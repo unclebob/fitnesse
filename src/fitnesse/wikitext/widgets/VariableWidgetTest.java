@@ -10,12 +10,14 @@ public class VariableWidgetTest extends WidgetTest
 	private WikiPage root;
 	private PageCrawler crawler;
 	private WikiPage page;
+	private WidgetRoot widgetRoot;
 
 	public void setUp() throws Exception
 	{
 		root = InMemoryPage.makeRoot("root");
 		crawler = root.getPageCrawler();
 		page = crawler.addPage(root, PathParser.parse("MyPage"));
+		widgetRoot = new WidgetRoot("", page);
 	}
 
 	public void tearDown() throws Exception
@@ -35,7 +37,6 @@ public class VariableWidgetTest extends WidgetTest
 
 	public void testVariableIsExpressed() throws Exception
 	{
-		WidgetRoot widgetRoot = new WidgetRoot("", page);
 		widgetRoot.addVariable("x", "1");
 		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
 		assertEquals("1", w.render());
@@ -43,7 +44,6 @@ public class VariableWidgetTest extends WidgetTest
 
 	public void testRenderTwice() throws Exception
 	{
-		WidgetRoot widgetRoot = new WidgetRoot("", page);
 		widgetRoot.addVariable("x", "1");
 		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
 		assertEquals("1", w.render());
@@ -66,5 +66,11 @@ public class VariableWidgetTest extends WidgetTest
 		WidgetRoot widgetRoot = new WidgetRoot("", page);
 		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
 		assertSubString("undefined variable: x", w.render());
+	}
+
+	public void testAsWikiText() throws Exception
+	{
+		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
+		assertEquals("${x}", w.asWikiText());
 	}
 }

@@ -2,28 +2,27 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import fitnesse.wikitext.WidgetBuilder;
 
-public class LinkWidget extends WikiWidget
+public class LinkWidget extends ParentWidget
 {
 	public static final String REGEXP = "https?://[^\\s]+[^\\s.)]+";
 	private static final Pattern pattern = Pattern.compile("https?://([^/\\s]*)(\\S*)?");
 
-	private String linkText;
 	private String usableURL;
 
-	public LinkWidget(ParentWidget parent, String text)
+	public LinkWidget(ParentWidget parent, String text) throws Exception
 	{
 		super(parent);
-		linkText = text;
-		usableURL = makeUrlUsable(linkText);
+		addChildWidgets(text);
 	}
 
 	public String render() throws Exception
 	{
+	 	String linkText = childHtml();
+		usableURL = makeUrlUsable(linkText);
 		StringBuffer html = new StringBuffer("<a href=\"");
 		html.append(usableURL);
 		html.append("\">");
@@ -48,9 +47,14 @@ public class LinkWidget extends WikiWidget
 		return usableUrl;
 	}
 
+	public WidgetBuilder getBuilder()
+	{
+		return WidgetBuilder.variableWidgetBuilder;
+	}
+
 	public String asWikiText() throws Exception
 	{
-		return linkText;
+		return childWikiText();
 	}
 }
 

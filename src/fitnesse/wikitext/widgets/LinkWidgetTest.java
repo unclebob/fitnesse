@@ -2,15 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import junit.swingui.TestRunner;
+import fitnesse.wiki.MockWikiPage;
 
 public class LinkWidgetTest extends WidgetTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.LinkWidgetTest"});
-	}
-
 	public void setUp() throws Exception
 	{
 	}
@@ -56,6 +51,14 @@ public class LinkWidgetTest extends WidgetTest
 		LinkWidget widget = new LinkWidget(new MockWidgetRoot(), link);
 		assertEquals("<a href=\"https://link.com\">https://link.com</a>", widget.render());
 		assertEquals(link, widget.asWikiText());
+	}
+
+	public void testLinkWikiWithVariable() throws Exception
+	{
+		String text = "!define HOST {somehost}\nhttp://www.${HOST}.com\n";
+		WidgetRoot root = new WidgetRoot(text, new MockWikiPage());
+		assertSubString("<a href=\"http://www.somehost.com\">http://www.somehost.com</a>", root.render());
+		assertEquals(text, root.asWikiText());
 	}
 
 	protected String getRegexp()

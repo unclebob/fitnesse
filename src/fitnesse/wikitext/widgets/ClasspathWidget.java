@@ -11,7 +11,6 @@ public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgum
 {
 	public static final String REGEXP = "^!path [^\r\n]*";
 	private static final Pattern pattern = Pattern.compile("^!path (.*)");
-	private static WidgetBuilder variableWidgetBook = new WidgetBuilder(new Class[]{VariableWidget.class});
 	private String pathText;
 
 	public ClasspathWidget(ParentWidget parent, String text) throws Exception
@@ -27,7 +26,7 @@ public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgum
 
 	public WidgetBuilder getBuilder()
 	{
-		return variableWidgetBook;
+		return WidgetBuilder.variableWidgetBuilder;
 	}
 
 	public String render() throws Exception

@@ -49,6 +49,10 @@ public class VariableWidget extends ParentWidget
 		return HtmlUtil.metaText("undefined variable: " + name);
 	}
 
+	public String asWikiText() throws Exception
+	{
+		return "${" + name + "}";
+	}
 }
 
 

@@ -44,6 +44,7 @@ public class WidgetBuilder
 
 	public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(htmlWidgetClasses);
 	public static WidgetBuilder literalAndVariableWidgetBuilder = new WidgetBuilder(new Class[]{LiteralWidget.class, VariableWidget.class});
+	public static WidgetBuilder variableWidgetBuilder = new WidgetBuilder(new Class[]{VariableWidget.class});
 
 	private Class[] widgetClasses;
 	private Pattern widgetPattern;

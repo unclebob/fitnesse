@@ -9,6 +9,7 @@ public class VariableDefinitionWidgetTest extends WidgetTest
 {
 	public WikiPage root;
 	private PageCrawler crawler;
+	private WidgetRoot widgetRoot;
 
 	protected String getRegexp()
 	{
@@ -41,7 +42,7 @@ public class VariableDefinitionWidgetTest extends WidgetTest
 		WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"), "content");
 		WikiPage page2 = crawler.addPage(root, PathParser.parse("SecondPage"), "content");
 
-		WidgetRoot widgetRoot = new WidgetRoot(page);
+		widgetRoot = new WidgetRoot(page);
 		VariableDefinitionWidget widget = new VariableDefinitionWidget(widgetRoot, "!define x {1}\n");
 		assertEquals("<span class=\"meta\">variable defined: x=1</span>", widget.render());
 		assertEquals("1", widgetRoot.getVariable("x"));
@@ -80,5 +81,13 @@ public class VariableDefinitionWidgetTest extends WidgetTest
 		data.setContent(content);
 		assertSubString("SOME_VARIABLE=Variable #1</span><br><span", data.getHtml());
 		assertNotSubString("SOME_VARIABLE=Variable #1</span><br><br><span", data.getHtml());
+	}
+
+	public void testAsWikiText() throws Exception
+	{
+		VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x {1}\n");
+		assertEquals("!define x {1}", widget.asWikiText());
+		widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x ({1})\n");
+		assertEquals("!define x ({1})", widget.asWikiText());
 	}
 }

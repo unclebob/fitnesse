@@ -33,7 +33,7 @@ public class WikiPageResponder implements SecureResponder
 			resource = "FrontPage";
 
 		WikiPagePath path = PathParser.parse(resource);
-		PageCrawler crawler = context.root.getPageCrawler();
+		PageCrawler crawler = context.root.getPageCrawler();                           
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		page = crawler.getPage(context.root, path);
 		if(page == null)

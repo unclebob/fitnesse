@@ -31,4 +31,14 @@ public class VariableDefinitionWidget extends ParentWidget
 		this.parent.addVariable(name, value);
 		return HtmlUtil.metaText("variable defined: " + name + "=" + value);
 	}
+
+	public String asWikiText() throws Exception
+	{
+		String text = "!define " + name + " ";
+		if(value.indexOf("{") == -1)
+			text += "{" + value + "}";
+		else
+			text += "(" + value + ")";
+		return text;
+	}
 }
