@@ -61,38 +61,74 @@ public class Fixture
 
   // Traversal //////////////////////////
 
+	/* Altered by Rick to dispatch on the first Fixture */
   public void doTables(Parse tables)
   {
     summary.put("run date", new Date());
     summary.put("run elapsed time", new RunTime());
-    while (tables != null)
+    if (tables != null)
     {
       Parse heading = tables.at(0, 0, 0);
       if (heading != null)
       {
         try
         {
-          final String fixtureName = heading.text();
-          Fixture fixture = loadFixture(fixtureName);
-          fixture.counts = counts;
-          fixture.summary = summary;
-
-          fixture.getArgsForTable(tables);
-          fixture.doTable(tables);
+          Fixture fixture = getLinkedFixtureWithArgs(tables);
+          fixture.listener = listener;
+          fixture.interpretTables(tables);
         }
         catch (Throwable e)
         {
           exception(heading, e);
+          interpretFollowingTables(tables);
         }
       }
-      listener.tableFinished(tables);
-      tables = tables.more;
     }
     listener.tablesFinished(counts);
     symbols.clear();
   }
 
-  public static Fixture loadFixture(String fixtureName) throws Throwable
+  /* Added by Rick to allow a dispatch into DoFixture */
+  protected void interpretTables(Parse tables) {
+		try { // Don't create the first fixture again, because creation may do something important.
+			getArgsForTable(tables); // get them again for the new fixture object
+			doTable(tables);
+		} catch (Exception ex) {
+			exception(tables.at(0, 0, 0), ex);
+			return;
+		}
+		interpretFollowingTables(tables);
+	}
+  /* Added by Rick */
+  private void interpretFollowingTables(Parse tables) {
+      listener.tableFinished(tables);
+      tables = tables.more;
+      while (tables != null) {
+          Parse heading = tables.at(0, 0, 0);
+          if (heading != null) {
+              try {
+                  Fixture fixture = getLinkedFixtureWithArgs(tables);
+                  fixture.doTable(tables);
+              } catch (Throwable e) {
+                  exception(heading, e);
+              }
+          }
+          listener.tableFinished(tables);
+          tables = tables.more;
+      }
+  }
+
+    /* Added by Rick */
+	protected Fixture getLinkedFixtureWithArgs(Parse tables) throws Throwable {
+		Parse header = tables.at(0, 0, 0);
+        Fixture fixture = loadFixture(header.text());
+		fixture.counts = counts;
+		fixture.summary = summary;
+		fixture.getArgsForTable(tables);
+		return fixture;
+	}
+
+	public static Fixture loadFixture(String fixtureName) throws Throwable
   {
     return FixtureLoader.instance().disgraceThenLoad(fixtureName);
   }

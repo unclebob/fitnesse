@@ -74,7 +74,7 @@ public class TypeAdapter
 
   // Accessors ////////////////////////////////
 
-  protected void init(Fixture fixture, Class type)
+  public void init(Fixture fixture, Class type)
   {
     this.fixture = fixture;
     this.type = type;
@@ -281,7 +281,7 @@ public class TypeAdapter
     Class componentType;
     TypeAdapter componentAdapter;
 
-    protected void init(Fixture target, Class type)
+    public void init(Fixture target, Class type)
     {
       super.init(target, type);
       componentType = type.getComponentType();

@@ -93,6 +93,59 @@ public class ParseTest extends TestCase
     assertEquals("ab", Parse.unformat("a<font size=+1>b</font>"));
     assertEquals("a<b", Parse.unformat("a<b"));
   }
-
+  
+  public void testFindNestedEnd() throws FitParseException {
+  	assertEquals(0, Parse.findMatchingEndTag("</t>",0,"t",0));
+  	assertEquals(7, Parse.findMatchingEndTag("<t></t></t>",0,"t",0));
+  	assertEquals(14, Parse.findMatchingEndTag("<t></t><t></t></t>",0,"t",0));
+  }
+  
+  public void testNestedTables() throws Exception
+  {
+  	String nestedTable = "<table><tr><td>embedded</td></tr></table>";
+  	Parse p = new Parse("<table><tr><td>"+nestedTable+"</td></tr>"+
+  	"<tr><td>two</td></tr><tr><td>three</td></tr></table>trailer");
+  	Parse sub = p.at(0, 0, 0).parts;
+  	assertEquals(1, p.size());
+  	assertEquals(3, p.parts.size());
+  	
+  	assertEquals(1, sub.at(0,0,0).size());
+  	assertEquals("embedded", sub.at(0, 0, 0).body);
+  	assertEquals(1, sub.size());
+  	assertEquals(1, sub.parts.size());
+  	assertEquals(1, sub.parts.parts.size());
+  	
+  	assertEquals("two", p.at(0, 1, 0).body);
+  	assertEquals("three", p.at(0, 2, 0).body);
+  	assertEquals(1, p.at(0,1,0).size());
+  	assertEquals(1, p.at(0,2,0).size());
+  }
+  
+  public void testNestedTables2() throws Exception
+  {
+  	String nestedTable = "<table><tr><td>embedded</td></tr></table>";
+  	String nestedTable2 = "<table><tr><td>"+nestedTable+"</td></tr><tr><td>two</td></tr></table>";
+  	Parse p = new Parse("<table><tr><td>one</td></tr><tr><td>"+nestedTable2+"</td></tr>"+
+  	"<tr><td>three</td></tr></table>trailer");
+  	
+  	assertEquals(1, p.size());
+  	assertEquals(3, p.parts.size());
+  	
+  	assertEquals("one", p.at(0, 0, 0).body);
+  	assertEquals("three", p.at(0, 2, 0).body);
+  	assertEquals(1, p.at(0,0,0).size());
+  	assertEquals(1, p.at(0,2,0).size());
+  	
+  	Parse sub = p.at(0, 1, 0).parts;
+  	assertEquals(2, sub.parts.size());
+  	assertEquals(1, sub.at(0,0,0).size());
+  	Parse subSub = sub.at(0,0,0).parts;
+  	
+  	assertEquals("embedded", subSub.at(0, 0, 0).body);
+  	assertEquals(1, subSub.at(0,0,0).size());
+  	
+  	assertEquals("two", sub.at(0, 1, 0).body);
+  	assertEquals(1, sub.at(0, 1, 0).size());
+  }
 
 }

@@ -41,8 +41,8 @@ public class FixtureLoader
   private void addPackageToFixturePath(Fixture fixture)
   {
     Package fixturePackage = fixture.getClass().getPackage();
-	  if(fixturePackage != null)
-      addPackageToPath(fixturePackage.getName());
+    if (fixturePackage != null)
+        addPackageToPath(fixturePackage.getName());
   }
 
   public void addPackageToPath(String name)
@@ -73,7 +73,8 @@ public class FixtureLoader
     }
   }
 
-  private Fixture instantiateFirstValidFixtureClass(FixtureName fixtureName) throws Throwable
+  private Fixture instantiateFirstValidFixtureClass(FixtureName fixtureName)
+      throws Throwable
   {
     for (Iterator i = fixtureName.getPotentialFixtureClassNames(
         fixturePathElements).iterator(); i.hasNext();)

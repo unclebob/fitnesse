@@ -48,7 +48,8 @@ public class Parse
 		String lc = text.toLowerCase();
 		int startTag = lc.indexOf("<" + tags[level]);
 		int endTag = lc.indexOf(">", startTag) + 1;
-		int startEnd = lc.indexOf("</" + tags[level], endTag);
+//		int startEnd = lc.indexOf("</" + tags[level], endTag);
+		int startEnd = findMatchingEndTag(lc, endTag, tags[level], offset);
 		int endEnd = lc.indexOf(">", startEnd) + 1;
 		int startMore = lc.indexOf("<" + tags[level], endEnd);
 		if(startTag < 0 || endTag < 0 || startEnd < 0 || endEnd < 0)
@@ -67,12 +68,49 @@ public class Parse
 			parts = new Parse(body, tags, level + 1, offset + endTag);
 			body = null;
 		}
+		else
+		{ // Check for nested table
+			int index = body.indexOf("<" + tags[0]);
+			if (index >= 0) {
+				parts = new Parse(body, tags, 0, offset + endTag);
+				body = "";
+			}
+		}
 
 		if(startMore >= 0)
 		{
 			more = new Parse(trailer, tags, level, offset + endEnd);
 			trailer = null;
 		}
+	}
+
+	/* Added by Rick Mugridge, Feb 2005 */
+	protected static int findMatchingEndTag(String lc, int matchFromHere, String tag, int offset) throws FitParseException {
+		int fromHere = matchFromHere;
+		int count = 1;
+		int startEnd = 0;
+		while (count > 0) {
+			int embeddedTag = lc.indexOf("<" + tag, fromHere);
+			int embeddedTagEnd = lc.indexOf("</" + tag, fromHere);
+			// Which one is closer?
+			if (embeddedTag < 0 && embeddedTagEnd < 0)
+				throw new FitParseException("Can't find tag: " + tag, offset);
+			if (embeddedTag < 0)
+				embeddedTag = Integer.MAX_VALUE;
+			if (embeddedTagEnd < 0)
+				embeddedTagEnd = Integer.MAX_VALUE;
+			if (embeddedTag < embeddedTagEnd) {
+				count++;
+				startEnd = embeddedTag;
+				fromHere = lc.indexOf(">", embeddedTag) + 1;
+			}
+			else if (embeddedTagEnd < embeddedTag) {
+				count--;
+				startEnd = embeddedTagEnd;
+				fromHere = lc.indexOf(">", embeddedTagEnd) + 1;
+			}
+		}
+		return startEnd;
 	}
 
 	public int size()
