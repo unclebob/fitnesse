@@ -155,14 +155,20 @@
 
 	<target name="add_headers" description="Add standard comment header to each java file">
 		<java classname="HeaderManager">
-			<arg value="${src}"/>
+			<arg value="${src}/fitnesse"/>
 			<arg value="extra/util/header.txt"/>
 			<arg value=".java"/>
 			<classpath path="extra/util"/>
 		</java>
 		<java classname="HeaderManager">
+			<arg value="${src}/fit"/>
+			<arg value="extra/util/fitHeader.txt"/>
+			<arg value=".java"/>
+			<classpath path="extra/util"/>
+		</java>
+		<java classname="HeaderManager">
 			<arg value="dotnet"/>
-			<arg value="extra/util/header.txt"/>
+			<arg value="extra/util/fitHeader.txt"/>
 			<arg value=".cs"/>
 			<classpath path="extra/util"/>
 		</java>
@@ -170,15 +176,22 @@
 
 	<target name="remove_headers" description="Remove standard comment header to each java file">
 		<java classname="HeaderManager">
-			<arg value="${src}"/>
+			<arg value="${src}/fitnesse"/>
 			<arg value="extra/util/header.txt"/>
 			<arg value=".java"/>
 			<arg value="remove"/>
 			<classpath path="extra/util"/>
 		</java>
 		<java classname="HeaderManager">
+			<arg value="${src}/fit"/>
+			<arg value="extra/util/fitHeader.txt"/>
+			<arg value=".java"/>
+			<arg value="remove"/>
+			<classpath path="extra/util"/>
+		</java>
+		<java classname="HeaderManager">
 			<arg value="dotnet"/>
-			<arg value="extra/util/header.txt"/>
+			<arg value="extra/util/fitHeader.txt"/>
 			<arg value=".cs"/>
 			<arg value="remove"/>
 			<classpath path="extra/util"/>
