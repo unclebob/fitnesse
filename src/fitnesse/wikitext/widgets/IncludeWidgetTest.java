@@ -51,7 +51,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testSeamlessIsNotCollapsable() throws Exception
 	{
-		IncludeWidget widget = createIncludeWidget(page1, "--seamless PageOne");
+		IncludeWidget widget = createIncludeWidget(page1, "-seamless PageOne");
 		final String result = widget.render();
 		assertNotSubString("class=\"collapsable\"", result);
 	}
@@ -68,24 +68,24 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testRegexpWithOptions() throws Exception
 	{
-		assertMatchEquals("!include --setup SomePage", "!include --setup SomePage");
-		assertMatchEquals("!include  --setup SomePage", "!include  --setup SomePage");
-		assertMatchEquals("!include --teardown SomePage", "!include --teardown SomePage");
-		assertMatchEquals("!include  --teardown SomePage", "!include  --teardown SomePage");
-		assertMatchEquals("!include --seamless SomePage", "!include --seamless SomePage");
-		assertMatchEquals("!include  --seamless SomePage", "!include  --seamless SomePage");
+		assertMatchEquals("!include -setup SomePage", "!include -setup SomePage");
+		assertMatchEquals("!include  -setup SomePage", "!include  -setup SomePage");
+		assertMatchEquals("!include -teardown SomePage", "!include -teardown SomePage");
+		assertMatchEquals("!include  -teardown SomePage", "!include  -teardown SomePage");
+		assertMatchEquals("!include -seamless SomePage", "!include -seamless SomePage");
+		assertMatchEquals("!include  -seamless SomePage", "!include  -seamless SomePage");
 	}
 
 	public void testSetUpParts() throws Exception
 	{
-		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include --setup SomePage");
+		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -setup SomePage");
 		assertSubString("class=\"setup\"", widget.render());
 		assertSubString("Set Up: ", widget.render());
 	}
 
 	public void testTearDownParts() throws Exception
 	{
-		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include --teardown SomePage");
+		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -teardown SomePage");
 		assertSubString("class=\"teardown\"", widget.render());
 		assertSubString("Tear Down: ", widget.render());
 	}
@@ -97,7 +97,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testLiteralsGetRenderedSeamless() throws Exception
 	{
-		verifyLiteralsGetRendered("--seamless ", "LiteralPage");
+		verifyLiteralsGetRendered("-seamless ", "LiteralPage");
 	}
 
 	private void verifyLiteralsGetRendered(String option, String pageName)
@@ -120,7 +120,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testRenderWhenMissingSeamless() throws Exception
 	{
-		verifyRenderWhenMissing("--seamless MissingPage");
+		verifyRenderWhenMissing("-seamless MissingPage");
 	}
 
 	private void verifyRenderWhenMissing(String optionAndPageName)
@@ -137,7 +137,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testNoNullPointerWhenIncludingFromRootPageSeamless() throws Exception
 	{
-		verifyNoNullPointerWhenIncludingFromRootPage("--seamless .PageOne");
+		verifyNoNullPointerWhenIncludingFromRootPage("-seamless .PageOne");
 	}
 
 	private void verifyNoNullPointerWhenIncludingFromRootPage(String optionAndPageName)
@@ -154,7 +154,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testIncludingVariablesSeamless() throws Exception
 	{
-		verifyIncludingVariables("--seamless ");
+		verifyIncludingVariables("-seamless ");
 	}
 
 	private void verifyIncludingVariables(String option)
@@ -175,7 +175,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testVirtualIncludeNotFoundSeamless() throws Exception
 	{
-		verifyVirtualIncludeNotFound("--seamless IncludedPage");
+		verifyVirtualIncludeNotFound("-seamless IncludedPage");
 	}
 
 	private void verifyVirtualIncludeNotFound(String optionAndPageName)
@@ -244,7 +244,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testRenderIncludedSiblingSeamless() throws Exception
 	{
-		IncludeWidget widget = createIncludeWidget(page1, "--seamless PageOne");
+		IncludeWidget widget = createIncludeWidget(page1, "-seamless PageOne");
 		final String result = widget.render();
 		verifySubstrings(new String[]{"page one<br>"}, result);
 	}

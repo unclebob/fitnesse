@@ -8,8 +8,8 @@ import java.util.regex.*;
 
 public class IncludeWidget extends ParentWidget implements PageReferencer
 {
-	public static final String REGEXP = "^!include(?: +--setup| +--teardown| +--seamless)? " + WikiWordWidget.REGEXP + LineBreakWidget.REGEXP + "?";
-	static final Pattern pattern = Pattern.compile("^!include *(--setup|--teardown|--seamless)? (.*)");
+	public static final String REGEXP = "^!include(?: +-setup| +-teardown| +-seamless)? " + WikiWordWidget.REGEXP + LineBreakWidget.REGEXP + "?";
+	static final Pattern pattern = Pattern.compile("^!include *(-setup|-teardown|-seamless)? (.*)");
 
 	protected String pageName;
 	protected WikiPage includingPage;
@@ -42,15 +42,15 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	private void handleDisplayForOption(String option) throws Exception
 	{
 		String widgetText = processLiterals(getIncludedPageContent());
-		if("--seamless".equals(option))
+		if("-seamless".equals(option))
 		{
 			addChildWidgets(widgetText + "\n");
 		}
-		else if("--setup".equals(option))
+		else if("-setup".equals(option))
 		{
 			new CollapsableWidget(this, "Set Up: " + pageName, widgetText, "setup");
 		}
-		else if("--teardown".equals(option))
+		else if("-teardown".equals(option))
 		{
 			new CollapsableWidget(this, "Tear Down: " + pageName, widgetText, "teardown");
 		}
