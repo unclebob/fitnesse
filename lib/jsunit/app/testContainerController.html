@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+            "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- JsUnit -->
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is Edward Hieatt code.
+   -
+   - The Initial Developer of the Original Code is
+   - Edward Hieatt, edward@jsunit.net.
+   - Portions created by the Initial Developer are Copyright (C) 2001
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   - Edward Hieatt, edward@jsunit.net (original author)
+   - Bob Clary, bc@bclary.com
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+    <title>JsUnit Test Container Controller</title>
+<script language="javascript" type="text/javascript">
+var containerReady=false;
+
+function init()
+{
+  containerReady = true;
+}
+
+function isPageLoaded() 
+{
+  if (!containerReady) 
+    return false;
+
+  var isTestPageLoaded=false;
+
+  try 
+  {
+    // attempt to access the var isTestPageLoaded in the testFrame
+    if (typeof(top.testManager.containerTestFrame.isTestPageLoaded) != 'undefined')
+    {
+      isTestPageLoaded=top.testManager.containerTestFrame.isTestPageLoaded;
+    }
+
+    // ok, if the above did not throw an exception, then the 
+    // variable is defined. If the onload has not fired in the
+    // testFrame then isTestPageLoaded is still false. Otherwise
+    // the testFrame has set it to true
+  }
+  catch (e) 
+  {
+    // an error occured while attempting to access the isTestPageLoaded
+    // in the testFrame, therefore the testFrame has not loaded yet
+    isTestPageLoaded=false;
+  }
+  return isTestPageLoaded;
+}
+
+function isContainerReady() 
+{
+    return containerReady;
+}
+
+function setNotReady() 
+{
+  try 
+  {
+    // attempt to set the isTestPageLoaded variable
+    // in the test frame to false. 
+    top.testManager.containerTestFrame.isTestPageLoaded=false;
+  } 
+  catch (e) 
+  {
+    // testFrame.isTestPageLoaded not available... ignore
+  }
+}
+function setTestPage(fileName) {
+  setNotReady();
+  top.jsUnitParseParms(fileName);
+  top.testManager.containerTestFrame.location.href=fileName;
+}
+</script>
+  </head>
+
+  <body onload="init()">
+    Test Container Controller
+  </body>
+</html>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NAnt</name>
+    </assembly>
+    <members>
+        <member name="M:SourceForge.NAnt.NAnt.GetBuildFileName(System.String,System.String,System.Boolean)">
+            <summary>
+            Gets the file name for the build file in the specified directory.
+            </summary>
+            <param name="directory">The directory to look for a build file.  When in doubt use Environment.CurrentDirectory for directory.</param>
+            <param name="searchPattern">Look for a build file with this pattern or name.  If null look for a file that matches the default build pattern (*.build).</param>
+            <param name="findInParent">Whether or not to search the parent directories for a build file.</param>
+            <returns>The path to the build file or <c>null</c> if no build file could be found.</returns>
+        </member>
+    </members>
+</doc>

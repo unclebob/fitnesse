@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<code_scheme name="Fitnesse" parent="Default">
+  <option name="INDENT_SIZE" value="2" />
+  <option name="CONTINUATION_INDENT_SIZE" value="2" />
+  <option name="TAB_SIZE" value="2" />
+  <option name="USE_TAB_CHARACTER" value="true" />
+  <option name="SMART_TABS" value="true" />
+  <option name="BRACE_STYLE" value="2" />
+  <option name="CLASS_BRACE_STYLE" value="2" />
+  <option name="METHOD_BRACE_STYLE" value="2" />
+  <option name="ELSE_ON_NEW_LINE" value="true" />
+  <option name="CATCH_ON_NEW_LINE" value="true" />
+  <option name="FINALLY_ON_NEW_LINE" value="true" />
+  <option name="INDENT_CASE_FROM_SWITCH" value="false" />
+  <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
+  <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
+  <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
+  <option name="SPACE_BEFORE_IF_PARENTHESES" value="false" />
+  <option name="SPACE_BEFORE_WHILE_PARENTHESES" value="false" />
+  <option name="SPACE_BEFORE_FOR_PARENTHESES" value="false" />
+  <option name="SPACE_BEFORE_CATCH_PARENTHESES" value="false" />
+  <option name="SPACE_BEFORE_SWITCH_PARENTHESES" value="false" />
+  <option name="SPACE_BEFORE_SYNCHRONIZED_PARENTHESES" value="false" />
+  <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="2" />
+  <option name="IMPORT_LAYOUT_TABLE">
+    <value>
+      <package name="" withSubpackages="true" />
+    </value>
+  </option>
+</code_scheme>
+
