@@ -89,15 +89,37 @@ public class IncludeWidgetTest extends WidgetTest
 	public void testSetUpParts() throws Exception
 	{
 		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -setup SomePage");
-		assertSubString("class=\"setup\"", widget.render());
 		assertSubString("Set Up: ", widget.render());
+		assertSubString("class=\"setup\"", widget.render());
+		assertSubString("class=\"collapsable\"", widget.render());
+	}
+
+	public void testSetUpCollapsed() throws Exception
+	{
+		WidgetRoot widgetRoot = new WidgetRoot(root);
+		widgetRoot.addVariable(IncludeWidget.COLLAPSE_SETUP, "true");
+		IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -setup SomePage");
+		assertSubString("Set Up: ", widget.render());
+		assertSubString("class=\"setup\"", widget.render());
+		assertSubString("class=\"hidden\"", widget.render());
 	}
 
 	public void testTearDownParts() throws Exception
 	{
 		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -teardown SomePage");
-		assertSubString("class=\"teardown\"", widget.render());
 		assertSubString("Tear Down: ", widget.render());
+		assertSubString("class=\"teardown\"", widget.render());
+		assertSubString("class=\"collapsable\"", widget.render());
+	}
+
+	public void testTearDownCollapsed() throws Exception
+	{
+		WidgetRoot widgetRoot = new WidgetRoot(root);
+		widgetRoot.addVariable(IncludeWidget.COLLAPSE_TEARDOWN, "true");
+		IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -teardown SomePage");
+		assertSubString("Tear Down: ", widget.render());
+		assertSubString("class=\"teardown\"", widget.render());
+		assertSubString("class=\"hidden\"", widget.render());
 	}
 
 	public void testLiteralsGetRendered() throws Exception

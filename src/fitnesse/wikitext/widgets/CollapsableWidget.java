@@ -44,11 +44,12 @@ public class CollapsableWidget extends ParentWidget
 		init(title, body);
 	}
 
-	public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass) throws Exception
+	public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass, boolean collapsed) throws Exception
 	{
 		this(parent);
 		init(title, body);
 		this.cssClass = cssClass;
+		this.expanded = !collapsed;
 	}
 
 	private void init(String title, String body) throws Exception
@@ -101,10 +102,5 @@ public class CollapsableWidget extends ParentWidget
 			return collapsableOpenImg;
 		else
 			return collapsableClosedImg;
-	}
-
-	public void setCollapsed(boolean collapsed)
-	{
-		expanded = !collapsed;
 	}
 }

@@ -4,6 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.components.PageReferencer;
 import fitnesse.wiki.*;
+import java.util.*;
 import java.util.regex.*;
 
 public class IncludeWidget extends ParentWidget implements PageReferencer
@@ -11,9 +12,15 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	public static final String REGEXP = "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + LineBreakWidget.REGEXP + "?";
 	static final Pattern pattern = Pattern.compile("^!include *(-setup|-teardown|-seamless|-c)? (.*)");
 
+	public static final String COLLAPSE_SETUP = "COLLAPSE_SETUP";
+	public static final String COLLAPSE_TEARDOWN = "COLLAPSE_TEARDOWN";
+
 	protected String pageName;
 	protected WikiPage includingPage;
 	protected WikiPage parentPage;
+
+	private static Map optionPrefixMap = buildOptionPrefixMap();
+	private static Map optionCssMap = buildOptionsCssMap();
 
 	public IncludeWidget(ParentWidget parent, String text) throws Exception
 	{
@@ -21,58 +28,11 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 		Matcher matcher = pattern.matcher(text);
 		if(matcher.find())
 		{
-			pageName = parsePageName(matcher);
+			pageName = getPageName(matcher);
 			includingPage = parent.getWikiPage();
 			parentPage = includingPage.getParent();
-			handleDisplayForOption(parseOption(matcher));
+			buildWidget(getOption(matcher));
 		}
-	}
-
-	private String parseOption(Matcher match)
-	{
-		return match.group(1);
-	}
-
-	private String parsePageName(Matcher match)
-	{
-		return match.group(2);
-	}
-
-	//TODO MDM I know this is bad...  But it seems better then creatting two new widgets.
-	private void handleDisplayForOption(String option) throws Exception
-	{
-		String widgetText = processLiterals(getIncludedPageContent());
-		if("-seamless".equals(option))
-		{
-			addChildWidgets(widgetText + "\n");
-		}
-		else if("-setup".equals(option))
-		{
-			new CollapsableWidget(this, "Set Up: " + pageName, widgetText, "setup");
-		}
-		else if("-teardown".equals(option))
-		{
-			new CollapsableWidget(this, "Tear Down: " + pageName, widgetText, "teardown");
-		}
-		else if("-c".equals(option))
-		{
-			CollapsableWidget widget = new CollapsableWidget(this, "Included page: " + pageName, widgetText, "included");
-			widget.setCollapsed(true);
-		}
-		else
-		{
-			new CollapsableWidget(this, "Included page: " + pageName, widgetText, "included");
-		}
-	}
-
-	public String render() throws Exception
-	{
-		return childHtml();
-	}
-
-	public WikiPage getReferencedPage() throws Exception
-	{
-		return getParentPage().getPageCrawler().getPage(getParentPage(), PathParser.parse(pageName));
 	}
 
 	protected String getIncludedPageContent() throws Exception
@@ -117,4 +77,103 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	{
 		return parent.getWikiPage().getParent();
 	}
+
+	private String getOption(Matcher match)
+	{
+		return match.group(1);
+	}
+
+	private String getPageName(Matcher match)
+	{
+		return match.group(2);
+	}
+
+	//TODO MDM I know this is bad...  But it seems better then creatting two new widgets.
+	private void buildWidget(String option) throws Exception
+	{
+		String widgetText = processLiterals(getIncludedPageContent());
+		if("-seamless".equals(option))
+		{
+			addChildWidgets(widgetText + "\n");
+		}
+		else
+		{
+			new CollapsableWidget(this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(option));
+		}
+	}
+
+	private String getCssClass(String option)
+	{
+		return (String) optionCssMap.get(option);
+	}
+
+	private String getPrefix(String option)
+	{
+		return (String) optionPrefixMap.get(option);
+	}
+
+	private boolean isCollapsed(String option)
+	  throws Exception
+	{
+		if(isSetup(option) && isSetupCollapsed())
+			return true;
+		else if(isTeardown(option) && isTeardownCollapsed())
+			return true;
+		else if("-c".equals(option))
+			return true;
+		return false;
+	}
+
+	private static Map buildOptionsCssMap()
+	{
+		Map optionCssMap = new HashMap();
+		optionCssMap.put("-setup", "setup");
+		optionCssMap.put("-teardown", "teardown");
+		optionCssMap.put("-c", "included");
+		optionCssMap.put(null, "included");
+		return optionCssMap;
+	}
+
+	private static Map buildOptionPrefixMap()
+	{
+		Map optionPrefixMap = new HashMap();
+		optionPrefixMap.put("-setup", "Set Up: ");
+		optionPrefixMap.put("-teardown", "Tear Down: ");
+		optionPrefixMap.put("-c", "Included page: ");
+		optionPrefixMap.put(null, "Included page: ");
+		return optionPrefixMap;
+	}
+
+	private boolean isTeardownCollapsed()
+	  throws Exception
+	{
+		return "true".equals(parent.getVariable(COLLAPSE_TEARDOWN));
+	}
+
+	private boolean isTeardown(String option)
+	{
+		return "-teardown".equals(option);
+	}
+
+	private boolean isSetupCollapsed()
+	  throws Exception
+	{
+		return "true".equals(parent.getVariable(COLLAPSE_SETUP));
+	}
+
+	private boolean isSetup(String option)
+	{
+		return "-setup".equals(option);
+	}
+
+	public String render() throws Exception
+	{
+		return childHtml();
+	}
+
+	public WikiPage getReferencedPage() throws Exception
+	{
+		return getParentPage().getPageCrawler().getPage(getParentPage(), PathParser.parse(pageName));
+	}
+
 }
