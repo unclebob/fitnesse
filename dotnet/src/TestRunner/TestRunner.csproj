@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = "App.ico"
+                ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
                 AssemblyName = "TestRunner"
                 AssemblyOriginatorKeyFile = ""
@@ -90,19 +90,10 @@
                     AssemblyName = "fit"
                     HintPath = "..\fit\bin\Debug\fit.dll"
                 />
-                <Reference
-                    Name = "FitServer"
-                    AssemblyName = "FitServer"
-                    HintPath = "..\FitServer\bin\Debug\FitServer.dll"
-                />
             </References>
         </Build>
         <Files>
             <Include>
-                <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
                 <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
