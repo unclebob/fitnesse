@@ -99,7 +99,10 @@ namespace fit
 			}
 			if (UniqueMatchFound(matches))
 				return UniqueMatch(matches);
-			return FindMatchingObject(queryItems, row, col + 1);
+			else if (matches.Count > 0 && !ColumnHasBinding(col + 1))
+				return matches[0];
+			else 
+				return FindMatchingObject(queryItems, row, col + 1);
 		}
 
 		private bool IsMatch(Parse row, int col)

@@ -262,6 +262,17 @@ namespace fit
 		}
 
 		[Test]
+		public void TestDupsAllowed()
+		{
+			AddQueryValue(new RowFixturePerson("Joe"));
+			AddQueryValue(new RowFixturePerson("Joe"));
+			AddRow(new string[] {"Joe"});
+			AddRow(new string[] {"Joe"});
+			fixture.DoTables(table);
+			VerifyCounts(2, 0, 0, 0);
+		}
+
+		[Test]
 		public void TestTwoExpectedTwoActualAllCorrectOrderCorrect()
 		{
 			AddQueryValue(new RowFixturePerson("Joe"));
