@@ -42,6 +42,7 @@ public class SerializedPageResponder implements SecureResponder
 
 	private SimpleResponse makeResponseWithxml(Document doc) throws Exception
 	{
+		//TODO MdM Shoudl probably use a StreamedResponse
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		XmlWriter xmlWriter = new XmlWriter(output);
 		xmlWriter.write(doc);

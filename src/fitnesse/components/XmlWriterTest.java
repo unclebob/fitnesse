@@ -2,13 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import junit.framework.*;
 import java.io.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
-import fitnesse.components.XmlWriter;
+import fitnesse.testutil.RegexTest;
 
-public class XmlWriterTest extends TestCase
+public class XmlWriterTest extends RegexTest
 {
 	private ByteArrayOutputStream output;
 	private Document doc;
@@ -45,12 +44,19 @@ public class XmlWriterTest extends TestCase
 
 	public void testAll() throws Exception
 	{
+		String results = writeXml(doc);
+
+		assertEquals(sampleXml, results);
+	}
+
+	private String writeXml(Document doc) throws Exception
+	{
 		XmlWriter writer = new XmlWriter(output);
 		writer.write(doc);
 		writer.flush();
 		writer.close();
 
 		String results = new String(output.toByteArray());
-		assertEquals(sampleXml, results);
+		return results;
 	}
 }

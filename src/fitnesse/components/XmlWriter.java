@@ -12,9 +12,9 @@ public class XmlWriter
 	private Writer writer;
 	private boolean isNewLine;
 
-	public XmlWriter(OutputStream os)
+	public XmlWriter(OutputStream os) throws Exception
 	{
-		writer = new OutputStreamWriter(os);
+		writer = new OutputStreamWriter(os, "UTF-8");
 	}
 
   public void write(Document doc) throws Exception

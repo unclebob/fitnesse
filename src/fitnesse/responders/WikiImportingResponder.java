@@ -4,11 +4,9 @@ import fitnesse.wiki.*;
 import fitnesse.util.*;
 import fitnesse.html.*;
 import fitnesse.http.*;
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
 import java.net.*;
 import java.io.*;
-import java.util.*;
 import org.w3c.dom.Document;
 
 public class WikiImportingResponder extends ChunkingResponder implements XmlizerPageHandler, SecureResponder
