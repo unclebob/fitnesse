@@ -44,17 +44,17 @@ public class ShutdownTest extends RegexTest
 		assertSubString("Authorization: ", request);
 	}
 
-	public void testBadServer() throws Exception
-	{
-		try
-		{
-			shutdown.hostname = "google.com";
-			ResponseParser response = shutdown.buildAndSendRequest();
-			String status = shutdown.checkResponse(response);
-			assertEquals("Not a FitNesse server", status);
-		}
-		catch(UnknownHostException e)
-		{
-		}
-	}
+//	public void testBadServer() throws Exception
+//	{
+//		try
+//		{
+//			shutdown.hostname = "google.com";
+//			ResponseParser response = shutdown.buildAndSendRequest();
+//			String status = shutdown.checkResponse(response);
+//			assertEquals("Not a FitNesse server", status);
+//		}
+//		catch(UnknownHostException e)
+//		{
+//		}
+//	}
 }

@@ -21,4 +21,12 @@ public class StringUtil
 
     return joined.toString();
   }
+
+	public static String[] combineArrays(String[] first, String[] second)
+	{
+		List combinedList = new LinkedList();
+		combinedList.addAll(Arrays.asList(first));
+		combinedList.addAll(Arrays.asList(second));
+		return (String[]) combinedList.toArray(new String[combinedList.size()]);
+	}
 }
