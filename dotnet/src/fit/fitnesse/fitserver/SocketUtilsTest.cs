@@ -2,7 +2,7 @@ using System;
 using System.Net.Sockets;
 using NUnit.Framework;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	[TestFixture]
 	public class SocketUtilsTest

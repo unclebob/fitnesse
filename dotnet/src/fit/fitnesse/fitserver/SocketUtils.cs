@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	public class SocketUtils
 	{

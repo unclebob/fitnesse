@@ -56,6 +56,6 @@ using System.Runtime.InteropServices;
 //
 
 [assembly : AssemblyDelaySign(false)]
-[assembly : AssemblyKeyFile(@"..\..\..\..\fitnesse.key")]
+[assembly : AssemblyKeyFile(@"../../../../fitnesse.key")]
 [assembly : AssemblyKeyName("")]
 [assembly : Guid("CCCDC85E-F60D-41de-B032-C711214F6666")]

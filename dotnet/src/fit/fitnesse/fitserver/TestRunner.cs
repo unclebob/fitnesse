@@ -7,7 +7,7 @@ namespace fitnesse.fitserver
 	public class TestRunner
 	{
 		public string pageName;
-		public bool usingDownloadedPaths;
+		public bool usingDownloadedPaths = true;
 		private FitServer fitServer;
 		private FixtureListener fixtureListener;
 		public string host;
@@ -63,10 +63,14 @@ namespace fitnesse.fitserver
 					string option = args[index++];
 					if("-results".Equals(option))
 						CreateCacheStream(args[index++]);
-					if("-v".Equals(option))
+					else if("-v".Equals(option))
 						verbose = true;
-					if("-debug".Equals(option))
+					else if("-debug".Equals(option))
 						debug = true;
+					else if("-nopaths".Equals(option))
+						usingDownloadedPaths = false;
+					else
+						throw new Exception("Bad option: " + option);
 				}
 				host = args[index];
 				port = Int32.Parse(args[index + 1]);
@@ -90,6 +94,10 @@ namespace fitnesse.fitserver
 		private void PrintUsage()
 		{
 			Console.WriteLine("Usage: TestRunner [options] <host> <port> <page name>");
+			Console.WriteLine("\t-v\tverbose: prints test progress to colsole");
+			Console.WriteLine("\t-debug\tprints FitServer actions to console");
+			Console.WriteLine("\t-nopaths\tprevents addition of assemblies from FitNesse");
+			Console.WriteLine("\t-results <filename|'stdout'>\tsends test results data to the specified file or the console");
 		}
 
 		public string MakeHttpRequest()
@@ -105,13 +113,21 @@ namespace fitnesse.fitserver
 			Counts counts = results.Counts();
 			pageCounts.TallyPageCounts(counts);
 			fitServer.Transmit(Protocol.FormatCounts(counts));
-			if(verbose && (counts.Wrong > 0 || counts.Exceptions > 0))
+			if(verbose)
 			{
-				output.WriteLine();
+				for(int i = 0; i < counts.Right; i++)
+					output.Write(".");
 				if(counts.Wrong > 0)
+				{
+					output.WriteLine();
 					output.WriteLine(PageDescription(results) + " has failures");
+				}
 				if(counts.Exceptions > 0)
+				{
+					output.WriteLine();
 					output.WriteLine(PageDescription(results) + " has errors");
+				}
+
 			}
 			CacheResults(results);
 		}
@@ -159,7 +175,8 @@ namespace fitnesse.fitserver
 
 		public void CacheResults(PageResult results)
 		{
-			cacheWriter.Write(results.ToString() + "\n");
+			string data = results.ToString() + "\n";
+			cacheWriter.Write(Protocol.FormatDocument(data));
 		}
 
 		public void CacheFinalCount(Counts counts)

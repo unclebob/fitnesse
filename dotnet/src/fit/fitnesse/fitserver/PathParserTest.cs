@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	[TestFixture]
 	public class PathParserTest

@@ -5,8 +5,9 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using fit;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	public class FitServer
 	{
@@ -82,10 +83,9 @@ namespace fit
 
 		private void PrintUsageAndExit()
 		{
-			Console.Error.WriteLine("Program usage:");
-			Console.Error.WriteLine("\tFitServer [-v] assemblies host port socket-token \n");
+			Console.Error.WriteLine("Usage: FitServer [-v] <assemblies> <host> <port> <socket-token>");
 			Console.Error.WriteLine("\t-v\tverbose: print log messages to stdout");
-			Console.Error.WriteLine("\tassemblies: ';' separated list of assembly filenames");
+			Console.Error.WriteLine("\tassemblies:\t';' separated list of assembly filenames");
 			Environment.Exit(1);
 		}
 

@@ -1,6 +1,6 @@
 using System.Net.Sockets;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	public interface ISocketWrapper
 	{

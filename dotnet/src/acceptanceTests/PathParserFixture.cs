@@ -1,4 +1,7 @@
-namespace fit
+using fit;
+using fitnesse.fitserver;
+
+namespace fitnesse.acceptanceTests
 {
 	public class PathParserFixture : ColumnFixture
 	{

@@ -3,22 +3,22 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{D244BC7D-BB6B-4327-AA09-49A56256AD5B}"
+        ProjectGuid = "{27ECAA53-8F5B-4E8B-9C80-215B9DD7FC1D}"
     >
         <Build>
             <Settings
-                ApplicationIcon = ""
+                ApplicationIcon = "App.ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "acceptanceTests"
+                AssemblyName = "TestRunner"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Library"
-                PreBuildEvent = "del $(SolutionDir)acceptanceTests.dll"
-                PostBuildEvent = "copy $(SolutionDir)src\acceptanceTests\bin\Debug\acceptanceTests.dll $(SolutionDir)"
-                RootNamespace = "fitnesse.acceptanceTests"
+                OutputType = "Exe"
+                PreBuildEvent = "del $(SolutionDir)TestRunner.exe"
+                PostBuildEvent = "copy $(SolutionDir)src\TestRunner\bin\Debug\TestRunner.exe $(SolutionDir)"
+                RootNamespace = "TestRunner"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -67,86 +67,49 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\..\..\apps\nunit\NUnit V2.1\\bin\nunit.framework.dll"
+                    HintPath = "..\..\..\..\..\Program Files\NUnit 2.2\bin\nunit.framework.dll"
                     AssemblyFolderKey = "hklm\dn\nunit.framework"
                 />
                 <Reference
                     Name = "fit"
-                    Project = "{483287D5-0C87-4257-AB40-C75C02F2ECF6}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                    Private = "True"
+                    AssemblyName = "fit"
+                    HintPath = "..\fit\bin\Debug\fit.dll"
+                />
+                <Reference
+                    Name = "FitServer"
+                    AssemblyName = "FitServer"
+                    HintPath = "..\FitServer\bin\Debug\FitServer.dll"
                 />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
+                    RelPath = "App.ico"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BlankAndNullKeywordColumnFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "BowlingGame.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "BowlingGameFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "BowlingGameTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ClearNamespacesFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ExecuteExampleFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ParameterizedColumnFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ParameterizedRowFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PathParserFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SummaryInspectorFixture.cs"
+                    RelPath = "Main.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

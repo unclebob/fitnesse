@@ -1,7 +1,8 @@
 using System;
 using System.Text;
+using fit;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	public class Protocol
 	{

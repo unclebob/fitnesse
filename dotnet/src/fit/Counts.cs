@@ -9,6 +9,17 @@ namespace fit
 		private int ignores = 0;
 		private int exceptions = 0;
 
+		public Counts()
+		{}
+
+		public Counts(int right, int wrong, int ignores, int exceptions)
+		{
+			this.right = right;
+			this.wrong = wrong;
+			this.ignores = ignores;
+			this.exceptions = exceptions;
+		}
+
 		public override string ToString()
 		{
 			return
@@ -48,6 +59,40 @@ namespace fit
 		{
 			get { return ignores; }
 			set { ignores = value; }
+		}
+
+		public override bool Equals(object o)
+		{
+			if(o is Counts)
+			{
+				Counts that = o as Counts;
+				if(this.right == that.right
+					&& this.wrong == that.wrong
+					&& this.ignores == that.ignores
+					&& this.exceptions == that.exceptions)
+					return true;
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return right * 1000 + wrong * 100 + ignores * 10 + exceptions;
+		}
+
+		public void TallyPageCounts(Counts counts)
+		{
+			if(counts.wrong > 0)
+				wrong += 1;
+			else if(counts.exceptions > 0)
+				exceptions += 1;
+			else if(counts.ignores > 0 && counts.right == 0)
+				ignores += 1;
+			else
+				right += 1;
 		}
 	}
 

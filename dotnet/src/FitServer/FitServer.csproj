@@ -20,7 +20,7 @@
                 PostBuildEvent = "copy $(SolutionDir)src\FitServer\bin\Debug\FitServer.exe $(SolutionDir)"
                 RootNamespace = "FitServer"
                 RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = "fit.FitServer"
+                StartupObject = ""
             >
                 <Config
                     Name = "Debug"
@@ -87,9 +87,8 @@
                 />
                 <Reference
                     Name = "fit"
-                    Project = "{483287D5-0C87-4257-AB40-C75C02F2ECF6}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                    Private = "True"
+                    AssemblyName = "fit"
+                    HintPath = "..\fit\bin\Debug\fit.dll"
                 />
             </References>
         </Build>
@@ -101,47 +100,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FitServer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "FitServerTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ISocketWrapper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PathParser.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PathParserFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PathParserTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SocketUtils.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SocketUtilsTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SocketWrapper.cs"
+                    RelPath = "Main.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

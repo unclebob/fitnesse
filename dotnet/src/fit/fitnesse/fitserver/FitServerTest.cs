@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	[TestFixture]
 	public class FitServerTest

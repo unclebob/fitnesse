@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace fit
+namespace fitnesse.fitserver
 {
 	public class PathParser
 	{

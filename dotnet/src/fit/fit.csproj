@@ -375,6 +375,76 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "fitnesse\fitserver\FitServer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\FitServerTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\ISocketWrapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\PageResult.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\PageResultTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\PathParser.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\PathParserTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\Protocol.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\SocketUtils.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\SocketUtilsTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\SocketWrapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\TestRunner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\TestRunnerFixtureListener.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fitserver\TestRunnerTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "fitnesse\handlers\AbstractCellHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -28,6 +28,7 @@ namespace fitnesse.fitserver
 		[Test]
 		public void TestMakeHttpRequest()
 		{
+			runner.usingDownloadedPaths = false;
 			runner.pageName = "SomePageName";
 			string request = runner.MakeHttpRequest();
 			Assert.AreEqual("GET /SomePageName?responder=fitClient HTTP/1.1\r\n\r\n", request);
@@ -53,9 +54,11 @@ namespace fitnesse.fitserver
 		[Test]
 		public void TestParseArgsWithOptions()
 		{
-			bool result = runner.ParseArgs(new string[] {"-v", "-debug", "-results", "stdout", "localhost", "8081", "SomeTestPage"});
+			bool result = runner.ParseArgs(new string[] {"-v", "-debug", "-nopaths", 
+				"-results", "stdout", "localhost", "8081", "SomeTestPage"});
 			Assert.IsTrue(runner.verbose);
 			Assert.IsTrue(runner.debug);
+			Assert.IsFalse(runner.usingDownloadedPaths);
 			Assert.IsTrue(result);
 			Assert.AreEqual("localhost", runner.host);
 			Assert.AreEqual(8081, runner.port);

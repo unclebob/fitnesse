@@ -16,6 +16,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "acceptanceTests", "src\acce
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "src\TestRunner\TestRunner.csproj", "{27ECAA53-8F5B-4E8B-9C80-215B9DD7FC1D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FF0B7C04-6823-4A2E-BA8A-D12223D7F9D2} = {FF0B7C04-6823-4A2E-BA8A-D12223D7F9D2}
+		{483287D5-0C87-4257-AB40-C75C02F2ECF6} = {483287D5-0C87-4257-AB40-C75C02F2ECF6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -38,6 +44,10 @@ Global
 		{D244BC7D-BB6B-4327-AA09-49A56256AD5B}.Debug.Build.0 = Debug|.NET
 		{D244BC7D-BB6B-4327-AA09-49A56256AD5B}.Release.ActiveCfg = Release|.NET
 		{D244BC7D-BB6B-4327-AA09-49A56256AD5B}.Release.Build.0 = Release|.NET
+		{27ECAA53-8F5B-4E8B-9C80-215B9DD7FC1D}.Debug.ActiveCfg = Debug|.NET
+		{27ECAA53-8F5B-4E8B-9C80-215B9DD7FC1D}.Debug.Build.0 = Debug|.NET
+		{27ECAA53-8F5B-4E8B-9C80-215B9DD7FC1D}.Release.ActiveCfg = Release|.NET
+		{27ECAA53-8F5B-4E8B-9C80-215B9DD7FC1D}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
