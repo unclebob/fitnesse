@@ -22,6 +22,11 @@ public class SearchFormResponderTest extends RegexTest
 	{
 	}
 
+	public void testFocusOnSearchBox() throws Exception
+	{
+		assertSubString("onload=\"document.forms[0].searchString.focus()\"", content);
+	}
+
 	public void testHtml() throws Exception
 	{
 		assertHasRegexp("form", content);

@@ -19,6 +19,7 @@ public class SearchFormResponder implements Responder
 	private String html(FitNesseContext context) throws Exception
 	{
 		HtmlPage page = context.htmlPageFactory.newPage();
+		page.body.addAttribute("onload", "document.forms[0].searchString.focus()");
 		HtmlUtil.addTitles(page, "Search Form");
 		page.main.use(makeRightColumn());
 		return page.html();
