@@ -6,7 +6,7 @@ import fit.ColumnFixture;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.StringTokenizer;
+import java.util.*;
 import fitnesse.wikitext.Utils;
 
 public class ResponseExaminer extends ColumnFixture
@@ -16,6 +16,7 @@ public class ResponseExaminer extends ColumnFixture
 	public String value;
 	public int number;
 	private Matcher matcher;
+	private int currentLine = 0;
 
 	public String contents() throws Exception
 	{
@@ -26,6 +27,25 @@ public class ResponseExaminer extends ColumnFixture
 	{
 		return Utils.escapeText(FitnesseFixtureContext.sender.sentData());
 	}
+
+	public boolean inOrder() throws Exception
+	{
+		if (value == null) {
+			return false;
+		}
+		String pageContent = FitnesseFixtureContext.sender.sentData();
+		String[] lines = arrayifyLines(pageContent);
+		for(int i = currentLine; i < lines.length; i++)
+		{
+			if (value.equals(lines[i].trim()))
+			{
+				currentLine = i;
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	public int matchCount() throws Exception
 	{
@@ -65,16 +85,32 @@ public class ResponseExaminer extends ColumnFixture
 		else if(type.equals("line"))
 		{
 			String pageContent = FitnesseFixtureContext.page.getData().getHtml();
-			String lineizedContent = pageContent.replaceAll("<br>", System.getProperty("line.separator"));
-			StringTokenizer t = new StringTokenizer(lineizedContent, System.getProperty("line.separator"));
+			String lineizedContent = convertBreaksToLineSeparators(pageContent);
+			StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
 			for(int i = number; i != 0; i--)
-				value = t.nextToken();
+				value = tokenizedLines.nextToken();
 			return value.trim();
 		}
 		else
 		{
 			throw new Exception("Bad type in ResponseExaminer");
 		}
+	}
+
+	private StringTokenizer tokenizeLines(String lineizedContent)
+	{
+		return new StringTokenizer(lineizedContent, System.getProperty("line.separator"));
+	}
+
+	private String[] arrayifyLines(String lineizedContent)
+	{
+		return lineizedContent.split(System.getProperty("line.separator"));
+	}
+
+	private String convertBreaksToLineSeparators(String pageContent)
+	{
+		String lineizedContent = pageContent.replaceAll("<br>", System.getProperty("line.separator"));
+		return lineizedContent;
 	}
 
 	public String found()
