@@ -104,4 +104,5 @@ public class ParentWidgetTest extends TestCase
 		assertEquals("someValue", parent1.getVariable("someKey"));
 		assertEquals("someValue", parent2.getVariable("someKey"));
 	}
+
 }

@@ -25,6 +25,17 @@ public class WidgetRootTest extends RegexTest
 		assertEquals("Variable #1", data.getVariable("v1"));
 	}
 
+	public void testVariablesFromSystemProperties() throws Exception
+	{
+		WikiPage root = InMemoryPage.makeRoot("RooT");
+		PageData data = root.getData();
+		System.getProperties().setProperty("widgetRootTestKey", "widgetRootTestValue");
+		root.commit(data);
+		WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "!define v2 {blah}\n${v1}\n");
+		data = page.getData();
+		assertEquals("widgetRootTestValue", data.getVariable("widgetRootTestKey"));
+	}
+
 	public void testProcessLiterals() throws Exception
 	{
 		WidgetRoot root = new WidgetRoot("", rootPage);
