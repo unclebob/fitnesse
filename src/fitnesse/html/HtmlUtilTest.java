@@ -82,4 +82,14 @@ public class HtmlUtilTest extends RegexTest
 		String expected = "<div class=\"myClass\"></div>" + HtmlElement.endl;
 		assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
 	}
+
+    public void testMakeBreadCrumbsWithCurrentPageLinkedWithEmptyArray() throws Exception
+    {
+        try {
+            HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(".");
+            HtmlUtil.makeBreadCrumbsWithCurrentPageLinked("");
+        } catch (Exception e) {
+            fail("should not throw excepotion");
+        }
+    }
 }

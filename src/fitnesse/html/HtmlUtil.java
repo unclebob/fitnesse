@@ -150,10 +150,11 @@ public class HtmlUtil
 		return tagGroup;
 	}
 
-	private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail)
-	  throws Exception
+	private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail) throws Exception
 	{
-		String crumb = crumbs[crumbs.length - 1];
+        String crumb = "";
+        if(crumbs.length > 0)
+		    crumb = crumbs[crumbs.length - 1];
 		HtmlTag link = makeLink("/" + trail + crumb, crumb);
 		link.head = HtmlUtil.BR.html();
 		link.addAttribute("class", "page_title");
