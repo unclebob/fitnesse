@@ -1,4 +1,4 @@
-// Copyright (C) 2003,2004 by Object Mentor, Inc. All rights reserved.
+// Copyright (C) 2003,2004,2005 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
@@ -246,12 +246,6 @@ public class ResponderFactoryTest extends TestCase
 	public void testSymbolicLinkResponder() throws Exception
 	{
 		assertResponderTypeMatchesInput("symlink", SymbolicLinkResponder.class);
-	}
-
-	public void testBlogResponder() throws Exception
-	{
-		assertResponderTypeMatchesInput("blog", BlogResponder.class);
-		assertResponderTypeMatchesInput("addBlogComment", AddBlogCommentResponder.class);
 	}
 
 	public void testWillDisplayVirtualPages() throws Exception

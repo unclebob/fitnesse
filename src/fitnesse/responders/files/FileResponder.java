@@ -1,4 +1,4 @@
-// Copyright (C) 2003,2004 by Object Mentor, Inc. All rights reserved.
+// Copyright (C) 2003,2004,2005 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
@@ -118,14 +118,22 @@ public class FileResponder implements Responder
 
 	private void setContentType(File file, Response response)
 	{
-		String contentType = fileNameMap.getContentTypeFor(file.getName());
+		String contentType = getContentType(file.getName());
+		response.setContentType(contentType);
+	}
+
+	public static String getContentType(String filename)
+	{
+		String contentType = fileNameMap.getContentTypeFor(filename);
 		if(contentType == null)
 		{
-			if(file.getName().endsWith(".css"))
+			if(filename.endsWith(".css"))
 				contentType = "text/css";
+			else if(filename.endsWith(".jar"))
+				contentType = "application/x-java-archive";
 			else
 				contentType = "text/plain";
 		}
-		response.setContentType(contentType);
+		return contentType;
 	}
 }

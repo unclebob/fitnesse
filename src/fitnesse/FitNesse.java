@@ -1,4 +1,4 @@
-// Copyright (C) 2003,2004 by Object Mentor, Inc. All rights reserved.
+// Copyright (C) 2003,2004,2005 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
@@ -14,7 +14,7 @@ import java.io.File;
 
 public class FitNesse
 {
-	public static final String VERSION = "20050301";
+	public static final String VERSION = "20050404";
 
 	private FitNesseContext context = new FitNesseContext();
 	private SocketService theService;

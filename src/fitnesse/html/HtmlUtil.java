@@ -1,4 +1,4 @@
-// Copyright (C) 2003,2004 by Object Mentor, Inc. All rights reserved.
+// Copyright (C) 2003,2004,2005 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.html;
 
@@ -152,19 +152,24 @@ public class HtmlUtil
 
 	private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail) throws Exception
 	{
-        String crumb = "";
-        if(crumbs.length > 0)
-		    crumb = crumbs[crumbs.length - 1];
+		String crumb = getLastCrumb(crumbs);
 		HtmlTag link = makeLink("/" + trail + crumb, crumb);
 		link.head = HtmlUtil.BR.html();
 		link.addAttribute("class", "page_title");
 		return link;
 	}
 
-	private static HtmlTag getLastCrumbAsText(String[] crumbs)
-	  throws Exception
+	private static String getLastCrumb(String[] crumbs)
 	{
-		String crumb = crumbs[crumbs.length - 1];
+		String crumb = "";
+		if(crumbs.length > 0)
+			crumb = crumbs[crumbs.length - 1];
+		return crumb;
+	}
+
+	private static HtmlTag getLastCrumbAsText(String[] crumbs) throws Exception
+	{
+		String crumb = getLastCrumb(crumbs);
 		HtmlTag thisPage = new HtmlTag("span", crumb);
 		thisPage.addAttribute("class", "page_title");
 		thisPage.head = HtmlUtil.BR.html();
