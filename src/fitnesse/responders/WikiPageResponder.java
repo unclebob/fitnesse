@@ -57,7 +57,7 @@ public class WikiPageResponder implements SecureResponder
 		WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
 		String fullPathName = PathParser.render(fullPath);
 		html.title.use(fullPathName);
-		html.header.use(HtmlUtil.makeBreadCrumbs(fullPathName));
+		html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
 		html.actions.use(HtmlUtil.makeActions(pageData));
 		html.main.use(HtmlUtil.addHeaderAndFooter(page, HtmlUtil.testableHtml(pageData)));
 

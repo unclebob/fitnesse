@@ -37,7 +37,7 @@ public class WikiPageResponderTest extends RegexTest
 		assertSubString("<body", body);
 		assertSubString("child content", body);
 		assertSubString("href=\"ChildPage?whereUsed\"", body);
-		assertSubString("ChildPage</a>", body);
+		assertSubString("ChildPage</span>", body);
 		assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
 	}
 

@@ -122,34 +122,52 @@ public class HtmlUtil
 		return link;
 	}
 
-	public static TagGroup makeBreadCrumbs(String path) throws Exception
+	public static TagGroup makeBreadCrumbsWithCurrentPageLinked(String path) throws Exception
 	{
-		return makeBreadCrumbs(path, ".");
+		return makeBreadCrumbsWithCurrentPageLinked(path, ".");
 	}
 
-	public static TagGroup makeBreadCrumbs(String path, String separator) throws Exception
+	public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(String trail) throws Exception
 	{
-		String trail = "";
-		TagGroup group = new TagGroup();
-		String[] crumbs = path.split("[" + separator + "]");
-		for(int i = 0; i < crumbs.length; i++)
-		{
-			String crumb = crumbs[i];
-			HtmlTag link = makeLink("/" + trail + crumb, crumb);
-			if(i == crumbs.length - 1)
-			{
-				link.head = HtmlUtil.BR.html();
-				link.addAttribute("class", "page_title");
-			}
-			else
-			{
-				link.tail = separator;
-				trail = trail + crumb + separator;
-			}
-			group.add(link);
-		}
+		return makeBreadCrumbsWithCurrentPageNotLinked(trail, ".");
+	}
 
-		return group;
+	public static TagGroup makeBreadCrumbsWithCurrentPageLinked(String path, String separator) throws Exception
+	{
+		TagGroup tagGroup = new TagGroup();
+		String[] crumbs = path.split("[" + separator + "]");
+		String trail = makeAllButLastCrumb(crumbs, separator, tagGroup);
+		tagGroup.add(getLastCrumbAsLink(crumbs, trail));
+		return tagGroup;
+	}
+
+	public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(String path, String separator) throws Exception
+	{
+		TagGroup tagGroup = new TagGroup();
+		String[] crumbs = path.split("[" + separator + "]");
+		makeAllButLastCrumb(crumbs, separator, tagGroup);
+		tagGroup.add(getLastCrumbAsText(crumbs));
+		return tagGroup;
+	}
+
+	private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail)
+	  throws Exception
+	{
+		String crumb = crumbs[crumbs.length - 1];
+		HtmlTag link = makeLink("/" + trail + crumb, crumb);
+		link.head = HtmlUtil.BR.html();
+		link.addAttribute("class", "page_title");
+		return link;
+	}
+
+	private static HtmlTag getLastCrumbAsText(String[] crumbs)
+	  throws Exception
+	{
+		String crumb = crumbs[crumbs.length - 1];
+		HtmlTag thisPage = new HtmlTag("span", crumb);
+		thisPage.addAttribute("class", "page_title");
+		thisPage.head = HtmlUtil.BR.html();
+		return thisPage;
 	}
 
 	public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) throws Exception
@@ -159,10 +177,24 @@ public class HtmlUtil
 
 	public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception
 	{
-		TagGroup group = makeBreadCrumbs(trail, separator);
+		TagGroup group = makeBreadCrumbsWithCurrentPageLinked(trail, separator);
 		group.add(HtmlUtil.BR);
 		group.add(HtmlUtil.makeSpanTag("page_type", type));
 		return group;
+	}
+
+	private static String makeAllButLastCrumb(String[] crumbs, String separator, TagGroup group)
+	{
+		String trail = "";
+		for(int i = 0; i < crumbs.length - 1; i++)
+		{
+			String crumb = crumbs[i];
+			HtmlTag link = makeLink("/" + trail + crumb, crumb);
+			link.tail = separator;
+			trail = trail + crumb + separator;
+			group.add(link);
+		}
+		return trail;
 	}
 
 	public static HtmlTag makeActions(PageData pageData) throws Exception

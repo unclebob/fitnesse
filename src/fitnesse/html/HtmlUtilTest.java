@@ -9,15 +9,48 @@ public class HtmlUtilTest extends RegexTest
 {
 	private static final String endl = HtmlElement.endl;
 
-	public void testBreadCrumbsTitle() throws Exception
+	public void testBreadCrumbsWithCurrentPageLinked() throws Exception
 	{
 		String trail = "1.2.3.4";
-		HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbs(trail);
-		String expected = "<a href=\"/1\">1</a>." + endl +
-		  "<a href=\"/1.2\">2</a>." + endl +
-		  "<a href=\"/1.2.3\">3</a>." + endl +
-		  "<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>" + endl;
+		HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(trail);
+		String expected = getBreadCrumbsWithLastOneLinked();
 		assertEquals(expected, breadcrumbs.html());
+	}
+
+	public void testBreadCrumbsWithCurrentPageNotLinked() throws Exception
+	{
+		String trail = "1.2.3.4";
+		HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(trail);
+		String expected = getBreadCrumbsWithLastOneNotLinked();
+		assertEquals(expected, breadcrumbs.html());
+	}
+
+	public void testBreadCrumbsWithPageType() throws Exception
+	{
+		String trail = "1.2.3.4";
+		HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithPageType(trail, "Some Type");
+		String expected = getBreadCrumbsWithLastOneLinked() +
+		  "<br/><span class=\"page_type\">Some Type</span>" + endl;
+		assertEquals(expected, breadcrumbs.html());
+	}
+
+	private String getBreadCrumbsWithLastOneLinked()
+	{
+		return getFirstThreeBreadCrumbs() +
+		  "<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>" + endl;
+	}
+
+	private String getBreadCrumbsWithLastOneNotLinked()
+	{
+		return getFirstThreeBreadCrumbs() +
+		  "<br/><span class=\"page_title\">4</span>" + endl;
+	}
+
+	private String getFirstThreeBreadCrumbs()
+	{
+		return "<a href=\"/1\">1</a>." + endl +
+		  "<a href=\"/1.2\">2</a>." + endl +
+		  "<a href=\"/1.2.3\">3</a>." + endl;
 	}
 
 	public void testMakeFormTag() throws Exception
