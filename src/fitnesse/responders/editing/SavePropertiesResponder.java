@@ -34,7 +34,7 @@ public class SavePropertiesResponder implements SecureResponder
 	private void saveAttributes(Request request, PageData data) throws Exception
 	{
     List attrs = new LinkedList();
-    attrs.addAll(Arrays.asList(WikiPage.STANDARD_ATTRIBUTES));
+    attrs.addAll(Arrays.asList(WikiPage.NON_SECURITY_ATTRIBUTES));
     attrs.addAll(Arrays.asList(WikiPage.SECURITY_ATTRIBUTES));
 
     for(Iterator i = attrs.iterator(); i.hasNext();)

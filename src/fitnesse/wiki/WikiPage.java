@@ -4,7 +4,7 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 public interface WikiPage extends Serializable, Comparable
 {
@@ -12,7 +12,11 @@ public interface WikiPage extends Serializable, Comparable
 	public static final String SECURE_WRITE = "secure-write";
 	public static final String SECURE_TEST = "secure-test";
 	public static final String LAST_MODIFYING_USER = "LastModifyingUser";
-	public String[] STANDARD_ATTRIBUTES = {"Test", "Search", "Edit", "Properties", "Suite", "Versions", "Refactor", "WhereUsed", "Files"};
+	public String[] PAGE_ACTION_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed"};
+	public String[] NAVIGATION_ATTRIBUTES = {"Files", "Search"};
+	//TODO - this is ugly but some code needs a list of both lists combined - move that to a method somewhere please.
+	public String[] NON_SECURITY_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed","Files", "Search"};
+
 	public String[] SECURITY_ATTRIBUTES = {SECURE_READ, SECURE_WRITE, SECURE_TEST};
 
 	public WikiPage getParent() throws Exception;

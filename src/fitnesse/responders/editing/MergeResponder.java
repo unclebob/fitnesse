@@ -110,9 +110,9 @@ public class MergeResponder implements Responder
 	private String addHiddenAttributes()
 	{
 		StringBuffer buffer = new StringBuffer();
-		for(int i = 0; i < WikiPage.STANDARD_ATTRIBUTES.length; i++)
+		for(int i = 0; i < WikiPage.NON_SECURITY_ATTRIBUTES.length; i++)
 		{
-			String attribute = WikiPage.STANDARD_ATTRIBUTES[i];
+			String attribute = WikiPage.NON_SECURITY_ATTRIBUTES[i];
 			if(request.hasInput(attribute))
 				buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
 		}

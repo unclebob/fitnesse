@@ -184,4 +184,41 @@ public class PropertiesResponderTest extends RegexTest
 		assertSubString("LinkTwo", content);
 		assertSubString("<a href=\"SomePage?responder=symlink&removal=LinkTwo\">remove</a>", content);
 	}
+
+	public void testActionPropertiesHtml() throws Exception
+	{
+		WikiPage page = root.addChildPage("SomePage");
+		PageData data = page.getData();
+		String html = new PropertiesResponder().makeTestActionCheckboxesHtml(data).html();
+		assertSubString("<div style=\"float: left; width: 150px;\">Actions:", html);
+		assertSubString("Actions:", html);
+		assertSubString("<input type=\"checkbox\" name=\"Test\"/> - Test", html);
+		assertSubString("<input type=\"checkbox\" name=\"Suite\"/> - Suite", html);
+		assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
+		assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/> - Versions", html);
+		assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/> - Properties", html);
+		assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/> - Refactor", html);
+		assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/> - WhereUsed", html);
+	}
+
+	public void testMakeNavigationPropertiesHtml() throws Exception
+	{
+		WikiPage page = root.addChildPage("SomePage");
+		PageData data = page.getData();
+		String html = new PropertiesResponder().makeNavigationCheckboxesHtml(data).html();
+		assertSubString("<div style=\"float: left; width: 150px;\">Navigation:", html);
+		assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
+		assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
+	}
+
+	public void testMakeSecurityPropertiesHtml() throws Exception
+	{
+		WikiPage page = root.addChildPage("SomePage");
+		PageData data = page.getData();
+		String html = new PropertiesResponder().makeSecurityCheckboxesHtml(data).html();
+		assertSubString("<div style=\"float: left; width: 150px;\">Security:", html);
+		assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
+		assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);
+		assertSubString("<input type=\"checkbox\" name=\"secure-test\"/> - secure-test", html);
+	}
 }

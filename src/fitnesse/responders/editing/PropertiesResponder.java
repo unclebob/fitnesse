@@ -52,7 +52,7 @@ public class PropertiesResponder implements SecureResponder
 		return page.html();
 	}
 
-	private HtmlTag makeAttributeCheckbox(String attribute) throws Exception
+	private HtmlTag makeAttributeCheckbox(String attribute, PageData pageData) throws Exception
 	{
 		HtmlTag checkbox = makeCheckbox(attribute);
 		if(pageData.hasAttribute(attribute))
@@ -102,8 +102,9 @@ public class PropertiesResponder implements SecureResponder
 
 		HtmlTag trisection = new HtmlTag("div");
 		trisection.addAttribute("style", "height: 200px");
-		trisection.add(makePropertiesHtml());
-		trisection.add(makeSecuritiesHtml());
+		trisection.add(makeTestActionCheckboxesHtml(pageData));
+		trisection.add(makeNavigationCheckboxesHtml(pageData));
+		trisection.add(makeSecurityCheckboxesHtml(pageData));
 		trisection.add(makeVirtualWikiHtml());
 		form.add(trisection);
 
@@ -127,36 +128,6 @@ public class PropertiesResponder implements SecureResponder
 		vwInput.addAttribute("size", "40");
 		virtualWiki.add(vwInput);
 		return virtualWiki;
-	}
-
-	private HtmlTag makeSecuritiesHtml() throws Exception
-	{
-		HtmlTag securities = new HtmlTag("div");
-		securities.addAttribute("style", "float: left; width: 150px;");
-		securities.add("Security Properties:");
-
-		for(int i = 0; i < WikiPage.SECURITY_ATTRIBUTES.length; i++)
-		{
-			String securityAttribute = WikiPage.SECURITY_ATTRIBUTES[i];
-			securities.add(HtmlUtil.BR);
-			securities.add(makeAttributeCheckbox(securityAttribute));
-		}
-		return securities;
-	}
-
-	private HtmlTag makePropertiesHtml() throws Exception
-	{
-		HtmlTag propertiesDiv = new HtmlTag("div");
-		propertiesDiv.addAttribute("style", "float: left; width: 150px;");
-
-		propertiesDiv.add("Page Properties:");
-		for(int i = 0; i < WikiPage.STANDARD_ATTRIBUTES.length; i++)
-		{
-			String attribute = WikiPage.STANDARD_ATTRIBUTES[i];
-			propertiesDiv.add(HtmlUtil.BR);
-			propertiesDiv.add(makeAttributeCheckbox(attribute));
-		}
-		return propertiesDiv;
 	}
 
 	private HtmlTag makeImportForm()
@@ -254,4 +225,36 @@ public class PropertiesResponder implements SecureResponder
 	{
 		return new SecureReadOperation();
 	}
+
+	public HtmlTag makeTestActionCheckboxesHtml(PageData pageData) throws Exception
+	{
+		return makeAttributeCheckboxesHtml("Actions:", WikiPage.PAGE_ACTION_ATTRIBUTES, pageData);
+	}
+
+	public HtmlElement makeNavigationCheckboxesHtml(PageData pageData) throws Exception
+	{
+		return makeAttributeCheckboxesHtml("Navigation:", WikiPage.NAVIGATION_ATTRIBUTES, pageData);
+	}
+
+	public HtmlTag makeSecurityCheckboxesHtml(PageData pageData) throws Exception
+	{
+		return makeAttributeCheckboxesHtml("Security:", WikiPage.SECURITY_ATTRIBUTES, pageData);
+	}
+
+	private HtmlTag makeAttributeCheckboxesHtml(String label, String[] attributes, PageData pageData)
+	  throws Exception
+	{
+		HtmlTag div = new HtmlTag("div");
+		div.addAttribute("style", "float: left; width: 150px;");
+
+		div.add(label);
+		for(int i = 0; i < attributes.length; i++)
+		{
+			String attribute = attributes[i];
+			div.add(HtmlUtil.BR);
+			div.add(makeAttributeCheckbox(attribute, pageData));
+		}
+		return div;
+	}
+
 }
