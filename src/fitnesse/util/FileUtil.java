@@ -147,4 +147,32 @@ public class FileUtil
 		while(!reader.isEof())
 			output.write(reader.readBytes(1000));
 	}
+
+	public static File createDir(String path)
+	{
+		makeDir(path);
+		return new File(path);
+	}
+
+	public static File[] getDirectoryListing(File dir)
+	{
+		SortedSet dirSet = new TreeSet();
+		SortedSet fileSet = new TreeSet();
+		File[] files = dir.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isDirectory())
+				dirSet.add(files[i]);
+			else
+				fileSet.add(files[i]);
+		}
+    List fileList = new LinkedList();
+		fileList.addAll(dirSet);
+		fileList.addAll(fileSet);
+		return (File[]) fileList.toArray(new File[]{});
+	}
+
+	public static String buildPath(String[] parts)
+	{
+		return StringUtil.join(Arrays.asList(parts), System.getProperty("file.separator"));
+	}
 }

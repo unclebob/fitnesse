@@ -2,14 +2,14 @@ package fitnesse.responders.files;
 
 import fitnesse.http.*;
 import fitnesse.*;
+import fitnesse.util.FileUtil;
 import fitnesse.authentication.*;
 import fitnesse.responders.*;
 import fitnesse.html.HtmlTableListingBuilder;
 import fitnesse.html.*;
 import java.io.File;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class DirectoryResponder implements SecureResponder
 {
@@ -57,7 +57,7 @@ public class DirectoryResponder implements SecureResponder
 	private String makeRightColumn() throws Exception
 	{
 		TagGroup html = new TagGroup();
-		html.add(addFiles(requestedDirectory.listFiles()));
+		html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));
 		html.add(HtmlUtil.HR.html());
 		html.add(makeUploadForm());
 		html.add(makeDirectoryForm());

@@ -6,6 +6,12 @@ import fitnesse.util.FileUtil;
 
 public class FileSection extends Fixture
 {
+	private static File fileSection;
+
+	public static File getFileSection() {
+		return fileSection;
+	}
+
 	public void doTable(Parse table)
 	{
 		try
@@ -16,11 +22,13 @@ public class FileSection extends Fixture
 				new File(FitnesseFixtureContext.baseDir).mkdir();
 				File dir = new File(FitnesseFixtureContext.baseDir + "/" + FitnesseFixtureContext.root.getName());
 				dir.mkdir();
-				new File(dir, "files").mkdir();
+				fileSection = new File(dir, "files");
+				fileSection.mkdir();
 			}
 			else
 			{
 				FileUtil.deleteFileSystemDirectory(FitnesseFixtureContext.baseDir);
+				fileSection = null;
 			}
 		}
 		catch(Exception e)
