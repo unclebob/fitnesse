@@ -16,13 +16,8 @@ public class HtmlUtilTest extends RegexTest
 		String expected = "<a href=\"/1\">1</a>." + endl +
 		  "<a href=\"/1.2\">2</a>." + endl +
 		  "<a href=\"/1.2.3\">3</a>." + endl +
-		  "<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>";
-
-		String html = breadcrumbs.html();
-		assertSubString(expected, html);
-		assertSubString("href=\"/1.2.3.4\"", html);
-		assertSubString("class=\"page_title\"", html);
-		assertTrue(html.endsWith(">4</a>" + endl));
+		  "<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>" + endl;
+		assertEquals(expected, breadcrumbs.html());
 	}
 
 	public void testMakeFormTag() throws Exception
