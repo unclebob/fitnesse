@@ -1,0 +1,2132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NAnt.Core</name>
+    </assembly>
+    <members>
+        <member name="T:SourceForge.NAnt.Attributes.BooleanValidatorAttribute">
+            <summary>Indicates that field should be able to be converted into a Boolean.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.BuildAttributeAttribute">
+            <summary>Indicates that field should be treated as a xml attribute for the task.</summary>
+            <example>
+            Examples of how to specify task attributes
+            <code>
+            // task XmlType default is string
+            [BuildAttribute("out", Required=true)]
+            string _out = null; // assign default value here
+            
+            [BuildAttribute("optimize")]
+            [BooleanValidator()]
+            // during ExecuteTask you can safely use Convert.ToBoolean(_optimize)
+            string _optimize = Boolean.FalseString;
+            
+            [BuildAttribute("warnlevel")]
+            [Int32Validator(0,4)] // limit values to 0-4
+            // during ExecuteTask you can safely use Convert.ToInt32(_optimize)
+            string _warnlevel = "0";
+            
+            [FileSet("sources")]
+            FileSet _sources = new FileSet();
+            </code>
+            NOTE: Attribute values must be of type of string if you want
+            to be able to have macros.  The field stores the exact value during
+            InitializeTask.  Just before ExecuteTask is called NAnt will expand
+            all the macros with the current values.
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.BuildElementArrayAttribute">
+            <summary>Indicates that property should be treated as a xml arrayList for the task.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.BuildElementAttribute">
+            <summary>Indicates that field should be treated as a xml file set for the task.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.ElementNameAttribute">
+            <summary>Indicates that class should be treated as a NAnt element.</summary>
+            <remarks>
+            Attach this attribute to a subclass of Element to have NAnt be able
+            to recognize it.  The name should be short but must not confict
+            with any other element already in use.
+            </remarks>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.Int32ValidatorAttribute">
+            <summary>Indicates that field should be able to be converted into a Int32 within the given range.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.TaskAttributeAttribute">
+            <summary>Indicates that field should be treated as a xml attribute for the task.</summary>
+            <example>
+            Examples of how to specify task attributes
+            <code>
+            // task XmlType default is string
+            [TaskAttribute("out", Required=true)]
+            string _out = null; // assign default value here
+            
+            [TaskAttribute("optimize")]
+            [BooleanValidator()]
+            // during ExecuteTask you can safely use Convert.ToBoolean(_optimize)
+            string _optimize = Boolean.FalseString;
+            
+            [TaskAttribute("warnlevel")]
+            [Int32Validator(0,4)] // limit values to 0-4
+            // during ExecuteTask you can safely use Convert.ToInt32(_optimize)
+            string _warnlevel = "0";
+            
+            [FileSet("sources")]
+            FileSet _sources = new FileSet();
+            </code>
+            NOTE: Attribute values must be of type of string if you want
+            to be able to have macros.  The field stores the exact value during
+            InitializeTask.  Just before ExecuteTask is called NAnt will expand
+            all the macros with the current values.
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.FileSetAttribute">
+            <summary>Indicates that field should be treated as a xml file set for the task.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Attributes.TaskNameAttribute">
+            <summary>Indicates that class should be treated as a task.</summary>
+            <remarks>
+            Attach this attribute to a subclass of Task to have NAnt be able
+            to recognize it.  The name should be short but must not confict
+            with any other task already in use.
+            </remarks>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.BaseTest">
+            <summary>
+            Class to represent a test element of an NUnit task  
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Element">
+            <summary>Models a NAnt XML element in the build file.</summary>
+            <remarks>
+              <para>Automatically validates attributes in the element based on Attribute settings in the derived class.</para>
+            </remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Element.#ctor">
+            <summary>The default contstructor.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Element.#ctor(SourceForge.NAnt.Element)">
+            <summary>A copy contstructor.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Element.InitializeAttributes(System.Xml.XmlNode)">
+            <summary>Initializes all build attributes.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Element.Initialize(System.Xml.XmlNode)">
+            <summary>Performs default initialization.</summary>
+            <remarks>
+              <para>Derived classes that wish to add custom initialization should override <see cref="M:SourceForge.NAnt.Element.InitializeElement(System.Xml.XmlNode)"/>.</para>
+            </remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Element.InitializeElement(System.Xml.XmlNode)">
+            <summary>Allows derived classes to provide extra initialization and validation not covered by the base class.</summary>
+            <param name="elementNode">The xml node of the element to use for initialization.</param>
+        </member>
+        <member name="P:SourceForge.NAnt.Element.Location">
+            <summary><see cref="P:SourceForge.NAnt.Element.Location"/> in the build file where the element is defined.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Element.Name">
+            <summary>Name of the XML element used to initialize this element.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Element.Project">
+            <summary><see cref="P:SourceForge.NAnt.Element.Project"/> this element belongs to.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.BaseTest.Class">
+            <summary>Class Name of the test</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.BaseTest.Assembly">
+            <summary>Assembly to Load the test from</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.BaseTest.Fork">
+            <summary>Run the tests in a separate AppDomain</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.BaseTest.HaltOnError">
+            <summary>Stop the build process if an error occurs during the test run</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.BaseTest.HaltOnFailure">
+            <summary>Stop the build process if a test fails (errors are considered failures as well).</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.FormatterType">
+            <summary>
+            The built-in formatter types.
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.FormatterElement">
+            <summary>class to represent the FormatterElement of the NUnit task.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.FormatterElement.Type">
+            <summary>Type of formatter ( means we will load a class of the form (type)Formatter</summary>       
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.FormatterElement.ClassName">
+            <summary>Name of a custom formatter class.</summary> 
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.FormatterElement.Extension">
+            <summary>Extension to append to the output filename..</summary> 
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.FormatterElement.UseFile">
+            <summary>Boolean that determines whether output should be sent to a file.</summary> 
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.IResultFormatter">
+            <summary>Summary description for IResultFormatter.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.IResultFormatter.StartTestSuite(SourceForge.NAnt.Tasks.NUnit.NUnitTest)">
+            <summary>The whole test suite started.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.IResultFormatter.EndTestSuite(SourceForge.NAnt.Tasks.NUnit.TestResultExtra)">
+            <summary>The whole test suite ended.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.IResultFormatter.SetOutput(System.IO.TextWriter)">
+            <summary>Sets the Writer the formatter is supposed to write its results to.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.LogFormatter">
+            <summary>Prints information about running tests directly to the Log class.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.LogFormatter.SetOutput(System.IO.TextWriter)">
+            <summary>Not used, all output goes to Log class.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.LogFormatter.StartTestSuite(SourceForge.NAnt.Tasks.NUnit.NUnitTest)">
+            <summary>Called when the whole test suite has started.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.LogFormatter.EndTestSuite(SourceForge.NAnt.Tasks.NUnit.TestResultExtra)">
+            <summary>Called when the whole test suite has ended.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.LogFormatter.FormatError(System.String,System.String)">
+            <summary>Convert a stack trace line into something that can be clicked on in an IDE output window.</summary>
+            <param name="trace">The StackTrace string, see <see cref="P:System.Exception.StackTrace"/>.</param>
+            <param name="message">The string that gets appended to the end of file(line): portion.</param>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.NUnitTask">
+            <summary>Runs tests using the NUnit framework.</summary>
+            <remarks>
+              <para>See the <a href="http://nunit.sf.net">NUnit home page</a> for more information.</para>
+            </remarks>
+            <example>
+              <para>Run tests in the <c>MyProject.Tests.dll</c> assembly.</para>
+              <para>The test results are logged in <c>results.xml</c> and <c>results.txt</c> using the <c>Xml</c> and <c>Plain</c> formatters, respectively.</para>
+              <code>
+            <![CDATA[
+            <nunit basedir="build" verbose="false" haltonerror="true" haltonfailure="true">
+                <formatter type="Xml"/>
+                <formatter type="Plain"/>
+                <test name="MyProject.Tests.AllTests" assembly="MyProject.Tests.dll" outfile="results"/>
+            </nunit>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Task">
+            <summary>Provides the abstract base class for tasks.</summary>
+            <remarks>A task is a piece of code that can be executed.</remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Task.Execute">
+            <summary>Executes the task unless it is skipped.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Task.InitializeElement(System.Xml.XmlNode)">
+            <summary><note>Deprecated (to be deleted).</note></summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Task.InitializeTask(System.Xml.XmlNode)">
+            <summary>Initializes the task.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Task.ExecuteTask">
+            <summary>Executes the task.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.FailOnError">
+            <summary>Determines if task failure stops the build, or is just reported. Default is "true".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.Verbose">
+            <summary>Task reports detailed build log messages.  Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.IfDefined">
+            <summary>If true then the task will be executed; otherwise skipped. Default is "true".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.UnlessDefined">
+            <summary>Opposite of if.  If false then the task will be executed; otherwise skipped. Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.Name">
+            <summary>The name of the task.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.LogPrefix">
+            <summary>The prefix used when sending messages to the log.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Task.Target">
+            <summary>The target the task belongs to.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.NUnitTask.InitializeTask(System.Xml.XmlNode)">
+            <param name="taskNode">Xml node used to initialize this task instance.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.NUnitTask.getOutput(SourceForge.NAnt.Tasks.NUnit.FormatterElement,SourceForge.NAnt.Tasks.NUnit.NUnitTest)">
+            <summary>Return the file or null if does not use a file.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTask.Fork">
+            <summary>Run the tests in a separate AppDomain.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTask.HaltOnError">
+            <summary>Stop the build process if an error occurs during the test run.</summary>
+            <remarks>Implies haltonfailure.</remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTask.HaltOnFailure">
+            <summary>Stop the build process if a test fails (errors are considered failures as well).</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTask.Timeout">
+            <summary>Cancel the individual tests if they do not finish in the specified time (measured in milliseconds). Ignored if fork is disabled.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTest.OutFile">
+            <summary>Base name of the test result. The full filename is determined by this attribute and the extension of formatter</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTest.ToDir">
+            <summary>Directory to write the reports to.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.NUnitTestRunner.GetSuite(System.String)">
+            <summary>Returns the test suite from a given class.</summary>
+            <remarks>
+            The assemblyQualifiedName parameter needs to be in form:
+            "full.qualified.class.name,Assembly"
+            </remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.NUnitTestRunner.Run">
+            <summary>Runs a Suite extracted from a TestCase subclass.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NUnit.NUnitTestRunner.Formatters">
+            <summary>Collection of the registered formatters.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.PlainTextFormatter">
+            <summary>Prints information about running tests in simple plain text.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.PlainTextFormatter.SetOutput(System.IO.TextWriter)">
+            <summary>Sets the Writer the formatter is supposed to write its results to.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.PlainTextFormatter.StartTestSuite(SourceForge.NAnt.Tasks.NUnit.NUnitTest)">
+            <summary>Called when the whole test suite has started.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.PlainTextFormatter.EndTestSuite(SourceForge.NAnt.Tasks.NUnit.TestResultExtra)">
+            <summary>Called when the whole test suite has ended.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.PlainTextFormatter.FormatError(System.String,System.String)">
+            <summary>Convert a stack trace line into something that can be clicked on in an IDE output window.</summary>
+            <param name="trace">The StackTrace string, see <see cref="P:System.Exception.StackTrace"/>.</param>
+            <param name="message">The string that gets appended to the end of file(line): portion.</param>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.TestResultExtra">
+             <summary>
+             This is purely to decorate NUnits TestResult with extra information such as run-time etc ...
+              TODO come up with a better name
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NUnit.XmlResultFormatter">
+            <summary>Prints detailed information in XML format about running tests.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.XmlResultFormatter.SetOutput(System.IO.TextWriter)">
+            <summary>Sets the Writer the formatter is supposed to write its results to.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.XmlResultFormatter.StartTestSuite(SourceForge.NAnt.Tasks.NUnit.NUnitTest)">
+            <summary>Called when the whole test suite has started.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NUnit.XmlResultFormatter.EndTestSuite(SourceForge.NAnt.Tasks.NUnit.TestResultExtra)">
+            <summary>Called when the whole test suite has ended.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.AlTask">
+            <summary>
+                Wraps al, the assembly linker for the .NET Framework.
+            </summary>
+            <remarks>
+              <para>All specified sources will be embedded using the <c>/embed</c> flag.  Other source types are not supported.</para>
+            </remarks>
+            <example>
+              <para>Create a library containing all icon files in the current directory.</para>
+              <code>
+            <![CDATA[
+            <al output="MyIcons.dll" target="lib">
+                <sources>
+                    <includes name="*.ico"/>
+                </sources>
+            </al>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.ExternalProgramBase">
+            <summary>Provides the abstract base class for tasks that execute external applications.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.ExternalProgramBase.GetCommandLine">
+            <summary>Get the command line arguments, separated by spaces.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.ExternalProgramBase.PrepareProcess(System.Diagnostics.Process@)">
+            <summary>
+            Sets the StartInfo Options and returns a new Process that can be run.
+            </summary>
+            <returns>new Process with information about programs to run, etc.</returns>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExternalProgramBase.ProgramFileName">
+            <summary>Gets the application to start.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExternalProgramBase.ProgramArguments">
+            <summary>Gets the command line arguments for the application.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExternalProgramBase.BaseDirectory">
+            <summary>Gets the working directory for the application.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExternalProgramBase.TimeOut">
+            <summary>The maximum amount of time the application is allowed to execute, expressed in milliseconds.  Defaults to no time-out.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExternalProgramBase.Args">
+            <summary>Get the command line arguments for the application.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AlTask.Output">
+            <summary>The name of the output file for the assembly manifest.
+                This attribute corresponds to the <c>/out</c> flag.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AlTask.OutputTarget">
+            <summary>The target type (one of "lib", "exe", or "winexe").
+                This attribute corresponds to the <c>/t[arget]:</c> flag.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AlTask.Culture">
+            <summary>The culture string associated with the output assembly.
+                The string must be in RFC 1766 format, such as "en-US".
+                This attribute corresponds to the <c>/c[ulture]:</c> flag.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AlTask.Template">
+            <summary>Specifies an assembly from which to get all options except the culture field.
+                The given filename must have a strong name.
+                This attribute corresponds to the <c>/template:</c> flag.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AlTask.Sources">
+            <summary>The set of source files to embed.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.AttribTask">
+            <summary>Changes the file attributes of a file or set of files.</summary>
+            <remarks>
+              <para>The <c>attrib</c> task does not have the concept of turning file attributes off.  Instead you specify all the attributes that you want turned on and the rest are turned off by default.</para>
+              <para>Refer to the <a href="ms-help://MS.NETFrameworkSDK/cpref/html/frlrfSystemIOFileAttributesClassTopic.htm">FileAttributes</a> enumeration in the .NET SDK for more information about file attributes.</para>
+            </remarks>
+            <example>
+              <para>Set the ReadOnly attribute to true for the specified file in the project directory.</para>
+              <code><![CDATA[<attrib file="myfile.txt" readonly="true"/>]]></code>
+              <para>Set the normal file attributes to the specified file.</para>
+              <code><![CDATA[<attrib file="myfile.txt" normal="true"/>]]></code>
+              <para>Set the normal file attributes to all executable files in the current project directory and sub-directories.</para>
+              <code>
+            <![CDATA[
+            <attrib normal="true">
+                <fileset>
+                    <includes name="**/*.exe"/>
+                    <includes name="**/*.dll"/>
+                </fileset>
+            </attrib>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.FileName">
+            <summary>The name of the file which will have its attributes set.  This is provided as an alternate to using the task's fileset.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.AttribFileSet">
+            <summary>All the files in this fileset will have their file attributes set.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.ArchiveAttrib">
+            <summary>Set the archive attribute.  Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.HiddenAttrib">
+            <summary>Set the hidden attribute.  Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.NormalAttrib">
+            <summary>Set the normal file attributes.  This attribute is valid only if used alone.  Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.ReadOnlyAttrib">
+            <summary>Set the read only attribute.  Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.AttribTask.SystemAttrib">
+            <summary>Set the system attribute.  Default is "false".</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.CallTask">
+            <summary>
+            Calls a NAnt target in the current project.
+            </summary>
+            <example>
+                <para>Call the target &quot;build&quot;.</para>
+                <code><![CDATA[<call target="build"/>]]></code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CallTask.TargetName">
+            <summary>NAnt target to call.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CallTask.ForceExecute">
+            <summary>Force a Execute even if the target has already been executed</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.ClTask">
+            <summary>
+                Compiles C/C++ programs using cl, Microsoft's C/C++ compiler.
+            </summary>
+            <remarks>
+              <para>This task is intended for version 13.00.9466 of cl.exe.</para>
+            </remarks>
+            <example>
+              <para>Compile <c>helloworld.cpp</c> for the Common Language Runtime.</para>
+              <code>
+                <![CDATA[
+            <cl outputdir="build" options="/clr">
+                <sources>
+                    <includes name="helloworld.cpp"/>
+                </sources>
+            </cl>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ClTask.Options">
+            <summary>
+            Options to pass to the compiler.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ClTask.OutputDir">
+            <summary>
+            Directory where all output files are placed.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ClTask.PchFile">
+            <summary>
+            The name of the precompiled header file.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ClTask.Sources">
+            <summary>
+            The list of files to compile.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ClTask.Includes">
+            <summary>
+            The list of directories in which to search for include files.
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.CompilerBase">
+            <summary>Provides the abstract base class for a Microsoft compiler task.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.CompilerBase.WriteOptions(System.IO.TextWriter)">
+            <summary>Allows derived classes to provide compiler-specific options.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.CompilerBase.WriteOption(System.IO.TextWriter,System.String)">
+            <summary>Write an option using the default output format.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.CompilerBase.WriteOption(System.IO.TextWriter,System.String,System.String)">
+            <summary>Write an option and its value using the default output format.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.CompilerBase.GetOutputPath">
+            <summary>Gets the complete output path.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.CompilerBase.NeedsCompiling">
+            <summary>Determines whether compilation is needed.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Output">
+            <summary>Output directory for the compilation target.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.OutputTarget">
+            <summary>Output type (<c>library</c> or <c>exe</c>).</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Debug">
+            <summary>Generate debug output (<c>true</c>/<c>false</c>).</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Define">
+            <summary>Define conditional compilation symbol(s). Corresponds to <c>/d[efine]:</c> flag.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Win32Icon">
+            <summary>Icon to associate with the application. Corresponds to <c>/win32icon:</c> flag.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.References">
+            <summary>Reference metadata from the specified assembly files.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Resources">
+            <summary>Set resources to embed.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Modules">
+            <summary>Link the specified modules into this assembly.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CompilerBase.Sources">
+            <summary>The set of source files for compilation.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.CopyTask">
+            <summary>Copies a file or fileset to a new file or directory.</summary>
+            <remarks>
+              <para>Files are only copied if the source file is newer than the destination file, or if the destination file does not exist. However, you can explicitly overwrite files with the overwrite attribute.</para>
+              <para>Filesets are used to select files to copy. To use a fileset, the todir attribute must be set.</para>
+            </remarks>
+            <example>
+              <para>Copy a single file.</para>
+              <code>&lt;copy file="myfile.txt" tofile="mycopy.txt"/&gt;</code>
+              <para>Copy a set of files to a new directory.</para>
+              <code>
+            <![CDATA[
+            <copy todir="${build.dir}">
+                <fileset basedir="bin">
+                    <includes name="*.dll"/>
+                </fileset>
+            </copy>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.CopyTask.DoFileOperations">
+            <summary>
+            Actually does the file (and possibly empty directory) copies.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CopyTask.SourceFile">
+            <summary>The file to copy.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CopyTask.ToFile">
+            <summary>The file to copy to.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CopyTask.ToDirectory">
+            <summary>The directory to copy to.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CopyTask.Overwrite">
+            <summary>Overwrite existing files even if the destination files are newer. Defaults to "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CopyTask.CopyFileSet">
+            <summary>Filesets are used to select files to copy. To use a fileset, the todir attribute must be set.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.CscTask">
+            <summary>Compiles C# programs using csc, Microsoft's C# compiler.</summary>
+            <example>
+              <para>Compile <c>helloworld.cs</c> to <c>helloworld.exe</c>.</para>
+              <code>
+                <![CDATA[
+            <csc target="exe" output="helloworld.exe" debug="true">
+                <sources>
+                    <includes name="helloworld.cs"/>
+                </sources>
+            </csc>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.CscTask.Doc">
+            <summary>The name of the XML documentation file to generate.
+                This attribute corresponds to the <c>/doc:</c> flag.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.DeleteTask">
+            <summary>Deletes a file, fileset or directory.</summary>
+            <remarks>
+              <para>Deletes either a single file, all files in a specified directory and its sub-directories, or a set of files specified by one or more filesets.</para>
+              <note>If the file attribute is set then the fileset contents will be ignored.  To delete the files in the file set ommit the file attribute in the delete element.</note>
+              <note>Read-only files cannot be deleted.  Use the <see cref="T:SourceForge.NAnt.Tasks.AttribTask"/> first to remove the read-only attribute.</note>
+            </remarks>
+            <example>
+              <para>Delete a single file.</para>
+              <code>&lt;delete file="myfile.txt"/&gt;</code>
+              <para>Delete a directory and the contents within.  If the directory does not exist the task does nothing.</para>
+              <code>&lt;delete dir="${build.dir}" failonerror="false"/&gt;</code>
+              <para>Delete a set of files.  Note the lack of file attribute in the delete element.</para>
+              <code>
+            <![CDATA[
+            <delete>
+                <fileset>
+                    <includes name="${basename}-??.exe"/>
+                    <includes name="${basename}-??.pdb"/>
+                </fileset>
+            </delete>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.DeleteTask.FileName">
+            <summary>The file to delete.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.DeleteTask.DirectoryName">
+            <summary>The directory to delete.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.DeleteTask.DeleteFileSet">
+            <summary>All the files in the file set will be deleted.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.DescriptionTask">
+            <summary>An empty task that allows a build file to contain a description.</summary>
+            <example>
+              <para>Set a description.</para>
+              <code><![CDATA[<description>This is a description.</description>]]></code>
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.EchoTask">
+            <summary>Writes a message to the build log.</summary>
+            <remarks>
+              <para>Macros in the message will be expanded.</para>
+            </remarks>
+            <example>
+              <para>Writes message to build log.</para>
+              <code>&lt;echo message="Hello, World!"/&gt;</code>
+              <para>Writes message with expanded macro to build log.</para>
+              <code>&lt;echo message="Base build directory = ${nant.project.basedir}"/&gt;</code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.EchoTask.Message">
+            <summary>The message to display.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.ExecTask">
+            <summary>Executes a system command.</summary>
+            <example>
+              <para>Ping nant.sourceforge.net.</para>
+              <code><![CDATA[<exec program="ping" commandline="nant.sourceforge.net"/>]]></code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExecTask.FileName">
+            <summary>The program to execute without command arguments.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExecTask.Arguments">
+            <summary>The command line arguments for the program.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExecTask.BaseDirectory">
+            <summary>The directory in which the command will be executed.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ExecTask.TimeOut">
+            <summary>Stop the build if the command does not finish within the specified time.  Specified in milliseconds.  Default is no time out.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.FailTask">
+            <summary>Exit the current build.</summary>
+            <remarks>
+              <para>Exits the current build by throwing a BuildException, optionally printing additional information.</para>
+            </remarks>
+            <example>
+              <para>Will exit the current build with no further information given.</para>
+              <code>&lt;fail/&gt;</code>
+              <para>Will exit the current build and write message to build log.</para>
+              <code>&lt;fail message="Something wrong here."/&gt;</code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.FailTask.Message">
+            <summary>A message giving further information on why the build exited.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.GetTask">
+            <summary>Get a particular file from a URL source.</summary>
+            <remarks>
+              <para>Options include verbose reporting, timestamp based fetches and controlling actions on failures.</para>
+              <para>Currently, only HTTP and UNC protocols are supported. FTP support may be added when more pluggable protocols are added to the System.Net assembly.</para>
+              <para>The <c>useTimeStamp</c> option enables you to control downloads so that the remote file is only fetched if newer than the local copy. If there is no local copy, the download always takes place. When a file is downloaded, the timestamp of the downloaded file is set to the remote timestamp.</para>
+              <note>This timestamp facility only works on downloads using the HTTP protocol.</note>
+            </remarks>
+            <example>
+              <para>Gets the index page of the NAnt home page, and stores it in the file help/index.html.</para>
+              <code>&lt;get src="http://nant.sourceforge.org/" dest="help/index.html"/&gt;</code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.GetTask.InitializeTask(System.Xml.XmlNode)">
+            <summary>Initializes task and ensures the supplied attributes are valid.</summary>
+            <param name="taskNode">Xml node used to define this task instance.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.GetTask.ExecuteTask">
+            <summary>This is where the work is done </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.GetTask.touchFile(System.String,System.DateTime)">
+            <summary>Set the timestamp of a named file to a specified time.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.GetTask.Source">
+            <summary>The URL from which to retrieve a file.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.GetTask.Destination">
+            <summary>The file where to store the retrieved file.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.GetTask.Proxy">
+            <summary>If inside a firewall, proxy server/port information
+            Format: {proxy server name}:{port number}
+            Example: proxy.mycompany.com:8080 </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.GetTask.ignoreErrors">
+            <summary>Log errors but don't treat as fatal. ("true"/"false"). Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.GetTask.useTimeStamp">
+            <summary>Conditionally download a file based on the timestamp of the local copy. HTTP only. ("true"/"false"). Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.GetTask.FileSet">
+            <summary>FileSets are used to select files to get.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.IncludeTask">
+            <summary>Include an external build file.</summary>
+            <remarks>
+              <para>This task is used to break your build file into smaller chunks.  You can load a partial build file and have it included into the build file.</para>
+              <note>Any global (project level) tasks in the included build file are executed when this task is executed.  Tasks in target elements are only executed if that target is executed.</note>
+              <note>The project element attributes are ignored.</note>
+              <note>This task can only be in the global (project level) section of the build file.</note>
+            </remarks>
+            <example>
+              <para>Include the script task that fetches the project version from the file "GetProjectVersion.include".</para>
+              <code><![CDATA[<include buildfile="GetProjectVersion.include"/>]]></code>
+            </example>
+        </member>
+        <member name="F:SourceForge.NAnt.Tasks.IncludeTask._includedFileNames">
+            <summary>Used to check for recursived includes.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.IncludeTask.InitializeTask(System.Xml.XmlNode)">
+            <summary>Verify parameters.</summary>
+            <param name="taskNode">Xml taskNode used to define this task instance.</param>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.IncludeTask.BuildFileName">
+            <summary>Build file to include.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.JscTask">
+            <summary>Compiles Microsoft JScript.NET programs using jsc.</summary>
+            <example>
+              <para>Compile helloworld.js to helloworld.exe.</para>
+              <code>
+                <![CDATA[
+            <jsc target="exe" output="helloworld.exe" debug="true">
+                <sources>
+                    <includes name="helloworld.js"/>
+                </sources>
+            </jsc>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.LibTask">
+            <summary>Run lib.exe, Microsoft's Library Manager.</summary>
+            <example>
+              <para>Create a library.</para>
+              <code>
+            <![CDATA[
+            <lib output="library.lib">
+                <sources>
+                    <includes name="library.obj"/>
+                </sources>
+            </lib>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LibTask.Options">
+            <summary>
+            Options to pass to the compiler.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LibTask.Output">
+            <summary>
+            The output file name.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LibTask.Sources">
+            <summary>
+            The list of files to combine into the output file.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LibTask.LibDirs">
+            <summary>
+            The list of additional library directories to search.
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.LinkTask">
+            <summary>Links files using link, Microsoft's Incremental Linker.</summary>
+            <remarks>
+              <para>This task is intended for version 7.00.9466 of link.exe.</para>
+            </remarks>
+            <example>
+              <para>Combine all object files in the current directory into <c>helloworld.exe</c>.</para>
+              <code>
+            <![CDATA[
+            <link output="helloworld.exe">
+                <sources>
+                    <includes name="*.obj"/>
+                </sources>
+            </link>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LinkTask.Options">
+            <summary>
+            Options to pass to the compiler.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LinkTask.Output">
+            <summary>
+            The output file name.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LinkTask.Sources">
+            <summary>
+            The list of files to combine into the output file.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.LinkTask.LibDirs">
+            <summary>
+            The list of additional library directories to search.
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.MailTask">
+            <summary>A task to send SMTP email.</summary>
+            <remarks>
+            Text and text files to include in the message body may be specified as well as binary attachments.
+            </remarks>
+            <example>
+              <para>Sends an email from nant@sourceforge.net to three recipients with a subject about the attachments.  The body of the message will be the combined contents of body1.txt through body4.txt.  The body1.txt through body3.txt files will also be included as attachments.  The message will be sent using the smtpserver.anywhere.com SMTP server.</para>
+              <code><![CDATA[
+                <mail 
+                  from="nAnt@sourceforge.net" 
+                  tolist="recipient1@sourceforge.net" 
+                  cclist="recipient2@sourceforge.net" 
+                  bcclist="recipient3@sourceforge.net" 
+                  subject="Msg 7: With attachments" 
+                  files="body1.txt,body2.txt;body3.txt,body4.txt" 
+                  attachments="body1.txt,body2.txt;,body3.txt" 
+                  mailhost="smtpserver.anywhere.com"/>
+              ]]></code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.MailTask.InitializeTask(System.Xml.XmlNode)">
+            <summary>Initializes task and ensures the supplied attributes are valid.</summary>
+            <param name="taskNode">Xml node used to define this task instance.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.MailTask.ExecuteTask">
+            <summary>
+            This is where the work is done
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.MailTask.ReadFile(System.String)">
+            <summary>
+            Reads a text file and returns the contents
+            in a string
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.From">
+            <summary>Email address of sender </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.ToList">
+            <summary>Comma- or semicolon-separated list of recipient email addresses</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.CcList">
+            <summary>Comma- or semicolon-separated list of CC: recipient email addresses </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.BccList">
+            <summary> Comma- or semicolon-separated list of BCC: recipient email addresses</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.Mailhost">
+            <summary>Host name of mail server. Defaults to "localhost"</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.Message">
+            <summary>Text to send in body of email message.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.Subject">
+            <summary>Text to send in subject line of email message.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.Format">
+            <summary>Format of the message body. Valid values are "Html" or "Text".  Defaults to "Text".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.Files">
+            <summary>Name(s) of text files to send as part of body of the email message. 
+            Multiple file names are comma- or semicolon-separated.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MailTask.Attachments">
+            <summary>Name(s) of files to send as attachments to email message.
+            Multiple file names are comma- or semicolon-separated.
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.McsTask">
+            <summary>
+            Compiles C# programs using the mono mcs compiler.
+            </summary>
+            <remarks>
+              <para>See the <a href="http://www.go-mono.com">mono home page</a> for more information.</para>
+            </remarks>
+            <example>
+              <para>Compile <c>helloworld.cs</c> to <c>helloworld.exe</c>.</para>
+              <code>
+                <![CDATA[
+            <mcs target="exe" output="helloworld.exe" debug="true">
+                <sources>
+                    <includes name="helloworld.cs"/>
+                </sources>
+            </mcs>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.MkDirTask">
+            <summary>Creates a directory and any non-existent parent directories if necessary.</summary>
+            <example>
+                <para>Create the directory &quot;build&quot;.</para>
+                <code><![CDATA[<mkdir dir="build"/>]]></code>
+                <para>Create the directory tree &quot;one/two/three&quot;.</para>
+                <code><![CDATA[<mkdir dir="one/two/three"/>]]></code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.MkDirTask.Dir">
+            <summary>The directory to create.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.MoveTask">
+            <summary>Moves a file or fileset to a new file or directory.</summary>
+            <remarks>
+              <para>Moves a file or fileset to a new file or directory. Files are only moved if the source file is newer than the destination file, or if the destination file does not exist.</para>
+              <note>You can explicitly overwrite files with the overwrite attribute.</note>
+              <para>Filesets are used to select files to move. To use a fileset, the todir attribute must be set.</para>
+            </remarks>
+            <example>
+              <para>Move a single file.</para>
+              <code>&lt;move file="myfile.txt" tofile="mytarget.txt"/&gt;</code>
+              <para>Move a set of files.</para>
+              <code>
+            <![CDATA[
+            <move todir="${build.dir}">
+                <fileset basedir="bin">
+                    <includes name="*.dll"/>
+                </fileset>
+            </move>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.MoveTask.DoFileOperations">
+            <summary>
+            Actually does the file (and possibly empty directory) moves.
+            </summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NAntSchemaTask">
+            <summary>Creates an XSD File for all available Tasks.</summary>
+            <remarks>
+              <para>This can be used in conjuntion with the command line option to do XSD Schema validation on the build file.</para>
+            </remarks>
+            <example>
+              <para>Creates an NAnt.xsd file in the current project directory</para>
+              <code><![CDATA[<NAntSchema name="NAnt.xsd"/>]]></code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.WriteSchema(System.IO.Stream,System.Type[],System.String)">
+            <summary>
+            Creates a NAnt Schema for given types
+            </summary>
+            <param name="stream">The output stream to save the schema to. If null, writing is ignored, no exception generated</param>
+            <param name="tasks">The list of Types to generate Schema for</param>
+            <param name="targetNS">The target Namespace to output</param>
+            <returns>The new NAnt Schema</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.CreateXSDAttr(System.String,System.Boolean)">
+            <summary>
+            Creates a new XmlSchemaAttribute
+            </summary>
+            <param name="name">XmlSchemaAttribute.Name</param>
+            <param name="required">sets XmlSchemaAttribute.Use</param>
+            <returns>The attribute</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.CreateXSDCT(System.String,System.String,System.Xml.Schema.XmlSchemaAttribute[])">
+            <summary>
+            
+            </summary>
+            <param name="name">ComplexType.Name</param>
+            <param name="id">ComplexType.id</param>
+            <param name="attrs">ComplexType.Attributes; null indicates none.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.CreateXSDChoice(System.Decimal,System.Decimal)">
+            <summary>
+            Generates a new object.
+            </summary>
+            <param name="min">The min value to allow for this choice</param>
+            <param name="max">The max value to allow, Decimal.MaxValue sets it to 'unbound'</param>
+            <returns></returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.GetDerivedAttribute(System.Reflection.MemberInfo,System.Type,System.Boolean,System.Boolean)">
+            <summary>
+            Searches throught custom attributes for any attribute based on attr
+            </summary>
+            <param name="meminfo">MemberInfo (includes Properties/Fields/Types)</param>
+            <param name="attr">Type of the Attribute you want; meaning that you want something derived by it.</param>
+            <param name="bSearchObjectHier">Search the MemberInfo class ancestry</param>
+            <param name="bSearchAttributeHier">Search the Attribute Type ancestry for a mactch to attr</param>
+            <returns></returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.NAntSchemaGenerator.#ctor(System.Type[],System.String)">
+            <summary>
+            Creates a new SchemaGenerator.
+            </summary>
+            <param name="tasks"><see cref="!:NAntSchemaGenerator.ctor"/></param>
+            <param name="targetNS">The namespace to use.
+            <example> http://tempuri.org/nant.xsd </example>
+            </param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NAntSchemaTask.NAntSchemaGenerator.#ctor(System.Type[])">
+            <summary>
+            Creates a new SchemaGenerator without a TargetNamespace.
+            </summary>
+            <param name="tasks">The Collection of Type(s) that represent the Task Classes to generation XSD for.</param>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NantTask">
+            <summary>Runs NAnt on a supplied build file. This can be used to build subprojects.</summary>
+            <example>
+              <para>Build the BuildServer project located in a different directory but only if the <c>debug</c> property is not true.</para>
+              <code><![CDATA[<nant unless="${debug}" buildfile="${src.dir}/Extras/BuildServer/BuildServer.build"/>]]></code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NantTask.BuildFileName">
+            <summary>The build file to build.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NantTask.DefaultTarget">
+            <summary>The target to execute.  To specify more than one target seperate targets with a space.  Targets are executed in order if possible.  Default to use target specified in the project's default attribute.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NantTask.InheritAll">
+            <summary>Specifies whether current property values should be inherited by the executed project. Default is false.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.NDocTask">
+            <summary>Runs NDoc to create documentation.</summary>
+            <remarks>
+              <para>See the <a href="http://ndoc.sf.net">NDoc home page</a> for more information.</para>
+            </remarks>
+            <example>
+              <para>Document two assemblies using the MSDN documenter.  The namespaces are documented in <c>NamespaceSummary.xml</c></para>
+              <code>
+                <![CDATA[
+            <ndoc>
+                <assemblies basedir="${build.dir}">
+                    <includes name="NAnt.exe"/>
+                    <includes name="NAnt.Core.dll"/>
+                </assemblies>
+                <summaries basedir="${build.dir}">
+                    <includes name="NamespaceSummary.xml"/>
+                </summaries>
+                <documenters>
+                    <documenter name="MSDN">
+                        <property name="OutputDirectory" value="doc\MSDN" />
+                        <property name="HtmlHelpName" value="NAnt" />
+                        <property name="HtmlHelpCompilerFilename" value="hhc.exe" />
+                        <property name="IncludeFavorites" value="False" />
+                        <property name="Title" value="An NDoc Documented Class Library" />
+                        <property name="SplitTOCs" value="False" />
+                        <property name="DefaulTOC" value="" />
+                        <property name="ShowVisualBasic" value="True" />
+                        <property name="ShowMissingSummaries" value="True" />
+                        <property name="ShowMissingRemarks" value="True" />
+                        <property name="ShowMissingParams" value="True" />
+                        <property name="ShowMissingReturns" value="True" />
+                        <property name="ShowMissingValues" value="True" />
+                        <property name="DocumentInternals" value="False" />
+                        <property name="DocumentProtected" value="True" />
+                        <property name="DocumentPrivates" value="False" />
+                        <property name="DocumentEmptyNamespaces" value="False" />
+                        <property name="IncludeAssemblyVersion" value="False" />
+                        <property name="CopyrightText" value="" />
+                        <property name="CopyrightHref" value="" />
+                     </documenter>
+                </documenters> 
+            </ndoc>
+                ]]>
+              </code>
+              <para><c>NamespaceSummary.xml</c> contents</para>
+              <code>
+                <![CDATA[
+            <namespaces>
+                <namespace name="Foo.Bar">
+                    The <b>Foo.Bar</b> namespace reinvents the wheel.
+                </namespace>
+                <namespace name="Foo.Bar.Tests">
+                    The <b>Foo.Bar.Tests</b> namespace ensures that the Foo.Bar namespace reinvents the wheel correctly.
+                </namespace>
+            </namespaces>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NDocTask.OnDocBuildingStep(System.Object,NDoc.Core.ProgressArgs)">
+            <summary>
+            Updates the progress bar representing a building step.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NDocTask.InitializeTask(System.Xml.XmlNode)">
+            <summary>
+            Initialize taks and verify parameters.
+            </summary>
+            <param name="taskNode">Node that contains the XML fragment used to define this task instance.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NDocTask.GetDocumenter(NDoc.Core.Project,System.String)">
+            <summary>Returns the documenter instance to use for this task.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.NDocTask.ExpandPropertiesInNodes(System.Xml.XmlNodeList)">
+            <summary>Perform macro expansion for the given XmlNodeList.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NDocTask.Assemblies">
+            <summary>The set of assemblies to document.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.NDocTask.Summaries">
+            <summary>The set of namespace summary files.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.PropertyTask">
+            <summary>Sets a property in the current project.</summary>
+            <remarks>
+              <note>NAnt uses a number of predefined properties.</note>
+            </remarks>
+            <example>
+              <para>Define a <c>debug</c> property with the value <c>true</c>.</para>
+              <code><![CDATA[<property name="debug" value="true"/>]]></code>
+              <para>Use the user-defined <c>debug</c> property.</para>
+              <code><![CDATA[<property name="trace" value="${debug}"/>]]></code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.PropertyTask.PropName">
+            <summary>the name of the property to set.</summary>        
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.PropertyTask.Value">
+            <summary>the value of the property.</summary>        
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.ScriptTask">
+            <summary>Executes the code contained within the task.</summary>
+            <remarks>
+                <para>
+                    The <c>script</c> element must contain a single <c>code</c> element, which in turn contains the script code.
+                </para>
+                <para>
+                    A static entry point named <c>ScriptMain</c> is required.   It must have a single <see cref="T:SourceForge.NAnt.Project"/> parameter.
+                </para>
+                <para>
+                    The following namespaces are loaded by default:
+                    System,
+                    System.Collections,
+                    System.Collections.Specialized,
+                    System.IO,
+                    System.Text,
+                    System.Text.RegularExpressions and
+                    SourceForge.NAnt.
+                </para>
+            </remarks>
+            <example>
+              <para>Run C# code.</para>
+              <code>
+                    &lt;script language="C#"&gt;
+                        &lt;code&gt;&lt;![CDATA[
+                            public static void ScriptMain(Project project) {
+                                System.Console.WriteLine("Hello World from a script task using C#"); 
+                            }
+                        ]]&gt;&lt;/code&gt;
+                    &lt;/script&gt;
+              </code>
+            </example>
+            <example>
+              <para>Run Visual Basic.NET code.</para>
+              <code>
+                    &lt;script language="VB"&gt;
+                        &lt;code&gt;&lt;![CDATA[
+                            Public Shared Sub ScriptMain(project As Project)
+                                System.Console.WriteLine("Hello World from a script task using Visual Basic.NET")
+                            End Sub
+                        ]]&gt;&lt;/code&gt;
+                    &lt;/script&gt;
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ScriptTask.Language">
+            <summary>The language of the script block (VB, C# or JS).</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ScriptTask.References">
+            <summary>Any required references.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ScriptTask.MainClass">
+            <summary>The name of the main class containing the static <c>ScriptMain</c> entry point.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.SleepTask">
+            <summary>
+            A task for sleeping a specified period of time, useful when a build or deployment process
+            requires an interval between tasks.
+            </summary>
+            <example>
+                <para>Sleep 1 hour, 2 minutes, 3 seconds and 4 milliseconds.</para>
+                <code><![CDATA[<sleep hours="1" minutes="2" seconds="3" milliseconds="4" />]]></code>
+                <para>Sleep 123 milliseconds.</para>
+                <code><![CDATA[<sleep milliseconds="123" />]]></code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.SleepTask.GetSleepTime">
+            <summary>Return time to sleep.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.SleepTask.DoSleep(System.Int32)">
+            <summary>Sleep the specified number of milliseconds.</summary>
+            <param name="millis">Milliseconds to sleep.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.SleepTask.InitializeTask(System.Xml.XmlNode)">
+            <summary>
+             Verify parameters.
+            </summary>
+            <param name="taskNode"> taskNode used to define this task instance </param>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.SleepTask.Hours">
+            <summary>Hours to add to the sleep time.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.SleepTask.Minutes">
+            <summary>Minutes to add to the sleep time.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.SleepTask.Seconds">
+            <summary>Seconds to add to the sleep time.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.SleepTask.Milliseconds">
+            <summary>Milliseconds to add to the sleep time.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.StyleTask">
+            <summary>
+            Process a document via XSLT.
+            This is useful for building views of XML based documentation, or in generating code.
+            </summary>
+            <example>
+              <para>Create a report in HTML.</para>
+              <code>&lt;style style="report.xsl" in="data.xml" out="report.html" /&gt;</code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.StyleTask.InitializeTask(System.Xml.XmlNode)">
+            <param name="taskNode"> taskNode used to define this task instance </param>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.StyleTask.BaseDir">
+            <summary>Where to find the source XML file, default is the project's basedir.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.StyleTask.DestDir">
+            <summary>Directory in which to store the results.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.StyleTask.Extension">
+            <summary>Desired file extension to be used for the targets. The default is "html".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.StyleTask.StyleSheet">
+            <summary>Name of the stylesheet to use - given either relative to the project's basedir or as an absolute path.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.StyleTask.SrcFile">
+            <summary>Specifies a single XML document to be styled. Should be used with the out attribute.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.StyleTask.OutputFile">
+            <summary>Specifies the output name for the styled result from the in attribute.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.SysInfoTask">
+            <summary>Set properties with system information.</summary>
+            <remarks>
+              <para>Sets a number of properties with information about the system environment.  The intent of this task is for nightly build logs to have a record of system information so that the build was performed on.</para>
+              <list type="table">
+                <listheader><term>Property</term>      <description>Value</description></listheader>
+                <item><term>sys.clr.version</term>     <description>Common Language Runtime version number.</description></item>
+                <item><term>sys.env.*</term>           <description>Environment variables (e.g., sys.env.PATH).</description></item>
+                <item><term>sys.os.folder.system</term><description>The System directory.</description></item>
+                <item><term>sys.os.folder.temp</term>  <description>The temporary directory.</description></item>
+                <item><term>sys.os.platform</term>     <description>Operating system platform ID.</description></item>
+                <item><term>sys.os.version</term>      <description>Operating system version.</description></item>
+                <item><term>sys.os</term>              <description>Operating system version string.</description></item>
+              </list>
+            </remarks>
+            <example>
+              <para>Register the properties with the default property prefix.</para>
+              <code>&lt;sysinfo/&gt;</code>
+              <para>Register the properties without a prefix.</para>
+              <code>&lt;sysinfo prefix=""/&gt;</code>
+              <para>Register properties and display a summary</para>
+              <code>&lt;sysinfo verbose="true"/&gt;</code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.SysInfoTask.Prefix">
+            <summary>The string to prefix the property names with.  Default is "sys."</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.TouchTask">
+            <summary>
+            Touch a file and/or fileset(s) -- corresponds to the Unix touch command.
+            </summary>
+            <example>
+              <para>Touch the <c>Main.cs</c> file.  The current time is used.</para>
+              <code><![CDATA[<touch file="Main.cs"/>]]></code>
+              <para>Touch all executable files in the current directory and its subdirectories.</para>
+              <code>
+            <![CDATA[
+            <touch>
+                <fileset>
+                    <includes name="**/*.exe"/>
+                    <includes name="**/*.dll"/>
+                </fileset>
+            </touch>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.TouchTask.InitializeTask(System.Xml.XmlNode)">
+            <summary>Initializes task and ensures the supplied attributes are valid.</summary>
+            <param name="taskNode">Xml node used to define this task instance.</param>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TouchTask.FileName">
+            <summary>Assembly Filename (required unless a fileset is specified).</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TouchTask.Millis">
+            <summary>Specifies the new modification time of the file in milliseconds since midnight Jan 1 1970.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TouchTask.Datetime">
+            <summary>Specifies the new modification time of the file in the format MM/DD/YYYY HH:MM AM_or_PM.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TouchTask.TouchFileSet">
+            <summary>Fileset to use instead of single file.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.TStampTask">
+            <summary>Sets properties with the current date and time.</summary>
+            <remarks>
+              <para>By default tstamp displays the current date and time and sets the following properties:</para>
+              <list type="bullet">
+                <item><description>tstamp.date to yyyyMMdd</description></item>
+                <item><description>tstamp.time to HHmm</description></item>
+                <item><description>tstamp.now using the default DateTime.ToString() method</description></item>
+              </list>
+              <para>To set an additional property with a custom date/time use the property and pattern attributes.  To set a number of additional properties all with the exact same date and time use the formatter nested element (see example).</para>
+              <para>The date and time string displayed the tstamp uses the computer's default long date and time string format.  You might consider setting these to the <a href="http://www.cl.cam.ac.uk/~mgk25/iso-time.html">ISO 8601 standard for date and time notation</a>.</para>
+            </remarks>
+            <example>
+              <para>Set the build.date property.</para>
+              <code><![CDATA[<tstamp property="build.date" pattern="yyyyMMdd" verbose="true"/>]]></code>
+              <para>Set a number of properties for for Ant like compatibility.</para>
+              <code>
+            <![CDATA[
+            <tstamp verbose="true">
+                <formatter property="TODAY" pattern="dd MMM yyyy"/>
+                <formatter property="DSTAMP" pattern="yyyyMMdd"/>
+                <formatter property="TSTAMP" pattern="HHmm"/>
+            </tstamp>
+            ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TStampTask.Property">
+            <summary>The property to receive the date/time string in the given pattern.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TStampTask.Pattern">
+            <summary>The date/time pattern to be used.</summary>
+            <remarks>
+              <para>The following table lists the standard format characters for each standard pattern. The format characters are case-sensitive; for example, 'g' and 'G' represent slightly different patterns.</para>
+              <list type="table">
+                <listheader>
+                  <description>Format Character</description>
+                  <description>Description Example Format Pattern (en-US)</description>
+                </listheader>
+                <item><description>d</description><description>MM/dd/yyyy</description></item>
+                <item><description>D</description><description>dddd, dd MMMM yyyy</description></item>
+                <item><description>f</description><description>dddd, dd MMMM yyyy HH:mm</description></item>
+                <item><description>F</description><description>dddd, dd MMMM yyyy HH:mm:ss</description></item>
+                <item><description>g</description><description>MM/dd/yyyy HH:mm</description></item>
+                <item><description>G</description><description>MM/dd/yyyy HH:mm:ss</description></item>
+                <item><description>m, M</description><description>MMMM dd</description></item>
+                <item><description>r, R</description><description>ddd, dd MMM yyyy HH':'mm':'ss 'GMT'</description></item>
+                <item><description>s</description><description>yyyy'-'MM'-'dd'T'HH':'mm':'ss</description></item>
+                <item><description>t</description><description>HH:mm</description></item>
+                <item><description>T</description><description>HH:mm:ss</description></item>
+                <item><description>u</description><description>yyyy'-'MM'-'dd HH':'mm':'ss'Z'</description></item>
+                <item><description>U</description><description>dddd, dd MMMM yyyy HH:mm:ss</description></item>
+                <item><description>y, Y</description><description>yyyy MMMM</description></item>
+              </list>
+              <para>The following table lists the patterns that can be combined to construct custom patterns. The patterns are case-sensitive; for example, "MM" is recognized, but "mm" is not. If the custom pattern contains white-space characters or characters enclosed in single quotation marks, the output string will also contain those characters. Characters not defined as part of a format pattern or as format characters are reproduced literally.</para>
+              <list type="table">
+                <listheader>
+                  <description>Format</description>
+                  <description>Pattern Description</description>
+                </listheader>
+                <item><description>d</description><description>The day of the month. Single-digit days will not have a leading zero.</description></item>
+                <item><description>dd</description><description>The day of the month. Single-digit days will have a leading zero.</description></item>
+                <item><description>ddd</description><description>The abbreviated name of the day of the week.</description></item>
+                <item><description>dddd</description><description>The full name of the day of the week.</description></item>
+                <item><description>M</description><description>The numeric month. Single-digit months will not have a leading zero.</description></item>
+                <item><description>MM</description><description>The numeric month. Single-digit months will have a leading zero.</description></item>
+                <item><description>MMM</description><description>The abbreviated name of the month.</description></item>
+                <item><description>MMMM</description><description>The full name of the month.</description></item>
+                <item><description>y</description><description>The year without the century. If the year without the century is less than 10, the year is displayed with no leading zero.</description></item>
+                <item><description>yy</description><description>The year without the century. If the year without the century is less than 10, the year is displayed with a leading zero.</description></item>
+                <item><description>yyyy</description><description>The year in four digits, including the century.</description></item>
+                <item><description>gg</description><description>The period or era. This pattern is ignored if the date to be formatted does not have an associated period or era string.</description></item>
+                <item><description>h</description><description>The hour in a 12-hour clock. Single-digit hours will not have a leading zero.</description></item>
+                <item><description>hh</description><description>The hour in a 12-hour clock. Single-digit hours will have a leading zero.</description></item>
+                <item><description>H</description><description>The hour in a 24-hour clock. Single-digit hours will not have a leading zero.</description></item>
+                <item><description>HH</description><description>The hour in a 24-hour clock. Single-digit hours will have a leading zero.</description></item>
+                <item><description>m</description><description>The minute. Single-digit minutes will not have a leading zero.</description></item>
+                <item><description>mm</description><description>The minute. Single-digit minutes will have a leading zero.</description></item>
+                <item><description>s</description><description>The second. Single-digit seconds will not have a leading zero.</description></item>
+                <item><description>ss</description><description>The second. Single-digit seconds will have a leading zero.</description></item>
+                <item><description>f</description><description>The fraction of a second in single-digit precision. The remaining digits are truncated.</description></item>
+                <item><description>ff</description><description>The fraction of a second in double-digit precision. The remaining digits are truncated.</description></item>
+                <item><description>fff</description><description>The fraction of a second in three-digit precision. The remaining digits are truncated.</description></item>
+                <item><description>ffff</description><description>The fraction of a second in four-digit precision. The remaining digits are truncated.</description></item>
+                <item><description>fffff</description><description>The fraction of a second in five-digit precision. The remaining digits are truncated. </description></item>
+                <item><description>ffffff</description><description>The fraction of a second in six-digit precision. The remaining digits are truncated. </description></item>
+                <item><description>fffffff</description><description>The fraction of a second in seven-digit precision. The remaining digits are truncated. </description></item>
+                <item><description>t</description><description>The first character in the AM/PM designator.</description></item>
+                <item><description>tt</description><description>The AM/PM designator. </description></item>
+                <item><description>z</description><description>The time zone offset ("+" or "-" followed by the hour only). Single-digit hours will not have a leading zero. For example, Pacific Standard Time is "-8".</description></item>
+                <item><description>zz</description><description>The time zone offset ("+" or "-" followed by the hour only). Single-digit hours will have a leading zero. For example, Pacific Standard Time is "-08".</description></item>
+                <item><description>zzz</description><description>The full time zone offset ("+" or "-" followed by the hour and minutes). Single-digit hours and minutes will have leading zeros. For example, Pacific Standard Time is "-08:00".</description></item>
+                <item><description>:</description><description>The default time separator.</description></item>
+                <item><description>/</description><description>The default date separator.</description></item>
+                <item><description>\ c</description><description>Pattern Where c is any character. Displays the character literally. To display the backslash character, use "\\". </description></item>
+              </list>
+            </remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TStampTask.FormatterElement.Property">
+            <summary>The property to set.</summary>       
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.TStampTask.FormatterElement.Pattern">
+            <summary>The string pattern to use to format the property.</summary>       
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.VbcTask">
+             <summary>Compiles Microsoft Visual Basic.NET programs using vbc.exe.</summary>
+             <example>
+               <para>Example build file using this task.</para>
+               <code><![CDATA[
+            <project name="Hello World" default="build" basedir=".">
+               <property name="basename" value="HelloWorld"/>
+               <property name="debug" value="true"/>
+               <target name="clean">
+                  <delete file="${basename}-vb.exe" failonerror="false"/>
+                  <delete file="${basename}-vb.pdb" failonerror="false"/>
+               </target>
+               <target name="build">
+                  <vbc target="exe" output="${basename}-vb.exe">
+                     <sources>
+                        <includes name="${basename}.vb"/>
+                     </sources>
+                  </vbc>
+               </target>
+               <target name="debug" depends="clean">
+                  <vbc target="exe" output="${basename}-vb.exe" debug="${debug}">
+                     <sources>
+                        <includes name="${basename}.vb"/>
+                     </sources>
+                  </vbc>
+               </target>
+            </project>]]>
+               </code>
+             </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Tasks.VbcTask.WriteOptions(System.IO.TextWriter)">
+            <summary>
+            Writes the compiler options to the specified TextWriter.
+            </summary>
+            <param name="writer"></param>
+            <remarks></remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.BaseAddress">
+            <summary>Specifies whether <c>/baseaddress</c> option gets passed to the compiler.</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfbaseaddressspecifybaseaddressofdll.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this property is a string that makes up a 32bit hexidecimal number.</value>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.Imports">
+            <summary>Specifies whether the <c>/imports</c> option gets passed to the compiler</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfImportImportNamespaceFromSpecifiedAssembly.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this attribute is a string that contains one or more namespaces separated by commas.</value>
+            <example>Example of an imports attribute
+            <code><![CDATA[imports="Microsoft.VisualBasic, System, System.Collections, System.Data, System.Diagnostics"]]></code></example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.OptionCompare">
+            <summary>Specifies whether <c>/optioncompare</c> option gets passed to the compiler</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfOptioncompareSpecifyHowStringsAreCompared.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this property must be either <c>text</c>, <c>binary</c>, or an empty string.  If the value is <c>false</c> or empty string, the switch is omitted.</value>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.OptionExplicit">
+            <summary>Specifies whether the <c>/optionexplicit</c> option gets passed to the compiler.</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfOptionexplicitRequireExplicitDeclarationOfVariables.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this attribute must be either <c>true</c> or <c>false</c>.  If <c>false</c>, the switch is omitted.</value>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.OptionStrict">
+            <summary>Specifies whether the <c>/optionstrict</c> option gets passed to the compiler.</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfOptionstrictEnforceStrictTypeSemantics.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this attribute must be either <c>true</c> or <c>false</c>.  If <c>false</c>, the switch is omitted.</value>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.RemoveIntChecks">
+            <summary>Specifies whether the <c>/removeintchecks</c> option gets passed to the compiler.</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfRemoveintchecksRemoveInteger-OverflowChecks.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this attribute must be either <c>true</c> or <c>false</c>.  If <c>false</c>, the switch is omitted.</value>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.VbcTask.RootNamespace">
+            <summary>Specifies whether the <c>/rootnamespace</c> option gets passed to the compiler.</summary>
+            <remarks><a href="ms-help://MS.NETFrameworkSDK/vblr7net/html/valrfRootnamespace.htm">See the Microsoft.NET Framework SDK documentation for details.</a></remarks>
+            <value>The value of this attribute is a string that contains the root namespace of the project.</value>
+        </member>
+        <member name="T:SourceForge.NAnt.Tasks.ZipTask">
+            <summary>
+            A task to create a zip file from a specified fileset.
+            </summary>
+            <remarks>
+              <para>Uses <a href="http://www.icsharpcode.net/OpenSource/NZipLib/">NZipLib</a>, an open source Zip/GZip library written entirely in C#.</para>
+            </remarks>
+            <example>
+              <para>Zip all files in the subdirectory <c>build</c> to <c>backup.zip</c>.</para>
+              <code>
+                <![CDATA[
+            <zip zipfile="backup.zip">
+                <fileset basedir="build">
+                    <includes name="*.*"/>
+                </fileset>
+            </zip>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ZipTask.ZipFileName">
+            <summary>The zip file to create.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ZipTask.ZipLevel">
+            <summary>Desired level of compression (default is 6).</summary>
+            <value>0 - 9 (0 - STORE only, 1-9 DEFLATE (1-lowest, 9-highest))</value>
+        </member>
+        <member name="P:SourceForge.NAnt.Tasks.ZipTask.ZipFileSet">
+            <summary>The set of files to be included in the archive.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.ConsoleLogger">
+            <summary>The standard logger that will suffice for any command line based nant runner.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.StringLogger">
+            <summary>Used for test classes to check output.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.StringLogger.ToString">
+            <summary>Returns the contents of log captured.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Log">
+            <summary>Provides a set of methods and properties that log the execution of the build process.  This class cannot be inherited.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.Flush">
+            <summary>Flushes the output buffer, and causes buffered data to be written to the Listeners.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.Indent">
+            <summary>Increases the current IndentLevel by one.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.Unindent">
+            <summary>Decreases the current IndentLevel by one.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.FormatMessage(System.String)">
+            <summary>Indents the message if needed.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.Write(System.String)">
+            <summary>Writes the given message to the log.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.Write(System.String,System.Object[])">
+            <summary>Writes the given message to the log.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteIf(System.Boolean,System.String)">
+            <summary>Writes the given message to the log if condition is true.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteIf(System.Boolean,System.String,System.Object[])">
+            <summary>Writes the given message to the log if condition is true.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteLine(System.String)">
+            <summary>Writes the given message to the log.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteLine">
+            <summary>Writes the given message to the log.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteLine(System.String,System.Object[])">
+            <summary>Writes the given message to the log.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteLineIf(System.Boolean,System.String)">
+            <summary>Writes the given message to the log if condition is true.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Log.WriteLineIf(System.Boolean,System.String,System.Object[])">
+            <summary>Writes the given message to the log if condition is true.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Log.AutoFlush">
+            <summary>Gets or sets whether Flush should be called on the Listeners after every write.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Log.IndentLevel">
+            <summary>Gets or sets the indent level.  Default is zero.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Log.IndentSize">
+            <summary>Gets or sets the number of spaces in an indent.  Default is four.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Log.Listeners">
+            <summary>Gets the collection of listeners that is monitoring the log output.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.BuildException">
+            <summary>
+            Thrown whenever an error occurs during the build.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.#ctor">
+            <summary>
+            Constructs a build exception with no descriptive information.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.#ctor(System.String)">
+            <summary>
+            Constructs an exception with a descriptive message.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.#ctor(System.String,System.Exception)">
+            <summary>
+            Constructs an exception with a descriptive message and an
+            instance of the Exception that is the cause of the current Exception.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.#ctor(System.String,SourceForge.NAnt.Location)">
+            <summary>
+            Constructs an exception with a descriptive message and location
+            in the build file that caused the exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="location">Location in the build file where the exception occured.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.#ctor(System.String,SourceForge.NAnt.Location,System.Exception)">
+            <summary>
+            Constructs an exception with the given descriptive message, the
+            location in the build file and an instance of the Exception that
+            is the cause of the current Exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="location">Location in the build file where the exception occured.</param>
+            <param name="e">An instance of Exception that is the cause of the current Exception.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes a new instance of the BuildException class with serialized data.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.BuildException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Sets the SerializationInfo object with information about the exception.</summary>
+            <param name="info">The object that holds the serialized object data. </param>
+            <param name="context">The contextual information about the source or destination. </param>
+            <remarks>For more information, see SerializationInfo in the Microsoft documentation.</remarks>
+        </member>
+        <member name="T:SourceForge.NAnt.DirectoryScanner">
+            <summary>Used for searching file system based on given include/exclude rules.</summary>
+            <example>
+                <para>Simple client code for testing the class.</para>
+                <code>
+                    while(true) {
+                        DirectoryScanner scanner = new DirectoryScanner();
+               			
+                        Console.Write("Scan Basedirectory : ");
+                        string s = Console.ReadLine();
+                        if (s == "") break;
+                        scanner.BaseDirectory = s;
+            
+                        while(true) {
+                            Console.Write("Include pattern : ");
+                            s = Console.ReadLine();
+                            if (s == "") break;
+                            scanner.Includes.Add(s);
+                        }
+            
+                        while(true) {
+                            Console.Write("Exclude pattern : ");
+                            s = Console.ReadLine();
+                            if (s == "") break;
+                            scanner.Excludes.Add(s);
+                        }
+            			
+                        foreach (string name in scanner.FileNames)
+                            Console.WriteLine("file:" + name);
+                        foreach (string name in scanner.DirectoryNames)
+                            Console.WriteLine("dir :" + name);
+            
+                        Console.WriteLine("");
+                    }
+                </code>
+            </example>
+            <history>
+                <change date="20020220" author="Ari Hännikäinen">Added support for absolute paths and relative paths refering to parent directories ( ../ )</change>
+                <change date="20020221" author="Ari Hännikäinen">Changed implementation because of performance reasons - now scanning each directory only once</change>
+            </history>
+        </member>
+        <member name="M:SourceForge.NAnt.DirectoryScanner.Scan">
+            <summary>
+                Use Includes and Excludes search criteria (relative to Basedirectory or absolute) to search for filesystem objects
+            </summary>
+            <history>
+                <change date="20020220" author="Ari Hännikäinen">Totally changed the scanning strategy</change>
+                <change date="20020221" author="Ari Hännikäinen">Changed it again because of performance reasons</change>
+            </history>
+        </member>
+        <member name="M:SourceForge.NAnt.DirectoryScanner.convertPatterns(System.Collections.Specialized.StringCollection,System.Collections.Specialized.StringCollection)">
+            <summary>
+                Parses given NAnt search patterns for search directories and corresponding regex patterns
+            </summary>
+            <param name="nantPatterns">In. NAnt patterns. Absolute or relative paths.</param>
+            <param name="regexPatterns">Out. Regex patterns. Absolute canonical paths.</param>
+            <history>
+                <change date="20020221" author="Ari Hännikäinen">Created</change>
+            </history>
+        </member>
+        <member name="M:SourceForge.NAnt.DirectoryScanner.parseSearchDirectoryAndPattern(System.String,System.String@,System.String@)">
+            <summary>
+                Given a NAnt search pattern returns a search directory and an regex search pattern.
+            </summary>
+            <param name="originalNAntPattern">NAnt searh pattern (relative to the Basedirectory OR absolute, relative paths refering to parent directories ( ../ ) also supported)</param>
+            <param name="searchDirectory">Out. Absolute canonical path to the directory to be searched</param>
+            <param name="regexPattern">Out. Regex search pattern (absolute canonical path)</param>
+            <history>
+                <change date="20020220" author="Ari Hännikäinen">Created</change>
+                <change date="20020221" author="Ari Hännikäinen">Returning absolute regex patterns instead of relative nant patterns</change>
+            </history>
+        </member>
+        <member name="M:SourceForge.NAnt.DirectoryScanner.ScanDirectory(System.String)">
+            <summary>
+                Searches a directory recursively for files and directories matching the search criteria
+            </summary>
+            <param name="path">Directory in which to search (absolute canonical path)</param>
+            <history>
+                <change date="20020221" author="Ari Hännikäinen">Checking if the directory has already been scanned</change>
+            </history>
+        </member>
+        <member name="M:SourceForge.NAnt.DirectoryScanner.ToRegexPattern(System.String,System.String)">
+            <summary>
+                Converts NAnt search pattern to a regular expression pattern
+            </summary>
+            <param name="baseDir">Base directory for the search</param>
+            <param name="nantPattern">Search pattern relative to the search directory</param>
+            <returns>Regular expresssion (absolute path) for searching matching file/directory names</returns>
+            <history>
+                <change date="20020220" author="Ari Hännikäinen">Added parameter baseDir, using  it instead of class member variable</change>
+            </history>
+        </member>
+        <member name="M:SourceForge.NAnt.FileSet.FindMoreRecentLastWriteTime(System.Collections.Specialized.StringCollection,System.DateTime)">
+            <summary>Determines if a file has a more recent last write time than the given time.</summary>
+            <param name="fileNames">A collection of filenames to check last write times against.</param>
+            <param name="targetLastWriteTime">The datetime to compare against.</param>
+            <returns>The name of the first file that has a last write time greater than <c>targetLastWriteTime</c>; otherwise null.</returns>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.DefaultExcludes">
+            <summary>Indicates whether default excludes should be used or not.  Default "true".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.BaseDirectory">
+            <summary>The base of the directory of this file set.  Default is project base directory.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.FileNames">
+            <summary>The collection of file names that match the file set.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.ExcludesElement.Pattern">
+            <summary>The pattern or file name to include.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.ExcludesElement.IfDefined">
+            <summary>If true then the pattern will be included; otherwise skipped. Default is "true".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.ExcludesElement.UnlessDefined">
+            <summary>Opposite of if.  If false then the pattern will be included; otherwise skipped. Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.IncludesElement.AsIs">
+            <summary>If true then the file name will be added to the file set without pattern matching or checking if the file exists.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.FileSet.IncludesElement.FromPath">
+            <summary>If true then the file will be searched for on the path.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.Location">
+            <summary>
+            Stores the file name, line number and column number to record a position in a text file.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Location.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>Creates a location consisting of a file name, line number and column number.</summary>
+            <remarks>fileName can be a local URI resource, e.g., file:///C:/WINDOWS/setuplog.txt</remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Location.#ctor(System.String)">
+            <summary>Creates a location consisting of a file name.</summary>
+            <remarks>fileName can be a local URI resource, e.g., file:///C:/WINDOWS/setuplog.txt</remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Location.#ctor">
+            <summary>Creates an "unknown" location.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Location.Init(System.String,System.Int32,System.Int32)">
+            <summary>Private Init function.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Location.ToString">
+             <summary>
+             Returns the file name, line number and a trailing space. An error
+             message can be appended easily. For unknown locations, returns
+             an empty string.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Location.FileName">
+            <summary>Gets a string containing the file name for the location.</summary>
+            <remarks>The file name includes both the file path and the extension.</remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Location.LineNumber">
+            <summary>Gets the line number for the location.</summary>
+            <remarks>Lines start at 1.  Will be zero if not specified.</remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Location.ColumnNumber">
+            <summary>Gets the column number for the location.</summary>
+            <remarks>Columns start a 1.  Will be zero if not specified.</remarks>
+        </member>
+        <member name="T:SourceForge.NAnt.LocationMap">
+            <summary>Maps XML nodes to the text positions from their original source.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.LocationMap.Add(System.Xml.XmlDocument)">
+            <summary>Add a XmlDocument to the map.</summary>
+            <remarks>
+              <para>A document can only be added to the map once.</para>
+            </remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.LocationMap.GetLocation(System.Xml.XmlNode)">
+            <summary>Return the <see cref="T:SourceForge.NAnt.Location"/> in the xml file for the given node.</summary>
+            <remarks>
+              <para>The <c>node</c> passed in must be from a XmlDocument that has been added to the map.</para>
+            </remarks>
+        </member>
+        <member name="T:SourceForge.NAnt.PathScanner">
+            <summary>Used to search for files on the PATH. The local directory is
+            not searched (since this would already be covered by normal use of
+            the includes element). Also, advanced pattern matching isn't supported
+            here: you need to know the exact name of the file.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.PathScanner.Add(System.String)">
+            <summary>Adds a file to the list to be scanned</summary>
+            <param name="fileName">The filename to add to the list</param>
+        </member>
+        <member name="T:SourceForge.NAnt.Project">
+            <summary>Central representation of an NAnt project.</summary>
+            <example>
+              <para>The <c>Run</c> method will initialize the project with the build file specified in the <c>BuildFile</c> property and execute the default target.</para>
+            <code>
+            <![CDATA[
+            Project p = new Project("foo.build");
+            p.Run();
+            ]]>
+            </code>
+              <para>If no target is given the default target will be executed if specified in the project.</para>
+            <code>
+            <![CDATA[
+            Project p = new Project("foo.build");
+            p.Execute("build"); /
+            ]]>
+            </code>
+            </example>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Constructs a new Project with the given document.
+            </summary>
+            <param name="doc">Any valid build format will do.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.#ctor(System.String)">
+            <summary>
+            Constructs a new Project with the given source.
+            </summary>
+            <param name="source">
+            <para> The Source should be the full path to the build file.</para>
+            <para> This can be of any form that XmlDocument.Load(string url) accepts.</para>
+            </param>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.ctorHelper(System.Xml.XmlDocument)">
+            <summary>
+            Inits stuff:
+            <para>TaskFactory: Calls Initialize and AddProject </para>
+            <para>Log.IndentSize set to 12</para>
+            <para>Project properties are initialized ("nant.* stuff set")</para>
+            <list type="nant.items">
+                <listheader>NAnt Props:</listheader>
+                <item>nant.filename</item>
+                <item>nant.version</item>
+                <item>nant.location</item>
+                <item>nant.project.name</item>
+                <item>nant.project.buildfile (if doc has baseuri)</item>
+                <item>nant.project.basedir</item>
+                <item>nant.project.default = defaultTarget</item>
+                <item>nant.tasks.[name] = true</item>
+                <item>nant.tasks.[name].location = AssemblyFileName</item>
+            </list>
+            </summary>
+            <param name="doc">The Project Document.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.LoadBuildFile(System.String)">
+            <summary>
+            Creates a new XmlDocument based on the project definition. 
+            </summary>
+            <param name="source">The source of the document. <para>Any form that is valid for XmlDocument.Load(string url) can be used here.</para></param>
+            <returns>The project document.</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.Execute">
+            <summary>Executes the default target.</summary>
+            <remarks>
+            	<para>No top level error handling is done. Any BuildExceptions will make it out of this method.</para>
+            </remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.Execute(System.String)">
+            <summary>Executes a specific target, and only that target.</summary>
+            <param name="targetName">target name to execute.</param>
+            <remarks>
+              <para>Only the target is executed. No global tasks are executed.</para>
+            </remarks>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.Run">
+            <summary>
+            Does Execute() and wraps in error handling and time stamping.
+            </summary>
+            <returns>Indication of success</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.InitializeProjectDocument(System.Xml.XmlDocument)">
+            <summary>This method is only meant to be used by the <see cref="T:SourceForge.NAnt.Project"/> class and <see cref="T:SourceForge.NAnt.Tasks.IncludeTask"/>.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.CreateTask(System.Xml.XmlNode)">
+            <summary>
+            Creates a new Task from the given XmlNode
+            </summary>
+            <param name="taskNode">The task definition.</param>
+            <returns>The new Task instance</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.CreateTask(System.Xml.XmlNode,SourceForge.NAnt.Target)">
+            <summary>
+            Creates a new Task from the given XmlNode within a Target
+            </summary>
+            <param name="taskNode">The task definition.</param>
+            <param name="target">The owner Target</param>
+            <returns>The new Task instance</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.ExpandProperties(System.String)">
+            <summary>
+            Expands a string from known properties
+            </summary>
+            <param name="input">The string with replacement tokens</param>
+            <returns>The expanded and replaced string</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Project.GetFullPath(System.String)">
+            <summary>Combine with project's <see cref="P:SourceForge.NAnt.Project.BaseDirectory"/> to form a full path to file or directory.</summary>
+            <remarks>
+              <para>If it is possible for the <c>path</c> to contain property macros the <c>path</c> call <see cref="M:SourceForge.NAnt.Project.ExpandProperties(System.String)"/> first.</para>
+            </remarks>
+            <returns>
+              <para>A rooted pathcomplete If the path is <c>null</c> the project's task does not have the concept of turning file attributes off.  Instead you specify all the attributes that you want turned on and the rest are turned off by default.</para>
+              <para>If the path is <c>null</c> the project's task does not have the concept of turning file attributes off.  Instead you specify all the attributes that you want turned on and the rest are turned off by default.</para>
+              <para>Refer to the <a href="ms-help://MS.NETFrameworkSDK/cpref/html/frlrfSystemIOFileAttributesClassTopic.htm">FileAttributes</a> enumeration in the .NET SDK for more information about file attributes.</para>
+            </returns>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.ProjectName">
+            <summary>The name of the project.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.BaseDirectory">
+            <summary>
+            The Base Directory used for relative references.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.BuildFileURI">
+            <summary>
+            The URI form of the current Document
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.BuildFileLocalName">
+            <summary>
+            If the build document is not file backed then null will be returned.
+            </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.Doc">
+            <summary>Returns the active build file</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.DefaultTargetName">
+            <remarks>
+              <para>Used only if BuildTargets collection is empty.</para>
+            </remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.Verbose">
+            <summary>When true tasks should output more build log messages.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.BuildTargets">
+            <summary>The list of targets to built.</summary>
+            <remarks>
+              <para>Targets are built in the order they appear in the collection.  If the collection is empty the default target will be built.</para>
+            </remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.Properties">
+            <summary> The NAnt Properties.</summary>
+            
+            <remarks>
+              <para>This is the collection of Properties that are defined by the system and property task statements.</para>
+              <para>These properties can be used in expansion.</para>
+            </remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Project.Targets">
+            <summary>
+            The targets defined in the this project. (RO Collection)
+            </summary>
+        </member>
+        <member name="F:SourceForge.NAnt.PropertyDictionary._readOnlyProperties">
+            <summary>
+            Maintains a list of the property names that are readonly.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.PropertyDictionary.AddReadOnly(System.String,System.String)">
+            <summary>
+            Adds a property that cannot be changed.
+            </summary>
+            <remarks>
+            Properties added with this method can never be changed.  Note that
+            they are removed if the <c>Clear</c> method is called.
+            </remarks>
+            <param name="name">Name of property</param>
+            <param name="value">Value of property</param>
+        </member>
+        <member name="M:SourceForge.NAnt.PropertyDictionary.Add(System.String,System.String)">
+            <summary>
+            Adds a property to the collection.
+            </summary>
+            <param name="name">Name of property</param>
+            <param name="value">Value of property</param>
+        </member>
+        <member name="M:SourceForge.NAnt.PropertyDictionary.IsReadOnlyProperty(System.String)">
+            <summary>
+            Returns true if a property is listed as read only
+            </summary>
+            <param name="name">Property to check</param>
+            <returns>true if readonly, false otherwise</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.PropertyDictionary.Inherit(SourceForge.NAnt.PropertyDictionary)">
+            <summary>
+            Inherits Properties from an existing property
+            dictionary Instance
+            </summary>
+            <param name="source">Property list to inherit</param>
+        </member>
+        <member name="F:SourceForge.NAnt.Target._targetNode">
+            <summary>The source xml representing this target.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Target.Execute">
+            <summary>Executes dependent targets first, then the target.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.Target.System#ICloneable#Clone">
+            <summary>
+            Creates a deep copy by calling Copy().
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SourceForge.NAnt.Target.Copy">
+            <summary>
+            Creates a new (deep) copy.
+            </summary>
+            <returns>A copy with the _hasExecuted set to false. This allows the new Target to be Executed.</returns>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.Name">
+            <summary>The name of the target.</summary>
+            <remarks>
+              <para>Hides <see cref="P:SourceForge.NAnt.Element.Name"/> to have <c>Target</c> return the name of target, not the name of Xml element - which would always be <c>target</c>.</para>
+            </remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.IfDefined">
+            <summary>If true then the target will be executed; otherwise skipped. Default is "true".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.UnlessDefined">
+            <summary>Opposite of if.  If false then the target will be executed; otherwise skipped. Default is "false".</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.Desc">
+            <summary> The Target Description </summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.DependsListString">
+            <summary> The space sep list of targets that this target depends on.</summary>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.HasExecuted">
+            <summary>Indicates if the target has been executed.</summary>
+            <remarks>
+              <para>Targets that have been executed will not execute a second time.</para>
+            </remarks>
+        </member>
+        <member name="P:SourceForge.NAnt.Target.Dependencies">
+            <summary>A collection of target names that must be executed before this target.</summary>
+        </member>
+        <member name="T:SourceForge.NAnt.TaskFactory">
+            <summary>
+            The TaskFactory comprises all of the loaded, and available, tasks. Use these static methods to register, initialize and create a task.
+            </summary>
+        </member>
+        <member name="M:SourceForge.NAnt.TaskFactory.Initialize">
+            <summary> Initializes the tasks in the executing assembly, and basedir of the current domain.</summary>
+        </member>
+        <member name="M:SourceForge.NAnt.TaskFactory.ScanDir(System.String)">
+            <summary>Scans the path for any Tasks assemblies and adds them.</summary>
+            <param name="path">The directory to scan in.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.TaskFactory.AddProject(SourceForge.NAnt.Project)">
+            <summary> Adds any Task Assemblies in the Project.BaseDirectory.</summary>
+            <param name="project">The project to work from.</param>
+        </member>
+        <member name="M:SourceForge.NAnt.TaskFactory.AddTasks(System.Reflection.Assembly)">
+            <summary> Scans the given assembly for any classes derived from Task and adds a new builder for them.</summary>
+            <param name="assembly">The Assembly containing the new tasks to be loaded.</param>
+            <returns>The count of tasks found in the assembly.</returns>
+        </member>
+        <member name="M:SourceForge.NAnt.TaskFactory.CreateTask(System.Xml.XmlNode,SourceForge.NAnt.Project)">
+            <summary> Creates a new Task instance for the given xml and project.</summary>
+            <param name="taskNode">The XML to initialize the task with.</param>
+            <param name="proj">The Project that the Task belongs to.</param>
+            <returns>The Task instance.</returns>
+        </member>
+        <member name="P:SourceForge.NAnt.TaskFactory.Builders">
+            <summary>Returns the list of loaded TaskBuilders</summary>
+        </member>
+    </members>
+</doc>
