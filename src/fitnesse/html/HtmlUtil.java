@@ -280,7 +280,7 @@ public class HtmlUtil
 			{
 				WikiPagePath setupPath = wikiPage.getPageCrawler().getFullPath(setup);
 				String setupPathName = PathParser.render(setupPath);
-				buffer.append("!include -setup .").append(setupPathName).append("\n");
+				buffer.append("!include --setup .").append(setupPathName).append("\n");
 			}
 		}
 		buffer.append(pageData.getContent());
@@ -291,7 +291,7 @@ public class HtmlUtil
 			{
 				WikiPagePath tearDownPath = wikiPage.getPageCrawler().getFullPath(teardown);
 				String tearDownPathName = PathParser.render(tearDownPath);
-				buffer.append("\n").append("!include -teardown .").append(tearDownPathName).append("\n");
+				buffer.append("\n").append("!include --teardown .").append(tearDownPathName).append("\n");
 			}
 		}
 		pageData.setContent(buffer.toString());

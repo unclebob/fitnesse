@@ -68,24 +68,24 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testRegexpWithOptions() throws Exception
 	{
-		assertMatchEquals("!include -setup SomePage", "!include -setup SomePage");
-		assertMatchEquals("!include  -setup SomePage", "!include  -setup SomePage");
-		assertMatchEquals("!include -teardown SomePage", "!include -teardown SomePage");
-		assertMatchEquals("!include  -teardown SomePage", "!include  -teardown SomePage");
+		assertMatchEquals("!include --setup SomePage", "!include --setup SomePage");
+		assertMatchEquals("!include  --setup SomePage", "!include  --setup SomePage");
+		assertMatchEquals("!include --teardown SomePage", "!include --teardown SomePage");
+		assertMatchEquals("!include  --teardown SomePage", "!include  --teardown SomePage");
 		assertMatchEquals("!include --seamless SomePage", "!include --seamless SomePage");
 		assertMatchEquals("!include  --seamless SomePage", "!include  --seamless SomePage");
 	}
 
 	public void testSetUpParts() throws Exception
 	{
-		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -setup SomePage");
+		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include --setup SomePage");
 		assertSubString("class=\"setup\"", widget.render());
 		assertSubString("Set Up: ", widget.render());
 	}
 
 	public void testTearDownParts() throws Exception
 	{
-		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -teardown SomePage");
+		IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include --teardown SomePage");
 		assertSubString("class=\"teardown\"", widget.render());
 		assertSubString("Tear Down: ", widget.render());
 	}
