@@ -217,6 +217,11 @@ div.main
 	font-size: 3.0em;
 }
 
+span.page_title
+{
+	text-shadow: 0px 0px 4px #2E2EB2;
+}
+
 .page_type
 {
 	font-size: 1.7em;
