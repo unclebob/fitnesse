@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="FitNesse" default="build" basedir=".">
+	<description>C# extention for FitNesse</description>    
+	
+	<target name="clean">
+		<delete>
+			<fileset>
+				<includes name="*.exe"/>
+				<includes name="*.dll"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="build_fit" description="builds fit.dll">
+		<csc target="library" output="fit.dll">
+			<references>
+				<includes name="lib/*.dll"/>
+			</references>
+			<sources>
+				<includes name="src/fit/*.cs"/>
+			</sources>
+		</csc>
+	</target>
+
+	<target name="build_eg" description="builds eg.dll">
+		<csc target="library" output="eg.dll">
+			<references>
+				<includes name="fit.dll"/>
+			</references>
+			<sources>
+				<includes name="src/eg/*.cs"/>
+			</sources>
+		</csc>
+	</target>
+
+	<target name="build_server" depends="build_fit" description="builds FitServer.exe">
+		<csc target="exe" output="FitServer.exe">
+			<references>
+				<includes name="fit.dll"/>
+			</references>
+			<sources>
+				<includes name="src/fit/FitServer.cs"/>
+			</sources>
+		</csc>
+	</target>
+	
+	<target name="build" description="build everything" depends="build_fit build_eg build_server">
+	</target>
+</project>
