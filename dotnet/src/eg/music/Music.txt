@@ -1,0 +1,38 @@
+Name	Artist	Album	Genre	Size	Time	Track Number	Track Count	Year	Date	
+Akila	Toure Kunda	The Toure Kunda Collection	World	5306074	265	9	10	1996	9/9/02 9:01 AM	
+American Tango	Weather Report	Mysterious Traveller	Jazz	4446151	222	2	7	1974	9/7/02 9:26 PM	
+Ananas	James Taylor	Hourglass	Pop	6897450	344	5	13	1997	9/7/02 11:47 PM	
+Another Grey Morning	James Taylor	JT	Pop	3284199	164	4	12	1977	9/7/02 11:32 PM	
+Cellohachi Part 1	Gideon Freudmann	Sound Of Distant Deer	New Age	4893909	244	4	9	1998	9/8/02 1:27 AM	
+Cellohachi Part 2	Gideon Freudmann	Sound Of Distant Deer	New Age	4303019	215	5	9	1998	9/8/02 1:27 AM	
+Cellohachi Part 3	Gideon Freudmann	Sound Of Distant Deer	New Age	2500570	124	6	9	1998	9/8/02 1:27 AM	
+Coolsville	Laurie Anderson	Strange Angels	Alternative	5542243	277	3	10	1989	9/9/02 8:30 AM	
+Copperline	James Taylor	New Moon Shine	Pop	5248087	262	1	12	1991	9/7/02 9:52 PM	
+Dice Are Rolling	Andrew Lloyd Webber	Evita	Soundtrack	6161383	307	10	13	1979	9/7/02 5:51 PM	
+El Vals De Tomas	Pepe & The Bottle Blondes	Latenight Betty	Latin	4889706	244	7	12	2000	9/9/02 12:23 AM	
+Guerrilla	Toure Kunda	The Toure Kunda Collection	World	6097588	304	3	10	1996	9/9/02 9:01 AM	
+Handy Man	James Taylor	JT	Pop	3976956	198	7	12	1977	9/7/02 11:36 PM	
+Hiawatha	Laurie Anderson	Strange Angels	Alternative	8248005	412	10	10	1989	9/9/02 8:30 AM	
+High Flying, Adored	Andrew Lloyd Webber	Evita	Soundtrack	4492160	224	2	13	1979	9/7/02 5:30 PM	
+I've Got The Blues	Lyle Lovett	I Love Everybody	Country	4272161	213	16	18	1994	9/8/02 8:02 PM	
+Licorice Particleboard	Gideon Freudmann	Hologram Crackers	New Age	3306675	165	14	17	1999	9/8/02 12:24 AM	
+Mhaire Bruineall	Clannad	Clannad In Concert	Celtic	1656778	82	4	8	1987	9/9/02 1:15 AM	
+Muddy River	Laurie Anderson	Bright Red	Alternative	3733522	186	7	14	1994	9/7/02 8:29 PM	
+Night In Baghdad	Laurie Anderson	Bright Red	Alternative	4064760	203	12	14	1994	9/7/02 8:38 PM	
+Nil Se'n La	Clannad	Clannad In Concert	Celtic	13821475	690	8	8	1987	9/9/02 1:15 AM	
+No Woman No Cry	Bob Marley	Legend	Reggae	8552070	427	2	14	1984	9/9/02 12:06 AM	
+1. Allegro ma non troppo	Emerson Quartet	Dvorak Op. 96	Classical	10956970	547	1	8	1986	9/9/02 8:34 AM	
+2. Lento	Emerson Quartet	Dvorak Op. 96	Classical	9336790	466	2	8	1986	9/8/02 12:38 AM	
+3. Molto vivace	Emerson Quartet	Dvorak Op. 96	Classical	4383458	219	3	8	1986	9/8/02 12:38 AM	
+4. Finale. Vivace, ma non troppo	Emerson Quartet	Dvorak Op. 96	Classical	6476928	323	4	8	1986	9/8/02 12:38 AM	
+Penguins	Lyle Lovett	I Love Everybody	Country	3025066	151	10	18	1994	9/8/02 7:54 PM	
+Rainbow Country	Ziggy Marley	Jahmekya	Reggae	4068927	203	3	16	1991	9/8/02 10:32 PM	
+Redemption Song	Bob Marley	Legend	Reggae	4589289	229	11	14	1984	9/9/02 12:23 AM	
+Robin Hood Changes His Oil	Gideon Freudmann	Hologram Crackers	New Age	5236082	261	3	17	1999	9/8/02 12:24 AM	
+Rumba De 5 Kilos	Pepe & The Bottle Blondes	Latenight Betty	Latin	3661951	182	1	12	2000	9/9/02 12:23 AM	
+Sailing To Philadelphia	James Taylor	October Rose	Pop	6581911	328	3	3	2001	9/7/02 10:45 PM	
+Scarlet Woman	Weather Report	Mysterious Traveller	Jazz	6880762	343	6	7	1974	9/7/02 9:44 PM	
+Sing Sing Sing	Pepe & The Bottle Blondes	Latenight Betty	Latin	4425770	221	11	12	2000	9/9/02 12:23 AM	
+Slippery Lettuce	Gideon Freudmann	Sound Of Distant Deer	New Age	5731393	286	2	9	1998	9/8/02 1:27 AM	
+Ti Mon Bo	Tito Puente	Mondobeat	World	7878131	393	2	12	1998	9/9/02 8:52 AM	
+Zahrafat A Sa'ld	Musicians Of The Nile	Mondobeat	World	8546887	427	6	12	1998	9/9/02 8:54 AM	
