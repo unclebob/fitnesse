@@ -102,4 +102,9 @@ public class CollapsableWidget extends ParentWidget
 		else
 			return collapsableClosedImg;
 	}
+
+	public void setCollapsed(boolean collapsed)
+	{
+		expanded = !collapsed;
+	}
 }

@@ -56,6 +56,15 @@ public class IncludeWidgetTest extends WidgetTest
 		assertNotSubString("class=\"collapsable\"", result);
 	}
 
+	public void testCollapsedIsHidden() throws Exception
+	{
+		IncludeWidget widget = createIncludeWidget(page1, "-c PageOne");
+		final String result = widget.render();
+		assertNotSubString("class=\"collapsable\"", result);
+		assertSubString("class=\"hidden\"", result);
+		assertSubString("collapsableClosed.gif", result);
+	}
+
 	public void testRegexp() throws Exception
 	{
 		assertMatchEquals("!include SomePage", "!include SomePage");
@@ -68,6 +77,7 @@ public class IncludeWidgetTest extends WidgetTest
 
 	public void testRegexpWithOptions() throws Exception
 	{
+		assertMatchEquals("!include -c SomePage", "!include -c SomePage");
 		assertMatchEquals("!include -setup SomePage", "!include -setup SomePage");
 		assertMatchEquals("!include  -setup SomePage", "!include  -setup SomePage");
 		assertMatchEquals("!include -teardown SomePage", "!include -teardown SomePage");

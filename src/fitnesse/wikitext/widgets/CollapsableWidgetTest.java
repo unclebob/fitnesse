@@ -124,4 +124,15 @@ public class CollapsableWidgetTest extends WidgetTest
 		return childTags;
 	}
 
+	public void testRenderCollapsed() throws Exception
+	{
+		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
+		widget.setCollapsed(true);
+		String html = widget.render();
+		assertSubString("collapsableClosed.gif", html);
+		assertSubString("class=\"hidden\"", html);
+	}
+
+
+
 }
