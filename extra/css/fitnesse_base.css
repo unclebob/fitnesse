@@ -366,6 +366,11 @@ div.edit_buttons
 {
 }
 
+div.nav_break
+{
+	font-size: .3em;
+}
+
 div.merge_new
 {
 	float: left;

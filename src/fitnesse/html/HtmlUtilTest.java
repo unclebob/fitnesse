@@ -83,13 +83,91 @@ public class HtmlUtilTest extends RegexTest
 		assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
 	}
 
-    public void testMakeBreadCrumbsWithCurrentPageLinkedWithEmptyArray() throws Exception
-    {
-        try {
-            HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(".");
-            HtmlUtil.makeBreadCrumbsWithCurrentPageLinked("");
-        } catch (Exception e) {
-            fail("should not throw excepotion");
-        }
-    }
+	public void testMakeBreadCrumbsWithCurrentPageLinkedWithEmptyArray() throws Exception
+	{
+		try
+		{
+			HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(".");
+			HtmlUtil.makeBreadCrumbsWithCurrentPageLinked("");
+		}
+		catch(Exception e)
+		{
+			fail("should not throw exception");
+		}
+	}
+
+	public void testMakeActionsDefault() throws Exception
+	{
+		WikiPage root = InMemoryPage.makeRoot("root");
+		root.addChildPage("SomePage");
+		PageData pageData = new PageData(root.getChildPage("SomePage"));
+		String expected = "<!--Edit button-->" + endl +
+		  "<a href=\"SomePage?edit\" accesskey=\"e\">Edit</a>" + endl +
+		  "<!--Versions button-->" + endl +
+		  "<a href=\"SomePage?versions\" accesskey=\"v\">Versions</a>" + endl +
+		  "<!--Properties button-->" + endl +
+		  "<a href=\"SomePage?properties\" accesskey=\"p\">Properties</a>" + endl +
+		  "<!--Refactor button-->" + endl +
+		  "<a href=\"SomePage?refactor\" accesskey=\"r\">Refactor</a>" + endl +
+		  "<!--Where Used button-->" + endl +
+		  "<a href=\"SomePage?whereUsed\" accesskey=\"w\">Where Used</a>" + endl +
+		  "<div class=\"nav_break\">&nbsp;</div>" + endl +
+		  "<!--Files button-->" + endl +
+		  "<a href=\"/files\" accesskey=\"f\">Files</a>" + endl +
+		  "<!--Search button-->" + endl +
+		  "<a href=\"?searchForm\" accesskey=\"s\">Search</a>" + endl;
+		assertEquals(expected, HtmlUtil.makeActions(pageData, "SomePage", "SomePage", false).html());
+	}
+
+	public void testMakeActionsWithTestButton() throws Exception
+	{
+		WikiPage root = InMemoryPage.makeRoot("root");
+		root.addChildPage("TestSomething");
+		PageData pageData = new PageData(root.getChildPage("TestSomething"));
+		String expected = "<!--Test button-->" + endl +
+		  "<a href=\"TestSomething?test\" accesskey=\"t\">Test</a>" + endl +
+		  "<div class=\"nav_break\">&nbsp;</div>" + endl +
+		  "<!--Edit button-->" + endl +
+		  "<a href=\"TestSomething?edit\" accesskey=\"e\">Edit</a>" + endl +
+		  "<!--Versions button-->" + endl +
+		  "<a href=\"TestSomething?versions\" accesskey=\"v\">Versions</a>" + endl +
+		  "<!--Properties button-->" + endl +
+		  "<a href=\"TestSomething?properties\" accesskey=\"p\">Properties</a>" + endl +
+		  "<!--Refactor button-->" + endl +
+		  "<a href=\"TestSomething?refactor\" accesskey=\"r\">Refactor</a>" + endl +
+		  "<!--Where Used button-->" + endl +
+		  "<a href=\"TestSomething?whereUsed\" accesskey=\"w\">Where Used</a>" + endl +
+		  "<div class=\"nav_break\">&nbsp;</div>" + endl +
+		  "<!--Files button-->" + endl +
+		  "<a href=\"/files\" accesskey=\"f\">Files</a>" + endl +
+		  "<!--Search button-->" + endl +
+		  "<a href=\"?searchForm\" accesskey=\"s\">Search</a>" + endl;
+		assertEquals(expected, HtmlUtil.makeActions(pageData, "TestSomething", "TestSomething", false).html());
+	}
+
+	public void testMakeActionsWithSuiteButton() throws Exception
+	{
+		WikiPage root = InMemoryPage.makeRoot("root");
+		root.addChildPage("SuiteNothings");
+		PageData pageData = new PageData(root.getChildPage("SuiteNothings"));
+		String expected = "<!--Suite button-->" + endl +
+		  "<a href=\"SuiteNothings?suite\" accesskey=\"\">Suite</a>" + endl +
+		  "<div class=\"nav_break\">&nbsp;</div>" + endl +
+		  "<!--Edit button-->" + endl +
+		  "<a href=\"SuiteNothings?edit\" accesskey=\"e\">Edit</a>" + endl +
+		  "<!--Versions button-->" + endl +
+		  "<a href=\"SuiteNothings?versions\" accesskey=\"v\">Versions</a>" + endl +
+		  "<!--Properties button-->" + endl +
+		  "<a href=\"SuiteNothings?properties\" accesskey=\"p\">Properties</a>" + endl +
+		  "<!--Refactor button-->" + endl +
+		  "<a href=\"SuiteNothings?refactor\" accesskey=\"r\">Refactor</a>" + endl +
+		  "<!--Where Used button-->" + endl +
+		  "<a href=\"SuiteNothings?whereUsed\" accesskey=\"w\">Where Used</a>" + endl +
+		  "<div class=\"nav_break\">&nbsp;</div>" + endl +
+		  "<!--Files button-->" + endl +
+		  "<a href=\"/files\" accesskey=\"f\">Files</a>" + endl +
+		  "<!--Search button-->" + endl +
+		  "<a href=\"?searchForm\" accesskey=\"s\">Search</a>" + endl;
+		assertEquals(expected, HtmlUtil.makeActions(pageData, "SuiteNothings", "SuiteNothings", false).html());
+	}
 }

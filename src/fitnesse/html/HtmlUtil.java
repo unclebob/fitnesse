@@ -201,7 +201,6 @@ public class HtmlUtil
 	public static HtmlTag makeActions(PageData pageData) throws Exception
 	{
 		WikiPage page = pageData.getWikiPage();
-		TagGroup actions = new TagGroup();
 
 		WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
 		String localPageName = PathParser.render(localPagePath);
@@ -213,26 +212,44 @@ public class HtmlUtil
 			localOrRemotePageName = proxyPage.getThisPageUrl();
 			newWindowIfRemote = true;
 		}
+		return makeActions(pageData, localPageName, localOrRemotePageName, newWindowIfRemote);
+
+	}
+
+	public static HtmlTag makeActions(PageData pageData, String localPageName, String localOrRemotePageName, boolean newWindowIfRemote)
+	  throws Exception
+	{
+		TagGroup actions = new TagGroup();
 		if(pageData.hasAttribute("Test"))
 			actions.add(makeActionLink(localPageName, "Test", "test", "t", NO_NEW_WINDOW));
 		if(pageData.hasAttribute("Suite"))
 			actions.add(makeActionLink(localPageName, "Suite", "suite", "", NO_NEW_WINDOW));
+		if(pageData.hasAttribute("Test") || pageData.hasAttribute("Suite"))
+			actions.add(getNavBreak());
 		if(pageData.hasAttribute("Edit"))
 			actions.add(makeActionLink(localOrRemotePageName, "Edit", "edit", "e", newWindowIfRemote));
-		if(pageData.hasAttribute("Properties"))
-			actions.add(makeActionLink(localOrRemotePageName, "Properties", "properties", "p", newWindowIfRemote));
 		if(pageData.hasAttribute("Versions"))
 			actions.add(makeActionLink(localOrRemotePageName, "Versions", "versions", "v", newWindowIfRemote));
-		if(pageData.hasAttribute("Search"))
-			actions.add(makeActionLink("?searchForm", "Search", null, "s", NO_NEW_WINDOW));
+		if(pageData.hasAttribute("Properties"))
+			actions.add(makeActionLink(localOrRemotePageName, "Properties", "properties", "p", newWindowIfRemote));
 		if(pageData.hasAttribute("Refactor"))
 			actions.add(makeActionLink(localOrRemotePageName, "Refactor", "refactor", "r", newWindowIfRemote));
 		if(pageData.hasAttribute("WhereUsed"))
 			actions.add(makeActionLink(localOrRemotePageName, "Where Used", "whereUsed", "w", NO_NEW_WINDOW));
+		actions.add(getNavBreak());
 		if(pageData.hasAttribute("Files"))
 			actions.add(makeActionLink("/files", "Files", null, "f", NO_NEW_WINDOW));
+		if(pageData.hasAttribute("Search"))
+			actions.add(makeActionLink("?searchForm", "Search", null, "s", NO_NEW_WINDOW));
 
 		return actions;
+	}
+
+	private static HtmlTag getNavBreak() {
+		HtmlTag navBreak = new HtmlTag("div");
+		navBreak.addAttribute("class", "nav_break");
+		navBreak.add("&nbsp;");
+		return navBreak;
 	}
 
 	public static String makeNormalWikiPageContent(PageData pageData) throws Exception
