@@ -55,7 +55,8 @@ public class PropertiesResponderTest extends RegexTest
     assertSubString("<input type=\"checkbox\" name=\"Suite\"/>", content);
     assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/>", content);
     assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/>", content);
+		assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/>", content);
+		assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/>", content);
 
     assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_READ + "\"/>", content);
     assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_WRITE + "\"/>", content);
@@ -208,6 +209,7 @@ public class PropertiesResponderTest extends RegexTest
 		String html = new PropertiesResponder().makeNavigationCheckboxesHtml(data).html();
 		assertSubString("<div style=\"float: left; width: 150px;\">Navigation:", html);
 		assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
+		assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
 		assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
 	}
 

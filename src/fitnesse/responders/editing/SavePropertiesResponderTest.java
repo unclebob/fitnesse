@@ -31,6 +31,7 @@ public class SavePropertiesResponderTest extends RegexTest
 		request.addInput("Test", "on");
 		request.addInput("Properties", "on");
 		request.addInput("Search", "on");
+		request.addInput("RecentChanges", "on");
     request.addInput(WikiPage.SECURE_READ, "on");
 		request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
 		request.setResource("PageOne");
@@ -99,6 +100,7 @@ public class SavePropertiesResponderTest extends RegexTest
 		assertTrue(data.hasAttribute("Properties"));
 		assertTrue(data.hasAttribute("Search"));
 		assertFalse(data.hasAttribute("Edit"));
+		assertTrue(data.hasAttribute("RecentChanges"));
     assertTrue(data.hasAttribute(WikiPage.SECURE_READ));
     assertFalse(data.hasAttribute(WikiPage.SECURE_WRITE));
 

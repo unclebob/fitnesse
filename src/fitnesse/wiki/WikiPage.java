@@ -12,10 +12,10 @@ public interface WikiPage extends Serializable, Comparable
 	public static final String SECURE_WRITE = "secure-write";
 	public static final String SECURE_TEST = "secure-test";
 	public static final String LAST_MODIFYING_USER = "LastModifyingUser";
-	public String[] PAGE_ACTION_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed"};
-	public String[] NAVIGATION_ATTRIBUTES = {"Files", "Search"};
+	public String[] ACTION_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed"};
+	public String[] NAVIGATION_ATTRIBUTES = {"RecentChanges", "Files", "Search"};
 	//TODO - this is ugly but some code needs a list of both lists combined - move that to a method somewhere please.
-	public String[] NON_SECURITY_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed","Files", "Search"};
+	public String[] NON_SECURITY_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed", "RecentChanges", "Files", "Search"};
 
 	public String[] SECURITY_ATTRIBUTES = {SECURE_READ, SECURE_WRITE, SECURE_TEST};
 

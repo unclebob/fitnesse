@@ -228,7 +228,7 @@ public class PropertiesResponder implements SecureResponder
 
 	public HtmlTag makeTestActionCheckboxesHtml(PageData pageData) throws Exception
 	{
-		return makeAttributeCheckboxesHtml("Actions:", WikiPage.PAGE_ACTION_ATTRIBUTES, pageData);
+		return makeAttributeCheckboxesHtml("Actions:", WikiPage.ACTION_ATTRIBUTES, pageData);
 	}
 
 	public HtmlElement makeNavigationCheckboxesHtml(PageData pageData) throws Exception

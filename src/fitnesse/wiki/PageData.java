@@ -61,12 +61,13 @@ public class PageData implements Serializable
 	public void initializeAttributes() throws Exception
 	{
 		properties.set("Edit", "true");
-		properties.set("Search", "true");
 		properties.set("Versions", "true");
 		properties.set("Properties", "true");
 		properties.set("Refactor", "true");
 		properties.set("WhereUsed", "true");
 		properties.set("Files", "true");
+		properties.set("RecentChanges", "true");
+		properties.set("Search", "true");
 		properties.set(EditResponder.TICKET_ID, SaveRecorder.newTicket() + "");
 		properties.set("LastModified", makeVersionTimeFormat().format(new Date()));
 

@@ -237,6 +237,8 @@ public class HtmlUtil
 		if(pageData.hasAttribute("WhereUsed"))
 			actions.add(makeActionLink(localOrRemotePageName, "Where Used", "whereUsed", "w", NO_NEW_WINDOW));
 		actions.add(getNavBreak());
+		if(pageData.hasAttribute("RecentChanges"))
+			actions.add(makeActionLink("/RecentChanges", "RecentChanges", null, "", NO_NEW_WINDOW));
 		if(pageData.hasAttribute("Files"))
 			actions.add(makeActionLink("/files", "Files", null, "f", NO_NEW_WINDOW));
 		if(pageData.hasAttribute("Search"))
