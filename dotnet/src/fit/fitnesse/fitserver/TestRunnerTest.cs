@@ -67,15 +67,6 @@ namespace fitnesse.fitserver
 		}
 
 		[Test]
-		public void TestEstablishCacheStream_Temp()
-		{
-			runner.CreateCacheStream("");
-			Assert.IsTrue(runner.cacheFilename.StartsWith("FitNesse"));
-			Assert.IsTrue(runner.cacheWriter is StreamWriter);
-			Assert.IsTrue(runner.deleteCacheOnExit);
-		}
-
-		[Test]
 		public void TestEstablishCacheStream_Stdout()
 		{
 			runner.CreateCacheStream("stdout");
@@ -101,7 +92,7 @@ namespace fitnesse.fitserver
 			runner.CacheResults(results);
 			writer.Close();
 			string text = writer.ToString();
-			Assert.AreEqual(results.ToString() + "\n", text);
+			Assert.AreEqual(Protocol.FormatDocument(results.ToString() + "\n"), text);
 		}
 
 		[Test]

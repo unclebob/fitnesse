@@ -148,12 +148,6 @@ namespace fitnesse.fitserver
 				cacheWriter = Console.Out;
 				deleteCacheOnExit = false;
 			}
-			else if("".Equals(filename))
-			{
-				cacheFilename = "FitNesse" + new Random().Next() + ".results";
-				cacheWriter = new StreamWriter(File.OpenWrite(cacheFilename));
-				deleteCacheOnExit = true;
-			}
 			else
 			{
 				cacheFilename = filename;
@@ -175,8 +169,11 @@ namespace fitnesse.fitserver
 
 		public void CacheResults(PageResult results)
 		{
-			string data = results.ToString() + "\n";
-			cacheWriter.Write(Protocol.FormatDocument(data));
+			if(cacheWriter != null)
+			{
+				string data = results.ToString() + "\n";
+				cacheWriter.Write(Protocol.FormatDocument(data));
+			}
 		}
 
 		public void CacheFinalCount(Counts counts)
@@ -187,9 +184,12 @@ namespace fitnesse.fitserver
 
 		public void CleanResultCache()
 		{
-			cacheWriter.Close();
-			if(deleteCacheOnExit)
-				File.Delete(cacheFilename);
+			if(cacheWriter != null)
+			{
+				cacheWriter.Close();
+				if(deleteCacheOnExit)
+					File.Delete(cacheFilename);
+			}
 		}
 	}
 }
