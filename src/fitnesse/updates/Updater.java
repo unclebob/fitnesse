@@ -40,6 +40,7 @@ public class Updater
 			new ReplacingFileUpdate(this, "files/javascript/SpreadsheetTranslator.js", "files/javascript"),
 			new ReplacingFileUpdate(this, "files/javascript/spreadsheetSupport.js", "files/javascript"),
 			new PropertiesToXmlUpdate(this),
+			new AttributeAdderUpdate(this, "RecentChanges"),
 			new AttributeAdderUpdate(this, "WhereUsed"),
 			new AttributeAdderUpdate(this, "Files"),
 			new VirtualWikiDeprecationUpdate(this),
