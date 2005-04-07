@@ -12,15 +12,18 @@ public class SymbolicPageTest extends TestCase
 	private WikiPage pageOne;
 	private WikiPage pageTwo;
 	private SymbolicPage symPage;
+	private String pageOnePath = "PageOne";
+	private String pageTwoPath = "PageTwo";
+	private String pageOneContent = "page one";
+	private String pageTwoContent = "page two";
 
 	public void setUp() throws Exception
 	{
 		root = InMemoryPage.makeRoot("RooT");
 		crawler = root.getPageCrawler();
-		pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-		pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
-
-		symPage = new SymbolicPage("SymPage", pageOne, pageTwo);
+		pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
+		pageTwo = crawler.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
+		symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
 	}
 
 	public void testCreation() throws Exception
@@ -30,32 +33,33 @@ public class SymbolicPageTest extends TestCase
 
 	public void testLinkage() throws Exception
 	{
-		assertSame(pageOne, symPage.getRealPage());
+		assertSame(pageTwo, symPage.getRealPage());
 	}
 
-	public void testData() throws Exception
+	public void testInternalData() throws Exception
 	{
 		PageData data = symPage.getData();
-		assertEquals("page one", data.getContent());
+		assertEquals(pageTwoContent, data.getContent());
 		assertSame(symPage, data.getWikiPage());
 	}
 
-	public void testCommit() throws Exception
+	public void testCommitInternal() throws Exception
 	{
 		PageData data = symPage.getData();
 		data.setContent("new content");
 		symPage.commit(data);
 
-		data = pageOne.getData();
+		data = pageTwo.getData();
 		assertEquals("new content", data.getContent());
 
 		data = symPage.getData();
 		assertEquals("new content", data.getContent());
+
 	}
 
 	public void testGetChild() throws Exception
 	{
-  	WikiPage childPage = crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child page");
+  	WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
 		WikiPage page = symPage.getChildPage("ChildPage");
 		assertNotNull(page);
 		assertEquals(SymbolicPage.class, page.getClass());
@@ -65,8 +69,8 @@ public class SymbolicPageTest extends TestCase
 
 	public void testGetChildren() throws Exception
 	{
-		crawler.addPage(pageOne, PathParser.parse("ChildOne"), "child one");
-		crawler.addPage(pageOne, PathParser.parse("ChildTwo"), "child two");
+		crawler.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
+		crawler.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
 		List children = symPage.getChildren();
 		assertEquals(2, children.size());
 		assertEquals(SymbolicPage.class, children.get(0).getClass());
@@ -76,15 +80,19 @@ public class SymbolicPageTest extends TestCase
 	public void testCyclicSymbolicLinks() throws Exception
 	{
 		PageData data = pageOne.getData();
-		data.getProperties().addSymbolicLink("SymTwo", PathParser.parse("PageTwo"));
+		data.getProperties().addSymbolicLink("SymOne", PathParser.parse(pageTwoPath));
 		pageOne.commit(data);
 
 		data = pageTwo.getData();
-		data.getProperties().addSymbolicLink("SymOne", PathParser.parse("PageOne"));
+		data.getProperties().addSymbolicLink("SymTwo", PathParser.parse(pageOnePath));
 		pageTwo.commit(data);
 
-		WikiPage deepPage = crawler.getPage(root, PathParser.parse("PageOne.SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
+		WikiPage deepPage = crawler.getPage(root, PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
 		List children = deepPage.getChildren();
+		assertEquals(1, children.size());
+
+		deepPage = crawler.getPage(root, PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
+		children = deepPage.getChildren();
 		assertEquals(1, children.size());
 	}
 }
