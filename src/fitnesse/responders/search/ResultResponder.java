@@ -26,17 +26,67 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		page.main.use(HtmlPage.BreakPoint);
 		page.divide();
 
-		response.add(page.preDivision + "<ul>");
+		response.add(page.preDivision);
+		response.add(buildFeedbackDiv().html());
+		response.add(ChunkedResultsListingUtil.getTableOpenHtml());
+		response.add(buildHeaderRow().html());
 		startSearching();
-		response.add("</ul>\n" + getPageFooterInfo(hits) + "\n" + page.postDivision);
+		response.add(ChunkedResultsListingUtil.getTableCloseHtml());
+		response.add(buildFeedbackModificationScript().html());
+		response.add(page.postDivision);
 		response.closeAll();
+	}
+
+	private HtmlTag buildFeedbackModificationScript()
+	  throws Exception
+	{
+		HtmlTag script = new HtmlTag("script");
+		script.addAttribute("language", "javascript");
+		script.add("document.getElementById(\"feedback\").innerHTML = '" + getPageFooterInfo(hits) + "'");
+		return script;
+	}
+
+	private HtmlTag buildHeaderRow()
+	{
+		HtmlTag headerRow = new HtmlTag("tr");
+		HtmlTag pageColumnHeader = new HtmlTag("td", "Page");
+		pageColumnHeader.addAttribute("class", "resultsHeader");
+		HtmlTag lastModifiedColumnHeader = new HtmlTag("td", "Last Modified");
+		lastModifiedColumnHeader.addAttribute("class", "resultsHeader");
+
+		headerRow.add(pageColumnHeader);
+		headerRow.add(lastModifiedColumnHeader);
+		return headerRow;
+	}
+
+	private HtmlTag buildFeedbackDiv()
+	{
+		HtmlTag feedback = new HtmlTag("div", "Searching...");
+		feedback.addAttribute("id", "feedback");
+		return feedback;
 	}
 
 	public void hit(WikiPage page) throws Exception
 	{
 		hits++;
 		String fullPathName = PathParser.render(getPageCrawler().getFullPath(page));
-		response.add("<li><a href=\"" + fullPathName + "\">" + fullPathName + "</a>\n");
+
+		HtmlTag row = new HtmlTag("tr");
+		row.addAttribute("class", "resultsRow" + getRow());
+
+		HtmlTag link = new HtmlTag("a", fullPathName) ;
+		link.addAttribute("href", fullPathName);
+
+		row.add(new HtmlTag("td", link));
+		row.add(new HtmlTag("td", "" + page.getData().getLastModificationTime()));
+		response.add(row.html());
+	}
+
+	private int nextRow = 0;
+
+	private int getRow()
+	{
+		return (nextRow++ % 2) + 1;
 	}
 
 	protected abstract String getTitle() throws Exception;

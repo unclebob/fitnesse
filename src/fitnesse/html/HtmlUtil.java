@@ -11,6 +11,7 @@ public class HtmlUtil
 	public static HtmlElement NBSP = new RawHtml("&nbsp;");
 	public static HtmlElement P = new RawHtml("<p>");
 	public static final boolean NO_NEW_WINDOW = false;
+	public static final String ENDL = System.getProperty("line.separator");
 
 	public static HtmlTag makeDivTag(String divClass)
 	{

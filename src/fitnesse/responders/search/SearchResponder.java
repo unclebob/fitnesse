@@ -3,8 +3,6 @@
 package fitnesse.responders.search;
 
 import fitnesse.components.Searcher;
-import fitnesse.responders.SecureResponder;
-import fitnesse.authentication.*;
 
 public class SearchResponder extends ResultResponder
 {

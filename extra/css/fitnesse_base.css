@@ -228,10 +228,20 @@ span.page_title
 	font-variant: small-caps;
 }
 
-.caps
+.caps, .resultsHeader
 {
 	font-size: 1.3em;
 	font-variant: small-caps;
+}
+
+.resultsHeader, .resultsRow2
+{
+	background-color: #EFEFEF;
+}
+
+.resultsRow1
+{
+	background-color: #FFFFFF;
 }
 
 .centered
