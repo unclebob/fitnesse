@@ -38,6 +38,8 @@ public class CollapsableWidgetTest extends WidgetTest
 		assertSubString("title", html);
 		assertSubString("content", html);
 		assertSubString("collapsableOpen.gif", html);
+		assertSubString("<a href=\"javascript:expandAll();\">Expand All</a>", html);
+		assertSubString("<a href=\"javascript:collapseAll();\">Collapse All</a>", html);
 	}
 
 	public void testExpandedOrCollapsed() throws Exception
@@ -84,13 +86,17 @@ public class CollapsableWidgetTest extends WidgetTest
 		assertEquals("collapse_rim", outerTag.getAttribute("class"));
 
 		List childTags = removeNewlineTags(outerTag);
-		HtmlTag anchor = (HtmlTag) childTags.get(0);
+
+		HtmlTag collapseAllLinksDiv = (HtmlTag) childTags.get(0);
+		assertEquals("div", collapseAllLinksDiv.tagName());
+
+		HtmlTag anchor = (HtmlTag) childTags.get(1);
 		assertEquals("a", anchor.tagName());
 
-		HtmlElement title = (HtmlElement) childTags.get(1);
+		HtmlElement title = (HtmlElement) childTags.get(2);
 		assertEquals("title", title.html());
 
-		HtmlTag contentDiv = (HtmlTag) childTags.get(2);
+		HtmlTag contentDiv = (HtmlTag) childTags.get(3);
 		assertEquals("div", contentDiv.tagName());
 		assertEquals("collapsable", contentDiv.getAttribute("class"));
 

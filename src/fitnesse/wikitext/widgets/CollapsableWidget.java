@@ -27,6 +27,8 @@ public class CollapsableWidget extends ParentWidget
 	private static final String collapsableClosedCss = "hidden";
 	private static final String collapsableOpenImg = "/files/images/collapsableOpen.gif";
 	private static final String collapsableClosedImg = "/files/images/collapsableClosed.gif";
+	private static final String collapseAllLink = "<a href=\"javascript:collapseAll();\">Collapse All</a>";
+	private static final String expandAllLink = "<a href=\"javascript:expandAll();\">Expand All</a>";
 
 	public CollapsableWidget(ParentWidget parent)
 	{
@@ -75,8 +77,16 @@ public class CollapsableWidget extends ParentWidget
 		image.addAttribute("src", imageSrc());
 		image.addAttribute("class", "left");
 		image.addAttribute("id", "img" + id);
+
 		HtmlTag anchor = new HtmlTag("a", image);
 		anchor.addAttribute("href", "javascript:toggleCollapsable('" + id + "');");
+
+		HtmlTag links = new HtmlTag("div");
+		links.addAttribute("style", "float: right;");
+		links.addAttribute("class", "meta");
+		links.add(expandAllLink + " | " + collapseAllLink);
+
+		outerDiv.add(links);
 		outerDiv.add(anchor);
 		outerDiv.add(title);
 
