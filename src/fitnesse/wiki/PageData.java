@@ -14,8 +14,8 @@ import java.text.SimpleDateFormat;
 
 public class PageData implements Serializable
 {
-	public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{ClasspathWidget.class});
-	public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{FixtureWidget.class});
+	public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{VariableDefinitionWidget.class, ClasspathWidget.class});
+	public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{VariableDefinitionWidget.class, FixtureWidget.class});
 	public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
 	public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]{VariableDefinitionWidget.class});
 
@@ -185,8 +185,11 @@ public class PageData implements Serializable
 		List values = new ArrayList();
 		for(Iterator iterator = widgets.iterator(); iterator.hasNext();)
 		{
-			WidgetWithTextArgument widget = (WidgetWithTextArgument) iterator.next();
-			values.add(widget.getText());
+			Object widget = iterator.next();
+			if(widget instanceof VariableDefinitionWidget)
+				((VariableDefinitionWidget)widget).render();
+			else if(widget instanceof WidgetWithTextArgument)
+				values.add(((WidgetWithTextArgument)widget).getText());
 		}
 		return values;
 	}

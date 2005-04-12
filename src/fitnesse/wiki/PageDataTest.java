@@ -48,32 +48,6 @@ public class PageDataTest extends RegexTest
 		String html = d.getHtml();
 		assertEquals("&lt;b&gt;", html);
 	}
-//todo delete comment
-// Disabled by Micah
-//	public void testNestedVariables() throws Exception
-//	{
-//		String content = "!define x (!define y {123})\n" +
-//		  "!define z (${y})\n" +
-//		  "${x}\n" +
-//		  "-${z}-";
-//		PageData d = new PageData(page, content);
-//		String text = d.preProcess();
-//		assertSubString("-123-", text);
-//	}
-//
-//	public void testInfiniteNestedVariables() throws Exception
-//	{
-//		String content = "!define x (${x})\n${x}";
-//		PageData d = new PageData(page, content);
-//		try
-//		{
-//			System.err.println(d.preProcess());
-//			fail("Should throw recursive variables Exception");
-//		}
-//		catch(Exception e)
-//		{
-//		}
-//	}
 
 	public void testLiteral() throws Exception
 	{
@@ -91,6 +65,23 @@ public class PageDataTest extends RegexTest
 		List paths = page.getData().getClasspaths();
 		assertTrue(paths.contains("123"));
 		assertTrue(paths.contains("abc"));
+	}
+
+	public void testClasspathWithVariable() throws Exception
+	{
+		WikiPage root = InMemoryPage.makeRoot("RooT");
+
+		WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
+		List paths = page.getData().getClasspaths();
+		assertEquals("/my/path.jar", paths.get(0).toString());
+
+		PageData data = root.getData();
+		data.setContent("!define PATH {/my/path}\n");
+		root.commit(data);
+
+		page = crawler.addPage(root, PathParser.parse("ClassPath2"), "!path ${PATH}.jar");
+		paths = page.getData().getClasspaths();
+		assertEquals("/my/path.jar", paths.get(0).toString());
 	}
 
 	public void testGetFixtureNames() throws Exception

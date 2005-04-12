@@ -5,6 +5,7 @@ package fitnesse;
 import fitnesse.wiki.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.editing.*;
 import fitnesse.authentication.*;
 import fitnesse.wikitext.WidgetBuilder;
 import java.util.*;
@@ -20,6 +21,7 @@ public class ComponentFactory
 	public static final String RESPONDERS = "Responders";
 	public static final String WIKI_WIDGETS = "WikiWidgets";
 	public static final String AUTHENTICATOR = "Authenticator";
+	public static final String CONTENT_FILTER = "ContentFilter";
 
 	private Properties loadedProperties;
 	private String propertiesLocation;
@@ -126,5 +128,16 @@ public class ComponentFactory
 			WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(widgetClassesArray);
 		}
 		return buffer.toString();
+	}
+
+	public String loadContentFilter() throws Exception
+	{
+		ContentFilter filter = (ContentFilter)createComponent(CONTENT_FILTER);
+		if(filter != null)
+		{
+			SaveResponder.contentFilter = filter;
+			return "\tContent filter installed: " + filter.getClass().getName() + "\n";
+		}
+		return "";
 	}
 }

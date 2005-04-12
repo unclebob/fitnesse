@@ -222,8 +222,7 @@ public class HtmlUtil
 
 	}
 
-	public static HtmlTag makeActions(PageData pageData, String localPageName, String localOrRemotePageName, boolean newWindowIfRemote)
-	  throws Exception
+	public static HtmlTag makeActions(PageData pageData, String localPageName, String localOrRemotePageName, boolean newWindowIfRemote) throws Exception
 	{
 		TagGroup actions = new TagGroup();
 		if(pageData.hasAttribute("Test"))

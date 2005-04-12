@@ -14,7 +14,7 @@ import java.io.File;
 
 public class FitNesse
 {
-	public static final String VERSION = "20050404";
+	public static final String VERSION = "20050405";
 
 	private FitNesseContext context = new FitNesseContext();
 	private SocketService theService;
@@ -57,6 +57,7 @@ public class FitNesse
 
 		extraOutput = componentFactory.loadResponderPlugins(context.responderFactory);
 		extraOutput += componentFactory.loadWikiWidgetPlugins();
+		extraOutput += componentFactory.loadContentFilter();
 
 		return context;
 	}

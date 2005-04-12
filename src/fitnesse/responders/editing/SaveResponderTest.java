@@ -24,6 +24,11 @@ public class SaveResponderTest extends RegexTest
 		responder = new SaveResponder();
 	}
 
+	protected void tearDown() throws Exception
+	{
+		SaveResponder.contentFilter = null;
+	}
+
 	public void testResponse() throws Exception
 	{
 		crawler.addPage(root, PathParser.parse("ChildPage"));
@@ -56,8 +61,6 @@ public class SaveResponderTest extends RegexTest
 		request.addInput(EditResponder.SAVE_ID, "12345");
 		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
 		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
-
-
 
 		responder.makeResponse(new FitNesseContext(root), request);
 
@@ -93,7 +96,7 @@ public class SaveResponderTest extends RegexTest
 		request.addInput(EditResponder.SAVE_ID, "" + SaveRecorder.newIdNumber());
 		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-      Response response = responder.makeResponse(new FitNesseContext(root), request);
+    Response response = responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(303, response.getStatus());
 
 		request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
@@ -110,6 +113,25 @@ public class SaveResponderTest extends RegexTest
 
 		String user = root.getChildPage("EditPage").getData().getAttribute(WikiPage.LAST_MODIFYING_USER);
 		assertEquals("Aladdin", user);
+	}
+
+	public void testContentFilter() throws Exception
+	{
+		SaveResponder.contentFilter = new ContentFilter(){
+			public boolean isContentAcceptable(String content, String page)
+			{
+				return false;
+			}
+		};
+		crawler.addPage(root, PathParser.parse("ChildPage"));
+		request.setResource("ChildPage");
+		request.addInput(EditResponder.SAVE_ID, "12345");
+		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
+		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
+
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+		assertEquals(200, response.getStatus());
+		assertSubString("Your changes will not be saved!", new MockResponseSender(response).sentData());
 	}
 
 	private void createAndSaveANewPage(String pageName) throws Exception

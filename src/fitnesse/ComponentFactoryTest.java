@@ -7,7 +7,7 @@ import java.io.*;
 import fitnesse.wiki.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.*;
-import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.editing.*;
 import fitnesse.testutil.*;
 import fitnesse.authentication.*;
 import fitnesse.wikitext.widgets.*;
@@ -60,7 +60,7 @@ public class ComponentFactoryTest extends RegexTest
 		assertEquals(FileSystemPage.class, page.getClass());
 		assertEquals("TestRoot", page.getName());
 	}
-
+                                
 	public void testDefaultHtmlPageFactory() throws Exception
 	{
 		factory.loadProperties();
@@ -134,11 +134,39 @@ public class ComponentFactoryTest extends RegexTest
 		assertEquals(SimpleAuthenticator.class, authenticator.getClass());
 	}
 
+	public void testContentFilterCreation() throws Exception
+	{
+		assertEquals("", factory.loadContentFilter());
+		assertEquals(null, SaveResponder.contentFilter);
+
+		testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
+		saveTestProperties();
+
+		factory.loadProperties();
+		String content = factory.loadContentFilter();
+		assertEquals("\tContent filter installed: " + SaveResponder.contentFilter.getClass().getName() + "\n", content);
+		assertNotNull(SaveResponder.contentFilter);
+		assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
+	}
+
 	public static class TestPageFactory extends HtmlPageFactory
 	{
 		public TestPageFactory(Properties p)
 		{
 			p.propertyNames();
+		}
+	}
+
+	public static class TestContentFilter implements ContentFilter
+	{
+		public TestContentFilter(Properties p)
+		{
+			p.propertyNames();
+		}
+
+		public boolean isContentAcceptable(String content, String page)
+		{
+			return false;
 		}
 	}
 }
