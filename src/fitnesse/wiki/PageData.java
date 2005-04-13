@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.widgets.*;
-import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.*;
 import fitnesse.responders.run.*;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.components.SaveRecorder;
@@ -14,10 +14,10 @@ import java.text.SimpleDateFormat;
 
 public class PageData implements Serializable
 {
-	public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{VariableDefinitionWidget.class, ClasspathWidget.class});
-	public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{VariableDefinitionWidget.class, FixtureWidget.class});
+	public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class});
+	public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{FixtureWidget.class});
 	public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
-	public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]{VariableDefinitionWidget.class});
+	public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class});
 
 	private transient WikiPage wikiPage;
 	private String content;
@@ -186,10 +186,10 @@ public class PageData implements Serializable
 		for(Iterator iterator = widgets.iterator(); iterator.hasNext();)
 		{
 			Object widget = iterator.next();
-			if(widget instanceof VariableDefinitionWidget)
-				((VariableDefinitionWidget)widget).render();
-			else if(widget instanceof WidgetWithTextArgument)
+			if(widget instanceof WidgetWithTextArgument)
 				values.add(((WidgetWithTextArgument)widget).getText());
+			else if(widget instanceof WikiWidget)
+				((WikiWidget)widget).render();
 		}
 		return values;
 	}

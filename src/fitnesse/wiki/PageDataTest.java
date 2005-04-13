@@ -84,6 +84,16 @@ public class PageDataTest extends RegexTest
 		assertEquals("/my/path.jar", paths.get(0).toString());
 	}
 
+	public void testClasspathWithVariableDefinedInIncludedPage() throws Exception
+	{
+		WikiPage root = InMemoryPage.makeRoot("RooT");
+		crawler.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
+		
+		WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
+		List paths = page.getData().getClasspaths();
+		assertEquals("/my/path.jar", paths.get(0).toString());
+	}
+
 	public void testGetFixtureNames() throws Exception
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
