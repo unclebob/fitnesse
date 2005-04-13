@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import java.net.URLDecoder;
 import fitnesse.components.Base64;
 import fitnesse.util.StreamReader;
-import fitnesse.FitNesseExpediter;
 
 public class Request
 {

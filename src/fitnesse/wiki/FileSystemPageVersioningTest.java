@@ -4,10 +4,8 @@ package fitnesse.wiki;
 
 import junit.framework.*;
 import fitnesse.util.FileUtil;
-import fitnesse.FitNesse;
 import java.io.File;
 import java.util.*;
-import java.text.*;
 
 public class FileSystemPageVersioningTest extends TestCase
 {

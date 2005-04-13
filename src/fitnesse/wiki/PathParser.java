@@ -5,7 +5,6 @@ package fitnesse.wiki;
 import java.util.regex.Pattern;
 import java.util.Iterator;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import fitnesse.util.StringUtil;
 
 public class PathParser
 {

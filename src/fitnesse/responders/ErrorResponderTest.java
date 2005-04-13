@@ -5,7 +5,6 @@ package fitnesse.responders;
 import fitnesse.*;
 import fitnesse.testutil.RegexTest;
 import fitnesse.http.*;
-import junit.swingui.TestRunner;
 
 public class ErrorResponderTest extends RegexTest
 {

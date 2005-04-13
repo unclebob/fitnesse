@@ -3,7 +3,6 @@
 package fitnesse.schedule;
 
 import junit.framework.Test;
-import junit.framework.TestSuite;
 import fitnesse.testutil.TestSuiteMaker;
 
 public class AllTestSuite

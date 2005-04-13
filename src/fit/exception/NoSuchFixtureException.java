@@ -6,7 +6,6 @@
 // later.
 package fit.exception;
 
-import fit.exception.FitFailureException;
 
 public class NoSuchFixtureException extends FixtureException
 {

@@ -7,7 +7,6 @@ import fitnesse.testutil.RegexTest;
 import fitnesse.components.CommandRunner;
 import fitnesse.wiki.MockWikiPage;
 import fitnesse.responders.run.TestHtmlFormatter;
-import fitnesse.responders.run.*;
 import fit.Counts;
 
 

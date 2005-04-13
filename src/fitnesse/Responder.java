@@ -3,7 +3,6 @@
 package fitnesse;
 
 import fitnesse.http.*;
-import fitnesse.wiki.WikiPage;
 
 public interface Responder
 {

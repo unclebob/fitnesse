@@ -4,7 +4,6 @@
 package fitnesse.wiki;
 
 import java.util.*;
-import fitnesse.components.*;
 
 public class MockWikiPage implements WikiPage
 {

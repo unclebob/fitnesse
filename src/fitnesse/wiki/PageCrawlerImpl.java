@@ -3,8 +3,6 @@
 package fitnesse.wiki;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import fitnesse.wikitext.widgets.WikiWordWidget;
 import fitnesse.components.FitNesseTraversalListener;
 
 public class PageCrawlerImpl implements PageCrawler

@@ -5,7 +5,6 @@ package fit;
 
 import junit.framework.*;
 import fitnesse.testutil.TestSuiteMaker;
-import fit.exception.*;
 
 public class AllTestSuite
 {

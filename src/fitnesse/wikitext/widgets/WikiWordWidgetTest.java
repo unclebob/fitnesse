@@ -4,7 +4,6 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

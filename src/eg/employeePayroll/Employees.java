@@ -3,7 +3,6 @@
 package eg.employeePayroll;
 
 import fitnesse.fixtures.RowEntryFixture;
-import fit.Parse;
 
 public class Employees extends RowEntryFixture
 {

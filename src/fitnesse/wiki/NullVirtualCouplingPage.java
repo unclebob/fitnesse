@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import java.util.*;
-import fitnesse.components.*;
 
 public class NullVirtualCouplingPage extends VirtualCouplingPage
 {

@@ -2,9 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
 import fitnesse.wiki.*;
-import fitnesse.http.*;
 
 public class PageDataWikiPageResponder extends BasicWikiPageResponder
 {

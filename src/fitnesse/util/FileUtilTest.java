@@ -3,7 +3,6 @@
 package fitnesse.util;
 
 import java.io.File;
-import java.util.Arrays;
 import junit.framework.TestCase;
 
 public class FileUtilTest extends TestCase

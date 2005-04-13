@@ -6,7 +6,6 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import java.io.*;
 import fitnesse.components.XmlWriter;
-import fitnesse.components.XmlWriter;
 
 public class XmlUtil
 {

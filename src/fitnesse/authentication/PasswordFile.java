@@ -6,7 +6,6 @@ import java.util.*;
 import java.io.File;
 import java.lang.reflect.*;
 import fitnesse.util.FileUtil;
-import fitnesse.util.FileUtil;
 
 public class PasswordFile
 {

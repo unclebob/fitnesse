@@ -3,11 +3,9 @@
 package fitnesse.responders.files;
 
 import junit.framework.*;
-import junit.swingui.TestRunner;
 import fitnesse.util.FileUtil;
 import fitnesse.http.*;
 import fitnesse.FitNesseContext;
-import fitnesse.util.FileUtil;
 
 import java.io.File;
 

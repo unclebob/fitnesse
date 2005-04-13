@@ -9,7 +9,6 @@ import fitnesse.wiki.*;
 import fitnesse.http.*;
 import fitnesse.authentication.*;
 import fit.Counts;
-import java.util.*;
 
 public class TestResponder extends ChunkingResponder implements FitClientListener, SecureResponder
 {

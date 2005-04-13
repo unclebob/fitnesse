@@ -2,13 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import junit.swingui.TestRunner;
 
 import fitnesse.wiki.*;
 import fitnesse.testutil.*;
-import fitnesse.http.*;
-import java.net.URL;
-import java.io.*;
 
 public class TestRunnerTest extends RegexTest
 {

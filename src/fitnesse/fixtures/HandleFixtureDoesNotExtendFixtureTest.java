@@ -3,7 +3,6 @@
 package fitnesse.fixtures;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 import fit.*;
