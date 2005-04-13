@@ -54,7 +54,7 @@ public class ColumnFixture extends Fixture
   {
 		try
 		{
-	    executeIfNeeded(); 
+	    executeIfNeeded();
 		}
 		catch(Exception e)
 		{
@@ -91,14 +91,18 @@ public class ColumnFixture extends Fixture
 		  columnBindings = new Binding[heads.size()];
 		  for(int i = 0; heads != null; i++, heads = heads.more)
 		  {
-		    String name = heads.text();
-			  columnBindings[i] = Binding.create(this, name);
+              columnBindings[i] = createBinding(i, heads);
 		  }
 	  }
 	  catch(Throwable throwable)
 	  {
 		  exception(heads, throwable);
 	  }
+  }
+
+  protected Binding createBinding(int column, Parse heads) throws Throwable
+  {
+      return Binding.create(this, heads.text());
   }
 
 }

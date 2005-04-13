@@ -49,13 +49,17 @@ public class FileSystemPage extends CachingPage
 			return false;
 	}
 
-	protected synchronized void saveContent(String content) throws Exception
+    protected synchronized void saveContent(String content) throws Exception
 	{
 		if(content == null)
 			return;
 
+        String separator = System.getProperty("line.separator");
+
 		if(content.endsWith("|"))
-			content += "\n";
+			content += separator;
+
+        content = content.replaceAll("\r\n", separator);
 
 		File output = new File(getFileSystemPath() + contentFilename);
 		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
@@ -300,7 +304,6 @@ public class FileSystemPage extends CachingPage
 		is.read(bytes);
 		is.close();
 		zos.write(bytes, 0, size);
-
 	}
 
 	protected void loadVersionContent(ZipFile zipFile, PageData data) throws Exception

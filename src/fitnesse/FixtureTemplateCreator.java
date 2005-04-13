@@ -48,38 +48,53 @@ public class FixtureTemplateCreator
 	private StringBuffer makeRowFixtureTemplate(String defaultTableTemplate, Class fixtureClass)
 	{
 		Class targetClass = getTargetClassFromRowFixture(fixtureClass);
-		return makeColumnFixtureTemplate(defaultTableTemplate, targetClass);
+		return makeFixtureTemplate(defaultTableTemplate, targetClass, Object.class);
 	}
 
 	private StringBuffer makeColumnFixtureTemplate(String defaultTableTemplate, Class fixtureClass)
 	{
+        return makeFixtureTemplate(defaultTableTemplate, fixtureClass, ColumnFixture.class);
+    }
+
+	private StringBuffer makeFixtureTemplate(String defaultTableTemplate, Class fixtureClass, Class stopClass)
+	{
 		StringBuffer tableTemplate = new StringBuffer(defaultTableTemplate + "\n");
 		List publicFieldsFound = new ArrayList();
 		List publicMethodsFound = new ArrayList();
-		getPublicMembers(fixtureClass, publicFieldsFound, publicMethodsFound);
+		getPublicMembers(fixtureClass, publicFieldsFound, publicMethodsFound, stopClass);
 		addCellsForColumnFixture(tableTemplate, publicFieldsFound, publicMethodsFound);
 
 		return tableTemplate;
 	}
 
-	private void getPublicMembers(Class aClass, List publicFields, List publicMethods)
+	private void getPublicMembers(Class aClass, List publicFields, List publicMethods, Class stopClass)
 	{
-		Field[] fields = aClass.getDeclaredFields();
-		for(int i = 0; i < fields.length; i++)
-		{
-			Field field = fields[i];
-			if(Modifier.isPublic(field.getModifiers()))
-				publicFields.add(field);
-		}
+        Class currentClass = aClass;
+        while (currentClass != stopClass)
+        {
+            Field[] fields = currentClass.getDeclaredFields();
+            for(int i = 0; i < fields.length; i++)
+            {
+                Field field = fields[i];
+                if(Modifier.isPublic(field.getModifiers()))
+                    publicFields.add(field);
+            }
 
-		Method[] methods = aClass.getDeclaredMethods();
-		for(int i = 0; i < methods.length; i++)
-		{
-			Method method = methods[i];
-			if(Modifier.isPublic(method.getModifiers()))
-				publicMethods.add(method);
-		}
-	}
+            Method[] methods = currentClass.getDeclaredMethods();
+            for(int i = 0; i < methods.length; i++)
+            {
+                Method method = methods[i];
+                String methodName = method.getName();
+                if ("reset".equals(methodName) || "execute".equals(methodName))
+                    continue;
+                if (Modifier.isAbstract(method.getModifiers()))
+                    continue;
+                if(Modifier.isPublic(method.getModifiers()))
+                    publicMethods.add(method);
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+    }
 
 	private void addCellsForColumnFixture(StringBuffer tableTemplate, List publicFields, List publicMethods)
 	{

@@ -22,7 +22,7 @@ public class UploadResponderTest extends TestCase
     context.rootPagePath = "testdir";
 		FileUtil.makeDir("testdir");
 		FileUtil.makeDir("testdir/files");
-		testFile = FileUtil.createFile("testDir/tempFile.txt", "test content");
+		testFile = FileUtil.createFile("testdir/tempFile.txt", "test content");
 
 		responder = new UploadResponder();
 		request = new MockRequest();
