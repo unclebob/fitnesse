@@ -27,14 +27,46 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		page.divide();
 
 		response.add(page.preDivision);
+		response.add(buildClientSideSortScriptTag().html());
 		response.add(buildFeedbackDiv().html());
-		response.add(ChunkedResultsListingUtil.getTableOpenHtml());
+		response.add(getTableOpen());
 		response.add(buildHeaderRow().html());
+		response.add(getTbodyOpen());
 		startSearching();
-		response.add(ChunkedResultsListingUtil.getTableCloseHtml());
+		response.add(getTbodyClose());
+		response.add(getTableClose());
+		response.add(buildTableSorterScript().html());
 		response.add(buildFeedbackModificationScript().html());
 		response.add(page.postDivision);
 		response.closeAll();
+	}
+
+	private String getTbodyClose()
+	{
+		return "</tbody>";
+	}
+
+	private String getTbodyOpen()
+	{
+		return "<tbody>";
+	}
+
+	private HtmlTag buildClientSideSortScriptTag()
+	{
+		HtmlTag tag = new HtmlTag("script");
+		tag.addAttribute("src", "/files/javascript/clientSideSort.js");
+		tag.add(" ");
+		return tag;
+	}
+
+	private String getTableClose()
+	{
+		return ChunkedResultsListingUtil.getTableCloseHtml();
+	}
+
+	private String getTableOpen()
+	{
+		return ChunkedResultsListingUtil.getTableOpenHtml("searchResultsTable");
 	}
 
 	private HtmlTag buildFeedbackModificationScript()
@@ -46,17 +78,50 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		return script;
 	}
 
+	private HtmlTag buildTableSorterScript()
+	  throws Exception
+	{
+		HtmlTag script = new HtmlTag("script");
+		script.addAttribute("language", "javascript");
+		script.add("tableSorter = new TableSorter('searchResultsTable', new DateParser(" + getDateFormatJavascriptRegex() + ",8,2,3,4,5,6));");
+		return script;
+	}
+
+	public static String getDateFormatJavascriptRegex()
+	{
+		return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
+	}
+
 	private HtmlTag buildHeaderRow()
 	{
+		HtmlTag thead = new HtmlTag("thead");
 		HtmlTag headerRow = new HtmlTag("tr");
-		HtmlTag pageColumnHeader = new HtmlTag("td", "Page");
-		pageColumnHeader.addAttribute("class", "resultsHeader");
-		HtmlTag lastModifiedColumnHeader = new HtmlTag("td", "Last Modified");
-		lastModifiedColumnHeader.addAttribute("class", "resultsHeader");
+		headerRow.add(buildPageColumnHeader());
+		headerRow.add(buildLastModifiedColumnHeader());
+		thead.add(headerRow);
+		return thead;
+	}
 
-		headerRow.add(pageColumnHeader);
-		headerRow.add(lastModifiedColumnHeader);
-		return headerRow;
+	private HtmlTag buildLastModifiedColumnHeader()
+	{
+		HtmlTag lastModifiedColumnHeader = new HtmlTag("td", buildSortLink("LastModified", "1, 'date'"));
+		lastModifiedColumnHeader.addAttribute("class", "resultsHeader");
+		return lastModifiedColumnHeader;
+	}
+
+	private HtmlTag buildPageColumnHeader()
+	{
+		HtmlTag pageColumnHeader = new HtmlTag("td", buildSortLink("Page", "0"));
+		pageColumnHeader.addAttribute("class", "resultsHeader");
+		return pageColumnHeader;
+	}
+
+	private HtmlTag buildSortLink(String text, String args)
+	{
+		HtmlTag link = new HtmlTag("a");
+		link.addAttribute("href", "javascript:void(tableSorter.sort(" + args + "));");
+		link.add(text);
+		return link;
 	}
 
 	private HtmlTag buildFeedbackDiv()

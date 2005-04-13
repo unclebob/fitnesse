@@ -37,6 +37,7 @@ public class Updater
 			new FileUpdate(this, "files/css/fitnesse.css", "files/css"),
 			new FileUpdate(this, "files/css/fitnesse_print.css", "files/css"),
 			new ReplacingFileUpdate(this, "files/javascript/fitnesse.js", "files/javascript"),
+			new ReplacingFileUpdate(this, "files/javascript/clientSideSort.js", "files/javascript"),
 			new ReplacingFileUpdate(this, "files/javascript/SpreadsheetTranslator.js", "files/javascript"),
 			new ReplacingFileUpdate(this, "files/javascript/spreadsheetSupport.js", "files/javascript"),
 			new PropertiesToXmlUpdate(this),

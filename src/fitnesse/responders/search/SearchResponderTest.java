@@ -38,6 +38,30 @@ public class SearchResponderTest extends RegexTest
 		assertHasRegexp("SomePage", content);
 	}
 
+	public void testTableSorterScript() throws Exception
+	{
+		String content = getResponseContentUsingSearchString("something");
+		assertSubString("<script language=\"javascript\">tableSorter = new TableSorter('searchResultsTable', new DateParser(/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/,8,2,3,4,5,6));</script>", content);
+	}
+
+	public void testClientSideSortScript() throws Exception
+	{
+		String content = getResponseContentUsingSearchString("something");
+		assertHasRegexp("<script src=\"/files/javascript/clientSideSort.js\"> </script>", content);
+	}
+
+	public void testPageSortLink() throws Exception
+	{
+		String content = getResponseContentUsingSearchString("something");
+		assertSubString("<a href=\"javascript:void(tableSorter.sort(0));\">Page</a>", content);
+	}
+
+	public void testLastModifiedSortLink() throws Exception
+	{
+		String content = getResponseContentUsingSearchString("something");
+		assertSubString("<a href=\"javascript:void(tableSorter.sort(1, 'date'));\">LastModified</a>", content);
+	}
+
 	public void testEscapesSearchString() throws Exception
 	{
 		String content = getResponseContentUsingSearchString("!+-<&>");
@@ -80,6 +104,11 @@ public class SearchResponderTest extends RegexTest
 		request.addInput("searchType", "something with the word content in it");
 		new MockResponseSender(responder.makeResponse(new FitNesseContext(root), request));
 		assertTrue(searcher.contentSearchCalled);
+	}
+
+	public void testJavascriptDateFormatRegex()
+	{
+		assertEquals("/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/", SearchResponder.getDateFormatJavascriptRegex());
 	}
 
 	private static class TestableSearcher extends Searcher

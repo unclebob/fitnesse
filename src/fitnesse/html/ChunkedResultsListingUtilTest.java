@@ -6,7 +6,7 @@ public class ChunkedResultsListingUtilTest extends RegexTest
 {
 	public void testOpeningTag()
 	{
-		assertEquals("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"dirListing\">", ChunkedResultsListingUtil.getTableOpenHtml());
+		assertEquals("<table id=\"myTable\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"dirListing\">", ChunkedResultsListingUtil.getTableOpenHtml("myTable"));
 	}
 
 	public void testClosingTag()
