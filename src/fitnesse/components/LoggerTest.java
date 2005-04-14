@@ -119,6 +119,19 @@ public class LoggerTest extends TestCase
 		assertEquals(l.formatLogLine(nextDay) + System.getProperty("line.separator"), secondContent);
 	}
 
+	public void testLoggingIncludesUsername() throws Exception
+	{
+		ld.username = "Joe";
+		l.log(ld);
+		l.close();
+		File dir = l.getDirectory();
+		File file = new File(dir, filename);
+		assertTrue(file.exists());
+		String contents = FileUtil.getFileContent(file);
+		logLine = "myHost - Joe [06/Mar/2003:13:42:05 -0100] \"request\" 42 666";
+		assertEquals(logLine + System.getProperty("line.separator"), contents);
+	}
+
 	private File getLogFileFor(LogData data)
 	{
 		return new File(l.getDirectory(), Logger.makeLogFileName(data.time));

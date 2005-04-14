@@ -11,6 +11,7 @@ public class LogData implements Cloneable
 	public String requestLine;
 	public int status;
 	public int size;
+	public String username;
 
 	public Object clone() throws CloneNotSupportedException
 	{

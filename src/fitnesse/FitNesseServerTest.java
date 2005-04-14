@@ -118,6 +118,7 @@ public class FitNesseServerTest extends RegexTest
     socket.setHost("1.2.3.4");
     request.setRequestLine("GET / HTTP/1.1");
     response.setContent("abc");
+	  request.setCredentials("billy", "bob");
 
     LogData data = FitNesseExpediter.makeLogData(socket, request, response);
 
@@ -126,6 +127,7 @@ public class FitNesseServerTest extends RegexTest
     assertEquals("GET / HTTP/1.1", data.requestLine);
     assertEquals(200, data.status);
     assertEquals(3, data.size);
+	  assertEquals("billy", data.username);
   }
 
   private String getSocketOutput(String requestLine, WikiPage page) throws Exception

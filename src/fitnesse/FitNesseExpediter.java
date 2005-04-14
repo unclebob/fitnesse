@@ -228,6 +228,7 @@ public class FitNesseExpediter implements ResponseSender
 		data.requestLine = request.getRequestLine();
 		data.status = response.getStatus();
 		data.size = response.getContentSize();
+		data.username = request.getAuthorizationUsername();
 
 		return data;
 	}

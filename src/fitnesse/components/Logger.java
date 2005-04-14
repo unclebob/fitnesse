@@ -40,8 +40,9 @@ public class Logger
 	String formatLogLine(LogData data)
 	{
 		StringBuffer line = new StringBuffer();
-		line.append(data.host).append(" - - [");
-		line.append(format(makeLogFormat(), data.time)).append("] ");
+		line.append(data.host).append(" - ");
+		line.append(data.username == null ? "-" : data.username);
+		line.append(" [").append(format(makeLogFormat(), data.time)).append("] ");
 		line.append('"').append(data.requestLine).append("\" ");
 		line.append(data.status).append(" ");
 		line.append(data.size);
