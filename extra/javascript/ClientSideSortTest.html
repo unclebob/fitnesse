@@ -191,7 +191,7 @@
 	function getCssClass(row)
 	{
   	table = document.getElementById('tableData');
-  	return table.tBodies[0].rows[row].getAttribute('class');
+  	return table.tBodies[0].rows[row].className;
 	}
 
 	function createTable(id)
@@ -201,11 +201,12 @@
 	 	tbody = document.createElement('tbody');
 
 	 	tr1 = document.createElement('tr');
-	 	tr1.setAttribute('class', 'row1');
+	 	tr1.className = 'row1';
 	 	tr2 = document.createElement('tr');
-	 	tr2.setAttribute('class', 'row2');
+	 	tr2.className = 'row2';
 	 	tr3 = document.createElement('tr');
-	 	tr3.setAttribute('class', 'row3');
+    tr3.className = 'row3';
+
 	 	td1 = document.createElement('td');
 	 	td2 = document.createElement('td');
 	 	td3 = document.createElement('td');

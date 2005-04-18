@@ -34,6 +34,7 @@ TableSorter = function(id, dateParser)
 			rowDataArray.reverse();
 		rowDataArray.rebuildTable();
 	}
+	return this;
 }
 
 TableRowData = function(cols)
@@ -60,7 +61,7 @@ TableRowDataArray = function(id)
 	var rows = tbody.rows;
 	for (var row = 0; row < rows.length; row++)
 	{
-		this.arr.cssClasses.push(rows[row].getAttribute('class'));
+		this.arr.cssClasses.push(rows[row].className);
 		var cells = rows[row].cells;
 		var cellTextArray = new Array();
 		for (var j = 0; j < cells.length; j++)
@@ -75,7 +76,7 @@ TableRowDataArray = function(id)
 		for (var row = 0; row < this.length; row++)
 		{
 			var tr = document.createElement("tr");
-			tr.setAttribute('class', this.cssClasses[row]);
+			tr.className = this.cssClasses[row];
 			for (var i = 0; i < this[row].cols.length; i++)
 			{
 				var td = document.createElement("td");
