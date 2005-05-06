@@ -10,7 +10,12 @@
 			</fileset>
 		</delete>
 	</target>
+	
+	<target name="build">
+		<solution configuration="release" solutionfile="Fitnesse.sln"/>
+	</target>
 
+<!--
 	<target name="build_fit" description="builds fit.dll">
 		<csc target="library" output="fit.dll">
 			<references>
@@ -46,4 +51,5 @@
 	
 	<target name="build" description="build everything" depends="build_fit build_eg build_server">
 	</target>
+-->
 </project>
