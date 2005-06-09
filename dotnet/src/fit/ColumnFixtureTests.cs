@@ -114,6 +114,32 @@ namespace fit
 			Assert.AreEqual(0, fixture.Counts.Ignores);
 			Assert.AreEqual(0, fixture.Counts.Exceptions);
 		}
+
+		[Test]
+		public void TestExecuteDoesNotCauseMethodsToGetCalledThrice()
+		{
+			TestUtils.InitAssembliesAndNamespaces();
+			StringBuilder builder = new StringBuilder();
+			builder.Append("<table>");
+			builder.Append("<tr><td colspan=\"2\">ExecuteTestFixture</td></tr>");
+			builder.Append("<tr><td>Method()</td></tr>");
+			builder.Append("<tr><td>1</td></tr>");
+			builder.Append("<tr><td>2</td></tr>");
+			builder.Append("</table>");
+			Parse table = new Parse(builder.ToString());
+			Fixture fixture = new Fixture();
+			fixture.DoTables(table);
+			ExecuteTestFixture testFixture = (ExecuteTestFixture) Fixture.LastFixtureLoaded;
+			Assert.AreEqual(4, testFixture.Values.Count);
+			Assert.AreEqual("Execute()", testFixture.Values[0]);
+			Assert.AreEqual("Method()", testFixture.Values[1]);
+			Assert.AreEqual("Execute()", testFixture.Values[2]);
+			Assert.AreEqual("Method()", testFixture.Values[3]);
+			Assert.AreEqual(2, fixture.Counts.Right);
+			Assert.AreEqual(0, fixture.Counts.Wrong);
+			Assert.AreEqual(0, fixture.Counts.Ignores);
+			Assert.AreEqual(0, fixture.Counts.Exceptions);
+		}
 	}
 
 	public class ExecuteTestFixture : ColumnFixture
@@ -124,6 +150,14 @@ namespace fit
 		{
 			get { return null; }
 			set { Values.Add(value); }
+		}
+
+		private int callsToMethod = 1;
+
+		public int Method()
+		{
+			Values.Add("Method()");
+			return callsToMethod++;
 		}
 
 		public override void Execute()

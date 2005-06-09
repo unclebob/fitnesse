@@ -7,6 +7,8 @@ namespace fit
 {
 	public class MethodAccessor : AbstractAccessor
 	{
+		private object retrievedValue;
+
 		protected internal MethodInfo methodInfo;
 
 		public MethodAccessor(MethodInfo method) : base(method.ReturnType)
@@ -16,11 +18,18 @@ namespace fit
 
 		public override object Get(Fixture fixture)
 		{
-			if (methodInfo.Name == "ToString")
+			if (this.retrievedValue == null)
 			{
-				return fixture.GetTargetObject().ToString();
+				if (methodInfo.Name == "ToString")
+				{
+					this.retrievedValue = fixture.GetTargetObject().ToString();
+				}
+				else
+				{
+					this.retrievedValue = methodInfo.Invoke(fixture.GetTargetObject(), new object[] {});
+				}
 			}
-			return methodInfo.Invoke(fixture.GetTargetObject(), new object[] {});
+			return this.retrievedValue;
 		}
 
 		public override void Set(Fixture fixture, object value)
