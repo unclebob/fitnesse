@@ -10,9 +10,9 @@ namespace fit
 {
 	public class ActionFixture : Fixture
 	{
-		private Parse cells;
-		private Fixture actor;
-		private object targetObject;
+		protected Parse cells;
+		protected Fixture actor;
+		protected object targetObject;
 
 		// Traversal ////////////////////////////////
 
@@ -22,7 +22,7 @@ namespace fit
 			try
 			{
 				targetObject = this;
-				Accessor accessor = AccessorFactory.Create(typeof(ActionFixture), cells.Text);
+				Accessor accessor = AccessorFactory.Create(this.GetType(), cells.Text);
 				accessor.Set(this, null);
 				targetObject = actor;
 			}
