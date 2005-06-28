@@ -10,6 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eg", "src\eg\eg.csproj", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitServer", "src\FitServer\FitServer.csproj", "{FF0B7C04-6823-4A2E-BA8A-D12223D7F9D2}"
 	ProjectSection(ProjectDependencies) = postProject
+		{483287D5-0C87-4257-AB40-C75C02F2ECF6} = {483287D5-0C87-4257-AB40-C75C02F2ECF6}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "acceptanceTests", "src\acceptanceTests\acceptanceTests.csproj", "{D244BC7D-BB6B-4327-AA09-49A56256AD5B}"

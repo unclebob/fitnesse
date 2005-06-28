@@ -15,7 +15,10 @@ namespace fitnesse.handlers
 
 		public override void HandleCheck(Fixture fixture, Parse cell, Accessor accessor)
 		{
-			Fixture.Save(ExtractSymbol(cell), accessor.Get(fixture));
+			string symbol = ExtractSymbol(cell);
+			object value = accessor.Get(fixture);
+			Fixture.Save(symbol, value);
+			cell.SetBody(Fixture.Gray(value + " &gt;&gt;"  + symbol));
 		}
 	}
 }

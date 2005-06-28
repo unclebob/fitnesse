@@ -38,12 +38,58 @@ namespace fitnesse.handlers
 		}
 
 		[Test]
+		public void CellContentWhenSaving()
+		{
+			Parse cell = CellHandlerTestUtils.CreateCell(">>xyz");
+			StringFixture fixture = new StringFixture();
+			fixture.Field = "abc";
+			CellOperation.Check(fixture, "Field", cell);
+			Assert.AreEqual("abc >>xyz", cell.Text.Trim());
+		}
+
+		[Test]
 		public void TestRecallString() {
 			Parse cell = CellHandlerTestUtils.CreateCell("<<def");
 			StringFixture fixture = new StringFixture();
 			Fixture.Save("def","ghi");
 			CellOperation.Input(fixture, "Field", cell);
 			Assert.AreEqual("ghi", fixture.Field);
+			CellHandlerTestUtils.VerifyCounts(fixture, 0, 0, 0, 0);
+		}
+
+		[Test]
+		public void CellContentWhenRecalling_Right()
+		{
+			Parse cell = CellHandlerTestUtils.CreateCell("<<def");
+			StringFixture fixture = new StringFixture();
+			Fixture.Save("def","ghi");
+			fixture.Field = "ghi";
+			CellOperation.Check(fixture, "Field", cell);
+			Assert.AreEqual("ghi <<def", cell.Text);
+			CellHandlerTestUtils.VerifyCounts(fixture, 1, 0, 0, 0);
+		}		
+
+		[Test]
+		public void CellContentWhenRecalling_Wrong()
+		{
+			Parse cell = CellHandlerTestUtils.CreateCell("<<def");
+			StringFixture fixture = new StringFixture();
+			Fixture.Save("def","ghi");
+			fixture.Field = "xyz";
+			CellOperation.Check(fixture, "Field", cell);
+			Assert.AreEqual("ghi <<def expectedxyz actual", cell.Text);
+			CellHandlerTestUtils.VerifyCounts(fixture, 0, 1, 0, 0);
+		}	
+
+		[Test]
+		public void CellContentWhenRecalling_Input()
+		{
+			Parse cell = CellHandlerTestUtils.CreateCell("<<def");
+			StringFixture fixture = new StringFixture();
+			Fixture.Save("def","ghi");
+			fixture.Field = "xyz";
+			CellOperation.Input(fixture, "Field", cell);
+			Assert.AreEqual("ghi <<def", cell.Text);
 			CellHandlerTestUtils.VerifyCounts(fixture, 0, 0, 0, 0);
 		}
 
