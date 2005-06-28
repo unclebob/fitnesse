@@ -94,6 +94,18 @@ namespace fitnesse.handlers
 		}
 
 		[Test]
+		public void CellContentWhenRecalling_Evaluate()
+		{
+			Parse cell = CellHandlerTestUtils.CreateCell("<<def");
+			StringFixture fixture = new StringFixture();
+			Fixture.Save("def","ghi");
+			fixture.Field = "xyz";
+			CellOperation.Evaluate(fixture, "Field", cell);
+			Assert.AreEqual("<<def", cell.Text);
+			CellHandlerTestUtils.VerifyCounts(fixture, 0, 0, 0, 0);
+		}
+
+		[Test]
 		public void TestEvaluateRecallStringPass() {
 			Parse cell = CellHandlerTestUtils.CreateCell("<<def");
 			StringFixture fixture = new StringFixture();

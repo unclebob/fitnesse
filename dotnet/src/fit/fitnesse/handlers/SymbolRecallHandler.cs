@@ -21,14 +21,27 @@ namespace fitnesse.handlers
 			cell.SetBody(value == null ? "null" : value.ToString() + Fixture.Gray("&lt;&lt;" + symbol));
 		}
 
-		public override bool HandleEvaluate(Fixture fixture, Parse cell, Accessor accessor) 
+		public override void HandleCheck(Fixture fixture, Parse cell, Accessor accessor)
 		{
+			bool evaluate = HandleEvaluate(fixture, cell, accessor);
 			string symbol = ExtractSymbol(cell);
 			object value = Fixture.Recall(symbol);
 			cell.SetBody(value == null ? "null" : value.ToString() + Fixture.Gray("&lt;&lt;" + symbol));
-			if (value == null)
-				return false;
-			return TypeAdapter.AreEqual(accessor.Get(fixture), value);
+			if (evaluate)
+			{
+				fixture.Right(cell);
+			}
+			else
+			{
+				if (accessor.Get(fixture) == null)
+				{
+					fixture.Wrong(cell, "null");
+				}
+				else
+				{
+					fixture.Wrong(cell, accessor.Get(fixture).ToString());
+				}
+			}
 		}
 	}
 }
