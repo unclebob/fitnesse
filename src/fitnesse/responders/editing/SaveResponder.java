@@ -41,7 +41,8 @@ public class SaveResponder implements SecureResponder
 	private Response makeBannedContentrResponse(FitNesseContext context, String resource) throws Exception
 	{
 		SimpleResponse response = new SimpleResponse();
-		HtmlPage html = context.htmlPageFactory.newPage();		html.title.use("Edit " + resource);
+		HtmlPage html = context.htmlPageFactory.newPage();
+		html.title.use("Edit " + resource);
 		html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Banned Content"));
 		html.main.use(new HtmlTag("h3", "The content you're trying to save has been " +
 		                                "banned from this site.  Your changes will not be saved!"));

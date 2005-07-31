@@ -69,8 +69,7 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		return ChunkedResultsListingUtil.getTableOpenHtml("searchResultsTable");
 	}
 
-	private HtmlTag buildFeedbackModificationScript()
-	  throws Exception
+	private HtmlTag buildFeedbackModificationScript() throws Exception
 	{
 		HtmlTag script = new HtmlTag("script");
 		script.addAttribute("language", "javascript");
@@ -78,8 +77,7 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		return script;
 	}
 
-	private HtmlTag buildTableSorterScript()
-	  throws Exception
+	private HtmlTag buildTableSorterScript() throws Exception
 	{
 		HtmlTag script = new HtmlTag("script");
 		script.addAttribute("language", "javascript");
