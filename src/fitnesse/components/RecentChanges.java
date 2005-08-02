@@ -3,6 +3,7 @@
 package fitnesse.components;
 
 import fitnesse.wiki.*;
+import fitnesse.FitNesseContext;
 
 import java.util.*;
 import java.io.*;
@@ -15,7 +16,7 @@ public class RecentChanges
   private static SimpleDateFormat makeDateFormat()
   {
     //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("kk:mm:ss EEE, MMM dd, yyyy");
+    return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
   }
 
   public static void updateRecentChanges(PageData pageData) throws Exception

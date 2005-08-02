@@ -10,6 +10,12 @@ import fitnesse.http.*;
 import org.w3c.dom.*;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.text.ParsePosition;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class RssResponder implements Responder
 {
@@ -41,6 +47,7 @@ public class RssResponder implements Responder
                 String path = fields[1];
                 String author = fields[2];
                 String pubDate = fields[3];
+                pubDate = convertDateFormat(pubDate);
 
                 if (shouldReportItem(resource, path))
                     buildItem(rssDocument, path, author, pubDate);
@@ -140,4 +147,15 @@ public class RssResponder implements Responder
         return rssDocument;
     }
 
+
+    protected String convertDateFormat(String dateIn)
+    {
+        // format matched kk:mm:ss EEE, MMM dd, yyyy
+        Pattern timePattern = Pattern.compile("\\d*:\\d*:\\d* \\w*, \\w* \\d*, \\d*");
+        Matcher m = timePattern.matcher(dateIn);
+        if(m.matches())
+            return (new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat)).format((new SimpleDateFormat(FitNesseContext.recentChangesDateFormat)).parse(dateIn, new ParsePosition(0)));
+        else
+            return dateIn;
+    }
 }
