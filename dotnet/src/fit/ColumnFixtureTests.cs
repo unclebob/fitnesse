@@ -66,6 +66,7 @@ namespace fit
 			Fixture fixture = new Fixture();
 			fixture.DoTables(table);
 			ExecuteTestFixture testFixture = (ExecuteTestFixture) Fixture.LastFixtureLoaded;
+			Assert.AreEqual(3, testFixture.Values.Count);
 			Assert.AreEqual("first call", testFixture.Values[0]);
 			Assert.AreEqual("second call", testFixture.Values[1]);
 			Assert.AreEqual("Execute()", testFixture.Values[2]);
@@ -85,9 +86,30 @@ namespace fit
 			Fixture fixture = new Fixture();
 			fixture.DoTables(table);
 			ExecuteTestFixture testFixture = (ExecuteTestFixture) Fixture.LastFixtureLoaded;
+			Assert.AreEqual(3, testFixture.Values.Count);
 			Assert.AreEqual("first call", testFixture.Values[0]);
 			Assert.AreEqual("Execute()", testFixture.Values[1]);
 			Assert.AreEqual("second call", testFixture.Values[2]);
+		}
+
+		[Test]
+		public void TestExecuteWithMethod()
+		{
+			TestUtils.InitAssembliesAndNamespaces();
+			StringBuilder builder = new StringBuilder();
+			builder.Append("<table>");
+			builder.Append("<tr><td colspan=\"2\">ExecuteTestFixture</td></tr>");
+			builder.Append("<tr><td>Property</td><td>BoolMethod?</td></tr>");
+			builder.Append("<tr><td>first call</td><td>true</td></tr>");
+			builder.Append("</table>");
+			Parse table = new Parse(builder.ToString());
+			Fixture fixture = new Fixture();
+			fixture.DoTables(table);
+			ExecuteTestFixture testFixture = (ExecuteTestFixture) Fixture.LastFixtureLoaded;
+			Assert.AreEqual(3, testFixture.Values.Count);
+			Assert.AreEqual("first call", testFixture.Values[0]);
+			Assert.AreEqual("Execute()", testFixture.Values[1]);
+			Assert.AreEqual("method!", testFixture.Values[2]);
 		}
 
 		[Test]
@@ -145,6 +167,12 @@ namespace fit
 	public class ExecuteTestFixture : ColumnFixture
 	{
 		public IList Values = new ArrayList();
+
+		public bool BoolMethod()
+		{
+			Values.Add("method!");
+			return true;
+		}
 
 		public string Property
 		{

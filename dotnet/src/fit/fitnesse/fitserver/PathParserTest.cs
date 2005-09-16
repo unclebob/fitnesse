@@ -3,6 +3,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 using System;
 using System.Collections;
+using System.IO;
 using NUnit.Framework;
 
 namespace fitnesse.fitserver
@@ -61,13 +62,23 @@ namespace fitnesse.fitserver
 		}
 
 		[Test]
+		public void TestHandlesRelativePath()
+		{
+			string path = "fake.config";
+			PathParser parser = new PathParser(path);
+			verifyAssemblyPaths(new string[]{}, parser.AssemblyPaths);
+			Assert.IsTrue(parser.HasConfigFilePath());
+			Assert.AreEqual(path, parser.ConfigFilePath);
+		}
+
+		[Test]
 		[ExpectedException(typeof(ArgumentException), "Please check the path. There should only be one config file on the path and there are at least two.")]
 		public void TestExceptionOnSecondConfigFile()
 		{
 			string path1 = "d:\\path\\to\\assembly.dll.config";
 			string path2 = "d:\\path\\to\\another\\assembly.dll.config";
 			string paths = path1 + ";" + path2;
-			PathParser parser = new PathParser(paths);
+			new PathParser(paths);
 		}
 
 		public void TestOneConfigFileAndOneAssemblyFile()

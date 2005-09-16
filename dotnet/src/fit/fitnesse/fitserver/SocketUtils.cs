@@ -17,7 +17,7 @@ namespace fitnesse.fitserver
 			while ((received = socketWrapper.Receive(stringBytes, received, stringLength - received, flags) + received) < stringLength)
 			{
 			}
-			Encoding.ASCII.GetDecoder().GetChars(stringBytes, 0, stringLength, stringCharacters, 0);
+			Encoding.UTF8.GetDecoder().GetChars(stringBytes, 0, stringLength, stringCharacters, 0);
 			return new StringBuilder(stringLength).Append(stringCharacters).ToString();
 		}
 	}

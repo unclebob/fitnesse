@@ -22,7 +22,7 @@ namespace fit
 
 		private object Parse(string s, Type type)
 		{
-			if (type.IsAssignableFrom(typeof (string)))
+			if (type.IsAssignableFrom(typeof (string)) && !type.Equals(typeof(DateTime)))
 				return s;
 			if (type.IsArray)
 				return ParseArray(s, type);
@@ -50,6 +50,8 @@ namespace fit
 
 		public static bool AreEqual(object o1, object o2)
 		{
+			if (o1 is DateTime && o2 is DateTime)
+				return o1.ToString().Equals(o2.ToString());
 			if (o1 == null)
 				return o2 == null;
 			if (o1 is Array && o2 is Array)

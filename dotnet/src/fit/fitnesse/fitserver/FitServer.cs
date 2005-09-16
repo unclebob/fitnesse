@@ -242,7 +242,7 @@ namespace fitnesse.fitserver
 
 		public void Transmit(string message)
 		{
-			byte[] messageBytes = Encoding.ASCII.GetBytes(message);
+			byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 			clientSocket.Send(messageBytes);
 		}
 
