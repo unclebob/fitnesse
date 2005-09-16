@@ -17,7 +17,7 @@ namespace fitnesse.fitserver
 
 		public static string FormatDocument(string document)
 		{
-			return Protocol.FormatInteger(document.Length) + document;
+			return Protocol.FormatInteger(Encoding.UTF8.GetBytes(document).Length) + document;
 		}
 
 		public static String FormatCounts(Counts counts)
