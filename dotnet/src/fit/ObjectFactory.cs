@@ -3,7 +3,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 using System;
 using System.Collections;
-using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -55,11 +54,11 @@ namespace fit
 					DirectoryInfo directoryInfo = fileInfo.Directory;
 					foreach (FileInfo configFileInfo in directoryInfo.GetFiles("*.config"))
 					{
-						AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE",configFileInfo);
+						AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", configFileInfo);
 					}
 				}
-					//TODO - explain why we need to catch exceptions but don't
-					//need to do anything with them
+				//TODO - explain why we need to catch exceptions but don't
+				//need to do anything with them
 				catch (Exception)
 				{}
 			}
@@ -93,7 +92,7 @@ namespace fit
 			{
 				return assembly.CreateInstance(type.FullName);
 			}
-			catch(NullReferenceException)
+			catch (NullReferenceException)
 			{
 				throw new ApplicationException(GetCouldNotFindTypeMessage(typeName.OriginalName));
 			}

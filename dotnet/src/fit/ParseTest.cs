@@ -11,7 +11,7 @@ namespace fit
 	{
 
 		[Test]
-		public void TestUnEscape() 
+		public void UnEscapeShouldRemoveHtmlEscapes() 
 		{
 			Assert.AreEqual("a<b", Parse.UnEscape("a&lt;b"));
 			Assert.AreEqual("a>b & b>c &&", Parse.UnEscape("a&gt;b&nbsp;&amp;&nbsp;b>c &&"));
@@ -20,7 +20,7 @@ namespace fit
 		}
 
 		[Test]
-		public void TestUnFormat() 
+		public void UnFormatShouldRemoveHtmlFormattingCodeIfPresent() 
 		{
 			Assert.AreEqual("ab",Parse.UnFormat("<font size=+1>a</font>b"));
 			Assert.AreEqual("ab",Parse.UnFormat("a<font size=+1>b</font>"));
@@ -28,37 +28,72 @@ namespace fit
 		}
 
 		[Test]
-		public void TestParsing()
+		public void LeaderShouldReturnAllHtmlTextBeforeTheParse()
 		{
-			Parse p = new Parse("leader<Table foo=2>body</table>trailer", new string[] {"table"});
-			Assert.AreEqual("leader", p.Leader);
+			Parse p = new Parse("<html><head></head><body><Table foo=2>body</table></body></html>", new string[] {"table"});
+			Assert.AreEqual("<html><head></head><body>", p.Leader);
 			Assert.AreEqual("<Table foo=2>", p.Tag);
 			Assert.AreEqual("body", p.Body);
-			Assert.AreEqual("trailer", p.Trailer);
+			Assert.AreEqual("</body></html>", p.Trailer);
+		}
+
+		private Parse SimpleTableParse
+		{
+			get { return new Parse("leader<table><tr><td>body</td></tr></table>trailer"); }
 		}
 
 		[Test]
-		public void TestRecursing() 
+		public void BodyShouldReturnNullForTables() 
 		{
-			Parse p = new Parse("leader<table><TR><Td>body</tD></TR></table>trailer");
-			Assert.AreEqual(null, p.Body);
-			Assert.AreEqual(null, p.Parts.Body);
-			Assert.AreEqual("body", p.Parts.Parts.Body);
+			Parse parse = SimpleTableParse;
+			Assert.AreEqual(null, parse.Body);
 		}
 
 		[Test]
-		public void TestIterating()
+		public void BodyShouldReturnNullForRows() 
 		{
-			Parse p = new Parse("leader<table><tr><td>one</td><td>two</td><td>three</td></tr></table>trailer");
-			Assert.AreEqual("one", p.Parts.Parts.Body);
-			Assert.AreEqual("two", p.Parts.Parts.More.Body);
-			Assert.AreEqual("three", p.Parts.Parts.More.More.Body);
+			Parse parse = SimpleTableParse;
+			Assert.AreEqual(null, parse.Parts.Body);
 		}
 
 		[Test]
-		public void TestIndexing() 
+		public void BodyShouldReturnTextForCells() 
 		{
-			Parse p = new Parse("leader<table><tr><td>one</td><td>two</td><td>three</td></tr><tr><td>four</td></tr></table>trailer");
+			Parse parse = SimpleTableParse;
+			Assert.AreEqual("body", parse.Parts.Parts.Body);
+		}
+
+		[Test]
+		public void PartsShouldReturnCellsWhenTheParseRepresentsARow()
+		{
+			Parse row = new Parse("<tr><td>one</td><td>two</td><td>three</td></tr>", new string[]{"tr", "td"});
+			Assert.AreEqual("one", row.Parts.Body);
+			Assert.AreEqual("two", row.Parts.More.Body);
+			Assert.AreEqual("three", row.Parts.More.More.Body);
+		}
+
+		[Test]
+		public void PartsShouldReturnRowsWhenTheParseRepresentsATable()
+		{
+			Parse table = new Parse("<table><tr><td>row one</td></tr><tr><td>row two</td></tr></table>", new string[] {"table", "tr", "td"});
+			Assert.AreEqual("row one", table.Parts.Parts.Body);
+			Assert.AreEqual("row two", table.Parts.More.Parts.Body);
+		}
+
+		[Test]
+		public void TestIndexingPage() 
+		{
+			Parse p = new Parse(
+				@"leader
+					<table>
+						<tr>
+							<td>one</td><td>two</td><td>three</td>
+						</tr>
+						<tr>
+							<td>four</td>
+						</tr>
+					</table>
+				trailer");
 			Assert.AreEqual("one", p.At(0,0,0).Body);
 			Assert.AreEqual("two", p.At(0,0,1).Body);
 			Assert.AreEqual("three", p.At(0,0,2).Body);

@@ -48,6 +48,12 @@ namespace fit
 		}
 
 		[Test]
+		public void IsFullyQualifiedShouldAllowNumbers()
+		{
+			Assert.IsTrue(new TypeName("This1.Is2.FullyQualified3").IsFullyQualified());
+		}
+
+		[Test]
 		public void TestOriginalName()
 		{
 			string originalName = "This.is.the orginal name!!!?";

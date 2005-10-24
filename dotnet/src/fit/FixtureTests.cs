@@ -31,9 +31,13 @@ namespace fit
 			Assert.IsTrue(message.IndexOf("Assemblies searched") > 0);
 			Assert.IsTrue(message.ToLower().IndexOf("fit.dll") > 0, message);
 		}
+	}
+
+	[TestFixture]
+	public class FixtureParametersTest{
 
 		[Test]
-		public void TestFixtureParametersNoAdditionalCell()
+		public void NoParameterCellsShouldResultInNoArguments()
 		{
 			string tableString = "<table><tr><td>StringFixture</td></tr><tr><td>field</td><td>field</td></tr></table>";
 			Fixture fixture = new Fixture();
@@ -43,7 +47,7 @@ namespace fit
 		}
 
 		[Test]
-		public void TestFixtureParametersOneParam()
+		public void OneParameterCellShouldResultInOneArgument()
 		{
 			string arg = "I'd like to buy an argument";
 			string tableString = "<table><tr><td>StringFixture</td><td>" + arg + "</td></tr><tr><td>field</td><td>field</td></tr></table>";
@@ -55,7 +59,7 @@ namespace fit
 		}
 
 		[Test]
-		public void TestFixtureParametersTwoParams()
+		public void TwoParameterCellShouldResultInTwoArguments()
 		{
 			string arg1 = "I'd like to buy an argument";
 			string arg2 = "I'd like to buy another argument";

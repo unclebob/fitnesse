@@ -93,7 +93,7 @@ namespace fit
 		public Parse(string text, string[] tags, int level, int offset)
 		{
 			string lc = text.ToLower();
-			string target = tags[level];
+			string target = tags[level].ToLower();
 
 			int startTag = ProtectedIndexOf(lc, "<" + target, 0, target);
 			int endTag = ProtectedIndexOf(lc, ">", startTag, target) + 1;

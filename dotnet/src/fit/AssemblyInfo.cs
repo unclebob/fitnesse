@@ -2,13 +2,12 @@
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
 using System.Reflection;
-using System.Runtime.InteropServices;
 //
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly : AssemblyTitle("")]
+[assembly : AssemblyTitle("fitnesse-dotnet")]
 [assembly : AssemblyDescription("")]
 [assembly : AssemblyConfiguration("")]
 [assembly : AssemblyCompany("")]
@@ -56,7 +55,3 @@ using System.Runtime.InteropServices;
 //       documentation for more information on this.
 //
 
-[assembly : AssemblyDelaySign(false)]
-[assembly : AssemblyKeyFile(@"../../../../fitnesse.key")]
-[assembly : AssemblyKeyName("")]
-[assembly : Guid("CCCDC85E-F60D-41de-B032-C711214F6666")]
