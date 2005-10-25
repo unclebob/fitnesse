@@ -21,17 +21,17 @@ namespace fit
 			TestUtils.InitAssembliesAndNamespaces();
 			DoTable(
 				BuildTable(new string[] {"null", "blank", "joe"}),
-				BuildObjectArray(new string[]{null, "", "joe"}), 
+				BuildObjectArray(new string[] {null, "", "joe"}),
 				3, 0, 0, 0
 				);
 			DoTable(
 				BuildTable(new string[] {"Null", "Blank"}),
-				BuildObjectArray(new string[]{null, ""}), 
+				BuildObjectArray(new string[] {null, ""}),
 				2, 0, 0, 0
 				);
 			DoTable(
 				BuildTable(new string[] {"NULL", "BLANK"}),
-				BuildObjectArray(new string[]{null, ""}), 
+				BuildObjectArray(new string[] {null, ""}),
 				2, 0, 0, 0
 				);
 		}
@@ -42,12 +42,12 @@ namespace fit
 			Parse table = BuildTable(new string[] {"blank", "null"});
 			DoTable(
 				table,
-				BuildObjectArray(new string[]{"", "this is not null"}), 
+				BuildObjectArray(new string[] {"", "this is not null"}),
 				1, 2, 0, 0
-			);
+				);
 		}
 
-		private static Parse BuildTable(string[] values)
+		private Parse BuildTable(string[] values)
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.Append("<table>");
@@ -61,7 +61,7 @@ namespace fit
 			return new Parse(builder.ToString());
 		}
 
-		private static object[] BuildObjectArray(string[] values)
+		private object[] BuildObjectArray(string[] values)
 		{
 			object[] objects = new object[values.Length];
 			int count = 0;
@@ -166,7 +166,8 @@ namespace fit
 			Assert.AreEqual(0, peopleRowFixture.Counts.Ignores);
 			Assert.AreEqual(0, peopleRowFixture.Counts.Exceptions);
 		}
-		private string rowFixtureName = typeof(NewRowFixtureDerivative).Name;
+
+		private string rowFixtureName = typeof (NewRowFixtureDerivative).Name;
 		private Parse table;
 		private Fixture fixture;
 
@@ -192,10 +193,10 @@ namespace fit
 		{
 			string name = "Joe";
 			AddQueryValue(new RowFixturePerson(name));
-			AddRow(new string[]{name});
+			AddRow(new string[] {name});
 			fixture.DoTables(table);
 			VerifyCounts(1, 0, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "pass");
+			AssertTextInTag(table.At(0, 2, 0), "pass");
 		}
 
 		[Test]
@@ -208,8 +209,8 @@ namespace fit
 			AddRow(new string[] {name, address});
 			fixture.DoTables(table);
 			VerifyCounts(2, 0, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "pass");
-			AssertTextInTag(table.At(0,2,1), "pass");
+			AssertTextInTag(table.At(0, 2, 0), "pass");
+			AssertTextInTag(table.At(0, 2, 1), "pass");
 		}
 
 		[Test]
@@ -247,8 +248,8 @@ namespace fit
 			AddRow(new string[] {name, "Second Street"});
 			fixture.DoTables(table);
 			VerifyCounts(1, 1, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "pass");
-			AssertTextInTag(table.At(0,2,1), "fail");
+			AssertTextInTag(table.At(0, 2, 0), "pass");
+			AssertTextInTag(table.At(0, 2, 1), "fail");
 		}
 
 		[Test]
@@ -258,10 +259,10 @@ namespace fit
 			AddRow(new string[] {"John"});
 			fixture.DoTables(table);
 			VerifyCounts(0, 2, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "fail");
-			AssertTextInBody(table.At(0,2,0), "missing");
-			AssertTextInTag(table.At(0,3,0), "fail");
-			AssertTextInBody(table.At(0,3,0), "surplus");
+			AssertTextInTag(table.At(0, 2, 0), "fail");
+			AssertTextInBody(table.At(0, 2, 0), "missing");
+			AssertTextInTag(table.At(0, 3, 0), "fail");
+			AssertTextInBody(table.At(0, 3, 0), "surplus");
 		}
 
 		[Test]
@@ -276,12 +277,27 @@ namespace fit
 		}
 
 		[Test]
+		public void ThreeItemsWithCommonParts()
+		{
+			AddColumn(table, "address");
+			AddQueryValue(new RowFixturePerson("A", "2"));
+			AddQueryValue(new RowFixturePerson("B", "1"));
+			AddQueryValue(new RowFixturePerson("A", "1"));
+			AddRow(new string[] {"A","1"});
+			AddRow(new string[] {"A","2"});
+			AddRow(new string[] {"B","1"});
+			Console.Out.WriteLine(table);
+			fixture.DoTables(table);
+			VerifyCounts(6, 0, 0, 0);
+		}
+
+		[Test]
 		public void TestTwoExpectedTwoActualAllCorrectOrderCorrect()
 		{
 			AddQueryValue(new RowFixturePerson("Joe"));
 			AddQueryValue(new RowFixturePerson("Jane"));
-			AddRow(new string[]{"Joe"});
-			AddRow(new string[]{"Jane"});
+			AddRow(new string[] {"Joe"});
+			AddRow(new string[] {"Jane"});
 			fixture.DoTables(table);
 			VerifyCounts(2, 0, 0, 0);
 		}
@@ -291,8 +307,8 @@ namespace fit
 		{
 			AddQueryValue(new RowFixturePerson("Joe"));
 			AddQueryValue(new RowFixturePerson("Jane"));
-			AddRow(new string[]{"Jane"});
-			AddRow(new string[]{"Joe"});
+			AddRow(new string[] {"Jane"});
+			AddRow(new string[] {"Joe"});
 			fixture.DoTables(table);
 			VerifyCounts(2, 0, 0, 0);
 		}
@@ -302,8 +318,8 @@ namespace fit
 		{
 			AddQueryValue(new RowFixturePerson("Joe"));
 			AddQueryValue(new RowFixturePerson("Jane"));
-			AddRow(new string[]{"Joe"});
-			AddRow(new string[]{"Susan"});
+			AddRow(new string[] {"Joe"});
+			AddRow(new string[] {"Susan"});
 			fixture.DoTables(table);
 			VerifyCounts(1, 2, 0, 0);
 		}
@@ -313,8 +329,8 @@ namespace fit
 		{
 			AddQueryValue(new RowFixturePerson("Joe"));
 			AddQueryValue(new RowFixturePerson("Jane"));
-			AddRow(new string[]{"Susan"});
-			AddRow(new string[]{"Joe"});
+			AddRow(new string[] {"Susan"});
+			AddRow(new string[] {"Joe"});
 			fixture.DoTables(table);
 			VerifyCounts(1, 2, 0, 0);
 		}
@@ -322,11 +338,11 @@ namespace fit
 		[Test]
 		public void TestOneMissing()
 		{
-			AddRow(new string[]{"Joe"});
+			AddRow(new string[] {"Joe"});
 			fixture.DoTables(table);
 			VerifyCounts(0, 1, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "fail");
-			AssertTextInBody(table.At(0,2,0), "missing");
+			AssertTextInTag(table.At(0, 2, 0), "fail");
+			AssertTextInBody(table.At(0, 2, 0), "missing");
 		}
 
 		[Test]
@@ -336,42 +352,42 @@ namespace fit
 			AddRow(new string[] {"Joe", "First Street"});
 			fixture.DoTables(table);
 			VerifyCounts(0, 1, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "fail");
-			AssertTextInBody(table.At(0,2,0), "missing");
+			AssertTextInTag(table.At(0, 2, 0), "fail");
+			AssertTextInBody(table.At(0, 2, 0), "missing");
 		}
 
 		[Test]
 		public void TestOnePresentOneMissingTwoColumns()
 		{
 			AddColumn(table, "address");
-			AddRow(new string[]{"Lilian", "First Street"});
-			AddRow(new string[]{"Joe", "Second Street"});
+			AddRow(new string[] {"Lilian", "First Street"});
+			AddRow(new string[] {"Joe", "Second Street"});
 			AddQueryValue(new RowFixturePerson("Lilian", "First Street"));
 			fixture.DoTables(table);
 			VerifyCounts(2, 1, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "pass");
-			AssertTextInTag(table.At(0,2,1), "pass");
-			AssertTextNotInBody(table.At(0,2,0), "missing");
-			AssertTextInTag(table.At(0,3,0), "fail");
-			AssertTextInBody(table.At(0,3,0), "missing");
+			AssertTextInTag(table.At(0, 2, 0), "pass");
+			AssertTextInTag(table.At(0, 2, 1), "pass");
+			AssertTextNotInBody(table.At(0, 2, 0), "missing");
+			AssertTextInTag(table.At(0, 3, 0), "fail");
+			AssertTextInBody(table.At(0, 3, 0), "missing");
 		}
 
 		[Test]
 		public void TestOnePresentOneMissingTwoColumnsReverseOrder()
 		{
 			AddColumn(table, "address");
-			AddRow(new string[]{"Joe", "Second Street"});
-			AddRow(new string[]{"Lilian", "First Street"});
+			AddRow(new string[] {"Joe", "Second Street"});
+			AddRow(new string[] {"Lilian", "First Street"});
 			AddQueryValue(new RowFixturePerson("Lilian", "First Street"));
 			fixture.DoTables(table);
 			VerifyCounts(2, 1, 0, 0);
-			AssertTextInTag(table.At(0,2,0), "fail");
-			AssertTextInBody(table.At(0,2,0), "missing");
-			AssertTextNotInBody(table.At(0,2,1), "missing");
-			AssertTextInTag(table.At(0,3,0), "pass");
-			AssertTextInTag(table.At(0,3,1), "pass");
-			AssertTextNotInBody(table.At(0,3,0), "missing");
-			AssertTextNotInBody(table.At(0,3,1), "missing");
+			AssertTextInTag(table.At(0, 2, 0), "fail");
+			AssertTextInBody(table.At(0, 2, 0), "missing");
+			AssertTextNotInBody(table.At(0, 2, 1), "missing");
+			AssertTextInTag(table.At(0, 3, 0), "pass");
+			AssertTextInTag(table.At(0, 3, 1), "pass");
+			AssertTextNotInBody(table.At(0, 3, 0), "missing");
+			AssertTextNotInBody(table.At(0, 3, 1), "missing");
 		}
 
 		[Test]
@@ -439,7 +455,7 @@ namespace fit
 				"<tr><td>Red</td></tr>" +
 				"<tr><td>Blue</td></tr>" +
 				"</table>";
-			Array colorsArray = Enum.GetValues(typeof(Color));
+			Array colorsArray = Enum.GetValues(typeof (Color));
 			ArrayList colorsList = new ArrayList(colorsArray);
 			DoTable(new Parse(tableHtml), colorsList.ToArray(), 2, 0, 0, 0);
 		}
@@ -534,7 +550,7 @@ namespace fit
 
 		public override Type GetTargetClass()
 		{
-			return typeof(RowFixturePerson);
+			return typeof (RowFixturePerson);
 		}
 	}
 
@@ -582,14 +598,14 @@ namespace fit
 	{
 		public override object[] Query()
 		{
-			Array colorsArray = Enum.GetValues(typeof(Color));
+			Array colorsArray = Enum.GetValues(typeof (Color));
 			ArrayList colorsList = new ArrayList(colorsArray);
 			return colorsList.ToArray();
 		}
 
 		public override Type GetTargetClass()
 		{
-			return typeof(Color);
+			return typeof (Color);
 		}
 	}
 }

@@ -98,12 +98,12 @@ namespace fit
 				if (IsMatch(row, col))
 					matches.Add(queryItem);
 			}
-			if (UniqueMatchFound(matches))
+			if (UniqueMatchFound(matches))	
 				return UniqueMatch(matches);
 			else if (matches.Count > 0 && !ColumnHasBinding(col + 1))
 				return matches[0];
 			else 
-				return FindMatchingObject(queryItems, row, col + 1);
+				return FindMatchingObject(matches, row, col + 1);
 		}
 
 		private bool IsMatch(Parse row, int col)

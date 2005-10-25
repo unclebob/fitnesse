@@ -475,6 +475,14 @@ namespace fit
 		}
 	}
 
+	public class PeopleRowFixtureCleaner : Fixture
+	{
+		public PeopleRowFixtureCleaner()
+		{
+			PeopleLoaderFixture.people.Clear();
+		}
+	}
+
 	public class PeopleRowFixture : RowFixture
 	{
 		public override object[] Query()
