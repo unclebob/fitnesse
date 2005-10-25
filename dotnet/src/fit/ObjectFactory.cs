@@ -18,7 +18,8 @@ namespace fit
 		private GracefulNameConverter converter = new GracefulNameConverter();
 
 		public ObjectFactory() : this(null)
-		{}
+		{
+		}
 
 		public ObjectFactory(string possibleSuffix)
 		{
@@ -57,10 +58,11 @@ namespace fit
 						AppDomain.CurrentDomain.SetData("APP_CONFIG_FILE", configFileInfo);
 					}
 				}
-				//TODO - explain why we need to catch exceptions but don't
-				//need to do anything with them
+					//TODO - explain why we need to catch exceptions but don't
+					//need to do anything with them
 				catch (Exception)
-				{}
+				{
+				}
 			}
 		}
 
@@ -105,6 +107,15 @@ namespace fit
 
 		private object GetTypeOrInstance(TypeName typeName, GetTypeOrInstanceDelegate getTypeOrInstance)
 		{
+			if (typeName.IsFullyQualified())
+			{
+				Type type = Type.GetType(typeName.OriginalName);
+				if (type != null)
+				{
+					Assembly assembly = type.Assembly;
+					return getTypeOrInstance(typeName, assembly, type);
+				}
+			}
 			foreach (Assembly assembly in loadedAssemblies)
 			{
 				foreach (Type type in assembly.GetExportedTypes())

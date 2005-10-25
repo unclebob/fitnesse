@@ -52,6 +52,12 @@ namespace fit
 		{
 			factory.CreateInstance("SomeClassInSomeNamespace");
 		}
+
+		[Test]
+		public void TestFindGacItems()
+		{
+			Assert.IsTrue(factory.CreateInstance("System.Boolean") is System.Boolean);
+		}
 	}
 }
 

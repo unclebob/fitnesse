@@ -37,7 +37,7 @@
                     NoWarn = ""
                     Optimize = "false"
                     OutputPath = "bin\Debug\"
-                    RegisterForComInterop = "false"
+                    RegisterForComInterop = "true"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
