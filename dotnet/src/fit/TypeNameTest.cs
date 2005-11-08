@@ -16,31 +16,36 @@ namespace fit
 		}
 
 		[Test]
-		public void TestGetNameWithOnePartNamespace() {
+		public void TestGetNameWithOnePartNamespace()
+		{
 			TypeName name = new TypeName("SomeNamespace.SomeFixture");
 			Assert.AreEqual("SomeFixture", name.Name);
 		}
 
 		[Test]
-		public void TestGetNamespaceWithOnePartNamespace() {
+		public void TestGetNamespaceWithOnePartNamespace()
+		{
 			TypeName name = new TypeName("SomeNamespace.SomeFixture");
 			Assert.AreEqual("SomeNamespace", name.Namespace);
 		}
 
 		[Test]
-		public void TestGetNameWithTwoPartNamespace() {
+		public void TestGetNameWithTwoPartNamespace()
+		{
 			TypeName name = new TypeName("Prefix.SomeNamespace.SomeFixture");
 			Assert.AreEqual("SomeFixture", name.Name);
 		}
 
 		[Test]
-		public void TestGetNamespaceWithTwoPartNamespace() {
+		public void TestGetNamespaceWithTwoPartNamespace()
+		{
 			TypeName name = new TypeName("Prefix.SomeNamespace.SomeFixture");
 			Assert.AreEqual("Prefix.SomeNamespace", name.Namespace);
 		}
 
 		[Test]
-		public void TestIsFullyQualified() {
+		public void TestIsFullyQualified()
+		{
 			Assert.IsTrue(new TypeName("this.is.FullyQualified").IsFullyQualified());
 			Assert.IsTrue(new TypeName("this.is.Fully_Qualified").IsFullyQualified());
 			Assert.IsFalse(new TypeName("thisIsNotFullyQualified....").IsFullyQualified());
@@ -51,6 +56,14 @@ namespace fit
 		public void IsFullyQualifiedShouldAllowNumbers()
 		{
 			Assert.IsTrue(new TypeName("This1.Is2.FullyQualified3").IsFullyQualified());
+		}
+
+		[Test]
+		public void IsFullyQualifiedShouldNotAllowNumbersAtTheBeginningOfAnyPartial()
+		{
+			Assert.IsFalse(new TypeName("1This.Is.FullyQualified").IsFullyQualified());
+			Assert.IsFalse(new TypeName("This.2Is.FullyQualified").IsFullyQualified());
+			Assert.IsFalse(new TypeName("This.Is.3FullyQualified").IsFullyQualified());
 		}
 
 		[Test]
