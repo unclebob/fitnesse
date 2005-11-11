@@ -1,14 +1,20 @@
 // Modified or written by Object Mentor, Inc. for inclusion with FitNesse.
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
-// Copyright (c) 2002 Cunningham & Cunningham, Inc.
-// Released under the terms of the GNU General Public License version 2 or later.
 using System;
 using System.Collections;
 
 namespace fit
 {
-	public class Fixture
+	// ******* insert start
+	public interface FixtureFactory
+	{
+		Fixture LoadFixture(Parse theTable);
+	}
+
+	// ******* insert end
+
+	public class Fixture : FixtureFactory
 	{
 		private static Hashtable saveAndRecall = new Hashtable();
 		private static Fixture lastFixtureLoaded = null;
@@ -23,10 +29,29 @@ namespace fit
 		public Counts Counts = new Counts();
 		public FixtureListener Listener = new NullFixtureListener();
 
+		// ******* insert start
+		private static FixtureFactory ourFixtureFactory;
+
+		public static FixtureFactory FixtureFactory
+		{
+			get { return ourFixtureFactory; }
+			set { ourFixtureFactory = value; }
+		}
+
+		public virtual Fixture LoadFixture(Parse theTable)
+		{
+			return LoadFixture(theTable.At(0, 0, 0).Text);
+		}
+
+		// ******* insert end
+
 		// Traversal //////////////////////////
 
 		public virtual void DoTables(Parse tables)
 		{
+			// ******* insert start
+			ourFixtureFactory = this;
+			// ******* insert end
 			InitializeNamespaces();
 			Summary["run date"] = DateTime.Now;
 			Summary["run elapsed time"] = new RunTime();
@@ -37,7 +62,9 @@ namespace fit
 				{
 					try
 					{
-						Fixture fixture = LoadFixture(heading.Text);
+						// ******* change start
+						Fixture fixture = ourFixtureFactory.LoadFixture(tables);
+						// ******* change end
 						fixture.Counts = Counts;
 						fixture.Summary = Summary;
 						fixture.GetArgsForTable(tables);
