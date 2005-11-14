@@ -11,7 +11,7 @@ namespace fit
 	public class ActionFixture : Fixture
 	{
 		protected Parse cells;
-		protected Fixture actor;
+		protected static Fixture actor;
 		protected object targetObject;
 
 		// Traversal ////////////////////////////////
