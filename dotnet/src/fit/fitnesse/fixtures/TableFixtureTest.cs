@@ -2,9 +2,11 @@
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
 using System.Text;
+using fit;
+using fitnesse.fixtures;
 using NUnit.Framework;
 
-namespace fit
+namespace fitnesse.fixtures
 {
 	[TestFixture]
 	public class TableFixtureTest
@@ -117,7 +119,10 @@ namespace fit
 			Assert.IsTrue(ExampleTableFixture.blankCell);
 		}
 	}
+}
 
+namespace fit
+{
 	public class ExampleTableFixture : TableFixture
 	{
 		public static int timesDoStaticTableCalled;

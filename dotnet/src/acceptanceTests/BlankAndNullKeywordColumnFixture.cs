@@ -6,30 +6,28 @@ using fit;
 
 namespace fitnesse.acceptanceTests
 {
-
-	public class BlankAndNullKeywordColumnFixture : ColumnFixture
-	{
-		public string Field;
-		public bool IsFieldNull() {return Field == null;}
-		public bool IsFieldBlank() {return Field != null && Field.Length == 0;}
-	}
-
 	public class BlankAndNullKeywordRowFixture : RowFixture
 	{
 		public override object[] Query()
 		{
-			BlankAndNullKeywordColumnFixture domainObject1 = new BlankAndNullKeywordColumnFixture();
-			domainObject1.Field = null;
-			BlankAndNullKeywordColumnFixture domainObject2 = new BlankAndNullKeywordColumnFixture();
-			domainObject2.Field = "";
-			BlankAndNullKeywordColumnFixture domainObject3 = new BlankAndNullKeywordColumnFixture();
-			domainObject3.Field = "joe";
-			return new object[]{domainObject1, domainObject2, domainObject3};
+			StringFixture fixture1 = new StringFixture();
+			fixture1.Field = null;
+			fixture1.Property = null;
+			fixture1.Set(null);
+			StringFixture fixture2 = new StringFixture();
+			fixture2.Field = "";
+			fixture2.Property = "";
+			fixture2.Set("");
+			StringFixture fixture3 = new StringFixture();
+			fixture3.Field = "Joe";
+			fixture3.Property = "Joe";
+			fixture3.Set("Joe");
+			return new object[]{fixture1, fixture2, fixture3};
 		}
 
 		public override Type GetTargetClass()
 		{
-			return typeof(BlankAndNullKeywordColumnFixture);
+			return typeof(StringFixture);
 		}
 	}
 }

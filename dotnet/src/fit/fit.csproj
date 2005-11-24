@@ -335,16 +335,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TableFixture.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "TableFixtureTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "TestUtils.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -441,6 +431,16 @@
                 />
                 <File
                     RelPath = "fitnesse\fitserver\TestRunnerTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fixtures\TableFixture.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "fitnesse\fixtures\TableFixtureTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
