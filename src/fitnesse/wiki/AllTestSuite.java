@@ -28,7 +28,8 @@ public class AllTestSuite
       PathParserTest.class,
       PageXmlizerTest.class,
       SymbolicPageTest.class,
-      BaseWikiPageTest.class
+      BaseWikiPageTest.class,
+			WikiPagePropertyTest.class
 		});
 	}
 }

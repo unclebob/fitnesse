@@ -36,19 +36,28 @@ public abstract class BaseWikiPage implements WikiPage
 	{
 		List children = getNormalChildren();
 		WikiPageProperties props = getData().getProperties();
-		for(Iterator iterator = props.getSymbolicLinkNames().iterator(); iterator.hasNext();)
+		WikiPageProperty symLinksProperty = props.getProperty("SymbolicLinks");
+		if(symLinksProperty != null)
 		{
-			String linkName = (String) iterator.next();
-			WikiPage page = createSymbolicPage(props, linkName);
-			if(page != null)
-				children.add(page);
+			for(Iterator iterator = symLinksProperty.keySet().iterator(); iterator.hasNext();)
+			{
+				String linkName = (String) iterator.next();
+				WikiPage page = createSymbolicPage(symLinksProperty, linkName);
+				if(page != null)
+					children.add(page);
+			}
 		}
 		return children;
 	}
 
-	private WikiPage createSymbolicPage(WikiPageProperties props, String linkName) throws Exception
+	private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) throws Exception
 	{
-		WikiPagePath path = props.getSymbolicLink(linkName);
+		if(symLinkProperty == null)
+			return null;
+		String linkPath = symLinkProperty.get(linkName);
+		if(linkPath == null)
+			return null;
+		WikiPagePath path = PathParser.parse(linkPath);
 		PageCrawler crawler = getPageCrawler();
 		WikiPage page = crawler.getPage(crawler.getRoot(this), path);
 		if(page != null)
@@ -57,11 +66,12 @@ public abstract class BaseWikiPage implements WikiPage
 	}
 
 	protected abstract WikiPage getNormalChildPage(String name) throws Exception;
+
 	public WikiPage getChildPage(String name) throws Exception
 	{
 		WikiPage page = getNormalChildPage(name);
 		if(page == null)
-			page = createSymbolicPage(getData().getProperties(), name);
+			page = createSymbolicPage(getData().getProperties().getProperty("SymbolicLinks"), name);
 		return page;
 	}
 

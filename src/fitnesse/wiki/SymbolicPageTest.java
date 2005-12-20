@@ -80,11 +80,11 @@ public class SymbolicPageTest extends TestCase
 	public void testCyclicSymbolicLinks() throws Exception
 	{
 		PageData data = pageOne.getData();
-		data.getProperties().addSymbolicLink("SymOne", PathParser.parse(pageTwoPath));
+		data.getProperties().set("SymbolicLinks").set("SymOne", pageTwoPath);
 		pageOne.commit(data);
 
 		data = pageTwo.getData();
-		data.getProperties().addSymbolicLink("SymTwo", PathParser.parse(pageOnePath));
+		data.getProperties().set("SymbolicLinks").set("SymTwo", pageOnePath);
 		pageTwo.commit(data);
 
 		WikiPage deepPage = crawler.getPage(root, PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));

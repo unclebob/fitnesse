@@ -24,7 +24,7 @@ public class ProxyPageTest extends TestCase
 		child1 = crawler.addPage(original, PathParser.parse("ChildOne"), "child one");
 		crawler.addPage(original, PathParser.parse("ChildTwo"), "child two");
 		PageData data = original.getData();
-		data.setAttribute("Attr1", "true");
+		data.setAttribute("Attr1");
 		original.commit(data);
 
 		FitNesseUtil.startFitnesse(root);

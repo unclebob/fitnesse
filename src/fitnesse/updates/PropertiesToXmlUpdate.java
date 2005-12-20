@@ -4,7 +4,7 @@ package fitnesse.updates;
 
 import fitnesse.wiki.*;
 import java.io.*;
-import java.util.Properties;
+import java.util.*;
 
 public class PropertiesToXmlUpdate extends PageTraversingUpdate
 {
@@ -39,7 +39,16 @@ public class PropertiesToXmlUpdate extends PageTraversingUpdate
 	private void saveNewProperties(String path, Properties oldProps) throws Exception
 	{
 		File newPropsFile = new File(path + FileSystemPage.propertiesFilename);
-		WikiPageProperties newProps = new WikiPageProperties(oldProps);
+		WikiPageProperties newProps = new WikiPageProperties();
+
+		for(Iterator iterator = oldProps.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			String value = (String) oldProps.get(key);
+			if(!"false".equals(value))
+				newProps.set(key, value);
+		}
+
 		FileOutputStream os = new FileOutputStream(newPropsFile);
 		newProps.save(os);
 		os.close();

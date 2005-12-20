@@ -199,12 +199,14 @@ public class PropertiesResponder implements SecureResponder
 
 	private void addSymbolicLinkRows(HtmlTableListingBuilder table) throws Exception
 	{
-		WikiPageProperties props = pageData.getProperties();
-		Set symbolicLinkNames = props.getSymbolicLinkNames();
+		WikiPageProperty symLinksProperty = pageData.getProperties().getProperty("SymbolicLinks");
+		if(symLinksProperty == null)
+			return;
+		Set symbolicLinkNames = symLinksProperty.keySet();
 		for(Iterator iterator = symbolicLinkNames.iterator(); iterator.hasNext();)
 		{
 			String linkName = (String) iterator.next();
-			WikiPagePath path = props.getSymbolicLink(linkName);
+			WikiPagePath path = PathParser.parse(symLinksProperty.get(linkName));
 			HtmlElement nameItem = new RawHtml(linkName);
 			HtmlTag pathItem = HtmlUtil.makeLink(PathParser.render(path), PathParser.render(path));
 			HtmlTag actionItem = HtmlUtil.makeLink(resource + "?responder=symlink&removal=" + linkName, "remove");

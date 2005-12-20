@@ -29,7 +29,7 @@ public class BaseWikiPageTest extends TestCase
 		checkSymbolicPage(children.get(1));
 	}
 
-	public void testgetChildUsesSymbolicPages() throws Exception
+	public void testGetChildUsesSymbolicPages() throws Exception
 	{
 		createLink();
 		checkSymbolicPage(linkingPage.getChildPage("SymLink"));
@@ -39,7 +39,8 @@ public class BaseWikiPageTest extends TestCase
 	{
 		PageData data = linkingPage.getData();
 		WikiPageProperties properties = data.getProperties();
-		properties.addSymbolicLink("SymLink", PathParser.parse("LinkedPage"));
+		properties.set("SymbolicLinks");
+		properties.getProperty("SymbolicLinks").set("SymLink", "LinkedPage");
 		linkingPage.commit(data);
 	}
 

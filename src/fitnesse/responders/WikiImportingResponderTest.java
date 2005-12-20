@@ -190,8 +190,7 @@ public class WikiImportingResponderTest extends RegexTest
 	{
 		Response response = responder.makeResponse(new FitNesseContext(localRoot), request);
 		assertTrue(response instanceof ChunkedResponse);
-		ChunkedResponse chunkedResponse = (ChunkedResponse) response;
-		return chunkedResponse;
+		return (ChunkedResponse) response;
 	}
 
 	private MockRequest makeRequest(String remoteUrl)

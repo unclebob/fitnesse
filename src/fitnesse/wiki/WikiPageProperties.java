@@ -8,29 +8,14 @@ import org.w3c.dom.*;
 import fitnesse.util.XmlUtil;
 import fitnesse.components.XmlWriter;
 
-public class WikiPageProperties implements Serializable
+public class WikiPageProperties extends WikiPageProperty implements Serializable
 {
-
-	private Map properties;
 	public static final String VIRTUAL_WIKI_ATTRIBUTE = "VirtualWiki";
 	private Map symbolicLinks;
 
 	public WikiPageProperties() throws Exception
 	{
-		properties = new HashMap();
 		symbolicLinks = new HashMap();
-	}
-
-	public WikiPageProperties(Map map) throws Exception
-	{
-		this();
-		for(Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
-		{
-			String key = (String) iterator.next();
-			String value = (String) map.get(key);
-			if(!"false".equals(value))
-				this.properties.put(key, value);
-		}
 	}
 
 	public WikiPageProperties(InputStream inputStream) throws Exception
@@ -47,7 +32,8 @@ public class WikiPageProperties implements Serializable
 
 	public WikiPageProperties(WikiPageProperties that) throws Exception
 	{
-		properties = new HashMap(that.properties);
+		if(that != null && that.children != null)
+			children = new HashMap<String, WikiPageProperty>(that.children);
 		symbolicLinks = new HashMap(that.symbolicLinks);
 	}
 
@@ -67,13 +53,26 @@ public class WikiPageProperties implements Serializable
 			if(node.getNodeType() != Node.ELEMENT_NODE)
 				continue;
 			String key = node.getNodeName();
-			if(key.equals("symbolicLink"))
-				loadSymbolicLink(node);
-			else
-			{
-				String value = node.hasChildNodes() ? node.getFirstChild().getNodeValue() : "true";
-				properties.put(key, value);
-			}
+			LoadElement(this, (Element)node, key);
+		}
+	}
+
+	private void LoadElement(WikiPageProperty context, Element element, String key)
+	{
+		WikiPageProperty newProperty = new WikiPageProperty();
+		context.set(key, newProperty);
+
+		NodeList nodes = element.getChildNodes();
+		if(element.hasAttribute("value"))
+			newProperty.setValue(element.getAttribute("value"));
+		else if(nodes.getLength() == 1)
+			newProperty.setValue(nodes.item(0).getNodeValue());
+
+		for(int i = 0; i < nodes.getLength(); i++)
+		{
+			Node childNode = nodes.item(i);
+			if(childNode instanceof Element)
+				LoadElement(newProperty, (Element)childNode, childNode.getNodeName());
 		}
 	}
 
@@ -91,120 +90,47 @@ public class WikiPageProperties implements Serializable
 	public Element makeRootElement(Document document)
 	{
 		Element root = document.createElement("properties");
-		List keys = new ArrayList(properties.keySet());
+		List keys = new ArrayList(keySet());
 		Collections.sort(keys);
 
 		for(Iterator iterator = keys.iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			String value = (String) properties.get(key);
-			Element element = document.createElement(key);
-			if(!"true".equals(value))
-				element.appendChild(document.createTextNode(value));
-			root.appendChild(element);
+			WikiPageProperty childProperty = getProperty(key);
+			toXml(childProperty, key, document, root);
 		}
 
-		addSymbolicLinkElements(document, root);
 		return root;
 	}
 
-	public boolean has(String key)
+	private void toXml(WikiPageProperty context, String key, Document document, Element parent)
 	{
-		return properties.containsKey(key);
-	}
+		Element element = document.createElement(key);
 
-	public String get(String key) throws Exception
-	{
-		return (String) properties.get(key);
-	}
+		String value = context.getValue();
+		if(context.hasChildren())
+		{
+			if(value != null)
+				element.setAttribute("value", value);
 
-	public void set(String key, String value)
-	{
-		properties.put(key, value);
-	}
+			Set childKeys = context.keySet();
+			for(Iterator iterator = childKeys.iterator(); iterator.hasNext();)
+			{
+				String childKey = (String) iterator.next();
+				WikiPageProperty child = context.getProperty(childKey);
+				toXml(child, childKey, document, element);
+			}
+		}
+		else if(value != null)
+				element.appendChild(document.createTextNode(value));
 
-	public void set(String key)
-	{
-		set(key, "true");
-	}
-
-	public void remove(String key)
-	{
-		properties.remove(key);
-	}
-
-	public Set keySet()
-	{
-		return properties.keySet();
+		parent.appendChild(element);
 	}
 
 	public String toString()
 	{
-		StringBuffer s = new StringBuffer("WikiPageProperties:\n");
-		for(Iterator iterator = properties.keySet().iterator(); iterator.hasNext();)
-		{
-			String key = (String) iterator.next();
-			String value = (String) properties.get(key);
-			s.append("\t").append(key).append(" = ").append(value).append("\n");
-		}
-		symbolicLinksToString(s);
+		StringBuffer s = new StringBuffer();
+		s.append(super.toString("WikiPageProperties", 0));
 		return s.toString();
-	}
-
-	public void addSymbolicLink(String linkName, WikiPagePath pagePath)
-	{
-		symbolicLinks.put(linkName, pagePath);
-	}
-
-	public boolean hasSymbolicLink(String linkName)
-	{
-		return symbolicLinks.containsKey(linkName);
-	}
-
-	public WikiPagePath getSymbolicLink(String linkName)
-	{
-		return (WikiPagePath) symbolicLinks.get(linkName);
-	}
-
-	public Set getSymbolicLinkNames()
-	{
-		return symbolicLinks.keySet();
-	}
-
-	public void removeSymbolicLink(String linkName)
-	{
-		symbolicLinks.remove(linkName);
-	}
-
-	private void addSymbolicLinkElements(Document document, Element root)
-	{
-		for(Iterator iterator1 = symbolicLinks.keySet().iterator(); iterator1.hasNext();)
-		{
-			String linkName = (String) iterator1.next();
-			WikiPagePath path = (WikiPagePath) symbolicLinks.get(linkName);
-			Element linkElement = document.createElement("symbolicLink");
-			XmlUtil.addTextNode(document, linkElement, "name", linkName);
-			XmlUtil.addTextNode(document, linkElement, "path", PathParser.render(path));
-			root.appendChild(linkElement);
-		}
-	}
-
-	private void loadSymbolicLink(Node node) throws Exception
-	{
-		Element linkElement = (Element) node;
-		String name = XmlUtil.getLocalTextValue(linkElement, "name");
-		WikiPagePath path = PathParser.parse(XmlUtil.getLocalTextValue(linkElement, "path"));
-		addSymbolicLink(name, path);
-	}
-
-	private void symbolicLinksToString(StringBuffer s)
-	{
-		s.append("\tSymbolic Links:\n");
-		for(Iterator iterator = symbolicLinks.keySet().iterator(); iterator.hasNext();)
-		{
-			String linkName = (String) iterator.next();
-			WikiPagePath path = getSymbolicLink(linkName);
-			s.append("\t\t").append(linkName).append(" -> ").append(path).append("\n");
-		}
 	}
 }

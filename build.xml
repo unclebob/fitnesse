@@ -32,6 +32,7 @@
 				<exclude name="**/.DS_Store"/>
 				<exclude name="**/Thumbs.db"/>
 			</fileset>
+			<fileset dir="lib" includes="fitlibrary.jar"/>
 		</copy>
 		<mkdir dir="${zipDir}/dotnet"/>
 		<copy todir="${zipDir}/dotnet">

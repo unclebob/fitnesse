@@ -229,8 +229,7 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 			throw new AuthenticationRequiredException(remoteUrl());
 
 		String body = parser.getBody();
-		Document doc = XmlUtil.newDocument(body);
-		return doc;
+		return XmlUtil.newDocument(body);
 	}
 
 	private void addRowToResponse(String status) throws Exception

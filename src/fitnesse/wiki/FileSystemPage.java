@@ -26,8 +26,7 @@ public class FileSystemPage extends CachingPage
 
 	public static WikiPage makeRoot(String path, String name) throws Exception
 	{
-		FileSystemPage root = new FileSystemPage(path, name, null);
-		return root;
+		return new FileSystemPage(path, name, null);
 	}
 
 	public void removeChildPage(String name) throws Exception

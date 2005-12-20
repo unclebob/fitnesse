@@ -49,8 +49,7 @@ public class TOCWidget extends WikiWidget
 		return list;
 	}
 
-	private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth)
-	  throws Exception
+	private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) throws Exception
 	{
 		HtmlTag listItem = new HtmlTag("li");
 		listItem.add(HtmlUtil.makeLink(getHref(wikiPage), getLinkText(wikiPage)));
@@ -61,8 +60,7 @@ public class TOCWidget extends WikiWidget
 		return listItem;
 	}
 
-	private String getHref(WikiPage wikiPage)
-	  throws Exception
+	private String getHref(WikiPage wikiPage) throws Exception
 	{
 		String href = null;
 		WikiPagePath wikiPagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
@@ -70,8 +68,7 @@ public class TOCWidget extends WikiWidget
 		return href;
 	}
 
-	private HtmlElement getLinkText(WikiPage wikiPage)
-	  throws Exception
+	private HtmlElement getLinkText(WikiPage wikiPage) throws Exception
 	{
 		if(wikiPage instanceof ProxyPage)
 			return new HtmlTag("i", wikiPage.getName());
@@ -79,8 +76,7 @@ public class TOCWidget extends WikiWidget
 			return new RawHtml(wikiPage.getName());
 	}
 
-	private List buildListOfChildPages(WikiPage wikiPage)
-	  throws Exception
+	private List buildListOfChildPages(WikiPage wikiPage) throws Exception
 	{
 		List childPageList = new ArrayList(wikiPage.getChildren());
 		if(wikiPage.hasExtension(VirtualCouplingExtension.NAME))

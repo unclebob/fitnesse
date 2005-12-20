@@ -86,7 +86,7 @@ public class SerializedPageResponderTest extends RegexTest
 		assertEquals("this is page one", data.getContent());
 
 		WikiPageProperties props = data.getProperties();
-		assertEquals("true", props.get("Attr1"));
+		assertTrue(props.has("Attr1"));
 	}
 
 	public void testGetVersionOfPageData() throws Exception
@@ -134,6 +134,6 @@ public class SerializedPageResponderTest extends RegexTest
 
 		assertEquals("text/xml", response.getContentType());
 		assertSubString("test page", xml);
-		assertSubString("<Test/>", xml);
+		assertSubString("<Test", xml);
 	}
 }
