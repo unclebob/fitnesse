@@ -15,7 +15,8 @@ public class AllTestSuite
 			FileUpdateTest.class,
 			PropertiesToXmlUpdateTest.class,
 			ReplacingFileUpdateTest.class,
-			FrontPageUpdateTest.class
+			FrontPageUpdateTest.class,
+			SymLinkPropertyFormatUpdateTest.class
 		});
 	}
 }

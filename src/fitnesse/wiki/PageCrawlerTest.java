@@ -160,7 +160,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
 	public void testdoesntTraverseSymbolicPages() throws Exception
 	{
 		PageData data = page1.getData();
-		data.getProperties().set("SymbolicLinks").set("SymLink", "PageTwo");
+		data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", "PageTwo");
 		page1.commit(data);
 
 		crawler.traverse(root, this);

@@ -36,7 +36,7 @@ public abstract class BaseWikiPage implements WikiPage
 	{
 		List children = getNormalChildren();
 		WikiPageProperties props = getData().getProperties();
-		WikiPageProperty symLinksProperty = props.getProperty("SymbolicLinks");
+		WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinksProperty != null)
 		{
 			for(Iterator iterator = symLinksProperty.keySet().iterator(); iterator.hasNext();)
@@ -71,7 +71,7 @@ public abstract class BaseWikiPage implements WikiPage
 	{
 		WikiPage page = getNormalChildPage(name);
 		if(page == null)
-			page = createSymbolicPage(getData().getProperties().getProperty("SymbolicLinks"), name);
+			page = createSymbolicPage(getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
 		return page;
 	}
 

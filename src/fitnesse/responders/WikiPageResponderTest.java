@@ -139,7 +139,8 @@ public class WikiPageResponderTest extends RegexTest
 	{
 		WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
 		PageData data = page.getData();
-		data.setAttribute("WikiImportSource", "blah");
+		WikiImportProperty importProperty = new WikiImportProperty("blah");
+		importProperty.addTo(data.getProperties());
 		page.commit(data);
 
 		String content = requestPage("SamplePage").getContent();

@@ -47,7 +47,7 @@ public class SymbolicLinkResponder implements Responder
 		WikiPageProperty symLinks = getSymLinkProperty(properties);
 		symLinks.remove(linkToRemove);
 		if(symLinks.keySet().size() == 0)
-			properties.remove("SymbolicLinks");
+			properties.remove(SymbolicPage.PROPERTY_NAME);
 		page.commit(data);
 		setRedirect(resource);
 	}
@@ -80,9 +80,9 @@ public class SymbolicLinkResponder implements Responder
 
 	private WikiPageProperty getSymLinkProperty(WikiPageProperties properties)
 	{
-		WikiPageProperty symLinks = properties.getProperty("SymbolicLinks");
+		WikiPageProperty symLinks = properties.getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinks == null)
-		  symLinks = properties.set("SymbolicLinks");
+		  symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
 		return symLinks;
 	}
 }

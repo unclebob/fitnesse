@@ -44,6 +44,7 @@ public class Updater
 			new AttributeAdderUpdate(this, "RecentChanges"),
 			new AttributeAdderUpdate(this, "WhereUsed"),
 			new AttributeAdderUpdate(this, "Files"),
+			new SymLinkPropertyFormatUpdate(this),
 			new VirtualWikiDeprecationUpdate(this),
 			new FrontPageUpdate(this)
 		};

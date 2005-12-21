@@ -125,7 +125,8 @@ public class WikiImportingResponderTest extends RegexTest
 	public void testImportingFromNonRootPageUpdatesPageContent() throws Exception
 	{
 		PageData data = pageTwo.getData();
-		data.setAttribute("WikiImportSource", baseUrl + "PageOne");
+		WikiImportProperty importProperty = new WikiImportProperty(baseUrl + "PageOne");
+		importProperty.addTo(data.getProperties());
 		data.setContent("nonsense");
 		pageTwo.commit(data);
 
@@ -135,7 +136,7 @@ public class WikiImportingResponderTest extends RegexTest
 		data = pageTwo.getData();
 		assertEquals("page one", data.getContent());
 
-		assertFalse(data.hasAttribute("WikiImportRoot"));
+		assertFalse(WikiImportProperty.createFrom(data.getProperties()).isRoot());
 	}
 
 	public void testImportPropertiesGetAdded() throws Exception
@@ -143,23 +144,25 @@ public class WikiImportingResponderTest extends RegexTest
 		Response response = makeSampleResponse(baseUrl);
 		new MockResponseSender(response);
 
-		checkProperties(pageTwo, "WikiImportRoot", baseUrl);
+		checkProperties(pageTwo, baseUrl, true);
 
 		WikiPage importedPageOne = pageTwo.getChildPage("PageOne");
-		checkProperties(importedPageOne, "WikiImportSource", baseUrl + "PageOne");
+		checkProperties(importedPageOne, baseUrl + "PageOne", false);
 
 		WikiPage importedPageTwo = pageTwo.getChildPage("PageTwo");
-		checkProperties(importedPageTwo, "WikiImportSource", baseUrl + "PageTwo");
+		checkProperties(importedPageTwo, baseUrl + "PageTwo", false);
 
 		WikiPage importedChildOne = importedPageOne.getChildPage("ChildOne");
-		checkProperties(importedChildOne, "WikiImportSource", baseUrl + "PageOne.ChildOne");
+		checkProperties(importedChildOne, baseUrl + "PageOne.ChildOne", false);
 	}
 
-	private void checkProperties(WikiPage page, String id, String value) throws Exception
+	private void checkProperties(WikiPage page, String source, boolean isRoot) throws Exception
 	{
 		WikiPageProperties props = page.getData().getProperties();
-		assertTrue(props.has(id));
-		assertEquals(value, props.get(id));
+		WikiImportProperty importProperty = WikiImportProperty.createFrom(props);
+		assertNotNull(importProperty);
+		assertEquals(source, importProperty.getSource());
+		assertEquals(isRoot, importProperty.isRoot());
 	}
 
 	public void testHtmlOfMakeResponse() throws Exception

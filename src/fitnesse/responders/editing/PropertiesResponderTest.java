@@ -3,6 +3,7 @@
 package fitnesse.responders.editing;
 
 import fitnesse.*;
+import fitnesse.responders.WikiImportProperty;
 import fitnesse.testutil.RegexTest;
 import fitnesse.wiki.*;
 import fitnesse.http.*;
@@ -13,7 +14,6 @@ public class PropertiesResponderTest extends RegexTest
 	private PageCrawler crawler;
 	private MockRequest request;
 	private Responder responder;
-	private SimpleResponse response;
 	private String content;
 
 	public void setUp() throws Exception
@@ -85,7 +85,7 @@ public class PropertiesResponderTest extends RegexTest
 		page.commit(data);
 
 		request.setResource("SomePage");
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		content = response.getContent();
 
 		assertSubString("Last modified by Bill", content);
@@ -103,7 +103,7 @@ public class PropertiesResponderTest extends RegexTest
 		request = new MockRequest();
 		request.setResource(page.getName());
 		responder = new PropertiesResponder();
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		content = response.getContent();
 		return page;
 	}
@@ -131,23 +131,25 @@ public class PropertiesResponderTest extends RegexTest
 
 	public void testWikiImportUpdate() throws Exception
 	{
-		testWikiImportUpdateWith("WikiImportRoot");
+		WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
+		property.setRoot(true);
+		testWikiImportUpdateWith(property);
 		assertSubString(" imports its subpages from ", content);
 		assertSubString("value=\"Update Subpages\"", content);
 	}
 
 	public void testWikiImportUpdateNonroot() throws Exception
 	{
-		testWikiImportUpdateWith("WikiImportSource");
+		testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
 		assertSubString(" imports its content and subpages from ", content);
 		assertSubString("value=\"Update Content and Subpages\"", content);
 	}
 
-	private void testWikiImportUpdateWith(String propertyName) throws Exception
+	private void testWikiImportUpdateWith(WikiImportProperty property) throws Exception
 	{
 		WikiPage page = root.addChildPage("SomePage");
 		PageData data = page.getData();
-		data.setAttribute(propertyName, "http://my.host.com/PageRoot");
+		property.addTo(data.getProperties());
 		page.commit(data);
 
 		getPropertiesContentFromPage(page);

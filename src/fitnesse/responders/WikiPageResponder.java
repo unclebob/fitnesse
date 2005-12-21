@@ -61,7 +61,8 @@ public class WikiPageResponder implements SecureResponder
 		html.actions.use(HtmlUtil.makeActions(pageData));
 		html.main.use(HtmlUtil.addHeaderAndFooter(page, HtmlUtil.testableHtml(pageData)));
 
-		if(pageData.hasAttribute("WikiImportSource"))
+		WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
+		if(importProperty != null && !importProperty.isRoot())
 			html.body.addAttribute("class", "imported");
 		else if(page instanceof ProxyPage)
 			html.body.addAttribute("class", "virtual");

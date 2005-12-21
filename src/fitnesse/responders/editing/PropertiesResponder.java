@@ -83,10 +83,9 @@ public class PropertiesResponder implements SecureResponder
 		TagGroup html = new TagGroup();
 		html.add(makePropertiesForm());
 
-		if(pageData.hasAttribute("WikiImportRoot"))
-			html.add(makeImportUpdateForm(pageData.getAttribute("WikiImportRoot"), true));
-		else if(pageData.hasAttribute("WikiImportSource"))
-			html.add(makeImportUpdateForm(pageData.getAttribute("WikiImportSource"), false));
+		WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
+		if(importProperty != null)
+			html.add(makeImportUpdateForm(importProperty.getSource(), importProperty.isRoot()));
 		else
 			html.add(makeImportForm());
 
@@ -199,7 +198,7 @@ public class PropertiesResponder implements SecureResponder
 
 	private void addSymbolicLinkRows(HtmlTableListingBuilder table) throws Exception
 	{
-		WikiPageProperty symLinksProperty = pageData.getProperties().getProperty("SymbolicLinks");
+		WikiPageProperty symLinksProperty = pageData.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinksProperty == null)
 			return;
 		Set symbolicLinkNames = symLinksProperty.keySet();

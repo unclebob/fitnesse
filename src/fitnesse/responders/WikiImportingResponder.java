@@ -47,7 +47,9 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 
 			if(!isUpdate)
 			{
-				data.setAttribute("WikiImportRoot", remoteUrl());
+				WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());
+				importProperty.setRoot(true);
+				importProperty.addTo(data.getProperties());
 				page.commit(data);
 			}
 		}
@@ -83,16 +85,13 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 	private String establishRemoteUrlAndUpdateStyle() throws Exception
 	{
 		String remoteWikiUrl = (String) request.getInput("remoteUrl");
-		if(data.hasAttribute("WikiImportRoot"))
+
+		WikiImportProperty importProperty = WikiImportProperty.createFrom(data.getProperties());
+		if(importProperty != null)
 		{
-			remoteWikiUrl = data.getAttribute("WikiImportRoot");
+			remoteWikiUrl = importProperty.getSource();
 			isUpdate = true;
-		}
-		else if(data.hasAttribute("WikiImportSource"))
-		{
-			remoteWikiUrl = data.getAttribute("WikiImportSource");
-			isUpdate = true;
-			isNonRoot = true;
+			isNonRoot = !importProperty.isRoot();
 		}
 		return remoteWikiUrl;
 	}
@@ -177,7 +176,8 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 		{
 			Document doc = getXmlDocument("data");
 			PageData data = new PageXmlizer().deXmlizeData(doc);
-			data.setAttribute("WikiImportSource", remoteUrl());
+			WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());
+			importProperty.addTo(data.getProperties());
 			localPage.commit(data);
 			addRowToResponse("");
 		}

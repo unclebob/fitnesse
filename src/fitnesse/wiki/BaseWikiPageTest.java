@@ -39,8 +39,8 @@ public class BaseWikiPageTest extends TestCase
 	{
 		PageData data = linkingPage.getData();
 		WikiPageProperties properties = data.getProperties();
-		properties.set("SymbolicLinks");
-		properties.getProperty("SymbolicLinks").set("SymLink", "LinkedPage");
+		properties.set(SymbolicPage.PROPERTY_NAME);
+		properties.getProperty(SymbolicPage.PROPERTY_NAME).set("SymLink", "LinkedPage");
 		linkingPage.commit(data);
 	}
 

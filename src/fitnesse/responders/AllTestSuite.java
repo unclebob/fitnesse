@@ -28,7 +28,8 @@ public class AllTestSuite
 			RssResponderTest.class,
 			WikiImportingResponderTest.class,
 			ShutdownResponderTest.class,
-			ChunkingResponderTest.class
+			ChunkingResponderTest.class,
+			WikiImportPropertyTest.class
 		});
 	}
 }

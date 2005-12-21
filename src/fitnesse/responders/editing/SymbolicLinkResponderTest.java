@@ -41,7 +41,7 @@ public class SymbolicLinkResponderTest extends RegexTest
 	public void testRemoval() throws Exception
 	{
 		PageData data = pageOne.getData();
-		WikiPageProperty symLinks = data.getProperties().set("SymbolicLinks");
+		WikiPageProperty symLinks = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
 		symLinks.set("SymLink", "PageTwo");
 		pageOne.commit(data);
 		assertNotNull(pageOne.getChildPage("SymLink"));

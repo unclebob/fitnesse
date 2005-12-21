@@ -93,8 +93,7 @@ public class FitServer
 	public String readDocument() throws Exception
 	{
 		int size = FitProtocol.readSize(socketReader);
-		String document = FitProtocol.readDocument(socketReader, size);
-		return document;
+		return FitProtocol.readDocument(socketReader, size);
 	}
 
 	private Fixture newFixture()
@@ -177,7 +176,7 @@ public class FitServer
 		else
 		{
 			String errorMessage = FitProtocol.readDocument(socketReader, statusSize);
-			print("...failed bacuase: " + errorMessage + "\n");
+			print("...failed because: " + errorMessage + "\n");
 			System.out.println("An error occured while connecting to client.");
 			System.out.println(errorMessage);
 			System.exit(-1);

@@ -6,6 +6,8 @@ import java.util.*;
 
 public class SymbolicPage extends BaseWikiPage
 {
+	public static final String PROPERTY_NAME = "SymbolicLinks";
+
 	private WikiPage realPage;
 
 	public SymbolicPage(String name, WikiPage realPage, WikiPage parent)
