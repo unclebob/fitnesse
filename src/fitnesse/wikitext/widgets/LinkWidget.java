@@ -11,8 +11,6 @@ public class LinkWidget extends ParentWidget
 	public static final String REGEXP = "https?://[^\\s]+[^\\s.)]+";
 	private static final Pattern pattern = Pattern.compile("https?://([^/\\s]*)(\\S*)?");
 
-	private String usableURL;
-
 	public LinkWidget(ParentWidget parent, String text) throws Exception
 	{
 		super(parent);
@@ -22,7 +20,7 @@ public class LinkWidget extends ParentWidget
 	public String render() throws Exception
 	{
 	 	String linkText = childHtml();
-		usableURL = makeUrlUsable(linkText);
+		String usableURL = makeUrlUsable(linkText);
 		StringBuffer html = new StringBuffer("<a href=\"");
 		html.append(usableURL);
 		html.append("\">");

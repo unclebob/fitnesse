@@ -10,7 +10,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker
 	
 	private int ticketNumber;
 	public CommandRunner commandRunner;
-	private SocketDoner doner;
+	private SocketDoner donor;
 	private boolean connectionEstablished = false;
 
 	private Thread timeoutThread;
@@ -41,10 +41,10 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker
 		}
 	}
 
-	public void acceptSocketFrom(SocketDoner doner) throws Exception
+	public void acceptSocketFrom(SocketDoner donor) throws Exception
 	{
-		this.doner = doner;
-		acceptSocket(doner.donateSocket());
+		this.donor = donor;
+		acceptSocket(donor.donateSocket());
 		connectionEstablished = true;
 
 		synchronized(this)
@@ -78,8 +78,8 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker
 		{
 			commandRunner.join();
 			super.join();
-			if(doner != null)
-				doner.finishedWithSocket();
+			if(donor != null)
+				donor.finishedWithSocket();
 			killVigilantThreads();
 		}
 		catch(InterruptedException e)

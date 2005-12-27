@@ -110,34 +110,42 @@ public class ComponentFactory
 
 	public String loadWikiWidgetPlugins() throws Exception
 	{
-		StringBuffer buffer = new StringBuffer();
-		String widgetList = loadedProperties.getProperty(WIKI_WIDGETS);
-		if(widgetList != null)
-		{
-			List widgetClasses = new ArrayList(Arrays.asList(WidgetBuilder.htmlWidgetClasses));
-			buffer.append("\tCustom wiki widgets loaded:").append(endl);
-			String[] widgetNames = widgetList.split(",");
-			for(int i = 0; i < widgetNames.length; i++)
-			{
-				String widgetName = widgetNames[i].trim();
-				Class widgetClass = Class.forName(widgetName);
-				widgetClasses.add(widgetClass);
-				buffer.append("\t\t" + widgetClass.getName()).append(endl);
-			}
-			Class[] widgetClassesArray = (Class[])widgetClasses.toArray(new Class[]{});
-			WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(widgetClassesArray);
-		}
-		return buffer.toString();
+    StringBuffer buffer = new StringBuffer();
+    String widgetList = loadedProperties.getProperty(WIKI_WIDGETS);
+    if(widgetList != null)
+    {
+      List widgetClasses = new ArrayList();
+      buffer.append("\tCustom wiki widgets loaded:").append(endl);
+      String[] widgetNames = widgetList.split(",");
+      for(int i = 0; i < widgetNames.length; i++)
+      {
+        String widgetName = widgetNames[i].trim();
+        Class widgetClass = Class.forName(widgetName);
+        widgetClasses.add(widgetClass);
+        buffer.append("\t\t" + widgetClass.getName()).append(endl);
+      }
+      appendExistingWidgets(widgetClasses);
+      Class[] widgetClassesArray = (Class[])widgetClasses.toArray(new Class[]{});
+      WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(widgetClassesArray);
+    }
+    return buffer.toString();
 	}
 
-	public String loadContentFilter() throws Exception
-	{
-		ContentFilter filter = (ContentFilter)createComponent(CONTENT_FILTER);
-		if(filter != null)
-		{
-			SaveResponder.contentFilter = filter;
-			return "\tContent filter installed: " + filter.getClass().getName() + "\n";
-		}
-		return "";
-	}
+  private void appendExistingWidgets(List widgetClasses) {
+    for (int i = 0; i < WidgetBuilder.htmlWidgetClasses.length; i++) {
+      Class htmlWidgetClass = WidgetBuilder.htmlWidgetClasses[i];
+      widgetClasses.add(htmlWidgetClass);
+    }
+  }
+
+  public String loadContentFilter() throws Exception
+  {
+    ContentFilter filter = (ContentFilter)createComponent(CONTENT_FILTER);
+    if(filter != null)
+    {
+      SaveResponder.contentFilter = filter;
+      return "\tContent filter installed: " + filter.getClass().getName() + "\n";
+    }
+    return "";
+  }
 }

@@ -30,7 +30,7 @@ public class ExecutionLog
 
 	public ExecutionLog(WikiPage testPage, CommandRunner client) throws Exception
 	{
-		this.runner = client;
+		runner = client;
 
 		crawler = testPage.getPageCrawler();
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -66,7 +66,7 @@ public class ExecutionLog
 		addEntry(buffer, "Date", makeDateFormat().format(new Date()));
 		addEntry(buffer, "Command", runner.getCommand());
 		addEntry(buffer, "Exit code", String.valueOf(runner.getExitCode()));
-		addEntry(buffer, "Time elapsed", (((double) runner.getExecutionTime()) / 1000.0) + " seconds");
+		addEntry(buffer, "Time elapsed", (double) runner.getExecutionTime() / 1000.0 + " seconds");
 		if(runner.wroteToOutputStream())
 			addOutputBlock(buffer);
 		if(runner.wroteToErrorStream())
