@@ -25,12 +25,6 @@ public class PageData implements Serializable
 	private Set versions;
 	private WidgetRoot variableRoot;
 
-	public static SimpleDateFormat makeVersionTimeFormat()
-	{
-		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
-		return new SimpleDateFormat("yyyyMMddHHmmss");
-	}
-
 	public PageData(WikiPage page) throws Exception
 	{
 		wikiPage = page;
@@ -69,7 +63,7 @@ public class PageData implements Serializable
 		properties.set("RecentChanges", "true");
 		properties.set("Search", "true");
 		properties.set(EditResponder.TICKET_ID, SaveRecorder.newTicket() + "");
-		properties.set("LastModified", makeVersionTimeFormat().format(new Date()));
+		properties.setLastModificationTime(new Date());
 
 		final String pageName = wikiPage.getName();
 		if(pageName.startsWith("Test"))
@@ -202,19 +196,5 @@ public class PageData implements Serializable
 	public void addVersions(Collection newVersions)
 	{
 		versions.addAll(newVersions);
-	}
-
-	public Date getLastModificationTime() throws Exception
-	{
-		String dateStr = (String) properties.get("LastModified");
-		if(dateStr == null)
-			return new Date();
-		else
-			return makeVersionTimeFormat().parse(dateStr);
-	}
-
-	public void setLastModificationTime(Date date)
-	{
-		properties.set("LastModified", makeVersionTimeFormat().format(date));
 	}
 }

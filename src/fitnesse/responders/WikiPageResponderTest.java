@@ -11,7 +11,6 @@ import fitnesse.wiki.*;
 public class WikiPageResponderTest extends RegexTest
 {
 	private WikiPage root;
-	private SimpleResponse response;
 	private PageCrawler crawler;
 
 	public void setUp() throws Exception
@@ -27,7 +26,7 @@ public class WikiPageResponderTest extends RegexTest
 		request.setResource("ChildPage");
 
 		Responder responder = new WikiPageResponder();
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
 		assertEquals(200, response.getStatus());
 
@@ -99,8 +98,7 @@ public class WikiPageResponderTest extends RegexTest
 		MockRequest request = new MockRequest();
 		request.setResource(name);
 		Responder responder = new WikiPageResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
-		return response;
+		return (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
 	}
 
 	public void testShouldGetVirtualPage() throws Exception

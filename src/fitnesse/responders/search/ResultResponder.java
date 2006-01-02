@@ -141,7 +141,7 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		link.addAttribute("href", fullPathName);
 
 		row.add(new HtmlTag("td", link));
-		row.add(new HtmlTag("td", "" + page.getData().getLastModificationTime()));
+		row.add(new HtmlTag("td", "" + page.getData().getProperties().getLastModificationTime()));
 		response.add(row.html());
 	}
 

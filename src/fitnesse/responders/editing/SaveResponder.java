@@ -32,13 +32,13 @@ public class SaveResponder implements SecureResponder
 		{
       savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
 			if(contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
-				return makeBannedContentrResponse(context, resource);
+				return makeBannedContentResponse(context, resource);
 			else
         return saveEdits(request, page);
 		}
 	}
 
-	private Response makeBannedContentrResponse(FitNesseContext context, String resource) throws Exception
+	private Response makeBannedContentResponse(FitNesseContext context, String resource) throws Exception
 	{
 		SimpleResponse response = new SimpleResponse();
 		HtmlPage html = context.htmlPageFactory.newPage();
@@ -57,7 +57,12 @@ public class SaveResponder implements SecureResponder
     VersionInfo commitRecord = page.commit(data);
     response.addHeader("Previous-Version", commitRecord.getName());
     RecentChanges.updateRecentChanges(data);
-    response.redirect(request.getResource());
+
+	  if(request.hasInput("redirect"))
+	    response.redirect(request.getInput("redirect").toString());
+	  else
+      response.redirect(request.getResource());
+
     return response;
   }
 
@@ -69,8 +74,7 @@ public class SaveResponder implements SecureResponder
     String ticketIdString = (String) request.getInput(EditResponder.TICKET_ID);
     ticketId = Long.parseLong(ticketIdString);
 
-    boolean shouldMerge = SaveRecorder.changesShouldBeMerged(saveId, ticketId, data);
-    return shouldMerge;
+	  return SaveRecorder.changesShouldBeMerged(saveId, ticketId, data);
   }
 
   private WikiPage getPage(String resource, FitNesseContext context) throws Exception

@@ -22,6 +22,7 @@ public class EditResponder implements SecureResponder
 	protected WikiPage page;
 	protected WikiPage root;
 	protected PageData pageData;
+	protected Request request;
 
 	public EditResponder()
 	{
@@ -57,6 +58,7 @@ public class EditResponder implements SecureResponder
 	protected void initializeResponder(WikiPage root, Request request)
 	{
 		this.root = root;
+		this.request = request;
 	}
 
 	protected String createPageContent() throws Exception
@@ -84,6 +86,13 @@ public class EditResponder implements SecureResponder
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
 		form.add(HtmlUtil.makeInputTag("hidden", SAVE_ID, String.valueOf(SaveRecorder.newIdNumber())));
 		form.add(HtmlUtil.makeInputTag("hidden", TICKET_ID, String.valueOf((SaveRecorder.newTicket()))));
+		if(request.hasInput("redirectToReferer") && request.hasHeader("Referer"))
+		{
+			String redirectUrl = request.getHeader("Referer").toString();
+			redirectUrl += "?" + request.getInput("redirectAction").toString();
+			form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
+		}
+
 
 		form.add(createTextarea());
 		form.add(createButtons());

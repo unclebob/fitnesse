@@ -230,7 +230,7 @@ public class HtmlUtil
 		if(pageData.hasAttribute("Suite"))
 			actions.add(makeActionLink(localPageName, "Suite", "suite", "", NO_NEW_WINDOW));
 		if(pageData.hasAttribute("Test") || pageData.hasAttribute("Suite"))
-			actions.add(getNavBreak());
+			actions.add(makeNavBreak());
 		if(pageData.hasAttribute("Edit"))
 			actions.add(makeActionLink(localOrRemotePageName, "Edit", "edit", "e", newWindowIfRemote));
 		if(pageData.hasAttribute("Versions"))
@@ -241,7 +241,7 @@ public class HtmlUtil
 			actions.add(makeActionLink(localOrRemotePageName, "Refactor", "refactor", "r", newWindowIfRemote));
 		if(pageData.hasAttribute("WhereUsed"))
 			actions.add(makeActionLink(localOrRemotePageName, "Where Used", "whereUsed", "w", NO_NEW_WINDOW));
-		actions.add(getNavBreak());
+		actions.add(makeNavBreak());
 		if(pageData.hasAttribute("RecentChanges"))
 			actions.add(makeActionLink("/RecentChanges", "RecentChanges", null, "", NO_NEW_WINDOW));
 		if(pageData.hasAttribute("Files"))
@@ -252,7 +252,7 @@ public class HtmlUtil
 		return actions;
 	}
 
-	private static HtmlTag getNavBreak() {
+	public static HtmlTag makeNavBreak() {
 		HtmlTag navBreak = new HtmlTag("div");
 		navBreak.addAttribute("class", "nav_break");
 		navBreak.add("&nbsp;");

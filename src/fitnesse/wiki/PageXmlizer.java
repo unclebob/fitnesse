@@ -3,11 +3,14 @@
 package fitnesse.wiki;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 import fitnesse.util.*;
 import org.w3c.dom.*;
 
 public class PageXmlizer
 {
+	private static SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
+
 	public Document xmlize(WikiPage page) throws Exception
 	{
 		Document document = XmlUtil.newDocument();
@@ -62,16 +65,26 @@ public class PageXmlizer
 	{
 		Element pageElement = document.createElement("page");
 		XmlUtil.addTextNode(document, pageElement, "name", page.getName());
+		addLastModifiedTag(page, document, pageElement);
 
 		addXmlFromChildren(page, document, pageElement);
 
 		return pageElement;
 	}
 
+	private void addLastModifiedTag(WikiPage page, Document document, Element pageElement) throws Exception
+	{
+		Date lastModificationTime = page.getData().getProperties().getLastModificationTime();
+		String lastModifiedTimeString = dateFormat.format(lastModificationTime);
+		XmlUtil.addTextNode(document, pageElement, "lastModified", lastModifiedTimeString);
+	}
+
 	private void addXmlFromChildren(WikiPage page, Document document, Element pageElement) throws Exception
 	{
 		Element childrenElement = document.createElement("children");
-		List children = page.getChildren();
+		List<WikiPage> children = page.getChildren();
+		Collections.sort(children);
+
 		for(Iterator iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage child = (WikiPage) iterator.next();
@@ -84,9 +97,14 @@ public class PageXmlizer
 	private void addChildFromXml(Element pageElement, WikiPage context, XmlizerPageHandler handler) throws Exception
 	{
 		String name = XmlUtil.getTextValue(pageElement, "name");
-		WikiPage newPage = context.addChildPage(name);
-		handler.pageAdded(newPage);
-		addChildrenFromXml(pageElement, newPage, handler);
+		String modifiedDateString = XmlUtil.getTextValue(pageElement, "lastModified");
+		Date modifiedDate = dateFormat.parse(modifiedDateString);
+
+		WikiPage childPage = context.getChildPage(name);
+		if(childPage == null)
+			childPage = context.addChildPage(name);
+		handler.enterChildPage(childPage, modifiedDate);
+		addChildrenFromXml(pageElement, childPage, handler);
 		handler.exitPage();
 	}
 

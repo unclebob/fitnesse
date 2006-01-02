@@ -32,11 +32,7 @@ public class SaveResponderTest extends RegexTest
 	public void testResponse() throws Exception
 	{
 		crawler.addPage(root, PathParser.parse("ChildPage"));
-		request.setResource("ChildPage");
-		request.addInput(EditResponder.SAVE_ID, "12345");
-		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
-
+		prepareRequest("ChildPage");
 
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(303, response.getStatus());
@@ -48,6 +44,25 @@ public class SaveResponderTest extends RegexTest
 		checkRecentChanges(root, "ChildPage");
 	}
 
+	private void prepareRequest(String pageName)
+	{
+		request.setResource(pageName);
+		request.addInput(EditResponder.SAVE_ID, "12345");
+		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
+		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
+	}
+
+	public void testResponseWithRedirect() throws Exception
+	{
+		crawler.addPage(root, PathParser.parse("ChildPage"));
+		prepareRequest("ChildPage");
+		request.addInput("redirect", "http://fitnesse.org:8080/SomePage");
+
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+		assertEquals(303, response.getStatus());
+		assertHasRegexp("Location: http://fitnesse.org:8080/SomePage", response.makeHttpHeaders());
+	}
+
 	private void checkRecentChanges(WikiPage source, String changedPage) throws Exception
 	{
 		assertTrue("RecentChanges should exist", source.hasChildPage("RecentChanges"));
@@ -57,10 +72,7 @@ public class SaveResponderTest extends RegexTest
 
 	public void testCanCreatePage() throws Exception
 	{
-		request.setResource("ChildPageTwo");
-		request.addInput(EditResponder.SAVE_ID, "12345");
-		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
+		prepareRequest("ChildPageTwo");
 
 		responder.makeResponse(new FitNesseContext(root), request);
 
@@ -124,10 +136,7 @@ public class SaveResponderTest extends RegexTest
 			}
 		};
 		crawler.addPage(root, PathParser.parse("ChildPage"));
-		request.setResource("ChildPage");
-		request.addInput(EditResponder.SAVE_ID, "12345");
-		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
+		prepareRequest("ChildPage");
 
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(200, response.getStatus());
@@ -153,10 +162,7 @@ public class SaveResponderTest extends RegexTest
 
 	private void addRequestParameters()
 	{
-		request.setResource("EditPage");
-		request.addInput(EditResponder.SAVE_ID, "12345");
-		request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
+		prepareRequest("EditPage");
 	}
 
 	public void testHasVersionHeader() throws Exception

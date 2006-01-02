@@ -2,6 +2,7 @@ package fitnesse.wiki;
 
 import java.util.*;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 public class WikiPageProperty implements Serializable
 {
@@ -103,5 +104,11 @@ public class WikiPageProperty implements Serializable
 	public boolean hasChildren()
 	{
 		return children != null && children.size() > 0;
+	}
+
+	public static SimpleDateFormat getTimeFormat()
+	{
+		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
+		return new SimpleDateFormat("yyyyMMddHHmmss");
 	}
 }

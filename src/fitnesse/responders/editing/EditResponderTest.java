@@ -3,6 +3,7 @@
 package fitnesse.responders.editing;
 
 import fitnesse.*;
+import fitnesse.html.*;
 import fitnesse.testutil.*;
 import fitnesse.http.*;
 import fitnesse.wiki.*;
@@ -12,8 +13,7 @@ public class EditResponderTest extends RegexTest
   private WikiPage root;
   private MockRequest request;
   private Responder responder;
-  private SimpleResponse response;
-  private PageCrawler crawler;
+	private PageCrawler crawler;
 
   public void setUp() throws Exception
   {
@@ -28,7 +28,7 @@ public class EditResponderTest extends RegexTest
     crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     request.setResource("ChildPage");
 
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
@@ -42,9 +42,25 @@ public class EditResponderTest extends RegexTest
     assertSubString("type=\"submit\"", body);
   }
 
+	public void testRedirectToRefererEffect() throws Exception
+	{
+    crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+    request.setResource("ChildPage");
+		request.addInput("redirectToReferer", true);
+		request.addInput("redirectAction", "boom");
+		request.addHeader("Referer", "http://fitnesse.org:8080/SomePage");
+
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    assertEquals(200, response.getStatus());
+
+    String body = response.getContent();
+		HtmlTag redirectInputTag = HtmlUtil.makeInputTag("hidden", "redirect", "http://fitnesse.org:8080/SomePage?boom");
+		assertSubString(redirectInputTag.html(), body);
+	}
+
   public void testPasteFromExcelExists() throws Exception
   {
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     String body = response.getContent();
     assertMatches("SpreadsheetTranslator.js", body);
     assertMatches("spreadsheetSupport.js", body);
@@ -78,9 +94,8 @@ public class EditResponderTest extends RegexTest
 
     WikiPagePath path = PathParser.parse(pathName);
     setTestAttributeForPage(crawler.getPage(root, path));
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-    String body = response.getContent();
-    return body;
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+	  return response.getContent();
   }
 
   private void buildPageHierarchyWithFixtures(final String TOP_LEVEL, final String MID_LEVEL, final String BOTTOM_LEVEL, final String FIXTURE_ONE, final String FIXTURE_TWO, final String FIXTURE_THREE) throws Exception

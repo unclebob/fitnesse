@@ -35,7 +35,7 @@ public class LastModifiedWidget extends WikiWidget
 	public String render() throws Exception
 	{
 		PageData data = getWikiPage().getData();
-		String formattedDate = formatDate(data.getLastModificationTime());
+		String formattedDate = formatDate(data.getProperties().getLastModificationTime());
 		String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
 		if(user == null || "".equals(user))
 			return HtmlUtil.metaText("Last modified anonymously on " + formattedDate);

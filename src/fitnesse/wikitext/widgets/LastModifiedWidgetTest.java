@@ -28,7 +28,7 @@ public class LastModifiedWidgetTest extends WidgetTest
 	public void testResults() throws Exception
 	{
 		setUp();
-		Date date = page.getData().getLastModificationTime();
+		Date date = page.getData().getProperties().getLastModificationTime();
 		String formattedDate = LastModifiedWidget.formatDate(date);
 		assertHasRegexp(formattedDate, widget.render());
 	}

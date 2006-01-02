@@ -14,6 +14,7 @@ public class WikiPageResponder implements SecureResponder
 	protected PageData pageData;
 	protected String pageTitle;
 	protected Request request;
+	protected PageCrawler crawler;
 
 	public WikiPageResponder()
 	{
@@ -32,13 +33,10 @@ public class WikiPageResponder implements SecureResponder
 		if("".equals(resource))
 			resource = "FrontPage";
 
-		WikiPagePath path = PathParser.parse(resource);
-		PageCrawler crawler = context.root.getPageCrawler();                           
-		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-		page = crawler.getPage(context.root, path);
+		loadPage(resource, context);
 		if(page == null)
 			return new NotFoundResponder().makeResponse(context, request);
-		pageData = page.getData();
+		loadPageData();
 
 		pageTitle = PathParser.render(crawler.getFullPath(page));
 		String html = makeHtml(context);
@@ -48,6 +46,19 @@ public class WikiPageResponder implements SecureResponder
 		response.setContent(html);
 
 		return response;
+	}
+
+	protected void loadPageData() throws Exception
+	{
+		pageData = page.getData();
+	}
+
+	protected void loadPage(String resource, FitNesseContext context) throws Exception
+	{
+		WikiPagePath path = PathParser.parse(resource);
+		crawler = context.root.getPageCrawler();
+		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
+		page = crawler.getPage(context.root, path);
 	}
 
 	public String makeHtml(FitNesseContext context) throws Exception
@@ -61,13 +72,14 @@ public class WikiPageResponder implements SecureResponder
 		html.actions.use(HtmlUtil.makeActions(pageData));
 		html.main.use(HtmlUtil.addHeaderAndFooter(page, HtmlUtil.testableHtml(pageData)));
 
-		WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
-		if(importProperty != null && !importProperty.isRoot())
-			html.body.addAttribute("class", "imported");
-		else if(page instanceof ProxyPage)
-			html.body.addAttribute("class", "virtual");
+		handleSpecialProperties(html, page);
 
 		return html.html();
+	}
+
+	private void handleSpecialProperties(HtmlPage html, WikiPage page) throws Exception
+	{
+		WikiImportProperty.handleImportProperties(html, page, pageData);
 	}
 
 	public SecureOperation getSecureOperation()

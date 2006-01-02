@@ -164,7 +164,7 @@ public class FileSystemPageTest extends TestCase
 		WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
 		page.commit(page.getData());
 		Date now = new Date();
-		Date lastModified = page.getData().getLastModificationTime();
+		Date lastModified = page.getData().getProperties().getLastModificationTime();
 		assertTrue(now.getTime() - lastModified.getTime() <= 1000);
 	}
 

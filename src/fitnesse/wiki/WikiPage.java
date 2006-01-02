@@ -28,7 +28,7 @@ public interface WikiPage extends Serializable, Comparable
 
 	public void removeChildPage(String name) throws Exception;
 
-	public List getChildren() throws Exception;
+	public List<WikiPage> getChildren() throws Exception;
 
 	public String getName() throws Exception;
 

@@ -6,12 +6,14 @@ import java.util.*;
 
 public class MockXmlizerPageHandler implements XmlizerPageHandler
 {
-	public List adds = new LinkedList();
+	public List<String> handledPages = new LinkedList<String>();
+	public List<Date> modDates = new LinkedList<Date>();
 	public int exits = 0;
 
-	public void pageAdded(WikiPage newPage) throws Exception
+	public void enterChildPage(WikiPage newPage, Date lastModified) throws Exception
 	{
-		adds.add(newPage.getName());
+		handledPages.add(newPage.getName());
+		modDates.add(lastModified);
 	}
 
 	public void exitPage()

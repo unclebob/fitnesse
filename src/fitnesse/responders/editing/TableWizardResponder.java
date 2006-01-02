@@ -8,14 +8,6 @@ import fitnesse.components.*;
 
 public class TableWizardResponder extends EditResponder
 {
-	private Request request;
-
-	protected void initializeResponder(WikiPage root, Request request)
-	{
-		this.root = root;
-		this.request = request;
-	}
-
 	protected String createPageContent() throws Exception
 	{
 		String textAreaContent = (String)request.getInput("text");

@@ -59,6 +59,7 @@ public class ResponderFactory
 		addResponder("shutdown", ShutdownResponder.class);
 		addResponder("format", TestResultFormattingResponder.class);
 		addResponder("symlink", SymbolicLinkResponder.class);
+		addResponder("importAndView", ImportAndViewResponder.class);
 	}
 
 	public void addResponder(String key, Class responderClass)

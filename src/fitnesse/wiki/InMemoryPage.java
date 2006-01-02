@@ -81,7 +81,7 @@ public class InMemoryPage extends CommitingPage
 	public void doCommit(PageData newData) throws Exception
 	{
 		newData.setWikiPage(this);
-		newData.setLastModificationTime(new Date());
+		newData.getProperties().setLastModificationTime(new Date());
 		versions.put(currentVersionName, newData);
 	}
 
@@ -114,7 +114,7 @@ public class InMemoryPage extends CommitingPage
 		String author = current.getAttribute(WikiPage.LAST_MODIFYING_USER);
 		if(author == null)
 			author = "";
-		Date date = current.getLastModificationTime();
+		Date date = current.getProperties().getLastModificationTime();
 		VersionInfo version = new VersionInfo(name, author, date);
 		return version;
 	}

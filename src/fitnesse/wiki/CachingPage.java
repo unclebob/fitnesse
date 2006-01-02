@@ -72,15 +72,13 @@ public abstract class CachingPage extends CommitingPage
 			PageData data = makePageData();
 			setCachedData(data);
 		}
-		PageData pageData = new PageData(getCachedData());
-		return pageData;
+		return new PageData(getCachedData());
 	}
 
 	private boolean cachedDataExpired() throws Exception
 	{
 		long now = System.currentTimeMillis();
-		boolean expired = getCachedData() == null || now >= (cachedDataCreationTime + cacheTime);
-		return expired;
+		return getCachedData() == null || now >= (cachedDataCreationTime + cacheTime);
 	}
 
 	public void dumpExpiredCachedData() throws Exception

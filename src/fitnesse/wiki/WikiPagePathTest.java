@@ -233,4 +233,18 @@ public class WikiPagePathTest extends TestCase
 		assertNotSame(path3, path2);
 		assertNotSame(path3, path);
 	}
+
+	public void testSubstract() throws Exception
+	{
+		WikiPagePath path123 = new WikiPagePath(new String[]{"OnE", "TwO", "ThreE"});
+		WikiPagePath path12 = new WikiPagePath(new String[]{"OnE", "TwO"});
+		WikiPagePath path1 = new WikiPagePath(new String[]{"OnE"});
+		WikiPagePath blah = new WikiPagePath(new String[]{"BlaH"});
+
+		assertEquals(new WikiPagePath(new String[]{"ThreE"}), path123.subtract(path12));
+		assertEquals(new WikiPagePath(new String[]{"TwO", "ThreE"}), path123.subtract(path1));
+		assertEquals(new WikiPagePath(new String[]{"TwO"}), path12.subtract(path1));
+		assertEquals(path123, path123.subtract(blah));
+		assertEquals(new WikiPagePath(), path123.subtract(path123));
+	}
 }

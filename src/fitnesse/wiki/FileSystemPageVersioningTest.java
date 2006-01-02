@@ -88,13 +88,13 @@ public class FileSystemPageVersioningTest extends TestCase
 		for(Iterator iterator = versions.iterator(); iterator.hasNext();)
 			page.removeVersion(iterator.next().toString());
 
-		data.setLastModificationTime(FileSystemPage.dateFormat().parse("20031213000000"));
+		data.getProperties().setLastModificationTime(FileSystemPage.dateFormat().parse("20031213000000"));
 		page.makeVersion(data);
-		data.setLastModificationTime(FileSystemPage.dateFormat().parse("20031214000000"));
+		data.getProperties().setLastModificationTime(FileSystemPage.dateFormat().parse("20031214000000"));
 		page.makeVersion(data);
-		data.setLastModificationTime(FileSystemPage.dateFormat().parse("20031215000000"));
+		data.getProperties().setLastModificationTime(FileSystemPage.dateFormat().parse("20031215000000"));
 		page.makeVersion(data);
-		data.setLastModificationTime(FileSystemPage.dateFormat().parse("20031216000000"));
+		data.getProperties().setLastModificationTime(FileSystemPage.dateFormat().parse("20031216000000"));
 		page.makeVersion(data);
 
 		versions = page.makePageData().getVersions();

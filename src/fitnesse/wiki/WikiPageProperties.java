@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.util.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import org.w3c.dom.*;
 import fitnesse.util.XmlUtil;
 import fitnesse.components.XmlWriter;
@@ -132,5 +133,19 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 		StringBuffer s = new StringBuffer();
 		s.append(super.toString("WikiPageProperties", 0));
 		return s.toString();
+	}
+
+	public Date getLastModificationTime() throws Exception
+	{
+		String dateStr = get("LastModified");
+		if(dateStr == null)
+			return new Date();
+		else
+			return getTimeFormat().parse(dateStr);
+	}
+
+	public void setLastModificationTime(Date date)
+	{
+		set("LastModified", getTimeFormat().format(date));
 	}
 }

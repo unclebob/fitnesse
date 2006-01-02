@@ -3,29 +3,26 @@
 package fitnesse.responders;
 
 import fitnesse.wiki.*;
-import fitnesse.util.*;
 import fitnesse.html.*;
 import fitnesse.http.*;
 import fitnesse.authentication.*;
 import java.net.*;
 import java.io.*;
-import org.w3c.dom.Document;
+import java.util.*;
 
-public class WikiImportingResponder extends ChunkingResponder implements XmlizerPageHandler, SecureResponder
+public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient
 {
-	public XmlizerPageHandler xmlizerPageHandler = this;
-	public String remoteHostname;
-	public int remotePort;
-	public WikiPagePath remotePath = new WikiPagePath();
-	public WikiPagePath relativePath = new WikiPagePath();
 	private int alternation = 0;
-	private int importCount = 0;
 	private boolean isUpdate;
 	private boolean isNonRoot;
 	private PageData data;
 
-	public static String remoteUsername;
-	public static String remotePassword;
+	private WikiImporter importer = new WikiImporter();
+
+	public void setImporter(WikiImporter importer)
+	{
+		this.importer = importer;
+	}
 
 	protected void doSending() throws Exception
 	{
@@ -36,18 +33,21 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 
 		try
 		{
+			importer.setWikiImporterClient(this);
+			importer.setLocalPath(path);
+			importer.parseUrl(remoteWikiUrl);
 			setRemoteUserCredentials();
-			parseUrl(remoteWikiUrl);
-			Document pageTree = getPageTree();
 			addHeadContent();
 			if(isNonRoot)
-				importRemotePageContent(page);
-			new PageXmlizer().deXmlizeSkippingRootLevel(pageTree, page, xmlizerPageHandler);
+				importer.importRemotePageContent(page);
+
+			importer.importWiki(page);
+
 			addTailContent();
 
 			if(!isUpdate)
 			{
-				WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());
+				WikiImportProperty importProperty = new WikiImportProperty(importer.remoteUrl());
 				importProperty.setRoot(true);
 				importProperty.addTo(data.getProperties());
 				page.commit(data);
@@ -59,9 +59,9 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 		}
 		catch(FileNotFoundException e)
 		{
-			writeErrorMessage("The remote resource, " + remoteUrl() + ", was not found.");
+			writeErrorMessage("The remote resource, " + importer.remoteUrl() + ", was not found.");
 		}
-		catch(AuthenticationRequiredException e)
+		catch(WikiImporter.AuthenticationRequiredException e)
 		{
 			writeAuthenticationForm(e.getMessage());
 		}
@@ -77,9 +77,9 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 	private void setRemoteUserCredentials()
 	{
 		if(request.hasInput("remoteUsername"))
-			remoteUsername = (String) request.getInput("remoteUsername");
+			importer.setRemoteUsername((String) request.getInput("remoteUsername"));
 		if(request.hasInput("remotePassword"))
-			remotePassword = (String) request.getInput("remotePassword");
+			importer.setRemotePassword((String) request.getInput("remotePassword"));
 	}
 
 	private String establishRemoteUrlAndUpdateStyle() throws Exception
@@ -120,7 +120,7 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 
 		head.add(HtmlUtil.BR);
 		head.add("Source wiki: ");
-		String remoteWikiUrl = remoteUrl();
+		String remoteWikiUrl = importer.remoteUrl();
 		head.add(HtmlUtil.makeLink(remoteWikiUrl, remoteWikiUrl));
 
 		head.add(HtmlUtil.BR);
@@ -132,14 +132,69 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 
 	private void addTailContent() throws Exception
 	{
+		TagGroup tail = makeTailHtml(importer);
+		response.add(tail.html());
+	}
+
+	public TagGroup makeTailHtml(WikiImporter importer) throws Exception
+	{
 		TagGroup tail = new TagGroup();
 		tail.add("<a name=\"end\"><hr></a>");
-		tail.add("Import complete. ");
-		if(importCount == 1)
+		tail.add(HtmlUtil.makeBold("Import complete. "));
+
+		addUnmodifiedCount(importer, tail);
+		tail.add(HtmlUtil.BR);
+		addImportedPageCount(importer, tail);
+		addOrphanedPageSection(importer, tail);
+
+		return tail;
+	}
+
+	private void addUnmodifiedCount(WikiImporter importer, TagGroup tail)
+	{
+		if(importer.getUnmodifiedCount() != 0)
+		{
+			tail.add(HtmlUtil.BR);
+			if(importer.getUnmodifiedCount() == 1)
+				tail.add("1 page was unmodified.");
+			else
+				tail.add(importer.getUnmodifiedCount() + " pages were unmodified.");
+		}
+	}
+
+	private void addImportedPageCount(WikiImporter importer, TagGroup tail)
+	{
+		if(importer.getImportCount() == 1)
 			tail.add("1 page was imported.");
 		else
-			tail.add(importCount + " pages were imported.");
-		response.add(tail.html());
+			tail.add(importer.getImportCount() + " pages were imported.");
+	}
+
+	private void addOrphanedPageSection(WikiImporter importer, TagGroup tail)
+	{
+		List<WikiPagePath> orphans = importer.getOrphans();
+		if(orphans.size() > 0)
+		{
+			tail.add(HtmlUtil.BR);
+			if(orphans.size() == 1)
+				tail.add("1 orphaned page was found and has been removed.");
+			else
+				tail.add(orphans.size() + " orphaned pages were found and have been removed.");
+			tail.add(" This may occur when a remote page is deleted, moved, or renamed.");
+			tail.add(HtmlUtil.BR);
+			tail.add(HtmlUtil.BR);
+			tail.add("Orphans:");
+			tail.add(HtmlUtil.HR);
+
+			for(Iterator iterator = orphans.iterator(); iterator.hasNext();)
+			{
+				WikiPagePath path = (WikiPagePath) iterator.next();
+				HtmlTag row = alternatingRow();
+				row.add(PathParser.render(path));
+				tail.add(row);
+			}
+			tail.add(HtmlUtil.HR);
+		}
 	}
 
 	private HtmlPage makeHtml() throws Exception
@@ -162,84 +217,19 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 		return root.getPageCrawler();
 	}
 
-	public void pageAdded(WikiPage newPage) throws Exception
-	{
-		remotePath.addName(newPage.getName());
-		relativePath.addName(newPage.getName());
-		path.addName(newPage.getName());
-		importRemotePageContent(newPage);
-	}
-
-	private void importRemotePageContent(WikiPage localPage) throws Exception
-	{
-		try
-		{
-			Document doc = getXmlDocument("data");
-			PageData data = new PageXmlizer().deXmlizeData(doc);
-			WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());
-			importProperty.addTo(data.getProperties());
-			localPage.commit(data);
-			addRowToResponse("");
-		}
-		catch(AuthenticationRequiredException e)
-		{
-			throw e;
-		}
-		catch(Exception e)
-		{
-			addRowToResponse(e.getMessage());
-		}
-		importCount++;
-	}
-
-	private String remoteUrl()
-	{
-		String remotePathName = PathParser.render(remotePath);
-		return "http://" + remoteHostname + ":" + remotePort + "/" + remotePathName;
-	}
-
-	public void exitPage()
-	{
-		remotePath.pop();
-		relativePath.pop();
-		path.pop();
-	}
-
-	public Document getPageTree() throws Exception
-	{
-		return getXmlDocument("pages");
-	}
-
-	private Document getXmlDocument(String documentType) throws Exception
-	{
-
-		String remotePathName = PathParser.render(remotePath);
-		RequestBuilder builder = new RequestBuilder("/" + remotePathName);
-		builder.addInput("responder", "proxy");
-		builder.addInput("type", documentType);
-		builder.setHostAndPort(remoteHostname, remotePort);
-		if(remoteUsername != null)
-			builder.addCredentials(remoteUsername, remotePassword);
-
-		ResponseParser parser = ResponseParser.performHttpRequest(remoteHostname, remotePort, builder);
-
-		if(parser.getStatus() == 404)
-			throw new Exception("The remote resource, " + remoteUrl() + ", was not found.");
-		if(parser.getStatus() == 401)
-			throw new AuthenticationRequiredException(remoteUrl());
-
-		String body = parser.getBody();
-		return XmlUtil.newDocument(body);
-	}
-
 	private void addRowToResponse(String status) throws Exception
 	{
-		HtmlTag tag = HtmlUtil.makeDivTag("alternating_row_" + alternate());
-		String relativePathName = PathParser.render(relativePath);
-		String localPathName = PathParser.render(path);
+		HtmlTag tag = alternatingRow();
+		String relativePathName = PathParser.render(importer.getRelativePath());
+		String localPathName = PathParser.render(importer.getLocalPath());
 		tag.add(HtmlUtil.makeLink(localPathName, relativePathName));
 		tag.add(" " + status);
 		response.add(tag.html());
+	}
+
+	private HtmlTag alternatingRow()
+	{
+		return HtmlUtil.makeDivTag("alternating_row_" + alternate());
 	}
 
 	private int alternate()
@@ -251,32 +241,6 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 	public void setResponse(ChunkedResponse response)
 	{
 		this.response = response;
-	}
-
-	public void parseUrl(String urlString) throws Exception
-	{
-		URL url = null;
-		try
-		{
-			url = new URL(urlString);
-		}
-		catch(MalformedURLException e)
-		{
-			throw new MalformedURLException(urlString + " is not a valid URL.");
-		}
-
-		remoteHostname = url.getHost();
-		remotePort = url.getPort();
-		if(remotePort == -1)
-			remotePort = 80;
-
-		String path = url.getPath();
-		if(path.startsWith("/"))
-			path = path.substring(1);
-		remotePath = PathParser.parse(path);
-
-		if(remotePath == null)
-			throw new MalformedURLException("The URL's resource path, " + path + ", is not a valid WikiWord.");
 	}
 
 	public SecureOperation getSecureOperation()
@@ -309,11 +273,18 @@ public class WikiImportingResponder extends ChunkingResponder implements Xmlizer
 		response.add(html.html());
 	}
 
-	private static class AuthenticationRequiredException extends Exception
+	public void pageImported(WikiPage localPage) throws Exception
 	{
-		public AuthenticationRequiredException(String message)
-		{
-			super(message);
-		}
+		addRowToResponse("");
+	}
+
+	public void pageImportError(WikiPage localPage, Exception e) throws Exception
+	{
+		addRowToResponse(e.toString());
+	}
+
+	public WikiImporter getImporter()
+	{
+		return importer;
 	}
 }

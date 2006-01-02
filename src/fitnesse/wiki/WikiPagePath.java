@@ -9,16 +9,22 @@ import java.io.Serializable;
 public class WikiPagePath implements Comparable, Cloneable, Serializable
 {
 	public static final String ROOT = "_root";
-	private LinkedList names = new LinkedList();
+	private LinkedList<String> names = new LinkedList<String>();
 
 	public WikiPagePath()
 	{
 	}
 
+	public WikiPagePath(String[] names)
+	{
+		for(int i = 0; i < names.length; i++)
+			addName(names[i]);
+	}
+
 	protected Object clone() throws CloneNotSupportedException
 	{
 		WikiPagePath clone = new WikiPagePath();
-		clone.names = (LinkedList) names.clone();
+		clone.names = (LinkedList<String>) names.clone();
 		return clone;
 	}
 
@@ -50,9 +56,9 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 			addName(p.getFirst());
 	}
 
-	private WikiPagePath(List names)
+	private WikiPagePath(List<String> names)
 	{
-		this.names = new LinkedList(names);
+		this.names = new LinkedList<String>(names);
 	}
 
 	public String getFirst()
@@ -88,7 +94,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 		return (String) (names.size() == 0 ? null : names.get(names.size() - 1));
 	}
 
-	public List getNames()
+	public List<String> getNames()
 	{
 		return names;
 	}
@@ -171,12 +177,10 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 			return false;
 
 		Iterator thisIterator = names.iterator();
-		Iterator thatIterator = that.names.iterator();
-		while(thatIterator.hasNext())
+		for(String name : that.names)
 		{
 			Object thisNext = thisIterator.next();
-			Object thatNext = thatIterator.next();
-			if(!thisNext.equals(thatNext))
+			if(!thisNext.equals(name))
 				return false;
 		}
 		return true;
@@ -187,5 +191,21 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 		WikiPagePath path = new WikiPagePath(this);
 		path.addName(name);
 		return path;
+	}
+
+	public WikiPagePath subtract(WikiPagePath operand)
+	{
+		WikiPagePath difference = new WikiPagePath(this);
+		if(difference.startsWith(operand))
+		{
+			for(String name : operand.getNames())
+			{
+				if(name.equals(difference.getFirst()))
+					difference.names.removeFirst();
+				else
+					break;
+			}
+		}
+		return difference;
 	}
 }

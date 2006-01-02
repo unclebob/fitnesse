@@ -153,15 +153,4 @@ public class PageDataTest extends RegexTest
 
 		assertEquals("Joe", data.getAttribute(WikiPage.LAST_MODIFYING_USER));
 	}
-
-	public void testLastModificationTime() throws Exception
-	{
-		SimpleDateFormat format = PageData.makeVersionTimeFormat();
-		PageData data = new PageData(root);
-		assertEquals(format.format(new Date()), format.format(data.getLastModificationTime()));
-		Date date = format.parse("20040101000001");
-		data.setLastModificationTime(date);
-		assertEquals("20040101000001", data.getProperties().get("LastModified"));
-		assertEquals(date, data.getLastModificationTime());
-	}
 }

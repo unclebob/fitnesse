@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.io.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
 import fitnesse.testutil.RegexTest;
 
 public class WikiPagePropertiesTest extends RegexTest
@@ -83,5 +84,16 @@ public class WikiPagePropertiesTest extends RegexTest
 		{
 			fail("its not serializabl: " + e);
 		}
+	}
+
+	public void testLastModificationTime() throws Exception
+	{
+		SimpleDateFormat format = WikiPageProperty.getTimeFormat();
+		WikiPageProperties props = new WikiPageProperties();
+		assertEquals(format.format(new Date()), format.format(props.getLastModificationTime()));
+		Date date = format.parse("20040101000001");
+		props.setLastModificationTime(date);
+		assertEquals("20040101000001", props.get("LastModified"));
+		assertEquals(date, props.getLastModificationTime());
 	}
 }

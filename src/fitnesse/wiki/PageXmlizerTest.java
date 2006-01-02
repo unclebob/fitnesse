@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import java.io.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
 import fitnesse.testutil.RegexTest;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
@@ -13,6 +14,7 @@ public class PageXmlizerTest extends RegexTest
 	private PageXmlizer xmlizer;
 	private WikiPage root;;
 	private PageCrawler crawler;
+	private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 
 	public void setUp() throws Exception
 	{
@@ -33,6 +35,15 @@ public class PageXmlizerTest extends RegexTest
 		assertSubString("<page>", value);
 		assertSubString("</page>", value);
 		assertSubString("<name>RooT</name>", value);
+
+		checkForLastModifiedTag(root, value);
+	}
+
+	private void checkForLastModifiedTag(WikiPage page, String value) throws Exception
+	{
+		Date lastModificationTime = page.getData().getProperties().getLastModificationTime();
+		String timeString = WikiPageProperties.getTimeFormat().format(lastModificationTime);
+		assertSubString("<lastModified>" + timeString + "</lastModified>", value);
 	}
 
 	public void testDeXmlizeOneWikiPage() throws Exception
@@ -48,12 +59,14 @@ public class PageXmlizerTest extends RegexTest
 
 	public void testXmlizeTwoPages() throws Exception
 	{
-		root.addChildPage("PageOne");
+		WikiPage pageOne = root.addChildPage("PageOne");
 		Document doc = xmlizer.xmlize(root);
 		String value = XmlUtil.xmlAsString(doc);
 
 		assertSubString("<name>RooT</name>", value);
 		assertSubString("<name>PageOne</name>", value);
+		checkForLastModifiedTag(root, value);
+		checkForLastModifiedTag(pageOne, value);
 	}
 
 	public void testDeXmlizingTwoPages() throws Exception
@@ -103,8 +116,8 @@ public class PageXmlizerTest extends RegexTest
 		WikiPage greatGrandChildA = grandChildA.getChildPage("GreatGrandChildA");
 		assertNotNull(greatGrandChildA);
 
-		assertNotNull(crawler.getPage(root, PathParser.parse("RooT.PageB.ChildOneB.GrandChildB")));
-		assertNotNull(crawler.getPage(root, PathParser.parse("RooT.PageC")));
+		assertNotNull(getPage("RooT.PageB.ChildOneB.GrandChildB"));
+		assertNotNull(getPage("RooT.PageC"));
 	}
 
 	public void testDeXmlizeEntireTreeTwice() throws Exception
@@ -145,20 +158,34 @@ public class PageXmlizerTest extends RegexTest
 		MockXmlizerPageHandler handler = new MockXmlizerPageHandler();
 		xmlizer.deXmlize(xmlizer.xmlize(root), root, handler);
 
-		assertEquals(11, handler.adds.size());
-		assertTrue(handler.adds.contains("RooT"));
-		assertTrue(handler.adds.contains("PageA"));
-		assertTrue(handler.adds.contains("ChildOneA"));
-		assertTrue(handler.adds.contains("GrandChildA"));
-		assertTrue(handler.adds.contains("GreatGrandChildA"));
-		assertTrue(handler.adds.contains("ChildTwoA"));
-		assertTrue(handler.adds.contains("GrandChildTwoA"));
-		assertTrue(handler.adds.contains("PageB"));
-		assertTrue(handler.adds.contains("ChildOneB"));
-		assertTrue(handler.adds.contains("GrandChildB"));
-		assertTrue(handler.adds.contains("PageC"));
+		assertEquals(11, handler.handledPages.size());
+
+		checkPageWasHandledWithRightDate(0, root, handler);
+		checkPageWasHandledWithRightDate(1, getPage("PageA"), handler);
+		checkPageWasHandledWithRightDate(2, getPage("PageA.ChildOneA"), handler);
+		checkPageWasHandledWithRightDate(3, getPage("PageA.ChildOneA.GrandChildA"), handler);
+		checkPageWasHandledWithRightDate(4, getPage("PageA.ChildOneA.GrandChildA.GreatGrandChildA"), handler);
+		checkPageWasHandledWithRightDate(5, getPage("PageA.ChildTwoA"), handler);
+		checkPageWasHandledWithRightDate(6, getPage("PageA.ChildTwoA.GrandChildTwoA"), handler);
+		checkPageWasHandledWithRightDate(7, getPage("PageB"), handler);
+		checkPageWasHandledWithRightDate(8, getPage("PageB.ChildOneB"), handler);
+		checkPageWasHandledWithRightDate(9, getPage("PageB.ChildOneB.GrandChildB"), handler);
+		checkPageWasHandledWithRightDate(10, getPage("PageC"), handler);
 
 		assertEquals(11, handler.exits);
+	}
+
+	private WikiPage getPage(String pathName) throws Exception
+	{
+		return crawler.getPage(root, PathParser.parse(pathName));
+	}
+
+	private void checkPageWasHandledWithRightDate(int i, WikiPage page, MockXmlizerPageHandler handler) throws Exception
+	{
+		assertEquals(page.getName(), handler.handledPages.get(i));
+		String actualModifyTime = format.format(page.getData().getProperties().getLastModificationTime());
+		String listedModifyTime = format.format(handler.modDates.get(i));
+		assertEquals(actualModifyTime, listedModifyTime);
 	}
 
 	private void makeFamilyOfPages() throws Exception
@@ -177,8 +204,7 @@ public class PageXmlizerTest extends RegexTest
 		addPage("PageC", "page c");
 	}
 
-	private void addPage(String path, String content)
-	  throws Exception
+	private void addPage(String path, String content) throws Exception
 	{
 		crawler.addPage(root, PathParser.parse(path), content);
 	}

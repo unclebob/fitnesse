@@ -45,6 +45,7 @@ public class Updater
 			new AttributeAdderUpdate(this, "WhereUsed"),
 			new AttributeAdderUpdate(this, "Files"),
 			new SymLinkPropertyFormatUpdate(this),
+			new WikiImportPropertyFormatUpdate(this),
 			new VirtualWikiDeprecationUpdate(this),
 			new FrontPageUpdate(this)
 		};
@@ -107,8 +108,7 @@ public class Updater
 	private File getPropertiesFile() throws Exception
 	{
 		String filename = context.rootPagePath + "/properties";
-		File propFile = new File(filename);
-		return propFile;
+		return new File(filename);
 	}
 
 	public void saveProperties() throws Exception

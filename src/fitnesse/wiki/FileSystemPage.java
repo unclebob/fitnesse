@@ -163,7 +163,7 @@ public class FileSystemPage extends CachingPage
 
 	public void doCommit(PageData data) throws Exception
 	{
-		data.setLastModificationTime(new Date());
+		data.getProperties().setLastModificationTime(new Date());
 		saveContent(data.getContent());
 		saveAttributes(data.getProperties());
 		PageVersionPruner.pruneVersions(this, loadVersions());
@@ -240,7 +240,7 @@ public class FileSystemPage extends CachingPage
 
 	protected VersionInfo makeVersionInfo(PageData data) throws Exception
 	{
-		Date time = data.getLastModificationTime();
+		Date time = data.getProperties().getLastModificationTime();
 		String versionName = VersionInfo.nextId() + "-" + dateFormat().format(time);
 		String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
 		if(user != null && !"".equals(user))

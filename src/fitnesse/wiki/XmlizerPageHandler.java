@@ -2,9 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
+import java.util.Date;
+
 public interface XmlizerPageHandler
 {
-	void pageAdded(WikiPage newPage) throws Exception;
+	void enterChildPage(WikiPage newPage, Date lastModified) throws Exception;
 
 	void exitPage();
 }
