@@ -240,6 +240,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "HtmlParser.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "HtmlParserTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ICellHandler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

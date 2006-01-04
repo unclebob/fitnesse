@@ -26,7 +26,8 @@ namespace fit
 		{
 			try 
 			{
-				tables = new Parse(input);
+				//tables = new Parse(input);
+                tables = HtmlParser.Instance.Parse(input);
 				fixture.DoTables(tables);
 			} 
 			catch (Exception e) 

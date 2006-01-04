@@ -187,7 +187,8 @@ namespace fitnesse.fitserver
 			Fixture fixture = new Fixture();
 			try
 			{
-				Parse parse = new Parse(document);
+                //Parse parse = new Parse(document);
+				Parse parse = HtmlParser.Instance.Parse(document);
 				fixture.Listener = fixtureListener;
 				fixture.DoTables(parse);
 				return fixture;

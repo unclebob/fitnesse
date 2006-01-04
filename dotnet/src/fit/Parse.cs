@@ -26,12 +26,16 @@ namespace fit
 			get { return leader; }
 		}
 
-		public string Tag
-		{
-			get { return tag; }
-		}
+        public string Tag {
+            get { return tag; }
+        }
 
-		public string Body
+        // added
+        public string End {
+            get { return end; }
+        }
+
+        public string Body
 		{
 			get { return body; }
 		}
@@ -43,8 +47,10 @@ namespace fit
 
 		public string Trailer
 		{
-			get { return trailer; }
-		}
+            get { return trailer; }
+            //added
+            set { trailer = value; }
+        }
 
 		public Parse More
 		{
@@ -56,6 +62,15 @@ namespace fit
 		{
 			get { return parts; }
 		}
+
+        //added
+        public Parse(string theTag, string theEnd, string theLeader, string theBody, Parse theParts) {
+            tag = theTag;
+            end = theEnd;
+            leader = theLeader;
+            body = theBody;
+            parts = theParts;
+        }
 
 		public Parse(string tag, string body, Parse parts, Parse more)
 		{
