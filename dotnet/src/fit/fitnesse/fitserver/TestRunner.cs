@@ -102,10 +102,10 @@ namespace fitnesse.fitserver
 
 		private void PrintUsage()
 		{
-			Console.WriteLine("Usage: TestRunner [options] <host> <port> <page name>");
+			Console.WriteLine("Usage: TestRunner [options] <host> <port> <page name> [assembly[;assembly]]");
 			Console.WriteLine("\t-v\tverbose: prints test progress to colsole");
 			Console.WriteLine("\t-debug\tprints FitServer actions to console");
-			Console.WriteLine("\t-nopaths\tprevents addition of assemblies from FitNesse");
+			Console.WriteLine("\t-nopaths\tprevents addition of assemblies from remote FitNesse");
 			Console.WriteLine("\t-results <filename|'stdout'>\tsends test results data to the specified file or the console");
 		}
 
