@@ -55,6 +55,17 @@ namespace fitnesse.fitserver
 		}
 
 		[Test]
+		public void ExtraAssemblyArgs()
+		{
+			bool result = runner.ParseArgs(new string[] {"host", "80", "SomePage", "fit.dll", "fit.config", "other.dll"});
+			Assert.IsTrue(result);
+			Assert.AreEqual("host", runner.host);
+			Assert.AreEqual(80, runner.port);
+			Assert.AreEqual("SomePage", runner.pageName);
+			Assert.AreEqual("fit.dll;fit.config;other.dll", runner.assemblyPath);
+		}
+
+		[Test]
 		public void TestParseArgsWithOptions()
 		{
 			bool result = runner.ParseArgs(new string[] {"-v", "-debug", "-nopaths", 
@@ -118,7 +129,6 @@ namespace fitnesse.fitserver
 
 			runner.HandleFinalCount(new Counts(1, 2, 3, 4));
 			Assert.AreEqual("", output.ToString());
-
 			
 			runner.verbose = true;
 			runner.HandleFinalCount(new Counts(1, 2, 3, 4));

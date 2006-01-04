@@ -87,8 +87,8 @@
                 />
                 <Reference
                     Name = "fit"
-                    AssemblyName = "fit"
-                    HintPath = "..\fit\bin\Debug\fit.dll"
+                    Project = "{483287D5-0C87-4257-AB40-C75C02F2ECF6}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

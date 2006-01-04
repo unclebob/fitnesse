@@ -22,6 +22,7 @@ namespace fitnesse.fitserver
 		public bool deleteCacheOnExit;
 		public Counts pageCounts = new Counts();
 		public TextWriter output = Console.Out;
+		public string assemblyPath;
 
 		public static int Main(string[] args)
 		{
@@ -42,13 +43,24 @@ namespace fitnesse.fitserver
 			fitServer.fixtureListener = fixtureListener;
 			fitServer.EstablishConnection(MakeHttpRequest());
 			fitServer.ValidateConnection();
-			if(usingDownloadedPaths)
-				ProcessAssembliesDocument();
+			AddAssemblies();
 			fitServer.ProcessTestDocuments();
 			HandleFinalCount(fitServer.Counts);
 			fitServer.CloseConnection();
 			fitServer.Exit();
 			CleanResultCache();
+		}
+
+		public void AddAssemblies()
+		{
+			if(usingDownloadedPaths)
+				assemblyPath += fitServer.ReceiveDocument();
+			if(assemblyPath != null && assemblyPath.Length > 0)
+			{
+				if(verbose)
+					output.WriteLine("Adding assemblies: " + assemblyPath);
+				fitServer.ParseAssemblyList(assemblyPath);	
+			}
 		}
 
 		public int ExitCode()
@@ -75,23 +87,17 @@ namespace fitnesse.fitserver
 					else
 						throw new Exception("Bad option: " + option);
 				}
-				host = args[index];
-				port = Int32.Parse(args[index + 1]);
-				pageName = args[index + 2];
+				host = args[index++];
+				port = Int32.Parse(args[index++]);
+				pageName = args[index++];
+				while(args.Length > index)
+					assemblyPath = assemblyPath == null ? args[index++] : (assemblyPath + ";" + args[index++]);
 				return true;
 			}
 			catch(Exception)
 			{
 				return false;
 			}
-		}
-
-		private void ProcessAssembliesDocument()
-		{
-			String assemblyPaths = fitServer.ReceiveDocument();
-			if(verbose)
-				output.WriteLine("Adding assemblies: " + assemblyPaths);
-			fitServer.ParseAssemblyList(assemblyPaths);	
 		}
 
 		private void PrintUsage()
