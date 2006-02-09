@@ -10,26 +10,33 @@ import org.w3c.dom.Document;
 
 public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListener
 {
+	public static String remoteUsername;
+	public static String remotePassword;
+
 	private String remoteHostname;
 	private int remotePort;
 	private WikiPagePath localPath;
 	private WikiPagePath remotePath = new WikiPagePath();
 	private WikiPagePath relativePath = new WikiPagePath();
-	private WikiImporterClient importerClient;
+	protected WikiImporterClient importerClient;
 	protected int importCount = 0;
 	protected int unmodifiedCount = 0;
-
-	public static String remoteUsername;
-	public static String remotePassword;
 	private List<WikiPagePath> orphans = new LinkedList<WikiPagePath>();
 	private HashSet<WikiPagePath> pageCatalog;
 	private PageCrawler crawler;
 	private boolean shouldDeleteOrphans = true;
 	private WikiPagePath contextPath;
+	private boolean autoUpdateSetting;
 
 	public WikiImporter()
 	{
 		this.importerClient = new NullWikiImporterClient();
+		this.localPath = new WikiPagePath();
+	}
+
+	public WikiImporter(WikiImporterClient client)
+	{
+		this.importerClient = client;
 		this.localPath = new WikiPagePath();
 	}
 
@@ -39,6 +46,8 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 		Document remotePageTreeDocument = getPageTree();
 		new PageXmlizer().deXmlizeSkippingRootLevel(remotePageTreeDocument, page, this);
+
+		configureAutoUpdateSetting(page);
 
 		filterOrphans(page);
 		if(shouldDeleteOrphans)
@@ -64,6 +73,7 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 			WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
 			PageData data = unrecognizedPage.getData();
 			WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
+
 			if(importProps != null && !importProps.isRoot())
 			{
 				orphans.add(wikiPagePath);
@@ -77,7 +87,8 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 		contextPath = crawler.getFullPath(page);
 		pageCatalog = new HashSet<WikiPagePath>();
 		page.getPageCrawler().traverse(page, this);
-		pageCatalog.remove(contextPath);
+		WikiPagePath relativePathOfContext = contextPath.subtract(contextPath);
+		pageCatalog.remove(relativePathOfContext);
 	}
 
 	public void enterChildPage(WikiPage childPage, Date lastModified) throws Exception
@@ -90,7 +101,8 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 		relativePath.addName(childPage.getName());
 		localPath.addName(childPage.getName());
 
-		WikiPageProperties props = childPage.getData().getProperties();
+		PageData data = childPage.getData();
+		WikiPageProperties props = data.getProperties();
 		WikiImportProperty importProps = WikiImportProperty.createFrom(props);
 		if(importProps != null)
 		{
@@ -98,10 +110,32 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 			if(lastModified.after(lastRemoteModification))
 				importRemotePageContent(childPage);
 			else
+			{
 				unmodifiedCount++;
+				configureAutoUpdateSetting(importProps, data, childPage);
+			}
 		}
 		else
 			importRemotePageContent(childPage);
+	}
+
+	private void configureAutoUpdateSetting(WikiImportProperty importProps, PageData data, WikiPage childPage) throws Exception
+	{
+		if(importProps.isAutoUpdate() != autoUpdateSetting)
+		{
+			importProps.setAutoUpdate(autoUpdateSetting);
+			importProps.addTo(data.getProperties());
+			childPage.commit(data);
+		}
+	}
+
+	public void configureAutoUpdateSetting(WikiPage page) throws Exception
+	{
+		PageData data = page.getData();
+		WikiPageProperties props = data.getProperties();
+		WikiImportProperty importProps = WikiImportProperty.createFrom(props);
+		if(importProps != null)
+			configureAutoUpdateSetting(importProps, data, page);
 	}
 
 	private WikiPagePath relativePath(WikiPage childPage) throws Exception
@@ -109,7 +143,7 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 		return crawler.getFullPath(childPage).subtract(contextPath);
 	}
 
-	void importRemotePageContent(WikiPage localPage) throws Exception
+	protected void importRemotePageContent(WikiPage localPage) throws Exception
 	{
 		try
 		{
@@ -122,7 +156,9 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 			WikiImportProperty importProperty = new WikiImportProperty(remoteUrl());
 			Date lastModificationTime = remoteProps.getLastModificationTime();
 			importProperty.setLastRemoteModificationTime(lastModificationTime);
+			importProperty.setAutoUpdate(autoUpdateSetting);
 			importProperty.addTo(remoteProps);
+
 			localPage.commit(remoteData);
 
 			importerClient.pageImported(localPage);
@@ -265,7 +301,8 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	public void processPage(WikiPage page) throws Exception
 	{
-		pageCatalog.add(relativePath(page));
+		WikiPagePath relativePath = relativePath(page);
+		pageCatalog.add(relativePath);
 	}
 
 	public String getSearchPattern() throws Exception
@@ -276,6 +313,16 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 	public void setDeleteOrphanOption(boolean shouldDeleteOrphans)
 	{
 		this.shouldDeleteOrphans = shouldDeleteOrphans;
+	}
+
+	public boolean getAutoUpdateSetting()
+	{
+		return autoUpdateSetting;
+	}
+
+	public void setAutoUpdateSetting(boolean autoUpdateSetting)
+	{
+		this.autoUpdateSetting = autoUpdateSetting;
 	}
 
 	private static class NullWikiImporterClient implements WikiImporterClient

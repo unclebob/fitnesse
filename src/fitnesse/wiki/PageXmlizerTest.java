@@ -28,7 +28,7 @@ public class PageXmlizerTest extends RegexTest
 	}
 
 	public void testXmlizeOneWikiPage() throws Exception
-	{
+	{                                                                                                                
 		Document doc = xmlizer.xmlize(root);
 		String value = XmlUtil.xmlAsString(doc);
 

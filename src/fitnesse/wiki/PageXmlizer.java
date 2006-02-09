@@ -98,7 +98,8 @@ public class PageXmlizer
 	{
 		String name = XmlUtil.getTextValue(pageElement, "name");
 		String modifiedDateString = XmlUtil.getTextValue(pageElement, "lastModified");
-		Date modifiedDate = dateFormat.parse(modifiedDateString);
+
+		Date modifiedDate = modifiedDateString == null ? new Date(0) : dateFormat.parse(modifiedDateString);
 
 		WikiPage childPage = context.getChildPage(name);
 		if(childPage == null)

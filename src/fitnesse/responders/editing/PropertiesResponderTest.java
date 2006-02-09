@@ -136,6 +136,8 @@ public class PropertiesResponderTest extends RegexTest
 		testWikiImportUpdateWith(property);
 		assertSubString(" imports its subpages from ", content);
 		assertSubString("value=\"Update Subpages\"", content);
+
+		assertSubString("Automatically update imported content when executing tests", content);
 	}
 
 	public void testWikiImportUpdateNonroot() throws Exception
@@ -143,6 +145,8 @@ public class PropertiesResponderTest extends RegexTest
 		testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
 		assertSubString(" imports its content and subpages from ", content);
 		assertSubString("value=\"Update Content and Subpages\"", content);
+
+		assertSubString("Automatically update imported content when executing tests", content);
 	}
 
 	private void testWikiImportUpdateWith(WikiImportProperty property) throws Exception
@@ -154,7 +158,7 @@ public class PropertiesResponderTest extends RegexTest
 
 		getPropertiesContentFromPage(page);
 		checkUpdateForm();
-		assertSubString("Wiki Import Update.", content);
+		assertSubString("Wiki Import Update", content);
 		assertSubString("<a href=\"http://my.host.com/PageRoot\">http://my.host.com/PageRoot</a>", content);
 
 		assertNotSubString("value=\"Import\"", content);

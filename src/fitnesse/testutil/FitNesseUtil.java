@@ -12,6 +12,7 @@ public class FitNesseUtil
 	private static FitNesse instance = null;
 	public static final int port = 1999;
 	public static FitNesseContext context;
+	public static final String URL = "http://localhost:" + port + "/";
 
 	public static void startFitnesse(WikiPage root) throws Exception
 	{

@@ -4,7 +4,7 @@ package fitnesse;
 
 import fitnesse.socketservice.SocketService;
 import fitnesse.wiki.*;
-import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.*;
 import fitnesse.components.*;
 import fitnesse.updates.Updater;
 import fitnesse.html.HtmlPageFactory;
@@ -58,6 +58,8 @@ public class FitNesse
 		extraOutput = componentFactory.loadResponderPlugins(context.responderFactory);
 		extraOutput += componentFactory.loadWikiWidgetPlugins();
 		extraOutput += componentFactory.loadContentFilter();
+
+		WikiImportTestEventListener.register();
 
 		return context;
 	}

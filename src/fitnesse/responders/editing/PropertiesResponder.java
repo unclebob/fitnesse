@@ -22,7 +22,7 @@ public class PropertiesResponder implements SecureResponder
 		resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
 		PageCrawler crawler = context.root.getPageCrawler();
-		if(crawler.pageExists(context.root, path) == false)
+		if(!crawler.pageExists(context.root, path))
     {
 	    crawler.setDeadEndStrategy(new MockingPageCrawler());
       page = crawler.getPage(context.root, path);
@@ -85,7 +85,7 @@ public class PropertiesResponder implements SecureResponder
 
 		WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
 		if(importProperty != null)
-			html.add(makeImportUpdateForm(importProperty.getSource(), importProperty.isRoot()));
+			html.add(makeImportUpdateForm(importProperty));
 		else
 			html.add(makeImportForm());
 
@@ -139,20 +139,25 @@ public class PropertiesResponder implements SecureResponder
 		HtmlTag remoteUrlField = HtmlUtil.makeInputTag("text", "remoteUrl");
 		remoteUrlField.addAttribute("size", "40");
 		form.add(remoteUrlField);
+		form.add(HtmlUtil.BR);
+		form.add(HtmlUtil.makeInputTag("checkbox", "autoUpdate", "0"));
+		form.add("- Automatically update imported content when executing tests");
+		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
 		form.add(HtmlUtil.makeInputTag("submit", "save", "Import"));
 		return form;
 	}
 
-	private HtmlTag makeImportUpdateForm(String hostUrl, boolean isRoot) throws Exception
+	private HtmlTag makeImportUpdateForm(WikiImportProperty importProps) throws Exception
 	{
 		HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
+
 		form.add(HtmlUtil.HR);
-		form.add("Wiki Import Update.");
+		form.add(new HtmlTag("strong", "Wiki Import Update"));
 		form.add(HtmlUtil.BR);
 		String buttonMessage = "";
 		form.add(HtmlUtil.makeLink(page.getName(), page.getName()));
-		if(isRoot)
+		if(importProps.isRoot())
 		{
 			form.add(" imports its subpages from ");
 		  buttonMessage = "Update Subpages";
@@ -162,8 +167,15 @@ public class PropertiesResponder implements SecureResponder
 			form.add(" imports its content and subpages from ");
 			buttonMessage = "Update Content and Subpages";
 		}
-		form.add(HtmlUtil.makeLink(hostUrl, hostUrl));
+		form.add(HtmlUtil.makeLink(importProps.getSourceUrl(), importProps.getSourceUrl()));
 		form.add(".");
+		form.add(HtmlUtil.BR);
+		HtmlTag autoUpdateCheckBox = HtmlUtil.makeInputTag("checkbox", "autoUpdate");
+		if(importProps.isAutoUpdate())
+			autoUpdateCheckBox.addAttribute("checked", "true");
+		form.add(autoUpdateCheckBox);
+
+		form.add("- Automatically update imported content when executing tests");
 		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
 		form.add(HtmlUtil.makeInputTag("submit", "save", buttonMessage));
@@ -176,7 +188,7 @@ public class PropertiesResponder implements SecureResponder
 		HtmlTag form = HtmlUtil.makeFormTag("get", resource);
 		form.add(HtmlUtil.HR);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "symlink"));
-		form.add("Symbolic Links");
+		form.add(new HtmlTag("strong", "Symbolic Links"));
 
 		HtmlTableListingBuilder table = new HtmlTableListingBuilder();
 		table.addRow(new HtmlElement[]{new HtmlTag("strong", "Name"), new HtmlTag("strong", "Path to Page"), new HtmlTag("strong", "Action")});

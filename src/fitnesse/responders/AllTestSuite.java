@@ -31,7 +31,8 @@ public class AllTestSuite
 			ChunkingResponderTest.class,
 			WikiImportPropertyTest.class,
 			WikiImporterTest.class,
-			ImportAndViewResponderTest.class
+			ImportAndViewResponderTest.class,
+			WikiImportTestEventListenerTest.class
 		});
 	}
 }

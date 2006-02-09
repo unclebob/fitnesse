@@ -13,9 +13,10 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	public static final String SUITE_SETUP_NAME = "SuiteSetUp";
 	public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
-	private LinkedList processingQueue = new LinkedList();
+	private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
 	private WikiPage currentTest = null;
 	private SuiteHtmlFormatter suiteFormatter;
+	private List testPages;
 
 	protected HtmlTag addSummaryPlaceHolder()
 	{
@@ -25,28 +26,25 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		return testSummaryDiv;
 	}
 
-	protected void doSending() throws Exception
+	protected void finishSending() throws Exception
 	{
-		data = page.getData();
-		buildHtml();
-		addToResponse(formatter.head());
+	}
 
-		List testPages = makePageList();
+	protected void performExecution() throws Exception
+	{
+		processTestPages(testPages);
 
-		String classPath = buildClassPath(testPages, page);
-		command = buildCommand(data, getClassName(data, request), classPath);
-		client = new CommandRunningFitClient(this, command, context.port, context.socketDealer);
-		log = new ExecutionLog(page, client.commandRunner);
-		client.start();
-		if(client.isSuccessfullyStarted())
-		{
-			processTestPages(testPages);
+		client.done();
+		client.join();
 
-			client.done();
-			client.join();
+		completeResponse();
+	}
 
-			completeResponse();
-		}
+	protected void prepareForExecution() throws Exception
+	{
+		testPages = makePageList();
+
+		classPath = buildClassPath(testPages, page);
 	}
 
 	private void processTestPages(List testPages) throws Exception
@@ -121,8 +119,7 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 			WikiPage testPage = (WikiPage) iterator.next();
 			addClassPathElements(testPage, classPathElements, visitedPages);
 		}
-		final String classPathString = classPathBuilder.createClassPathString(classPathElements, pathSeparator);
-		return classPathString;
+		return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
 	}
 
 	private static void addClassPathElements(WikiPage page, List classPathElements, Set visitedPages) throws Exception

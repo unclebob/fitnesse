@@ -44,7 +44,7 @@ public class MockResponseSender implements ResponseSender
 	public void doSending(Response response) throws Exception
 	{
 		response.readyToSend(this);
-		waitForClose(5000);
+		waitForClose(10000);
 	}
 
 	// Utility method that returns when this.closed is true.  Throws an exception

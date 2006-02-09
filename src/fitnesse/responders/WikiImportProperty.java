@@ -16,7 +16,7 @@ public class WikiImportProperty extends WikiPageProperty
 		set("Source", source);
 	}
 
-	public String getSource()
+	public String getSourceUrl()
 	{
 		return get("Source");
 	}
@@ -34,6 +34,19 @@ public class WikiImportProperty extends WikiPageProperty
 			remove("IsRoot");
 	}
 
+	public boolean isAutoUpdate()
+	{
+		return has("AutoUpdate");
+	}
+
+	public void setAutoUpdate(boolean value)
+	{
+		if(value)
+			set("AutoUpdate");
+		else
+			remove("AutoUpdate");
+	}
+
 	public static WikiImportProperty createFrom(WikiPageProperty property)
 	{
 		if(property.has(PROPERTY_NAME))
@@ -44,6 +57,9 @@ public class WikiImportProperty extends WikiPageProperty
 			importProperty.set("LastRemoteModification", rawImportProperty.getProperty("LastRemoteModification"));
 			if(rawImportProperty.has("IsRoot"))
 				importProperty.set("IsRoot", rawImportProperty.getProperty("IsRoot"));
+			if(rawImportProperty.has("AutoUpdate"))
+				importProperty.set("AutoUpdate", rawImportProperty.getProperty("AutoUpdate"));
+
 
 			return importProperty;
 		}
@@ -82,7 +98,7 @@ public class WikiImportProperty extends WikiPageProperty
 			String localPageName = PathParser.render(localPagePath);
 			html.actions.add(HtmlUtil.makeActionLink(localPageName, "Edit Locally", "edit", "e", false));
 			String remoteInput = "responder=edit&redirectToReferer=true&redirectAction=importAndView";
-			html.actions.add(HtmlUtil.makeActionLink(importProperty.getSource(), "Edit Remotely", remoteInput, "e", false));
+			html.actions.add(HtmlUtil.makeActionLink(importProperty.getSourceUrl(), "Edit Remotely", remoteInput, "e", false));
 		}
 		else if(page instanceof ProxyPage)
 		html.body.addAttribute("class", "virtual");

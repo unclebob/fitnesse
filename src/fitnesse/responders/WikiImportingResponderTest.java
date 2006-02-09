@@ -103,7 +103,7 @@ public class WikiImportingResponderTest extends RegexTest
 
 		WikiImportProperty importProperty = WikiImportProperty.createFrom(props);
 		assertNotNull(importProperty);
-		assertEquals(source, importProperty.getSource());
+		assertEquals(source, importProperty.getSourceUrl());
 		assertEquals(isRoot, importProperty.isRoot());
 
 		if(remotePage != null)
@@ -287,5 +287,33 @@ public class WikiImportingResponderTest extends RegexTest
 		assertSubString("2 orphaned pages were found and have been removed.", tail);
 		assertSubString("PageOne", tail);
 		assertSubString("PageOne.ChildOne", tail);
+	}
+
+	public void testAutoUpdatingTurnedOn() throws Exception
+	{
+		MockRequest request = makeRequest(baseUrl);
+		responder.setRequest(request);
+		responder.data = new PageData(new MockWikiPage());
+
+		responder.initializeImporter();
+		assertFalse(responder.getImporter().getAutoUpdateSetting());
+
+		request.addInput("autoUpdate", "1");
+		responder.initializeImporter();
+		assertTrue(responder.getImporter().getAutoUpdateSetting());
+	}
+
+	public void testAutoUpdateSettingDisplayedInTail() throws Exception
+	{
+		WikiImporter importer = new MockWikiImporter();
+		importer.setAutoUpdateSetting(true);
+
+		String tail = responder.makeTailHtml(importer).html();
+		assertSubString("Automatic Update turned ON", tail);
+
+		importer.setAutoUpdateSetting(false);
+
+		tail = responder.makeTailHtml(importer).html();
+		assertSubString("Automatic Update turned OFF", tail);
 	}
 }

@@ -213,12 +213,54 @@ public class WikiImporterTest extends RegexTest implements WikiImporterClient
 	public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception
 	{
 		addLocalPageWithImportProperty(localRoot, "PageOne", false);
-
 		importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
 
-		importer.importWiki(pageOne);
+		importer.importWiki(localRoot.getChildPage("PageOne"));
 
 		assertEquals(0, importer.getOrphans().size());
+	}
+
+	public void testAutoUpdatePropertySetOnRoot() throws Exception
+	{
+		addLocalPageWithImportProperty(localRoot, "PageOne", false);
+		importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+		importer.setAutoUpdateSetting(true);
+		WikiPage importedPage = localRoot.getChildPage("PageOne");
+		importer.importWiki(importedPage);
+
+		WikiImportProperty importProp = WikiImportProperty.createFrom(importedPage.getData().getProperties());
+		assertTrue(importProp.isAutoUpdate());
+
+		importer.setAutoUpdateSetting(false);
+		importer.importWiki(importedPage);
+
+		importProp = WikiImportProperty.createFrom(importedPage.getData().getProperties());
+		assertFalse(importProp.isAutoUpdate());
+	}
+
+	public void testAutoUpdate_NewPage() throws Exception
+	{
+		importer.setAutoUpdateSetting(true);
+		importer.enterChildPage(pageOne, new Date());
+
+		WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
+		assertTrue(importProps.isAutoUpdate());
+	}
+
+	public void testAutoUpdateWhenRemotePageNotModified() throws Exception
+	{
+		importer.enterChildPage(pageOne, new Date());
+		importer.exitPage();
+
+		PageData data = pageOne.getData();
+		data.setContent("new content");
+		pageOne.commit(data);
+
+		importer.setAutoUpdateSetting(true);
+		importer.enterChildPage(pageOne, new Date(0));
+
+		WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
+		assertTrue(importProps.isAutoUpdate());
 	}
 
 	private WikiPage addLocalPageWithImportProperty(WikiPage parentPage, String pageName, boolean isRoot) throws Exception

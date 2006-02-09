@@ -15,7 +15,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 	private int alternation = 0;
 	private boolean isUpdate;
 	private boolean isNonRoot;
-	private PageData data;
+	public PageData data;
 
 	private WikiImporter importer = new WikiImporter();
 
@@ -27,16 +27,12 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 	protected void doSending() throws Exception
 	{
 		data = page.getData();
-		String remoteWikiUrl = establishRemoteUrlAndUpdateStyle();
 		HtmlPage html = makeHtml();
 		response.add(html.preDivision);
 
 		try
 		{
-			importer.setWikiImporterClient(this);
-			importer.setLocalPath(path);
-			importer.parseUrl(remoteWikiUrl);
-			setRemoteUserCredentials();
+			initializeImporter();
 			addHeadContent();
 			if(isNonRoot)
 				importer.importRemotePageContent(page);
@@ -49,13 +45,14 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 			{
 				WikiImportProperty importProperty = new WikiImportProperty(importer.remoteUrl());
 				importProperty.setRoot(true);
+				importProperty.setAutoUpdate(importer.getAutoUpdateSetting());
 				importProperty.addTo(data.getProperties());
 				page.commit(data);
 			}
 		}
 		catch(MalformedURLException e)
 		{
-			writeErrorMessage(e.getMessage());
+			writeErrorMessage(e);
 		}
 		catch(FileNotFoundException e)
 		{
@@ -67,14 +64,24 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 		}
 		catch(Exception e)
 		{
-			writeErrorMessage(e.toString());
+			writeErrorMessage(e);
 		}
 
 		response.add(html.postDivision);
 		response.closeAll();
 	}
 
-	private void setRemoteUserCredentials()
+	public void initializeImporter() throws Exception
+	{
+		String remoteWikiUrl = establishRemoteUrlAndUpdateStyle();
+		importer.setWikiImporterClient(this);
+		importer.setLocalPath(path);
+		importer.parseUrl(remoteWikiUrl);
+		setRemoteUserCredentialsOnImporter();
+		importer.setAutoUpdateSetting(request.hasInput("autoUpdate"));
+	}
+
+	private void setRemoteUserCredentialsOnImporter()
 	{
 		if(request.hasInput("remoteUsername"))
 			importer.setRemoteUsername((String) request.getInput("remoteUsername"));
@@ -89,7 +96,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 		WikiImportProperty importProperty = WikiImportProperty.createFrom(data.getProperties());
 		if(importProperty != null)
 		{
-			remoteWikiUrl = importProperty.getSource();
+			remoteWikiUrl = importProperty.getSourceUrl();
 			isUpdate = true;
 			isNonRoot = !importProperty.isRoot();
 		}
@@ -102,6 +109,18 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 		alert.add(new HtmlTag("h2", "Import Failure"));
 		alert.add(message);
 		response.add(alert.html());
+	}
+
+	private void writeErrorMessage(Exception e) throws Exception
+	{
+		writeErrorMessage(e.getMessage());
+		HtmlTag pre = new HtmlTag("pre");
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream printStream = new PrintStream(output);
+		e.printStackTrace(printStream);
+		printStream.flush();
+		pre.add(new String(output.toByteArray()));
+		response.add(pre.html());
 	}
 
 	private void addHeadContent() throws Exception
@@ -146,8 +165,16 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 		tail.add(HtmlUtil.BR);
 		addImportedPageCount(importer, tail);
 		addOrphanedPageSection(importer, tail);
+		addAutoUpdateMessage(importer, tail);
 
 		return tail;
+	}
+
+	private void addAutoUpdateMessage(WikiImporter importer, TagGroup tail)
+	{
+		tail.add(HtmlUtil.BR);
+		String message = "Automatic Update turned " + (importer.getAutoUpdateSetting() ? "ON" : "OFF");
+		tail.add(message);
 	}
 
 	private void addUnmodifiedCount(WikiImporter importer, TagGroup tail)
@@ -194,7 +221,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 				tail.add(row);
 			}
 			tail.add(HtmlUtil.HR);
-		}
+		}                                                                                                              
 	}
 
 	private HtmlPage makeHtml() throws Exception

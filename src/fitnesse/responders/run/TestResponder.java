@@ -9,10 +9,15 @@ import fitnesse.wiki.*;
 import fitnesse.http.*;
 import fitnesse.authentication.*;
 import fit.Counts;
+import java.util.*;
 
 public class TestResponder extends ChunkingResponder implements FitClientListener, SecureResponder
 {
 	protected static final String emptyPageContent = "OH NO! This page is empty!";
+	public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
+	protected static final int htmlDepth = 2;
+
+	private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
 
 	protected HtmlPage html;
 	protected CommandRunningFitClient client;
@@ -20,36 +25,72 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 	protected ExecutionLog log;
 	protected PageData data;
 	private boolean closed = false;
-	public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
-	protected static final int htmlDepth = 2;
 	private Counts assertionCounts = new Counts();
 	protected TestHtmlFormatter formatter;
+	protected String classPath;
+	private String testableHtml;
 
 	protected void doSending() throws Exception
 	{
 		data = page.getData();
+		startHtml();
 
-		buildHtml();
-		addToResponse(formatter.head());
+		sendPreTestNotification();
+
+		prepareForExecution();
+
+		startFitClient(classPath);
+
+		if(client.isSuccessfullyStarted())
+			performExecution();
+
+		finishSending();
+	}
+
+	private void sendPreTestNotification() throws Exception
+	{
+		for(Iterator iterator = eventListeners.iterator(); iterator.hasNext();)
+		{
+			TestEventListener testEventListener = (TestEventListener) iterator.next();
+			testEventListener.notifyPreTest(this, data);
+		}
+	}
+
+	protected void finishSending() throws Exception
+	{
+		completeResponse();
+	}
+
+	protected void performExecution() throws Exception
+	{
+		client.send(testableHtml);
+		client.done();
+		client.join();
+	}
+
+	protected void prepareForExecution() throws Exception
+	{
 		addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
 
-		String testableHtml = HtmlUtil.testableHtml(data);
+		testableHtml = HtmlUtil.testableHtml(data);
 		if(testableHtml.length() == 0)
 			testableHtml = handleBlankHtml();
-		String classPath = new ClassPathBuilder().getClasspath(page);
+		classPath = new ClassPathBuilder().getClasspath(page);
+	}
+
+	protected void startHtml() throws Exception
+	{
+		buildHtml();
+		addToResponse(formatter.head());
+	}
+
+	protected void startFitClient(String classPath) throws Exception
+	{
 		command = buildCommand(data, getClassName(data, request), classPath);
 		client = new CommandRunningFitClient(this, command, context.port, context.socketDealer);
 		log = new ExecutionLog(page, client.commandRunner);
 
 		client.start();
-		if(client.isSuccessfullyStarted())
-		{
-			client.send(testableHtml);
-			client.done();
-			client.join();
-		}
-
-		completeResponse();
 	}
 
 	protected PageCrawler getPageCrawler()
@@ -112,7 +153,7 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 		response.add(formatter.executionStatus(log));
 	}
 
-	protected void addToResponse(String output) throws Exception
+	public void addToResponse(String output) throws Exception
 	{
 		if(!closed)
 			response.add(output);
@@ -211,5 +252,10 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 	protected int exitCode()
 	{
 		return assertionCounts.wrong + assertionCounts.exceptions;
+	}
+
+	public static void registerListener(TestEventListener listener)
+	{
+		eventListeners.add(listener);
 	}
 }

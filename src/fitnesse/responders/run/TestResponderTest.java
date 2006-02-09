@@ -131,8 +131,7 @@ public class TestResponderTest extends RegexTest
 		assertHasRegexp("ErrorLog", results);
 
 		WikiPage errorLog = errorLogsParentPage.getChildPage(testPage.getName());
-		String errorLogContent = errorLog.getData().getContent();
-		return errorLogContent;
+		return errorLog.getData().getContent();
 	}
 
 	public void testHasExitValueHeader() throws Exception
@@ -249,6 +248,20 @@ public class TestResponderTest extends RegexTest
 		assertEquals(SecureTestOperation.class, operation.getClass());
 	}
 
+	public void testNotifyListeners() throws Exception
+	{
+		MockTestEventListener listener1 = new MockTestEventListener();
+		MockTestEventListener listener2 = new MockTestEventListener();
+
+		TestResponder.registerListener(listener1);      
+		TestResponder.registerListener(listener2);
+
+		doSimpleRun(passFixtureTable());
+
+		assertEquals(true, listener1.gotPreTestNotification);
+		assertEquals(true, listener2.gotPreTestNotification);
+	}
+
 	private String errorWritingTable(String message)
 	{
 		return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +
@@ -276,4 +289,5 @@ public class TestResponderTest extends RegexTest
 	{
 		return "|!-fitnesse.testutil.PassFixture-!|\n";
 	}
+
 }

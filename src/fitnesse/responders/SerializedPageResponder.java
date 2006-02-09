@@ -15,7 +15,7 @@ public class SerializedPageResponder implements SecureResponder
 {
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
-
+Thread.sleep(1000);
     WikiPage page = getRequestedPage(request, context);
     if(page == null)
 			return new NotFoundResponder().makeResponse(context, request);

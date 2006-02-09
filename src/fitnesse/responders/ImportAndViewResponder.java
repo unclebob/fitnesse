@@ -44,7 +44,7 @@ public class ImportAndViewResponder implements Responder, WikiImporterClient
 		{
 			WikiImporter importer = new WikiImporter();
 			importer.setWikiImporterClient(this);
-			importer.parseUrl(importProperty.getSource());
+			importer.parseUrl(importProperty.getSourceUrl());
 			importer.importRemotePageContent(page);
 		}
 	}

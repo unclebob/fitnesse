@@ -4,13 +4,16 @@ package fitnesse.fixtures;
 
 import fit.Fixture;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.*;
 import fitnesse.*;
 
 public class SetUp extends Fixture
 {
   public SetUp() throws Exception
   {
+	  //TODO - MdM - There's got to be a better way.
+	  WikiImportTestEventListener.register();
+
     FitnesseFixtureContext.root = InMemoryPage.makeRoot("RooT");
     FitnesseFixtureContext.responderFactory = new ResponderFactory(FitnesseFixtureContext.baseDir + "/RooT/");
     FitnesseFixtureContext.context = new FitNesseContext(FitnesseFixtureContext.root);

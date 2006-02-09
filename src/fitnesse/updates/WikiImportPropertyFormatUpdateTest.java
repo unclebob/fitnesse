@@ -29,7 +29,7 @@ public class WikiImportPropertyFormatUpdateTest extends UpdateTest
 		WikiImportProperty importProperty = WikiImportProperty.createFrom(properties);
 		assertNotNull(importProperty);
 		assertEquals(root, importProperty.isRoot());
-		assertEquals(source, importProperty.getSource());
+		assertEquals(source, importProperty.getSourceUrl());
 	}
 
 	private void addPropertyToPage(WikiPage page, String propertyName, String propertyValue) throws Exception

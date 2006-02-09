@@ -21,7 +21,7 @@ public class WikiImportPropertyTest extends RegexTest
 	public void testSource() throws Exception
 	{
 		property = new WikiImportProperty("import source");
-		assertEquals("import source", property.getSource());
+		assertEquals("import source", property.getSourceUrl());
 		assertEquals("import source", property.get("Source"));
 	}
 
@@ -34,6 +34,17 @@ public class WikiImportPropertyTest extends RegexTest
 
 		assertTrue(property.isRoot());
 		assertTrue(property.has("IsRoot"));
+	}
+
+	public void testAutoUpdate() throws Exception
+	{
+		assertFalse(property.isAutoUpdate());
+		assertFalse(property.has("AutoUpdate"));
+
+		property.setAutoUpdate(true);
+
+		assertTrue(property.isAutoUpdate());
+		assertTrue(property.has("AutoUpdate"));
 	}
 
 	public void testLastUpdated() throws Exception
@@ -56,13 +67,15 @@ public class WikiImportPropertyTest extends RegexTest
 	{
 		WikiPageProperty rawImportProperty = property.set(WikiImportProperty.PROPERTY_NAME);
 		rawImportProperty.set("IsRoot");
+		rawImportProperty.set("AutoUpdate");
 		rawImportProperty.set("Source", "some source");
 		Date date = new Date();
 		rawImportProperty.set("LastRemoteModification", WikiPageProperty.getTimeFormat().format(date));
 
 		WikiImportProperty importProperty = WikiImportProperty.createFrom(property);
-		assertEquals("some source", importProperty.getSource());
+		assertEquals("some source", importProperty.getSourceUrl());
 		assertTrue(importProperty.isRoot());
+		assertTrue(importProperty.isAutoUpdate());
 		SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 		assertEquals(format.format(date), format.format(importProperty.getLastRemoteModificationTime()));
 	}
@@ -71,11 +84,13 @@ public class WikiImportPropertyTest extends RegexTest
 	{
 		WikiImportProperty importProperty = new WikiImportProperty("some source");
 		importProperty.setRoot(true);
+		importProperty.setAutoUpdate(true);
 		importProperty.addTo(property);
 
 		WikiImportProperty importProperty2 = WikiImportProperty.createFrom(property);
-		assertEquals("some source", importProperty2.getSource());
+		assertEquals("some source", importProperty2.getSourceUrl());
 		assertTrue(importProperty2.isRoot());
+		assertTrue(importProperty2.isAutoUpdate());
 	}
 
 
