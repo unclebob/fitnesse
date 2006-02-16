@@ -1,0 +1,9 @@
+WikiImport:
+ * Only modified pages are updated
+ * Orphaned pages are deleted
+ * Edit button removed, Edit Locally, Edit Remotely buttons added
+ * Automatic Update option
+Symbolic Links to external directories
+Can create tables cells with multiple lines
+Fixed FitServer Classpath bug.
+Support for FitLibrary's SuiteFixture
