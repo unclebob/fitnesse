@@ -8,9 +8,11 @@ namespace fitnesse.handlers
 {
 	public class SymbolRecallHandler : AbstractSymbolHandler
 	{
+		private static Regex matchExpression =
+			new Regex("^<<");
 		public override bool Match(string searchString, System.Type type)
 		{
-			return Regex.IsMatch(searchString, "^<<");
+			return matchExpression.IsMatch(searchString);
 		}
 
 		public override void HandleInput(Fixture fixture, Parse cell, Accessor accessor)

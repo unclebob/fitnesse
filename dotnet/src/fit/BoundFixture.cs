@@ -91,9 +91,10 @@ namespace fit
 			return "".Equals(name.Trim());
 		}
 
+		private static Regex checkIsImpliedByRegex = new Regex("(\\?|!|\\(\\))$");
 		internal virtual bool CheckIsImpliedBy(string name)
 		{
-			return Regex.IsMatch(name, "(\\?|!|\\(\\))$");
+			return checkIsImpliedByRegex.IsMatch(name);
 		}
 	}
 }

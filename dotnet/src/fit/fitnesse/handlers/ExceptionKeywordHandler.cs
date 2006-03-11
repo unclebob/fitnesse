@@ -10,9 +10,11 @@ namespace fitnesse.handlers
 {
 	public class ExceptionKeywordHandler : AbstractCellHandler
 	{
+		private static Regex matchExpression =
+			new Regex("^exception\\[.*\\]$");
 		public override bool Match(string searchString, Type type)
 		{
-			return Regex.IsMatch(searchString, "^exception\\[.*\\]$");
+			return matchExpression.IsMatch(searchString);
 		}
 
 		public override void HandleCheck(Fixture fixture, Parse cell, Accessor accessor)
@@ -40,14 +42,18 @@ namespace fitnesse.handlers
 			}
 		}
 
+		private static Regex regexForExceptionTypeNameOnly =
+			new Regex("^.*: \".*\"$");
 		private bool isExceptionTypeNameOnly(string exceptionContent)
 		{
-			return Regex.IsMatch(exceptionContent, "^.*: \".*\"$");
+			return regexForExceptionTypeNameOnly.IsMatch(exceptionContent);
 		}
 
+		private static Regex regexForMessageOnly =
+			new Regex("^\".*\"$");
 		private bool isMessageOnly(string exceptionContent)
 		{
-			return Regex.IsMatch(exceptionContent, "^\".*\"$");
+			return regexForMessageOnly.IsMatch(exceptionContent);
 		}
 
 		private void evaluateException(bool expression, Fixture fixture, Parse cell, TargetInvocationException e)

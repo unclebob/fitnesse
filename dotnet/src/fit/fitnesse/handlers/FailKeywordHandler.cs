@@ -9,9 +9,11 @@ namespace fitnesse.handlers
 {
 	public class FailKeywordHandler : AbstractCellHandler
 	{
+		private static Regex matchExpression = 
+			new Regex("^fail\\[.*\\]$");
 		public override bool Match(string searchString, Type type)
 		{
-			return Regex.IsMatch(searchString, "^fail\\[.*\\]$");
+			return matchExpression.IsMatch(searchString);
 		}
 
 		public override void HandleCheck(Fixture fixture, Parse cell, Accessor accessor)

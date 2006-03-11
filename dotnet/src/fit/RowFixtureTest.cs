@@ -283,10 +283,9 @@ namespace fit
 			AddQueryValue(new RowFixturePerson("A", "2"));
 			AddQueryValue(new RowFixturePerson("B", "1"));
 			AddQueryValue(new RowFixturePerson("A", "1"));
-			AddRow(new string[] {"A","1"});
-			AddRow(new string[] {"A","2"});
-			AddRow(new string[] {"B","1"});
-			Console.Out.WriteLine(table);
+			AddRow(new string[] {"A", "1"});
+			AddRow(new string[] {"A", "2"});
+			AddRow(new string[] {"B", "1"});
 			fixture.DoTables(table);
 			VerifyCounts(6, 0, 0, 0);
 		}
@@ -393,6 +392,7 @@ namespace fit
 		[Test]
 		public void TestCorrectFormatForMissing()
 		{
+			PeopleLoaderFixture.people.Clear();
 			string loaderFixtureHtml = "<table>" +
 				"<tr><td colspan=\"3\">people loader fixture</td></tr>" +
 				"<tr><td>id</td><td>first name</td><td>last name</td></tr>" +

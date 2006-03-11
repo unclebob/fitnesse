@@ -77,5 +77,4 @@ namespace fit
 			this.TheField = value;
 		}
 	}
-
 }

@@ -23,15 +23,16 @@ namespace fit
 			return convertedName;
 		}
 
+		private static Regex replaceIllegalCharactersWithSpacesRegex = new Regex(@"[^a-zA-Z0-9]");
 		internal string ReplaceIllegalCharactersWithSpaces(string name)
 		{
-			return Regex.Replace(name, @"[^a-zA-Z0-9]", " ");
+			return replaceIllegalCharactersWithSpacesRegex.Replace(name, " ");
 		}
 
+		private static Regex wordSplitterRegex = new Regex(" +");
 		internal IList GetListOfSeparatedWords(string name)
 		{
-			Regex regex = new Regex(" +");
-			string[] wordArray = regex.Split(name);
+			string[] wordArray = wordSplitterRegex.Split(name);
 			IList words = new ArrayList();
 			foreach (string word in wordArray)
 			{
@@ -43,9 +44,10 @@ namespace fit
 			return words;
 		}
 
+		private static Regex separateNumbersFromWordsRegex = new Regex("([a-zA-Z][0-9]|[0-9][a-zA-Z])");
 		internal string SeparateNumbersFromWords(string name)
 		{
-			return Regex.Replace(name, "([a-zA-Z][0-9]|[0-9][a-zA-Z])", new MatchEvaluator(SeparateTwoCharactersEvaluator));
+			return separateNumbersFromWordsRegex.Replace(name, new MatchEvaluator(SeparateTwoCharactersEvaluator));
 		}
 
 		internal string MergeWords(IList words)

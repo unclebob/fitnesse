@@ -9,9 +9,10 @@ namespace fitnesse.handlers
 {
 	public class IntegralRangeHandler : AbstractCellHandler
 	{
+		private static Regex matchExpression = new Regex("^-?[0-9]*\\.\\.-?[0-9]*$");
 		public override bool Match(string searchString, Type type)
 		{
-			return type == typeof (int) && Regex.IsMatch(searchString, "^-?[0-9]*\\.\\.-?[0-9]*$");
+			return type == typeof (int) && matchExpression.IsMatch(searchString);
 		}
 
 		public override bool HandleEvaluate(Fixture fixture, Parse cell, Accessor accessor)

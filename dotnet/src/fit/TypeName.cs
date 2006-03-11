@@ -36,9 +36,10 @@ namespace fit
 			}
 		}
 
+		private Regex isFullyQualifiedRegex = new Regex(@"^([A-Za-z_][A-Za-z\d_]+\.)+[A-Za-z_][A-Za-z\d_]+$");
 		public bool IsFullyQualified()
 		{
-			return Regex.IsMatch(name, @"^([A-Za-z_][A-Za-z\d_]+\.)+[A-Za-z_][A-Za-z\d_]+$");
+			return isFullyQualifiedRegex.IsMatch(name);
 		}
 
 		public string OriginalName

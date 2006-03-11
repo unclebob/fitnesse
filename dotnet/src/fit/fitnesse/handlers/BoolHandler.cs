@@ -58,15 +58,16 @@ namespace fitnesse.handlers
 			}
 		}
 
-
+		private static Regex regexForTrue = new Regex("^([Yy]|[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee])$");
 		private bool ImpliesTrue(string possibleTrue)
 		{
-			return Regex.IsMatch(possibleTrue, "^([Yy]|[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee])$");
+			return regexForTrue.IsMatch(possibleTrue);
 		}
 
+		private static Regex regexForFalse = new Regex("^([Nn]|[Nn][Oo]|[Ff][Aa][Ll][Ss][Ee])$");
 		private bool ImpliesFalse(string possibleFalse)
 		{
-			return Regex.IsMatch(possibleFalse, "^([Nn]|[Nn][Oo]|[Ff][Aa][Ll][Ss][Ee])$");
+			return regexForFalse.IsMatch(possibleFalse);
 		}
 	}
 }
