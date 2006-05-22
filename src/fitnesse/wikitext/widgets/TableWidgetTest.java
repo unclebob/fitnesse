@@ -33,6 +33,16 @@ public class TableWidgetTest extends WidgetTest
 		assertMatches("|a|b|\n|c|\n");
 		assertMatches("|a|\n|b|\n|c|\n");
 		assertNoMatch("|abc\n|\n");
+		assertMatches("|a|\r");
+		assertMatches("|a|b|\r");
+		assertMatches("|a|b|\r|c|\r");
+		assertMatches("|a|\r|b|\r|c|\r");
+		assertNoMatch("|abc\r|\r");
+		assertMatches("|a|\r\n");
+		assertMatches("|a|b|\r\n");
+		assertMatches("|a|b|\r\n|c|\r\n");
+		assertMatches("|a|\r\n|b|\r\n|c|\r\n");
+		assertNoMatch("|abc\r\n|\r\n");
 	}
 
 	public void testRegexpForLiteralTable() throws Exception

@@ -109,11 +109,11 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 	{
 		try
 		{
-			client.kill();
 			log.addException(e);
 			log.addReason("Test execution aborted abnormally with error code " + client.commandRunner.getExitCode());
 
 			completeResponse();
+			client.kill();
 		}
 		catch(Exception e1)
 		{

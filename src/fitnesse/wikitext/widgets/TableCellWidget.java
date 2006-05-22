@@ -4,9 +4,12 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.html.HtmlTag;
+import java.util.regex.*;
 
 public class TableCellWidget extends ParentWidget
 {
+	private static Pattern NEWLINE_PATTERN = Pattern.compile("\\\\(" + LineBreakWidget.REGEXP + ")");
+
 	private TableRowWidget parentRow = null;
 	private boolean isLiteral;
 
@@ -15,7 +18,13 @@ public class TableCellWidget extends ParentWidget
 		super(parentRow);
 		this.parentRow = parentRow;
 		this.isLiteral = isLiteral;
-		addChildWidgets(text.trim());
+		addChildWidgets(groomText(text));
+	}
+
+	private String groomText(String text)
+	{
+		text = text.replaceAll("\\\\\\r", "\r").replaceAll("\\\\\\n", "\n");
+		return text.trim();
 	}
 
 	public String render() throws Exception

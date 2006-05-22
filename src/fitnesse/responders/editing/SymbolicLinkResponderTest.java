@@ -5,6 +5,7 @@ package fitnesse.responders.editing;
 import fitnesse.http.*;
 import fitnesse.wiki.*;
 import fitnesse.*;
+import fitnesse.util.FileUtil;
 import fitnesse.testutil.RegexTest;
 
 public class SymbolicLinkResponderTest extends RegexTest
@@ -23,6 +24,11 @@ public class SymbolicLinkResponderTest extends RegexTest
 		request = new MockRequest();
 		request.setResource("PageOne");
 		responder = new SymbolicLinkResponder();
+	}
+
+	public void tearDown() throws Exception
+	{
+		FileUtil.deleteFileSystemDirectory("testDir");
 	}
 
 	public void testSubmitGoodForm() throws Exception
@@ -76,6 +82,38 @@ public class SymbolicLinkResponderTest extends RegexTest
     assertEquals(412, response.getStatus());
 		String content = ((SimpleResponse)response).getContent();
 		assertSubString("already has a child named SymLink", content);
+		assertSubString("Error Occured", content);
+	}
+
+	public void testSubmitFormForLinkToExternalRoot() throws Exception
+	{
+		FileUtil.createDir("testDir");
+		FileUtil.createDir("testDir/ExternalRoot");
+
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", "file://testDir/ExternalRoot");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkRedirectToProperties(response);
+
+		WikiPage symLink = pageOne.getChildPage("SymLink");
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+
+		WikiPage realPage = ((SymbolicPage)symLink).getRealPage();
+		assertEquals(FileSystemPage.class, realPage.getClass());
+		assertEquals("testDir/ExternalRoot", ((FileSystemPage)realPage).getFileSystemPath());
+	}
+
+	public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception
+	{
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", "file://testDir/ExternalRoot");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+    assertEquals(404, response.getStatus());
+		String content = ((SimpleResponse)response).getContent();
+		assertSubString("Cannot create link to the file system path, <b>file://testDir/ExternalRoot</b>.", content);
 		assertSubString("Error Occured", content);
 	}
 

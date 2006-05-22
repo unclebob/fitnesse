@@ -175,6 +175,22 @@ public class PropertiesResponderTest extends RegexTest
 		assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create Symbolic Link\"/>", content);
 	}
 
+	public void testSymbolicLinkListing() throws Exception
+	{
+		WikiPage page = root.addChildPage("SomePage");
+		PageData data = page.getData();
+		WikiPageProperties props = data.getProperties();
+		WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
+		symProp.set("InternalPage", ".PageOne.ChildOne");
+		symProp.set("ExternalPage", "file://some/page");
+		page.commit(data);
+
+		getPropertiesContentFromPage(page);
+
+		assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
+		assertSubString("<td>file://some/page</td>", content);
+	}
+
 	public void testActionPropertiesHtml() throws Exception
 	{
 		WikiPage page = root.addChildPage("SomePage");

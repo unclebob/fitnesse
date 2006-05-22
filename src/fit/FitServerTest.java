@@ -8,6 +8,7 @@ import java.net.*;
 import fitnesse.util.StreamReader;
 import fitnesse.testutil.RegexTest;
 import fitnesse.components.FitProtocol;
+import eg.Division;
 
 public class FitServerTest extends RegexTest
 {
@@ -151,6 +152,19 @@ public class FitServerTest extends RegexTest
 		terminateSessionProcess();
 
 		assertEquals(1, process.exitValue());
+	}
+
+	public void testFixtureSupplier() throws Exception
+	{
+		FixtureSupplier fixtureSupplier = new FixtureSupplier(){
+			public Fixture getFixture()
+			{
+				return new Division();
+			}
+		};
+
+		FitServer.registerFixtureSupplier(fixtureSupplier);
+		assertEquals(Division.class, FitServer.getFixture().getClass());
 	}
 
 	private String read(int n) throws Exception

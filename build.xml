@@ -41,7 +41,6 @@
 				<include name="*.dll"/>
 			</fileset>
 		</copy>
-
 	</target>
 
 	<target name="zip_bin" depends="assemble_bin" description="zip up the binary distribution">
@@ -135,9 +134,9 @@
 	</target>
 
 	<target name="test" depends="compile" description="run the unit tests">
-		<junit fork='true' haltonfailure='true'>
+		<junit fork='true' haltonfailure='false'>
 			<classpath refid='classpath'/>
-			<formatter type="brief" usefile="false"/>
+			<formatter type="xml" usefile="true"/>
 			<test name='fitnesse.AllTestSuite'/>
 		</junit>
 	</target>

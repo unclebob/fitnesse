@@ -100,20 +100,7 @@ public abstract class ParentWidget extends WikiWidget
 
 	public void addChildWidgets(String value) throws Exception
 	{
-		Matcher matcher = getBuilder().getWidgetPattern().matcher(value);
-
-		if(matcher.find())
-		{
-			String preString = value.substring(0, matcher.start());
-			if(!"".equals(preString))
-				new TextWidget(this, preString);
-			getBuilder().makeWidget(this, matcher);
-			String postString = value.substring(matcher.end());
-			if(!postString.equals(""))
-				addChildWidgets(postString);
-		}
-		else
-			new TextWidget(this, value);
+		getBuilder().addChildWidgets(value, this);
 	}
 
 	public WidgetBuilder getBuilder()

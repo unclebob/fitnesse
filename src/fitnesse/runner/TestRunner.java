@@ -122,7 +122,7 @@ public class TestRunner
 			request += "&includePaths=yes";
 		return request + " HTTP/1.1\r\n\r\n";
 	}
-
+	                                                                                                                       
 	public Counts getCounts()
 	{
 		return fitServer.getCounts();
@@ -148,7 +148,7 @@ public class TestRunner
 
 	public static void addItemsToClasspath(String classpathItems) throws Exception
 	{
-		String[] items = classpathItems.split("[:;]");
+		String[] items = classpathItems.split(System.getProperty("path.separator"));
 		for(int i = 0; i < items.length; i++)
 		{
 			String item = items[i];

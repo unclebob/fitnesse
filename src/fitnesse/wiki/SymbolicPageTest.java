@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import junit.framework.TestCase;
 import java.util.List;
+import fitnesse.util.FileUtil;
 
 public class SymbolicPageTest extends TestCase
 {
@@ -16,6 +17,7 @@ public class SymbolicPageTest extends TestCase
 	private String pageTwoPath = "PageTwo";
 	private String pageOneContent = "page one";
 	private String pageTwoContent = "page two";
+	private WikiPage externalRoot;
 
 	public void setUp() throws Exception
 	{
@@ -24,6 +26,11 @@ public class SymbolicPageTest extends TestCase
 		pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
 		pageTwo = crawler.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
 		symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
+	}
+
+	public void tearDown() throws Exception
+	{
+		FileUtil.deleteFileSystemDirectory("testDir");
 	}
 
 	public void testCreation() throws Exception
@@ -45,21 +52,18 @@ public class SymbolicPageTest extends TestCase
 
 	public void testCommitInternal() throws Exception
 	{
-		PageData data = symPage.getData();
-		data.setContent("new content");
-		symPage.commit(data);
+		commitNewContent(symPage);
 
-		data = pageTwo.getData();
+		PageData data = pageTwo.getData();
 		assertEquals("new content", data.getContent());
 
 		data = symPage.getData();
 		assertEquals("new content", data.getContent());
-
 	}
 
 	public void testGetChild() throws Exception
 	{
-  	WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
+	  WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
 		WikiPage page = symPage.getChildPage("ChildPage");
 		assertNotNull(page);
 		assertEquals(SymbolicPage.class, page.getClass());
@@ -94,5 +98,57 @@ public class SymbolicPageTest extends TestCase
 		deepPage = crawler.getPage(root, PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));
 		children = deepPage.getChildren();
 		assertEquals(1, children.size());
+	}
+
+	public void testSymbolicPageUsingExternalDirectory() throws Exception
+	{
+		CreateExternalRoot();
+
+		assertEquals(2, symPage.getChildren().size());
+
+		WikiPage symPageOne = symPage.getChildPage("ExternalPageOne");
+		assertNotNull(symPageOne);
+		assertEquals("external page one", symPageOne.getData().getContent());
+
+		WikiPage symPageTwo = symPage.getChildPage("ExternalPageTwo");
+		assertNotNull(symPageTwo);
+		assertEquals("external page two", symPageTwo.getData().getContent());
+
+		WikiPage symChild = symPageOne.getChildPage("ExternalChild");
+		assertNotNull(symChild);
+		assertEquals("external child", symChild.getData().getContent());
+	}
+
+	private void CreateExternalRoot() throws Exception
+	{
+		FileUtil.createDir("testDir");
+		FileUtil.createDir("testDir/ExternalRoot");
+		externalRoot = FileSystemPage.makeRoot("testDir/ExternalRoot", "ExternalRoot");
+		PageCrawler externalCrawler = externalRoot.getPageCrawler();
+		WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
+		externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
+		externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
+
+		symPage = new SymbolicPage("SymPage", externalRoot, pageOne);
+	}
+
+	public void testCommittingToExternalRoot() throws Exception
+	{
+		CreateExternalRoot();
+
+		commitNewContent(symPage);
+
+		assertEquals("new content", externalRoot.getData().getContent());
+
+		commitNewContent(symPage.getChildPage("ExternalPageOne"));
+
+		assertEquals("new content", externalRoot.getChildPage("ExternalPageOne").getData().getContent());
+	}
+
+	private void commitNewContent(WikiPage wikiPage) throws Exception
+	{
+		PageData data = wikiPage.getData();
+		data.setContent("new content");
+		wikiPage.commit(data);
 	}
 }

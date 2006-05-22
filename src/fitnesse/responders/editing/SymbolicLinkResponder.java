@@ -6,6 +6,7 @@ import fitnesse.*;
 import fitnesse.responders.*;
 import fitnesse.wiki.*;
 import fitnesse.http.*;
+import java.io.File;
 
 public class SymbolicLinkResponder implements Responder
 {
@@ -57,25 +58,62 @@ public class SymbolicLinkResponder implements Responder
 		String linkName = (String)request.getInput("linkName");
 		String linkPath = (String)request.getInput("linkPath");
 
-    if(!crawler.pageExists(context.root, PathParser.parse(linkPath)))
-    {
-	    response = new ErrorResponder("The page to which you are attemting to link, " + linkPath + ", doesn't exist.").makeResponse(context, null);
-	    response.setStatus(404);
-    }
-    else if(page.hasChildPage(linkName))
-    {
-	    response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
-	    response.setStatus(412);
-    }
+		if(isFilePath(linkPath) && !isValidDirectoryPath(linkPath))
+		{
+			String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +
+				"<br> The canonical file system path used was <b>" + createFileFromPath(linkPath).getCanonicalPath() + ".</b>" +
+				"<br>Either it doesn't exist or it's not a directory.";
+			response = new ErrorResponder(message).makeResponse(context, null);
+			response.setStatus(404);
+		}
+		else if(!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath))
+		{
+			response = new ErrorResponder("The page to which you are attemting to link, " + linkPath + ", doesn't exist.").makeResponse(context, null);
+			response.setStatus(404);
+		}
+		else if(page.hasChildPage(linkName))
+		{
+			response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
+			response.setStatus(412);
+		}
 		else
-    {
+		{
 			PageData data = page.getData();
-	    WikiPageProperties properties = data.getProperties();
-	    WikiPageProperty symLinks = getSymLinkProperty(properties);
-	    symLinks.set(linkName, linkPath);
+			WikiPageProperties properties = data.getProperties();
+			WikiPageProperty symLinks = getSymLinkProperty(properties);
+			symLinks.set(linkName, linkPath);
 			page.commit(data);
 			setRedirect(resource);
-    }
+		}
+	}
+
+	private boolean isValidDirectoryPath(String linkPath) throws Exception
+	{
+		File file = createFileFromPath(linkPath);
+
+		if(file.exists())
+			return file.isDirectory();
+		else
+		{
+			File parentDir = file.getParentFile();
+			return parentDir.exists() && parentDir.isDirectory();
+		}
+	}
+
+	private File createFileFromPath(String linkPath)
+	{
+		String pathToFile = linkPath.substring(7);
+		return new File(pathToFile);
+	}
+
+	private boolean isFilePath(String linkPath)
+	{
+		return linkPath.startsWith("file://");
+	}
+
+	private boolean isInternalPageThatDoesntExist(String linkPath) throws Exception
+	{
+		return !crawler.pageExists(context.root, PathParser.parse(linkPath));
 	}
 
 	private WikiPageProperty getSymLinkProperty(WikiPageProperties properties)

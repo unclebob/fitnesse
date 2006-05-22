@@ -6,6 +6,7 @@ import fitnesse.wiki.MockWikiPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.*;
 import junit.framework.TestCase;
+import java.util.Iterator;
 
 public class WidgetBuilderTest extends TestCase
 {
@@ -95,6 +96,7 @@ public class WidgetBuilderTest extends TestCase
 		assertEquals(1, page.numberOfChildren());
 		assertEquals(PreformattedWidget.class, page.nextChild().getClass());
 	}
+
 	public void testEmailWidget() throws Exception
 	{
 		ParentWidget page = new WidgetRoot("someone@somewhere.com", mockSource);
@@ -201,6 +203,25 @@ public class WidgetBuilderTest extends TestCase
 		assertEquals(1, page.numberOfChildren());
 		assertEquals(VirtualWikiWidget.class, page.nextChild().getClass());
 	}
+
+// TODO MdM A Test that reveals FitNesse's weakness for parsing large wiki documents.
+//
+//	public void testLargeTable() throws Exception
+//	{
+//		StringBuffer buffer = new StringBuffer();
+//		for(int i = 0; i < 1000; i++)
+//			buffer.append("|'''bold'''|''italic''|!c centered|\n");
+//
+//		try
+//		{
+//			WidgetRoot root = new WidgetRoot(buffer.toString(), new MockWikiPage());
+//			root.render();
+//		}
+//		catch(StackOverflowError e)
+//		{
+//			fail("Got error with big table: " + e);
+//		}
+//	}
 
 	private void testWikiWordInParentWidget(String input, Class expectedClass, String wikiWordText, int subChildren) throws Exception
 	{

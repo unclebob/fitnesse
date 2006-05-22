@@ -92,6 +92,7 @@ public class Fixture
 			doTable(tables);
 		} catch (Exception ex) {
 			exception(tables.at(0, 0, 0), ex);
+			listener.tableFinished(tables);
 			return;
 		}
 		interpretFollowingTables(tables);

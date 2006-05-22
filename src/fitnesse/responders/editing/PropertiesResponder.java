@@ -217,12 +217,21 @@ public class PropertiesResponder implements SecureResponder
 		for(Iterator iterator = symbolicLinkNames.iterator(); iterator.hasNext();)
 		{
 			String linkName = (String) iterator.next();
-			WikiPagePath path = PathParser.parse(symLinksProperty.get(linkName));
 			HtmlElement nameItem = new RawHtml(linkName);
-			HtmlTag pathItem = HtmlUtil.makeLink(PathParser.render(path), PathParser.render(path));
+			HtmlElement pathItem = makeHtmlForSymbolicPath(symLinksProperty, linkName);
 			HtmlTag actionItem = HtmlUtil.makeLink(resource + "?responder=symlink&removal=" + linkName, "remove");
 			table.addRow(new HtmlElement[]{nameItem, pathItem, actionItem});
 		}
+	}
+
+	private HtmlElement makeHtmlForSymbolicPath(WikiPageProperty symLinksProperty, String linkName)
+	{
+		String linkPath = symLinksProperty.get(linkName);
+		WikiPagePath wikiPagePath = PathParser.parse(linkPath);
+		if(wikiPagePath != null)
+			return HtmlUtil.makeLink(PathParser.render(wikiPagePath), PathParser.render(wikiPagePath));
+		else
+			return new RawHtml(linkPath);
 	}
 
 	public static String getVirtualWikiValue(PageData data) throws Exception

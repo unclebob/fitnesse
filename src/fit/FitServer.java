@@ -1,8 +1,6 @@
 // Modified or written by Object Mentor, Inc. for inclusion with FitNesse.
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
-// Copyright (C) 2003,2004 by Robert C. Martin and Micah D. Martin. All rights reserved.
-// Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
 import java.io.*;
@@ -13,6 +11,8 @@ import fit.exception.FitParseException;
 
 public class FitServer
 {
+	private static FixtureSupplier FIXTURE_SUPPLIER = new DefaultFixtureSupplier();
+
 	public String input;
 	public Parse tables;
 	public Fixture fixture = new Fixture();
@@ -21,12 +21,13 @@ public class FitServer
 	private OutputStream socketOutput;
 	private StreamReader socketReader;
 	private boolean verbose = false;
-  private String host;
-  private int port;
-  private int socketToken;;
-  private Socket socket;
+	private String host;
+	private int port;
+	private int socketToken;
+	;
+	private Socket socket;
 
-  public FitServer(String host, int port, boolean verbose)
+	public FitServer(String host, int port, boolean verbose)
 	{
 		this.host = host;
 		this.port = port;
@@ -51,15 +52,15 @@ public class FitServer
 		validateConnection();
 		process();
 		closeConnection();
-    exit();
+		exit();
 	}
 
-  public void closeConnection() throws IOException
-  {
-    socket.close();
-  }
+	public void closeConnection() throws IOException
+	{
+		socket.close();
+	}
 
-  public void process()
+	public void process()
 	{
 		fixture.listener = fixtureListener;
 		try
@@ -96,9 +97,9 @@ public class FitServer
 		return FitProtocol.readDocument(socketReader, size);
 	}
 
-	private Fixture newFixture()
+	protected Fixture newFixture()
 	{
-		fixture = new Fixture();
+		fixture = getFixture();
 		fixture.listener = fixtureListener;
 		return fixture;
 	}
@@ -117,12 +118,12 @@ public class FitServer
 			usage();
 	}
 
-  private void usage()
-  {
-    System.out.println("usage: java fit.FitServer [-v] host port socketTicket");
-    System.out.println("\t-v\tverbose");
-    System.exit(-1);
-  }
+	private void usage()
+	{
+		System.out.println("usage: java fit.FitServer [-v] host port socketTicket");
+		System.out.println("\t-v\tverbose");
+		System.exit(-1);
+	}
 
 	protected void exception(Exception e)
 	{
@@ -153,7 +154,7 @@ public class FitServer
 
 	public void establishConnection(String httpRequest) throws Exception
 	{
-    socket = new Socket(host, port);
+		socket = new Socket(host, port);
 		socketOutput = socket.getOutputStream();
 		socketReader = new StreamReader(socket.getInputStream());
 		byte[] bytes = httpRequest.getBytes("UTF-8");
@@ -163,11 +164,11 @@ public class FitServer
 	}
 
 	private String makeHttpRequest()
-  {
+	{
 		return "GET /?responder=socketCatcher&ticket=" + socketToken + " HTTP/1.1\r\n\r\n";
-  }
+	}
 
-  public void validateConnection() throws Exception
+	public void validateConnection() throws Exception
 	{
 		print("validating connection...");
 		int statusSize = FitProtocol.readSize(socketReader);
@@ -215,6 +216,28 @@ public class FitServer
 		FitProtocol.writeCounts(counts, socketOutput);
 	}
 
+	public static void registerFixtureSupplier(FixtureSupplier fixtureSupplier)
+	{
+		FIXTURE_SUPPLIER = fixtureSupplier;
+	}
+
+	public static Fixture getFixture()
+	{
+		return FIXTURE_SUPPLIER.getFixture();
+	}
+
+	public static void clearFixtureSupplierRegistration()
+	{
+		FIXTURE_SUPPLIER = new DefaultFixtureSupplier();
+	}
+
+	private static class DefaultFixtureSupplier implements FixtureSupplier
+	{
+		public Fixture getFixture()
+		{
+			return new Fixture();
+		}
+	}
 	class TablePrintingFixtureListener implements FixtureListener
 	{
 		public void tableFinished(Parse table)

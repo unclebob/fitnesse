@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import junit.framework.TestCase;
 import java.util.List;
+import java.io.File;
+import fitnesse.util.FileUtil;
 
 public class BaseWikiPageTest extends TestCase
 {
@@ -18,9 +20,14 @@ public class BaseWikiPageTest extends TestCase
 		linkingPage.addChildPage("ChildPage");
 	}
 
+	public void tearDown() throws Exception
+	{
+		FileUtil.deleteFileSystemDirectory("testDir");
+	}
+
 	public void testGetChildrenUsesSymbolicPages() throws Exception
 	{
-		createLink();
+		createLink("LinkedPage");
 
 		List children = linkingPage.getChildren();
 		assertEquals(2, children.size());
@@ -31,16 +38,48 @@ public class BaseWikiPageTest extends TestCase
 
 	public void testGetChildUsesSymbolicPages() throws Exception
 	{
-		createLink();
+		createLink("LinkedPage");
 		checkSymbolicPage(linkingPage.getChildPage("SymLink"));
 	}
 
-	private void createLink() throws Exception
+	public void testCanCreateSymLinksToExternalDirectories() throws Exception
+	{
+		FileUtil.createDir("testDir");
+		FileUtil.createDir("testDir/ExternalRoot");
+
+		createLink("file://testDir/ExternalRoot");
+
+		checkExternalLink();
+	}
+
+	private void checkExternalLink() throws Exception
+	{
+		WikiPage symPage = linkingPage.getChildPage("SymLink");
+		assertNotNull(symPage);
+		assertEquals(SymbolicPage.class, symPage.getClass());
+
+		WikiPage realPage = ((SymbolicPage)symPage).getRealPage();
+		assertEquals(FileSystemPage.class, realPage.getClass());
+
+		assertEquals("testDir/ExternalRoot", ((FileSystemPage)realPage).getFileSystemPath());
+		assertEquals("ExternalRoot", ((FileSystemPage)realPage).getName());
+	}
+
+	public void testExternalSymbolicLinkToNewDirectory() throws Exception
+	{
+		FileUtil.createDir("testDir");
+		createLink("file://testDir/ExternalRoot");
+
+		checkExternalLink();
+		assertTrue(new File("testDir/ExternalRoot").exists());
+	}
+
+	private void createLink(String linkedPagePath) throws Exception
 	{
 		PageData data = linkingPage.getData();
 		WikiPageProperties properties = data.getProperties();
 		properties.set(SymbolicPage.PROPERTY_NAME);
-		properties.getProperty(SymbolicPage.PROPERTY_NAME).set("SymLink", "LinkedPage");
+		properties.getProperty(SymbolicPage.PROPERTY_NAME).set("SymLink", linkedPagePath);
 		linkingPage.commit(data);
 	}
 
@@ -51,5 +90,4 @@ public class BaseWikiPageTest extends TestCase
 		assertEquals("SymLink", symPage.getName());
 		assertEquals("LinkedPage", symPage.getRealPage().getName());
 	}
-
 }

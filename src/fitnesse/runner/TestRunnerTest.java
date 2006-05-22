@@ -178,6 +178,22 @@ public class TestRunnerTest extends RegexTest
 		assertSubString(sampleUrl.toString(), classpath);
 	}
 
+	public void testAddMultipleUrlsToClasspath() throws Exception
+	{
+		String separator = System.getProperty("path.separator");
+		String paths = "/blah/blah" + separator + "C" + otherSeperator(separator) + "\\foo\\bar";
+		TestRunner.addItemsToClasspath(paths);
+		URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+		String classpath = classpathAsString(classLoader);
+		assertSubString("/blah/blah", classpath);
+		assertSubString("C" + otherSeperator(separator) + "\\foo\\bar", classpath);
+	}
+
+	private String otherSeperator(String separator)
+	{
+		return separator.equals(";") ? ":" : ";";
+	}
+
 	private String classpathAsString(URLClassLoader classLoader)
 	{
 		URL[] urls = classLoader.getURLs();

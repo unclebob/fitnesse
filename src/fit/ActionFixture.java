@@ -21,7 +21,7 @@ public class ActionFixture extends Fixture
     try
     {
       Method action = getClass().getMethod(cells.text(), empty);
-      action.invoke(this, empty);
+      action.invoke(this);
     }
     catch(Exception e)
     {
@@ -61,7 +61,7 @@ public class ActionFixture extends Fixture
 
   public void press() throws Exception
   {
-    method(0).invoke(actor, empty);
+    method(0).invoke(actor);
   }
 
   public void check() throws Throwable

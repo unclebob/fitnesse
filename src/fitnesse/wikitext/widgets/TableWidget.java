@@ -8,8 +8,9 @@ import java.util.regex.Pattern;
 
 public class TableWidget extends ParentWidget
 {
-	public static final String REGEXP = "^!?(?:\\|[^\r\n]*?\\|" + LineBreakWidget.REGEXP + ")+";
-	private static final Pattern pattern = Pattern.compile("(!?)(\\|[^\r\n]*?)\\|" + LineBreakWidget.REGEXP);
+	public static final String LF = LineBreakWidget.REGEXP;
+	public static final String REGEXP = "^!?(?:\\|[^\r\n]*?\\|" + LF + ")+";
+	private static final Pattern pattern = Pattern.compile("(!?)(\\|[^\r\n]*?)\\|" + LF);
 
 	public boolean isTestTable;
 	private int columns = 0;

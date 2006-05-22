@@ -3,6 +3,8 @@
 package fitnesse.wiki;
 
 import java.util.*;
+import java.io.File;
+import fitnesse.util.FileUtil;
 
 public abstract class BaseWikiPage implements WikiPage
 {
@@ -57,6 +59,32 @@ public abstract class BaseWikiPage implements WikiPage
 		String linkPath = symLinkProperty.get(linkName);
 		if(linkPath == null)
 			return null;
+		if(linkPath.startsWith("file://"))
+			return createExternalSymbolicLink(linkPath, linkName);
+		else
+			return createInternalSymbolicPage(linkPath, linkName);
+	}
+
+	private WikiPage createExternalSymbolicLink(String linkPath, String linkName) throws Exception
+	{
+		String fullPagePath = linkPath.substring(7);
+		File file = new File(fullPagePath);
+		File parentDirectory = file.getParentFile();
+		if(parentDirectory.exists())
+		{
+			if(!file.exists())
+				FileUtil.makeDir(file.getPath());
+			if(file.isDirectory())
+			{
+				WikiPage externalRoot = FileSystemPage.makeRoot(parentDirectory.getPath(), file.getName());
+				return new SymbolicPage(linkName, externalRoot, this);
+			}
+		}
+		return null;
+	}
+
+	private WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws Exception
+	{
 		WikiPagePath path = PathParser.parse(linkPath);
 		PageCrawler crawler = getPageCrawler();
 		WikiPage page = crawler.getPage(crawler.getRoot(this), path);
