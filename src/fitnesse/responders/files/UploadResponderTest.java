@@ -63,6 +63,22 @@ public class UploadResponderTest extends TestCase
 		assertEquals("/files/", response.getHeader("Location"));
 	}
 
+	public void testMakeResponseSpaceInDirectoryName() throws Exception
+	{
+		FileUtil.makeDir("testdir/files/Folder With Space");
+		request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
+		request.setResource("files/Folder%20With%20Space/");
+
+		Response response = responder.makeResponse(context, request);
+
+		File file = new File("testdir/files/Folder With Space/filename.txt");
+		assertTrue(file.exists());
+		assertEquals("test content", FileUtil.getFileContent(file));
+
+		assertEquals(303, response.getStatus());
+		assertEquals("/files/Folder%20With%20Space/", response.getHeader("Location"));
+	}
+
 	public void testMakeRelativeFilename() throws Exception
 	{
 		String name1 = "name1.txt";

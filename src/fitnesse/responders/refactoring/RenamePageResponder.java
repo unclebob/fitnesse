@@ -16,13 +16,16 @@ public class RenamePageResponder implements SecureResponder
 {
 	private String qualifiedName;
 	private String newName;
+	private boolean refactorReferences;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
 		qualifiedName = request.getResource();
 		newName = (String) request.getInput("newName");
+		refactorReferences = request.hasInput("refactorReferences");
 
 		Response response;
+
 
 		if(newName != null && !qualifiedName.equals("FrontPage") && WikiWordWidget.isSingleWikiWord(newName))
 		{
@@ -69,13 +72,19 @@ public class RenamePageResponder implements SecureResponder
 
 	private String doRename(WikiPage root, WikiPage pageToRename, WikiPage parent, String newName, WikiPagePath subjectPath) throws Exception
 	{
-		PageReferenceRenamer renamer = new PageReferenceRenamer(root);
-		renamer.renameReferences(pageToRename, newName);
+		if(refactorReferences)
+			renameReferences(root, pageToRename, newName);
 		rename(parent, pageToRename.getName(), newName, root);
 
 		subjectPath.pop();
 		subjectPath.addName(newName);
 		return PathParser.render(subjectPath);
+	}
+
+	private void renameReferences(WikiPage root, WikiPage pageToRename, String newName) throws Exception
+	{
+		PageReferenceRenamer renamer = new PageReferenceRenamer(root);
+		renamer.renameReferences(pageToRename, newName);
 	}
 
 	private static boolean rename(WikiPage context, String oldName, String newName, WikiPage root) throws Exception

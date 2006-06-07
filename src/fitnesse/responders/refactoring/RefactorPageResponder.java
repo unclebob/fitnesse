@@ -65,7 +65,6 @@ public class RefactorPageResponder implements SecureResponder
 		TagGroup group = new TagGroup();
 		group.add(HtmlUtil.BR);
 		group.add(makeHeaderTag("Move:"));
-		group.add("Moving this page will find all references and change them accordingly.");
 		group.add(makeMovePageForm());
 		return group;
 	}
@@ -77,6 +76,9 @@ public class RefactorPageResponder implements SecureResponder
 		form.add("New Location: ");
 		form.add(HtmlUtil.makeInputTag("text", "newLocation", ""));
 		form.add(HtmlUtil.BR);
+		form.add(HtmlUtil.makeInputTag("checkbox", "refactorReferences"));
+		form.add(" - Find all references to this page and change them accordingly (May take several minutes)");
+		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("submit", "", "Move Page"));
 		return form;
 	}
@@ -86,7 +88,6 @@ public class RefactorPageResponder implements SecureResponder
 		TagGroup group = new TagGroup();
 		group.add(HtmlUtil.BR);
 		group.add(makeHeaderTag("Rename:"));
-		group.add("Renaming this page will find all references and change them accordingly.");
 		group.add(makeRenamePageForm());
 		return group;
 	}
@@ -97,6 +98,9 @@ public class RefactorPageResponder implements SecureResponder
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "renamePage"));
 		form.add("  New Name: ");
 		form.add(HtmlUtil.makeInputTag("text", "newName", ""));
+		form.add(HtmlUtil.BR);
+		form.add(HtmlUtil.makeInputTag("checkbox", "refactorReferences"));
+		form.add(" - Find all references to this page and change them accordingly (May take several minutes)");
 		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("submit", "", "Rename Page"));
 		return form;

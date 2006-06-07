@@ -33,7 +33,7 @@ public class RenamePageResponderTest extends ResponderTest
 		String invalidName = "FirstName.SecondName";
 		String pageName = "MyPage";
 		crawler.addPage(root, PathParser.parse(pageName), "content");
-		Response response = doRename(pageName, invalidName);
+		Response response = doRename(pageName, invalidName, true);
 
 		assertHasRegexp("Cannot rename", getResponseContent(response));
 	}
@@ -42,7 +42,7 @@ public class RenamePageResponderTest extends ResponderTest
 	{
 		String frontPageName = "FrontPage";
 		crawler.addPage(root, PathParser.parse(frontPageName), "Content");
-		Response response = doRename(frontPageName, "ReNamed");
+		Response response = doRename(frontPageName, "ReNamed", true);
 		assertNotNull(response);
 		assertSubString("Cannot rename", getResponseContent(response));
 	}
@@ -51,7 +51,7 @@ public class RenamePageResponderTest extends ResponderTest
 	{
 		WikiPage pageOne = crawler.addPage(root, PathParser.parse("OneOne"), "Content");
 		crawler.addPage(pageOne, PathParser.parse("TwoOne"));
-		Response response = doRename("OneOne.TwoOne", "ReName");
+		Response response = doRename("OneOne.TwoOne", "ReName", true);
 		assertNotNull(response);
 		assertEquals(303, response.getStatus());
 		assertEquals("OneOne.ReName", response.getHeader("Location"));
@@ -68,7 +68,7 @@ public class RenamePageResponderTest extends ResponderTest
 		assertTrue(crawler.pageExists(root, originalPath));
 		assertFalse(crawler.pageExists(root, renamedPath));
 
-		doRename(originalName, renamedName);
+		doRename(originalName, renamedName, true);
 
 		assertTrue(crawler.pageExists(root, renamedPath));
 		assertFalse(crawler.pageExists(root, originalPath));
@@ -79,10 +79,19 @@ public class RenamePageResponderTest extends ResponderTest
 		crawler.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
 		crawler.addPage(root, pageTwoPath, "Page two content");
 
-		doRename(pageTwoName, "PageThree");
-		assertNotNull(root.getChildPage("PageThree"));
+		doRename(pageTwoName, "PageThree", true);
 		WikiPage pageOne = root.getChildPage(pageOneName);
 		assertEquals("Line one\nPageThree\nLine three", pageOne.getData().getContent());
+	}
+
+	public void testReferencesNotChangedWhenDisabled() throws Exception
+	{
+		crawler.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
+		crawler.addPage(root, pageTwoPath, "Page two content");
+
+		doRename(pageTwoName, "PageThree", false);
+		WikiPage pageOne = root.getChildPage(pageOneName);
+		assertEquals("Line one\nPageTwo\nLine three", pageOne.getData().getContent());
 	}
 
 	public void testDontRenameToExistingPage() throws Exception
@@ -90,7 +99,7 @@ public class RenamePageResponderTest extends ResponderTest
 		crawler.addPage(root, pageOnePath, "Page one content");
 		crawler.addPage(root, pageTwoPath, "Page two content");
 
-		Response response = doRename(pageOneName, pageTwoName);
+		Response response = doRename(pageOneName, pageTwoName, true);
 		assertTrue(crawler.pageExists(root, pageOnePath));
 		assertTrue(crawler.pageExists(root, pageTwoPath));
 		assertEquals("Page two content", root.getChildPage(pageTwoName).getData().getContent());
@@ -103,7 +112,7 @@ public class RenamePageResponderTest extends ResponderTest
 		crawler.addPage(root, PathParser.parse("PageOne.ChildPage"), "child page");
 		crawler.addPage(root, PathParser.parse("PageOne.ChildPage.GrandChild"), "grand child");
 
-		doRename(pageOneName, pageTwoName);
+		doRename(pageOneName, pageTwoName, true);
 
 		WikiPagePath path = PathParser.parse("PageTwo.ChildPage");
 		assertTrue(crawler.pageExists(root, path));
@@ -123,10 +132,12 @@ public class RenamePageResponderTest extends ResponderTest
 		return new MockResponseSender(response).sentData();
 	}
 
-	private Response doRename(String fromName, String toName) throws Exception
+	private Response doRename(String fromName, String toName, boolean renameReferences) throws Exception
 	{
 		request.setResource(fromName);
 		request.addInput("newName", toName);
+		if(renameReferences)
+			request.addInput("refactorReferences", "on");
 		return responder.makeResponse(new FitNesseContext(root), request);
 	}
 }

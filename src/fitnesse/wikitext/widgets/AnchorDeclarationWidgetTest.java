@@ -19,25 +19,25 @@ public class AnchorDeclarationWidgetTest extends WidgetTest
 	public void testRendering() throws Exception
 	{
 		AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "!anchor name");
-		assertEquals("<a name=\"name\"/>", declarationWidget.render().trim());
+		assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
 	}
 
 	public void testRenderingManyWordMatch() throws Exception
 	{
 		AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "!anchor name some other stuff");
-		assertEquals("<a name=\"name\"/>", declarationWidget.render().trim());
+		assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
 	}
 
 	public void testRenderingTextBefore() throws Exception
 	{
 		AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "stuff!anchor name some other stuff");
-		assertEquals("<a name=\"name\"/>", declarationWidget.render().trim());
+		assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
 	}
 
 	public void testRenderingTextBeforeWithSpace() throws Exception
 	{
 		AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "stuff !anchor name some other stuff");
-		assertEquals("<a name=\"name\"/>", declarationWidget.render().trim());
+		assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
 	}
 
 	protected String getRegexp()

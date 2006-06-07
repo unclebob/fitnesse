@@ -62,7 +62,7 @@ public class HtmlUtil
 
 	public static HtmlTag makeAnchorTag(String name)
 	{
-		HtmlTag anchorTag = new HtmlTag("a");
+		HtmlTag anchorTag = new HtmlTag("a", " ");
 		anchorTag.addAttribute("name", name);
 		return anchorTag;
 	}

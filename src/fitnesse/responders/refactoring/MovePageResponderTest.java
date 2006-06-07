@@ -54,7 +54,7 @@ public class MovePageResponderTest extends ResponderTest
 		assertTrue(crawler.pageExists(root, PathParser.parse(sourcePage)));
 		assertFalse(crawler.pageExists(root, PathParser.parse(destinationPage)));
 
-		movePage(sourcePage, destinationParent);
+		movePage(sourcePage, destinationParent, true);
 		assertTrue(crawler.pageExists(root, PathParser.parse(destinationPage)));
 		assertFalse(crawler.pageExists(root, PathParser.parse(sourcePage)));
 
@@ -65,21 +65,23 @@ public class MovePageResponderTest extends ResponderTest
 		assertEquals("someValue", data.getAttribute("someAttribute"));
 	}
 
-	private SimpleResponse movePage(String pageToMove, String newParent) throws Exception  //todo RCM 2/8/05 Change all callers to use wikiPagePath version below.
+	private SimpleResponse movePage(String pageToMove, String newParent, boolean refactorReferences) throws Exception  //todo RCM 2/8/05 Change all callers to use wikiPagePath version below.
 	{
 		request.addInput("newLocation", newParent);
 		request.setResource(pageToMove);
+		if(refactorReferences)
+			request.addInput("refactorReferences", "on");
 		return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 	}
 
-	private SimpleResponse movePage(WikiPagePath pageToMove, WikiPagePath newParent) throws Exception
+	private SimpleResponse movePage(WikiPagePath pageToMove, WikiPagePath newParent, boolean refactorReferences) throws Exception
 	{
-		return movePage(PathParser.render(pageToMove), PathParser.render(newParent));
+		return movePage(PathParser.render(pageToMove), PathParser.render(newParent), refactorReferences);
 	}
 
 	public void testReferencesChanged() throws Exception
 	{
-		movePage("PageOne.PageA", "PageTwo");
+		movePage("PageOne.PageA", "PageTwo", true);
 		pageOne = root.getChildPage("PageOne");
 		assertEquals(".PageTwo.PageA", pageOne.getData().getContent());
 	}
@@ -87,16 +89,24 @@ public class MovePageResponderTest extends ResponderTest
 	public void testReferenceToSubPageChanged() throws Exception
 	{
 		crawler.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
-		movePage("PageOne", "PageTwo");
+		movePage("PageOne", "PageTwo", true);
 		WikiPage referingPage = root.getChildPage("ReferingPage");
 		assertEquals(".PageTwo.PageOne.PageA", referingPage.getData().getContent());
+	}
+
+	public void testReferenceToSubPageNotChangedWhenDisabled() throws Exception
+	{
+		crawler.addPage(root, PathParser.parse("ReferingPage"), "PageOne.PageA");
+		movePage("PageOne", "PageTwo", false);
+		WikiPage referingPage = root.getChildPage("ReferingPage");
+		assertEquals("PageOne.PageA", referingPage.getData().getContent());
 	}
 
 	public void testCantMoveToSelf() throws Exception
 	{
 		pageA.getData().setAttribute("someAttribute", "someValue");
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
-		SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "PageOne");
+		SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "PageOne", true);
 		assertSubString("Cannot move", response.getContent());
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
 	}
@@ -108,7 +118,7 @@ public class MovePageResponderTest extends ResponderTest
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageTwo.PageA")));
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
 
-		SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "PageTwo");
+		SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "PageTwo", true);
 		assertSubString("Cannot move", response.getContent());
 		assertEquals("someContent", pageTwo.getChildPage("PageA").getData().getContent());
 		assertEquals("content", pageA.getData().getContent());
@@ -140,7 +150,7 @@ public class MovePageResponderTest extends ResponderTest
 		crawler.addPage(root, sourceChildTwoPath, "child2Content");
 		crawler.addPage(root, sourceGrandChildPath);
 
-		movePage(parentToMove, destinationParent);
+		movePage(parentToMove, destinationParent, true);
 		WikiPage movedPage = crawler.getPage(root, destinationPagePath);
 		assertFalse(crawler.pageExists(root, sourceChildOnePath));
 		assertFalse(crawler.pageExists(root, sourceChildTwoPath));
@@ -153,7 +163,7 @@ public class MovePageResponderTest extends ResponderTest
 
 	public void testCantMovePageBelowChild() throws Exception
 	{
-		SimpleResponse response = (SimpleResponse) movePage("PageOne", "PageOne.PageA");
+		SimpleResponse response = (SimpleResponse) movePage("PageOne", "PageOne.PageA", true);
 		assertSubString("Cannot move", response.getContent());
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
 
@@ -163,7 +173,7 @@ public class MovePageResponderTest extends ResponderTest
 	{
 		WikiPagePath originalPath = PathParser.parse("PageOne.PageA");
 		assertTrue(crawler.pageExists(root, originalPath));
-		movePage(originalPath, PathParser.parse(""));
+		movePage(originalPath, PathParser.parse(""), true);
 		WikiPage movedPage = root.getChildPage(pageA.getName());
 		assertFalse(crawler.pageExists(root, originalPath));
 		assertEquals("content", movedPage.getData().getContent());
@@ -175,7 +185,7 @@ public class MovePageResponderTest extends ResponderTest
 	public void testMoveFromRoot() throws Exception
 	{
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne")));
-		movePage("PageOne", "PageTwo");
+		movePage("PageOne", "PageTwo", true);
 		WikiPage movedPage = pageTwo.getChildPage("PageOne");
 		assertFalse(crawler.pageExists(root, PathParser.parse("PageOne")));
 		assertEquals(".PageTwo.PageOne.PageA", movedPage.getData().getContent());
@@ -194,7 +204,7 @@ public class MovePageResponderTest extends ResponderTest
 	public void testBadMoveLocationName() throws Exception
 	{
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
-		SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "NoSuchPage");
+		SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "NoSuchPage", true);
 		assertSubString("Cannot move", response.getContent());
 		assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
 	}
@@ -202,7 +212,7 @@ public class MovePageResponderTest extends ResponderTest
 	public void testMovePageIntoItselfIsNotAllowed() throws Exception
 	{
 		crawler.addPage(root, PathParser.parse("TestPage"));
-		SimpleResponse response = movePage("TestPage", "TestPage");
+		SimpleResponse response = movePage("TestPage", "TestPage", true);
 
 		assertFalse(crawler.pageExists(root, PathParser.parse("TestPage.TestPage")));
 		assertEquals(400, response.getStatus());

@@ -9,6 +9,7 @@ import fitnesse.authentication.*;
 import fitnesse.http.*;
 import java.io.*;
 import java.util.regex.*;
+import java.net.*;
 
 public class UploadResponder implements SecureResponder
 {
@@ -20,7 +21,7 @@ public class UploadResponder implements SecureResponder
 	{
     rootPath = context.rootPagePath;
 		SimpleResponse response = new SimpleResponse();
-		String resource = request.getResource();
+		String resource = request.getResource().replace("%20", " ");
 		UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
 		if(uploadedFile.isUsable())
 		{
@@ -28,7 +29,7 @@ public class UploadResponder implements SecureResponder
 			writeFile(file, uploadedFile);
 		}
 
-		response.redirect("/" + resource);
+		response.redirect("/" +resource.replace(" ", "%20"));
 		return response;
 	}
 

@@ -15,10 +15,12 @@ public class MovePageResponder implements SecureResponder
 {
 	private String nameOfPageToBeMoved;
 	private String newParentName;
+	private boolean refactorReferences;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
 		newParentName = getNameofNewParent(request);
+		refactorReferences = request.hasInput("refactorReferences");
 
 		nameOfPageToBeMoved = request.getResource();
 		WikiPagePath path = PathParser.parse(nameOfPageToBeMoved);
@@ -34,8 +36,8 @@ public class MovePageResponder implements SecureResponder
 
 		if(pageCanBeMoved(pageToBeMoved, newParent, path, newParentPath))
 		{
-			MovedPageReferenceRenamer renamer = new MovedPageReferenceRenamer(context.root);
-			renamer.renameReferences(pageToBeMoved, newParentName);
+			if(refactorReferences)
+				refactorReferences(context, pageToBeMoved);
 			movePage(context.root, crawler.getFullPath(pageToBeMoved), crawler.getFullPath(newParent));
 
 			SimpleResponse response = new SimpleResponse();
@@ -46,6 +48,13 @@ public class MovePageResponder implements SecureResponder
 		{
 			return makeErrorMessageResponder("").makeResponse(context, request);
 		}
+	}
+
+	private void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved)
+		throws Exception
+	{
+		MovedPageReferenceRenamer renamer = new MovedPageReferenceRenamer(context.root);
+		renamer.renameReferences(pageToBeMoved, newParentName);
 	}
 
 	private static String getNameofNewParent(Request request)
