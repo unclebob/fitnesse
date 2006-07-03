@@ -154,19 +154,6 @@ public class FitServerTest extends RegexTest
 		assertEquals(1, process.exitValue());
 	}
 
-	public void testFixtureSupplier() throws Exception
-	{
-		FixtureSupplier fixtureSupplier = new FixtureSupplier(){
-			public Fixture getFixture()
-			{
-				return new Division();
-			}
-		};
-
-		FitServer.registerFixtureSupplier(fixtureSupplier);
-		assertEquals(Division.class, FitServer.getFixture().getClass());
-	}
-
 	private String read(int n) throws Exception
 	{
 		return new StreamReader(socketInput).read(n);

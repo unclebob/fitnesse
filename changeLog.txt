@@ -8,3 +8,6 @@ Fixed FitServer Classpath bug.
 Support for FitLibrary's SuiteFixture
 Applied Joel Shprentz's fix for test execution threading issue on Solaris
 Applied Randy Coulman's fix for for missing exceptions.
+Minor bug fix to the Anchor widget
+Fixed bug in files section where directories with spaces in the names caused problems.
+Rafactoring: made the reference refactoring optional for the Rename and Move refactorings.

@@ -11,8 +11,6 @@ import fit.exception.FitParseException;
 
 public class FitServer
 {
-	private static FixtureSupplier FIXTURE_SUPPLIER = new DefaultFixtureSupplier();
-
 	public String input;
 	public Parse tables;
 	public Fixture fixture = new Fixture();
@@ -99,7 +97,7 @@ public class FitServer
 
 	protected Fixture newFixture()
 	{
-		fixture = getFixture();
+		fixture = new Fixture();
 		fixture.listener = fixtureListener;
 		return fixture;
 	}
@@ -216,28 +214,6 @@ public class FitServer
 		FitProtocol.writeCounts(counts, socketOutput);
 	}
 
-	public static void registerFixtureSupplier(FixtureSupplier fixtureSupplier)
-	{
-		FIXTURE_SUPPLIER = fixtureSupplier;
-	}
-
-	public static Fixture getFixture()
-	{
-		return FIXTURE_SUPPLIER.getFixture();
-	}
-
-	public static void clearFixtureSupplierRegistration()
-	{
-		FIXTURE_SUPPLIER = new DefaultFixtureSupplier();
-	}
-
-	private static class DefaultFixtureSupplier implements FixtureSupplier
-	{
-		public Fixture getFixture()
-		{
-			return new Fixture();
-		}
-	}
 	class TablePrintingFixtureListener implements FixtureListener
 	{
 		public void tableFinished(Parse table)
