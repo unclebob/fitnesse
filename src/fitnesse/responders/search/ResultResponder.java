@@ -154,7 +154,8 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 
 	protected abstract String getTitle() throws Exception;
 
-	protected abstract String getPageFooterInfo(int hits) throws Exception;
+
+    protected abstract String getPageFooterInfo(int hits) throws Exception;
 
 	protected abstract void startSearching() throws Exception;
 
