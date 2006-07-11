@@ -156,6 +156,15 @@ public class FixtureTest extends RegexTest
 		assertNotSubString("Exception", cell.body);
 	}
 
+	public void testClearingSymbols() throws Exception
+	{
+		Fixture.setSymbol("blah", "blah");
+		assertEquals("blah", Fixture.getSymbol("blah"));
+
+		Fixture.ClearSymbols();
+		assertEquals(null, Fixture.getSymbol("blah"));
+	}
+
   private static String makeFixtureTable(String table[][])
   {
     StringBuffer buf = new StringBuffer();

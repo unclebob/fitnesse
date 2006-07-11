@@ -82,21 +82,26 @@ public class Fixture
       }
     }
     listener.tablesFinished(counts);
-    symbols.clear();
+	  ClearSymbols();
   }
 
-  /* Added by Rick to allow a dispatch into DoFixture */
-  protected void interpretTables(Parse tables) {
-		try { // Don't create the first fixture again, because creation may do something important.
-			getArgsForTable(tables); // get them again for the new fixture object
-			doTable(tables);
-		} catch (Exception ex) {
-			exception(tables.at(0, 0, 0), ex);
-			listener.tableFinished(tables);
-			return;
-		}
-		interpretFollowingTables(tables);
+	public static void ClearSymbols()
+	{
+		symbols.clear();
 	}
+
+	/* Added by Rick to allow a dispatch into DoFixture */
+	protected void interpretTables(Parse tables) {
+			try { // Don't create the first fixture again, because creation may do something important.
+				getArgsForTable(tables); // get them again for the new fixture object
+				doTable(tables);
+			} catch (Exception ex) {
+				exception(tables.at(0, 0, 0), ex);
+				listener.tableFinished(tables);
+				return;
+			}
+			interpretFollowingTables(tables);
+		}
   /* Added by Rick */
   private void interpretFollowingTables(Parse tables) {
       listener.tableFinished(tables);
