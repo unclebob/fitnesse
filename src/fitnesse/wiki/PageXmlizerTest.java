@@ -246,4 +246,24 @@ public class PageXmlizerTest extends RegexTest
 		assertNotSame(properties, receivedProperties);
 		assertEquals(properties.toString(), receivedProperties.toString());
 	}
+
+	public void testConditionForXmlization() throws Exception
+	{
+		WikiPage pageOne = root.addChildPage("PageOne");
+		WikiPage pageTwo = root.addChildPage("PageTwo");
+
+		xmlizer.addPageCondition(new XmlizePageCondition() {
+			public boolean canBeXmlized(WikiPage page) throws Exception{
+				return !page.getName().equals("PageTwo");
+			}
+		});
+		Document doc = xmlizer.xmlize(root);
+		String value = XmlUtil.xmlAsString(doc);
+
+		assertSubString("<name>RooT</name>", value);
+		assertSubString("<name>PageOne</name>", value);
+		assertNotSubString("PageTwo", value);
+		checkForLastModifiedTag(root, value);
+		checkForLastModifiedTag(pageOne, value);
+	}
 }

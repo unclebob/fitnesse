@@ -179,6 +179,7 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 		html.title.use(pageType() + ": " + fullPathName);
 		html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(fullPathName, pageType()));
 		html.actions.use(HtmlUtil.makeActions(data));
+		WikiImportProperty.handleImportProperties(html, page, data);
 
 		makeFormatter();
 	}

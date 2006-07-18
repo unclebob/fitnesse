@@ -13,16 +13,24 @@ import org.w3c.dom.Document;
 
 public class SerializedPageResponder implements SecureResponder
 {
+	private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition(){
+				public boolean canBeXmlized(WikiPage page) throws Exception
+				{
+					return ! (page instanceof SymbolicPage);
+				}
+			};
+
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
-Thread.sleep(1000);
     WikiPage page = getRequestedPage(request, context);
     if(page == null)
 			return new NotFoundResponder().makeResponse(context, request);
 
 		if("pages".equals(request.getInput("type")))
 		{
-			Document doc = new PageXmlizer().xmlize(page);
+			PageXmlizer pageXmlizer = new PageXmlizer();
+			pageXmlizer.addPageCondition(xmlizePageCondition);
+			Document doc = pageXmlizer.xmlize(page);
 			SimpleResponse response = makeResponseWithxml(doc);
 			return response;
 		}

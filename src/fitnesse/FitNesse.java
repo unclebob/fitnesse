@@ -14,7 +14,7 @@ import java.io.File;
 
 public class FitNesse
 {
-	public static final String VERSION = "20060220";
+	public static final String VERSION = "20060717";
 
 	private FitNesseContext context = new FitNesseContext();
 	private SocketService theService;

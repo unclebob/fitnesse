@@ -89,6 +89,9 @@ public class EditResponder implements SecureResponder
 		if(request.hasInput("redirectToReferer") && request.hasHeader("Referer"))
 		{
 			String redirectUrl = request.getHeader("Referer").toString();
+			int questionMarkIndex = redirectUrl.indexOf("?");
+			if(questionMarkIndex > 0)
+				redirectUrl = redirectUrl.substring(0, questionMarkIndex);
 			redirectUrl += "?" + request.getInput("redirectAction").toString();
 			form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
 		}

@@ -3,6 +3,7 @@ WikiImport:
  * Orphaned pages are deleted
  * Edit button removed, Edit Locally, Edit Remotely buttons added
  * Automatic Update option
+ * SymbolicPages are not included in imports
 Symbolic Links to external directories
 Fixed FitServer Classpath bug.
 Support for FitLibrary's SuiteFixture

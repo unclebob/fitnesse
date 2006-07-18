@@ -10,6 +10,7 @@ import org.w3c.dom.*;
 public class PageXmlizer
 {
 	private static SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
+	private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
 
 	public Document xmlize(WikiPage page) throws Exception
 	{
@@ -61,6 +62,23 @@ public class PageXmlizer
 		return data;
 	}
 
+	private void addPageXmlToElement(Document document, Element context, WikiPage page) throws Exception
+	{
+		if(pageMeetsConditions(page))
+			context.appendChild(createXmlFromPage(document, page));
+	}
+
+	private boolean pageMeetsConditions(WikiPage page) throws Exception
+	{
+		for(Iterator iterator = pageConditions.iterator(); iterator.hasNext();)
+		{
+			XmlizePageCondition xmlizePageCondition = (XmlizePageCondition) iterator.next();
+			if(!xmlizePageCondition.canBeXmlized(page))
+				return false;
+		}
+		return true;
+	}
+
 	private Element createXmlFromPage(Document document, WikiPage page) throws Exception
 	{
 		Element pageElement = document.createElement("page");
@@ -88,8 +106,7 @@ public class PageXmlizer
 		for(Iterator iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage child = (WikiPage) iterator.next();
-			Element childElement = createXmlFromPage(document, child);
-			childrenElement.appendChild(childElement);
+			addPageXmlToElement(document, childrenElement, child);
 		}
 		pageElement.appendChild(childrenElement);
 	}
@@ -119,5 +136,10 @@ public class PageXmlizer
 			if("page".equals(node.getNodeName()))
 				addChildFromXml((Element)node, contextPage, handler);
 		}
+	}
+
+	public void addPageCondition(XmlizePageCondition xmlizePageCondition)
+	{
+		pageConditions.add(xmlizePageCondition);
 	}
 }
