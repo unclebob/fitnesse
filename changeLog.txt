@@ -1,3 +1,6 @@
+
+-- 20060719 -------------------------------------------------------------------------------
+Requires Java 5.
 WikiImport:
  * Only modified pages are updated
  * Orphaned pages are deleted
@@ -12,3 +15,4 @@ Applied Randy Coulman's fix for for missing exceptions.
 Minor bug fix to the Anchor widget
 Fixed bug in files section where directories with spaces in the names caused problems.
 Rafactoring: made the reference refactoring optional for the Rename and Move refactorings.
+Last release containing VirtualWiki
