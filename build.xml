@@ -1,227 +1,278 @@
 <project name="Fitnesse" default="build" basedir=".">
-	<description>
+    <description>
 		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
 	</description>
 
-	<property name="src" location="src"/>
-	<property name="classes" location="classes"/>
-	<property name="lib" location="lib"/>
-	<property name="fitnesseRoot" value="FitNesseRoot"/>
-	<property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
-	<property name="zipDir" location="dist/fitnesse"/>
+    <property name="src" location="src" />
+    <property name="classes" location="classes/bin" />
+    <property name="instrumented-classes" location="classes/instrumented" />
+    <property name="lib" location="lib" />
+    <property name="fitnesseRoot" value="FitNesseRoot" />
+    <property name="fitnesseRootZip" value="FitNesseRoot.zip" />
+    <property name="zipDir" location="dist/fitnesse" />
+    <property name="results.dir" location="test-results" />
 
-	<path id='classpath'>
-		<pathelement path="${classes}"/>
-		<fileset dir="lib">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
+    <property name="cobertura.root" value="${lib}/cobertura-1.7" />
+    <property name="cobertura.dir" location="${results.dir}/cobertura" />
 
-	<target name="build" depends="clean, compile" description="clean, then compile the source"/>
+    <path id='classpath'>
+        <pathelement path="${classes}" />
+        <fileset dir="lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
 
-	<target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release."/>
+    <path id="cobertura.classpath">
+        <fileset dir="${cobertura.root}">
+            <include name="cobertura.jar" />
+            <include name="${lib}/**/*.jar" />
+        </fileset>
+    </path>
 
-	<target name="assemble_bin" depends="clean_dist, jar" description="create the binary distribution">
-		<tstamp/>
-		<copy todir="${zipDir}">
-			<fileset dir="extra/release" includes="**"/>
-			<fileset dir="dist" includes="fitnesse.jar"/>
-			<fileset dir=".">
-				<include name="${fitnesseRoot}/**"/>
-				<exclude name="**/*.zip"/>
-				<exclude name="**/.DS_Store"/>
-				<exclude name="**/Thumbs.db"/>
-			</fileset>
-			<fileset dir="lib" includes="fitlibrary.jar"/>
-		</copy>
-		<mkdir dir="${zipDir}/dotnet"/>
-		<copy todir="${zipDir}/dotnet">
-			<fileset dir="dotnet">
-				<include name="*.exe"/>
-				<include name="*.dll"/>
-			</fileset>
-		</copy>
-	</target>
+    <taskdef classpath="${cobertura.root}/cobertura.jar" resource="tasks.properties" />
 
-	<target name="zip_bin" depends="assemble_bin" description="zip up the binary distribution">
-		<zip zipfile="fitnesse${DSTAMP}.zip" basedir="dist" includes="fitnesse/**" excludes="**/Thumbs.db"/>
-	</target>
+    <target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-	<target name="zip_src" depends="clean_dist" description="Packages all the source into a .zip file">
-		<tstamp/>
-		<zip zipfile="fitnesse_src${DSTAMP}.zip">
-			<fileset dir=".">
-				<include name="src/**"/>
-				<include name="lib/**"/>
-				<include name="extra/**"/>
-				<include name="build.xml"/>
-				<include name="dotnet/**"/>
-				<include name="BUILD_README.txt"/>
-				<exclude name="**/fitnesse*.zip"/>
-			</fileset>
-		</zip>
-	</target>
+    <target name="testbuild" depends="clean, instrument, test, report" description="clean, then compile the source" />
 
-	<target name="jar" depends="build, copyResources" description="generate the jar file">
-		<mkdir dir="dist"/>
-		<delete file="dist/fitnesse.jar"/>
+    <target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
-		<jar jarfile="dist/fitnesse.jar" basedir="${classes}">
-			<include name="**/*.class"/>
-			<exclude name="**/*Test.class"/>
-			<exclude name="**/*TestSuite.class"/>
-			<include name="files/**"/>
-			<manifest>
-				<attribute name="Built-By" value="Robert C. Martin and Micah D. Martin"/>
-			</manifest>
-		</jar>
-	</target>
+    <target name="assemble_bin" depends="clean_dist, jar" description="create the binary distribution">
+        <tstamp />
+        <copy todir="${zipDir}">
+            <fileset dir="extra/release" includes="**" />
+            <fileset dir="dist" includes="fitnesse.jar" />
+            <fileset dir=".">
+                <include name="${fitnesseRoot}/**" />
+                <exclude name="**/*.zip" />
+                <exclude name="**/.DS_Store" />
+                <exclude name="**/Thumbs.db" />
+            </fileset>
+            <fileset dir="lib" includes="fitlibrary.jar" />
+        </copy>
+        <mkdir dir="${zipDir}/dotnet" />
+        <copy todir="${zipDir}/dotnet">
+            <fileset dir="dotnet">
+                <include name="*.exe" />
+                <include name="*.dll" />
+            </fileset>
+        </copy>
+    </target>
 
-	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<delete dir="${classes}/files"/>
-		<mkdir dir="${classes}/files"/>
-		<copy todir="${classes}/files">
-			<fileset dir="extra">
-				<include name="images/**/*.gif"/>
-				<include name="images/**/*.jpg"/>
-				<include name="css/*.css"/>
-				<include name="javascript/*.js"/>
-				<exclude name="juUnitTestLink.js"/>
-				<exclude name="**/unused/**"/>
-			</fileset>
-		</copy>
-	</target>
+    <target name="zip_bin" depends="assemble_bin" description="zip up the binary distribution">
+        <zip zipfile="fitnesse${DSTAMP}.zip" basedir="dist" includes="fitnesse/**" excludes="**/Thumbs.db" />
+    </target>
 
-	<target name="jar_classes" depends="build" description="generate the jar file with all the classes and only the classes">
-		<mkdir dir="dist"/>
-		<delete file="dist/fitnesse_classes.jar"/>
-		<jar jarfile="dist/fitnesse_classes.jar" basedir="${classes}">
-			<include name="**/*.class"/>
-			<manifest>
-				<attribute name="Built-By" value="Robert C. Martin and Micah D. Martin"/>
-			</manifest>
-		</jar>
-	</target>
+    <target name="zip_src" depends="clean_dist" description="Packages all the source into a .zip file">
+        <tstamp />
+        <zip zipfile="fitnesse_src${DSTAMP}.zip">
+            <fileset dir=".">
+                <include name="src/**" />
+                <include name="lib/**" />
+                <include name="extra/**" />
+                <include name="build.xml" />
+                <include name="dotnet/**" />
+                <include name="BUILD_README.txt" />
+                <exclude name="**/fitnesse*.zip" />
+            </fileset>
+        </zip>
+    </target>
 
-	<target name="http_jar" depends="compile" description="create a jar of the http stuff">
-		<copy todir="${classes}">
-			<fileset dir="${src}" includes="**/*.java"/>
-		</copy>
+    <target name="jar" depends="build, copyResources" description="generate the jar file">
+        <mkdir dir="dist" />
+        <delete file="dist/fitnesse.jar" />
 
-		<jar jarfile="fitnesse_http.jar" basedir="${classes}">
-			<include name="fitnesse/http/**/*.class"/>
-			<include name="fitnesse/socketservice/**/*.class"/>
-			<include name="fitnesse/http/**/*.java"/>
-			<include name="fitnesse/socketservice/**/*.java"/>
-			<exclude name="**/*Test.*"/>
-			<exclude name="**/*TestSuite.*"/>
-		</jar>
+        <jar jarfile="dist/fitnesse.jar" basedir="${classes}">
+            <include name="**/*.class" />
+            <exclude name="**/*Test.class" />
+            <exclude name="**/*TestSuite.class" />
+            <include name="files/**" />
+            <manifest>
+                <attribute name="Built-By" value="Robert C. Martin and Micah D. Martin" />
+            </manifest>
+        </jar>
+    </target>
 
-		<delete>
-			<fileset dir="${classes}" includes="**/*.java"/>
-		</delete>
-	</target>
+    <target name="copyResources" description="copy images, css, and other resources into the classes directory">
+        <delete dir="${classes}/files" />
+        <mkdir dir="${classes}/files" />
+        <copy todir="${classes}/files">
+            <fileset dir="extra">
+                <include name="images/**/*.gif" />
+                <include name="images/**/*.jpg" />
+                <include name="css/*.css" />
+                <include name="javascript/*.js" />
+                <exclude name="juUnitTestLink.js" />
+                <exclude name="**/unused/**" />
+            </fileset>
+        </copy>
+    </target>
 
-	<target name="compile" depends="init" description="compile the source (make)">
-		<javac srcdir="${src}" destdir="${classes}" classpathref="classpath"/>
-	</target>
+    <target name="jar_classes" depends="build" description="generate the jar file with all the classes and only the classes">
+        <mkdir dir="dist" />
+        <delete file="dist/fitnesse_classes.jar" />
+        <jar jarfile="dist/fitnesse_classes.jar" basedir="${classes}">
+            <include name="**/*.class" />
+            <manifest>
+                <attribute name="Built-By" value="Robert C. Martin and Micah D. Martin" />
+            </manifest>
+        </jar>
+    </target>
 
-	<target name="clean" description="delete everything in the classes directory">
-		<mkdir dir="${classes}"/>
-		<delete includeemptydirs="yes">
-			<fileset dir="${classes}" includes="**/*"/>
-		</delete>
-	</target>
+    <target name="http_jar" depends="compile" description="create a jar of the http stuff">
+        <copy todir="${classes}">
+            <fileset dir="${src}" includes="**/*.java" />
+        </copy>
 
-	<target name="test" depends="compile" description="run the unit tests">
-		<junit fork='true' haltonfailure='false'>
-			<classpath refid='classpath'/>
-			<formatter type="xml" usefile="true"/>
-			<test name='fitnesse.AllTestSuite'/>
-		</junit>
-	</target>
+        <jar jarfile="fitnesse_http.jar" basedir="${classes}">
+            <include name="fitnesse/http/**/*.class" />
+            <include name="fitnesse/socketservice/**/*.class" />
+            <include name="fitnesse/http/**/*.java" />
+            <include name="fitnesse/socketservice/**/*.java" />
+            <exclude name="**/*Test.*" />
+            <exclude name="**/*TestSuite.*" />
+        </jar>
 
-	<target name="clean_dist" description="clean out the distribution folder">
-		<mkdir dir="dist"/>
-		<delete>
-			<fileset dir="dist">
-				<include name="fitnesse*.zip"/>
-				<include name="fitnesse.jar"/>
-				<exclude name="${fitnesseRoot}"/>
-			</fileset>
-		</delete>
-		<delete dir="${zipDir}"/>
-	</target>
+        <delete>
+            <fileset dir="${classes}" includes="**/*.java" />
+        </delete>
+    </target>
 
-	<target name="add_headers" description="Add standard comment header to each java file">
-		<java classname="HeaderManager">
-			<arg value="${src}/fitnesse"/>
-			<arg value="extra/util/header.txt"/>
-			<arg value=".java"/>
-			<classpath path="extra/util"/>
-		</java>
-		<java classname="HeaderManager">
-			<arg value="${src}/fit"/>
-			<arg value="extra/util/fitHeader.txt"/>
-			<arg value=".java"/>
-			<classpath path="extra/util"/>
-		</java>
-		<java classname="HeaderManager">
-			<arg value="dotnet"/>
-			<arg value="extra/util/fitHeader.txt"/>
-			<arg value=".cs"/>
-			<classpath path="extra/util"/>
-		</java>
-	</target>
+    <target name="compile" depends="init" description="compile the source (make)">
+        <javac srcdir="${src}" destdir="${classes}" classpathref="classpath" debug="true" />
+    </target>
 
-	<target name="remove_headers" description="Remove standard comment header to each java file">
-		<java classname="HeaderManager">
-			<arg value="${src}/fitnesse"/>
-			<arg value="extra/util/header.txt"/>
-			<arg value=".java"/>
-			<arg value="remove"/>
-			<classpath path="extra/util"/>
-		</java>
-		<java classname="HeaderManager">
-			<arg value="${src}/fit"/>
-			<arg value="extra/util/fitHeader.txt"/>
-			<arg value=".java"/>
-			<arg value="remove"/>
-			<classpath path="extra/util"/>
-		</java>
-		<java classname="HeaderManager">
-			<arg value="dotnet"/>
-			<arg value="extra/util/fitHeader.txt"/>
-			<arg value=".cs"/>
-			<arg value="remove"/>
-			<classpath path="extra/util"/>
-		</java>
-	</target>
+    <target name="instrument" depends="compile">
+        <delete file="${cobertura.dir}/cobertura.ser" />
+        <cobertura-instrument todir="${instrumented-classes}" datafile="${cobertura.dir}/cobertura.ser">
+            <fileset dir="${classes}">
+                <include name="**/*.class" />
+                <exclude name="**/*Test.class" />
+                <exclude name="**/*AllTestSuite.class" />
+                <exclude name="eg/" />
+            </fileset>
+        </cobertura-instrument>
+    </target>
 
-	<target name="init">
-		<tstamp/>
-		<mkdir dir="${classes}"/>
-	</target>
+    <target name="clean" description="delete everything in the classes directory">
+        <mkdir dir="${classes}" />
+        <delete includeemptydirs="true">
+            <fileset dir="${classes}" includes="**/" />
+        </delete>
+        <delete dir="${instrumented-classes}" />
+        <delete dir="${results.dir}" />
+    </target>
 
-	<target name="jdepend-txt">
-		<jdepend outputfile="docs/jdepend-report.txt">
-			<exclude name="java.*"/>
-			<exclude name="javax.*"/>
-			<classespath>
-				<pathelement location="classes"/>
-			</classespath>
-		</jdepend>
-	</target>
+    <target name="test" depends="compile" description="run the unit tests">
+        <junit fork="yes" printsummary="on" haltonfailure="no" haltonerror="no">
+            <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
+            <classpath location="${instrumented-classes}" />
+            <classpath refid="classpath" />
+            <classpath refid="cobertura.classpath" />
+            <formatter type="xml" usefile="true" />
+            <formatter type="plain" usefile="false" />
+            <batchtest todir="${results.dir}">
+                <fileset dir="${src}">
+                    <include name="**/*Test.java" />
+                    <exclude name="**/*AllTestSuite.java" />
+                    <exclude name="**/*FitServerTest.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
 
-	<target name="jdepend-xml">
-		<jdepend format="xml" outputfile="docs/jdepend-report.xml">
-			<exclude name="java.*"/>
-			<exclude name="javax.*"/>
-			<classespath>
-				<pathelement location="classes"/>
-			</classespath>
-		</jdepend>
-	</target>
+    <target name="report">
+        <cobertura-report datafile="${cobertura.dir}/cobertura.ser" destdir="${cobertura.dir}">
+            <fileset dir="${src}">
+                <include name="**/*.java" />
+                <exclude name="**/*Test.java" />
+                <exclude name="**/*AllTestSuite.java" />
+                <exclude name="eg/" />
+            </fileset>
+        </cobertura-report>
+    </target>
+
+    <target name="clean_dist" description="clean out the distribution folder">
+        <mkdir dir="dist" />
+        <delete>
+            <fileset dir="dist">
+                <include name="fitnesse*.zip" />
+                <include name="fitnesse.jar" />
+                <exclude name="${fitnesseRoot}" />
+            </fileset>
+        </delete>
+        <delete dir="${zipDir}" />
+    </target>
+
+    <target name="add_headers" description="Add standard comment header to each java file">
+        <java classname="HeaderManager">
+            <arg value="${src}/fitnesse" />
+            <arg value="extra/util/header.txt" />
+            <arg value=".java" />
+            <classpath path="extra/util" />
+        </java>
+        <java classname="HeaderManager">
+            <arg value="${src}/fit" />
+            <arg value="extra/util/fitHeader.txt" />
+            <arg value=".java" />
+            <classpath path="extra/util" />
+        </java>
+        <java classname="HeaderManager">
+            <arg value="dotnet" />
+            <arg value="extra/util/fitHeader.txt" />
+            <arg value=".cs" />
+            <classpath path="extra/util" />
+        </java>
+    </target>
+
+    <target name="remove_headers" description="Remove standard comment header to each java file">
+        <java classname="HeaderManager">
+            <arg value="${src}/fitnesse" />
+            <arg value="extra/util/header.txt" />
+            <arg value=".java" />
+            <arg value="remove" />
+            <classpath path="extra/util" />
+        </java>
+        <java classname="HeaderManager">
+            <arg value="${src}/fit" />
+            <arg value="extra/util/fitHeader.txt" />
+            <arg value=".java" />
+            <arg value="remove" />
+            <classpath path="extra/util" />
+        </java>
+        <java classname="HeaderManager">
+            <arg value="dotnet" />
+            <arg value="extra/util/fitHeader.txt" />
+            <arg value=".cs" />
+            <arg value="remove" />
+            <classpath path="extra/util" />
+        </java>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${classes}" />
+        <mkdir dir="${instrumented-classes}" />
+        <mkdir dir="${cobertura.dir}" />
+    </target>
+
+    <target name="jdepend-txt">
+        <jdepend outputfile="docs/jdepend-report.txt">
+            <exclude name="java.*" />
+            <exclude name="javax.*" />
+            <classespath>
+                <pathelement location="classes" />
+            </classespath>
+        </jdepend>
+    </target>
+
+    <target name="jdepend-xml">
+        <jdepend format="xml" outputfile="docs/jdepend-report.xml">
+            <exclude name="java.*" />
+            <exclude name="javax.*" />
+            <classespath>
+                <pathelement location="classes" />
+            </classespath>
+        </jdepend>
+    </target>
 
 </project>
-
