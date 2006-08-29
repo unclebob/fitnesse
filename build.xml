@@ -4,8 +4,7 @@
 	</description>
 
     <property name="src" location="src" />
-    <property name="classes" location="classes/bin" />
-    <property name="instrumented-classes" location="classes/instrumented" />
+    <property name="classes" location="classes" />
     <property name="lib" location="lib" />
     <property name="fitnesseRoot" value="FitNesseRoot" />
     <property name="fitnesseRootZip" value="FitNesseRoot.zip" />
@@ -144,7 +143,7 @@
 
     <target name="instrument" depends="compile">
         <delete file="${cobertura.dir}/cobertura.ser" />
-        <cobertura-instrument todir="${instrumented-classes}" datafile="${cobertura.dir}/cobertura.ser">
+        <cobertura-instrument datafile="${cobertura.dir}/cobertura.ser">
             <fileset dir="${classes}">
                 <include name="**/*.class" />
                 <exclude name="**/*Test.class" />
@@ -159,14 +158,12 @@
         <delete includeemptydirs="true">
             <fileset dir="${classes}" includes="**/" />
         </delete>
-        <delete dir="${instrumented-classes}" />
         <delete dir="${results.dir}" />
     </target>
 
     <target name="test" depends="compile" description="run the unit tests">
         <junit fork="yes" printsummary="on" haltonfailure="no" haltonerror="no">
             <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
-            <classpath location="${instrumented-classes}" />
             <classpath refid="classpath" />
             <classpath refid="cobertura.classpath" />
             <formatter type="xml" usefile="true" />
@@ -251,7 +248,6 @@
 
     <target name="init">
         <mkdir dir="${classes}" />
-        <mkdir dir="${instrumented-classes}" />
         <mkdir dir="${cobertura.dir}" />
     </target>
 
