@@ -33,7 +33,7 @@
 
     <target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-    <target name="testbuild" depends="clean, instrument, test, report" description="clean, then compile the source" />
+    <target name="testbuild" depends="clean, instrument, test, report" description="clean, then compile the source, run all the unit test and finally generate the code coverage." />
 
     <target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
