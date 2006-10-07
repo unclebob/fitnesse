@@ -74,23 +74,23 @@ public class PageReferenceRenamerTest extends RegexTest
 	public void testTestReferencesToSubWiki_1() throws Exception
 	{
 		PageData data = subWiki.getData();
-		data.setContent("Stuff ^PageTwo Stuff\n");
+		data.setContent("Stuff >PageTwo Stuff\n");
 		subWiki.commit(data);
 
 		renamer.renameReferences(subWiki_pageTwo, "PageThree");
 		String updatedSubWikiContent = subWiki.getData().getContent();
-		assertEquals("Stuff ^PageThree Stuff\n", updatedSubWikiContent);
+		assertEquals("Stuff >PageThree Stuff\n", updatedSubWikiContent);
 	}
 
 	public void testTestReferencesToSubWiki_2() throws Exception
 	{
 		PageData data = subWiki.getData();
-		data.setContent("Stuff ^PageTwo.DeepPage Stuff\n");
+		data.setContent("Stuff >PageTwo.DeepPage Stuff\n");
 		subWiki.commit(data);
 
 		renamer.renameReferences(subWiki_pageTwo, "PageThree");
 		String updatedSubWikiContent = subWiki.getData().getContent();
-		assertEquals("Stuff ^PageThree.DeepPage Stuff\n", updatedSubWikiContent);
+		assertEquals("Stuff >PageThree.DeepPage Stuff\n", updatedSubWikiContent);
 	}
 
 	private void checkChangesOnPageOne(String beforeText, String expectedAfterText) throws Exception
@@ -112,7 +112,7 @@ public class PageReferenceRenamerTest extends RegexTest
 		assertEquals("gunk .SubWiki.PageThree gunk", updatedContent);
 	}
 
-	public void testRenameParentWithReferenceOnSibling() throws Exception
+	public void testSubPageReferenceUnchangedWhenParentRenamed() throws Exception
 	{
 		WikiPage pageOne = crawler.addPage(subWiki, PathParser.parse("PageOne"), "gunk ^SubPage gunk");
 		renamer.renameReferences(subWiki, "RenamedSubWiki");
@@ -143,7 +143,7 @@ public class PageReferenceRenamerTest extends RegexTest
 		WikiPage target = crawler.addPage(source, PathParser.parse("TargetPage"));
 		renamer.renameReferences(target, "RenamedPage");
 		String updatedSourceContent = source.getData().getContent();
-		assertEquals("gunk ^RenamedPage gunk", updatedSourceContent);
+		assertEquals("gunk >RenamedPage gunk", updatedSourceContent);
 	}
 
 	public void testImageNotChanged() throws Exception

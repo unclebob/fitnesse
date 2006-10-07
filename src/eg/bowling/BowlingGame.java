@@ -21,7 +21,7 @@ public class BowlingGame implements Bowling
 	private final BowlingScorer bowlingScorer = new BowlingScorer();
 
 	private void changeState()
-	{
+	{ 
 		switch(state)
 		{
 		case FIRST_BALL_IN_FRAME:

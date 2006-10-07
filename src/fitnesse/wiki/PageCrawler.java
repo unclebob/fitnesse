@@ -21,4 +21,6 @@ public interface PageCrawler
 	WikiPage getRoot(WikiPage page) throws Exception;
 
   void traverse(WikiPage root, FitNesseTraversalListener pageCrawlerTest) throws Exception;
+
+  WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
 }

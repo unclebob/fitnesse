@@ -33,7 +33,7 @@ public class LoopingActionFixture extends ActionFixture {
                 this.cells = cells;
                 try {
                         Method action = getAction(cells.text());
-                        action.invoke(this, empty);
+                        action.invoke(this);
                 } catch (Exception e) {
                         exception(cells, e);
                 }
@@ -44,8 +44,8 @@ public class LoopingActionFixture extends ActionFixture {
 
         public void action_while() throws Exception {
                 String methodName = cells.more.text();
-                Method action = actor.getClass().getMethod(methodName, empty);
-                Boolean result = (Boolean)action.invoke(actor, empty);
+                Method action = actor.getClass().getMethod(methodName);
+                Boolean result = (Boolean)action.invoke(actor);
                 if (result.booleanValue()) {
                         rows = (Parse)loopContexts.peek();
                 }

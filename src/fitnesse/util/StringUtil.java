@@ -14,7 +14,7 @@ public class StringUtil
     Iterator i = strings.iterator();
     StringBuffer joined = new StringBuffer((String) i.next());
 
-    for (/* declared above */; i.hasNext();)
+    while(i.hasNext())
     {
       String eachLine = (String) i.next();
       joined.append(delimiter);
@@ -26,9 +26,9 @@ public class StringUtil
 
 	public static String[] combineArrays(String[] first, String[] second)
 	{
-		List combinedList = new LinkedList();
+		List<String> combinedList = new LinkedList();
 		combinedList.addAll(Arrays.asList(first));
 		combinedList.addAll(Arrays.asList(second));
-		return (String[]) combinedList.toArray(new String[combinedList.size()]);
+		return combinedList.toArray(new String[combinedList.size()]);
 	}
 }

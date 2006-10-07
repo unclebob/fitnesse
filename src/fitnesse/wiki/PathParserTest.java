@@ -32,24 +32,24 @@ public class PathParserTest extends TestCase
 	public void testAbsolutePath() throws Exception
 	{
 		path = makePath(".ParentPage.ChildPage");
-		assertEquals(WikiPagePath.ROOT, path.getFirst());
-		assertEquals("ParentPage", path.getRest().getFirst());
-		assertEquals("ChildPage", path.getRest().getRest().getFirst());
-		assertTrue(path.getRest().getRest().getRest().isEmpty());
+		assertTrue(path.isAbsolute());
+		assertEquals("ParentPage", path.getFirst());
+		assertEquals("ChildPage", path.getRest().getFirst());
+		assertTrue(path.getRest().getRest().isEmpty());
 	}
 
 	public void testRoot() throws Exception
 	{
 		path = makePath("root");
-		assertEquals(WikiPagePath.ROOT, path.getFirst());
-		assertTrue(path.getRest().isEmpty());
+		assertTrue(path.isAbsolute());
+		assertTrue(path.isEmpty());
 	}
 
 	public void testDot() throws Exception
 	{
 		path = makePath(".");
-		assertEquals(WikiPagePath.ROOT, path.getFirst());
-		assertTrue(path.getRest().isEmpty());
+		assertTrue(path.isAbsolute());
+		assertTrue(path.isEmpty());
 	}
 
 	public void testEmptyString() throws Exception
@@ -65,7 +65,24 @@ public class PathParserTest extends TestCase
 		assertNull(makePath("_root"));
 	}
 
-	public void testRender() throws Exception
+  public void testSubPagePath() throws Exception {
+    path = makePath(">MySubPagePath.ChildPage");
+    assertTrue(path.isSubPagePath());
+    assertEquals("MySubPagePath", path.getFirst());
+    assertEquals("ChildPage", path.getRest().getFirst());
+    assertTrue(path.getRest().getRest().isEmpty());
+  }
+
+    public void testBackwardSearchPath() throws Exception {
+    path = makePath("<MySubPagePath.ChildPage");
+    assertTrue(path.isBackwardSearchPath());
+    assertEquals("MySubPagePath", path.getFirst());
+    assertEquals("ChildPage", path.getRest().getFirst());
+    assertTrue(path.getRest().getRest().isEmpty());
+  }
+
+
+  public void testRender() throws Exception
 	{
 		assertEquals("MyPage", PathParser.render(makePath("MyPage")));
 		assertEquals(".MyPage", PathParser.render(makePath(".MyPage")));
@@ -75,6 +92,8 @@ public class PathParserTest extends TestCase
 		assertEquals(".MyPage", PathParser.render(p));
 
 		assertEquals(".", PathParser.render(PathParser.parse(".")));
-		//todo RCM 2/7/05 More tests here.
-	}
+
+    assertEquals("<MyPage", PathParser.render(makePath("<MyPage")));
+    assertEquals(">MyPage", PathParser.render(makePath(">MyPage")));
+  }
 }

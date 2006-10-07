@@ -56,29 +56,26 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	private void removeOrphans(WikiPage context) throws Exception
 	{
-		for(Iterator iterator = orphans.iterator(); iterator.hasNext();)
-		{
-			WikiPagePath path = (WikiPagePath) iterator.next();
-			WikiPage wikiPage = crawler.getPage(context, path);
-			if(wikiPage != null)
-				wikiPage.getParent().removeChildPage(wikiPage.getName());
-		}
+    for (WikiPagePath orphan : orphans) {
+      WikiPagePath path = orphan;
+      WikiPage wikiPage = crawler.getPage(context, path);
+      if (wikiPage != null)
+        wikiPage.getParent().removeChildPage(wikiPage.getName());
+    }
 	}
 
 	private void filterOrphans(WikiPage context) throws Exception
 	{
-		for(Iterator iterator = pageCatalog.iterator(); iterator.hasNext();)
-		{
-			WikiPagePath wikiPagePath = (WikiPagePath) iterator.next();
-			WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
-			PageData data = unrecognizedPage.getData();
-			WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
+    for (WikiPagePath aPageCatalog : pageCatalog) {
+      WikiPagePath wikiPagePath = aPageCatalog;
+      WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
+      PageData data = unrecognizedPage.getData();
+      WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
 
-			if(importProps != null && !importProps.isRoot())
-			{
-				orphans.add(wikiPagePath);
-			}
-		}
+      if (importProps != null && !importProps.isRoot()) {
+        orphans.add(wikiPagePath);
+      }
+    }
 	}
 
 	private void catalogLocalTree(WikiPage page) throws Exception
@@ -87,7 +84,7 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 		contextPath = crawler.getFullPath(page);
 		pageCatalog = new HashSet<WikiPagePath>();
 		page.getPageCrawler().traverse(page, this);
-		WikiPagePath relativePathOfContext = contextPath.subtract(contextPath);
+		WikiPagePath relativePathOfContext = contextPath.subtractFromFront(contextPath);
 		pageCatalog.remove(relativePathOfContext);
 	}
 
@@ -140,7 +137,7 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	private WikiPagePath relativePath(WikiPage childPage) throws Exception
 	{
-		return crawler.getFullPath(childPage).subtract(contextPath);
+		return crawler.getFullPath(childPage).subtractFromFront(contextPath);
 	}
 
 	protected void importRemotePageContent(WikiPage localPage) throws Exception
@@ -260,8 +257,8 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	public void parseUrl(String urlString) throws Exception
 	{
-		URL url = null;
-		try
+    URL url;
+    try
 		{
 			url = new URL(urlString);
 		}
@@ -276,13 +273,15 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 			remotePort = 80;
 
 		String path = url.getPath();
-		if(path.startsWith("/"))
+    while(path.startsWith("/"))
 			path = path.substring(1);
-		remotePath = PathParser.parse(path);
+    
+    remotePath = PathParser.parse(path);
 
-		if(remotePath == null)
+		if(remotePath == null)  {
 			throw new MalformedURLException("The URL's resource path, " + path + ", is not a valid WikiWord.");
-	}
+    }
+  }
 
 	public void setWikiImporterClient(WikiImporterClient client)
 	{

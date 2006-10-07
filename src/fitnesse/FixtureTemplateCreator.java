@@ -173,8 +173,8 @@ public class FixtureTemplateCreator
 
 		try
 		{
-			Method method_getTargetClass = rowFixtureClass.getMethod("getTargetClass", null);
-			targetClass = (Class)method_getTargetClass.invoke(rowFixtureClass.newInstance(), null);
+			Method method_getTargetClass = rowFixtureClass.getMethod("getTargetClass");
+			targetClass = (Class)method_getTargetClass.invoke(rowFixtureClass.newInstance());
 		}
 		catch(NoSuchMethodException nsme)
 		{

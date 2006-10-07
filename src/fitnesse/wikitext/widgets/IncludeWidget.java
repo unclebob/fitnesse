@@ -40,10 +40,10 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 		PageCrawler crawler = parentPage.getPageCrawler();
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		WikiPagePath pagePath = PathParser.parse(pageName);
-		if(crawler.pageExists(parentPage, pagePath))
+    WikiPage includedPage = crawler.getSiblingPage(includingPage, pagePath);
+    if(includedPage != null)
 		{
-			WikiPage page = getIncludedPage();
-			return page.getData().getContent();
+			return includedPage.getData().getContent();
 		}
 		else if(includingPage instanceof ProxyPage)
 		{

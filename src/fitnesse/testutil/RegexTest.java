@@ -23,7 +23,7 @@ public class RegexTest extends TestCase
         Matcher match = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL).matcher(output);
         boolean found = match.find();
         if (!found)
-            fail("The regexp <" + regexp + "> was not found.");
+            fail("The regexp <" + regexp + "> was not found in: " + output + ".");
     }
 
     public static void assertDoesntHaveRegexp(String regexp, String output)
