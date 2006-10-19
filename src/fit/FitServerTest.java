@@ -8,7 +8,6 @@ import java.net.*;
 import fitnesse.util.StreamReader;
 import fitnesse.testutil.RegexTest;
 import fitnesse.components.FitProtocol;
-import eg.Division;
 
 public class FitServerTest extends RegexTest
 {
