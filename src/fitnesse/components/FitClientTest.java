@@ -9,8 +9,8 @@ import fit.Counts;
 
 public class FitClientTest extends RegexTest implements FitClientListener
 {
-	private List outputs = new ArrayList();
-	private List counts = new ArrayList();
+	private List<String> outputs = new ArrayList<String>();
+	private List<Counts> counts = new ArrayList<Counts>();
 	private CommandRunningFitClient client;
 	private boolean exceptionOccurred = false;
 	private int port = 9080;
