@@ -12,7 +12,7 @@ public class ResponseParser
 {
 	private int status;
 	private String body;
-	private HashMap headers = new HashMap();
+	private HashMap<String, String> headers = new HashMap<String, String>();
 	private StreamReader input;
 
 	private static final Pattern statusLinePattern = Pattern.compile("HTTP/\\d.\\d (\\d\\d\\d) ");

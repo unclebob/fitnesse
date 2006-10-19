@@ -10,7 +10,7 @@ import fitnesse.components.*;
 public class CachingResultFormatter implements ResultFormatter
 {
 	private ContentBuffer buffer;
-	public List subHandlers = new LinkedList();
+	public List<ResultHandler> subHandlers = new LinkedList<ResultHandler>();
 
 	public CachingResultFormatter() throws Exception
 	{

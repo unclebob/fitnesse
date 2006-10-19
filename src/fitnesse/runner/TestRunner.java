@@ -18,7 +18,7 @@ public class TestRunner
 	public TestRunnerFixtureListener fixtureListener;
 	public CachingResultFormatter handler;
 	private PrintStream output;
-	public List formatters = new LinkedList();
+	public List<FormattingOption> formatters = new LinkedList<FormattingOption>();
 	private boolean debug;
 	public boolean verbose;
 	public boolean usingDownloadedPaths = true;
