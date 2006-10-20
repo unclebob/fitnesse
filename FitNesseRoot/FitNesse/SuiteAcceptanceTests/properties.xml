@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <properties>
 	<Files/>
-	<LastModified>20061019221104</LastModified>
+	<LastModified>20061020065808</LastModified>
 	<Properties/>
 	<RecentChanges/>
 	<Search/>
@@ -10,8 +10,8 @@
 	<WhereUsed/>
 	<WikiImport>
 		<LastRemoteModification>20060208201629</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests</Source>
+		<Source>http://docs.fitnesse.org:80/FitNesse.SuiteAcceptanceTests</Source>
 	</WikiImport>
-	<saveId>1161310264739</saveId>
-	<ticketId>3333405289054803281</ticketId>
+	<saveId>1161341888002</saveId>
+	<ticketId>-8675111072763661154</ticketId>
 </properties>

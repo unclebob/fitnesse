@@ -4,7 +4,11 @@ https://sourceforge.net/svn/?group_id=167811
 http://svn.sourceforge.net/viewcvs.cgi/fitnessedotnet/
 svn co https://svn.sourceforge.net/svnroot/fitnessedotnet/trunk fitnessedotnet
 
-As of today (6/20/2006) .NET 1.1 and 2.0 binaries can be found in /bin/Framework.1.1 and /bin/Framework.2.0. Once we get a release plan together, these will be stored with specific releases rather than the trunk.
+As of today (10/11/2006) .NET 1.1 and 2.0 binaries can be found in the following locations as well:
+
+https://svn.sourceforge.net/svnroot/fitnessedotnet/tags/20060530/bin/Framework.1.1/
+https://svn.sourceforge.net/svnroot/fitnessedotnet/tags/20060530/bin/Framework.2.0/
+
 ----
 |^ReleaseNotes.NextRelease|
 |^ReleaseNotes.ReleaseOn20050301|

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<properties>
+	<Files>true</Files>
+	<LastModified>20061020065611</LastModified>
+	<LastModifyingUser>docs</LastModifyingUser>
+	<Properties>true</Properties>
+	<RecentChanges>true</RecentChanges>
+	<Refactor>true</Refactor>
+	<Search>true</Search>
+	<Test>true</Test>
+	<Versions>true</Versions>
+	<WhereUsed>true</WhereUsed>
+	<WikiImport>
+		<LastRemoteModification>20061006161920</LastRemoteModification>
+		<Source>http://docs.fitnesse.org:80/FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithBackwardsSearchReference</Source>
+	</WikiImport>
+	<saveId>1160165960160</saveId>
+	<ticketId>332407903866722431</ticketId>
+</properties>

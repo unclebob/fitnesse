@@ -1,3 +1,4 @@
-|FitNesse.SuiteAcceptanceTests||22:11:04 Thu, Oct 19, 2006|
+|FitNesse.SuiteAcceptanceTests||06:58:08 Fri, Oct 20, 2006|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithSubpageReference||23:44:24 Thu, Oct 19, 2006|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||08:23:54 Thu, Oct 19, 2006|
 |||21:42:03 Tue, Oct 17, 2006|

@@ -1,30 +1,30 @@
 !2 The Sub Page widget.
 Sometimes we want to conveniently create a link to a sub page.  We could do this by using the syntax ''!-SuperPage.SubPage-!'', but this is inconvenient.  Instead we want to be able to say ''!-^SubPage-!''.
 
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
-|!-SuperPage-!|!-^SubPage-!||true|
+|SuperPage|^SubPage||true|
 
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|contents?|
-|!-SuperPage-!|true||
+|SuperPage|true||
 
 The widget should translate into a ? link of the form: 
  * ''!-^SubPage-!<a href="!-SuperPage.SubPage-!?edit">?</a>''
-|Response Examiner.|
+!|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|!-\^SubPage-!<a href="!-SuperPage.SubPage-!\?edit">\?</a>|true||
+|contents|\^SubPage<a href="SuperPage.SubPage\?edit">\?</a>|true||
 
 If the sub page is already present, then the widget should translate into a normal link.
 
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
-|!-SuperPage.SubPage-!|nothing||true|
+|SuperPage.SubPage|nothing||true|
 
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|contents?|
-|!-SuperPage-!|true||
+|SuperPage|true||
 
-|Response Examiner.|
+!|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|<a href="!-SuperPage.SubPage-!">!-\^SubPage-!</a>|true||
+|contents|<a href="SuperPage.SubPage">\^SubPage</a>|true||

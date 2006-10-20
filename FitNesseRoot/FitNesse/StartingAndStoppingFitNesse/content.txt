@@ -13,6 +13,8 @@ In the standard distribution there is a file named ''run.bat'' for windows and '
 '''{values between braces are default values}'''
 Most of the options here speak for themselves.  The most commonly used option is -p which allows you to change the port on which the FitNesse server will start.
 
+See PasswordFile for a description of how to set up per user authentication.
+
 !2 Stopping FitNesse
 
 Historically, pressing ''ctrl-c'' has worked well.  However, it's not sufficient for automated control.  There is a class to stop FitNesse as well.

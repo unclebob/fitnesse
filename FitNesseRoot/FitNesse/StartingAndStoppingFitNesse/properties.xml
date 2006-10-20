@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <properties>
 	<Files/>
-	<LastModified>20060717210023</LastModified>
+	<LastModified>20061020065946</LastModified>
+	<LastModifyingUser>docs</LastModifyingUser>
 	<RecentChanges/>
 	<WhereUsed/>
 	<WikiImport>
-		<LastRemoteModification>20050412141208</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.StartingAndStoppingFitNesse</Source>
+		<LastRemoteModification>20061004115116</LastRemoteModification>
+		<Source>http://docs.fitnesse.org:80/FitNesse.StartingAndStoppingFitNesse</Source>
 	</WikiImport>
+	<saveId>1159977076523</saveId>
+	<ticketId>1619957440856317725</ticketId>
 </properties>

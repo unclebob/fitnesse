@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <properties>
 	<Files/>
-	<LastModified>20061019234424</LastModified>
+	<LastModified>20061020065611</LastModified>
+	<LastModifyingUser>docs</LastModifyingUser>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
@@ -10,9 +11,9 @@
 	<Versions/>
 	<WhereUsed/>
 	<WikiImport>
-		<LastRemoteModification>20060717203109</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithSubpageReference</Source>
+		<LastRemoteModification>20061003153201</LastRemoteModification>
+		<Source>http://docs.fitnesse.org:80/FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithSubpageReference</Source>
 	</WikiImport>
-	<saveId>1161315863997</saveId>
-	<ticketId>-6763748613397811756</ticketId>
+	<saveId>1159903921951</saveId>
+	<ticketId>-4307571380144945702</ticketId>
 </properties>

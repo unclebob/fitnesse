@@ -1,12 +1,15 @@
 <?xml version="1.0"?>
 <properties>
 	<Files/>
-	<LastModified>20060717210149</LastModified>
+	<LastModified>20061020065613</LastModified>
+	<LastModifyingUser>docs</LastModifyingUser>
 	<RecentChanges/>
 	<Test/>
 	<WhereUsed/>
 	<WikiImport>
-		<LastRemoteModification>20050418140328</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestSubPageWidget</Source>
+		<LastRemoteModification>20061003152931</LastRemoteModification>
+		<Source>http://docs.fitnesse.org:80/FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestSubPageWidget</Source>
 	</WikiImport>
+	<saveId>1159903771283</saveId>
+	<ticketId>-5646907566667358465</ticketId>
 </properties>

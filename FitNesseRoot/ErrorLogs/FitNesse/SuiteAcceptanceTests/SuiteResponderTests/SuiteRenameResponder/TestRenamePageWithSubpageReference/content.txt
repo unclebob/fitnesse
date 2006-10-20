@@ -1,0 +1,4 @@
+|'''Date: '''|!-11:44:34 PM (EDT) on Thursday, October 19, 2006-!|
+|'''Command: '''|!-java -cp classes;lib\cobertura-1.7\cobertura.jar fit.FitServer localhost 8082 7-!|
+|'''Exit code: '''|!-0-!|
+|'''Time elapsed: '''|!-0.875 seconds-!|
