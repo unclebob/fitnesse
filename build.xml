@@ -271,7 +271,7 @@
         </jdepend>
     </target>
 
-    <macrodef name="fit.run.tests" description="Macro to run fit tests.  This Macro starts the fit server, runs fitnesse tests in-container using the specified URL and publish the results.">
+    <macrodef name="run.fit.tests" description="Macro to run fit tests.  This Macro starts the fit server, runs fitnesse tests in-container using the specified URL and publish the results.">
         <attribute name="wiki.root.path" description="Path to the FitnesseRoot filder which contains all the wiki pages" />
         <attribute name="fitnesse.port" default="8082" description="Port on which fitnesse would run" />
         <attribute name="suite.page" description="Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest" />
@@ -336,7 +336,7 @@
     </macrodef>
 
     <target name="fit_test">
-        <fit.run.tests fitnesse.port="8082" result.dir="${results.dir}" result.filename.without.extension="fit-results" suite.page="FitNesse.SuiteAcceptanceTests" wiki.root.path="." fail.on.error="false" />
+        <run.fit.tests fitnesse.port="8082" result.dir="${results.dir}" result.filename.without.extension="fit-results" suite.page="FitNesse.SuiteAcceptanceTests" wiki.root.path="." fail.on.error="true" />
     </target>
 
 </project>
