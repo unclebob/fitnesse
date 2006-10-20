@@ -2,29 +2,29 @@
 
 First build parent & child pages where one refers to the other.
 
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|valid?|
-|!-ParentPage-!|!-refer to ^ChildPage-!|true|
-|!-ParentPage.ChildPage-!|whatever|true|
+|ParentPage|refer to >ChildPage|true|
+|ParentPage.ChildPage|whatever|true|
 
 Then rename the target page.
 
-|Response Requester.|
+!|Response Requester.|
 |uri   |status?|
-|!-ParentPage.ChildPage?responder=renamePage&newName=NewChild&refactorReferences=on-!||
+|ParentPage.ChildPage?responder=renamePage&newName=NewChild&refactorReferences=on||
 
 Next fetch the Source page.
 
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|contents?|
-|!-ParentPage-!|true||
+|ParentPage|true||
 
 Make sure that the new target name is present and that the old name is not.
 
-|Response Examiner.|
+!|Response Examiner.|
 |type  |pattern|matches?|
-|contents|!-\^NewChild-!|true|
-|contents|!-href="ParentPage\.NewChild"-!|true|
-|contents|!-\^ChildPage-!|false|
+|contents|&gt;NewChild|true|
+|contents|href="ParentPage\.NewChild"|true|
+|contents|&gt;ChildPage|false|
 
 
