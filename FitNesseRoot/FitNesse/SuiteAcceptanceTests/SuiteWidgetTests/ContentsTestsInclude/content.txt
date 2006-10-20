@@ -1,0 +1,11 @@
+'''Next create a child'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I came first!|
+|enter|page|!-ParentPage.FirstChild-!|
+
+'''Next create a sibling'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I'm younger, but wiser|
+|enter|page|!-ParentPage.SecondChild-!|

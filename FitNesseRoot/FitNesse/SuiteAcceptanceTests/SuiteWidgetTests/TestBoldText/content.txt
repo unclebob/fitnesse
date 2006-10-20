@@ -1,0 +1,20 @@
+This page tests bold text on a wiki page.
+
+First create a page with bold text on it.
+
+!|Page Creator|
+|page name|page contents|page attributes|valid?|
+|BoldTextPage|This is '''bold''' text||true|
+
+Then request that page
+
+!|Response Requester|
+|uri|valid?|
+|BoldTextPage|true|
+
+Examine the page to be sure it has the bold text
+
+|Response Examiner|
+|type|pattern|matches?|value|
+|contents|This is <b>bold</b> text|true||
+

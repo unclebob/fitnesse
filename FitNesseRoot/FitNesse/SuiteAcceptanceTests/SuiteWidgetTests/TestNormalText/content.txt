@@ -1,0 +1,20 @@
+This page tests normal text on a wiki page.
+
+First create a page with normal text on it.
+
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-NormalTextPage-!|This is normal text||true|
+
+Then request that page
+
+|Response Requester.|
+|uri|valid?|
+|!-NormalTextPage-!|true|
+
+Examine the page to be sure it has the normal text
+
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|This is normal text|true||
+

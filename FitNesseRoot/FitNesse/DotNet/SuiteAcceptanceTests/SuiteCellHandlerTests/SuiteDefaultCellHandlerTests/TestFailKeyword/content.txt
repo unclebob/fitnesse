@@ -1,0 +1,26 @@
+!3 This is primarily necessary to test Fitnesse itself. We need the ability to show that Fitnesse will correctly fail a test when comparing different expected and actual values, but we need that test to turn GREEN so we don't have failing tests!
+
+Works for primatives
+|int fixture|
+|field|field?|
+|21|fail[37]|
+
+Works for strings
+|string fixture|
+|field|field?|
+|some value|fail[some other value]|
+
+Works for objects (people)
+|person fixture|
+|field|field?|
+|Joe Smith|fail[Joe Smithe]|
+
+You can even use the fail keyword to prove that the fail keyword works. In this test, we wrap "fail[Joe Smith]" inside a fail - so when the application returns a person named "Joe Smith", which fails to fail (get it?), the test PASSES!
+|person fixture|
+|field|field?|
+|Joe Smith|fail[fail[Joe Smith]]|
+
+And this one shows that "Joe Smith" (correctly) does not equal "failure[Joe Smith]"
+|person fixture|
+|field|field?|
+|Joe Smith|fail[failure[Joe Smith]]|

@@ -1,0 +1,15 @@
+This suite specifies the behavior of the virtual wiki feature.  These tests use some special pages that exist in ''this'' wiki.  The pages are .FitNesse.SuiteAcceptanceTests.AcceptanceTestPage and its children.
+
+These tests make use of the fact that there are two instances of FitNesse running.  The first is ''this'' one, and the second is the one in the fixture.  The tests build virtual wiki links between the fixture and the .FitNesse.SuiteAcceptanceTests.AcceptanceTestPage in ''this'' wiki.  '''That means this instance of FitNesse must be running on port 80 of localhost.'''
+
+!note make sure you define PORT {80} in root
+
+^TestVirtualLinkConnection
+^TestVirtualLinkError
+^TestAccessVirtualChild
+^TestQuestionMarkLinkDefersToRemoteServer
+^TestQuestionMarkLinkForChildPage
+^TestAliasLinkToNonExistentPageDefersToRemoteServer
+^TestAliasLinkToNonExistentSubPage
+^TestIncludedPageInRange
+^TestIncludedPageOutOfRange

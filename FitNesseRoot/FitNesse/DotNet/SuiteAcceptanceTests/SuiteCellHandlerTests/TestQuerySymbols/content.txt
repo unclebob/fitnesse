@@ -1,0 +1,16 @@
+!3 The !-DotNet FitServer-! treats "()", "?" and "!" as indications that you are trying to access information (for fields, properties and methods).
+----
+!|string fixture|
+|field|field!|field?|field()|
+|aValue|aValue|aValue|aValue|
+|anotherValue|anotherValue|anotherValue|anotherValue|
+
+!|string fixture|
+|property|property!|property?|property()|
+|aValue|aValue|aValue|aValue|
+|anotherValue|anotherValue|anotherValue|anotherValue|
+
+!|string fixture|
+|set|get!|get?|get()|
+|aValue|aValue|aValue|aValue|
+|anotherValue|anotherValue|anotherValue|anotherValue|

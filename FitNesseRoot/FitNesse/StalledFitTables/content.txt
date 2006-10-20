@@ -1,0 +1,9 @@
+There is a nasty bug in Fit that causes Fit to stall, or fail silently without output.  You can see this bug by clicking on the run button below.
+
+|eg.division|
+|numerator|denominator|quotient()|
+|5|1|5|
+
+This bug is caused by a subtle mispelling of the fixture name.  The name of the fixtures should be '''eg.Division'''.  Apparently when you use the wrong case in a fixture name, Fit stalls.
+
+!r fitnesse.FitFilter

@@ -1,0 +1,20 @@
+!2 Test the !c center widget
+If !c is at the beginning of a line, then the rest of the line will be centered.
+----
+!3 First create a page with centered text on it.
+#
+!|Page Creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|CenterTextPage|!c This is centered text||yes|
+#
+!3 Then request that page
+#
+!|Response Requester.|
+|uri|valid?|
+|CenterTextPage|true|
+#
+!3 Examine the page to be sure it has the centered text
+#
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<div class="centered">This is centered text</div>|true||

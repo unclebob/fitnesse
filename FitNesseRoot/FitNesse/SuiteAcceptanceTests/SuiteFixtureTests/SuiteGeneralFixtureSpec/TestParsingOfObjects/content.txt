@@ -1,0 +1,8 @@
+Table cells contain strings.  Fixtures deal with objects.  In order to convert the strings into the objects FIT needs to know how to parse the strings.  One way we accomplish this is to allow the objects to have the following method:{{{Object parse(String s);}}}The following table shows the result of adding two vectors.  Each vector is represented by an ordered pair which represents it's X and Y dimensions.  The class CartesianVector is used to parse, display, and sum the vectors.
+
+!|fitnesse.testutil.VectorSum|
+|v1|v2|sum?|
+|(0,0)|(0,1)|(0,1)|
+|(0,1)|(0,1)|(0,2)|
+|(1,1)|(1,1)|(2,2)|
+

@@ -1,0 +1,13 @@
+!3 Use the "error" keyword when you expect an error. In this case, an error turns the cell a nice shade of green!
+----
+This example uses a fixture that has string property and two string methods that throw errors - one that throws it directly and one that throws it by delegating to another method that throws an error. See the cells turn yellow when you specify a value
+!|fit.ff.FixtureFixture|
+|fixture|error throwing fixture|
+||error throwing method()|error throwing property()|redirect to error throwing method()|
+|eee|expecting|string|values|
+
+When you use the error keyword and errors are received, however, the cells turn green.
+!|fit.ff.FixtureFixture|
+|fixture|error throwing fixture|
+||error throwing method()|error throwing property()|redirect to error throwing method()|
+|rrr|error|error|error|

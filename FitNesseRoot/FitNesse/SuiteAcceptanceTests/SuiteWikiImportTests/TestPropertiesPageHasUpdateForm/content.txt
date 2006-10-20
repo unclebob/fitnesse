@@ -1,0 +1,28 @@
+!c !3 Import Update Form on Properties Page
+Once a page has been updated, it no longer has the Wiki Import form.  Instead is has a Wiki Import Update form.  Essentially it is just one button that will update the imported pages.
+
+First we need a page.
+!|Page creator.|
+|Page name.   |Page contents.|valid?|
+|ImportingPage|!contents   |true   |
+
+Import the !-SampleWiki-!. 
+!|Response Requester.|
+|uri   |valid?|
+|ImportingPage?responder=import&remoteUrl=http://localhost:${PORT}/FitNesse.SampleWiki|true|
+
+Request the properties view of this page.
+!|Response Requester.|
+|uri   |valid?|
+|ImportingPage?properties|true|
+
+Now lets look at the form.
+!|Response Examiner|
+|type|pattern|matches?|value|
+|contents|Wiki Import Update|true||
+
+!|Response Examiner|
+|type|pattern|matches?|
+|contents|<form .* action="ImportingPage#end"|true|
+|contents|<input .* name="remoteUrl"|false|
+|contents|<input .* value="Update Subpages"|true|

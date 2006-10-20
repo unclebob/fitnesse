@@ -1,0 +1,77 @@
+!3 Empty cells should display the value of a field or property. If a cell contains ''"blank"'' or ''"null"'' then treat it as blank ("") or truly null.
+
+Empty cells are automatically filled with the value of the field or property, and no check is performed. To explicitly set a value to empty string ("") or null, or to check for empty string or null, use the "blank" and "null" keywords.
+
+This works in column fixtures...
+!|fit.ff.FixtureFixture|
+|fixture|string fixture|
+||field|field|field?|field?|field?|
+|--rww|null||null|blank|joe|
+|--wrw|blank||null|blank|joe|
+|--wwr|joe||null|blank|joe|
+
+...row fixtures...
+!|fit.ff.FixtureFixture|
+|fixture|blank and null keyword row fixture|
+||field|property|get|field|property|get|field|property|get|
+|rrrwwwwww|null|null|null|blank|blank|blank|Joe|Joe|Joe|
+|rrrwwwwww|blank|blank|blank|Joe|Joe|Joe|null|null|null|
+|rrrwwwwww|Joe|Joe|Joe|null|null|null|blank|blank|blank|
+
+{{{
+public class BlankAndNullKeywordRowFixture : RowFixture
+{
+	public override object[] Query()
+	{
+		StringFixture fixture1 = new StringFixture();
+		fixture1.Field = null;
+		fixture1.Property = null;
+		fixture1.Set(null);
+		StringFixture fixture2 = new StringFixture();
+		fixture2.Field = "";
+		fixture2.Property = "";
+		fixture2.Set("");
+		StringFixture fixture3 = new StringFixture();
+		fixture3.Field = "Joe";
+		fixture3.Property = "Joe";
+		fixture3.Set("Joe");
+		return new object[]{fixture1, fixture2, fixture3};
+	}
+
+	public override Type GetTargetClass()
+	{
+		return typeof(StringFixture);
+	}
+}
+}}}
+
+...and action fixtures...
+!|fit.ff.FixtureFixture|
+|fixture|action fixture|
+||start|string fixture|
+||enter|field|null|
+|---|check|field||
+|--r|check|field|null|
+|--w|check|field|blank|
+|--w|check|field|Joe|
+
+
+!|fit.ff.FixtureFixture|
+|fixture|action fixture|
+||start|string fixture|
+||enter|field|blank|
+|---|check|field||
+|--w|check|field|null|
+|--r|check|field|blank|
+|--w|check|field|Joe|
+
+
+!|fit.ff.FixtureFixture|
+|fixture|action fixture|
+||start|string fixture|
+||enter|field|Joe|
+|---|check|field||
+|--w|check|field|null|
+|--w|check|field|blank|
+|--r|check|field|Joe|
+

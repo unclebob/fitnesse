@@ -1,0 +1,10 @@
+The best way to see learn about .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.WikiWord syntax is by example.
+Notice the combination of capitatol and lower case letters.
+
+!|fitnesse.fixtures.RenderFixture|
+|text|rendered()|
+|WikiWord|WikiWord<a href="WikiWord?edit">?</a>|
+|MdM|MdM<a href="MdM?edit">?</a>|
+|AbCdEfGhIjKlMnOpQrTuVxYz|AbCdEfGhIjKlMnOpQrTuVxYz<a href="AbCdEfGhIjKlMnOpQrTuVxYz?edit">?</a>|
+|TheNumber1|TheNumber1<a href="TheNumber1?edit">?</a>|
+|ParenT.ChilD|ParenT.ChilD<a href="ParenT.ChilD?edit">?</a>|

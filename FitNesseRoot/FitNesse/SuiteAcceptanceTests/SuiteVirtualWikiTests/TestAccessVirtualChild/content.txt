@@ -1,0 +1,15 @@
+In this test we make sure we can fetch the virtual child page.  
+
+!|Page creator.|
+|Page name.   |Page contents.|Page attributes.                            |valid?|
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
+
+!|Response Requester.|
+|uri   |valid?|
+|VirtualPage.ChildOne|true|
+
+!|Response Examiner|
+|type|pattern|matches?|value|
+|contents|You have reached Child One.|true||
+
+!note Why doesn't the page look blue?  Something about the URLRequester or !-ResponseExaminer-! fixtures must be bypassing the colorization.

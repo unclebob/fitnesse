@@ -1,0 +1,23 @@
+!3 !-FitNesse-! treats "y" or "yes" (case insensitive) as true and "n" or "no" as false for bools.
+
+This works with fields...
+!|fit.ff.FixtureFixture|
+|fixture|bool fixture|
+||field|field?|field?|field?|field?|field?|field?|field?|field?|field?|field?|field?|field?|
+|-rrrrrrwwwwww|true|true|True|Y|y|Yes|yes|false|False|N|n|No|no|
+|-rrrrrrwwwwww|false|false|False|N|n|No|no|true|True|Y|y|Yes|yes|
+
+...properties...
+!|fit.ff.FixtureFixture|
+|fixture|bool fixture|
+||property|property?|property?|property?|property?|property?|property?|property?|property?|property?|property?|property?|property?|
+|-rrrrrrwwwwww|true|true|True|Y|y|Yes|yes|false|False|N|n|No|no|
+|-rrrrrrwwwwww|false|false|False|N|n|No|no|true|True|Y|y|Yes|yes|
+
+..and methods...
+!|fit.ff.FixtureFixture|
+|fixture|bool fixture|
+||set|get?|get?|get?|get?|get?|get?|get?|get?|get?|get?|get?|get?|
+|-rrrrrrwwwwww|true|true|True|Y|y|Yes|yes|false|False|N|n|No|no|
+|-rrrrrrwwwwww|false|false|False|N|n|No|no|true|True|Y|y|Yes|yes|
+

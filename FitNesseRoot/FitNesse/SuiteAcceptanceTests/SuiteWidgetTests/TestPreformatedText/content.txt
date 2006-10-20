@@ -1,0 +1,22 @@
+!2 Test that pre-formatted text is rendered correctly.
+Any text enclosed in !-{{{-! and !-}}}-! will be rendered exactly as is, including line breaks and spaces.  The text will be rendered in monofont, using the <!-pre-!> tag.
+----
+!3 Test preformatted text.
+#
+ * Create a page with preformatted text.
+#
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-PreformattedPage-!|!-{{{preformatted text}}}-!||true|
+#
+ * Fetch that page.
+#
+|Response Requester.|
+|uri|valid?|
+|!-PreformattedPage-!|true|
+#
+ * Inspect the preformatted text.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<!-pre-!>preformatted text<!-/pre-!>|true||

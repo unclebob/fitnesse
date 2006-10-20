@@ -1,0 +1,7 @@
+!c !1 Sample Wiki
+!c This subwiki is used in the SuiteAcceptanceTests.SuiteWikiImportTests test suite.
+
+^ChildPageOne
+^ChildPageTwo
+^ChildPageThree
+^ChildWithUnicode

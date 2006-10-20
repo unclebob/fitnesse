@@ -1,0 +1,13 @@
+ * If you see the message:
+  * !-FitNesse-! cannot be started...
+  * Port 80 is already in use.
+  * Use the -p <port#> command line argument to use a different port.
+  * Fitnesse (''date code'') Started...
+   *         on port      80
+   *         using path   '.'
+   *         using dir    '!-FitNesseRoot-!'
+   *         Not logging.
+ * Then you probably have some web server running on your machine.
+  * You must edit the run.bat command to look like this:
+   * java -cp fitnesse.jar fitnesse.FitNesse -p 8080 %1 %2 %3 %4 %5
+  * Then double click run.bat again.

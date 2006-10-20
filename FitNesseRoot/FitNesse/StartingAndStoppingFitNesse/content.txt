@@ -1,0 +1,27 @@
+!2 Starting FitNesse
+
+In the standard distribution there is a file named ''run.bat'' for windows and ''run.sh'' for unix/linux/osx.  Double clicking this file should get things going in most cases.  The main class that gets executed is '''fitnesse.FitNesse'''.  Here is the usage for the '''FitNesse''' class:
+{{{Usage: java fitnesse.FitNesse [-pdrleoa]
+        -p <port number> {80}
+        -d <working directory> {.}
+        -r <page root directory> {FitNesseRoot}
+        -l <log directory> {no logging}
+        -e <days> {14} Number of days before page versions expire
+        -o omit updates
+        -a {user:pwd | user-file-name} enable authentication.
+}}}
+'''{values between braces are default values}'''
+Most of the options here speak for themselves.  The most commonly used option is -p which allows you to change the port on which the FitNesse server will start.
+
+!2 Stopping FitNesse
+
+Historically, pressing ''ctrl-c'' has worked well.  However, it's not sufficient for automated control.  There is a class to stop FitNesse as well.
+{{{Usage: java fitnesse.Shutdown [-pa]
+        -h <hostname> {localhost}
+        -p <port number> {80}
+        -c <username> <password> Supply user credentials.  Use when FitNesse has authentication activated.
+}}}  
+This command will send an HTTP request to the designated server.  If the server is using authentication then the '''-c''' option should be used with appropriate username and password.
+
+Alternatively you may manually type a URL to shutdown a server.
+http://hostname:port/?responder=shutdown

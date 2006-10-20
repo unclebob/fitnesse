@@ -1,0 +1,24 @@
+!2 Test editing a non-existent page.
+The form should have a normal header, a blank edit area, a save button.
+----
+ * Request a page that does not exist.
+#
+|Response Requester.|
+|uri|valid?|
+|!-SomeNonExistentPage?edit-!|true|
+#
+ * Does the page have the appropriate header?
+!|Response Examiner|
+|type|pattern|matches?|value|
+|contents|SomeNonExistentPage|true||
+#
+ * Does the page have an empty text area?
+ * Does the save button invoke the appropriate action.
+#
+!|Response Examiner|
+|type|pattern|matches?|
+|contents|<textarea.*></textarea>|true|
+|contents|<form|true|
+|contents|action="SomeNonExistentPage" |true|
+|contents|type="submit"|true|
+#

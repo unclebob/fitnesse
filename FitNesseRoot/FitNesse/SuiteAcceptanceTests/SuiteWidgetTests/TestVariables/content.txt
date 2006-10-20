@@ -1,0 +1,49 @@
+!2 Test that variables are properly defined and expressed on a page.
+ * Variables are defined as !-!define name {value}-!. 
+ * Alternately they are defined as !-!define name (value)-!.
+  * This is so that you can create variables with {} or () in them. 
+ * They are expressed using !-${name}-! 
+----
+!3 Test a variable defined and used on the same page.
+#
+ * Create a page with a variable definition and use..
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!define x {1}-!|
+|enter|line|!-x is ${x}-!|
+|enter|page|!-VariablePage-!|
+#
+ * Fetch that page.
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-VariablePage-!|true||
+#
+ * Inspect the text to see if the variable was expressed.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|x is 1|true||
+----
+!3 Test a variable defined and used on the same page using () syntax.
+#
+ * Create a page with a variable definition and use..
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!define x (1)-!|
+|enter|line|!-x is ${x}-!|
+|enter|page|!-ParenVariablePage-!|
+#
+ * Fetch that page.
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParenVariablePage-!|true||
+#
+ * Inspect the text to see if the variable was expressed.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|x is 1|true||

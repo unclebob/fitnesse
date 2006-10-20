@@ -1,0 +1,42 @@
+!2 This page tests literals on a wiki page.
+A literal is a string that is not interpreted by the wiki.  All the normal markup syntax is ignored.  Thus you can have wiki words, or multiplie apostrophes or other wiki markup language appear in the clear.
+----
+!3 Test simple literal text.
+First create a page with literal text on it.
+
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-LiteralTextPage-!|!- !-This is literal text-! -!||true|
+
+Then request that page
+
+|Response Requester.|
+|uri|valid?|
+|!-LiteralTextPage-!|true|
+
+Examine the page to be sure it has the normal text
+
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|This is literal text|true||
+----
+!3 Test literal text with markup syntax in it.
+First create a page with literal markup text on it.
+
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-LiteralMarkupTextPage-!|!- !-This is ''literal'' text-! -!||true|
+
+Then request that page
+
+|Response Requester.|
+|uri|valid?|
+|!-LiteralMarkupTextPage-!|true|
+
+Examine the page to be sure it has the normal text
+
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|!-This is ''literal'' text-!|true||
+
+

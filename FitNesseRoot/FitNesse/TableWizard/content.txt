@@ -1,0 +1,6 @@
+A dropdown box located on the edit screen for pages that have the Test attribute set.
+
+The dropdown displays the fixtures specified by all the !fixture elements listed on any !-FixtureList-! pages in the hierarchy, and on selecting a fixture, a table template appropriate for that fixture will be appended to the edit window.  Currently ColumnFixture, RowFixture, and all their descendents are treated specially, and headers will be generated for appropriate public fields and methods.
+
+''Notes''
+ * A fixture must be located in the classpath to be rendered properly in the edit window.

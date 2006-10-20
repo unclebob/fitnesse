@@ -1,0 +1,49 @@
+Here's a programmer's view of what happens, using the example. As it happens, you can run it.
+
+To use a suite fixture, change the TEST_RUNNER (you'll need to press Edit to see the textual form of this):
+
+!define TEST_RUNNER {fitlibrary.suiteFixture.FitLibraryServer}
+
+Now include a table in the ''!-SuiteSetUp-!'' page. Eg
+
+!|ChatSuiteFixture|
+
+|''select or''|complete|
+
+''!-FitNesse-!'' runs this first for a suite. As ''!-ChatSuiteFixture-!'' is a subclass of ''!-SuiteFixture-!'', it automatically registers itself with ''!-FitLibraryServer-!'' as the suite fixture.
+
+The second table above results in a call to a method in ''!-SuiteFixture-!'', which records the keywords to be selected in the storytests.
+
+Then for each storytest, ''!-FitLibraryServer-!'' passes control to the suite fixture. As it is a subclass of ''!-DoFixture-!'', it runs it in flow. So it runs the storytest until it finds that it's filtered out, or when it finds a ''!-DoFixture-!'' to run the rest. Eg, with:
+
+|''keywords''|complete,connect|
+
+|''chat''|
+
+|''connect user''|sarah|
+
+''etc''
+
+Now the first table above results in a call to keywords(), a method that's defined in ''!-SuiteFixture-!''. If the keywords hadn't matched, the storytest would be abandoned at this point and the first table marked as ignored.
+
+Then the second table results in a call to chat(), a method defined in ''!-ChatSuiteFixture-!''. This creates a specific ''!-DoFixture-!'' object and returns it (having passed any shared resources to it).
+
+Because that's a ''!-DoFixture-!'', the suite fixture passes control to it to execute the rest of the storytest, as usual. In the eg above, it runs the ''connect user'' table and those that follow, in the usual way.
+
+Extra comments:
+ * This is analogous to the approach that ''!-DoFixture-!'' takes to go into flow
+ * The ''!-SuiteSetUp-!'' is used to get the suite fixture going at the start
+ * ''!-FitLibraryServer-!'' acts the same as ''!-FitServer-!'' when there is no suite fixture registered, so it's backwards compatible (and so ''!-FitServer-!'' could  have the new code included so that it happens by default)
+ * A suite fixture can override ''keywords()'' and do whatever keyword processing it wants
+ * Other tables can be used in the ''!-SuiteSetUp-!'' to configure the suite fixture concerned (eg, with Spring or db info). As it's a ''!-DoFixture-!'', it's trivial to add capability.
+ * As a ''!-DoFixture-!'' subclass, a ''!-SuiteFixture-!'' has ''setUp()'' and ''tearDown()'' methods called. So resources can be allocated and destroyed appropriately.
+ * Suite fixtures don't mix with fixture class names. When a fixture class name appears at the start of a storytest that use suite fixtures, it is simply treated as a ''!-DoFixture-!'' action. So ''!-|fit.ColumnFixture|-!'' will result in a call to ''fitDotColumnFixture()'', if it exists.
+ * Suite fixtures could be easily nested by stacking their registration/deregistration
+ * This approach suffers from being added to an existing execution model, as with ''!-DoFixture-!'' flow. And so it can be confusing to people who are used to the current system (as happens initially with ''!-DoFixture-!''). But in time, I'm sure that it can be incorporated cleanly.
+Once it's clear that suite fixtures are going ahead, I'll put together a tutorial on getting started with them, as well as the steps involved in taking existing storytests and moving to this approach.
+
+It's easy to switch over if you:
+ * Use ''!-SetUp-!'' pages for at least the first table of a set of storytests; and
+ * Don't mention fixture class names elsewhere
+
+

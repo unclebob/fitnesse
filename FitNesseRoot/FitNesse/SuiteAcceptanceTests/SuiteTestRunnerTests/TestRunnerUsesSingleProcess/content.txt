@@ -1,0 +1,11 @@
+The TestRunner must be debuggable.
+
+Here is a general outline of a TestRunner execution:
+ 0 TestRunner is started
+ 0 TestRunner initiates a FitServer session
+ 0 FitServer sends a request specifying which test to run to a FitNesse server
+ 0 FitNesse responds by sending all the test data
+ 0 FitServer accepts the test data and executes the test.
+ 0 TestRunner accepts the test results from FitServer as they are completed
+ 0 TestRunner generates reports and output.
+

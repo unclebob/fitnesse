@@ -1,0 +1,11 @@
+When no other options are supplied, the TestRunner will print simple messages to standard out.  For each passing assertion a . will be printed.  When an error or failure occurs, the failing page's name is diaplayed along with a brief message. The final counts are printed at the end of execution.
+
+!include CreateSamplePages
+
+!|Test Runner Fixture|
+|args|page name|output?|
+|-v|SuiteFodder.TestPassing|Adding to classpath: classes\n.\nTest Pages: 1 right, 0 wrong, 0 ignored, 0 exceptions\nAssertions: 1 right, 0 wrong, 0 ignored, 0 exceptions\n|
+|-v|SuiteFodder.TestFailing|Adding to classpath: classes\n\nThe test has failures\n\nTest Pages: 0 right, 1 wrong, 0 ignored, 0 exceptions\nAssertions: 0 right, 1 wrong, 0 ignored, 0 exceptions\n|
+|-v|SuiteFodder.TestIgnoring|Adding to classpath: classes\n\nTest Pages: 0 right, 0 wrong, 1 ignored, 0 exceptions\nAssertions: 0 right, 0 wrong, 1 ignored, 0 exceptions\n|
+|-v|SuiteFodder.TestCrashing|Adding to classpath: classes\n\nThe test has errors\n\nTest Pages: 0 right, 0 wrong, 0 ignored, 1 exceptions\nAssertions: 0 right, 0 wrong, 0 ignored, 1 exceptions\n|
+|-v|SuiteFodder|Adding to classpath: classes\n\nTestCrashing has errors\n\nTestFailing has failures\n.\nTest Pages: 1 right, 1 wrong, 1 ignored, 1 exceptions\nAssertions: 1 right, 1 wrong, 1 ignored, 1 exceptions\n|

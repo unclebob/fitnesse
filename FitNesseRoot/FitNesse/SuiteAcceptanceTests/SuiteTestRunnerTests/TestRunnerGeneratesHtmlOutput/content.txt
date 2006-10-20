@@ -1,0 +1,21 @@
+The TestRunner has the ability to dump the HTML output produced by the test execution.  To invoke this option, the ''-html'' command line option must be used.  This parameter reauires a specified file where the output will be dumped.  Optionaly, the ''stdout'' keywork may be used and the HTML will be dumped to standard output.
+
+example command line: '''!-java fitnesse.runner.TestRunner -hmlt stdout localhost 9123 PageName-!'''
+
+!include CreateSamplePages
+
+!|Test Runner Fixture|
+|args|page name|=output?|
+|-html stdout|SuiteFodder.TestPassing|testHtml|
+
+!|String Fixture|
+|value=|starts with?|ends with?|contains?|
+|testHtml|&lt;!DOCTYPE HTML|&lt;/html&gt;\n|PassFixture|
+
+!|Test Runner Fixture|
+|args|page name|=output?|
+|-html stdout|SuiteFodder|suiteHtml|
+
+!|String Fixture|
+|value=|starts with?|ends with?|contains?|
+|suiteHtml|&lt;!DOCTYPE HTML|&lt;/html&gt;\n|1 right, 1 wrong, 1 ignored, 1 exceptions|

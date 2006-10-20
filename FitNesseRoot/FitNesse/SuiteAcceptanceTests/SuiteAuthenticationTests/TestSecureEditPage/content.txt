@@ -1,0 +1,26 @@
+If you try to edit a page marked secure-read, you'll need to authenticate.
+
+First setup the Authentication module.
+!|Authenticator Setup|
+|username|password|status?|
+|Aladdin|open sesame||
+
+Create a page to be edited.
+!|Page creator.|
+|Page name.|page contents.|page attributes|valid?|
+|FrontPage |contents|secure-read=true|true|
+
+Now request a page.  We should get a 401 since we didn't suply any credentials.
+!|Response Requester.|
+|uri|status?|
+|FrontPage?edit |401     |
+
+When we supply bad credintials we get a 401.
+!|Response Requester.|
+|uri|username|password|status?|
+|FrontPage?edit |Aladdin|open please|401|
+
+Proper credentials give a successfull response.
+!|Response Requester.|
+|uri|username|password|status?|
+|FrontPage?edit |Aladdin|open sesame|200|

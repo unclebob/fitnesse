@@ -1,0 +1,10 @@
+!3 Doing your own processing before and/or after a fixture has done its work
+Rather than overriding implementation-specific methods (such as ''doTable()'') in ''Fit'' or ''!-FitLibrary-!'', use the methods ''setUp()'' and ''tearDown()''.
+
+Fixture objects of class ''!-DoFixture-!'' (and subclasses) call these two methods. Consider first a ''!-DoFixture-!'' that's running a single table. Such a fixture could be introduced in the middle of flow-style, or it could be introduced with an explicit fixture class name in core-style. In this case:
+ * ''setUp()'' is called before the fixture object processes the table
+ * ''tearDown()'' is called after the fixture object has finished processing the table
+Now let's consider a ''!-DoFixture-!'' that's a ''flow fixture object'' -- the first ''!-DoFixture-!'' of a storytest that runs the whole storytest. This is responsible for running all of the tables in a storytest, passing control to other fixtures as needed. In this case:
+ * ''setUp()'' is called before the fixture object processes any of the tables
+ * ''tearDown()'' is called after the fixture object has finished processing all of the tables (or after it is prematurely stopped)
+

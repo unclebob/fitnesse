@@ -1,0 +1,10 @@
+The ''' !contents ''' widget is replaced with a list of all the immediate child pages.  If there are no child pages, then it is replaced with an empty list.
+
+You can also add the -R option
+{{{!contents -R}}}
+in which case the widget will recurse down the hierarchy from the page you're on. So you get the immediate child pages, all of their immediate child pages, all of theirs, etc, until all of the leaves have been reached.
+
+The AcceptanceTests for the ''' !contents ''' widget can be found at:
+
+http://docs.fitnesse.org/FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents
+http://docs.fitnesse.org/FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursion

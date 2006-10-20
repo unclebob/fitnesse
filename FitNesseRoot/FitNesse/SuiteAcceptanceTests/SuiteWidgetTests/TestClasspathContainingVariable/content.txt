@@ -1,0 +1,20 @@
+Classpath widgets can cantain variables.  The text of !path widgets do not get processed with exception of variable references.
+
+Create a page that defines a variable used in a !path widget.
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!define BASE_PATH {/some/path/}|
+|enter|line|!path !-${BASE_PATH}-!blah.jar|
+|enter|page|!-ClasspathTestPage-!|
+
+Next, request that page with ?test (as though you clicked the test button)
+
+!|Response Requester.|
+|uri|valid?|
+|!-ClasspathTestPage-!|true|
+
+Lastly, make sure the variable was rendered.
+
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|classpath: /some/path/blah.jar|true||

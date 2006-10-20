@@ -1,0 +1,17 @@
+To include the content from one page into another you may use the !-!include-! widget
+
+Usage:
+'''!-!include PageName-!'''
+
+For example if you wanted to all the content from .FrontPage to be displayed here you would simply type:
+
+!-!include .FrontPage-!
+
+As a result you will see .FrontPage below:
+-----
+!include .FrontPage
+-----
+Now that we've included .FrontPage...
+we can continue to talk about the !include widget.
+'''Watch out for !include cycles'''
+Don't include a page that already includes the page that you are including from. ;-)  

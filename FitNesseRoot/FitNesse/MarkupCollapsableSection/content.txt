@@ -1,0 +1,31 @@
+Often a page include lots of meta text that tends to get in the way.  With collapsable sections you can easily collapse sections of content to hide their content and later expand them to make their content visible again.
+
+A collapsable section starts with an ! and at least one star followed by a title for the section.  The following lines will contain the content of the section.  The section ends by a line with at least one star and an !.
+
+{{{
+!******** Section Title
+This is the content of the section.
+The section may be as long as needed.
+To end a collapsable section,
+use at least one * followed by an !.
+**************!
+}}}
+When rendered looks like:  (Click the arrow! It's fun!)
+!* Section Title
+This is the content of the section.
+The section may be as long as needed.
+To end a collapsable section,
+use at least one * followed by an !.
+**************!
+
+You'll notice that the section is expanded by default.  You may designate a section the be closed by default by following the stars on the first line with a right arrow ('''>''').
+{{{
+!*****> Collapsed Section
+section body
+**********!
+}}}
+When rendered:
+
+!*****> Collapsed Section
+section body
+**********!

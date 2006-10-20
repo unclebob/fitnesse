@@ -1,0 +1,13 @@
+@import url("/files/css/fitnesse_base.css");
+
+div.sidebar
+{
+	display: none;
+}
+
+div.mainbar
+{
+	position: relative;
+	left: 0px;
+	width: 100%;
+}
