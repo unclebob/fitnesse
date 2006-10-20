@@ -14,7 +14,7 @@
     <property name="cobertura.root" value="${lib}/cobertura-1.7" />
     <property name="cobertura.dir" location="${results.dir}/cobertura" />
 
-    <path id='classpath'>
+    <path id="classpath">
         <pathelement path="${classes}" />
         <fileset dir="lib">
             <include name="**/*.jar" />
@@ -32,7 +32,7 @@
 
     <target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-    <target name="testbuild" depends="clean, instrument, test, report" description="clean, then compile the source, run all the unit test and finally generate the code coverage." />
+    <target name="testbuild" depends="clean, instrument, unit_test, fit_test, report" description="clean, then compile the source, run all the unit test and finally generate the code coverage." />
 
     <target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
@@ -161,7 +161,7 @@
         <delete dir="${results.dir}" />
     </target>
 
-    <target name="test" depends="compile" description="run the unit tests">
+    <target name="unit_test" depends="compile" description="run the unit tests">
         <junit fork="yes" printsummary="on" haltonfailure="no" haltonerror="no">
             <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
             <classpath refid="classpath" />
@@ -269,6 +269,74 @@
                 <pathelement location="classes" />
             </classespath>
         </jdepend>
+    </target>
+
+    <macrodef name="fit.run.tests" description="Macro to run fit tests.  This Macro starts the fit server, runs fitnesse tests in-container using the specified URL and publish the results.">
+        <attribute name="wiki.root.path" description="Path to the FitnesseRoot filder which contains all the wiki pages" />
+        <attribute name="fitnesse.port" default="8082" description="Port on which fitnesse would run" />
+        <attribute name="suite.page" description="Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest" />
+        <attribute name="result.dir" description="Path to the folder that should contain the fitnesse results page" />
+        <attribute name="result.filename.without.extension" description="Fitnesse results file name without the extension. The file name will automatically appended with .html and .xml. Both these files will be copied to the result.dir folder" />
+        <attribute name="fail.on.error" default="true" description="If set to true, fails the build if any fit test fails. If set to false, it does not fail the build, but writes a line to the failure.file, so that you could run multiple run.fit.test targets and finally check the failure.file file if any suites failed." />
+        <sequential>
+            <echo message="About to run fitnesse server" level="info" />
+            <parallel>
+                <daemons>
+                    <java classname="fitnesse.FitNesse">
+                        <classpath>
+                            <path refid="classpath" />
+                            <path refid="cobertura.classpath" />
+                        </classpath>
+                        <arg value="-p" />
+                        <arg value="@{fitnesse.port}" />
+                        <arg value="-e" />
+                        <arg value="0" />
+                        <arg value="-d" />
+                        <arg value="@{wiki.root.path}" />
+                        <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
+                    </java>
+                </daemons>
+                <sequential>
+                    <echo message="Waiting for Fitnesse server to start" level="info" />
+                    <mkdir dir="@{result.dir}" />
+                    <waitfor checkevery="5" checkeveryunit="second">
+                        <http url="http://localhost:@{fitnesse.port}" />
+                    </waitfor>
+                    <java classname="fitnesse.runner.TestRunner" classpath="${classes}" fork="true" resultproperty="fit.test.failures">
+                        <classpath>
+                            <path refid="classpath" />
+                            <path refid="cobertura.classpath" />
+                        </classpath>
+                        <arg value="-html" />
+                        <arg value="@{result.dir}/@{result.filename.without.extension}.html" />
+                        <arg value="-xml" />
+                        <arg value="@{result.dir}/@{result.filename.without.extension}.xml" />
+                        <arg value="-v" />
+                        <arg value="-debug" />
+                        <arg value="-nopath" />
+                        <arg value="localhost" />
+                        <arg value="@{fitnesse.port}" />
+                        <arg value="@{suite.page}" />
+                        <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
+                    </java>
+                    <echo message="Finished FIT tests: ${fit.test.failures} failures/exceptions" level="info" />
+                    <fail message="Number of FIT test failures/exceptions: ${fit.test.failures}">
+                        <condition>
+                            <and>
+                                <equals arg1="@{fail.on.error}" arg2="true" casesensitive="false" />
+                                <not>
+                                    <equals arg1="${fit.test.failures}" arg2="0" />
+                                </not>
+                            </and>
+                        </condition>
+                    </fail>
+                </sequential>
+            </parallel>
+        </sequential>
+    </macrodef>
+
+    <target name="fit_test">
+        <fit.run.tests fitnesse.port="8082" result.dir="${results.dir}" result.filename.without.extension="fit-results" suite.page="FitNesse.SuiteAcceptanceTests" wiki.root.path="." fail.on.error="false" />
     </target>
 
 </project>
