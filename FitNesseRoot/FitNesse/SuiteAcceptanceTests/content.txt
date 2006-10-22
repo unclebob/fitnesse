@@ -12,7 +12,6 @@
 
 !2 ''Classpaths''
 !path classes
-!path lib\cobertura-1.7\cobertura.jar
 ----
 !2 ''Port''
 !define PORT {8082}

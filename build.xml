@@ -32,7 +32,7 @@
 
     <target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-    <target name="testbuild" depends="clean, instrument, unit_test, fit_test, report" description="clean, then compile the source, run all the unit test and finally generate the code coverage." />
+    <target name="testbuild" depends="clean, unit_test, fit_test" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests." />
 
     <target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
@@ -162,7 +162,7 @@
     </target>
 
     <target name="unit_test" depends="compile" description="run the unit tests">
-        <junit fork="yes" printsummary="on" haltonfailure="no" haltonerror="no">
+        <junit fork="yes" printsummary="on" haltonfailure="yes" haltonerror="yes">
             <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
             <classpath refid="classpath" />
             <classpath refid="cobertura.classpath" />
@@ -170,9 +170,7 @@
             <formatter type="plain" usefile="false" />
             <batchtest todir="${results.dir}">
                 <fileset dir="${src}">
-                    <include name="**/*Test.java" />
-                    <exclude name="**/*AllTestSuite.java" />
-                    <exclude name="**/*FitServerTest.java" />
+                    <include name="AllTestSuite.java" />
                 </fileset>
             </batchtest>
         </junit>
@@ -271,8 +269,8 @@
         </jdepend>
     </target>
 
-    <macrodef name="run.fit.tests" description="Macro to run fit tests.  This Macro starts the fit server, runs fitnesse tests in-container using the specified URL and publish the results.">
-        <attribute name="wiki.root.path" description="Path to the FitnesseRoot filder which contains all the wiki pages" />
+    <macrodef name="run.fit.tests" description="Macro to run fit tests.  This Macro starts the fit server, runs fitnesse tests and publishes the results.">
+        <attribute name="wiki.root.path" default="." description="Path to the FitnesseRoot filder which contains all the wiki pages" />
         <attribute name="fitnesse.port" default="8082" description="Port on which fitnesse would run" />
         <attribute name="suite.page" description="Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest" />
         <attribute name="result.dir" description="Path to the folder that should contain the fitnesse results page" />
@@ -282,18 +280,13 @@
             <echo message="About to run fitnesse server" level="info" />
             <parallel>
                 <daemons>
-                    <java classname="fitnesse.FitNesse">
-                        <classpath>
-                            <path refid="classpath" />
-                            <path refid="cobertura.classpath" />
-                        </classpath>
+                    <java classname="fitnesse.FitNesse" classpathref="classpath">
                         <arg value="-p" />
                         <arg value="@{fitnesse.port}" />
                         <arg value="-e" />
                         <arg value="0" />
                         <arg value="-d" />
                         <arg value="@{wiki.root.path}" />
-                        <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
                     </java>
                 </daemons>
                 <sequential>
@@ -302,11 +295,7 @@
                     <waitfor checkevery="5" checkeveryunit="second">
                         <http url="http://localhost:@{fitnesse.port}" />
                     </waitfor>
-                    <java classname="fitnesse.runner.TestRunner" classpath="${classes}" fork="true" resultproperty="fit.test.failures">
-                        <classpath>
-                            <path refid="classpath" />
-                            <path refid="cobertura.classpath" />
-                        </classpath>
+                    <java classname="fitnesse.runner.TestRunner" classpathref="classpath" fork="true" resultproperty="fit.test.failures">
                         <arg value="-html" />
                         <arg value="@{result.dir}/@{result.filename.without.extension}.html" />
                         <arg value="-xml" />
@@ -317,7 +306,6 @@
                         <arg value="localhost" />
                         <arg value="@{fitnesse.port}" />
                         <arg value="@{suite.page}" />
-                        <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
                     </java>
                     <echo message="Finished FIT tests: ${fit.test.failures} failures/exceptions" level="info" />
                     <fail message="Number of FIT test failures/exceptions: ${fit.test.failures}">
@@ -336,7 +324,7 @@
     </macrodef>
 
     <target name="fit_test">
-        <run.fit.tests fitnesse.port="8082" result.dir="${results.dir}" result.filename.without.extension="fit-results" suite.page="FitNesse.SuiteAcceptanceTests" wiki.root.path="." fail.on.error="true" />
+        <run.fit.tests result.dir="${results.dir}" result.filename.without.extension="fit-results" suite.page="FitNesse.SuiteAcceptanceTests" />
     </target>
 
 </project>
