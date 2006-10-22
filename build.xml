@@ -295,7 +295,7 @@
                     <waitfor checkevery="5" checkeveryunit="second">
                         <http url="http://localhost:@{fitnesse.port}" />
                     </waitfor>
-                    <java classname="fitnesse.runner.TestRunner" classpathref="classpath" fork="true" resultproperty="fit.test.failures">
+                    <java classname="fitnesse.runner.TestRunner" classpath="classes" fork="true" resultproperty="fit.test.failures">
                         <arg value="-html" />
                         <arg value="@{result.dir}/@{result.filename.without.extension}.html" />
                         <arg value="-xml" />
