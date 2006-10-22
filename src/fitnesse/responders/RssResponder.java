@@ -2,20 +2,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
-import fitnesse.components.XmlWriter;
-import fitnesse.wiki.*;
-import fitnesse.util.XmlUtil;
-import fitnesse.http.*;
-import org.w3c.dom.*;
-
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
 import java.text.ParsePosition;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.components.XmlWriter;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 public class RssResponder implements Responder
 {
@@ -55,8 +60,7 @@ public class RssResponder implements Responder
         }
     }
 
-    protected String[] getLines(WikiPage page)
-            throws Exception
+    protected String[] getLines(WikiPage page) throws Exception
     {
         PageData data = page.getData();
         String recentChanges = data.getContent();
@@ -90,7 +94,8 @@ public class RssResponder implements Responder
 
     protected void buildLink(Document rssDocument, Element itemElement1, String pageName) throws Exception
     {
-        String prefix = "http://localhost/";
+        String hostName = java.net.InetAddress.getLocalHost().getHostName();
+        String prefix = "http://" + hostName + "/";
         if (contextPage != null)
         {
             PageData data = contextPage.getData();
@@ -147,14 +152,14 @@ public class RssResponder implements Responder
         return rssDocument;
     }
 
-
     protected String convertDateFormat(String dateIn)
     {
         // format matched kk:mm:ss EEE, MMM dd, yyyy
         Pattern timePattern = Pattern.compile("\\d*:\\d*:\\d* \\w*, \\w* \\d*, \\d*");
         Matcher m = timePattern.matcher(dateIn);
-        if(m.matches())
-            return (new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat)).format((new SimpleDateFormat(FitNesseContext.recentChangesDateFormat)).parse(dateIn, new ParsePosition(0)));
+        if (m.matches())
+            return (new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat)).format((new SimpleDateFormat(
+                    FitNesseContext.recentChangesDateFormat)).parse(dateIn, new ParsePosition(0)));
         else
             return dateIn;
     }

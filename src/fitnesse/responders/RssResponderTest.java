@@ -19,6 +19,7 @@ public class RssResponderTest extends ResponderTest
     protected Document rssDoc;
     private String date;
     private String rfcDate;
+    private String hostName;
 
     // Return an instance of the Responder being tested.
     protected Responder responderInstance()
@@ -33,6 +34,7 @@ public class RssResponderTest extends ResponderTest
         date = dateFormat.format(new Date());
         SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
         rfcDate = rfcDateFormat.format(new Date());
+        hostName = java.net.InetAddress.getLocalHost().getHostName();
     }
 
     public void testEmptyRssReport() throws Exception
@@ -52,7 +54,7 @@ public class RssResponderTest extends ResponderTest
         String author = "me";
         String pubDate = rfcDate;
         String description = "me:" + rfcDate;
-        checkItem(items.item(0), title, author, pubDate, description, "http://localhost/MyNewPage");
+        checkItem(items.item(0), title, author, pubDate, description, "http://" + hostName + "/MyNewPage");
     }
 
     public void testTwoNewPages() throws Exception
@@ -62,8 +64,8 @@ public class RssResponderTest extends ResponderTest
         String recentChangesContent = recentChangeOne + "\n" + recentChangeTwo + "\n";
         NodeList items = getReportedItems(recentChangesContent);
         assertEquals(2, items.getLength());
-        checkItem(items.item(0), "MyNewPage", "me", rfcDate, "me:" + rfcDate, "http://localhost/MyNewPage");
-        checkItem(items.item(1), "SomeOtherPage", null, rfcDate, rfcDate, "http://localhost/SomeOtherPage");
+        checkItem(items.item(0), "MyNewPage", "me", rfcDate, "me:" + rfcDate, "http://" + hostName + "/MyNewPage");
+        checkItem(items.item(1), "SomeOtherPage", null, rfcDate, rfcDate, "http://" + hostName + "/SomeOtherPage");
     }
 
     public void testReportedPagesSelectedByResource() throws Exception
@@ -77,8 +79,9 @@ public class RssResponderTest extends ResponderTest
         String recentChangesContent = page1 + "\n" + page2 + "\n" + page3 + "\n" + page4 + "\n";
         NodeList items = getReportedItems(recentChangesContent);
         assertEquals(2, items.getLength());
-        checkItem(items.item(0), "FrontPage", "me", rfcDate, "me:" + rfcDate, "http://localhost/FrontPage");
-        checkItem(items.item(1), "FrontPage.MyPage", "me", rfcDate, "me:" + rfcDate, "http://localhost/FrontPage.MyPage");
+        checkItem(items.item(0), "FrontPage", "me", rfcDate, "me:" + rfcDate, "http://" + hostName + "/FrontPage");
+        checkItem(items.item(1), "FrontPage.MyPage", "me", rfcDate, "me:" + rfcDate, "http://" + hostName
+                + "/FrontPage.MyPage");
     }
 
     public void testLinkWithSetPrefix() throws Exception
@@ -96,7 +99,7 @@ public class RssResponderTest extends ResponderTest
     {
         NodeList items = getReportedItems("|PageName|author|" + date + "|");
         assertEquals(1, items.getLength());
-        checkItem(items.item(0), "PageName", "author", rfcDate, "author:"+rfcDate, "http://localhost/PageName");
+        checkItem(items.item(0), "PageName", "author", rfcDate, "author:" + rfcDate, "http://" + hostName + "/PageName");
     }
 
     public void testConvertDateFormat() throws Exception
@@ -127,7 +130,8 @@ public class RssResponderTest extends ResponderTest
         channelElement = XmlUtil.getElementByTagName(rssElement, "channel");
     }
 
-    private void checkItem(Node node, String title, String author, String pubDate, String description, String link) throws Exception
+    private void checkItem(Node node, String title, String author, String pubDate, String description, String link)
+            throws Exception
     {
         Element itemElement = (Element) node;
         assertEquals(title, XmlUtil.getTextValue(itemElement, "title"));
