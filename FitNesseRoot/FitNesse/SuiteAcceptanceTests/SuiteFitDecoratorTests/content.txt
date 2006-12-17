@@ -1,6 +1,8 @@
-!-FitDecorator-! is a framework for writing decorator for FIT fixtures. If you have exisiting fixtures which you don't want to or cannot update to add new functionality, some of the decorators might help. 
+!-FitDecorator-! is a framework for writing decorator for FIT fixtures. !-FitDecorator-! help you to add new functionality to existing fixture classes without having to update them. You can just decorate the table on the fitnesse page with the appropriate !-FitDecorator-!.
 
 For example, if you want to approximately know how much time each fixture is taking during a fitnesse test, you can decorate the existing fitnesse table with a !-MaxTime-! decorator.
+
+List of available decorators and their functionality with an example:
 
  * [[Measure Max Time taken by the Division Fixture by using !-MaxTime-! decorator][^MaxTimeDivision]]
  * [[Execute Division Fixture multiple times using Loop Decorator][^MultipleDivision]]
