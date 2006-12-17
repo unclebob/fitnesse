@@ -16,7 +16,7 @@ public class AllTestSuite
 			FitServerTest.class,
 			FitMatcherTest.class,
 			ColumnFixtureTest.class,
-      RowFixtureTest.class,
+			RowFixtureTest.class,
 			FixtureTest.class,
 			ScientificDoubleTest.class,
 			GracefulNamerTest.class,

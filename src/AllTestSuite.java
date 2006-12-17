@@ -10,7 +10,8 @@ public class AllTestSuite
   {
 	  return TestSuiteMaker.makeSuite("root", new Class[] {
 			fitnesse.AllTestSuite.class,
-			fit.AllTestSuite.class
+			fit.AllTestSuite.class,
+            fit.decorator.AllTestSuite.class
     });
   }
 }
