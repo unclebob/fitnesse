@@ -3,6 +3,7 @@ package fit.decorator;
 import junit.framework.Test;
 import fit.decorator.performance.MaxTimeTest;
 import fit.decorator.performance.TimeRangeTest;
+import fit.decorator.util.DataTypeTest;
 import fit.decorator.util.DeltaTest;
 import fit.decorator.util.TableTest;
 import fitnesse.testutil.TestSuiteMaker;
@@ -19,6 +20,7 @@ public class AllTestSuite
             TimeRangeTest.class,
             DeltaTest.class,
             TableTest.class,
+            DataTypeTest.class
         });
   }
 }

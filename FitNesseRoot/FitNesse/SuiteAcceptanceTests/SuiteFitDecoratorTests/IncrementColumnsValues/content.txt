@@ -2,6 +2,7 @@ What if you want to increment the value of one of the columns of your fixture ta
  * int or integer
  * double
  * string
+ * date
 
 !|Increment Columns Value|numerator|of type|int|by|5|
 |Division|
@@ -29,5 +30,13 @@ What if you want to increment the value of one of the columns of your fixture ta
 |5|1|5|
 |5|11|5|
 |5|111|5|
+
+Updates the dates by 5 days. 
+!|Increment Columns Value|inDate|of type|date|by|5|
+|Get Dates|
+|inDate|updatedDate()|
+|12/02/2006|12/02/2006|
+|12/02/2006|12/07/2006|
+|12/22/2006|01/01/2007|
 
 This decorator by itself is not as useful. But piped with other decorators this can be really handy.

@@ -23,12 +23,20 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase
         return 0;
     }
 
-    public void testSetupDecoratorShouldAddColumnnameDatatypeAndDeltaToSummary() throws Exception
+    public void testSetupDecoratorShouldAddColumnNameDataTypeAndDeltaToSummary() throws Exception
     {
         decorator.setupDecorator(new String[]
         {"Column1", "int", "1"});
         assertEquals("Column1", (String) decorator.summary.get(IncrementColumnsValue.COLUMN_NAME));
         assertEquals(new Delta("int", "1"), decorator.summary.get(IncrementColumnsValue.DELTA));
+    }
+
+    public void testSetupDecoratorShouldAddColumnNameDataTypeAndDeltaToSummaryForDates() throws Exception
+    {
+        decorator.setupDecorator(new String[]
+        {"Column1", "date", "5"});
+        assertEquals("Column1", (String) decorator.summary.get(IncrementColumnsValue.COLUMN_NAME));
+        assertEquals(new Delta("date", "5"), decorator.summary.get(IncrementColumnsValue.DELTA));
     }
 
     public void testSetupDecoratorShouldThrowInvalidInputExceptionIfColumnNameIsNotSpecified() throws ParseException
@@ -53,12 +61,14 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase
             throws ParseException
     {
         assertInvalidInputException(new String[]
-        {"Column1", "double", "xyz"}, "value 'xyz' is not of type 'double'");
+        {"Column1", "double", "xyz"}, "value 'xyz' is not a valid DataType = 'double'");
         assertInvalidInputException(new String[]
-        {"Column1", "int", "1.2"}, "value '1.2' is not of type 'int'");
+        {"Column1", "int", "1.2"}, "value '1.2' is not a valid DataType = 'int'");
+        assertInvalidInputException(new String[]
+        {"Column1", "date", "12-5-2006"}, "value '12-5-2006' is not a valid DataType = 'date'");
     }
 
-    public void testSetupDecoratorShouldDefaultDataTypeToStringIfItDoesNotMatch_int_integer_or_double()
+    public void testSetupDecoratorShouldDefaultDataTypeToStringIfItDoesNotMatch_int_integer_double_or_date()
             throws Exception
     {
         decorator.setupDecorator(new String[]
@@ -83,6 +93,17 @@ public class IncrementColumnsValueTest extends FixtureDecoratorTestCase
                 + "<tr><td>10</td><td>3</td><td>5</td></tr></table>";
         decorator.doTable(new Parse(fitPage));
         TestCaseHelper.assertCounts(TestCaseHelper.counts(2, 1, 0, 0), decorator.counts);
+    }
+
+    public void testShouldIncrementDateColumnValuesFromSecondRowForTheGivenColumnName() throws Exception
+    {
+        String fitPage = "<table><tr><td>" + IncrementColumnsValue.class.getName()
+                + "</td><td>inDate</td><td>of type</td><td>date</td><td>by</td><td>5</td></tr>"
+                + "<tr><td>eg.GetDates</td></tr><tr><td>inDate</td><td>updatedDate()</td></tr>"
+                + "<tr><td>12/02/2006</td><td>12/02/2006</td></tr>" + "<tr><td>12/02/2006</td><td>12/07/2006</td></tr>"
+                + "<tr><td>12/22/2006</td><td>01/01/2007</td></tr></table>";
+        decorator.doTable(new Parse(fitPage));
+        TestCaseHelper.assertCounts(TestCaseHelper.counts(3, 0, 0, 0), decorator.counts);
     }
 
     public void testShouldLeaveTheTableAsItIsIfTablesHasLessThanFourRows() throws Exception

@@ -25,7 +25,7 @@ public class DeltaTest extends TestCase
             new Delta(dataType, value);
         } catch (InvalidInputException e)
         {
-            assertEquals("value '" + value + "' is not of type '" + dataType + "'", e.getMessage());
+            assertEquals("value '" + value + "' is not a valid DataType = '" + dataType + "'", e.getMessage());
         }
     }
 
@@ -80,7 +80,7 @@ public class DeltaTest extends TestCase
 
     private void aasertToString(String value, String dataType) throws InvalidInputException
     {
-        String expectedToStringValue = "DataType = " + dataType + " and value = " + value;
+        String expectedToStringValue = "DataType = '" + dataType + "' and value = " + value;
         assertEquals(expectedToStringValue, new Delta(dataType, value).toString());
     }
 }

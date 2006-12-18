@@ -10,7 +10,7 @@ public class Delta
     public Delta(String dataType, String value) throws InvalidInputException
     {
         this.dataType = DataType.instance(dataType);
-        this.value = this.dataType.validate(value);
+        this.value = this.dataType.parse(value);
     }
 
     public String addTo(String originalValue, int numberofTime)
@@ -39,5 +39,4 @@ public class Delta
     {
         return dataType.toString() + " and value = " + value;
     }
-
 }
