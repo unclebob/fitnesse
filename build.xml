@@ -11,12 +11,12 @@
     <property name="zipDir" location="dist/fitnesse" />
     <property name="results.dir" location="test-results" />
 
-    <property name="cobertura.root" value="${lib}/cobertura-1.7" />
+    <property name="cobertura.root" value="${lib}/cobertura-1.8" />
     <property name="cobertura.dir" location="${results.dir}/cobertura" />
 
     <path id="classpath">
         <pathelement path="${classes}" />
-        <fileset dir="lib">
+        <fileset dir="${lib}">
             <include name="*.jar" />
         </fileset>
     </path>
@@ -24,15 +24,15 @@
     <path id="cobertura.classpath">
         <fileset dir="${cobertura.root}">
             <include name="cobertura.jar" />
-            <include name="${lib}/**/*.jar" />
+            <include name="lib/*.jar" />
         </fileset>
     </path>
 
-    <taskdef classpath="${cobertura.root}/cobertura.jar" resource="tasks.properties" />
+    <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
     <target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-    <target name="testbuild" depends="clean, unit_test, fit_test" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests." />
+    <target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests." />
 
     <target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
@@ -86,6 +86,7 @@
             <exclude name="**/*Test.class" />
             <exclude name="**/*TestSuite.class" />
             <include name="files/**" />
+            <include name="tasks.properties" />
             <manifest>
                 <attribute name="Built-By" value="Robert C. Martin and Micah D. Martin" />
             </manifest>
@@ -139,6 +140,7 @@
 
     <target name="compile" depends="init" description="compile the source (make)">
         <javac srcdir="${src}" destdir="${classes}" classpathref="classpath" debug="true" />
+        <copy file="extra/ant/tasks.properties" todir="${classes}" />
     </target>
 
     <target name="instrument" depends="compile">
@@ -146,8 +148,6 @@
         <cobertura-instrument datafile="${cobertura.dir}/cobertura.ser">
             <fileset dir="${classes}">
                 <include name="**/*.class" />
-                <exclude name="**/*Test.class" />
-                <exclude name="**/*AllTestSuite.class" />
                 <exclude name="eg/" />
             </fileset>
         </cobertura-instrument>
@@ -180,8 +180,6 @@
         <cobertura-report datafile="${cobertura.dir}/cobertura.ser" destdir="${cobertura.dir}">
             <fileset dir="${src}">
                 <include name="**/*.java" />
-                <exclude name="**/*Test.java" />
-                <exclude name="**/*AllTestSuite.java" />
                 <exclude name="eg/" />
             </fileset>
         </cobertura-report>
@@ -269,62 +267,26 @@
         </jdepend>
     </target>
 
-    <macrodef name="run.fit.tests" description="Macro to run fit tests.  This Macro starts the fit server, runs fitnesse tests and publishes the results.">
-        <attribute name="wiki.root.path" default="." description="Path to the FitnesseRoot filder which contains all the wiki pages" />
-        <attribute name="fitnesse.port" default="8082" description="Port on which fitnesse would run" />
-        <attribute name="suite.page" description="Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest" />
-        <attribute name="result.dir" description="Path to the folder that should contain the fitnesse results page" />
-        <attribute name="result.filename.without.extension" description="Fitnesse results file name without the extension. The file name will automatically appended with .html and .xml. Both these files will be copied to the result.dir folder" />
-        <attribute name="fail.on.error" default="true" description="If set to true, fails the build if any fit test fails. If set to false, it does not fail the build, but writes a line to the failure.file, so that you could run multiple run.fit.test targets and finally check the failure.file file if any suites failed." />
-        <sequential>
-            <echo message="About to run fitnesse server" level="info" />
-            <parallel>
-                <daemons>
-                    <java classname="fitnesse.FitNesse" classpathref="classpath">
-                        <arg value="-p" />
-                        <arg value="@{fitnesse.port}" />
-                        <arg value="-e" />
-                        <arg value="0" />
-                        <arg value="-d" />
-                        <arg value="@{wiki.root.path}" />
-                    </java>
-                </daemons>
-                <sequential>
-                    <echo message="Waiting for Fitnesse server to start" level="info" />
-                    <mkdir dir="@{result.dir}" />
-                    <waitfor checkevery="5" checkeveryunit="second">
-                        <http url="http://localhost:@{fitnesse.port}" />
-                    </waitfor>
-                    <java classname="fitnesse.runner.TestRunner" classpath="classes" fork="true" resultproperty="fit.test.failures">
-                        <arg value="-html" />
-                        <arg value="@{result.dir}/@{result.filename.without.extension}.html" />
-                        <arg value="-xml" />
-                        <arg value="@{result.dir}/@{result.filename.without.extension}.xml" />
-                        <arg value="-v" />
-                        <arg value="-debug" />
-                        <arg value="-nopath" />
-                        <arg value="localhost" />
-                        <arg value="@{fitnesse.port}" />
-                        <arg value="@{suite.page}" />
-                    </java>
-                    <echo message="Finished FIT tests: ${fit.test.failures} failures/exceptions" level="info" />
-                    <fail message="Number of FIT test failures/exceptions: ${fit.test.failures}">
-                        <condition>
-                            <and>
-                                <equals arg1="@{fail.on.error}" arg2="true" casesensitive="false" />
-                                <not>
-                                    <equals arg1="${fit.test.failures}" arg2="0" />
-                                </not>
-                            </and>
-                        </condition>
-                    </fail>
-                </sequential>
-            </parallel>
-        </sequential>
-    </macrodef>
+    <target name="load_fitnesse_taskdef">
+        <taskdef classpathref="classpath" resource="tasks.properties" />
+    </target>
 
-    <target name="fit_test">
-        <run.fit.tests result.dir="${results.dir}" result.filename.without.extension="fit-results" suite.page="FitNesse.SuiteAcceptanceTests" />
+    <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef" description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
+        <run-fitnesse-tests wikidirectoryrootpath="." suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" resultsxmlpage="fit-results.xml" classpathref="classpath" />
+    </target>
+
+    <target name="execute_fitnesse_tests_using_different_tasks" depends="startFitnesse, runAcceptanceTests, stopFitnesse" />
+
+    <target name="startFitnesse" description="Start fitnesse" depends="load_fitnesse_taskdef">
+        <start-fitnesse wikidirectoryrootpath="." fitnesseport="8082" />
+    </target>
+
+    <target name="runAcceptanceTests" depends="load_fitnesse_taskdef" description="Execute Fitnesse Acceptance Tests and publishes the test results">
+        <execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
+    </target>
+
+    <target name="stopFitnesse" description="Stops fitnesse" depends="load_fitnesse_taskdef">
+        <stop-fitnesse fitnesseport="8082" />
     </target>
 
 </project>
