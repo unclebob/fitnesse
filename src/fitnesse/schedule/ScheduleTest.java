@@ -27,7 +27,7 @@ public class ScheduleTest extends TestCase
 	{
 		schedule.add(counter);
 		schedule.start();
-		Thread.sleep(750);
+		Thread.sleep(700);
 		schedule.stop();
 		assertEquals(3, counter.count);
 	}

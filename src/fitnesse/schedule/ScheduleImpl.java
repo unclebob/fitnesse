@@ -9,7 +9,7 @@ public class ScheduleImpl implements Schedule, Runnable
 	private long delay;
 	private Thread thread;
 	private boolean running;
-	private List scheduleItems = Collections.synchronizedList(new LinkedList());
+	private List<ScheduleItem> scheduleItems = Collections.synchronizedList(new LinkedList<ScheduleItem>());
 
 	public ScheduleImpl(long delay)
 	{
@@ -58,11 +58,9 @@ public class ScheduleImpl implements Schedule, Runnable
 		long time = System.currentTimeMillis();
 		synchronized(scheduleItems)
 		{
-			for(Iterator iterator = scheduleItems.iterator(); iterator.hasNext();)
-			{
-				ScheduleItem item = (ScheduleItem) iterator.next();
-				runItem(item, time);
-			}
+			for (ScheduleItem item : scheduleItems) {
+			    runItem(item, time);
+            }
 		}
 	}
 
