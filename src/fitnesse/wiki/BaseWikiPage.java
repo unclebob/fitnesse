@@ -32,11 +32,11 @@ public abstract class BaseWikiPage implements WikiPage
 		return parent == null ? this : parent;
 	}
 
-	protected abstract List getNormalChildren() throws Exception;
+	protected abstract List<WikiPage> getNormalChildren() throws Exception;
 
-	public List getChildren() throws Exception
+	public List<WikiPage> getChildren() throws Exception
 	{
-		List children = getNormalChildren();
+		List<WikiPage> children = getNormalChildren();
 		WikiPageProperties props = getData().getProperties();
 		WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinksProperty != null)

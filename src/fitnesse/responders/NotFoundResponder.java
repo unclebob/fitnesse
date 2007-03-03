@@ -13,10 +13,6 @@ public class NotFoundResponder implements Responder
 {
 	private String resource;
 
-	public NotFoundResponder()
-	{
-	}
-
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
 		SimpleResponse response = new SimpleResponse(404);

@@ -2,14 +2,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import fitnesse.FitNesseContext;
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.http.UploadedFile;
 import fitnesse.responders.SecureResponder;
 import fitnesse.util.FileUtil;
-import fitnesse.authentication.*;
-import fitnesse.http.*;
-import java.io.*;
-import java.util.regex.*;
-import java.net.*;
 
 public class UploadResponder implements SecureResponder
 {

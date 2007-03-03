@@ -2,12 +2,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.util.*;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import org.w3c.dom.*;
-import fitnesse.util.XmlUtil;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import fitnesse.components.XmlWriter;
+import fitnesse.util.XmlUtil;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable
 {

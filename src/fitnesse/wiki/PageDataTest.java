@@ -2,13 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.testutil.RegexTest;
-import fitnesse.responders.run.*;
+import static fitnesse.testutil.RegexTest.assertDoesntHaveRegexp;
+import static fitnesse.testutil.RegexTest.assertHasRegexp;
 
-import java.util.*;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
-public class PageDataTest extends RegexTest
+import junit.framework.TestCase;
+import fitnesse.responders.run.SuiteResponder;
+
+public class PageDataTest extends TestCase
 {
 	public WikiPage page;
 	private WikiPage root;
@@ -19,10 +21,6 @@ public class PageDataTest extends RegexTest
 		root = InMemoryPage.makeRoot("RooT");
 		crawler = root.getPageCrawler();
 		page = crawler.addPage(root, PathParser.parse("PagE"), "some content");
-	}
-
-	public void tearDown() throws Exception
-	{
 	}
 
 	public void testVariablePreprocessing() throws Exception

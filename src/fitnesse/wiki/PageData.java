@@ -2,15 +2,28 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.wikitext.widgets.*;
-import fitnesse.wikitext.*;
-import fitnesse.responders.run.*;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.components.SaveRecorder;
-
-import java.util.*;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import fitnesse.components.SaveRecorder;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.widgets.ClasspathWidget;
+import fitnesse.wikitext.widgets.FixtureWidget;
+import fitnesse.wikitext.widgets.IncludeWidget;
+import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
+import fitnesse.wikitext.widgets.VariableDefinitionWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WidgetWithTextArgument;
+import fitnesse.wikitext.widgets.XRefWidget;
 
 public class PageData implements Serializable
 {
@@ -133,13 +146,24 @@ public class PageData implements Serializable
 
 	public String getVariable(String name) throws Exception
 	{
-		if(variableRoot == null)
+		initializeVariableRoot();
+		return variableRoot.getVariable(name);
+	}
+
+    private void initializeVariableRoot() throws Exception
+    {
+        if(variableRoot == null)
 		{
 			variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, variableDefinitionWidgetBuilder);
 			variableRoot.render();
 		}
-		return variableRoot.getVariable(name);
-	}
+    }
+    
+    public void addVariable(String name, String value) throws Exception
+    {
+        initializeVariableRoot();
+        variableRoot.addVariable(name, value);
+    }
 
 	private String processHTMLWidgets(String content, WikiPage context) throws Exception
 	{

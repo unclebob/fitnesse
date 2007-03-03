@@ -1,11 +1,9 @@
 package fit.decorator.util;
 
 import java.awt.Point;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
-import fit.decorator.exceptions.InvalidInputException;
 import junit.framework.TestCase;
+import fit.decorator.exceptions.InvalidInputException;
 
 public class DataTypeTest extends TestCase {
     public void testInstanceMethodReturnsValidDataTypeForGivenParam() throws Exception {

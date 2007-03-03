@@ -2,11 +2,30 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
+import junit.framework.TestCase;
 import fitnesse.wiki.MockWikiPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.*;
-import junit.framework.TestCase;
-import java.util.Iterator;
+import fitnesse.wikitext.widgets.AnchorDeclarationWidget;
+import fitnesse.wikitext.widgets.AnchorMarkerWidget;
+import fitnesse.wikitext.widgets.BoldWidget;
+import fitnesse.wikitext.widgets.CenterWidget;
+import fitnesse.wikitext.widgets.ClasspathWidget;
+import fitnesse.wikitext.widgets.CollapsableWidget;
+import fitnesse.wikitext.widgets.EmailWidget;
+import fitnesse.wikitext.widgets.HeaderWidget;
+import fitnesse.wikitext.widgets.HruleWidget;
+import fitnesse.wikitext.widgets.ItalicWidget;
+import fitnesse.wikitext.widgets.LineBreakWidget;
+import fitnesse.wikitext.widgets.ListWidget;
+import fitnesse.wikitext.widgets.NoteWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.PreformattedWidget;
+import fitnesse.wikitext.widgets.StrikeWidget;
+import fitnesse.wikitext.widgets.TableWidget;
+import fitnesse.wikitext.widgets.TextWidget;
+import fitnesse.wikitext.widgets.VirtualWikiWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class WidgetBuilderTest extends TestCase
 {

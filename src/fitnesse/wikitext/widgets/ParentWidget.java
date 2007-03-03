@@ -2,10 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.*;
+import java.util.LinkedList;
+import java.util.List;
 
-import java.util.*;
-import java.util.regex.Matcher;
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWidget;
 
 public abstract class ParentWidget extends WikiWidget
 {

@@ -9,12 +9,11 @@ import java.util.*;
 
 public class WidgetRoot extends ParentWidget
 {
-	private Map variables = new HashMap();
+	private Map<String, String> variables = new HashMap<String, String>();
 	private WidgetBuilder builder;
 	private WikiPage page;
-	private PagePointer pagePointer;
 	private boolean doEscaping = true;
-	private List literals = new LinkedList();
+	private List<String> literals = new LinkedList<String>();
 
 	public WidgetRoot(WikiPage page) throws Exception
 	{
@@ -126,7 +125,7 @@ public class WidgetRoot extends ParentWidget
 		return literals;
 	}
 
-	public void setLiterals(List literals)
+	public void setLiterals(List<String> literals)
 	{
 		this.literals = literals;
 	}

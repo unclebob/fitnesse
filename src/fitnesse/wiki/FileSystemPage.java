@@ -198,7 +198,7 @@ public class FileSystemPage extends CachingPage
 	{
 		File dir = new File(getFileSystemPath());
 		File[] files = dir.listFiles();
-			Set versions = new HashSet();
+		Set<VersionInfo> versions = new HashSet<VersionInfo>();
 		if(files != null)
 		{
 			for(int i = 0; i < files.length; i++)
@@ -279,7 +279,7 @@ public class FileSystemPage extends CachingPage
 
 	protected Set getFilesToZip(String dirPath)
 	{
-		Set filesToZip = new HashSet();
+		Set<File> filesToZip = new HashSet<File>();
 		File dir = new File(dirPath);
 		File[] files = dir.listFiles();
 		if(files == null)

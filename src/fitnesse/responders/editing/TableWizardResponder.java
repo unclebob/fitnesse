@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.http.*;
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.CommandRunner;
 import fitnesse.wiki.WikiPage;
-import fitnesse.components.*;
 
 public class TableWizardResponder extends EditResponder
 {
