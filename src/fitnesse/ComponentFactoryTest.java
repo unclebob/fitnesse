@@ -3,6 +3,8 @@
 package fitnesse;
 
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.*;
 import fitnesse.wiki.*;
 import fitnesse.html.HtmlPageFactory;
@@ -12,6 +14,8 @@ import fitnesse.testutil.*;
 import fitnesse.authentication.*;
 import fitnesse.wikitext.widgets.*;
 import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetInterceptor;
+import fitnesse.wikitext.WikiWidget;
 
 public class ComponentFactoryTest extends RegexTest
 {
@@ -39,7 +43,8 @@ public class ComponentFactoryTest extends RegexTest
     out.write("".getBytes());
     out.close();
     file.delete();
-	}
+    TestWidgetInterceptor.widgetsIntercepted.clear();
+  }
 
 	public void testRootPageCreation() throws Exception
 	{
@@ -115,7 +120,29 @@ public class ComponentFactoryTest extends RegexTest
 		assertSubString(ItalicWidget.REGEXP, builderPattern);
 	}
 
-	public void testAuthenticatorDefaultCreation() throws Exception
+  public void testWikiWidgetInterceptors() throws Exception {
+    WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
+    testProperties.setProperty(ComponentFactory.WIKI_WIDGET_INTERCEPTORS, TestWidgetInterceptor.class.getName());
+    saveTestProperties();
+
+    factory.loadProperties();
+    String output = factory.loadWikiWidgetInterceptors();
+
+    assertSubString(TestWidgetInterceptor.class.getName(), output);
+
+    new WidgetRoot("hello '''world'''" + "\n", (WikiPage) null, WidgetBuilder.htmlWidgetBuilder);
+    assertTrue(TestWidgetInterceptor.widgetsIntercepted.contains(BoldWidget.class));
+  }
+
+  public static class TestWidgetInterceptor implements WidgetInterceptor {
+    public static List<Class> widgetsIntercepted = new ArrayList<Class>();
+
+    public void intercept(WikiWidget widget) {
+      widgetsIntercepted.add(widget.getClass());
+    }
+  }
+
+  public void testAuthenticatorDefaultCreation() throws Exception
 	{
 		factory.loadProperties();
 		Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());

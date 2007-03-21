@@ -57,6 +57,7 @@ public class FitNesse
 
 		extraOutput = componentFactory.loadResponderPlugins(context.responderFactory);
 		extraOutput += componentFactory.loadWikiWidgetPlugins();
+		extraOutput += componentFactory.loadWikiWidgetInterceptors();
 		extraOutput += componentFactory.loadContentFilter();
 
 		WikiImportTestEventListener.register();

@@ -5,6 +5,8 @@ package fitnesse.wikitext;
 import fitnesse.wikitext.widgets.*;
 import java.lang.reflect.*;
 import java.util.regex.*;
+import java.util.List;
+import java.util.LinkedList;
 
 public class WidgetBuilder
 {
@@ -50,7 +52,9 @@ public class WidgetBuilder
 	private Pattern widgetPattern;
 	private WidgetData[] widgetDataArray;
 
-	public WidgetBuilder(Class[] widgetClasses)
+  private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
+
+  public WidgetBuilder(Class[] widgetClasses)
 	{
 		this.widgetClasses = widgetClasses;
 		widgetPattern = buildCompositeWidgetPattern();
@@ -117,7 +121,11 @@ public class WidgetBuilder
 		try
 		{
 			Constructor widgetConstructor = widgetClass.getConstructor(new Class[]{ParentWidget.class, String.class});
-			return (WikiWidget) widgetConstructor.newInstance(new Object[]{parent, text});
+      WikiWidget widget = (WikiWidget) widgetConstructor.newInstance(new Object[]{parent, text});
+      for(WidgetInterceptor i: interceptors) {
+        i.intercept(widget);
+      }
+      return widget;
 		}
 		catch(Exception e)
 		{
@@ -200,7 +208,11 @@ public class WidgetBuilder
 			widgetDataArray[i].match = null;
 	}
 
-	static class WidgetData
+  public void addInterceptor(WidgetInterceptor interceptor) {
+    interceptors.add(interceptor);
+  }
+
+  static class WidgetData
 	{
 		public Class widgetClass;
 		public Pattern pattern;

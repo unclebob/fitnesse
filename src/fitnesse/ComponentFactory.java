@@ -8,6 +8,8 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.*;
 import fitnesse.authentication.*;
 import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetInterceptor;
+
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.*;
@@ -20,13 +22,14 @@ public class ComponentFactory
 	public static final String HTML_PAGE_FACTORY = "HtmlPageFactory";
 	public static final String RESPONDERS = "Responders";
 	public static final String WIKI_WIDGETS = "WikiWidgets";
+  public static final String WIKI_WIDGET_INTERCEPTORS = "WikiWidgetInterceptors";
 	public static final String AUTHENTICATOR = "Authenticator";
 	public static final String CONTENT_FILTER = "ContentFilter";
 
 	private Properties loadedProperties;
 	private String propertiesLocation;
 
-	public ComponentFactory(String propertiesLocation)
+  public ComponentFactory(String propertiesLocation)
 	{
 		this(propertiesLocation, new Properties());
 	}
@@ -128,8 +131,23 @@ public class ComponentFactory
       Class[] widgetClassesArray = (Class[])widgetClasses.toArray(new Class[]{});
       WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(widgetClassesArray);
     }
+
     return buffer.toString();
 	}
+
+  public String loadWikiWidgetInterceptors() throws Exception {
+    StringBuffer buffer = new StringBuffer();
+
+    String widgetInterceptorList = loadedProperties.getProperty(WIKI_WIDGET_INTERCEPTORS);
+    if (widgetInterceptorList != null) {
+      buffer.append("\tCustom wiki widget interceptors loaded:").append(endl);
+      for(String interceptorClass: widgetInterceptorList.split(",")) {
+        WidgetBuilder.htmlWidgetBuilder.addInterceptor((WidgetInterceptor) Class.forName(interceptorClass).newInstance());
+        buffer.append("\t\t").append(interceptorClass).append(endl);
+      }
+    }
+    return buffer.toString();
+  }
 
   private void appendExistingWidgets(List widgetClasses) {
     for (int i = 0; i < WidgetBuilder.htmlWidgetClasses.length; i++) {
