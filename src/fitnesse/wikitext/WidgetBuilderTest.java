@@ -2,6 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import junit.framework.TestCase;
 import fitnesse.wiki.MockWikiPage;
 import fitnesse.wiki.WikiPage;
@@ -17,6 +19,7 @@ import fitnesse.wikitext.widgets.HruleWidget;
 import fitnesse.wikitext.widgets.ItalicWidget;
 import fitnesse.wikitext.widgets.LineBreakWidget;
 import fitnesse.wikitext.widgets.ListWidget;
+import fitnesse.wikitext.widgets.MockWidgetRoot;
 import fitnesse.wikitext.widgets.NoteWidget;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.PreformattedWidget;
@@ -260,6 +263,49 @@ public class WidgetBuilderTest extends TestCase
 		assertEquals(expectedClass, widget.getClass());
 		if(widget instanceof TextWidget)
 			assertEquals(expectedText, ((TextWidget) widget).getText());
+	}
+	
+	public void testConcurrentAddWidgets() throws Exception
+	{
+		WidgetBuilder widgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
+		String text = "'''bold text'''";
+		ParentWidget parent = new BoldWidget(new MockWidgetRoot(), "'''bold text'''");
+		AtomicBoolean failFlag = new AtomicBoolean();
+		failFlag.set(false);
+		//This is our best attempt to get a race condition by creating large number of threads.
+		for (int i=0; i<25000; i++)
+		{
+			new Thread(new WidgetBuilderThread(widgetBuilder, text, parent, failFlag)).start();
+		}
+		assertEquals(false, failFlag.get());
+	}
+
+	class WidgetBuilderThread implements Runnable
+	{
+		WidgetBuilder widjetBuilder = null;
+		String text = null;
+		ParentWidget parent = null;
+		AtomicBoolean failFlag = null;
+		
+		public WidgetBuilderThread(WidgetBuilder widjetBuilder, String text, ParentWidget parent, AtomicBoolean failFlag)
+		{
+			this.widjetBuilder = widjetBuilder;
+			this.text = text;
+			this.parent = parent;
+			this.failFlag = failFlag;
+		}
+
+		public void run()
+		{
+			try
+			{
+				this.widjetBuilder.addChildWidgets(this.text, this.parent);
+			} 
+			catch (Exception e)
+			{
+				this.failFlag.set(true);
+			}
+		}
 	}
 }
 
