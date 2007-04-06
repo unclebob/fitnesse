@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import java.util.regex.*;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class WidgetBuilder
 {
@@ -53,6 +54,7 @@ public class WidgetBuilder
 	private WidgetData[] widgetDataArray;
 
   private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
+  private final ReentrantLock widgetDataArraylock = new ReentrantLock();
 
   public WidgetBuilder(Class[] widgetClasses)
 	{
@@ -164,21 +166,28 @@ public class WidgetBuilder
 
 	public void addChildWidgets(String value, ParentWidget parent) throws Exception
 	{
+		widgetDataArraylock.lock();
 		WidgetData firstMatch = findFirstMatch(value);
-
-		if(firstMatch != null)
+		try
 		{
-			Matcher match = firstMatch.match;
-			String preString = value.substring(0, match.start());
-			if(!"".equals(preString))
-				new TextWidget(parent, preString);
-			constructWidget(firstMatch.widgetClass, parent, match.group());
-			String postString = value.substring(match.end());
-			if(!postString.equals(""))
-				addChildWidgets(postString, parent);
+			if(firstMatch != null)
+			{
+				Matcher match = firstMatch.match;
+				String preString = value.substring(0, match.start());
+				if(!"".equals(preString))
+					new TextWidget(parent, preString);
+				constructWidget(firstMatch.widgetClass, parent, match.group());
+				String postString = value.substring(match.end());
+				if(!postString.equals(""))
+					addChildWidgets(postString, parent);
+			}
+			else
+				new TextWidget(parent, value);
+		} 
+		finally 
+		{
+			widgetDataArraylock.unlock();
 		}
-		else
-			new TextWidget(parent, value);
 	}
 
 	private WidgetData findFirstMatch(String value)
