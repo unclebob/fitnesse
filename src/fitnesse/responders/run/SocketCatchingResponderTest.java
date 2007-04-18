@@ -47,7 +47,7 @@ public class SocketCatchingResponderTest extends RegexTest
 		response.readyToSend(sender);
 
 		assertHasRegexp("There are no clients waiting for a socket with ticketNumber 123", sender.sentData());
-		assertTrue(sender.closed);
+		assertTrue(sender.isClosed());
 		assertEquals(404, response.getStatus());
 	}
 

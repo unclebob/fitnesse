@@ -50,6 +50,7 @@
             <fileset dir="lib" includes="fitlibrary.jar" />
         </copy>
         <mkdir dir="${zipDir}/dotnet" />
+        <mkdir dir="dotnet" />
         <copy todir="${zipDir}/dotnet">
             <fileset dir="dotnet">
                 <include name="*.exe" />
