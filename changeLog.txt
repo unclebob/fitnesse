@@ -1,3 +1,6 @@
+-- 20070426 -------------------------------------------------------------------------------
+SuiteSetUp and SuiteTearDown is called on running a single test
+Fixed unit tests which broke if run in non-US locale
 
 -- 20060719 -------------------------------------------------------------------------------
 Requires Java 5.
