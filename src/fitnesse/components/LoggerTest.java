@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class LoggerTest extends TestCase
@@ -22,9 +23,12 @@ public class LoggerTest extends TestCase
 	private LogData ld;
 	private String filename = "fitnesse20030306134205.log";
 	private String logLine = "myHost - - [06/Mar/2003:13:42:05 -0100] \"request\" 42 666";
+	private Locale saveLocale;
 
 	public void setUp() throws Exception
 	{
+		saveLocale = Locale.getDefault();
+		Locale.setDefault(Locale.US);
 		l = new Logger(dirPath);
 		ld = new LogData();
 		ld.host = "myHost";
@@ -40,6 +44,7 @@ public class LoggerTest extends TestCase
 	{
 		l.close();
 		FileUtil.deleteFileSystemDirectory(dirPath);
+		Locale.setDefault(saveLocale);
 	}
 
 	public void testTimeZoneHandling()

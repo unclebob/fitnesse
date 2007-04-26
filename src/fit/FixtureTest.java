@@ -5,10 +5,14 @@ package fit;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
+
 import fitnesse.testutil.RegexTest;
 
 public class FixtureTest extends RegexTest
 {
+  private Locale saveLocale;
+
   static class HasParseMethod
   {
     public static Object parse(String s)
@@ -21,6 +25,21 @@ public class FixtureTest extends RegexTest
   {
   }
 
+  @Override
+  protected void setUp() throws Exception 
+  {
+	super.setUp();
+	saveLocale = Locale.getDefault();
+	Locale.setDefault(Locale.US);
+  }
+  
+  @Override
+  protected void tearDown() throws Exception 
+  {
+	super.tearDown();
+	Locale.setDefault(saveLocale);
+  }
+  
   public void testHasParseMethod() throws Exception
   {
     assertTrue(Fixture.hasParseMethod(HasParseMethod.class));

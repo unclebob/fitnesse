@@ -14,6 +14,7 @@ public class FileResponderTest extends RegexTest
 	private Response response;
 	private FitNesseContext context;
 	private FileResponder responder;
+	private Locale saveLocale;
 	// Example: "Tue, 02 Apr 2003 22:18:49 GMT"
 
 	public void setUp() throws Exception
@@ -23,13 +24,14 @@ public class FileResponderTest extends RegexTest
 		context.rootPagePath = SampleFileUtility.base;
 		SampleFileUtility.makeSampleFiles();
 		response = null;
+		saveLocale = Locale.getDefault();
 	}
 
 	public void tearDown() throws Exception
 	{
 		if (response != null) response.readyToSend(new MockResponseSender());
 		SampleFileUtility.deleteSampleFiles();
-
+		Locale.setDefault(saveLocale);
 	}
 
 	public void testFileContent() throws Exception
@@ -54,6 +56,7 @@ public class FileResponderTest extends RegexTest
 
 	public void testLastModifiedHeader() throws Exception
 	{
+		Locale.setDefault(Locale.US);
 		request.setResource("files/testFile1");
 		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
 		response = responder.makeResponse(context, request);
@@ -63,6 +66,7 @@ public class FileResponderTest extends RegexTest
 
 	public void test304IfNotModified() throws Exception
 	{
+		Locale.setDefault(Locale.US);
 		Calendar now = new GregorianCalendar();
 		now.add(Calendar.DATE, -1);
 		String yesterday = SimpleResponse.makeStandardHttpDateFormat().format(now.getTime());
