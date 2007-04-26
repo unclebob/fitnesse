@@ -262,6 +262,31 @@ public class TestResponderTest extends RegexTest
 		assertEquals(true, listener2.gotPreTestNotification);
 	}
 
+	public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception
+	{
+		WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+		WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+		
+		WikiPagePath testPagePath = crawler.getFullPath(testPage);
+		String resource = PathParser.render(testPagePath);
+		request.setResource(resource);
+
+		Response response = responder.makeResponse(context, request);
+		MockResponseSender sender = new MockResponseSender(response);
+		results = sender.sentData();
+
+		assertEquals("Output Captured", getExecutionStatusMessage());
+		assertHasRegexp("ErrorLog", results);
+
+		WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+		String errorLogContent = errorLog.getData().getContent();
+		assertHasRegexp("Output of SuiteSetUp", errorLogContent);
+		assertHasRegexp("Output of TestPage", errorLogContent);
+		assertHasRegexp("Output of SuiteTearDown", errorLogContent);
+	}
+	
 	private String errorWritingTable(String message)
 	{
 		return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +

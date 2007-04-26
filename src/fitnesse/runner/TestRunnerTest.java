@@ -5,6 +5,7 @@ package fitnesse.runner;
 import fitnesse.wiki.*;
 import fitnesse.testutil.*;
 import fitnesse.responders.run.FitClientResponderTest;
+import fitnesse.responders.run.SuiteResponder;
 import fitnesse.util.FileUtil;
 import java.util.List;
 import java.io.*;
@@ -99,6 +100,29 @@ public class TestRunnerTest extends RegexTest
         assertSubString("TestIgnore", content);
     }
 
+    public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception
+    {
+    	addSuiteSetUpTearDown();
+		runner.handler.addHandler(mockHandler);
+
+		runPage("SuitePage.TestPassing");
+		
+		List results = mockHandler.results;
+        assertEquals(1, results.size());
+        checkResult(results, 0, "", new Counts(3, 0, 0, 0), "PassFixture");
+        PageResult result = (PageResult) results.get(0);
+        String content = result.content();
+		assertSubString("SuiteSetUp", content);
+		assertSubString("SuiteTearDown", content);
+    }
+
+	private void addSuiteSetUpTearDown() throws Exception {
+		PageCrawler crawler = root.getPageCrawler();
+    	WikiPage suitePage = crawler.getPage(root, PathParser.parse("SuitePage"));
+		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME), "!|fitnesse.testutil.PassFixture|\n");
+		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME), "!|fitnesse.testutil.PassFixture|\n");
+	}
+    
     private void checkResult(List results, int i, String s, Counts counts, String content)
     {
         PageResult result = (PageResult) results.get(i);

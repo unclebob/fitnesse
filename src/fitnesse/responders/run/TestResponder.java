@@ -72,7 +72,7 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 	{
 		addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
 
-		testableHtml = HtmlUtil.testableHtml(data);
+		testableHtml = HtmlUtil.testableHtml(data, true);
 		if(testableHtml.length() == 0)
 			testableHtml = handleBlankHtml();
 		classPath = new ClassPathBuilder().getClasspath(page);

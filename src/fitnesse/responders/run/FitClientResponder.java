@@ -60,7 +60,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 			client.send(classpath);
 		}
 
-		sendPage(data, client);
+		sendPage(data, client, true);
 		closeClient(client);
 	}
 
@@ -79,15 +79,15 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 		{
 			WikiPage testPage = (WikiPage) iterator.next();
 			PageData testPageData = testPage.getData();
-			sendPage(testPageData, client);
+			sendPage(testPageData, client, false);
 		}
 		closeClient(client);
 	}
 
-	private void sendPage(PageData data, FitClient client) throws Exception
+	private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws Exception
 	{
 		String pageName = crawler.getRelativeName(page, data.getWikiPage());
-		String testableHtml = HtmlUtil.testableHtml(data);
+		String testableHtml = HtmlUtil.testableHtml(data, includeSuiteSetup);
 		String sendableHtml = pageName + "\n" + testableHtml;
 		client.send(sendableHtml);
 	}
