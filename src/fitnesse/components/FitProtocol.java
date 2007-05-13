@@ -48,7 +48,7 @@ public class FitProtocol
 		if(sizeString.length() < 10)
 			throw new Exception("A size value could not be read. Fragment=|" + sizeString + "|");
 		else
-			return format.parse(sizeString).intValue();
+			return Integer.valueOf(sizeString).intValue();
 	}
 
 	public static String readDocument(StreamReader reader, int size) throws Exception
