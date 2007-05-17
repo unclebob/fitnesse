@@ -12,7 +12,6 @@ import fit.exception.FitParseException;
 public class FitServer
 {
 	public String input;
-	public Parse tables;
 	public Fixture fixture = new Fixture();
 	public FixtureListener fixtureListener = new TablePrintingFixtureListener();
 	private Counts counts = new Counts();
@@ -71,7 +70,7 @@ public class FitServer
 					print("processing document of size: " + size + "\n");
 					String document = FitProtocol.readDocument(socketReader, size);
 					//TODO MDM if the page name was always the first line of the body, it could be printed here.
-					tables = new Parse(document);
+					Parse tables = new Parse(document);
 					newFixture().doTables(tables);
 					print("\tresults: " + fixture.counts() + "\n");
 					counts.tally(fixture.counts);
@@ -127,7 +126,7 @@ public class FitServer
 	{
 		print("Exception occurred!" + "\n");
 		print("\t" + e.getMessage() + "\n");
-		tables = new Parse("span", "Exception occurred: ", null, null);
+		Parse tables = new Parse("span", "Exception occurred: ", null, null);
 		fixture.exception(tables, e);
 		counts.exceptions += 1;
 		fixture.listener.tableFinished(tables);

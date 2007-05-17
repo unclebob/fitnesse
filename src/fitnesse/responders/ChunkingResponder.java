@@ -15,7 +15,6 @@ public abstract class ChunkingResponder implements Responder
 	protected Request request;
 	protected ChunkedResponse response;
 	protected FitNesseContext context;
-	private Thread respondingThread;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
@@ -28,7 +27,7 @@ public abstract class ChunkingResponder implements Responder
 		if(page == null && shouldRespondWith404())
 			return pageNotFoundResponse(context, request);
 
-		respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
+		Thread respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
 		respondingThread.start();
 
 		return response;
