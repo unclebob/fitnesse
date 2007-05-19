@@ -2,43 +2,38 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fitnesse.wiki.*;
-import fitnesse.testutil.*;
-import fitnesse.responders.*;
-import fitnesse.responders.files.*;
-import fitnesse.components.*;
+import fitnesse.components.LogData;
 import fitnesse.http.*;
+import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.files.SampleFileUtility;
+import fitnesse.testutil.*;
 import fitnesse.util.FileUtil;
+import fitnesse.wiki.*;
 
 import java.util.regex.Pattern;
 
-public class FitNesseServerTest extends RegexTest
-{
-	private PageCrawler crawler;
-	private WikiPage root;
-	private WikiPagePath pageOnePath;
-	private WikiPagePath pageOneTwoPath;
+public class FitNesseServerTest extends RegexTest {
+  private PageCrawler crawler;
+  private WikiPage root;
+  private WikiPagePath pageOnePath;
+  private WikiPagePath pageOneTwoPath;
 
-	public FitNesseServerTest()
-	{
-	}
-
-	public void setUp() throws Exception
-  {
-    SampleFileUtility.makeSampleFiles();
-	  root = InMemoryPage.makeRoot("RootPage");
-	  crawler = root.getPageCrawler();
-	  pageOnePath = PathParser.parse("PageOne");
-	  pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
+  public FitNesseServerTest() {
   }
 
-  public void tearDown() throws Exception
-  {
+  public void setUp() throws Exception {
+    SampleFileUtility.makeSampleFiles();
+    root = InMemoryPage.makeRoot("RootPage");
+    crawler = root.getPageCrawler();
+    pageOnePath = PathParser.parse("PageOne");
+    pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
+  }
+
+  public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(SampleFileUtility.base);
   }
 
-  public void testSimple() throws Exception
-  {
+  public void testSimple() throws Exception {
     crawler.addPage(root, PathParser.parse("SomePage"), "some string");
     String output = getSocketOutput("GET /SomePage HTTP/1.1\r\n\r\n", root);
     String statusLine = "HTTP/1.1 200 OK\r\n";
@@ -46,39 +41,34 @@ public class FitNesseServerTest extends RegexTest
     assertTrue("Should have canned Content", hasSubString("some string", output));
   }
 
-  public void testNotFound() throws Exception
-  {
+  public void testNotFound() throws Exception {
     String output = getSocketOutput("GET /WikiWord HTTP/1.1\r\n\r\n", new MockWikiPage());
 
     assertSubString("404 Not Found", output);
   }
 
-  public void testBadRequest() throws Exception
-  {
+  public void testBadRequest() throws Exception {
     String output = getSocketOutput("Bad Request \r\n\r\n", new MockWikiPage());
 
     assertSubString("400 Bad Request", output);
-	  assertSubString("The request string is malformed and can not be parsed", output);
+    assertSubString("The request string is malformed and can not be parsed", output);
   }
 
-  public void testFrontPageRequest() throws Exception
-  {
+  public void testFrontPageRequest() throws Exception {
     crawler.addPage(root, PathParser.parse("FrontPage"), "This is the FrontPage content");
     String output = getSocketOutput("GET / HTTP/1.1\r\n\r\n", root);
     String expected = "This is the .* content";
     assertTrue("Should have content", hasSubString(expected, output));
   }
 
-  public void testSomeOtherPage() throws Exception
-  {
+  public void testSomeOtherPage() throws Exception {
     crawler.addPage(root, pageOnePath, "Page One Content");
     String output = getSocketOutput("GET /PageOne HTTP/1.1\r\n\r\n", root);
     String expected = "Page One Content";
     assertTrue("Should have page one", hasSubString(expected, output));
   }
 
-  public void testSecondLevelPage() throws Exception
-  {
+  public void testSecondLevelPage() throws Exception {
     crawler.addPage(root, pageOnePath, "Page One Content");
     crawler.addPage(root, pageOneTwoPath, "Page Two Content");
     String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n", root);
@@ -87,8 +77,7 @@ public class FitNesseServerTest extends RegexTest
     assertTrue("Should have page Two", hasSubString(expected, output));
   }
 
-  public void testRelativeAndAbsoluteLinks() throws Exception
-  {
+  public void testRelativeAndAbsoluteLinks() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RootPage");
     crawler.addPage(root, pageOnePath, "PageOne");
     crawler.addPage(root, pageOneTwoPath, "PageTwo");
@@ -103,14 +92,12 @@ public class FitNesseServerTest extends RegexTest
     assertTrue("Should have absolute link", hasSubString(expected, output));
   }
 
-  public void testServingRegularFiles() throws Exception
-  {
+  public void testServingRegularFiles() throws Exception {
     String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new MockWikiPage());
     assertHasRegexp("file2 content", output);
   }
 
-  public void testLoggingDataCreation() throws Exception
-  {
+  public void testLoggingDataCreation() throws Exception {
     MockRequest request = new MockRequest();
     SimpleResponse response = new SimpleResponse(200);
     MockSocket socket = new MockSocket("something");
@@ -118,7 +105,7 @@ public class FitNesseServerTest extends RegexTest
     socket.setHost("1.2.3.4");
     request.setRequestLine("GET / HTTP/1.1");
     response.setContent("abc");
-	  request.setCredentials("billy", "bob");
+    request.setCredentials("billy", "bob");
 
     LogData data = FitNesseExpediter.makeLogData(socket, request, response);
 
@@ -127,11 +114,10 @@ public class FitNesseServerTest extends RegexTest
     assertEquals("GET / HTTP/1.1", data.requestLine);
     assertEquals(200, data.status);
     assertEquals(3, data.size);
-	  assertEquals("billy", data.username);
+    assertEquals("billy", data.username);
   }
 
-  private String getSocketOutput(String requestLine, WikiPage page) throws Exception
-  {
+  private String getSocketOutput(String requestLine, WikiPage page) throws Exception {
     MockSocket s = new MockSocket(requestLine);
     FitNesseContext context = new FitNesseContext();
     context.rootPagePath = SampleFileUtility.base;
@@ -143,8 +129,7 @@ public class FitNesseServerTest extends RegexTest
     return output;
   }
 
-  private static boolean hasSubString(String expected, String output)
-  {
+  private static boolean hasSubString(String expected, String output) {
     return Pattern.compile(expected, Pattern.MULTILINE).matcher(output).find();
   }
 }

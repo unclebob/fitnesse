@@ -4,156 +4,141 @@ package fitnesse.responders.run;
 
 import fitnesse.testutil.*;
 import fitnesse.wiki.*;
-import fitnesse.testutil.MockCommandRunner;
 
-public class ErrorLogGeneratorTest extends RegexTest
-{
-	private static String ErrorLogName = ExecutionLog.ErrorLogName;
+public class ErrorLogGeneratorTest extends RegexTest {
+  private static String ErrorLogName = ExecutionLog.ErrorLogName;
 
-	private WikiPage testPage;
-	private MockCommandRunner runner;
-	private ExecutionLog log;
-	private WikiPage root;
-	private WikiPage errorLogsParentPage;
+  private WikiPage testPage;
+  private MockCommandRunner runner;
+  private ExecutionLog log;
+  private WikiPage root;
+  private WikiPage errorLogsParentPage;
 
-	public void setUp() throws Exception
-	{
-		root = InMemoryPage.makeRoot("RooT");
-		errorLogsParentPage = root.addChildPage(ErrorLogName);
-		testPage = root.addChildPage("TestPage");
-		runner = new MockCommandRunner("some command", 123);
-		log = new ExecutionLog(testPage, runner);
-	}
+  public void setUp() throws Exception {
+    root = InMemoryPage.makeRoot("RooT");
+    errorLogsParentPage = root.addChildPage(ErrorLogName);
+    testPage = root.addChildPage("TestPage");
+    runner = new MockCommandRunner("some command", 123);
+    log = new ExecutionLog(testPage, runner);
+  }
 
-	public void tearDown() throws Exception
-	{
-	}
+  public void tearDown() throws Exception {
+  }
 
-	public void testPageIsCreated() throws Exception
-	{
-		log.publish();
-		assertTrue(errorLogsParentPage.hasChildPage(testPage.getName()));
-	}
+  public void testPageIsCreated() throws Exception {
+    log.publish();
+    assertTrue(errorLogsParentPage.hasChildPage(testPage.getName()));
+  }
 
-	public void testErrorLogContentIsReplaced() throws Exception
-	{
-		WikiPage errorLogPage = root.getPageCrawler().addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-		PageData data = errorLogPage.getData();
-		data.setContent("old content");
-		errorLogPage.commit(data);
+  public void testErrorLogContentIsReplaced() throws Exception {
+    WikiPage errorLogPage = root.getPageCrawler().addPage(root, PathParser.parse("ErrorLogs.TestPage"));
+    PageData data = errorLogPage.getData();
+    data.setContent("old content");
+    errorLogPage.commit(data);
 
-		log.publish();
-		String content = errorLogPage.getData().getContent();
-		assertNotSubString("old content", content);
-	}
+    log.publish();
+    String content = errorLogPage.getData().getContent();
+    assertNotSubString("old content", content);
+  }
 
-	public void testBasicContent() throws Exception
-	{
-		String content = getGeneratedContent();
+  public void testBasicContent() throws Exception {
+    String content = getGeneratedContent();
 
-		assertSubString("'''Command: '''", content);
-		assertSubString("!-some command-!", content);
-		assertSubString("'''Exit code: '''", content);
-		assertSubString("123", content);
-		assertSubString("'''Date: '''", content);
-		assertSubString("'''Time elapsed: '''", content);
-	}
+    assertSubString("'''Command: '''", content);
+    assertSubString("!-some command-!", content);
+    assertSubString("'''Exit code: '''", content);
+    assertSubString("123", content);
+    assertSubString("'''Date: '''", content);
+    assertSubString("'''Time elapsed: '''", content);
+  }
 
-	private String getGeneratedContent() throws Exception
-	{
-		log.publish();
-		WikiPage errorLogPage = errorLogsParentPage.getChildPage(testPage.getName());
-		String content = errorLogPage.getData().getContent();
-		return content;
-	}
+  private String getGeneratedContent() throws Exception {
+    log.publish();
+    WikiPage errorLogPage = errorLogsParentPage.getChildPage(testPage.getName());
+    String content = errorLogPage.getData().getContent();
+    return content;
+  }
 
-	public void testNoExtraLogTextWasGenerated() throws Exception
-	{
-		String content = getGeneratedContent();
+  public void testNoExtraLogTextWasGenerated() throws Exception {
+    String content = getGeneratedContent();
 
-		assertNotSubString("Exception", content);
-		assertNotSubString("Standard Error", content);
-		assertNotSubString("Standard Output", content);
-	}
+    assertNotSubString("Exception", content);
+    assertNotSubString("Standard Error", content);
+    assertNotSubString("Standard Output", content);
+  }
 
-	public void testStdout() throws Exception
-	{
-		runner.setOutput("standard output that got printed");
-		String content = getGeneratedContent();
+  public void testStdout() throws Exception {
+    runner.setOutput("standard output that got printed");
+    String content = getGeneratedContent();
 
-		assertSubString("'''Standard Output:'''", content);
-		assertSubString("standard output that got printed", content);
-	}
+    assertSubString("'''Standard Output:'''", content);
+    assertSubString("standard output that got printed", content);
+  }
 
-	public void testStderr() throws Exception
-	{
-		runner.setError("standard error that got printed");
-		String content = getGeneratedContent();
+  public void testStderr() throws Exception {
+    runner.setError("standard error that got printed");
+    String content = getGeneratedContent();
 
-		assertSubString("'''Standard Error:'''", content);
-		assertSubString("standard error that got printed", content);
-	}
+    assertSubString("'''Standard Error:'''", content);
+    assertSubString("standard error that got printed", content);
+  }
 
-	public void testException() throws Exception
-	{
-		log.addException(new Exception("I made this"));
-		String content = getGeneratedContent();
+  public void testException() throws Exception {
+    log.addException(new Exception("I made this"));
+    String content = getGeneratedContent();
 
-		assertSubString("'''Internal Exception:'''", content);
-		assertSubString("I made this", content);
-	}
+    assertSubString("'''Internal Exception:'''", content);
+    assertSubString("I made this", content);
+  }
 
-	public void testExecutionReport_Ok() throws Exception
-	{
-		MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
-		MockCommandRunner mockCommandRunner = new MockCommandRunner();
-		ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
-		ExecutionStatus result;
+  public void testExecutionReport_Ok() throws Exception {
+    MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
+    MockCommandRunner mockCommandRunner = new MockCommandRunner();
+    ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
+    ExecutionStatus result;
 
-		if(executionLog.exceptionCount() > 0)
-			result = ExecutionStatus.ERROR;
-		else if(executionLog.hasCapturedOutput())
-			result = ExecutionStatus.OUTPUT;
-		else
-			result = ExecutionStatus.OK;
+    if (executionLog.exceptionCount() > 0)
+      result = ExecutionStatus.ERROR;
+    else if (executionLog.hasCapturedOutput())
+      result = ExecutionStatus.OUTPUT;
+    else
+      result = ExecutionStatus.OK;
 
-		assertSame(ExecutionStatus.OK, result);
-	}
+    assertSame(ExecutionStatus.OK, result);
+  }
 
-	public void testExecutionReport_Output() throws Exception
-	{
-		MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
-		MockCommandRunner mockCommandRunner = new MockCommandRunner();
-		mockCommandRunner.setOutput("I wrote something here");
-		ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
-		ExecutionStatus result;
+  public void testExecutionReport_Output() throws Exception {
+    MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
+    MockCommandRunner mockCommandRunner = new MockCommandRunner();
+    mockCommandRunner.setOutput("I wrote something here");
+    ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
+    ExecutionStatus result;
 
-		if(executionLog.exceptionCount() > 0)
-			result = ExecutionStatus.ERROR;
-		else if(executionLog.hasCapturedOutput())
-			result = ExecutionStatus.OUTPUT;
-		else
-			result = ExecutionStatus.OK;
+    if (executionLog.exceptionCount() > 0)
+      result = ExecutionStatus.ERROR;
+    else if (executionLog.hasCapturedOutput())
+      result = ExecutionStatus.OUTPUT;
+    else
+      result = ExecutionStatus.OK;
 
-		assertSame(ExecutionStatus.OUTPUT, result);
-	}
+    assertSame(ExecutionStatus.OUTPUT, result);
+  }
 
-	public void testExecutionReport_Error() throws Exception
-	{
-		MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
-		MockCommandRunner mockCommandRunner = new MockCommandRunner();
-		ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
-		executionLog.addException(new RuntimeException("I messed up"));
-		ExecutionStatus result;
+  public void testExecutionReport_Error() throws Exception {
+    MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
+    MockCommandRunner mockCommandRunner = new MockCommandRunner();
+    ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
+    executionLog.addException(new RuntimeException("I messed up"));
+    ExecutionStatus result;
 
-		if(executionLog.exceptionCount() > 0)
-			result = ExecutionStatus.ERROR;
-		else if(executionLog.hasCapturedOutput())
-			result = ExecutionStatus.OUTPUT;
-		else
-			result = ExecutionStatus.OK;
+    if (executionLog.exceptionCount() > 0)
+      result = ExecutionStatus.ERROR;
+    else if (executionLog.hasCapturedOutput())
+      result = ExecutionStatus.OUTPUT;
+    else
+      result = ExecutionStatus.OK;
 
-		assertSame(ExecutionStatus.ERROR, result);
-	}
+    assertSame(ExecutionStatus.ERROR, result);
+  }
 }
 
