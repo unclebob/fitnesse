@@ -1,3 +1,19 @@
+-- 20070519 -------------------------------------------------------------------------------
+Tim Ottinger and RMartin added the < and > link prefixes back in Feb.
+The > prefix replaces the ^ prefix, which is deprecated.  >MyPage is now the
+preferred way of linking to a subpage.
+
+The < prefix is a search up the hierarchy.  <MyPage.YourPage hunts from the current page
+up the hierarchy to first occurrence of MyPage.  Then it links to >YourPage from there.
+
+Cleaned up a few odds and ends.  Changed MockWikiPage to WikiPageDummy to follow
+Gerard's new nomenclature for Test Doubles.
+
+Apparently there have been some fixes to timing and reentrancy bugs by Andreas and a few others.
+
+Someone added an ant task to start fitnesse.  This means that in order to compile you have to
+have the ANT jars in your classpath.
+
 -- 20070426 -------------------------------------------------------------------------------
 SuiteSetUp and SuiteTearDown is called on running a single test
 Fixed unit tests which broke if run in non-US locale
