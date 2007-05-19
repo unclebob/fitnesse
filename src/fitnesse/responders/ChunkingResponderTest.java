@@ -12,7 +12,7 @@ public class ChunkingResponderTest extends RegexTest {
   private Exception exception;
   private Response response;
   private FitNesseContext context;
-  private WikiPage root = new MockWikiPage();
+  private WikiPage root = new WikiPageDummy();
   private ChunkingResponder responder = new ChunkingResponder() {
     protected void doSending() throws Exception {
       throw exception;

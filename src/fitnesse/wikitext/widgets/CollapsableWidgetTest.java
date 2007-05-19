@@ -3,7 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.html.*;
-import fitnesse.wiki.MockWikiPage;
+import fitnesse.wiki.WikiPageDummy;
 
 import java.util.*;
 
@@ -53,7 +53,7 @@ public class CollapsableWidgetTest extends WidgetTest {
   public void testTwoCollapsableSections() throws Exception {
     String text = "!* section1\nsection1 content\n*!\n" +
       "!* section2\nsection2 content\n*!\n";
-    WidgetRoot widgetRoot = new WidgetRoot(text, new MockWikiPage());
+    WidgetRoot widgetRoot = new WidgetRoot(text, new WikiPageDummy());
     String html = widgetRoot.render();
     assertSubString("<span class=\"meta\">section1</span>", html);
     assertSubString("<span class=\"meta\">section2</span>", html);
@@ -61,7 +61,7 @@ public class CollapsableWidgetTest extends WidgetTest {
 
   public void testEatsNewlineAtEnd() throws Exception {
     String text = "!* section1\nsection1 content\n*!\n";
-    WidgetRoot widgetRoot = new WidgetRoot(text, new MockWikiPage());
+    WidgetRoot widgetRoot = new WidgetRoot(text, new WikiPageDummy());
     String html = widgetRoot.render();
     assertNotSubString("<br>", html);
   }

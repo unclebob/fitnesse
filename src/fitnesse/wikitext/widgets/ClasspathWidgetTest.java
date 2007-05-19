@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.MockWikiPage;
+import fitnesse.wiki.WikiPageDummy;
 
 import java.util.regex.*;
 
@@ -26,14 +26,14 @@ public class ClasspathWidgetTest extends WidgetTest {
 
   public void testPathWithVariable() throws Exception {
     String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
-    WidgetRoot root = new WidgetRoot(text, new MockWikiPage());
+    WidgetRoot root = new WidgetRoot(text, new WikiPageDummy());
     String html = root.render();
     assertSubString("/my/base/*.jar", html);
   }
 
   public void testPathWikiTextWithVariable() throws Exception {
     String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
-    WidgetRoot root = new WidgetRoot(text, new MockWikiPage());
+    WidgetRoot root = new WidgetRoot(text, new WikiPageDummy());
     String text2 = root.asWikiText();
     assertSubString("!path ${BASE}*.jar", text2);
   }

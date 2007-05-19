@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.MockWikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import junit.framework.TestCase;
 
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ public class CommentWidgetTest extends TestCase {
   private WidgetRoot root;
 
   public void setUp() throws Exception {
-    MockWikiPage page = new MockWikiPage();
+    WikiPageDummy page = new WikiPageDummy();
     root = new WidgetRoot(page);
   }
 

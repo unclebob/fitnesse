@@ -3,7 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.MockWikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
 
 import java.util.regex.Pattern;
@@ -33,13 +33,13 @@ public class PreformattedWidgetTest extends RegexTest {
   }
 
   public void testThatLiteralsWorkInPreformattedText() throws Exception {
-    WidgetRoot root = new WidgetRoot("{{{abc !-123-! xyz}}}", new MockWikiPage(), WidgetBuilder.htmlWidgetBuilder);
+    WidgetRoot root = new WidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
     String text = root.render();
     assertEquals("<pre>abc 123 xyz</pre>", text);
   }
 
   public void testThatVariablesWorkInPreformattedText() throws Exception {
-    WidgetRoot root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new MockWikiPage(), WidgetBuilder.htmlWidgetBuilder);
+    WidgetRoot root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
     String text = root.render();
     assertSubString("<pre>abc 123 xyz</pre>", text);
   }

@@ -16,7 +16,7 @@ public class HruleWidgetTest extends TestCase {
   }
 
   public void setUp() throws Exception {
-    mockSource = new MockWikiPage();
+    mockSource = new WikiPageDummy();
   }
 
   public void tearDown() throws Exception {

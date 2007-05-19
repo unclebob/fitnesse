@@ -44,7 +44,7 @@ public class PageXmlizer {
   }
 
   public PageData deXmlizeData(Document document) throws Exception {
-    PageData data = new PageData(new MockWikiPage());
+    PageData data = new PageData(new WikiPageDummy());
     Element dataElement = document.getDocumentElement();
 
     String content = XmlUtil.getLocalTextValue(dataElement, "content");

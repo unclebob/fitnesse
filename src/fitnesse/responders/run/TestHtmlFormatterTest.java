@@ -6,7 +6,7 @@ import fit.Counts;
 import fitnesse.components.CommandRunner;
 import fitnesse.html.*;
 import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.MockWikiPage;
+import fitnesse.wiki.WikiPageDummy;
 
 
 public class TestHtmlFormatterTest extends RegexTest {
@@ -39,7 +39,7 @@ public class TestHtmlFormatterTest extends RegexTest {
   }
 
   public void testExecutionStatusHtml() throws Exception {
-    ExecutionLog log = new ExecutionLog(new MockWikiPage(), new CommandRunner());
+    ExecutionLog log = new ExecutionLog(new WikiPageDummy(), new CommandRunner());
     String status = formatter.executionStatus(log);
 
     assertSubString("<div id=\"execution-status\">", status);

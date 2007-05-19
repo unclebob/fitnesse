@@ -37,7 +37,7 @@ public class PageDataTest extends RegexTest {
   }
 
   public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-    PageData d = new PageData(new MockWikiPage(), "<b>");
+    PageData d = new PageData(new WikiPageDummy(), "<b>");
     String html = d.getHtml();
     assertEquals("&lt;b&gt;", html);
   }

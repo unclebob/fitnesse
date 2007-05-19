@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.MockWikiPage;
+import fitnesse.wiki.WikiPageDummy;
 
 public class LinkWidgetTest extends WidgetTest {
   public void setUp() throws Exception {
@@ -48,7 +48,7 @@ public class LinkWidgetTest extends WidgetTest {
 
   public void testLinkWikiWithVariable() throws Exception {
     String text = "!define HOST {somehost}\nhttp://www.${HOST}.com\n";
-    WidgetRoot root = new WidgetRoot(text, new MockWikiPage());
+    WidgetRoot root = new WidgetRoot(text, new WikiPageDummy());
     assertSubString("<a href=\"http://www.somehost.com\">http://www.somehost.com</a>", root.render());
     assertEquals(text, root.asWikiText());
   }

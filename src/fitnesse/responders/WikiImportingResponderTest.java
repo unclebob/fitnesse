@@ -268,7 +268,7 @@ public class WikiImportingResponderTest extends RegexTest {
   public void testAutoUpdatingTurnedOn() throws Exception {
     MockRequest request = makeRequest(baseUrl);
     responder.setRequest(request);
-    responder.data = new PageData(new MockWikiPage());
+    responder.data = new PageData(new WikiPageDummy());
 
     responder.initializeImporter();
     assertFalse(responder.getImporter().getAutoUpdateSetting());

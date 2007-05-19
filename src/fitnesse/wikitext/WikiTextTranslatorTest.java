@@ -39,7 +39,7 @@ public class WikiTextTranslatorTest extends TestCase {
   public void testHtmlEscape() throws Exception {
     String wikiText = "<h1>this \"&\" that</h1>";
     String html = "&lt;h1&gt;this \"&amp;\" that&lt;/h1&gt;";
-    assertEquals(html, translate(wikiText, new MockWikiPage()));
+    assertEquals(html, translate(wikiText, new WikiPageDummy()));
   }
 
   public void testTableHtml() throws Exception {
@@ -54,7 +54,7 @@ public class WikiTextTranslatorTest extends TestCase {
       "<td>four</td>" + HtmlElement.endl +
       "<td>columns</td>" + HtmlElement.endl +
       "</tr>\n</table>\n";
-    assertEquals(html, translate(wikiText, new MockWikiPage()));
+    assertEquals(html, translate(wikiText, new WikiPageDummy()));
   }
 
   private static String translate(String value, WikiPage source) throws Exception {

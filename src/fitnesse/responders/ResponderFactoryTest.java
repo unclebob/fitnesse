@@ -20,7 +20,7 @@ import java.io.File;
 public class ResponderFactoryTest extends TestCase {
   private ResponderFactory factory;
   private MockRequest request;
-  private MockWikiPage nonExistantPage;
+  private WikiPageDummy nonExistantPage;
   private WikiPage root;
   private PageCrawler crawler;
 
@@ -29,7 +29,7 @@ public class ResponderFactoryTest extends TestCase {
     request = new MockRequest();
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
-    nonExistantPage = new MockWikiPage();
+    nonExistantPage = new WikiPageDummy();
   }
 
   public void testGetResponderKey() throws Exception {

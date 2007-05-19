@@ -21,7 +21,7 @@ public class MockingPageCrawlerTest extends TestCase {
     WikiPagePath pageOnePath = PathParser.parse("PageOne");
     WikiPage mockPage = crawler.getPage(root, pageOnePath);
     assertNotNull(mockPage);
-    assertTrue(mockPage instanceof MockWikiPage);
+    assertTrue(mockPage instanceof WikiPageDummy);
     assertEquals("PageOne", mockPage.getName());
   }
 
@@ -29,7 +29,7 @@ public class MockingPageCrawlerTest extends TestCase {
     WikiPagePath otherPagePath = PathParser.parse("PageOne.SomePage.OtherPage");
     WikiPage mockPage = crawler.getPage(root, otherPagePath);
     assertNotNull(mockPage);
-    assertTrue(mockPage instanceof MockWikiPage);
+    assertTrue(mockPage instanceof WikiPageDummy);
     assertEquals("OtherPage", mockPage.getName());
   }
 }

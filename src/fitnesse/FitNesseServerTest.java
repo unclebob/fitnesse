@@ -42,13 +42,13 @@ public class FitNesseServerTest extends RegexTest {
   }
 
   public void testNotFound() throws Exception {
-    String output = getSocketOutput("GET /WikiWord HTTP/1.1\r\n\r\n", new MockWikiPage());
+    String output = getSocketOutput("GET /WikiWord HTTP/1.1\r\n\r\n", new WikiPageDummy());
 
     assertSubString("404 Not Found", output);
   }
 
   public void testBadRequest() throws Exception {
-    String output = getSocketOutput("Bad Request \r\n\r\n", new MockWikiPage());
+    String output = getSocketOutput("Bad Request \r\n\r\n", new WikiPageDummy());
 
     assertSubString("400 Bad Request", output);
     assertSubString("The request string is malformed and can not be parsed", output);
@@ -93,7 +93,7 @@ public class FitNesseServerTest extends RegexTest {
   }
 
   public void testServingRegularFiles() throws Exception {
-    String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new MockWikiPage());
+    String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new WikiPageDummy());
     assertHasRegexp("file2 content", output);
   }
 

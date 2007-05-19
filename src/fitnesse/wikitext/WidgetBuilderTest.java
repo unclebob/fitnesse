@@ -12,7 +12,7 @@ public class WidgetBuilderTest extends TestCase {
   private WikiPage mockSource;
 
   public void setUp() throws Exception {
-    mockSource = new MockWikiPage();
+    mockSource = new WikiPageDummy();
   }
 
   public void tearDown() throws Exception {
@@ -162,7 +162,7 @@ public class WidgetBuilderTest extends TestCase {
 
   public void testNullPointerError() throws Exception {
     String wikiText = "''\nsome text that should be in italics\n''";
-    WidgetRoot root = new WidgetRoot(wikiText, new MockWikiPage());
+    WidgetRoot root = new WidgetRoot(wikiText, new WikiPageDummy());
 
     try {
       root.render();

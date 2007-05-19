@@ -92,9 +92,9 @@ public class ErrorLogGeneratorTest extends RegexTest {
   }
 
   public void testExecutionReport_Ok() throws Exception {
-    MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
+    WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
-    ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
     ExecutionStatus result;
 
     if (executionLog.exceptionCount() > 0)
@@ -108,10 +108,10 @@ public class ErrorLogGeneratorTest extends RegexTest {
   }
 
   public void testExecutionReport_Output() throws Exception {
-    MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
+    WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
     mockCommandRunner.setOutput("I wrote something here");
-    ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
     ExecutionStatus result;
 
     if (executionLog.exceptionCount() > 0)
@@ -125,9 +125,9 @@ public class ErrorLogGeneratorTest extends RegexTest {
   }
 
   public void testExecutionReport_Error() throws Exception {
-    MockWikiPage mockWikiPage = new MockWikiPage("This.Is.Not.A.Real.Location");
+    WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
-    ExecutionLog executionLog = new ExecutionLog(mockWikiPage, mockCommandRunner);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
     executionLog.addException(new RuntimeException("I messed up"));
     ExecutionStatus result;
 
