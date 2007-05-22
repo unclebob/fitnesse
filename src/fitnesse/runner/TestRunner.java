@@ -22,6 +22,7 @@ public class TestRunner
 	private boolean debug;
 	public boolean verbose;
 	public boolean usingDownloadedPaths = true;
+    private String suiteFilter = null;
 
 	public TestRunner() throws Exception
 	{
@@ -43,7 +44,7 @@ public class TestRunner
 
 	public void args(String[] args) throws Exception
 	{
-		CommandLine commandLine = new CommandLine("[-debug] [-v] [-results file] [-html file] [-xml file] [-nopath] host port pageName");
+		CommandLine commandLine = new CommandLine("[-debug] [-v] [-results file] [-html file] [-xml file] [-nopath] [-suiteFilter filter] host port pageName");
 		if(!commandLine.parse(args))
 			usage();
 
@@ -66,6 +67,9 @@ public class TestRunner
 			formatters.add(new FormattingOption("html", commandLine.getOptionArgument("html", "file"), output, host, port, pageName));
 		if(commandLine.hasOption("xml"))
 			formatters.add(new FormattingOption("xml", commandLine.getOptionArgument("xml", "file"), output, host, port, pageName));
+        
+        if(commandLine.hasOption("suiteFilter"))
+            suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
 	}
 
 	private void usage()
@@ -120,6 +124,10 @@ public class TestRunner
 		String request = "GET /" + pageName + "?responder=fitClient";
 		if(usingDownloadedPaths)
 			request += "&includePaths=yes";
+        if (suiteFilter != null)
+        {
+            request += "&suiteFilter=" + suiteFilter;
+        }
 		return request + " HTTP/1.1\r\n\r\n";
 	}
 	                                                                                                                       

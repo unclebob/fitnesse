@@ -229,4 +229,37 @@ public class TestRunnerTest extends RegexTest
             urlString.append(urls[i].toString()).append(":");
         return urlString.toString();
     }
+    
+    public void testNonMatchingSuiteFilter() throws Exception
+    {
+        runPage("-results testFile.txt -suiteFilter xxx", "SuitePage");
+        assertTrue(new File("testFile.txt").exists());
+        String content = FileUtil.getFileContent("testFile.txt");
+        assertDoesntHaveRegexp(".*TestPassing.*", content);
+        assertDoesntHaveRegexp(".*TestFailing.*", content);
+        assertDoesntHaveRegexp(".*TestError.*", content);
+        assertDoesntHaveRegexp(".*TestIgnore.*", content);
+    }
+
+    public void testSimpleMatchingSuiteFilter() throws Exception
+    {
+        runPage("-results testFile.txt -suiteFilter foo", "SuitePage");
+        assertTrue(new File("testFile.txt").exists());
+        String content = FileUtil.getFileContent("testFile.txt");
+        assertHasRegexp(".*TestPassing.*", content);
+        assertDoesntHaveRegexp(".*TestError.*", content);
+        assertDoesntHaveRegexp(".*TestError.*", content);
+        assertDoesntHaveRegexp(".*TestIgnore.*", content);
+    }
+    
+    public void testSecondMatchingSuiteFilter() throws Exception
+    {
+        runPage("-results testFile.txt -suiteFilter smoke", "SuitePage");
+        assertTrue(new File("testFile.txt").exists());
+        String content = FileUtil.getFileContent("testFile.txt");
+        assertDoesntHaveRegexp(".*TestPassing.*", content);
+        assertHasRegexp(".*TestFailing.*", content);
+        assertDoesntHaveRegexp(".*TestError.*", content);
+        assertDoesntHaveRegexp(".*TestIgnore.*", content);
+    }
 }

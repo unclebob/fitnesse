@@ -12,7 +12,9 @@ import java.util.*;
 
 public class PropertiesResponder implements SecureResponder
 {
-	private WikiPage page;
+	public static final String SUITES = "Suites";
+    
+    private WikiPage page;
 	public PageData pageData;
 	private String resource;
 
@@ -105,6 +107,7 @@ public class PropertiesResponder implements SecureResponder
 		trisection.add(makeNavigationCheckboxesHtml(pageData));
 		trisection.add(makeSecurityCheckboxesHtml(pageData));
 		trisection.add(makeVirtualWikiHtml());
+        trisection.add(makeSuitesHtml(pageData));
 		form.add(trisection);
 
 		HtmlTag saveButton = HtmlUtil.makeInputTag("submit", "Save", "Save Properties");
@@ -262,6 +265,25 @@ public class PropertiesResponder implements SecureResponder
 	{
 		return makeAttributeCheckboxesHtml("Security:", WikiPage.SECURITY_ATTRIBUTES, pageData);
 	}
+
+    public HtmlTag makeSuitesHtml(PageData pageData) throws Exception
+    {
+        HtmlTag div = new HtmlTag("div");
+        div.addAttribute("style", "float: left;");
+        div.add("Suites:");
+
+        String suites = "";
+        WikiPageProperty suitesProp = pageData.getProperties().getProperty(SUITES);
+        if (suitesProp != null)
+        {
+            suites = suitesProp.getValue();
+        }
+        
+        div.add(HtmlUtil.BR);
+        
+        div.add(HtmlUtil.makeInputTag("text", "Suites", suites));
+        return div;
+    }
 
 	private HtmlTag makeAttributeCheckboxesHtml(String label, String[] attributes, PageData pageData)
 	  throws Exception

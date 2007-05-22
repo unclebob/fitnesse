@@ -10,15 +10,18 @@
 !3 Using the TestRunner
 {{{
 usage: java fitnesse.runner.TestRunner [options] host port page-name
-        -v      verbose: prints test progress to stdout
+        -v                              verbose: prints test progress to stdout
         -results <filename|'stdout'>    save raw test results to a file or dump to standard output
         -html <filename|'stdout'>       format results as HTML and save to a file or dump to standard output
-        -debug  prints FitServer protocol actions to stdout
-        -nopath         prevents downloaded path elements from being added to classpath
+        -debug                          prints FitServer protocol actions to stdout
+        -nopath                         prevents downloaded path elements from being added to classpath
+        -suiteFilter <filter>           runs only those tests of a suite which have been marked with the respective filter
 }}}
 There are three required arguments: '''host port page-name'''.  The command to run all the FitNesse test suite on you local instance of FitNesse is:
 {{{java -cp fitnesse.jar fitnesse.runner.TestRunner localhost 80 FitNesse.SuiteAcceptanceTests}}}
 The TestRunner, regardless of options, exits with the number of failures + exceptions that occured during execution. An exit value of 0 means all the tests passed.  However, without option the program lacks excitement.  Adding the '''-v''' will give you somthing to watch.  There are also other forms of output that are discussed below.  The page designated by '''page-name''' may be either a suite or test page.  
+
+More details about suite filters can be found [[here][TestSuites]].
 
 !3 Dynamic Classpath
 By default, the TestRunner will attempt to dynamically modify the classpath  of the JVM that invoked the TestRunner class.  This can avoid the annoyance of manually building a classpath.  However, it must be used properly to be effective.  

@@ -130,12 +130,13 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 
 	public List makePageList() throws Exception
 	{
-		return makePageList(page, root);
+        String suite = request != null ? (String) request.getInput("suiteFilter") : null;
+        return makePageList(page, root, suite);
 	}
 
-	public static List makePageList(WikiPage page, WikiPage root) throws Exception
+	public static List makePageList(WikiPage page, WikiPage root, String suite) throws Exception
 	{
-		LinkedList pages = getAllTestPagesUnder(page);
+		LinkedList pages = getAllTestPagesUnder(page, suite);
 		List referencedPages = gatherCrossReferencedTestPages(page, root);
 		pages.addAll(referencedPages);
 
@@ -154,13 +155,25 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 			pages.addLast(suiteTearDown);
 		}
 
+        if (pages.isEmpty())
+        {
+            String name = new WikiPagePath(page).toString();
+            WikiPageDummy dummy = new WikiPageDummy("", "|Comment|\n|No test found with suite filter '" + suite + "' in subwiki !-" + name + "-!!|\n");
+            dummy.setParent(root);
+            pages.add(dummy);
+        }
 		return pages;
 	}
 
 	public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot) throws Exception
 	{
+        return getAllTestPagesUnder(suiteRoot, null);
+    }
+    
+    public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception
+    {
 		LinkedList testPages = new LinkedList();
-		addTestPagesToList(testPages, suiteRoot);
+		addTestPagesToList(testPages, suiteRoot, suite);
 
 		Collections.sort(testPages, new Comparator()
 		{
@@ -185,11 +198,16 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		return testPages;
 	}
 
-	private static void addTestPagesToList(List testPages, WikiPage context) throws Exception
+	private static void addTestPagesToList(List testPages, WikiPage context, String suite) throws Exception
 	{
 		if(context.getData().hasAttribute("Test"))
-			testPages.add(context);
-
+        {
+		    if (belongsToSuite(context, suite))
+            {
+                testPages.add(context);
+            }
+        }
+        
 		ArrayList children = new ArrayList();
 		children.addAll(context.getChildren());
 		if(context.hasExtension(VirtualCouplingExtension.NAME))
@@ -200,10 +218,38 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		for(Iterator iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage page = (WikiPage) iterator.next();
-			addTestPagesToList(testPages, page);
+			addTestPagesToList(testPages, page, suite);
 		}
 	}
 
+	private static boolean belongsToSuite(WikiPage context, String suite)
+    {
+        if ((suite == null) || (suite.trim().length() == 0))
+        {
+            return true;
+        }
+        try 
+        {
+            String suitesStr = context.getData().getAttribute("Suites");
+            if (suitesStr != null) 
+            {
+                StringTokenizer t = new StringTokenizer(suitesStr, ",");
+                while (t.hasMoreTokens()) 
+                {
+                    if (t.nextToken().trim().equalsIgnoreCase(suite)) 
+                    {
+                        return true;
+                    }
+                }
+            }
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+     
 	public static List gatherCrossReferencedTestPages(WikiPage testPage, WikiPage root) throws Exception
 	{
 		LinkedList pages = new LinkedList();

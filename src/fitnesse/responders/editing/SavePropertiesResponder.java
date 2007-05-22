@@ -60,6 +60,9 @@ public class SavePropertiesResponder implements SecureResponder
 			data.removeAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
 		else
 			data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, value);
+        
+		String suites = (String)request.getInput("Suites");
+		data.setAttribute("Suites", suites);
 	}
 
 	private boolean isChecked(Request request, String name)

@@ -10,222 +10,246 @@ import fitnesse.http.*;
 
 public class PropertiesResponderTest extends RegexTest
 {
-	private WikiPage root;
-	private PageCrawler crawler;
-	private MockRequest request;
-	private Responder responder;
-	private String content;
+    private WikiPage root;
 
-	public void setUp() throws Exception
-	{
-		root = InMemoryPage.makeRoot("RooT");
-		crawler = root.getPageCrawler();
-	}
+    private PageCrawler crawler;
 
+    private MockRequest request;
 
-	public void testResponse() throws Exception
-	{
-		WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
-		PageData data = page.getData();
-		data.setContent("some content");
-		WikiPageProperties properties = data.getProperties();
-		properties.set("Test", "true");
-		properties.set(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
-		page.commit(data);
+    private Responder responder;
 
-		MockRequest request = new MockRequest();
-		request.setResource("PageOne");
+    private String content;
 
-		Responder responder = new PropertiesResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
-		assertEquals("max-age=0", response.getHeader("Cache-Control"));
+    public void setUp() throws Exception
+    {
+        root = InMemoryPage.makeRoot("RooT");
+        crawler = root.getPageCrawler();
+    }
 
-		String content = response.getContent();
-		assertSubString("PageOne", content);
-		assertSubString("value=\"http://www.fitnesse.org\"", content);
-		assertDoesntHaveRegexp("textarea name=\"extensionXml\"", content);
-		assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
+    public void testResponse() throws Exception
+    {
+        WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+        PageData data = page.getData();
+        data.setContent("some content");
+        WikiPageProperties properties = data.getProperties();
+        properties.set("Test", "true");
+        properties.set(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
+        page.commit(data);
 
-		assertHasRegexp("<input.*value=\"saveProperties\"", content);
+        MockRequest request = new MockRequest();
+        request.setResource("PageOne");
 
-    assertSubString("<input type=\"checkbox\" name=\"Test\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Suite\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/>", content);
-		assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/>", content);
-		assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/>", content);
+        Responder responder = new PropertiesResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        assertEquals("max-age=0", response.getHeader("Cache-Control"));
 
-    assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_READ + "\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_WRITE + "\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_TEST + "\"/>", content);
-	}
+        String content = response.getContent();
+        assertSubString("PageOne", content);
+        assertSubString("value=\"http://www.fitnesse.org\"", content);
+        assertDoesntHaveRegexp("textarea name=\"extensionXml\"", content);
+        assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
 
-	public void testGetVirtualWikiValue() throws Exception
-	{
-		WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
-		PageData data = page.getData();
+        assertHasRegexp("<input.*value=\"saveProperties\"", content);
 
-		assertEquals("", PropertiesResponder.getVirtualWikiValue(data));
+        assertSubString("<input type=\"checkbox\" name=\"Test\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"Suite\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/>", content);
 
-		data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.objectmentor.com");
-		assertEquals("http://www.objectmentor.com", PropertiesResponder.getVirtualWikiValue(data));
-	}
+        assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_READ + "\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_WRITE + "\"/>", content);
+        assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_TEST + "\"/>", content);
+    }
 
-	public void testUsernameDisplayed() throws Exception
-	{
-		WikiPage page = getContentFromSimplePropertiesPage();
+    public void testGetVirtualWikiValue() throws Exception
+    {
+        WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+        PageData data = page.getData();
 
-		assertSubString("Last modified anonymously", content);
+        assertEquals("", PropertiesResponder.getVirtualWikiValue(data));
 
-		PageData data = page.getData();
-		data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Bill");
-		page.commit(data);
+        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.objectmentor.com");
+        assertEquals("http://www.objectmentor.com", PropertiesResponder.getVirtualWikiValue(data));
+    }
 
-		request.setResource("SomePage");
-		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-		content = response.getContent();
+    public void testUsernameDisplayed() throws Exception
+    {
+        WikiPage page = getContentFromSimplePropertiesPage();
 
-		assertSubString("Last modified by Bill", content);
-	}
+        assertSubString("Last modified anonymously", content);
 
-	private WikiPage getContentFromSimplePropertiesPage() throws Exception
-	{
-		WikiPage page = root.addChildPage("SomePage");
+        PageData data = page.getData();
+        data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Bill");
+        page.commit(data);
 
-		return getPropertiesContentFromPage(page);
-	}
+        request.setResource("SomePage");
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        content = response.getContent();
 
-	private WikiPage getPropertiesContentFromPage(WikiPage page) throws Exception
-	{
-		request = new MockRequest();
-		request.setResource(page.getName());
-		responder = new PropertiesResponder();
-		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-		content = response.getContent();
-		return page;
-	}
+        assertSubString("Last modified by Bill", content);
+    }
 
-	public void testWikiImportForm() throws Exception
-	{
-		getContentFromSimplePropertiesPage();
+    private WikiPage getContentFromSimplePropertiesPage() throws Exception
+    {
+        WikiPage page = root.addChildPage("SomePage");
 
-		checkUpdateForm();
-		assertSubString("Wiki Import.", content);
-		assertSubString("value=\"Import\"", content);
-		assertSubString("type=\"text\"", content);
-		assertSubString("name=\"remoteUrl\"", content);
-	}
+        return getPropertiesContentFromPage(page);
+    }
 
-	private void checkUpdateForm()
-	{
-		assertSubString("<form", content);
-		assertSubString("action=\"SomePage#end\"", content);
-		assertSubString("<input", content);
-		assertSubString("type=\"hidden\"", content);
-		assertSubString("name=\"responder\"", content);
-		assertSubString("value=\"import\"", content);
-	}
+    private WikiPage getPropertiesContentFromPage(WikiPage page) throws Exception
+    {
+        request = new MockRequest();
+        request.setResource(page.getName());
+        responder = new PropertiesResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        content = response.getContent();
+        return page;
+    }
 
-	public void testWikiImportUpdate() throws Exception
-	{
-		WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
-		property.setRoot(true);
-		testWikiImportUpdateWith(property);
-		assertSubString(" imports its subpages from ", content);
-		assertSubString("value=\"Update Subpages\"", content);
+    public void testWikiImportForm() throws Exception
+    {
+        getContentFromSimplePropertiesPage();
 
-		assertSubString("Automatically update imported content when executing tests", content);
-	}
+        checkUpdateForm();
+        assertSubString("Wiki Import.", content);
+        assertSubString("value=\"Import\"", content);
+        assertSubString("type=\"text\"", content);
+        assertSubString("name=\"remoteUrl\"", content);
+    }
 
-	public void testWikiImportUpdateNonroot() throws Exception
-	{
-		testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
-		assertSubString(" imports its content and subpages from ", content);
-		assertSubString("value=\"Update Content and Subpages\"", content);
+    private void checkUpdateForm()
+    {
+        assertSubString("<form", content);
+        assertSubString("action=\"SomePage#end\"", content);
+        assertSubString("<input", content);
+        assertSubString("type=\"hidden\"", content);
+        assertSubString("name=\"responder\"", content);
+        assertSubString("value=\"import\"", content);
+    }
 
-		assertSubString("Automatically update imported content when executing tests", content);
-	}
+    public void testWikiImportUpdate() throws Exception
+    {
+        WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
+        property.setRoot(true);
+        testWikiImportUpdateWith(property);
+        assertSubString(" imports its subpages from ", content);
+        assertSubString("value=\"Update Subpages\"", content);
 
-	private void testWikiImportUpdateWith(WikiImportProperty property) throws Exception
-	{
-		WikiPage page = root.addChildPage("SomePage");
-		PageData data = page.getData();
-		property.addTo(data.getProperties());
-		page.commit(data);
+        assertSubString("Automatically update imported content when executing tests", content);
+    }
 
-		getPropertiesContentFromPage(page);
-		checkUpdateForm();
-		assertSubString("Wiki Import Update", content);
-		assertSubString("<a href=\"http://my.host.com/PageRoot\">http://my.host.com/PageRoot</a>", content);
+    public void testWikiImportUpdateNonroot() throws Exception
+    {
+        testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
+        assertSubString(" imports its content and subpages from ", content);
+        assertSubString("value=\"Update Content and Subpages\"", content);
 
-		assertNotSubString("value=\"Import\"", content);
-	}
+        assertSubString("Automatically update imported content when executing tests", content);
+    }
 
-	public void testSymbolicLinkForm() throws Exception
-	{
-		getContentFromSimplePropertiesPage();
+    private void testWikiImportUpdateWith(WikiImportProperty property) throws Exception
+    {
+        WikiPage page = root.addChildPage("SomePage");
+        PageData data = page.getData();
+        property.addTo(data.getProperties());
+        page.commit(data);
 
-		assertSubString("Symbolic Links", content);
-		assertSubString("<input type=\"hidden\" name=\"responder\" value=\"symlink\"/>", content);
-		assertSubString("<input type=\"text\" name=\"linkName\"/>", content);
-		assertSubString("<input type=\"text\" name=\"linkPath\"", content);
-		assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create Symbolic Link\"/>", content);
-	}
+        getPropertiesContentFromPage(page);
+        checkUpdateForm();
+        assertSubString("Wiki Import Update", content);
+        assertSubString("<a href=\"http://my.host.com/PageRoot\">http://my.host.com/PageRoot</a>", content);
 
-	public void testSymbolicLinkListing() throws Exception
-	{
-		WikiPage page = root.addChildPage("SomePage");
-		PageData data = page.getData();
-		WikiPageProperties props = data.getProperties();
-		WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
-		symProp.set("InternalPage", ".PageOne.ChildOne");
-		symProp.set("ExternalPage", "file://some/page");
-		page.commit(data);
+        assertNotSubString("value=\"Import\"", content);
+    }
 
-		getPropertiesContentFromPage(page);
+    public void testSymbolicLinkForm() throws Exception
+    {
+        getContentFromSimplePropertiesPage();
 
-		assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
-		assertSubString("<td>file://some/page</td>", content);
-	}
+        assertSubString("Symbolic Links", content);
+        assertSubString("<input type=\"hidden\" name=\"responder\" value=\"symlink\"/>", content);
+        assertSubString("<input type=\"text\" name=\"linkName\"/>", content);
+        assertSubString("<input type=\"text\" name=\"linkPath\"", content);
+        assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create Symbolic Link\"/>", content);
+    }
 
-	public void testActionPropertiesHtml() throws Exception
-	{
-		WikiPage page = root.addChildPage("SomePage");
-		PageData data = page.getData();
-		String html = new PropertiesResponder().makeTestActionCheckboxesHtml(data).html();
-		assertSubString("<div style=\"float: left; width: 150px;\">Actions:", html);
-		assertSubString("Actions:", html);
-		assertSubString("<input type=\"checkbox\" name=\"Test\"/> - Test", html);
-		assertSubString("<input type=\"checkbox\" name=\"Suite\"/> - Suite", html);
-		assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
-		assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/> - Versions", html);
-		assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/> - Properties", html);
-		assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/> - Refactor", html);
-		assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/> - WhereUsed", html);
-	}
+    public void testSymbolicLinkListing() throws Exception
+    {
+        WikiPage page = root.addChildPage("SomePage");
+        PageData data = page.getData();
+        WikiPageProperties props = data.getProperties();
+        WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
+        symProp.set("InternalPage", ".PageOne.ChildOne");
+        symProp.set("ExternalPage", "file://some/page");
+        page.commit(data);
 
-	public void testMakeNavigationPropertiesHtml() throws Exception
-	{
-		WikiPage page = root.addChildPage("SomePage");
-		PageData data = page.getData();
-		String html = new PropertiesResponder().makeNavigationCheckboxesHtml(data).html();
-		assertSubString("<div style=\"float: left; width: 150px;\">Navigation:", html);
-		assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
-		assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
-		assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
-	}
+        getPropertiesContentFromPage(page);
 
-	public void testMakeSecurityPropertiesHtml() throws Exception
-	{
-		WikiPage page = root.addChildPage("SomePage");
-		PageData data = page.getData();
-		String html = new PropertiesResponder().makeSecurityCheckboxesHtml(data).html();
-		assertSubString("<div style=\"float: left; width: 150px;\">Security:", html);
-		assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
-		assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);
-		assertSubString("<input type=\"checkbox\" name=\"secure-test\"/> - secure-test", html);
-	}
+        assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
+        assertSubString("<td>file://some/page</td>", content);
+    }
+
+    public void testActionPropertiesHtml() throws Exception
+    {
+        WikiPage page = root.addChildPage("SomePage");
+        PageData data = page.getData();
+        String html = new PropertiesResponder().makeTestActionCheckboxesHtml(data).html();
+        assertSubString("<div style=\"float: left; width: 150px;\">Actions:", html);
+        assertSubString("Actions:", html);
+        assertSubString("<input type=\"checkbox\" name=\"Test\"/> - Test", html);
+        assertSubString("<input type=\"checkbox\" name=\"Suite\"/> - Suite", html);
+        assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
+        assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/> - Versions", html);
+        assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/> - Properties", html);
+        assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/> - Refactor", html);
+        assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/> - WhereUsed", html);
+    }
+
+    public void testMakeNavigationPropertiesHtml() throws Exception
+    {
+        WikiPage page = root.addChildPage("SomePage");
+        PageData data = page.getData();
+        String html = new PropertiesResponder().makeNavigationCheckboxesHtml(data).html();
+        assertSubString("<div style=\"float: left; width: 150px;\">Navigation:", html);
+        assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
+        assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
+        assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
+    }
+
+    public void testMakeSecurityPropertiesHtml() throws Exception
+    {
+        WikiPage page = root.addChildPage("SomePage");
+        PageData data = page.getData();
+        String html = new PropertiesResponder().makeSecurityCheckboxesHtml(data).html();
+        assertSubString("<div style=\"float: left; width: 150px;\">Security:", html);
+        assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
+        assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);
+        assertSubString("<input type=\"checkbox\" name=\"secure-test\"/> - secure-test", html);
+    }
+    
+    public void testEmptySuitesForm() throws Exception
+    {
+        getContentFromSimplePropertiesPage();
+
+        assertSubString("Suites", content);
+        assertSubString("<input type=\"text\" name=\"Suites\" value=\"\"/>", content);
+    }
+    
+    public void testSuitesDisplayed() throws Exception
+    {
+        WikiPage page = getContentFromSimplePropertiesPage();
+        PageData data = page.getData();
+        data.setAttribute(PropertiesResponder.SUITES, "smoke");
+        page.commit(data);
+
+        getPropertiesContentFromPage(page);
+
+        assertSubString("Suites", content);
+        assertSubString("<input type=\"text\" name=\"Suites\" value=\"smoke\"/>", content);
+    }
 }

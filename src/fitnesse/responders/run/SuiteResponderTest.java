@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.wiki.*;
 import fitnesse.http.*;
+import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.testutil.*;
 import fitnesse.FitNesseContext;
 import java.util.*;
@@ -227,4 +228,46 @@ public class SuiteResponderTest extends RegexTest
 		return "!path classes\n" +
 		  "!path lib/dummy.jar\n";
 	}
+    
+    public void testNonMatchingSuiteFilter() throws Exception
+    {
+        addTestPagesWithSuiteProperty();
+        request.setQueryString("suiteFilter=xxx");
+        String results = runSuite();
+        assertDoesntHaveRegexp(".*href=\"#TestOne\".*", results);
+        assertDoesntHaveRegexp(".*href=\"#TestTwo\".*", results);
+        assertDoesntHaveRegexp(".*href=\"#TestThree\".*", results);
+    }
+
+    public void testSimpleMatchingSuiteFilter() throws Exception
+    {
+        addTestPagesWithSuiteProperty();
+        request.setQueryString("suiteFilter=foo");
+        String results = runSuite();
+        assertDoesntHaveRegexp(".*href=\"#TestOne\".*", results);
+        assertHasRegexp(".*href=\"#TestTwo\".*", results);
+        assertDoesntHaveRegexp(".*href=\"#TestThree\".*", results);
+    }
+    
+    public void testSecondMatchingSuiteFilter() throws Exception
+    {
+        addTestPagesWithSuiteProperty();
+        request.setQueryString("suiteFilter=smoke");
+        String results = runSuite();
+        assertDoesntHaveRegexp(".*href=\"#TestOne\".*", results);
+        assertDoesntHaveRegexp(".*href=\"#TestTwo\".*", results);
+        assertHasRegexp(".*href=\"#TestThree\".*", results);
+    }
+    
+    private void addTestPagesWithSuiteProperty() throws Exception
+    {
+        WikiPage test2 = addTestToSuite("TestTwo", "|!-fitnesse.testutil.PassFixture-!|\n");
+        WikiPage test3 = addTestToSuite("TestThree", "|!-fitnesse.testutil.PassFixture-!|\n");
+        PageData data2 = test2.getData();
+        PageData data3 = test3.getData();
+        data2.setAttribute(PropertiesResponder.SUITES, "foo");
+        data3.setAttribute(PropertiesResponder.SUITES, "bar, smoke");
+        test2.commit(data2);
+        test3.commit(data3);
+    }
 }

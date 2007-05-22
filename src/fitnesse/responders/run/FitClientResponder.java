@@ -18,6 +18,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 	private String resource;
 	private WikiPage page;
 	private boolean shouldIncludePaths;
+    private String suiteFilter;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
@@ -26,6 +27,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		resource = request.getResource();
 		shouldIncludePaths = request.hasInput("includePaths");
+        suiteFilter = (String) request.getInput("suiteFilter");
 		return new PuppetResponse(this);
 	}
 
@@ -67,7 +69,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 	private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws Exception
 	{
 		FitClient client = startClient(socket);
-		List testPages = SuiteResponder.makePageList(page, root);
+		List testPages = SuiteResponder.makePageList(page, root, suiteFilter);
 
 		if(shouldIncludePaths)
 		{

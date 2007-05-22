@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.wiki.*;
 import fitnesse.http.*;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.testutil.RegexTest;
 
 public class FitClientResponderTest extends RegexTest
@@ -32,11 +33,18 @@ public class FitClientResponderTest extends RegexTest
 	{
 		crawler = root.getPageCrawler();
 		suite = crawler.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
-		crawler.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
-		crawler.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
+		WikiPage page1 = crawler.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
+		WikiPage page2 = crawler.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
 		crawler.addPage(suite, PathParser.parse("TestError"), "!|fitnesse.testutil.ErrorFixture|\n");
 		crawler.addPage(suite, PathParser.parse("TestIgnore"), "!|fitnesse.testutil.IgnoreFixture|\n");
 		crawler.addPage(suite, PathParser.parse("SomePage"), "This is just some page.");
+        
+        PageData data1 = page1.getData();
+        PageData data2 = page2.getData();
+        data1.setAttribute(PropertiesResponder.SUITES, "foo");
+        data2.setAttribute(PropertiesResponder.SUITES, "bar, smoke");
+        page1.commit(data1);
+        page2.commit(data2);
 	}
 
 	public void tearDown() throws Exception
