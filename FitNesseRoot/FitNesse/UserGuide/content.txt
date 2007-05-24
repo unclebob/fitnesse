@@ -54,6 +54,10 @@ Behind each test table is FixtureCode. Learn how to write and run it.
 This is Rick's writeup on !-DoFixture-! and all the other fixtures in his library.
 |[[!-FitLibrary-!][FitLibraryUserGuide]]|''A quick walk through.''|
 
+!2 !-FitDecorator-!
+Quick overview of !-FitDecorators-!
+|[[!-FitDecorator-!][FitDecoratorUserGuide]]|''A quick overview with examples''|
+
 !2 FitNesse Plugins
 There are several plugins for FitNesse that are avaiable at the following URL:
 http://www.fitnesse.org/PluginsPage
