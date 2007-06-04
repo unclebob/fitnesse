@@ -94,6 +94,14 @@ public class BindingTest extends RegexTest
 		binding.doCell(fixture, cell3);
 		assertSubString("No such symbol: abc", cell3.text());
 	}
+	
+	public void testRecallBindingSymbolTableText() throws Throwable
+	{
+		Binding binding = Binding.create(fixture, "intField=");
+		Fixture.setSymbol("123", "999");
+		binding.doCell(fixture, cell1);
+		assertEquals("123  = 999", cell1.text());
+	}
 
 	public void testUseOfGracefulNamingForMethods() throws Throwable
 	{
