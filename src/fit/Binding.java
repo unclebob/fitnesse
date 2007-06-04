@@ -159,8 +159,10 @@ public abstract class Binding
 			String value = (String) Fixture.getSymbol(symbolName);
 			if(value == null)
 				fixture.exception(cell, new FitFailureException("No such symbol: " + symbolName));
-			else
+			else {
 				adapter.set(adapter.parse(value));
+				cell.addToBody(Fixture.gray(" = " + value));
+			}
 		}
 	}
 
