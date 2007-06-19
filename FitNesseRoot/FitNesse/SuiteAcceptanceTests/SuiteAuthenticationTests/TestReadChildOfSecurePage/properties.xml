@@ -9,8 +9,4 @@
 	<Test/>
 	<Versions/>
 	<WhereUsed/>
-	<WikiImport>
-		<LastRemoteModification>20050418123334</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestReadChildOfSecurePage</Source>
-	</WikiImport>
 </properties>

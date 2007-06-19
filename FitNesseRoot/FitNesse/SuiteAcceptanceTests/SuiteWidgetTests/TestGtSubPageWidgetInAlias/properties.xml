@@ -10,10 +10,6 @@
 	<Test>true</Test>
 	<Versions>true</Versions>
 	<WhereUsed>true</WhereUsed>
-	<WikiImport>
-		<LastRemoteModification>20061003152836</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80/FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestGtSubPageWidgetInAlias</Source>
-	</WikiImport>
 	<saveId>1159903716669</saveId>
 	<ticketId>4076963033172720798</ticketId>
 </properties>

@@ -1,3 +1,5 @@
-!contents -R
+!contents
 
 !path classes
+!path fitnesse.jar
+!path fitlibrary.jar

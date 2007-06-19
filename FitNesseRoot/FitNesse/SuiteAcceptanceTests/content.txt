@@ -15,7 +15,7 @@
 !path classes
 ----
 !2 ''Port''
-!define PORT {8082}
+!define PORT {8080}
 !define INTERNAL_PORT {9123}
 ----
 !2 ''Fixtures''

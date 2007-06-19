@@ -8,8 +8,4 @@
 	<Suite/>
 	<Versions/>
 	<WhereUsed/>
-	<WikiImport>
-		<LastRemoteModification>20050609010259</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.DotNet.SuiteAcceptanceTests.SuiteCellHandlerTests.SuiteDefaultCellHandlerTests</Source>
-	</WikiImport>
 </properties>

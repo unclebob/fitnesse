@@ -9,8 +9,4 @@
 	<Suite/>
 	<Versions/>
 	<WhereUsed/>
-	<WikiImport>
-		<LastRemoteModification>20050418123021</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests</Source>
-	</WikiImport>
 </properties>

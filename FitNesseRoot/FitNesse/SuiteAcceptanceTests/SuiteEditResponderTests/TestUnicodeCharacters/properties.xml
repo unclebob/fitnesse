@@ -9,8 +9,4 @@
 	<Test/>
 	<Versions/>
 	<WhereUsed/>
-	<WikiImport>
-		<LastRemoteModification>20050418123708</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUnicodeCharacters</Source>
-	</WikiImport>
 </properties>

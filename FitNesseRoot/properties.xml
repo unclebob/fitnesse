@@ -1,13 +1,9 @@
 <?xml version="1.0"?>
 <properties>
 	<Files>true</Files>
-	<LastModified>20061017214203</LastModified>
+	<LastModified>20070619095023</LastModified>
 	<RecentChanges>true</RecentChanges>
 	<WhereUsed>true</WhereUsed>
-	<WikiImport>
-		<IsRoot/>
-		<Source>http://docs.fitnesse.org:80/</Source>
-	</WikiImport>
-	<saveId>1161135723815</saveId>
-	<ticketId>-2046856734547823435</ticketId>
+	<saveId>1182264623931</saveId>
+	<ticketId>8658002709111342438</ticketId>
 </properties>

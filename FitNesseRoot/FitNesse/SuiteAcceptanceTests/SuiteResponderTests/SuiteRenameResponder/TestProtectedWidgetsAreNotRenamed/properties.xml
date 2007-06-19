@@ -10,10 +10,6 @@
 	<Test/>
 	<Versions/>
 	<WhereUsed/>
-	<WikiImport>
-		<LastRemoteModification>20060717190847</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestProtectedWidgetsAreNotRenamed</Source>
-	</WikiImport>
 	<saveId>1153177727141</saveId>
 	<ticketId>-6278225220512060275</ticketId>
 </properties>

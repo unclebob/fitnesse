@@ -8,10 +8,6 @@
 	<Test/>
 	<Versions/>
 	<WhereUsed/>
-	<WikiImport>
-		<LastRemoteModification>20050628102015</LastRemoteModification>
-		<Source>http://docs.fitnesse.org:80//FitNesse.DotNet.SuiteAcceptanceTests.SuiteCellHandlerTests.SuiteDefaultCellHandlerTests.TestSaveAndRecallSymbols</Source>
-	</WikiImport>
 	<saveId>1119968415065</saveId>
 	<ticketId>-324361682006869056</ticketId>
 </properties>
