@@ -3,8 +3,8 @@
 package fitnesse.components;
 
 import fitnesse.wiki.*;
-import fitnesse.wikitext.widgets.*;
 import fitnesse.wikitext.*;
+import fitnesse.wikitext.widgets.*;
 
 public abstract class ReferenceRenamer implements FitNesseTraversalListener
 {
@@ -29,12 +29,13 @@ public abstract class ReferenceRenamer implements FitNesseTraversalListener
 
 		String newContent = widgetRoot.asWikiText();
 		boolean pageHasChanged = !newContent.equals(content);
-		if (pageHasChanged) {
+		if(pageHasChanged)
+		{
 			data.setContent(newContent);
 			currentPage.commit(data);
 		}
 	}
-	
+
 	protected abstract WidgetVisitor getVisitor();
 
 	public static WidgetBuilder referenceModifyingWidgetBuilder = new WidgetBuilder(new Class[]{

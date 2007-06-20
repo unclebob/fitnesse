@@ -7,7 +7,7 @@ import java.util.regex.*;
 
 public class CommandLine extends Option
 {
-  private static Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
+	private static Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
 	private Map possibleOptions = new HashMap();
 
 	public CommandLine(String optionDescriptor)
@@ -44,7 +44,7 @@ public class CommandLine extends Option
 				else
 				{
 					String argName = arg.substring(1);
-					currentOption = (Option)possibleOptions.get(argName);
+					currentOption = (Option) possibleOptions.get(argName);
 					if(currentOption != null)
 						currentOption.active = true;
 					else
@@ -63,7 +63,7 @@ public class CommandLine extends Option
 
 	public boolean hasOption(String optionName)
 	{
-		Option option = (Option)possibleOptions.get(optionName);
+		Option option = (Option) possibleOptions.get(optionName);
 		if(option == null)
 			return false;
 
@@ -72,7 +72,7 @@ public class CommandLine extends Option
 
 	public String getOptionArgument(String optionName, String argName)
 	{
-		Option option = (Option)possibleOptions.get(optionName);
+		Option option = (Option) possibleOptions.get(optionName);
 		if(option == null)
 			return null;
 		else
@@ -108,7 +108,7 @@ class Option
 	public boolean needsMoreArguments()
 	{
 		return argumentIndex < argumentNames.length;
-}
+	}
 
 	public void addArgument(String value)
 	{
@@ -125,6 +125,6 @@ class Option
 			if(token.length() > 0)
 				usableTokens.add(token);
 		}
-		return (String[])usableTokens.toArray(new String[]{});
+		return (String[]) usableTokens.toArray(new String[]{});
 	}
 }

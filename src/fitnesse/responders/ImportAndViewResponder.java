@@ -1,8 +1,8 @@
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
 import fitnesse.*;
 import fitnesse.http.*;
+import fitnesse.wiki.*;
 
 public class ImportAndViewResponder implements Responder, WikiImporterClient
 {

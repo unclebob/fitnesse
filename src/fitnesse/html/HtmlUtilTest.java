@@ -11,7 +11,8 @@ public class HtmlUtilTest extends RegexTest
 
 	private WikiPage root;
 
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 		root = InMemoryPage.makeRoot("root");
 	}
 
@@ -36,27 +37,27 @@ public class HtmlUtilTest extends RegexTest
 		String trail = "1.2.3.4";
 		HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithPageType(trail, "Some Type");
 		String expected = getBreadCrumbsWithLastOneLinked() +
-		  "<br/><span class=\"page_type\">Some Type</span>" + endl;
+			"<br/><span class=\"page_type\">Some Type</span>" + endl;
 		assertEquals(expected, breadcrumbs.html());
 	}
 
 	private String getBreadCrumbsWithLastOneLinked()
 	{
 		return getFirstThreeBreadCrumbs() +
-		  "<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>" + endl;
+			"<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>" + endl;
 	}
 
 	private String getBreadCrumbsWithLastOneNotLinked()
 	{
 		return getFirstThreeBreadCrumbs() +
-		  "<br/><span class=\"page_title\">4</span>" + endl;
+			"<br/><span class=\"page_title\">4</span>" + endl;
 	}
 
 	private String getFirstThreeBreadCrumbs()
 	{
 		return "<a href=\"/1\">1</a>." + endl +
-		  "<a href=\"/1.2\">2</a>." + endl +
-		  "<a href=\"/1.2.3\">3</a>." + endl;
+			"<a href=\"/1.2\">2</a>." + endl +
+			"<a href=\"/1.2.3\">3</a>." + endl;
 	}
 
 	public void testMakeFormTag() throws Exception
@@ -126,7 +127,7 @@ public class HtmlUtilTest extends RegexTest
 	}
 
 	private String getActionsHtml(String pageName)
-	  throws Exception
+		throws Exception
 	{
 		root.addChildPage(pageName);
 		PageData pageData = new PageData(root.getChildPage(pageName));

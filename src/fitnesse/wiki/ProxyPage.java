@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.http.*;
-import java.util.*;
-import java.net.*;
+import fitnesse.http.ResponseParser;
+
 import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 public class ProxyPage extends CachingPage implements Serializable
 {

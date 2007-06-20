@@ -3,8 +3,8 @@
 package fitnesse.runner;
 
 import fit.Counts;
-import fitnesse.util.StreamReader;
 import fitnesse.testutil.RegexTest;
+import fitnesse.util.StreamReader;
 
 public class CachingResultFormatterTest extends RegexTest
 {

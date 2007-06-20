@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import java.io.*;
 import fitnesse.util.FileUtil;
+
+import java.io.*;
 
 public class ReplacingFileUpdateTest extends UpdateTest
 {
@@ -53,7 +54,7 @@ public class ReplacingFileUpdateTest extends UpdateTest
 		output.close();
 
 		assertTrue(update.shouldBeApplied());
-    update.doUpdate();
+		update.doUpdate();
 
 		assertEquals("hello", FileUtil.getFileContent(destFile));
 	}

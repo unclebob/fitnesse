@@ -3,8 +3,8 @@
 
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
 import fitnesse.testutil.SimpleCachinePage;
+import junit.framework.TestCase;
 
 public class CachingPageTest extends TestCase
 {
@@ -93,7 +93,7 @@ public class CachingPageTest extends TestCase
 	public void testPageDataIsCached() throws Exception
 	{
 		CachingPage.cacheTime = 100;
-		CachingPage page = (CachingPage)crawler.addPage(root, PathParser.parse("PageOne"), "some content");
+		CachingPage page = (CachingPage) crawler.addPage(root, PathParser.parse("PageOne"), "some content");
 
 		PageData data1 = page.getCachedData();
 		PageData data2 = page.getCachedData();
@@ -112,7 +112,7 @@ public class CachingPageTest extends TestCase
 		PageData data = page.getData();
 		assertNotNull(data);
 		Thread.sleep(200);
-		((CachingPage)page).dumpExpiredCachedData();
+		((CachingPage) page).dumpExpiredCachedData();
 		assertNull(page.getCachedData());
 	}
 
@@ -145,7 +145,7 @@ public class CachingPageTest extends TestCase
 
 	public void testCachedDataIsTrashedBeforeOutOfMemoryError() throws Exception
 	{
-		CachingPage page = (CachingPage)crawler.addPage(root, PathParser.parse("SomePage"), "some content");
+		CachingPage page = (CachingPage) crawler.addPage(root, PathParser.parse("SomePage"), "some content");
 		page.getData();
 		assertTrue(page.getCachedData() != null);
 		boolean exceptionThrown = false;

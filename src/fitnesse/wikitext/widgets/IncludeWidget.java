@@ -4,6 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.components.PageReferencer;
 import fitnesse.wiki.*;
+
 import java.util.*;
 import java.util.regex.*;
 
@@ -40,8 +41,8 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 		PageCrawler crawler = parentPage.getPageCrawler();
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		WikiPagePath pagePath = PathParser.parse(pageName);
-    WikiPage includedPage = crawler.getSiblingPage(includingPage, pagePath);
-    if(includedPage != null)
+		WikiPage includedPage = crawler.getSiblingPage(includingPage, pagePath);
+		if(includedPage != null)
 		{
 			return includedPage.getData().getContent();
 		}
@@ -113,7 +114,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	}
 
 	private boolean isCollapsed(String option)
-	  throws Exception
+		throws Exception
 	{
 		if(isSetup(option) && isSetupCollapsed())
 			return true;
@@ -145,7 +146,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	}
 
 	private boolean isTeardownCollapsed()
-	  throws Exception
+		throws Exception
 	{
 		return "true".equals(parent.getVariable(COLLAPSE_TEARDOWN));
 	}
@@ -156,7 +157,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	}
 
 	private boolean isSetupCollapsed()
-	  throws Exception
+		throws Exception
 	{
 		return "true".equals(parent.getVariable(COLLAPSE_SETUP));
 	}

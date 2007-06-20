@@ -1,10 +1,11 @@
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
 import fitnesse.testutil.*;
 import fitnesse.util.XmlUtil;
-import java.util.*;
+import fitnesse.wiki.*;
 import org.w3c.dom.Document;
+
+import java.util.*;
 
 public class WikiImporterTest extends RegexTest implements WikiImporterClient
 {

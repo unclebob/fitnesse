@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.*;
 
 public class PageReferenceRenamer extends ReferenceRenamer

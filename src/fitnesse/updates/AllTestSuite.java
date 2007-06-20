@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import junit.framework.Test;
 import fitnesse.testutil.TestSuiteMaker;
+import junit.framework.Test;
 
 public class AllTestSuite
 {
 	public static Test suite()
 	{
-		return TestSuiteMaker.makeSuite("updates", new Class[] {
+		return TestSuiteMaker.makeSuite("updates", new Class[]{
 			UpdaterTest.class,
 			VirtualWikiDepricationUpdateTest.class,
 			FileUpdateTest.class,
@@ -17,7 +17,7 @@ public class AllTestSuite
 			ReplacingFileUpdateTest.class,
 			FrontPageUpdateTest.class,
 			SymLinkPropertyFormatUpdateTest.class,
-      WikiImportPropertyFormatUpdateTest.class
-    });
+			WikiImportPropertyFormatUpdateTest.class
+		});
 	}
 }

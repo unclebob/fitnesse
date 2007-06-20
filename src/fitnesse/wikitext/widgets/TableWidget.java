@@ -3,8 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 public class TableWidget extends ParentWidget
 {

@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fitnesse.testutil.RegexTest;
 import fitnesse.http.ResponseParser;
+import fitnesse.testutil.RegexTest;
+
 import java.net.UnknownHostException;
 
 public class ShutdownTest extends RegexTest
@@ -21,13 +22,13 @@ public class ShutdownTest extends RegexTest
 
 	public void testArgs() throws Exception
 	{
-		assertTrue(shutdown.parseArgs(new String[] {}));
+		assertTrue(shutdown.parseArgs(new String[]{}));
 		assertEquals("localhost", shutdown.hostname);
 		assertEquals(80, shutdown.port);
 		assertEquals(null, shutdown.username);
 		assertEquals(null, shutdown.password);
 
-		assertTrue(shutdown.parseArgs(new String[] {"-h", "host.com", "-p", "1234", "-c", "user", "pass"}));
+		assertTrue(shutdown.parseArgs(new String[]{"-h", "host.com", "-p", "1234", "-c", "user", "pass"}));
 		assertEquals("host.com", shutdown.hostname);
 		assertEquals(1234, shutdown.port);
 		assertEquals("user", shutdown.username);

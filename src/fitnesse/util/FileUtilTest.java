@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.util;
 
-import java.io.File;
 import junit.framework.TestCase;
+
+import java.io.File;
 
 public class FileUtilTest extends TestCase
 {
@@ -74,7 +75,8 @@ public class FileUtilTest extends TestCase
 		FileUtil.deleteFileSystemDirectory(dir);
 	}
 
-	public void testOrganizeFilesMixOfFilesAndDirs() {
+	public void testOrganizeFilesMixOfFilesAndDirs()
+	{
 		File dir = FileUtil.createDir("temp");
 		File dir3 = createSubDir(dir, "dDir");
 		File file3 = createFileInDir(dir, "dFile.txt");

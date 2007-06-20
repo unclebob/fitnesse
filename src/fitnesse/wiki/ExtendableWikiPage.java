@@ -25,6 +25,6 @@ public abstract class ExtendableWikiPage extends BaseWikiPage
 
 	public Extension getExtension(String extensionName)
 	{
-		return (Extension)extensions.get(extensionName);
+		return (Extension) extensions.get(extensionName);
 	}
 }

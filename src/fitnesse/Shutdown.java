@@ -11,7 +11,8 @@ public class Shutdown
 	public int port = Arguments.DEFAULT_PORT;
 	public String username;
 	public String password;
-	private CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]");;
+	private CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]");
+	;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -85,6 +86,6 @@ public class Shutdown
 		System.err.println("\t-h <hostname> {localhost}");
 		System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
 		System.err.println("\t-c <username> <password> Supply user credentials.  Use when FitNesse has authentication activated.");
-    System.exit(-1);
+		System.exit(-1);
 	}
 }

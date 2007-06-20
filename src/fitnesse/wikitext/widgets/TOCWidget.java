@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wiki.*;
 import fitnesse.html.*;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiWidget;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class TOCWidget extends WikiWidget
 	}
 
 	private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth)
-	  throws Exception
+		throws Exception
 	{
 		HtmlTag div = makeDivTag(currentDepth);
 		div.add(buildList(wikiPage, currentDepth));
@@ -39,7 +39,7 @@ public class TOCWidget extends WikiWidget
 	}
 
 	private HtmlTag buildList(WikiPage wikiPage, int currentDepth)
-	  throws Exception
+		throws Exception
 	{
 		HtmlTag list = new HtmlTag("ul");
 		for(Iterator iterator = buildListOfChildPages(wikiPage).iterator(); iterator.hasNext();)

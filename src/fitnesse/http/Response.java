@@ -2,26 +2,26 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.text.*;
 
 public abstract class Response
 {
-  public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
+	public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 
 	protected static final String CRLF = "\r\n";
 
-  public static SimpleDateFormat makeStandardHttpDateFormat()
-  {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-    df.setTimeZone(TimeZone.getTimeZone("GMT"));
-    return df;
-  }
+	public static SimpleDateFormat makeStandardHttpDateFormat()
+	{
+		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
+		SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return df;
+	}
 
-  private int status = 200;
+	private int status = 200;
 	private HashMap headers = new HashMap(17);
-  private String contentType = DEFAULT_CONTENT_TYPE;
+	private String contentType = DEFAULT_CONTENT_TYPE;
 
 	public Response()
 	{
@@ -33,7 +33,9 @@ public abstract class Response
 	}
 
 	public abstract void readyToSend(ResponseSender sender) throws Exception;
+
 	protected abstract void addSpecificHeaders();
+
 	public abstract int getContentSize();
 
 	public int getStatus()

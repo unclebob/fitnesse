@@ -235,20 +235,20 @@ public class StreamReader
 				bytesConsumed++;
 				if(b == boundary[matchingBoundaryIndex])
 				{
-					matchedBoundaryBytes[matchingBoundaryIndex++] = (byte)b;
+					matchedBoundaryBytes[matchingBoundaryIndex++] = (byte) b;
 					if(matchingBoundaryIndex >= boundaryLength)
 						changeState(FINAL_STATE);
 				}
 				else if(matchingBoundaryIndex == 0)
-					output.write((byte)b);
+					output.write((byte) b);
 				else
 				{
 					output.write(matchedBoundaryBytes, 0, matchingBoundaryIndex);
 					matchingBoundaryIndex = 0;
 					if(b == boundary[matchingBoundaryIndex])
-						matchedBoundaryBytes[matchingBoundaryIndex++] = (byte)b;
+						matchedBoundaryBytes[matchingBoundaryIndex++] = (byte) b;
 					else
-						output.write((byte)b);
+						output.write((byte) b);
 				}
 			}
 		}

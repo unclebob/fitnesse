@@ -6,10 +6,14 @@ import fit.ColumnFixture;
 
 public class NullAndBlankFixture extends ColumnFixture
 {
-  public String nullString;
-  public String blankString;
-  public String nullString() {return null;}
-  public String blankString() {return "";}
-  public boolean isNull() {return nullString == null;}
-  public boolean isBlank() {return blankString.length() == 0;}
+	public String nullString;
+	public String blankString;
+
+	public String nullString() {return null;}
+
+	public String blankString() {return "";}
+
+	public boolean isNull() {return nullString == null;}
+
+	public boolean isBlank() {return blankString.length() == 0;}
 }

@@ -3,10 +3,11 @@
 package fitnesse.runner;
 
 import fit.Counts;
-import java.io.InputStream;
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.*;
 import fitnesse.responders.run.SuiteHtmlFormatter;
+
+import java.io.InputStream;
 
 public class HtmlResultFormatter implements ResultFormatter
 {
@@ -37,7 +38,7 @@ public class HtmlResultFormatter implements ResultFormatter
 		page.title.use(rootPath);
 		page.head.add(page.title);
 		page.head.add(page.makeCssLink("/files/css/fitnesse_print.css", "screen"));
-                                                                                                                               
+
 		HtmlTag script = new HtmlTag("script", scriptContent);
 		script.addAttribute("language", "javascript");
 		page.head.add(script);
@@ -101,17 +102,17 @@ public class HtmlResultFormatter implements ResultFormatter
 	}
 
 	public static final String scriptContent = "\n" +
-	  "function localizeInPageLinks()\n" +
-	  "{\n" +
-	  "\tvar base = document.getElementsByTagName('base')[0].href;\n" +
-	  "\tvar inPageBase = base + \"#\";\n" +
-	  "\tvar baseLength = inPageBase.length\n" +
-	  "\tvar aTags = document.getElementsByTagName('a');\n" +
-	  "\tfor(var i=0; i < aTags.length; i++)\n" +
-	  "\t{\n" +
-	  "\t\tvar tag = aTags[i];\n" +
-	  "\t\tif(tag.href && tag.href.substring(0, baseLength) == inPageBase)\n" +
-	  "\t\t\ttag.href = location.href + '#' + tag.href.substring(baseLength);\n" +
-	  "\t}\n" +
-	  "}\n";
+		"function localizeInPageLinks()\n" +
+		"{\n" +
+		"\tvar base = document.getElementsByTagName('base')[0].href;\n" +
+		"\tvar inPageBase = base + \"#\";\n" +
+		"\tvar baseLength = inPageBase.length\n" +
+		"\tvar aTags = document.getElementsByTagName('a');\n" +
+		"\tfor(var i=0; i < aTags.length; i++)\n" +
+		"\t{\n" +
+		"\t\tvar tag = aTags[i];\n" +
+		"\t\tif(tag.href && tag.href.substring(0, baseLength) == inPageBase)\n" +
+		"\t\t\ttag.href = location.href + '#' + tag.href.substring(baseLength);\n" +
+		"\t}\n" +
+		"}\n";
 }

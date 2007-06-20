@@ -4,11 +4,13 @@ package fitnesse.testutil;
 
 import junit.framework.Test;
 
-public class AllTestSuite {
-  public static Test suite() {
-    return TestSuiteMaker.makeSuite("testutil", new Class[]{
-      CartesianVectorTest.class,
-      ClassDelegatePointParserTest.class
-    });
-  }
+public class AllTestSuite
+{
+	public static Test suite()
+	{
+		return TestSuiteMaker.makeSuite("testutil", new Class[]{
+			CartesianVectorTest.class,
+			ClassDelegatePointParserTest.class
+		});
+	}
 }

@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import fitnesse.authentication.Authenticator;
+
 import java.util.Properties;
 
 public class SimpleAuthenticator extends Authenticator
@@ -15,7 +16,7 @@ public class SimpleAuthenticator extends Authenticator
 
 	public SimpleAuthenticator(Properties p)
 	{
-			p.propertyNames();
+		p.propertyNames();
 	}
 
 	public boolean isAuthenticated(String username, String password)

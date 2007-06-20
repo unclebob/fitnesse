@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.WikiWidget;
+
 import java.util.regex.*;
 
 public class AnchorMarkerWidget extends WikiWidget

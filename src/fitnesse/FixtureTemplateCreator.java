@@ -3,6 +3,7 @@
 package fitnesse;
 
 import fit.*;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -53,8 +54,8 @@ public class FixtureTemplateCreator
 
 	private StringBuffer makeColumnFixtureTemplate(String defaultTableTemplate, Class fixtureClass)
 	{
-        return makeFixtureTemplate(defaultTableTemplate, fixtureClass, ColumnFixture.class);
-    }
+		return makeFixtureTemplate(defaultTableTemplate, fixtureClass, ColumnFixture.class);
+	}
 
 	private StringBuffer makeFixtureTemplate(String defaultTableTemplate, Class fixtureClass, Class stopClass)
 	{
@@ -69,37 +70,37 @@ public class FixtureTemplateCreator
 
 	private void getPublicMembers(Class aClass, List publicFields, List publicMethods, Class stopClass)
 	{
-        Class currentClass = aClass;
-        while (currentClass != stopClass)
-        {
-            Field[] fields = currentClass.getDeclaredFields();
-            for(int i = 0; i < fields.length; i++)
-            {
-                Field field = fields[i];
-                if(Modifier.isPublic(field.getModifiers()))
-                    publicFields.add(field);
-            }
+		Class currentClass = aClass;
+		while(currentClass != stopClass)
+		{
+			Field[] fields = currentClass.getDeclaredFields();
+			for(int i = 0; i < fields.length; i++)
+			{
+				Field field = fields[i];
+				if(Modifier.isPublic(field.getModifiers()))
+					publicFields.add(field);
+			}
 
-            Method[] methods = currentClass.getDeclaredMethods();
-            for(int i = 0; i < methods.length; i++)
-            {
-                Method method = methods[i];
-                String methodName = method.getName();
-                if ("reset".equals(methodName) || "execute".equals(methodName))
-                    continue;
-                if (Modifier.isAbstract(method.getModifiers()))
-                    continue;
-                if(Modifier.isPublic(method.getModifiers()))
-                    publicMethods.add(method);
-            }
-            currentClass = currentClass.getSuperclass();
-        }
-    }
+			Method[] methods = currentClass.getDeclaredMethods();
+			for(int i = 0; i < methods.length; i++)
+			{
+				Method method = methods[i];
+				String methodName = method.getName();
+				if("reset".equals(methodName) || "execute".equals(methodName))
+					continue;
+				if(Modifier.isAbstract(method.getModifiers()))
+					continue;
+				if(Modifier.isPublic(method.getModifiers()))
+					publicMethods.add(method);
+			}
+			currentClass = currentClass.getSuperclass();
+		}
+	}
 
 	private void addCellsForColumnFixture(StringBuffer tableTemplate, List publicFields, List publicMethods)
 	{
 		StringBuffer headerRow = new StringBuffer("|");
-		StringBuffer valueRow  = new StringBuffer("|");
+		StringBuffer valueRow = new StringBuffer("|");
 
 		addCellsForFieldNamesAndTypes(publicFields, headerRow, valueRow);
 		addCellsForMethodNamesAndReturnTypes(publicMethods, headerRow, valueRow);
@@ -174,7 +175,7 @@ public class FixtureTemplateCreator
 		try
 		{
 			Method method_getTargetClass = rowFixtureClass.getMethod("getTargetClass");
-			targetClass = (Class)method_getTargetClass.invoke(rowFixtureClass.newInstance());
+			targetClass = (Class) method_getTargetClass.invoke(rowFixtureClass.newInstance());
 		}
 		catch(NoSuchMethodException nsme)
 		{

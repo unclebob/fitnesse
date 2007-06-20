@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.*;
+import fitnesse.wikitext.WikiWidget;
 import junit.swingui.TestRunner;
 
 public class ListWidgetTest extends WidgetTest
@@ -39,7 +39,7 @@ public class ListWidgetTest extends WidgetTest
 	}
 
 	private void formsSimpleOneElementList(String itemText)
-	  throws Exception
+		throws Exception
 	{
 		ListWidget list = new ListWidget(widgetRoot, " *" + itemText);
 		assertTrue("should not be ordered", !list.isOrdered());

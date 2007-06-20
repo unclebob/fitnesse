@@ -3,9 +3,10 @@
 package fitnesse.runner;
 
 import fit.Counts;
+import fitnesse.components.*;
+
 import java.io.*;
 import java.util.*;
-import fitnesse.components.*;
 
 public class CachingResultFormatter implements ResultFormatter
 {

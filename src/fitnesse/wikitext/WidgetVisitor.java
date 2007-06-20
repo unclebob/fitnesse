@@ -7,6 +7,8 @@ import fitnesse.wikitext.widgets.*;
 public interface WidgetVisitor
 {
 	public void visit(WikiWidget widget) throws Exception;
+
 	public void visit(WikiWordWidget widget) throws Exception;
+
 	public void visit(AliasLinkWidget widget) throws Exception;
 }

@@ -2,18 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.wiki.*;
 import fitnesse.util.Wildcard;
-import java.util.*;
+import fitnesse.wiki.*;
+
 import java.io.File;
+import java.util.*;
 
 public class ClassPathBuilder extends InheritedItemBuilder
 {
 	public String getClasspath(WikiPage page) throws Exception
 	{
 		List paths = getInheritedPathElements(page, new HashSet(89));
-    String classPathString = createClassPathString(paths, getPathSeparator(page));
-    return classPathString;
+		String classPathString = createClassPathString(paths, getPathSeparator(page));
+		return classPathString;
 	}
 
 	public String getPathSeparator(WikiPage page) throws Exception
@@ -61,7 +62,7 @@ public class ClassPathBuilder extends InheritedItemBuilder
 		{
 			String path = (String) iterator.next();
 			File file = new File(path);
-      File dir = new File(file.getAbsolutePath()).getParentFile();
+			File dir = new File(file.getAbsolutePath()).getParentFile();
 			if(file.getName().indexOf('*') != -1 && dir.exists())
 			{
 				File[] files = dir.listFiles(new Wildcard(file.getName()));

@@ -1,6 +1,6 @@
 package fitnesse.responders.run;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
 
 public class MockTestEventListener implements TestEventListener
 {

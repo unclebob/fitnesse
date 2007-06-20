@@ -6,10 +6,15 @@ import fit.Fixture;
 
 public class ActionFixtureTestFixture extends Fixture
 {
-  public void duplicateMethod(int i) {}
-  public void duplicateMethod(double d) {}
-  public void realMethod() {}
-  public void someField(int i) {}
-  public int realCheck() {return 0;}
-  public void voidCheck() {}
+	public void duplicateMethod(int i) {}
+
+	public void duplicateMethod(double d) {}
+
+	public void realMethod() {}
+
+	public void someField(int i) {}
+
+	public int realCheck() {return 0;}
+
+	public void voidCheck() {}
 }

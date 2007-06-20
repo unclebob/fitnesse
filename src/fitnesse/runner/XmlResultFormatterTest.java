@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.InputStream;
-import fitnesse.util.*;
-import fitnesse.testutil.RegexTest;
-import org.w3c.dom.*;
 import fit.Counts;
+import fitnesse.testutil.RegexTest;
+import fitnesse.util.*;
+import org.w3c.dom.*;
+
+import java.io.InputStream;
 
 public class XmlResultFormatterTest extends RegexTest
 {
@@ -44,7 +45,7 @@ public class XmlResultFormatterTest extends RegexTest
 		Document doc = getXmlDoc();
 		NodeList results = doc.getElementsByTagName("result");
 		assertEquals(1, results.getLength());
-		Element result = (Element)results.item(0);
+		Element result = (Element) results.item(0);
 		checkResultElement(result, result1);
 	}
 
@@ -55,8 +56,8 @@ public class XmlResultFormatterTest extends RegexTest
 		Document doc = getXmlDoc();
 		NodeList results = doc.getElementsByTagName("result");
 		assertEquals(2, results.getLength());
-		Element resultElement1 = (Element)results.item(0);
-		Element resultElement2 = (Element)results.item(1);
+		Element resultElement1 = (Element) results.item(0);
+		Element resultElement2 = (Element) results.item(1);
 
 		checkResultElement(resultElement1, result1);
 		checkResultElement(resultElement2, result2);
@@ -68,7 +69,7 @@ public class XmlResultFormatterTest extends RegexTest
 		Document doc = getXmlDoc();
 		NodeList finalCountsList = doc.getElementsByTagName("finalCounts");
 		assertEquals(1, finalCountsList.getLength());
-		Element finalCountElement = (Element)finalCountsList.item(0);
+		Element finalCountElement = (Element) finalCountsList.item(0);
 		checkCounts(finalCounts, finalCountElement);
 	}
 

@@ -24,7 +24,7 @@ public class SocketDealer
 	public void dealSocketTo(int ticket, SocketDoner doner) throws Exception
 	{
 		Integer key = new Integer(ticket);
-		SocketSeeker seeker = (SocketSeeker)waitingList.get(key);
+		SocketSeeker seeker = (SocketSeeker) waitingList.get(key);
 		seeker.acceptSocketFrom(doner);
 		waitingList.remove(key);
 	}

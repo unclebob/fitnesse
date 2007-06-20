@@ -3,10 +3,11 @@
 
 package fitnesse.wiki;
 
+import fitnesse.util.FileUtil;
 import junit.framework.TestCase;
+
 import java.io.File;
 import java.util.*;
-import fitnesse.util.FileUtil;
 
 public class FileSystemPageTest extends TestCase
 {
@@ -104,7 +105,7 @@ public class FileSystemPageTest extends TestCase
 
 	public void testDelTree() throws Exception
 	{
-		FileSystemPage fsRoot = (FileSystemPage)FileSystemPage.makeRoot(".", "RooT");
+		FileSystemPage fsRoot = (FileSystemPage) FileSystemPage.makeRoot(".", "RooT");
 		WikiPage levelOne = crawler.addPage(fsRoot, PathParser.parse("LevelOne"));
 		crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
 		File childOne = new File("RooT/LevelOne");
@@ -193,7 +194,7 @@ public class FileSystemPageTest extends TestCase
 	{
 		WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
 		page.getChildren();
-		FileUtil.deleteFileSystemDirectory(((FileSystemPage)page).getFileSystemPath());
+		FileUtil.deleteFileSystemDirectory(((FileSystemPage) page).getFileSystemPath());
 		try
 		{
 			page.getChildren();
@@ -216,7 +217,7 @@ public class FileSystemPageTest extends TestCase
 
 		data.setProperties(oldProps);
 		VersionInfo version = page.commit(data);
-		
+
 		PageData versionedData = page.getDataVersion(version.getName());
 		WikiPageProperties versionedProps = versionedData.getProperties();
 

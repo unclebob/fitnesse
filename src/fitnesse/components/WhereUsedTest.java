@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.wiki.*;
 import fitnesse.testutil.*;
+import fitnesse.wiki.*;
+
 import java.util.*;
 
 public class WhereUsedTest extends RegexTest implements SearchObserver

@@ -2,7 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.util;
 
-import junit.framework.*;
+import junit.framework.TestCase;
+
 import java.io.File;
 import java.util.*;
 

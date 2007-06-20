@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.WidgetBuilder;
+
+import java.util.regex.*;
 
 public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgument
 {

@@ -3,8 +3,8 @@
 package fitnesse.responders;
 
 import fitnesse.Responder;
-import fitnesse.wiki.PathParser;
 import fitnesse.http.*;
+import fitnesse.wiki.PathParser;
 
 public class RawContentResponderTest extends ResponderTest
 {

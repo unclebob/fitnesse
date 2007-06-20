@@ -6,15 +6,9 @@ package fitnesse.components;
 import fitnesse.util.FileUtil;
 import junit.framework.TestCase;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 public class LoggerTest extends TestCase
 {

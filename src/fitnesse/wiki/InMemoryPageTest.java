@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import junit.framework.TestCase;
+
 import java.util.*;
 
 public class InMemoryPageTest extends TestCase

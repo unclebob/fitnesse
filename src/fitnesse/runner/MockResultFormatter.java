@@ -3,8 +3,9 @@
 package fitnesse.runner;
 
 import fit.Counts;
-import java.util.*;
+
 import java.io.*;
+import java.util.*;
 
 public class MockResultFormatter implements ResultFormatter
 {

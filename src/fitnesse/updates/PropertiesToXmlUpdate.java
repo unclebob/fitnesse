@@ -3,6 +3,7 @@
 package fitnesse.updates;
 
 import fitnesse.wiki.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -27,7 +28,7 @@ public class PropertiesToXmlUpdate extends PageTraversingUpdate
 
 	public void processPage(WikiPage page) throws Exception
 	{
-		FileSystemPage fsPage = (FileSystemPage)page;
+		FileSystemPage fsPage = (FileSystemPage) page;
 		String path = fsPage.getFileSystemPath();
 
 		File oldPropsFile = new File(path + old_propertiesFilename);

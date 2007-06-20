@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fitnesse.testutil.*;
-import fitnesse.http.*;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.responders.*;
 import fitnesse.authentication.Authenticator;
+import fitnesse.http.*;
+import fitnesse.responders.*;
+import fitnesse.testutil.*;
+import fitnesse.wiki.InMemoryPage;
+
 import java.io.*;
 
 public class FitNesseExpediterTest extends RegexTest
@@ -21,7 +22,7 @@ public class FitNesseExpediterTest extends RegexTest
 
 	public void setUp() throws Exception
 	{
-		root = (InMemoryPage)InMemoryPage.makeRoot("RooT");
+		root = (InMemoryPage) InMemoryPage.makeRoot("RooT");
 		root.addChildPage("FrontPage");
 		socket = new MockSocket();
 		context = new FitNesseContext(root);
@@ -56,20 +57,20 @@ public class FitNesseExpediterTest extends RegexTest
 		}
 	}
 
-  public void testIncompleteRequestsTimeOut() throws Exception
-  {
-	  final FitNesseExpediter sender = preparePipedFitNesseExpediter();
+	public void testIncompleteRequestsTimeOut() throws Exception
+	{
+		final FitNesseExpediter sender = preparePipedFitNesseExpediter();
 
-	  Thread senderThread = makeSendingThread(sender);
-	  senderThread.start();
+		Thread senderThread = makeSendingThread(sender);
+		senderThread.start();
 		Thread parseResponseThread = makeParsingThread();
 		parseResponseThread.start();
-    Thread.sleep(sender.requestParsingTimeLimit + 100);
+		Thread.sleep(sender.requestParsingTimeLimit + 100);
 
-	  parseResponseThread.join();
+		parseResponseThread.join();
 
-	  assertEquals(408, response.getStatus());
-  }
+		assertEquals(408, response.getStatus());
+	}
 
 	private FitNesseExpediter preparePipedFitNesseExpediter() throws Exception
 	{
@@ -132,19 +133,19 @@ public class FitNesseExpediterTest extends RegexTest
 	private Thread makeSendingThread(final FitNesseExpediter sender)
 	{
 		Thread senderThread = new Thread(new Runnable()
-    {
-      public void run()
-      {
-        try
-        {
-          sender.start();
-        }
-        catch(Exception e)
-        {
-          e.printStackTrace();
-        }
-      }
-    });
+		{
+			public void run()
+			{
+				try
+				{
+					sender.start();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
 		return senderThread;
 	}
 
@@ -169,10 +170,10 @@ public class FitNesseExpediterTest extends RegexTest
 
 	class StoneWallAuthenticator extends Authenticator
 	{
-    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception
-    {
-      return new UnauthorizedResponder();
-    }
+		public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception
+		{
+			return new UnauthorizedResponder();
+		}
 
 		public boolean isAuthenticated(String username, String password)
 		{

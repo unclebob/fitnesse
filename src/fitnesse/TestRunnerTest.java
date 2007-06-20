@@ -2,9 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-
-import fitnesse.wiki.*;
 import fitnesse.testutil.*;
+import fitnesse.wiki.*;
 
 public class TestRunnerTest extends RegexTest
 {

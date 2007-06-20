@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
+import fitnesse.util.StreamReader;
 import junit.framework.TestCase;
+
 import java.io.*;
-import fitnesse.util.*;
 
 public class ContentBufferTest extends TestCase
 {

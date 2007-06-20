@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
-import fitnesse.http.*;
 import fitnesse.*;
+import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
 import fitnesse.util.FileUtil;
+import fitnesse.wiki.*;
 
 import java.io.*;
 
@@ -69,7 +69,7 @@ public class SerializedPageResponderTest extends RegexTest
 	private Object getObject(WikiPage root, MockRequest request) throws Exception
 	{
 		Responder responder = new SerializedPageResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
 		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
 		Object obj = ois.readObject();
@@ -113,7 +113,7 @@ public class SerializedPageResponderTest extends RegexTest
 		request.setResource("root");
 		request.addInput("type", "pages");
 		Responder responder = new SerializedPageResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String xml = response.getContent();
 
 		assertEquals("text/xml", response.getContentType());
@@ -137,7 +137,7 @@ public class SerializedPageResponderTest extends RegexTest
 		request.setResource("root");
 		request.addInput("type", "pages");
 		Responder responder = new SerializedPageResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String xml = response.getContent();
 
 		assertEquals("text/xml", response.getContentType());
@@ -154,7 +154,7 @@ public class SerializedPageResponderTest extends RegexTest
 		request.setResource("TestPageOne");
 		request.addInput("type", "data");
 		Responder responder = new SerializedPageResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String xml = response.getContent();
 
 		assertEquals("text/xml", response.getContentType());

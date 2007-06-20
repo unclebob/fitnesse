@@ -3,11 +3,12 @@
 package fitnesse.runner;
 
 import fit.*;
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import java.lang.reflect.Method;
 import fitnesse.components.CommandLine;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.net.*;
+import java.util.*;
 
 public class TestRunner
 {
@@ -22,7 +23,7 @@ public class TestRunner
 	private boolean debug;
 	public boolean verbose;
 	public boolean usingDownloadedPaths = true;
-    private String suiteFilter = null;
+	private String suiteFilter = null;
 
 	public TestRunner() throws Exception
 	{
@@ -67,9 +68,9 @@ public class TestRunner
 			formatters.add(new FormattingOption("html", commandLine.getOptionArgument("html", "file"), output, host, port, pageName));
 		if(commandLine.hasOption("xml"))
 			formatters.add(new FormattingOption("xml", commandLine.getOptionArgument("xml", "file"), output, host, port, pageName));
-        
-        if(commandLine.hasOption("suiteFilter"))
-            suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
+
+		if(commandLine.hasOption("suiteFilter"))
+			suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
 	}
 
 	private void usage()
@@ -124,13 +125,13 @@ public class TestRunner
 		String request = "GET /" + pageName + "?responder=fitClient";
 		if(usingDownloadedPaths)
 			request += "&includePaths=yes";
-        if (suiteFilter != null)
-        {
-            request += "&suiteFilter=" + suiteFilter;
-        }
+		if(suiteFilter != null)
+		{
+			request += "&suiteFilter=" + suiteFilter;
+		}
 		return request + " HTTP/1.1\r\n\r\n";
 	}
-	                                                                                                                       
+
 	public Counts getCounts()
 	{
 		return fitServer.getCounts();

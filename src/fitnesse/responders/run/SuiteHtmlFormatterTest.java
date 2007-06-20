@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
+import fit.Counts;
 import fitnesse.html.*;
 import fitnesse.testutil.RegexTest;
-import fit.Counts;
 
 public class SuiteHtmlFormatterTest extends RegexTest
 {
@@ -24,7 +24,7 @@ public class SuiteHtmlFormatterTest extends RegexTest
 	public void testTestSummary() throws Exception
 	{
 		formatter.setPageAssertions(new Counts(12, 0, 0, 0));
-  	String summary = formatter.testSummary(new Counts(49, 0, 0, 0));
+		String summary = formatter.testSummary(new Counts(49, 0, 0, 0));
 
 		assertSubString("<strong>Test Pages:</strong> 12 right, 0 wrong, 0 ignored, 0 exceptions", summary);
 		assertSubString("<strong>Assertions:</strong> 49 right, 0 wrong, 0 ignored, 0 exceptions", summary);
@@ -49,7 +49,7 @@ public class SuiteHtmlFormatterTest extends RegexTest
 		formatter.startOutputForNewTest("RelativeName", "FullName");
 		formatter.acceptOutput("starting");
 		formatter.acceptOutput(" output");
-		formatter.acceptResults("RelativeName", new Counts(1, 0, 0 ,0));
+		formatter.acceptResults("RelativeName", new Counts(1, 0, 0, 0));
 		formatter.startOutputForNewTest("NewRelativeName", "NewFullName");
 		formatter.acceptOutput("second");
 		formatter.acceptOutput(" test");

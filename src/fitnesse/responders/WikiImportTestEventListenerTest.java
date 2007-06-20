@@ -1,9 +1,9 @@
 package fitnesse.responders;
 
-import junit.framework.TestCase;
-import fitnesse.wiki.*;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.responders.run.*;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
 
 public class WikiImportTestEventListenerTest extends TestCase
 {
@@ -102,11 +102,11 @@ public class WikiImportTestEventListenerTest extends TestCase
 		pageOne.commit(data);
 	}
 
-
 	private String sentMessages = "";
+
 	private void AddMessage(String output)
 	{
-			sentMessages += output.replaceAll("<.*?>", "");
+		sentMessages += output.replaceAll("<.*?>", "");
 	}
 
 	private class MockTestResponder extends TestResponder

@@ -3,8 +3,9 @@
 package fitnesse.responders.files;
 
 import fitnesse.*;
-import fitnesse.testutil.*;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
+
 import java.util.*;
 
 public class FileResponderTest extends RegexTest
@@ -29,7 +30,7 @@ public class FileResponderTest extends RegexTest
 
 	public void tearDown() throws Exception
 	{
-		if (response != null) response.readyToSend(new MockResponseSender());
+		if(response != null) response.readyToSend(new MockResponseSender());
 		SampleFileUtility.deleteSampleFiles();
 		Locale.setDefault(saveLocale);
 	}
@@ -37,7 +38,7 @@ public class FileResponderTest extends RegexTest
 	public void testFileContent() throws Exception
 	{
 		request.setResource("files/testFile1");
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
 		response = responder.makeResponse(context, request);
 		assertEquals(InputStreamResponse.class, response.getClass());
 		String responseString = new MockResponseSender(response).sentData();
@@ -50,7 +51,7 @@ public class FileResponderTest extends RegexTest
 		assertEquals("files/test File With Spaces In Name", restoredPath);
 
 		request.setResource("files/file4%20with%20spaces.txt");
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
 		assertEquals("files/file4 with spaces.txt", responder.resource);
 	}
 
@@ -58,7 +59,7 @@ public class FileResponderTest extends RegexTest
 	{
 		Locale.setDefault(Locale.US);
 		request.setResource("files/testFile1");
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
 		response = responder.makeResponse(context, request);
 		String lastModifiedHeader = response.getHeader("Last-Modified");
 		assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
@@ -75,14 +76,14 @@ public class FileResponderTest extends RegexTest
 
 		request.setResource("files/testFile1");
 		request.addHeader("If-Modified-Since", yesterday);
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
 		response = responder.makeResponse(context, request);
 		assertEquals(200, response.getStatus());
 
 		request.setResource("files/testFile1");
 		request.addHeader("If-Modified-Since", tomorrow);
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
 		SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(context, request);
 		assertEquals(304, notModifiedResponse.getStatus());
 		assertEquals("", notModifiedResponse.getContent());
@@ -103,7 +104,7 @@ public class FileResponderTest extends RegexTest
 	{
 		SampleFileUtility.addFile("/files/fitnesse.css", "body{color: red;}");
 		request.setResource("files/fitnesse.css");
-		responder = (FileResponder)FileResponder.makeResponder(request, SampleFileUtility.base);
+		responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
 		response = responder.makeResponse(context, request);
 		assertEquals("text/css", response.getContentType());
 	}

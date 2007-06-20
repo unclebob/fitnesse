@@ -2,10 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.testutil.RegexTest;
+
+import java.util.regex.*;
 
 public abstract class WidgetTest extends RegexTest
 {

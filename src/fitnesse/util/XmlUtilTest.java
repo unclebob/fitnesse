@@ -17,11 +17,11 @@ public class XmlUtilTest extends TestCase
 	public void testGetLocalElementByTagName() throws Exception
 	{
 		Document doc = XmlUtil.newDocument("<level1>" +
-		                                   "  <target1/>" +
-		                                   "  <level2>" +
-		                                   "    <target2/>" +
-		                                   "  </level2>" +
-		                                   "</level1>");
+			"  <target1/>" +
+			"  <level2>" +
+			"    <target2/>" +
+			"  </level2>" +
+			"</level1>");
 		Element level1 = doc.getDocumentElement();
 		Element level2 = XmlUtil.getElementByTagName(level1, "level2");
 
@@ -47,7 +47,7 @@ public class XmlUtilTest extends TestCase
 		assertNotNull(myDataElement);
 		Node childNode = myDataElement.getChildNodes().item(0);
 		assertTrue(childNode instanceof CDATASection);
-		CDATASection cData = (CDATASection)childNode;
+		CDATASection cData = (CDATASection) childNode;
 		assertEquals("<>&#;", cData.getNodeValue());
 	}
 }

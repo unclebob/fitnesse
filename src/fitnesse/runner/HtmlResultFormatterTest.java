@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.InputStream;
-import fitnesse.util.StreamReader;
-import fitnesse.testutil.RegexTest;
-import fitnesse.html.HtmlPageFactory;
 import fit.Counts;
+import fitnesse.html.HtmlPageFactory;
+import fitnesse.testutil.RegexTest;
+import fitnesse.util.StreamReader;
+
+import java.io.InputStream;
 
 public class HtmlResultFormatterTest extends RegexTest
 {

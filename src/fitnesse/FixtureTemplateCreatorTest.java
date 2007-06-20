@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import junit.framework.*;
-import fitnesse.fixtures.*;
+import fitnesse.fixtures.PrimeNumberRowFixture;
+import junit.framework.TestCase;
 
 public class FixtureTemplateCreatorTest extends TestCase
 {
@@ -17,14 +17,14 @@ public class FixtureTemplateCreatorTest extends TestCase
 
 	public void testGetShortClassName() throws Exception
 	{
-		assertEquals("Three",     templateCreator.getShortClassName("one.two.Three"));
+		assertEquals("Three", templateCreator.getShortClassName("one.two.Three"));
 		assertEquals("ClassName", templateCreator.getShortClassName("ClassName"));
 	}
 
 	public void testFixClassName() throws Exception
 	{
 		assertEquals("Object[]", templateCreator.fixClassName("Object;"));
-		assertEquals("Object",   templateCreator.fixClassName("Object"));
+		assertEquals("Object", templateCreator.fixClassName("Object"));
 	}
 
 	public void testGetTargetClassFromRowFixture() throws Exception

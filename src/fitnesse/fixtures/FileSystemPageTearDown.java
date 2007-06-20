@@ -3,6 +3,7 @@
 package fitnesse.fixtures;
 
 import fit.Fixture;
+
 import java.io.File;
 
 public class FileSystemPageTearDown extends Fixture

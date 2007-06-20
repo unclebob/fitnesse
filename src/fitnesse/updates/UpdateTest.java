@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import junit.framework.*;
+import fitnesse.FitNesseContext;
 import fitnesse.util.FileUtil;
 import fitnesse.wiki.*;
-import fitnesse.FitNesseContext;
+import junit.framework.TestCase;
 
 public abstract class UpdateTest extends TestCase
 {
@@ -47,5 +47,7 @@ public abstract class UpdateTest extends TestCase
 	protected Update makeUpdate() throws Exception
 	{
 		return null;
-	};
+	}
+
+	;
 }

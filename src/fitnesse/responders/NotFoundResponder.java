@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.http.*;
-import fitnesse.wikitext.widgets.WikiWordWidget;
 import fitnesse.*;
 import fitnesse.html.*;
+import fitnesse.http.*;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 import java.util.regex.Pattern;
 

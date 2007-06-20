@@ -3,8 +3,9 @@
 package fitnesse.responders;
 
 import fitnesse.*;
-import fitnesse.wiki.*;
 import fitnesse.http.*;
+import fitnesse.wiki.*;
+
 import java.net.SocketException;
 
 public abstract class ChunkingResponder implements Responder

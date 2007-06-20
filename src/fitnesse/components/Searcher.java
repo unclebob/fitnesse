@@ -40,7 +40,7 @@ public class Searcher implements FitNesseTraversalListener
 		String content = page.getName().toLowerCase();
 		if(!isTitleSearch)
 			content = page.getData().getContent().toLowerCase();
-		
+
 		boolean matches = content.indexOf(searchString) != -1;
 		return matches;
 	}

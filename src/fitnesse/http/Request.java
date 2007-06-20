@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.net.URLDecoder;
 import fitnesse.components.Base64;
 import fitnesse.util.StreamReader;
+
+import java.io.*;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.regex.*;
 
 public class Request
 {
@@ -300,7 +300,7 @@ public class Request
 		{
 			String authHeader = getHeader("Authorization").toString();
 			String userpass = getUserpass(authHeader);
-      String[] values = userpass.split(":");
+			String[] values = userpass.split(":");
 			if(values.length == 2)
 			{
 				authorizationUsername = values[0];

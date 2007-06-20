@@ -2,8 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 // created by Jason Sypher
 
@@ -15,7 +14,6 @@ public class StrikeWidget extends ParentWidget
 // The following regexp is intersting becuase each addition char
 // in the string to match would double the time it took to parse.
 //	public static final String REGEXP = "--(?:(?:[^-]+[-]?[^-]+)+)--";
-
 
 	public StrikeWidget(ParentWidget parent, String text) throws Exception
 	{

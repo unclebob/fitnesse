@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.testutil.RegexTest;
 import fitnesse.*;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
 
-public class RenameFileConfirmationResponderTest  extends RegexTest
+public class RenameFileConfirmationResponderTest extends RegexTest
 {
 	MockRequest request;
 	private FitNesseContext context;
@@ -21,6 +21,7 @@ public class RenameFileConfirmationResponderTest  extends RegexTest
 		context.rootPagePath = SampleFileUtility.base;
 		SampleFileUtility.makeSampleFiles();
 	}
+
 	public void testContentOfPage() throws Exception
 	{
 		getContentForSimpleRename();
@@ -42,14 +43,14 @@ public class RenameFileConfirmationResponderTest  extends RegexTest
 		request.setResource("files");
 		request.addInput("filename", "MyFile.txt");
 		responder = new RenameFileConfirmationResponder();
-		response = (SimpleResponse)responder.makeResponse(context, request);
+		response = (SimpleResponse) responder.makeResponse(context, request);
 		content = response.getContent();
 	}
 
-	public void testFitnesseLook()  throws Exception
+	public void testFitnesseLook() throws Exception
 	{
 		Responder responder = new RenameFileConfirmationResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(context, request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 		String content = response.getContent();
 		assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/css/fitnesse.css\" media=\"screen\"/>", content);
 	}

@@ -2,13 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.*;
-import fitnesse.responders.SecureResponder;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
+import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
 import fitnesse.util.FileUtil;
-import fitnesse.http.Response;
-import fitnesse.http.Request;
-import fitnesse.http.SimpleResponse;
 
 import java.io.File;
 

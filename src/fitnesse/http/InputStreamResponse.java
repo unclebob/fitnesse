@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import java.io.*;
 import fitnesse.util.StreamReader;
+
+import java.io.*;
 
 public class InputStreamResponse extends Response
 {
@@ -39,7 +40,7 @@ public class InputStreamResponse extends Response
 	public void setBody(File file) throws Exception
 	{
 		FileInputStream input = new FileInputStream(file);
-		int size = (int)file.length();
+		int size = (int) file.length();
 		setBody(input, size);
 	}
 }

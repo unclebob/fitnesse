@@ -2,23 +2,23 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.http.*;
-import fitnesse.*;
-import fitnesse.util.FileUtil;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
-import fitnesse.responders.*;
-import fitnesse.html.HtmlTableListingBuilder;
 import fitnesse.html.*;
+import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
+import fitnesse.util.FileUtil;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
 
 public class DirectoryResponder implements SecureResponder
 {
 	private String resource;
 	private File requestedDirectory;
 	private FitNesseContext context;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
 
 	public DirectoryResponder(String resource, File requestedFile)
 	{

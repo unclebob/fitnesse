@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.authentication;
 
-import fitnesse.http.Request;
 import fitnesse.FitNesseContext;
+import fitnesse.http.Request;
 
 public interface SecureOperation
 {
-  public abstract boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception;
+	public abstract boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception;
 }

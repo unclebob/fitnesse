@@ -12,7 +12,7 @@ public abstract class TableFixture extends Fixture
 	public void doRows(Parse rows)
 	{
 		firstRow = rows;
-		if (rows == null)
+		if(rows == null)
 			throw new FitFailureException("There are no rows in this table");
 		doStaticTable(rows.size());
 	}
@@ -21,7 +21,7 @@ public abstract class TableFixture extends Fixture
 
 	protected Parse getCell(int row, int column)
 	{
-		return firstRow.at(row,column);
+		return firstRow.at(row, column);
 	}
 
 	protected String getText(int row, int column)
@@ -31,22 +31,22 @@ public abstract class TableFixture extends Fixture
 
 	protected boolean blank(int row, int column)
 	{
-		return getText(row,column).equals("");
+		return getText(row, column).equals("");
 	}
 
 	protected void wrong(int row, int column)
 	{
-    wrong(getCell(row, column));
+		wrong(getCell(row, column));
 	}
 
 	protected void right(int row, int column)
 	{
-    right(getCell(row,column));
+		right(getCell(row, column));
 	}
 
 	protected void wrong(int row, int column, String actual)
 	{
-    wrong(getCell(row,column), actual);
+		wrong(getCell(row, column), actual);
 	}
 
 	protected void ignore(int row, int column)
@@ -58,7 +58,7 @@ public abstract class TableFixture extends Fixture
 	{
 		int i = 0;
 		String text = getText(row, column);
-		if (text.equals(""))
+		if(text.equals(""))
 		{
 			ignore(row, column);
 			return 0;

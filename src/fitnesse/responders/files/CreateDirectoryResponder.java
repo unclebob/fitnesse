@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.*;
-import fitnesse.responders.SecureResponder;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
 import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
+
 import java.io.File;
 
 public class CreateDirectoryResponder implements SecureResponder

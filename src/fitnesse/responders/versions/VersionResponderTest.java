@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.versions;
 
+import fitnesse.*;
+import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
 import fitnesse.wiki.*;
-import fitnesse.http.*;
-import fitnesse.*;
 
 public class VersionResponderTest extends RegexTest
 {
@@ -28,7 +28,7 @@ public class VersionResponderTest extends RegexTest
 		request.addInput("version", oldVersion);
 
 		Responder responder = new VersionResponder();
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 	}
 
 	public void testVersionName() throws Exception

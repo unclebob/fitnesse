@@ -2,13 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.runner.*;
+import fit.Counts;
 import fitnesse.*;
 import fitnesse.components.FitProtocol;
-import fitnesse.util.*;
 import fitnesse.http.*;
+import fitnesse.runner.*;
+import fitnesse.util.StreamReader;
+
 import java.io.*;
-import fit.Counts;
 
 public class TestResultFormattingResponder implements Responder
 {
@@ -22,7 +23,7 @@ public class TestResultFormattingResponder implements Responder
 	{
 		init(context, request);
 
-		String results = (String)request.getInput("results");
+		String results = (String) request.getInput("results");
 		byte[] bytes = results.getBytes("UTF-8");
 		processResults(new ByteArrayInputStream(bytes));
 
@@ -38,8 +39,8 @@ public class TestResultFormattingResponder implements Responder
 	public void init(FitNesseContext context, Request request) throws Exception
 	{
 		this.context = context;
-		baseUrl = (String)request.getHeader("Host");
-		rootPath = (String)request.getResource();
+		baseUrl = (String) request.getHeader("Host");
+		rootPath = (String) request.getResource();
 		formatter = makeFormatter(request);
 	}
 
@@ -64,7 +65,7 @@ public class TestResultFormattingResponder implements Responder
 
 	public ResultFormatter makeFormatter(Request request) throws Exception
 	{
-		String format = (String)request.getInput("format");
+		String format = (String) request.getInput("format");
 		if(format != null)
 		{
 			if("html".equals(format))

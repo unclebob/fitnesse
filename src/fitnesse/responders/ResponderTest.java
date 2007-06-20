@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.testutil.*;
-import fitnesse.wiki.*;
-import fitnesse.http.*;
 import fitnesse.*;
+import fitnesse.http.MockRequest;
+import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 
 public abstract class ResponderTest extends RegexTest
 {

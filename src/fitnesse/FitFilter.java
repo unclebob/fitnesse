@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fit.Parse;
-import fit.Fixture;
+import fit.*;
+
 import java.io.*;
 
 public class FitFilter

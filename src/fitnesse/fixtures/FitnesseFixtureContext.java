@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.fixtures;
 
-import fitnesse.wiki.WikiPage;
+import fitnesse.*;
 import fitnesse.http.*;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.*;
+import fitnesse.wiki.WikiPage;
 
 public class FitnesseFixtureContext
 {
@@ -15,6 +15,6 @@ public class FitnesseFixtureContext
 	public static MockResponseSender sender;
 	public static ResponderFactory responderFactory;
 	public static String baseDir = "temp";
-  public static FitNesseContext context;
+	public static FitNesseContext context;
 	public static FitNesse fitnesse;
 }

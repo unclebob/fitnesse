@@ -2,7 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.schedule;
 
-import junit.framework.*;
+import junit.framework.TestCase;
+
 import java.io.*;
 
 public class ScheduleTest extends TestCase
@@ -45,7 +46,8 @@ public class ScheduleTest extends TestCase
 
 	public void testLotsOfAddingWhileRunning() throws Exception
 	{
-		Runnable adder = new Runnable(){
+		Runnable adder = new Runnable()
+		{
 			public void run()
 			{
 				while(shouldAddCounters)

@@ -3,6 +3,7 @@
 package fitnesse.authentication;
 
 import junit.framework.TestCase;
+
 import java.util.Random;
 
 public class HashingCipherTest extends TestCase
@@ -73,7 +74,7 @@ public class HashingCipherTest extends TestCase
 		{
 			crypter.encrypt(inputs[i]);
 		}
-    long duration = System.currentTimeMillis() - startTime;
+		long duration = System.currentTimeMillis() - startTime;
 
 		assertTrue(duration < 1000);
 	}

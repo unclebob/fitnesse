@@ -7,5 +7,6 @@ import fit.Counts;
 public interface ResultHandler
 {
 	void acceptResult(PageResult result) throws Exception;
+
 	void acceptFinalCount(Counts count) throws Exception;
 }

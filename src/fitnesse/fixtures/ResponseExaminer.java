@@ -3,11 +3,10 @@
 package fitnesse.fixtures;
 
 import fit.ColumnFixture;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.*;
 import fitnesse.wikitext.Utils;
+
+import java.util.StringTokenizer;
+import java.util.regex.*;
 
 public class ResponseExaminer extends ColumnFixture
 {
@@ -30,14 +29,15 @@ public class ResponseExaminer extends ColumnFixture
 
 	public boolean inOrder() throws Exception
 	{
-		if (value == null) {
+		if(value == null)
+		{
 			return false;
 		}
 		String pageContent = FitnesseFixtureContext.sender.sentData();
 		String[] lines = arrayifyLines(pageContent);
 		for(int i = currentLine; i < lines.length; i++)
 		{
-			if (value.equals(lines[i].trim()))
+			if(value.equals(lines[i].trim()))
 			{
 				currentLine = i;
 				return true;
@@ -45,7 +45,6 @@ public class ResponseExaminer extends ColumnFixture
 		}
 		return false;
 	}
-
 
 	public int matchCount() throws Exception
 	{

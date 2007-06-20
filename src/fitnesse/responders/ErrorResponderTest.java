@@ -3,15 +3,15 @@
 package fitnesse.responders;
 
 import fitnesse.*;
-import fitnesse.testutil.RegexTest;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
 
 public class ErrorResponderTest extends RegexTest
 {
 	public void testResponse() throws Exception
 	{
 		Responder responder = new ErrorResponder(new Exception("some error message"));
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(), new MockRequest());
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
 
 		assertEquals(400, response.getStatus());
 
@@ -25,7 +25,7 @@ public class ErrorResponderTest extends RegexTest
 	public void testWithMessage() throws Exception
 	{
 		Responder responder = new ErrorResponder("error Message");
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(), new MockRequest());
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
 		String body = response.getContent();
 
 		assertSubString("error Message", body);

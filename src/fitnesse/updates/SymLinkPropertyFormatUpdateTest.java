@@ -1,24 +1,25 @@
 package fitnesse.updates;
 
-import fitnesse.wiki.*;
 import fitnesse.util.FileUtil;
+import fitnesse.wiki.*;
+
 import java.io.*;
 
 public class SymLinkPropertyFormatUpdateTest extends UpdateTest
 {
 	private static String badPropertiesFormat =
 		"<?xml version=\"1.0\"?>\n" +
-		"<properties>\n" +
-		"        <Edit/>\n" +
-		"        <symbolicLink>\n" +
-		"                <name>SomePage</name>\n" +
-		"                <path>RecentChanges</path>\n" +
-		"        </symbolicLink>\n" +
-		"        <symbolicLink>\n" +
-		"                <name>PageTwo</name>\n" +
-		"                <path>PageHeader</path>\n" +
-		"        </symbolicLink>\n" +
-		"</properties>";
+			"<properties>\n" +
+			"        <Edit/>\n" +
+			"        <symbolicLink>\n" +
+			"                <name>SomePage</name>\n" +
+			"                <path>RecentChanges</path>\n" +
+			"        </symbolicLink>\n" +
+			"        <symbolicLink>\n" +
+			"                <name>PageTwo</name>\n" +
+			"                <path>PageHeader</path>\n" +
+			"        </symbolicLink>\n" +
+			"</properties>";
 
 	private void setupPropertiesFilesThatNeedsFixing() throws Exception
 	{
@@ -34,7 +35,7 @@ public class SymLinkPropertyFormatUpdateTest extends UpdateTest
 
 	private File getSamplePropertiesFile() throws Exception
 	{
-		FileSystemPage page = (FileSystemPage)pageOne;
+		FileSystemPage page = (FileSystemPage) pageOne;
 		return new File(page.getFileSystemPath() + FileSystemPage.propertiesFilename);
 	}
 

@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.*;
 import fitnesse.util.FileUtil;
+import junit.framework.TestCase;
+
 import java.io.File;
 import java.util.*;
 
@@ -75,7 +76,7 @@ public class FileSystemPageVersioningTest extends TestCase
 		data.setContent("new content");
 		VersionInfo secondVersion = page.commit(data);
 		Set versionNames = page.getData().getVersions();
-		assertEquals(2,versionNames.size());
+		assertEquals(2, versionNames.size());
 		assertTrue(versionNames.contains(firstVersion));
 		assertTrue(versionNames.contains(secondVersion));
 	}

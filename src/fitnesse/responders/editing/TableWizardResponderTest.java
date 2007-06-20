@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.wiki.*;
-import fitnesse.http.*;
 import fitnesse.*;
+import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 
 public class TableWizardResponderTest extends RegexTest
 {
@@ -30,7 +30,7 @@ public class TableWizardResponderTest extends RegexTest
 		request.addInput("fixture", "fitnesse.FitNesse");
 		request.addInput("text", "child content");
 
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String body = response.getContent();
 		assertMatches("child content", body);
 		assertMatches("# fitnesse.FitNesse is not a valid fixture! #", body);
@@ -43,7 +43,7 @@ public class TableWizardResponderTest extends RegexTest
 		request.addInput("fixture", "fitnesse.FitNesse");
 		request.addInput("text", "child content with <html>\nmore text.\n");
 
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(200, response.getStatus());
 
 		String body = response.getContent();
@@ -62,7 +62,7 @@ public class TableWizardResponderTest extends RegexTest
 		request.addInput("fixture", "fitnesse.testutil.DummyClassForWizardTest");
 		request.addInput("text", "child content");
 
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String body = response.getContent();
 		assertTrue(body.indexOf("child content\n!|fitnesse.testutil.DummyClassForWizardTest|\n|v1 |f1()|\n") != -1);
 		assertTrue(body.indexOf("|int|int |") != -1);
@@ -75,10 +75,10 @@ public class TableWizardResponderTest extends RegexTest
 		request.addInput("fixture", "fitnesse.fixtures.PayCheckRecordFixture");
 		request.addInput("text", "child content");
 
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String body = response.getContent();
 		assertTrue(body.indexOf("child content\n!|fitnesse.fixtures.PayCheckRecordFixture|\n|employeeId|date  |name  |pay() |\n") != -1);
-		assertTrue(body.indexOf(                                                              "|int       |String|String|double|\n") != -1);
+		assertTrue(body.indexOf("|int       |String|String|double|\n") != -1);
 	}
 
 	public void testCreateCommandLine() throws Exception

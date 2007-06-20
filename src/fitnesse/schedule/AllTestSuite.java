@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.schedule;
 
-import junit.framework.Test;
 import fitnesse.testutil.TestSuiteMaker;
+import junit.framework.Test;
 
 public class AllTestSuite
 {
 	public static Test suite()
 	{
-		return TestSuiteMaker.makeSuite("schedule", new Class[] {
+		return TestSuiteMaker.makeSuite("schedule", new Class[]{
 			ScheduleTest.class
 		});
 	}

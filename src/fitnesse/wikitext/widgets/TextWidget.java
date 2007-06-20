@@ -2,8 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.Utils;
-import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.*;
 
 public class TextWidget extends WikiWidget implements WidgetWithTextArgument
 {

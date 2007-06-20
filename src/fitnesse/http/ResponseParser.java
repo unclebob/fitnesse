@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
+import fitnesse.util.StreamReader;
+
 import java.io.*;
+import java.net.Socket;
 import java.util.*;
 import java.util.regex.*;
-import java.net.Socket;
-import fitnesse.util.StreamReader;
 
 public class ResponseParser
 {

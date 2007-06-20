@@ -2,25 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import fitnesse.components.XmlWriter;
 import fitnesse.util.XmlUtil;
+import org.w3c.dom.*;
+
+import java.io.*;
+import java.util.*;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable
 {
@@ -67,7 +54,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 			if(node.getNodeType() != Node.ELEMENT_NODE)
 				continue;
 			String key = node.getNodeName();
-			LoadElement(this, (Element)node, key);
+			LoadElement(this, (Element) node, key);
 		}
 	}
 
@@ -86,7 +73,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 		{
 			Node childNode = nodes.item(i);
 			if(childNode instanceof Element)
-				LoadElement(newProperty, (Element)childNode, childNode.getNodeName());
+				LoadElement(newProperty, (Element) childNode, childNode.getNodeName());
 		}
 	}
 
@@ -136,7 +123,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 			}
 		}
 		else if(value != null)
-				element.appendChild(document.createTextNode(value));
+			element.appendChild(document.createTextNode(value));
 
 		parent.appendChild(element);
 	}

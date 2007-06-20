@@ -3,9 +3,10 @@
 
 package fitnesse.wiki;
 
-import java.io.Serializable;
-import java.util.*;
 import fitnesse.util.StringUtil;
+
+import java.io.Serializable;
+import java.util.List;
 
 public interface WikiPage extends Serializable, Comparable
 {

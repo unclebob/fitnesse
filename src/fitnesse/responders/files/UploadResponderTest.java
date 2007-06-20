@@ -2,24 +2,24 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
+import fitnesse.FitNesseContext;
 import fitnesse.http.*;
 import fitnesse.util.FileUtil;
-import fitnesse.FitNesseContext;
 import junit.framework.TestCase;
 
 import java.io.File;
 
 public class UploadResponderTest extends TestCase
 {
-  private FitNesseContext context;
+	private FitNesseContext context;
 	private UploadResponder responder;
 	private MockRequest request;
 	private File testFile;
 
 	public void setUp() throws Exception
 	{
-    context = new FitNesseContext();
-    context.rootPagePath = "testdir";
+		context = new FitNesseContext();
+		context.rootPagePath = "testdir";
 		FileUtil.makeDir("testdir");
 		FileUtil.makeDir("testdir/files");
 		testFile = FileUtil.createFile("testdir/tempFile.txt", "test content");

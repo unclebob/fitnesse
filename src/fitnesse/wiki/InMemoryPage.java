@@ -21,7 +21,7 @@ public class InMemoryPage extends CommitingPage
 	public WikiPage addChildPage(String name) throws Exception
 	{
 		WikiPage page = createChildPage(name);
-		children.put(name,page);
+		children.put(name, page);
 		return page;
 	}
 
@@ -65,7 +65,7 @@ public class InMemoryPage extends CommitingPage
 
 	protected WikiPage getNormalChildPage(String name) throws Exception
 	{
-		return (WikiPage)children.get(name);
+		return (WikiPage) children.get(name);
 	}
 
 	public List getNormalChildren() throws Exception
@@ -97,7 +97,7 @@ public class InMemoryPage extends CommitingPage
 		for(Iterator iterator = names.iterator(); iterator.hasNext();)
 		{
 			String name = (String) iterator.next();
-			PageData data = (PageData)versions.get(name);
+			PageData data = (PageData) versions.get(name);
 			pageVersions.add(makeVersionInfo(data, name));
 		}
 		version.addVersions(pageVersions);

@@ -2,14 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
+import fit.Counts;
 import fitnesse.*;
-import fitnesse.html.HtmlUtil;
 import fitnesse.components.*;
-import fitnesse.wiki.*;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.*;
+import fitnesse.wiki.*;
+
 import java.net.Socket;
 import java.util.*;
-import fit.Counts;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, FitClientListener
 {
@@ -18,7 +19,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 	private String resource;
 	private WikiPage page;
 	private boolean shouldIncludePaths;
-    private String suiteFilter;
+	private String suiteFilter;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
@@ -27,7 +28,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		resource = request.getResource();
 		shouldIncludePaths = request.hasInput("includePaths");
-        suiteFilter = (String) request.getInput("suiteFilter");
+		suiteFilter = (String) request.getInput("suiteFilter");
 		return new PuppetResponse(this);
 	}
 
@@ -48,7 +49,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 				handleTestPage(socket, data);
 			else
 				FitProtocol.writeData(notATestMessage(), socket.getOutputStream());
-			}
+		}
 		sender.close();
 	}
 
@@ -76,7 +77,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 			String classpath = SuiteResponder.buildClassPath(testPages, page);
 			client.send(classpath);
 		}
-		
+
 		for(Iterator iterator = testPages.iterator(); iterator.hasNext();)
 		{
 			WikiPage testPage = (WikiPage) iterator.next();

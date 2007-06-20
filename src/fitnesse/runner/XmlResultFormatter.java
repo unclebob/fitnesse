@@ -2,12 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.*;
 import fit.Counts;
 import fitnesse.components.*;
-import fitnesse.util.*;
-import fitnesse.components.XmlWriter;
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.*;
+
+import java.io.*;
 
 public class XmlResultFormatter implements ResultFormatter
 {

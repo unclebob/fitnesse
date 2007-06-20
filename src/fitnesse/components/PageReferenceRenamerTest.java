@@ -186,9 +186,9 @@ public class PageReferenceRenamerTest extends RegexTest
 		checkChangesOnPageOne("gunk [[!-gunk-!][PageTwo]] gunk", "gunk [[!-gunk-!][PageThree]] gunk");
 	}
 
-  public void testXrefWidgetRenamed() throws Exception
-  {
-    checkChangesOnPageOne("!see PageTwo", "!see PageThree");
-  }
+	public void testXrefWidgetRenamed() throws Exception
+	{
+		checkChangesOnPageOne("!see PageTwo", "!see PageThree");
+	}
 }
 

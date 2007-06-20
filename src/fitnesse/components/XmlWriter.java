@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.io.*;
 import org.w3c.dom.*;
+
+import java.io.*;
 
 public class XmlWriter
 {
@@ -17,12 +18,12 @@ public class XmlWriter
 		writer = new OutputStreamWriter(os, "UTF-8");
 	}
 
-  public void write(Document doc) throws Exception
-  {
-	  write("<?xml version=\"1.0\"?>");
+	public void write(Document doc) throws Exception
+	{
+		write("<?xml version=\"1.0\"?>");
 		write(endl);
-	  write(doc.getDocumentElement(), 0);
-  }
+		write(doc.getDocumentElement(), 0);
+	}
 
 	public void write(NodeList nodes) throws Exception
 	{
@@ -31,7 +32,7 @@ public class XmlWriter
 
 	public void write(Element element, int tabs) throws Exception
 	{
-		if(! isNewLine)
+		if(!isNewLine)
 			write(endl);
 		if(!element.hasChildNodes())
 		{
@@ -55,7 +56,8 @@ public class XmlWriter
 		StringBuffer attributeString = new StringBuffer();
 		NamedNodeMap attributeMap = element.getAttributes();
 		int length = attributeMap.getLength();
-		for (int i=0; i<length; i++) {
+		for(int i = 0; i < length; i++)
+		{
 			Attr attributeNode = (Attr) attributeMap.item(i);
 			String name = attributeNode.getName();
 			String value = attributeNode.getValue();
@@ -68,7 +70,7 @@ public class XmlWriter
 	{
 		for(int i = 0; i < nodes.getLength(); i++)
 		{
-      Node node = nodes.item(i);
+			Node node = nodes.item(i);
 			write(node, tabs);
 		}
 	}
@@ -88,11 +90,11 @@ public class XmlWriter
 	private void write(Node node, int tabs) throws Exception
 	{
 		if(node instanceof Element)
-			write((Element)node, tabs);
+			write((Element) node, tabs);
 		else if(node instanceof CDATASection)
-			writeCdata((CDATASection)node);
+			writeCdata((CDATASection) node);
 		else if(node instanceof Text)
-			writeText((Text)node);
+			writeText((Text) node);
 		else
 			throw new Exception("XmlWriter: unsupported node type: " + node.getClass());
 	}
@@ -105,7 +107,8 @@ public class XmlWriter
 
 	private void write(String value) throws Exception
 	{
-		if(value == null || "".equals(value))  {
+		if(value == null || "".equals(value))
+		{
 			return;
 		}
 		isNewLine = endl.equals(value);

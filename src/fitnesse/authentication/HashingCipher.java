@@ -6,16 +6,16 @@ import fitnesse.components.Base64;
 
 public class HashingCipher implements PasswordCipher
 {
-  private static final int repetitions = 3;
+	private static final int repetitions = 3;
 
 	private static final String theMagicLock = // A Peom by Yeats.
-	  "Like a long-leggedfly upon the stream\n" +
-	  "His mind moves upon silence.";
+		"Like a long-leggedfly upon the stream\n" +
+			"His mind moves upon silence.";
 
 	public String encrypt(String value)
 	{
 		byte[] crypted = repeatEncryption(theMagicLock.getBytes(), value.getBytes());
-		byte[] squeezed = fillToSize(crypted,15);
+		byte[] squeezed = fillToSize(crypted, 15);
 		byte[] encoded = Base64.encode(squeezed);
 
 		return new String(encoded);
@@ -36,7 +36,7 @@ public class HashingCipher implements PasswordCipher
 		{
 			byte lockByte = lock[i];
 			byte keyByte = key[keyIndex++];
-			lock[i] = (byte)(lockByte + keyByte);
+			lock[i] = (byte) (lockByte + keyByte);
 			if(keyIndex == key.length)
 				keyIndex = 0;
 		}
@@ -46,7 +46,7 @@ public class HashingCipher implements PasswordCipher
 
 	public byte[] fillToSize(byte[] input, int size)
 	{
-  	byte[] bytes = new byte[size];
+		byte[] bytes = new byte[size];
 		int inputLength = input.length;
 		int inputIndex = 0;
 		int outputIndex = 0;
@@ -64,7 +64,7 @@ public class HashingCipher implements PasswordCipher
 			while(inputIndex < inputLength)
 			{
 				byte currentByte = bytes[outputIndex];
-				bytes[outputIndex++] = (byte)(currentByte + input[inputIndex++]);
+				bytes[outputIndex++] = (byte) (currentByte + input[inputIndex++]);
 				if(outputIndex == size)
 					outputIndex = 0;
 			}

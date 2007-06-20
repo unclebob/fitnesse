@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.search;
 
-import fitnesse.http.*;
 import fitnesse.*;
 import fitnesse.html.*;
+import fitnesse.http.*;
 
 public class SearchFormResponder implements Responder
 {

@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.search;
 
-import fitnesse.testutil.*;
-import fitnesse.http.*;
-import fitnesse.wiki.*;
 import fitnesse.FitNesseContext;
 import fitnesse.components.*;
+import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 
 public class SearchResponderTest extends RegexTest
 {
@@ -62,13 +62,13 @@ public class SearchResponderTest extends RegexTest
 		assertSubString("<a href=\"javascript:void(tableSorter.sort(1, 'date'));\">LastModified</a>", content);
 	}
 
-    public void testNoSearchStringBringsUpNoResults() throws Exception
-    {
-        String content = getResponseContentUsingSearchString("");
-        assertSubString("Found 0 results for your search.", content);
+	public void testNoSearchStringBringsUpNoResults() throws Exception
+	{
+		String content = getResponseContentUsingSearchString("");
+		assertSubString("Found 0 results for your search.", content);
 	}
 
-    public void testEscapesSearchString() throws Exception
+	public void testEscapesSearchString() throws Exception
 	{
 		String content = getResponseContentUsingSearchString("!+-<&>");
 		assertSubString("!+-<&>", content);
@@ -79,7 +79,7 @@ public class SearchResponderTest extends RegexTest
 		request.addInput("searchString", searchString);
 
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
-   	    MockResponseSender sender = new MockResponseSender();
+		MockResponseSender sender = new MockResponseSender();
 		response.readyToSend(sender);
 		sender.waitForClose(5000);
 		return sender.sentData();

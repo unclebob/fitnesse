@@ -2,12 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.*;
-import fitnesse.util.FileUtil;
-import fitnesse.testutil.*;
-import fitnesse.http.Request;
-import fitnesse.wiki.InMemoryPage;
 import fit.Counts;
+import fitnesse.http.Request;
+import fitnesse.testutil.*;
+import fitnesse.util.FileUtil;
+import fitnesse.wiki.InMemoryPage;
+
+import java.io.*;
 
 public class FormattingOptionTest extends RegexTest
 {

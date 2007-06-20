@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import junit.framework.TestCase;
 import fitnesse.*;
 import fitnesse.authentication.AlwaysSecureOperation;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.*;
+import fitnesse.testutil.FitNesseUtil;
+import junit.framework.TestCase;
 
 public class ShutdownResponderTest extends TestCase
 {
@@ -32,13 +32,14 @@ public class ShutdownResponderTest extends TestCase
 	{
 		ShutdownResponder responder = new ShutdownResponder();
 		responder.makeResponse(context, new MockRequest());
-    Thread.sleep(200);
+		Thread.sleep(200);
 		assertFalse(fitnesse.isRunning());
 	}
 
 	public void testShutdownCalledFromServer() throws Exception
 	{
-		Thread thread = new Thread(){
+		Thread thread = new Thread()
+		{
 			public void run()
 			{
 				try

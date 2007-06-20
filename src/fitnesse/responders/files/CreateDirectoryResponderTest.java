@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import junit.framework.*;
-import fitnesse.util.FileUtil;
-import fitnesse.http.*;
 import fitnesse.FitNesseContext;
+import fitnesse.http.*;
+import fitnesse.util.FileUtil;
+import junit.framework.TestCase;
 
 import java.io.File;
 
@@ -24,8 +24,8 @@ public class CreateDirectoryResponderTest extends TestCase
 
 	public void testMakeResponse() throws Exception
 	{
-    FitNesseContext context = new FitNesseContext();
-    context.rootPagePath = "testdir";
+		FitNesseContext context = new FitNesseContext();
+		context.rootPagePath = "testdir";
 		CreateDirectoryResponder responder = new CreateDirectoryResponder();
 		MockRequest request = new MockRequest();
 		request.addInput("dirname", "subdir");

@@ -3,6 +3,7 @@
 package fitnesse.http;
 
 import fitnesse.testutil.RegexTest;
+
 import java.net.Socket;
 
 public class ChunkedResponseTest extends RegexTest implements ResponseSender

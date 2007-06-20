@@ -7,5 +7,6 @@ import java.net.Socket;
 public interface SocketDoner
 {
 	public Socket donateSocket();
+
 	public void finishedWithSocket() throws Exception;
 }

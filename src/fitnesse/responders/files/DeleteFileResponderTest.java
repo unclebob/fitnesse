@@ -2,10 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.testutil.*;
-import fitnesse.http.MockRequest;
-import fitnesse.http.Response;
 import fitnesse.FitNesseContext;
+import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
 import fitnesse.util.FileUtil;
 
 import java.io.File;
@@ -13,14 +12,14 @@ import java.io.File;
 public class DeleteFileResponderTest extends RegexTest
 {
 	public MockRequest request;
-  private FitNesseContext context;
+	private FitNesseContext context;
 
-  public void setUp()
+	public void setUp()
 	{
 		FileUtil.makeDir("testdir");
 		request = new MockRequest();
-    context = new FitNesseContext();
-    context.rootPagePath = "testdir";
+		context = new FitNesseContext();
+		context.rootPagePath = "testdir";
 	}
 
 	public void tearDown() throws Exception
@@ -31,7 +30,7 @@ public class DeleteFileResponderTest extends RegexTest
 	public void testDelete() throws Exception
 	{
 		File file = new File("testdir/testfile");
-    assertTrue(file.createNewFile());
+		assertTrue(file.createNewFile());
 		DeleteFileResponder responder = new DeleteFileResponder();
 		request.addInput("filename", "testfile");
 		request.setResource("");
@@ -45,8 +44,8 @@ public class DeleteFileResponderTest extends RegexTest
 	{
 		File dir = new File("testdir/dir");
 		assertTrue(dir.mkdir());
-		File file = new File(dir,"testChildFile");
-    assertTrue(file.createNewFile());
+		File file = new File(dir, "testChildFile");
+		assertTrue(file.createNewFile());
 		DeleteFileResponder responder = new DeleteFileResponder();
 		request.addInput("filename", "dir");
 		request.setResource("");

@@ -2,12 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.http.*;
-import fitnesse.wiki.*;
-import fitnesse.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
+import fitnesse.http.*;
 import fitnesse.responders.SecureResponder;
 import fitnesse.testutil.*;
+import fitnesse.wiki.*;
+
 import java.util.regex.*;
 
 public class TestResponderTest extends RegexTest
@@ -69,7 +70,7 @@ public class TestResponderTest extends RegexTest
 
 	public void testEmptyTestPage() throws Exception
 	{
-    PageData data = root.getData();
+		PageData data = root.getData();
 		data.setContent(classpathWidgets());
 		root.commit(data);
 		testPage = crawler.addPage(root, PathParser.parse("EmptyTestPage"));
@@ -94,9 +95,9 @@ public class TestResponderTest extends RegexTest
 	public void testStandardOutput() throws Exception
 	{
 		String content = classpathWidgets()
-		  + outputWritingTable("output1")
-		  + outputWritingTable("output2")
-		  + outputWritingTable("output3");
+			+ outputWritingTable("output1")
+			+ outputWritingTable("output2")
+			+ outputWritingTable("output3");
 
 		String errorLogContent = doRunAndGetErrorLog(content);
 
@@ -108,9 +109,9 @@ public class TestResponderTest extends RegexTest
 	public void testErrorOutput() throws Exception
 	{
 		String content = classpathWidgets()
-		  + errorWritingTable("error1")
-		  + errorWritingTable("error2")
-		  + errorWritingTable("error3");
+			+ errorWritingTable("error1")
+			+ errorWritingTable("error2")
+			+ errorWritingTable("error3");
 
 		String errorLogContent = doRunAndGetErrorLog(content);
 
@@ -244,7 +245,7 @@ public class TestResponderTest extends RegexTest
 	public void testAuthentication_RequiresTestPermission() throws Exception
 	{
 		assertTrue(responder instanceof SecureResponder);
-		SecureOperation operation = ((SecureResponder)responder).getSecureOperation();
+		SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
 		assertEquals(SecureTestOperation.class, operation.getClass());
 	}
 
@@ -253,7 +254,7 @@ public class TestResponderTest extends RegexTest
 		MockTestEventListener listener1 = new MockTestEventListener();
 		MockTestEventListener listener2 = new MockTestEventListener();
 
-		TestResponder.registerListener(listener1);      
+		TestResponder.registerListener(listener1);
 		TestResponder.registerListener(listener2);
 
 		doSimpleRun(passFixtureTable());
@@ -268,7 +269,7 @@ public class TestResponderTest extends RegexTest
 		WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
 		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
 		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
-		
+
 		WikiPagePath testPagePath = crawler.getFullPath(testPage);
 		String resource = PathParser.render(testPagePath);
 		request.setResource(resource);
@@ -286,18 +287,18 @@ public class TestResponderTest extends RegexTest
 		assertHasRegexp("Output of TestPage", errorLogContent);
 		assertHasRegexp("Output of SuiteTearDown", errorLogContent);
 	}
-	
+
 	private String errorWritingTable(String message)
 	{
 		return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +
-		  "|" + message + "|\n\n";
+			"|" + message + "|\n\n";
 
 	}
 
 	private String outputWritingTable(String message)
 	{
 		return "\n|!-fitnesse.testutil.OutputWritingFixture-!|\n" +
-		  "|" + message + "|\n\n";
+			"|" + message + "|\n\n";
 	}
 
 	private String classpathWidgets()

@@ -42,7 +42,7 @@ public class ReplacingFileUpdate extends FileUpdate
 	{
 		long sum = 0;
 		int b;
-		while( (b = input.read()) != -1)
+		while((b = input.read()) != -1)
 			sum += b;
 		input.close();
 

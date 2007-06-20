@@ -3,9 +3,8 @@
 package fitnesse.responders.files;
 
 import fitnesse.*;
-import fitnesse.testutil.RegexTest;
 import fitnesse.http.*;
-
+import fitnesse.testutil.RegexTest;
 
 public class DirectoryResponderTest extends RegexTest
 {

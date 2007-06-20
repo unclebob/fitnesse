@@ -3,8 +3,8 @@
 package fitnesse.updates;
 
 import fitnesse.wiki.*;
-import fitnesse.wikitext.widgets.*;
 import fitnesse.wikitext.*;
+import fitnesse.wikitext.widgets.*;
 
 public class VirtualWikiDeprecationUpdate extends PageTraversingUpdate
 {
@@ -34,7 +34,7 @@ public class VirtualWikiDeprecationUpdate extends PageTraversingUpdate
 			WikiWidget widget = widgetRoot.nextChild();
 			if(widget instanceof VirtualWikiWidget)
 			{
-				VirtualWikiWidget vWidget = (VirtualWikiWidget)widget;
+				VirtualWikiWidget vWidget = (VirtualWikiWidget) widget;
 				String url = vWidget.getRemoteUrl();
 				data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, url);
 				page.commit(data);

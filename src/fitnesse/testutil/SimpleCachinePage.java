@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import fitnesse.wiki.*;
+
 import java.util.Date;
 
 public class SimpleCachinePage extends CachingPage

@@ -2,21 +2,21 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.util.regex.*;
-import java.util.*;
 import java.io.Serializable;
-import java.text.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.*;
 
 public class VersionInfo implements Comparable, Serializable
 {
 	public static final Pattern COMPEX_NAME_PATTERN = Pattern.compile("(?:([a-zA-Z][^\\-]*)-)?(?:\\d+-)?(\\d{14})");
 	private static int counter = 0;
 
-  public static SimpleDateFormat makeVersionTimeFormat()
-  {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("yyyyMMddHHmmss");
-  }
+	public static SimpleDateFormat makeVersionTimeFormat()
+	{
+		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
+		return new SimpleDateFormat("yyyyMMddHHmmss");
+	}
 
 	public static int nextId()
 	{
@@ -74,7 +74,7 @@ public class VersionInfo implements Comparable, Serializable
 		VersionInfo otherVersion;
 		if(o instanceof VersionInfo)
 		{
-			otherVersion = ((VersionInfo)o);
+			otherVersion = ((VersionInfo) o);
 			return getCreationTime().compareTo(otherVersion.getCreationTime());
 		}
 		else
@@ -90,7 +90,7 @@ public class VersionInfo implements Comparable, Serializable
 	{
 		if(o != null && o instanceof VersionInfo)
 		{
-			VersionInfo otherVersion = (VersionInfo)o;
+			VersionInfo otherVersion = (VersionInfo) o;
 			return getName().equals(otherVersion.getName());
 		}
 		else

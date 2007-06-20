@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.search;
 
-import fitnesse.testutil.RegexTest;
-import fitnesse.http.*;
 import fitnesse.FitNesseContext;
+import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
 
 public class SearchFormResponderTest extends RegexTest
 {
@@ -14,7 +14,7 @@ public class SearchFormResponderTest extends RegexTest
 	public void setUp() throws Exception
 	{
 		SearchFormResponder responder = new SearchFormResponder();
-		response = (SimpleResponse)responder.makeResponse(new FitNesseContext(), new MockRequest());
+		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
 		content = response.getContent();
 	}
 

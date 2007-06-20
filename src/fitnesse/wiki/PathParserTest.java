@@ -65,24 +65,25 @@ public class PathParserTest extends TestCase
 		assertNull(makePath("_root"));
 	}
 
-  public void testSubPagePath() throws Exception {
-    path = makePath(">MySubPagePath.ChildPage");
-    assertTrue(path.isSubPagePath());
-    assertEquals("MySubPagePath", path.getFirst());
-    assertEquals("ChildPage", path.getRest().getFirst());
-    assertTrue(path.getRest().getRest().isEmpty());
-  }
+	public void testSubPagePath() throws Exception
+	{
+		path = makePath(">MySubPagePath.ChildPage");
+		assertTrue(path.isSubPagePath());
+		assertEquals("MySubPagePath", path.getFirst());
+		assertEquals("ChildPage", path.getRest().getFirst());
+		assertTrue(path.getRest().getRest().isEmpty());
+	}
 
-    public void testBackwardSearchPath() throws Exception {
-    path = makePath("<MySubPagePath.ChildPage");
-    assertTrue(path.isBackwardSearchPath());
-    assertEquals("MySubPagePath", path.getFirst());
-    assertEquals("ChildPage", path.getRest().getFirst());
-    assertTrue(path.getRest().getRest().isEmpty());
-  }
+	public void testBackwardSearchPath() throws Exception
+	{
+		path = makePath("<MySubPagePath.ChildPage");
+		assertTrue(path.isBackwardSearchPath());
+		assertEquals("MySubPagePath", path.getFirst());
+		assertEquals("ChildPage", path.getRest().getFirst());
+		assertTrue(path.getRest().getRest().isEmpty());
+	}
 
-
-  public void testRender() throws Exception
+	public void testRender() throws Exception
 	{
 		assertEquals("MyPage", PathParser.render(makePath("MyPage")));
 		assertEquals(".MyPage", PathParser.render(makePath(".MyPage")));
@@ -93,7 +94,7 @@ public class PathParserTest extends TestCase
 
 		assertEquals(".", PathParser.render(PathParser.parse(".")));
 
-    assertEquals("<MyPage", PathParser.render(makePath("<MyPage")));
-    assertEquals(">MyPage", PathParser.render(makePath(">MyPage")));
-  }
+		assertEquals("<MyPage", PathParser.render(makePath("<MyPage")));
+		assertEquals(">MyPage", PathParser.render(makePath(">MyPage")));
+	}
 }

@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.authentication;
 
-import fitnesse.wiki.*;
-import fitnesse.http.*;
-import fitnesse.responders.*;
 import fitnesse.*;
+import fitnesse.http.MockRequest;
+import fitnesse.responders.*;
 import fitnesse.testutil.SimpleAuthenticator;
+import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
 public class AuthenticatorTest extends TestCase
@@ -17,29 +17,29 @@ public class AuthenticatorTest extends TestCase
 	private Responder responder;
 	private Class responderType;
 	private WikiPageResponder privilegedResponder;
-  private FitNesseContext context;
+	private FitNesseContext context;
 
 	public void setUp() throws Exception
 	{
 		root = InMemoryPage.makeRoot("RooT");
 		WikiPage frontpage = root.addChildPage("FrontPage");
-    makeReadSecure(frontpage);
-    authenticator = new SimpleAuthenticator();
+		makeReadSecure(frontpage);
+		authenticator = new SimpleAuthenticator();
 		privilegedResponder = new WikiPageResponder();
 
 		request = new MockRequest();
 		request.setResource("FrontPage");
-    context = new FitNesseContext(root);
+		context = new FitNesseContext(root);
 	}
 
-  private void makeReadSecure(WikiPage frontpage) throws Exception
-  {
-    PageData data = frontpage.getData();
-    data.setAttribute(WikiPage.SECURE_READ);
-    frontpage.commit(data);
-  }
+	private void makeReadSecure(WikiPage frontpage) throws Exception
+	{
+		PageData data = frontpage.getData();
+		data.setAttribute(WikiPage.SECURE_READ);
+		frontpage.commit(data);
+	}
 
-  public void tearDown() throws Exception
+	public void tearDown() throws Exception
 	{
 	}
 

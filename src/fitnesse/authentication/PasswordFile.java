@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.authentication;
 
-import java.util.*;
-import java.io.File;
-import java.lang.reflect.*;
 import fitnesse.util.FileUtil;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 public class PasswordFile
 {
@@ -58,7 +59,7 @@ public class PasswordFile
 		for(Iterator iterator = lines.iterator(); iterator.hasNext();)
 		{
 			String line = (String) iterator.next();
-			if(! "".equals(line))
+			if(!"".equals(line))
 			{
 				String[] tokens = line.split(":");
 				passwordMap.put(tokens[0], tokens[1]);
@@ -84,7 +85,7 @@ public class PasswordFile
 	{
 		Class cipherClass = Class.forName(cipherClassName);
 		Constructor constructor = cipherClass.getConstructor(new Class[]{});
-		cipher = (PasswordCipher)constructor.newInstance(new Object[]{});
+		cipher = (PasswordCipher) constructor.newInstance(new Object[]{});
 		return cipher;
 	}
 

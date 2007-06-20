@@ -3,6 +3,7 @@
 package fitnesse.http;
 
 import fitnesse.testutil.RegexTest;
+
 import java.net.Socket;
 
 public class SimpleResponseTest extends RegexTest implements ResponseSender

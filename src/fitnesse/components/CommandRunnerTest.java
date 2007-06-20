@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import junit.swingui.TestRunner;
 import fitnesse.testutil.RegexTest;
+import junit.swingui.TestRunner;
 
 public class CommandRunnerTest extends RegexTest
 {

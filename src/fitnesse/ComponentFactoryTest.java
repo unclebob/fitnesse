@@ -2,20 +2,17 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import java.util.Properties;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.*;
-import fitnesse.wiki.*;
+import fitnesse.authentication.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.*;
 import fitnesse.responders.editing.*;
 import fitnesse.testutil.*;
-import fitnesse.authentication.*;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.*;
 import fitnesse.wikitext.widgets.*;
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetInterceptor;
-import fitnesse.wikitext.WikiWidget;
+
+import java.io.*;
+import java.util.*;
 
 public class ComponentFactoryTest extends RegexTest
 {
@@ -38,13 +35,13 @@ public class ComponentFactoryTest extends RegexTest
 
 	public void tearDown() throws Exception
 	{
-    final File file = new File(ComponentFactory.PROPERTIES_FILE);
-    FileOutputStream out = new FileOutputStream(file);
-    out.write("".getBytes());
-    out.close();
-    file.delete();
-    TestWidgetInterceptor.widgetsIntercepted.clear();
-  }
+		final File file = new File(ComponentFactory.PROPERTIES_FILE);
+		FileOutputStream out = new FileOutputStream(file);
+		out.write("".getBytes());
+		out.close();
+		file.delete();
+		TestWidgetInterceptor.widgetsIntercepted.clear();
+	}
 
 	public void testRootPageCreation() throws Exception
 	{
@@ -65,7 +62,7 @@ public class ComponentFactoryTest extends RegexTest
 		assertEquals(FileSystemPage.class, page.getClass());
 		assertEquals("TestRoot", page.getName());
 	}
-                                
+
 	public void testDefaultHtmlPageFactory() throws Exception
 	{
 		factory.loadProperties();
@@ -120,29 +117,32 @@ public class ComponentFactoryTest extends RegexTest
 		assertSubString(ItalicWidget.REGEXP, builderPattern);
 	}
 
-  public void testWikiWidgetInterceptors() throws Exception {
-    WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
-    testProperties.setProperty(ComponentFactory.WIKI_WIDGET_INTERCEPTORS, TestWidgetInterceptor.class.getName());
-    saveTestProperties();
+	public void testWikiWidgetInterceptors() throws Exception
+	{
+		WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
+		testProperties.setProperty(ComponentFactory.WIKI_WIDGET_INTERCEPTORS, TestWidgetInterceptor.class.getName());
+		saveTestProperties();
 
-    factory.loadProperties();
-    String output = factory.loadWikiWidgetInterceptors();
+		factory.loadProperties();
+		String output = factory.loadWikiWidgetInterceptors();
 
-    assertSubString(TestWidgetInterceptor.class.getName(), output);
+		assertSubString(TestWidgetInterceptor.class.getName(), output);
 
-    new WidgetRoot("hello '''world'''" + "\n", (WikiPage) null, WidgetBuilder.htmlWidgetBuilder);
-    assertTrue(TestWidgetInterceptor.widgetsIntercepted.contains(BoldWidget.class));
-  }
+		new WidgetRoot("hello '''world'''" + "\n", (WikiPage) null, WidgetBuilder.htmlWidgetBuilder);
+		assertTrue(TestWidgetInterceptor.widgetsIntercepted.contains(BoldWidget.class));
+	}
 
-  public static class TestWidgetInterceptor implements WidgetInterceptor {
-    public static List<Class> widgetsIntercepted = new ArrayList<Class>();
+	public static class TestWidgetInterceptor implements WidgetInterceptor
+	{
+		public static List<Class> widgetsIntercepted = new ArrayList<Class>();
 
-    public void intercept(WikiWidget widget) {
-      widgetsIntercepted.add(widget.getClass());
-    }
-  }
+		public void intercept(WikiWidget widget)
+		{
+			widgetsIntercepted.add(widget.getClass());
+		}
+	}
 
-  public void testAuthenticatorDefaultCreation() throws Exception
+	public void testAuthenticatorDefaultCreation() throws Exception
 	{
 		factory.loadProperties();
 		Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());

@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.testutil;
 
-import java.net.Socket;
-import fitnesse.testutil.MockSocket;
 import fitnesse.responders.run.SocketDoner;
+
+import java.net.Socket;
 
 public class SimpleSocketDoner implements SocketDoner
 {

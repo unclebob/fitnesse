@@ -3,9 +3,10 @@
 package fitnesse.responders.editing;
 
 import fitnesse.*;
+import fitnesse.http.*;
 import fitnesse.responders.*;
 import fitnesse.wiki.*;
-import fitnesse.http.*;
+
 import java.io.File;
 
 public class SymbolicLinkResponder implements Responder
@@ -24,7 +25,6 @@ public class SymbolicLinkResponder implements Responder
 		if(page == null)
 			return new NotFoundResponder().makeResponse(context, request);
 
-
 		response = new SimpleResponse();
 		if(request.hasInput("removal"))
 			removeSymbolicLink(request, page);
@@ -41,7 +41,7 @@ public class SymbolicLinkResponder implements Responder
 
 	private void removeSymbolicLink(Request request, WikiPage page) throws Exception
 	{
-		String linkToRemove = (String)request.getInput("removal");
+		String linkToRemove = (String) request.getInput("removal");
 
 		PageData data = page.getData();
 		WikiPageProperties properties = data.getProperties();
@@ -55,8 +55,8 @@ public class SymbolicLinkResponder implements Responder
 
 	private void addSymbolicLink(Request request, WikiPage page) throws Exception
 	{
-		String linkName = (String)request.getInput("linkName");
-		String linkPath = (String)request.getInput("linkPath");
+		String linkName = (String) request.getInput("linkName");
+		String linkPath = (String) request.getInput("linkPath");
 
 		if(isFilePath(linkPath) && !isValidDirectoryPath(linkPath))
 		{
@@ -120,7 +120,7 @@ public class SymbolicLinkResponder implements Responder
 	{
 		WikiPageProperty symLinks = properties.getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinks == null)
-		  symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
+			symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
 		return symLinks;
 	}
 }

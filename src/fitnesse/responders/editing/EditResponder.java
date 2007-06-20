@@ -2,14 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.components.SaveRecorder;
-import fitnesse.http.*;
-import fitnesse.wiki.*;
-import fitnesse.wikitext.*;
-import fitnesse.html.*;
-import fitnesse.*;
-import fitnesse.responders.SecureResponder;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
+import fitnesse.components.SaveRecorder;
+import fitnesse.html.*;
+import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
+
 import java.util.*;
 
 public class EditResponder implements SecureResponder
@@ -34,7 +35,7 @@ public class EditResponder implements SecureResponder
 
 		SimpleResponse response = new SimpleResponse();
 		String resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
+		WikiPagePath path = PathParser.parse(resource);
 		PageCrawler crawler = context.root.getPageCrawler();
 		if(!crawler.pageExists(root, path))
 		{
@@ -96,7 +97,6 @@ public class EditResponder implements SecureResponder
 			form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
 		}
 
-
 		form.add(createTextarea());
 		form.add(createButtons());
 
@@ -140,7 +140,7 @@ public class EditResponder implements SecureResponder
 		List fixtureNames = new FixtureListBuilder().getFixtureNames(this.page);
 		for(Iterator fixtures = fixtureNames.iterator(); fixtures.hasNext();)
 		{
-			String fixture = (String)fixtures.next();
+			String fixture = (String) fixtures.next();
 			wizardOptions.add(HtmlUtil.makeOptionTag(fixture, fixture));
 		}
 		return wizardOptions;
@@ -155,11 +155,11 @@ public class EditResponder implements SecureResponder
 
 		HtmlTag wizardScript = new HtmlTag("script");
 		wizardScript.add("\nfunction addFixture()\n" +
-		              "{\n" +
-		              "\tdocument.tableWizardForm.text.value = document.f." + CONTENT_INPUT_NAME + ".value;\n" +
-		              "\tdocument.tableWizardForm.fixture.value = document.f.fixtureTable.options[document.f.fixtureTable.selectedIndex].value;\n" +
-		              "\tdocument.tableWizardForm.submit();\n" +
-		              "}");
+			"{\n" +
+			"\tdocument.tableWizardForm.text.value = document.f." + CONTENT_INPUT_NAME + ".value;\n" +
+			"\tdocument.tableWizardForm.fixture.value = document.f.fixtureTable.options[document.f.fixtureTable.selectedIndex].value;\n" +
+			"\tdocument.tableWizardForm.submit();\n" +
+			"}");
 		scripts.add(wizardScript);
 
 		return scripts;

@@ -62,7 +62,7 @@ public class ChunkedResponse extends Response
 
 	public void closeChunks() throws Exception
 	{
-		sender.send( ("0" + CRLF).getBytes() );
+		sender.send(("0" + CRLF).getBytes());
 	}
 
 	public void closeTrailer() throws Exception

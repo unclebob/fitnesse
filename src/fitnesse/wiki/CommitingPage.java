@@ -15,7 +15,7 @@ public abstract class CommitingPage extends ExtendableWikiPage
 
 	public VersionInfo commit(PageData data) throws Exception
 	{
-    VersionInfo previousVersion = makeVersion();
+		VersionInfo previousVersion = makeVersion();
 		doCommit(data);
 		return previousVersion;
 	}

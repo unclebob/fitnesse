@@ -7,6 +7,8 @@ import fit.Counts;
 public interface FitClientListener
 {
 	public void acceptOutput(String output) throws Exception;
+
 	public void acceptResults(Counts counts) throws Exception;
-  public void exceptionOccurred(Exception e);
+
+	public void exceptionOccurred(Exception e);
 }

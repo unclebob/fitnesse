@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.*;
-import fitnesse.wikitext.*;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.*;
+import junit.framework.TestCase;
+
 import java.util.*;
 
 public class WidgetVisitorTest extends TestCase implements WidgetVisitor

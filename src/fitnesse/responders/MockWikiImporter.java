@@ -1,7 +1,8 @@
 package fitnesse.responders;
 
 import fitnesse.wiki.*;
-import java.util.*;
+
+import java.util.Iterator;
 
 public class MockWikiImporter extends WikiImporter
 {
@@ -27,7 +28,7 @@ public class MockWikiImporter extends WikiImporter
 	{
 		PageCrawler pageCrawler = page.getPageCrawler();
 		for(Iterator iterator = page.getChildren().iterator(); iterator.hasNext();)
-			pageCrawler.traverse((WikiPage)iterator.next(), this);
+			pageCrawler.traverse((WikiPage) iterator.next(), this);
 	}
 
 	public void processPage(WikiPage page) throws Exception

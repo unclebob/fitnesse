@@ -2,12 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
-import fitnesse.html.*;
-import fitnesse.http.*;
 import fitnesse.authentication.*;
-import java.net.*;
+import fitnesse.html.*;
+import fitnesse.http.ChunkedResponse;
+import fitnesse.wiki.*;
+
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.*;
 
 public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient
@@ -221,7 +222,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 				tail.add(row);
 			}
 			tail.add(HtmlUtil.HR);
-		}                                                                                                              
+		}
 	}
 
 	private HtmlPage makeHtml() throws Exception

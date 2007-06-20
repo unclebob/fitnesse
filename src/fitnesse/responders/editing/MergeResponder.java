@@ -2,12 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.wikitext.Utils;
-import fitnesse.wiki.*;
-import fitnesse.http.*;
-import fitnesse.components.SaveRecorder;
 import fitnesse.*;
+import fitnesse.components.SaveRecorder;
 import fitnesse.html.*;
+import fitnesse.http.*;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
 
 public class MergeResponder implements Responder
 {
@@ -25,8 +25,8 @@ public class MergeResponder implements Responder
 	{
 		SimpleResponse response = new SimpleResponse();
 		resource = this.request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+		WikiPagePath path = PathParser.parse(resource);
+		WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
 		existingContent = page.getData().getContent();
 		newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 

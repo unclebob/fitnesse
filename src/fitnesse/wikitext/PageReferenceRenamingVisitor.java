@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
-import fitnesse.wikitext.widgets.*;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.widgets.*;
 
 public class PageReferenceRenamingVisitor implements WidgetVisitor
 {

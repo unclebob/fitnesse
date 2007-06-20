@@ -13,7 +13,7 @@ public class Wildcard implements FilenameFilter
 
 	public Wildcard(String pattern)
 	{
-  	int starIndex = pattern.indexOf("*");
+		int starIndex = pattern.indexOf("*");
 		if(starIndex > -1)
 		{
 			prefix = pattern.substring(0, starIndex);

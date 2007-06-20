@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import java.util.*;
-import java.net.URLEncoder;
-import java.io.*;
 import fitnesse.components.Base64;
 import fitnesse.util.StreamReader;
+
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.*;
 
 public class RequestBuilder
 {
@@ -104,7 +105,7 @@ public class RequestBuilder
 				partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
 				if(value instanceof InputStreamPart)
 				{
-					InputStreamPart part = (InputStreamPart)value;
+					InputStreamPart part = (InputStreamPart) value;
 					partBuffer.append("Content-Type: ").append(part.contentType).append("\r\n");
 					partBuffer.append("\r\n");
 					addBodyPart(partBuffer.toString());
@@ -170,7 +171,7 @@ public class RequestBuilder
 		for(Iterator iterator = inputs.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			String value = (String)inputs.get(key);
+			String value = (String) inputs.get(key);
 			if(!first)
 				buffer.append("&");
 			buffer.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"));
@@ -202,12 +203,12 @@ public class RequestBuilder
 	public void addInputAsPart(String name, Object content) throws Exception
 	{
 		multipart();
-    addInput(name, content);
+		addInput(name, content);
 	}
 
 	public void addInputAsPart(String name, InputStream input, int size, String contentType) throws Exception
 	{
-    addInputAsPart(name, new InputStreamPart(input, size, contentType));
+		addInputAsPart(name, new InputStreamPart(input, size, contentType));
 	}
 
 	private void multipart()

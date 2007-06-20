@@ -1,8 +1,8 @@
 package fitnesse.wiki;
 
-import java.util.*;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class WikiPageProperty implements Serializable
 {
@@ -44,7 +44,7 @@ public class WikiPageProperty implements Serializable
 
 	public WikiPageProperty set(String name)
 	{
-		return set(name, (String)null);
+		return set(name, (String) null);
 	}
 
 	public void remove(String name)

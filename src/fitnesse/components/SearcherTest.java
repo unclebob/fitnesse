@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import junit.framework.*;
-import fitnesse.wiki.*;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
+
 import java.util.*;
 
 public class SearcherTest extends TestCase implements SearchObserver
@@ -29,7 +30,7 @@ public class SearcherTest extends TestCase implements SearchObserver
 		crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
 		pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");
 		PageData data = pageTwo.getData();
-		data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.port  + "/PageOne");
+		data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.port + "/PageOne");
 		pageTwo.commit(data);
 	}
 
@@ -74,13 +75,13 @@ public class SearcherTest extends TestCase implements SearchObserver
 		Collections.sort(hits, new Comparer());
 
 		assertEquals(2, hits.size());
-		assertEquals("PageOne", ((WikiPage)hits.get(0)).getName());
-		assertEquals("PageOneChild", ((WikiPage)hits.get(1)).getName());
+		assertEquals("PageOne", ((WikiPage) hits.get(0)).getName());
+		assertEquals("PageOneChild", ((WikiPage) hits.get(1)).getName());
 	}
 
 	private void hasNamedPageAtIndex(List results, String name, int index) throws Exception
 	{
-		WikiPage p = (WikiPage)results.get(index);
+		WikiPage p = (WikiPage) results.get(index);
 		assertEquals(name, p.getName());
 	}
 

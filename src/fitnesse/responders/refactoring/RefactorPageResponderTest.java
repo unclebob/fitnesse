@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
+import fitnesse.*;
+import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
 import fitnesse.wiki.*;
-import fitnesse.http.*;
-import fitnesse.*;
 
 public class RefactorPageResponderTest extends RegexTest
 {
@@ -28,7 +28,7 @@ public class RefactorPageResponderTest extends RegexTest
 
 	public void testHtml() throws Exception
 	{
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(200, response.getStatus());
 
 		String content = response.getContent();

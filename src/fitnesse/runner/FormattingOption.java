@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.*;
-import fitnesse.http.*;
 import fitnesse.components.CommandLine;
+import fitnesse.http.*;
 import fitnesse.util.FileUtil;
+
+import java.io.*;
 
 public class FormattingOption
 {
@@ -25,7 +26,7 @@ public class FormattingOption
 		option.args(args);
 		File inputFile = new File(option.resultFilename);
 		FileInputStream input = new FileInputStream(inputFile);
-		int byteCount = (int)inputFile.length();
+		int byteCount = (int) inputFile.length();
 		option.process(input, byteCount);
 	}
 
@@ -36,7 +37,7 @@ public class FormattingOption
 	private void args(String[] args) throws Exception
 	{
 		CommandLine commandLine = new CommandLine("resultFilename format outputFilename host port rootPath");
-		if(! commandLine.parse(args))
+		if(!commandLine.parse(args))
 			usage();
 		resultFilename = commandLine.getArgument("resultFilename");
 		format = commandLine.getArgument("format");
@@ -49,7 +50,7 @@ public class FormattingOption
 
 	private void usage()
 	{
-   	System.out.println("java fitnesse.runner.FormattingOption resultFilename format outputFilename host port rootPath");
+		System.out.println("java fitnesse.runner.FormattingOption resultFilename format outputFilename host port rootPath");
 		System.out.println("\tresultFilename:\tthe name of the file containing test results");
 		System.out.println("\tformat:        \traw|html|xml|...");
 		System.out.println("\toutputfilename:\tstdout|a filename where the formatted results are to be stored");

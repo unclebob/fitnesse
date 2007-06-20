@@ -14,7 +14,7 @@ public class VirtualWikiDepricationUpdateTest extends UpdateTest
 	public void testDoVisiting() throws Exception
 	{
 		WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "!virtualwiki http://some.url");
-		PageTraversingUpdate update2 = (PageTraversingUpdate)update;
+		PageTraversingUpdate update2 = (PageTraversingUpdate) update;
 		update2.processPage(page);
 
 		PageData data = page.getData();

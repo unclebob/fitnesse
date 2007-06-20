@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
-import fitnesse.responders.SecureResponder;
 import fitnesse.html.*;
 import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
+
 import java.io.File;
 
 public class DeleteConfirmationResponder implements SecureResponder
@@ -17,13 +18,13 @@ public class DeleteConfirmationResponder implements SecureResponder
 	{
 		SimpleResponse response = new SimpleResponse();
 		resource = request.getResource();
-		String filename = (String)request.getInput("filename");
-		response.setContent(makeDirectoryListingPage(filename,context));
-    response.setLastModifiedHeader("Delete");
+		String filename = (String) request.getInput("filename");
+		response.setContent(makeDirectoryListingPage(filename, context));
+		response.setLastModifiedHeader("Delete");
 		return response;
 	}
 
-  private String makeDirectoryListingPage(String filename , FitNesseContext context) throws Exception
+	private String makeDirectoryListingPage(String filename, FitNesseContext context) throws Exception
 	{
 		HtmlPage page = context.htmlPageFactory.newPage();
 		page.title.use("Delete File(s): ");
@@ -32,11 +33,12 @@ public class DeleteConfirmationResponder implements SecureResponder
 
 		return page.html();
 	}
+
 	private HtmlTag makeConfirmationHTML(String filename, FitNesseContext context) throws Exception
 	{
 		String pathname = context.rootPagePath + "/" + resource + filename;
 		File file = new File(pathname);
-    boolean isDir = file.isDirectory();
+		boolean isDir = file.isDirectory();
 
 		TagGroup group = new TagGroup();
 		group.add(messageText(filename, isDir, file));
@@ -55,7 +57,7 @@ public class DeleteConfirmationResponder implements SecureResponder
 	{
 		String message = "Are you sure you would like to delete <b>" + filename + "</b> ";
 		if(dir)
-		  message += " and all " + file.listFiles().length  + " files inside";
+			message += " and all " + file.listFiles().length + " files inside";
 
 		return message + "?";
 	}
@@ -63,16 +65,16 @@ public class DeleteConfirmationResponder implements SecureResponder
 	private HtmlTag makeNoForm()
 	{
 		HtmlTag noForm = HtmlUtil.makeFormTag("get", "/" + resource);
-		noForm.add(HtmlUtil.makeInputTag("submit","","No"));
+		noForm.add(HtmlUtil.makeInputTag("submit", "", "No"));
 		return noForm;
 	}
 
 	private HtmlTag makeYesForm(String filename)
 	{
 		HtmlTag yesForm = HtmlUtil.makeFormTag("get", "/" + resource);
-		yesForm.add(HtmlUtil.makeInputTag("submit","","Yes"));
-		yesForm.add(HtmlUtil.makeInputTag("hidden","responder","deleteFile"));
-		yesForm.add(HtmlUtil.makeInputTag("hidden","filename",filename));
+		yesForm.add(HtmlUtil.makeInputTag("submit", "", "Yes"));
+		yesForm.add(HtmlUtil.makeInputTag("hidden", "responder", "deleteFile"));
+		yesForm.add(HtmlUtil.makeInputTag("hidden", "filename", filename));
 		return yesForm;
 	}
 

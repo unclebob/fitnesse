@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.*;
 import fitnesse.testutil.TestSuiteMaker;
+import junit.framework.Test;
 
 public class AllTestSuite
 {

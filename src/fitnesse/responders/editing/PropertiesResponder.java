@@ -2,19 +2,20 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
 import fitnesse.html.*;
+import fitnesse.http.*;
 import fitnesse.responders.*;
 import fitnesse.wiki.*;
-import fitnesse.http.*;
+
 import java.util.*;
 
 public class PropertiesResponder implements SecureResponder
 {
 	public static final String SUITES = "Suites";
-    
-    private WikiPage page;
+
+	private WikiPage page;
 	public PageData pageData;
 	private String resource;
 
@@ -22,13 +23,13 @@ public class PropertiesResponder implements SecureResponder
 	{
 		SimpleResponse response = new SimpleResponse();
 		resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
+		WikiPagePath path = PathParser.parse(resource);
 		PageCrawler crawler = context.root.getPageCrawler();
 		if(!crawler.pageExists(context.root, path))
-    {
-	    crawler.setDeadEndStrategy(new MockingPageCrawler());
-      page = crawler.getPage(context.root, path);
-    }
+		{
+			crawler.setDeadEndStrategy(new MockingPageCrawler());
+			page = crawler.getPage(context.root, path);
+		}
 		else
 			page = crawler.getPage(context.root, path);
 		if(page == null)
@@ -107,7 +108,7 @@ public class PropertiesResponder implements SecureResponder
 		trisection.add(makeNavigationCheckboxesHtml(pageData));
 		trisection.add(makeSecurityCheckboxesHtml(pageData));
 		trisection.add(makeVirtualWikiHtml());
-        trisection.add(makeSuitesHtml(pageData));
+		trisection.add(makeSuitesHtml(pageData));
 		form.add(trisection);
 
 		HtmlTag saveButton = HtmlUtil.makeInputTag("submit", "Save", "Save Properties");
@@ -163,7 +164,7 @@ public class PropertiesResponder implements SecureResponder
 		if(importProps.isRoot())
 		{
 			form.add(" imports its subpages from ");
-		  buttonMessage = "Update Subpages";
+			buttonMessage = "Update Subpages";
 		}
 		else
 		{
@@ -266,27 +267,27 @@ public class PropertiesResponder implements SecureResponder
 		return makeAttributeCheckboxesHtml("Security:", WikiPage.SECURITY_ATTRIBUTES, pageData);
 	}
 
-    public HtmlTag makeSuitesHtml(PageData pageData) throws Exception
-    {
-        HtmlTag div = new HtmlTag("div");
-        div.addAttribute("style", "float: left;");
-        div.add("Suites:");
+	public HtmlTag makeSuitesHtml(PageData pageData) throws Exception
+	{
+		HtmlTag div = new HtmlTag("div");
+		div.addAttribute("style", "float: left;");
+		div.add("Suites:");
 
-        String suites = "";
-        WikiPageProperty suitesProp = pageData.getProperties().getProperty(SUITES);
-        if (suitesProp != null)
-        {
-            suites = suitesProp.getValue();
-        }
-        
-        div.add(HtmlUtil.BR);
-        
-        div.add(HtmlUtil.makeInputTag("text", "Suites", suites));
-        return div;
-    }
+		String suites = "";
+		WikiPageProperty suitesProp = pageData.getProperties().getProperty(SUITES);
+		if(suitesProp != null)
+		{
+			suites = suitesProp.getValue();
+		}
+
+		div.add(HtmlUtil.BR);
+
+		div.add(HtmlUtil.makeInputTag("text", "Suites", suites));
+		return div;
+	}
 
 	private HtmlTag makeAttributeCheckboxesHtml(String label, String[] attributes, PageData pageData)
-	  throws Exception
+		throws Exception
 	{
 		HtmlTag div = new HtmlTag("div");
 		div.addAttribute("style", "float: left; width: 150px;");

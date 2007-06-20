@@ -11,19 +11,19 @@ public class Logger
 {
 	private File directory;
 
-  public static SimpleDateFormat makeLogFormat()
-  {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z");
-  }
+	public static SimpleDateFormat makeLogFormat()
+	{
+		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
+		return new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z");
+	}
 
-  public static SimpleDateFormat makeFileNameFormat()
-  {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.    
-    return new SimpleDateFormat("yyyyMMddHHmmss");
-  }
+	public static SimpleDateFormat makeFileNameFormat()
+	{
+		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
+		return new SimpleDateFormat("yyyyMMddHHmmss");
+	}
 
-  private PrintWriter writer;
+	private PrintWriter writer;
 	private GregorianCalendar currentFileCreationDate;
 
 	public Logger(String dirPath)
@@ -71,7 +71,7 @@ public class Logger
 		else
 		{
 			boolean different = (time.get(Calendar.DAY_OF_YEAR) != currentFileCreationDate.get(Calendar.DAY_OF_YEAR))
-			  || (time.get(Calendar.YEAR) != currentFileCreationDate.get(Calendar.YEAR));
+				|| (time.get(Calendar.YEAR) != currentFileCreationDate.get(Calendar.YEAR));
 			return different;
 		}
 

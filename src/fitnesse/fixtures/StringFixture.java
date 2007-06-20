@@ -16,10 +16,10 @@ public class StringFixture extends ColumnFixture
 		super.check(cell, a);
 	}
 
-  public void execute() throws Exception
-  {
-    value = value.trim();
-  }
+	public void execute() throws Exception
+	{
+		value = value.trim();
+	}
 
 	public String startsWith()
 	{
@@ -49,14 +49,14 @@ public class StringFixture extends ColumnFixture
 
 	public String contains()
 	{
-  	if(value.indexOf(expected) != -1)
-		  return expected;
+		if(value.indexOf(expected) != -1)
+			return expected;
 		else
-	  {
-		  if(value.length() <= subStringSize)
-			  return value;
-		  else
-			  return "...";
-	  }
+		{
+			if(value.length() <= subStringSize)
+				return value;
+			else
+				return "...";
+		}
 	}
 }

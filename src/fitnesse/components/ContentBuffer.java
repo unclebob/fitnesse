@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.io.*;
 import fitnesse.util.FileUtil;
+
+import java.io.*;
 
 public class ContentBuffer
 {
@@ -69,7 +70,8 @@ public class ContentBuffer
 	public InputStream getInputStream() throws Exception
 	{
 		close();
-		return new FileInputStream(tempFile){
+		return new FileInputStream(tempFile)
+		{
 			public void close() throws IOException
 			{
 				super.close();

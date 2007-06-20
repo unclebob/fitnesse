@@ -2,9 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.html.*;
-import fitnesse.responders.run.ExecutionLog;
 import fit.Counts;
+import fitnesse.html.*;
 
 public class TestHtmlFormatter
 {
@@ -37,7 +36,7 @@ public class TestHtmlFormatter
 
 		HtmlTag script = new HtmlTag("script");
 		script.add("document.getElementById(\"test-summary\").innerHTML = \"" + summaryContent + "\";");
-		script.add("document.getElementById(\"test-summary\").className = \"" + cssClassFor(counts)+ "\";");
+		script.add("document.getElementById(\"test-summary\").className = \"" + cssClassFor(counts) + "\";");
 		return script.html();
 	}
 
@@ -63,11 +62,11 @@ public class TestHtmlFormatter
 		return page.postDivision;
 	}
 
-	public String messageForBlankHtml() throws Exception                                            
+	public String messageForBlankHtml() throws Exception
 	{
 		TagGroup html = new TagGroup();
 		HtmlTag h2 = new HtmlTag("h2");
-		h2.addAttribute("class","centered");
+		h2.addAttribute("class", "centered");
 		h2.add("Oops!  Did you forget to add to some content to this ?");
 		html.add(h2.html());
 		html.add(HtmlUtil.HR.html());

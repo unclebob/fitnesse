@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import java.io.*;
-import java.net.Socket;
 import fitnesse.testutil.RegexTest;
 import fitnesse.util.FileUtil;
+
+import java.io.*;
+import java.net.Socket;
 
 public class InputStreamResponseTest extends RegexTest implements ResponseSender
 {
@@ -58,7 +59,7 @@ public class InputStreamResponseTest extends RegexTest implements ResponseSender
 
 		response.setBody(testFile);
 		response.readyToSend(this);
-    String responseString = output.toString();
+		String responseString = output.toString();
 		assertSubString("Content-Length: 100000", responseString);
 		assertTrue(bytesSent > 100000);
 	}
@@ -69,7 +70,7 @@ public class InputStreamResponseTest extends RegexTest implements ResponseSender
 
 		response.setBody(testFile);
 		response.readyToSend(this);
-    String responseString = output.toString();
+		String responseString = output.toString();
 		assertSubString("Content-Length: 10000000", responseString);
 		assertTrue(bytesSent > 10000000);
 	}
@@ -81,7 +82,7 @@ public class InputStreamResponseTest extends RegexTest implements ResponseSender
 
 		response.setBody(testFile);
 		response.readyToSend(this);
-    String responseString = output.toString();
+		String responseString = output.toString();
 		assertSubString("Content-Length: 1000000000", responseString);
 		assertTrue(bytesSent > 1000000000);
 	}

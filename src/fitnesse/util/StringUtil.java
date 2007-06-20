@@ -6,23 +6,23 @@ import java.util.*;
 
 public class StringUtil
 {
-  public static String join(List strings, String delimiter)
-  {
-    if (strings.isEmpty())
-      return "";
+	public static String join(List strings, String delimiter)
+	{
+		if(strings.isEmpty())
+			return "";
 
-    Iterator i = strings.iterator();
-    StringBuffer joined = new StringBuffer((String) i.next());
+		Iterator i = strings.iterator();
+		StringBuffer joined = new StringBuffer((String) i.next());
 
-    while(i.hasNext())
-    {
-      String eachLine = (String) i.next();
-      joined.append(delimiter);
-      joined.append(eachLine);
-    }
+		while(i.hasNext())
+		{
+			String eachLine = (String) i.next();
+			joined.append(delimiter);
+			joined.append(eachLine);
+		}
 
-    return joined.toString();
-  }
+		return joined.toString();
+	}
 
 	public static String[] combineArrays(String[] first, String[] second)
 	{

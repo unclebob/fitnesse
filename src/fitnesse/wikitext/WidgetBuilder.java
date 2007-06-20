@@ -3,11 +3,11 @@
 package fitnesse.wikitext;
 
 import fitnesse.wikitext.widgets.*;
+
 import java.lang.reflect.*;
-import java.util.regex.*;
-import java.util.List;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.*;
 
 public class WidgetBuilder
 {
@@ -53,10 +53,10 @@ public class WidgetBuilder
 	private Pattern widgetPattern;
 	private WidgetData[] widgetDataArray;
 
-  private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
-  private final ReentrantLock widgetDataArraylock = new ReentrantLock();
+	private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
+	private final ReentrantLock widgetDataArraylock = new ReentrantLock();
 
-  public WidgetBuilder(Class[] widgetClasses)
+	public WidgetBuilder(Class[] widgetClasses)
 	{
 		this.widgetClasses = widgetClasses;
 		widgetPattern = buildCompositeWidgetPattern();
@@ -123,11 +123,12 @@ public class WidgetBuilder
 		try
 		{
 			Constructor widgetConstructor = widgetClass.getConstructor(new Class[]{ParentWidget.class, String.class});
-      WikiWidget widget = (WikiWidget) widgetConstructor.newInstance(new Object[]{parent, text});
-      for(WidgetInterceptor i: interceptors) {
-        i.intercept(widget);
-      }
-      return widget;
+			WikiWidget widget = (WikiWidget) widgetConstructor.newInstance(new Object[]{parent, text});
+			for(WidgetInterceptor i : interceptors)
+			{
+				i.intercept(widget);
+			}
+			return widget;
 		}
 		catch(Exception e)
 		{
@@ -183,8 +184,8 @@ public class WidgetBuilder
 			}
 			else
 				new TextWidget(parent, value);
-		} 
-		finally 
+		}
+		finally
 		{
 			widgetDataArraylock.unlock();
 		}
@@ -217,11 +218,12 @@ public class WidgetBuilder
 			widgetDataArray[i].match = null;
 	}
 
-  public void addInterceptor(WidgetInterceptor interceptor) {
-    interceptors.add(interceptor);
-  }
+	public void addInterceptor(WidgetInterceptor interceptor)
+	{
+		interceptors.add(interceptor);
+	}
 
-  static class WidgetData
+	static class WidgetData
 	{
 		public Class widgetClass;
 		public Pattern pattern;

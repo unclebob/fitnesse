@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.authentication;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.WikiPage;
 
 public class SecureReadOperation extends SecurePageOperation
 {
-  protected String getSecurityMode()
-  {
-    return WikiPage.SECURE_READ;
-  }
+	protected String getSecurityMode()
+	{
+		return WikiPage.SECURE_READ;
+	}
 
 }

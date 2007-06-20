@@ -28,8 +28,9 @@ public class ParentWidgetTest extends TestCase
 		{
 			return null;
 		}
-	};
+	}
 
+	;
 
 	public void setUp() throws Exception
 	{

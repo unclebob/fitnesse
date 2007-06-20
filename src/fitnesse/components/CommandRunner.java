@@ -4,7 +4,6 @@
 package fitnesse.components;
 
 import java.io.*;
-
 import java.util.*;
 
 public class CommandRunner
@@ -24,7 +23,7 @@ public class CommandRunner
 
 	public CommandRunner() {}
 
-  public CommandRunner(String command, String input)
+	public CommandRunner(String command, String input)
 	{
 		this.command = command;
 		this.input = input;
@@ -67,9 +66,10 @@ public class CommandRunner
 		}
 	}
 
-  protected void setCommand(String command) {
-    this.command = command;
-  }
+	protected void setCommand(String command)
+	{
+		this.command = command;
+	}
 
 	public String getCommand()
 	{
@@ -123,7 +123,8 @@ public class CommandRunner
 
 	protected void sendInput() throws Exception
 	{
-		Thread thread = new Thread(){
+		Thread thread = new Thread()
+		{
 			public void run()
 			{
 				try

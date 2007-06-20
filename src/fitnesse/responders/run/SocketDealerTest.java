@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import junit.framework.TestCase;
-import java.util.*;
-import java.net.Socket;
 import fitnesse.testutil.*;
+import junit.framework.TestCase;
+
+import java.net.Socket;
+import java.util.Collection;
 
 public class SocketDealerTest extends TestCase
 {
@@ -27,6 +28,7 @@ public class SocketDealerTest extends TestCase
 	{
 		public MockSocket socket = new MockSocket("");
 		boolean finished = false;
+
 		public Socket donateSocket()
 		{
 			return socket;
@@ -86,14 +88,14 @@ public class SocketDealerTest extends TestCase
 
 	public void testSeekerRemovedAfterDeltTo() throws Exception
 	{
-   	doSimpleDealing();
+		doSimpleDealing();
 		Collection waiting = dealer.getWaitingList();
 		assertEquals(0, waiting.size());
 	}
 
 	public void testSeekerIsWaiting() throws Exception
 	{
-  	assertFalse(dealer.isWaiting(23));
+		assertFalse(dealer.isWaiting(23));
 		int ticket = dealer.seekingSocket(new SimpleSocketSeeker());
 		assertTrue(dealer.isWaiting(ticket));
 	}

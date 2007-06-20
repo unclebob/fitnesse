@@ -2,24 +2,24 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.wiki.*;
 import fitnesse.FitNesseContext;
+import fitnesse.wiki.*;
 
-import java.util.*;
 import java.io.*;
-import java.text.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class RecentChanges
 {
 	private static final String RECENT_CHANGES = "RecentChanges";
 
-  private static SimpleDateFormat makeDateFormat()
-  {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-    return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
-  }
+	private static SimpleDateFormat makeDateFormat()
+	{
+		//SimpleDateFormat is not thread safe, so we need to create each instance independently.
+		return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
+	}
 
-  public static void updateRecentChanges(PageData pageData) throws Exception
+	public static void updateRecentChanges(PageData pageData) throws Exception
 	{
 		createRecentChangesIfNecessary(pageData);
 		addCurrentPageToRecentChanges(pageData);

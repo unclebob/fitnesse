@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.html.*;
 import fit.Counts;
+import fitnesse.html.*;
 
 public class SuiteHtmlFormatter extends TestHtmlFormatter
 {

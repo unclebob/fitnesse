@@ -1,12 +1,13 @@
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
-import fitnesse.testutil.*;
-import fitnesse.http.*;
 import fitnesse.*;
 import fitnesse.html.*;
-import java.util.Date;
+import fitnesse.http.*;
+import fitnesse.testutil.*;
+import fitnesse.wiki.*;
+
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class WikiImportPropertyTest extends RegexTest
 {
@@ -93,7 +94,6 @@ public class WikiImportPropertyTest extends RegexTest
 		assertTrue(importProperty2.isAutoUpdate());
 	}
 
-
 	// Tests for the rendering of import specific page details
 	private WikiPage root;
 	private PageCrawler crawler;
@@ -109,7 +109,7 @@ public class WikiImportPropertyTest extends RegexTest
 		MockRequest request = new MockRequest();
 		request.setResource(name);
 		Responder responder = new WikiPageResponder();
-		return (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 	}
 
 	public void testVirtualPageIndication() throws Exception
@@ -118,7 +118,7 @@ public class WikiImportPropertyTest extends RegexTest
 
 		WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
 		crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-		WikiPage linkPage = (BaseWikiPage)crawler.addPage(root, PathParser.parse("LinkPage"));
+		WikiPage linkPage = (BaseWikiPage) crawler.addPage(root, PathParser.parse("LinkPage"));
 		VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
 
 		FitNesseUtil.startFitnesse(root);

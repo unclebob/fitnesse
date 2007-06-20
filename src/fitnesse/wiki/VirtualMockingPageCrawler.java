@@ -8,8 +8,8 @@ public class VirtualMockingPageCrawler extends VirtualEnabledPageCrawler
 	public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws Exception
 	{
 		WikiPage page = super.getPageAfterDeadEnd(context, restOfPath, crawler);
-    if(page == null)
-      page = MockingPageCrawler.createMockPage(restOfPath.last(), context);
+		if(page == null)
+			page = MockingPageCrawler.createMockPage(restOfPath.last(), context);
 
 		return page;
 	}

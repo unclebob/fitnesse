@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.WikiPage;
 
 public class PageDataWikiPageResponder extends BasicWikiPageResponder
 {
-  protected String contentFrom(WikiPage requestedPage)
-    throws Exception
-  {
-    return requestedPage.getData().getContent();
-  }
+	protected String contentFrom(WikiPage requestedPage)
+		throws Exception
+	{
+		return requestedPage.getData().getContent();
+	}
 
 }

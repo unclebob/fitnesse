@@ -34,8 +34,8 @@ public class HtmlTagTest extends TestCase
 		tag.add(new HtmlTag("innertag"));
 
 		String expected = "<sillytag>" + endl +
-		  "\t<innertag/>" + endl +
-		  "</sillytag>" + endl;
+			"\t<innertag/>" + endl +
+			"</sillytag>" + endl;
 
 		assertEquals(expected, tag.html());
 	}
@@ -56,12 +56,12 @@ public class HtmlTagTest extends TestCase
 		tag.add(inner);
 
 		String expected = "<sillytag mykey=\"myValue\">" + endl +
-		  "\t<inner>" + endl +
+			"\t<inner>" + endl +
 			"\t\t<beforetext/>" + endl +
-		  "inner text" + endl +
-		  "\t\t<aftertext/>" + endl +
-		  "\t</inner>" + endl +
-		  "</sillytag>" + endl;
+			"inner text" + endl +
+			"\t\t<aftertext/>" + endl +
+			"\t</inner>" + endl +
+			"</sillytag>" + endl;
 
 		assertEquals(expected, tag.html());
 	}
@@ -73,8 +73,8 @@ public class HtmlTagTest extends TestCase
 		tag.add(subtag);
 
 		String expected = "<sillytag>" + endl +
-		  "\t<subtag>content</subtag>" + endl +
-		  "</sillytag>" + endl;
+			"\t<subtag>content</subtag>" + endl +
+			"</sillytag>" + endl;
 
 		assertEquals(expected, tag.html());
 	}
@@ -85,9 +85,9 @@ public class HtmlTagTest extends TestCase
 		tag.add(new HtmlTag("tag2"));
 
 		String expected = "<sillytag>" + endl +
-		  "\t<tag1/>" + endl +
-		  "\t<tag2/>" + endl +
-		  "</sillytag>" + endl;
+			"\t<tag1/>" + endl +
+			"\t<tag2/>" + endl +
+			"</sillytag>" + endl;
 
 		assertEquals(expected, tag.html());
 	}

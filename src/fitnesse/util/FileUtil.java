@@ -103,7 +103,7 @@ public class FileUtil
 	{
 		long size = input.length();
 		FileInputStream stream = new FileInputStream(input);
-		byte[] bytes = new StreamReader(stream).readBytes((int)size);
+		byte[] bytes = new StreamReader(stream).readBytes((int) size);
 		stream.close();
 		return bytes;
 	}
@@ -159,13 +159,14 @@ public class FileUtil
 		SortedSet dirSet = new TreeSet();
 		SortedSet fileSet = new TreeSet();
 		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory())
+		for(int i = 0; i < files.length; i++)
+		{
+			if(files[i].isDirectory())
 				dirSet.add(files[i]);
 			else
 				fileSet.add(files[i]);
 		}
-    List fileList = new LinkedList();
+		List fileList = new LinkedList();
 		fileList.addAll(dirSet);
 		fileList.addAll(fileSet);
 		return (File[]) fileList.toArray(new File[]{});

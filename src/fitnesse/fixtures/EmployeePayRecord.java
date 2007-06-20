@@ -2,14 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.fixtures;
 
-public class EmployeePayRecord {
-  public int id;
-  private double salary;
-  public EmployeePayRecord(int id, double salary) {
-    this.id = id;
-    this.salary = salary;
-  }
-  public double pay() {
-    return salary;
-  }
+public class EmployeePayRecord
+{
+	public int id;
+	private double salary;
+
+	public EmployeePayRecord(int id, double salary)
+	{
+		this.id = id;
+		this.salary = salary;
+	}
+
+	public double pay()
+	{
+		return salary;
+	}
 }

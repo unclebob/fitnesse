@@ -25,7 +25,8 @@ public class ShutdownResponder implements SecureResponder
 
 		final FitNesse fitnesseInstance = context.fitnesse;
 
-		Thread shutdownThread = new Thread(){
+		Thread shutdownThread = new Thread()
+		{
 			public void run()
 			{
 				try

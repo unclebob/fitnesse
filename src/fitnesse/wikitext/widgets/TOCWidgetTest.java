@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.html.HtmlElement;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.html.HtmlElement;
 
 public class TOCWidgetTest extends WidgetTest
 {
@@ -61,13 +61,13 @@ public class TOCWidgetTest extends WidgetTest
 	}
 
 	private void addGrandChild()
-	  throws Exception
+		throws Exception
 	{
 		crawler.addPage(parent.getChildPage("ChildOne"), PathParser.parse("GrandChild"), "content");
 	}
 
 	private void addGreatGrandChild()
-	  throws Exception
+		throws Exception
 	{
 		crawler.addPage(parent.getChildPage("ChildOne").getChildPage("GrandChild"), PathParser.parse("GreatGrandChild"), "content");
 	}
@@ -112,13 +112,13 @@ public class TOCWidgetTest extends WidgetTest
 	}
 
 	private String renderNormalTOCWidget()
-	  throws Exception
+		throws Exception
 	{
 		return new TOCWidget(new WidgetRoot(parent), "!contents\n").render();
 	}
 
 	private String renderHierarchicalTOCWidget()
-	  throws Exception
+		throws Exception
 	{
 		return new TOCWidget(new WidgetRoot(parent), "!contents -R\n").render();
 	}
@@ -126,86 +126,86 @@ public class TOCWidgetTest extends WidgetTest
 	private String getHtmlWithNoHierarchy()
 	{
 		return
-		  "<div class=\"toc1\">" + endl +
-		  "\t<ul>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"ParenT.ChildOne\">ChildOne</a>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"ParenT.ChildTwo\">ChildTwo</a>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t</ul>" + endl +
-		  "</div>" + endl;
+			"<div class=\"toc1\">" + endl +
+				"\t<ul>" + endl +
+				"\t\t<li>" + endl +
+				"\t\t\t<a href=\"ParenT.ChildOne\">ChildOne</a>" + endl +
+				"\t\t</li>" + endl +
+				"\t\t<li>" + endl +
+				"\t\t\t<a href=\"ParenT.ChildTwo\">ChildTwo</a>" + endl +
+				"\t\t</li>" + endl +
+				"\t</ul>" + endl +
+				"</div>" + endl;
 	}
 
 	private String getHtmlWithGrandChild()
 	{
 		return
-		  "<div class=\"toc1\">" + endl +
-		  "\t<ul>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"ParenT.ChildOne\">ChildOne</a>" + endl +
-		  "\t\t\t<div class=\"toc2\">" + endl +
-		  "\t\t\t\t<ul>" + endl +
-		  "\t\t\t\t\t<li>" + endl +
-		  "\t\t\t\t\t\t<a href=\"ParenT.ChildOne.GrandChild\">GrandChild</a>" + endl +
-		  "\t\t\t\t\t</li>" + endl +
-		  "\t\t\t\t</ul>" + endl +
-		  "\t\t\t</div>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"ParenT.ChildTwo\">ChildTwo</a>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t</ul>" + endl +
-		  "</div>" + endl;
+			"<div class=\"toc1\">" + endl +
+				"\t<ul>" + endl +
+				"\t\t<li>" + endl +
+				"\t\t\t<a href=\"ParenT.ChildOne\">ChildOne</a>" + endl +
+				"\t\t\t<div class=\"toc2\">" + endl +
+				"\t\t\t\t<ul>" + endl +
+				"\t\t\t\t\t<li>" + endl +
+				"\t\t\t\t\t\t<a href=\"ParenT.ChildOne.GrandChild\">GrandChild</a>" + endl +
+				"\t\t\t\t\t</li>" + endl +
+				"\t\t\t\t</ul>" + endl +
+				"\t\t\t</div>" + endl +
+				"\t\t</li>" + endl +
+				"\t\t<li>" + endl +
+				"\t\t\t<a href=\"ParenT.ChildTwo\">ChildTwo</a>" + endl +
+				"\t\t</li>" + endl +
+				"\t</ul>" + endl +
+				"</div>" + endl;
 	}
 
 	private String getHtmlWithGreatGrandChild()
 	{
 		String expected =
-		  "<div class=\"toc1\">" + endl +
-		  "\t<ul>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"ParenT.ChildOne\">ChildOne</a>" + endl +
-		  "\t\t\t<div class=\"toc2\">" + endl +
-		  "\t\t\t\t<ul>" + endl +
-		  "\t\t\t\t\t<li>" + endl +
-		  "\t\t\t\t\t\t<a href=\"ParenT.ChildOne.GrandChild\">GrandChild</a>" + endl +
-		  "\t\t\t\t\t\t<div class=\"toc3\">" + endl +
-		  "\t\t\t\t\t\t\t<ul>" + endl +
-		  "\t\t\t\t\t\t\t\t<li>" + endl +
-		  "\t\t\t\t\t\t\t\t\t<a href=\"ParenT.ChildOne.GrandChild.GreatGrandChild\">GreatGrandChild</a>" + endl +
-		  "\t\t\t\t\t\t\t\t</li>" + endl +
-		  "\t\t\t\t\t\t\t</ul>" + endl +
-		  "\t\t\t\t\t\t</div>" + endl +
-		  "\t\t\t\t\t</li>" + endl +
-		  "\t\t\t\t</ul>" + endl +
-		  "\t\t\t</div>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"ParenT.ChildTwo\">ChildTwo</a>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t</ul>" + endl +
-		  "</div>" + endl;
+			"<div class=\"toc1\">" + endl +
+				"\t<ul>" + endl +
+				"\t\t<li>" + endl +
+				"\t\t\t<a href=\"ParenT.ChildOne\">ChildOne</a>" + endl +
+				"\t\t\t<div class=\"toc2\">" + endl +
+				"\t\t\t\t<ul>" + endl +
+				"\t\t\t\t\t<li>" + endl +
+				"\t\t\t\t\t\t<a href=\"ParenT.ChildOne.GrandChild\">GrandChild</a>" + endl +
+				"\t\t\t\t\t\t<div class=\"toc3\">" + endl +
+				"\t\t\t\t\t\t\t<ul>" + endl +
+				"\t\t\t\t\t\t\t\t<li>" + endl +
+				"\t\t\t\t\t\t\t\t\t<a href=\"ParenT.ChildOne.GrandChild.GreatGrandChild\">GreatGrandChild</a>" + endl +
+				"\t\t\t\t\t\t\t\t</li>" + endl +
+				"\t\t\t\t\t\t\t</ul>" + endl +
+				"\t\t\t\t\t\t</div>" + endl +
+				"\t\t\t\t\t</li>" + endl +
+				"\t\t\t\t</ul>" + endl +
+				"\t\t\t</div>" + endl +
+				"\t\t</li>" + endl +
+				"\t\t<li>" + endl +
+				"\t\t\t<a href=\"ParenT.ChildTwo\">ChildTwo</a>" + endl +
+				"\t\t</li>" + endl +
+				"\t</ul>" + endl +
+				"</div>" + endl;
 		return expected;
 	}
 
 	private String virtualChildrenHtml()
 	{
 		return "<div class=\"toc1\">" + endl +
-		  "\t<ul>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"VirtualParent.ChildOne\">" + endl +
-		  "\t\t\t\t<i>ChildOne</i>" + endl +
-		  "\t\t\t</a>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t\t<li>" + endl +
-		  "\t\t\t<a href=\"VirtualParent.ChildTwo\">" + endl +
-		  "\t\t\t\t<i>ChildTwo</i>" + endl +
-		  "\t\t\t</a>" + endl +
-		  "\t\t</li>" + endl +
-		  "\t</ul>" + endl +
-		  "</div>" + endl;
+			"\t<ul>" + endl +
+			"\t\t<li>" + endl +
+			"\t\t\t<a href=\"VirtualParent.ChildOne\">" + endl +
+			"\t\t\t\t<i>ChildOne</i>" + endl +
+			"\t\t\t</a>" + endl +
+			"\t\t</li>" + endl +
+			"\t\t<li>" + endl +
+			"\t\t\t<a href=\"VirtualParent.ChildTwo\">" + endl +
+			"\t\t\t\t<i>ChildTwo</i>" + endl +
+			"\t\t\t</a>" + endl +
+			"\t\t</li>" + endl +
+			"\t</ul>" + endl +
+			"</div>" + endl;
 
 	}
 

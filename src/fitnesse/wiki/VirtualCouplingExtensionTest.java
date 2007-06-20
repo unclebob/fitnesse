@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.*;
 import fitnesse.testutil.*;
-import java.util.List;
+import junit.framework.TestCase;
 
+import java.util.List;
 
 public class VirtualCouplingExtensionTest extends TestCase
 {
@@ -25,7 +25,7 @@ public class VirtualCouplingExtensionTest extends TestCase
 		page1 = (BaseWikiPage) crawler.addPage(root, PathParser.parse("PageOne"), "page one content\n!contents\n");
 		crawler.addPage(page1, PathParser.parse("SomeOtherPage"), "some other page");
 
-		setVirtualWiki(page1, "http://localhost:" + FitNesseUtil.port  + "/PageTwo");
+		setVirtualWiki(page1, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
 	}
 
 	public static void setVirtualWiki(WikiPage page, String virtualWikiURL) throws Exception
@@ -44,13 +44,13 @@ public class VirtualCouplingExtensionTest extends TestCase
 	{
 		List children = page1.getChildren();
 		assertEquals(1, children.size());
-		assertEquals("SomeOtherPage", ((WikiPage)children.get(0)).getName());
+		assertEquals("SomeOtherPage", ((WikiPage) children.get(0)).getName());
 
-		VirtualCouplingExtension extension = (VirtualCouplingExtension)page1.getExtension(VirtualCouplingExtension.NAME);
+		VirtualCouplingExtension extension = (VirtualCouplingExtension) page1.getExtension(VirtualCouplingExtension.NAME);
 		children = extension.getVirtualCoupling().getChildren();
 		assertEquals(1, children.size());
 		assertTrue(children.get(0) instanceof ProxyPage);
-		assertEquals("PageTwoChild", ((WikiPage)children.get(0)).getName());
+		assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
 	}
 
 	public void testNewProxyChildrenAreFound() throws Exception
@@ -70,14 +70,14 @@ public class VirtualCouplingExtensionTest extends TestCase
 	public void testProxyChildrenAreFoundOnStartUp() throws Exception
 	{
 		WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
-		setVirtualWiki(page3, "http://localhost:" + FitNesseUtil.port  + "/PageTwo");
+		setVirtualWiki(page3, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
 
 		assertTrue(page3.hasExtension(VirtualCouplingExtension.NAME));
 
-		VirtualCouplingExtension extension = (VirtualCouplingExtension)page3.getExtension(VirtualCouplingExtension.NAME);
+		VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
 		List children = extension.getVirtualCoupling().getChildren();
 		assertEquals(1, children.size());
-		assertEquals("PageTwoChild", ((WikiPage)children.get(0)).getName());
+		assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
 	}
 
 	public void testGetChildrenOnlyAsksOnce() throws Exception
@@ -85,8 +85,8 @@ public class VirtualCouplingExtensionTest extends TestCase
 		CachingPage.cacheTime = 10000;
 		ProxyPage.retrievalCount = 0;
 		SimpleCachinePage page = new SimpleCachinePage("RooT", null);
-		setVirtualWiki(page, "http://localhost:" + FitNesseUtil.port  + "/PageTwo");
-		VirtualCouplingExtension extension = (VirtualCouplingExtension)page.getExtension(VirtualCouplingExtension.NAME);
+		setVirtualWiki(page, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+		VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
 		extension.getVirtualCoupling().getChildren();
 		assertEquals(1, ProxyPage.retrievalCount);
 	}
@@ -97,7 +97,7 @@ public class VirtualCouplingExtensionTest extends TestCase
 		setVirtualWiki(page3, "http://google.com/SomePage");
 		try
 		{
-			VirtualCouplingExtension extension = (VirtualCouplingExtension)page3.getExtension(VirtualCouplingExtension.NAME);
+			VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
 			extension.getVirtualCoupling().getChildren();
 			assertNotNull(page3.getChildPage("VirtualWikiNetworkError"));
 		}

@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import java.io.File;
 import fitnesse.util.FileUtil;
+
+import java.io.File;
 
 public class UploadedFile
 {

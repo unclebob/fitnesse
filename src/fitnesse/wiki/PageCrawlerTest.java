@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
 import fitnesse.components.FitNesseTraversalListener;
+import junit.framework.TestCase;
+
 import java.util.*;
 
 public class PageCrawlerTest extends TestCase implements FitNesseTraversalListener
@@ -12,8 +13,8 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
 	private WikiPage page1;
 	private WikiPage page2;
 	private WikiPage child1;
-  private WikiPage child2;
-  private WikiPage grandChild1;
+	private WikiPage child2;
+	private WikiPage grandChild1;
 	private PageCrawler crawler;
 	private WikiPagePath page1Path;
 	private WikiPagePath child1FullPath;
@@ -32,8 +33,8 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
 		page1 = crawler.addPage(root, page1Path);
 		page2 = crawler.addPage(root, page2Path);
 		child1 = crawler.addPage(page1, PathParser.parse("ChildOne"));
-    child2 = crawler.addPage(page1, PathParser.parse("ChildTwo"));
-    grandChild1 = crawler.addPage(child1, PathParser.parse("GrandChildOne"));
+		child2 = crawler.addPage(page1, PathParser.parse("ChildTwo"));
+		grandChild1 = crawler.addPage(child1, PathParser.parse("GrandChildOne"));
 	}
 
 	public void testPageExists() throws Exception
@@ -65,16 +66,16 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
 		assertEquals(root, crawler.getPage(root, PathParser.parse("root")));
 		assertEquals(root, crawler.getPage(root, PathParser.parse(".")));
 		assertEquals(root, crawler.getPage(root, PathParser.parse("")));
-  }
+	}
 
-  public void testGetSiblingPage() throws Exception {
-    assertEquals(page2, crawler.getSiblingPage(page1, page2Path));
-    assertEquals(child1, crawler.getSiblingPage(page1, PathParser.parse(">ChildOne")));
-    assertEquals(child2, crawler.getSiblingPage(grandChild1, PathParser.parse("<PageOne.ChildTwo")));
-  }
+	public void testGetSiblingPage() throws Exception
+	{
+		assertEquals(page2, crawler.getSiblingPage(page1, page2Path));
+		assertEquals(child1, crawler.getSiblingPage(page1, PathParser.parse(">ChildOne")));
+		assertEquals(child2, crawler.getSiblingPage(grandChild1, PathParser.parse("<PageOne.ChildTwo")));
+	}
 
-
-  public void testGetFullPath() throws Exception
+	public void testGetFullPath() throws Exception
 	{
 		assertEquals(page1Path, crawler.getFullPath(page1));
 		assertEquals(page2Path, crawler.getFullPath(page2));

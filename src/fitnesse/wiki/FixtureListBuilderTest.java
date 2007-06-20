@@ -3,7 +3,8 @@
 package fitnesse.wiki;
 
 import fitnesse.testutil.RegexTest;
-import java.util.*;
+
+import java.util.List;
 
 public class FixtureListBuilderTest extends RegexTest
 {

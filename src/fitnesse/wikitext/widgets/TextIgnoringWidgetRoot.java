@@ -3,7 +3,6 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.WikiPage;
-
 import fitnesse.wikitext.WidgetBuilder;
 
 import java.util.regex.Matcher;

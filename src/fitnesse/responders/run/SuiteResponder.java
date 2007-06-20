@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
+import fit.Counts;
+import fitnesse.components.*;
 import fitnesse.html.*;
 import fitnesse.wiki.*;
-import fitnesse.components.*;
-import fit.*;
+
 import java.util.*;
 
 public class SuiteResponder extends TestResponder implements FitClientListener
@@ -130,8 +131,8 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 
 	public List makePageList() throws Exception
 	{
-        String suite = request != null ? (String) request.getInput("suiteFilter") : null;
-        return makePageList(page, root, suite);
+		String suite = request != null ? (String) request.getInput("suiteFilter") : null;
+		return makePageList(page, root, suite);
 	}
 
 	public static List makePageList(WikiPage page, WikiPage root, String suite) throws Exception
@@ -155,23 +156,23 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 			pages.addLast(suiteTearDown);
 		}
 
-        if (pages.isEmpty())
-        {
-            String name = new WikiPagePath(page).toString();
-            WikiPageDummy dummy = new WikiPageDummy("", "|Comment|\n|No test found with suite filter '" + suite + "' in subwiki !-" + name + "-!!|\n");
-            dummy.setParent(root);
-            pages.add(dummy);
-        }
+		if(pages.isEmpty())
+		{
+			String name = new WikiPagePath(page).toString();
+			WikiPageDummy dummy = new WikiPageDummy("", "|Comment|\n|No test found with suite filter '" + suite + "' in subwiki !-" + name + "-!!|\n");
+			dummy.setParent(root);
+			pages.add(dummy);
+		}
 		return pages;
 	}
 
 	public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot) throws Exception
 	{
-        return getAllTestPagesUnder(suiteRoot, null);
-    }
-    
-    public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception
-    {
+		return getAllTestPagesUnder(suiteRoot, null);
+	}
+
+	public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception
+	{
 		LinkedList testPages = new LinkedList();
 		addTestPagesToList(testPages, suiteRoot, suite);
 
@@ -201,13 +202,13 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	private static void addTestPagesToList(List testPages, WikiPage context, String suite) throws Exception
 	{
 		if(context.getData().hasAttribute("Test"))
-        {
-		    if (belongsToSuite(context, suite))
-            {
-                testPages.add(context);
-            }
-        }
-        
+		{
+			if(belongsToSuite(context, suite))
+			{
+				testPages.add(context);
+			}
+		}
+
 		ArrayList children = new ArrayList();
 		children.addAll(context.getChildren());
 		if(context.hasExtension(VirtualCouplingExtension.NAME))
@@ -223,33 +224,33 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	}
 
 	private static boolean belongsToSuite(WikiPage context, String suite)
-    {
-        if ((suite == null) || (suite.trim().length() == 0))
-        {
-            return true;
-        }
-        try 
-        {
-            String suitesStr = context.getData().getAttribute("Suites");
-            if (suitesStr != null) 
-            {
-                StringTokenizer t = new StringTokenizer(suitesStr, ",");
-                while (t.hasMoreTokens()) 
-                {
-                    if (t.nextToken().trim().equalsIgnoreCase(suite)) 
-                    {
-                        return true;
-                    }
-                }
-            }
-        } 
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
-     
+	{
+		if((suite == null) || (suite.trim().length() == 0))
+		{
+			return true;
+		}
+		try
+		{
+			String suitesStr = context.getData().getAttribute("Suites");
+			if(suitesStr != null)
+			{
+				StringTokenizer t = new StringTokenizer(suitesStr, ",");
+				while(t.hasMoreTokens())
+				{
+					if(t.nextToken().trim().equalsIgnoreCase(suite))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	public static List gatherCrossReferencedTestPages(WikiPage testPage, WikiPage root) throws Exception
 	{
 		LinkedList pages = new LinkedList();

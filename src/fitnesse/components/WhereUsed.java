@@ -3,8 +3,9 @@
 package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.*;
 import fitnesse.wikitext.*;
+import fitnesse.wikitext.widgets.*;
+
 import java.util.*;
 
 public class WhereUsed implements FitNesseTraversalListener, SearchObserver, WidgetVisitor
@@ -63,7 +64,7 @@ public class WhereUsed implements FitNesseTraversalListener, SearchObserver, Wid
 	{
 		this.currentPage = currentPage;
 		String content = currentPage.getData().getContent();
-      WidgetBuilder referenceWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class, WikiWordWidget.class, PreformattedWidget.class});
+		WidgetBuilder referenceWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class, WikiWordWidget.class, PreformattedWidget.class});
 		WidgetRoot widgetRoot = new WidgetRoot(content, currentPage, referenceWidgetBuilder);
 		widgetRoot.acceptVisitor(this);
 	}

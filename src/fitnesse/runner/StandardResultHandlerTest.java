@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.*;
 import fit.Counts;
 import fitnesse.testutil.RegexTest;
+
+import java.io.*;
 
 public class StandardResultHandlerTest extends RegexTest
 {

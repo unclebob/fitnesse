@@ -1,10 +1,10 @@
 package fitnesse.responders;
 
-import junit.framework.TestCase;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.http.*;
 import fitnesse.FitNesseContext;
+import fitnesse.http.*;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import junit.framework.TestCase;
 
 public class ImportAndViewResponderTest extends TestCase
 {

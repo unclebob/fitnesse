@@ -12,6 +12,7 @@ public class FrontPageUpdate implements Update
 	{
 		this.updater = updater;
 	}
+
 	public String getName()
 	{
 		return "FrontPageUpdate";
@@ -24,7 +25,7 @@ public class FrontPageUpdate implements Update
 
 	public boolean shouldBeApplied() throws Exception
 	{
-		return ! updater.getRoot().hasChildPage("FrontPage");
+		return !updater.getRoot().hasChildPage("FrontPage");
 	}
 
 	public void doUpdate() throws Exception
@@ -36,5 +37,5 @@ public class FrontPageUpdate implements Update
 	}
 
 	private static String content = "\n\n\n" +
-	  "!c !3 Welcome to the Wonderful World of !-FitNesse-!!";
+		"!c !3 Welcome to the Wonderful World of !-FitNesse-!!";
 }

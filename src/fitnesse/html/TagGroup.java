@@ -18,7 +18,7 @@ public class TagGroup extends HtmlTag
 		{
 			HtmlElement element = (HtmlElement) iterator.next();
 			if(element instanceof HtmlTag)
-				buffer.append(((HtmlTag)element).html(depth));
+				buffer.append(((HtmlTag) element).html(depth));
 			else
 				buffer.append(element.html());
 		}

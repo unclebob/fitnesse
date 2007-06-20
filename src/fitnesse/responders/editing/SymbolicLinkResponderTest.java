@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.http.*;
-import fitnesse.wiki.*;
 import fitnesse.*;
-import fitnesse.util.FileUtil;
+import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
+import fitnesse.util.FileUtil;
+import fitnesse.wiki.*;
 
 public class SymbolicLinkResponderTest extends RegexTest
 {
@@ -52,7 +52,7 @@ public class SymbolicLinkResponderTest extends RegexTest
 		pageOne.commit(data);
 		assertNotNull(pageOne.getChildPage("SymLink"));
 
-    request.addInput("removal", "SymLink");
+		request.addInput("removal", "SymLink");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 		checkRedirectToProperties(response);
 
@@ -65,22 +65,21 @@ public class SymbolicLinkResponderTest extends RegexTest
 		request.addInput("linkPath", "NonExistingPage");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 
-    assertEquals(404, response.getStatus());
-		String content = ((SimpleResponse)response).getContent();
+		assertEquals(404, response.getStatus());
+		String content = ((SimpleResponse) response).getContent();
 		assertSubString("doesn't exist", content);
 		assertSubString("Error Occured", content);
 	}
 
 	public void testAddFailWhenPageAlreadyHasChild() throws Exception
 	{
-  	pageOne.addChildPage("SymLink");
+		pageOne.addChildPage("SymLink");
 		request.addInput("linkName", "SymLink");
 		request.addInput("linkPath", "PageTwo");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 
-
-    assertEquals(412, response.getStatus());
-		String content = ((SimpleResponse)response).getContent();
+		assertEquals(412, response.getStatus());
+		String content = ((SimpleResponse) response).getContent();
 		assertSubString("already has a child named SymLink", content);
 		assertSubString("Error Occured", content);
 	}
@@ -100,9 +99,9 @@ public class SymbolicLinkResponderTest extends RegexTest
 		assertNotNull(symLink);
 		assertEquals(SymbolicPage.class, symLink.getClass());
 
-		WikiPage realPage = ((SymbolicPage)symLink).getRealPage();
+		WikiPage realPage = ((SymbolicPage) symLink).getRealPage();
 		assertEquals(FileSystemPage.class, realPage.getClass());
-		assertEquals("testDir/ExternalRoot", ((FileSystemPage)realPage).getFileSystemPath());
+		assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
 	}
 
 	public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception
@@ -111,8 +110,8 @@ public class SymbolicLinkResponderTest extends RegexTest
 		request.addInput("linkPath", "file://testDir/ExternalRoot");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 
-    assertEquals(404, response.getStatus());
-		String content = ((SimpleResponse)response).getContent();
+		assertEquals(404, response.getStatus());
+		String content = ((SimpleResponse) response).getContent();
 		assertSubString("Cannot create link to the file system path, <b>file://testDir/ExternalRoot</b>.", content);
 		assertSubString("Error Occured", content);
 	}

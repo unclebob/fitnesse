@@ -3,9 +3,9 @@
 package fitnesse.responders.editing;
 
 import fitnesse.*;
-import fitnesse.testutil.RegexTest;
 import fitnesse.components.SaveRecorder;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
 import fitnesse.wiki.*;
 
 public class SaveResponderTest extends RegexTest
@@ -93,7 +93,7 @@ public class SaveResponderTest extends RegexTest
 		request.addInput(EditResponder.SAVE_ID, "" + (SaveRecorder.newIdNumber() - 10000));
 		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
 		assertHasRegexp("Merge", response.getContent());
 	}
@@ -102,13 +102,13 @@ public class SaveResponderTest extends RegexTest
 	{
 		String pageName = "NewPage";
 		createAndSaveANewPage(pageName);
-      String newContent = "some new Content work damn you!";
+		String newContent = "some new Content work damn you!";
 		request.setResource(pageName);
 		request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent);
 		request.addInput(EditResponder.SAVE_ID, "" + SaveRecorder.newIdNumber());
 		request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(303, response.getStatus());
 
 		request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
@@ -129,7 +129,8 @@ public class SaveResponderTest extends RegexTest
 
 	public void testContentFilter() throws Exception
 	{
-		SaveResponder.contentFilter = new ContentFilter(){
+		SaveResponder.contentFilter = new ContentFilter()
+		{
 			public boolean isContentAcceptable(String content, String page)
 			{
 				return false;

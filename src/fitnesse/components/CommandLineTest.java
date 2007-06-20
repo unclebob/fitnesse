@@ -51,7 +51,7 @@ public class CommandLineTest extends TestCase
 
 	public void testInvalidOption() throws Exception
 	{
-  	assertFalse(createOptionsAndParse("", "-badArg"));
+		assertFalse(createOptionsAndParse("", "-badArg"));
 	}
 
 	public void testCombo() throws Exception
@@ -73,7 +73,7 @@ public class CommandLineTest extends TestCase
 		assertTrue(createOptionsAndParse(descriptor, "-opt1 a b -opt2 c d e"));
 
 		assertTrue(createOptionsAndParse(descriptor, "-opt1 a b -opt2 c -opt3 d e"));
-    assertTrue(options.hasOption("opt1"));
+		assertTrue(options.hasOption("opt1"));
 		assertEquals("a", options.getOptionArgument("opt1", "arg1"));
 		assertEquals("b", options.getOptionArgument("opt1", "arg2"));
 		assertTrue(options.hasOption("opt2"));

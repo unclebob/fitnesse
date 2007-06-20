@@ -2,25 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.AlwaysSecureOperation;
-import fitnesse.authentication.SecureOperation;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.http.UploadedFile;
+import fitnesse.authentication.*;
+import fitnesse.http.*;
 import fitnesse.responders.SecureResponder;
 import fitnesse.util.FileUtil;
+
+import java.io.*;
+import java.util.regex.*;
 
 public class UploadResponder implements SecureResponder
 {
@@ -30,7 +19,7 @@ public class UploadResponder implements SecureResponder
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
-    rootPath = context.rootPagePath;
+		rootPath = context.rootPagePath;
 		SimpleResponse response = new SimpleResponse();
 		String resource = request.getResource().replace("%20", " ");
 		UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
@@ -40,7 +29,7 @@ public class UploadResponder implements SecureResponder
 			writeFile(file, uploadedFile);
 		}
 
-		response.redirect("/" +resource.replace(" ", "%20"));
+		response.redirect("/" + resource.replace(" ", "%20"));
 		return response;
 	}
 

@@ -3,11 +3,11 @@
 package fitnesse.fixtures;
 
 import fit.ColumnFixture;
+import fitnesse.FitNesseExpediter;
 import fitnesse.http.*;
-import fitnesse.wiki.*;
-import fitnesse.*;
-import fitnesse.wikitext.Utils;
 import fitnesse.testutil.MockSocket;
+import fitnesse.wiki.PathParser;
+import fitnesse.wikitext.Utils;
 
 public class ResponseRequester extends ColumnFixture
 {
@@ -37,7 +37,7 @@ public class ResponseRequester extends ColumnFixture
 		FitnesseFixtureContext.response = expediter.createGoodResponse(request);
 		FitnesseFixtureContext.sender = new MockResponseSender(FitnesseFixtureContext.response);
 	}
-             
+
 	public int status() throws Exception
 	{
 		int status = FitnesseFixtureContext.response.getStatus();

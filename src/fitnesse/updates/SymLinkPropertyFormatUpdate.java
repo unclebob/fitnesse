@@ -1,8 +1,8 @@
 package fitnesse.updates;
 
-import org.w3c.dom.*;
-import fitnesse.wiki.*;
 import fitnesse.util.*;
+import fitnesse.wiki.*;
+import org.w3c.dom.*;
 
 public class SymLinkPropertyFormatUpdate extends PageTraversingUpdate
 {
@@ -15,7 +15,7 @@ public class SymLinkPropertyFormatUpdate extends PageTraversingUpdate
 	{
 		try
 		{
-			FileSystemPage page = (FileSystemPage)currentPage;
+			FileSystemPage page = (FileSystemPage) currentPage;
 			String propertiesContent = FileUtil.getFileContent(page.getFileSystemPath() + FileSystemPage.propertiesFilename);
 			if(propertiesContent.contains("<symbolicLink>"))
 				fixPropertiesFile(page, propertiesContent);
@@ -36,12 +36,11 @@ public class SymLinkPropertyFormatUpdate extends PageTraversingUpdate
 		NodeList oldLinkElements = document.getElementsByTagName("symbolicLink");
 		for(int i = 0; i < oldLinkElements.getLength(); i++)
 		{
-			Element oldSymLink = (Element)oldLinkElements.item(i);
+			Element oldSymLink = (Element) oldLinkElements.item(i);
 			String name = XmlUtil.getLocalTextValue(oldSymLink, "name");
 			String path = XmlUtil.getLocalTextValue(oldSymLink, "path");
 			symLinkProperty.set(name, path);
 		}
-
 
 		page.commit(data);
 	}

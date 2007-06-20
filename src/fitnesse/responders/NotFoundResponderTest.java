@@ -3,9 +3,9 @@
 package fitnesse.responders;
 
 import fitnesse.*;
-import fitnesse.wiki.*;
-import fitnesse.testutil.RegexTest;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 import junit.swingui.TestRunner;
 
 public class NotFoundResponderTest extends RegexTest
@@ -29,7 +29,7 @@ public class NotFoundResponderTest extends RegexTest
 		request.setResource("some page");
 
 		Responder responder = new NotFoundResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
 
 		assertEquals(404, response.getStatus());
 
@@ -48,7 +48,7 @@ public class NotFoundResponderTest extends RegexTest
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 
 		Responder responder = new NotFoundResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
 		assertHasRegexp("href=\"PageOne[.]PageTwo[?]edit\"", response.getContent());
 	}

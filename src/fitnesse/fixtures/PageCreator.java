@@ -4,6 +4,7 @@ package fitnesse.fixtures;
 
 import fit.ColumnFixture;
 import fitnesse.wiki.*;
+
 import java.util.StringTokenizer;
 
 public class PageCreator extends ColumnFixture
@@ -22,7 +23,7 @@ public class PageCreator extends ColumnFixture
 			PageData data = thePage.getData();
 			setAttributes(data);
 			thePage.commit(data);
-			pageAttributes="";
+			pageAttributes = "";
 		}
 		catch(Exception e)
 		{
@@ -31,19 +32,19 @@ public class PageCreator extends ColumnFixture
 		return true;
 	}
 
-  private void setAttributes(PageData data) throws Exception
-  {
-    StringTokenizer tokenizer = new StringTokenizer(pageAttributes, ",");
-    while (tokenizer.hasMoreTokens())
-    {
-      String nameValuePair = tokenizer.nextToken();
-      int equals = nameValuePair.indexOf("=");
-      if (equals < 0)
-	      throw new Exception("Attribute must have form name=value");
-      String name = nameValuePair.substring(0, equals);
-      String value = nameValuePair.substring(equals+1);
-      data.setAttribute(name, value);
-    }
-  }
+	private void setAttributes(PageData data) throws Exception
+	{
+		StringTokenizer tokenizer = new StringTokenizer(pageAttributes, ",");
+		while(tokenizer.hasMoreTokens())
+		{
+			String nameValuePair = tokenizer.nextToken();
+			int equals = nameValuePair.indexOf("=");
+			if(equals < 0)
+				throw new Exception("Attribute must have form name=value");
+			String name = nameValuePair.substring(0, equals);
+			String value = nameValuePair.substring(equals + 1);
+			data.setAttribute(name, value);
+		}
+	}
 }
 

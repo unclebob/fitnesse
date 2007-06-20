@@ -6,7 +6,8 @@ import fit.Fixture;
 
 public class TearDown extends Fixture
 {
-	public TearDown() throws Exception	{
+	public TearDown() throws Exception
+	{
 		FitnesseFixtureContext.fitnesse.stop();
 		FitnesseFixtureContext.root = null;
 	}

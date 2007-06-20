@@ -8,7 +8,9 @@ public class SystemPropertySetterFixture extends ColumnFixture
 {
 	public String key;
 	public String value;
-	public void execute() {
+
+	public void execute()
+	{
 		System.getProperties().setProperty(key, value);
 	}
 }

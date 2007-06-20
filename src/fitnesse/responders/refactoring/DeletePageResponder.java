@@ -2,12 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
-import fitnesse.*;
-import fitnesse.responders.SecureResponder;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
 import fitnesse.html.*;
 import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
+
 import java.util.List;
 
 public class DeletePageResponder implements SecureResponder

@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.*;
 import fitnesse.*;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 
 public class PageDataResponderTest extends RegexTest
 {
@@ -24,7 +24,7 @@ public class PageDataResponderTest extends RegexTest
 		MockRequest request = new MockRequest();
 		request.setResource("PageOne");
 		request.addInput("pageData", "");
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		assertEquals(pageOne.getData().getContent(), response.getContent());
 	}
 }

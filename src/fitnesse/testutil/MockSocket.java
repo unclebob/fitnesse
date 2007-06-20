@@ -66,7 +66,7 @@ public class MockSocket extends Socket
 	public String getOutput() throws Exception
 	{
 		if(output instanceof ByteArrayOutputStream)
-			return ((ByteArrayOutputStream)output).toString("UTF-8");
+			return ((ByteArrayOutputStream) output).toString("UTF-8");
 		else
 			return "";
 	}

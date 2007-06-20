@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.authentication;
 
-import java.io.File;
-import fitnesse.testutil.*;
+import fitnesse.testutil.RegexTest;
 import fitnesse.util.FileUtil;
+
+import java.io.File;
 
 public class PasswordFileTest extends RegexTest
 {

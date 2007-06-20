@@ -17,11 +17,13 @@ public class ExecutionStatus
 		this.iconFilename = iconFilename;
 	}
 
-	public String getMessage() {
+	public String getMessage()
+	{
 		return message;
 	}
 
-	public String getIconFilename() {
+	public String getIconFilename()
+	{
 		return iconFilename;
 	}
 

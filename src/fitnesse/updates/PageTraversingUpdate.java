@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import java.util.*;
+import fitnesse.components.FitNesseTraversalListener;
 import fitnesse.wiki.*;
-import fitnesse.components.*;
+
+import java.util.Properties;
 
 public abstract class PageTraversingUpdate implements FitNesseTraversalListener, Update
 {

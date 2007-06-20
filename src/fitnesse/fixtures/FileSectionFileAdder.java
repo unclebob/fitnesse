@@ -3,6 +3,7 @@
 package fitnesse.fixtures;
 
 import fit.ColumnFixture;
+
 import java.io.File;
 
 public class FileSectionFileAdder extends ColumnFixture
@@ -10,9 +11,10 @@ public class FileSectionFileAdder extends ColumnFixture
 	public String path;
 	public String type;
 
-	public boolean valid() throws Exception {
+	public boolean valid() throws Exception
+	{
 		File file = null;
-		if ("dir".equals(type))
+		if("dir".equals(type))
 		{
 			file = new File(FileSection.getFileSection().getPath() + "/" + path);
 			file.mkdir();

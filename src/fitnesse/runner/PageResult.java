@@ -3,6 +3,7 @@
 package fitnesse.runner;
 
 import fit.Counts;
+
 import java.util.regex.*;
 
 public class PageResult

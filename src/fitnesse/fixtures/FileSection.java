@@ -3,14 +3,16 @@
 package fitnesse.fixtures;
 
 import fit.*;
-import java.io.File;
 import fitnesse.util.FileUtil;
+
+import java.io.File;
 
 public class FileSection extends Fixture
 {
 	private static File fileSection;
 
-	public static File getFileSection() {
+	public static File getFileSection()
+	{
 		return fileSection;
 	}
 

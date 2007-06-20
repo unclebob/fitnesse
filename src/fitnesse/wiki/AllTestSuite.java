@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.Test;
 import fitnesse.testutil.TestSuiteMaker;
+import junit.framework.Test;
 
 public class AllTestSuite
 {
 	public static Test suite()
 	{
-		return TestSuiteMaker.makeSuite("wiki", new Class[] {
+		return TestSuiteMaker.makeSuite("wiki", new Class[]{
 			CachingPageTest.class,
 			VirtualCouplingExtensionTest.class,
 			FileSystemPageTest.class,
@@ -24,11 +24,11 @@ public class AllTestSuite
 			VersionInfoTest.class,
 			ExtendableWikiPageTest.class,
 			InMemoryPageTest.class,
-      WikiPagePathTest.class,
-      PathParserTest.class,
-      PageXmlizerTest.class,
-      SymbolicPageTest.class,
-      BaseWikiPageTest.class,
+			WikiPagePathTest.class,
+			PathParserTest.class,
+			PageXmlizerTest.class,
+			SymbolicPageTest.class,
+			BaseWikiPageTest.class,
 			WikiPagePropertyTest.class
 		});
 	}

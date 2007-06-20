@@ -2,13 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.html.*;
-import fitnesse.responders.*;
-import fitnesse.components.*;
-import fitnesse.wiki.*;
-import fitnesse.http.*;
-import fitnesse.authentication.*;
 import fit.Counts;
+import fitnesse.authentication.*;
+import fitnesse.components.*;
+import fitnesse.html.*;
+import fitnesse.http.Request;
+import fitnesse.responders.*;
+import fitnesse.wiki.*;
+
 import java.util.*;
 
 public class TestResponder extends ChunkingResponder implements FitClientListener, SecureResponder

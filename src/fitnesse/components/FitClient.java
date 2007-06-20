@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.io.*;
-import java.net.Socket;
 import fit.Counts;
 import fitnesse.util.StreamReader;
+
+import java.io.OutputStream;
+import java.net.Socket;
 
 public class FitClient
 {
@@ -54,8 +55,8 @@ public class FitClient
 
 	public void join() throws Exception
 	{
-    if (fitListeningThread != null)
-      fitListeningThread.join();
+		if(fitListeningThread != null)
+			fitListeningThread.join();
 	}
 
 	public void kill() throws Exception
@@ -105,36 +106,36 @@ public class FitClient
 		}
 	}
 
-  private boolean finishedReading()
+	private boolean finishedReading()
 	{
-    while (stateIndeterminate())
-      shortSleep();
+		while(stateIndeterminate())
+			shortSleep();
 		return isDoneSending && received == sent;
 	}
 
-  /**
-   * @return  true if the current state of the transission is indeterminate.
-   *
-   * When the number of pages sent and recieved is the same, we may be done with the whole job,
-   * or we may just be waiting for FitNesse to send the next page.  There's no way to know until
-   * FitNesse either calls send, or done.
-   */
-  private boolean stateIndeterminate()
-  {
-    return (received == sent) && !isDoneSending;
-  }
+	/**
+	 * @return true if the current state of the transission is indeterminate.
+	 *         <p/>
+	 *         When the number of pages sent and recieved is the same, we may be done with the whole job,
+	 *         or we may just be waiting for FitNesse to send the next page.  There's no way to know until
+	 *         FitNesse either calls send, or done.
+	 */
+	private boolean stateIndeterminate()
+	{
+		return (received == sent) && !isDoneSending;
+	}
 
-  private void shortSleep()
-  {
-    try
-    {
-      Thread.sleep(10);
-    }
-    catch(InterruptedException e)
-    {
-      e.printStackTrace();
-    }
-  }
+	private void shortSleep()
+	{
+		try
+		{
+			Thread.sleep(10);
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	private class FitListeningRunnable implements Runnable
 	{

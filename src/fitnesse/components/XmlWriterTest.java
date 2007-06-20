@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.io.*;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
 import fitnesse.testutil.RegexTest;
+import org.w3c.dom.Document;
+
+import javax.xml.parsers.*;
+import java.io.*;
 
 public class XmlWriterTest extends RegexTest
 {

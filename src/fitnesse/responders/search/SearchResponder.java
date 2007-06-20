@@ -10,7 +10,7 @@ public class SearchResponder extends ResultResponder
 
 	private String getSearchString()
 	{
-        return (String) request.getInput("searchString");
+		return (String) request.getInput("searchString");
 	}
 
 	private String getSearchType()
@@ -18,7 +18,7 @@ public class SearchResponder extends ResultResponder
 		String searchType = (String) request.getInput("searchType");
 		searchType = searchType.toLowerCase();
 
-        if(searchType.indexOf("title") != -1)
+		if(searchType.indexOf("title") != -1)
 			return "Title";
 		else
 			return "Content";
@@ -37,15 +37,15 @@ public class SearchResponder extends ResultResponder
 	protected void startSearching() throws Exception
 	{
 		String searchString = getSearchString();
-        if(!searchString.equals(""))
-        {
-            loadSearcher(searchString);
-            String searchType = getSearchType();
-            if ("Title".equals(searchType))
-                searcher.searchTitles(this);
-            else
-                searcher.searchContent(this);
-        }
+		if(!searchString.equals(""))
+		{
+			loadSearcher(searchString);
+			String searchType = getSearchType();
+			if("Title".equals(searchType))
+				searcher.searchTitles(this);
+			else
+				searcher.searchContent(this);
+		}
 	}
 
 	protected boolean shouldRespondWith404()
@@ -55,7 +55,7 @@ public class SearchResponder extends ResultResponder
 
 	public void setSearcher(Searcher searcher)
 	{
-  	    this.searcher = searcher;
+		this.searcher = searcher;
 	}
 
 	private void loadSearcher(String searchString) throws Exception

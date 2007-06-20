@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.testutil;
 
-import java.net.*;
 import fitnesse.http.Request;
 import fitnesse.responders.run.SocketDealer;
+
+import java.net.*;
 
 public class FitSocketReceiver
 {
@@ -24,7 +25,8 @@ public class FitSocketReceiver
 	public void receiveSocket() throws Exception
 	{
 		serverSocket = new ServerSocket(port);
-		new Thread(){
+		new Thread()
+		{
 			public void run()
 			{
 				try
@@ -37,8 +39,8 @@ public class FitSocketReceiver
 					int ticket = Integer.parseInt(request.getInput("ticket").toString());
 					dealSocket(ticket);
 				}
-        catch(SocketException se)
-        {}
+				catch(SocketException se)
+				{}
 				catch(Exception e)
 				{
 					e.printStackTrace();

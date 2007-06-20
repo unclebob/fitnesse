@@ -9,6 +9,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.*;
 import fitnesse.responders.*;
 import fitnesse.wiki.*;
+
 import java.util.*;
 
 public class MovePageResponder implements SecureResponder
@@ -68,9 +69,9 @@ public class MovePageResponder implements SecureResponder
 	private boolean pageCanBeMoved(WikiPage pageToBeMoved, WikiPage newParent, WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception
 	{
 		return !pageToBeMovedPath.equals(newParentPath) &&
-		  !selfPage(pageToBeMovedPath, newParentPath) &&
-		  targetPageDoesntExist(pageToBeMoved.getName(), newParent) &&
-		  !pageIsAncestorOfNewParent(pageToBeMovedPath, newParentPath);
+			!selfPage(pageToBeMovedPath, newParentPath) &&
+			targetPageDoesntExist(pageToBeMoved.getName(), newParent) &&
+			!pageIsAncestorOfNewParent(pageToBeMovedPath, newParentPath);
 	}
 
 	public boolean pageIsAncestorOfNewParent(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception

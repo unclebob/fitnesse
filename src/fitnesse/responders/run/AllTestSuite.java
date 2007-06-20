@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import junit.framework.*;
 import fitnesse.testutil.TestSuiteMaker;
+import junit.framework.Test;
 
 public class AllTestSuite
 {
 	public static Test suite()
 	{
-		return TestSuiteMaker.makeSuite("run", new Class[] {
+		return TestSuiteMaker.makeSuite("run", new Class[]{
 			TestResponderTest.class,
 			SuiteResponderTest.class,
 			SocketDealerTest.class,

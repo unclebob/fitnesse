@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.versions;
 
-import junit.framework.*;
-import junit.swingui.TestRunner;
-import fitnesse.wiki.*;
-import fitnesse.http.*;
 import fitnesse.*;
+import fitnesse.http.*;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
+import junit.swingui.TestRunner;
 
 public class RollbackResponderTest extends TestCase
 {

@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
 public class ArgumentsTest extends TestCase
 {
@@ -49,7 +49,7 @@ public class ArgumentsTest extends TestCase
 	public void testAllArguments() throws Exception
 	{
 		args = makeArgs(new String[]{"-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory",
-		                             "-o", "-e", "22"});
+			"-o", "-e", "22"});
 		assertNotNull(args);
 		assertEquals(81, args.getPort());
 		assertEquals("directory", args.getRootPath());

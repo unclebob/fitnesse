@@ -3,10 +3,11 @@
 package fitnesse.responders.versions;
 
 import fitnesse.*;
+import fitnesse.html.*;
+import fitnesse.http.*;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
-import fitnesse.http.*;
-import fitnesse.html.*;
+
 import java.util.*;
 
 public class VersionSelectionResponder implements Responder

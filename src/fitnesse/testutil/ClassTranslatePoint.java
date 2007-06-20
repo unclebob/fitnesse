@@ -1,13 +1,13 @@
 package fitnesse.testutil;
 
-import java.awt.Point;
-
 import fit.TypeAdapter;
+
+import java.awt.*;
 
 public class ClassTranslatePoint extends TranslatePoint
 {
-    static
-    {
-        TypeAdapter.registerParseDelegate(Point.class, ClassDelegatePointParser.class);
-    }
+	static
+	{
+		TypeAdapter.registerParseDelegate(Point.class, ClassDelegatePointParser.class);
+	}
 }

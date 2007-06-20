@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.wiki.*;
-import fitnesse.http.*;
 import fitnesse.*;
+import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 
 public class MergeResponderTest extends RegexTest
 {
@@ -29,7 +29,7 @@ public class MergeResponderTest extends RegexTest
 	public void testHtml() throws Exception
 	{
 		Responder responder = new MergeResponder(request);
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(source), new MockRequest());
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(source), new MockRequest());
 		assertHasRegexp("name=\\\"" + EditResponder.CONTENT_INPUT_NAME + "\\\"", response.getContent());
 		assertHasRegexp("this is SimplePage", response.getContent());
 		assertHasRegexp("name=\\\"oldContent\\\"", response.getContent());
@@ -42,7 +42,7 @@ public class MergeResponderTest extends RegexTest
 		request.addInput("Test", "On");
 		request.addInput("Search", "On");
 		Responder responder = new MergeResponder(request);
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(source), new MockRequest());
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(source), new MockRequest());
 
 		assertHasRegexp("type=\"hidden\"", response.getContent());
 		assertHasRegexp("name=\"Edit\"", response.getContent());

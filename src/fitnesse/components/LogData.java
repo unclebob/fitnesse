@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.util.*;
+import java.util.GregorianCalendar;
 
 public class LogData implements Cloneable
 {

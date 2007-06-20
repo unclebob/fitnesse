@@ -2,17 +2,17 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
-import fitnesse.wiki.*;
 import fitnesse.http.*;
+import fitnesse.wiki.*;
 
 public class RawContentResponder implements SecureResponder
 {
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
 		String resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
+		WikiPagePath path = PathParser.parse(resource);
 		WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
 		if(page == null)
 			return new NotFoundResponder().makeResponse(context, request);

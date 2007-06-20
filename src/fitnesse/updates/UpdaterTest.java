@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import java.io.File;
 import fitnesse.wiki.PathParser;
+
+import java.io.File;
 
 public class UpdaterTest extends UpdateTest
 {

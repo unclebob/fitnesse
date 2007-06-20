@@ -7,6 +7,8 @@ import java.net.Socket;
 public interface ResponseSender
 {
 	public void send(byte[] bytes) throws Exception;
+
 	public void close() throws Exception;
+
 	public Socket getSocket() throws Exception; //TODO-MdM maybe get rid of this method.
 }

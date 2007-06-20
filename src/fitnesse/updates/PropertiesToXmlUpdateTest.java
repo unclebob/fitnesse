@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
+import fitnesse.wiki.FileSystemPage;
+
 import java.io.*;
 import java.util.Properties;
-import fitnesse.wiki.FileSystemPage;
 
 public class PropertiesToXmlUpdateTest extends UpdateTest
 {

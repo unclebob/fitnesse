@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.*;
+import fitnesse.wikitext.WikiWidget;
 
 // created by Jason Sypher
 
@@ -17,7 +17,7 @@ public class StrikeWidgetTest extends WidgetTest
 	public void testOutput() throws Exception
 	{
 		StrikeWidget widget =
-		  new StrikeWidget(new MockWidgetRoot(), "--some text--");
+			new StrikeWidget(new MockWidgetRoot(), "--some text--");
 		assertEquals(1, widget.numberOfChildren());
 		WikiWidget child = widget.nextChild();
 		assertEquals(TextWidget.class, child.getClass());

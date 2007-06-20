@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
 import fitnesse.html.HtmlElement;
+import fitnesse.wikitext.WikiWidget;
 import junit.swingui.TestRunner;
 
 public class TableWidgetTest extends WidgetTest
@@ -88,9 +88,9 @@ public class TableWidgetTest extends WidgetTest
 	{
 		TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|\n|b|c|\n");
 		String expected = "<table border=\"1\" cellspacing=\"0\">\n<tr><td colspan=\"2\">a</td>" +
-		  HtmlElement.endl + "</tr>\n<tr><td>b</td>" +
-		  HtmlElement.endl + "<td>c</td>" +
-		  HtmlElement.endl + "</tr>\n</table>\n";
+			HtmlElement.endl + "</tr>\n<tr><td>b</td>" +
+			HtmlElement.endl + "<td>c</td>" +
+			HtmlElement.endl + "</tr>\n</table>\n";
 		assertEquals(expected, table.render());
 	}
 

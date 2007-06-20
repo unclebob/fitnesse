@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.text.DecimalFormat;
-import java.io.*;
-import fitnesse.util.StreamReader;
 import fit.Counts;
+import fitnesse.util.StreamReader;
+
+import java.io.*;
+import java.text.DecimalFormat;
 
 public class FitProtocol
 {

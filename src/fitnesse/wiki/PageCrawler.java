@@ -8,19 +8,26 @@ import fitnesse.components.FitNesseTraversalListener;
 public interface PageCrawler
 {
 	WikiPage getPage(WikiPage context, WikiPagePath path) throws Exception;
+
 	void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);
+
 	boolean pageExists(WikiPage context, WikiPagePath path) throws Exception;
 
 	WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) throws Exception;
+
 	WikiPagePath getFullPath(WikiPage page) throws Exception;
+
 	WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws Exception;
+
 	WikiPage addPage(WikiPage context, WikiPagePath path) throws Exception;
 
 	String getRelativeName(WikiPage base, WikiPage page) throws Exception;
+
 	boolean isRoot(WikiPage page) throws Exception;
+
 	WikiPage getRoot(WikiPage page) throws Exception;
 
-  void traverse(WikiPage root, FitNesseTraversalListener pageCrawlerTest) throws Exception;
+	void traverse(WikiPage root, FitNesseTraversalListener pageCrawlerTest) throws Exception;
 
-  WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
+	WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
 }

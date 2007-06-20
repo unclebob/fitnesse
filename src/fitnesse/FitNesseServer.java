@@ -3,7 +3,8 @@
 package fitnesse;
 
 import fitnesse.socketservice.SocketServer;
-import java.net.*;
+
+import java.net.Socket;
 
 public class FitNesseServer implements SocketServer
 {

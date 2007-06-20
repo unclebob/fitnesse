@@ -8,5 +8,6 @@ import fitnesse.wiki.WikiPage;
 public interface FitNesseTraversalListener
 {
 	public void processPage(WikiPage page) throws Exception;
+
 	public String getSearchPattern() throws Exception;
 }

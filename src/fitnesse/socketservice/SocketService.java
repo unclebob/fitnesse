@@ -3,8 +3,7 @@
 package fitnesse.socketservice;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.LinkedList;
 
 public class SocketService
@@ -20,13 +19,13 @@ public class SocketService
 		this.server = server;
 		serverSocket = new ServerSocket(port);
 		serviceThread = new Thread(
-		   new Runnable()
-		   {
-			   public void run()
-			   {
-				   serviceThread();
-			   }
-		   }
+			new Runnable()
+			{
+				public void run()
+				{
+					serviceThread();
+				}
+			}
 		);
 		serviceThread.start();
 	}

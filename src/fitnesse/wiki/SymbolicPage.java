@@ -51,7 +51,7 @@ public class SymbolicPage extends BaseWikiPage
 		for(Iterator iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage child = (WikiPage) iterator.next();
-			if(! (child instanceof SymbolicPage))
+			if(!(child instanceof SymbolicPage))
 				symChildren.add(new SymbolicPage(child.getName(), child, this));
 		}
 		return symChildren;

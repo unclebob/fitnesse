@@ -5,14 +5,16 @@ package fitnesse.util;
 import fitnesse.testutil.TestSuiteMaker;
 import junit.framework.Test;
 
-public class AllTestSuite {
-  public static Test suite() {
-    return TestSuiteMaker.makeSuite("util", new Class[]{
-      WildcardTest.class,
-      StreamReaderTest.class,
-      FileUtilTest.class,
-      StringUtilTest.class,
-      XmlUtilTest.class
-    });
-  }
+public class AllTestSuite
+{
+	public static Test suite()
+	{
+		return TestSuiteMaker.makeSuite("util", new Class[]{
+			WildcardTest.class,
+			StreamReaderTest.class,
+			FileUtilTest.class,
+			StringUtilTest.class,
+			XmlUtilTest.class
+		});
+	}
 }

@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import junit.swingui.TestRunner;
-import fitnesse.wiki.*;
 import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
+import junit.swingui.TestRunner;
 
-import java.util.*;
+import java.util.List;
 
 public class RecentChangesTest extends RegexTest
 {

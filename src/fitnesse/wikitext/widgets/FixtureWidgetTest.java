@@ -12,7 +12,7 @@ public class FixtureWidgetTest extends WidgetTest
 	}
 
 	private void assertWidgetRendersToContain(final String text, final String substring)
-	  throws Exception
+		throws Exception
 	{
 		WikiWidget widget = makeWidget(text);
 		String html = widget.render();
@@ -20,7 +20,7 @@ public class FixtureWidgetTest extends WidgetTest
 	}
 
 	private FixtureWidget makeWidget(final String text)
-	  throws Exception
+		throws Exception
 	{
 		return new FixtureWidget(new MockWidgetRoot(), text);
 	}

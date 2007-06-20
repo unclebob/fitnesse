@@ -15,7 +15,7 @@ public class PuppetResponse extends Response
 
 	public void readyToSend(ResponseSender sender) throws Exception
 	{
-		puppeteer.readyToSend(sender);	
+		puppeteer.readyToSend(sender);
 	}
 
 	protected void addSpecificHeaders()

@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
-import java.util.List;
 import fitnesse.util.FileUtil;
+import junit.framework.TestCase;
+
+import java.util.List;
 
 public class SymbolicPageTest extends TestCase
 {
@@ -63,11 +64,11 @@ public class SymbolicPageTest extends TestCase
 
 	public void testGetChild() throws Exception
 	{
-	  WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
+		WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
 		WikiPage page = symPage.getChildPage("ChildPage");
 		assertNotNull(page);
 		assertEquals(SymbolicPage.class, page.getClass());
-		SymbolicPage symChild = (SymbolicPage)page;
+		SymbolicPage symChild = (SymbolicPage) page;
 		assertSame(childPage, symChild.getRealPage());
 	}
 

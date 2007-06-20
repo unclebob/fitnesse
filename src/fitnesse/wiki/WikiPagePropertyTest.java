@@ -1,6 +1,7 @@
 package fitnesse.wiki;
 
 import junit.framework.TestCase;
+
 import java.io.Serializable;
 
 public class WikiPagePropertyTest extends TestCase

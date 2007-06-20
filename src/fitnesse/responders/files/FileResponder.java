@@ -2,13 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.http.*;
 import fitnesse.*;
-import fitnesse.responders.*;
-import java.io.*;
+import fitnesse.http.*;
+import fitnesse.responders.NotFoundResponder;
+
+import java.io.File;
 import java.net.*;
-import java.util.*;
 import java.text.ParseException;
+import java.util.Date;
 
 public class FileResponder implements Responder
 {

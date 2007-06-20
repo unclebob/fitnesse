@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
-import java.util.List;
-import java.io.File;
 import fitnesse.util.FileUtil;
+import junit.framework.TestCase;
+
+import java.io.File;
+import java.util.List;
 
 public class BaseWikiPageTest extends TestCase
 {
@@ -14,7 +15,7 @@ public class BaseWikiPageTest extends TestCase
 
 	public void setUp() throws Exception
 	{
-		root = (BaseWikiPage)InMemoryPage.makeRoot("RooT");
+		root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
 		root.addChildPage("LinkedPage");
 		linkingPage = root.addChildPage("LinkingPage");
 		linkingPage.addChildPage("ChildPage");
@@ -31,7 +32,7 @@ public class BaseWikiPageTest extends TestCase
 
 		List children = linkingPage.getChildren();
 		assertEquals(2, children.size());
-		assertEquals("ChildPage", ((WikiPage)children.get(0)).getName());
+		assertEquals("ChildPage", ((WikiPage) children.get(0)).getName());
 
 		checkSymbolicPage(children.get(1));
 	}
@@ -58,11 +59,11 @@ public class BaseWikiPageTest extends TestCase
 		assertNotNull(symPage);
 		assertEquals(SymbolicPage.class, symPage.getClass());
 
-		WikiPage realPage = ((SymbolicPage)symPage).getRealPage();
+		WikiPage realPage = ((SymbolicPage) symPage).getRealPage();
 		assertEquals(FileSystemPage.class, realPage.getClass());
 
-		assertEquals("testDir/ExternalRoot", ((FileSystemPage)realPage).getFileSystemPath());
-		assertEquals("ExternalRoot", ((FileSystemPage)realPage).getName());
+		assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
+		assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
 	}
 
 	public void testExternalSymbolicLinkToNewDirectory() throws Exception
@@ -86,7 +87,7 @@ public class BaseWikiPageTest extends TestCase
 	private void checkSymbolicPage(Object page) throws Exception
 	{
 		assertEquals(SymbolicPage.class, page.getClass());
-		SymbolicPage symPage = (SymbolicPage)page;
+		SymbolicPage symPage = (SymbolicPage) page;
 		assertEquals("SymLink", symPage.getName());
 		assertEquals("LinkedPage", symPage.getRealPage().getName());
 	}

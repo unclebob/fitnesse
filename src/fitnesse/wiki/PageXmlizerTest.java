@@ -2,17 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
 import fitnesse.testutil.RegexTest;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 public class PageXmlizerTest extends RegexTest
 {
 	private PageXmlizer xmlizer;
-	private WikiPage root;;
+	private WikiPage root;
+	;
 	private PageCrawler crawler;
 	private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 
@@ -28,7 +30,7 @@ public class PageXmlizerTest extends RegexTest
 	}
 
 	public void testXmlizeOneWikiPage() throws Exception
-	{                                                                                                                
+	{
 		Document doc = xmlizer.xmlize(root);
 		String value = XmlUtil.xmlAsString(doc);
 
@@ -53,7 +55,7 @@ public class PageXmlizerTest extends RegexTest
 
 		List children = root.getChildren();
 		assertEquals(1, children.size());
-		WikiPage page = (WikiPage)children.get(0);
+		WikiPage page = (WikiPage) children.get(0);
 		assertEquals("RooT", page.getName());
 	}
 
@@ -252,8 +254,10 @@ public class PageXmlizerTest extends RegexTest
 		WikiPage pageOne = root.addChildPage("PageOne");
 		WikiPage pageTwo = root.addChildPage("PageTwo");
 
-		xmlizer.addPageCondition(new XmlizePageCondition() {
-			public boolean canBeXmlized(WikiPage page) throws Exception{
+		xmlizer.addPageCondition(new XmlizePageCondition()
+		{
+			public boolean canBeXmlized(WikiPage page) throws Exception
+			{
 				return !page.getName().equals("PageTwo");
 			}
 		});

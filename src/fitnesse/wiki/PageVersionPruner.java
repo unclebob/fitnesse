@@ -6,7 +6,7 @@ import java.util.*;
 
 public class PageVersionPruner
 {
-  public static int daysTillVersionsExpire = 14;
+	public static int daysTillVersionsExpire = 14;
 
 	public static void pruneVersions(FileSystemPage page, Collection versions) throws Exception
 	{

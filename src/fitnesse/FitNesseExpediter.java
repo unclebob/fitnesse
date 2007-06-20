@@ -2,11 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
+import fitnesse.components.LogData;
 import fitnesse.http.*;
-import fitnesse.responders.*;
-import fitnesse.components.*;
-import java.net.*;
+import fitnesse.responders.ErrorResponder;
+
 import java.io.*;
+import java.net.*;
 import java.util.GregorianCalendar;
 
 public class FitNesseExpediter implements ResponseSender
@@ -113,7 +114,7 @@ public class FitNesseExpediter implements ResponseSender
 		}
 		catch(SocketException se)
 		{
-			throw(se);
+			throw (se);
 		}
 		catch(Exception e)
 		{
@@ -142,7 +143,7 @@ public class FitNesseExpediter implements ResponseSender
 		{
 			Thread.sleep(10);
 			if(timeIsUp(now) && parsingIsUnproductive(request))
-					reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
+				reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
 		}
 	}
 

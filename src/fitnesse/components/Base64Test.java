@@ -31,9 +31,9 @@ public class Base64Test extends TestCase
 
 	public void testGetValueFor() throws Exception
 	{
-		assertEquals(0, Base64.getValueFor((byte)'A'));
-		assertEquals(26, Base64.getValueFor((byte)'a'));
-		assertEquals(52, Base64.getValueFor((byte)'0'));
+		assertEquals(0, Base64.getValueFor((byte) 'A'));
+		assertEquals(26, Base64.getValueFor((byte) 'a'));
+		assertEquals(52, Base64.getValueFor((byte) '0'));
 	}
 
 	public void testDecodeNothing() throws Exception

@@ -22,10 +22,8 @@ public class Password
 		if(!password.args(args))
 			printUsage();
 
-
-
-	  input = new BufferedReader(new InputStreamReader(System.in));
-    password.interactForPassword();
+		input = new BufferedReader(new InputStreamReader(System.in));
+		password.interactForPassword();
 
 		password.savePassword();
 		System.out.println("password saved in " + password.passwords.getName());
@@ -33,9 +31,9 @@ public class Password
 
 	public static void printUsage()
 	{
-    System.err.println("Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>");
-    System.err.println("\t-f <password file> {" + defaultFile + "}");
-    System.err.println("\t-c <password cipher> {" + defaultCipher + "}");
+		System.err.println("Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>");
+		System.err.println("\t-f <password file> {" + defaultFile + "}");
+		System.err.println("\t-c <password cipher> {" + defaultCipher + "}");
 		System.exit(-1);
 	}
 

@@ -2,9 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.*;
 import fitnesse.testutil.FitNesseUtil;
+import junit.framework.TestCase;
+
 import java.util.*;
+
 public class ProxyPageTest extends TestCase
 {
 	private WikiPage root;
@@ -65,9 +67,9 @@ public class ProxyPageTest extends TestCase
 	{
 		List children = proxy.getChildren();
 		assertEquals(2, children.size());
-		WikiPage child = (WikiPage)children.get(0);
+		WikiPage child = (WikiPage) children.get(0);
 		assertEquals(true, "ChildOne".equals(child.getName()) || "ChildTwo".equals(child.getName()));
-		child = (WikiPage)children.get(1);
+		child = (WikiPage) children.get(1);
 		assertEquals(true, "ChildOne".equals(child.getName()) || "ChildTwo".equals(child.getName()));
 	}
 
@@ -106,7 +108,6 @@ public class ProxyPageTest extends TestCase
 		proxy.hasChildPage("SomeMissingChild");
 		assertEquals(1, ProxyPage.retrievalCount);
 	}
-
 
 // MdM - Fails but who cares?  The whole virtual wiki will be erradicated next release.
 //	public void testChildrenAreCached() throws Exception

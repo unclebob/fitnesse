@@ -79,7 +79,7 @@ public class WidgetRoot extends ParentWidget
 			page = page.getParent();
 			value = page.getData().getVariable(key);
 		}
-		if (value == null)
+		if(value == null)
 		{
 			value = System.getProperty(key);
 		}

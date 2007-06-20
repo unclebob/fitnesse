@@ -4,8 +4,8 @@ package fitnesse;
 
 import fitnesse.http.*;
 
-import java.net.*;
 import java.io.*;
+import java.net.*;
 
 //TODO-MdM DELETE ME SOON
 public class TestRunner
@@ -94,7 +94,7 @@ public class TestRunner
 				if(arg.startsWith("-"))
 				{
 					boolean isValid = setOption(arg.substring(1));
-					if(! isValid)
+					if(!isValid)
 						return false;
 				}
 				else

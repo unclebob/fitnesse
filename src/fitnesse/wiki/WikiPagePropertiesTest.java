@@ -2,28 +2,29 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.io.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
 import fitnesse.testutil.RegexTest;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class WikiPagePropertiesTest extends RegexTest
 {
 	private WikiPageProperties properties;
 
 	static String endl = System.getProperty("line.separator");
-	static String sampleXml  = "<?xml version=\"1.0\"?>" + endl +
-	  "<properties>" + endl +
-	  "\t<Edit/>" + endl +
+	static String sampleXml = "<?xml version=\"1.0\"?>" + endl +
+		"<properties>" + endl +
+		"\t<Edit/>" + endl +
 		"\t<ParentOne>" + endl +
 		"\t\t<ChildOne>child one value</ChildOne>" + endl +
 		"\t</ParentOne>" + endl +
 		"\t<ParentTwo value=\"parent 2 value\">" + endl +
 		"\t\t<ChildTwo>child two value</ChildTwo>" + endl +
 		"\t</ParentTwo>" + endl +
-	  "\t<Test/>" + endl +
-	  "\t<VirtualWiki>http://someurl</VirtualWiki>" + endl +
-	  "</properties>" + endl;
+		"\t<Test/>" + endl +
+		"\t<VirtualWiki>http://someurl</VirtualWiki>" + endl +
+		"</properties>" + endl;
 
 	public void setUp() throws Exception
 	{

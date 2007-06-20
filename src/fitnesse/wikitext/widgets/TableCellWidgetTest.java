@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
 import fitnesse.testutil.RegexTest;
+import fitnesse.wikitext.WikiWidget;
 import junit.swingui.TestRunner;
 
 public class TableCellWidgetTest extends RegexTest

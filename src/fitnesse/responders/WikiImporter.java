@@ -1,12 +1,13 @@
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
+import fitnesse.components.FitNesseTraversalListener;
 import fitnesse.http.*;
 import fitnesse.util.XmlUtil;
-import fitnesse.components.FitNesseTraversalListener;
-import java.util.*;
-import java.net.*;
+import fitnesse.wiki.*;
 import org.w3c.dom.Document;
+
+import java.net.*;
+import java.util.*;
 
 public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListener
 {
@@ -56,26 +57,29 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	private void removeOrphans(WikiPage context) throws Exception
 	{
-    for (WikiPagePath orphan : orphans) {
-      WikiPagePath path = orphan;
-      WikiPage wikiPage = crawler.getPage(context, path);
-      if (wikiPage != null)
-        wikiPage.getParent().removeChildPage(wikiPage.getName());
-    }
+		for(WikiPagePath orphan : orphans)
+		{
+			WikiPagePath path = orphan;
+			WikiPage wikiPage = crawler.getPage(context, path);
+			if(wikiPage != null)
+				wikiPage.getParent().removeChildPage(wikiPage.getName());
+		}
 	}
 
 	private void filterOrphans(WikiPage context) throws Exception
 	{
-    for (WikiPagePath aPageCatalog : pageCatalog) {
-      WikiPagePath wikiPagePath = aPageCatalog;
-      WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
-      PageData data = unrecognizedPage.getData();
-      WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
+		for(WikiPagePath aPageCatalog : pageCatalog)
+		{
+			WikiPagePath wikiPagePath = aPageCatalog;
+			WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
+			PageData data = unrecognizedPage.getData();
+			WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());
 
-      if (importProps != null && !importProps.isRoot()) {
-        orphans.add(wikiPagePath);
-      }
-    }
+			if(importProps != null && !importProps.isRoot())
+			{
+				orphans.add(wikiPagePath);
+			}
+		}
 	}
 
 	private void catalogLocalTree(WikiPage page) throws Exception
@@ -257,8 +261,8 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	public void parseUrl(String urlString) throws Exception
 	{
-    URL url;
-    try
+		URL url;
+		try
 		{
 			url = new URL(urlString);
 		}
@@ -273,15 +277,16 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 			remotePort = 80;
 
 		String path = url.getPath();
-    while(path.startsWith("/"))
+		while(path.startsWith("/"))
 			path = path.substring(1);
-    
-    remotePath = PathParser.parse(path);
 
-		if(remotePath == null)  {
+		remotePath = PathParser.parse(path);
+
+		if(remotePath == null)
+		{
 			throw new MalformedURLException("The URL's resource path, " + path + ", is not a valid WikiWord.");
-    }
-  }
+		}
+	}
 
 	public void setWikiImporterClient(WikiImporterClient client)
 	{

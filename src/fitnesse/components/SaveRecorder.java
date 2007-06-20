@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.wiki.*;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.wiki.PageData;
+
 import java.util.Random;
 
 public class SaveRecorder

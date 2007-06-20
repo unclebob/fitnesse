@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.search;
 
-import fitnesse.wiki.*;
+import fitnesse.FitNesseContext;
 import fitnesse.http.*;
 import fitnesse.testutil.RegexTest;
-import fitnesse.FitNesseContext;
+import fitnesse.wiki.*;
 
 public class WhereUsedResponderTest extends RegexTest
 {
@@ -31,7 +31,7 @@ public class WhereUsedResponderTest extends RegexTest
 		MockResponseSender sender = new MockResponseSender();
 		response.readyToSend(sender);
 		sender.waitForClose(5000);
-		
+
 		String content = sender.sentData();
 		assertEquals(200, response.getStatus());
 		assertHasRegexp("Where Used", content);

@@ -2,9 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.html.HtmlTag;
-import java.util.regex.*;
+import fitnesse.wikitext.WidgetBuilder;
+
+import java.util.regex.Pattern;
 
 public class TableCellWidget extends ParentWidget
 {

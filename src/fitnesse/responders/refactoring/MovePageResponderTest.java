@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
-import fitnesse.wiki.*;
 import fitnesse.*;
-import fitnesse.http.*;
+import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTest;
+import fitnesse.wiki.*;
+
 import java.util.List;
 
 public class MovePageResponderTest extends ResponderTest

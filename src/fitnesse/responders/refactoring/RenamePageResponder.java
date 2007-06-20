@@ -3,13 +3,14 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.*;
-import fitnesse.html.HtmlUtil;
 import fitnesse.authentication.*;
-import fitnesse.responders.*;
 import fitnesse.components.PageReferenceRenamer;
-import fitnesse.wikitext.widgets.WikiWordWidget;
-import fitnesse.wiki.*;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.*;
+import fitnesse.responders.*;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.widgets.WikiWordWidget;
+
 import java.util.*;
 
 public class RenamePageResponder implements SecureResponder
@@ -25,7 +26,6 @@ public class RenamePageResponder implements SecureResponder
 		refactorReferences = request.hasInput("refactorReferences");
 
 		Response response;
-
 
 		if(newName != null && !qualifiedName.equals("FrontPage") && WikiWordWidget.isSingleWikiWord(newName))
 		{

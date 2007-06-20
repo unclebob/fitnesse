@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.*;
 import fitnesse.html.HtmlUtil;
+
+import java.util.regex.*;
 
 public class MetaWidget extends ParentWidget
 {

@@ -3,8 +3,9 @@
 package fitnesse.responders.run;
 
 import fitnesse.*;
-import fitnesse.components.*;
+import fitnesse.components.FitProtocol;
 import fitnesse.http.*;
+
 import java.net.Socket;
 
 public class SocketCatchingResponder implements Responder, SocketDoner, ResponsePuppeteer

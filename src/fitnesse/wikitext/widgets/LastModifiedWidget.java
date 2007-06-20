@@ -2,12 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wiki.*;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiWidget;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 //created by Jason Sypher
 

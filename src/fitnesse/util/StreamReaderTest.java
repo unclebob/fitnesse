@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.util;
 
-import java.io.*;
 import fitnesse.testutil.RegexTest;
+
+import java.io.*;
 
 public class StreamReaderTest extends RegexTest
 {
@@ -192,7 +193,6 @@ public class StreamReaderTest extends RegexTest
 		assertTrue(reader.isEof());
 	}
 
-
 	public void testBytesConsumed() throws Exception
 	{
 		writeToPipe("One line\r\n12345abc-boundary");
@@ -242,7 +242,9 @@ public class StreamReaderTest extends RegexTest
 		}
 
 		public abstract void doRead() throws Exception;
-	};
+	}
+
+	;
 
 	class ReadLine extends ReadThread
 	{

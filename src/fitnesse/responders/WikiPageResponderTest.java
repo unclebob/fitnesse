@@ -4,8 +4,8 @@ package fitnesse.responders;
 
 import fitnesse.*;
 import fitnesse.authentication.*;
-import fitnesse.testutil.*;
 import fitnesse.http.*;
+import fitnesse.testutil.*;
 import fitnesse.wiki.*;
 
 public class WikiPageResponderTest extends RegexTest
@@ -98,7 +98,7 @@ public class WikiPageResponderTest extends RegexTest
 		MockRequest request = new MockRequest();
 		request.setResource(name);
 		Responder responder = new WikiPageResponder();
-		return (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 	}
 
 	public void testShouldGetVirtualPage() throws Exception
@@ -109,14 +109,14 @@ public class WikiPageResponderTest extends RegexTest
 		FitNesseUtil.bindVirtualLinkToPage(linkerPage, pageOne);
 		SimpleResponse response = requestPage("LinkerPage.ChildPage");
 
-		assertSubString("child content",response.getContent());
+		assertSubString("child content", response.getContent());
 	}
 
 	public void testVirtualPageIndication() throws Exception
 	{
 		WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
 		crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-		WikiPage linkPage = (BaseWikiPage)crawler.addPage(root, PathParser.parse("LinkPage"));
+		WikiPage linkPage = (BaseWikiPage) crawler.addPage(root, PathParser.parse("LinkPage"));
 		VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
 
 		FitNesseUtil.startFitnesse(root);
@@ -146,12 +146,12 @@ public class WikiPageResponderTest extends RegexTest
 		assertSubString("<body class=\"imported\">", content);
 	}
 
-  public void testResponderIsSecureReadOperation() throws Exception
-  {
-    Responder responder = new WikiPageResponder();
-    assertTrue(responder instanceof SecureResponder);
-	  SecureOperation operation = ((SecureResponder)responder).getSecureOperation();
-	  assertEquals(SecureReadOperation.class, operation.getClass());
-  }
+	public void testResponderIsSecureReadOperation() throws Exception
+	{
+		Responder responder = new WikiPageResponder();
+		assertTrue(responder instanceof SecureResponder);
+		SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
+		assertEquals(SecureReadOperation.class, operation.getClass());
+	}
 
 }

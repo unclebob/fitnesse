@@ -2,12 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.versions;
 
-import fitnesse.*;
-import fitnesse.responders.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
-import fitnesse.components.*;
-import fitnesse.wiki.*;
+import fitnesse.components.RecentChanges;
 import fitnesse.http.*;
+import fitnesse.responders.*;
+import fitnesse.wiki.*;
 
 public class RollbackResponder implements SecureResponder
 {

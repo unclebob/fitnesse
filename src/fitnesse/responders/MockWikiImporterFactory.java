@@ -1,6 +1,5 @@
 package fitnesse.responders;
 
-
 public class MockWikiImporterFactory extends WikiImporterFactory
 {
 	public MockWikiImporter mockWikiImporter = new MockWikiImporter();

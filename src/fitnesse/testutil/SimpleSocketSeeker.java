@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import fitnesse.responders.run.*;
+
 import java.net.Socket;
 
 public class SimpleSocketSeeker implements SocketSeeker

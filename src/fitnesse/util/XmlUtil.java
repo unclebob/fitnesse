@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.util;
 
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import java.io.*;
 import fitnesse.components.XmlWriter;
+import org.w3c.dom.*;
+
+import javax.xml.parsers.*;
+import java.io.*;
 
 public class XmlUtil
 {
@@ -48,7 +49,7 @@ public class XmlUtil
 		{
 			Node node = childNodes.item(i);
 			if(node instanceof Element && tagName.equals(node.getNodeName()))
-      	return (Element)node;
+				return (Element) node;
 		}
 		return null;
 	}

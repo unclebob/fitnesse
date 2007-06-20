@@ -3,6 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
+
 import java.util.regex.*;
 
 public class PreProcessorLiteralWidget extends WikiWidget

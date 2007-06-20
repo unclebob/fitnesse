@@ -5,18 +5,18 @@
 // later.
 package fitnesse.fixtures;
 
-import junit.framework.*;
 import fit.CannotLoadFixtureTest;
 import fitnesse.testutil.TestSuiteMaker;
+import junit.framework.Test;
 
 public class AllTestSuite
 {
-  public static Test suite()
-  {
-    return TestSuiteMaker.makeSuite("fixtures", new Class[]
-    { RowEntryFixtureTest.class,
-      PageCreatorTest.class,
-      HandleFixtureDoesNotExtendFixtureTest.class,
-      CannotLoadFixtureTest.class });
-  }
+	public static Test suite()
+	{
+		return TestSuiteMaker.makeSuite("fixtures", new Class[]
+			{RowEntryFixtureTest.class,
+				PageCreatorTest.class,
+				HandleFixtureDoesNotExtendFixtureTest.class,
+				CannotLoadFixtureTest.class});
+	}
 }

@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
-import fitnesse.responders.SecureResponder;
 import fitnesse.html.*;
 import fitnesse.http.*;
+import fitnesse.responders.SecureResponder;
 
 public class RenameFileConfirmationResponder implements SecureResponder
 {

@@ -2,10 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.fixtures;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import fit.*;
+
+import java.io.*;
 
 public abstract class RowEntryFixture extends ColumnFixture
 {

@@ -4,20 +4,24 @@ package fitnesse.fixtures;
 
 import fit.Fixture;
 
-public class CountFixture extends Fixture {
-  private int counter = 0;
+public class CountFixture extends Fixture
+{
+	private int counter = 0;
 
-	public void count() {
-    counter++;
-  }
+	public void count()
+	{
+		counter++;
+	}
 
-  public int counter() {
-    return counter;
-  }
+	public int counter()
+	{
+		return counter;
+	}
 
-  public void counter(int i) {
-    counter = i;
-  }
+	public void counter(int i)
+	{
+		counter = i;
+	}
 }
 
 

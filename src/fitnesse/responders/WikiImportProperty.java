@@ -1,7 +1,8 @@
 package fitnesse.responders;
 
-import fitnesse.wiki.*;
 import fitnesse.html.*;
+import fitnesse.wiki.*;
+
 import java.util.Date;
 
 public class WikiImportProperty extends WikiPageProperty
@@ -60,7 +61,6 @@ public class WikiImportProperty extends WikiPageProperty
 			if(rawImportProperty.has("AutoUpdate"))
 				importProperty.set("AutoUpdate", rawImportProperty.getProperty("AutoUpdate"));
 
-
 			return importProperty;
 		}
 		else
@@ -101,6 +101,6 @@ public class WikiImportProperty extends WikiPageProperty
 			html.actions.add(HtmlUtil.makeActionLink(importProperty.getSourceUrl(), "Edit Remotely", remoteInput, "e", false));
 		}
 		else if(page instanceof ProxyPage)
-		html.body.addAttribute("class", "virtual");
+			html.body.addAttribute("class", "virtual");
 	}
 }

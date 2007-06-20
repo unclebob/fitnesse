@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import junit.framework.*;
 import fitnesse.wiki.*;
+import junit.framework.TestCase;
 
 public class SaveRecorderTest extends TestCase
 {

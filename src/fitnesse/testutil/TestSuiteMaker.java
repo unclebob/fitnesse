@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import junit.framework.*;
+
 import java.lang.reflect.Method;
 
 public class TestSuiteMaker
@@ -39,7 +40,7 @@ public class TestSuiteMaker
 		Method suite = null;
 		try
 		{
-			suite = test.getDeclaredMethod("suite", new Class[] {});
+			suite = test.getDeclaredMethod("suite", new Class[]{});
 		}
 		catch(NoSuchMethodException e)
 		{
@@ -50,6 +51,6 @@ public class TestSuiteMaker
 	public static Test getSuite(Class test) throws Exception
 	{
 		Method suite = getSuiteMethod(test);
-		return (Test)suite.invoke(null, new Object[] {});
+		return (Test) suite.invoke(null, new Object[]{});
 	}
 }

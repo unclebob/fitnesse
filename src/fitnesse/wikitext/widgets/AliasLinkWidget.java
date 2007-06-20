@@ -5,8 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetVisitor;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 public class AliasLinkWidget extends ParentWidget
 {
@@ -57,8 +56,8 @@ public class AliasLinkWidget extends ParentWidget
 		int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
 		String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
 		return childHtml() + "<a href=\"" + remoteURLOfParent + theWord + "?edit\""
-		  + " target=\"" + theWord + "\""
-		  + ">?</a>";
+			+ " target=\"" + theWord + "\""
+			+ ">?</a>";
 	}
 
 	public String asWikiText() throws Exception

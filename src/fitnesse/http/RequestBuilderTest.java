@@ -3,6 +3,7 @@
 package fitnesse.http;
 
 import fitnesse.testutil.RegexTest;
+
 import java.io.ByteArrayInputStream;
 
 public class RequestBuilderTest extends RegexTest
@@ -26,7 +27,7 @@ public class RequestBuilderTest extends RegexTest
 		builder = new RequestBuilder("/someResource");
 		String text = builder.getText();
 		assertSubString("Host: \r\n", text);
-		
+
 		builder.setHostAndPort("some.host.com", 123);
 		text = builder.getText();
 		assertSubString("Host: some.host.com:123\r\n", text);
@@ -43,10 +44,10 @@ public class RequestBuilderTest extends RegexTest
 	{
 		builder.addInput("responder", "saveData");
 		String content = "!fixture fit.ColumnFixture\n" +
-				                                "\n" +
-				                                "!path classes\n" +
-				                                "\n" +
-				                                "!2 ";
+			"\n" +
+			"!path classes\n" +
+			"\n" +
+			"!2 ";
 		builder.addInput("pageContent", content);
 
 		String inputString = builder.inputString();
@@ -88,7 +89,7 @@ public class RequestBuilderTest extends RegexTest
 
 	public void testMultipartOnePart() throws Exception
 	{
-    builder.addInputAsPart("myPart", "part data");
+		builder.addInputAsPart("myPart", "part data");
 		String text = builder.getText();
 
 		assertSubString("POST", text);
@@ -96,7 +97,7 @@ public class RequestBuilderTest extends RegexTest
 		String boundary = builder.getBoundary();
 		assertSubString("--" + boundary, text);
 		assertSubString("\r\n\r\npart data\r\n", text);
-    assertSubString("--" + boundary + "--", text);
+		assertSubString("--" + boundary + "--", text);
 	}
 
 	public void testMultipartWithInputStream() throws Exception
@@ -111,7 +112,7 @@ public class RequestBuilderTest extends RegexTest
 
 	public void testMultipartWithRequestParser() throws Exception
 	{
-    builder.addInputAsPart("part1", "data 1");
+		builder.addInputAsPart("part1", "data 1");
 		builder.addInput("input1", "input1 value");
 		builder.addInputAsPart("part2", "data 2");
 		String text = builder.getText();

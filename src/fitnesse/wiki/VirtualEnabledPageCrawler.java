@@ -9,18 +9,18 @@ public class VirtualEnabledPageCrawler implements PageCrawlerDeadEndStrategy
 	{
 		String name = restOfPath.getFirst();
 		restOfPath = restOfPath.getRest();
-    if(context.hasExtension(VirtualCouplingExtension.NAME))
-    {
-      VirtualCouplingExtension extension = (VirtualCouplingExtension)context.getExtension(VirtualCouplingExtension.NAME);
-      WikiPage coupling = extension.getVirtualCoupling();
-      WikiPage child = coupling.getChildPage(name);
-      if(child != null)
-        return crawler.getPage(child, restOfPath);
-      else
-        return null;
-    }
-    else
-      return null;
+		if(context.hasExtension(VirtualCouplingExtension.NAME))
+		{
+			VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(VirtualCouplingExtension.NAME);
+			WikiPage coupling = extension.getVirtualCoupling();
+			WikiPage child = coupling.getChildPage(name);
+			if(child != null)
+				return crawler.getPage(child, restOfPath);
+			else
+				return null;
+		}
+		else
+			return null;
 
-  }
+	}
 }

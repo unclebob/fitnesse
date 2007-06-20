@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import junit.framework.TestCase;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import fitnesse.components.Base64;
 import fitnesse.util.FileUtil;
+import junit.framework.TestCase;
+
+import java.io.*;
 
 public class RequestTest extends TestCase
 {
@@ -230,22 +230,22 @@ public class RequestTest extends TestCase
 	public void testMultiPartForms() throws Exception
 	{
 		String content = "----bob\r\n" +
-		  "Content-Disposition: form-data; name=\"key1\"\r\n" +
-		  "\r\n" +
-		  "value1\r\n" +
-		  "----bob\r\n" +
-		  "Content-Disposition: form-data; name=\"key3\"\r\n" +
-		  "\r\n" +
-		  "some\r\nmulti-line\r\nvalue\r\n\r\n" +
-		  "----bob\r\n" +
-		  "Content-Disposition: form-data; name=\"key2\"\r\n" +
-		  "\r\n" +
-		  "value2\r\n" +
-		  "----bob\r\n" +
-		  "Content-Disposition: form-data; name=\"key4\"\r\n" +
-		  "\r\n" +
-		  "\r\n" +
-		  "----bob--\r\n";
+			"Content-Disposition: form-data; name=\"key1\"\r\n" +
+			"\r\n" +
+			"value1\r\n" +
+			"----bob\r\n" +
+			"Content-Disposition: form-data; name=\"key3\"\r\n" +
+			"\r\n" +
+			"some\r\nmulti-line\r\nvalue\r\n\r\n" +
+			"----bob\r\n" +
+			"Content-Disposition: form-data; name=\"key2\"\r\n" +
+			"\r\n" +
+			"value2\r\n" +
+			"----bob\r\n" +
+			"Content-Disposition: form-data; name=\"key4\"\r\n" +
+			"\r\n" +
+			"\r\n" +
+			"----bob--\r\n";
 
 		startParsing();
 		writeToPipe("GET /request-uri HTTP/1.1\r\n");
@@ -270,11 +270,11 @@ public class RequestTest extends TestCase
 	public void testUploadingFile() throws Exception
 	{
 		String content = "----bob\r\n" +
-		  "Content-Disposition: form-data; name=\"file1\"; filename=\"mike dile.txt\"\r\n" +
-		  "Content-Type: text/plain\r\n" +
-		  "\r\n" +
-		  "file contents\r\n" +
-		  "----bob--\r\n";
+			"Content-Disposition: form-data; name=\"file1\"; filename=\"mike dile.txt\"\r\n" +
+			"Content-Type: text/plain\r\n" +
+			"\r\n" +
+			"file contents\r\n" +
+			"----bob--\r\n";
 
 		startParsing();
 		writeToPipe("GET /request-uri HTTP/1.1\r\n");
@@ -290,16 +290,16 @@ public class RequestTest extends TestCase
 	public void testUploadingTwoFiles() throws Exception
 	{
 		String content = "-----------------------------7d32df3a80058\r\n" +
-		  "Content-Disposition: form-data; name=\"file\"; filename=\"C:\\test.txt\"\r\n" +
-		  "Content-Type: text/plain\r\n" +
-		  "\r\n" +
-		  "test\r\n" +
-		  "-----------------------------7d32df3a80058\r\n" +
-		  "Content-Disposition: form-data; name=\"file2\"; filename=\"C:\\test2.txt\"\r\n" +
-		  "Content-Type: text/plain\r\n" +
-		  "\r\n" +
-		  "test2\r\n" +
-		  "-----------------------------7d32df3a80058--\r\n";
+			"Content-Disposition: form-data; name=\"file\"; filename=\"C:\\test.txt\"\r\n" +
+			"Content-Type: text/plain\r\n" +
+			"\r\n" +
+			"test\r\n" +
+			"-----------------------------7d32df3a80058\r\n" +
+			"Content-Disposition: form-data; name=\"file2\"; filename=\"C:\\test2.txt\"\r\n" +
+			"Content-Type: text/plain\r\n" +
+			"\r\n" +
+			"test2\r\n" +
+			"-----------------------------7d32df3a80058--\r\n";
 
 		startParsing();
 		writeToPipe("GET /request-uri HTTP/1.1\r\n");
@@ -387,7 +387,7 @@ public class RequestTest extends TestCase
 
 	public void testUnicodeCharacters() throws Exception
 	{
-  	startParsing();
+		startParsing();
 		writeToPipe("GET /?key=%EB%AA%80%EB%AA%81%EB%AA%82%EB%AA%83 HTTP/1.1\r\n\r\n");
 		finishParsing();
 		assertEquals("\uba80\uba81\uba82\uba83", request.getInput("key"));

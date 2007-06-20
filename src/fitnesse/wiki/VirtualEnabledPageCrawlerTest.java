@@ -2,9 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import junit.framework.*;
-
 import fitnesse.testutil.FitNesseUtil;
+import junit.framework.TestCase;
 
 public class VirtualEnabledPageCrawlerTest extends TestCase
 {
@@ -41,7 +40,7 @@ public class VirtualEnabledPageCrawlerTest extends TestCase
 
 	public void testCanCrossMultipleVirtualLinks() throws Exception
 	{
-  	WikiPage secondTarget = crawler.addPage(root, PathParser.parse("SecondTarget"));
+		WikiPage secondTarget = crawler.addPage(root, PathParser.parse("SecondTarget"));
 		crawler.addPage(secondTarget, PathParser.parse("ChildOfSecondTarget"));
 		FitNesseUtil.bindVirtualLinkToPage(child1, secondTarget);
 		WikiPage virtualChild = crawler.getPage(vlink, PathParser.parse("ChildOne.ChildOfSecondTarget"));

@@ -54,13 +54,13 @@ public class FileUpdate implements Update
 			OutputStream output = new FileOutputStream(destinationFile());
 
 			int b;
-			while( (b = input.read()) != -1)
+			while((b = input.read()) != -1)
 				output.write(b);
 
 			input.close();
 			output.close();
 		}
-	  else
+		else
 			throw new Exception("Could not load resource: " + source);
 	}
 
@@ -86,6 +86,6 @@ public class FileUpdate implements Update
 
 	public boolean shouldBeApplied() throws Exception
 	{
-		return ! destinationFile().exists();
+		return !destinationFile().exists();
 	}
 }

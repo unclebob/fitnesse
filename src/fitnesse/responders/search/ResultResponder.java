@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.search;
 
-import fitnesse.html.*;
-import fitnesse.components.SearchObserver;
-import fitnesse.wiki.*;
-import fitnesse.responders.*;
 import fitnesse.authentication.*;
+import fitnesse.components.SearchObserver;
+import fitnesse.html.*;
+import fitnesse.responders.*;
+import fitnesse.wiki.*;
 
 public abstract class ResultResponder extends ChunkingResponder implements SearchObserver, SecureResponder
 {
@@ -137,7 +137,7 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 		HtmlTag row = new HtmlTag("tr");
 		row.addAttribute("class", "resultsRow" + getRow());
 
-		HtmlTag link = new HtmlTag("a", fullPathName) ;
+		HtmlTag link = new HtmlTag("a", fullPathName);
 		link.addAttribute("href", fullPathName);
 
 		row.add(new HtmlTag("td", link));
@@ -154,8 +154,7 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 
 	protected abstract String getTitle() throws Exception;
 
-
-    protected abstract String getPageFooterInfo(int hits) throws Exception;
+	protected abstract String getPageFooterInfo(int hits) throws Exception;
 
 	protected abstract void startSearching() throws Exception;
 

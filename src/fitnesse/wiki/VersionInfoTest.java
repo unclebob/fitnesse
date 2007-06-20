@@ -3,22 +3,23 @@
 package fitnesse.wiki;
 
 import junit.framework.TestCase;
-import java.util.regex.Matcher;
+
 import java.util.*;
+import java.util.regex.Matcher;
 
 public class VersionInfoTest extends TestCase
 {
-  public void testRegex() throws Exception
-  {
+	public void testRegex() throws Exception
+	{
 		Matcher match = VersionInfo.COMPEX_NAME_PATTERN.matcher("01234567890123");
-	  assertTrue(match.find());
-	  assertEquals("01234567890123", match.group(2));
+		assertTrue(match.find());
+		assertEquals("01234567890123", match.group(2));
 
 		match = VersionInfo.COMPEX_NAME_PATTERN.matcher("Joe-01234567890123");
-	  assertTrue(match.find());
-	  assertEquals("Joe", match.group(1));
-	  assertEquals("01234567890123", match.group(2));
-  }
+		assertTrue(match.find());
+		assertEquals("Joe", match.group(1));
+		assertEquals("01234567890123", match.group(2));
+	}
 
 	public void testGetVersionNumber() throws Exception
 	{

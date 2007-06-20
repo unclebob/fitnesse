@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.versions;
 
-import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.*;
 import fitnesse.*;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
+import fitnesse.wiki.*;
 
 import java.util.*;
 
@@ -70,7 +70,7 @@ public class VersionSelectionResponderTest extends RegexTest
 		request.setResource("PageOne");
 
 		Responder responder = new VersionSelectionResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(new FitNesseContext(root), request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
 		String content = response.getContent();
 		assertSubString("<input", content);

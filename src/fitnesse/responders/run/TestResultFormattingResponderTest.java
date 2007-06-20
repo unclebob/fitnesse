@@ -2,12 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.runner.*;
+import fit.Counts;
+import fitnesse.FitNesseContext;
 import fitnesse.components.FitProtocol;
 import fitnesse.http.*;
-import fitnesse.FitNesseContext;
+import fitnesse.runner.*;
 import fitnesse.testutil.RegexTest;
-import fit.Counts;
+
 import java.io.*;
 
 public class TestResultFormattingResponderTest extends RegexTest
@@ -38,7 +39,7 @@ public class TestResultFormattingResponderTest extends RegexTest
 	public void testOneResult() throws Exception
 	{
 		FitProtocol.writeData(result1.toString(), output);
-		FitProtocol.writeCounts(new Counts(0,0,0,0), output);
+		FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
 		responder.processResults(input);
 
 		assertEquals(1, formatter.results.size());
@@ -49,7 +50,7 @@ public class TestResultFormattingResponderTest extends RegexTest
 	{
 		FitProtocol.writeData(result1.toString(), output);
 		FitProtocol.writeData(result2.toString(), output);
-		FitProtocol.writeCounts(new Counts(0,0,0,0), output);
+		FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
 		responder.processResults(input);
 
 		assertEquals(2, formatter.results.size());
@@ -64,7 +65,7 @@ public class TestResultFormattingResponderTest extends RegexTest
 		FitProtocol.writeCounts(counts, output);
 		responder.processResults(input);
 
-    assertEquals(counts, formatter.finalCounts);
+		assertEquals(counts, formatter.finalCounts);
 	}
 
 	public void testMakeResponse() throws Exception

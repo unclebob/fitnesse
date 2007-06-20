@@ -2,8 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import junit.framework.TestCase;
 import fit.Counts;
+import junit.framework.TestCase;
 
 public class PageResultTest extends TestCase
 {
@@ -12,7 +12,7 @@ public class PageResultTest extends TestCase
 		PageResult result = new PageResult("PageTitle", new Counts(1, 2, 3, 4), "content");
 		assertEquals("PageTitle\n1 right, 2 wrong, 3 ignored, 4 exceptions\ncontent", result.toString());
 	}
-	
+
 	public void testParse() throws Exception
 	{
 		Counts counts = new Counts(1, 2, 3, 4);

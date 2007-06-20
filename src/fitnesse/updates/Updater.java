@@ -5,8 +5,8 @@ package fitnesse.updates;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
-import java.util.Properties;
 import java.io.*;
+import java.util.Properties;
 
 public class Updater
 {

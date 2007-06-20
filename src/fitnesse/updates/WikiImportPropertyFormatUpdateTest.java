@@ -1,7 +1,7 @@
 package fitnesse.updates;
 
-import fitnesse.wiki.*;
 import fitnesse.responders.WikiImportProperty;
+import fitnesse.wiki.*;
 
 public class WikiImportPropertyFormatUpdateTest extends UpdateTest
 {

@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.testutil.*;
-import fitnesse.http.*;
 import fitnesse.FitNesseContext;
+import fitnesse.http.*;
+import fitnesse.testutil.*;
 
 public class SocketCatchingResponderTest extends RegexTest
 {

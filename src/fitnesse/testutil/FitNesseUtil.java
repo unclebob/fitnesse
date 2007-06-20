@@ -3,8 +3,8 @@
 package fitnesse.testutil;
 
 import fitnesse.*;
-import fitnesse.util.FileUtil;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.util.FileUtil;
 import fitnesse.wiki.*;
 
 public class FitNesseUtil
@@ -36,6 +36,6 @@ public class FitNesseUtil
 	public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception
 	{
 		VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
-		((VirtualCouplingExtension)host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
+		((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
 	}
 }

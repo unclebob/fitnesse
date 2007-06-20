@@ -2,10 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import java.util.*;
-import fitnesse.testutil.*;
-import fitnesse.responders.run.SocketDealer;
 import fit.Counts;
+import fitnesse.responders.run.SocketDealer;
+import fitnesse.testutil.*;
+
+import java.util.*;
 
 public class FitClientTest extends RegexTest implements FitClientListener
 {
@@ -111,8 +112,8 @@ public class FitClientTest extends RegexTest implements FitClientListener
 		receiver.receiveSocket();
 		client.start();
 		client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table>" +
-		            "<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
-		            "<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
+			"<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
+			"<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
 		client.done();
 		client.join();
 		assertFalse(exceptionOccurred);
@@ -187,7 +188,7 @@ public class FitClientTest extends RegexTest implements FitClientListener
 		client.done();
 		client.join();
 
-    assertFalse(exceptionOccurred);
+		assertFalse(exceptionOccurred);
 		StringBuffer buffer = new StringBuffer();
 		for(Iterator iterator = outputs.iterator(); iterator.hasNext();)
 			buffer.append(iterator.next());

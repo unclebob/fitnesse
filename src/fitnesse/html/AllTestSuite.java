@@ -9,7 +9,7 @@ public class AllTestSuite
 {
 	public static Test suite()
 	{
-		return TestSuiteMaker.makeSuite("html", new Class[] {
+		return TestSuiteMaker.makeSuite("html", new Class[]{
 			HtmlPageTest.class,
 			HtmlTagTest.class,
 			HtmlUtilTest.class

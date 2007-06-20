@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import fitnesse.wikitext.WidgetBuilder;
+
+import java.util.regex.*;
 
 public class LinkWidget extends ParentWidget
 {
@@ -19,7 +19,7 @@ public class LinkWidget extends ParentWidget
 
 	public String render() throws Exception
 	{
-	 	String linkText = childHtml();
+		String linkText = childHtml();
 		String usableURL = makeUrlUsable(linkText);
 		StringBuffer html = new StringBuffer("<a href=\"");
 		html.append(usableURL);

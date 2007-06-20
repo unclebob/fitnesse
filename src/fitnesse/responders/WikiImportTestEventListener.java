@@ -24,12 +24,12 @@ public class WikiImportTestEventListener implements TestEventListener
 			eventProcessor = new SuiteEventProcessor();
 		else
 			eventProcessor = new TestEventProcessor();
-		
+
 		eventProcessor.run(testResponder, data);
 	}
 
 	private class TestEventProcessor implements WikiImporterClient
-	{                                                                                                             
+	{
 		private TestResponder testResponder;
 		private boolean errorOccured;
 		protected WikiImporter wikiImporter;
@@ -94,10 +94,10 @@ public class WikiImportTestEventListener implements TestEventListener
 	{
 		protected void doUpdating() throws Exception
 		{
-				if(!importProperty.isRoot())
-					updatePagePassedIn();
+			if(!importProperty.isRoot())
+				updatePagePassedIn();
 
-				wikiImporter.importWiki(wikiPage);
+			wikiImporter.importWiki(wikiPage);
 		}
 	}
 }

@@ -2,16 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.components.ClassPathBuilder;
-import fitnesse.components.CommandRunner;
+import fitnesse.components.*;
 import fitnesse.wiki.WikiPage;
 
 public class TableWizardResponder extends EditResponder
 {
 	protected String createPageContent() throws Exception
 	{
-		String textAreaContent = (String)request.getInput("text");
-		String fixtureName     = (String)request.getInput("fixture");
+		String textAreaContent = (String) request.getInput("text");
+		String fixtureName = (String) request.getInput("fixture");
 		String template = createFixtureTableTemplate(fixtureName);
 		if(!template.equals(""))
 			template = "\n" + template;

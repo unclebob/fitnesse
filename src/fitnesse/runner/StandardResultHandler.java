@@ -2,8 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import java.io.*;
 import fit.Counts;
+
+import java.io.*;
 
 //TODO MDM Rename to VerboseResultHandler
 public class StandardResultHandler implements ResultHandler
@@ -20,8 +21,8 @@ public class StandardResultHandler implements ResultHandler
 	{
 		Counts counts = result.counts();
 		pageCounts.tallyPageCounts(counts);
-    for(int i = 0; i < counts.right; i++)
-	    output.print(".");
+		for(int i = 0; i < counts.right; i++)
+			output.print(".");
 		if(counts.wrong > 0 || counts.exceptions > 0)
 		{
 			output.println();

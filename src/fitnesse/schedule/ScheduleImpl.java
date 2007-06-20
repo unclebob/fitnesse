@@ -32,9 +32,10 @@ public class ScheduleImpl implements Schedule, Runnable
 	public void stop() throws Exception
 	{
 		running = false;
-		if(thread != null) {
+		if(thread != null)
+		{
 			thread.join();
-    }
+		}
 		thread = null;
 	}
 
@@ -58,9 +59,10 @@ public class ScheduleImpl implements Schedule, Runnable
 		long time = System.currentTimeMillis();
 		synchronized(scheduleItems)
 		{
-			for (ScheduleItem item : scheduleItems) {
-			    runItem(item, time);
-            }
+			for(ScheduleItem item : scheduleItems)
+			{
+				runItem(item, time);
+			}
 		}
 	}
 

@@ -5,9 +5,8 @@ package fitnesse.components;
 public class Base64
 {
 	private static final byte[] base64Alphabet =
-	  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
 	private static final byte pad = '=';
-
 
 	public static String decode(String value) throws Exception
 	{
@@ -27,9 +26,9 @@ public class Base64
 			byte v3 = getValueFor(bytes[index + 2]);
 			byte v4 = getValueFor(bytes[index + 3]);
 
-			byte c1 = (byte)((v1 << 2) + (v2 >> 4));
-			byte c2 = (byte)((v2 << 4) + (v3 >> 2));
-			byte c3 = (byte)((v3 << 6) + v4);
+			byte c1 = (byte) ((v1 << 2) + (v2 >> 4));
+			byte c2 = (byte) ((v2 << 4) + (v3 >> 2));
+			byte c3 = (byte) ((v3 << 6) + v4);
 
 			decoding[decodingIndex++] = c1;
 			if(c2 != 0)
@@ -60,10 +59,10 @@ public class Base64
 			byte c2 = index >= inputLength ? 0 : bytes[index++];
 			byte c3 = index >= inputLength ? 0 : bytes[index++];
 
-			byte v1 = abs((byte)(c1 >> 2));
-			byte v2 = abs((byte)(((c1 << 4) & 63) + (c2 >> 4)));
-			byte v3 = abs((byte)(((c2 << 2) & 63) + (c3 >> 6)));
-			byte v4 = abs((byte)(c3 & 63));
+			byte v1 = abs((byte) (c1 >> 2));
+			byte v2 = abs((byte) (((c1 << 4) & 63) + (c2 >> 4)));
+			byte v3 = abs((byte) (((c2 << 2) & 63) + (c3 >> 6)));
+			byte v4 = abs((byte) (c3 & 63));
 
 			encoding[encodingIndex++] = base64Alphabet[v1];
 			encoding[encodingIndex++] = base64Alphabet[v2];
@@ -84,10 +83,10 @@ public class Base64
 		if(bytes.length == 0)
 			return 0;
 
-		int lengthOfOutput = (int)(bytes.length * .75);
+		int lengthOfOutput = (int) (bytes.length * .75);
 
 		for(int i = bytes.length - 1; bytes[i] == pad; i--)
-				lengthOfOutput--;
+			lengthOfOutput--;
 
 		return lengthOfOutput;
 	}
@@ -96,7 +95,7 @@ public class Base64
 	{
 		boolean needsPadding = (bytes.length % 3 != 0);
 
-		int length = ((int)(bytes.length / 3)) * 4;
+		int length = ((int) (bytes.length / 3)) * 4;
 		if(needsPadding)
 			length += 4;
 
@@ -106,17 +105,17 @@ public class Base64
 	public static byte getValueFor(byte b)
 	{
 		if(b == pad)
-			return (byte)0;
+			return (byte) 0;
 		for(int i = 0; i < base64Alphabet.length; i++)
 		{
 			if(base64Alphabet[i] == b)
-				return (byte)i;
+				return (byte) i;
 		}
 		return -1;
 	}
 
 	private static byte abs(byte b)
 	{
-		return (byte)Math.abs(b);
+		return (byte) Math.abs(b);
 	}
 }

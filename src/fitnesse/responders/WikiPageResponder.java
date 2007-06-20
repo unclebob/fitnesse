@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.http.*;
-import fitnesse.wiki.*;
-import fitnesse.*;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.*;
 import fitnesse.html.*;
+import fitnesse.http.*;
+import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder
 {

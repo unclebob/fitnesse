@@ -3,8 +3,8 @@
 package fitnesse.responders.files;
 
 import fitnesse.*;
-import fitnesse.testutil.RegexTest;
 import fitnesse.http.*;
+import fitnesse.testutil.RegexTest;
 
 public class DeleteConfirmationResponderTest extends RegexTest
 {
@@ -16,12 +16,13 @@ public class DeleteConfirmationResponderTest extends RegexTest
 		request = new MockRequest();
 		context = new FitNesseContext();
 	}
+
 	public void testContentOfPage() throws Exception
 	{
 		request.setResource("files");
 		request.addInput("filename", "MyFile.txt");
 		Responder responder = new DeleteConfirmationResponder();
-		SimpleResponse response = (SimpleResponse)responder.makeResponse(context, request);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 		String content = response.getContent();
 
 		assertSubString("deleteFile", content);
