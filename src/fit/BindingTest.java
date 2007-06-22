@@ -65,7 +65,7 @@ public class BindingTest extends RegexTest
 		assertEquals(321, fixture.intField);
 	}
 
-	public void testQueryBindingWithBlackCell() throws Throwable
+	public void testQueryBindingWithBlankCell() throws Throwable
 	{
 		Binding binding = Binding.create(fixture, "intField");
 		binding.doCell(fixture, cell4);
