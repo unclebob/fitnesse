@@ -119,6 +119,16 @@
             </manifest>
         </jar>
     </target>
+	
+	<target name="jar_testclasses" depends="build" description="generate the jar file with all test classes and only the test classes">
+        <mkdir dir="dist" />
+        <delete file="dist/fitnesse_testclasses.jar" />
+        <jar jarfile="dist/fitnesse_testclasses.jar" basedir="${classes}">
+            <include name="**/*Test.class" />
+        </jar>
+	</target>
+		
+	
 
     <target name="http_jar" depends="compile" description="create a jar of the http stuff">
         <copy todir="${classes}">
@@ -163,7 +173,7 @@
     </target>
 
     <target name="unit_test" depends="compile" description="run the unit tests">
-        <junit fork="yes" printsummary="on" haltonfailure="yes" haltonerror="yes">
+        <junit fork="yes" printsummary="on" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
             <sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/cobertura.ser" />
             <classpath refid="classpath" />
             <classpath refid="cobertura.classpath" />
@@ -273,7 +283,7 @@
     </target>
 
     <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef" description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-        <run-fitnesse-tests wikidirectoryrootpath="." suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" resultsxmlpage="fit-results.xml" classpathref="classpath" />
+        <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" resultsxmlpage="fit-results.xml" classpathref="classpath" />
     </target>
 
     <target name="execute_fitnesse_tests_using_different_tasks" depends="startFitnesse, runAcceptanceTests, stopFitnesse" />
