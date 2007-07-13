@@ -3,7 +3,9 @@
 package fitnesse.html;
 
 import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
 public class HtmlUtilTest extends RegexTest
 {
@@ -65,23 +67,6 @@ public class HtmlUtilTest extends RegexTest
 		HtmlTag formTag = HtmlUtil.makeFormTag("method", "action");
 		assertSubString("method", formTag.getAttribute("method"));
 		assertSubString("action", formTag.getAttribute("action"));
-	}
-
-	public void testTestableHtml() throws Exception
-	{
-		WikiPage root = InMemoryPage.makeRoot("RooT");
-		PageCrawler crawler = root.getPageCrawler();
-		crawler.addPage(root, PathParser.parse("SetUp"), "setup");
-		crawler.addPage(root, PathParser.parse("TearDown"), "teardown");
-		WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "the content");
-
-		String html = HtmlUtil.testableHtml(page.getData());
-		assertSubString(".SetUp", html);
-		assertSubString("setup", html);
-		assertSubString(".TearDown", html);
-		assertSubString("teardown", html);
-		assertSubString("the content", html);
-		assertSubString("class=\"collapsable\"", html);
 	}
 
 	public void testMakeDivTag() throws Exception

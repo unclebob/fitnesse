@@ -2,30 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.*;
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 import java.util.regex.Pattern;
 
 public class HruleWidgetTest extends TestCase
 {
-	private WikiPage mockSource;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.HruleWidgetTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-		mockSource = new WikiPageDummy();
-	}
-
-	public void tearDown() throws Exception
-	{
-	}
-
 	public void testRegexp() throws Exception
 	{
 		assertTrue("match1", Pattern.matches(HruleWidget.REGEXP, "----"));

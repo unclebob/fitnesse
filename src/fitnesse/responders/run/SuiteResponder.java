@@ -3,8 +3,10 @@
 package fitnesse.responders.run;
 
 import fit.Counts;
-import fitnesse.components.*;
-import fitnesse.html.*;
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.FitClientListener;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.wiki.*;
 
 import java.util.*;
@@ -17,7 +19,7 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
 	private WikiPage currentTest = null;
 	private SuiteHtmlFormatter suiteFormatter;
-	private List testPages;
+	private List<WikiPage> testPages;
 
 	protected HtmlTag addSummaryPlaceHolder()
 	{
@@ -48,19 +50,17 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		classPath = buildClassPath(testPages, page);
 	}
 
-	private void processTestPages(List testPages) throws Exception
+	private void processTestPages(List<WikiPage> testPages) throws Exception
 	{
-		for(Iterator iterator = testPages.iterator(); iterator.hasNext();)
-		{
-			WikiPage testPage = (WikiPage) iterator.next();
-			processingQueue.addLast(testPage);
-			String testableHtml = HtmlUtil.testableHtml(testPage.getData());
-			if(testableHtml.length() > 0)
-				client.send(testableHtml);
-			else
-				client.send(emptyPageContent);
-		}
-	}
+    for (WikiPage testPage : testPages) {
+      processingQueue.addLast(testPage);
+      String testableHtml = SetupTeardownIncluder.render(testPage.getData());
+      if (testableHtml.length() > 0)
+        client.send(testableHtml);
+      else
+        client.send(emptyPageContent);
+    }
+  }
 
 	protected void close() throws Exception
 	{
@@ -74,7 +74,7 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 
 	public void acceptOutput(String output) throws Exception
 	{
-		WikiPage firstInLine = processingQueue.isEmpty() ? null : (WikiPage) processingQueue.getFirst();
+		WikiPage firstInLine = processingQueue.isEmpty() ? null : processingQueue.getFirst();
 		if(firstInLine != null && firstInLine != currentTest)
 		{
 			PageCrawler pageCrawler = page.getPageCrawler();
@@ -92,7 +92,7 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		super.acceptResults(counts);
 
 		PageCrawler pageCrawler = page.getPageCrawler();
-		WikiPage testPage = (WikiPage) processingQueue.removeFirst();
+		WikiPage testPage = processingQueue.removeFirst();
 		String relativeName = pageCrawler.getRelativeName(page, testPage);
 		addToResponse(suiteFormatter.acceptResults(relativeName, counts));
 	}
@@ -108,37 +108,35 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		return "Suite Results";
 	}
 
-	public static String buildClassPath(List testPages, WikiPage page) throws Exception
+	public static String buildClassPath(List<WikiPage> testPages, WikiPage page) throws Exception
 	{
 		final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
 		final String pathSeparator = classPathBuilder.getPathSeparator(page);
-		List classPathElements = new ArrayList();
+		List<Object> classPathElements = new ArrayList<Object>();
 		Set visitedPages = new HashSet();
 
-		for(Iterator iterator = testPages.iterator(); iterator.hasNext();)
-		{
-			WikiPage testPage = (WikiPage) iterator.next();
-			addClassPathElements(testPage, classPathElements, visitedPages);
-		}
-		return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
+    for (WikiPage testPage : testPages) {
+      addClassPathElements(testPage, classPathElements, visitedPages);
+    }
+    return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
 	}
 
-	private static void addClassPathElements(WikiPage page, List classPathElements, Set visitedPages) throws Exception
+	private static void addClassPathElements(WikiPage page, List<Object> classPathElements, Set visitedPages) throws Exception
 	{
 		List pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
 		classPathElements.addAll(pathElements);
 	}
 
-	public List makePageList() throws Exception
+	public List<WikiPage> makePageList() throws Exception
 	{
 		String suite = request != null ? (String) request.getInput("suiteFilter") : null;
 		return makePageList(page, root, suite);
 	}
 
-	public static List makePageList(WikiPage page, WikiPage root, String suite) throws Exception
+	public static List<WikiPage> makePageList(WikiPage page, WikiPage root, String suite) throws Exception
 	{
-		LinkedList pages = getAllTestPagesUnder(page, suite);
-		List referencedPages = gatherCrossReferencedTestPages(page, root);
+		LinkedList<WikiPage> pages = getAllTestPagesUnder(page, suite);
+		List<WikiPage> referencedPages = gatherCrossReferencedTestPages(page, root);
 		pages.addAll(referencedPages);
 
 		WikiPage suiteSetUp = PageCrawlerImpl.getInheritedPage(SUITE_SETUP_NAME, page);
@@ -173,18 +171,18 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 
 	public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception
 	{
-		LinkedList testPages = new LinkedList();
+		LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
 		addTestPagesToList(testPages, suiteRoot, suite);
 
-		Collections.sort(testPages, new Comparator()
+		Collections.sort(testPages, new Comparator<WikiPage>()
 		{
-			public int compare(Object o, Object o1)
+			public int compare(WikiPage p1, WikiPage p2)
 			{
 				try
 				{
-					PageCrawler crawler = ((WikiPage) o).getPageCrawler();
-					WikiPagePath path1 = crawler.getFullPath((WikiPage) o);
-					WikiPagePath path2 = crawler.getFullPath((WikiPage) o1);
+					PageCrawler crawler = p1.getPageCrawler();
+					WikiPagePath path1 = crawler.getFullPath(p1);
+					WikiPagePath path2 = crawler.getFullPath(p2);
 
 					return path1.compareTo(path2);
 				}
@@ -199,7 +197,7 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		return testPages;
 	}
 
-	private static void addTestPagesToList(List testPages, WikiPage context, String suite) throws Exception
+	private static void addTestPagesToList(List<WikiPage> testPages, WikiPage context, String suite) throws Exception
 	{
 		if(context.getData().hasAttribute("Test"))
 		{
@@ -209,19 +207,17 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 			}
 		}
 
-		ArrayList children = new ArrayList();
+		ArrayList<WikiPage> children = new ArrayList<WikiPage>();
 		children.addAll(context.getChildren());
 		if(context.hasExtension(VirtualCouplingExtension.NAME))
 		{
 			VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(VirtualCouplingExtension.NAME);
 			children.addAll(extension.getVirtualCoupling().getChildren());
 		}
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
-		{
-			WikiPage page = (WikiPage) iterator.next();
-			addTestPagesToList(testPages, page, suite);
-		}
-	}
+    for (WikiPage page : children) {
+      addTestPagesToList(testPages, page, suite);
+    }
+  }
 
 	private static boolean belongsToSuite(WikiPage context, String suite)
 	{
@@ -251,21 +247,20 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		return false;
 	}
 
-	public static List gatherCrossReferencedTestPages(WikiPage testPage, WikiPage root) throws Exception
+	public static List<WikiPage> gatherCrossReferencedTestPages(WikiPage testPage, WikiPage root) throws Exception
 	{
-		LinkedList pages = new LinkedList();
+		LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
 		PageData data = testPage.getData();
-		List pageReferences = data.getXrefPages();
+		List<String> pageReferences = data.getXrefPages();
 		PageCrawler crawler = testPage.getPageCrawler();
 		WikiPagePath testPagePath = crawler.getFullPath(testPage);
 		WikiPage parent = crawler.getPage(root, testPagePath.parentPath());
-		for(Iterator i = pageReferences.iterator(); i.hasNext();)
-		{
-			WikiPagePath path = PathParser.parse((String) i.next());
-			WikiPage referencedPage = crawler.getPage(parent, path);
-			if(referencedPage != null)
-				pages.add(referencedPage);
-		}
-		return pages;
+    for (String pageReference : pageReferences) {
+      WikiPagePath path = PathParser.parse(pageReference);
+      WikiPage referencedPage = crawler.getPage(parent, path);
+      if (referencedPage != null)
+        pages.add(referencedPage);
+    }
+    return pages;
 	}
 }

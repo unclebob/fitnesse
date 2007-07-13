@@ -6,24 +6,16 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 public class WikiTextTranslatorTest extends TestCase
 {
-	private WikiPage root;
-	private WikiPage page;
-	private PageCrawler crawler;
+  private WikiPage page;
 
-	public static void main(String[] args)
+  public void setUp() throws Exception
 	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.WikiTextTranslatorTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-		root = InMemoryPage.makeRoot("RooT");
-		crawler = root.getPageCrawler();
-		page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    PageCrawler crawler = root.getPageCrawler();
+    page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
 	}
 
 	public void tearDown() throws Exception

@@ -3,14 +3,20 @@
 package fitnesse.responders.run;
 
 import fit.Counts;
-import fitnesse.*;
-import fitnesse.components.*;
-import fitnesse.html.HtmlUtil;
-import fitnesse.http.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.FitClient;
+import fitnesse.components.FitClientListener;
+import fitnesse.components.FitProtocol;
+import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.ResponseSender;
 import fitnesse.wiki.*;
 
 import java.net.Socket;
-import java.util.*;
+import java.util.List;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, FitClientListener
 {
@@ -70,7 +76,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 	private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws Exception
 	{
 		FitClient client = startClient(socket);
-		List testPages = SuiteResponder.makePageList(page, root, suiteFilter);
+		List<WikiPage> testPages = SuiteResponder.makePageList(page, root, suiteFilter);
 
 		if(shouldIncludePaths)
 		{
@@ -78,19 +84,17 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 			client.send(classpath);
 		}
 
-		for(Iterator iterator = testPages.iterator(); iterator.hasNext();)
-		{
-			WikiPage testPage = (WikiPage) iterator.next();
-			PageData testPageData = testPage.getData();
-			sendPage(testPageData, client, false);
-		}
-		closeClient(client);
+    for (WikiPage testPage : testPages) {
+      PageData testPageData = testPage.getData();
+      sendPage(testPageData, client, false);
+    }
+    closeClient(client);
 	}
 
 	private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws Exception
 	{
 		String pageName = crawler.getRelativeName(page, data.getWikiPage());
-		String testableHtml = HtmlUtil.testableHtml(data, includeSuiteSetup);
+		String testableHtml = SetupTeardownIncluder.render(data, includeSuiteSetup);
 		String sendableHtml = pageName + "\n" + testableHtml;
 		client.send(sendableHtml);
 	}

@@ -3,17 +3,11 @@
 package fitnesse.wikitext.widgets;
 
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 import java.util.regex.Pattern;
 
 public class CenterWidgetTest extends TestCase
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.CenterWidgetTest"});
-	}
-
 	public void setUp() throws Exception
 	{
 	}

@@ -3,14 +3,22 @@
 package fitnesse.responders.run;
 
 import fit.Counts;
-import fitnesse.authentication.*;
-import fitnesse.components.*;
-import fitnesse.html.*;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureTestOperation;
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.CommandRunningFitClient;
+import fitnesse.components.FitClientListener;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
-import fitnesse.responders.*;
+import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.SecureResponder;
+import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.*;
 
-import java.util.*;
+import java.util.LinkedList;
 
 public class TestResponder extends ChunkingResponder implements FitClientListener, SecureResponder
 {
@@ -50,12 +58,10 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 
 	private void sendPreTestNotification() throws Exception
 	{
-		for(Iterator iterator = eventListeners.iterator(); iterator.hasNext();)
-		{
-			TestEventListener testEventListener = (TestEventListener) iterator.next();
-			testEventListener.notifyPreTest(this, data);
-		}
-	}
+    for (TestEventListener eventListener : eventListeners) {
+      eventListener.notifyPreTest(this, data);
+    }
+  }
 
 	protected void finishSending() throws Exception
 	{
@@ -73,7 +79,7 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
 	{
 		addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
 
-		testableHtml = HtmlUtil.testableHtml(data, true);
+		testableHtml = SetupTeardownIncluder.render(data, true);
 		if(testableHtml.length() == 0)
 			testableHtml = handleBlankHtml();
 		classPath = new ClassPathBuilder().getClasspath(page);

@@ -2,23 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import junit.swingui.TestRunner;
 
 public class LiteralWidgetTest extends WidgetTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"LiteralWidgetTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-	}
-
-	public void tearDown() throws Exception
-	{
-	}
-
 	public void testMatches() throws Exception
 	{
 		assertMatches("!lit(0)");

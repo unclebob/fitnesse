@@ -3,15 +3,9 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.FitNesseUtil;
-import junit.swingui.TestRunner;
 
 public class VirtualWikiWidgetTest extends WidgetTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"VirtualWikiWidgetTest"});
-	}
-
 	public void setUp() throws Exception
 	{
 	}

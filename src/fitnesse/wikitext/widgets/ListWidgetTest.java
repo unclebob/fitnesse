@@ -3,16 +3,10 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
-import junit.swingui.TestRunner;
 
 public class ListWidgetTest extends WidgetTest
 {
 	private MockWidgetRoot widgetRoot;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"ListWidgetTest"});
-	}
 
 	protected void setUp() throws Exception
 	{

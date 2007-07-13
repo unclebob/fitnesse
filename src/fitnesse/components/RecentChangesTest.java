@@ -3,8 +3,9 @@
 package fitnesse.components;
 
 import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.*;
-import junit.swingui.TestRunner;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
 import java.util.List;
 
@@ -14,11 +15,6 @@ public class RecentChangesTest extends RegexTest
 	private WikiPage newPage;
 	private WikiPage page1;
 	private WikiPage page2;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"RecentChangesTest"});
-	}
 
 	public void setUp() throws Exception
 	{

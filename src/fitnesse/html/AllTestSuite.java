@@ -5,15 +5,16 @@ package fitnesse.html;
 import fitnesse.testutil.TestSuiteMaker;
 import junit.framework.Test;
 
-public class AllTestSuite
-{
-	public static Test suite()
-	{
-		return TestSuiteMaker.makeSuite("html", new Class[]{
-			HtmlPageTest.class,
-			HtmlTagTest.class,
-			HtmlUtilTest.class
-		});
-	}
+public class AllTestSuite {
+  public static Test suite() {
+    return TestSuiteMaker.makeSuite("html", new Class[]{
+            HtmlPageTest.class,
+            HtmlTagTest.class,
+            HtmlUtilTest.class,
+            SetupTeardownIncluderTest.class
+
+    }
+    );
+  }
 }
 

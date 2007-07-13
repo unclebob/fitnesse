@@ -2,22 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fitnesse.authentication.*;
+import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.MultiUserAuthenticator;
+import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.util.FileUtil;
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 import java.io.File;
 
 public class FitNesseMainTest extends TestCase
 {
 	private FitNesseContext context;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"FitNesseMainTest"});
-	}
 
 	public void setUp() throws Exception
 	{

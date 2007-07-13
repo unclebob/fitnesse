@@ -2,20 +2,26 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fitnesse.authentication.*;
-import fitnesse.components.*;
+import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.MultiUserAuthenticator;
+import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.components.CommandLine;
+import fitnesse.components.Logger;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.*;
+import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.socketservice.SocketService;
 import fitnesse.updates.Updater;
-import fitnesse.wiki.*;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageVersionPruner;
 
 import java.io.File;
 import java.net.BindException;
 
 public class FitNesse
 {
-	public static final String VERSION = "20070619";
+	public static final String VERSION = "UNRELEASED";
 
 	private FitNesseContext context = new FitNesseContext();
 	private SocketService theService;

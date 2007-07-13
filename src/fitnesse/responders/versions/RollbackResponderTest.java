@@ -2,27 +2,22 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.versions;
 
-import fitnesse.*;
-import fitnesse.http.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 public class RollbackResponderTest extends TestCase
 {
-	private WikiPage root;
-	private WikiPage page;
+  private WikiPage page;
 	private Response response;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"RollbackResponderTest"});
-	}
 
 	public void setUp() throws Exception
 	{
-		root = InMemoryPage.makeRoot("RooT");
-		page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "original content");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "original content");
 		PageData data = page.getData();
 		data.setContent("new stuff");
 		data.setProperties(new WikiPageProperties());

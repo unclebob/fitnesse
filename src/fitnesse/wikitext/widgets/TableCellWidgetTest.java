@@ -4,17 +4,11 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.RegexTest;
 import fitnesse.wikitext.WikiWidget;
-import junit.swingui.TestRunner;
 
 public class TableCellWidgetTest extends RegexTest
 {
 	public TableRowWidget row;
 	private TableWidget table;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.TableCellWidgetTest"});
-	}
 
 	public void setUp() throws Exception
 	{

@@ -3,14 +3,9 @@
 package fitnesse.components;
 
 import fitnesse.testutil.RegexTest;
-import junit.swingui.TestRunner;
 
 public class CommandRunnerTest extends RegexTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"CommandRunnerTest"});
-	}
 
 	public void setUp() throws Exception
 	{

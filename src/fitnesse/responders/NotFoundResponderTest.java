@@ -2,27 +2,16 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
-import fitnesse.http.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.RegexTest;
-import fitnesse.wiki.*;
-import junit.swingui.TestRunner;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 
 public class NotFoundResponderTest extends RegexTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"NotFoundResponderTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-	}
-
-	public void tearDown() throws Exception
-	{
-	}
-
 	public void testResponse() throws Exception
 	{
 		MockRequest request = new MockRequest();

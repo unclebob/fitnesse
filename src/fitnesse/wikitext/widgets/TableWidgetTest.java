@@ -4,26 +4,12 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wikitext.WikiWidget;
-import junit.swingui.TestRunner;
 
 public class TableWidgetTest extends WidgetTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.TableWidgetTest"});
-	}
-
 	protected String getRegexp()
 	{
 		return TableWidget.REGEXP;
-	}
-
-	public void setUp() throws Exception
-	{
-	}
-
-	public void tearDown() throws Exception
-	{
 	}
 
 	public void testRegexp() throws Exception

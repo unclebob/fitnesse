@@ -3,9 +3,14 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.*;
-import fitnesse.html.*;
-import fitnesse.http.*;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder
@@ -70,7 +75,7 @@ public class WikiPageResponder implements SecureResponder
 		html.title.use(fullPathName);
 		html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
 		html.actions.use(HtmlUtil.makeActions(pageData));
-		html.main.use(HtmlUtil.addHeaderAndFooter(page, HtmlUtil.testableHtml(pageData)));
+		html.main.use(HtmlUtil.addHeaderAndFooter(page, SetupTeardownIncluder.render(pageData)));
 
 		handleSpecialProperties(html, page);
 

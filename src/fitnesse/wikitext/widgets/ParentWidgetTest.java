@@ -2,20 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWidget;
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 public class ParentWidgetTest extends TestCase
 {
 	private ParentWidget parent;
 	private WikiPage rootPage;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.ParentWidgetTest"});
-	}
 
 	class MockParentWidget extends ParentWidget
 	{
@@ -29,8 +24,6 @@ public class ParentWidgetTest extends TestCase
 			return null;
 		}
 	}
-
-	;
 
 	public void setUp() throws Exception
 	{

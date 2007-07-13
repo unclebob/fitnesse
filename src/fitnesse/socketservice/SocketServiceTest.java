@@ -3,7 +3,6 @@
 package fitnesse.socketservice;
 
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,10 +14,6 @@ public class SocketServiceTest extends TestCase
 	private SocketService ss;
 	private final static int portNumber = 1999;
 
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"com.objectmentor.SocketService.SocketServiceTest"});
-	}
 
 	public SocketServiceTest()
 	{
@@ -138,16 +133,14 @@ class TestUtility
 	public static PrintStream GetPrintStream(Socket s) throws IOException
 	{
 		OutputStream os = s.getOutputStream();
-		PrintStream ps = new PrintStream(os);
-		return ps;
+    return new PrintStream(os);
 	}
 
 	public static BufferedReader GetBufferedReader(Socket s) throws IOException
 	{
 		InputStream is = s.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is);
-		BufferedReader br = new BufferedReader(isr);
-		return br;
+    return new BufferedReader(isr);
 	}
 }
 

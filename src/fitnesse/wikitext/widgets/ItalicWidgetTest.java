@@ -3,15 +3,9 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.RegexTest;
-import junit.swingui.TestRunner;
 
 public class ItalicWidgetTest extends RegexTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.ItalicWidgetTest"});
-	}
-
 	public void setUp() throws Exception
 	{
 	}

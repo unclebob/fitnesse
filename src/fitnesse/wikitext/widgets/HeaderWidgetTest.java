@@ -3,25 +3,11 @@
 package fitnesse.wikitext.widgets;
 
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 import java.util.regex.Pattern;
 
 public class HeaderWidgetTest extends TestCase
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.HeaderWidgetTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-	}
-
-	public void tearDown() throws Exception
-	{
-	}
-
 	public void testRegexp() throws Exception
 	{
 		assertTrue("match1", Pattern.matches(HeaderWidget.REGEXP, "!1 some text\n"));

@@ -3,24 +3,10 @@
 package fitnesse.wikitext.widgets;
 
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 public class ListItemWidgetTest extends TestCase
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"ListItemWidgetTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-	}
-
-	public void tearDown() throws Exception
-	{
-	}
-
-	public void testHtml() throws Exception
+    public void testHtml() throws Exception
 	{
 		ListItemWidget widget = new ListItemWidget(new MockWidgetRoot(), "some text", 0);
 		assertEquals("<li>some text</li>\n", widget.render());

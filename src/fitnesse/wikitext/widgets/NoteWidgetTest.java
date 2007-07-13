@@ -3,15 +3,9 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
-import junit.swingui.TestRunner;
 
 public class NoteWidgetTest extends WidgetTest
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"NoteTestClass"});
-	}
-
 	public void setUp() throws Exception
 	{
 	}

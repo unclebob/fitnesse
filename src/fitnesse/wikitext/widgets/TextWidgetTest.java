@@ -3,23 +3,9 @@
 package fitnesse.wikitext.widgets;
 
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
 public class TextWidgetTest extends TestCase
 {
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"fitnesse.wikitext.widgets.TextWidgetTest"});
-	}
-
-	public void setUp() throws Exception
-	{
-	}
-
-	public void tearDown() throws Exception
-	{
-	}
-
 	public void testGetText() throws Exception
 	{
 		TextWidget widget = new TextWidget(new MockWidgetRoot(), "some text");

@@ -3,19 +3,14 @@
 package fitnesse.http;
 
 import junit.framework.TestCase;
-import junit.swingui.TestRunner;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class ResponseParserTest extends TestCase
 {
 	private String response;
 	private InputStream input;
-
-	public static void main(String[] args)
-	{
-		TestRunner.main(new String[]{"ResponseParserTest"});
-	}
 
 	public void setUp() throws Exception
 	{
