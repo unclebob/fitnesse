@@ -16,7 +16,7 @@ public class SetupTeardownIncluder {
   }
 
   public static String render(PageData pageData, boolean isSuite)
-          throws Exception {
+    throws Exception {
     return new SetupTeardownIncluder(pageData).render(isSuite);
   }
 
@@ -99,10 +99,11 @@ public class SetupTeardownIncluder {
   }
 
   private void buildIncludeDirective(String pagePathName, String arg) {
-    newPageContent.append("\n!include ")
-            .append(arg)
-            .append(" .")
-            .append(pagePathName)
-            .append("\n");
+    newPageContent
+      .append("\n!include ")
+      .append(arg)
+      .append(" .")
+      .append(pagePathName)
+      .append("\n");
   }
 }
