@@ -4,8 +4,12 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.http.*;
-import fitnesse.testutil.*;
+import fitnesse.http.ChunkedResponse;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.RegexTest;
 import fitnesse.wiki.*;
 
 public class WikiImportingResponderTest extends RegexTest
@@ -194,15 +198,6 @@ public class WikiImportingResponderTest extends RegexTest
 
 		String content = new MockResponseSender(response).sentData();
 		assertSubString("The remote resource, " + remoteUrl + ", was not found.", content);
-	}
-
-	public void testBadDomainName() throws Exception
-	{
-		String remoteUrl = "http://bad.domainthatdoesntexist.com/FrontPage";
-		Response response = makeSampleResponse(remoteUrl);
-
-		String content = new MockResponseSender(response).sentData();
-		assertSubString("java.net.UnknownHostException: bad.domainthatdoesntexist.com", content);
 	}
 
 	public void testErrorMessageForBadUrlProvided() throws Exception
