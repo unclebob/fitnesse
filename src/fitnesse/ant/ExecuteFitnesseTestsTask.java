@@ -1,21 +1,35 @@
 package fitnesse.ant;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Task to run fit tests. This task runs fitnesse tests and publishes the results.
  * <p/>
  * <pre>
  * Usage:
- * &lt;taskdef name=&quot;execute-fitnesse-tests&quot; classname=&quot;fitnesse.ant.ExecuteFitnesseTestsTask&quot; classpathref=&quot;classpath&quot; /&gt;
+ * &lt;taskdef name=&quot;execute-fitnesse-tests&quot;
+ *     classname=&quot;fitnesse.ant.ExecuteFitnesseTestsTask&quot;
+ *     classpathref=&quot;classpath&quot; /&gt;
  * OR
- * &lt;taskdef classpathref=&quot;classpath&quot; resource=&quot;tasks.properties&quot; /&gt;
+ * &lt;taskdef classpathref=&quot;classpath&quot;
+ *             resource=&quot;tasks.properties&quot; /&gt;
  * <p/>
- * &lt;execute-fitnesse-tests suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot; fitnesseport=&quot;8082&quot; resultsdir=&quot;${results.dir}&quot; resultshtmlpage=&quot;fit-results.html&quot; classpathref=&quot;classpath&quot; /&gt;
+ * &lt;execute-fitnesse-tests
+ *     suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot;
+ *     fitnesseport=&quot;8082&quot;
+ *     resultsdir=&quot;${results.dir}&quot;
+ *     resultshtmlpage=&quot;fit-results.html&quot;
+ *     classpathref=&quot;classpath&quot; /&gt;
  * </pre>
  */
 public class ExecuteFitnesseTestsTask extends Task

@@ -62,17 +62,6 @@ public class CachingPageTest extends TestCase
 		assertFalse(root.hasCachedSubpage(child));
 	}
 
-// TODO MdM - trying to get rid of getParent()
-//	public void testGetParent() throws Exception
-//	{
-//		WikiPage child1 = crawler.addPage(root, "ChildOne", "ChildOne");
-//		WikiPage child2 = crawler.addPage(child1, "ChildTwo", "ChildTwo");
-//
-//		assertSame(child1, child2.getParent());
-//		assertSame(root, child1.getParent());
-//		assertEquals(root, root.getParent());
-//	}
-
 	public void testGetName() throws Exception
 	{
 		WikiPage frontPage = crawler.addPage(root, PathParser.parse("FrontPage"), "FrontPage");

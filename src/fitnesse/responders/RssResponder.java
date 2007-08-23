@@ -2,16 +2,22 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
 import fitnesse.components.XmlWriter;
-import fitnesse.http.*;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.ByteArrayOutputStream;
-import java.text.*;
-import java.util.regex.*;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RssResponder implements Responder
 {
@@ -22,36 +28,51 @@ public class RssResponder implements Responder
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
 		Document rssDocument = buildRssHeader();
+    XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
 
-		resource = request.getResource();
-		contextPage = context.root.getPageCrawler().getPage(context.root, PathParser.parse(resource));
-		XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
-		WikiPage page = context.root.getChildPage("RecentChanges");
-		buildItemReport(page, rssDocument, request.getResource());
+    contextPage = getContextPage(request, context);   
+		WikiPage recentChangesPage = context.root.getChildPage("RecentChanges");
+		buildItemReportIfRecentChangesExists(recentChangesPage, rssDocument, request.getResource());
 		SimpleResponse response = responseFrom(rssDocument);
 		return response;
 	}
 
-	protected void buildItemReport(WikiPage page, Document rssDocument, String resource) throws Exception
-	{
-		if(page != null)
-		{
-			String[] lines = getLines(page);
-			for(int i = 0; i < lines.length; i++)
-			{
-				String[] fields = lines[i].split("\\|");
-				String path = fields[1];
-				String author = fields[2];
-				String pubDate = fields[3];
-				pubDate = convertDateFormat(pubDate);
+  private WikiPage getContextPage(Request request, FitNesseContext context)
+    throws Exception {
+    resource = request.getResource();
+    PageCrawler pageCrawler = context.root.getPageCrawler();
+    WikiPagePath resourcePath = PathParser.parse(resource);
+    return pageCrawler.getPage(context.root, resourcePath);
+  }
 
-				if(shouldReportItem(resource, path))
-					buildItem(rssDocument, path, author, pubDate);
-			}
-		}
+  protected void buildItemReportIfRecentChangesExists(WikiPage recentChangesPage, Document rssDocument, String resource) throws Exception
+	{
+		if(recentChangesPage != null)
+      buildItemReport(recentChangesPage, resource, rssDocument);
 	}
 
-	protected String[] getLines(WikiPage page) throws Exception
+  private void buildItemReport( WikiPage recentChangesPage, String resource, Document rssDocument) throws Exception {
+    String[] lines = convertPageToArrayOfLines(recentChangesPage);
+    for(String line : lines)
+      reportRecentChangeItem(line, resource, rssDocument);
+  }
+
+  private void reportRecentChangeItem( String line, String resource, Document rssDocument) throws Exception {
+    String[] fields = convertTableLineToStrings(line);
+    String path = fields[1];
+    String author = fields[2];
+    String pubDate = fields[3];
+    pubDate = convertDateFormat(pubDate);
+
+    if(shouldReportItem(resource, path))
+      buildItem(rssDocument, path, author, pubDate);
+  }
+
+  private String[] convertTableLineToStrings(String line) {
+    return line.split("\\|");
+  }
+
+  protected String[] convertPageToArrayOfLines(WikiPage page) throws Exception
 	{
 		PageData data = page.getData();
 		String recentChanges = data.getContent();
@@ -61,7 +82,8 @@ public class RssResponder implements Responder
 
 	protected boolean shouldReportItem(String resource, String title)
 	{
-		return !exists(resource) || title.startsWith(resource);
+    boolean blank = isNeitherNullNorBlank(resource);
+    return !blank || title.startsWith(resource);
 	}
 
 	private void buildItem(Document rssDocument, String title, String author, String pubDate) throws Exception
@@ -102,15 +124,15 @@ public class RssResponder implements Responder
 	{
 		String description;
 		String authoredBy = "";
-		if(exists(author))
+		if(isNeitherNullNorBlank(author))
 			authoredBy = author + ":";
 		description = authoredBy + pubDate;
 		return description;
 	}
 
-	protected boolean exists(String author)
+	protected boolean isNeitherNullNorBlank(String string)
 	{
-		return author != null && author.length() > 0;
+		return string != null && string.length() > 0;
 	}
 
 	private SimpleResponse responseFrom(Document rssDocument) throws Exception

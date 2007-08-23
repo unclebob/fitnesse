@@ -5,13 +5,19 @@ package fitnesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.editing.*;
+import fitnesse.responders.editing.ContentFilter;
+import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.*;
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetInterceptor;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class ComponentFactory
 {
@@ -44,7 +50,9 @@ public class ComponentFactory
 	{
 		try
 		{
-			loadedProperties.load(new FileInputStream(propertiesLocation + "/" + PROPERTIES_FILE));
+      String propertiesPath = propertiesLocation + "/" + PROPERTIES_FILE;
+      FileInputStream propertiesStream = new FileInputStream(propertiesPath);
+      loadedProperties.load(propertiesStream);
 		}
 		catch(IOException e)
 		{
@@ -58,8 +66,8 @@ public class ComponentFactory
 		if(componentClassName != null)
 		{
 			Class componentClass = Class.forName(componentClassName);
-			Constructor constructor = componentClass.getConstructor(new Class[]{Properties.class});
-			return constructor.newInstance(new Object[]{loadedProperties});
+			Constructor constructor = componentClass.getConstructor(Properties.class);
+			return constructor.newInstance(loadedProperties);
 		}
 		return null;
 	}
@@ -70,8 +78,8 @@ public class ComponentFactory
 		if(rootPageClassName != null)
 		{
 			Class rootPageClass = Class.forName(rootPageClassName);
-			Method constructorMethod = rootPageClass.getMethod("makeRoot", new Class[]{Properties.class});
-			return (WikiPage) constructorMethod.invoke(rootPageClass, new Object[]{loadedProperties});
+			Method constructorMethod = rootPageClass.getMethod("makeRoot", Properties.class);
+			return (WikiPage) constructorMethod.invoke(rootPageClass, loadedProperties);
 		}
 		else
 			return defaultPage;

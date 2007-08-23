@@ -2,9 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
-import fitnesse.http.*;
-import fitnesse.wiki.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.ChunkedResponse;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 import java.net.SocketException;
 
@@ -67,19 +73,23 @@ public abstract class ChunkingResponder implements Responder
 		}
 		catch(Exception e)
 		{
-			try
-			{
-				response.add(ErrorResponder.makeExceptionString(e));
-				response.closeAll();
-			}
-			catch(Exception e1)
-			{
-				//Give me a break!
-			}
+			addExceptionAndCloseResponse(e);
 		}
 	}
 
-	protected String getRenderedPath()
+	private void addExceptionAndCloseResponse(Exception e)
+	{
+		try
+		{
+			response.add(ErrorResponder.makeExceptionString(e));
+			response.closeAll();
+		}
+		catch(Exception e1)
+		{
+		}
+	}
+
+  protected String getRenderedPath()
 	{
 		if(path != null)
 			return PathParser.render(path);

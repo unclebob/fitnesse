@@ -2,7 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.widgets.*;
 import junit.framework.TestCase;
 
@@ -208,23 +209,23 @@ public class WidgetBuilderTest extends TestCase
 	}
 
 // TODO MdM A Test that reveals FitNesse's weakness for parsing large wiki documents.
-//
-//	public void testLargeTable() throws Exception
-//	{
-//		StringBuffer buffer = new StringBuffer();
-//		for(int i = 0; i < 1000; i++)
-//			buffer.append("|'''bold'''|''italic''|!c centered|\n");
-//
-//		try
-//		{
-//			WidgetRoot root = new WidgetRoot(buffer.toString(), new MockWikiPage());
-//			root.render();
-//		}
-//		catch(StackOverflowError e)
-//		{
-//			fail("Got error with big table: " + e);
-//		}
-//	}
+
+	public void _testLargeTable() throws Exception
+	{
+		StringBuffer buffer = new StringBuffer();
+		for(int i = 0; i < 1000; i++)
+			buffer.append("|'''bold'''|''italic''|!c centered|\n");
+
+		try
+		{
+			WidgetRoot root = new WidgetRoot(buffer.toString(), new WikiPageDummy());
+			root.render();
+		}
+		catch(StackOverflowError e)
+		{
+			fail("Got error with big table: " + e);
+		}
+	}
 
 	private void testWikiWordInParentWidget(String input, Class expectedClass, String wikiWordText, int subChildren) throws Exception
 	{
@@ -253,10 +254,14 @@ public class WidgetBuilderTest extends TestCase
 		ParentWidget parent = new BoldWidget(new MockWidgetRoot(), "'''bold text'''");
 		AtomicBoolean failFlag = new AtomicBoolean();
 		failFlag.set(false);
-		//This is our best attempt to get a race condition by creating large number of threads.
+
+		//This is our best attempt to get a race condition
+		//by creating large number of threads.
 		for(int i = 0; i < 25000; i++)
 		{
-			new Thread(new WidgetBuilderThread(widgetBuilder, text, parent, failFlag)).start();
+			WidgetBuilderThread widgetBuilderThread = new WidgetBuilderThread(widgetBuilder, text, parent, failFlag);
+			Thread thread = new Thread(widgetBuilderThread);
+			thread.start();
 		}
 		assertEquals(false, failFlag.get());
 	}

@@ -92,8 +92,6 @@ public class TOCWidgetTest extends WidgetTest
 			TOCWidget widget = new TOCWidget(new WidgetRoot(page), "!contents\n");
 			String html = widget.render();
 			assertEquals(virtualChildrenHtml(), html);
-//			assertSubString("<li><a href=\"VirtualParent.ChildOne\"><i>ChildOne</i></a></li>\n", html);
-//			assertSubString("<li><a href=\"VirtualParent.ChildTwo\"><i>ChildTwo</i></a></li>\n", html);
 		}
 		finally
 		{
