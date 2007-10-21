@@ -77,3 +77,19 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |type|pattern|matches?|value|
 |contents|<a href=!-"http://localhost:8080/page"-!>tag</a> works fine.|true||
 
+!3 Test variables defined in parent page get rendered in http link alias on child pages
+ * First define parent page with variable definition and child page with a http link which uses the variable.
+!|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-SomePage.ParentPage-!|!define HOST {localhost:8080}||true|
+|!-SomePage.ParentPage.ChildPage-!|!-[[tag][http://${HOST}/page]]-! works fine.||true|
+
+* Fetch the page.
+!|Response Requester.|
+|uri|valid?|
+|!-SomePage.ParentPage.ChildPage-!|true|
+
+* Make sure the link is properly constructed.
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<a href=!-"http://localhost:8080/page"-!>tag</a> works fine.|true||
