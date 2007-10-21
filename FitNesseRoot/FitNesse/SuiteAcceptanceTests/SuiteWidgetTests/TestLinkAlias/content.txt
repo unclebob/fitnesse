@@ -4,59 +4,76 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 ----
 !3 Test simple link alias
  * First create a page with a simple link alias text on it.
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
 |!-SomePage-!|some page||true|
 |!-AliasLinkPage-!|!-[[tag][SomePage]]-!||true|
  * Then request that page
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|
 |!-AliasLinkPage-!|true|
  * Examine the page to be sure it has the link
-|Response Examiner.|
+!|Response Examiner.|
 |type|pattern|matches?|value|
 |contents|<a href=!-"SomePage"-!>tag</a>|true||
 ----
 !3 Test relative link alias
  * First create two sub pages.  One has a relative link to the other.
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
 |!-SomePage.TargetPage-!|target page||true|
 |!-SomePage.LinkPage-!|!-[[tag][TargetPage]]-!||true|
  * Then get the page with the relative link on it.
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|
 |!-SomePage.LinkPage-!|true|
  * Then make sure the relative link is properly constructed.
-|Response Examiner.|
+!|Response Examiner.|
 |type|pattern|matches?|value|
 |contents|<a href=!-"SomePage.TargetPage"-!>tag</a>|true||
 ----
 !3 Test global link alias
  * First create a sub page that has a global reference to another sub page.
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
 |!-SomePage.GlobalLinkPage-!|!-[[tag][.SomePage.TargetPage]]-!||true|
  * Then fetch that page.
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|
 |!-SomePage.GlobalLinkPage-!|true|
  * Make sure the link is properly formed.
-|Response Examiner.|
+!|Response Examiner.|
 |type|pattern|matches?|value|
 |contents|<a href=!-"SomePage.TargetPage"-!>tag</a>|true||
 ----
 !3 Test http link alias
  * Create a page with an http link alias
-|Page creator.|
+!|Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
 |!-HttpLinkPage-!|!-[[tag][http://fitnesse.org]]-!||true|
  * Fetch the page.
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|
 |!-HttpLinkPage-!|true|
  * Make sure the link is properly constructed.
-|Response Examiner.|
+!|Response Examiner.|
 |type|pattern|matches?|value|
 |contents|<a href=!-"http://fitnesse.org"-!>tag</a>|true||
+
+!3 Test variables get rendered in http link alias
+ * First create a page with a variable and http link on it.
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!define HOST {localhost:8080}|
+|enter|line|!-[[tag][http://${HOST}/page]]-! works fine.|
+|enter|page|!-HttpLinkPage-!|
+ 
+* Fetch the page.
+!|Response Requester.|
+|uri|valid?|
+|!-HttpLinkPage-!|true|
+ * Make sure the link is properly constructed.
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<a href=!-"http://localhost:8080/page"-!>tag</a> works fine.|true||
 

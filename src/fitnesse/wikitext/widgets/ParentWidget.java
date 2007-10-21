@@ -8,7 +8,7 @@ import java.util.*;
 
 public abstract class ParentWidget extends WikiWidget
 {
-	protected LinkedList children = new LinkedList();
+	protected LinkedList<WikiWidget> children = new LinkedList<WikiWidget>();
 	private int currentChild = 0;
 
 	public ParentWidget(ParentWidget parent)
