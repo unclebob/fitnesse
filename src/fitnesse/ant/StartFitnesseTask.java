@@ -26,7 +26,7 @@ public class StartFitnesseTask extends Task
 		try
 		{
 			FitNesse.main(new String[]
-				{"-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0"});
+				{"-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o"});
 			log("Sucessfully Started Fitnesse on port " + fitnessePort);
 		}
 		catch(Exception e)

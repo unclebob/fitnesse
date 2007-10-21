@@ -283,21 +283,21 @@
     </target>
 
     <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef" description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-        <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" resultsxmlpage="fit-results.xml" classpathref="classpath" />
+        <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" resultsxmlpage="fit-results.xml" classpathref="classpath" />
     </target>
 
     <target name="execute_fitnesse_tests_using_different_tasks" depends="startFitnesse, runAcceptanceTests, stopFitnesse" />
 
     <target name="startFitnesse" description="Start fitnesse" depends="load_fitnesse_taskdef">
-        <start-fitnesse wikidirectoryrootpath="." fitnesseport="8082" />
+        <start-fitnesse wikidirectoryrootpath="." fitnesseport="8080" />
     </target>
 
     <target name="runAcceptanceTests" depends="load_fitnesse_taskdef" description="Execute Fitnesse Acceptance Tests and publishes the test results">
-        <execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
+        <execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
     </target>
 
     <target name="stopFitnesse" description="Stops fitnesse" depends="load_fitnesse_taskdef">
-        <stop-fitnesse fitnesseport="8082" />
+        <stop-fitnesse fitnesseport="8080" />
     </target>
 
 </project>
