@@ -13,13 +13,13 @@ public class GracefulNamer
   private static Pattern disgracefulNamePattern = Pattern
       .compile("\\w(?:[.]|\\w)*[^.]");
 
-  static boolean isGracefulName(String fixtureName)
+  public static boolean isGracefulName(String fixtureName)
   {
     Matcher matcher = disgracefulNamePattern.matcher(fixtureName);
     return !matcher.matches();
   }
 
-  static String disgrace(String fixtureName)
+  public static String disgrace(String fixtureName)
   {
     GracefulNamer namer = new GracefulNamer();
 
