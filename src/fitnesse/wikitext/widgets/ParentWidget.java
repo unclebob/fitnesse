@@ -2,9 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.*;
+import java.util.LinkedList;
+import java.util.List;
 
-import java.util.*;
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWidget;
 
 public abstract class ParentWidget extends WikiWidget
 {
@@ -15,6 +18,22 @@ public abstract class ParentWidget extends WikiWidget
 	{
 		super(parent);
 	}
+
+   //[acd] !include: New constructor for alias
+   public ParentWidget(ParentWidget alias, boolean isAlias)
+   {
+      super(null);
+      parent = alias.parent;
+      if (isAlias)
+      {  children      = alias.children;
+         currentChild  = alias.currentChild;
+      }
+      else //not an alias
+         addToParent();  //...behaves like ctor(ParentWidget)
+   }
+
+   //[acd] !include: Expose the root widget via the parent
+   public WidgetRoot getRoot () { return parent.getRoot(); }
 
 	public void reset()
 	{
