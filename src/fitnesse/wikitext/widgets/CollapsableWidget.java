@@ -10,16 +10,23 @@ import java.util.regex.*;
 public class CollapsableWidget extends ParentWidget
 {
 	private static final String ENDL = LineBreakWidget.REGEXP;
-	public static final String REGEXP = "!\\*+>? .*?" + ENDL + ".*?" + ENDL + "\\*+!" + ENDL + "?";
-	private static final Pattern pattern = Pattern.compile("!\\*+(>)? (.*?)" + ENDL + "(.*?)" + ENDL + "\\*+!", Pattern.MULTILINE + Pattern.DOTALL);
+   //[acd] invisible: Modify REGEXP to allow < to make invisible
+	public static final String REGEXP = "!\\*+[<>]? .*?" + ENDL + ".*?" + ENDL + "\\*+!" + ENDL + "?";
+	private static final Pattern pattern = Pattern.compile("!\\*+([<>])? (.*?)" + ENDL + "(.*?)" + ENDL + "\\*+!", Pattern.MULTILINE + Pattern.DOTALL);
+   //[acd] invisible: N.B., add to fitnesse.css:
+   //div.invisible  { line-height: 0px; margin: 0px 0px 0px 0px; display:none; visibility:hidden; }
+   //[acd] invisible: end of < patch to REGEXP
 
 	private static Random random = new Random();
 
 	private String cssClass = "collapse_rim";
 	private ParentWidget titleWidget;
 	public boolean expanded = true;
+   public boolean invisible = false;
 
 	private static final String collapsableOpenCss = "collapsable";
+   private static final String collapsableInvisibleCss = "invisible";  //[acd] invisible: class in fitnesse[_base].css
+   //[acd] invisible: Add to fitnesse_base.css: .invisible  { line-height: 0px;  visibility:hidden; }
 	private static final String collapsableClosedCss = "hidden";
 	private static final String collapsableOpenImg = "/files/images/collapsableOpen.gif";
 	private static final String collapsableClosedImg = "/files/images/collapsableClosed.gif";
@@ -36,23 +43,37 @@ public class CollapsableWidget extends ParentWidget
 		this(parent);
 		Matcher match = pattern.matcher(text);
 		match.find();
-		expanded = match.group(1) == null;
+      String tailChar = match.group(1);
+		expanded  = tailChar == null;
+      invisible = "<".equals(tailChar); 
 		String title = match.group(2);
 		String body = match.group(3);
-		init(title, body);
+		init(title, body, this);
 	}
 
+   //[acd] !include: Refactored to use dual-scope constructor
 	public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass, boolean collapsed) throws Exception
 	{
 		this(parent);
-		init(title, body);
+		init(title, body, this); //[acd] !include: dual-scope
 		this.cssClass = cssClass;
 		this.expanded = !collapsed;
 	}
 
-	private void init(String title, String body) throws Exception
+   //[acd] !include: New constructor with dual scope: title & body.
+   public CollapsableWidget(ParentWidget parent, ParentWidget includeParent, 
+                            String title, String body, String cssClass, boolean collapsed) throws Exception
 	{
-		titleWidget = new BlankParentWidget(this, "!meta " + title);
+      this(parent);
+      init(title, body, includeParent);
+      this.cssClass = cssClass;
+      this.expanded = !collapsed;
+   }
+
+   //[acd] !include: Refactored for 3rd arg
+	private void init(String title, String body, ParentWidget parent) throws Exception
+	{
+		titleWidget = new BlankParentWidget(parent, "!meta " + title); //[acd] !include: patch
 		addChildWidgets(body);
 	}
 
@@ -67,8 +88,18 @@ public class CollapsableWidget extends ParentWidget
 	public HtmlTag makeCollapsableSection(HtmlElement title, HtmlElement content)
 	{
 		String id = random.nextLong() + "";
-		HtmlTag outerDiv = HtmlUtil.makeDivTag(cssClass);
+      //[acd] invisible: < recognition
+      HtmlTag outerDiv;
+      if (invisible)
+      {
+         outerDiv = HtmlUtil.makeDivTag(collapsableInvisibleCss);
+         outerDiv.add(content);
+         return outerDiv;
+      }
+      //[acd] invisible: end of < recognition
 
+      outerDiv = HtmlUtil.makeDivTag(cssClass);
+      
 		HtmlTag image = new HtmlTag("img");
 		image.addAttribute("src", imageSrc());
 		image.addAttribute("class", "left");

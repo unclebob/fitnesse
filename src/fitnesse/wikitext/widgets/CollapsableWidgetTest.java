@@ -20,6 +20,10 @@ public class CollapsableWidgetTest extends WidgetTest
 		assertNoMatch("!*missing a space\n content \n*!");
 		assertNoMatch("!* Some title\n content *!\n");
 		assertNoMatch("!* Some title\n content *!...");
+
+    //[acd] invisible: Matches
+    assertMatches("!*< Some title\n content \n*!");
+    assertMatches("!***< Some title\n content \n***!");
 	}
 
 	protected String getRegexp()
@@ -38,13 +42,20 @@ public class CollapsableWidgetTest extends WidgetTest
 		assertSubString("<a href=\"javascript:collapseAll();\">Collapse All</a>", html);
 	}
 
-	public void testExpandedOrCollapsed() throws Exception
-	{
+  //[acd] invisible: Test invisible too
+  public void testExpandedOrCollapsedOrInvisible() throws Exception {
 		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
 		assertTrue(widget.expanded);
+    assertFalse(widget.invisible);
 
 		widget = new CollapsableWidget(new MockWidgetRoot(), "!*> title\ncontent\n*!");
 		assertFalse(widget.expanded);
+    assertFalse(widget.invisible);
+    
+    //[acd] invisible: Test invisible flags
+    widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!");
+    assertFalse(widget.expanded);
+    assertTrue(widget.invisible);
 	}
 
 	public void testRenderCollapsedSection() throws Exception
@@ -56,8 +67,15 @@ public class CollapsableWidgetTest extends WidgetTest
 		assertSubString("collapsableClosed.gif", html);
 	}
 
-	public void testTwoCollapsableSections() throws Exception
-	{
+  //[acd] invisible: Test invisible class
+  public void testRenderInvisibleSection() throws Exception {
+     CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!");
+     String html = widget.render();
+     assertSubString("class=\"invisible\"", html);
+     assertNotSubString("class=\"collapsable\"", html);
+   }
+
+  public void testTwoCollapsableSections() throws Exception {
 		String text = "!* section1\nsection1 content\n*!\n" +
 			"!* section2\nsection2 content\n*!\n";
 		WidgetRoot widgetRoot = new WidgetRoot(text, new WikiPageDummy());
@@ -74,8 +92,7 @@ public class CollapsableWidgetTest extends WidgetTest
 		assertNotSubString("<br>", html);
 	}
 
-	public void testMakeCollapsableSecion() throws Exception
-	{
+  public void testMakeCollapsableSection() throws Exception {
 		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot());
 		HtmlTag outerTag = widget.makeCollapsableSection(new RawHtml("title"), new RawHtml("content"));
 		assertEquals("div", outerTag.tagName());
