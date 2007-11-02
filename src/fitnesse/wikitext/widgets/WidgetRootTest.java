@@ -14,6 +14,16 @@ public class WidgetRootTest extends RegexTest
 		rootPage = InMemoryPage.makeRoot("RooT");
 	}
 
+   //[acd] PAGE_NAME: Test
+   public void testPageNameVariable() throws Exception
+   {
+      WikiPage root = InMemoryPage.makeRoot("RooT");
+      PageData data = root.getData();
+      WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
+      data = page.getData();
+      assertEquals("SomePage", data.getVariable("PAGE_NAME"));
+   }
+
 	public void testVariablesOneTheRootPage() throws Exception
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
@@ -59,7 +69,8 @@ public class WidgetRootTest extends RegexTest
 		String result = root.processLiterals("the !-second-! literal");
 
 		assertEquals("the first literal", root.render());
-		assertEquals("the !lit(1) literal", result);
+		//[acd] Paren Literal: () -> ??
+      assertEquals("the !lit?1? literal", result);
 		assertEquals(2, root.getLiterals().size());
 		assertEquals("first", root.getLiteral(0));
 		assertEquals("second", root.getLiteral(1));
