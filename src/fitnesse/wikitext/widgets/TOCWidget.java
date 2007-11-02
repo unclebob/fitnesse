@@ -7,24 +7,40 @@ import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
 
 import java.util.*;
+import java.util.regex.*;
 
 public class TOCWidget extends WikiWidget
 {
-	public static final String REGEXP = "(?:^!contents[ \t]*$)|(?:^!contents -R[ \t]*$)";
+   //[acd] !contents: [-R[0-9]] [-g]
+   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-g)?[ \\t]*$)";
+   public static final String REGRACE_TOC = "REGRACE_TOC";
 
-	private boolean recursive;
+	private boolean recursive, isGraceful;
+   private int     depthLimit;  //[acd] !contents: 0 = unlimited depth recursion
 
 	public TOCWidget(ParentWidget parent, String text)
 	{
 		super(parent);
 		setRecursive(text);
+      setGraceful(text);
 	}
 
 	private void setRecursive(String text)
 	{
 		recursive = (text.indexOf("-R") > -1);
+      
+      if (recursive) //[acd] !contents: -R[0-9]...
+      {  Pattern pat = Pattern.compile("-R([0-9])");
+         Matcher mat = pat.matcher(text);
+         depthLimit = mat.find()?  Integer.valueOf(mat.group(1)) : 0;
+      }
 	}
 
+   private void setGraceful(String text) //[acd] Regracing
+   {
+      isGraceful  = (text.indexOf("-g") > -1);
+   }
+   
 	public String render() throws Exception
 	{
 		return buildContentsDiv(getWikiPage(), 1).html();
@@ -34,7 +50,7 @@ public class TOCWidget extends WikiWidget
 		throws Exception
 	{
 		HtmlTag div = makeDivTag(currentDepth);
-		div.add(buildList(wikiPage, currentDepth));
+      div.add(buildList(wikiPage, currentDepth));
 		return div;
 	}
 
@@ -49,13 +65,22 @@ public class TOCWidget extends WikiWidget
 		return list;
 	}
 
+   private boolean isDepthExceeded (int currentDepth)  //[acd] !contents: -R[0-9] limiter
+   { return (depthLimit > 0) && (currentDepth > depthLimit);
+   }
+   
 	private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) throws Exception
 	{
 		HtmlTag listItem = new HtmlTag("li");
 		listItem.add(HtmlUtil.makeLink(getHref(wikiPage), getLinkText(wikiPage)));
+      
 		if(isRecursive() && buildListOfChildPages(wikiPage).size() > 0)
 		{
-			listItem.add(buildContentsDiv(wikiPage, currentDepth + 1));
+         //[acd] !contents: -R[0-9] limit & show "..."
+         if (isDepthExceeded(currentDepth + 1))
+            listItem.add("...");
+         else
+            listItem.add(buildContentsDiv(wikiPage, currentDepth + 1));
 		}
 		return listItem;
 	}
@@ -68,12 +93,21 @@ public class TOCWidget extends WikiWidget
 		return href;
 	}
 
+   //[acd] Regracing
+   public boolean isRegracing ()
+   {  boolean isDoingIt = false;
+      try { isDoingIt = "true".equals(parent.getVariable(REGRACE_TOC)); }
+      catch (Exception e) { isDoingIt = false; }
+      return isDoingIt || isGraceful;
+   }
+
 	private HtmlElement getLinkText(WikiPage wikiPage) throws Exception
 	{
+      String name = regrace(wikiPage.getName());  //[acd] regrace names
 		if(wikiPage instanceof ProxyPage)
-			return new HtmlTag("i", wikiPage.getName());
+			return new HtmlTag("i", name);
 		else
-			return new RawHtml(wikiPage.getName());
+			return new RawHtml(name);
 	}
 
 	private List buildListOfChildPages(WikiPage wikiPage) throws Exception
