@@ -51,9 +51,9 @@ public class FitNesse
 	private static FitNesseContext loadContext(Arguments arguments) throws Exception
 	{
 		FitNesseContext context = new FitNesseContext();
-		ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
 		context.port = arguments.getPort();
 		context.rootPath = arguments.getRootPath();
+		ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
 		context.rootPageName = arguments.getRootDirectory();
 		context.rootPagePath = context.rootPath + "/" + context.rootPageName;
 		context.root = componentFactory.getRootPage(FileSystemPage.makeRoot(context.rootPath, context.rootPageName));
