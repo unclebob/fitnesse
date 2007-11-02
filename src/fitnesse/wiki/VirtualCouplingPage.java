@@ -60,6 +60,15 @@ public class VirtualCouplingPage implements WikiPage
 		return hostPage.getParent();
 	}
 
+   //[acd] !include: Setter for variable parent
+   public void setParentForVariables(WikiPage parent) {
+      hostPage.setParentForVariables(parent);
+   }
+   //[acd] !include: Getter for variable parent
+   public WikiPage getParentForVariables() throws Exception {
+      return hostPage.getParentForVariables();
+   }
+
 	public String getName() throws Exception
 	{
 		return hostPage.getName();
