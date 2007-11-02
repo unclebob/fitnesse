@@ -23,6 +23,7 @@ public class PageData implements Serializable
 	private WikiPageProperties properties = new WikiPageProperties();
 	private Set versions;
 	private WidgetRoot variableRoot;
+   private List literals;
 
 	public PageData(WikiPage page) throws Exception
 	{
@@ -136,11 +137,18 @@ public class PageData implements Serializable
 		return variableRoot.getVariable(name);
 	}
 
+   public void setLiterals (List literals)
+   {
+      this.literals = literals;
+   }
+   
 	private void initializeVariableRoot() throws Exception
 	{
 		if(variableRoot == null)
 		{
-			variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, variableDefinitionWidgetBuilder);
+         //[acd] Parent Literals: New T'I'W'Root ctor with literal list
+			//variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, variableDefinitionWidgetBuilder);
+         variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, literals, variableDefinitionWidgetBuilder); 
 			variableRoot.render();
 		}
 	}
