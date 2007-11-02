@@ -61,7 +61,7 @@ public class XRefWidgetTest extends WidgetTest
       
       croot.addVariable(WikiWordWidget.REGRACE_LINK, "true");
       widget = new XRefWidget(croot, "!see <SomePage.SomeChild2");
-      assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild2.*&lt; Some Page . Some Child 2</a></b>", widget.render());
+      assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild2.*&lt; Some Page .Some Child 2</a></b>", widget.render());
 	}
 
 	public void testAsWikiText() throws Exception

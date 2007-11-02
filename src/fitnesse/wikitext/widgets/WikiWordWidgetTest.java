@@ -191,7 +191,7 @@ public class WikiWordWidgetTest extends TestCase
       data.setContent("<TargetPage.SubTarget");
       referer.commit(data);
       String renderedLink = referer.getData().getHtml();
-      assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt; Target Page . Sub Target</a>", renderedLink);
+      assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt; Target Page .Sub Target</a>", renderedLink);
    }
 
 	private WikiPage addPage(WikiPage parent, String childName) throws Exception
