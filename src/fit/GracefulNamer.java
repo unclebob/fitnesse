@@ -37,6 +37,32 @@ public class GracefulNamer
     return namer.finalName.toString();
   }
 
+  public static String regrace(String disgracefulName)
+  {
+    char c = '?';
+    GracefulNamer namer = new GracefulNamer();
+    if (disgracefulName.length() > 0)
+       namer.finalName.append(c = disgracefulName.charAt(0));
+
+    boolean isGrabbingDigits = false, wasPeriod = (c == '.');
+    for (int i = 1; i < disgracefulName.length(); i++)
+    {  c = disgracefulName.charAt(i);
+       if (   (Character.isUpperCase(c))
+           || (Character.isDigit(c) && !isGrabbingDigits)
+           || (c == '.')
+          )
+       {
+          if (!wasPeriod) namer.finalName.append(" ");
+          wasPeriod = (c == '.');
+       }
+
+       isGrabbingDigits = (Character.isDigit(c));
+       namer.finalName.append(c);
+    }
+    
+    return namer.finalName.toString();
+  }
+
   private StringBuffer finalName = new StringBuffer();
 
   private GracefulNameState currentState = new OutOfWordState();

@@ -35,6 +35,17 @@ public class GracefulNamerTest extends TestCase
     assertEquals("MyNamespaceBad123Company", GracefulNamer.disgrace("My.Namespace.Bad123Company"));
   }
 
+  public void testRegracingName() throws Exception
+  {
+    assertEquals("Company", GracefulNamer.regrace("Company"));
+    assertEquals("Bad Company", GracefulNamer.regrace("BadCompany"));
+    assertEquals("Bad Company Two", GracefulNamer.regrace("BadCompanyTwo"));
+    assertEquals("Bad Company 123", GracefulNamer.regrace("BadCompany123"));
+    assertEquals("Bad 123 Company", GracefulNamer.regrace("Bad123Company"));
+    assertEquals("Bad 1a 2b 3 Company", GracefulNamer.regrace("Bad1a2b3Company"));
+    assertEquals("B 12z 3 Company", GracefulNamer.regrace("B12z3Company"));
+  }
+  
 	public void testEmptyString() throws Exception
 	{
 		assertEquals("", GracefulNamer.disgrace(""));
