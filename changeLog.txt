@@ -1,3 +1,45 @@
+-- 20071102 -------------------------------------------------------------------------------
+Changes, ACDassing (i-m-fit-r-u) [acd]
+--------------------------------------
+N.B.: Create a "TODO" or "Tasks" tag in your IDE to look for [acd]; all mods are tagged as such.
+- - - -
+Eclipse:  org.eclipse.jdt.core.prefs - achieves a clean compile for Java 5.
+ * Enabled project-specific settings for Errors/Warnings
+    - Potential programming problems
+       . Serializable class without serialVersionUID:  Ignore
+    - Generic types
+       . Unchecked generic type operation:  Ignore
+       
+ * Clean compile modifications to code
+    - Added @SuppressWarnings("unused") to seven classes.
+
+- - - -
+Bug Fixes:
+ * !define:  Allow literals in parenthesized definitions; !lit(n) changed to !lit?n?.
+ * !lit():  Changed delimiters from () to ?? to allow literals in !define X () markups.
+ * !see:  Backward-relative links included in suite test.
+ * alias:  [[tag][link]]--link section handles all relative types and fragment suffixes.
+
+- - - -
+Enhancements:
+ * !contents:  -R<number> to limit recursion depth & show "..." when more depth exists.
+ * !contents:  -g to re[g]race the TOC links.
+ * !define & ${}:  Allow periods in variable names.
+ * !include:  Multiple levels of relative child links are preserved.
+ * !include:  Variables are properly scoped to the including page.
+ * !*<:  New "invisible" collapsible section; requires div.invisible in fitnesse_base.css.
+ * !{= =}:  New EvaluatorWidget to pre-process arithmetic expressions; allows variables.
+ * alias:  [[tag][link]]--link section allows variables and expressions (see ${= =}.)
+ * REGRACE_TOC:  Globally set regracing of TOC widgets; set {true} or {false}.
+ * REGRACE_LINK:  Globally set regracing all page link widgets; set {true} or {false}.
+ * ${PAGE_NAME}:  Global variable returning the name of the page.
+ * ${PAGE_PATH}:  Global variable returning the absolute path to the page.
+ * FitLibrary:  Changed access of Fixture.getArgsForTable() to public for FitLibrary mods.
+ * Expression.java:  New module to support EvaluatorWidget expression evaluation.
+ * Semaphores:  Checks for semaphores (file-based) for page arbitration; see SemaphoreFixture.java.
+                N.B., this is an initial implementation open to rewrite and extension to
+                      exit the table/test/suite on failure/exception/semaphore.
+ 
 -- 20070519 -------------------------------------------------------------------------------
 Tim Ottinger and RMartin added the < and > link prefixes back in Feb.
 The > prefix replaces the ^ prefix, which is deprecated.  >MyPage is now the
