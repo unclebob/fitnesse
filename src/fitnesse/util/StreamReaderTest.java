@@ -13,7 +13,7 @@ public class StreamReaderTest extends RegexTest
 	private String readResult;
 	private byte[] byteResult;
 	private Thread thread;
-	private Exception exception;
+   @SuppressWarnings("unused") private Exception exception;
 
 	public void setUp() throws Exception
 	{
