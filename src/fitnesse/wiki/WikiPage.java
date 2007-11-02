@@ -20,6 +20,8 @@ public interface WikiPage extends Serializable, Comparable
 	public String[] SECURITY_ATTRIBUTES = {SECURE_READ, SECURE_WRITE, SECURE_TEST};
 
 	public WikiPage getParent() throws Exception;
+   public WikiPage getParentForVariables() throws Exception; //[acd] !include: getter for variable parent
+   public void     setParentForVariables(WikiPage parent); //[acd] !include: setter for variable parent
 
 	public WikiPage addChildPage(String name) throws Exception;
 
