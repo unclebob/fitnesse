@@ -22,6 +22,8 @@ public class Fixture
     protected String[] args;
 
     private static Map<String, Object> symbols = new HashMap<String, Object>();
+    private static boolean forcedAbort = false;  //[acd] Semaphores
+    public static void setForcedAbort (boolean state) { forcedAbort = state; }  //[acd] Semaphores
 
     protected Class getTargetClass()
     {
@@ -80,6 +82,7 @@ public class Fixture
         }
         listener.tablesFinished(counts);
         ClearSymbols();
+        SemaphoreFixture.ClearSemaphores(); //[acd] Semaphores:  clear all at end
     }
 
     public static void ClearSymbols()
@@ -110,7 +113,9 @@ public class Fixture
         while (tables != null)
         {
             Parse heading = tables.at(0, 0, 0);
-            if (heading != null)
+            
+            if (forcedAbort) ignore(heading);  //[acd] Semaphores: ignore on failed lock
+            else if (heading != null)
             {
                 try
                 {
@@ -142,7 +147,8 @@ public class Fixture
         return FixtureLoader.instance().disgraceThenLoad(fixtureName);
     }
 
-    void getArgsForTable(Parse table)
+    //[acd] Embedded Fixtures: Exposed getArgsForTable() as public
+    public void getArgsForTable(Parse table)
     {
         List<String> argumentList = new ArrayList<String>();
         Parse parameters = table.parts.parts.more;
