@@ -252,6 +252,7 @@ public class PageXmlizerTest extends RegexTest
 	public void testConditionForXmlization() throws Exception
 	{
 		WikiPage pageOne = root.addChildPage("PageOne");
+      @SuppressWarnings("unused")
 		WikiPage pageTwo = root.addChildPage("PageTwo");
 
 		xmlizer.addPageCondition(new XmlizePageCondition()
