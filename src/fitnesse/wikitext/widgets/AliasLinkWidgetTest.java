@@ -26,13 +26,21 @@ public class AliasLinkWidgetTest extends WidgetTest
         assertNoMatch("[[][x]");
         assertNoMatch("[[x] [x]]");
         assertNoMatch("[[x]]");
+      
+      //[acd] Alias Vars/Evals: Test: Match/NoMatch
+      assertMatches("[[tag][SomePage#Anchor]]");
+      assertMatches("[[tag][http://www.objectmentor.com#jumpTo]]");
+      assertMatches("[[tag][  SpacesAllowed  ]]");
+      assertMatches("[[tag][#archor${number}]]");
+      assertMatches("[[tag][.#archor${number}]]");
+      assertMatches("[[tag][SomeLink${= 1 + ${TWO} =}]]");
+      //
     }
 
     public void testHtmlAtTopLevelPage() throws Exception
     {
-        WikiPagePath testPagePath = PathParser.parse("TestPage");
-        crawler.addPage(root, testPagePath);
-        WidgetRoot wroot = new WidgetRoot(new PagePointer(root, testPagePath));
+		crawler.addPage(root, PathParser.parse("TestPage"));
+		WidgetRoot wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
         AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][TestPage]]");
         String html = w.render();
         assertEquals("<a href=\"TestPage\">tag</a>", html);
@@ -76,6 +84,70 @@ public class AliasLinkWidgetTest extends WidgetTest
         String html = w.render();
         assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
     }
+
+   //[acd] Alias: Check >ChildLink if doesn't exist
+   public void testRightArrowOnPageThatDoesNotExist() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("FrontPage"));
+      AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(page), "[[tag][>TestPage]]");
+      assertEquals("tag<a href=\"FrontPage.TestPage?edit\">?</a>", w.render());
+   }
+
+   //[acd] Alias: Check >ChildLink exists 
+   public void testRightArrowOnPageThatDoesExist() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+      crawler.addPage(page, PathParser.parse("SubPage"));
+      WidgetRoot wroot = new WidgetRoot(page);
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][>SubPage]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
+   }
+
+   //[acd] Alias: Check >ChildLink if doesn't exist
+   public void testLeftArrowOnPageThatDoesNotExist() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+      WikiPage child2 = crawler.addPage(page, PathParser.parse("SubPage2"));
+      AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(child2), "[[tag][<TestPage.SubPage]]");
+      assertEquals("tag<a href=\"TestPage.SubPage?edit\">?</a>", w.render());
+   }
+
+   //[acd] Alias: Check <ParentPage.ChildLink 
+   public void testLeftArrowOnPageThatDoesExist() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+      crawler.addPage(page, PathParser.parse("SubPage"));
+      WikiPage child2 = crawler.addPage(page, PathParser.parse("SubPage2"));
+      WidgetRoot wroot = new WidgetRoot(child2);
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
+   }
+
+   //[acd] Alias: Check ${var} expansion 
+   public void testVariableExpansion() throws Exception
+   {
+      WikiPage page   = crawler.addPage(root, PathParser.parse("TestPage"));
+      WikiPage child1 = crawler.addPage(page, PathParser.parse("SubPage"));
+      crawler.addPage(page, PathParser.parse("SubPage2"));
+      WidgetRoot wroot = new WidgetRoot(child1);
+      wroot.addVariable("TWO", "2");
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage${TWO}]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage2\">tag</a>", html);
+   }
+   //[acd] Alias: Check ${= expression =} expansion 
+   public void testExpressionExpansion() throws Exception
+   {
+      WikiPage page   = crawler.addPage(root, PathParser.parse("TestPage"));
+      WikiPage child1 = crawler.addPage(page, PathParser.parse("SubPage"));
+      crawler.addPage(page, PathParser.parse("SubPage2"));
+      WidgetRoot wroot = new WidgetRoot(child1);
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage${= 1 + 1 =}]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage2\">tag</a>", html);
+   }
 
     public void testQuestionMarkDoesNotAppear() throws Exception
     {

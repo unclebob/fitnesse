@@ -3,8 +3,8 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WidgetBuilder;
 
 import java.util.regex.*;
 
@@ -29,45 +29,54 @@ public class AliasLinkWidget extends ParentWidget
         }
     }
 
+   //[acd] Alias Vars/Evals: Class to expand variables
+   public static class VariableExpandingWidgetRoot extends ParentWidget
+   {
+      public VariableExpandingWidgetRoot(ParentWidget parent, String content) throws Exception
+      {  super(parent);
+         if(content != null) addChildWidgets(content);
+      }
+
+      public WidgetBuilder getBuilder()
+      {  return WidgetBuilder.literalAndVariableWidgetBuilder;
+      }
+
+      public    boolean doEscaping()  {  return false; }
+      public    String  render()      throws Exception { return ""; }
+      protected void    addToParent() { }
+   }
+   //[acd] Alias Vars/Evals: end of variable expander
+   
     public String render() throws Exception
     {
-        if (WikiWordWidget.isWikiWord(href))
+      
+      //[acd] Alias Vars/Evals: Expand and allow (#) in alias link
+      String expandedHref = (new VariableExpandingWidgetRoot(this, href)).childHtml(); 
+      int hashAt = expandedHref.indexOf('#');
+      String hashText = "";
+      if (hashAt > 0) //the link has a local reference
+      {  hashText     = expandedHref.substring(hashAt);
+         expandedHref = expandedHref.substring(0, hashAt);
+      }
+      //[acd] Alias Vars/Evals: end allow (#) in alias link
+      
+		if(WikiWordWidget.isWikiWord(expandedHref))
         {
-            WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), href);
+			WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), expandedHref);
             String theWord = www.getWikiWord();
             WikiPagePath wikiWordPath = PathParser.parse(theWord);
             WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
             String qualifiedName = PathParser.render(fullPathOfWikiWord);
             if (parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
-                return ("<a href=\"" + qualifiedName + "\">" + childHtml() + "</a>");
+				return ("<a href=\"" + qualifiedName + hashText + "\">" + childHtml() + "</a>"); //[acd] Alias V/E: use it
             else if (getWikiPage() instanceof ProxyPage)
                 return makeAliasLinkToNonExistentRemotePage(theWord);
             else
                 return (childHtml() + "<a href=\"" + qualifiedName + "?edit\">?</a>");
-        } else
-        {
-            String tagValue = childHtml();
-            if (hrefContainsVariable())
-            {
-                return ("<a href=\"" + substitutedHRefVariableValue() + "\">" + tagValue + "</a>");
-            } else
-            {
-                return ("<a href=\"" + href + "\">" + tagValue + "</a>");
             }
+		else //
+			return ("<a href=\"" + expandedHref + hashText + "\">" + childHtml() + "</a>");  //[acd] Alias V/E: use it
         }
-    }
-
-    private String substitutedHRefVariableValue() throws Exception
-    {
-        VariableWidget variableWidget = new VariableWidget(this, href);
-        WidgetBuilder.variableWidgetBuilder.addChildWidgets(href, variableWidget);
-        return variableWidget.childHtml();
-    }
-
-    private boolean hrefContainsVariable()
-    {
-        return VariableWidget.pattern.matcher(href).find();
-    }
 
     private String makeAliasLinkToNonExistentRemotePage(String theWord) throws Exception
     {
@@ -76,8 +85,9 @@ public class AliasLinkWidget extends ParentWidget
         String nameOfThisPage = proxy.getName();
         int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
         String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
-        return childHtml() + "<a href=\"" + remoteURLOfParent + theWord + "?edit\"" + " target=\"" + theWord + "\""
-                + ">?</a>";
+		  return childHtml() + "<a href=\"" + remoteURLOfParent + theWord + "?edit\""
+		                     + " target=\"" + theWord + "\""
+                           + ">?</a>";
     }
 
     public String asWikiText() throws Exception
