@@ -31,10 +31,21 @@ public class VariableDefinitionWidgetTest extends WidgetTest
 		assertMatches("!define xyz {\n123\r\n456\r\n}");
 		assertMatches("!define abc {1}");
 		assertMatches("!define abc (1)");
+      assertMatches("!define x (!define y {123})");
+
 		assertNoMatch("!define");
 		assertNoMatch("!define x");
 		assertNoMatch(" !define x {1}");
-		assertMatches("!define x (!define y {123})");
+      
+      //[acd] Var .: Test allow periods
+      assertMatches("!define x.y.z {1}");
+      assertMatches("!define .y.z {1}");
+      assertMatches("!define x.y. {1}");
+      assertMatches("!define .xy. {1}");
+      
+      //[acd] Paren Literal: Test matches
+      assertMatches("!define curly {!-some curly literal-!}");
+      assertMatches("!define paren (!-some paren literal-!)");
 	}
 
 	public void testHtml() throws Exception
@@ -60,6 +71,15 @@ public class VariableDefinitionWidgetTest extends WidgetTest
 		assertSubString("x", renderedText);
 		assertSubString("1", renderedText);
 	}
+
+   //[acd] Var .: Test render with periods
+   public void testRenderedTextWithPeriods() throws Exception
+   {
+      WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot(root), "!define x.y.z (1)\n");
+      String renderedText = widget.render();
+      assertSubString("x.y.z", renderedText);
+      assertSubString("1", renderedText);
+   }
 
 	public void testDefinePrecedingClasspath() throws Exception
 	{

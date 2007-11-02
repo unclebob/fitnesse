@@ -28,6 +28,10 @@ public class VariableWidgetTest extends WidgetTest
 	{
 		assertMatches("${X}");
 		assertMatches("${xyz}");
+      assertMatches("${x.y.z}");
+      assertMatches("${.y.z}");
+      assertMatches("${x.y.}");
+      assertMatches("${.xy.}");
 	}
 
 	protected String getRegexp()
@@ -41,6 +45,13 @@ public class VariableWidgetTest extends WidgetTest
 		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
 		assertEquals("1", w.render());
 	}
+
+   public void testVariableIsExpressedWithPeriods() throws Exception
+   {
+      widgetRoot.addVariable("x.y.z", "2");
+      VariableWidget w = new VariableWidget(widgetRoot, "${x.y.z}");
+      assertEquals("2", w.render());
+   }
 
 	public void testRenderTwice() throws Exception
 	{
@@ -73,4 +84,28 @@ public class VariableWidgetTest extends WidgetTest
 		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
 		assertEquals("${x}", w.asWikiText());
 	}
+   
+   public void testAsWikiTextWithPeriods() throws Exception
+   {
+      VariableWidget w = new VariableWidget(widgetRoot, "${x.y.z}");
+      assertEquals("${x.y.z}", w.asWikiText());
+}
+   //[acd] Parent Literals: Test for inherited literals generated in variables
+   //[acd] Paren Literal: Test for literals in parenthesized !define
+   public void testLiteralsInheritedFromParent() throws Exception
+   {
+      WikiPage parent = crawler.addPage
+                        ( root,
+                          PathParser.parse("ParentPage"),
+                          "!define var {!-some literal-!}\n" +
+                          "!define paren (!-paren literal-!)\n"
+                        );
+      WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
+      WidgetRoot widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+
+      VariableWidget w = new VariableWidget(widgetRoot, "${var}");
+      assertEquals("some literal", w.render());
+      w = new VariableWidget(widgetRoot, "${paren}");
+      assertEquals("paren literal", w.render());
+   }
 }

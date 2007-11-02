@@ -2,16 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import fitnesse.html.HtmlUtil;
-
-import java.util.regex.*;
 
 public class VariableDefinitionWidget extends ParentWidget
 {
-	public static final String REGEXP = "^!define \\w+ (?:(?:\\{[^}]*\\})|(?:\\([^)]*\\)))";
+   //[acd] Var .: Allow periods (.) in variables
+	public static final String REGEXP = "^!define [\\w\\.]+ (?:(?:\\{[^}]*\\})|(?:\\([^)]*\\)))";
 	private static final Pattern pattern =
-		Pattern.compile("^!define (\\w+) ([\\{\\(])(.*)[\\}\\)]",
+	  Pattern.compile("^!define ([\\w\\.]+) ([\\{\\(])(.*)[\\}\\)]",
 		                Pattern.DOTALL + Pattern.MULTILINE);
+   //[acd] Var .: end of periods (.) in variables
+   
 	public String name;
 	public String value;
 
