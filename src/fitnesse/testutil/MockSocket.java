@@ -15,6 +15,7 @@ public class MockSocket extends Socket
 	public MockSocket() throws Exception
 	{
 		PipedInputStream serverInput = new PipedInputStream();
+      @SuppressWarnings("unused")
 		PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
 		PipedInputStream clientInput = new PipedInputStream();
 		PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
