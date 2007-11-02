@@ -5,9 +5,10 @@ package fitnesse.wikitext;
 import fitnesse.wikitext.widgets.*;
 
 import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.*;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class WidgetBuilder
 {
@@ -42,12 +43,14 @@ public class WidgetBuilder
 		CollapsableWidget.class,
 		IncludeWidget.class,
 		VariableDefinitionWidget.class,
+      EvaluatorWidget.class,  //[acd] EvaluatorWidget: match before variables
 		VariableWidget.class
 	};
 
 	public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(htmlWidgetClasses);
-	public static WidgetBuilder literalAndVariableWidgetBuilder = new WidgetBuilder(new Class[]{LiteralWidget.class, VariableWidget.class});
-	public static WidgetBuilder variableWidgetBuilder = new WidgetBuilder(new Class[]{VariableWidget.class});
+   //[acd] EvaluatorWidget: Allow in builders
+   public static WidgetBuilder literalAndVariableWidgetBuilder = new WidgetBuilder(new Class[]{LiteralWidget.class, VariableWidget.class, EvaluatorWidget.class});
+   public static WidgetBuilder variableWidgetBuilder = new WidgetBuilder(new Class[]{VariableWidget.class, EvaluatorWidget.class});
 
 	private Class[] widgetClasses;
 	private Pattern widgetPattern;
