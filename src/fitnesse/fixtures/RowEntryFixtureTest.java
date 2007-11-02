@@ -13,7 +13,8 @@ public class RowEntryFixtureTest extends TestCase
 	private Parse simpleTable;
 	private String ERROR_MESSAGE = "bad input";
 
-	protected void setUp() throws ParseException
+   @SuppressWarnings("unused")
+   protected void setUp() throws ParseException
 	{
 		fixture = new RowEntryFixture()
 		{
