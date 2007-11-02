@@ -59,4 +59,17 @@ public class StringFixture extends ColumnFixture
 				return "...";
 		}
 	}
+   
+   public String equals()
+   {
+      if(value.equals(expected))
+         return expected;
+      else
+      {
+         if(value.length() <= subStringSize)
+            return value;
+         else
+            return "...";
+      }
+   }
 }
