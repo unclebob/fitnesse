@@ -107,6 +107,8 @@ div.sidebar
 	width: 95px;
 	height: 1000px;
 	border-right: dotted 1px #FF8000;
+	z-index: 99; /*[acd]*/
+	background: white; /*[acd]*/
 }
 
 div.art_niche
@@ -341,6 +343,12 @@ div.collapsable
 .hidden
 {
 	display: none;
+}
+
+.invisible
+{
+	line-height: 0px;
+	visibility:hidden;
 }
 
 .toc1 ul
