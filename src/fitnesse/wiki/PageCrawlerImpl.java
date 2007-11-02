@@ -31,6 +31,11 @@ public class PageCrawlerImpl implements PageCrawler
 			relativeToRoot.setPathMode(WikiPagePath.Mode.RELATIVE);
 			return getPage(getRoot(context), relativeToRoot);
 		}
+     //[acd] !see: Allow < path prefix
+     else if (path.isBackwardSearchPath())     
+        return getSiblingPage(context, path);
+     //[acd] !see: end allow < prefix
+        
 		String firstPathElement = path.getFirst();
 		WikiPagePath restOfPath = path.getRest();
 
