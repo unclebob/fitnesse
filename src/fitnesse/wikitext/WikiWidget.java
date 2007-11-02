@@ -2,6 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
+import fit.GracefulNamer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.ParentWidget;
 
@@ -38,5 +39,13 @@ public abstract class WikiWidget
 	{
 		return getClass().toString() + ".asWikiText()";
 	}
+
+   //[acd] Regracing
+   public boolean isRegracing () { return false; }
+   public String regrace(String disgracefulName)
+   {  String newName = disgracefulName;
+      if (isRegracing())  newName = GracefulNamer.regrace(disgracefulName);
+      return newName;
+   }
 }
 

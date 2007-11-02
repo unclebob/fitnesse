@@ -126,6 +126,7 @@ public class WikiWordWidgetTest extends TestCase
 		WikiPage top = addPage(root, "TopPage");
 		WikiPage target = addPage(top, "TargetPage");
 		WikiPage referer = addPage(target, "ReferingPage");
+      @SuppressWarnings("unused")
 		WikiPage subTarget = addPage(target, "SubTarget");
 
 		String actual = WikiWordWidget.expandPrefix(referer, "<TargetPage.SubTarget");
@@ -140,6 +141,58 @@ public class WikiWordWidgetTest extends TestCase
 		String renderedLink = referer.getData().getHtml();
 		assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
 	}
+
+   public void testHtmlForNormalLinkRegraced() throws Exception
+   {
+      WikiPage page = addPage(root, "PageOne");
+      WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "Wiki42Word");
+      assertEquals("Wiki42Word<a href=\"Wiki42Word?edit\">?</a>", widget.render());
+      page = addPage(root, "Wiki42Word");
+      WidgetRoot root = new WidgetRoot(page);
+      root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
+      widget = new WikiWordWidget(root, "Wiki42Word");
+      assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
+   }
+
+   public void testGTSubPageWidgetRegraced() throws Exception
+   {
+      WikiPage superPage = addPage(root, "SuperPage");
+      WikiPage childPage = addPage(superPage, "SubPage");
+      
+      PageData data = superPage.getData();
+      data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
+      superPage.commit(data);
+
+      data = childPage.getData();
+      data.setContent(">Sub123Page");
+      childPage.commit(data);
+
+      String renderedText = childPage.getData().getHtml();
+      assertEquals("&gt;Sub123Page<a href=\"SuperPage.SubPage.Sub123Page?edit\">?</a>", renderedText);
+      
+      addPage(childPage, "Sub123Page");
+      renderedText = childPage.getData().getHtml();
+      assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt; Sub 123 Page</a>", renderedText);
+   }
+
+   public void testBackwardSearchWidgetRegraced() throws Exception
+   {
+      WikiPage top = addPage(root, "TopPage");
+      WikiPage target = addPage(top, "TargetPage");
+      WikiPage referer = addPage(target, "ReferingPage");
+      @SuppressWarnings("unused")
+      WikiPage subTarget = addPage(target, "SubTarget");
+      
+      PageData data = top.getData();
+      data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
+      top.commit(data);
+      
+      data = referer.getData();
+      data.setContent("<TargetPage.SubTarget");
+      referer.commit(data);
+      String renderedLink = referer.getData().getHtml();
+      assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt; Target Page . Sub Target</a>", renderedLink);
+   }
 
 	private WikiPage addPage(WikiPage parent, String childName) throws Exception
 	{
@@ -220,6 +273,7 @@ public class WikiWordWidgetTest extends TestCase
 	{
 		WikiPage topPage = addPage(root, "TopPage");
 		WikiPage pageToRename = addPage(topPage, "OldPageName");
+      @SuppressWarnings("unused")
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "TopPage.OldPageName.LastPage");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
@@ -230,6 +284,7 @@ public class WikiWordWidgetTest extends TestCase
 	{
 		WikiPage topPage = addPage(root, "TopPage");
 		WikiPage pageToRename = addPage(topPage, "OldPageName");
+      @SuppressWarnings("unused")
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), ".TopPage.OldPageName.LastPage");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
@@ -240,6 +295,7 @@ public class WikiWordWidgetTest extends TestCase
 	{
 		WikiPage topPage = addPage(root, "TopPage");
 		WikiPage pageToRename = addPage(topPage, "OldPageName");
+      @SuppressWarnings("unused")
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "^OldPageName.LastPage");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");

@@ -14,6 +14,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 {
 	public static final String SINGLE_WIKIWORD_REGEXP = "\\b[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+";
 	public static final String REGEXP = "(?:[<>^.])?(?:" + SINGLE_WIKIWORD_REGEXP + "[.]?)+\\b";
+   public static final String REGRACE_LINK = "REGRACE_LINK";
 
 	public WikiPage parentPage;
 
@@ -45,12 +46,20 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 		return html.toString();
 	}
 
+   //[acd] Regracing
+   public boolean isRegracing ()
+   {  Boolean isDoingIt = false;
+      try { isDoingIt = "true".equals(parent.getVariable(REGRACE_LINK)); }
+      catch (Exception e) { }
+      return isDoingIt;
+   }
+
 	private String makeLinkToExistingWikiPage(String qualifiedName)
 	{
 		StringBuffer html = new StringBuffer();
 		html.append("<a href=\"");
 		html.append(qualifiedName).append("\">");
-		html.append(Utils.escapeText(getText())).append("</a>");
+		html.append(Utils.escapeText(regrace(getText()))).append("</a>");  //[acd] Regracing
 		return html.toString();
 	}
 
