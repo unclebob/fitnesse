@@ -32,7 +32,8 @@ public class PreProcessorLiteralWidgetTest extends WidgetTest
 	public void testRender() throws Exception
 	{
 		PreProcessorLiteralWidget widget = new PreProcessorLiteralWidget(root, "!-abc-!");
-		assertEquals("!lit(0)", widget.render());
+		//[acd] Paren Literal: () -> ??
+      assertEquals("!lit?0?", widget.render());
 		assertEquals("abc", root.getLiteral(0));
 	}
 

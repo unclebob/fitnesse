@@ -26,7 +26,8 @@ public class PreProcessorLiteralWidget extends WikiWidget
 
 	public String render() throws Exception
 	{
-		return "!lit(" + literalNumber + ")";
+      //[acd] Paren Literal: generate as !lit?[0-9]+?
+      return "!lit?" + literalNumber + "?";
 	}
 
 	public String asWikiText() throws Exception
