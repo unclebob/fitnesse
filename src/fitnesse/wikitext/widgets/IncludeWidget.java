@@ -18,6 +18,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 
 	protected String pageName;
 	protected WikiPage includingPage;
+   protected WikiPage includedPage; //[acd] !include: Retain from getIncludedPageContent
 	protected WikiPage parentPage;
 
 	private static Map optionPrefixMap = buildOptionPrefixMap();
@@ -41,9 +42,11 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 		PageCrawler crawler = parentPage.getPageCrawler();
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		WikiPagePath pagePath = PathParser.parse(pageName);
-		WikiPage includedPage = crawler.getSiblingPage(includingPage, pagePath);
+      includedPage = crawler.getSiblingPage(includingPage, pagePath); //[acd] !include: Retain this.
+      
 		if(includedPage != null)
 		{
+         includedPage.setParentForVariables(this.getWikiPage().getParentForVariables());
 			return includedPage.getData().getContent();
 		}
 		else if(includingPage instanceof ProxyPage)
@@ -89,17 +92,21 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 		return match.group(2);
 	}
 
-	//TODO MDM I know this is bad...  But it seems better then creatting two new widgets.
+	//TODO MDM I know this is bad...  But it seems better then creating two new widgets.
 	private void buildWidget(String option) throws Exception
 	{
 		String widgetText = processLiterals(getIncludedPageContent());
-		if("-seamless".equals(option))
-		{
-			addChildWidgets(widgetText + "\n");
+
+      //[acd] !include: Create imposter root with alias = this if included page found.
+      ParentWidget incRoot = (includedPage == null)? this : new WidgetRoot(includedPage, this);
+
+		if("-seamless".equals(option) || getRoot().isGatheringInfo())
+		{  //[acd] !include: Use the imposter if found.
+         incRoot.addChildWidgets(widgetText + "\n");
 		}
 		else
-		{
-			new CollapsableWidget(this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(option));
+		{  //[acd] !include: Use new constructor with dual scope.  
+         new CollapsableWidget(incRoot, this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(option));
 		}
 	}
 
