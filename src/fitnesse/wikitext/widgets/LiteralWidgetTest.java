@@ -6,11 +6,11 @@ package fitnesse.wikitext.widgets;
 public class LiteralWidgetTest extends WidgetTest
 {
 	public void testMatches() throws Exception
-	{
-		assertMatches("!lit(0)");
-		assertMatches("!lit(99)");
-		assertNoMatch("!lit(-1)");
-		assertNoMatch("!lit(a)");
+	{  //[acd] Paren Literal: () -> ??
+      assertMatches("!lit?0?" );
+      assertMatches("!lit?99?");
+      assertNoMatch("!lit?-1?");
+      assertNoMatch("!lit?a?" );
 	}
 
 	protected String getRegexp()
@@ -22,7 +22,8 @@ public class LiteralWidgetTest extends WidgetTest
 	{
 		WidgetRoot root = new MockWidgetRoot();
 		root.defineLiteral("Bob");
-		LiteralWidget w = new LiteralWidget(root, "!lit(0)");
+  		//[acd] Paren Literal: () -> ??
+  		LiteralWidget w = new LiteralWidget(root, "!lit?0?");
 		String html = w.render();
 		assertEquals("Bob", html);
 	}

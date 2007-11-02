@@ -4,12 +4,14 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class LiteralWidget extends WikiWidget
 {
-	public static final String REGEXP = "!lit\\(\\d+\\)";
-	public static final Pattern pattern = Pattern.compile("!lit\\((\\d+)\\)", Pattern.MULTILINE + Pattern.DOTALL);
+	//[acd] Paren Literal: REGEXP & pattern
+   public static final String REGEXP = "!lit\\?\\d+\\?";
+   public static final Pattern pattern = Pattern.compile("!lit\\?(\\d+)\\?", Pattern.MULTILINE + Pattern.DOTALL);
 	private int literalNumber;
 
 	public LiteralWidget(ParentWidget parent, String text)
