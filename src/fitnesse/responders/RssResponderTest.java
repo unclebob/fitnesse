@@ -11,7 +11,7 @@ import org.w3c.dom.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class RssResponderTest extends ResponderTest
+public class RssResponderTest extends ResponderTestCase
 {
 	protected Element channelElement;
 	protected Element rssElement;

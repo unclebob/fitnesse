@@ -3,11 +3,11 @@
 package fitnesse.runner;
 
 import fit.Counts;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.io.*;
 
-public class StandardResultHandlerTest extends RegexTest
+public class StandardResultHandlerTest extends RegexTestCase
 {
 	private StandardResultHandler handler;
 	private ByteArrayOutputStream bytes;

@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.util;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.io.*;
 
-public class StreamReaderTest extends RegexTest
+public class StreamReaderTest extends RegexTestCase
 {
 	private PipedOutputStream output;
 	private StreamReader reader;

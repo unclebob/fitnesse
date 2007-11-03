@@ -11,7 +11,7 @@ import fitnesse.wiki.*;
 
 import java.util.regex.*;
 
-public class TestResponderTest extends RegexTest
+public class TestResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private MockRequest request;

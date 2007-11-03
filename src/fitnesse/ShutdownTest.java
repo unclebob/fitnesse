@@ -3,11 +3,11 @@
 package fitnesse;
 
 import fitnesse.http.ResponseParser;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.net.UnknownHostException;
 
-public class ShutdownTest extends RegexTest
+public class ShutdownTest extends RegexTestCase
 {
 	private Shutdown shutdown;
 

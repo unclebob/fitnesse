@@ -9,7 +9,7 @@ import fitnesse.wiki.*;
 
 import java.util.List;
 
-public class SavePropertiesResponderTest extends RegexTest
+public class SavePropertiesResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 

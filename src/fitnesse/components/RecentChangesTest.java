@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.util.List;
 
-public class RecentChangesTest extends RegexTest
+public class RecentChangesTest extends RegexTestCase
 {
 	private WikiPage rootPage;
 	private WikiPage newPage;

@@ -6,13 +6,13 @@ import fitnesse.util.FileUtil;
 
 import java.io.*;
 
-public class ReplacingFileUpdateTest extends UpdateTest
+public class ReplacingFileUpdateTest extends UpdateTestCase
 {
 	public final String sourceFilename = "classes/testFile";
 	public final File sourceFile = new File(sourceFilename);
 
 	public final String destDirName = "subDir";
-	public final String destPath = UpdateTest.testDir + "/" + UpdateTest.rootName + "/" + destDirName + "/testFile";
+	public final String destPath = UpdateTestCase.testDir + "/" + UpdateTestCase.rootName + "/" + destDirName + "/testFile";
 	public final File destFile = new File(destPath);
 
 	public void setUp() throws Exception

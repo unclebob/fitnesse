@@ -9,7 +9,7 @@ import fitnesse.wiki.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class WikiImportPropertyTest extends RegexTest
+public class WikiImportPropertyTest extends RegexTestCase
 {
 	private WikiImportProperty property;
 	private WikiPage page;

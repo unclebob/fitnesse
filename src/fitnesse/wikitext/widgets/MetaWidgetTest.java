@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-public class MetaWidgetTest extends WidgetTest
+public class MetaWidgetTest extends WidgetTestCase
 {
 	public void setUp() throws Exception
 	{

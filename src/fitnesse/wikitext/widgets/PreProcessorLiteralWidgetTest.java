@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-public class PreProcessorLiteralWidgetTest extends WidgetTest
+public class PreProcessorLiteralWidgetTest extends WidgetTestCase
 {
 	private WidgetRoot root;
 

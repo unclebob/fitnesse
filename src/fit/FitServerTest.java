@@ -4,14 +4,14 @@
 package fit;
 
 import fitnesse.components.FitProtocol;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class FitServerTest extends RegexTest
+public class FitServerTest extends RegexTestCase
 {
 	private Process process;
 	private Socket socket;

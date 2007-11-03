@@ -4,13 +4,13 @@ package fitnesse.responders;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.FileUtil;
 import fitnesse.wiki.*;
 
 import java.io.*;
 
-public class SerializedPageResponderTest extends RegexTest
+public class SerializedPageResponderTest extends RegexTestCase
 {
 	private final String RootPath = "TestRooT";
 	private PageCrawler crawler;

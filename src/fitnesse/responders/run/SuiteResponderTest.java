@@ -10,7 +10,7 @@ import fitnesse.wiki.*;
 
 import java.util.List;
 
-public class SuiteResponderTest extends RegexTest
+public class SuiteResponderTest extends RegexTestCase
 {
 	private MockRequest request;
 	private SuiteResponder responder;

@@ -4,7 +4,7 @@ package fitnesse.updates;
 
 import java.io.File;
 
-public class FileUpdateTest extends UpdateTest
+public class FileUpdateTest extends UpdateTestCase
 {
 	public final File testFile = new File("classes/testFile");
 

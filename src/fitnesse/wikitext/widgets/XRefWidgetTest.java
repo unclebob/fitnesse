@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
 
-public class XRefWidgetTest extends WidgetTest
+public class XRefWidgetTest extends WidgetTestCase
 {
 	private WikiPage root;
 	private WikiPage page;

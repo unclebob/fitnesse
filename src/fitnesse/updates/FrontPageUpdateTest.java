@@ -4,7 +4,7 @@ package fitnesse.updates;
 
 import fitnesse.wiki.*;
 
-public class FrontPageUpdateTest extends UpdateTest
+public class FrontPageUpdateTest extends UpdateTestCase
 {
 	protected Update makeUpdate() throws Exception
 	{

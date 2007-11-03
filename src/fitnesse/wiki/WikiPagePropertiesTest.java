@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class WikiPagePropertiesTest extends RegexTest
+public class WikiPagePropertiesTest extends RegexTestCase
 {
 	private WikiPageProperties properties;
 

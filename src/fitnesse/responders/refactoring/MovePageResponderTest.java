@@ -4,12 +4,12 @@ package fitnesse.responders.refactoring;
 
 import fitnesse.*;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ResponderTest;
+import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.*;
 
 import java.util.List;
 
-public class MovePageResponderTest extends ResponderTest
+public class MovePageResponderTest extends ResponderTestCase
 {
 	private WikiPage pageOne;
 	private WikiPage pageA;

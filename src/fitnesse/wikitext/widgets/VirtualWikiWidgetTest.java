@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.FitNesseUtil;
 
-public class VirtualWikiWidgetTest extends WidgetTest
+public class VirtualWikiWidgetTest extends WidgetTestCase
 {
 	public void setUp() throws Exception
 	{

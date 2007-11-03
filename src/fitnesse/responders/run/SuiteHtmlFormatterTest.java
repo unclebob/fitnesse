@@ -4,9 +4,9 @@ package fitnesse.responders.run;
 
 import fit.Counts;
 import fitnesse.html.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class SuiteHtmlFormatterTest extends RegexTest
+public class SuiteHtmlFormatterTest extends RegexTestCase
 {
 	private HtmlPage page;
 	private SuiteHtmlFormatter formatter;

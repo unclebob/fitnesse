@@ -12,7 +12,7 @@ import java.io.*;
 import java.net.*;
 import java.util.List;
 
-public class TestRunnerTest extends RegexTest
+public class TestRunnerTest extends RegexTestCase
 {
 	private int port;
 	private WikiPage root;

@@ -4,10 +4,10 @@ package fitnesse.responders.editing;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class TableWizardResponderTest extends RegexTest
+public class TableWizardResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private MockRequest request;
@@ -59,12 +59,12 @@ public class TableWizardResponderTest extends RegexTest
 	{
 		prepareTest();
 		request.setResource("ChildPage");
-		request.addInput("fixture", "fitnesse.testutil.DummyClassForWizardTest");
+		request.addInput("fixture", "fitnesse.testutil.DummyClassForWizardTests");
 		request.addInput("text", "child content");
 
 		response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 		String body = response.getContent();
-		assertTrue(body.indexOf("child content\n!|fitnesse.testutil.DummyClassForWizardTest|\n|v1 |f1()|\n") != -1);
+		assertTrue(body.indexOf("child content\n!|fitnesse.testutil.DummyClassForWizardTests|\n|v1 |f1()|\n") != -1);
 		assertTrue(body.indexOf("|int|int |") != -1);
 	}
 

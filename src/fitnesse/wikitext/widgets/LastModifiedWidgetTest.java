@@ -8,7 +8,7 @@ import java.util.*;
 
 //created by Jason Sypher
 
-public class LastModifiedWidgetTest extends WidgetTest
+public class LastModifiedWidgetTest extends WidgetTestCase
 {
 	private WikiPage root;
 	private WikiPage page;

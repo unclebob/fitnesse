@@ -6,7 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.*;
 import fitnesse.testutil.*;
 
-public class SocketCatchingResponderTest extends RegexTest
+public class SocketCatchingResponderTest extends RegexTestCase
 {
 	private SocketDealer dealer;
 	private SimpleSocketSeeker seeker;

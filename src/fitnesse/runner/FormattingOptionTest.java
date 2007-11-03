@@ -10,7 +10,7 @@ import fitnesse.wiki.InMemoryPage;
 
 import java.io.*;
 
-public class FormattingOptionTest extends RegexTest
+public class FormattingOptionTest extends RegexTestCase
 {
 	private ByteArrayOutputStream output;
 	private FormattingOption option;

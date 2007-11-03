@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.WildcardTest;
 import fitnesse.wiki.*;
 
-public class ClassPathBuilderTest extends RegexTest
+public class ClassPathBuilderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private ClassPathBuilder builder;

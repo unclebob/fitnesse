@@ -4,11 +4,11 @@ package fitnesse.responders.files;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.util.*;
 
-public class FileResponderTest extends RegexTest
+public class FileResponderTest extends RegexTestCase
 {
 	MockRequest request;
 	private final String HTTP_DATE_REGEXP = "[SMTWF][a-z]{2}\\,\\s[0-9]{2}\\s[JFMASOND][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}\\sGMT";

@@ -7,7 +7,7 @@ import fitnesse.util.FileUtil;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
-public abstract class UpdateTest extends TestCase
+public abstract class UpdateTestCase extends TestCase
 {
 	public static final String testDir = "testDir";
 	public static final String rootName = "RooT";

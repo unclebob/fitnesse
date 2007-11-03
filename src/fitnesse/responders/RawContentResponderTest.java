@@ -6,7 +6,7 @@ import fitnesse.Responder;
 import fitnesse.http.*;
 import fitnesse.wiki.PathParser;
 
-public class RawContentResponderTest extends ResponderTest
+public class RawContentResponderTest extends ResponderTestCase
 {
 	protected Responder responderInstance()
 	{

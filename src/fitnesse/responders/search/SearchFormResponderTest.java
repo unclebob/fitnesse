@@ -4,9 +4,9 @@ package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class SearchFormResponderTest extends RegexTest
+public class SearchFormResponderTest extends RegexTestCase
 {
 	private SimpleResponse response;
 	private String content;

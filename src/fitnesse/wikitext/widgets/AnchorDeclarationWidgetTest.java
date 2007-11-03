@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import java.util.regex.Pattern;
 
-public class AnchorDeclarationWidgetTest extends WidgetTest
+public class AnchorDeclarationWidgetTest extends WidgetTestCase
 {
 	public void testRegularExpressionToMatch() throws Exception
 	{

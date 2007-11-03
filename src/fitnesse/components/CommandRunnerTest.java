@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class CommandRunnerTest extends RegexTest
+public class CommandRunnerTest extends RegexTestCase
 {
 
 	public void setUp() throws Exception

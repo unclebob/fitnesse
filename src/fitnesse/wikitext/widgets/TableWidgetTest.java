@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlElement;
 import fitnesse.wikitext.WikiWidget;
 
-public class TableWidgetTest extends WidgetTest
+public class TableWidgetTest extends WidgetTestCase
 {
 	protected String getRegexp()
 	{

@@ -5,10 +5,10 @@ package fitnesse.responders.editing;
 import fitnesse.*;
 import fitnesse.html.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class EditResponderTest extends RegexTest
+public class EditResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private MockRequest request;

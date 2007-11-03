@@ -3,7 +3,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
 
-public class EvaluatorWidgetTest extends WidgetTest
+public class EvaluatorWidgetTest extends WidgetTestCase
 {
    private WikiPage root;
    private PageCrawler crawler;

@@ -3,7 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 
-public class LiteralWidgetTest extends WidgetTest
+public class LiteralWidgetTest extends WidgetTestCase
 {
 	public void testMatches() throws Exception
 	{  //[acd] Paren Literal: () -> ??

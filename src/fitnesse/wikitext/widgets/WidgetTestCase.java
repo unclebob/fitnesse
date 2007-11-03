@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.util.regex.*;
 
-public abstract class WidgetTest extends RegexTest
+public abstract class WidgetTestCase extends RegexTestCase
 {
 	protected void assertMatchEquals(String value, String expected)
 	{

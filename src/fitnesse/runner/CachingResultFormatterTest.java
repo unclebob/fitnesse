@@ -3,10 +3,10 @@
 package fitnesse.runner;
 
 import fit.Counts;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
 
-public class CachingResultFormatterTest extends RegexTest
+public class CachingResultFormatterTest extends RegexTestCase
 {
 	public void testAddResult() throws Exception
 	{

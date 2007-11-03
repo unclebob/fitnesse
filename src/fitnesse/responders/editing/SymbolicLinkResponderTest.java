@@ -4,11 +4,11 @@ package fitnesse.responders.editing;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.FileUtil;
 import fitnesse.wiki.*;
 
-public class SymbolicLinkResponderTest extends RegexTest
+public class SymbolicLinkResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private WikiPage pageOne;

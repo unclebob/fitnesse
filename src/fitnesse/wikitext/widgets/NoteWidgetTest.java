@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-public class NoteWidgetTest extends WidgetTest
+public class NoteWidgetTest extends WidgetTestCase
 {
 	public void setUp() throws Exception
 	{

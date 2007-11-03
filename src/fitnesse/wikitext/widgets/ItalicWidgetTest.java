@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class ItalicWidgetTest extends RegexTest
+public class ItalicWidgetTest extends RegexTestCase
 {
 	public void setUp() throws Exception
 	{

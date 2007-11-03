@@ -6,7 +6,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 
-public class TOCWidgetTest extends WidgetTest
+public class TOCWidgetTest extends WidgetTestCase
 {
 	private WikiPage root;
 	private WikiPage parent, parent2;

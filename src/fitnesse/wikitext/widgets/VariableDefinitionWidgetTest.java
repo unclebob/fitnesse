@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
 
-public class VariableDefinitionWidgetTest extends WidgetTest
+public class VariableDefinitionWidgetTest extends WidgetTestCase
 {
 	public WikiPage root;
 	private PageCrawler crawler;

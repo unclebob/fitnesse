@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class PageReferenceRenamerTest extends RegexTest
+public class PageReferenceRenamerTest extends RegexTestCase
 {
 	WikiPage root;
 	WikiPage subWiki;

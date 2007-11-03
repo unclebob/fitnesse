@@ -10,7 +10,7 @@ import fitnesse.wiki.InMemoryPage;
 
 import java.io.*;
 
-public class FitNesseExpediterTest extends RegexTest
+public class FitNesseExpediterTest extends RegexTestCase
 {
 	private FitNesseExpediter expediter;
 	private MockSocket socket;

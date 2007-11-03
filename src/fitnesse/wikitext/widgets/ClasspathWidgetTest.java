@@ -6,7 +6,7 @@ import fitnesse.wiki.WikiPageDummy;
 
 import java.util.regex.*;
 
-public class ClasspathWidgetTest extends WidgetTest
+public class ClasspathWidgetTest extends WidgetTestCase
 {
 	public void testRegexp() throws Exception
 	{

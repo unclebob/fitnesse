@@ -4,12 +4,12 @@ package fitnesse.responders.files;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.FileUtil;
 
 import java.io.File;
 
-public class DeleteFileResponderTest extends RegexTest
+public class DeleteFileResponderTest extends RegexTestCase
 {
 	public MockRequest request;
 	private FitNesseContext context;

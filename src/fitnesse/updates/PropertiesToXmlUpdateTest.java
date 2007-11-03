@@ -7,7 +7,7 @@ import fitnesse.wiki.FileSystemPage;
 import java.io.*;
 import java.util.Properties;
 
-public class PropertiesToXmlUpdateTest extends UpdateTest
+public class PropertiesToXmlUpdateTest extends UpdateTestCase
 {
 	private String pageOneOldFilename = "testDir/RooT/PageOne" + PropertiesToXmlUpdate.old_propertiesFilename;
 	private String pageTwoOldFilename = "testDir/RooT/PageOne/PageTwo" + PropertiesToXmlUpdate.old_propertiesFilename;

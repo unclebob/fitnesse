@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
 
-public class ImageWidgetTest extends WidgetTest
+public class ImageWidgetTest extends WidgetTestCase
 {
 	public void testRegexp() throws Exception
 	{

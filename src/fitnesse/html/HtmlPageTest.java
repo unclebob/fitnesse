@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.html;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class HtmlPageTest extends RegexTest
+public class HtmlPageTest extends RegexTestCase
 {
 	private HtmlPage page;
 	private String html;

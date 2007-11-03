@@ -5,10 +5,10 @@ package fitnesse.responders.search;
 import fitnesse.FitNesseContext;
 import fitnesse.components.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class SearchResponderTest extends RegexTest
+public class SearchResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private PageCrawler crawler;

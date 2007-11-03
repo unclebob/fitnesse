@@ -1,8 +1,8 @@
 package fitnesse.html;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class ChunkedResultsListingUtilTest extends RegexTest
+public class ChunkedResultsListingUtilTest extends RegexTestCase
 {
 	public void testOpeningTag()
 	{

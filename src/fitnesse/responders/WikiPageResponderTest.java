@@ -8,7 +8,7 @@ import fitnesse.http.*;
 import fitnesse.testutil.*;
 import fitnesse.wiki.*;
 
-public class WikiPageResponderTest extends RegexTest
+public class WikiPageResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private PageCrawler crawler;

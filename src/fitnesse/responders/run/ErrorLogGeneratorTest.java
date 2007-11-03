@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.testutil.*;
 import fitnesse.wiki.*;
 
-public class ErrorLogGeneratorTest extends RegexTest
+public class ErrorLogGeneratorTest extends RegexTestCase
 {
 	private static String ErrorLogName = ExecutionLog.ErrorLogName;
 

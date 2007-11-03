@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class WidgetRootTest extends RegexTest
+public class WidgetRootTest extends RegexTestCase
 {
 	private WikiPage rootPage;
 

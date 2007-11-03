@@ -4,12 +4,12 @@ package fitnesse.responders.versions;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
 import java.util.*;
 
-public class VersionSelectionResponderTest extends RegexTest
+public class VersionSelectionResponderTest extends RegexTestCase
 {
 	private WikiPage page;
 	private WikiPage root;

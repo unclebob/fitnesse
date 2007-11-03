@@ -14,7 +14,7 @@ import fitnesse.wikitext.widgets.*;
 import java.io.*;
 import java.util.*;
 
-public class ComponentFactoryTest extends RegexTest
+public class ComponentFactoryTest extends RegexTestCase
 {
 	private Properties testProperties;
 	private ComponentFactory factory;

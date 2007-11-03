@@ -4,10 +4,10 @@ package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class WhereUsedResponderTest extends RegexTest
+public class WhereUsedResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private WikiPage pageTwo;

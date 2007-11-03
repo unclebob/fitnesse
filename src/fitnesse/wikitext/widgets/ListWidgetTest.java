@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-public class ListWidgetTest extends WidgetTest
+public class ListWidgetTest extends WidgetTestCase
 {
 	private MockWidgetRoot widgetRoot;
 

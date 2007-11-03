@@ -6,11 +6,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
-public class NotFoundResponderTest extends RegexTest
+public class NotFoundResponderTest extends RegexTestCase
 {
 	public void testResponse() throws Exception
 	{

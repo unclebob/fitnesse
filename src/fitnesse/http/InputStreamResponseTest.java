@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.FileUtil;
 
 import java.io.*;
 import java.net.Socket;
 
-public class InputStreamResponseTest extends RegexTest implements ResponseSender
+public class InputStreamResponseTest extends RegexTestCase implements ResponseSender
 {
 	private InputStreamResponse response;
 	private boolean closed = false;

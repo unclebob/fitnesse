@@ -6,7 +6,7 @@ import fitnesse.wiki.PathParser;
 
 import java.io.File;
 
-public class UpdaterTest extends UpdateTest
+public class UpdaterTest extends UpdateTestCase
 {
 
 	public void setUp() throws Exception

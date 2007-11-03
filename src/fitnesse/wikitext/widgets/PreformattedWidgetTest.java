@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
 
 import java.util.regex.Pattern;
 
-public class PreformattedWidgetTest extends RegexTest
+public class PreformattedWidgetTest extends RegexTestCase
 {
 	public void testRegexp() throws Exception
 	{

@@ -7,7 +7,7 @@ import fitnesse.wiki.*;
 
 import java.util.*;
 
-public class WhereUsedTest extends RegexTest implements SearchObserver
+public class WhereUsedTest extends RegexTestCase implements SearchObserver
 {
 	private WikiPage root;
 	private InMemoryPage pageOne;

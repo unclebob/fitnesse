@@ -4,10 +4,10 @@ package fitnesse.responders.refactoring;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.responders.ResponderTest;
+import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.*;
 
-public class RenamePageResponderTest extends ResponderTest
+public class RenamePageResponderTest extends ResponderTestCase
 {
 	private WikiPagePath pageOnePath;
 	private WikiPagePath pageTwoPath;

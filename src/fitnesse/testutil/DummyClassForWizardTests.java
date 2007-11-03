@@ -4,7 +4,7 @@ package fitnesse.testutil;
 
 import fit.ColumnFixture;
 
-public class DummyClassForWizardTest extends ColumnFixture
+public class DummyClassForWizardTests extends ColumnFixture
 {
 	public int v1;
 

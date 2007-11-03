@@ -4,9 +4,9 @@ package fitnesse.responders.files;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class DirectoryResponderTest extends RegexTest
+public class DirectoryResponderTest extends RegexTestCase
 {
 	MockRequest request;
 	private SimpleResponse response;

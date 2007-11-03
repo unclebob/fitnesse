@@ -3,7 +3,7 @@ package fitnesse.updates;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.*;
 
-public class WikiImportPropertyFormatUpdateTest extends UpdateTest
+public class WikiImportPropertyFormatUpdateTest extends UpdateTestCase
 {
 	protected Update makeUpdate() throws Exception
 	{

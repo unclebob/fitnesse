@@ -1,9 +1,9 @@
 package fitnesse.html;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class SetupTeardownIncluderTest extends RegexTest {
+public class SetupTeardownIncluderTest extends RegexTestCase {
   private PageData pageData;
 
   protected void setUp() throws Exception {

@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.*;
 import java.io.*;
 
-public class XmlWriterTest extends RegexTest
+public class XmlWriterTest extends RegexTestCase
 {
 	private ByteArrayOutputStream output;
 	private Document doc;

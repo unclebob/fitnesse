@@ -4,10 +4,10 @@ package fitnesse.responders.versions;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class VersionResponderTest extends RegexTest
+public class VersionResponderTest extends RegexTestCase
 {
 	private String oldVersion;
 	private SimpleResponse response;

@@ -5,7 +5,7 @@ package fitnesse;
 import fitnesse.testutil.*;
 import fitnesse.wiki.*;
 
-public class TestRunnerTest extends RegexTest
+public class TestRunnerTest extends RegexTestCase
 {
 	private fitnesse.TestRunner runner;
 	private PageCrawler crawler;

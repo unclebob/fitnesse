@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
 
-public class AliasLinkWidgetTest extends WidgetTest
+public class AliasLinkWidgetTest extends WidgetTestCase
 {
     private WikiPage root;
     private PageCrawler crawler;

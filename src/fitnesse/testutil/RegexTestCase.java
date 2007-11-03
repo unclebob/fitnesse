@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import java.util.regex.*;
 
-public class RegexTest extends TestCase
+public abstract class RegexTestCase extends TestCase
 {
 	public static void assertMatches(String regexp, String string)
 	{

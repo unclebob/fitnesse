@@ -4,10 +4,10 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class ChunkingResponderTest extends RegexTest
+public class ChunkingResponderTest extends RegexTestCase
 {
 
 	private Exception exception;

@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.util.List;
 
-public class FixtureListBuilderTest extends RegexTest
+public class FixtureListBuilderTest extends RegexTestCase
 {
 	private FixtureListBuilder builder;
 	private PageCrawler crawler;

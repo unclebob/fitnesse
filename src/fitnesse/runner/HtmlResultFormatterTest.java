@@ -4,12 +4,12 @@ package fitnesse.runner;
 
 import fit.Counts;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
 
 import java.io.InputStream;
 
-public class HtmlResultFormatterTest extends RegexTest
+public class HtmlResultFormatterTest extends RegexTestCase
 {
 	private HtmlResultFormatter formatter;
 

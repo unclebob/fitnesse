@@ -3,10 +3,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fit.exception.*;
 
-public class BindingTest extends RegexTest
+public class BindingTest extends RegexTestCase
 {
 	private TestFixture fixture;
 	private Parse cell1;

@@ -5,7 +5,7 @@ import fitnesse.wiki.*;
 
 import java.io.*;
 
-public class SymLinkPropertyFormatUpdateTest extends UpdateTest
+public class SymLinkPropertyFormatUpdateTest extends UpdateTestCase
 {
 	private static String badPropertiesFormat =
 		"<?xml version=\"1.0\"?>\n" +

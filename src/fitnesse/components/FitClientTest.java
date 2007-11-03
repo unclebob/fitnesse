@@ -8,7 +8,7 @@ import fitnesse.testutil.*;
 
 import java.util.*;
 
-public class FitClientTest extends RegexTest implements FitClientListener
+public class FitClientTest extends RegexTestCase implements FitClientListener
 {
 	private List<String> outputs = new ArrayList<String>();
 	private List<Counts> counts = new ArrayList<Counts>();

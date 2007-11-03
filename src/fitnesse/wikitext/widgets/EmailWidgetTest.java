@@ -6,7 +6,7 @@ import fitnesse.wikitext.WikiWidget;
 
 import java.util.regex.Pattern;
 
-public class EmailWidgetTest extends WidgetTest
+public class EmailWidgetTest extends WidgetTestCase
 {
 	protected String getRegexp()
 	{

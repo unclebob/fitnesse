@@ -7,9 +7,9 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class FixtureTest extends RegexTest
+public class FixtureTest extends RegexTestCase
 {
   private Locale saveLocale;
 

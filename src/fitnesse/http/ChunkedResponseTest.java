@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.net.Socket;
 
-public class ChunkedResponseTest extends RegexTest implements ResponseSender
+public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 {
 	private ChunkedResponse response;
 	private boolean closed = false;

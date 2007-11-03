@@ -2,12 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.html;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class HtmlUtilTest extends RegexTest
+public class HtmlUtilTest extends RegexTestCase
 {
 	private static final String endl = HtmlElement.endl;
 

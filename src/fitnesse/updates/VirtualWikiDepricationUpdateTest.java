@@ -4,7 +4,7 @@ package fitnesse.updates;
 
 import fitnesse.wiki.*;
 
-public class VirtualWikiDepricationUpdateTest extends UpdateTest
+public class VirtualWikiDepricationUpdateTest extends UpdateTestCase
 {
 	protected Update makeUpdate()
 	{

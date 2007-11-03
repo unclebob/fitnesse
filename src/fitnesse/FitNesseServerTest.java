@@ -12,7 +12,7 @@ import fitnesse.wiki.*;
 
 import java.util.regex.Pattern;
 
-public class FitNesseServerTest extends RegexTest
+public class FitNesseServerTest extends RegexTestCase
 {
 	private PageCrawler crawler;
 	private WikiPage root;

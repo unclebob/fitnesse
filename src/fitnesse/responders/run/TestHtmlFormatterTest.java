@@ -5,10 +5,10 @@ package fitnesse.responders.run;
 import fit.Counts;
 import fitnesse.components.CommandRunner;
 import fitnesse.html.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.WikiPageDummy;
 
-public class TestHtmlFormatterTest extends RegexTest
+public class TestHtmlFormatterTest extends RegexTestCase
 {
 	private HtmlPage page;
 	private TestHtmlFormatter formatter;

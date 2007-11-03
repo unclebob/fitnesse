@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 
@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PageXmlizerTest extends RegexTest
+public class PageXmlizerTest extends RegexTestCase
 {
 	private PageXmlizer xmlizer;
 	private WikiPage root;

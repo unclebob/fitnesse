@@ -3,11 +3,11 @@
 package fitnesse.wiki;
 
 import fitnesse.responders.run.SuiteResponder;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.util.List;
 
-public class PageDataTest extends RegexTest
+public class PageDataTest extends RegexTestCase
 {
 	public WikiPage page;
 	private WikiPage root;

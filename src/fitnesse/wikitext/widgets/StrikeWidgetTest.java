@@ -6,7 +6,7 @@ import fitnesse.wikitext.WikiWidget;
 
 // created by Jason Sypher
 
-public class StrikeWidgetTest extends WidgetTest
+public class StrikeWidgetTest extends WidgetTestCase
 {
 	public void testRegularExpression() throws Exception
 	{

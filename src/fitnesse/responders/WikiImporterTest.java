@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 
 import java.util.*;
 
-public class WikiImporterTest extends RegexTest implements WikiImporterClient
+public class WikiImporterTest extends RegexTestCase implements WikiImporterClient
 {
 	public WikiPage pageOne;
 	public WikiPage childPageOne;

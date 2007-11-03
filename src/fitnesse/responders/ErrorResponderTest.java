@@ -4,9 +4,9 @@ package fitnesse.responders;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class ErrorResponderTest extends RegexTest
+public class ErrorResponderTest extends RegexTestCase
 {
 	public void testResponse() throws Exception
 	{

@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-public class LineBreakWidgetTest extends WidgetTest
+public class LineBreakWidgetTest extends WidgetTestCase
 {
 
 	public void testRegexp() throws Exception

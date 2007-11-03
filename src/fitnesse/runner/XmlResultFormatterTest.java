@@ -3,13 +3,13 @@
 package fitnesse.runner;
 
 import fit.Counts;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.*;
 import org.w3c.dom.*;
 
 import java.io.InputStream;
 
-public class XmlResultFormatterTest extends RegexTest
+public class XmlResultFormatterTest extends RegexTestCase
 {
 	private XmlResultFormatter formatter;
 	private PageResult result1;

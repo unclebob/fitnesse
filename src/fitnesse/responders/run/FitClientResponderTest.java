@@ -5,10 +5,10 @@ package fitnesse.responders.run;
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
 import fitnesse.responders.editing.PropertiesResponder;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class FitClientResponderTest extends RegexTest
+public class FitClientResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private FitClientResponder responder;

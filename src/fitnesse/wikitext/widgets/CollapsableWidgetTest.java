@@ -7,7 +7,7 @@ import fitnesse.wiki.WikiPageDummy;
 
 import java.util.*;
 
-public class CollapsableWidgetTest extends WidgetTest
+public class CollapsableWidgetTest extends WidgetTestCase
 {
 	public void testRegExp() throws Exception
 	{

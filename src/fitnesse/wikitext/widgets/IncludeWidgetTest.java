@@ -6,7 +6,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetBuilder;
 
-public class IncludeWidgetTest extends WidgetTest
+public class IncludeWidgetTest extends WidgetTestCase
 {
 
 	protected WikiPage root;

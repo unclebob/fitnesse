@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.io.ByteArrayInputStream;
 
-public class RequestBuilderTest extends RegexTest
+public class RequestBuilderTest extends RegexTestCase
 {
 	private RequestBuilder builder;
 

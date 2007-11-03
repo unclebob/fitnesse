@@ -9,10 +9,10 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public class WikiImportingResponderTest extends RegexTest
+public class WikiImportingResponderTest extends RegexTestCase
 {
 	private WikiImportingResponder responder;
 	private String baseUrl;

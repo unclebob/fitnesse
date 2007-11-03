@@ -4,9 +4,9 @@ package fitnesse.responders.files;
 
 import fitnesse.*;
 import fitnesse.http.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
-public class RenameFileConfirmationResponderTest extends RegexTest
+public class RenameFileConfirmationResponderTest extends RegexTestCase
 {
 	MockRequest request;
 	private FitNesseContext context;

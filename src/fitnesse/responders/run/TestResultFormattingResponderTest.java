@@ -7,11 +7,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.components.FitProtocol;
 import fitnesse.http.*;
 import fitnesse.runner.*;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 
 import java.io.*;
 
-public class TestResultFormattingResponderTest extends RegexTest
+public class TestResultFormattingResponderTest extends RegexTestCase
 {
 	private PipedOutputStream output;
 	private PipedInputStream input;

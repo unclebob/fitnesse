@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.WikiPageDummy;
 
-public class LinkWidgetTest extends WidgetTest
+public class LinkWidgetTest extends WidgetTestCase
 {
 	public void setUp() throws Exception
 	{

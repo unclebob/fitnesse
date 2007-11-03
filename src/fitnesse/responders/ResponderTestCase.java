@@ -4,10 +4,10 @@ package fitnesse.responders;
 
 import fitnesse.*;
 import fitnesse.http.MockRequest;
-import fitnesse.testutil.RegexTest;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
-public abstract class ResponderTest extends RegexTest
+public abstract class ResponderTestCase extends RegexTestCase
 {
 	protected WikiPage root;
 	protected MockRequest request;
