@@ -44,6 +44,12 @@ public class GracefulNamerTest extends TestCase
     assertEquals("Bad 123 Company", GracefulNamer.regrace("Bad123Company"));
     assertEquals("Bad 1a 2b 3 Company", GracefulNamer.regrace("Bad1a2b3Company"));
     assertEquals("B 12z 3 Company", GracefulNamer.regrace("B12z3Company"));
+    assertEquals(".Bad Company Two", GracefulNamer.regrace(".BadCompanyTwo"));
+    assertEquals(">Bad Company Two", GracefulNamer.regrace(">BadCompanyTwo"));
+    assertEquals("<Bad Company Two", GracefulNamer.regrace("<BadCompanyTwo"));
+    assertEquals(".Bad Company Two .Child Page", GracefulNamer.regrace(".BadCompanyTwo.ChildPage"));
+    assertEquals(">Bad Company Two .Child Page", GracefulNamer.regrace(">BadCompanyTwo.ChildPage"));
+    assertEquals("<Bad Company Two .Child Page", GracefulNamer.regrace("<BadCompanyTwo.ChildPage"));
   }
   
 	public void testEmptyString() throws Exception

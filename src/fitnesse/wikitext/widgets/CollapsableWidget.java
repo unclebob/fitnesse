@@ -45,7 +45,7 @@ public class CollapsableWidget extends ParentWidget
 		match.find();
       String tailChar = match.group(1);
 		expanded  = tailChar == null;
-      invisible = "<".equals(tailChar); 
+      invisible = expanded? false : "<".equals(tailChar); 
 		String title = match.group(2);
 		String body = match.group(3);
 		init(title, body, this);

@@ -7,6 +7,7 @@
 package fit;
 
 import java.util.regex.*;
+import fitnesse.wiki.PathParser;
 
 public class GracefulNamer
 {
@@ -39,21 +40,22 @@ public class GracefulNamer
 
   public static String regrace(String disgracefulName)
   {
+    final char separator = PathParser.PATH_SEPARATOR.charAt(0);
     char c = '?';
     GracefulNamer namer = new GracefulNamer();
     if (disgracefulName.length() > 0)
        namer.finalName.append(c = disgracefulName.charAt(0));
 
-    boolean isGrabbingDigits = false, wasPeriod = (c == '.');
+    boolean isGrabbingDigits = false, wasSeparator = (PathParser.isPathPrefix(c));
     for (int i = 1; i < disgracefulName.length(); i++)
     {  c = disgracefulName.charAt(i);
        if (   (Character.isUpperCase(c))
            || (Character.isDigit(c) && !isGrabbingDigits)
-           || (c == '.')
+           || (c == separator)
           )
        {
-          if (!wasPeriod) namer.finalName.append(" ");
-          wasPeriod = (c == '.');
+          if (!wasSeparator) namer.finalName.append(" ");
+          wasSeparator = (c == separator);
        }
 
        isGrabbingDigits = (Character.isDigit(c));

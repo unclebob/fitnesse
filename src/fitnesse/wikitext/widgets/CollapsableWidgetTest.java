@@ -69,7 +69,7 @@ public class CollapsableWidgetTest extends WidgetTestCase
 
   //[acd] invisible: Test invisible class
   public void testRenderInvisibleSection() throws Exception {
-     CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!");
+     CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!\n");
      String html = widget.render();
      assertSubString("class=\"invisible\"", html);
      assertNotSubString("class=\"collapsable\"", html);

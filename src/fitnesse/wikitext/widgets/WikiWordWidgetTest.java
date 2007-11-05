@@ -172,7 +172,7 @@ public class WikiWordWidgetTest extends TestCase
       
       addPage(childPage, "Sub123Page");
       renderedText = childPage.getData().getHtml();
-      assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt; Sub 123 Page</a>", renderedText);
+      assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt;Sub 123 Page</a>", renderedText);
    }
 
    public void testBackwardSearchWidgetRegraced() throws Exception
@@ -191,7 +191,7 @@ public class WikiWordWidgetTest extends TestCase
       data.setContent("<TargetPage.SubTarget");
       referer.commit(data);
       String renderedLink = referer.getData().getHtml();
-      assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt; Target Page .Sub Target</a>", renderedLink);
+      assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;Target Page .Sub Target</a>", renderedLink);
    }
 
 	private WikiPage addPage(WikiPage parent, String childName) throws Exception
