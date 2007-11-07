@@ -4,6 +4,7 @@
 	</description>
 
 	<property name="src" location="src" />
+	<property name="src2" location="srcFitServerTests" />
 	<property name="classes" location="classes" />
 	<property name="lib" location="lib" />
 	<property name="fitnesseRoot" value="FitNesseRoot" />
@@ -67,7 +68,8 @@
 		<tstamp />
 		<zip zipfile="fitnesse_src${DSTAMP}.zip">
 			<fileset dir=".">
-				<include name="src/**" />
+				<include name="${src}/**" />
+				<include name="${src2}/**" />
 				<include name="lib/**" />
 				<include name="extra/**" />
 				<include name="build.xml" />
@@ -132,7 +134,12 @@
 
 	<target name="http_jar" depends="compile" description="create a jar of the http stuff">
 		<copy todir="${classes}">
-			<fileset dir="${src}" includes="**/*.java" />
+			<fileset dir="${src}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${src2}">
+				<include name="**/*.java" />
+			</fileset>
 		</copy>
 
 		<jar jarfile="fitnesse_http.jar" basedir="${classes}">
@@ -151,6 +158,7 @@
 
 	<target name="compile" depends="init" description="compile the source (make)">
 		<javac srcdir="${src}" destdir="${classes}" classpathref="classpath" debug="true" />
+		<javac srcdir="${src2}" destdir="${classes}" classpathref="classpath" debug="true" />
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 	</target>
 
@@ -182,7 +190,6 @@
 			<batchtest todir="${results.dir}">
 				<fileset dir="${src}">
 					<include name="**/*Test.java" />
-					<exclude name="**/?*FitServerTest.java" />
 				</fileset>
 			</batchtest>
 		</junit>
@@ -193,6 +200,9 @@
 			<fileset dir="${src}">
 				<include name="**/*.java" />
 				<exclude name="eg/" />
+			</fileset>
+			<fileset dir="${src2}">
+				<include name="**/*.java" />
 			</fileset>
 		</cobertura-report>
 	</target>
@@ -223,6 +233,12 @@
 			<classpath path="extra/util" />
 		</java>
 		<java classname="HeaderManager">
+			<arg value="${src2}/fit" />
+			<arg value="extra/util/fitHeader.txt" />
+			<arg value=".java" />
+			<classpath path="extra/util" />
+		</java>
+		<java classname="HeaderManager">
 			<arg value="dotnet" />
 			<arg value="extra/util/fitHeader.txt" />
 			<arg value=".cs" />
@@ -240,6 +256,13 @@
 		</java>
 		<java classname="HeaderManager">
 			<arg value="${src}/fit" />
+			<arg value="extra/util/fitHeader.txt" />
+			<arg value=".java" />
+			<arg value="remove" />
+			<classpath path="extra/util" />
+		</java>
+		<java classname="HeaderManager">
+			<arg value="${src2}/fit" />
 			<arg value="extra/util/fitHeader.txt" />
 			<arg value=".java" />
 			<arg value="remove" />
