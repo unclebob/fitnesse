@@ -164,24 +164,44 @@ public class Parse
 		return s;
 	}
 
+//	public static String unescape(String s)
+//	{
+//		int i = -1, j;
+//		while((i = s.indexOf('&', i + 1)) >= 0)
+//		{
+//			if((j = s.indexOf(';', i + 1)) > 0)
+//			{
+//				String from = s.substring(i + 1, j).toLowerCase();
+//				String to = null;
+//				if((to = replacement(from)) != null)
+//				{
+//					s = s.substring(0, i) + to + s.substring(j + 1);
+//				}
+//			}
+//		}
+//		return s;
+//	}
+
 	public static String unescape(String s)
 	{
+		StringBuilder sb = new StringBuilder(s);
 		int i = -1, j;
-		while((i = s.indexOf('&', i + 1)) >= 0)
+		while ((i = sb.indexOf("&", i + 1)) >= 0)
 		{
-			if((j = s.indexOf(';', i + 1)) > 0)
+			if ((j = sb.indexOf(";", i + 1)) > 0)
 			{
-				String from = s.substring(i + 1, j).toLowerCase();
+				String from = sb.substring(i + 1, j).toLowerCase();
 				String to = null;
-				if((to = replacement(from)) != null)
+				if ((to = replacement(from)) != null)
 				{
-					s = s.substring(0, i) + to + s.substring(j + 1);
+					sb.replace(i, j + 1, to);
 				}
 			}
 		}
-		return s;
+		return sb.toString();
 	}
-
+	
+	
 	public static String replacement(String from)
 	{
 		if(from.equals("lt"))
