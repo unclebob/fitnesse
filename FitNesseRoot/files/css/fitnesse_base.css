@@ -405,6 +405,7 @@ div.merge_old
 
 .test_summary_link
 {
+	position: absolute; /*[acd] For IE7--prevents wrapping & hiding*/
 	text-align: right;
 }
 
