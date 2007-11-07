@@ -101,7 +101,8 @@ public class ComponentFactoryTest extends RegexTestCase
 
 	public void testWikiWidgetPlugins() throws Exception
 	{
-		WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{WikiWordWidget.class});
+		//[acd] The following line alter the global widget builder; seems unnecessary.
+		//WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{WikiWordWidget.class});
 		String widgetsValue = BoldWidget.class.getName() + ", " + ItalicWidget.class.getName();
 		testProperties.setProperty(ComponentFactory.WIKI_WIDGETS, widgetsValue);
 		saveTestProperties();
@@ -119,7 +120,8 @@ public class ComponentFactoryTest extends RegexTestCase
 
 	public void testWikiWidgetInterceptors() throws Exception
 	{
-		WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
+		//[acd] The following line alter the global widget builder; seems unnecessary.
+		//WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
 		testProperties.setProperty(ComponentFactory.WIKI_WIDGET_INTERCEPTORS, TestWidgetInterceptor.class.getName());
 		saveTestProperties();
 
