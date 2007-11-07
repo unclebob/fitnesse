@@ -1,3 +1,27 @@
+-- 20071107 -------------------------------------------------------------------------------
+Changes, ACDassing (i-m-fit-r-u) [acd]
+--------------------------------------
+Bug Fixes:
+     ComponentFactoryTest.java - commented out reassignment of global 
+          WidgetBuilder.htmlWidgetBuilder; it negatively affected subsequent tests via the
+          integrated JUnit in Eclipse and appeared to be unnecessary.
+     .classpath - (Eclipse)  "
+
+Changes:
+     Reorganization:  Moved the following test modules to a different source folder for
+          Eclipse integrated JUnit support (why are these embedded in FitNesse?):
+               srcFitServerTests/fit/CppFitServertest.java
+               srcFitServerTests/fit/DotNetFitServerTest.java
+               srcFitServerTests/fit/RubyFitServerTest.java
+          
+     build.xml:  Modified to support reorganization (above) using ${src2} initialzed with
+          srcFitServerTests.
+
+     Parse.java:  Reimplemented using StringBuffer per suggestion from Konrad Argasinski.
+     
+     fitnesse_base.css:  Modified .test_summary_link to be absolute to prevent inadvertant
+          hiding of long page path names.
+
 -- 20071102 -------------------------------------------------------------------------------
 Changes, ACDassing (i-m-fit-r-u) [acd]
 --------------------------------------
