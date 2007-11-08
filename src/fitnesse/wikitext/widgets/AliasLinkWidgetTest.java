@@ -34,7 +34,16 @@ public class AliasLinkWidgetTest extends WidgetTestCase
       assertMatches("[[tag][#archor${number}]]");
       assertMatches("[[tag][.#archor${number}]]");
       assertMatches("[[tag][SomeLink${= 1 + ${TWO} =}]]");
-      //
+
+      //[acd] Alias query plus fragment
+      assertMatches("[[tag][?query]]");
+      assertMatches("[[tag][?query#fragment]]");
+      assertMatches("[[tag][SomePage?query#fragment]]");
+      assertMatches("[[tag][SomePage.ChildPage?query#fragment]]");
+      assertMatches("[[tag][.SomePage.ChildPage?query#fragment]]");
+      assertMatches("[[tag][>SomePage.ChildPage?query#fragment]]");
+      assertMatches("[[tag][<SomePage.ChildPage?query#fragment]]");
+      assertMatches("[[tag][http://www.objectmentor.com?query#fragment]]");
     }
 
     public void testHtmlAtTopLevelPage() throws Exception
@@ -123,6 +132,42 @@ public class AliasLinkWidgetTest extends WidgetTestCase
       AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage]]");
       String html = w.render();
       assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
+   }
+
+   //[acd] Alias: Check query suffix 
+   public void testLeftArrowOnPageWithQuery() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+      crawler.addPage(page, PathParser.parse("SubPage"));
+      WikiPage child2 = crawler.addPage(page, PathParser.parse("SubPage2"));
+      WidgetRoot wroot = new WidgetRoot(child2);
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage?query]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage?query\">tag</a>", html);
+   }
+
+   //[acd] Alias: Check fragment suffix 
+   public void testLeftArrowOnPageWithFragment() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+      crawler.addPage(page, PathParser.parse("SubPage"));
+      WikiPage child2 = crawler.addPage(page, PathParser.parse("SubPage2"));
+      WidgetRoot wroot = new WidgetRoot(child2);
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage#fragment]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage#fragment\">tag</a>", html);
+   }
+   
+   //[acd] Alias: Check query suffix plus fragment suffix 
+   public void testLeftArrowOnPageWithQueryAndFragment() throws Exception
+   {
+      WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+      crawler.addPage(page, PathParser.parse("SubPage"));
+      WikiPage child2 = crawler.addPage(page, PathParser.parse("SubPage2"));
+      WidgetRoot wroot = new WidgetRoot(child2);
+      AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][<TestPage.SubPage?query#fragment]]");
+      String html = w.render();
+      assertEquals("<a href=\"TestPage.SubPage?query#fragment\">tag</a>", html);
    }
 
    //[acd] Alias: Check ${var} expansion 

@@ -47,36 +47,38 @@ public class AliasLinkWidget extends ParentWidget
    }
    //[acd] Alias Vars/Evals: end of variable expander
    
-    public String render() throws Exception
-    {
-      
-      //[acd] Alias Vars/Evals: Expand and allow (#) in alias link
-      String expandedHref = (new VariableExpandingWidgetRoot(this, href)).childHtml(); 
-      int hashAt = expandedHref.indexOf('#');
-      String hashText = "";
-      if (hashAt > 0) //the link has a local reference
-      {  hashText     = expandedHref.substring(hashAt);
-         expandedHref = expandedHref.substring(0, hashAt);
-      }
-      //[acd] Alias Vars/Evals: end allow (#) in alias link
-      
-		if(WikiWordWidget.isWikiWord(expandedHref))
-        {
-			WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), expandedHref);
-            String theWord = www.getWikiWord();
-            WikiPagePath wikiWordPath = PathParser.parse(theWord);
-            WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
-            String qualifiedName = PathParser.render(fullPathOfWikiWord);
-            if (parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
-				return ("<a href=\"" + qualifiedName + hashText + "\">" + childHtml() + "</a>"); //[acd] Alias V/E: use it
-            else if (getWikiPage() instanceof ProxyPage)
-                return makeAliasLinkToNonExistentRemotePage(theWord);
-            else
-                return (childHtml() + "<a href=\"" + qualifiedName + "?edit\">?</a>");
-            }
-		else //
-			return ("<a href=\"" + expandedHref + hashText + "\">" + childHtml() + "</a>");  //[acd] Alias V/E: use it
-        }
+   public String render() throws Exception
+   {
+   	//[acd] Alias Vars/Evals: Expand and allow (?) and (#) in alias link
+   	//
+   	String expandedHref = (new VariableExpandingWidgetRoot(this, href)).childHtml();
+   	Pattern urlPat   = Pattern.compile("([^\\?\\#]*)((\\?.+)?(\\#.+)?)?");
+   	Matcher urlMat   = urlPat.matcher(expandedHref);
+   	String  urlSuffix = "";
+   	
+   	if (urlMat.matches())
+   	{
+   		expandedHref = urlMat.group(1);
+   		urlSuffix = urlMat.group(2);
+   	}
+
+   	if(WikiWordWidget.isWikiWord(expandedHref))
+   	{
+   		WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), expandedHref);
+   		String theWord = www.getWikiWord();
+   		WikiPagePath wikiWordPath = PathParser.parse(theWord);
+   		WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
+   		String qualifiedName = PathParser.render(fullPathOfWikiWord);
+   		if (parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
+   			return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>"); //[acd] Alias V/E: use it
+   		else if (getWikiPage() instanceof ProxyPage)
+   			return makeAliasLinkToNonExistentRemotePage(theWord);
+   		else
+   			return (childHtml() + "<a href=\"" + qualifiedName + "?edit\">?</a>");
+   	}
+   	else //
+   		return ("<a href=\"" + expandedHref + urlSuffix + "\">" + childHtml() + "</a>");  //[acd] Alias V/E: use it
+   }
 
     private String makeAliasLinkToNonExistentRemotePage(String theWord) throws Exception
     {
