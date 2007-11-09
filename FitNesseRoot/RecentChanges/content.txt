@@ -1,3 +1,8 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestExpression||17:14:45 Fri, Nov 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionRegracedImm||10:15:06 Fri, Nov 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionRegracedInd||10:14:58 Fri, Nov 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegracedIndirect||10:12:51 Fri, Nov 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegracedImmediate||10:11:08 Fri, Nov 09, 2007|
 |||09:50:23 Tue, Jun 19, 2007|
 |FitNesse.FitDecoratorUserGuide||22:22:52 Wed, May 23, 2007|
 |FitNesse.UserGuide||21:49:13 Wed, May 23, 2007|
