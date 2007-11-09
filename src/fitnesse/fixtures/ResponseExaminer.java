@@ -121,4 +121,11 @@ public class ResponseExaminer extends ColumnFixture
 	{
 		return value;
 	}
+	
+	public String wrappedHtml () throws Exception
+	{
+		String txt = FitnesseFixtureContext.sender.sentData();
+		String txt2 = txt.replaceAll("(<br */?>)", "$1"+System.getProperty("line.separator"));
+		return "<pre>" + Utils.escapeText(txt2) + "</pre>";
+	}
 }
