@@ -175,7 +175,10 @@
 	<target name="clean" description="delete everything in the classes directory">
 		<mkdir dir="${classes}" />
 		<delete includeemptydirs="true">
-			<fileset dir="${classes}" includes="**/" />
+			<fileset dir="${classes}">
+				<include name="**/" />
+				<exclude name=".cvs.txt" />
+			</fileset>
 		</delete>
 		<delete dir="${results.dir}" />
 	</target>
