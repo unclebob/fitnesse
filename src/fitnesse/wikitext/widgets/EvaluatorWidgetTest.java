@@ -95,7 +95,7 @@ public class EvaluatorWidgetTest extends WidgetTestCase
    public void testInvalidExpression() throws Exception
    {
       EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${= x =}");
-      assertSubString("invalid expression: x", eval.render());
+      assertSubString("invalid expression:  x ", eval.render());
    }
 
    public void testRenderTwice() throws Exception
@@ -108,6 +108,6 @@ public class EvaluatorWidgetTest extends WidgetTestCase
    public void testAsWikiText() throws Exception
    {
       EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${= 1 + 2 * 3 / 4 =}");
-      assertEquals("${=1 + 2 * 3 / 4=}", eval.asWikiText());
+      assertEquals("${= 1 + 2 * 3 / 4 =}", eval.asWikiText());
    }
 }
