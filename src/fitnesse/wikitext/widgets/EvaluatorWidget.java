@@ -3,19 +3,22 @@
 //[acd] EvaluatorWidget: Created using VariableWidget & Expression
 package fitnesse.wikitext.widgets;
 
+import java.util.Calendar;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import fitnesse.html.HtmlUtil;
 import fitnesse.util.Expression;
+import fitnesse.wikitext.widgets.AliasLinkWidget.VariableExpandingWidgetRoot;
 
 public class EvaluatorWidget extends ParentWidget
 {
-   public static final String REGEXP = "\\$\\{=[^=]*=\\}";
+   public static final String REGEXP = "\\$\\{=[ \\t]*(?:%[-#+ 0,(]*(?:[0-9]*\\.?[0-9]*)?[a-zA-Z]+[ \\t]*:)?[^:=]*=\\}";
    public static final Pattern pattern = Pattern.compile("\\$\\{=([^=]*)=\\}", Pattern.MULTILINE + Pattern.DOTALL);
-   public static final Pattern formatParser = Pattern.compile("^[ \\t]*([^:]+:)?[ \\t]*(.*)$");
+   public static final Pattern formatParser = Pattern.compile("^[ \\t]*((%[-#+ 0,(]*[0-9.]*([a-zA-Z])[^: \\t]*)[ \\t]*:)?[ \\t]*(.*)$");
 	private String name = null;
    private String formatSpec = null;
+   private char   conversion = '?';
 	private String renderedText;
 	private boolean rendered;
 
@@ -35,9 +38,7 @@ public class EvaluatorWidget extends ParentWidget
 
 	private void doRender() throws Exception
 	{
-		addChildWidgets(name.trim());
-		parseOutFormat(childHtml());
-		
+		parseOutFormat((new VariableExpandingWidgetRoot(this, name)).childHtml());
 		if (renderedText.length() > 0)
 		{
 	      try { evaluateAndFormat(); }
@@ -53,9 +54,10 @@ public class EvaluatorWidget extends ParentWidget
 	{
 		Matcher match = formatParser.matcher(expr);
 		if (match.find())
-      {
-         formatSpec   = (match.group(1) == null)? null : match.group(1).trim();
-         renderedText = (match.group(2) == null)? ""   : match.group(2).trim();
+      {  //match.group(1) is an outer group.
+         formatSpec   = (match.group(2) == null)? null : match.group(2).trim();
+         conversion   = (match.group(3) == null)? '?'  : match.group(3).trim().charAt(0);
+         renderedText = (match.group(4) == null)? ""   : match.group(4).trim();
       }
 		else
 		{
@@ -66,23 +68,39 @@ public class EvaluatorWidget extends ParentWidget
 	
 	private void evaluateAndFormat () throws Exception
 	{
-      Double result = (new Expression(renderedText)).evaluate();
-      Long iResult = new Long(Math.round(result));
+      Double  result  = (new Expression(renderedText)).evaluate();
+      Long    iResult = new Long(Math.round(result));
       
       if (formatSpec == null)
          renderedText = (result.equals(iResult.doubleValue()))? iResult.toString() : result.toString();
       else
       {
-         if (formatSpec.length() == 2) //...must a letter + ':'
-            formatSpec = "%" + formatSpec.charAt(0) ;
-         else  ///...take "as is" less the ':'
-            formatSpec = formatSpec.substring(0, formatSpec.length() - 1);
+         //char conversion = formatSpec.charAt(formatSpec.length() - 1);
          
-         char conversion = formatSpec.charAt(formatSpec.length() - 1);
-         if ("doOxX".indexOf(conversion) >= 0) //...use the integer
+         if ("aAdhHoOxX".indexOf(conversion) >= 0) //...use the integer
             renderedText = String.format(formatSpec, iResult);
-         else //...use the double
+         else if ("bB".indexOf(conversion) >= 0) //...use boolean
+         	renderedText = (result == 0.0)? "false" : "true";
+         else if ("sScC".indexOf(conversion) >= 0) //...string & character formatting; use the double
+         {	String sString;
+         	boolean isInt = result.equals(iResult.doubleValue());
+         	if (isInt)
+         		sString = String.format(formatSpec, iResult.toString());
+         	else
+         		sString = String.format(formatSpec, result.toString());
+         	
+         	renderedText = sString.replaceAll(" ", HtmlUtil.NBSP.html());
+         }
+         else if ("tT".indexOf(conversion) >= 0) //...date
+         {
+         	Calendar cal = Calendar.getInstance();
+         	cal.setTimeInMillis(iResult);
+         	renderedText = String.format(formatSpec, cal.getTime());
+         }
+         else if ("eEfgG".indexOf(conversion) >= 0)  //...use the double
             renderedText = String.format(formatSpec, result);
+         else
+         	renderedText = makeInvalidVariableExpression("invalid format: " + formatSpec);
       }
 	}
 	

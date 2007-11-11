@@ -14,11 +14,17 @@ public class EvaluatorWidgetTest extends WidgetTestCase
    {
       root = InMemoryPage.makeRoot("root");
       crawler = root.getPageCrawler();
-      page = crawler.addPage(root, PathParser.parse("MyPage"));
+      
+      String content =    "!define ONE {1}\n"
+      						+ "!define TWO {2}\n"
+      						+ "!define FMT {%03x}\n"
+      						+ "!define FmtCOLON {%03X:}"
+      						;
+      
+      page = crawler.addPage(root, PathParser.parse("MyPage"), content);
       widgetRoot = new WidgetRoot("", page);
       
-      widgetRoot.addChildWidgets("!define ONE {1}\n!define TWO {2}");
-   }
+    }
 
    public void tearDown() throws Exception
    {
@@ -37,6 +43,14 @@ public class EvaluatorWidgetTest extends WidgetTestCase
       assertMatches("${=  X  =}");
       assertMatches("${= 1 + 1 =}");
       assertMatches("${= ${ONE} + ${TWO} =}");
+      assertMatches("${=%d:2.3=}");
+      assertMatches("${= %02X : 27 =}");
+
+      assertMatches("${=%30s:123=}");
+      assertMatches("${=%-30s:123=}");
+
+      assertMatches("${= %d : 3.2           =}");
+      assertMatches("${= %03o : 18 =}");
    }
   
    public void testSimpleTermOneDigit () throws Exception
@@ -54,6 +68,20 @@ public class EvaluatorWidgetTest extends WidgetTestCase
    public void testSimpleTermSigned () throws Exception
    {  assertEquals("-123", new EvaluatorWidget(widgetRoot, "${= -123 =}").render());
    }
+
+   public void testFormatting () throws Exception
+   {
+   	assertEquals("3", new EvaluatorWidget(widgetRoot, "${=%d:3.2           =}").render());
+   	assertEquals("3", new EvaluatorWidget(widgetRoot, "${= %d :3.2           =}").render());
+   	assertEquals("3", new EvaluatorWidget(widgetRoot, "${= %d:3.2           =}").render());
+   	assertEquals("3", new EvaluatorWidget(widgetRoot, "${=%d :3.2           =}").render());
+   	assertSubString("invalid expression: %3 d :3.2           ", new EvaluatorWidget(widgetRoot, "${=%3 d :3.2           =}").render());
+   	assertEquals("022", new EvaluatorWidget(widgetRoot, "${=%03o: 18 =}").render());
+   	assertEquals("01b", new EvaluatorWidget(widgetRoot, "${=%03x: 27 =}").render());
+   	assertEquals("01C", new EvaluatorWidget(widgetRoot, "${=%03X: 28 =}").render());
+   	assertEquals("0.4041", new EvaluatorWidget(widgetRoot, "${=%5.4f: 0.8082 / 2 =}").render());
+   }
+   
    public void testAddition () throws Exception
    {  assertEquals("3", new EvaluatorWidget(widgetRoot, "${= 1 + 2 =}").render());
    }
@@ -73,17 +101,17 @@ public class EvaluatorWidgetTest extends WidgetTestCase
    {  assertEquals("2.5", new EvaluatorWidget(widgetRoot, "${= 5 / 2 =}").render());
    }
    public void testExponent () throws Exception
-   {  EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${= 3^3 =}");
-      assertHasRegexp("^26.9+[0-9]$", eval.render());
+   {  EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%d: 3^3 =}");
+      assertEquals("27", eval.render());
    }
    public void testSine () throws Exception
-   {  assertSubString("1.8509", new EvaluatorWidget(widgetRoot, "${= 1 + sin 45 =}").render());
+   {  assertEquals("1.8509", new EvaluatorWidget(widgetRoot, "${=%5.4f: 1 + sin 45 =}").render());
    }
    public void testCosine () throws Exception
-   {  assertSubString("1.1542", new EvaluatorWidget(widgetRoot, "${= 1 + cos 30 =}").render());
+   {  assertEquals("1.1543", new EvaluatorWidget(widgetRoot, "${=%5.4f: 1 + cos 30 =}").render());
    }
    public void testTangent () throws Exception
-   {  assertSubString("-5.4053", new EvaluatorWidget(widgetRoot, "${= 1 + tan 30 =}").render());
+   {  assertEquals("-5.4053", new EvaluatorWidget(widgetRoot, "${=%5.4f: 1 + tan 30 =}").render());
    }
    public void testParentheses () throws Exception
    {  assertEquals("9", new EvaluatorWidget(widgetRoot, "${= (1 + 2) * 3 =}").render());
@@ -98,6 +126,24 @@ public class EvaluatorWidgetTest extends WidgetTestCase
       assertSubString("invalid expression:  x ", eval.render());
    }
 
+   public void testVariableSubstitutionPlain () throws Exception
+   {
+      WikiPage page2 = crawler.addPage( page, 
+      											 PathParser.parse("MyVarSubPage"),
+      											   "~vs1:${=${ONE}=}~\n"
+      											 + "~vs2:${=${ONE}+${TWO}=}~\n"
+      											 + "~vs3:${= ${ONE} + ${TWO} * ${TWO} =}~\n"
+      											 + "~vs4:${=(${ONE} + ${TWO}) * ${TWO}=}~\n"
+      											);
+      
+      String result = page2.getData().getHtml();
+      assertSubString("~vs1:1~", result);
+      assertSubString("~vs2:3~", result);
+      assertSubString("~vs3:5~", result);
+      assertSubString("~vs4:6~", result);
+   }
+   
+   
    public void testRenderTwice() throws Exception
    {
       EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${= 2 + 2 =}");
