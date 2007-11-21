@@ -6,7 +6,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetVisitor;
 
 import java.util.regex.Matcher;
@@ -32,36 +31,6 @@ public class AliasLinkWidget extends ParentWidget
 			addChildWidgets(tag);
 		}
 	}
-
-	//[acd] Alias Vars/Evals: Class to expand variables
-	public static class VariableExpandingWidgetRoot extends ParentWidget
-	{
-		public VariableExpandingWidgetRoot(ParentWidget parent, String content) throws Exception
-		{
-			super(parent);
-			if(content != null) addChildWidgets(content);
-		}
-
-		public WidgetBuilder getBuilder()
-		{
-			return WidgetBuilder.literalAndVariableWidgetBuilder;
-		}
-
-		public boolean doEscaping()
-		{
-			return false;
-		}
-
-		public String render() throws Exception
-		{
-			return "";
-		}
-
-		protected void addToParent()
-		{
-		}
-	}
-	//[acd] Alias Vars/Evals: end of variable expander
 
 	public String render() throws Exception
 	{

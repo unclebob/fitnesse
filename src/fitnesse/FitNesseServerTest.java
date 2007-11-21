@@ -3,11 +3,12 @@
 package fitnesse;
 
 import fitnesse.components.LogData;
-import fitnesse.http.*;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
-import fitnesse.testutil.*;
-import fitnesse.util.FileUtil;
+import fitnesse.testutil.MockSocket;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
 import java.util.regex.Pattern;
@@ -34,7 +35,7 @@ public class FitNesseServerTest extends RegexTestCase
 
 	public void tearDown() throws Exception
 	{
-		FileUtil.deleteFileSystemDirectory(SampleFileUtility.base);
+		SampleFileUtility.deleteSampleFiles();
 	}
 
 	public void testSimple() throws Exception

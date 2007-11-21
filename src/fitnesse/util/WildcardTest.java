@@ -5,16 +5,18 @@ package fitnesse.util;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WildcardTest extends TestCase
 {
 	private File testDir;
+	private static final String TEST_DIR = "testDir";
 
 	public void setUp() throws Exception
 	{
 		makeSampleFiles();
-		testDir = new File("testDir");
+		testDir = new File(TEST_DIR);
 	}
 
 	public void tearDown() throws Exception
@@ -57,6 +59,8 @@ public class WildcardTest extends TestCase
 	{
 		Wildcard wildcard = new Wildcard("*");
 		File[] files = testDir.listFiles(wildcard);
+		for (File f : files)
+			System.out.println("f.getName() = " + f.getName());
 		assertEquals(6, files.length);
 	}
 
@@ -73,18 +77,18 @@ public class WildcardTest extends TestCase
 
 	public static void makeSampleFiles()
 	{
-		FileUtil.makeDir("testDir");
-		FileUtil.createFile("testDir/one.jar", "");
-		FileUtil.createFile("testDir/two.jar", "");
-		FileUtil.createFile("testDir/one.dll", "");
-		FileUtil.createFile("testDir/two.dll", "");
-		FileUtil.createFile("testDir/oneA", "");
-		FileUtil.createFile("testDir/twoA", "");
+		FileUtil.makeDir(TEST_DIR);
+		FileUtil.createFile(TEST_DIR+"/one.jar", "");
+		FileUtil.createFile(TEST_DIR+"/two.jar", "");
+		FileUtil.createFile(TEST_DIR+"/one.dll", "");
+		FileUtil.createFile(TEST_DIR+"/two.dll", "");
+		FileUtil.createFile(TEST_DIR+"/oneA", "");
+		FileUtil.createFile(TEST_DIR+"/twoA", "");
 	}
 
 	public static void deleteSampleFiles()
 	{
-		FileUtil.deleteFileSystemDirectory("testDir");
+		FileUtil.deleteFileSystemDirectory(TEST_DIR);
 	}
 
 

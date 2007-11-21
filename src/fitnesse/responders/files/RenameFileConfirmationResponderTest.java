@@ -2,8 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.files;
 
-import fitnesse.*;
-import fitnesse.http.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.RegexTestCase;
 
 public class RenameFileConfirmationResponderTest extends RegexTestCase
@@ -20,6 +22,11 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase
 		context = new FitNesseContext();
 		context.rootPagePath = SampleFileUtility.base;
 		SampleFileUtility.makeSampleFiles();
+	}
+
+	public void tearDown() throws Exception
+	{
+		SampleFileUtility.deleteSampleFiles();
 	}
 
 	public void testContentOfPage() throws Exception
