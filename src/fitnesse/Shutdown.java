@@ -3,7 +3,9 @@
 package fitnesse;
 
 import fitnesse.components.CommandLine;
-import fitnesse.http.*;
+import fitnesse.http.RequestBuilder;
+import fitnesse.http.Response;
+import fitnesse.http.ResponseParser;
 
 public class Shutdown
 {
@@ -12,7 +14,6 @@ public class Shutdown
 	public String username;
 	public String password;
 	private CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]");
-	;
 
 	public static void main(String[] args) throws Exception
 	{

@@ -215,7 +215,6 @@ abstract public class RowFixture extends ColumnFixture
 		String annotation = label(message);
 		while(rows.hasNext())
 		{
-			;
 			Parse row = (Parse) rows.next();
 			wrong(row.parts);
 			row.parts.addToBody(annotation);

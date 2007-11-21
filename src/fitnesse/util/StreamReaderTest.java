@@ -4,7 +4,9 @@ package fitnesse.util;
 
 import fitnesse.testutil.RegexTestCase;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 public class StreamReaderTest extends RegexTestCase
 {
@@ -243,8 +245,6 @@ public class StreamReaderTest extends RegexTestCase
 
 		public abstract void doRead() throws Exception;
 	}
-
-	;
 
 	class ReadLine extends ReadThread
 	{

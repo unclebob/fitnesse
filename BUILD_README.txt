@@ -11,6 +11,6 @@ To run the unit tests:
  * add to your classpath:
   * the 'classes' directory
   * junit.jar.
- * run fitnesse.AllTestSuite.
+ * run all tests.
 
 Direct any questions to the FitNesse yahoo group or to micah@objectmentor.com.

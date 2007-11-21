@@ -8,13 +8,13 @@ import org.w3c.dom.Document;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 public class PageXmlizerTest extends RegexTestCase
 {
 	private PageXmlizer xmlizer;
 	private WikiPage root;
-	;
 	private PageCrawler crawler;
 	private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 

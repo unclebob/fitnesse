@@ -3,11 +3,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import fit.exception.FitParseException;
+import fitnesse.components.CommandLine;
+import fitnesse.components.FitProtocol;
+import fitnesse.util.StreamReader;
+
 import java.io.*;
 import java.net.Socket;
-import fitnesse.util.StreamReader;
-import fitnesse.components.*;
-import fit.exception.FitParseException;
 
 public class FitServer
 {
@@ -21,7 +23,7 @@ public class FitServer
 	private String host;
 	private int port;
 	private int socketToken;
-	;
+
 	private Socket socket;
 
 	public FitServer(String host, int port, boolean verbose)

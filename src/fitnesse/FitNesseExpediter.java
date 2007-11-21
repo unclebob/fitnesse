@@ -3,11 +3,18 @@
 package fitnesse;
 
 import fitnesse.components.LogData;
-import fitnesse.http.*;
+import fitnesse.http.HttpException;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketException;
 import java.util.GregorianCalendar;
 
 public class FitNesseExpediter implements ResponseSender
@@ -23,7 +30,8 @@ public class FitNesseExpediter implements ResponseSender
 	private long requestParsingDeadline;
 	private boolean hasError;
 
-	public FitNesseExpediter(Socket s, FitNesseContext context) throws Exception
+	public FitNesseExpediter(Socket s,
+	                         FitNesseContext context) throws Exception
 	{
 		this.context = context;
 		socket = s;

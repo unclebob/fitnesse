@@ -2,25 +2,23 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class CenterWidget extends ParentWidget
-{
-	public static final String REGEXP = "^![cC] [^\r\n]*" + LineBreakWidget.REGEXP + "?";
-	private static final Pattern pattern = Pattern.compile("^![cC] (.*)");
+public class CenterWidget extends ParentWidget {
+  public static final String REGEXP = "^![cC] [^\r\n]*" + LineBreakWidget.REGEXP + "?";
+  private static final Pattern pattern = Pattern.compile("^![cC] (.*)");
 
-	public CenterWidget(ParentWidget parent, String text) throws Exception
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-			addChildWidgets(match.group(1));
-	}
+  public CenterWidget(ParentWidget parent, String text) throws Exception {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find())
+      addChildWidgets(match.group(1));
+  }
 
-	public String render() throws Exception
-	{
-		StringBuffer html = new StringBuffer("<div class=\"centered\">");
-		html.append(childHtml()).append("</div>");
-		return html.toString();
-	}
+  public String render() throws Exception {
+    StringBuffer html = new StringBuffer("<div class=\"centered\">");
+    html.append(childHtml()).append("</div>");
+    return html.toString();
+  }
 }

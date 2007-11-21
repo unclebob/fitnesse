@@ -2,7 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class StringUtil
 {
@@ -30,5 +33,10 @@ public class StringUtil
 		combinedList.addAll(Arrays.asList(first));
 		combinedList.addAll(Arrays.asList(second));
 		return combinedList.toArray(new String[combinedList.size()]);
+	}
+
+	public static boolean isBlank(String resource)
+	{
+		return "".equals(resource);
 	}
 }

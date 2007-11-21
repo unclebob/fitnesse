@@ -11,84 +11,95 @@ import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.util.StringUtil;
 import fitnesse.wiki.*;
 
-public class WikiPageResponder implements SecureResponder
-{
-	protected WikiPage page;
-	protected PageData pageData;
-	protected String pageTitle;
-	protected Request request;
-	protected PageCrawler crawler;
+public class WikiPageResponder implements SecureResponder {
+  protected WikiPage page;
+  protected PageData pageData;
+  protected String pageTitle;
+  protected Request request;
+  protected PageCrawler crawler;
 
-	public WikiPageResponder()
-	{
-	}
+  public WikiPageResponder() {
+  }
 
-	public WikiPageResponder(WikiPage page) throws Exception
-	{
-		this.page = page;
-		pageData = page.getData();
-	}
+  public WikiPageResponder(WikiPage page) throws Exception {
+    this.page = page;
+    pageData = page.getData();
+  }
 
-	public Response makeResponse(FitNesseContext context, Request request) throws Exception
-	{
-		String resource = request.getResource();
+  public Response makeResponse(FitNesseContext context, Request request)
+    throws Exception {
+    String pageName = getPageNameOrDefault(request, "FrontPage");
+    loadPage(pageName, context);
+    if (page == null)
+      return notFoundResponse(context, request);
+    else
+      return makePageResponse(context);
+  }
 
-		if("".equals(resource))
-			resource = "FrontPage";
+  private String getPageNameOrDefault(Request request, String defaultPageName) {
+    String pageName = request.getResource();
+    if (StringUtil.isBlank(pageName))
+      pageName = defaultPageName;
 
-		loadPage(resource, context);
-		if(page == null)
-			return new NotFoundResponder().makeResponse(context, request);
-		loadPageData();
+    return pageName;
+  }
 
-		pageTitle = PathParser.render(crawler.getFullPath(page));
-		String html = makeHtml(context);
+  protected void loadPage(String resource, FitNesseContext context)
+    throws Exception {
+    WikiPagePath path = PathParser.parse(resource);
+    crawler = context.root.getPageCrawler();
+    crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
+    page = crawler.getPage(context.root, path);
+    if (page != null)
+      pageData = page.getData();
+  }
 
-		SimpleResponse response = new SimpleResponse();
-		response.setMaxAge(0);
-		response.setContent(html);
+  private Response notFoundResponse(FitNesseContext context, Request request)
+    throws Exception {
+    return new NotFoundResponder().makeResponse(context, request);
+  }
 
-		return response;
-	}
+  private SimpleResponse makePageResponse(FitNesseContext context)
+    throws Exception {
+    pageTitle = PathParser.render(crawler.getFullPath(page));
+    String html = makeHtml(context);
 
-	protected void loadPageData() throws Exception
-	{
-		pageData = page.getData();
-	}
+    SimpleResponse response = new SimpleResponse();
+    response.setMaxAge(0);
+    response.setContent(html);
+    return response;
+  }
 
-	protected void loadPage(String resource, FitNesseContext context) throws Exception
-	{
-		WikiPagePath path = PathParser.parse(resource);
-		crawler = context.root.getPageCrawler();
-		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-		page = crawler.getPage(context.root, path);
-	}
+  public String makeHtml(FitNesseContext context) throws Exception {
+    WikiPage page = pageData.getWikiPage();
+    HtmlPage html = context.htmlPageFactory.newPage();
+    WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
+    String fullPathName = PathParser.render(fullPath);
+    html.title.use(fullPathName);
+    html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(
+      fullPathName
+    )
+    );
+    html.actions.use(HtmlUtil.makeActions(pageData));
+    html.main.use(HtmlUtil.addHeaderAndFooter(page,
+      SetupTeardownIncluder.render(pageData)
+    )
+    );
 
-	public String makeHtml(FitNesseContext context) throws Exception
-	{
-		WikiPage page = pageData.getWikiPage();
-		HtmlPage html = context.htmlPageFactory.newPage();
-		WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
-		String fullPathName = PathParser.render(fullPath);
-		html.title.use(fullPathName);
-		html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
-		html.actions.use(HtmlUtil.makeActions(pageData));
-		html.main.use(HtmlUtil.addHeaderAndFooter(page, SetupTeardownIncluder.render(pageData)));
+    handleSpecialProperties(html, page);
 
-		handleSpecialProperties(html, page);
+    return html.html();
+  }
 
-		return html.html();
-	}
+  private void handleSpecialProperties(HtmlPage html, WikiPage page)
+    throws Exception {
+    WikiImportProperty.handleImportProperties(html, page, pageData);
+  }
 
-	private void handleSpecialProperties(HtmlPage html, WikiPage page) throws Exception
-	{
-		WikiImportProperty.handleImportProperties(html, page, pageData);
-	}
-
-	public SecureOperation getSecureOperation()
-	{
-		return new SecureReadOperation();
-	}
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
+  }
 }
