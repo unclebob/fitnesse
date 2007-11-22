@@ -18,18 +18,18 @@ public class HruleWidgetTest extends TestCase
 	public void testGetSize() throws Exception
 	{
 		HruleWidget widget = new HruleWidget(new MockWidgetRoot(), "----");
-		assertEquals(0, widget.size());
+		assertEquals(0, widget.getExtraDashes());
 		widget = new HruleWidget(new MockWidgetRoot(), "-----");
-		assertEquals(1, widget.size());
+		assertEquals(1, widget.getExtraDashes());
 		widget = new HruleWidget(new MockWidgetRoot(), "--------------");
-		assertEquals(10, widget.size());
+		assertEquals(10, widget.getExtraDashes());
 	}
 
 	public void testHtml() throws Exception
 	{
 		HruleWidget widget = new HruleWidget(new MockWidgetRoot(), "----");
-		assertEquals("<hr>", widget.render());
+		assertEquals("<hr/>\n", widget.render());
 		widget = new HruleWidget(new MockWidgetRoot(), "------");
-		assertEquals("<hr size=\"3\">", widget.render());
+		assertEquals("<hr size=\"3\"/>\n", widget.render());
 	}
 }

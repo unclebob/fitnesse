@@ -34,8 +34,12 @@ public class FitServerTest extends RegexTestCase
 
 	public void testSimpleStartUp() throws Exception
 	{
+		String junkMessage = "x";
+		connectionStatusSize = "0000000001";
 		prepareSessionProcess();
 		assertTrue(new String(httpRequest).startsWith("GET /?responder=socketCatcher&ticket=23"));
+		socketOutput.write(junkMessage.getBytes());
+		process.waitFor();
 	}
 
 	public void testBadConnection() throws Exception

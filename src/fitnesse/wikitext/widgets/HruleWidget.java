@@ -2,38 +2,44 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.html.HtmlTag;
 import fitnesse.wikitext.WikiWidget;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HruleWidget extends WikiWidget
 {
 	public static final String REGEXP = "-{4,}";
 	private static final Pattern pattern = Pattern.compile("-{4}(-*)");
 
-	private int size = 0;
+	private int extraDashes = 0;
 
 	public HruleWidget(ParentWidget parent, String text)
 	{
 		super(parent);
 		Matcher match = pattern.matcher(text);
 		if(match.find())
-			size = match.group(1).length();
+			extraDashes = match.group(1).length();
 	}
 
-	public int size()
+	public int getExtraDashes()
 	{
-		return size;
+		return extraDashes;
 	}
 
 	public String render() throws Exception
 	{
-		StringBuffer html = new StringBuffer("<hr");
-		if(size > 0)
-			html.append(" size=\"").append(size + 1).append("\"");
-		html.append(">");
+		HtmlTag hr = new HtmlTag("hr");
+		if (extraDashes > 0)
+			hr.addAttribute("size", hrSize(extraDashes));
+		return hr.html();
+	}
 
-		return html.toString();
+	private String hrSize(int height)
+	{
+		int hrSize = height + 1;
+		return String.format("%d", hrSize);
 	}
 }
 

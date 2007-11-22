@@ -59,8 +59,6 @@ public class WildcardTest extends TestCase
 	{
 		Wildcard wildcard = new Wildcard("*");
 		File[] files = testDir.listFiles(wildcard);
-		for (File f : files)
-			System.out.println("f.getName() = " + f.getName());
 		assertEquals(6, files.length);
 	}
 
