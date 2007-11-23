@@ -68,7 +68,7 @@ public class SymbolicLinkResponder implements Responder
 		}
 		else if(!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath))
 		{
-			response = new ErrorResponder("The page to which you are attemting to link, " + linkPath + ", doesn't exist.").makeResponse(context, null);
+			response = new ErrorResponder("The page to which you are attempting to link, " + linkPath + ", doesn't exist.").makeResponse(context, null);
 			response.setStatus(404);
 		}
 		else if(page.hasChildPage(linkName))
