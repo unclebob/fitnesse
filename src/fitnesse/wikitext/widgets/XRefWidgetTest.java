@@ -17,7 +17,7 @@ public class XRefWidgetTest extends WidgetTestCase
 		assertMatchEquals("!see SomePage.SubPage", "!see SomePage.SubPage");
 		assertMatchEquals("!see SomePage.SubPage junk", "!see SomePage.SubPage");
       
-      //[acd] !see: Child and backward search matching
+      //!see: Child and backward search matching
       assertMatchEquals("!see >SubPage junk", "!see >SubPage");
       assertMatchEquals("!see <SomeParent.SubPage junk", "!see <SomeParent.SubPage");
 	}
@@ -41,14 +41,14 @@ public class XRefWidgetTest extends WidgetTestCase
 		widget = new XRefWidget(wroot, "!see NoPage");
 		assertHasRegexp("<b>See: NoPage<a href=.*>?</a></b>", widget.render());
 
-      //[acd] !see: Left & right arrow testing
+      //see: Left & right arrow testing
       widget = new XRefWidget(wroot, "!see >SomeChild");
       assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild.*SomeChild</a></b>", widget.render());
       
       widget = new XRefWidget(croot, "!see <SomePage.SomeChild2");
       assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild2.*SomePage.SomeChild2</a></b>", widget.render());
       
-      //[acd] Regracing
+      //Regracing
       wroot.addVariable(WikiWordWidget.REGRACE_LINK, "true");
       widget = new XRefWidget(wroot, "!see SomePage");
       assertHasRegexp("<b>See: <a href=.*Some Page</a></b>", widget.render());

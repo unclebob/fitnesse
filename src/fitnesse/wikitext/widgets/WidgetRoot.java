@@ -16,7 +16,7 @@ public class WidgetRoot extends ParentWidget
 	private List<String> literals = new LinkedList<String>();
    private boolean             isGatheringInfo = false;
 
-   //[acd] !include: Constructor for IncludeWidget support (alias locale & scope)
+   //Constructor for IncludeWidget support (alias locale & scope)
    public WidgetRoot(WikiPage aliasPage, ParentWidget imposterWidget) throws Exception
    {
       super(imposterWidget, /*is alias=*/ true);
@@ -30,10 +30,8 @@ public class WidgetRoot extends ParentWidget
       this.page            = aliasPage;
    }
    
-   //[acd] !include: Expose the root widget via ParentWidget; expose isGathering too.
    public WidgetRoot      getRoot() { return this; }
    public boolean isGatheringInfo() { return isGatheringInfo; }
-   //[acd] !include: end exposures
    
 	public WidgetRoot(WikiPage page) throws Exception
 	{
@@ -45,13 +43,11 @@ public class WidgetRoot extends ParentWidget
 		this(value, page, WidgetBuilder.htmlWidgetBuilder);
 	}
 
-   //[acd] !include: Refactored for isGathering parameter.
 	public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws Exception
 	{
 	   this(value, page, builder, false);
    }
    
-   //[acd] !include: Refactored for isGathering parameter.
    public WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) throws Exception
    {
 		super(null);
@@ -99,20 +95,19 @@ public class WidgetRoot extends ParentWidget
 	public String getVariable(String key) throws Exception
 	{
 		String value = (String) variables.get(key);
-      if (key.equals("PAGE_NAME")) value = page.getName(); //[acd] PAGE_NAME: global ${PAGE_NAME} variable
-      if (key.equals("PAGE_PATH")) //[acd] PAGE_PATH: global ${PAGE_PATH} variable
+      if (key.equals("PAGE_NAME")) value = page.getName();
+      else if (key.equals("PAGE_PATH"))
       {  String parenName = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
          value = parenName.substring(1, parenName.length() - 1);
       }
 		WikiPage page = getWikiPage();
 		while(value == null && !page.getPageCrawler().isRoot(page))
 		{
-			page = page.getParentForVariables();   //[acd] !include: follow parents for variables
-         //[acd] Parent Literals: Gain access to page data to set parent's literal list
+			page = page.getParentForVariables();   //follow parents for variables
+         //Gain access to page data to set parent's literal list
          PageData pageData = page.getData();
          pageData.setLiterals(this.getLiterals());
 			value = pageData.getVariable(key);
-         //[acd] Parent Literals: end
 		}
 		if(value == null)
 		{

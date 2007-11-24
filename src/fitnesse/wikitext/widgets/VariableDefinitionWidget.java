@@ -8,12 +8,10 @@ import fitnesse.html.HtmlUtil;
 
 public class VariableDefinitionWidget extends ParentWidget
 {
-   //[acd] Var .: Allow periods (.) in variables
 	public static final String REGEXP = "^!define [\\w\\.]+ +(?:(?:\\{[^}]*\\})|(?:\\([^)]*\\)))";
 	private static final Pattern pattern =
 	  Pattern.compile("^!define ([\\w\\.]+) +([\\{\\(])(.*)[\\}\\)]",
 		                Pattern.DOTALL + Pattern.MULTILINE);
-   //[acd] Var .: end of periods (.) in variables
    
 	public String name;
 	public String value;

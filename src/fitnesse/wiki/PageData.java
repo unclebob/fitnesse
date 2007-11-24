@@ -146,8 +146,6 @@ public class PageData implements Serializable
 	{
 		if(variableRoot == null)
 		{
-         //[acd] Parent Literals: New T'I'W'Root ctor with literal list
-			//variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, variableDefinitionWidgetBuilder);
          variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, literals, variableDefinitionWidgetBuilder); 
 			variableRoot.render();
 		}

@@ -6,8 +6,12 @@ import junit.framework.TestCase;
 
 import java.util.regex.Pattern;
 
+import fitnesse.html.HtmlElement;
+
 public class HruleWidgetTest extends TestCase
 {
+	private static String endl = HtmlElement.endl;
+	
 	public void testRegexp() throws Exception
 	{
 		assertTrue("match1", Pattern.matches(HruleWidget.REGEXP, "----"));
@@ -28,8 +32,8 @@ public class HruleWidgetTest extends TestCase
 	public void testHtml() throws Exception
 	{
 		HruleWidget widget = new HruleWidget(new MockWidgetRoot(), "----");
-		assertEquals("<hr/>\n", widget.render());
+		assertEquals("<hr/>" + endl, widget.render());
 		widget = new HruleWidget(new MockWidgetRoot(), "------");
-		assertEquals("<hr size=\"3\"/>\n", widget.render());
+		assertEquals("<hr size=\"3\"/>" + endl, widget.render());
 	}
 }

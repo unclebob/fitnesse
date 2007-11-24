@@ -6,7 +6,7 @@ package fitnesse.wikitext.widgets;
 public class LiteralWidgetTest extends WidgetTestCase
 {
 	public void testMatches() throws Exception
-	{  //[acd] Paren Literal: () -> ??
+	{  //Paren Literal: () -> ??
       assertMatches("!lit?0?" );
       assertMatches("!lit?99?");
       assertNoMatch("!lit?-1?");
@@ -22,7 +22,7 @@ public class LiteralWidgetTest extends WidgetTestCase
 	{
 		WidgetRoot root = new MockWidgetRoot();
 		root.defineLiteral("Bob");
-  		//[acd] Paren Literal: () -> ??
+  		//Paren Literal: () -> ??
   		LiteralWidget w = new LiteralWidget(root, "!lit?0?");
 		String html = w.render();
 		assertEquals("Bob", html);

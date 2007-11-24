@@ -8,10 +8,8 @@ import java.util.regex.*;
 
 public class VariableWidget extends ParentWidget
 {
-   //[acd] Var .: Allow periods (.) in variables
 	public static final String REGEXP = "\\$\\{[\\w\\.]+\\}";
 	public static final Pattern pattern = Pattern.compile("\\$\\{([\\w\\.]+)\\}", Pattern.MULTILINE + Pattern.DOTALL);
-   //[acd] Var .: end of periods (.) in variables
    
 	private String name = null;
 	private String renderedText;

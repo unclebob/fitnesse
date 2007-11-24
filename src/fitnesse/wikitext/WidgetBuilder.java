@@ -43,12 +43,11 @@ public class WidgetBuilder
 		CollapsableWidget.class,
 		IncludeWidget.class,
 		VariableDefinitionWidget.class,
-      EvaluatorWidget.class,  //[acd] EvaluatorWidget: match before variables
+      EvaluatorWidget.class,
 		VariableWidget.class
 	};
 
 	public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(htmlWidgetClasses);
-   //[acd] EvaluatorWidget: Allow in builders
    public static WidgetBuilder literalAndVariableWidgetBuilder = new WidgetBuilder(new Class[]{LiteralWidget.class, VariableWidget.class, EvaluatorWidget.class});
    public static WidgetBuilder variableWidgetBuilder = new WidgetBuilder(new Class[]{VariableWidget.class, EvaluatorWidget.class});
 

@@ -21,7 +21,7 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertNoMatch("!* Some title\n content *!\n");
 		assertNoMatch("!* Some title\n content *!...");
 
-    //[acd] invisible: Matches
+    //invisible: Matches
     assertMatches("!*< Some title\n content \n*!");
     assertMatches("!***< Some title\n content \n***!");
 	}
@@ -42,7 +42,7 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertSubString("<a href=\"javascript:collapseAll();\">Collapse All</a>", html);
 	}
 
-  //[acd] invisible: Test invisible too
+  //invisible: Test invisible too
   public void testExpandedOrCollapsedOrInvisible() throws Exception {
 		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
 		assertTrue(widget.expanded);
@@ -52,7 +52,7 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertFalse(widget.expanded);
     assertFalse(widget.invisible);
     
-    //[acd] invisible: Test invisible flags
+    //invisible: Test invisible flags
     widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!");
     assertFalse(widget.expanded);
     assertTrue(widget.invisible);
@@ -67,7 +67,7 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertSubString("collapsableClosed.gif", html);
 	}
 
-  //[acd] invisible: Test invisible class
+  //invisible: Test invisible class
   public void testRenderInvisibleSection() throws Exception {
      CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!\n");
      String html = widget.render();

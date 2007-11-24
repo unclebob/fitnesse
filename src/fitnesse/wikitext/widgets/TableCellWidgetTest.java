@@ -47,7 +47,7 @@ public class TableCellWidgetTest extends RegexTestCase
 		root.defineLiteral("blah");
 		table = new TableWidget(root, "");
 		row = new TableRowWidget(table, "", true);
-      //[acd] Paren Literal: () -> ??
+      //Paren Literal: () -> ??
 		TableCellWidget cell = new TableCellWidget(row, "''!lit?0?''", true);
 		assertSubString("''blah''", cell.render());
 	}

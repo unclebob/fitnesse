@@ -11,12 +11,12 @@ import java.util.regex.*;
 
 public class TOCWidget extends WikiWidget
 {
-   //[acd] !contents: [-R[0-9]] [-g]
+   // [-R[0-9]] [-g]
    public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-g)?[ \\t]*$)";
    public static final String REGRACE_TOC = "REGRACE_TOC";
 
 	private boolean recursive, isGraceful;
-   private int     depthLimit;  //[acd] !contents: 0 = unlimited depth recursion
+   private int     depthLimit;  // 0 = unlimited depth recursion
 
 	public TOCWidget(ParentWidget parent, String text)
 	{
@@ -29,14 +29,14 @@ public class TOCWidget extends WikiWidget
 	{
 		recursive = (text.indexOf("-R") > -1);
       
-      if (recursive) //[acd] !contents: -R[0-9]...
+      if (recursive) // -R[0-9]...
       {  Pattern pat = Pattern.compile("-R([0-9])");
          Matcher mat = pat.matcher(text);
          depthLimit = mat.find()?  Integer.valueOf(mat.group(1)) : 0;
       }
 	}
 
-   private void setGraceful(String text) //[acd] Regracing
+   private void setGraceful(String text)
    {
       isGraceful  = (text.indexOf("-g") > -1);
    }
@@ -65,7 +65,7 @@ public class TOCWidget extends WikiWidget
 		return list;
 	}
 
-   private boolean isDepthExceeded (int currentDepth)  //[acd] !contents: -R[0-9] limiter
+   private boolean isDepthExceeded (int currentDepth)  // -R[0-9] limiter
    { return (depthLimit > 0) && (currentDepth > depthLimit);
    }
    
@@ -76,7 +76,7 @@ public class TOCWidget extends WikiWidget
       
 		if(isRecursive() && buildListOfChildPages(wikiPage).size() > 0)
 		{
-         //[acd] !contents: -R[0-9] limit & show "..."
+         // -R[0-9] limit & show "..."
          if (isDepthExceeded(currentDepth + 1))
             listItem.add("...");
          else
@@ -93,7 +93,6 @@ public class TOCWidget extends WikiWidget
 		return href;
 	}
 
-   //[acd] Regracing
    public boolean isRegracing ()
    {  boolean isDoingIt = false;
       try { isDoingIt = "true".equals(parent.getVariable(REGRACE_TOC)); }
@@ -103,7 +102,7 @@ public class TOCWidget extends WikiWidget
 
 	private HtmlElement getLinkText(WikiPage wikiPage) throws Exception
 	{
-      String name = regrace(wikiPage.getName());  //[acd] regrace names
+      String name = regrace(wikiPage.getName());
 		if(wikiPage instanceof ProxyPage)
 			return new HtmlTag("i", name);
 		else

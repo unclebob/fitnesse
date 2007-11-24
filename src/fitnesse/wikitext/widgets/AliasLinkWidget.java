@@ -34,8 +34,7 @@ public class AliasLinkWidget extends ParentWidget
 
 	public String render() throws Exception
 	{
-		//[acd] Alias Vars/Evals: Expand and allow (?) and (#) in alias link
-		//
+		//--Expand and allow (?) and (#) in alias link and tag.
 		String expandedHref = (new VariableExpandingWidgetRoot(this, href)).childHtml();
 		Pattern urlPat = Pattern.compile("([^\\?\\#]*)((\\?.+)?(\\#.+)?)?");
 		Matcher urlMat = urlPat.matcher(expandedHref);
@@ -55,7 +54,7 @@ public class AliasLinkWidget extends ParentWidget
 			WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
 			String qualifiedName = PathParser.render(fullPathOfWikiWord);
 			if(parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
-				return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>"); //[acd] Alias V/E: use it
+				return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>");
 			else if(getWikiPage() instanceof ProxyPage)
 				return makeAliasLinkToNonExistentRemotePage(theWord);
 			else
@@ -63,8 +62,8 @@ public class AliasLinkWidget extends ParentWidget
 		}
 		else
 		{
-			String url = LinkWidget.makeUrlUsable(href);
-			return String.format("<a href=\"%s\">%s</a>", url, tag);
+			String url = LinkWidget.makeUrlUsable(expandedHref);
+			return String.format("<a href=\"%s%s\">%s</a>", url, urlSuffix, childHtml());
 		}
 
 	}

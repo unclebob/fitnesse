@@ -37,13 +37,13 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase
 		assertNoMatch("!define x");
 		assertNoMatch(" !define x {1}");
       
-      //[acd] Var .: Test allow periods
+      //Test allow periods
       assertMatches("!define x.y.z {1}");
       assertMatches("!define .y.z {1}");
       assertMatches("!define x.y. {1}");
       assertMatches("!define .xy. {1}");
       
-      //[acd] Paren Literal: Test matches
+      //Paren Literal: Test matches
       assertMatches("!define curly {!-some curly literal-!}");
       assertMatches("!define paren (!-some paren literal-!)");
 	}
@@ -72,7 +72,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase
 		assertSubString("1", renderedText);
 	}
 
-   //[acd] Var .: Test render with periods
+   //Test render with periods
    public void testRenderedTextWithPeriods() throws Exception
    {
       WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot(root), "!define x.y.z (1)\n");

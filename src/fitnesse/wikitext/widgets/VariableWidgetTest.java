@@ -89,9 +89,8 @@ public class VariableWidgetTest extends WidgetTestCase
    {
       VariableWidget w = new VariableWidget(widgetRoot, "${x.y.z}");
       assertEquals("${x.y.z}", w.asWikiText());
-}
-   //[acd] Parent Literals: Test for inherited literals generated in variables
-   //[acd] Paren Literal: Test for literals in parenthesized !define
+   }
+   
    public void testLiteralsInheritedFromParent() throws Exception
    {
       WikiPage parent = crawler.addPage

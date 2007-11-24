@@ -6,17 +6,17 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 
 import java.util.regex.Matcher;
-import java.util.List;  //[acd] Parent Literals: List type
+import java.util.List;  //Parent Literals
 
 public class TextIgnoringWidgetRoot extends WidgetRoot
 {
-   //[acd] !include: Refactored for isGathering parameter.
+   //Refactored for isGathering parameter.
 	public TextIgnoringWidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws Exception
 	{
 		super(value, page, builder, /*isGatheringInfo=*/ true);
 	}
 
-   //[acd] Parent Literals: T'I'W'Root ctor with parent's literals
+   //Parent Literals: T'I'W'Root ctor with parent's literals
    public TextIgnoringWidgetRoot(String value, WikiPage page, List literals, WidgetBuilder builder) throws Exception
    {
       super(null, page, builder, /*isGatheringInfo=*/ true);

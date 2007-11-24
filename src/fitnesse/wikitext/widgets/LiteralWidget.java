@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 
 public class LiteralWidget extends WikiWidget
 {
-	//[acd] Paren Literal: REGEXP & pattern
    public static final String REGEXP = "!lit\\?\\d+\\?";
    public static final Pattern pattern = Pattern.compile("!lit\\?(\\d+)\\?", Pattern.MULTILINE + Pattern.DOTALL);
 	private int literalNumber;

@@ -46,7 +46,6 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 		return html.toString();
 	}
 
-   //[acd] Regracing
    public boolean isRegracing ()
    {  Boolean isDoingIt = false;
       try { isDoingIt = "true".equals(parent.getVariable(REGRACE_LINK)); }
@@ -59,7 +58,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 		StringBuffer html = new StringBuffer();
 		html.append("<a href=\"");
 		html.append(qualifiedName).append("\">");
-		html.append(Utils.escapeText(regrace(getText()))).append("</a>");  //[acd] Regracing
+		html.append(Utils.escapeText(regrace(getText()))).append("</a>");
 		return html.toString();
 	}
 

@@ -1,6 +1,6 @@
 package fitnesse.util;
 
-public class Expression  //[acd] EvaluatorWidget:  Supporting class
+public class Expression
 {
 	/*
 	* Strings used for storing expression.

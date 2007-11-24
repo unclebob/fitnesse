@@ -22,7 +22,7 @@ public class TOCWidgetTest extends WidgetTestCase
 
       crawler.addPage(parent, PathParser.parse("ChildOne"), "content");
 		crawler.addPage(parent, PathParser.parse("ChildTwo"), "content");
-		//[acd] Regracing
+		//Regracing
       parent2 = crawler.addPage(root, PathParser.parse("ParenT2"), "parent2");
       crawler.addPage(parent2, PathParser.parse("Child1Page"), "content");
       crawler.addPage(parent2, PathParser.parse("Child2Page"), "content");
@@ -42,13 +42,13 @@ public class TOCWidgetTest extends WidgetTestCase
 		assertMatchEquals(" !contents -R\n", null);
 		assertMatchEquals("!contents zap\n", null);
 		assertMatchEquals("!contents \n", "!contents ");
-      //[acd] !contents: -R[0-9]...
+      // -R[0-9]...
       assertMatchEquals("!contents -R0\n", "!contents -R0");
       assertMatchEquals("!contents -R1\n", "!contents -R1");
       assertMatchEquals("!contents -R99\n", "!contents -R99");
       assertMatchEquals("!contents -Rx\n", null);
       
-      //[acd] Regracing
+      // Regracing
       assertMatchEquals("!contents -g\n", "!contents -g");
       assertMatchEquals("!contents -R -g\n", "!contents -R -g");
       assertMatchEquals("!contents -g\r", "!contents -g");
@@ -80,7 +80,7 @@ public class TOCWidgetTest extends WidgetTestCase
 		assertEquals(getHtmlWithGreatGrandChild(), renderHierarchicalTOCWidget());
 	}
    
-   public void testWithGreatGrandchildrenRegraced() throws Exception  //[acd] Regracing
+   public void testWithGreatGrandchildrenRegraced() throws Exception  //Regracing
    {
       addGrandChild(parent2, "Child1Page");
       addGreatGrandChild(parent2, "Child1Page");
@@ -247,7 +247,7 @@ public class TOCWidgetTest extends WidgetTestCase
             "</div>" + endl;
    }
 
-   private String getHtmlWithGreatGrandChildRegraced()  //[acd] Regracing
+   private String getHtmlWithGreatGrandChildRegraced()  //Regracing
    {
       String expected =
          "<div class=\"toc1\">" + endl +

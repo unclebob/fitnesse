@@ -1,4 +1,4 @@
-//[acd] EvaluatorWidget: Test module
+//EvaluatorWidget: Test module
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;

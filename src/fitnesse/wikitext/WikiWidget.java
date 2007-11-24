@@ -40,7 +40,6 @@ public abstract class WikiWidget
 		return getClass().toString() + ".asWikiText()";
 	}
 
-   //[acd] Regracing
    public boolean isRegracing () { return false; }
    public String regrace(String disgracefulName)
    {  String newName = disgracefulName;

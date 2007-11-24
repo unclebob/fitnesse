@@ -1,6 +1,6 @@
 // Derived from copyrighted code by Object Mentor, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
-//[acd] EvaluatorWidget: Created using VariableWidget & Expression
+//EvaluatorWidget: Created using VariableWidget & Expression
 package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;

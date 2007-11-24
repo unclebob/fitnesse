@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Vector;
 import fit.Parse;
 
-//[acd] Semaphores
 public class SemaphoreFixture extends Fixture
 {
    private static String SEMAPHORE_SUFFIX = ".semaphore";

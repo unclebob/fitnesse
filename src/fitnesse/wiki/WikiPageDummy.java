@@ -11,7 +11,7 @@ public class WikiPageDummy implements WikiPage
 	protected String location;
 	private PageData pageData;
 	private WikiPage parent;
-  protected WikiPage parentForVariables; //[acd] !include: Variable parent
+  protected WikiPage parentForVariables;
   
 	public static final int daysTillVersionsExpire = 14;
 
@@ -43,12 +43,11 @@ public class WikiPageDummy implements WikiPage
 		return parent;
 	}
 
-   //[acd] !include: Setter for variable parent
    public void setParentForVariables(WikiPage parent)
    {
      parentForVariables = parent;
    }
-   //[acd] !include: Getter for variable parent
+
    public WikiPage getParentForVariables() throws Exception
    {
      return parentForVariables == null ? this : parentForVariables;
@@ -56,7 +55,7 @@ public class WikiPageDummy implements WikiPage
 
    public void setParent(WikiPage parent)
    {
-     this.parent = this.parentForVariables = parent; //[acd] !include: matches BaseWikiPage.java
+     this.parent = this.parentForVariables = parent;
 	}
 
 	public PageData getData() throws Exception

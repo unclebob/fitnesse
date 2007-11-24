@@ -19,7 +19,7 @@ public abstract class ParentWidget extends WikiWidget
 		super(parent);
 	}
 
-   //[acd] !include: New constructor for alias
+   //!include: New constructor for alias
    public ParentWidget(ParentWidget alias, boolean isAlias)
    {
       super(null);
@@ -32,7 +32,7 @@ public abstract class ParentWidget extends WikiWidget
          addToParent();  //...behaves like ctor(ParentWidget)
    }
 
-   //[acd] !include: Expose the root widget via the parent
+   //!include: Expose the root widget via the parent
    public WidgetRoot getRoot () { return parent.getRoot(); }
 
 	public void reset()
