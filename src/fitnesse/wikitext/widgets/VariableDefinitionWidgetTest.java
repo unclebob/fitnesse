@@ -28,24 +28,24 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase
 
 	public void testRegexp() throws Exception
 	{
-		assertMatches("!define xyz {\n123\r\n456\r\n}");
-		assertMatches("!define abc {1}");
-		assertMatches("!define abc (1)");
-      assertMatches("!define x (!define y {123})");
+		assertMatch("!define xyz {\n123\r\n456\r\n}");
+		assertMatch("!define abc {1}");
+		assertMatch("!define abc (1)");
+      assertMatch("!define x (!define y {123})");
 
 		assertNoMatch("!define");
 		assertNoMatch("!define x");
 		assertNoMatch(" !define x {1}");
       
       //Test allow periods
-      assertMatches("!define x.y.z {1}");
-      assertMatches("!define .y.z {1}");
-      assertMatches("!define x.y. {1}");
-      assertMatches("!define .xy. {1}");
+      assertMatch("!define x.y.z {1}");
+      assertMatch("!define .y.z {1}");
+      assertMatch("!define x.y. {1}");
+      assertMatch("!define .xy. {1}");
       
       //Paren Literal: Test matches
-      assertMatches("!define curly {!-some curly literal-!}");
-      assertMatches("!define paren (!-some paren literal-!)");
+      assertMatch("!define curly {!-some curly literal-!}");
+      assertMatch("!define paren (!-some paren literal-!)");
 	}
 
 	public void testHtml() throws Exception

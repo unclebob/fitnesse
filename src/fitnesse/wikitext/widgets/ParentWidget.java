@@ -2,12 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetVisitor;
 import fitnesse.wikitext.WikiWidget;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class ParentWidget extends WikiWidget
 {
@@ -153,6 +153,11 @@ public abstract class ParentWidget extends WikiWidget
 	}
 
 	public static WidgetBuilder preprocessingLiteralWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class});
+
+	protected String expandVariables(String content) throws Exception
+	{
+		return (new VariableExpandingWidgetRoot(this, content)).childHtml();
+	}
 
 	public static class LiteralProcessingWidgetRoot extends ParentWidget
 	{

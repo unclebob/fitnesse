@@ -18,12 +18,12 @@ public class PreProcessorLiteralWidgetTest extends WidgetTestCase
 
 	public void testMatches() throws Exception
 	{
-		assertMatches("!-literal-!");
-		assertMatches("!-this is a literal-!");
-		assertMatches("!-this is\n a literal-!");
-		assertMatches("!- !- !-this is a literal-!");
-		assertMatches("!-!literal-!");
-		assertMatches("!--!");
+		assertMatch("!-literal-!");
+		assertMatch("!-this is a literal-!");
+		assertMatch("!-this is\n a literal-!");
+		assertMatch("!- !- !-this is a literal-!");
+		assertMatch("!-!literal-!");
+		assertMatch("!--!");
 		assertNoMatch("!-no");
 		assertNoMatch("! -no-!");
 		assertMatchEquals("!-no-!-!", "!-no-!");

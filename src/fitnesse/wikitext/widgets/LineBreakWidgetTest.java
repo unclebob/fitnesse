@@ -7,9 +7,9 @@ public class LineBreakWidgetTest extends WidgetTestCase
 
 	public void testRegexp() throws Exception
 	{
-		assertMatches("\n");
-		assertMatches("\r");
-		assertMatches("\r\n");
+		assertMatch("\n");
+		assertMatch("\r");
+		assertMatch("\r\n");
 	}
 
 	public void testHtml() throws Exception

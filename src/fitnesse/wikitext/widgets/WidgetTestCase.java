@@ -4,7 +4,8 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.RegexTestCase;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class WidgetTestCase extends RegexTestCase
 {
@@ -23,7 +24,7 @@ public abstract class WidgetTestCase extends RegexTestCase
 		}
 	}
 
-	protected void assertMatches(String s)
+	protected void assertMatch(String s)
 	{
 		assertMatchEquals(s, s);
 	}

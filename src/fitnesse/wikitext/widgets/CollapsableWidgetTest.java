@@ -2,19 +2,23 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.html.*;
+import fitnesse.html.HtmlElement;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.RawHtml;
 import fitnesse.wiki.WikiPageDummy;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CollapsableWidgetTest extends WidgetTestCase
 {
 	public void testRegExp() throws Exception
 	{
-		assertMatches("!* Some title\n content \n*!");
-		assertMatches("!*> Some title\n content \n*!");
-		assertMatches("!********** Some title\n content \n**************!");
-		assertMatches("!* title\n * list\r*!");
+		assertMatch("!* Some title\n content \n*!");
+		assertMatch("!*> Some title\n content \n*!");
+		assertMatch("!********** Some title\n content \n**************!");
+		assertMatch("!* title\n * list\r*!");
 
 		assertNoMatch("!* title content *!");
 		assertNoMatch("!*missing a space\n content \n*!");
@@ -22,8 +26,8 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertNoMatch("!* Some title\n content *!...");
 
     //invisible: Matches
-    assertMatches("!*< Some title\n content \n*!");
-    assertMatches("!***< Some title\n content \n***!");
+    assertMatch("!*< Some title\n content \n*!");
+    assertMatch("!***< Some title\n content \n***!");
 	}
 
 	protected String getRegexp()

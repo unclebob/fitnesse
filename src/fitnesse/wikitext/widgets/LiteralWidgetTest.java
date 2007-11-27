@@ -7,8 +7,8 @@ public class LiteralWidgetTest extends WidgetTestCase
 {
 	public void testMatches() throws Exception
 	{  //Paren Literal: () -> ??
-      assertMatches("!lit?0?" );
-      assertMatches("!lit?99?");
+      assertMatch("!lit?0?" );
+      assertMatch("!lit?99?");
       assertNoMatch("!lit?-1?");
       assertNoMatch("!lit?a?" );
 	}

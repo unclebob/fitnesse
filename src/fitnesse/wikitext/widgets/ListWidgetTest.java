@@ -23,7 +23,7 @@ public class ListWidgetTest extends WidgetTestCase
 		assertMatchEquals(". *Item1", null);
 		assertMatchEquals(" 1Item1", " 1Item1");
 		assertMatchEquals("\nWikiTextExample *hello\n", null);
-		assertMatches(" * 50 ways to leave your lover.");
+		assertMatch(" * 50 ways to leave your lover.");
 	}
 
 	public void testSimpleList() throws Exception

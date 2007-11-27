@@ -12,7 +12,7 @@ public class VariableExpandingWidgetRoot extends ParentWidget
 
 	public WidgetBuilder getBuilder()
 	{
-		return WidgetBuilder.literalAndVariableWidgetBuilder;
+		return WidgetBuilder.literalVariableEvaluatorWidgetBuilder;
 	}
 
 	public boolean doEscaping()

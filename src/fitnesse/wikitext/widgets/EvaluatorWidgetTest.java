@@ -1,7 +1,10 @@
 //EvaluatorWidget: Test module
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 public class EvaluatorWidgetTest extends WidgetTestCase
 {
@@ -38,19 +41,19 @@ public class EvaluatorWidgetTest extends WidgetTestCase
 
    public void testMatches() throws Exception
    {
-      assertMatches("${=X=}");
-      assertMatches("${=xyz=}");
-      assertMatches("${=  X  =}");
-      assertMatches("${= 1 + 1 =}");
-      assertMatches("${= ${ONE} + ${TWO} =}");
-      assertMatches("${=%d:2.3=}");
-      assertMatches("${= %02X : 27 =}");
+      assertMatch("${=X=}");
+      assertMatch("${=xyz=}");
+      assertMatch("${=  X  =}");
+      assertMatch("${= 1 + 1 =}");
+      assertMatch("${= ${ONE} + ${TWO} =}");
+      assertMatch("${=%d:2.3=}");
+      assertMatch("${= %02X : 27 =}");
 
-      assertMatches("${=%30s:123=}");
-      assertMatches("${=%-30s:123=}");
+      assertMatch("${=%30s:123=}");
+      assertMatch("${=%-30s:123=}");
 
-      assertMatches("${= %d : 3.2           =}");
-      assertMatches("${= %03o : 18 =}");
+      assertMatch("${= %d : 3.2           =}");
+      assertMatch("${= %03o : 18 =}");
    }
   
    public void testSimpleTermOneDigit () throws Exception

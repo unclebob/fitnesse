@@ -4,7 +4,8 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WidgetBuilder;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PreformattedWidget extends ParentWidget
 {
@@ -34,7 +35,7 @@ public class PreformattedWidget extends ParentWidget
 
 	public WidgetBuilder getBuilder()
 	{
-		return WidgetBuilder.literalAndVariableWidgetBuilder;
+		return WidgetBuilder.literalVariableEvaluatorWidgetBuilder;
 	}
 }
 

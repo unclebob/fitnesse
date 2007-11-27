@@ -18,54 +18,55 @@ public class AliasLinkWidget extends ParentWidget
 	private String tag;
 	private String href;
 	WikiPage parentPage;
+	private static final Pattern URL_SUFFIX_PARSER = Pattern.compile("([^\\?\\#]*)((\\?.+)?(\\#.+)?)?");
 
 	public AliasLinkWidget(ParentWidget parent, String text) throws Exception
 	{
 		super(parent);
 		parentPage = getWikiPage().getParent();
 		Matcher match = pattern.matcher(text);
-		if(match.find())
-		{
-			tag = match.group(1);
-			href = match.group(2);
-			addChildWidgets(tag);
-		}
+		match.find();
+		tag = match.group(1);
+		href = match.group(2);
+		addChildWidgets(tag);
 	}
 
 	public String render() throws Exception
 	{
-		//--Expand and allow (?) and (#) in alias link and tag.
-		String expandedHref = (new VariableExpandingWidgetRoot(this, href)).childHtml();
-		Pattern urlPat = Pattern.compile("([^\\?\\#]*)((\\?.+)?(\\#.+)?)?");
-		Matcher urlMat = urlPat.matcher(expandedHref);
-		String urlSuffix = "";
+		String expandedHref = expandVariables(href);
+		Matcher suffixMatcher = URL_SUFFIX_PARSER.matcher(expandedHref);
+		suffixMatcher.find();
+		String url = suffixMatcher.group(1);
+		String urlSuffix = suffixMatcher.group(2);
 
-		if(urlMat.matches())
-		{
-			expandedHref = urlMat.group(1);
-			urlSuffix = urlMat.group(2);
-		}
+		return makeLinkTag(url, urlSuffix);
 
-		if(WikiWordWidget.isWikiWord(expandedHref))
-		{
-			WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), expandedHref);
-			String theWord = www.getWikiWord();
-			WikiPagePath wikiWordPath = PathParser.parse(theWord);
-			WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
-			String qualifiedName = PathParser.render(fullPathOfWikiWord);
-			if(parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
-				return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>");
-			else if(getWikiPage() instanceof ProxyPage)
-				return makeAliasLinkToNonExistentRemotePage(theWord);
-			else
-				return (childHtml() + "<a href=\"" + qualifiedName + "?edit\">?</a>");
-		}
+	}
+
+	private String makeLinkTag(String url, String urlSuffix) throws Exception
+	{
+		if(WikiWordWidget.isWikiWord(url))
+			return makeLinkTagForWikiWord(url, urlSuffix);
 		else
 		{
-			String url = LinkWidget.makeUrlUsable(expandedHref);
-			return String.format("<a href=\"%s%s\">%s</a>", url, urlSuffix, childHtml());
+			url = LinkWidget.makeUrlUsable(url);
+			return String.format("<a href=\"%s\">%s</a>", url+urlSuffix, tag);
 		}
+	}
 
+	private String makeLinkTagForWikiWord(String url, String urlSuffix) throws Exception
+	{
+		WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), url);
+		String theWord = www.getWikiWord();
+		WikiPagePath wikiWordPath = PathParser.parse(theWord);
+		WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
+		String qualifiedName = PathParser.render(fullPathOfWikiWord);
+		if(parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
+			return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>"); //[acd] Alias V/E: use it
+		else if(getWikiPage() instanceof ProxyPage)
+			return makeAliasLinkToNonExistentRemotePage(theWord);
+		else
+			return (childHtml() + "<a href=\"" + qualifiedName + "?edit\">?</a>");
 	}
 
 	private String makeAliasLinkToNonExistentRemotePage(String theWord) throws Exception

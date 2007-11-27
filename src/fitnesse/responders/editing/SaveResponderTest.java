@@ -2,9 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
-import fitnesse.http.*;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
@@ -22,6 +26,7 @@ public class SaveResponderTest extends RegexTestCase
 		crawler = root.getPageCrawler();
 		request = new MockRequest();
 		responder = new SaveResponder();
+		SaveResponder.contentFilter = null;
 	}
 
 	protected void tearDown() throws Exception

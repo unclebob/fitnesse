@@ -37,7 +37,7 @@ public class EvaluatorWidget extends ParentWidget
 
 	private void doRender() throws Exception
 	{
-		parseOutFormat((new VariableExpandingWidgetRoot(this, name)).childHtml());
+		parseOutFormat(expandVariables(name));
 		if(renderedText.length() > 0)
 		{
 			try

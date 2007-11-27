@@ -16,7 +16,7 @@ public class VirtualWikiWidgetTest extends WidgetTestCase
 
 	public void testRegexp() throws Exception
 	{
-		assertMatches("!virtualwiki http://localhost:" + FitNesseUtil.port + "/SomePage");
+		assertMatch("!virtualwiki http://localhost:" + FitNesseUtil.port + "/SomePage");
 		assertNoMatch("!virtualwiki SomeName");
 	}
 

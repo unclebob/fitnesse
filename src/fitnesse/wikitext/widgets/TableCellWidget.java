@@ -65,7 +65,7 @@ public class TableCellWidget extends ParentWidget
 	public WidgetBuilder getBuilder()
 	{
 		if(isLiteral)
-			return WidgetBuilder.literalAndVariableWidgetBuilder;
+			return WidgetBuilder.literalVariableEvaluatorWidgetBuilder;
 		else
 			return parent.getBuilder();
 	}

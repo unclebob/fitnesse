@@ -5,7 +5,8 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.WidgetBuilder;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgument
 {
@@ -26,7 +27,7 @@ public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgum
 
 	public WidgetBuilder getBuilder()
 	{
-		return WidgetBuilder.variableWidgetBuilder;
+		return WidgetBuilder.variableEvaluatorWidgetBuilder;
 	}
 
 	public String render() throws Exception

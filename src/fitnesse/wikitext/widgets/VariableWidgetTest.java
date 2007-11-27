@@ -2,7 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 
 public class VariableWidgetTest extends WidgetTestCase
@@ -26,12 +29,12 @@ public class VariableWidgetTest extends WidgetTestCase
 
 	public void testMatches() throws Exception
 	{
-		assertMatches("${X}");
-		assertMatches("${xyz}");
-      assertMatches("${x.y.z}");
-      assertMatches("${.y.z}");
-      assertMatches("${x.y.}");
-      assertMatches("${.xy.}");
+		assertMatch("${X}");
+		assertMatch("${xyz}");
+      assertMatch("${x.y.z}");
+      assertMatch("${.y.z}");
+      assertMatch("${x.y.}");
+      assertMatch("${.xy.}");
 	}
 
 	protected String getRegexp()

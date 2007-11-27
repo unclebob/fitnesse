@@ -35,6 +35,3 @@
 !2 Collapse Set Up and Tear Down
 !define COLLAPSE_SETUP {true}
 !define COLLAPSE_TEARDOWN {true}
-----
-!2 ''Contents''
-!contents -R

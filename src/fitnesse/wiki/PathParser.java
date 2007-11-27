@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 public class PathParser
 {
 	public static final String PATH_SEPARATOR = ".";
-   
-   public static final String PATH_PREFIX_CHARS = ".<>^"; //..."^" is deprecated
+
+	public static final String PATH_PREFIX_CHARS = ".<>^"; //..."^" is deprecated
 	private static final Pattern wikiWordPattern = Pattern.compile(WikiWordWidget.REGEXP);
 	private WikiPagePath path;
 
@@ -67,11 +67,11 @@ public class PathParser
 		return path;
 	}
 
-   public static boolean isPathPrefix(Character c)
-   {
-      return PATH_PREFIX_CHARS.indexOf(c) >= 0;
-   }
-   
+	public static boolean isPathPrefix(Character c)
+	{
+		return PATH_PREFIX_CHARS.indexOf(c) >= 0;
+	}
+
 	private static boolean nameIsValid(String name)
 	{
 		return wikiWordPattern.matcher(name).matches();

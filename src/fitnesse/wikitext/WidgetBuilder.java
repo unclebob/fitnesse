@@ -4,11 +4,13 @@ package fitnesse.wikitext;
 
 import fitnesse.wikitext.widgets.*;
 
-import java.lang.reflect.*;
-import java.util.regex.*;
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WidgetBuilder
 {
@@ -43,13 +45,24 @@ public class WidgetBuilder
 		CollapsableWidget.class,
 		IncludeWidget.class,
 		VariableDefinitionWidget.class,
-      EvaluatorWidget.class,
+		EvaluatorWidget.class,
 		VariableWidget.class
 	};
 
 	public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(htmlWidgetClasses);
-   public static WidgetBuilder literalAndVariableWidgetBuilder = new WidgetBuilder(new Class[]{LiteralWidget.class, VariableWidget.class, EvaluatorWidget.class});
-   public static WidgetBuilder variableWidgetBuilder = new WidgetBuilder(new Class[]{VariableWidget.class, EvaluatorWidget.class});
+
+	public static WidgetBuilder literalVariableEvaluatorWidgetBuilder = new WidgetBuilder(
+		new Class[]{
+			LiteralWidget.class,
+			EvaluatorWidget.class,
+			VariableWidget.class
+		});
+
+	public static WidgetBuilder variableEvaluatorWidgetBuilder = new WidgetBuilder(
+		new Class[]{
+			EvaluatorWidget.class,
+			VariableWidget.class
+		});
 
 	private Class[] widgetClasses;
 	private Pattern widgetPattern;

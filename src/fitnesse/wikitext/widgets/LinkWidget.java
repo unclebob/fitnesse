@@ -4,7 +4,8 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WidgetBuilder;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LinkWidget extends ParentWidget
 {
@@ -47,7 +48,7 @@ public class LinkWidget extends ParentWidget
 
 	public WidgetBuilder getBuilder()
 	{
-		return WidgetBuilder.variableWidgetBuilder;
+		return WidgetBuilder.variableEvaluatorWidgetBuilder;
 	}
 
 	public String asWikiText() throws Exception

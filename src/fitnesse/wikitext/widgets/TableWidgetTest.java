@@ -14,27 +14,27 @@ public class TableWidgetTest extends WidgetTestCase
 
 	public void testRegexp() throws Exception
 	{
-		assertMatches("|a|\n");
-		assertMatches("|a|b|\n");
-		assertMatches("|a|b|\n|c|\n");
-		assertMatches("|a|\n|b|\n|c|\n");
+		assertMatch("|a|\n");
+		assertMatch("|a|b|\n");
+		assertMatch("|a|b|\n|c|\n");
+		assertMatch("|a|\n|b|\n|c|\n");
 		assertNoMatch("|abc\n|\n");
-		assertMatches("|a|\r");
-		assertMatches("|a|b|\r");
-		assertMatches("|a|b|\r|c|\r");
-		assertMatches("|a|\r|b|\r|c|\r");
+		assertMatch("|a|\r");
+		assertMatch("|a|b|\r");
+		assertMatch("|a|b|\r|c|\r");
+		assertMatch("|a|\r|b|\r|c|\r");
 		assertNoMatch("|abc\r|\r");
-		assertMatches("|a|\r\n");
-		assertMatches("|a|b|\r\n");
-		assertMatches("|a|b|\r\n|c|\r\n");
-		assertMatches("|a|\r\n|b|\r\n|c|\r\n");
+		assertMatch("|a|\r\n");
+		assertMatch("|a|b|\r\n");
+		assertMatch("|a|b|\r\n|c|\r\n");
+		assertMatch("|a|\r\n|b|\r\n|c|\r\n");
 		assertNoMatch("|abc\r\n|\r\n");
 	}
 
 	public void testRegexpForLiteralTable() throws Exception
 	{
-		assertMatches("!|a|\n");
-		assertMatches("!|a|\n|b|\n");
+		assertMatch("!|a|\n");
+		assertMatch("!|a|\n|b|\n");
 		assertNoMatch(" !|a|\n");
 	}
 
