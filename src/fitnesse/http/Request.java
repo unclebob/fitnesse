@@ -14,7 +14,7 @@ public class Request
 {
 	private static final Pattern requestLinePattern = Pattern.compile("(\\p{Upper}+?) ([^\\s]+)");
 	private static final Pattern requestUriPattern = Pattern.compile("([^?]+)\\??(.*)");
-	private static final Pattern queryStringPattern = Pattern.compile("([^=]*)=?([^&]*)&?");
+	private static final Pattern queryStringPattern = Pattern.compile("([^=&]*)=?([^&]*)&?");
 	private static final Pattern headerPattern = Pattern.compile("([^:]*): (.*)");
 	private static final Pattern boundaryPattern = Pattern.compile("boundary=(.*)");
 	private static final Pattern multipartHeaderPattern = Pattern.compile("([^ =]+)=\\\"([^\"]*)\\\"");
