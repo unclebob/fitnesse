@@ -70,10 +70,14 @@ public class ResponderFactory
 
 	public String getResponderKey(Request request)
 	{
+		String fullQuery;
 		if(request.hasInput("responder"))
-			return (String) request.getInput("responder");
+			fullQuery = (String) request.getInput("responder");
 		else
-			return request.getQueryString();
+			fullQuery = request.getQueryString();
+		
+		int argStart = fullQuery == null? -1 : fullQuery.indexOf('&');
+		return (argStart <= 0)? fullQuery : fullQuery.substring(0, argStart);
 	}
 
 	public Responder makeResponder(Request request, WikiPage root) throws Exception
