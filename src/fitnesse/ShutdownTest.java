@@ -51,7 +51,7 @@ public class ShutdownTest extends RegexTestCase
 	{
 		try
 		{
-			shutdown.hostname = "google.com";
+			shutdown.hostname = "http://google.com";
 			ResponseParser response = shutdown.buildAndSendRequest();
 			String status = shutdown.checkResponse(response);
 			assertEquals("Not a FitNesse server", status);
