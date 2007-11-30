@@ -99,12 +99,30 @@ public class AliasLinkWidgetTest extends WidgetTestCase
 		assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
 	}
 
+	public void testSpacePaddingOnAliasLink() throws Exception
+	{
+		WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
+		crawler.addPage(page, PathParser.parse("SubPage"));
+		WidgetRoot wroot = new WidgetRoot(page);
+		AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][ ^SubPage ]]");
+		String html = w.render();
+		assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
+	}
+
 	public void testVariableIsRenderedInAliasLink() throws Exception 
 	{
 		WidgetRoot wroot = new WidgetRoot(root);
 		wroot.addVariable("X", "Y");
 		AliasLinkWidget w = new AliasLinkWidget(wroot, "[[x][${X}]]");
 		assertEquals("<a href=\"Y\">x</a>", w.render());
+	}
+
+	public void testVariableIsRenderedInAliasTag() throws Exception 
+	{
+		WidgetRoot wroot = new WidgetRoot(root);
+		wroot.addVariable("X", "Y");
+		AliasLinkWidget w = new AliasLinkWidget(wroot, "[[${X}][x]]");
+		assertEquals("<a href=\"x\">Y</a>", w.render());
 	}
 
 	public void testStandardLink() throws Exception

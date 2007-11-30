@@ -27,7 +27,7 @@ public class AliasLinkWidget extends ParentWidget
 		Matcher match = pattern.matcher(text);
 		match.find();
 		tag = match.group(1);
-		href = match.group(2);
+		href = match.group(2).trim();
 		addChildWidgets(tag);
 	}
 
@@ -50,7 +50,7 @@ public class AliasLinkWidget extends ParentWidget
 		else
 		{
 			url = LinkWidget.makeUrlUsable(url);
-			return String.format("<a href=\"%s\">%s</a>", url+urlSuffix, tag);
+			return String.format("<a href=\"%s\">%s</a>", url+urlSuffix, childHtml());
 		}
 	}
 
