@@ -62,7 +62,7 @@ public class AliasLinkWidget extends ParentWidget
 		WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
 		String qualifiedName = PathParser.render(fullPathOfWikiWord);
 		if(parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
-			return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>"); //[acd] Alias V/E: use it
+			return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>");
 		else if(getWikiPage() instanceof ProxyPage)
 			return makeAliasLinkToNonExistentRemotePage(theWord);
 		else
