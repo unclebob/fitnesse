@@ -58,20 +58,29 @@ public class TOCWidgetTest extends WidgetTestCase
       assertMatchEquals("!contents -gx\n", null);
       assertMatchEquals("!contents -g \n", "!contents -g ");
 
-      // Propertying
+      // Property suffix
       assertMatchEquals("!contents -p\n", "!contents -p");
       assertMatchEquals("!contents -R -p\n", "!contents -R -p");
       assertMatchEquals("!contents -p\r", "!contents -p");
       assertMatchEquals("!contents -R -p\r", "!contents -R -p");
-      assertMatchEquals(" !contents    -p\n", null);
-      assertMatchEquals(" !contents -R -p\n", null);
-      assertMatchEquals("!contents -px\n", null);
       assertMatchEquals("!contents -p \n", "!contents -p ");
-
       assertMatchEquals("!contents -g -p\n", "!contents -g -p");
       assertMatchEquals("!contents  -R2  -g  -p  \n", "!contents  -R2  -g  -p  ");
       assertMatchEquals("!contents -p -g\n", "!contents -p -g");
       assertMatchEquals("!contents -R -p -g\n", "!contents -R -p -g");
+      assertMatchEquals(" !contents    -p\n", null);
+      assertMatchEquals(" !contents -R -p\n", null);
+      assertMatchEquals("!contents -px\n",    null);
+
+      // Filter suffix
+      assertMatchEquals("!contents -f\n", "!contents -f");
+      assertMatchEquals("!contents -R -f\n", "!contents -R -f");
+      assertMatchEquals("!contents -p \n", "!contents -p ");
+      assertMatchEquals("!contents -g -p -f\n", "!contents -g -p -f");
+      assertMatchEquals("!contents -f -p -g\n", "!contents -f -p -g");
+      assertMatchEquals("!contents -R -p -g -f\n", "!contents -R -p -g -f");
+
+      assertMatchEquals("!contents -fx\n", null);
 	}
 
 	public void testNoGrandchildren() throws Exception
@@ -120,11 +129,24 @@ public class TOCWidgetTest extends WidgetTestCase
    	PageData data = page.getData();
    	WikiPageProperties props = data.getProperties();
    	for (int i = 0;  i < propList.length;  i++)
-   		props.set(propList[i]);
+   	{
+   		String[] parts = propList[i].split("=");
+   		if (parts.length == 1) props.set(parts[0]); else props.set(parts[0], parts[1]);
+   	}
    	
     	page.commit(data);
    }
-   
+
+   public void testWithGreatGrandchildrenAndFilters() throws Exception  //Regracing
+   {
+   	setProperties(child1P2, new String[]{"Suites=F1"});
+   	setProperties(child2P2, new String[]{"Suites=F1,F2"});
+      setProperties(addGrandChild(parent2, "Child1Page"), new String[]{"Suites=F2"});
+      setProperties(addGreatGrandChild(parent2, "Child1Page"), new String[]{"Suites=F2,F3"});
+      assertEquals(getHtmlWithNoHierarchyFilters(), renderNormalFiltersTOCWidget());
+      assertEquals(getHtmlWithGreatGrandChildFilters(), renderHierarchicalFiltersTOCWidget());
+   }
+
 	public void testTocOnRoot() throws Exception
 	{
 		TOCWidget widget = new TOCWidget(new WidgetRoot(root), "!contents\n");
@@ -213,6 +235,14 @@ public class TOCWidgetTest extends WidgetTestCase
 	   return new TOCWidget(root, "!contents\n").render();
 	}
 	
+	private String renderNormalFiltersTOCWidget()
+   throws Exception
+	{
+	   WidgetRoot root = new WidgetRoot(parent2);
+	   root.addVariable(TOCWidget.FILTER_TOC, "true");
+	   return new TOCWidget(root, "!contents -g\n").render();
+	}
+	
 	private String renderHierarchicalRegracedPropTOCWidget()
 	   throws Exception
 	{
@@ -222,6 +252,14 @@ public class TOCWidgetTest extends WidgetTestCase
 	   return new TOCWidget(root, "!contents -R\n").render();
 	}
 	
+	private String renderHierarchicalFiltersTOCWidget()
+   throws Exception
+{
+   WidgetRoot root = new WidgetRoot(parent2);
+   root.addVariable(TOCWidget.FILTER_TOC, "true");
+   return new TOCWidget(root, "!contents -R -g -f\n").render();
+}
+
 	private String renderHierarchicalRegracedPropAltTOCWidget()
 	throws Exception
 	{
@@ -328,6 +366,22 @@ public class TOCWidgetTest extends WidgetTestCase
             "\t</ul>" + endl +
             "</div>" + endl;
    }
+
+   private String getHtmlWithNoHierarchyFilters()
+   {
+      return
+         "<div class=\"toc1\">" + endl +
+            "\t<ul>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page (F1)</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page (F1,F2)</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t</ul>" + endl +
+            "</div>" + endl;
+   }
+
    private String getHtmlWithGreatGrandChildRegraced()  //Regracing
    {
       String expected =
@@ -382,6 +436,36 @@ public class TOCWidgetTest extends WidgetTestCase
             "\t\t</li>" + endl +
             "\t\t<li>" + endl +
             "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page *+@</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t</ul>" + endl +
+            "</div>" + endl;
+      return expected;
+   }
+
+   private String getHtmlWithGreatGrandChildFilters()  //Regracing
+   {
+      String expected =
+         "<div class=\"toc1\">" + endl +
+            "\t<ul>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page (F1)</a>" + endl +
+            "\t\t\t<div class=\"toc2\">" + endl +
+            "\t\t\t\t<ul>" + endl +
+            "\t\t\t\t\t<li>" + endl +
+            "\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild\">Grand Child (F2)</a>" + endl +
+            "\t\t\t\t\t\t<div class=\"toc3\">" + endl +
+            "\t\t\t\t\t\t\t<ul>" + endl +
+            "\t\t\t\t\t\t\t\t<li>" + endl +
+            "\t\t\t\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild.GreatGrandChild\">Great Grand Child (F2,F3)</a>" + endl +
+            "\t\t\t\t\t\t\t\t</li>" + endl +
+            "\t\t\t\t\t\t\t</ul>" + endl +
+            "\t\t\t\t\t\t</div>" + endl +
+            "\t\t\t\t\t</li>" + endl +
+            "\t\t\t\t</ul>" + endl +
+            "\t\t\t</div>" + endl +
+            "\t\t</li>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page (F1,F2)</a>" + endl +
             "\t\t</li>" + endl +
             "\t</ul>" + endl +
             "</div>" + endl;

@@ -1,12 +1,5 @@
 !3 !-!contents-! with Recursive, Graceful, and Property options
-'''You can add the -R option to the [[!-!contents-!][TestContents]] widget to get a recursive,  hierarchical view of all the descendents of the current page.  The -g options regraces or space-ifies the current TOC only.  The REGRACE_TOC will set graceful TOC display for all child pages.'''
-{{{Example:  !contents -R -g -p
-  Options
-    -R   ...include all of the descendent pages
-    -g   ...show graceful names in the list--define REGRACE_TOC {true} for global;
-    -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
-              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>)
-              define PROPERTY_CHARACTERS {*+@>} to change.}}}
+!include -seamless ContentsUsage
 !3 Explicit -R -g -p Options
 '''First create the parent page.'''
 |Action Fixture.|

@@ -1,11 +1,11 @@
-!3 !-!contents-! with Graceful and Properties options
+!3 !-!contents-! with Suite Filters Option
 !include -seamless ContentsUsage
-!3 Explicit Graceful and Property Options
+!3 Explicit Property Option
 '''First create the parent page.'''
 |Action Fixture.|
 |start|Page Builder|
 |enter|line|I'm the parent|
-|enter|line|!-!contents -g -p-!|
+|enter|line|!-!contents -f-!|
 |enter|page|!-ParentPage-!|
 
 !include -seamless ContentsTestsInclude
@@ -18,19 +18,17 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">First Child \*\+</a>|true|
-|contents|<a href="ParentPage.SecondChild">Second Child @</a>|true|
+|contents|<a href="ParentPage.FirstChild">FirstChild \(FC1\)</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild \(FC2\)</a>|true|
 
-!3 Indirect via REGRACE_TOC and PROPERTY_TOC Variables
+!3 Indirect via PROPERTY_TOC Variable
 '''First create the parent page.'''
 |Action Fixture.|
 |start|Page Builder|
 |enter|line|I'm also the parent|
-|enter|line|!-!define REGRACE_TOC {true}-!|
-|enter|line|!-!define PROPERTY_TOC {true}-!|
+|enter|line|!-!define FILTER_TOC {true}-!|
 |enter|line|!-!contents-!|
-|enter|line|!-!define REGRACE_TOC {false}-!|
-|enter|line|!-!define PROPERTY_TOC {false}-!|
+|enter|line|!-!define FILTER_TOC {false}-!|
 |enter|page|!-ParentPage-!|
 
 !include -seamless ContentsTestsInclude
@@ -43,5 +41,5 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">First Child \*\+</a>|true|
-|contents|<a href="ParentPage.SecondChild">Second Child @</a>|true|
+|contents|<a href="ParentPage.FirstChild">FirstChild \(FC1\)</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild \(FC2\)</a>|true|

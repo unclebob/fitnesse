@@ -1,1 +1,1 @@
-!contents
+!contents -R1 -g

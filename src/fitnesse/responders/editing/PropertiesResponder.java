@@ -277,7 +277,8 @@ public class PropertiesResponder implements SecureResponder
 		WikiPageProperty suitesProp = pageData.getProperties().getProperty(SUITES);
 		if(suitesProp != null)
 		{
-			suites = suitesProp.getValue();
+			String suiteValue = suitesProp.getValue();
+			if (suiteValue != null)  suites = suiteValue;
 		}
 
 		div.add(HtmlUtil.BR);

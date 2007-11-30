@@ -2,12 +2,12 @@
 |Action Fixture.|
 |start|Page Builder|
 |enter|line|I came first!|
-|enter|attributes|Suite=true,Test=true|
+|enter|attributes|Suite=true,Test=true,Suites=FC1|
 |enter|page|!-ParentPage.FirstChild-!|
 
 '''Next create a sibling'''
 |Action Fixture.|
 |start|Page Builder|
 |enter|line|I'm younger, but wiser|
-|enter|attributes|!-WikiImport-!=true|
+|enter|attributes|!-WikiImport-!=true,Suites=FC2|
 |enter|page|!-ParentPage.SecondChild-!|

@@ -12,14 +12,15 @@ import java.util.regex.*;
 public class TOCWidget extends WikiWidget
 {
    // [-R[0-9]] [-g]
-   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-[gp])*?[ \\t]*$)";
+   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-[fgp])*?[ \\t]*$)";
    public static final String REGRACE_TOC = "REGRACE_TOC";
+   public static final String FILTER_TOC = "FILTER_TOC";
    public static final String PROPERTY_TOC = "PROPERTY_TOC";
    public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
    public static final String PROP_CHAR_DEFAULT = "*+@>";
    
    public String   propertyCharacters = PROP_CHAR_DEFAULT;
-	private boolean recursive, isGraceful, isPropertied;
+	private boolean recursive, isGraceful, isPropertied, isFiltered;
    private int     depthLimit;  // 0 = unlimited depth recursion
 
 	public TOCWidget(ParentWidget parent, String text)
@@ -28,6 +29,7 @@ public class TOCWidget extends WikiWidget
 		setRecursive(text);
       setGraceful(text);
       setPropertied(text);
+      setFiltered(text);
 	}
 
 	private void setRecursive(String text)
@@ -49,6 +51,11 @@ public class TOCWidget extends WikiWidget
    private void setPropertied(String text)
    {
       isPropertied  = (text.indexOf("-p") > -1);
+   }
+   
+   private void setFiltered(String text)
+   {
+      isFiltered  = (text.indexOf("-f") > -1);
    }
    
    private void setPropertyCharacters (WikiPage page)
@@ -135,15 +142,23 @@ public class TOCWidget extends WikiWidget
       return isDoingIt || isPropertied;
    }
 
+   public boolean isFiltersAppended ()
+   {  boolean isDoingIt = false;
+      try { isDoingIt = "true".equals(parent.getVariable(FILTER_TOC)); }
+      catch (Exception e) { isDoingIt = false; }
+      return isDoingIt || isFiltered;
+   }
+
 	private HtmlElement getLinkText(WikiPage wikiPage) throws Exception
 	{
-      String name   = regrace(wikiPage.getName()),
-             props  = getProperties(wikiPage);
+      String name    = regrace(wikiPage.getName()),
+             props   = getProperties(wikiPage),
+             filters = getFilters(wikiPage);
 
 		if(wikiPage instanceof ProxyPage)
-			return new HtmlTag("i", name + props);
+			return new HtmlTag("i", name + props + filters);
 		else
-			return new RawHtml(name + props);
+			return new RawHtml(name + props + filters);
 	}
 
 	private String getProperties (WikiPage wikiPage) throws Exception
@@ -176,7 +191,23 @@ public class TOCWidget extends WikiWidget
 		
 		return isSym;
 	}
-	
+
+	private String getFilters (WikiPage wikiPage) throws Exception
+	{
+		String filters = "";
+		
+		if (isFiltersAppended())
+		{
+			PageData data = wikiPage.getData();
+			WikiPageProperties props = data.getProperties();
+			
+			String filterText = (props.has("Suites"))? filterText = props.get("Suites") : "";
+			filters = (filterText != null)? filterText.trim() : ""; 
+		}
+		
+		return (filters.length() > 0)? " (" + filters + ")": ""; 
+	}
+
 	private List buildListOfChildPages(WikiPage wikiPage) throws Exception
 	{
 		List childPageList = new ArrayList(wikiPage.getChildren());
