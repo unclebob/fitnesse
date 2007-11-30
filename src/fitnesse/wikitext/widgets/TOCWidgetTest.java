@@ -9,7 +9,7 @@ import fitnesse.wiki.*;
 public class TOCWidgetTest extends WidgetTestCase
 {
 	private WikiPage root;
-	private WikiPage parent, parent2;
+	private WikiPage parent, parent2, child1P2, child2P2;
 	private PageCrawler crawler;
 	private String endl = HtmlElement.endl;
 
@@ -24,8 +24,8 @@ public class TOCWidgetTest extends WidgetTestCase
 		crawler.addPage(parent, PathParser.parse("ChildTwo"), "content");
 		//Regracing
       parent2 = crawler.addPage(root, PathParser.parse("ParenT2"), "parent2");
-      crawler.addPage(parent2, PathParser.parse("Child1Page"), "content");
-      crawler.addPage(parent2, PathParser.parse("Child2Page"), "content");
+      child1P2 = crawler.addPage(parent2, PathParser.parse("Child1Page"), "content");
+      child2P2 = crawler.addPage(parent2, PathParser.parse("Child2Page"), "content");
 	}
 
 	public void tearDown() throws Exception
@@ -57,6 +57,21 @@ public class TOCWidgetTest extends WidgetTestCase
       assertMatchEquals(" !contents -R -g\n", null);
       assertMatchEquals("!contents -gx\n", null);
       assertMatchEquals("!contents -g \n", "!contents -g ");
+
+      // Propertying
+      assertMatchEquals("!contents -p\n", "!contents -p");
+      assertMatchEquals("!contents -R -p\n", "!contents -R -p");
+      assertMatchEquals("!contents -p\r", "!contents -p");
+      assertMatchEquals("!contents -R -p\r", "!contents -R -p");
+      assertMatchEquals(" !contents    -p\n", null);
+      assertMatchEquals(" !contents -R -p\n", null);
+      assertMatchEquals("!contents -px\n", null);
+      assertMatchEquals("!contents -p \n", "!contents -p ");
+
+      assertMatchEquals("!contents -g -p\n", "!contents -g -p");
+      assertMatchEquals("!contents  -R2  -g  -p  \n", "!contents  -R2  -g  -p  ");
+      assertMatchEquals("!contents -p -g\n", "!contents -p -g");
+      assertMatchEquals("!contents -R -p -g\n", "!contents -R -p -g");
 	}
 
 	public void testNoGrandchildren() throws Exception
@@ -88,6 +103,28 @@ public class TOCWidgetTest extends WidgetTestCase
       assertEquals(getHtmlWithGreatGrandChildRegraced(), renderHierarchicalRegracedTOCWidget());
    }
 
+   public void testWithGreatGrandchildrenRegracedProp() throws Exception  //Regracing
+   {
+   	setProperties(child1P2, new String[]{"Suite"});
+   	setProperties(child2P2, new String[]{"Suite","Test","WikiImport"});
+      setProperties(addGrandChild(parent2, "Child1Page"), new String[]{"Test"});
+      setProperties(addGreatGrandChild(parent2, "Child1Page"), new String[]{"Suite","Test"});
+      assertEquals(getHtmlWithNoHierarchyRegracedProp(), renderNormalRegracedPropTOCWidget());
+      assertEquals(getHtmlWithGreatGrandChildRegracedProp(), renderHierarchicalRegracedPropTOCWidget());
+      parent2.getData().addVariable(TOCWidget.PROPERTY_CHARACTERS, "#!%");
+      assertEquals(getHtmlWithGreatGrandChildRegracedPropAlt(), renderHierarchicalRegracedPropAltTOCWidget());
+   }
+
+   private void setProperties (WikiPage page, String[] propList) throws Exception
+   {
+   	PageData data = page.getData();
+   	WikiPageProperties props = data.getProperties();
+   	for (int i = 0;  i < propList.length;  i++)
+   		props.set(propList[i]);
+   	
+    	page.commit(data);
+   }
+   
 	public void testTocOnRoot() throws Exception
 	{
 		TOCWidget widget = new TOCWidget(new WidgetRoot(root), "!contents\n");
@@ -125,16 +162,18 @@ public class TOCWidgetTest extends WidgetTestCase
 		assertTrue(new TOCWidget(new WidgetRoot(parent), "!contents -R\n").isRecursive());
 	}
 
-	private void addGrandChild(WikiPage parent, String childName)
+	private WikiPage addGrandChild(WikiPage parent, String childName)
 	throws Exception
 	{
 	   crawler.addPage(parent.getChildPage(childName), PathParser.parse("GrandChild"), "content");
+	   return parent.getChildPage(childName).getChildPage("GrandChild");
 	}
 
-	private void addGreatGrandChild(WikiPage parent, String childName)
+	private WikiPage addGreatGrandChild(WikiPage parent, String childName)
 	throws Exception
 	{
 	   crawler.addPage(parent.getChildPage(childName).getChildPage("GrandChild"), PathParser.parse("GreatGrandChild"), "content");
+	   return parent.getChildPage(childName).getChildPage("GrandChild").getChildPage("GreatGrandChild");
 	}
 
 	private String renderNormalTOCWidget()
@@ -164,6 +203,34 @@ public class TOCWidgetTest extends WidgetTestCase
       root.addVariable(TOCWidget.REGRACE_TOC, "true");
 	   return new TOCWidget(root, "!contents -R\n").render();
 	}
+
+	private String renderNormalRegracedPropTOCWidget()
+   throws Exception
+	{
+	   WidgetRoot root = new WidgetRoot(parent2);
+	   root.addVariable(TOCWidget.REGRACE_TOC, "true");
+	   root.addVariable(TOCWidget.PROPERTY_TOC, "true");
+	   return new TOCWidget(root, "!contents\n").render();
+	}
+	
+	private String renderHierarchicalRegracedPropTOCWidget()
+	   throws Exception
+	{
+	   WidgetRoot root = new WidgetRoot(parent2);
+	   root.addVariable(TOCWidget.REGRACE_TOC, "true");
+	   root.addVariable(TOCWidget.PROPERTY_TOC, "true");
+	   return new TOCWidget(root, "!contents -R\n").render();
+	}
+	
+	private String renderHierarchicalRegracedPropAltTOCWidget()
+	throws Exception
+	{
+	WidgetRoot root = new WidgetRoot(parent2);
+	root.addVariable(TOCWidget.REGRACE_TOC, "true");
+	root.addVariable(TOCWidget.PROPERTY_CHARACTERS, "#!%");
+	return new TOCWidget(root, "!contents -R -p\n").render();
+	}
+	
 
 	private String getHtmlWithNoHierarchy()
 	{
@@ -247,6 +314,20 @@ public class TOCWidgetTest extends WidgetTestCase
             "</div>" + endl;
    }
 
+   private String getHtmlWithNoHierarchyRegracedProp()
+   {
+      return
+         "<div class=\"toc1\">" + endl +
+            "\t<ul>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page *</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page *+@</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t</ul>" + endl +
+            "</div>" + endl;
+   }
    private String getHtmlWithGreatGrandChildRegraced()  //Regracing
    {
       String expected =
@@ -277,6 +358,65 @@ public class TOCWidgetTest extends WidgetTestCase
       return expected;
    }
 
+   private String getHtmlWithGreatGrandChildRegracedProp()  //Regracing
+   {
+      String expected =
+         "<div class=\"toc1\">" + endl +
+            "\t<ul>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page *</a>" + endl +
+            "\t\t\t<div class=\"toc2\">" + endl +
+            "\t\t\t\t<ul>" + endl +
+            "\t\t\t\t\t<li>" + endl +
+            "\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild\">Grand Child +</a>" + endl +
+            "\t\t\t\t\t\t<div class=\"toc3\">" + endl +
+            "\t\t\t\t\t\t\t<ul>" + endl +
+            "\t\t\t\t\t\t\t\t<li>" + endl +
+            "\t\t\t\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild.GreatGrandChild\">Great Grand Child *+</a>" + endl +
+            "\t\t\t\t\t\t\t\t</li>" + endl +
+            "\t\t\t\t\t\t\t</ul>" + endl +
+            "\t\t\t\t\t\t</div>" + endl +
+            "\t\t\t\t\t</li>" + endl +
+            "\t\t\t\t</ul>" + endl +
+            "\t\t\t</div>" + endl +
+            "\t\t</li>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page *+@</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t</ul>" + endl +
+            "</div>" + endl;
+      return expected;
+   }
+
+   private String getHtmlWithGreatGrandChildRegracedPropAlt()  //Regracing
+   {
+      String expected =
+         "<div class=\"toc1\">" + endl +
+            "\t<ul>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page #</a>" + endl +
+            "\t\t\t<div class=\"toc2\">" + endl +
+            "\t\t\t\t<ul>" + endl +
+            "\t\t\t\t\t<li>" + endl +
+            "\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild\">Grand Child !</a>" + endl +
+            "\t\t\t\t\t\t<div class=\"toc3\">" + endl +
+            "\t\t\t\t\t\t\t<ul>" + endl +
+            "\t\t\t\t\t\t\t\t<li>" + endl +
+            "\t\t\t\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild.GreatGrandChild\">Great Grand Child #!</a>" + endl +
+            "\t\t\t\t\t\t\t\t</li>" + endl +
+            "\t\t\t\t\t\t\t</ul>" + endl +
+            "\t\t\t\t\t\t</div>" + endl +
+            "\t\t\t\t\t</li>" + endl +
+            "\t\t\t\t</ul>" + endl +
+            "\t\t\t</div>" + endl +
+            "\t\t</li>" + endl +
+            "\t\t<li>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page #!%</a>" + endl +
+            "\t\t</li>" + endl +
+            "\t</ul>" + endl +
+            "</div>" + endl;
+      return expected;
+   }
 
 	private String virtualChildrenHtml()
 	{

@@ -1,6 +1,12 @@
 !3 !-!contents-!
-'''Use !contents to list all the child pages of the current page. You can also use the "-R" option to include all of the descendent pages* (see TestContentsWithRecursion)'''
-
+'''Use !contents to list all the child pages of the current page.'''
+{{{Example:  !contents -R -g -p
+  Options
+    -R   ...include all of the descendent pages
+    -g   ...show graceful names in the list--define REGRACE_TOC {true} for global;
+    -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
+              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>)
+              define PROPERTY_CHARACTERS {*+@>} to change.}}}
 '''First create the parent page.'''
 |Action Fixture.|
 |start|Page Builder|

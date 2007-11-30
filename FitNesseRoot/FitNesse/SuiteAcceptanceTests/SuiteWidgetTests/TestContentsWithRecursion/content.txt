@@ -1,9 +1,12 @@
 !3 !-!contents-! with Recursive option
-
 '''You can add the -R option to the [[!-!contents-!][TestContents]] widget to get a recursive, hierarchical view of all the descendents of the current page.'''
-
-!-*-! NOTE: 3/10/2005 - the -R option is checked in to CVS, but has not been released yet
-
+{{{Example:  !contents -R -g -a
+  Options
+    -R   ...include all of the descendent pages
+    -g   ...show graceful names in the list--define REGRACE_TOC {true} for global;
+    -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
+              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>)
+              define PROPERTY_CHARACTERS {*+@>} to change.}}}
 '''First create the parent page.'''
 |Action Fixture.|
 |start|Page Builder|

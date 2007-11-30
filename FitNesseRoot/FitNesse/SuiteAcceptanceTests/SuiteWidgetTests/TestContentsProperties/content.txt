@@ -1,0 +1,52 @@
+!3 !-!contents-! with Properties Option
+'''Use !contents to list all the child pages of the current page.'''
+{{{Example:  !contents -R -g -p
+  Options
+    -R   ...include all of the descendent pages
+    -g   ...show graceful names in the list--define REGRACE_TOC {true} for global;
+    -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
+              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>)
+              define PROPERTY_CHARACTERS {*+@>} to change.}}}
+!3 Explicit Property Option
+'''First create the parent page.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I'm the parent|
+|enter|line|!-!contents -p-!|
+|enter|page|!-ParentPage-!|
+
+!include -seamless ContentsTestsInclude
+
+'''Then request the parent page.'''
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage-!|true||
+
+'''...and examine the requested page to be sure that the child pages are included'''
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<a href="ParentPage.FirstChild">FirstChild \*\+</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild @</a>|true|
+
+!3 Indirect via PROPERTY_TOC Variable
+'''First create the parent page.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I'm also the parent|
+|enter|line|!-!define PROPERTY_TOC {true}-!|
+|enter|line|!-!contents-!|
+|enter|line|!-!define PROPERTY_TOC {false}-!|
+|enter|page|!-ParentPage-!|
+
+!include -seamless ContentsTestsInclude
+
+'''Then request the parent page.'''
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage-!|true||
+
+'''...and examine the requested page to be sure that the child pages are included'''
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<a href="ParentPage.FirstChild">FirstChild \*\+</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild @</a>|true|

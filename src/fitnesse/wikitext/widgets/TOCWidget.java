@@ -12,10 +12,14 @@ import java.util.regex.*;
 public class TOCWidget extends WikiWidget
 {
    // [-R[0-9]] [-g]
-   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-g)?[ \\t]*$)";
+   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-[gp])*?[ \\t]*$)";
    public static final String REGRACE_TOC = "REGRACE_TOC";
-
-	private boolean recursive, isGraceful;
+   public static final String PROPERTY_TOC = "PROPERTY_TOC";
+   public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
+   public static final String PROP_CHAR_DEFAULT = "*+@>";
+   
+   public String   propertyCharacters = PROP_CHAR_DEFAULT;
+	private boolean recursive, isGraceful, isPropertied;
    private int     depthLimit;  // 0 = unlimited depth recursion
 
 	public TOCWidget(ParentWidget parent, String text)
@@ -23,6 +27,7 @@ public class TOCWidget extends WikiWidget
 		super(parent);
 		setRecursive(text);
       setGraceful(text);
+      setPropertied(text);
 	}
 
 	private void setRecursive(String text)
@@ -41,9 +46,32 @@ public class TOCWidget extends WikiWidget
       isGraceful  = (text.indexOf("-g") > -1);
    }
    
+   private void setPropertied(String text)
+   {
+      isPropertied  = (text.indexOf("-p") > -1);
+   }
+   
+   private void setPropertyCharacters (WikiPage page)
+   {
+      StringBuffer propChars = new StringBuffer();
+   	try
+   	{	String propsFromEnv = parent.getVariable(PROPERTY_CHARACTERS);
+   		if (propsFromEnv != null)  propChars.append(propsFromEnv);
+   	} catch (Exception e) { }
+   	
+   	int newLength = propChars.length();
+   	
+   	if (newLength < PROP_CHAR_DEFAULT.length())
+   		propChars.append(PROP_CHAR_DEFAULT.substring(newLength));
+   	
+   	propertyCharacters = propChars.toString();
+   }
+   
 	public String render() throws Exception
 	{
-		return buildContentsDiv(getWikiPage(), 1).html();
+		WikiPage page = getWikiPage();
+		setPropertyCharacters(page);
+		return buildContentsDiv(page, 1).html();
 	}
 
 	private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth)
@@ -100,15 +128,55 @@ public class TOCWidget extends WikiWidget
       return isDoingIt || isGraceful;
    }
 
+   public boolean isPropertyAppended ()
+   {  boolean isDoingIt = false;
+      try { isDoingIt = "true".equals(parent.getVariable(PROPERTY_TOC)); }
+      catch (Exception e) { isDoingIt = false; }
+      return isDoingIt || isPropertied;
+   }
+
 	private HtmlElement getLinkText(WikiPage wikiPage) throws Exception
 	{
-      String name = regrace(wikiPage.getName());
+      String name   = regrace(wikiPage.getName()),
+             props  = getProperties(wikiPage);
+
 		if(wikiPage instanceof ProxyPage)
-			return new HtmlTag("i", name);
+			return new HtmlTag("i", name + props);
 		else
-			return new RawHtml(name);
+			return new RawHtml(name + props);
 	}
 
+	private String getProperties (WikiPage wikiPage) throws Exception
+	{
+		StringBuffer propText = new StringBuffer();
+		if (isPropertyAppended())
+		{
+			PageData data = wikiPage.getData();
+			WikiPageProperties props = data.getProperties();
+			
+			if (props.has("Suite"))        propText.append(propertyCharacters.charAt(0));
+			if (props.has("Test"))         propText.append(propertyCharacters.charAt(1));
+			if (props.has("WikiImport"))   propText.append(propertyCharacters.charAt(2));
+			if (isSymbolic(wikiPage))      propText.append(propertyCharacters.charAt(3));
+		}
+		
+		return (propText.length() > 0)? " " + propText.toString() : ""; 
+	}
+
+	private boolean isSymbolic (WikiPage page) throws Exception
+	{
+		boolean isSym = false;
+		WikiPageProperties props = page.getParent().getData().getProperties();
+		
+		if (props.has("SymbolicLinks"))
+		{
+			WikiPageProperty syms = props.getProperty("SymbolicLinks");
+			isSym = syms == null? false : syms.has(page.getName());
+		}
+		
+		return isSym;
+	}
+	
 	private List buildListOfChildPages(WikiPage wikiPage) throws Exception
 	{
 		List childPageList = new ArrayList(wikiPage.getChildren());
