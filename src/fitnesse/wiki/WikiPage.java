@@ -47,6 +47,8 @@ public interface WikiPage extends Serializable, Comparable
 	public boolean hasExtension(String extensionName);
 
 	public Extension getExtension(String extensionName);
+	
+	public String getHelpText () throws Exception;
 }
 
 

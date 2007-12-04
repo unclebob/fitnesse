@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
-import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.testutil.*;
 import fitnesse.wiki.*;
 
@@ -266,8 +265,8 @@ public class SuiteResponderTest extends RegexTestCase
 		WikiPage test3 = addTestToSuite("TestThree", "|!-fitnesse.testutil.PassFixture-!|\n");
 		PageData data2 = test2.getData();
 		PageData data3 = test3.getData();
-		data2.setAttribute(PropertiesResponder.SUITES, "foo");
-		data3.setAttribute(PropertiesResponder.SUITES, "bar, smoke");
+		data2.setAttribute(PageData.PropertySUITES, "foo");
+		data3.setAttribute(PageData.PropertySUITES, "bar, smoke");
 		test2.commit(data2);
 		test3.commit(data3);
 	}

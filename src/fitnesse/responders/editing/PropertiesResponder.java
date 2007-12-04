@@ -13,8 +13,6 @@ import java.util.*;
 
 public class PropertiesResponder implements SecureResponder
 {
-	public static final String SUITES = "Suites";
-
 	private WikiPage page;
 	public PageData pageData;
 	private String resource;
@@ -103,18 +101,24 @@ public class PropertiesResponder implements SecureResponder
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveProperties"));
 
 		HtmlTag trisection = new HtmlTag("div");
-		trisection.addAttribute("style", "height: 200px");
+		trisection.addAttribute("style", "width:100%");
+		//trisection.addAttribute("style", "height: 200px");
 		trisection.add(makeTestActionCheckboxesHtml(pageData));
 		trisection.add(makeNavigationCheckboxesHtml(pageData));
 		trisection.add(makeSecurityCheckboxesHtml(pageData));
 		trisection.add(makeVirtualWikiHtml());
 		trisection.add(makeSuitesHtml(pageData));
+		trisection.add(makeHelpTextHtml(pageData));
 		form.add(trisection);
 
+		HtmlTag buttonSection = new HtmlTag("div");
+		buttonSection.add(HtmlUtil.BR);
 		HtmlTag saveButton = HtmlUtil.makeInputTag("submit", "Save", "Save Properties");
 		saveButton.addAttribute("accesskey", "s");
-		form.add(HtmlUtil.BR);
-		form.add(saveButton);
+		buttonSection.add(saveButton);
+		form.add(buttonSection);
+		//form.add(HtmlUtil.BR);
+		//form.add(saveButton);
 		return form;
 	}
 
@@ -130,6 +134,8 @@ public class PropertiesResponder implements SecureResponder
 		HtmlTag vwInput = HtmlUtil.makeInputTag("text", "VirtualWiki", getVirtualWikiValue(pageData));
 		vwInput.addAttribute("size", "40");
 		virtualWiki.add(vwInput);
+		virtualWiki.add(HtmlUtil.NBSP);
+		virtualWiki.add(HtmlUtil.NBSP);
 		return virtualWiki;
 	}
 
@@ -269,21 +275,33 @@ public class PropertiesResponder implements SecureResponder
 
 	public HtmlTag makeSuitesHtml(PageData pageData) throws Exception
 	{
+		return makeInputField("Suites:", PageData.PropertySUITES, "Suites", 40, pageData);
+	}
+
+	public HtmlTag makeHelpTextHtml(PageData pageData) throws Exception
+	{
+		return makeInputField("Help Text:", PageData.PropertyHELP, "HelpText", 90, pageData);
+	}
+
+	public HtmlTag makeInputField (String label, String propertyName, String fieldId, int size, PageData pageData) 
+		throws Exception
+	{
 		HtmlTag div = new HtmlTag("div");
 		div.addAttribute("style", "float: left;");
-		div.add("Suites:");
+		div.add(label);
 
-		String suites = "";
-		WikiPageProperty suitesProp = pageData.getProperties().getProperty(SUITES);
-		if(suitesProp != null)
+		String textValue = "";
+		WikiPageProperty theProp = pageData.getProperties().getProperty(propertyName);
+		if(theProp != null)
 		{
-			String suiteValue = suitesProp.getValue();
-			if (suiteValue != null)  suites = suiteValue;
+			String propValue = theProp.getValue();
+			if (propValue != null)  textValue = propValue;
 		}
 
 		div.add(HtmlUtil.BR);
-
-		div.add(HtmlUtil.makeInputTag("text", "Suites", suites));
+		HtmlTag input = HtmlUtil.makeInputTag("text", fieldId, textValue);
+		input.addAttribute("size", Integer.toString(size));
+		div.add(input);
 		return div;
 	}
 
@@ -300,6 +318,8 @@ public class PropertiesResponder implements SecureResponder
 			div.add(HtmlUtil.BR);
 			div.add(makeAttributeCheckbox(attribute, pageData));
 		}
+		div.add(HtmlUtil.BR);
+		div.add(HtmlUtil.BR);
 		return div;
 	}
 

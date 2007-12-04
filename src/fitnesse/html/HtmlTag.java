@@ -11,7 +11,8 @@ public class HtmlTag extends HtmlElement
 	protected String tagName = "youreIt";
 	public String tail;
 	public String head;
-
+	public boolean isInline;
+	
 	public HtmlTag(String tagName)
 	{
 		this.tagName = tagName;
@@ -39,13 +40,18 @@ public class HtmlTag extends HtmlElement
 		return html(0);
 	}
 
+	public String htmlInline() throws Exception
+	{
+		isInline = true;
+		return html(0);
+	}
+
 	public String html(int depth) throws Exception
 	{
 		StringBuffer buffer = new StringBuffer();
 		addTabs(depth, buffer);
 
-		if(head != null)
-			buffer.append(head);
+		if (head != null)  buffer.append(head);
 
 		buffer.append("<").append(tagName());
 		addAttributes(buffer);
@@ -54,17 +60,14 @@ public class HtmlTag extends HtmlElement
 		{
 			buffer.append(">");
 			boolean tagWasAdded = addChildHtml(buffer, depth);
-			if(tagWasAdded)
-				addTabs(depth, buffer);
+			if (tagWasAdded && !isInline)  addTabs(depth, buffer);
 			buffer.append("</").append(tagName()).append(">");
 		}
 		else
 			buffer.append("/>");
 
-		if(tail != null)
-			buffer.append(tail);
-
-		buffer.append(endl);
+		if( tail != null)  buffer.append(tail);
+		if (!isInline)  buffer.append(endl);
 
 		return buffer.toString();
 	}
@@ -92,7 +95,7 @@ public class HtmlTag extends HtmlElement
 		{
 			if(element instanceof HtmlTag)
 			{
-				if(i == 0 || lastAddedWasNonTag)
+				if ((i == 0 || lastAddedWasNonTag) && !isInline)
 					buffer.append(endl);
 				buffer.append(((HtmlTag) element).html(depth + 1));
 				addedTag = true;

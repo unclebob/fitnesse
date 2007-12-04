@@ -227,7 +227,7 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		}
 		try
 		{
-			String suitesStr = context.getData().getAttribute("Suites");
+			String suitesStr = context.getData().getAttribute(PageData.PropertySUITES);
 			if(suitesStr != null)
 			{
 				StringTokenizer t = new StringTokenizer(suitesStr, ",");

@@ -117,4 +117,8 @@ public class WikiPageDummy implements WikiPage
 	{
 		return null;
 	}
+	
+	public String getHelpText () throws Exception
+	{	return "Dummy help text";
+	}
 }

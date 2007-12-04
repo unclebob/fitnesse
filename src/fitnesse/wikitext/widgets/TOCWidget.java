@@ -12,15 +12,26 @@ import java.util.regex.*;
 public class TOCWidget extends WikiWidget
 {
    // [-R[0-9]] [-g]
-   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-[fgp])*?[ \\t]*$)";
-   public static final String REGRACE_TOC = "REGRACE_TOC";
-   public static final String FILTER_TOC = "FILTER_TOC";
-   public static final String PROPERTY_TOC = "PROPERTY_TOC";
-   public static final String PROPERTY_CHARACTERS = "PROPERTY_CHARACTERS";
-   public static final String PROP_CHAR_DEFAULT = "*+@>";
+   public static final String REGEXP = "(?:^!contents([ \t]+-R[0-9]*)?([ \t]+-[fhgp])*?[ \\t]*$)";
+   
+   public static final String REGRACE_TOC 			= "REGRACE_TOC";
+   public static final String FILTER_TOC 				= "FILTER_TOC";
+   public static final String PROPERTY_TOC 			= "PROPERTY_TOC";
+   public static final String PROPERTY_CHARACTERS 	= "PROPERTY_CHARACTERS";
+   public static final String HELP_TOC					= "HELP_TOC";
+   public static final String HELP_PREFIX_TOC		= "HELP_PREFIX_TOC";
+   
+   public static final String PROP_CHAR_DEFAULT 	= "*+@>";
+   public static final String HELP_PREFIX_DEFAULT 	= "...";
    
    public String   propertyCharacters = PROP_CHAR_DEFAULT;
-	private boolean recursive, isGraceful, isPropertied, isFiltered;
+   public String   helpTextPrefix     = HELP_PREFIX_DEFAULT;
+   
+	private boolean recursive, 
+						 isGraceful, 	isVarGraceful, 
+						 isPropertied,	isVarPropertied, 
+						 isFiltered, 	isVarFiltered,
+						 isHelpShown,  isVarHelpShown;
    private int     depthLimit;  // 0 = unlimited depth recursion
 
 	public TOCWidget(ParentWidget parent, String text)
@@ -30,6 +41,7 @@ public class TOCWidget extends WikiWidget
       setGraceful(text);
       setPropertied(text);
       setFiltered(text);
+      setHelpShown(text);
 	}
 
 	private void setRecursive(String text)
@@ -58,6 +70,33 @@ public class TOCWidget extends WikiWidget
       isFiltered  = (text.indexOf("-f") > -1);
    }
    
+   private void setHelpShown (String text)
+   {
+      isHelpShown  = (text.indexOf("-h") > -1);
+   }
+   
+	public String render() throws Exception
+	{
+		WikiPage page = getWikiPage();
+		setVarFlags          (page);
+		setPropertyCharacters(page);
+		setHelpTextPrefix    (page);		
+		return buildContentsDiv(page, 1).html();
+	}
+
+	private void setVarFlags (WikiPage page) throws Exception
+	{
+     isVarGraceful   = "true".equals(parent.getVariable(REGRACE_TOC) ); 
+     isVarPropertied = "true".equals(parent.getVariable(PROPERTY_TOC));
+     isVarFiltered   = "true".equals(parent.getVariable(FILTER_TOC)  );
+     isVarHelpShown  = "true".equals(parent.getVariable(HELP_TOC)    );
+	}
+	
+	public boolean isRegracing ()        { return isVarGraceful   || isGraceful;   }
+   public boolean isPropertyAppended () { return isVarPropertied || isPropertied; }
+   public boolean isFiltersAppended ()  { return isVarFiltered   || isFiltered;   }
+   public boolean isHelpAppended ()     { return isVarHelpShown  || isHelpShown;  }
+
    private void setPropertyCharacters (WikiPage page)
    {
       StringBuffer propChars = new StringBuffer();
@@ -73,14 +112,13 @@ public class TOCWidget extends WikiWidget
    	
    	propertyCharacters = propChars.toString();
    }
-   
-	public String render() throws Exception
-	{
-		WikiPage page = getWikiPage();
-		setPropertyCharacters(page);
-		return buildContentsDiv(page, 1).html();
-	}
 
+   private void setHelpTextPrefix (WikiPage page) throws Exception
+   {
+   	String helpPrefixEnv = parent.getVariable(HELP_PREFIX_TOC);
+   	helpTextPrefix = (helpPrefixEnv != null)? helpPrefixEnv : HELP_PREFIX_DEFAULT; 
+   }
+   
 	private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth)
 		throws Exception
 	{
@@ -107,7 +145,9 @@ public class TOCWidget extends WikiWidget
 	private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) throws Exception
 	{
 		HtmlTag listItem = new HtmlTag("li");
-		listItem.add(HtmlUtil.makeLink(getHref(wikiPage), getLinkText(wikiPage)));
+		HtmlTag link = HtmlUtil.makeLink(getHref(wikiPage), getLinkText(wikiPage));
+		addHelpText(link, wikiPage);
+		listItem.add(link);
       
 		if(isRecursive() && buildListOfChildPages(wikiPage).size() > 0)
 		{
@@ -128,26 +168,17 @@ public class TOCWidget extends WikiWidget
 		return href;
 	}
 
-   public boolean isRegracing ()
-   {  boolean isDoingIt = false;
-      try { isDoingIt = "true".equals(parent.getVariable(REGRACE_TOC)); }
-      catch (Exception e) { isDoingIt = false; }
-      return isDoingIt || isGraceful;
-   }
-
-   public boolean isPropertyAppended ()
-   {  boolean isDoingIt = false;
-      try { isDoingIt = "true".equals(parent.getVariable(PROPERTY_TOC)); }
-      catch (Exception e) { isDoingIt = false; }
-      return isDoingIt || isPropertied;
-   }
-
-   public boolean isFiltersAppended ()
-   {  boolean isDoingIt = false;
-      try { isDoingIt = "true".equals(parent.getVariable(FILTER_TOC)); }
-      catch (Exception e) { isDoingIt = false; }
-      return isDoingIt || isFiltered;
-   }
+	private void addHelpText (HtmlTag link, WikiPage wikiPage) throws Exception
+	{
+			String helpText = wikiPage.getHelpText();
+			if (helpText != null)
+			{
+				if (isHelpAppended())
+					link.tail = HtmlUtil.makeSpanTag("pageHelp", "..." + helpText).html();
+				else
+					link.addAttribute("title", helpText);
+			}
+	}
 
 	private HtmlElement getLinkText(WikiPage wikiPage) throws Exception
 	{
@@ -201,7 +232,7 @@ public class TOCWidget extends WikiWidget
 			PageData data = wikiPage.getData();
 			WikiPageProperties props = data.getProperties();
 			
-			String filterText = (props.has("Suites"))? filterText = props.get("Suites") : "";
+			String filterText = (props.has(PageData.PropertySUITES))? filterText = props.get(PageData.PropertySUITES) : "";
 			filters = (filterText != null)? filterText.trim() : ""; 
 		}
 		

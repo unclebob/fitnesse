@@ -2,6 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
@@ -61,12 +63,23 @@ public class AliasLinkWidget extends ParentWidget
 		WikiPagePath wikiWordPath = PathParser.parse(theWord);
 		WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, wikiWordPath);
 		String qualifiedName = PathParser.render(fullPathOfWikiWord);
-		if(parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(theWord)))
-			return ("<a href=\"" + qualifiedName + urlSuffix + "\">" + childHtml() + "</a>");
+		WikiPage target = parentPage.getPageCrawler().getPage(parentPage, PathParser.parse(theWord)); 
+		if (target != null)
+		{
+			HtmlTag link = HtmlUtil.makeLink(qualifiedName + urlSuffix, childHtml());
+			addHelpText(link, target);
+			return link.htmlInline();
+		}
 		else if(getWikiPage() instanceof ProxyPage)
 			return makeAliasLinkToNonExistentRemotePage(theWord);
 		else
 			return (childHtml() + "<a href=\"" + qualifiedName + "?edit\">?</a>");
+	}
+
+	private void addHelpText (HtmlTag link, WikiPage wikiPage) throws Exception
+	{
+		String helpText = wikiPage.getHelpText();
+		if (helpText != null)  link.addAttribute("title", helpText);
 	}
 
 	private String makeAliasLinkToNonExistentRemotePage(String theWord) throws Exception

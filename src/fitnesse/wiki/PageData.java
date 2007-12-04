@@ -18,6 +18,10 @@ public class PageData implements Serializable
 	public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
 	public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class});
 
+	public static final String PropertyHELP      = "Help";
+	//TODO -AcD: refactor add other properties such as "Edit", "Suite", "Test", ...
+	public static final String PropertySUITES    = "Suites";
+	
 	private transient WikiPage wikiPage;
 	private String content;
 	private WikiPageProperties properties = new WikiPageProperties();

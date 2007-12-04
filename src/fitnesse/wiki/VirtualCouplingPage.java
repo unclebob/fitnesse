@@ -104,4 +104,8 @@ public class VirtualCouplingPage implements WikiPage
 	{
 		return hostPage.getPageCrawler();
 	}
+
+	public String getHelpText () throws Exception
+	{	return "Virtual coupling help text";
+	}
 }

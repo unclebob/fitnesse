@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.*;
-import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
@@ -41,8 +40,8 @@ public class FitClientResponderTest extends RegexTestCase
 
 		PageData data1 = page1.getData();
 		PageData data2 = page2.getData();
-		data1.setAttribute(PropertiesResponder.SUITES, "foo");
-		data2.setAttribute(PropertiesResponder.SUITES, "bar, smoke");
+		data1.setAttribute(PageData.PropertySUITES, "foo");
+		data2.setAttribute(PageData.PropertySUITES, "bar, smoke");
 		page1.commit(data1);
 		page2.commit(data2);
 	}

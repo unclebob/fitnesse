@@ -63,7 +63,10 @@ public class SavePropertiesResponder implements SecureResponder
 			data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, value);
 
 		String suites = (String) request.getInput("Suites");
-		data.setAttribute("Suites", suites);
+		data.setAttribute(PageData.PropertySUITES, suites);
+		
+		String helpText = (String) request.getInput("HelpText");
+		data.setAttribute(PageData.PropertyHELP, helpText);
 	}
 
 	private boolean isChecked(Request request, String name)

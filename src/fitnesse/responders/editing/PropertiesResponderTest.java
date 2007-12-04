@@ -237,19 +237,40 @@ public class PropertiesResponderTest extends RegexTestCase
 		getContentFromSimplePropertiesPage();
 
 		assertSubString("Suites", content);
-		assertSubString("<input type=\"text\" name=\"Suites\" value=\"\"/>", content);
+		assertSubString("<input type=\"text\" name=\"Suites\" value=\"\" size=\"40\"/>", content);
 	}
 
 	public void testSuitesDisplayed() throws Exception
 	{
 		WikiPage page = getContentFromSimplePropertiesPage();
 		PageData data = page.getData();
-		data.setAttribute(PropertiesResponder.SUITES, "smoke");
+		data.setAttribute(PageData.PropertySUITES, "smoke");
 		page.commit(data);
 
 		getPropertiesContentFromPage(page);
 
 		assertSubString("Suites", content);
-		assertSubString("<input type=\"text\" name=\"Suites\" value=\"smoke\"/>", content);
+		assertSubString("<input type=\"text\" name=\"Suites\" value=\"smoke\" size=\"40\"/>", content);
+	}
+
+	public void testEmptyHelpTextForm() throws Exception
+	{
+		getContentFromSimplePropertiesPage();
+
+		assertSubString("Help Text", content);
+		assertSubString("<input type=\"text\" name=\"HelpText\" value=\"\" size=\"90\"/>", content);
+	}
+
+	public void testHelpTextDisplayed() throws Exception
+	{
+		WikiPage page = getContentFromSimplePropertiesPage();
+		PageData data = page.getData();
+		data.setAttribute(PageData.PropertyHELP, "help text");
+		page.commit(data);
+
+		getPropertiesContentFromPage(page);
+
+		assertSubString("Help Text", content);
+		assertSubString("<input type=\"text\" name=\"HelpText\" value=\"help text\" size=\"90\"/>", content);
 	}
 }

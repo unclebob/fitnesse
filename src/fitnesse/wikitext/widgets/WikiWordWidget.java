@@ -3,6 +3,8 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.components.PageReferencer;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
 import fitnesse.util.StringUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.*;
@@ -30,8 +32,9 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 		WikiPagePath pathOfWikiWord = PathParser.parse(getWikiWord());
 		WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
 		String qualifiedName = PathParser.render(fullPathOfWikiWord);
-		if(parentPage.getPageCrawler().pageExists(parentPage, PathParser.parse(getWikiWord())))
-			return makeLinkToExistingWikiPage(qualifiedName);
+		WikiPage targetPage = parentPage.getPageCrawler().getPage(parentPage, PathParser.parse(getWikiWord())); 
+		if (targetPage != null)
+			return makeLinkToExistingWikiPage(qualifiedName, targetPage);
 		else
 			return makeLinkToNonExistentWikiPage(qualifiedName);
 	}
@@ -53,13 +56,17 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
       return isDoingIt;
    }
 
-	private String makeLinkToExistingWikiPage(String qualifiedName)
+	private String makeLinkToExistingWikiPage(String qualifiedName, WikiPage wikiPage) throws Exception
 	{
-		StringBuffer html = new StringBuffer();
-		html.append("<a href=\"");
-		html.append(qualifiedName).append("\">");
-		html.append(Utils.escapeText(regrace(getText()))).append("</a>");
-		return html.toString();
+		HtmlTag link = HtmlUtil.makeLink(qualifiedName, Utils.escapeText(regrace(getText())));
+		addHelpText(link, wikiPage);
+		return link.htmlInline();
+	}
+
+	private void addHelpText (HtmlTag link, WikiPage wikiPage) throws Exception
+	{
+		String helpText = wikiPage.getHelpText();
+		if (helpText != null)  link.addAttribute("title", helpText);
 	}
 
 	// If pageToRename is referenced somewhere in this wiki word (could be a parent, etc.),

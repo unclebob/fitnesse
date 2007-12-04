@@ -41,6 +41,7 @@ public class SavePropertiesResponderTest extends RegexTestCase
 		request.addInput(WikiPage.SECURE_READ, "on");
 		request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
 		request.addInput("Suites", "Suite A, Suite B");
+		request.addInput("HelpText", "Help text literal");
 		request.setResource("PageOne");
 	}
 
@@ -110,7 +111,8 @@ public class SavePropertiesResponderTest extends RegexTestCase
 		assertTrue(data.hasAttribute("RecentChanges"));
 		assertTrue(data.hasAttribute(WikiPage.SECURE_READ));
 		assertFalse(data.hasAttribute(WikiPage.SECURE_WRITE));
-		assertEquals("Suite A, Suite B", data.getAttribute("Suites"));
+		assertEquals("Suite A, Suite B", data.getAttribute(PageData.PropertySUITES));
+		assertEquals("Help text literal", data.getAttribute(PageData.PropertyHELP));
 
 		assertEquals(303, response.getStatus());
 		assertEquals("PageOne", response.getHeader("Location"));
