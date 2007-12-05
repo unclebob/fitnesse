@@ -654,19 +654,20 @@ public class TOCWidgetTest extends WidgetTestCase
 
    private String getHtmlWithGreatGrandChildHelp()
    {
+   	String hsep = TOCWidget.HELP_PREFIX_DEFAULT;
       String expected =
          "<div class=\"toc1\">" + endl +
             "\t<ul>" + endl +
             "\t\t<li>" + endl +
-            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page (F1)</a><span class=\"pageHelp\">...Root child 1 help</span>" + endl + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page (F1)</a><span class=\"pageHelp\">" + hsep + "Root child 1 help</span>" + endl + 
             "\t\t\t<div class=\"toc2\">" + endl +
             "\t\t\t\t<ul>" + endl +
             "\t\t\t\t\t<li>" + endl +
-            "\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild\">Grand Child (F2)</a><span class=\"pageHelp\">...Grand child help</span>" + endl + endl +
+            "\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild\">Grand Child (F2)</a><span class=\"pageHelp\">" + hsep + "Grand child help</span>" + endl + 
             "\t\t\t\t\t\t<div class=\"toc3\">" + endl +
             "\t\t\t\t\t\t\t<ul>" + endl +
             "\t\t\t\t\t\t\t\t<li>" + endl +
-            "\t\t\t\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild.GreatGrandChild\">Great Grand Child (F2,F3)</a><span class=\"pageHelp\">...Great grand child help</span>" + endl + endl +
+            "\t\t\t\t\t\t\t\t\t<a href=\"ParenT2.Child1Page.GrandChild.GreatGrandChild\">Great Grand Child (F2,F3)</a><span class=\"pageHelp\">" + hsep + "Great grand child help</span>" + endl + 
             "\t\t\t\t\t\t\t\t</li>" + endl +
             "\t\t\t\t\t\t\t</ul>" + endl +
             "\t\t\t\t\t\t</div>" + endl +
@@ -675,7 +676,7 @@ public class TOCWidgetTest extends WidgetTestCase
             "\t\t\t</div>" + endl +
             "\t\t</li>" + endl +
             "\t\t<li>" + endl +
-            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page (F1,F2)</a><span class=\"pageHelp\">...Root child 2 help</span>" + endl + endl +
+            "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page (F1,F2)</a><span class=\"pageHelp\">" + hsep + "Root child 2 help</span>" + endl + 
             "\t\t</li>" + endl +
             "\t</ul>" + endl +
             "</div>" + endl;
