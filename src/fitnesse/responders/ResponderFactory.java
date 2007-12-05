@@ -61,6 +61,7 @@ public class ResponderFactory
 		addResponder("format", TestResultFormattingResponder.class);
 		addResponder("symlink", SymbolicLinkResponder.class);
 		addResponder("importAndView", ImportAndViewResponder.class);
+		addResponder("getPage", WikiPageResponder.class);
 	}
 
 	public void addResponder(String key, Class responderClass)
