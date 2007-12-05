@@ -93,6 +93,15 @@ public class PageDataTest extends RegexTestCase
 		assertEquals("/my/path.jar", paths.get(0).toString());
 	}
 
+	public void testVariableIgnoredInParentPreformatted() throws Exception
+	{	//--variables in parent preformatted blocks must not recognize !define widgets.
+		WikiPage root = InMemoryPage.makeRoot("RooT");
+		WikiPage parent = crawler.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
+		WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "${SOMEVAR}\n");
+		String renderedContent = child.getData().getHtml();
+		assertHasRegexp("undefined variable", renderedContent);
+	}
+	
 	public void testGetFixtureNames() throws Exception
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
