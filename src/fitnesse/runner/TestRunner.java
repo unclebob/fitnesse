@@ -81,6 +81,7 @@ public class TestRunner
 		System.out.println("\t-html <filename|'stdout'>\tformat results as HTML and save to a file or dump to standard output");
 		System.out.println("\t-debug \tprints FitServer protocol actions to stdout");
 		System.out.println("\t-nopath \tprevents downloaded path elements from being added to classpath");
+		System.out.println("\t-suiteFilter <filter> \texecutes only tests which are flagged with the given filter");
 		System.exit(-1);
 	}
 
