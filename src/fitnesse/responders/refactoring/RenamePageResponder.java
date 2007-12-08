@@ -54,7 +54,7 @@ public class RenamePageResponder implements SecureResponder
 				final boolean pageExists = pageCrawler.pageExists(parentOfPageToRename, PathParser.parse(newName));
 				if(!pageExists)
 				{
-					qualifiedName = doRename();
+					qualifiedName = renamePageAndMaybeAllReferences();
 					response = new SimpleResponse();
 					response.redirect(qualifiedName);
 				}
@@ -82,7 +82,7 @@ public class RenamePageResponder implements SecureResponder
 		return HtmlUtil.makeLink(page, page).html();
 	}
 
-	private String doRename() throws Exception
+	private String renamePageAndMaybeAllReferences() throws Exception
 	{
 		if(refactorReferences)
 			renameReferences();
