@@ -2,25 +2,37 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
-import fitnesse.*;
-import fitnesse.authentication.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
 import fitnesse.components.PageReferenceRenamer;
 import fitnesse.html.HtmlUtil;
-import fitnesse.http.*;
-import fitnesse.responders.*;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 public class RenamePageResponder implements SecureResponder
 {
 	private String qualifiedName;
 	private String newName;
 	private boolean refactorReferences;
+	private WikiPagePath pathToRename;
+	private WikiPage pageToRename;
+	private WikiPage root;
+	private WikiPage parentOfPageToRename;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
+		root = context.root;
 		qualifiedName = request.getResource();
 		newName = (String) request.getInput("newName");
 		refactorReferences = request.hasInput("refactorReferences");
@@ -31,18 +43,18 @@ public class RenamePageResponder implements SecureResponder
 		{
 			PageCrawler pageCrawler = context.root.getPageCrawler();
 
-			WikiPagePath subjectPath = PathParser.parse(qualifiedName);
-			WikiPage subjectPage = pageCrawler.getPage(context.root, subjectPath);
-			if(subjectPage == null)
+			pathToRename = PathParser.parse(qualifiedName);
+			pageToRename = pageCrawler.getPage(context.root, pathToRename);
+			if(pageToRename == null)
 				response = new NotFoundResponder().makeResponse(context, request);
 			else
 			{
-				WikiPagePath parentPath = subjectPath.parentPath();
-				WikiPage parent = pageCrawler.getPage(context.root, parentPath);
-				final boolean pageExists = pageCrawler.pageExists(parent, PathParser.parse(newName));
+				WikiPagePath parentPath = pathToRename.parentPath();
+				parentOfPageToRename = pageCrawler.getPage(context.root, parentPath);
+				final boolean pageExists = pageCrawler.pageExists(parentOfPageToRename, PathParser.parse(newName));
 				if(!pageExists)
 				{
-					qualifiedName = doRename(context.root, subjectPage, parent, newName, subjectPath);
+					qualifiedName = doRename();
 					response = new SimpleResponse();
 					response.redirect(qualifiedName);
 				}
@@ -70,32 +82,33 @@ public class RenamePageResponder implements SecureResponder
 		return HtmlUtil.makeLink(page, page).html();
 	}
 
-	private String doRename(WikiPage root, WikiPage pageToRename, WikiPage parent, String newName, WikiPagePath subjectPath) throws Exception
+	private String doRename() throws Exception
 	{
 		if(refactorReferences)
-			renameReferences(root, pageToRename, newName);
-		rename(parent, pageToRename.getName(), newName, root);
+			renameReferences();
+		renamePage();
 
-		subjectPath.pop();
-		subjectPath.addName(newName);
-		return PathParser.render(subjectPath);
+		pathToRename.pop();
+		pathToRename.addName(newName);
+		return PathParser.render(pathToRename);
 	}
 
-	private void renameReferences(WikiPage root, WikiPage pageToRename, String newName) throws Exception
+	private void renameReferences() throws Exception
 	{
 		PageReferenceRenamer renamer = new PageReferenceRenamer(root);
 		renamer.renameReferences(pageToRename, newName);
 	}
 
-	private static boolean rename(WikiPage context, String oldName, String newName, WikiPage root) throws Exception
+	private boolean renamePage() throws Exception
 	{
-		if(context.hasChildPage(oldName) && !context.hasChildPage(newName))
+		String oldName = pageToRename.getName();
+		if(parentOfPageToRename.hasChildPage(oldName) && !parentOfPageToRename.hasChildPage(newName))
 		{
-			WikiPage originalPage = context.getChildPage(oldName);
+			WikiPage originalPage = parentOfPageToRename.getChildPage(oldName);
 			PageCrawler crawler = originalPage.getPageCrawler();
 			PageData data = originalPage.getData();
 
-			WikiPage renamedPage = context.addChildPage(newName);
+			WikiPage renamedPage = parentOfPageToRename.addChildPage(newName);
 			renamedPage.commit(data);
 
 			List children = originalPage.getChildren();
@@ -105,7 +118,7 @@ public class RenamePageResponder implements SecureResponder
 				MovePageResponder.movePage(root, crawler.getFullPath(child), crawler.getFullPath(renamedPage));
 			}
 
-			context.removeChildPage(oldName);
+			parentOfPageToRename.removeChildPage(oldName);
 			return true;
 		}
 		return false;

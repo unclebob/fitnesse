@@ -40,8 +40,8 @@
 '''...and examine the requested page to insure help text is visible'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">FirstChild</a><span class="pageHelp">...First Child's help</span>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild</a><span class="pageHelp">...Second Child's help</span>|true|
+|contents|<a href="ParentPage.FirstChild">FirstChild</a><span class="pageHelp">: First Child's help</span>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild</a><span class="pageHelp">: Second Child's help</span>|true|
 #-------------------------------------------------
 !3 Implicitly Request Help Text Suffix via Variable
 '''First create the parent page.'''
@@ -63,5 +63,5 @@
 '''...and examine the requested page to insure help text is visible'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">FirstChild</a><span class="pageHelp">...First Child's help</span>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild</a><span class="pageHelp">...Second Child's help</span>|true|
+|contents|<a href="ParentPage.FirstChild">FirstChild</a><span class="pageHelp">: First Child's help</span>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild</a><span class="pageHelp">: Second Child's help</span>|true|
