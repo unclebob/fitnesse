@@ -3,11 +3,18 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.*;
-import fitnesse.html.*;
-import fitnesse.http.*;
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
 import fitnesse.responders.SecureResponder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 import java.util.List;
 
@@ -27,7 +34,7 @@ public class DeletePageResponder implements SecureResponder
 			if("yes".equals(confirmedString))
 			{
 				String nameOfPageToBeDeleted = path.last();
-				path.pop();
+				path.removeNameFromEnd();
 				WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
 				if(parentOfPageToBeDeleted != null)
 					parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);

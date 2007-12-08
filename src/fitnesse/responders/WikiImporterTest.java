@@ -1,11 +1,14 @@
 package fitnesse.responders;
 
-import fitnesse.testutil.*;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WikiImporterTest extends RegexTestCase implements WikiImporterClient
 {
@@ -170,11 +173,11 @@ public class WikiImporterTest extends RegexTestCase implements WikiImporterClien
 
 		List<WikiPagePath> orphans = importer.getOrphans();
 		assertEquals(3, orphans.size());
-		assertTrue(orphans.contains(new WikiPagePath().addName("PageThree")));
-		assertTrue(orphans.contains(new WikiPagePath().addName("PageOne").addName("ChildTwo")));
-		assertTrue(orphans.contains(new WikiPagePath().addName("PageOne").addName("ChildOne").addName("GrandChildOne")));
-		assertFalse(orphans.contains(new WikiPagePath().addName("PageThatDoesntImport")));
-		assertFalse(orphans.contains(new WikiPagePath().addName("OtherImportRoot")));
+		assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageThree")));
+		assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageOne").addNameToEnd("ChildTwo")));
+		assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageOne").addNameToEnd("ChildOne").addNameToEnd("GrandChildOne")));
+		assertFalse(orphans.contains(new WikiPagePath().addNameToEnd("PageThatDoesntImport")));
+		assertFalse(orphans.contains(new WikiPagePath().addNameToEnd("OtherImportRoot")));
 	}
 
 	private void performImportWithExtraLocalPages() throws Exception

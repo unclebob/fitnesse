@@ -22,7 +22,7 @@ public class WikiPagePathTest extends TestCase
 
 	public void testAddOneName() throws Exception
 	{
-		path.addName("bob");
+		path.addNameToEnd("bob");
 		assertEquals("bob", path.getFirst());
 		assertFalse(path.isEmpty());
 		assertTrue(path.getRest().isEmpty());
@@ -30,8 +30,8 @@ public class WikiPagePathTest extends TestCase
 
 	public void testAddTwoNames() throws Exception
 	{
-		path.addName("bob");
-		path.addName("martin");
+		path.addNameToEnd("bob");
+		path.addNameToEnd("martin");
 		assertFalse(path.isEmpty());
 		assertEquals("bob", path.getFirst());
 		WikiPagePath rest = path.getRest();
@@ -48,31 +48,31 @@ public class WikiPagePathTest extends TestCase
 
 	public void testRenderSimplePath() throws Exception
 	{
-		path.addName("Bob");
+		path.addNameToEnd("Bob");
 		String renderedPath = PathParser.render(path);
 		assertEquals("Bob", renderedPath);
 	}
 
 	public void testRenderComplexPaths() throws Exception
 	{
-		path.addName("Bob");
-		path.addName("Martin");
+		path.addNameToEnd("Bob");
+		path.addNameToEnd("Martin");
 		String renderedPath = PathParser.render(path);
 		assertEquals("Bob.Martin", renderedPath);
 	}
 
 	public void testPop() throws Exception
 	{
-		path.addName("Micah");
-		path.pop();
+		path.addNameToEnd("Micah");
+		path.removeNameFromEnd();
 		assertEquals("", PathParser.render(path));
 
-		path.addName("Micah");
-		path.addName("Martin");
-		path.pop();
+		path.addNameToEnd("Micah");
+		path.addNameToEnd("Martin");
+		path.removeNameFromEnd();
 		assertEquals("Micah", PathParser.render(path));
 
-		path.pop();
+		path.removeNameFromEnd();
 		assertEquals("", PathParser.render(path));
 	}
 
@@ -173,11 +173,11 @@ public class WikiPagePathTest extends TestCase
 		WikiPagePath path2 = new WikiPagePath();
 		assertEquals(path2, path.parentPath());
 
-		path.addName("AbC");
+		path.addNameToEnd("AbC");
 		assertEquals(path2, path.parentPath());
 
-		path.addName("XyZ");
-		path2.addName("AbC");
+		path.addNameToEnd("XyZ");
+		path2.addNameToEnd("AbC");
 		assertEquals(path2, path.parentPath());
 	}
 
@@ -189,20 +189,20 @@ public class WikiPagePathTest extends TestCase
 		assertEquals(path1, path2);
 		assertEquals(path2, path1);
 
-		path1.addName("AbC");
+		path1.addNameToEnd("AbC");
 		assertFalse(path1.equals(path2));
 		assertFalse(path2.equals(path1));
 
-		path2.addName("AbC");
+		path2.addNameToEnd("AbC");
 		assertEquals(path1, path2);
 
-		path1.addName("XyZ");
-		path2.addName("XyZ");
+		path1.addNameToEnd("XyZ");
+		path2.addNameToEnd("XyZ");
 		assertEquals(path1, path2);
 
-		path1.pop();
+		path1.removeNameFromEnd();
 		assertFalse(path1.equals(path2));
-		path2.pop();
+		path2.removeNameFromEnd();
 		assertEquals(path1, path2);
 	}
 
@@ -223,30 +223,30 @@ public class WikiPagePathTest extends TestCase
 		WikiPagePath path2 = new WikiPagePath();
 		assertTrue(path2.startsWith(path));
 
-		path.addName("AbC");
+		path.addNameToEnd("AbC");
 		assertTrue(path.startsWith(path2));
 
-		path2.addName("AbC");
+		path2.addNameToEnd("AbC");
 		assertTrue(path.startsWith(path2));
 
-		path.addName("DeF");
+		path.addNameToEnd("DeF");
 		assertTrue(path.startsWith(path2));
 
-		path2.addName("XyZ");
+		path2.addNameToEnd("XyZ");
 		assertFalse(path.startsWith(path2));
 
-		path2.pop();
-		path2.addName("DeF");
+		path2.removeNameFromEnd();
+		path2.addNameToEnd("DeF");
 		assertTrue(path.startsWith(path2));
 
-		path2.addName("XyZ");
+		path2.addNameToEnd("XyZ");
 		assertFalse(path.startsWith(path2));
 	}
 
 	public void testWithNameAdded() throws Exception
 	{
 		WikiPagePath path2 = new WikiPagePath();
-		path2.addName("AbC");
+		path2.addNameToEnd("AbC");
 		WikiPagePath path3 = path.withNameAdded("AbC");
 		assertEquals(path2, path3);
 		assertNotSame(path3, path2);

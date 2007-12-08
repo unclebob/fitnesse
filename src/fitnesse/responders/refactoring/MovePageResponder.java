@@ -2,15 +2,22 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
-import fitnesse.*;
-import fitnesse.authentication.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
 import fitnesse.components.MovedPageReferenceRenamer;
 import fitnesse.html.HtmlUtil;
-import fitnesse.http.*;
-import fitnesse.responders.*;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 public class MovePageResponder implements SecureResponder
 {
@@ -85,7 +92,7 @@ public class MovePageResponder implements SecureResponder
 		if(crawler.isRoot(newParent))
 			return pageToBeMoved.getName();
 		else
-			return PathParser.render(crawler.getFullPath(newParent).addName(pageToBeMoved.getName()));
+			return PathParser.render(crawler.getFullPath(newParent).addNameToEnd(pageToBeMoved.getName()));
 	}
 
 	public boolean selfPage(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception

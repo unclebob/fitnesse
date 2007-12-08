@@ -6,7 +6,9 @@ import fitnesse.util.StringUtil;
 import static fitnesse.wiki.WikiPagePath.Mode.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WikiPagePath implements Comparable, Cloneable, Serializable
 {
@@ -25,7 +27,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 	public WikiPagePath(String[] names)
 	{
 		for(int i = 0; i < names.length; i++)
-			addName(names[i]);
+			addNameToEnd(names[i]);
 	}
 
 	protected Object clone() throws CloneNotSupportedException
@@ -62,7 +64,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 	{
 		mode = path.mode;
 		for(WikiPagePath p = path; !p.isEmpty(); p = p.getRest())
-			addName(p.getFirst());
+			addNameToEnd(p.getFirst());
 	}
 
 	private WikiPagePath(List<String> names)
@@ -75,7 +77,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 		return isEmpty() ? null : (String) names.get(0);
 	}
 
-	public WikiPagePath addName(String name)
+	public WikiPagePath addNameToEnd(String name)
 	{
 		names.add(name);
 		return this;
@@ -117,7 +119,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 		return "(" + prefix + StringUtil.join(names, ".") + ")";
 	}
 
-	public void pop()
+	public void removeNameFromEnd()
 	{
 		if(names.size() > 0)
 			names.removeLast();
@@ -127,7 +129,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 	{
 		WikiPagePath newPath = new WikiPagePath(this);
 		for(WikiPagePath p = childPath; !p.isEmpty(); p = p.getRest())
-			newPath.addName(p.getFirst());
+			newPath.addNameToEnd(p.getFirst());
 		return newPath;
 	}
 
@@ -183,7 +185,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 	public WikiPagePath parentPath()
 	{
 		WikiPagePath parentPath = new WikiPagePath(this);
-		parentPath.pop();
+		parentPath.removeNameFromEnd();
 		return parentPath;
 	}
 
@@ -205,7 +207,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 	public WikiPagePath withNameAdded(String name)
 	{
 		WikiPagePath path = new WikiPagePath(this);
-		path.addName(name);
+		path.addNameToEnd(name);
 		return path;
 	}
 

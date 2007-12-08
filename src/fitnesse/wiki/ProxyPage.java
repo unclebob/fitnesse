@@ -4,9 +4,13 @@ package fitnesse.wiki;
 
 import fitnesse.http.ResponseParser;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.net.URL;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class ProxyPage extends CachingPage implements Serializable
 {
@@ -59,7 +63,7 @@ public class ProxyPage extends CachingPage implements Serializable
 
 	protected WikiPage createChildPage(String name) throws Exception
 	{
-		WikiPagePath childPath = realPath.copy().addName(name);
+		WikiPagePath childPath = realPath.copy().addNameToEnd(name);
 		return new ProxyPage(name, this, host, getHostPort(), childPath);
 	}
 

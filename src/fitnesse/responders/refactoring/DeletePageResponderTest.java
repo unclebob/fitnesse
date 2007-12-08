@@ -2,10 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
-import fitnesse.*;
-import fitnesse.http.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderTestCase;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 import java.util.List;
 
@@ -15,7 +20,7 @@ public class DeletePageResponderTest extends ResponderTestCase
 	final WikiPagePath level1Path = PathParser.parse(level1Name);
 	final String level2Name = "LevelTwo";
 	final WikiPagePath level2Path = PathParser.parse(level2Name);
-	final WikiPagePath level2FullPath = level1Path.copy().addName(level2Name);
+	final WikiPagePath level2FullPath = level1Path.copy().addNameToEnd(level2Name);
 	final String qualifiedLevel2Name = PathParser.render(level2FullPath);
 
 	public void setUp() throws Exception

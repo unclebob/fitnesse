@@ -60,7 +60,7 @@ public class PathParser
 		{
 			String pageName = names[i];
 			if(nameIsValid(pageName))
-				path.addName(pageName);
+				path.addNameToEnd(pageName);
 			else
 				return null;
 		}

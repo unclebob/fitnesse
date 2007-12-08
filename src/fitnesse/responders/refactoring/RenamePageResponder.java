@@ -88,8 +88,8 @@ public class RenamePageResponder implements SecureResponder
 			renameReferences();
 		renamePage();
 
-		pathToRename.pop();
-		pathToRename.addName(newName);
+		pathToRename.removeNameFromEnd();
+		pathToRename.addNameToEnd(newName);
 		return PathParser.render(pathToRename);
 	}
 

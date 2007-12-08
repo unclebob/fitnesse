@@ -1,13 +1,18 @@
 package fitnesse.responders;
 
 import fitnesse.components.FitNesseTraversalListener;
-import fitnesse.http.*;
+import fitnesse.http.RequestBuilder;
+import fitnesse.http.ResponseParser;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 
-import java.net.*;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListener
 {
@@ -98,9 +103,9 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 		{
 			pageCatalog.remove(relativePath(childPage));
 		}
-		remotePath.addName(childPage.getName());
-		relativePath.addName(childPage.getName());
-		localPath.addName(childPage.getName());
+		remotePath.addNameToEnd(childPage.getName());
+		relativePath.addNameToEnd(childPage.getName());
+		localPath.addNameToEnd(childPage.getName());
 
 		PageData data = childPage.getData();
 		WikiPageProperties props = data.getProperties();
@@ -183,9 +188,9 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	public void exitPage()
 	{
-		remotePath.pop();
-		relativePath.pop();
-		localPath.pop();
+		remotePath.removeNameFromEnd();
+		relativePath.removeNameFromEnd();
+		localPath.removeNameFromEnd();
 	}
 
 	public Document getPageTree() throws Exception
