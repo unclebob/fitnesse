@@ -12,18 +12,26 @@ public class WikiPagePropertiesTest extends RegexTestCase
 {
 	private WikiPageProperties properties;
 
-	static String endl = System.getProperty("line.separator");
-	static String sampleXml = "<?xml version=\"1.0\"?>" + endl +
+	static String endl = System.getProperty("line.separator"),
+	              tab  = "\t";
+	static String sampleXml =
+		"<?xml version=\"1.0\"?>" + endl +
 		"<properties>" + endl +
-		"\t<Edit/>" + endl +
-		"\t<ParentOne>" + endl +
-		"\t\t<ChildOne>child one value</ChildOne>" + endl +
-		"\t</ParentOne>" + endl +
-		"\t<ParentTwo value=\"parent 2 value\">" + endl +
-		"\t\t<ChildTwo>child two value</ChildTwo>" + endl +
-		"\t</ParentTwo>" + endl +
-		"\t<Test/>" + endl +
-		"\t<VirtualWiki>http://someurl</VirtualWiki>" + endl +
+		tab + "<Edit/>" + endl +
+		tab + "<ParentOne>" + endl +
+		tab + tab + "<ChildOne>child one value</ChildOne>" + endl +
+		tab + "</ParentOne>" + endl +
+		tab + "<ParentTwo value=\"parent 2 value\">" + endl +
+		tab + tab + "<ChildTwo>child two value</ChildTwo>" + endl +
+		tab + "</ParentTwo>" + endl +
+		tab + "<SymbolicLinks>" + endl +
+		tab + tab + "<BackLink>&lt;BackWard.SymLink</BackLink>" + endl +
+		tab + tab + "<RelLink>RelaTive.SymLink</RelLink>" + endl +
+		tab + tab + "<AbsLink>.AbsoLute.SymLink</AbsLink>" + endl +
+		tab + tab + "<SubLink>&gt;SubChild.SymLink</SubLink>" + endl +
+		tab + "</SymbolicLinks>" + endl +
+		tab + "<Test/>" + endl +
+		tab + "<VirtualWiki>http://someurl</VirtualWiki>" + endl +
 		"</properties>" + endl;
 
 	public void setUp() throws Exception
@@ -50,6 +58,12 @@ public class WikiPagePropertiesTest extends RegexTestCase
 		WikiPageProperty parentTwo = properties.getProperty("ParentTwo");
 		assertEquals("parent 2 value", parentTwo.getValue());
 		assertEquals("child two value", parentTwo.get("ChildTwo"));
+		
+		WikiPageProperty symbolics = properties.getProperty("SymbolicLinks");
+		assertEquals("<BackWard.SymLink", symbolics.get("BackLink"));
+		assertEquals("RelaTive.SymLink", symbolics.get("RelLink"));
+		assertEquals(".AbsoLute.SymLink", symbolics.get("AbsLink"));
+		assertEquals(">SubChild.SymLink", symbolics.get("SubLink"));
 	}
 
 	public void testSave() throws Exception

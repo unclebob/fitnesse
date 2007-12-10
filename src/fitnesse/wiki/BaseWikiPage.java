@@ -95,11 +95,11 @@ public abstract class BaseWikiPage implements WikiPage
 		return null;
 	}
 
-	private WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws Exception
+	protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws Exception
 	{
 		WikiPagePath path = PathParser.parse(linkPath);
-		PageCrawler crawler = getPageCrawler();
-		WikiPage page = crawler.getPage(crawler.getRoot(this), path);
+		WikiPage start = (path.isRelativePath())? getParent() : this;  //TODO -AcD- a better way?
+		WikiPage page = getPageCrawler().getPage(start, path);
 		if(page != null)
 			page = new SymbolicPage(linkName, page, this);
 		return page;

@@ -8,6 +8,7 @@ import fitnesse.html.*;
 import fitnesse.http.*;
 import fitnesse.responders.*;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
 
 import java.util.*;
 
@@ -102,7 +103,6 @@ public class PropertiesResponder implements SecureResponder
 
 		HtmlTag trisection = new HtmlTag("div");
 		trisection.addAttribute("style", "width:100%");
-		//trisection.addAttribute("style", "height: 200px");
 		trisection.add(makeTestActionCheckboxesHtml(pageData));
 		trisection.add(makeNavigationCheckboxesHtml(pageData));
 		trisection.add(makeSecurityCheckboxesHtml(pageData));
@@ -117,8 +117,6 @@ public class PropertiesResponder implements SecureResponder
 		saveButton.addAttribute("accesskey", "s");
 		buttonSection.add(saveButton);
 		form.add(buttonSection);
-		//form.add(HtmlUtil.BR);
-		//form.add(saveButton);
 		return form;
 	}
 
@@ -147,7 +145,7 @@ public class PropertiesResponder implements SecureResponder
 		form.add(HtmlUtil.BR);
 		form.add("Remote Wiki URL:");
 		HtmlTag remoteUrlField = HtmlUtil.makeInputTag("text", "remoteUrl");
-		remoteUrlField.addAttribute("size", "40");
+		remoteUrlField.addAttribute("size", "70");
 		form.add(remoteUrlField);
 		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("checkbox", "autoUpdate", "0"));
@@ -201,6 +199,7 @@ public class PropertiesResponder implements SecureResponder
 		form.add(new HtmlTag("strong", "Symbolic Links"));
 
 		HtmlTableListingBuilder table = new HtmlTableListingBuilder();
+		table.getTable().addAttribute("style", "width:80%");
 		table.addRow(new HtmlElement[]{new HtmlTag("strong", "Name"), new HtmlTag("strong", "Path to Page"), new HtmlTag("strong", "Action")});
 		addSymbolicLinkRows(table);
 		addFormRow(table);
@@ -212,9 +211,11 @@ public class PropertiesResponder implements SecureResponder
 	private void addFormRow(HtmlTableListingBuilder table) throws Exception
 	{
 		HtmlTag nameInput = HtmlUtil.makeInputTag("text", "linkName");
+		nameInput.addAttribute("size", "25%");
 		HtmlTag pathInput = HtmlUtil.makeInputTag("text", "linkPath");
-		pathInput.addAttribute("size", "40");
-		HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "submit", "Create Symbolic Link");
+		pathInput.addAttribute("size", "75%");
+		HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "submit", "Create/Replace");
+		submitButton.addAttribute("style", "width:8em");
 		table.addRow(new HtmlElement[]{nameInput, pathInput, submitButton});
 	}
 
@@ -229,17 +230,31 @@ public class PropertiesResponder implements SecureResponder
 			String linkName = (String) iterator.next();
 			HtmlElement nameItem = new RawHtml(linkName);
 			HtmlElement pathItem = makeHtmlForSymbolicPath(symLinksProperty, linkName);
-			HtmlTag actionItem = HtmlUtil.makeLink(resource + "?responder=symlink&removal=" + linkName, "remove");
+			HtmlTag actionItem = HtmlUtil.makeLink(resource + "?responder=symlink&removal=" + linkName, "Remove");
 			table.addRow(new HtmlElement[]{nameItem, pathItem, actionItem});
 		}
 	}
 
-	private HtmlElement makeHtmlForSymbolicPath(WikiPageProperty symLinksProperty, String linkName)
+	private HtmlElement makeHtmlForSymbolicPath(WikiPageProperty symLinksProperty, String linkName) throws Exception
 	{
 		String linkPath = symLinksProperty.get(linkName);
 		WikiPagePath wikiPagePath = PathParser.parse(linkPath);
+		
 		if(wikiPagePath != null)
-			return HtmlUtil.makeLink(PathParser.render(wikiPagePath), PathParser.render(wikiPagePath));
+		{
+			WikiPage parent = wikiPagePath.isRelativePath()? page.getParent() : page; // TODO -AcD- a better way?
+			PageCrawler crawler = parent.getPageCrawler();
+			WikiPage target = crawler.getPage(parent, wikiPagePath);
+			WikiPagePath fullPath;
+			if (target != null)
+			{
+				fullPath = crawler.getFullPath(target);
+				fullPath.makeAbsolute();
+			}
+			else
+				fullPath = new WikiPagePath();
+			return HtmlUtil.makeLink(fullPath.toString(), Utils.escapeText(linkPath));
+		}
 		else
 			return new RawHtml(linkPath);
 	}

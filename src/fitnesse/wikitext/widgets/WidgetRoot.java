@@ -95,11 +95,10 @@ public class WidgetRoot extends ParentWidget
 	public String getVariable(String key) throws Exception
 	{
 		String value = (String) variables.get(key);
-      if (key.equals("PAGE_NAME")) value = page.getName();
+      if (key.equals("PAGE_NAME"))  value = page.getName();
       else if (key.equals("PAGE_PATH"))
-      {  String parenName = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
-         value = parenName.substring(1, parenName.length() - 1);
-      }
+      	value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
+      
 		WikiPage page = getWikiPage();
 		while(value == null && !page.getPageCrawler().isRoot(page))
 		{

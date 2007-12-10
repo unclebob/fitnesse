@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import fitnesse.components.XmlWriter;
 import fitnesse.util.XmlUtil;
+import fitnesse.wikitext.Utils;
+
 import org.w3c.dom.*;
 
 import java.io.*;
@@ -123,7 +125,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 			}
 		}
 		else if(value != null)
-			element.appendChild(document.createTextNode(value));
+			element.appendChild(document.createTextNode(Utils.escapeText(value)));
 
 		parent.appendChild(element);
 	}

@@ -11,15 +11,18 @@ import fitnesse.wiki.*;
 public class SymbolicLinkResponderTest extends RegexTestCase
 {
 	private WikiPage root;
-	private WikiPage pageOne;
+	private WikiPage pageOne, pageTwo, childTwo;
 	private MockRequest request;
 	private Responder responder;
 
 	public void setUp() throws Exception
 	{
-		root = InMemoryPage.makeRoot("RooT");
-		pageOne = root.addChildPage("PageOne");
-		root.addChildPage("PageTwo");
+		root = InMemoryPage.makeRoot("RooT");          //#  root
+		pageOne  = root.addChildPage("PageOne");       //#    |--PageOne
+		           pageOne.addChildPage("ChildOne");   //#    |    `--ChildOne
+		pageTwo  = root.addChildPage("PageTwo");       //#    `--PageTwo  
+		childTwo = pageTwo.addChildPage("ChildTwo");   //#         |--ChildTwo
+		           pageTwo.addChildPage("ChildThree"); //#         `--ChildThree
 
 		request = new MockRequest();
 		request.setResource("PageOne");
@@ -37,9 +40,89 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 		request.addInput("linkPath", "PageTwo");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 
-		checkRedirectToProperties(response);
+		checkPageOneRedirectToProperties(response);
 
 		WikiPage symLink = pageOne.getChildPage("SymLink");
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+	}
+
+	public void testSubmitGoodFormToSiblingChild() throws Exception
+	{
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", "PageTwo.ChildTwo");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkPageOneRedirectToProperties(response);
+
+		WikiPage symLink = pageOne.getChildPage("SymLink");
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+	}
+
+	public void testSubmitGoodFormToChildSibling() throws Exception
+	{
+		request.setResource("PageTwo.ChildTwo");
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", "ChildThree");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkChildTwoRedirectToProperties(response);
+
+		WikiPage symLink = childTwo.getChildPage("SymLink");
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+	}
+
+	public void testSubmitGoodFormToAbsolutePath() throws Exception
+	{
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", ".PageTwo");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkPageOneRedirectToProperties(response);
+
+		WikiPage symLink = pageOne.getChildPage("SymLink");
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+	}
+
+	public void testSubmitGoodFormToSubChild() throws Exception
+	{
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", ">ChildOne");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkPageOneRedirectToProperties(response);
+
+		SymbolicPage symLink = (SymbolicPage)(pageOne.getChildPage("SymLink"));
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+	}
+
+	public void testSubmitGoodFormToSibling() throws Exception
+	{
+		request.addInput("linkName", "SymTwo");
+		request.addInput("linkPath", "PageTwo");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkPageOneRedirectToProperties(response);
+
+		WikiPage symLink = pageOne.getChildPage("SymTwo");
+		assertNotNull(symLink);
+		assertEquals(SymbolicPage.class, symLink.getClass());
+	}
+
+	public void testSubmitGoodFormToBackwardRelative() throws Exception
+	{
+		request.setResource("PageTwo.ChildTwo");
+		request.addInput("linkName", "SymLink");
+		request.addInput("linkPath", "<PageTwo.ChildThree");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+
+		checkChildTwoRedirectToProperties(response);
+
+		WikiPage symLink = childTwo.getChildPage("SymLink");
 		assertNotNull(symLink);
 		assertEquals(SymbolicPage.class, symLink.getClass());
 	}
@@ -54,7 +137,7 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 
 		request.addInput("removal", "SymLink");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
-		checkRedirectToProperties(response);
+		checkPageOneRedirectToProperties(response);
 
 		assertNull(pageOne.getChildPage("SymLink"));
 	}
@@ -93,7 +176,7 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 		request.addInput("linkPath", "file://testDir/ExternalRoot");
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 
-		checkRedirectToProperties(response);
+		checkPageOneRedirectToProperties(response);
 
 		WikiPage symLink = pageOne.getChildPage("SymLink");
 		assertNotNull(symLink);
@@ -116,9 +199,15 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 		assertSubString("Error Occured", content);
 	}
 
-	private void checkRedirectToProperties(Response response)
+	private void checkPageOneRedirectToProperties(Response response)
 	{
 		assertEquals(303, response.getStatus());
 		assertEquals(response.getHeader("Location"), "PageOne?properties");
+	}
+
+	private void checkChildTwoRedirectToProperties(Response response)
+	{
+		assertEquals(303, response.getStatus());
+		assertEquals(response.getHeader("Location"), "PageTwo.ChildTwo?properties");
 	}
 }

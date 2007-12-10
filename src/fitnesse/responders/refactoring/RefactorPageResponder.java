@@ -74,7 +74,9 @@ public class RefactorPageResponder implements SecureResponder
 		HtmlTag form = HtmlUtil.makeFormTag("get", resource);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "movePage"));
 		form.add("New Location: ");
-		form.add(HtmlUtil.makeInputTag("text", "newLocation", ""));
+		HtmlTag input = HtmlUtil.makeInputTag("text", "newLocation", "");
+		input.addAttribute("size", "80");
+		form.add(input);
 		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("checkbox", "refactorReferences"));
 		form.add(" - Find all references to this page and change them accordingly (May take several minutes)");
@@ -97,7 +99,10 @@ public class RefactorPageResponder implements SecureResponder
 		HtmlTag form = HtmlUtil.makeFormTag("get", resource);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "renamePage"));
 		form.add("  New Name: ");
-		form.add(HtmlUtil.makeInputTag("text", "newName", ""));
+		//form.add(HtmlUtil.makeInputTag("text", "newName", ""));
+		HtmlTag input = HtmlUtil.makeInputTag("text", "newName", "");
+		input.addAttribute("size", "50");
+		form.add(input);
 		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("checkbox", "refactorReferences"));
 		form.add(" - Find all references to this page and change them accordingly (May take several minutes)");

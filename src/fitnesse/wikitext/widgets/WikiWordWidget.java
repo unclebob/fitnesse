@@ -204,7 +204,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 		return expandPrefix(wikiPage, theWord);
 	}
 
-	static String expandPrefix(WikiPage wikiPage, String theWord) throws Exception
+	public static String expandPrefix(WikiPage wikiPage, String theWord) throws Exception
 	{
 		PageCrawler crawler = wikiPage.getPageCrawler();
 		if(theWord.charAt(0) == '^' || theWord.charAt(0) == '>')

@@ -116,7 +116,7 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 		if(mode == ABSOLUTE) prefix = ".";
 		else if(mode == SUB_PAGE) prefix = ">";
 		else if(mode == BACKWARD_SEARCH) prefix = "<";
-		return "(" + prefix + StringUtil.join(names, ".") + ")";
+		return prefix + StringUtil.join(names, ".");
 	}
 
 	public void removeNameFromEnd()
@@ -231,6 +231,11 @@ public class WikiPagePath implements Comparable, Cloneable, Serializable
 	public void setPathMode(Mode mode)
 	{
 		this.mode = mode;
+	}
+
+	public boolean isRelativePath()
+	{
+		return mode == RELATIVE;
 	}
 
 	public boolean isSubPagePath()

@@ -6,6 +6,8 @@ import fitnesse.*;
 import fitnesse.http.*;
 import fitnesse.responders.*;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 import java.io.File;
 
@@ -15,13 +17,14 @@ public class SymbolicLinkResponder implements Responder
 	private String resource;
 	private PageCrawler crawler;
 	private FitNesseContext context;
+	private WikiPage page;
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
 		resource = request.getResource();
 		this.context = context;
 		crawler = context.root.getPageCrawler();
-		WikiPage page = crawler.getPage(context.root, PathParser.parse(resource));
+		page = crawler.getPage(context.root, PathParser.parse(resource));
 		if(page == null)
 			return new NotFoundResponder().makeResponse(context, request);
 
@@ -68,7 +71,7 @@ public class SymbolicLinkResponder implements Responder
 		}
 		else if(!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath))
 		{
-			response = new ErrorResponder("The page to which you are attempting to link, " + linkPath + ", doesn't exist.").makeResponse(context, null);
+			response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeText(linkPath) + ", doesn't exist.").makeResponse(context, null);
 			response.setStatus(404);
 		}
 		else if(page.hasChildPage(linkName))
@@ -113,7 +116,10 @@ public class SymbolicLinkResponder implements Responder
 
 	private boolean isInternalPageThatDoesntExist(String linkPath) throws Exception
 	{
-		return !crawler.pageExists(context.root, PathParser.parse(linkPath));
+		String expandedPath = WikiWordWidget.expandPrefix(page, linkPath);
+		WikiPagePath path = PathParser.parse(expandedPath);
+		WikiPage start = path.isRelativePath()? page.getParent() : page; //TODO -AcD- a better way?
+		return !crawler.pageExists(start, path);
 	}
 
 	private WikiPageProperty getSymLinkProperty(WikiPageProperties properties)

@@ -172,26 +172,55 @@ public class PropertiesResponderTest extends RegexTestCase
 		getContentFromSimplePropertiesPage();
 
 		assertSubString("Symbolic Links", content);
-		assertSubString("<input type=\"hidden\" name=\"responder\" value=\"symlink\"/>", content);
-		assertSubString("<input type=\"text\" name=\"linkName\"/>", content);
+		assertSubString("<input type=\"hidden\" name=\"responder\" value=\"symlink\"", content);
+		assertSubString("<input type=\"text\" name=\"linkName\"", content);
 		assertSubString("<input type=\"text\" name=\"linkPath\"", content);
-		assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create Symbolic Link\"/>", content);
+		assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create/Replace\"", content);
 	}
 
 	public void testSymbolicLinkListing() throws Exception
 	{
 		WikiPage page = root.addChildPage("SomePage");
+		page.addChildPage("SomeChild");
+		WikiPage pageOne = root.addChildPage("PageOne"); //...page must exist!
+		pageOne.addChildPage("ChildOne");                //...page must exist!
+		
 		PageData data = page.getData();
 		WikiPageProperties props = data.getProperties();
 		WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
-		symProp.set("InternalPage", ".PageOne.ChildOne");
+		symProp.set("InternalAbsPage",  ".PageOne.ChildOne");
+		symProp.set("InternalRelPage",  "PageOne.ChildOne" );
+		symProp.set("InternalSubPage",  ">SomeChild"       );
 		symProp.set("ExternalPage", "file://some/page");
 		page.commit(data);
 
 		getPropertiesContentFromPage(page);
 
+		assertSubString("InternalAbsPage", content);
 		assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
+		assertSubString("InternalRelPage", content);
+		assertSubString("<a href=\".PageOne.ChildOne\">PageOne.ChildOne</a>", content);		
+		assertSubString("InternalSubPage", content);
+		assertSubString("<a href=\".SomePage.SomeChild\">&gt;SomeChild</a>", content);
 		assertSubString("<td>file://some/page</td>", content);
+	}
+
+	public void testSymbolicLinkListingForBackwardPath() throws Exception
+	{
+		WikiPage page  = root.addChildPage("SomePage");
+		WikiPage child = page.addChildPage("SomeChild");
+		page.addChildPage("OtherChild");
+		
+		PageData data = child.getData();
+		WikiPageProperties props = data.getProperties();
+		WikiPageProperty symProp = props.set(SymbolicPage.PROPERTY_NAME);
+		symProp.set("InternalBackPage", "<SomePage.OtherChild");
+		page.commit(data);
+
+		getPropertiesContentFromPage(page);
+      
+		assertSubString("InternalBackPage", content);
+		assertSubString("<a href=\".SomePage.OtherChild\">&lt;SomePage.OtherChild</a>", content);
 	}
 
 	public void testActionPropertiesHtml() throws Exception
