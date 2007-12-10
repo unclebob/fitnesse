@@ -1,3 +1,16 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests||23:25:37 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestSymbolicLinkBehavior||23:20:50 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestRemovingSymbolicLink||23:20:26 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingSubPageSymbolicLink||23:20:07 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingRelativeSymbolicLink||23:19:36 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingBackwardSymbolicLink||23:19:18 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingAbsoluteSymbolicLink||23:18:53 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateRelativeSymbolicLink||23:18:38 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateBackwardSymbolicLink||23:18:18 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateAbsoluteSymbolicLink||23:17:45 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateSubPageSymbolicLink||21:03:32 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingSymbolicLink||14:46:21 Sun, Dec 09, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateSymbolicLink||14:45:24 Sun, Dec 09, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp||09:56:19 Sat, Dec 08, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsIncludeWithHelp||18:04:36 Tue, Dec 04, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp.Child2Page||11:40:24 Tue, Dec 04, 2007|

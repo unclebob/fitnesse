@@ -1,15 +1,11 @@
 <?xml version="1.0"?>
 <properties>
-	<Edit>true</Edit>
-	<Files>true</Files>
-	<LastModified>20071209215620</LastModified>
-	<Properties>true</Properties>
-	<RecentChanges>true</RecentChanges>
-	<Refactor>true</Refactor>
-	<Search>true</Search>
-	<Test>true</Test>
-	<Versions>true</Versions>
-	<WhereUsed>true</WhereUsed>
+	<Files/>
+	<Help></Help>
+	<LastModified>20071209231853</LastModified>
+	<RecentChanges/>
+	<Suites></Suites>
+	<Test/>
 	<saveId>1197255380696</saveId>
 	<ticketId>-4394329366322317351</ticketId>
 </properties>

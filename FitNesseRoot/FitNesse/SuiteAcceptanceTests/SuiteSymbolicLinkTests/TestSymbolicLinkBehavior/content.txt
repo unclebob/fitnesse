@@ -1,6 +1,6 @@
 After a Symbolic Link is created, it is possible to view it as a normal page as well as it's children. 
 
-!include CreateSymbolicLink
+!include CreateRelativeSymbolicLink
 
 Now add a child on the linked page.
 !|Page creator.|
