@@ -63,14 +63,22 @@ public class SymbolicLinkResponder implements Responder
 		String linkToRename = (String)request.getInput("rename"),
 		       newName      = (String)request.getInput("newname");
 
-		PageData data = page.getData();
-		WikiPageProperties properties = data.getProperties();
-		WikiPageProperty symLinks = getSymLinkProperty(properties);
-		String currentPath = symLinks.get(linkToRename);
-		symLinks.remove(linkToRename);
-		symLinks.set(newName, currentPath);
-		page.commit(data);
-		setRedirect(resource);
+		if(page.hasChildPage(newName))
+		{
+			response = new ErrorResponder(resource + " already has a child named " + newName + ".").makeResponse(context, null);
+			response.setStatus(412);
+		}
+		else
+		{
+			PageData data = page.getData();
+			WikiPageProperties properties = data.getProperties();
+			WikiPageProperty symLinks = getSymLinkProperty(properties);
+			String currentPath = symLinks.get(linkToRename);
+			symLinks.remove(linkToRename);
+			symLinks.set(newName, currentPath);
+			page.commit(data);
+			setRedirect(resource);
+		}
 	}
 
 	private void addSymbolicLink(Request request, WikiPage page) throws Exception
