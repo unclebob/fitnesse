@@ -193,14 +193,20 @@ public class PropertiesResponder implements SecureResponder
 
 	private HtmlTag makeSymbolicLinkSection() throws Exception
 	{
-		HtmlTag form = HtmlUtil.makeFormTag("get", resource);
+		HtmlTag form = HtmlUtil.makeFormTag("get", resource, "symbolics");
 		form.add(HtmlUtil.HR);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "symlink"));
 		form.add(new HtmlTag("strong", "Symbolic Links"));
 
 		HtmlTableListingBuilder table = new HtmlTableListingBuilder();
 		table.getTable().addAttribute("style", "width:80%");
-		table.addRow(new HtmlElement[]{new HtmlTag("strong", "Name"), new HtmlTag("strong", "Path to Page"), new HtmlTag("strong", "Action")});
+		table.addRow(new HtmlElement[]
+		                 { new HtmlTag("strong", "Name")
+				 	        , new HtmlTag("strong", "Path to Page")
+				 	        , new HtmlTag("strong", "Actions")
+                       , new HtmlTag("strong", "New Name")
+		                 }
+		            );
 		addSymbolicLinkRows(table);
 		addFormRow(table);
 		form.add(table.getTable());
@@ -211,9 +217,9 @@ public class PropertiesResponder implements SecureResponder
 	private void addFormRow(HtmlTableListingBuilder table) throws Exception
 	{
 		HtmlTag nameInput = HtmlUtil.makeInputTag("text", "linkName");
-		nameInput.addAttribute("size", "25%");
+		nameInput.addAttribute("size", "16%");
 		HtmlTag pathInput = HtmlUtil.makeInputTag("text", "linkPath");
-		pathInput.addAttribute("size", "75%");
+		pathInput.addAttribute("size", "60%");
 		HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "submit", "Create/Replace");
 		submitButton.addAttribute("style", "width:8em");
 		table.addRow(new HtmlElement[]{nameInput, pathInput, submitButton});
@@ -230,8 +236,15 @@ public class PropertiesResponder implements SecureResponder
 			String linkName = (String) iterator.next();
 			HtmlElement nameItem = new RawHtml(linkName);
 			HtmlElement pathItem = makeHtmlForSymbolicPath(symLinksProperty, linkName);
-			HtmlTag actionItem = HtmlUtil.makeLink(resource + "?responder=symlink&removal=" + linkName, "Remove");
-			table.addRow(new HtmlElement[]{nameItem, pathItem, actionItem});
+			//---Unlink---
+			HtmlTag actionItems = HtmlUtil.makeLink(resource + "?responder=symlink&removal=" + linkName, "Unlink&nbsp;");
+			//---Rename---
+			String callScript = "javascript:symbolicLinkRename('" + linkName + "','" + resource + "');";
+			actionItems.tail = HtmlUtil.makeLink(callScript, "&nbsp;Rename:").html(); //..."linked list"
+			
+			HtmlTag newNameInput = HtmlUtil.makeInputTag("text", linkName);
+			newNameInput.addAttribute("size", "16%");
+			table.addRow(new HtmlElement[]{nameItem, pathItem, actionItems, newNameInput});
 		}
 	}
 

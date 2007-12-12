@@ -142,6 +142,22 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 		assertNull(pageOne.getChildPage("SymLink"));
 	}
 
+	public void testRename() throws Exception
+	{
+		PageData data = pageOne.getData();
+		WikiPageProperty symLinks = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
+		symLinks.set("SymLink", "PageTwo");
+		pageOne.commit(data);
+		assertNotNull(pageOne.getChildPage("SymLink"));
+
+		request.addInput("rename", "SymLink");
+		request.addInput("newname", "NewLink");
+		Response response = responder.makeResponse(new FitNesseContext(root), request);
+		checkPageOneRedirectToProperties(response);
+
+		assertNotNull(pageOne.getChildPage("NewLink"));
+	}
+
 	public void testNoPageAtPath() throws Exception
 	{
 		request.addInput("linkName", "SymLink");

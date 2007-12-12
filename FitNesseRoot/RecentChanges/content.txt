@@ -1,6 +1,9 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingNestedBackSymbolicLink||15:35:28 Wed, Dec 12, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateNestedBackSymbolicLink||15:34:58 Wed, Dec 12, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestRenameSymbolicLink||12:28:54 Wed, Dec 12, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestRemovingSymbolicLink||11:40:10 Wed, Dec 12, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests||23:25:37 Sun, Dec 09, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestSymbolicLinkBehavior||23:20:50 Sun, Dec 09, 2007|
-|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestRemovingSymbolicLink||23:20:26 Sun, Dec 09, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingSubPageSymbolicLink||23:20:07 Sun, Dec 09, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingRelativeSymbolicLink||23:19:36 Sun, Dec 09, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingBackwardSymbolicLink||23:19:18 Sun, Dec 09, 2007|

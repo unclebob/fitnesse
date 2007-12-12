@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 <properties>
 	<Files/>
+	<Help></Help>
 	<LastModified>20071212153528</LastModified>
-	<Properties/>
 	<RecentChanges/>
-	<Refactor/>
-	<Search/>
-	<Suites/>
-	<Versions/>
-	<WhereUsed/>
-	<ticketId>3344763437588684910</ticketId>
+	<Suites></Suites>
+	<Test/>
+	<saveId>1197318177000</saveId>
+	<ticketId>-8309724017985931211</ticketId>
 </properties>

@@ -48,9 +48,14 @@ public class HtmlUtil {
   }
 
   public static HtmlTag makeFormTag(String method, String action) {
+	  return makeFormTag(method, action, null);
+  }
+  
+  public static HtmlTag makeFormTag(String method, String action, String name) {
     HtmlTag formTag = new HtmlTag("form");
     formTag.addAttribute("method", method);
     formTag.addAttribute("action", action);
+    if (name != null)  formTag.addAttribute("name", name);
     return formTag;
   }
 

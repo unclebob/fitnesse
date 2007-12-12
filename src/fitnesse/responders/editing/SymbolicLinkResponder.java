@@ -29,8 +29,10 @@ public class SymbolicLinkResponder implements Responder
 			return new NotFoundResponder().makeResponse(context, request);
 
 		response = new SimpleResponse();
-		if(request.hasInput("removal"))
+		if (request.hasInput("removal"))
 			removeSymbolicLink(request, page);
+		else if (request.hasInput("rename"))
+			renameSymbolicLink(request, page);
 		else
 			addSymbolicLink(request, page);
 
@@ -52,6 +54,21 @@ public class SymbolicLinkResponder implements Responder
 		symLinks.remove(linkToRemove);
 		if(symLinks.keySet().size() == 0)
 			properties.remove(SymbolicPage.PROPERTY_NAME);
+		page.commit(data);
+		setRedirect(resource);
+	}
+
+	private void renameSymbolicLink(Request request, WikiPage page) throws Exception
+	{
+		String linkToRename = (String)request.getInput("rename"),
+		       newName      = (String)request.getInput("newname");
+
+		PageData data = page.getData();
+		WikiPageProperties properties = data.getProperties();
+		WikiPageProperty symLinks = getSymLinkProperty(properties);
+		String currentPath = symLinks.get(linkToRename);
+		symLinks.remove(linkToRename);
+		symLinks.set(newName, currentPath);
 		page.commit(data);
 		setRedirect(resource);
 	}

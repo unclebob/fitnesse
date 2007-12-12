@@ -196,12 +196,19 @@ public class PropertiesResponderTest extends RegexTestCase
 
 		getPropertiesContentFromPage(page);
 
-		assertSubString("InternalAbsPage", content);
+		assertSubString("<td>InternalAbsPage</td>", content);
+		assertSubString("<input type=\"text\" name=\"InternalAbsPage\"", content);
 		assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
-		assertSubString("InternalRelPage", content);
-		assertSubString("<a href=\".PageOne.ChildOne\">PageOne.ChildOne</a>", content);		
-		assertSubString("InternalSubPage", content);
+		assertMatches("<a href=\".*\">&nbsp;Rename:</a>", content);
+		
+		assertSubString("<td>InternalRelPage</td>", content);
+		assertSubString("<input type=\"text\" name=\"InternalRelPage\"", content);
+		assertSubString("<a href=\".PageOne.ChildOne\">PageOne.ChildOne</a>", content);
+		
+		assertSubString("<td>InternalSubPage</td>", content);
+		assertSubString("<input type=\"text\" name=\"InternalSubPage\"", content);
 		assertSubString("<a href=\".SomePage.SomeChild\">&gt;SomeChild</a>", content);
+		
 		assertSubString("<td>file://some/page</td>", content);
 	}
 
