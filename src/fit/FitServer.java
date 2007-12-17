@@ -177,7 +177,7 @@ public class FitServer
 		{
 			String errorMessage = FitProtocol.readDocument(socketReader, statusSize);
 			print("...failed because: " + errorMessage + "\n");
-			System.out.println("An error occured while connecting to client.");
+			System.out.println("An error occurred while connecting to client.");
 			System.out.println(errorMessage);
 			System.exit(-1);
 		}
