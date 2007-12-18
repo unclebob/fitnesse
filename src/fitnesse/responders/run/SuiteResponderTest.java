@@ -131,6 +131,24 @@ public class SuiteResponderTest extends RegexTestCase
 		assertSubString("FailFixture", results);
 	}
 
+	public void testWithPrunedPage () throws Exception
+	{
+		WikiPage pageTwo = addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
+		PageData data = pageTwo.getData();
+		data.setAttribute("Prune");
+		pageTwo.commit(data);
+		String results = runSuite();
+
+		assertSubString("href=\"#TestOne\"", results);
+		assertNotSubString("href=\"#TestTwo\"", results);
+		assertSubString("1 right", results);
+		assertSubString("0 wrong", results);
+		assertSubString("id=\"TestOne\"", results);
+		assertNotSubString("id=\"TestTwo\"", results);
+		assertSubString("PassFixture", results);
+		assertNotSubString("FailFixture", results);
+	}
+	
 	public void testSuiteWithEmptyPage() throws Exception
 	{
 		suite = crawler.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");

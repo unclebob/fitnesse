@@ -373,7 +373,7 @@ public class TOCWidgetTest extends WidgetTestCase
 	//
    public void testWithGreatGrandchildrenRegracedProp() throws Exception
    {
-   	setProperties(child1P2, new String[]{"Suite"});
+   	setProperties(child1P2, new String[]{"Suite","Prune"});
    	setProperties(child2P2, new String[]{"Suite","Test","WikiImport"});
       setProperties(addGrandChild(parent2, "Child1Page"), new String[]{"Test"});
       setProperties(addGreatGrandChild(parent2, "Child1Page"), new String[]{"Suite","Test"});
@@ -416,7 +416,7 @@ public class TOCWidgetTest extends WidgetTestCase
          "<div class=\"toc1\">" + endl +
             "\t<ul>" + endl +
             "\t\t<li>" + endl +
-            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page *</a>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page *-</a>" + endl +
             "\t\t</li>" + endl +
             "\t\t<li>" + endl +
             "\t\t\t<a href=\"ParenT2.Child2Page\">Child 2 Page *+@</a>" + endl +
@@ -449,7 +449,7 @@ public class TOCWidgetTest extends WidgetTestCase
          "<div class=\"toc1\">" + endl +
             "\t<ul>" + endl +
             "\t\t<li>" + endl +
-            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page *</a>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page *-</a>" + endl +
             "\t\t\t<div class=\"toc2\">" + endl +
             "\t\t\t\t<ul>" + endl +
             "\t\t\t\t\t<li>" + endl +
@@ -489,7 +489,7 @@ public class TOCWidgetTest extends WidgetTestCase
          "<div class=\"toc1\">" + endl +
             "\t<ul>" + endl +
             "\t\t<li>" + endl +
-            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page #</a>" + endl +
+            "\t\t\t<a href=\"ParenT2.Child1Page\">Child 1 Page #-</a>" + endl +
             "\t\t\t<div class=\"toc2\">" + endl +
             "\t\t\t\t<ul>" + endl +
             "\t\t\t\t\t<li>" + endl +

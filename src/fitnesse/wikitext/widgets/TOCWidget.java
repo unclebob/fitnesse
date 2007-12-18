@@ -23,7 +23,7 @@ public class TOCWidget extends WikiWidget
    public static final String HELP_PREFIX_TOC		= "HELP_PREFIX_TOC";
    
    public static final String MORE_SUFFIX_DEFAULT  = " ...";
-   public static final String PROP_CHAR_DEFAULT 	= "*+@>";
+   public static final String PROP_CHAR_DEFAULT 	= "*+@>-";
    public static final String HELP_PREFIX_DEFAULT 	= ": ";
    
    public String   moreSuffix         = MORE_SUFFIX_DEFAULT;
@@ -212,10 +212,12 @@ public class TOCWidget extends WikiWidget
 			PageData data = wikiPage.getData();
 			WikiPageProperties props = data.getProperties();
 			
-			if (props.has("Suite"))        propText.append(propertyCharacters.charAt(0));
-			if (props.has("Test"))         propText.append(propertyCharacters.charAt(1));
-			if (props.has("WikiImport"))   propText.append(propertyCharacters.charAt(2));
-			if (isSymbolic(wikiPage))      propText.append(propertyCharacters.charAt(3));
+			if (props.has("Suite"))       propText.append(propertyCharacters.charAt(0));
+			if (props.has("Test"))        propText.append(propertyCharacters.charAt(1));
+			if (props.has("WikiImport"))  propText.append(propertyCharacters.charAt(2));
+			if (isSymbolic(wikiPage))     propText.append(propertyCharacters.charAt(3));
+			//...try to keep the following property last in the list!
+			if (props.has("Prune"))       propText.append(propertyCharacters.charAt(4));
 		}
 		
 		return (propText.length() > 0)? " " + propText.toString() : ""; 

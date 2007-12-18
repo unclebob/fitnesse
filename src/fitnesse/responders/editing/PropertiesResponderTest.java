@@ -56,6 +56,7 @@ public class PropertiesResponderTest extends RegexTestCase
 		assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/>", content);
 		assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/>", content);
 		assertSubString("<input type=\"checkbox\" name=\"Suite\"/>", content);
+		assertSubString("<input type=\"checkbox\" name=\"Prune\"/>", content);
 		assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/>", content);
 		assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/>", content);
 		assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/>", content);
@@ -255,6 +256,7 @@ public class PropertiesResponderTest extends RegexTestCase
 		assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
 		assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
 		assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
+		assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Prune", html);
 	}
 
 	public void testMakeSecurityPropertiesHtml() throws Exception

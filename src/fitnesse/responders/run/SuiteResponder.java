@@ -199,24 +199,28 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 
 	private static void addTestPagesToList(List<WikiPage> testPages, WikiPage context, String suite) throws Exception
 	{
-		if(context.getData().hasAttribute("Test"))
+		PageData data = context.getData();
+		if (! data.hasAttribute(PageData.PropertyPRUNE))
 		{
-			if(belongsToSuite(context, suite))
+			if (data.hasAttribute("Test"))
 			{
-				testPages.add(context);
+				if(belongsToSuite(context, suite))
+				{
+					testPages.add(context);
+				}
+			}
+
+			ArrayList<WikiPage> children = new ArrayList<WikiPage>();
+			children.addAll(context.getChildren());
+			if(context.hasExtension(VirtualCouplingExtension.NAME))
+			{
+				VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(VirtualCouplingExtension.NAME);
+				children.addAll(extension.getVirtualCoupling().getChildren());
+			}
+			for (WikiPage page : children) {
+				addTestPagesToList(testPages, page, suite);
 			}
 		}
-
-		ArrayList<WikiPage> children = new ArrayList<WikiPage>();
-		children.addAll(context.getChildren());
-		if(context.hasExtension(VirtualCouplingExtension.NAME))
-		{
-			VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(VirtualCouplingExtension.NAME);
-			children.addAll(extension.getVirtualCoupling().getChildren());
-		}
-    for (WikiPage page : children) {
-      addTestPagesToList(testPages, page, suite);
-    }
   }
 
 	private static boolean belongsToSuite(WikiPage context, String suite)

@@ -25,6 +25,7 @@ public class PageData implements Serializable
 													 }             );
 
 	public static final String PropertyHELP      = "Help";
+	public static final String PropertyPRUNE     = "Prune";
 	//TODO -AcD: refactor add other properties such as "Edit", "Suite", "Test", ...
 	public static final String PropertySUITES    = "Suites";
 	

@@ -57,7 +57,7 @@ public abstract class BaseWikiPage implements WikiPage
 			{
 				String linkName = (String) iterator.next();
 				WikiPage page = createSymbolicPage(symLinksProperty, linkName);
-				if(page != null)
+				if (page != null && !children.contains(page))
 					children.add(page);
 			}
 		}

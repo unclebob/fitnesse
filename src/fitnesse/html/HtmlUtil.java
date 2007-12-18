@@ -5,8 +5,10 @@ package fitnesse.html;
 import fitnesse.wiki.*;
 
 public class HtmlUtil {
-  public static HtmlElement BR = new RawHtml("<br/>");
-  public static HtmlElement HR = new RawHtml("<hr/>");
+  public static final String BRtag = "<br/>";
+  public static final String HRtag = "<hr/>";
+  public static HtmlElement BR = new RawHtml(BRtag);
+  public static HtmlElement HR = new RawHtml(HRtag);
   public static HtmlElement NBSP = new RawHtml("&nbsp;");
   public static HtmlElement P = new RawHtml("<p>");
   public static final boolean NO_NEW_WINDOW = false;
