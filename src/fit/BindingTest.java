@@ -42,6 +42,8 @@ public class BindingTest extends RegexTestCase
 		{
 			return intField;
 		}
+		public Integer integerField = new Integer(42);
+		public Integer integerMethodIsNull() { return integerField; }
 	}
 
 	public void testQueryBinding() throws Throwable
@@ -84,6 +86,18 @@ public class BindingTest extends RegexTestCase
 		assertEquals("999", Fixture.getSymbol("321"));
 	}
 
+	public void testSaveBindingWithNull() throws Throwable
+	{
+		Binding binding = Binding.create(fixture, "=integerMethodIsNull()");
+		fixture.integerField = null;
+		binding.doCell(fixture, cell1);
+		assertEquals("null", Fixture.getSymbol("123"));
+		assertSubString("123  = null", cell1.text());
+
+		binding.doCell(fixture, cell2);
+		assertEquals("null", Fixture.getSymbol("321"));
+	}
+
 	public void testRecallBinding() throws Throwable
 	{
 		Binding binding = Binding.create(fixture, "intField=");
@@ -93,6 +107,15 @@ public class BindingTest extends RegexTestCase
 
 		binding.doCell(fixture, cell3);
 		assertSubString("No such symbol: abc", cell3.text());
+	}
+	
+	// -AcD- Found this while testing with nulls
+	public void testRecallBindingWithNull() throws Throwable
+	{
+		Binding binding = Binding.create(fixture, "integerField=");
+		Fixture.setSymbol("123", null);
+		binding.doCell(fixture, cell1);
+		assertEquals(null, fixture.integerField);
 	}
 	
 	public void testRecallBindingSymbolTableText() throws Throwable

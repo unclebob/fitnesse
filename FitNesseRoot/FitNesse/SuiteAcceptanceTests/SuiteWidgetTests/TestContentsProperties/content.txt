@@ -19,7 +19,7 @@
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|<a href="ParentPage.FirstChild">FirstChild \*\+</a>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild @</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild @-</a>|true|
 
 !3 Indirect via PROPERTY_TOC Variable
 '''First create the parent page.'''
@@ -42,4 +42,4 @@
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|<a href="ParentPage.FirstChild">FirstChild \*\+</a>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild @</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild @-</a>|true|

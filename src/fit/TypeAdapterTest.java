@@ -83,6 +83,8 @@ public class TypeAdapterTest extends TestCase
         {
             return 3.141592653;
         }
+        
+        public Integer getNull() { return null; }
     }
 
     public void testBooleanTypeAdapter() throws Exception

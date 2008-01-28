@@ -6,5 +6,5 @@
     -g   ...show graceful names in the list--define REGRACE_TOC {true} for global;
     -h   ...show help property text--define HELP_TOC {true} for global;
     -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
-              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>)
-              define PROPERTY_CHARACTERS {*+@>} to change.}}}
+              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>), Pruned(-)
+              define PROPERTY_CHARACTERS {*+@>-} to change.}}}

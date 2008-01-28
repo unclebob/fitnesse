@@ -29,6 +29,7 @@ Ensure that the Navigation links are present
 |contents|<input type="checkbox" name="Files" checked="true"/> - Files|true|
 |contents|<input type="checkbox" name="RecentChanges" checked="true"/> - RecentChanges|true|
 |contents|<input type="checkbox" name="Search" checked="true"/> - Search|true|
+|contents|<input type="checkbox" name="Prune"/> - Prune|true|
 
 Ensure that the Security links are present
 !|Response Examiner.|

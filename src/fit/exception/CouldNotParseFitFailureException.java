@@ -7,6 +7,6 @@ public class CouldNotParseFitFailureException extends FitFailureException
 {
   public CouldNotParseFitFailureException(String text, String type)
   {
-    super("Could not parse: " + text + " expected type: " + type + ".");
+    super("Could not parse: " + text + ", expected type: " + type + ".");
   }
 }

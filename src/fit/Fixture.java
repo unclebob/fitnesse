@@ -376,12 +376,17 @@ public class Fixture
 
     public static void setSymbol(String name, Object value)
     {
-        symbols.put(name, value);
+        symbols.put(name, (value == null)? "null" : value);
     }
 
     public static Object getSymbol(String name)
     {
         return symbols.get(name);
+    }
+
+    public static boolean hasSymbol(String name)
+    {
+        return symbols.containsKey(name);
     }
 
     public static boolean hasParseMethod(Class type)
@@ -452,7 +457,7 @@ public class Fixture
         {
             try
             {
-                return typeAdapter.parse(cell.text());
+                return typeAdapter.isRegex? cell.text() : typeAdapter.parse(cell.text());
             }
             // Ignore parse exceptions, print non-parse exceptions,
             // return null so that compareCellToResult tries relational matching.

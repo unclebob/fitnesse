@@ -1,3 +1,12 @@
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteColumnFixtureSpec.TestSaveAndRecallSymbol||14:19:49 Mon, Jan 28, 2008|
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteColumnFixtureSpec||14:17:29 Mon, Jan 28, 2008|
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteColumnFixtureSpec.TestRegularExpressions||13:57:22 Mon, Jan 28, 2008|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsInclude||23:59:49 Mon, Dec 17, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsProperties||23:59:12 Mon, Dec 17, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsUsage||23:57:50 Mon, Dec 17, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestPrunedPageIsExcluded||23:26:48 Mon, Dec 17, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder||23:17:08 Mon, Dec 17, 2007|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuitePropertiesResponder.TestPropertyCheckboxesArePresent||23:14:22 Mon, Dec 17, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingNestedBackSymbolicLink||15:35:28 Wed, Dec 12, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateNestedBackSymbolicLink||15:34:58 Wed, Dec 12, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestRenameSymbolicLink||12:28:54 Wed, Dec 12, 2007|
@@ -19,7 +28,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp.Child2Page||11:40:24 Tue, Dec 04, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp.Child1Page||11:39:59 Tue, Dec 04, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsWithHelpTestsInclude||10:55:24 Tue, Dec 04, 2007|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsUsage||10:51:34 Tue, Dec 04, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestInclude||10:25:19 Tue, Dec 04, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests||15:58:45 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionRegracedPropertiesFilters||15:57:42 Fri, Nov 30, 2007|
@@ -29,11 +37,9 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionRegraced||15:48:24 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegracedProperties||15:48:02 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegraced||15:47:39 Fri, Nov 30, 2007|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsProperties||15:47:03 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionProperties||15:46:09 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsFilters||15:40:37 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegracedFilters||15:40:19 Fri, Nov 30, 2007|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsInclude||15:35:52 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionRegracedProperties||15:31:47 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursion||15:31:18 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||15:30:06 Fri, Nov 30, 2007|

@@ -39,7 +39,7 @@ public class FriendlyErrorTest extends TestCase
         };
     Parse page = FixtureTest.executeFixture(table);
     String colTwoResult = page.at(0,2,1).body;
-    assertTrue(colTwoResult.indexOf("Could not parse: alpha expected type: int") != -1);
+    assertTrue(colTwoResult.indexOf("Could not parse: alpha, expected type: int") != -1);
   }
 
   public void testExceptionInMethod() throws Exception

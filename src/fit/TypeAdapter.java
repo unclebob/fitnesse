@@ -14,6 +14,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 public class TypeAdapter
 {
@@ -22,6 +23,7 @@ public class TypeAdapter
     public Field field;
     public Method method;
     public Class type;
+    public boolean isRegex;
     private static Map<Class, TypeAdapter> PARSE_DELEGATES = new HashMap<Class, TypeAdapter>();
     // Factory //////////////////////////////////
 
@@ -42,9 +44,15 @@ public class TypeAdapter
 
     public static TypeAdapter on(Fixture fixture, Method method)
     {
+   	 return on(fixture, method, false);
+    }
+
+    public static TypeAdapter on(Fixture fixture, Method method, boolean isRegex)
+    {
         TypeAdapter a = on(fixture, method.getReturnType());
         a.target = fixture;
         a.method = method;
+        a.isRegex = isRegex;
         return a;
     }
 
@@ -90,7 +98,7 @@ public class TypeAdapter
     }
 
     public Object get() throws IllegalAccessException, InvocationTargetException
-    {
+    {   	 
         if (field != null)
         {
             return field.get(target);
@@ -116,16 +124,25 @@ public class TypeAdapter
 
     public Object parse(String s) throws Exception
     {
-        return fixture.parse(s, type);
+   	 Object obj;
+       obj =  isRegex? s : fixture.parse(s, type);
+       return obj;
     }
 
     public boolean equals(Object a, Object b)
     {
-        if (a == null)
-        {
-            return b == null;
-        }
-        return a.equals(b);
+   	 boolean isEqual = false;
+   	 
+   	 if (isRegex)
+    		 isEqual = Pattern.matches(a.toString(), b.toString());
+   	 else
+   	 {
+   		 if (a == null)
+   			 isEqual = (b == null);
+   		 else
+   			 isEqual = a.equals(b);
+   	 }
+   	 return isEqual;
     }
 
     public String toString(Object o)
@@ -186,7 +203,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Byte(Byte.parseByte(s));
+            return ("null".equals(s))? null : new Byte(Byte.parseByte(s));
         }
     }
 
@@ -202,7 +219,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Short(Short.parseShort(s));
+            return ("null".equals(s))? null : new Short(Short.parseShort(s));
         }
     }
 
@@ -218,7 +235,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Integer(Integer.parseInt(s));
+      	  return ("null".equals(s))? null : new Integer(Integer.parseInt(s));
         }
     }
 
@@ -234,7 +251,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Long(Long.parseLong(s));
+            return ("null".equals(s))? null : new Long(Long.parseLong(s));
         }
     }
 
@@ -247,7 +264,7 @@ public class TypeAdapter
 
         public Object parse(String s)
         {
-            return new Float(Float.parseFloat(s));
+            return ("null".equals(s))? null : new Float(Float.parseFloat(s));
         }
     }
 
@@ -255,7 +272,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Float(Float.parseFloat(s));
+            return ("null".equals(s))? null : new Float(Float.parseFloat(s));
         }
     }
 
@@ -276,7 +293,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Double(Double.parseDouble(s));
+      	  return ("null".equals(s))? null : new Double(Double.parseDouble(s));
         }
     }
 
@@ -292,7 +309,7 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            return new Character(s.charAt(0));
+            return ("null".equals(s))? null : new Character(s.charAt(0));
         }
     }
 
@@ -308,7 +325,8 @@ public class TypeAdapter
     {
         public Object parse(String s)
         {
-            String ls = s.toLowerCase();
+      	   if ("null".equals(s))  return null;
+      	   String ls = s.toLowerCase();
             if (ls.equals("true"))
                 return new Boolean(true);
             if (ls.equals("yes"))

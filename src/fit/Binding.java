@@ -9,6 +9,7 @@ import java.util.regex.*;
 
 public abstract class Binding
 {
+	private static Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");
 	private static Pattern methodPattern = Pattern.compile("(.+)(?:\\(\\)|\\?|!)");
 	private static Pattern fieldPattern = Pattern.compile("=?([^=]+)=?");
 
@@ -22,6 +23,8 @@ public abstract class Binding
 			binding = new SaveBinding();
 		else if(name.endsWith("="))
 			binding = new RecallBinding();
+		else if(regexMethodPattern.matcher(name).matches())
+			binding = new RegexQueryBinding();
 		else if(methodPattern.matcher(name).matches())
 			binding = new QueryBinding();
 		else if(fieldPattern.matcher(name).matches())
@@ -37,11 +40,17 @@ public abstract class Binding
 
 	private static TypeAdapter makeAdapter(Fixture fixture, String name) throws Throwable
 	{
-		Matcher matcher = methodPattern.matcher(name);
-		if(matcher.find())
-			return makeAdapterForMethod(name, fixture, matcher);
+		Matcher regexMatcher  = regexMethodPattern.matcher(name);
+		if (regexMatcher.find())
+			return makeAdapterForRegexMethod(name, fixture, regexMatcher);
 		else
-			return makeAdapterForField(name, fixture);
+		{
+			Matcher methodMatcher = methodPattern.matcher(name);
+			if (methodMatcher.find())
+				return makeAdapterForMethod(name, fixture, methodMatcher);
+			else
+				return makeAdapterForField(name, fixture);
+		}
 	}
 
 	private static TypeAdapter makeAdapterForField(String name, Fixture fixture)
@@ -73,6 +82,24 @@ public abstract class Binding
 
 	private static TypeAdapter makeAdapterForMethod(String name, Fixture fixture, Matcher matcher)
 	{
+		Method method = getMethod(name, fixture, matcher);
+		
+		if(method == null)
+			throw new NoSuchMethodFitFailureException(name);
+		return TypeAdapter.on(fixture, method, false);
+	}
+
+	private static TypeAdapter makeAdapterForRegexMethod(String name, Fixture fixture, Matcher matcher)
+	{
+		Method method = getMethod(name, fixture, matcher);
+		
+		if(method == null)
+			throw new NoSuchMethodFitFailureException(name);
+		return TypeAdapter.on(fixture, method, true);
+	}
+
+	private static Method getMethod(String name, Fixture fixture, Matcher matcher)
+	{
 		Method method = null;
 		if(GracefulNamer.isGracefulName(name))
 		{
@@ -90,10 +117,8 @@ public abstract class Binding
 			{
 			}
 		}
-
-		if(method == null)
-			throw new NoSuchMethodFitFailureException(name);
-		return TypeAdapter.on(fixture, method);
+		
+		return method;
 	}
 
 	private static Field findField(Fixture fixture, String simpleName)
@@ -139,7 +164,9 @@ public abstract class Binding
 				//TODO-MdM hmm... somehow this needs to regulated by the fixture.
 				if(fixture instanceof ColumnFixture)
 					((ColumnFixture) fixture).executeIfNeeded();
-				String symbolValue = adapter.get().toString();
+
+				Object valueObj = adapter.get(); //...might be validly null
+				String symbolValue = valueObj == null? "null" : valueObj.toString();
 				String symbolName = cell.text();
 				Fixture.setSymbol(symbolName, symbolValue);
 				cell.addToBody(Fixture.gray(" = " + symbolValue));
@@ -156,12 +183,21 @@ public abstract class Binding
 		public void doCell(Fixture fixture, Parse cell) throws Exception
 		{
 			String symbolName = cell.text();
-			String value = (String) Fixture.getSymbol(symbolName);
-			if(value == null)
+			if (!Fixture.hasSymbol(symbolName))
 				fixture.exception(cell, new FitFailureException("No such symbol: " + symbolName));
-			else {
-				adapter.set(adapter.parse(value));
-				cell.addToBody(Fixture.gray(" = " + value));
+			else
+			{
+				String value = (String) Fixture.getSymbol(symbolName);
+				if (adapter.field != null)
+				{
+					adapter.set(adapter.parse(value));
+					cell.addToBody(Fixture.gray(" = " + value));
+				}
+				if (adapter.method != null)
+				{
+					cell.body = value;
+					fixture.check(cell, adapter);					
+				}
 			}
 		}
 	}
@@ -177,6 +213,14 @@ public abstract class Binding
 	}
 
 	public static class QueryBinding extends Binding
+	{
+		public void doCell(Fixture fixture, Parse cell)
+		{
+			fixture.check(cell, adapter);
+		}
+	}
+
+	public static class RegexQueryBinding extends Binding
 	{
 		public void doCell(Fixture fixture, Parse cell)
 		{

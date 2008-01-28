@@ -9,5 +9,5 @@
 |Action Fixture.|
 |start|Page Builder|
 |enter|line|I'm younger, but wiser|
-|enter|attributes|!-WikiImport-!=true,Suites=FC2|
+|enter|attributes|!-WikiImport-!=true,Prune=true,Suites=FC2|
 |enter|page|!-ParentPage.SecondChild-!|
