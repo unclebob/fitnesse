@@ -22,6 +22,6 @@ You can add to the list of packages that Fit searches by using the ''Import'' fi
 |Import|
 |payroll.fixtures|
 
-This table should appear ''above'' the tables that use the ''!-PaycheckInspector-!'' fixture.  It's a good idea to put your ''Import'' fixtures in a SetUp page.
+This table should appear ''above'' the tables that use the ''!-PaycheckInspector-!'' fixture.  It's a good idea to put your ''Import'' fixtures in a !-SetUp-! page.
 
 

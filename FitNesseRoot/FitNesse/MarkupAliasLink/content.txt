@@ -11,8 +11,12 @@ You can take any word, phrase, or image and turn it into a link using the follow
 |!c Markup Text|!c Displayed as:|
 |!-click [[RecentChanges][.FrontPage]].-!|click [[RecentChanges][.FrontPage]].|
 
- * When the link is a wiki word then, as usual, it is relative to the parent page unless preceded by a dot, in which case it is relative to the top. (See SubWiki for more details.)
+ * When the link is a wiki word then, as usual, it may include a relative or an absolute path with respect to the parent page using < . > characters, or is a sibling if no path is specified. (See SubWiki for more details.)
 
 |!c Markup Text|!c Displayed as:|
 |!-click [[here][.FrontPage]].-!|click [[here][.FrontPage]].|
 |!-click [[here][FrontPage]].-!|click [[here][FrontPage]].|
+
+ * When the link is to an anchor on a different page, append the anchor's name.  (See LinksWithinPages)
+|!c Markup Text|!c Displayed as:|
+|!-click [[Bottom of Page][LinksWithinPages#pageBottom]].-!|click [[Bottom of Page][LinksWithinPages#pageBottom]].|

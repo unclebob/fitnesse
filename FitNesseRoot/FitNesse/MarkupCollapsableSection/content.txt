@@ -1,9 +1,9 @@
-Often a page include lots of meta text that tends to get in the way.  With collapsable sections you can easily collapse sections of content to hide their content and later expand them to make their content visible again.
+Often a page include lots of meta text that tends to get in the way.  With collapsable sections you can easily delimit, collapse, or completely hide sections of content.  Delimited content may be collapsed to hide its content and later expand it to make the content visible again.  Hidden sections (as opposed to collapsed sections) are completely inaccessible.
 
-A collapsable section starts with an ! and at least one star followed by a title for the section.  The following lines will contain the content of the section.  The section ends by a line with at least one star and an !.
+A collapsable section starts with an ! and at least one star followed by a space and title for the section.  The following lines will contain the content of the section.  The section ends by a line with at least one star and an !.
 
-{{{
-!******** Section Title
+!3 Collapsible Sections that Start Opened
+{{{!******** Section Title
 This is the content of the section.
 The section may be as long as needed.
 To end a collapsable section,
@@ -18,9 +18,11 @@ To end a collapsable section,
 use at least one * followed by an !.
 **************!
 
-You'll notice that the section is expanded by default.  You may designate a section the be closed by default by following the stars on the first line with a right arrow ('''>''').
-{{{
-!*****> Collapsed Section
+You'll notice that the section is expanded by default.  
+
+!3 Collapsible Sections that Start Closed
+You may designate a section to be closed by default by following the stars on the first line with a right arrow ('''>''').
+{{{!*****> Collapsed Section
 section body
 **********!
 }}}
@@ -29,3 +31,22 @@ When rendered:
 !*****> Collapsed Section
 section body
 **********!
+
+!3 Collapsible Sections that Are Completely Hidden
+Additionally, a section may be hidden completely using the "less than" (<) character after the asterisks:
+{{{!*****< This is HIDDEN, but is ACTIVE
+!define VarIsStillDEFINED {23}
+******!
+}}}
+This feature requires the following addition to the fitnesse_base.css file if upgrading the .jar files:
+{{{.invisible
+{
+	line-height: 0px;
+	visibility:hidden;
+}
+}}}
+The actual section is after this line...really!  We'll check it with a variable expansion:
+!*****< This is HIDDEN, but is ACTIVE
+!define VarIsStillDEFINED {23}
+******!
+!-$-!VarIsStillDEFINED = ${VarIsStillDEFINED}
