@@ -248,7 +248,6 @@ span.page_title
 
 .centered
 {
-	margin: 5px;
 	text-align: center;
 }
 
@@ -345,9 +344,11 @@ div.collapsable
 	display: none;
 }
 
-.invisible
+div.invisible
 {
 	line-height: 0px;
+	margin: 0px 0px 0px 0px;
+	display: none;
 	visibility:hidden;
 }
 
