@@ -1,3 +1,7 @@
+
+20080610, unclebob
+Added double wildcard to !path so that all files in all subdirectories can be included
+as in !path myDirectory/**.jar
 -- 20071107 -------------------------------------------------------------------------------
 Changes, ACDassing (i-m-fit-r-u) [acd]
 --------------------------------------

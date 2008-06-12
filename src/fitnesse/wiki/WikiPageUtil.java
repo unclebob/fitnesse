@@ -6,10 +6,10 @@ import java.util.LinkedList;
 
 public class WikiPageUtil
 {
-	public static LinkedList getAncestorsOf(WikiPage page) throws Exception
+	public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) throws Exception
 	{
 		PageCrawler crawler = page.getPageCrawler();
-		LinkedList ancestors = new LinkedList();
+		LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
 		WikiPage parent = page;
 		do
 		{
@@ -22,7 +22,7 @@ public class WikiPageUtil
 
 	public static LinkedList getAncestorsStartingWith(WikiPage page) throws Exception
 	{
-		LinkedList ancestors = getAncestorsOf(page);
+		LinkedList<WikiPage> ancestors = getAncestorsOf(page);
 		ancestors.addFirst(page);
 		return ancestors;
 	}

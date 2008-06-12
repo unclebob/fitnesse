@@ -51,7 +51,7 @@ public abstract class ParentWidget extends WikiWidget
 		return children.size();
 	}
 
-	public List getChildren()
+	public List<WikiWidget> getChildren()
 	{
 		return children;
 	}
@@ -59,7 +59,7 @@ public abstract class ParentWidget extends WikiWidget
 	public WikiWidget nextChild()
 	{
 		if(hasNextChild())
-			return (WikiWidget) children.get(currentChild++);
+			return children.get(currentChild++);
 		else
 			throw new ArrayIndexOutOfBoundsException("No next child exists");
 	}

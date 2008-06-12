@@ -2,19 +2,20 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public abstract class InheritedItemBuilder
 {
-	protected List getInheritedItems(WikiPage page, Set visitedPages) throws Exception
+	protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) throws Exception
 	{
-		List items = new ArrayList();
+		List<String> items = new ArrayList<String>();
 		addItemsFromPage(page, items);
 
-		List ancestors = WikiPageUtil.getAncestorsOf(page);
-		for(Iterator iterator = ancestors.iterator(); iterator.hasNext();)
+		List<WikiPage> ancestors = WikiPageUtil.getAncestorsOf(page);
+		for(WikiPage ancestor : ancestors)
 		{
-			WikiPage ancestor = (WikiPage) iterator.next();
 			if(!visitedPages.contains(ancestor))
 			{
 				visitedPages.add(ancestor);
@@ -25,11 +26,11 @@ public abstract class InheritedItemBuilder
 		return items;
 	}
 
-	private void addItemsFromPage(WikiPage itemPage, List items) throws Exception
+	private void addItemsFromPage(WikiPage itemPage, List<String> items) throws Exception
 	{
-		List itemsOnThisPage = getItemsFromPage(itemPage);
+		List<String> itemsOnThisPage = getItemsFromPage(itemPage);
 		items.addAll(itemsOnThisPage);
 	}
 
-	protected abstract List getItemsFromPage(WikiPage page) throws Exception;
+	protected abstract List<String> getItemsFromPage(WikiPage page) throws Exception;
 }

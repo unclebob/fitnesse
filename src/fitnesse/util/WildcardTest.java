@@ -76,12 +76,12 @@ public class WildcardTest extends TestCase
 	public static void makeSampleFiles()
 	{
 		FileUtil.makeDir(TEST_DIR);
-		FileUtil.createFile(TEST_DIR+"/one.jar", "");
-		FileUtil.createFile(TEST_DIR+"/two.jar", "");
-		FileUtil.createFile(TEST_DIR+"/one.dll", "");
-		FileUtil.createFile(TEST_DIR+"/two.dll", "");
-		FileUtil.createFile(TEST_DIR+"/oneA", "");
-		FileUtil.createFile(TEST_DIR+"/twoA", "");
+		FileUtil.createFile(TEST_DIR + "/one.jar", "");
+		FileUtil.createFile(TEST_DIR + "/two.jar", "");
+		FileUtil.createFile(TEST_DIR + "/one.dll", "");
+		FileUtil.createFile(TEST_DIR + "/two.dll", "");
+		FileUtil.createFile(TEST_DIR + "/oneA", "");
+		FileUtil.createFile(TEST_DIR + "/twoA", "");
 	}
 
 	public static void deleteSampleFiles()

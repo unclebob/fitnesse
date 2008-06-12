@@ -13,6 +13,7 @@
 
 !2 ''Classpaths''
 !path classes
+!path lib/fitlibrary.jar
 ----
 !2 ''Port''
 !define PORT {8080}

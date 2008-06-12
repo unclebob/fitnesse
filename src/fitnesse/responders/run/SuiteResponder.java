@@ -112,16 +112,16 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	{
 		final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
 		final String pathSeparator = classPathBuilder.getPathSeparator(page);
-		List<Object> classPathElements = new ArrayList<Object>();
+		List<String> classPathElements = new ArrayList<String>();
 		Set visitedPages = new HashSet();
 
-    for (WikiPage testPage : testPages) {
+    for (WikiPage testPage : testPages)
       addClassPathElements(testPage, classPathElements, visitedPages);
-    }
+  
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
 	}
 
-	private static void addClassPathElements(WikiPage page, List<Object> classPathElements, Set visitedPages) throws Exception
+	private static void addClassPathElements(WikiPage page, List<String> classPathElements, Set visitedPages) throws Exception
 	{
 		List pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
 		classPathElements.addAll(pathElements);

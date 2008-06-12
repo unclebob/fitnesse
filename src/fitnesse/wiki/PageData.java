@@ -5,7 +5,8 @@ package fitnesse.wiki;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.run.SuiteResponder;
-import fitnesse.wikitext.*;
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.*;
 
 import java.io.Serializable;
@@ -16,25 +17,25 @@ public class PageData implements Serializable
 	public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class});
 	public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{FixtureWidget.class});
 	public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
-	
-	public static WidgetBuilder
-	variableDefinitionWidgetBuilder= new WidgetBuilder(new Class[]
-											       { IncludeWidget.class,
-													   PreformattedWidget.class,
-													   VariableDefinitionWidget.class
-													 }             );
 
-	public static final String PropertyHELP      = "Help";
+	public static WidgetBuilder
+		variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]
+		{IncludeWidget.class,
+			PreformattedWidget.class,
+			VariableDefinitionWidget.class
+		});
+
+	public static final String PropertyHELP = "Help";
 	public static final String PropertyPRUNE     = "Prune";
 	//TODO -AcD: refactor add other properties such as "Edit", "Suite", "Test", ...
-	public static final String PropertySUITES    = "Suites";
-	
+	public static final String PropertySUITES = "Suites";
+
 	private transient WikiPage wikiPage;
 	private String content;
 	private WikiPageProperties properties = new WikiPageProperties();
 	private Set versions;
 	private WidgetRoot variableRoot;
-   private List literals;
+	private List literals;
 
 	public PageData(WikiPage page) throws Exception
 	{
@@ -148,16 +149,16 @@ public class PageData implements Serializable
 		return variableRoot.getVariable(name);
 	}
 
-   public void setLiterals (List literals)
-   {
-      this.literals = literals;
-   }
-   
+	public void setLiterals(List literals)
+	{
+		this.literals = literals;
+	}
+
 	private void initializeVariableRoot() throws Exception
 	{
 		if(variableRoot == null)
 		{
-         variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, literals, variableDefinitionWidgetBuilder); 
+			variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, literals, variableDefinitionWidgetBuilder);
 			variableRoot.render();
 		}
 	}
@@ -184,7 +185,7 @@ public class PageData implements Serializable
 		return wikiPage;
 	}
 
-	public List getClasspaths() throws Exception
+	public List<String> getClasspaths() throws Exception
 	{
 		return getTextOfWidgets(classpathWidgetBuilder);
 	}
@@ -199,18 +200,17 @@ public class PageData implements Serializable
 		return getTextOfWidgets(xrefWidgetBuilder);
 	}
 
-	private List getTextOfWidgets(WidgetBuilder builder) throws Exception
+	private List<String> getTextOfWidgets(WidgetBuilder builder) throws Exception
 	{
 		WidgetRoot root = new TextIgnoringWidgetRoot(getContent(), wikiPage, builder);
-		List widgets = root.getChildren();
-		List values = new ArrayList();
-		for(Iterator iterator = widgets.iterator(); iterator.hasNext();)
+		List<WikiWidget> widgets = root.getChildren();
+		List<String> values = new ArrayList<String>();
+		for(WikiWidget widget : widgets)
 		{
-			Object widget = iterator.next();
 			if(widget instanceof WidgetWithTextArgument)
 				values.add(((WidgetWithTextArgument) widget).getText());
-			else if(widget instanceof WikiWidget)
-				((WikiWidget) widget).render();
+			else
+				widget.render();
 		}
 		return values;
 	}

@@ -3,7 +3,7 @@
 package fitnesse.components;
 
 import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.WildcardTest;
+import fitnesse.util.FileUtil;
 import fitnesse.wiki.*;
 
 public class ClassPathBuilderTest extends RegexTestCase
@@ -13,6 +13,7 @@ public class ClassPathBuilderTest extends RegexTestCase
 	String pathSeparator = System.getProperty("path.separator");
 	private PageCrawler crawler;
 	private WikiPagePath somePagePath;
+	private static final String TEST_DIR = "testDir";
 
 	public void setUp() throws Exception
 	{
@@ -25,8 +26,8 @@ public class ClassPathBuilderTest extends RegexTestCase
 	public void testGetClasspath() throws Exception
 	{
 		crawler.addPage(root, PathParser.parse("TestPage"),
-		                "!path fitnesse.jar\n" +
-			                "!path my.jar");
+			"!path fitnesse.jar\n" +
+				"!path my.jar");
 		String expected = "fitnesse.jar" + pathSeparator + "my.jar";
 		assertEquals(expected, builder.getClasspath(root.getChildPage("TestPage")));
 	}
@@ -46,8 +47,8 @@ public class ClassPathBuilderTest extends RegexTestCase
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 		crawler.addPage(root, PathParser.parse("ProjectOne"),
-		                "!path path2\n" +
-			                "!path path 3");
+			"!path path2\n" +
+				"!path path 3");
 		crawler.addPage(root, PathParser.parse("ProjectOne.TesT"), "!path path1");
 
 		String cp = builder.getClasspath(crawler.getPage(root, PathParser.parse("ProjectOne.TesT")));
@@ -102,7 +103,7 @@ public class ClassPathBuilderTest extends RegexTestCase
 	{
 		try
 		{
-			WildcardTest.makeSampleFiles();
+			makeSampleFiles();
 
 			String classPath = makeClassPathFromSimpleStructure("testDir/*.jar");
 			assertHasRegexp("one\\.jar", classPath);
@@ -116,10 +117,37 @@ public class ClassPathBuilderTest extends RegexTestCase
 			assertHasRegexp("one\\.dll", classPath);
 			assertHasRegexp("one\\.jar", classPath);
 			assertHasRegexp("oneA", classPath);
+
+			classPath = makeClassPathFromSimpleStructure("testDir/**.jar");
+			assertHasRegexp("one\\.jar", classPath);
+			assertHasRegexp("two\\.jar", classPath);
+			assertHasRegexp("subdir/sub1\\.jar", classPath);
+			assertHasRegexp("subdir/sub2\\.jar", classPath);
 		}
 		finally
 		{
-			WildcardTest.deleteSampleFiles();
+			deleteSampleFiles();
 		}
+	}
+
+	public static void makeSampleFiles()
+	{
+		FileUtil.makeDir(TEST_DIR);
+		FileUtil.createFile(TEST_DIR + "/one.jar", "");
+		FileUtil.createFile(TEST_DIR + "/two.jar", "");
+		FileUtil.createFile(TEST_DIR + "/one.dll", "");
+		FileUtil.createFile(TEST_DIR + "/two.dll", "");
+		FileUtil.createFile(TEST_DIR + "/oneA", "");
+		FileUtil.createFile(TEST_DIR + "/twoA", "");
+		FileUtil.createDir(TEST_DIR + "/subdir");
+		FileUtil.createFile(TEST_DIR + "/subdir/sub1.jar", "");
+		FileUtil.createFile(TEST_DIR + "/subdir/sub2.jar", "");
+		FileUtil.createFile(TEST_DIR + "/subdir/sub1.dll", "");
+		FileUtil.createFile(TEST_DIR + "/subdir/sub2.dll", "");
+	}
+
+	public static void deleteSampleFiles()
+	{
+		FileUtil.deleteFileSystemDirectory(TEST_DIR);
 	}
 }
