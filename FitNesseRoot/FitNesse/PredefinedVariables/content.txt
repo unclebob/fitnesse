@@ -32,5 +32,7 @@ dotnet2\FitServer.exe-!|
 |''' NAME '''         |''' Default '''|''' Values '''    |''' Notes '''|
 | REGRACE_LINK | false | true!-|-!false    |'' Displays all WikiWord links as graceful names when true''|
 | RSS_PREFIX   | ''none'' | ''any string'' |'' Used locally as a prefix for RSS content links ''|
+| PAGE_NAME    | read-only | string |'' Contains the current page's name ''|
+| PAGE_PATH    | read-only | string |'' Contains the current page's wiki path ''|
 
 !note (See the ''root'' page for overrides)
