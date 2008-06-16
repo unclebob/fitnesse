@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class CommentWidgetTest extends TestCase
 {
-	private WidgetRoot root;
+	private ParentWidget root;
 
 	public void setUp() throws Exception
 	{

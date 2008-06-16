@@ -51,7 +51,7 @@ public class FitNesseServerTest extends RegexTestCase
 	{
 		String output = getSocketOutput("GET /WikiWord HTTP/1.1\r\n\r\n", new WikiPageDummy());
 
-		assertSubString("404 Not Found", output);
+		assertSubString("Page doesn't exist.", output);
 	}
 
 	public void testBadRequest() throws Exception

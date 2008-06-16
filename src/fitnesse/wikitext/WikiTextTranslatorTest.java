@@ -4,18 +4,30 @@ package fitnesse.wikitext;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import junit.framework.TestCase;
 
 public class WikiTextTranslatorTest extends TestCase
 {
-  private WikiPage page;
+	private WikiPage page;
+	private String expectedHtmlFromWikiText = 
+		"<table border=\"1\" cellspacing=\"0\">\n<tr><td>this</td>" + HtmlElement.endl +
+		"<td>is</td>" + HtmlElement.endl +
+		"<td>a</td>" + HtmlElement.endl +
+		"<td>table</td>" + HtmlElement.endl +
+		"</tr>\n" +
+		"<tr><td>that</td>" + HtmlElement.endl +
+		"<td>has</td>" + HtmlElement.endl +
+		"<td>four</td>" + HtmlElement.endl +
+		"<td>columns</td>" + HtmlElement.endl +
+		"</tr>\n</table>\n";
 
-  public void setUp() throws Exception
+	public void setUp() throws Exception
 	{
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = root.getPageCrawler();
-    page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
+		WikiPage root = InMemoryPage.makeRoot("RooT");
+		PageCrawler crawler = root.getPageCrawler();
+		page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
 	}
 
 	public void tearDown() throws Exception
@@ -28,8 +40,8 @@ public class WikiTextTranslatorTest extends TestCase
 			"\n" +
 			"''' ''Some Bold and Italic text'' '''\n";
 		String html = "<div class=\"centered\"><h1>This is a <a href=\"WidgetRoot\">WidgetRoot</a></h1></div>" +
-			"<br>" +
-			"<b> <i>Some Bold and Italic text</i> </b><br>";
+			"<br/>" +
+			"<b> <i>Some Bold and Italic text</i> </b><br/>";
 		assertEquals(html, translate(wikiText, page));
 	}
 
@@ -43,22 +55,38 @@ public class WikiTextTranslatorTest extends TestCase
 	public void testTableHtml() throws Exception
 	{
 		String wikiText = "|this|is|a|table|\n|that|has|four|columns|\n";
-		String html = "<table border=\"1\" cellspacing=\"0\">\n<tr><td>this</td>" + HtmlElement.endl +
-			"<td>is</td>" + HtmlElement.endl +
-			"<td>a</td>" + HtmlElement.endl +
-			"<td>table</td>" + HtmlElement.endl +
-			"</tr>\n" +
-			"<tr><td>that</td>" + HtmlElement.endl +
-			"<td>has</td>" + HtmlElement.endl +
-			"<td>four</td>" + HtmlElement.endl +
-			"<td>columns</td>" + HtmlElement.endl +
-			"</tr>\n</table>\n";
-		assertEquals(html, translate(wikiText, new WikiPageDummy()));
+		assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy()));
+	}
+
+	public void testTableHtmlStripsTrailingWhiteSpaceFromLines() throws Exception
+	{
+		String wikiText = "|this|is|a|table|\t\n|that|has|four|columns|  \n";
+		assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy()));
+	}
+
+	public void testTableBlankLinesConvertedToBreaks() throws Exception
+	{
+		String wikiText1 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t";
+		assertEquals(expectedHtmlFromWikiText+"<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy()));
+		String wikiText2 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t\n";
+		assertEquals(expectedHtmlFromWikiText+"<br/><br/><br/><br/>", translate(wikiText2, new WikiPageDummy()));
+		String wikiText3 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t\n\n";
+		assertEquals(expectedHtmlFromWikiText+"<br/><br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy()));
+	}
+
+	public void testBlankLinesConvertedToBreaks() throws Exception
+	{
+		String wikiText1 = "\n  \n\t\n\t";
+		assertEquals("<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy()));
+		String wikiText2 = "\n  \n\t\n\t\n";
+		assertEquals("<br/><br/><br/><br/>", translate(wikiText2, new WikiPageDummy()));
+		String wikiText3 = "\n  \n\t\n\t\n";
+		assertEquals("<br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy()));
 	}
 
 	private static String translate(String value, WikiPage source) throws Exception
 	{
-		WidgetRoot page = new WidgetRoot(value, source);
+		ParentWidget page = new WidgetRoot(value, source);
 		return page.render();
 	}
 }

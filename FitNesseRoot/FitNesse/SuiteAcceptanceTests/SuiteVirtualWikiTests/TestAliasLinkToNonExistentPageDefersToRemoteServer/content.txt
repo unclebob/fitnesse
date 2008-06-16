@@ -1,4 +1,4 @@
-An alias link to a non-existent page on a virtual child should generate a '''?''' that links to an edit page on the remote server, not on the local server.  
+An alias link to a non-existent page on a virtual child should generate a '''[?]''' that links to an edit page on the remote server, not on the local server.  
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                                    |valid?|
@@ -10,4 +10,4 @@ An alias link to a non-existent page on a virtual child should generate a '''?''
 
 !|Response Examiner|
 |type|pattern|matches?|value|
-|contents|<a href="http://localhost:${PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage\.NonExistentPage\?edit" target=".*">\?</a>|true||
+|contents|<a title="create page" href="http://localhost:${PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage\.NonExistentPage\?edit&nonExistent=true" target=".*">\[\?\]</a>|true||

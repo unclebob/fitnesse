@@ -22,7 +22,7 @@ If this is the installation machine use http://localhost
 Enjoy!
 
     Micah Martin
-    micah@objectmentor.com
+    fitnesse@objectmentor.com
 
 Please visit www.fitnesse.org for questions or comments.
 

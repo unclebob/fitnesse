@@ -31,8 +31,10 @@ Next fetch old parent page and make sure the reference has been changed.
 |type  |pattern|matches?|value|
 |contents|!-ParentPageAy.ChildDee.ChildCee-!|true||
 
-Make sure we can't get the old A.B.C page.
+Make sure we can't get the old A.B.C page. Use the !-dontCreatePage-! query to suppress default creation of a non-existent page. 
 
 |Response Requester.|
 |uri|valid?|status?|
-|!-ParentPageAy.ChildBee.ChildCee-!|false||
+|!-ParentPageAy.ChildBee.ChildCee?dontCreatePage-!|false|404|
+
+

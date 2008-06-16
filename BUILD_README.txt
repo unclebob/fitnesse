@@ -4,6 +4,11 @@ BUILDING:
 The build.xml should be sufficient to build FitNesse as long as junit.jar is in your system classpath.
 If not then open build.xml and modify the 'junitJar' property to reflect your environment.
 
+To build and run all tests, run the command
+ * ant
+ 
+which builds the '''all''' target. 
+
 TESTING:
 To run the unit tests:
  * build all the class files
@@ -13,4 +18,4 @@ To run the unit tests:
   * junit.jar.
  * run all tests.
 
-Direct any questions to the FitNesse yahoo group or to micah@objectmentor.com.
+Direct any questions to the FitNesse yahoo group or to fitnesse@objectmentor.com.

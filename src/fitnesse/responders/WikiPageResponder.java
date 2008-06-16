@@ -11,6 +11,7 @@ import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.editing.EditResponder;
 import fitnesse.util.StringUtil;
 import fitnesse.wiki.*;
 
@@ -57,9 +58,15 @@ public class WikiPageResponder implements SecureResponder {
       pageData = page.getData();
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request)
-    throws Exception {
-    return new NotFoundResponder().makeResponse(context, request);
+  private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
+	  if (dontCreateNonExistentPage(request))
+		  return new NotFoundResponder().makeResponse(context, request);
+	  return new EditResponder().makeResponseForNonExistentPage(context, request);
+  }
+
+  private boolean dontCreateNonExistentPage(Request request) {
+	  String dontCreate = (String) request.getInput("dontCreatePage");
+	  return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));	
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context)

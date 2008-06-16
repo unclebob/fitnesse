@@ -1,2 +1,4 @@
 ----
-.FrontPage .RecentChanges .FitNesse.SuiteAcceptanceTests
+| .FitNesse.SuiteAcceptanceTests | !-FitNesse's-! own acceptance test suite. |
+| [[User Guide][.FitNesse.UserGuide]] | Documentation |
+| [[Front Page][.FrontPage]] | Front Page |

@@ -2,13 +2,20 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import fitnesse.*;
-import fitnesse.html.*;
-import fitnesse.http.*;
-import fitnesse.wikitext.widgets.WikiWordWidget;
-
 import java.util.regex.Pattern;
 
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wikitext.widgets.WikiWordWidget;
+
+// TODO: Some of this code may now be obsolete, because this responder is no longer used for some
+// scenarios (we skip directly to an EditResponder...).
 public class NotFoundResponder implements Responder
 {
 	private String resource;
@@ -36,13 +43,20 @@ public class NotFoundResponder implements Responder
 		buffer.append("The requested resource: <i>" + name + "</i> was not found.");
 		if(Pattern.matches(WikiWordWidget.REGEXP, name))
 		{
-			HtmlTag unorderedListTag = new HtmlTag("ul");
-			HtmlTag item = new HtmlTag("li");
-			item.add(HtmlUtil.makeLink(name + "?edit", "create this page"));
-			unorderedListTag.add(item);
-			buffer.append(unorderedListTag.html());
+			makeCreateThisPageWithButton(name, buffer);
 		}
 		return buffer.toString();
 	}
 
+	private void makeCreateThisPageWithButton(String name, StringBuffer buffer)
+			throws Exception {
+		HtmlTag createPageForm = HtmlUtil.makeFormTag("POST", name+"?edit", "createPageForm");
+		HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "createPageSubmit", "Create This Page");
+		submitButton.addAttribute("accesskey", "c");
+		createPageForm.add(submitButton);
+		buffer.append(HtmlUtil.BR);
+		buffer.append(HtmlUtil.BR);
+		buffer.append(createPageForm.html());
+	}
+	
 }

@@ -10,24 +10,30 @@ public class HeaderWidgetTest extends TestCase
 {
 	public void testRegexp() throws Exception
 	{
-		assertTrue("match1", Pattern.matches(HeaderWidget.REGEXP, "!1 some text\n"));
-		assertTrue("match2", Pattern.matches(HeaderWidget.REGEXP, "!2 \n"));
-		assertTrue("match3", !Pattern.matches(HeaderWidget.REGEXP, "!3text\n"));
-		assertTrue("match4", !Pattern.matches(HeaderWidget.REGEXP, "!4 text\n"));
-		assertTrue("match5", Pattern.matches(HeaderWidget.REGEXP, "!3 text\n"));
+		assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!1 some text\n"));
+		assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!2 \n"));
+		assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!3 text\n"));
+		assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!4 text\n"));
+		assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!5 text\n"));
+		assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!6 text\n"));
+		assertTrue(!Pattern.matches(HeaderWidget.REGEXP, "!3text\n"));
+		assertTrue(!Pattern.matches(HeaderWidget.REGEXP, "!0 text\n"));
+		assertTrue(!Pattern.matches(HeaderWidget.REGEXP, "!7 text\n"));
 	}
 
 	public void testGetSize() throws Exception
 	{
-		HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(), "!1 text \n");
-		assertEquals(1, widget.size());
-		widget = new HeaderWidget(new MockWidgetRoot(), "!3 text \n");
-		assertEquals(3, widget.size());
+		for (int i=1; i<=6; i++) {
+			HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(), "!"+i+" text \n");
+			assertEquals(i, widget.size());
+		}
 	}
 
 	public void testHtml() throws Exception
 	{
-		HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(), "!1 some text\n");
-		assertEquals("<h1>some text</h1>", widget.render());
+		for (int i=1; i<=6; i++) {
+			HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(), "!"+i+" some text \n");
+			assertEquals("<h"+i+">some text</h"+i+">", widget.render());
+		}
 	}
 }

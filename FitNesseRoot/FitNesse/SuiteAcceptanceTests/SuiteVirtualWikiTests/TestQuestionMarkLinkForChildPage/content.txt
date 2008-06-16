@@ -1,7 +1,7 @@
 !c !1 Test Deactivated
 !c !3 Due to changes the virtual wiki features is undergoing.  This test should eventually get deleted.
 
-A sub page link to a non-existent page on a virtual child should generate a '''?''' that edits the subpage of the remote parent. 
+A sub page link to a non-existent page on a virtual child should generate a '''[?]''' that edits the subpage of the remote parent. 
  
 
 !|Page creator.|

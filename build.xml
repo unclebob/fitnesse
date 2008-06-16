@@ -1,4 +1,4 @@
-<project name="Fitnesse" default="build" basedir=".">
+<project name="Fitnesse" default="all" basedir=".">
 	<description>
 		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
 	</description>
@@ -31,10 +31,12 @@
 
 	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
+	<target name="all" depends="testbuild" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests." />
+
 	<target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-	<target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests." />
-
+	<target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests" />
+	
 	<target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
 	<target name="assemble_bin" depends="clean_dist, jar" description="create the binary distribution">

@@ -39,14 +39,14 @@ public class PreformattedWidgetTest extends RegexTestCase
 
 	public void testThatLiteralsWorkInPreformattedText() throws Exception
 	{
-		WidgetRoot root = new WidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
+		ParentWidget root = new WidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
 		String text = root.render();
 		assertEquals("<pre>abc 123 xyz</pre>", text);
 	}
 
 	public void testThatVariablesWorkInPreformattedText() throws Exception
 	{
-		WidgetRoot root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
+		ParentWidget root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
 		String text = root.render();
 		assertSubString("<pre>abc 123 xyz</pre>", text);
 	}

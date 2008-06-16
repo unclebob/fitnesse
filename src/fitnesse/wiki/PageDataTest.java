@@ -124,8 +124,10 @@ public class PageDataTest extends RegexTestCase
 	public void testDefaultAttributes() throws Exception
 	{
 		WikiPage normalPage = crawler.addPage(root, PathParser.parse("NormalPage"));
-		WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"));
-		WikiPage suitePage = crawler.addPage(root, PathParser.parse("SuitePage"));
+		WikiPage testPage1 = crawler.addPage(root, PathParser.parse("TestPage"));
+		WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
+		WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
+		WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
 		WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME));
 		WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME));
 
@@ -137,11 +139,19 @@ public class PageDataTest extends RegexTestCase
 		assertFalse(data.hasAttribute("Test"));
 		assertFalse(data.hasAttribute("Suite"));
 
-		data = new PageData(testPage);
+		data = new PageData(testPage1);
 		assertTrue(data.hasAttribute("Test"));
 		assertFalse(data.hasAttribute("Suite"));
 
-		data = new PageData(suitePage);
+		data = new PageData(testPage2);
+		assertTrue(data.hasAttribute("Test"));
+		assertFalse(data.hasAttribute("Suite"));
+
+		data = new PageData(suitePage1);
+		assertFalse(data.hasAttribute("Test"));
+		assertTrue(data.hasAttribute("Suite"));
+
+		data = new PageData(suitePage2);
 		assertFalse(data.hasAttribute("Test"));
 		assertTrue(data.hasAttribute("Suite"));
 

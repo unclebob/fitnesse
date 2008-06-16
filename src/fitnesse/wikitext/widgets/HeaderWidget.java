@@ -6,8 +6,8 @@ import java.util.regex.*;
 
 public class HeaderWidget extends ParentWidget
 {
-	public static final String REGEXP = "^![123] [^\r\n]*(?:(?:\r\n)|\n|\r)?";
-	private static final Pattern pattern = Pattern.compile("!([123]) (.*)");
+	public static final String REGEXP = "^![1-6] [^\r\n]*(?:(?:\r\n)|\n|\r)?";
+	private static final Pattern pattern = Pattern.compile("!([1-6]) (.*)");
 
 	private int size = 3;
 
@@ -18,7 +18,7 @@ public class HeaderWidget extends ParentWidget
 		if(match.find())
 		{
 			size = Integer.valueOf(match.group(1)).intValue();
-			addChildWidgets(match.group(2));
+			addChildWidgets(match.group(2).trim());
 		}
 	}
 

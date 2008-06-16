@@ -396,7 +396,7 @@ class=SpellE>A</span><st1:PersonName><span class=SpellE>c</span></st1:PersonName
      a way for <span class=SpellE>ColumnFixture</span> to easily annotate a <st1:PersonName>c</st1:PersonName>ell
      (in<st1:PersonName>c</st1:PersonName>luding when it passes)</li>
  <li class=MsoNormal style='mso-list:l4 level1 lfo3;tab-stops:list .5in'>Data
-     setup fixture, similar to <span class=SpellE>RowFixture</span>?</li>
+     setup fixture, similar to <span class=SpellE>RowFixture</span>[?]</li>
 </ul>
 
 <p><o:p>&nbsp;</o:p></p>

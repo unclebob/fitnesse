@@ -65,7 +65,7 @@ public class WhereUsed implements FitNesseTraversalListener, SearchObserver, Wid
 		this.currentPage = currentPage;
 		String content = currentPage.getData().getContent();
 		WidgetBuilder referenceWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class, WikiWordWidget.class, PreformattedWidget.class});
-		WidgetRoot widgetRoot = new WidgetRoot(content, currentPage, referenceWidgetBuilder);
+		ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceWidgetBuilder);
 		widgetRoot.acceptVisitor(this);
 	}
 

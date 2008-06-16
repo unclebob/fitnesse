@@ -10,10 +10,10 @@ Sometimes we want to conveniently create a link to a sub page.  We could do this
 |SuperPage|true||
 
 The widget should translate into a ? link of the form: 
- * ''!-^SubPage-!<a href="!-SuperPage.SubPage-!?edit">?</a>''
+ * ''!-^SubPage-!<a title="create page" href="!-SuperPage.SubPage-!?edit&nonExistent=true">[?]</a>''
 !|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|\^SubPage<a href="SuperPage.SubPage\?edit">\?</a>|true||
+|contents|\^SubPage<a title="create page" href="SuperPage.SubPage\?edit&nonExistent=true">\[\?\]</a>|true||
 
 If the sub page is already present, then the widget should translate into a normal link.
 

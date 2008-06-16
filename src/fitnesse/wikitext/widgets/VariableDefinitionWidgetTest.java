@@ -9,7 +9,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase
 {
 	public WikiPage root;
 	private PageCrawler crawler;
-	private WidgetRoot widgetRoot;
+	private ParentWidget widgetRoot;
 
 	protected String getRegexp()
 	{
@@ -99,8 +99,8 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase
 		PageData data = root.getData();
 		String content = "!define SOME_VARIABLE {Variable #1}\n!define ANOTHER_VARIABLE {Variable #2}";
 		data.setContent(content);
-		assertSubString("SOME_VARIABLE=Variable #1</span><br><span", data.getHtml());
-		assertNotSubString("SOME_VARIABLE=Variable #1</span><br><br><span", data.getHtml());
+		assertSubString("SOME_VARIABLE=Variable #1</span><br/><span", data.getHtml());
+		assertNotSubString("SOME_VARIABLE=Variable #1</span><br/><br/><span", data.getHtml());
 	}
 
 	public void testAsWikiText() throws Exception

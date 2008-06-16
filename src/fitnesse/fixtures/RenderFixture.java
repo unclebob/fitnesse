@@ -3,6 +3,7 @@
 package fitnesse.fixtures;
 
 import fit.ColumnFixture;
+import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 
 public class RenderFixture extends ColumnFixture
@@ -11,7 +12,7 @@ public class RenderFixture extends ColumnFixture
 
 	public String rendered() throws Exception
 	{
-		WidgetRoot root = new WidgetRoot(text, FitnesseFixtureContext.root);
+		ParentWidget root = new WidgetRoot(text, FitnesseFixtureContext.root);
 		return root.render();
 	}
 

@@ -34,7 +34,7 @@ public class PageData implements Serializable
 	private String content;
 	private WikiPageProperties properties = new WikiPageProperties();
 	private Set versions;
-	private WidgetRoot variableRoot;
+	private ParentWidget variableRoot;
 	private List literals;
 
 	public PageData(WikiPage page) throws Exception
@@ -78,9 +78,9 @@ public class PageData implements Serializable
 		properties.setLastModificationTime(new Date());
 
 		final String pageName = wikiPage.getName();
-		if(pageName.startsWith("Test"))
+		if(pageName.startsWith("Test") || pageName.endsWith("Test"))
 			properties.set("Test", "true");
-		if(pageName.startsWith("Suite") &&
+		if((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
 			!pageName.equals(SuiteResponder.SUITE_SETUP_NAME) &&
 			!pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME))
 		{
@@ -171,7 +171,7 @@ public class PageData implements Serializable
 
 	private String processHTMLWidgets(String content, WikiPage context) throws Exception
 	{
-		WidgetRoot root = new WidgetRoot(content, context, WidgetBuilder.htmlWidgetBuilder);
+		ParentWidget root = new WidgetRoot(content, context, WidgetBuilder.htmlWidgetBuilder);
 		return root.render();
 	}
 
@@ -202,7 +202,7 @@ public class PageData implements Serializable
 
 	private List<String> getTextOfWidgets(WidgetBuilder builder) throws Exception
 	{
-		WidgetRoot root = new TextIgnoringWidgetRoot(getContent(), wikiPage, builder);
+		ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage, builder);
 		List<WikiWidget> widgets = root.getChildren();
 		List<String> values = new ArrayList<String>();
 		for(WikiWidget widget : widgets)

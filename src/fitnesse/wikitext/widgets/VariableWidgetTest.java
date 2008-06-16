@@ -13,7 +13,7 @@ public class VariableWidgetTest extends WidgetTestCase
 	private WikiPage root;
 	private PageCrawler crawler;
 	private WikiPage page;
-	private WidgetRoot widgetRoot;
+	private ParentWidget widgetRoot;
 
 	public void setUp() throws Exception
 	{
@@ -69,7 +69,7 @@ public class VariableWidgetTest extends WidgetTestCase
 		WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define var {zot}\n");
 		WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
 
-		WidgetRoot widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+		ParentWidget widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
 		VariableWidget w = new VariableWidget(widgetRoot, "${var}");
 		assertEquals("zot", w.render());
 	}
@@ -77,7 +77,7 @@ public class VariableWidgetTest extends WidgetTestCase
 	public void testUndefinedVariable() throws Exception
 	{
 		WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
-		WidgetRoot widgetRoot = new WidgetRoot("", page);
+		ParentWidget widgetRoot = new WidgetRoot("", page);
 		VariableWidget w = new VariableWidget(widgetRoot, "${x}");
 		assertSubString("undefined variable: x", w.render());
 	}
@@ -103,7 +103,7 @@ public class VariableWidgetTest extends WidgetTestCase
                           "!define paren (!-paren literal-!)\n"
                         );
       WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
-      WidgetRoot widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+      ParentWidget widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
 
       VariableWidget w = new VariableWidget(widgetRoot, "${var}");
       assertEquals("some literal", w.render());

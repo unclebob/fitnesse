@@ -19,7 +19,7 @@
 #
 |Response Examiner.|
 |type|pattern|matches?|value|
-|contents|!-one.*&lt;br>.*&lt;br>.*two.*&lt;br>.*-!|true||
+|contents|!-one.*&lt;br/>.*&lt;br/>.*two.*&lt;br/>.*-!|true||
 
 
 

@@ -22,9 +22,9 @@ Make sure that we got an error message.
 
 The renamed page should not exist.
 
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|
-|!-TargetPage.SomePage-!|false|
+|TargetPage.SomePage?dontCreatePage|false|
 
 The old page should still exist.
 

@@ -29,9 +29,9 @@ Make sure that the sub page can be referenced in it's new location.
 
 Make sure that there is no sub page beneath !-ParentPage-!.
 
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|contents?|
-|!-ParentPage.SubPage-!|false||
+|ParentPage.SubPage?dontCreatePage|false||
 
 Finally, make sure that the refering page now refers to the new location.
 
@@ -39,7 +39,7 @@ Finally, make sure that the refering page now refers to the new location.
 |uri|valid?|contents?|
 |!-ReferingPage-!|true||
 
-|Response Examiner.|
+!|Response Examiner.|
 |type  |pattern|matches?|value|
 |contents|NewParentPage.SubPage|true||
 

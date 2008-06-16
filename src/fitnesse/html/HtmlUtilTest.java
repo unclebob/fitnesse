@@ -95,7 +95,7 @@ public class HtmlUtilTest extends RegexTestCase
 		verifyDefaultLinks(html, "SomePage");
 	}
 
-	public void testMakeActionsWithTestButton() throws Exception
+	public void testMakeActionsWithTestButtonWhenNameStartsWithTest() throws Exception
 	{
 		String pageName = "TestSomething";
 		String html = getActionsHtml(pageName);
@@ -103,9 +103,25 @@ public class HtmlUtilTest extends RegexTestCase
 		assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
 	}
 
-	public void testMakeActionsWithSuiteButton() throws Exception
+	public void testMakeActionsWithSuffixButtonWhenNameEndsWithTest() throws Exception
+	{
+		String pageName = "SomethingTest";
+		String html = getActionsHtml(pageName);
+		verifyDefaultLinks(html, pageName);
+		assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+	}
+
+	public void testMakeActionsWithSuiteButtonWhenNameStartsWithSuite() throws Exception
 	{
 		String pageName = "SuiteNothings";
+		String html = getActionsHtml(pageName);
+		verifyDefaultLinks(html, pageName);
+		assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+	}
+
+	public void testMakeActionsWithSuiteButtonWhenNameEndsWithSuite() throws Exception
+	{
+		String pageName = "NothingsSuite";
 		String html = getActionsHtml(pageName);
 		verifyDefaultLinks(html, pageName);
 		assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
@@ -128,6 +144,6 @@ public class HtmlUtilTest extends RegexTestCase
 		assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
 		assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
 		assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);
-		assertSubString("<a href=\"/RecentChanges\" accesskey=\"\">RecentChanges</a>", html);
+		assertSubString("<a href=\"/RecentChanges\" accesskey=\"\">Recent Changes</a>", html);
 	}
 }

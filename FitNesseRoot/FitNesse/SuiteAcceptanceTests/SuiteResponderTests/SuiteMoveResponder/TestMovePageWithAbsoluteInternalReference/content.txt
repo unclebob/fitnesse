@@ -24,4 +24,4 @@ Next fetch old parent page and make sure the reference has been changed.
 
 |Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|NewParentPage.SubPage|true||
+|contents|!-NewParentPage.SubPage-!|true||

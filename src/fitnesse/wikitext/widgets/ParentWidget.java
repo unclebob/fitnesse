@@ -8,6 +8,7 @@ import fitnesse.wikitext.WikiWidget;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class ParentWidget extends WikiWidget
 {
@@ -157,6 +158,10 @@ public abstract class ParentWidget extends WikiWidget
 	protected String expandVariables(String content) throws Exception
 	{
 		return (new VariableExpandingWidgetRoot(this, content)).childHtml();
+	}
+
+	protected String stripTrialingWhiteSpaceInLines(String value) {
+		return Pattern.compile("[ \\t]+("+LineBreakWidget.REGEXP+")").matcher(value).replaceAll("$1");
 	}
 
 	public static class LiteralProcessingWidgetRoot extends ParentWidget

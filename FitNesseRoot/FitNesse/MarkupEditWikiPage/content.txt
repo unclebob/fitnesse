@@ -1,4 +1,4 @@
- * You create a new wiki page by clicking on the '''?''' at the end of a new WikiWord.  
+ * You create a new wiki page by clicking on the '''[?]''' at the end of a new WikiWord.  
  * You edit an existing wiki page by clicking on the '''Edit''' button (or typing ''alt-e'', then ''Enter'').
 
 Both of these operations take you to the edit page, in which the current markup text of the wiki page is shown.  You can edit the markup using standard text editing operations.

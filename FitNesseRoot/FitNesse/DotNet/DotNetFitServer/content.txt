@@ -1,6 +1,6 @@
 First, you have to tell FitNesse to use an alternate COMMAND_PATTERN, formatted specifically for the .NET FitServer. To do this, add these lines to the wiki page (on the Edit Page):
-!-!define COMMAND_PATTERN {%m %p}<br>
-!define TEST_RUNNER {dotnet\FitServer.exe}<br>
+!-!define COMMAND_PATTERN {%m %p}<br/>
+!define TEST_RUNNER {dotnet\FitServer.exe}<br/>
 !define PATH_SEPARATOR {;}-!
 
 The classpath should be modified to list the .dll files that should be loaded. Use the ''' !path ''' widget for this:

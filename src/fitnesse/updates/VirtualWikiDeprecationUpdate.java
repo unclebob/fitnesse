@@ -28,7 +28,7 @@ public class VirtualWikiDeprecationUpdate extends PageTraversingUpdate
 	public void processPage(WikiPage page) throws Exception
 	{
 		PageData data = page.getData();
-		WidgetRoot widgetRoot = new WidgetRoot(data.getContent(), page, virtualWidgetBuilder);
+		ParentWidget widgetRoot = new WidgetRoot(data.getContent(), page, virtualWidgetBuilder);
 		while(widgetRoot.hasNextChild())
 		{
 			WikiWidget widget = widgetRoot.nextChild();

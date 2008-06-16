@@ -9,7 +9,7 @@ public class XRefWidgetTest extends WidgetTestCase
 	private WikiPage root;
 	private WikiPage page;
    private WikiPage child;
-	private WidgetRoot wroot, croot;
+	private ParentWidget wroot, croot;
 
 	public void testRegexp() throws Exception
 	{
@@ -39,7 +39,7 @@ public class XRefWidgetTest extends WidgetTestCase
 		assertHasRegexp("<b>See: <a href=.*SomePage</a></b>", widget.render());
 
 		widget = new XRefWidget(wroot, "!see NoPage");
-		assertHasRegexp("<b>See: NoPage<a href=.*>?</a></b>", widget.render());
+		assertHasRegexp("<b>See: NoPage<a title=.* href=.*>\\[\\?\\]</a></b>", widget.render());
 
       //see: Left & right arrow testing
       widget = new XRefWidget(wroot, "!see >SomeChild");
@@ -54,7 +54,7 @@ public class XRefWidgetTest extends WidgetTestCase
       assertHasRegexp("<b>See: <a href=.*Some Page</a></b>", widget.render());
 
       widget = new XRefWidget(wroot, "!see NoPage");
-      assertHasRegexp("<b>See: NoPage<a href=.*>?</a></b>", widget.render());
+      assertHasRegexp("<b>See: NoPage<a title=.* href=.*>\\[\\?\\]</a></b>", widget.render());
 
       widget = new XRefWidget(wroot, "!see >SomeChild");
       assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild.*&gt;Some Child</a></b>", widget.render());

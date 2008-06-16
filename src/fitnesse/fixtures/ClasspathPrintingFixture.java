@@ -8,6 +8,6 @@ public class ClasspathPrintingFixture extends Fixture
 {
 	public void doTable(Parse table)
 	{
-		table.parts.parts.addToBody("<br>classpath: " + System.getProperty("java.class.path"));
+		table.parts.parts.addToBody("<br/>classpath: " + System.getProperty("java.class.path"));
 	}
 }

@@ -74,7 +74,7 @@ Answers to all your other FitNesse questions.
 |CustomizingLookAndFeel|''Changing the colors and layout of the various pages''|
 |PluginUsage|''How to create and use plugins''|
 |[[Design Notes][DesignNotes]]|''Various articles and discussions on the design of FitNesse.''|
-|[[FitNesse Tests][.FitNesse.SuiteAcceptanceTests]]|''The suite of acceptance tests for !-FitNesse-! itself.''|
+|[[!-FitNesse-! Tests][.FitNesse.SuiteAcceptanceTests]]|''The suite of acceptance tests for !-FitNesse-! itself.''|
 
 
 ----

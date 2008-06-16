@@ -149,8 +149,9 @@ public class WidgetBuilderTest extends TestCase
 	{
 		ParentWidget page = new WidgetRoot("\n\r\n\r", mockSource);
 		assertEquals(3, page.numberOfChildren());
-		while(page.hasNextChild())
+		while(page.hasNextChild()) {
 			assertEquals(LineBreakWidget.class, page.nextChild().getClass());
+		}
 	}
 
 	public void testList() throws Exception
@@ -189,7 +190,7 @@ public class WidgetBuilderTest extends TestCase
 	public void testNullPointerError() throws Exception
 	{
 		String wikiText = "''\nsome text that should be in italics\n''";
-		WidgetRoot root = new WidgetRoot(wikiText, new WikiPageDummy());
+		ParentWidget root = new WidgetRoot(wikiText, new WikiPageDummy());
 
 		try
 		{
@@ -218,7 +219,7 @@ public class WidgetBuilderTest extends TestCase
 
 		try
 		{
-			WidgetRoot root = new WidgetRoot(buffer.toString(), new WikiPageDummy());
+			ParentWidget root = new WidgetRoot(buffer.toString(), new WikiPageDummy());
 			root.render();
 		}
 		catch(StackOverflowError e)

@@ -18,7 +18,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 
 	protected String pageName;
 	protected WikiPage includingPage;
-   protected WikiPage includedPage; //Retain from getIncludedPageContent()
+	protected WikiPage includedPage; //Retain from getIncludedPageContent()	
 	protected WikiPage parentPage;
 
 	private static Map optionPrefixMap = buildOptionPrefixMap();
@@ -42,7 +42,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 		PageCrawler crawler = parentPage.getPageCrawler();
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		WikiPagePath pagePath = PathParser.parse(pageName);
-      includedPage = crawler.getSiblingPage(includingPage, pagePath); //Retain this
+		includedPage = crawler.getSiblingPage(includingPage, pagePath); //Retain this
       
 		if(includedPage != null)
 		{
@@ -97,16 +97,16 @@ public class IncludeWidget extends ParentWidget implements PageReferencer
 	{
 		String widgetText = processLiterals(getIncludedPageContent());
 
-      //Create imposter root with alias = this if included page found.
-      ParentWidget incRoot = (includedPage == null)? this : new WidgetRoot(includedPage, this);
+		//Create imposter root with alias = this if included page found.
+		ParentWidget incRoot = (includedPage == null)? this : new WidgetRoot(includedPage, this);
 
 		if("-seamless".equals(option) || getRoot().isGatheringInfo())
 		{  //Use the imposter if found.
-         incRoot.addChildWidgets(widgetText + "\n");
+			incRoot.addChildWidgets(widgetText + "\n");
 		}
 		else
 		{  //Use new constructor with dual scope.  
-         new CollapsableWidget(incRoot, this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(option));
+			new CollapsableWidget(incRoot, this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(option));
 		}
 	}
 

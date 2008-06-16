@@ -47,7 +47,7 @@ public class ImageWidgetTest extends WidgetTestCase
 	{
 		WikiPage root = InMemoryPage.makeRoot("root");
 		WikiPage somePage = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
-		WidgetRoot widgetRoot = new WidgetRoot(somePage);
+		ParentWidget widgetRoot = new WidgetRoot(somePage);
 		ImageWidget widget = new ImageWidget(widgetRoot, original);
 		assertEquals(original, widget.asWikiText());
 	}

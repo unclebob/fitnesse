@@ -15,7 +15,7 @@ public class LineBreakWidget extends WikiWidget
 
 	public String render() throws Exception
 	{
-		return "<br>";
+		return "<br/>";
 	}
 
 	public String asWikiText() throws Exception

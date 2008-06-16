@@ -239,8 +239,8 @@ public class TestRunnerTask extends Task
 	}
 
 	/**
-	 * Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest or
-	 * FitNesse.SuiteAcceptanceTests. <b>MUST SET.</b>
+	 * Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest,
+	 * FitNesse.SuiteAcceptanceTests, or FitNesse.AcceptanceTestsSuite. <b>MUST SET.</b>
 	 *
 	 * @param suitePage
 	 */

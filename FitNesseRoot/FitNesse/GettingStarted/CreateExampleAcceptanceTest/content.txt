@@ -2,7 +2,7 @@
 
  1 Edit the FrontPage and add the link !-^ExampleAcceptanceTest-!.  Click save.
   * You should see !-^ExampleAcceptanceTest?-! appear on the screen.
- 1 Click on the '''?''' to open the page.
+ 1 Click on the '''[?]''' to open the page.
   * This will open an edit window on the page !-FrontPage.ExampleAcceptanceTest-!.
  1 Add the following to the page:
   * !-|myFixtures.rightTriangle|-!
@@ -17,7 +17,7 @@
  1 Click on ''properties''.
   * click the ''test'' check box 
   * hit ''save''.
- 1 Click on the '''?''' after !-ClassPath-!
+ 1 Click on the '''[?]''' after !-ClassPath-!
   * Add the following to the !-ClassPath-! page:
    * !-!path fitnesse.jar-!
    * !-!path FitNesseRoot/files/examples-!

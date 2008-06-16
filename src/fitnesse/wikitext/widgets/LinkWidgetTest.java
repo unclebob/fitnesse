@@ -56,7 +56,7 @@ public class LinkWidgetTest extends WidgetTestCase
 	public void testLinkWikiWithVariable() throws Exception
 	{
 		String text = "!define HOST {somehost}\nhttp://www.${HOST}.com\n";
-		WidgetRoot root = new WidgetRoot(text, new WikiPageDummy());
+		ParentWidget root = new WidgetRoot(text, new WikiPageDummy());
 		assertSubString("<a href=\"http://www.somehost.com\">http://www.somehost.com</a>", root.render());
 		assertEquals(text, root.asWikiText());
 	}

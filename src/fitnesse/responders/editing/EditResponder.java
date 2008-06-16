@@ -31,6 +31,16 @@ public class EditResponder implements SecureResponder
 
 	public Response makeResponse(FitNesseContext context, Request request) throws Exception
 	{
+		boolean nonExistent = request.hasInput("nonExistent") ? true : false; 
+		return doMakeResponse(context, request, nonExistent);
+	}
+
+	public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) throws Exception {
+		return doMakeResponse(context, request, true);
+	}
+
+	protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage)
+			throws Exception {
 		initializeResponder(context.root, request);
 
 		SimpleResponse response = new SimpleResponse();
@@ -48,13 +58,14 @@ public class EditResponder implements SecureResponder
 		pageData = page.getData();
 		content = createPageContent();
 
-		String html = makeHtml(resource, context);
+		String html = doMakeHtml(resource, context, firstTimeForNewPage);
 
 		response.setContent(html);
 		response.setMaxAge(0);
 
 		return response;
 	}
+
 
 	protected void initializeResponder(WikiPage root, Request request)
 	{
@@ -69,16 +80,27 @@ public class EditResponder implements SecureResponder
 
 	public String makeHtml(String resource, FitNesseContext context) throws Exception
 	{
+		return doMakeHtml(resource, context, false);
+	}
+
+	private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage)
+			throws Exception {
 		HtmlPage html = context.htmlPageFactory.newPage();
-		html.title.use("Edit " + resource);
+		String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
+		html.title.use(title + resource + ":");
 		html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
-		html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Edit Page"));
-		html.main.use(makeEditForm(resource));
+		HtmlTag header = makeHeader(resource, title, firstTimeForNewPage);
+		html.header.use(header);
+		html.main.use(makeEditForm(resource, firstTimeForNewPage));
 
 		return html.html();
 	}
 
-	public HtmlTag makeEditForm(String resource) throws Exception
+	private HtmlTag makeHeader(String resource, String title, boolean firstTimeForNewPage) throws Exception {
+		return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
+	}
+
+	private HtmlTag makeEditForm(String resource, boolean firstTimeForNewPage) throws Exception
 	{
 		HtmlTag form = new HtmlTag("form");
 		form.addAttribute("name", "f");
@@ -97,9 +119,12 @@ public class EditResponder implements SecureResponder
 			form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
 		}
 
-		form.add(createTextarea());
+		form.add(createTextarea(firstTimeForNewPage));
 		form.add(createButtons());
-
+		form.add("<br/>Hints:\n<ul>" +
+				 "<li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the \"Save\" button!</li>\n" +
+				 "<li>Grab the lower-right corner of the text area to increase its size.</li>\n" +
+				 "</ul>");
 		HtmlTag wizardForm = makeWizardForm(resource);
 
 		TagGroup group = new TagGroup();
@@ -152,6 +177,7 @@ public class EditResponder implements SecureResponder
 
 		includeJavaScriptFile("/files/javascript/SpreadsheetTranslator.js", scripts);
 		includeJavaScriptFile("/files/javascript/spreadsheetSupport.js", scripts);
+		includeJavaScriptFile("/files/javascript/fitnesse.js", scripts);
 
 		HtmlTag wizardScript = new HtmlTag("script");
 		wizardScript.add("\nfunction addFixture()\n" +
@@ -159,6 +185,7 @@ public class EditResponder implements SecureResponder
 			"\tdocument.tableWizardForm.text.value = document.f." + CONTENT_INPUT_NAME + ".value;\n" +
 			"\tdocument.tableWizardForm.fixture.value = document.f.fixtureTable.options[document.f.fixtureTable.selectedIndex].value;\n" +
 			"\tdocument.tableWizardForm.submit();\n" +
+			"\tenableSaveOnControlS(document.tableWizardForm, document.tableWizardForm)" +
 			"}");
 		scripts.add(wizardScript);
 
@@ -179,14 +206,15 @@ public class EditResponder implements SecureResponder
 		return saveButton;
 	}
 
-	private HtmlTag createTextarea()
+	private HtmlTag createTextarea(boolean firstTimeForNewPage)
 	{
 		HtmlTag textarea = new HtmlTag("textarea");
+		textarea.addAttribute("class", CONTENT_INPUT_NAME);
 		textarea.addAttribute("name", CONTENT_INPUT_NAME);
 		textarea.addAttribute("rows", "25");
 		textarea.addAttribute("cols", "70");
 		textarea.addAttribute("tabindex", "1");
-		textarea.add(Utils.escapeText(content));
+		textarea.add(Utils.escapeText(firstTimeForNewPage ? "!contents" : content));
 		return textarea;
 	}
 

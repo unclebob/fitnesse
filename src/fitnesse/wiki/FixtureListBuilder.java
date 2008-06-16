@@ -13,6 +13,7 @@ public class FixtureListBuilder extends InheritedItemBuilder
 
 	protected List getItemsFromPage(WikiPage page) throws Exception
 	{
-		return page.getData().getFixtureNames();
+		PageData pageData = page.getData();
+		return pageData == null ? new ArrayList() : pageData.getFixtureNames();
 	}
 }

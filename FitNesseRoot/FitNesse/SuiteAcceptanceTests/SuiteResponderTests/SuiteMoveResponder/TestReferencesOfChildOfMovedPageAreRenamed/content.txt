@@ -29,9 +29,9 @@ Next fetch reference page and make sure the reference has been changed.
 
 Make sure we can't get the old A.B.C page.
 
-|Response Requester.|
+!|Response Requester.|
 |uri|valid?|status?|
-|!-ParentPageAy.ChildBee.ChildCee-!|false||
+|ParentPageAy.ChildBee.ChildCee?dontCreatePage|false||
 
 Make sure we ''can'' get the A.D.C.E page at it's new location.
 

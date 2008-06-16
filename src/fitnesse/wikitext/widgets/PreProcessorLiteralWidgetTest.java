@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 public class PreProcessorLiteralWidgetTest extends WidgetTestCase
 {
-	private WidgetRoot root;
+	private ParentWidget root;
 
 	public void setUp() throws Exception
 	{

@@ -89,7 +89,7 @@ public class ParentWidgetTest extends TestCase
 
 	public void testVariables() throws Exception
 	{
-		WidgetRoot root = new WidgetRoot(rootPage);
+		ParentWidget root = new WidgetRoot(rootPage);
 		ParentWidget parent1 = new MockParentWidget(root);
 		ParentWidget parent2 = new MockParentWidget(parent1);
 		parent2.addVariable("someKey", "someValue");

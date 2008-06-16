@@ -15,7 +15,7 @@ public class LineBreakWidgetTest extends WidgetTestCase
 	public void testHtml() throws Exception
 	{
 		LineBreakWidget widget = new LineBreakWidget(new MockWidgetRoot(), "\n");
-		assertEquals("<br>", widget.render());
+		assertEquals("<br/>", widget.render());
 	}
 
 	protected String getRegexp()

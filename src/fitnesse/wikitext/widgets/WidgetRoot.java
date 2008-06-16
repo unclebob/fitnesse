@@ -53,8 +53,9 @@ public class WidgetRoot extends ParentWidget
 		super(null);
 		this.page = page;
 		this.builder = builder;
-      this.isGatheringInfo = isGathering;
-		if (value != null)   buildWidgets(value);
+		this.isGatheringInfo = isGathering;
+		if (value != null)   
+			buildWidgets(value);
 	}
 
 	public WidgetRoot(PagePointer pagePointer) throws Exception
@@ -83,7 +84,7 @@ public class WidgetRoot extends ParentWidget
 
 	protected void buildWidgets(String value) throws Exception
 	{
-		String nonLiteralContent = processLiterals(value);
+		String nonLiteralContent = processLiterals(stripTrialingWhiteSpaceInLines(value));
 		addChildWidgets(nonLiteralContent);
 	}
 

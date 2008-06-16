@@ -74,7 +74,7 @@ public class RenamePageResponder implements SecureResponder
 
 	private Responder makeErrorMessageResponder(String message) throws Exception
 	{
-		return new ErrorResponder("Cannot rename " + makeLink(qualifiedName) + " to " + newName + "<br>" + message);
+		return new ErrorResponder("Cannot rename " + makeLink(qualifiedName) + " to " + newName + "<br/>" + message);
 	}
 
 	private String makeLink(String page) throws Exception

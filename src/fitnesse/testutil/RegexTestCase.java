@@ -37,13 +37,13 @@ public abstract class RegexTestCase extends TestCase
 	public static void assertSubString(String substring, String string)
 	{
 		if(string.indexOf(substring) == -1)
-			fail("substring '" + substring + "' not found.");
+			fail("substring '" + substring + "' not found in string '" + string + "'.");
 	}
 
 	public static void assertNotSubString(String subString, String string)
 	{
 		if(string.indexOf(subString) > -1)
-			fail("expecting substring:'" + subString + "' in string:'" + string + "'");
+			fail("expecting substring:'" + subString + "' in string:'" + string + "'.");
 	}
 
 	public static String divWithIdAndContent(String id, String expectedDivContent)

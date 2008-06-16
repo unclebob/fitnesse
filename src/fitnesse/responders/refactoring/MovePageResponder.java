@@ -103,7 +103,7 @@ public class MovePageResponder implements SecureResponder
 
 	private Responder makeErrorMessageResponder(String message) throws Exception
 	{
-		return new ErrorResponder("Cannot move " + makeLink(nameOfPageToBeMoved) + " below " + newParentName + "<br>" + message);
+		return new ErrorResponder("Cannot move " + makeLink(nameOfPageToBeMoved) + " below " + newParentName + "<br/>" + message);
 	}
 
 	private String makeLink(String page) throws Exception

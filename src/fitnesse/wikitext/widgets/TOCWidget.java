@@ -133,19 +133,27 @@ public class TOCWidget extends WikiWidget
 		throws Exception
 	{
 		HtmlTag div = makeDivTag(currentDepth);
-      div.add(buildList(wikiPage, currentDepth));
+		div.add(buildList(wikiPage, currentDepth));
 		return div;
 	}
 
 	private HtmlTag buildList(WikiPage wikiPage, int currentDepth)
 		throws Exception
 	{
+		HtmlTag contentsDiv = null;
+		if (currentDepth == 1) {
+			contentsDiv = HtmlUtil.makeDivTag("contents");
+			contentsDiv.add(HtmlUtil.makeBold("Contents:"));
+		} else {
+			contentsDiv = HtmlUtil.makeDivTag("nested-contents");
+		}
 		HtmlTag list = new HtmlTag("ul");
 		for(Iterator iterator = buildListOfChildPages(wikiPage).iterator(); iterator.hasNext();)
 		{
 			list.add(buildListItem((WikiPage) iterator.next(), currentDepth));
 		}
-		return list;
+		contentsDiv.add(list);
+		return contentsDiv;
 	}
 
    private boolean isDepthExceeded (int currentDepth)  // -R[0-9] limiter
@@ -168,7 +176,6 @@ public class TOCWidget extends WikiWidget
 		
 		if (willRecurse && !depthExceeded)  
 			listItem.add(buildContentsDiv(wikiPage, currentDepth + 1));
-
 		return listItem;
 	}
 

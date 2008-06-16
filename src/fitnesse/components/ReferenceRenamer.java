@@ -24,7 +24,7 @@ public abstract class ReferenceRenamer implements FitNesseTraversalListener
 	{
 		PageData data = currentPage.getData();
 		String content = data.getContent();
-		WidgetRoot widgetRoot = new WidgetRoot(content, currentPage, referenceModifyingWidgetBuilder);
+		ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceModifyingWidgetBuilder);
 		widgetRoot.acceptVisitor(getVisitor());
 
 		String newContent = widgetRoot.asWikiText();

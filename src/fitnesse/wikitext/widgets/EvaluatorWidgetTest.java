@@ -11,7 +11,7 @@ public class EvaluatorWidgetTest extends WidgetTestCase
    private WikiPage root;
    private PageCrawler crawler;
    private WikiPage page;
-   private WidgetRoot widgetRoot;
+   private ParentWidget widgetRoot;
 
    public void setUp() throws Exception
    {

@@ -1,2 +1,3 @@
 ----
-[ [[User Guide][.FitNesse.UserGuide]]] [.FrontPage] [.RecentChanges]
+| [[Front Page][.FrontPage]] | Front Page |
+| [[User Guide][.FitNesse.UserGuide]] | Documentation |

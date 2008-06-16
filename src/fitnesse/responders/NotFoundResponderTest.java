@@ -39,7 +39,7 @@ public class NotFoundResponderTest extends RegexTestCase
 		Responder responder = new NotFoundResponder();
 		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
-		assertHasRegexp("href=\"PageOne[.]PageTwo[?]edit\"", response.getContent());
+		assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
 	}
 
 }

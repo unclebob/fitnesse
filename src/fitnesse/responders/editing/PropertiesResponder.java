@@ -103,12 +103,18 @@ public class PropertiesResponder implements SecureResponder
 
 		HtmlTag trisection = new HtmlTag("div");
 		trisection.addAttribute("style", "width:100%");
-		trisection.add(makeTestActionCheckboxesHtml(pageData));
-		trisection.add(makeNavigationCheckboxesHtml(pageData));
-		trisection.add(makeSecurityCheckboxesHtml(pageData));
-		trisection.add(makeVirtualWikiHtml());
-		trisection.add(makeSuitesHtml(pageData));
-		trisection.add(makeHelpTextHtml(pageData));
+		HtmlTag checkBoxesSection = new HtmlTag("div");
+		checkBoxesSection.addAttribute("class", "properties");
+		checkBoxesSection.add(makeTestActionCheckboxesHtml(pageData));
+		checkBoxesSection.add(makeNavigationCheckboxesHtml(pageData));
+		checkBoxesSection.add(makeSecurityCheckboxesHtml(pageData));
+		HtmlTag virtualWikiSection = new HtmlTag("div");
+		virtualWikiSection.addAttribute("class", "virtual-wiki-properties");
+		virtualWikiSection.add(makeVirtualWikiHtml());
+		virtualWikiSection.add(makeSuitesHtml(pageData));
+		virtualWikiSection.add(makeHelpTextHtml(pageData));
+		trisection.add(checkBoxesSection);
+		trisection.add(virtualWikiSection);
 		form.add(trisection);
 
 		HtmlTag buttonSection = new HtmlTag("div");
@@ -123,7 +129,7 @@ public class PropertiesResponder implements SecureResponder
 	private HtmlTag makeVirtualWikiHtml() throws Exception
 	{
 		HtmlTag virtualWiki = new HtmlTag("div");
-		virtualWiki.addAttribute("style", "float: left;");
+		virtualWiki.addAttribute("style", "float: left; width: 450px;");
 		virtualWiki.add("VirtualWiki URL: ");
 		HtmlTag deprecated = new HtmlTag("span", "(DEPRECATED)");
 		deprecated.addAttribute("style", "color: #FF0000;");
@@ -148,7 +154,9 @@ public class PropertiesResponder implements SecureResponder
 		remoteUrlField.addAttribute("size", "70");
 		form.add(remoteUrlField);
 		form.add(HtmlUtil.BR);
-		form.add(HtmlUtil.makeInputTag("checkbox", "autoUpdate", "0"));
+		HtmlTag autoUpdateCheckBox = HtmlUtil.makeInputTag("checkbox", "autoUpdate", "checked");
+		autoUpdateCheckBox.addAttribute("checked", "true");
+		form.add(autoUpdateCheckBox);
 		form.add("- Automatically update imported content when executing tests");
 		form.add(HtmlUtil.BR);
 		form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
@@ -161,7 +169,7 @@ public class PropertiesResponder implements SecureResponder
 		HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
 
 		form.add(HtmlUtil.HR);
-		form.add(new HtmlTag("strong", "Wiki Import Update"));
+		form.add(new HtmlTag("b", "Wiki Import Update"));
 		form.add(HtmlUtil.BR);
 		String buttonMessage = "";
 		form.add(HtmlUtil.makeLink(page.getName(), page.getName()));
@@ -204,7 +212,7 @@ public class PropertiesResponder implements SecureResponder
 		                 { new HtmlTag("strong", "Name")
 				 	        , new HtmlTag("strong", "Path to Page")
 				 	        , new HtmlTag("strong", "Actions")
-                       , new HtmlTag("strong", "New Name")
+                       // , new HtmlTag("strong", "New Name")
 		                 }
 		            );
 		addSymbolicLinkRows(table);

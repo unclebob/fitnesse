@@ -31,7 +31,7 @@ public class ClasspathWidgetTest extends WidgetTestCase
 	public void testPathWithVariable() throws Exception
 	{
 		String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
-		WidgetRoot root = new WidgetRoot(text, new WikiPageDummy());
+		ParentWidget root = new WidgetRoot(text, new WikiPageDummy());
 		String html = root.render();
 		assertSubString("/my/base/*.jar", html);
 	}
@@ -39,7 +39,7 @@ public class ClasspathWidgetTest extends WidgetTestCase
 	public void testPathWikiTextWithVariable() throws Exception
 	{
 		String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
-		WidgetRoot root = new WidgetRoot(text, new WikiPageDummy());
+		ParentWidget root = new WidgetRoot(text, new WikiPageDummy());
 		String text2 = root.asWikiText();
 		assertSubString("!path ${BASE}*.jar", text2);
 	}

@@ -2809,7 +2809,7 @@ to the pre<st1:PersonName>c</st1:PersonName>ision that is normal in the host
 language. It is possible for a domain obje<st1:PersonName>c</st1:PersonName>t
 to infer pre<st1:PersonName>c</st1:PersonName>ision from the string
 representation of expe<st1:PersonName>c</st1:PersonName>ted values. For
-example, <a href="http://192.168.2.114/fit/edit.cgi?ScientificDouble">?</a>S<st1:PersonName>c</st1:PersonName>ientifi<st1:PersonName>c</st1:PersonName>Double
+example, <a href="http://192.168.2.114/fit/edit.cgi?ScientificDouble">[?]</a>S<st1:PersonName>c</st1:PersonName>ientifi<st1:PersonName>c</st1:PersonName>Double
 <st1:PersonName>c</st1:PersonName>he<st1:PersonName>c</st1:PersonName>ks
 equality to the pre<st1:PersonName>c</st1:PersonName>ision implied by the
 number of signifi<st1:PersonName>c</st1:PersonName>ant digits in a value. </p>
@@ -3866,7 +3866,7 @@ mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
 mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>main is fa<st1:PersonName>c</st1:PersonName>tored
-to simplify <a href="http://192.168.2.114/fit/edit.cgi?RunnerFixtures">?</a>RunnerFixtures
+to simplify <a href="http://192.168.2.114/fit/edit.cgi?RunnerFixtures">[?]</a>RunnerFixtures
 </p>
 
 <p>A runner establishes run spe<st1:PersonName>c</st1:PersonName>ifi<st1:PersonName>c</st1:PersonName>
@@ -3879,7 +3879,7 @@ mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
 mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
 style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><a
-href="http://192.168.2.114/fit/edit.cgi?AssemblyPath">?</a>AssemblyPath ???</p>
+href="http://192.168.2.114/fit/edit.cgi?AssemblyPath">[?]</a>AssemblyPath ???</p>
 
 <p><o:p>&nbsp;</o:p></p>
 -!

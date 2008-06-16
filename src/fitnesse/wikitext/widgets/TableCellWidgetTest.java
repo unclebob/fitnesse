@@ -43,7 +43,7 @@ public class TableCellWidgetTest extends RegexTestCase
 
 	public void testLiteralInLiteralCell() throws Exception
 	{
-		WidgetRoot root = new MockWidgetRoot();
+		ParentWidget root = new MockWidgetRoot();
 		root.defineLiteral("blah");
 		table = new TableWidget(root, "");
 		row = new TableRowWidget(table, "", true);
@@ -54,7 +54,7 @@ public class TableCellWidgetTest extends RegexTestCase
 
 	public void testVariableInLiteralCell() throws Exception
 	{
-		WidgetRoot root = new MockWidgetRoot();
+		ParentWidget root = new MockWidgetRoot();
 		root.addVariable("X", "abc");
 		table = new TableWidget(root, "");
 		row = new TableRowWidget(table, "", true);

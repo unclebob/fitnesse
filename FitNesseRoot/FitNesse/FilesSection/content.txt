@@ -10,7 +10,7 @@ Notice that this looks like a directory listing.  That is because the root of th
 In general FitNesse will serve files from the FilesSection like any other web server would.
 
 '''How can I link to files in the FilesSection?'''
-Any file located in the FilesSection can be linked to from any WikiPage.  For example the link to the images directory would look like this:
+Any file located in the FilesSection can be linked to from any Wiki page.  For example the link to the images directory would look like this:
 http://files/images/
 Notice that there is no domain name in the URL.  You could have put the domain name in like this:
 http://www.fitnesse.org/files/images/

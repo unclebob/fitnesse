@@ -65,14 +65,18 @@ public class DeleteConfirmationResponder implements SecureResponder
 	private HtmlTag makeNoForm()
 	{
 		HtmlTag noForm = HtmlUtil.makeFormTag("get", "/" + resource);
-		noForm.add(HtmlUtil.makeInputTag("submit", "", "No"));
+		HtmlTag noButton = HtmlUtil.makeInputTag("submit", "", "No");
+		noButton.addAttribute("accesskey", "n");
+		noForm.add(noButton);
 		return noForm;
 	}
 
 	private HtmlTag makeYesForm(String filename)
 	{
 		HtmlTag yesForm = HtmlUtil.makeFormTag("get", "/" + resource);
-		yesForm.add(HtmlUtil.makeInputTag("submit", "", "Yes"));
+		HtmlTag yesButton = HtmlUtil.makeInputTag("submit", "", "Yes");
+		yesButton.addAttribute("accesskey", "y");
+		yesForm.add(yesButton);
 		yesForm.add(HtmlUtil.makeInputTag("hidden", "responder", "deleteFile"));
 		yesForm.add(HtmlUtil.makeInputTag("hidden", "filename", filename));
 		return yesForm;

@@ -88,13 +88,18 @@ public class WikiWordWidgetTest extends TestCase
 	{
 		WikiPage page = addPage(root, "PageOne");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
-		assertEquals("WikiWord<a href=\"WikiWord?edit\">?</a>", widget.render());
+		assertEquals(makeExpectedNonExistentWikiWord("WikiWord", "WikiWord"), widget.render());
 		page = addPage(root, "WikiWord");
 		widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
 		assertEquals("<a href=\"WikiWord\">WikiWord</a>", widget.render());
 	}
 
-	//todo the ^ widget is deprecated.  Remove it by 7/2007
+	private String makeExpectedNonExistentWikiWord(String wikiWord, String fullWikiWord) {
+		return wikiWord+"<a title=\"create page\" href=\""+fullWikiWord+"?edit&nonExistent=true\">[?]</a>";
+	}
+
+	//todo the ^ widget is deprecated.  Remove it by 7/2007? (DeanW: There is no real point in removing this, as it
+	// is "harmless" and it will break some user's tests.)
 	public void testSubPageWidget() throws Exception
 	{
 		WikiPage superPage = addPage(root, "SuperPage");
@@ -102,7 +107,7 @@ public class WikiWordWidgetTest extends TestCase
 		data.setContent("^SubPage");
 		superPage.commit(data);
 		String renderedText = superPage.getData().getHtml();
-		assertEquals("^SubPage<a href=\"SuperPage.SubPage?edit\">?</a>", renderedText);
+		assertEquals(makeExpectedNonExistentWikiWord("^SubPage", "SuperPage.SubPage"), renderedText);
 		addPage(superPage, "SubPage");
 		renderedText = superPage.getData().getHtml();
 		assertEquals("<a href=\"SuperPage.SubPage\">^SubPage</a>", renderedText);
@@ -115,7 +120,7 @@ public class WikiWordWidgetTest extends TestCase
 		data.setContent(">SubPage");
 		superPage.commit(data);
 		String renderedText = superPage.getData().getHtml();
-		assertEquals("&gt;SubPage<a href=\"SuperPage.SubPage?edit\">?</a>", renderedText);
+		assertEquals(makeExpectedNonExistentWikiWord("&gt;SubPage", "SuperPage.SubPage"), renderedText);
 		addPage(superPage, "SubPage");
 		renderedText = superPage.getData().getHtml();
 		assertEquals("<a href=\"SuperPage.SubPage\">&gt;SubPage</a>", renderedText);
@@ -146,9 +151,9 @@ public class WikiWordWidgetTest extends TestCase
    {
       WikiPage page = addPage(root, "PageOne");
       WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "Wiki42Word");
-      assertEquals("Wiki42Word<a href=\"Wiki42Word?edit\">?</a>", widget.render());
+      assertEquals(makeExpectedNonExistentWikiWord("Wiki42Word", "Wiki42Word"), widget.render());
       page = addPage(root, "Wiki42Word");
-      WidgetRoot root = new WidgetRoot(page);
+      ParentWidget root = new WidgetRoot(page);
       root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
       widget = new WikiWordWidget(root, "Wiki42Word");
       assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
@@ -168,7 +173,7 @@ public class WikiWordWidgetTest extends TestCase
       childPage.commit(data);
 
       String renderedText = childPage.getData().getHtml();
-      assertEquals("&gt;Sub123Page<a href=\"SuperPage.SubPage.Sub123Page?edit\">?</a>", renderedText);
+      assertEquals(makeExpectedNonExistentWikiWord("&gt;Sub123Page", "SuperPage.SubPage.Sub123Page"), renderedText);
       
       addPage(childPage, "Sub123Page");
       renderedText = childPage.getData().getHtml();

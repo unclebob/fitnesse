@@ -71,8 +71,14 @@ public class CollapsableWidget extends ParentWidget
    //!include: Refactored for 3rd arg
 	private void init(String title, String body, ParentWidget parent) throws Exception
 	{
-		titleWidget = new BlankParentWidget(parent, "!meta " + title);
+		titleWidget = new BlankParentWidget(parent, "!meta " + makeTitleAndEditLinks(title));
 		addChildWidgets(body);
+	}
+
+	private String makeTitleAndEditLinks(String title) {
+		// todo: hack!
+		String[] splitTitle = title.split("\\s+"); 
+		return title + " [[(edit)]["+splitTitle[splitTitle.length-1]+"?edit&redirectToReferer=true&redirectAction=]]";
 	}
 
 	public String render() throws Exception

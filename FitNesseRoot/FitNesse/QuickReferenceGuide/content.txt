@@ -13,7 +13,7 @@
 | !define DOT {'''.'''}      | !define LT {'''<'''}     | !define GT {'''>'''}     |
 | !define BAR {'''!-|-!'''}  | !define LBRACE ('''{''') | !define RBRACE ('''}''') |
 | !define DIVend {!-</div>-!}| !define LPAREN {'''('''} | !define RPAREN {''')'''} |
-| !define BANG {'''!-!-!'''} | !define SPC {!-&nbsp;-!} | !define NL {!-<br>-!}    |
+| !define BANG {'''!-!-!'''} | !define SPC {!-&nbsp;-!} | !define NL {!-<br/>-!}    |
 | !define TEXT {''text''}   | | !define SLASH {'''/'''} | !define NUL {}          |
 | !define PageNAME {''!-PageName-!''} | !define PagePATH {''!-PagePath-!''}       |
 | !define LabelNAME {''label-name''}  | !define AnyPagePATH {''!-AnyPagePath-!''} |

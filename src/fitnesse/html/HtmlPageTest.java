@@ -21,7 +21,7 @@ public class HtmlPageTest extends RegexTestCase
 
 	public void testStandardTags() throws Exception
 	{
-		assertTrue("bad doctype", html.startsWith(HtmlPage.DTD));
+		assertTrue("bad doctype for page: "+html, html.startsWith(HtmlPage.DTD));
 		assertSubString("<html>", html);
 		assertHasRegexp("</html>", html);
 	}

@@ -35,7 +35,7 @@ public class WidgetVisitorTest extends TestCase implements WidgetVisitor
 
 	public void testSimpleVisitorVisitsAllWidgets() throws Exception
 	{
-		WidgetRoot root = new WidgetRoot("''hello''", this.root);
+		ParentWidget root = new WidgetRoot("''hello''", this.root);
 		root.acceptVisitor(this);
 		assertEquals(3, visits.size());
 		assertEquals(WidgetRoot.class, visits.get(0).getClass());
@@ -45,7 +45,7 @@ public class WidgetVisitorTest extends TestCase implements WidgetVisitor
 
 	public void testComplexVisitorVisitsAllWidgets() throws Exception
 	{
-		WidgetRoot root = new WidgetRoot("|CellOne|CellTwo|\n|''hello''|'''hello'''|\n", this.root);
+		ParentWidget root = new WidgetRoot("|CellOne|CellTwo|\n|''hello''|'''hello'''|\n", this.root);
 		root.acceptVisitor(this);
 		assertEquals(14, visits.size());
 	}

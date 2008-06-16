@@ -18,7 +18,7 @@ A note is created using the !-!note-! widget as follows {{{!note this is a note.
 #
 !|Response Examiner|
 |type|string?|
-|contents|<span class="note">hello</span><br>|
+|contents|<span class="note">hello</span><br/>|
 
 |Response Examiner.|
 |type|pattern|matches?|value|

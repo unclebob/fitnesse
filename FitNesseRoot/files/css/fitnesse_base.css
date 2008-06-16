@@ -8,9 +8,9 @@ body
 {
 	margin: 0px;
 	padding: 0px;
-	font-family: trebuchet ms, verdana, tahoma, arial, sans-serif;
-	font-size: 0.9em;
-	background-color: white;
+	font-family: 'Lucida Grande', 'Bitstream Vera Sans', 'trebuchet ms', verdana, tahoma, arial, sans-serif;
+	font-size: 14px;
+	background-color: #FAFAFE; /* #F8F8FC; #F8FCFC; #FFFCF8; #F8FDFF; */
 }
 
 a:link
@@ -40,38 +40,62 @@ a:active
 
 table
 {
-	background: #EEEEEE;
-	margin: 2px;
+	background: #F8F8F8;
+	margin: 5px;
 	padding: 0px;
 	border: solid #AAAAAA;
 	border-width: 1px 0px 0px 1px;
-	font-size: 0.9em;
+/*	font-size: 0.9em;*/
 }
 
 td, th
 {
 	border: solid #AAAAAA;
 	border-width: 0px 1px 1px 0px;
-	padding: 1px 3px 1px 3px;
+	padding: 5px;
 }
+
+table.confirmation-form
+{
+	border: solid 1px #C6CCB7;
+	padding: 5px;
+	margin: 5px;
+}
+
+td.confirmation-form, th.confirmation-form
+{
+	vertical-align: middle;
+	border: solid 0px #C6CCB7;
+	padding: 0px;
+	margin: 0px;
+}
+
 
 h1
 {
-	font-size: 3.0em;
+	font-size: 28px;
 	font-variant: small-caps;
 	margin: 0.5em
 }
 
 h2
 {
-	font-size: 2.2em;
+	font-size: 24px;
 	font-variant: small-caps;
 	margin: 0.5em
 }
 
 h3
 {
-	font-size: 1.7em;
+	font-size: 20px;
+	font-variant: small-caps;
+	margin: 0.5em
+}
+
+h4
+{
+	font-size: 18px;
+	font-style: italic;
 	font-variant: small-caps;
 	margin: 0.5em
 }
@@ -81,9 +105,18 @@ textarea
 	width: 100%;
 }
 
+textarea.pageContent
+{
+	font-family: monaco, 'Lucida Sans Typewriter';
+	font-size: 12px;
+	height: 100%;
+	rows: 40;
+	columns: 70;
+}
+
 pre
 {
-	font-size: 1.5em;
+/*	font-size: 1.5em;*/
 }
 
 img
@@ -99,16 +132,15 @@ img
 
 div.sidebar
 {
+	background: #D9DFC9;
 	margin: 0px;
 	padding: 5px;
 	position: fixed;
 	top: 0px;
 	left: 0px;
-	width: 95px;
+	width: 130px;
 	height: 1000px;
-	border-right: dotted 1px #FF8000;
-	z-index: 99; /*[acd]*/
-	background: white; /*[acd]*/
+	border-right: 1px dotted #C6CCB7;
 }
 
 div.art_niche
@@ -119,7 +151,7 @@ div.art_niche
 	top: 0px;
 	left: 0px;
 	height: 90px;
-	border-bottom: solid 1px #FF8000;
+	border-bottom: solid 1px #984D00;
 	background-image: url("/files/images/FitNesseLogo.gif");
 	background-repeat: no-repeat;
 	background-position: center;
@@ -128,8 +160,8 @@ div.art_niche
 div.actions
 {
 	margin: 0px;
-	padding: 0px;
-	border-top: solid 3px white;
+	padding-top: 5px;
+	padding-botton: 5px;
 }
 
 div.mainbar
@@ -137,8 +169,8 @@ div.mainbar
 	margin: 0px;
 	position: absolute;
 	top: 0px;
-	left: 110px;
-	width: 87%;
+	left: 145px;
+	width: 85%;
 }
 
 div.header
@@ -146,13 +178,60 @@ div.header
 	margin: 0px;
 	padding: 5px;
 	height: 90px;
-	border-bottom: solid 1px #FF8000;
+	border-bottom: 1px solid #984D00;
+}
+/* TODO: we don't have a footer div currently */
+div.footer
+{
+	margin: 0px;
+	padding: 5px;
+	/* Use same color as border color for div.header. */
+	border-top: 1px solid #984D00;
+}
+
+div.contents
+{
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #F0F0F0;
+}
+div.nested-contents
+{
+	margin: 2px;
+	padding: 2px;
+	border: 0px solid #F0F0F0;
+}
+
+hr
+{
+	/* Use same color as border color for div.header. */
+	color: #984D00;   /* for IE */
+	background-color: #984D00; /* for real browsers */
+	height: 1;
 }
 
 div.main
 {
 	margin: 0px;
 	padding: 5px;
+}
+
+div.properties
+{
+	height: 150px;
+	width: 100%;
+	margin: 5px;
+	padding: 5px;
+	border: solid 1px #C6CCB7;
+}
+
+div.virtual-wiki-properties
+{
+	height: 80px;
+	width: 100%;
+	margin: 5px;
+	padding: 5px;
+	border: solid 1px #C6CCB7;
 }
 
 #execution-status
@@ -181,20 +260,21 @@ div.main
 	display: block;
 	margin: 0px;
 	line-height: 2.2em;
-	text-indent: 1em;
-	color: #FFF;
-	font-size: 0.8em;
-	font-weight: bold;
-	background-color: #2E2EB2;
+	text-indent: .5em;
+	color: black; /*#3D4529;*/
+	font-family: sans-serif, verdana, tahoma, arial, sans-serif;
+	font-size: 14px;
+/*	font-weight: bold;*/
+	background-color: #F8F6D3; /* #EDEAC8; */
 	text-decoration: none;
-	border: solid 1px white;
-	border-width: 0px 0px 2px 0px;
+	border: solid 1px #8D8360;
+/*	border-width: 0px 0px 2px 0px;*/
 }
 
 .actions a:hover
 {
-	color: #FF8000;
-	background-color: #606099;
+	color: #3D4529;
+	background-color: #DEDDBD;
 }
 
 .header a:link
@@ -210,29 +290,29 @@ div.main
 
 .note
 {
-	font-size: 0.75em;
-	color: #999999;
+	font-size: 12px;
+	color: #818181;
 }
 
 .page_title
 {
-	font-size: 3.0em;
+	font-size: 36px;
 }
 
 span.page_title
 {
-	text-shadow: 0px 0px 4px #2E2EB2;
+/*	text-shadow: 0px 0px 4px #2E2EB2;*/
 }
 
 .page_type
 {
-	font-size: 1.7em;
+	font-size: 20px;
 	font-variant: small-caps;
 }
 
 .caps, .resultsHeader
 {
-	font-size: 1.3em;
+	font-size: 18px;
 	font-variant: small-caps;
 }
 
@@ -248,6 +328,7 @@ span.page_title
 
 .centered
 {
+	margin: 5px;
 	text-align: center;
 }
 
@@ -339,9 +420,10 @@ div.collapsable
 	display: block;
 }
 
-.hidden
+div.collapsable-contents
 {
-	display: none;
+	margin: 0px 0px 0px 15px;
+	display: block;
 }
 
 div.invisible
@@ -358,6 +440,11 @@ div.invisible
 	font-size: 0.7em;
 	font-style: italic;
 	margin-left: 1.5em;
+}
+
+.hidden
+{
+	display: none;
 }
 
 .toc1 ul
@@ -414,7 +501,6 @@ div.merge_old
 
 .test_summary_link
 {
-	position: absolute; /*[acd] For IE7--prevents wrapping & hiding*/
 	text-align: right;
 }
 

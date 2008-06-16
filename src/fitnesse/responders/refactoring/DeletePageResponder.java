@@ -2,12 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.html.RawHtml;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -15,8 +18,6 @@ import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-
-import java.util.List;
 
 public class DeletePageResponder implements SecureResponder
 {
@@ -77,10 +78,22 @@ public class DeletePageResponder implements SecureResponder
 		HtmlTag divTag = HtmlUtil.makeDivTag("centered");
 		divTag.add(makeHeadingTag(addSubPageWarning, qualifiedPageName));
 		divTag.add(HtmlUtil.BR);
-		divTag.add(HtmlUtil.makeLink(qualifiedPageName + "?responder=deletePage&confirmed=yes", "Yes"));
-		divTag.add("&nbsp;&nbsp;&nbsp;&nbsp;");
-		divTag.add(HtmlUtil.makeLink(qualifiedPageName, "No"));
+		divTag.add(new RawHtml("<center><table class = \"confirmation-form\"><tr><td class = \"confirmation-form\">"));
+		HtmlTag deletePageYesForm = HtmlUtil.makeFormTag("POST", qualifiedPageName+"?responder=deletePage&confirmed=yes", "deletePageYesForm");
+		HtmlTag submitYesButton = HtmlUtil.makeInputTag("submit", "deletePageYesSubmit", "Yes");
+		deletePageYesForm.add(submitYesButton);
+		divTag.add(deletePageYesForm.html());
 
+		divTag.add(new RawHtml("</td><td class = \"confirmation-form\">"));
+
+		HtmlTag deletePageNoForm = HtmlUtil.makeFormTag("POST", qualifiedPageName, "deletePageNoForm");
+		HtmlTag submitNoButton = HtmlUtil.makeInputTag("submit", "deletePageYesSubmit", "No");
+		deletePageNoForm.add(submitNoButton);
+		divTag.add(deletePageNoForm.html());
+
+		divTag.add(new RawHtml("</tr></table></center>"));
+		divTag.add(HtmlUtil.BR);
+		
 		return divTag.html();
 	}
 

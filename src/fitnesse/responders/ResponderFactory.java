@@ -25,6 +25,7 @@ public class ResponderFactory
 	{
 		this.rootPath = rootPath;
 		responderMap = new HashMap();
+		addResponder("dontCreatePage", NotFoundResponder.class);
 		addResponder("edit", EditResponder.class);
 		addResponder("saveData", SaveResponder.class);
 		addResponder("tableWizard", TableWizardResponder.class);

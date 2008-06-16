@@ -81,6 +81,14 @@ public class ResponderFactoryTest extends TestCase
 		assertResponderType(EditResponder.class, nonExistantPage);
 	}
 
+	public void testDontCreatePageResponder() throws Exception
+	{
+		request.addInput("responder", "dontCreatePage");
+		request.setResource("SomePage");
+		assertResponderType(NotFoundResponder.class, root);
+		assertResponderType(NotFoundResponder.class, nonExistantPage);
+	}
+
 	public void testPageDataResponder() throws Exception
 	{
 		request.addInput("responder", "pageData");
