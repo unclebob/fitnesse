@@ -42,6 +42,10 @@ do
 	esac
 	shift
 done
-java -cp fitnesse.jar "${jvm_args[*]}" fitnesse.FitNesse "${fitnesse_args[*]}"
+jvm_args[${#jvm_args[*]}]="-cp"
+jvm_args[${#jvm_args[*]}]="fitnesse.jar"
+
+echo java ${jvm_args[*]} fitnesse.FitNesse ${fitnesse_args[*]}
+java ${jvm_args[*]} fitnesse.FitNesse ${fitnesse_args[*]}
 
 
