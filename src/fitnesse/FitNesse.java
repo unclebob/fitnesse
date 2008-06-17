@@ -27,6 +27,8 @@ public class FitNesse
 	private SocketService theService;
 	private static String extraOutput;
 
+	public static FitNesse fitnesse;
+
 	public static void main(String[] args) throws Exception
 	{
 		Arguments arguments = parseCommandLine(args);
@@ -34,7 +36,7 @@ public class FitNesse
 		{
 			FitNesseContext context = loadContext(arguments);
 			PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
-			FitNesse fitnesse = new FitNesse(context);
+			fitnesse = new FitNesse(context);
 			if(!arguments.isOmittingUpdates())
 				fitnesse.applyUpdates();
 			boolean started = fitnesse.start();
@@ -209,5 +211,9 @@ public class FitNesse
 	public boolean isRunning()
 	{
 		return theService != null;
+	}
+	
+	public FitNesseContext getContext() {
+		return context;
 	}
 }

@@ -2,15 +2,29 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.*;
-
-import java.io.Serializable;
-import java.util.*;
+import fitnesse.wikitext.widgets.ClasspathWidget;
+import fitnesse.wikitext.widgets.FixtureWidget;
+import fitnesse.wikitext.widgets.IncludeWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.PreformattedWidget;
+import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
+import fitnesse.wikitext.widgets.VariableDefinitionWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WidgetWithTextArgument;
+import fitnesse.wikitext.widgets.XRefWidget;
 
 public class PageData implements Serializable
 {
@@ -77,7 +91,15 @@ public class PageData implements Serializable
 		properties.set(EditResponder.TICKET_ID, SaveRecorder.newTicket() + "");
 		properties.setLastModificationTime(new Date());
 
+		initTestOrSuiteProperty();
+	}
+
+	private void initTestOrSuiteProperty() throws Exception {
 		final String pageName = wikiPage.getName();
+		if (pageName == null) {
+			handleInvalidPageName(wikiPage);
+			return;
+		}
 		if(pageName.startsWith("Test") || pageName.endsWith("Test"))
 			properties.set("Test", "true");
 		if((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
@@ -85,6 +107,17 @@ public class PageData implements Serializable
 			!pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME))
 		{
 			properties.set("Suite", "true");
+		}
+	}
+
+	// TODO: Should be written to a real logger, but it doesn't like FitNesse's logger is
+	// really intended for general logging.
+	private void handleInvalidPageName(WikiPage wikiPage) {
+		try {
+			System.err.println("WikiPage "+wikiPage+" does not have a valid name!"+wikiPage.getName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
