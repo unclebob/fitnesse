@@ -180,13 +180,15 @@ div.header
 	height: 90px;
 	border-bottom: 1px solid #984D00;
 }
-/* TODO: we don't have a footer div currently */
+
 div.footer
 {
 	margin: 0px;
 	padding: 5px;
 	/* Use same color as border color for div.header. */
 	border-top: 1px solid #984D00;
+	font-size: 12px;
+	text-align: center;
 }
 
 div.contents

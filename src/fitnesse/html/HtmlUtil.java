@@ -294,7 +294,9 @@ public class HtmlUtil {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getHtmlOfInheritedPage("PageHeader", page));
 		buffer.append(content);
+		buffer.append("<br/><div class=\"footer\">\n");
 		buffer.append(getHtmlOfInheritedPage("PageFooter", page));
+		buffer.append("</div>\n");
 		return buffer.toString();
 	}
 

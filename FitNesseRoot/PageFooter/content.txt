@@ -1,6 +1,2 @@
-----
-| [[User Guide][.FitNesse.UserGuide]] | Documentation |
-| [[Front Page][.FrontPage]] | Front Page |
-| [[root][.root]] | Where to put global !-!path-! declarations, ''etc.'' |
-| [[!-SetUp-!][SetUp]] | Edit or create the !-SetUp-! page for this page. |
-| [[!-TearDown-!][TearDown]] | Edit or create the !-TearDown-! page for this page. |
+[[Front Page][.FrontPage]] | [[User Guide][.FitNesse.UserGuide]] 
+[[!-SetUp-!][SetUp]], [[!-TearDown-!][TearDown]] for this page | [[root][root]] (for global !-!path's-!, ''etc.'')
