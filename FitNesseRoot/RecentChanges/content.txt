@@ -1,3 +1,5 @@
+|FitNesse.StartingAndStoppingFitNesse||14:56:38 Wed, Jun 18, 2008|
+|FitNesse.QuickReferenceGuide||14:48:55 Wed, Jun 18, 2008|
 |FitNesse.WikiImport||16:26:34 Tue, Jun 17, 2008|
 |FrontPage||15:31:39 Tue, Jun 17, 2008|
 |||14:56:11 Tue, Jun 17, 2008|
@@ -10,7 +12,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestBrokenWikiWordLink||15:12:21 Mon, Jun 16, 2008|
 |FitNesse.UserGuide||15:00:08 Mon, Jun 16, 2008|
 |FitNesse.FilesSection||14:56:44 Mon, Jun 16, 2008|
-|FitNesse.StartingAndStoppingFitNesse||14:54:12 Mon, Jun 16, 2008|
 |FitNesse.SubWiki||14:17:23 Mon, Jun 16, 2008|
 |FitNesse.RefactoringWikiPages||14:14:53 Mon, Jun 16, 2008|
 |FitNesse.PageProperties||14:14:07 Mon, Jun 16, 2008|
@@ -54,7 +55,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.TestPathWithWildcards||07:59:14 Tue, Jun 10, 2008|
 |FitNesse.SuiteAcceptanceTests||07:51:38 Tue, Jun 10, 2008|
 |FitNesse.GracefulName||17:57:51 Wed, Jan 30, 2008|
-|FitNesse.QuickReferenceGuide||17:54:45 Wed, Jan 30, 2008|
 |FitNesse.PredefinedVariables||17:54:25 Wed, Jan 30, 2008|
 |FitNesse||17:53:24 Wed, Jan 30, 2008|
 |FitNesse.MarkupCollapsableSection||17:08:28 Wed, Jan 30, 2008|

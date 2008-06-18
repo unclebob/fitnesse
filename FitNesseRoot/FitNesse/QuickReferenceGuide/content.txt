@@ -82,8 +82,9 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 |${CODE} ${GT}C${NUL}hildPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}| child or symbolic |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-!define CollapSIBLE (|${CODE} ${CollapsibleEXPANDED}  ${CODEend}| expanded  |
-|${CODE} ${CollapsibleCOLLAPSED} ${CODEend}| collapsed |
+!define CollapSIBLE (|${CODE} ${CollapsibleEXPANDED}  ${CODEend}| expanded  | |
+|${CODE} ${CollapsibleCOLLAPSED} ${CODEend}| collapsed | |
+|${CODE} ${CollapsibleINVISIBLE} ${CODEend}| invisible | ''useful for hidding define's, etc.'' |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 !define HASH {'''!-#-!'''}
@@ -169,7 +170,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 !anchor FitNesseACTIONS
 |${HDR} !-FitNesse-! Actions ${HDRend}|
 | '''Edit''' this page                 | ${CODE} ''url''${NUL}'''?edit'''        ${CODEend} |
-| '''Create''' a new page directly | ${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}'''?edit'''${CODEend} |
+| '''Create''' a new page directly | ${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}${CODEend}${NL}'''or''' ${NL} ${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}'''?edit'''${CODEend} |
 | '''Test''' this page                 | ${CODE} ''url''${NUL}'''?test'''        ${CODEend} |
 | '''Suite''' test this spage          | ${CODE} ''url''${NUL}'''?suite'''       ${CODEend} |
 | Set '''properties''' of this page    | ${CODE} ''url''${NUL}'''?properties'''  ${CODEend} |
@@ -181,12 +182,12 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 #-------------------------------------------------------------------------------------------
 !anchor CharacterFORMATTING
 |${HDR} Character Formatting ${HDRend}|
-| Comment          |${CODE} '''!-#-!'''${TEXT}    ${CODEend}|
-| Italics          |${CODE} '''!-''-!'''${TEXT}'''!-''-!'''   ${CODEend}|
-| Bold             |${CODE} '''!-'''-!'''${TEXT}'''!-'''-!''' ${CODEend}|
-| Strike-through   |${CODE} '''!----!'''${TEXT}'''!----!'''   ${CODEend}|
-| "As-is"/escaping |${CODE} '''!-!-!-'''${TEXT}'''-!-!-!''' ${CODEend}|
-| Alias Link       |${CODE} '''[['''${TEXT}''']['''${AnyPagePATH}''']]''' ${CODEend}|
+| Comment          |${CODE} '''!-#-!'''${TEXT}    ${CODEend}| ''Can also be used to comment-out markup'' |
+| Italics          |${CODE} '''!-''-!'''${TEXT}'''!-''-!'''   ${CODEend}||
+| Bold             |${CODE} '''!-'''-!'''${TEXT}'''!-'''-!''' ${CODEend}||
+| Strike-through   |${CODE} '''!----!'''${TEXT}'''!----!'''   ${CODEend}||
+| "As-is"/escaping |${CODE} '''!-!-!-'''${TEXT}'''-!-!-!''' ${CODEend}| ''Can also be used to insert HTML tags directly''|
+| Alias Link       |${CODE} '''[['''${TEXT}''']['''${AnyPagePATH}''']]''' ${CODEend}||
 #-------------------------------------------------------------------------------------------
 !anchor LineBlockFORMATTING
 |${HDR} Line & Block Formatting ${HDRend}|
@@ -261,3 +262,4 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 | Smallest Table | ${CODE} ${BAR} ${TEXT} ${BAR} ${CODEend} |
 | Fixture Table | ${CODE} ${FixtureTABLE} ${CODEend} |
 | Graceful Naming | ${FixtureNAMING} |
+
