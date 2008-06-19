@@ -1,3 +1,4 @@
+|FitNesse.FixtureGallery||11:48:01 Thu, Jun 19, 2008|
 |FitNesse.StartingAndStoppingFitNesse||14:56:38 Wed, Jun 18, 2008|
 |FitNesse.QuickReferenceGuide||14:48:55 Wed, Jun 18, 2008|
 |FitNesse.WikiImport||16:26:34 Tue, Jun 17, 2008|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestInclude||10:25:19 Tue, Dec 04, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests||15:58:45 Fri, Nov 30, 2007|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionRegracedPropertiesFilters||15:57:42 Fri, Nov 30, 2007|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursionFilters||15:51:28 Fri, Nov 30, 2007|
