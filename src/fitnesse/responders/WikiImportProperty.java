@@ -48,6 +48,14 @@ public class WikiImportProperty extends WikiPageProperty
 			remove("AutoUpdate");
 	}
 
+	public static boolean isImported(PageData pageData) {
+		try {
+			return pageData.getProperties().has(PROPERTY_NAME);
+		} catch (Exception e) {
+		}
+		return false;
+	}
+	
 	public static WikiImportProperty createFrom(WikiPageProperty property)
 	{
 		if(property.has(PROPERTY_NAME))
@@ -90,17 +98,22 @@ public class WikiImportProperty extends WikiPageProperty
 	public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) throws Exception
 	{
 		html.actions.add(HtmlUtil.makeNavBreak());
-		WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
-		if(importProperty != null && !importProperty.isRoot())
+		if (isImported(pageData)) 
 		{
 			html.body.addAttribute("class", "imported");
 			WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
 			String localPageName = PathParser.render(localPagePath);
 			html.actions.add(HtmlUtil.makeActionLink(localPageName, "Edit Locally", "edit", "e", false));
-			String remoteInput = "responder=edit&redirectToReferer=true&redirectAction=importAndView";
+			html.actions.add(HtmlUtil.makeNavBreak());
+			String remoteInput = makeRemoteEditQueryParameters();
+			WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
 			html.actions.add(HtmlUtil.makeActionLink(importProperty.getSourceUrl(), "Edit Remotely", remoteInput, "e", false));
 		}
-		else if(page instanceof ProxyPage)
+		else if (page instanceof ProxyPage)
 			html.body.addAttribute("class", "virtual");
+	}
+
+	public static String makeRemoteEditQueryParameters() {
+		return "responder=edit&redirectToReferer=true&redirectAction=importAndView";
 	}
 }

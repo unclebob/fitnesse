@@ -2,14 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
 import fitnesse.wiki.WikiPageDummy;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 public class CollapsableWidgetTest extends WidgetTestCase
 {
@@ -96,12 +96,12 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertNotSubString("<br/>", html);
 	}
 
-  public void testMakeCollapsableSection() throws Exception {
+	public void testMakeCollapsableSection() throws Exception {
 		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot());
 		HtmlTag outerTag = widget.makeCollapsableSection(new RawHtml("title"), new RawHtml("content"));
 		assertEquals("div", outerTag.tagName());
 		assertEquals("collapse_rim", outerTag.getAttribute("class"));
-
+		
 		List childTags = removeNewlineTags(outerTag);
 
 		HtmlTag collapseAllLinksDiv = (HtmlTag) childTags.get(0);

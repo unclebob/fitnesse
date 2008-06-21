@@ -3,6 +3,8 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.html.*;
+import fitnesse.responders.WikiImportProperty;
+import fitnesse.wiki.PageData;
 
 import java.util.Random;
 import java.util.regex.*;
@@ -41,9 +43,9 @@ public class CollapsableWidget extends ParentWidget
 		this(parent);
 		Matcher match = pattern.matcher(text);
 		match.find();
-      String tailChar = match.group(1);
+		String tailChar = match.group(1);
 		expanded  = tailChar == null;
-      invisible = expanded? false : "<".equals(tailChar); 
+		invisible = expanded? false : "<".equals(tailChar); 
 		String title = match.group(2);
 		String body = match.group(3);
 		init(title, body, this);
@@ -71,14 +73,43 @@ public class CollapsableWidget extends ParentWidget
    //!include: Refactored for 3rd arg
 	private void init(String title, String body, ParentWidget parent) throws Exception
 	{
-		titleWidget = new BlankParentWidget(parent, "!meta " + makeTitleAndEditLinks(title));
+		titleWidget = new BlankParentWidget(parent, "!meta " + title + " " + makeEditLinks(title));
 		addChildWidgets(body);
 	}
 
-	private String makeTitleAndEditLinks(String title) {
-		// todo: hack!
+	private String makeEditLinks(String title) {
+		try {
+			PageData pageData = getWikiPage().getData();
+			if (WikiImportProperty.isImported(pageData)) {
+				return makeImportedEditLinks(pageData, title);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return "[[(edit)][" + makeLocalEditLinks(title) + "]]";		
+	}
+
+	private String makeLocalEditLinks(String title) {
 		String[] splitTitle = title.split("\\s+"); 
-		return title + " [[(edit)]["+splitTitle[splitTitle.length-1]+"?edit&redirectToReferer=true&redirectAction=]]";
+		return splitTitle[splitTitle.length-1]+"?edit&redirectToReferer=true&redirectAction=";
+	}
+
+	
+	private String makeImportedEditLinks(PageData pageData, String title) {
+		return "(edit: [[locally]["+makeLocalEditLinks(title) + "]]" +
+			   " | [[remotely]["+makeRemoteLink(pageData, title)+"]])";
+	}
+
+	private String makeRemoteLink(PageData pageData, String title) {
+		String remoteInputParameters = WikiImportProperty.makeRemoteEditQueryParameters();
+		WikiImportProperty importProperty;
+		try {
+			importProperty = WikiImportProperty.createFrom(pageData.getProperties());
+			return importProperty.getSourceUrl() + "?" + remoteInputParameters;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	public String render() throws Exception
