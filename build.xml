@@ -322,11 +322,13 @@
 	</target>
 
 	<target name="runAcceptanceTests" depends="load_fitnesse_taskdef" description="Execute Fitnesse Acceptance Tests and publishes the test results">
-		<execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
+		<execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
 	</target>
 
 	<target name="stopFitnesse" description="Stops fitnesse" depends="load_fitnesse_taskdef">
 		<stop-fitnesse fitnesseport="8080" />
 	</target>
+
+	<target name="release" depends="clean, clean_dist, compile, copyResources, unit_test, execute_fitnesse_tests, jar, zip_bin, zip_src" />
 
 </project>

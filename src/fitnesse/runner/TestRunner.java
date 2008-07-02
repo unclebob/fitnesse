@@ -2,13 +2,18 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.*;
+import fit.Counts;
+import fit.FitServer;
 import fitnesse.components.CommandLine;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestRunner
 {
@@ -158,7 +163,9 @@ public class TestRunner
 
 	public static void addItemsToClasspath(String classpathItems) throws Exception
 	{
-		String[] items = classpathItems.split(System.getProperty("path.separator"));
+		final String separator = System.getProperty("path.separator");
+		System.setProperty("java.class.path", System.getProperty("java.class.path") + separator + classpathItems);
+		String[] items = classpathItems.split(separator);
 		for(int i = 0; i < items.length; i++)
 		{
 			String item = items[i];

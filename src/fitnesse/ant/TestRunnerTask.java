@@ -1,11 +1,18 @@
 package fitnesse.ant;
 
-import fitnesse.*;
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Task to run fit tests. This task starts the fit server, runs fitnesse tests and publishes the results.
@@ -137,7 +144,7 @@ public class TestRunnerTask extends Task
 			cmd.createArgument().setValue("-xml");
 			cmd.createArgument().setValue(resultsHTMLPagePath);
 		}
-		cmd.createArgument().setValue("-nopath");
+		//cmd.createArgument().setValue("-nopath");
 		cmd.createArgument().setValue("localhost");
 		cmd.createArgument().setValue(String.valueOf(fitnessePort));
 		cmd.createArgument().setValue(suitePage);

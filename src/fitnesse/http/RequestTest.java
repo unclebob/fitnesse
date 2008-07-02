@@ -6,7 +6,8 @@ import fitnesse.components.Base64;
 import fitnesse.util.FileUtil;
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 public class RequestTest extends TestCase
 {
@@ -123,8 +124,7 @@ public class RequestTest extends TestCase
 	{
 		startParsing();
 		writeToPipe("GET /something HTTP/1.1\r\n");
-		writeToPipe("\r\n");
-		writeToPipe("This is the Entity Body");
+		writeToPipe("\r\nThis is the Entity Body");
 		finishParsing();
 		assertEquals("", request.getBody());
 	}

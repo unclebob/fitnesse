@@ -129,8 +129,9 @@ public class ClassPathBuilder extends InheritedItemBuilder
 	{
 		String fileName = new File(path).getName();
 		File[] files = dir.listFiles(new Wildcard(fileName));
-		for(File file : files)
+		for(File file : files)  {
 			allPaths.add(file.getPath());
+		}
 	}
 
 	private void addMatchingSubfiles(String path, File dir)
