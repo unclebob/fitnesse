@@ -18,4 +18,9 @@ To run the unit tests:
   * junit.jar.
  * run all tests.
 
+There is a second source directory, "srcFitServerTests", which contains units tests that test 
+invocation of Fit servers written in Ruby, C++, and .NET. These tests are not run as part of the normal
+ant test-related targets. When using an IDE, make sure it does not invoke these tests when running the 
+"normal" tests under the "src" directory.
+
 Direct any questions to the FitNesse yahoo group or to fitnesse@objectmentor.com.

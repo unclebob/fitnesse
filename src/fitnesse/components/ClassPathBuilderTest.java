@@ -121,8 +121,8 @@ public class ClassPathBuilderTest extends RegexTestCase
 			classPath = makeClassPathFromSimpleStructure("testDir/**.jar");
 			assertHasRegexp("one\\.jar", classPath);
 			assertHasRegexp("two\\.jar", classPath);
-			assertHasRegexp("subdir/sub1\\.jar", classPath);
-			assertHasRegexp("subdir/sub2\\.jar", classPath);
+			assertHasRegexp("subdir(?:\\\\|/)sub1\\.jar", classPath);
+			assertHasRegexp("subdir(?:\\\\|/)sub2\\.jar", classPath);
 		}
 		finally
 		{

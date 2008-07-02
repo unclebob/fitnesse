@@ -1,3 +1,10 @@
+-- 20080701 -------------------------------------------------------------------------------
+Dean Wampler:
+Fix a few build problems reported by users.
+1) ClassPathBuilderTest.testWildCardExpansion() didn't handle Windows paths.
+2) "Rogue" dummy.jar in SVN caused build "mischief".
+3) Added comment to BUILD_README.txt about the special tests for Ruby, CPP, and .NET Fit.
+
 -- 20080616 -------------------------------------------------------------------------------
 Dean Wampler:
 This commit contains the following changes (listed in no particular order). Most are usability improvements, but a few involve relatively-minor behavior changes.  
