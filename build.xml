@@ -3,17 +3,17 @@
 		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
 	</description>
 
-	<property name="src" location="src" />
-	<property name="src2" location="srcFitServerTests" />
-	<property name="classes" location="classes" />
-	<property name="lib" location="lib" />
+	<property name="src" value="src" />
+	<property name="src2" value="srcFitServerTests" />
+	<property name="classes" value="classes" />
+	<property name="lib" value="lib" />
 	<property name="fitnesseRoot" value="FitNesseRoot" />
 	<property name="fitnesseRootZip" value="FitNesseRoot.zip" />
-	<property name="zipDir" location="dist/fitnesse" />
-	<property name="results.dir" location="test-results" />
+	<property name="zipDir" value="dist/fitnesse" />
+	<property name="results.dir" value="test-results" />
 
 	<property name="cobertura.root" value="${lib}/cobertura-1.8" />
-	<property name="cobertura.dir" location="${results.dir}/cobertura" />
+	<property name="cobertura.dir" value="${results.dir}/cobertura" />
 
 	<path id="classpath">
 		<pathelement path="${classes}" />
@@ -94,7 +94,7 @@
 			<include name="files/**" />
 			<include name="tasks.properties" />
 			<manifest>
-				<attribute name="Built-By" value="Robert C. Martin and Micah D. Martin" />
+				<attribute name="Built-By" value="Object Mentor, Inc." />
 			</manifest>
 		</jar>
 	</target>
