@@ -143,6 +143,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker
 		{
 			try
 			{
+				Thread.sleep(1000);  // next waitFor() can finish too quickly on Linux!
 				commandRunner.process.waitFor();
 				synchronized(CommandRunningFitClient.this)
 				{

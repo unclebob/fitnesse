@@ -8,44 +8,35 @@ import java.io.*;
 
 public class ScheduleTest extends TestCase
 {
-	private ScheduleImpl schedule;
-	private Counter counter;
 	private boolean shouldAddCounters;
-
-	public void setUp() throws Exception
-	{
-		schedule = new ScheduleImpl(250);
-		counter = new Counter();
-	}
-
-	public void tearDown() throws Exception
-	{
-		if(schedule != null)
-			schedule.stop();
-	}
 
 	public void testRunsAtIntervals() throws Exception
 	{
+		ScheduleImpl schedule = new ScheduleImpl(250);
+		Counter counter = new Counter();
 		schedule.add(counter);
 		schedule.start();
 		Thread.sleep(700);
 		schedule.stop();
-		assertEquals(3, counter.count);
+		assertTrue(counter.count >= 3);
 	}
 
 	public void testAddingWhileRunning() throws Exception
 	{
+		ScheduleImpl schedule = new ScheduleImpl(250);
+		Counter counter = new Counter();
 		Sleeper sleeper = new Sleeper();
 		schedule.add(sleeper);
 		schedule.start();
 		schedule.add(counter);
-		Thread.sleep(100);
+		Thread.sleep(400);
 		schedule.stop();
-		assertEquals(1, counter.count);
+		assertTrue(counter.count >= 1);
 	}
 
 	public void testLotsOfAddingWhileRunning() throws Exception
 	{
+		final ScheduleImpl schedule = new ScheduleImpl(250);
 		Runnable adder = new Runnable()
 		{
 			public void run()
@@ -79,6 +70,8 @@ public class ScheduleTest extends TestCase
 
 	public void testExceptionDoesNotCrashRun() throws Exception
 	{
+		ScheduleImpl schedule = new ScheduleImpl(250);
+		Counter counter = new Counter();
 		schedule.add(new ExceptionThrower());
 		schedule.add(counter);
 		PrintStream err = System.err;
