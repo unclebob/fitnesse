@@ -123,7 +123,7 @@ public class EditResponder implements SecureResponder
 		form.add(createButtons());
 		form.add("<br/>Hints:\n<ul>" +
 				 "<li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the \"Save\" button!</li>\n" +
-				 "<li>Grab the lower-right corner of the text area to increase its size.</li>\n" +
+				 "<li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>\n" +
 				 "</ul>");
 		HtmlTag wizardForm = makeWizardForm(resource);
 
@@ -211,7 +211,7 @@ public class EditResponder implements SecureResponder
 		HtmlTag textarea = new HtmlTag("textarea");
 		textarea.addAttribute("class", CONTENT_INPUT_NAME);
 		textarea.addAttribute("name", CONTENT_INPUT_NAME);
-		textarea.addAttribute("rows", "25");
+		textarea.addAttribute("rows", "30");
 		textarea.addAttribute("cols", "70");
 		textarea.addAttribute("tabindex", "1");
 		textarea.add(Utils.escapeText(firstTimeForNewPage ? "!contents -R2 -g -p -f -h" : content));
