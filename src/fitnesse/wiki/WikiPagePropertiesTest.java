@@ -33,7 +33,8 @@ public class WikiPagePropertiesTest extends RegexTestCase
 		tab + "<Test/>" + endl +
 		tab + "<VirtualWiki>http://someurl</VirtualWiki>" + endl +
 		"</properties>" + endl;
-
+	static String[] sampleXmlFragments = sampleXml.split("\t*"+endl);
+	
 	public void setUp() throws Exception
 	{
 		InputStream sampleInputStream = new ByteArrayInputStream(sampleXml.getBytes());
@@ -72,9 +73,11 @@ public class WikiPagePropertiesTest extends RegexTestCase
 		properties.save(os);
 
 		String xml = os.toString();
-		assertEquals(sampleXml, xml);
+		for (String fragment: sampleXmlFragments) {
+			assertTrue(fragment, xml.contains(fragment));
+		}
 	}
-
+	
 	public void testKeySet() throws Exception
 	{
 		properties = new WikiPageProperties();
