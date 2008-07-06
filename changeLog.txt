@@ -1,3 +1,10 @@
+-- 20080702 RELEASE -------------------------------------------------------------------------------
+Uncle Bob.
+Added new ant target "release", which does everything necessary for a release including running
+all the unit and acceptance tests.  Got all the unit and acceptance tests to run in ant too,
+of course.  That was a bit tricky since ant wants to execute everything that ends in 'Test'.
+So I had to change a few class names.
+
 -- 20080701 -------------------------------------------------------------------------------
 Dean Wampler:
 Fix a few build problems reported by users.

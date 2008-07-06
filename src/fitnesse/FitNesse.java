@@ -21,7 +21,7 @@ import java.net.BindException;
 
 public class FitNesse
 {
-	public static final String VERSION = "UNRELEASED";
+	public static final String VERSION = "UNRELEASED POST: 20080702";
 
 	private FitNesseContext context = new FitNesseContext();
 	private SocketService theService;

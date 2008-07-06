@@ -71,8 +71,8 @@
 		<tstamp />
 		<zip zipfile="fitnesse_src${DSTAMP}.zip">
 			<fileset dir=".">
-				<include name="${src}/**" />
-				<include name="${src2}/**" />
+				<include name="src/**" />
+				<include name="srcFitServerTests/**" />
 				<include name="lib/**" />
 				<include name="extra/**" />
 				<include name="build.xml" />
