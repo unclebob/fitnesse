@@ -22,11 +22,15 @@ public class CollapsableWidget extends ParentWidget
 	private String cssClass = "collapse_rim";
 	private ParentWidget titleWidget;
 	public boolean expanded = true;
-   public boolean invisible = false;
+	public boolean invisible = false;
+	// hack. We only set the following flag to false in the 2-arg. constructor shown below. This constructor
+	// is only used in WidgetBuilder and only when "!* .... *!" wiki text is encountered. For those collapsable sections,
+	// we DON'T want an edit link!
+	private boolean showEditCommand = true;  
 
 	private static final String collapsableOpenCss = "collapsable";
-   private static final String collapsableInvisibleCss = "invisible";
-   //invisible: Add to fitnesse_base.css: .invisible  { line-height: 0px;  visibility:hidden; }
+	private static final String collapsableInvisibleCss = "invisible";
+	//invisible: Add to fitnesse_base.css: .invisible  { line-height: 0px;  visibility:hidden; }
 	private static final String collapsableClosedCss = "hidden";
 	private static final String collapsableOpenImg = "/files/images/collapsableOpen.gif";
 	private static final String collapsableClosedImg = "/files/images/collapsableClosed.gif";
@@ -41,6 +45,7 @@ public class CollapsableWidget extends ParentWidget
 	public CollapsableWidget(ParentWidget parent, String text) throws Exception
 	{
 		this(parent);
+		showEditCommand = false;  // hack. only set false here.
 		Matcher match = pattern.matcher(text);
 		match.find();
 		String tailChar = match.group(1);
@@ -78,6 +83,8 @@ public class CollapsableWidget extends ParentWidget
 	}
 
 	private String makeEditLinks(String title) {
+		if (showEditCommand == false)
+			return "";
 		try {
 			PageData pageData = getWikiPage().getData();
 			if (WikiImportProperty.isImported(pageData)) {
