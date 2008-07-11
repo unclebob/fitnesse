@@ -71,6 +71,13 @@ public class IncludeWidgetTest extends WidgetTestCase
 		assertSubString("collapsableClosed.gif", result);
 	}
 
+	public void testHasEditLink() throws Exception
+	{
+		IncludeWidget widget = createIncludeWidget(page1, "PageOne");
+		final String result = widget.render();
+		assertHasRegexp("^.*href.*edit.*$", result);
+	}
+
 	public void testRegexp() throws Exception
 	{
 		assertMatchEquals("!include SomePage", "!include SomePage");

@@ -135,6 +135,22 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		}
 	}
 
+	public void testEditLinkSuppressedWhenWidgetBuilderConstructorIsUsed() throws Exception
+	{
+		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
+		String html = widget.render();
+		assertDoesntHaveRegexp("^.*href.*edit.*$", html);
+	}
+
+	public void testEditLinkIncludedWhenOtherConstructorsAreUsed() throws Exception
+	{
+		CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), new MockWidgetRoot(), 
+				"title", "!* title\ncontent\n*!", "include", false);
+		String html = widget.render();
+		assertHasRegexp("^.*href.*edit.*$", html);
+	}
+
+
 	private List removeNewlineTags(HtmlTag tag) throws Exception
 	{
 		List childTags = new LinkedList(tag.childTags);
