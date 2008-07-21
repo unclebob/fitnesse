@@ -1,5 +1,6 @@
 !3 Announcements
- * The ''!-FitLibrary-!'' jar for ''!-FitNesse-!'' is now called ''fitlibrary.jar''.
+ * The ''!-FitLibrary-!'' jar for ''!-FitNesse-!'' is now called ''fitlibrary.jar''. 
+ * Version ''20070225'' of ''fitlibrary.jar'' is included with this release of !-FitNesse-!.
  * The ''!-FitLibrary-!'' jar for batch processing with ^FolderRunner is now called ''fitlibraryRunner.jar''.
 !3 Introduction to ''!-FitLibrary-!''
  * This user guide assumes familiarity with ''Fit'' and ''!-FitNesse-!''.
