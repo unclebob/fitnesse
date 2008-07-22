@@ -168,7 +168,7 @@ public class WikiImportPropertyTest extends RegexTestCase
 		content = getContentAfterSpecialImportHandling();
 
 		assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
-		assertSubString("<a href=\"blah?responder=edit&redirectToReferer=true&redirectAction=importAndView\" accesskey=\"e\">Edit Remotely</a>", content);
+		assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\" accesskey=\"e\">Edit Remotely</a>", content);
 	}
 
 	private String getContentAfterSpecialImportHandling() throws Exception

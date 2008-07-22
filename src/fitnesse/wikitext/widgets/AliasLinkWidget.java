@@ -73,7 +73,7 @@ public class AliasLinkWidget extends ParentWidget
 		else if(getWikiPage() instanceof ProxyPage)
 			return makeAliasLinkToNonExistentRemotePage(theWord);
 		else
-			return (childHtml() + "<a title=\"create page\" href=\"" + qualifiedName + "?edit&nonExistent=true\">[?]</a>");
+			return (childHtml() + "<a title=\"create page\" href=\"" + qualifiedName + "?edit&amp;nonExistent=true\">[?]</a>");
 	}
 
 	private void addHelpText (HtmlTag link, WikiPage wikiPage) throws Exception
@@ -89,7 +89,7 @@ public class AliasLinkWidget extends ParentWidget
 		String nameOfThisPage = proxy.getName();
 		int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
 		String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
-		return childHtml() + "<a title=\"create page\" href=\"" + remoteURLOfParent + theWord + "?edit&nonExistent=true\""
+		return childHtml() + "<a title=\"create page\" href=\"" + remoteURLOfParent + theWord + "?edit&amp;nonExistent=true\""
 			+ " target=\"" + theWord + "\""
 			+ ">[?]</a>";
 	}

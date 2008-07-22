@@ -79,14 +79,14 @@ public class AliasLinkWidgetTest extends WidgetTestCase
 		crawler.addPage(root, PathParser.parse("FrontPage"));
 		ParentWidget parentWidget = new WidgetRoot(new PagePointer(root, PathParser.parse("FrontPage")));
 		AliasLinkWidget w = new AliasLinkWidget(parentWidget, "[[tag][TestPage]]");
-		assertEquals("tag<a title=\"create page\" href=\"TestPage?edit&nonExistent=true\">[?]</a>", w.render());
+		assertEquals("tag<a title=\"create page\" href=\"TestPage?edit&amp;nonExistent=true\">[?]</a>", w.render());
 	}
 
 	public void testUparrowOnPageThatDoesNotExist() throws Exception
 	{
 		WikiPage page = crawler.addPage(root, PathParser.parse("FrontPage"));
 		AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(page), "[[tag][^TestPage]]");
-		assertEquals("tag<a title=\"create page\" href=\"FrontPage.TestPage?edit&nonExistent=true\">[?]</a>", w.render());
+		assertEquals("tag<a title=\"create page\" href=\"FrontPage.TestPage?edit&amp;nonExistent=true\">[?]</a>", w.render());
 	}
 
 	public void testUparrowOnPageThatDoesExist() throws Exception
@@ -182,6 +182,6 @@ public class AliasLinkWidgetTest extends WidgetTestCase
 
 		ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"));
 		AliasLinkWidget widget = new AliasLinkWidget(new WidgetRoot(virtualPage), "[[link][NonExistentPage]]");
-		assertEquals("link<a title=\"create page\" href=\"http://host:9999/RealPage.NonExistentPage?edit&nonExistent=true\" target=\"NonExistentPage\">[?]</a>", widget.render());
+		assertEquals("link<a title=\"create page\" href=\"http://host:9999/RealPage.NonExistentPage?edit&amp;nonExistent=true\" target=\"NonExistentPage\">[?]</a>", widget.render());
 	}
 }

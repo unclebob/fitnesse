@@ -95,7 +95,7 @@ public class WikiWordWidgetTest extends TestCase
 	}
 
 	private String makeExpectedNonExistentWikiWord(String wikiWord, String fullWikiWord) {
-		return wikiWord+"<a title=\"create page\" href=\""+fullWikiWord+"?edit&nonExistent=true\">[?]</a>";
+		return wikiWord+"<a title=\"create page\" href=\""+fullWikiWord+"?edit&amp;nonExistent=true\">[?]</a>";
 	}
 
 	//todo the ^ widget is deprecated.  Remove it by 7/2007? (DeanW: There is no real point in removing this, as it

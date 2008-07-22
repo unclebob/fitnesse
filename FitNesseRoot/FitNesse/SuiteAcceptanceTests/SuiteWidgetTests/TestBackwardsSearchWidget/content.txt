@@ -29,7 +29,7 @@ Now check for a page that doesn't exist.
 
 !|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|&lt;NoSuch<a title="create page" href="NoSuch\?edit&nonExistent=true">\[\?\]</a>|true||
+|contents|&lt;NoSuch<a title="create page" href="NoSuch\?edit&amp;nonExistent=true">\[\?\]</a>|true||
 
 Now check for a sub page that doesn't exist.
 
@@ -43,4 +43,4 @@ Now check for a sub page that doesn't exist.
 
 !|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|&lt;PageOne\.NoSuch<a title="create page" href="PageOne\.NoSuch\?edit&nonExistent=true">\[\?\]</a>|true||
+|contents|&lt;PageOne\.NoSuch<a title="create page" href="PageOne\.NoSuch\?edit&amp;nonExistent=true">\[\?\]</a>|true||

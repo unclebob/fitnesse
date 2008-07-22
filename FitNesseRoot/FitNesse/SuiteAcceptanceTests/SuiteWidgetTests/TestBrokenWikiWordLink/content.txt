@@ -14,4 +14,4 @@
  * Make sure the rendered page has a broken link.
 !|Response Examiner|
 |type|pattern|matches?|value|
-|contents|SomePage<a title="create page" href="SomePage\?edit&nonExistent=true">\[\?\]</a>|true||
+|contents|SomePage<a title="create page" href="SomePage\?edit&amp;nonExistent=true">\[\?\]</a>|true||

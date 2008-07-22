@@ -114,6 +114,6 @@ public class WikiImportProperty extends WikiPageProperty
 	}
 
 	public static String makeRemoteEditQueryParameters() {
-		return "responder=edit&redirectToReferer=true&redirectAction=importAndView";
+		return "responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView";
 	}
 }

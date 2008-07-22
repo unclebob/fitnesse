@@ -98,7 +98,7 @@ public class CollapsableWidget extends ParentWidget
 
 	private String makeLocalEditLinks(String title) {
 		String[] splitTitle = title.split("\\s+"); 
-		return splitTitle[splitTitle.length-1]+"?edit&redirectToReferer=true&redirectAction=";
+		return splitTitle[splitTitle.length-1]+"?edit&amp;redirectToReferer=true&amp;redirectAction=";
 	}
 
 	
