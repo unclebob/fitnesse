@@ -196,6 +196,7 @@
 			<batchtest todir="${results.dir}">
 				<fileset dir="${src}">
 					<include name="**/*Test.java" />
+					<exclude name="**/ShutdownResponderTest.java" />
 				</fileset>
 			</batchtest>
 		</junit>
