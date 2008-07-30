@@ -50,15 +50,21 @@ public class FileUpdate implements Update
 		URL url = getResource(source);
 		if(url != null)
 		{
-			InputStream input = url.openStream();
-			OutputStream output = new FileOutputStream(destinationFile());
-
-			int b;
-			while((b = input.read()) != -1)
-				output.write(b);
-
-			input.close();
-			output.close();
+			InputStream input = null;
+			OutputStream output = null;
+			try {
+				input = url.openStream();
+				output = new FileOutputStream(destinationFile());
+	
+				int b;
+				while((b = input.read()) != -1)
+					output.write(b);
+			} finally {
+				if (input != null)
+					input.close();
+				if (output != null)
+					output.close();
+			}
 		}
 		else
 			throw new Exception("Could not load resource: " + source);

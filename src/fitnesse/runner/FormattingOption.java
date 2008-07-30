@@ -83,17 +83,20 @@ public class FormattingOption
 
 	public void process(InputStream inputStream, int size) throws Exception
 	{
-		if("raw".equals(format))
-			FileUtil.copyBytes(inputStream, output);
-		else
-		{
-			RequestBuilder request = buildRequest(inputStream, size);
-			ResponseParser response = ResponseParser.performHttpRequest(host, port, request);
-			status = response.getStatus();
-			output.write(response.getBody().getBytes("UTF-8"));
+		try {
+			if("raw".equals(format))
+				FileUtil.copyBytes(inputStream, output);
+			else
+			{
+				RequestBuilder request = buildRequest(inputStream, size);
+				ResponseParser response = ResponseParser.performHttpRequest(host, port, request);
+				status = response.getStatus();
+				output.write(response.getBody().getBytes("UTF-8"));
+			}
+		} finally {
+			if(!usingStdout)
+				output.close();
 		}
-		if(!usingStdout)
-			output.close();
 	}
 
 	public boolean wasSuccessful()

@@ -131,11 +131,18 @@ public class CommandRunner
 				{
 					stdin.write(input.getBytes("UTF-8"));
 					stdin.flush();
-					stdin.close();
 				}
 				catch(Exception e)
 				{
 					exceptionOccurred(e);
+				}
+				finally
+				{
+					try {
+						stdin.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}					
 				}
 			}
 		};

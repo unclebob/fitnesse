@@ -38,12 +38,17 @@ public class UploadResponder implements SecureResponder
 		boolean renamed = uploadedFile.getFile().renameTo(file);
 		if(!renamed)
 		{
-			InputStream input = new BufferedInputStream(new FileInputStream(uploadedFile.getFile()));
-			OutputStream output = new BufferedOutputStream(new FileOutputStream(file));
-			FileUtil.copyBytes(input, output);
-			input.close();
-			output.close();
-			uploadedFile.delete();
+			InputStream input = null;
+			OutputStream output = null;
+			try {
+				input = new BufferedInputStream(new FileInputStream(uploadedFile.getFile()));
+				output = new BufferedOutputStream(new FileOutputStream(file));
+				FileUtil.copyBytes(input, output);
+			} finally {
+				input.close();
+				output.close();
+				uploadedFile.delete();
+			}
 		}
 	}
 

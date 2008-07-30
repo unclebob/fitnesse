@@ -13,12 +13,15 @@ public class InputStreamResponse extends Response
 
 	public void readyToSend(ResponseSender sender) throws Exception
 	{
-		addStandardHeaders();
-		sender.send(makeHttpHeaders().getBytes());
-		while(!reader.isEof())
-			sender.send(reader.readBytes(1000));
-		reader.close();
-		sender.close();
+		try {
+			addStandardHeaders();
+			sender.send(makeHttpHeaders().getBytes());
+			while(!reader.isEof())
+				sender.send(reader.readBytes(1000));
+		} finally {
+			reader.close();
+			sender.close();
+		}
 	}
 
 	protected void addSpecificHeaders()

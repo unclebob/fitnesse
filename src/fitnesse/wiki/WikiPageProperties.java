@@ -81,13 +81,20 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 
 	public void save(OutputStream outputStream) throws Exception
 	{
-		Document document = XmlUtil.newDocument();
-		document.appendChild(makeRootElement(document));
-
-		XmlWriter writer = new XmlWriter(outputStream);
-		writer.write(document);
-		writer.flush();
-		writer.close();
+		Document document = null;
+		XmlWriter writer = null;
+		try {
+			document = XmlUtil.newDocument();
+			document.appendChild(makeRootElement(document));
+	
+			writer = new XmlWriter(outputStream);
+			writer.write(document);
+		} finally {
+			if (writer != null) {
+				writer.flush();
+				writer.close();
+			}
+		}
 	}
 
 	public Element makeRootElement(Document document)
@@ -121,7 +128,11 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 			{
 				String childKey = (String) iterator.next();
 				WikiPageProperty child = context.getProperty(childKey);
-				toXml(child, childKey, document, element);
+				if (child == null) {
+					System.err.println("Property key \""+childKey+"\" has null value for {"+context+"}");
+				} else {
+					toXml(child, childKey, document, element);
+				}
 			}
 		}
 		else if(value != null)

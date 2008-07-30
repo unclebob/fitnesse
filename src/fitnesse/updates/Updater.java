@@ -98,9 +98,14 @@ public class Updater
 		File propFile = getPropertiesFile();
 		if(propFile.exists())
 		{
-			InputStream is = new FileInputStream(propFile);
-			properties.load(is);
-			is.close();
+			InputStream is = null;
+			try {
+				is = new FileInputStream(propFile);
+				properties.load(is);
+			} finally {
+				if (is != null)
+					is.close();
+			}
 		}
 		return properties;
 	}
@@ -113,10 +118,20 @@ public class Updater
 
 	public void saveProperties() throws Exception
 	{
-		File propFile = getPropertiesFile();
-		OutputStream os = new FileOutputStream(propFile);
-		rootProperties.store(os, "FitNesse properties");
-		os.close();
+		OutputStream os = null;
+		File propFile = null;
+		try {
+			propFile = getPropertiesFile();
+			os = new FileOutputStream(propFile);
+			rootProperties.store(os, "FitNesse properties");
+		} catch (Exception e) {
+			String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
+			System.err.println("Filed to save properties file: \""+fileName+"\". (exception: "+e+")");
+			throw e;
+		} finally {
+			if (os != null)
+				os.close();
+		}
 	}
 
 	private void print(String message)

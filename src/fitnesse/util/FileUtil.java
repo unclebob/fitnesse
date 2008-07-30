@@ -16,15 +16,24 @@ public class FileUtil
 
 	public static File createFile(File file, String content)
 	{
+		FileOutputStream fileOutput = null;
 		try
 		{
-			FileOutputStream fileOutput = new FileOutputStream(file);
+			fileOutput = new FileOutputStream(file);
 			fileOutput.write(content.getBytes());
-			fileOutput.close();
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{		
+			if (fileOutput != null)
+				try {
+					fileOutput.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		}
 		return file;
 	}
@@ -102,10 +111,15 @@ public class FileUtil
 	public static byte[] getFileBytes(File input) throws Exception
 	{
 		long size = input.length();
-		FileInputStream stream = new FileInputStream(input);
-		byte[] bytes = new StreamReader(stream).readBytes((int) size);
-		stream.close();
-		return bytes;
+		FileInputStream stream = null;
+		try {
+			stream = new FileInputStream(input);
+			byte[] bytes = new StreamReader(stream).readBytes((int) size);
+			return bytes;
+		} finally {
+			if (stream != null)
+				stream.close();
+		}
 	}
 
 	public static LinkedList getFileLines(String filename) throws Exception

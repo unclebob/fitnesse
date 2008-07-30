@@ -229,9 +229,12 @@ public class FitServerTest extends RegexTestCase
 
 	private void terminateSessionProcess() throws IOException, InterruptedException
 	{
-		socketOutput.write("0000000000".getBytes());
-		process.waitFor();
-		socketInput.close();
+		try {
+			socketOutput.write("0000000000".getBytes());
+			process.waitFor();
+		} finally {
+			socketInput.close();
+		}
 	}
 
 	private void watchForOutput(final InputStream processOutput, final PrintStream consoleOutput)

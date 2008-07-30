@@ -70,16 +70,21 @@ public class TestRunner
 		int port = url.getPort() == -1 ? 80 : url.getPort();
 		String host = url.getHost();
 
-		Socket s = new Socket(host, port);
-		OutputStream output = s.getOutputStream();
-		output.write(request.getText().getBytes());
-		InputStream input = s.getInputStream();
-		ResponseParser response = new ResponseParser(input);
-		output.close();
-		input.close();
-		s.close();
-
-		return response;
+		Socket socket = null;
+		OutputStream output = null;
+		InputStream input = null;
+		try {
+			socket = new Socket(host, port);
+			output = socket.getOutputStream();
+			output.write(request.getText().getBytes());
+			input = socket.getInputStream();
+			ResponseParser response = new ResponseParser(input);
+			return response;
+		} finally  {
+			output.close();
+			input.close();
+			socket.close();
+		}
 	}
 
 	public boolean acceptAgrs(String[] args) throws Exception

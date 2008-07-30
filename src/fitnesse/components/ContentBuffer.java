@@ -74,8 +74,11 @@ public class ContentBuffer
 		{
 			public void close() throws IOException
 			{
-				super.close();
-				tempFile.delete();
+				try {
+					super.close();
+				} finally {
+					tempFile.delete();
+				}
 			}
 		};
 	}

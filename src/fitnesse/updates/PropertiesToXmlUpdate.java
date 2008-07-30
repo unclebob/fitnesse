@@ -50,9 +50,18 @@ public class PropertiesToXmlUpdate extends PageTraversingUpdate
 				newProps.set(key, value);
 		}
 
-		FileOutputStream os = new FileOutputStream(newPropsFile);
-		newProps.save(os);
-		os.close();
+		FileOutputStream os = null;
+		try {
+			os = new FileOutputStream(newPropsFile);
+			newProps.save(os);
+		} catch (Exception e) {
+			System.err.println("Failed to save new properties file: \""+newPropsFile.getAbsolutePath()+"\" (exception: "+e+").");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (os != null)
+				os.close();
+		}
 	}
 
 	private Properties loadOldProperties(File oldPropsFile) throws IOException
@@ -60,9 +69,14 @@ public class PropertiesToXmlUpdate extends PageTraversingUpdate
 		Properties oldProps = new Properties();
 		if(oldPropsFile.exists())
 		{
-			FileInputStream is = new FileInputStream(oldPropsFile);
-			oldProps.load(is);
-			is.close();
+			FileInputStream is = null;
+			try {
+				is = new FileInputStream(oldPropsFile);
+				oldProps.load(is);
+			} finally {
+				if (is != null)
+					is.close();
+			}
 		}
 		return oldProps;
 	}

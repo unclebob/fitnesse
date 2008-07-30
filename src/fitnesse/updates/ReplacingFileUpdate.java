@@ -40,12 +40,15 @@ public class ReplacingFileUpdate extends FileUpdate
 
 	private long checkSum(InputStream input) throws IOException
 	{
-		long sum = 0;
-		int b;
-		while((b = input.read()) != -1)
-			sum += b;
-		input.close();
+		try {
+			long sum = 0;
+			int b;
+			while((b = input.read()) != -1)
+				sum += b;
+			return sum;
+		} finally {
+			input.close();
+		}
 
-		return sum;
 	}
 }

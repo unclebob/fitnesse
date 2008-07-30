@@ -61,17 +61,32 @@ public class FileSystemPage extends CachingPage
 		content = content.replaceAll("\r\n", separator);
 
 		File output = new File(getFileSystemPath() + contentFilename);
-		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
-		writer.write(content);
-		writer.close();
+		OutputStreamWriter writer = null;
+		try {
+			writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
+			writer.write(content);
+		} finally {
+			if (writer != null)
+				writer.close();
+		}
 	}
 
 	protected synchronized void saveAttributes(WikiPageProperties attributes) throws Exception
 	{
-		String propertiesFileName = getFileSystemPath() + propertiesFilename;
-		OutputStream output = new FileOutputStream(propertiesFileName);
-		attributes.save(output);
-		output.close();
+		OutputStream output = null;
+		String propertiesFileName  = "<unknown>";
+		try {
+			propertiesFileName = getFileSystemPath() + propertiesFilename;
+			output = new FileOutputStream(propertiesFileName);
+			attributes.save(output);
+		} catch (Exception e) {
+			System.err.println("Failed to save properties file: \""+propertiesFileName+"\" (exception: "+e+").");
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (output != null)
+				output.close();
+		}
 	}
 
 	protected WikiPage createChildPage(String name) throws Exception
@@ -89,14 +104,24 @@ public class FileSystemPage extends CachingPage
 		File input = new File(name);
 		if(input.exists())
 		{
-			byte[] bytes = new byte[(int) input.length()];
-			FileInputStream inputStream = new FileInputStream(input);
-			inputStream.read(bytes);
-			inputStream.close();
-
+			byte[] bytes = readContentBytes(input);
 			content = new String(bytes, "UTF-8");
 		}
 		data.setContent(content);
+	}
+
+	private byte[] readContentBytes(File input) throws FileNotFoundException,
+			IOException {
+		FileInputStream inputStream = null;
+		try {
+			byte[] bytes = new byte[(int) input.length()];
+			inputStream = new FileInputStream(input);
+			inputStream.read(bytes);
+			return bytes;
+		} finally {
+			if (inputStream != null) 
+				inputStream.close();
+		}
 	}
 
 	protected void loadChildren() throws Exception
@@ -154,11 +179,16 @@ public class FileSystemPage extends CachingPage
 
 	private void attemptToReadPropertiesFile(File file, PageData data) throws Exception
 	{
-		WikiPageProperties props = new WikiPageProperties();
-		InputStream input = new FileInputStream(file);
-		props.loadFromXmlStream(input);
-		input.close();
-		data.setProperties(props);
+		InputStream input = null;
+		try {
+			WikiPageProperties props = new WikiPageProperties();
+			input = new FileInputStream(file);
+			props.loadFromXmlStream(input);
+			data.setProperties(props);
+		} finally {
+			if (input != null)
+				input.close();
+		}
 	}
 
 	public void doCommit(PageData data) throws Exception
@@ -185,13 +215,18 @@ public class FileSystemPage extends CachingPage
 		if(!file.exists())
 			throw new NoSuchVersionException("There is no version '" + versionName + "'");
 
-		PageData data = new PageData(this);
-		ZipFile zipFile = new ZipFile(file);
-		loadVersionContent(zipFile, data);
-		loadVersionAttributes(zipFile, data);
-		data.addVersions(loadVersions());
-		zipFile.close();
-		return data;
+		ZipFile zipFile = null;
+		try {
+			PageData data = new PageData(this);
+			zipFile = new ZipFile(file);
+			loadVersionContent(zipFile, data);
+			loadVersionAttributes(zipFile, data);
+			data.addVersions(loadVersions());
+			return data;
+		} finally {
+			if (zipFile != null)
+				zipFile.close();
+		}
 	}
 
 	private Collection loadVersions() throws Exception
@@ -226,16 +261,19 @@ public class FileSystemPage extends CachingPage
 
 		if(filesToZip.size() == 0)
 			return new VersionInfo("first_commit", "", new Date());
-
-		String filename = makeVersionFileName(version.getName());
-		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(filename));
-
-		for(Iterator iterator = filesToZip.iterator(); iterator.hasNext();)
-			addToZip((File) iterator.next(), zos);
-
-		zos.finish();
-		zos.close();
-		return new VersionInfo(version.getName());
+		ZipOutputStream zos = null; 
+		try {
+			String filename = makeVersionFileName(version.getName());
+			zos = new ZipOutputStream(new FileOutputStream(filename));
+	
+			for(Iterator iterator = filesToZip.iterator(); iterator.hasNext();)
+				addToZip((File) iterator.next(), zos);
+			zos.finish();
+			return new VersionInfo(version.getName());
+		} finally {
+			if (zos != null)
+				zos.close();
+		}
 	}
 
 	protected VersionInfo makeVersionInfo(PageData data) throws Exception
@@ -297,12 +335,17 @@ public class FileSystemPage extends CachingPage
 	{
 		ZipEntry entry = new ZipEntry(file.getName());
 		zos.putNextEntry(entry);
-		FileInputStream is = new FileInputStream(file);
-		int size = (int) file.length();
-		byte[] bytes = new byte[size];
-		is.read(bytes);
-		is.close();
-		zos.write(bytes, 0, size);
+		FileInputStream is = null;
+		try {
+			is = new FileInputStream(file);
+			int size = (int) file.length();
+			byte[] bytes = new byte[size];
+			is.read(bytes);
+			zos.write(bytes, 0, size);
+		} finally {
+			if (is != null)
+				is.close();
+		}
 	}
 
 	protected void loadVersionContent(ZipFile zipFile, PageData data) throws Exception
@@ -311,12 +354,24 @@ public class FileSystemPage extends CachingPage
 		ZipEntry contentEntry = zipFile.getEntry("content.txt");
 		if(contentEntry != null)
 		{
-			InputStream contentIS = zipFile.getInputStream(contentEntry);
-			StreamReader reader = new StreamReader(contentIS);
-			content = reader.read((int) contentEntry.getSize());
-			reader.close();
+			content = readContentEntry(zipFile, contentEntry);
 		}
 		data.setContent(content);
+	}
+
+	private String readContentEntry(ZipFile zipFile, ZipEntry contentEntry)
+			throws IOException, Exception {
+		String content;
+		StreamReader reader = null;
+		try {
+			InputStream contentIS = zipFile.getInputStream(contentEntry);
+			reader = new StreamReader(contentIS);
+			content = reader.read((int) contentEntry.getSize());
+			return content;
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
 	}
 
 	protected void loadVersionAttributes(ZipFile zipFile, PageData data) throws Exception
@@ -324,10 +379,15 @@ public class FileSystemPage extends CachingPage
 		ZipEntry attributes = zipFile.getEntry("properties.xml");
 		if(attributes != null)
 		{
-			InputStream attributeIS = zipFile.getInputStream(attributes);
-			WikiPageProperties props = new WikiPageProperties(attributeIS);
-			attributeIS.close();
-			data.setProperties(props);
+			InputStream attributeIS = null;
+			try {
+				attributeIS = zipFile.getInputStream(attributes);
+				WikiPageProperties props = new WikiPageProperties(attributeIS);
+				data.setProperties(props);
+			} finally {
+				if (attributeIS != null)
+					attributeIS.close();
+			}
 		}
 	}
 

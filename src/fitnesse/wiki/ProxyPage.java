@@ -155,11 +155,19 @@ public class ProxyPage extends CachingPage implements Serializable
 	private static Object getObjectFromUrl(URL url) throws Exception
 	{
 		Object obj;
-		InputStream is = url.openStream();
-		ObjectInputStream ois = new ObjectInputStream(is);
-		obj = ois.readObject();
-		ois.close();
-		return obj;
+		InputStream is = null;
+		ObjectInputStream ois = null;
+		try {
+			is = url.openStream();
+			ois = new ObjectInputStream(is);
+			obj = ois.readObject();
+			return obj;
+		} finally {
+			if (is != null)
+				is.close();
+			if (ois != null)
+				ois.close();
+		}
 	}
 
 	protected PageData makePageData() throws Exception

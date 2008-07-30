@@ -148,10 +148,15 @@ public class Request
 		String filename = (String) headers.get("filename");
 		String contentType = (String) headers.get("content-type");
 		File tempFile = File.createTempFile("FitNesse", ".uploadedFile");
-		OutputStream output = new BufferedOutputStream(new FileOutputStream(tempFile));
-		reader.copyBytesUpTo("\r\n" + boundary, output);
-		output.close();
-		return new UploadedFile(filename, contentType, tempFile);
+		OutputStream output = null;
+		try {
+			output = new BufferedOutputStream(new FileOutputStream(tempFile));
+			reader.copyBytesUpTo("\r\n" + boundary, output);
+			return new UploadedFile(filename, contentType, tempFile);
+		} finally {
+			if (output != null)
+				output.close();
+		}
 	}
 
 	private void checkRequestLine(Matcher match) throws HttpException

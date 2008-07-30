@@ -86,6 +86,10 @@ public class WikiImportTestEventListener implements TestEventListener
 		public void pageImportError(WikiPage localPage, Exception e) throws Exception
 		{
 			errorOccured = true;
+			System.out.println("Exception while importing \"local page\": "+localPage.getName()+", exception: "+e.getMessage());
+			if (e.getCause() != null)
+				System.out.println("  cause: "+e.getCause().getMessage());
+			e.printStackTrace(System.out);
 			testResponder.addToResponse(e.toString());
 		}
 	}
