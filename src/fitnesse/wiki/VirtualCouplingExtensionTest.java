@@ -2,110 +2,96 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import fitnesse.testutil.*;
-import junit.framework.TestCase;
-
 import java.util.List;
 
-public class VirtualCouplingExtensionTest extends TestCase
-{
-	public WikiPage root;
-	public BaseWikiPage page1;
-	public WikiPage page2;
-	private PageCrawler crawler;
+import junit.framework.TestCase;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.SimpleCachinePage;
 
-	public void setUp() throws Exception
-	{
-		root = InMemoryPage.makeRoot("RooT");
-		crawler = root.getPageCrawler();
-		FitNesseUtil.startFitnesse(root);
+public class VirtualCouplingExtensionTest extends TestCase {
+    public WikiPage root;
+    public BaseWikiPage page1;
+    public WikiPage page2;
+    private PageCrawler crawler;
 
-		page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
-		crawler.addPage(page2, PathParser.parse("PageTwoChild"), "page two child");
-		page1 = (BaseWikiPage) crawler.addPage(root, PathParser.parse("PageOne"), "page one content\n!contents\n");
-		crawler.addPage(page1, PathParser.parse("SomeOtherPage"), "some other page");
+    @Override
+    public void setUp() throws Exception {
+        root = InMemoryPage.makeRoot("RooT");
+        crawler = root.getPageCrawler();
+        FitNesseUtil.startFitnesse(root);
 
-		setVirtualWiki(page1, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
-	}
+        page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
+        crawler.addPage(page2, PathParser.parse("PageTwoChild"), "page two child");
+        page1 = (BaseWikiPage) crawler.addPage(root, PathParser.parse("PageOne"), "page one content\n!contents\n");
+        crawler.addPage(page1, PathParser.parse("SomeOtherPage"), "some other page");
 
-	public static void setVirtualWiki(WikiPage page, String virtualWikiURL) throws Exception
-	{
-		PageData data = page.getData();
-		data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, virtualWikiURL);
-		page.commit(data);
-	}
+        setVirtualWiki(page1, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+    }
 
-	public void tearDown() throws Exception
-	{
-		FitNesseUtil.stopFitnesse();
-	}
+    public static void setVirtualWiki(WikiPage page, String virtualWikiURL) throws Exception {
+        PageData data = page.getData();
+        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, virtualWikiURL);
+        page.commit(data);
+    }
 
-	public void testGetChildren() throws Exception
-	{
-		List children = page1.getChildren();
-		assertEquals(1, children.size());
-		assertEquals("SomeOtherPage", ((WikiPage) children.get(0)).getName());
+    @Override
+    public void tearDown() throws Exception {
+        FitNesseUtil.stopFitnesse();
+    }
 
-		VirtualCouplingExtension extension = (VirtualCouplingExtension) page1.getExtension(VirtualCouplingExtension.NAME);
-		children = extension.getVirtualCoupling().getChildren();
-		assertEquals(1, children.size());
-		assertTrue(children.get(0) instanceof ProxyPage);
-		assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
-	}
+    public void testGetChildren() throws Exception {
+        List children = page1.getChildren();
+        assertEquals(1, children.size());
+        assertEquals("SomeOtherPage", ((WikiPage) children.get(0)).getName());
 
-	public void testNewProxyChildrenAreFound() throws Exception
-	{
-		CachingPage.cacheTime = 0;
-		BaseWikiPage realChild = (BaseWikiPage) page2.getChildPage("PageTwoChild");
+        VirtualCouplingExtension extension = (VirtualCouplingExtension) page1.getExtension(VirtualCouplingExtension.NAME);
+        children = extension.getVirtualCoupling().getChildren();
+        assertEquals(1, children.size());
+        assertTrue(children.get(0) instanceof ProxyPage);
+        assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
+    }
 
-		PageCrawler crawler = page2.getPageCrawler();
-		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-		ProxyPage childProxy = (ProxyPage) crawler.getPage(page1, PathParser.parse("PageTwoChild"));
-		assertNull(childProxy.getChildPage("AnotherChild"));
+    public void testNewProxyChildrenAreFound() throws Exception {
+        CachingPage.cacheTime = 0;
+        BaseWikiPage realChild = (BaseWikiPage) page2.getChildPage("PageTwoChild");
 
-		crawler.addPage(realChild, PathParser.parse("AnotherChild"), "another child");
-		assertNotNull(childProxy.getChildPage("AnotherChild"));
-	}
+        PageCrawler crawler = page2.getPageCrawler();
+        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
+        ProxyPage childProxy = (ProxyPage) crawler.getPage(page1, PathParser.parse("PageTwoChild"));
+        assertNull(childProxy.getChildPage("AnotherChild"));
 
-	public void testProxyChildrenAreFoundOnStartUp() throws Exception
-	{
-		WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
-		setVirtualWiki(page3, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+        crawler.addPage(realChild, PathParser.parse("AnotherChild"), "another child");
+        assertNotNull(childProxy.getChildPage("AnotherChild"));
+    }
 
-		assertTrue(page3.hasExtension(VirtualCouplingExtension.NAME));
+    public void testProxyChildrenAreFoundOnStartUp() throws Exception {
+        WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
+        setVirtualWiki(page3, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
 
-		VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
-		List children = extension.getVirtualCoupling().getChildren();
-		assertEquals(1, children.size());
-		assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
-	}
+        assertTrue(page3.hasExtension(VirtualCouplingExtension.NAME));
 
-	public void testGetChildrenOnlyAsksOnce() throws Exception
-	{
-		CachingPage.cacheTime = 10000;
-		ProxyPage.retrievalCount = 0;
-		SimpleCachinePage page = new SimpleCachinePage("RooT", null);
-		setVirtualWiki(page, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
-		VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
-		extension.getVirtualCoupling().getChildren();
-		assertEquals(1, ProxyPage.retrievalCount);
-	}
+        VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
+        List children = extension.getVirtualCoupling().getChildren();
+        assertEquals(1, children.size());
+        assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
+    }
 
-	public void testNoNastyExceptionIsThrownWhenVirutalChildrenAreLoaded() throws Exception
-	{
-		WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
-		setVirtualWiki(page3, "http://google.com/SomePage");
-		try
-		{
-			VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
-			extension.getVirtualCoupling().getChildren();
-			assertNotNull(page3.getChildPage("VirtualWikiNetworkError"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			fail("an exception was thrown");
-		}
-	}
+    public void testGetChildrenOnlyAsksOnce() throws Exception {
+        CachingPage.cacheTime = 10000;
+        ProxyPage.retrievalCount = 0;
+        SimpleCachinePage page = new SimpleCachinePage("RooT", null);
+        setVirtualWiki(page, "http://localhost:" + FitNesseUtil.port + "/PageTwo");
+        VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
+        extension.getVirtualCoupling().getChildren();
+        assertEquals(1, ProxyPage.retrievalCount);
+    }
+
+    public void testNoNastyExceptionIsThrownWhenVirutalChildrenAreLoaded() throws Exception {
+        WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
+        setVirtualWiki(page3, "http://google.com/SomePage");
+        VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
+        extension.getVirtualCoupling().getChildren();
+        assertNotNull(page3.getChildPage("VirtualWikiNetworkError"));
+    }
 
 }

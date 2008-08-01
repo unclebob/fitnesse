@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="lib/fitlibrary.jar"/>
 	<classpathentry kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/easymock.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
