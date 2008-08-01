@@ -1,0 +1,16 @@
+The !-PathParser-! is used by the .NET !-FitServer-! to parse the path passed to it from [[!-FitNesse-!][.FitNesse]]. You can include a config file on the path, and .NET !-FitServer-! will use that config file during the test run.
+
+Try just one path entry...
+|path parser fixture|
+|path string|assembly paths?|config file path?|
+|c:\path\to\assembly.dll|c:\path\to\assembly.dll|null|
+
+Now two...
+|path parser fixture|
+|path string|assembly paths?|config file path?|
+|c:\path\to\assembly.dll;c:\path\to\other\assembly.dll|c:\path\to\assembly.dll,c:\path\to\other\assembly.dll|null|
+
+Now one assembly and one config file
+|path parser fixture|
+|path string|assembly paths?|config file path?|
+|c:\path\to\assembly.dll;c:\path\to\assembly.config|c:\path\to\assembly.dll|c:\path\to\assembly.config|

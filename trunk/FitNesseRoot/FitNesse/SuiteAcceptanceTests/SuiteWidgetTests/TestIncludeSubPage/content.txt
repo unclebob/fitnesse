@@ -1,0 +1,32 @@
+!3 This page tests includes of a sub page. 
+
+Make sure the !-!include >MySubPage-! syntax works.
+#
+ * First create a page to be included.
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|this subpage was included 3.14159|
+|enter|page|!-IncludingPage.IncludedPage-!|
+#
+ * Next create a page to do the including.
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|before|
+|enter|line|!-!include >IncludedPage-! |
+|enter|line|after|
+|enter|page|!-IncludingPage-!|
+#
+ * Then request the including page.
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-IncludingPage-!|true||
+#
+ * Examine the requested page to be sure the included page was in fact included.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|this subpage was included 3.14159|true||
+#

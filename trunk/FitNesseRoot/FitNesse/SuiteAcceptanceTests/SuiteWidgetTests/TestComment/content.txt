@@ -1,0 +1,32 @@
+!3 This page tests comments on a wiki page.
+#
+ * First create a page with comment text on it.
+#
+!|Action Fixture|
+|start|Page Builder|
+|enter|line|one|
+|enter|line|#two|
+|enter|line|three|
+|enter|page|CommentTextPage|
+#
+ * Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|CommentTextPage|true||
+#
+ * Examine the page to be sure the comment was not expressed.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|two|false||
+
+|Response Examiner.|
+|type|number|string?|
+|line|1|one|
+|line|2|three|
+
+
+
+
+

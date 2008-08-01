@@ -1,0 +1,46 @@
+!2 The Backwards Search widget.
+Sometimes we want to search backwards through a path to a named page.  For example, if we are on the page !-.PageOne.PageTwo.PageThree.PageFour-! we might be able to say !-<PageTwo-! to search backwards to !-PageTwo-!.  Now let's say there is a page named !-.PageOne.PageTwo.AnotherPage-! and we are on !-.PageOne.PageTwo.PageThree.PageFour-!  We could say !-<PageTwo.AnotherPage-!
+
+!|Page creator.|
+|Page name.                        |Page contents.      |valid?|
+|PageOne                           |                    |true  |
+|PageOne.PageTwo                   |                    |true  |
+|PageOne.PageTwo.AnotherPage               |                    |true  |
+|PageOne.PageTwo.PageThree         |                    |true  |
+|PageOne.PageTwo.PageThree.PageFour|<PageTwo.AnotherPage|true  |
+
+!|Response Requester.|
+|uri|valid?|contents?|
+|PageOne.PageTwo.PageThree.PageFour|true||
+
+!|Response Examiner.|
+|type  |pattern|matches?|value|
+|contents|href="PageOne.PageTwo.AnotherPage"|true||
+
+Now check for a page that doesn't exist.
+
+!|Page creator.|
+|Page name.                        |Page contents.      |valid?|
+|PageOne.PageTwo.PageThree.PageFour|<NoSuch             |true  |
+
+!|Response Requester.|
+|uri|valid?|contents?|
+|PageOne.PageTwo.PageThree.PageFour|true||
+
+!|Response Examiner.|
+|type  |pattern|matches?|value|
+|contents|&lt;NoSuch<a title="create page" href="NoSuch\?edit&amp;nonExistent=true">\[\?\]</a>|true||
+
+Now check for a sub page that doesn't exist.
+
+!|Page creator.|
+|Page name.                        |Page contents.      |valid?|
+|PageOne.PageTwo.PageThree.PageFour|<PageOne.NoSuch     |true  |
+
+!|Response Requester.|
+|uri|valid?|contents?|
+|PageOne.PageTwo.PageThree.PageFour|true||
+
+!|Response Examiner.|
+|type  |pattern|matches?|value|
+|contents|&lt;PageOne\.NoSuch<a title="create page" href="PageOne\.NoSuch\?edit&amp;nonExistent=true">\[\?\]</a>|true||

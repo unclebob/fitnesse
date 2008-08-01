@@ -1,0 +1,28 @@
+!3 You can save values in arbitary symbols and recall them later
+
+'''NOTE: This functionality works differently from similar functionality in java !-FitNesse-!. The plan is to add this approach to the java version in an upcoming release.'''
+----
+In the first column, set the value of the field. In the second, query for the value of that field (indicated by the column header ending with "?") and store that value in the symbol "id".
+!|string fixture|
+|field|field?|
+|3|>>id|
+
+In another table (for the purposes of demonstration - this would work fine in one table) recall the value of the symbol "id" and assign it to the field in the first column. In the second column, query for the value of field (field?) and assert that its value is what was submitted in the previous table..
+!|string fixture|
+|field|field?|
+|<<id|3|
+
+This works for fields, properties and methods...
+!|string fixture|
+|field|field?|property|property?|set|get?|
+|1|>>a|2|>>b|3|>>c|
+
+Retrieve the values for setting
+!|string fixture|
+|field|field?|property|property?|set|get?|
+|<<a|1|<<b|2|<<c|3|
+
+Retrieve the values for checking
+!|string fixture|
+|field|field?|property|property?|set|get?|
+|1|<<a|2|<<b|3|<<c|

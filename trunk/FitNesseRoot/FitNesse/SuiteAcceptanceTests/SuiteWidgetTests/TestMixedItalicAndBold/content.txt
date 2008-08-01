@@ -1,0 +1,20 @@
+This page tests mixed formatting text on a wiki page.
+
+First create a page with normal text on it.
+
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-MixedTextPage-!|!-This is normal, ''italic'', and '''bold''' text-!||true|
+
+Then request that page
+
+|Response Requester.|
+|uri|valid?|
+|!-MixedTextPage-!|true|
+
+Examine the page to be sure it has the mixed text
+
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|This is normal, <i>italic</i>, and <b>bold</b> text|true||
+

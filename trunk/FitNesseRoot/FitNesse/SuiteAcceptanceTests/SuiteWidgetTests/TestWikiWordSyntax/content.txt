@@ -1,0 +1,12 @@
+The best way to see learn about .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.WikiWord syntax is by example.
+Notice the combination of capital and lower case letters.
+
+!|fitnesse.fixtures.RenderFixture|
+|text|rendered()||
+|WikiWord|WikiWord<a title="create page" href="WikiWord?edit&amp;nonExistent=true">[?]</a>|
+|MdM|MdM<a title="create page" href="MdM?edit&amp;nonExistent=true">[?]</a>|
+|AbCdEfGhIjKlMnOpQrTuVxYz|AbCdEfGhIjKlMnOpQrTuVxYz<a title="create page" href="AbCdEfGhIjKlMnOpQrTuVxYz?edit&amp;nonExistent=true">[?]</a>|
+|TheNumber1|TheNumber1<a title="create page" href="TheNumber1?edit&amp;nonExistent=true">[?]</a>|
+|ParenT.ChilD|ParenT.ChilD<a title="create page" href="ParenT.ChilD?edit&amp;nonExistent=true">[?]</a>|
+|^SubPage|^SubPage<a title="create page" href="RooT.SubPage?edit&amp;nonExistent=true">[?]</a>|DEPRECATED|
+|>SubPage|&gt;SubPage<a title="create page" href="RooT.SubPage?edit&amp;nonExistent=true">[?]</a>|

@@ -1,0 +1,50 @@
+!2 Test variables declared on parent page.
+When a variable is expressed on a page, if that variable was not defined on that page, then !-FitNesse-! looks on the parent pages until it finds one that has the variable.
+----
+!3 Test parent variable
+ * Build parent page with variable definition.
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!define x {1}-!|
+|enter|page|!-ParentPage-!|
+#
+ * Build sub page with variable expression
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-x is ${x}-!|
+|enter|page|!-ParentPage.SubPage-!|
+#
+ * fetch sub page.
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage.SubPage-!|true||
+#
+ * Make sure variable was expressed.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|x is 1|true||
+----
+!3 Make sure child variables override parent variables.
+ * Build sub page with both variable definition and expression.
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!define x {2}-!|
+|enter|line|!-x is ${x}-!|
+|enter|page|!-ParentPage.SubPageTwo-!|
+#
+ * fetch sub page.
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage.SubPageTwo-!|true||
+#
+ * Make sure variable definition from sub page was expressed.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|x is 2|true||

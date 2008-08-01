@@ -1,0 +1,45 @@
+!3 !-!contents-! with Graceful option
+!include -seamless ContentsUsage
+!3 Explicit Graceful Option
+'''First create the parent page.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I'm the parent|
+|enter|line|!-!contents -g-!|
+|enter|page|!-ParentPage-!|
+
+!include -seamless ContentsTestsInclude
+
+'''Then request the parent page.'''
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage-!|true||
+
+'''...and examine the requested page to be sure that the child pages are included'''
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<a href="ParentPage.FirstChild">First Child</a>|true|
+|contents|<a href="ParentPage.SecondChild">Second Child</a>|true|
+
+!3 Indirect via REGRACE_TOC Variable
+'''First create the parent page.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I'm also the parent|
+|enter|line|!-!define REGRACE_TOC {true}-!|
+|enter|line|!-!contents-!|
+|enter|line|!-!define REGRACE_TOC {false}-!|
+|enter|page|!-ParentPage-!|
+
+!include -seamless ContentsTestsInclude
+
+'''Then request the parent page.'''
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage-!|true||
+
+'''...and examine the requested page to be sure that the child pages are included'''
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<a href="ParentPage.FirstChild">First Child</a>|true|
+|contents|<a href="ParentPage.SecondChild">Second Child</a>|true|

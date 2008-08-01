@@ -1,0 +1,20 @@
+!3 !-!contents-!
+!include -seamless ContentsUsage
+'''First create the parent page.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|I'm the parent|
+|enter|line|!-!contents-!|
+|enter|page|!-ParentPage-!|
+
+!include -seamless ContentsTestsInclude
+'''Then request the parent page.'''
+|Response Requester.|
+|uri|valid?|contents?|
+|!-ParentPage-!|true||
+
+'''...and examine the requested page to be sure that the child pages are included'''
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<a href="ParentPage.FirstChild">FirstChild</a>|true|
+|contents|<a href="ParentPage.SecondChild">SecondChild</a>|true|

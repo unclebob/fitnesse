@@ -1,0 +1,30 @@
+!1 Wiki Markup Language Reference
+
+The FitNesse markup language is straightforward to learn, and powerful enough to enable you to create richly-formatted and customized wiki pages. Below is a reference of so-called "widgets" for formatting text and accomplishing other things on wiki pages. 
+
+|!c '''Markup Syntax'''|
+|[[Italics][MarkupItalics]]|''Setting a word or phrase in italics.''|
+|[[Bold][MarkupBold]]|''Setting a word or phrase in bold.''|
+|[[Strike][MarkupStrike]]|''Putting a strike through a word or phrase.''|
+|[[Cross Reference][MarkupCrossReference]]|''Add a cross reference to another page.''|
+|[[Headers][MarkupHeaders]]|''Setting a line as a title or section header.''|
+|[[Centering][MarkupCenter]]|''Centering a line.''|
+|[[Notes][MarkupNote]]|''Making a note.''|
+|[[Horizontal Rules][MarkupHorizontalRule]]|''Drawing a horizontal separator.''|
+|[[Images][MarkupPicture]]|''Placing a picture or image.''|
+|[[External links][MarkupExternalLink]]|''Creating a hyperlink to an external webpage.''|
+|[[Links Within Pages][LinksWithinPages]]|''Creating links to anchors within the same page.''|
+|[[Wiki page links][MarkupInternalLink]]|''Creating a hyperlink to an internal wiki page.''|
+|[[Alias links][MarkupAliasLink]]|''Turning reqular words or images into links''|
+|[[Lists][MarkupLists]]|''Creating bullet lists and numbered lists''|
+|[[Literal Text][MarkupLiteralText]]|''Preventing text from being interpreted.''|
+|[[Preformatted text][MarkupPreformatted]]|''Setting text as preformatted monofont''|
+|[[Comments][MarkupComments]]|''Putting comments in markup text.''|
+|[[Variables][MarkupVariables]]|''Defining and expressing variables''|
+|[[Classpaths][MarkupPath]]|''Marking a line as a directory path.''|
+|[[Tables][MarkupTable]]|''Creating tables.''|
+|[[Generating tables of contents][MarkupContents]]|''Generate a table of contents for a SubWiki.''|
+|[[Page Inlining][MarkupPageInclude]]|''Pulling the content from one page into another.''|
+|[[Last Modification Time][LastModificationTime]]|''Showing the time that a page was last modified.''|
+|[[Fixture Specifiers][MarkupFixture]]|''Specify a fixture to be displayed by the TableWizard.''|
+|[[Collapsable Sections][MarkupCollapsableSection]]|''Making a section of content collapsable and expandable''|

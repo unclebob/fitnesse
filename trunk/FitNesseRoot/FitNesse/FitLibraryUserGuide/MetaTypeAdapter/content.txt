@@ -1,0 +1,23 @@
+(This is an advanced topic that concerns few people.)
+!3 ''!-TypeAdapter-!''
+Core Fit assumes that each cell of a table contains text. This text is converted into a Java object (or primitive value) by a ''!-TypeAdapter-!'' so that the value can be used in the test (eg, assigned to an instance variable or used to check whether the right value was returned from the fixture). The ''!-TypeAdapter-!'' chosen depends on the type of the corresponding method argument, method return type, public instance variable type, etc.
+
+A ''!-TypeAdapter-!'' is actually responsible for:
+ * Parsing a string into a value
+ * Displaying a value as a string - usually by calling the ''toString()'' method on the value, if it's an Object
+ * Checking that two values are the same - usually by calling the ''equals()'' method on the value, if it's an Object
+Any tags in the text of a cell are removed before it is parsed into a value.
+
+See Chapter 37 of the FitBook for further discussion.
+
+!3 ''!-LibraryTypeAdapter-!''
+!-FitLibrary-! extends this idea so that it can treat the text inside a cell in a special way (such as to treat the contents as a list, or table, etc). !-FitLibrary-! does this if there is a ''!-MetaTypeAdapter-!'' associated with the type of a method argument (or whatever), in which case it passes all of the contents of the cell (including tags) to the ''!-MetaTypeAdapter-!''.
+
+Here is a simplified account of ''!-MetaTypeAdapter-!''s:
+ * If the argument is of type ''Tree'', a ''!-TreeTypeAdapter-!'' is used. It expects to find an HTML list in the string; it converts it into a ''!-TreeList-!'' object, which is a ''Tree''. A ''!-TreeList-!'' will compare itself to another ''Tree''.
+ * If the argument is of type ''!-GraphicInterface-!'', a ''!-GraphicTypeAdapter-!'' is used. It expects to find a IMAGE graphics link in the string; it converts it into a ''!-DotGraphic-!'' object, which is a ''GraphicInterface''. A ''!-DotGraphic-!'' will compare itself to another ''DotGraphic''.
+ * If the argument is of type ''!-TaggedString-!'', a ''!-TaggedTypeAdapter-!'' is used. It simply stores the whole string (including tags) in a ''!-TaggedString-!''. A ''!-TaggedString-!'' will compare itself to another ''!-TaggedString-!''.
+ * If the argument is of type ''TableInterface'', a ''!-TableTypeAdapter-!'' is used. It expects to find an embedded table in the cell; it converts it into a ''!-Table-!'' object, which is a ''TableInterface''. A ''!-Table-!'' will compare itself to another ''Table''.
+In fact, ''!-MetaTypeAdapter-!''s are more general than this. Most ''!-MetaTypeAdapter-!''s actually pass responsibility for parsing to the type concerned, through that type's ''static Object parse(String)'' method. This can result in quite different parsing and testing for equality. Eg, ''!-GraphicTypeAdapter-!'' may pass responsbility to a ''!-ImageNameGraphic-!'' (which simply compare the file names), ''!-DotGraphic-!'' (which compares the underlying text in a Dot file), or a ''!-ObjectDotGraphic-!'' (which builds Dot graphs automatically out of graphs of objects).
+
+You can provide your own subclasses to handle parsing and equality however you like. For example, you might choose to compare the pixels within two images that are referenced through a IMAGE.

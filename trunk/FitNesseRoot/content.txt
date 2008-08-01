@@ -1,0 +1,7 @@
+!contents
+
+'''Caution:''' Don't remove or modify these path statements unless you know what you are doing!
+
+!path classes
+!path fitnesse.jar
+!path fitlibrary.jar

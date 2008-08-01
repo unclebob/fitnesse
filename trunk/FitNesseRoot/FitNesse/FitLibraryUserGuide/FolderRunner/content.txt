@@ -1,0 +1,42 @@
+FolderRunner:
+ * Handles test suites, organised in directories (folders)
+ * Handles both HTML and XLS spreadsheet files
+ * Now works with the ''!-FitNesse-!'' version of Java Fit instead of ''!-FitJava1.1-!''.
+ * Uses CSS for reports, and automatically includes the appropriate links in the html header for those
+Run FolderRunner as follows:
+{{{      java -cp fitlibraryRunner.jar fitlibrary.runner.FolderRunner testDiry reportDiry
+}}} * You will need to add to the classpath (''cp'') for any application code that you're testing.
+If you want feedback on progress of FolderRunner, instead run ''!-FolderRunnerUI-!'' as follows:
+{{{      java -cp fitlibraryRunner.jar fitlibrary.runner.FolderRunnerUI testDiry reportDiry
+}}} * This shows the current counts of passed tests, etc as it runs the tests
+ * It also shows any program output (to ''out'' or ''err'')
+ * It allows you to quit partway through
+!3 FolderRunner
+ * FolderRunner runs ''Fit'' on every file in the ''testDiry'' and sub-directories and writes a report file into the corresponding place in the ''reportDiry'' (creating any sub-directories, as needed).
+ * However, it ignores files that start with "." or "CVS" and any ''files'' directories
+ * You can have relative references to images, etc, in your test files in a local ''files'' directory. Before running Fit on the files in a directory, FolderRunner  copies any ''files'' directory in that directory into the corresponding place in the ''reportDiry'', so that they're available for access from the reports.
+ * It creates a file ''reportIndex.html'' in the ''reportDiry'' that gives the results of all the tests. It provides links into all of the reports, as well as to the directories holding the reports in a (sub-)suite.
+ * FolderRunner  handles both HTML and XLS spreadsheet files.
+ * FolderRunner inserts CCS links, etc in the generated reports so that the colors show (and writes a suitable CSS file so it can be accessed).
+ * If you wish to change the CSS file used (eg, to alter the colors of the reports), run FolderRunner once and it will add several files into ''testDiry/files''. Edit the CSS file (''testDiry/files/css/fitnesse.css'') to suit. FolderRunner won't replace them.
+!3 Spreadsheet files
+ * FolderRunner uses ''!-SpreadsheetRunner-!'' which in turn uses ''Poi'' to read XLS files.
+ * ''!-SpreadsheetRunner-!'' uses spreadsheet borders to work out where the tables are in the spreadsheet (just the first sheet).
+ * See the directory ''testFolders'' in the distribution of ''!-FitLibrayForFit-!'' for examples of the use of spreadsheet files (these are used in my Fit tests for FolderRunner itself).
+ * Add the poi jar in the classpath when using such files. (Download poi from http://jakarta.apache.org/poi)
+!3 ''!-SetUp-!'' and ''!-TearDown-!''
+The following special files may be in the ''testDiry'' or any of its sub-directories, and are used as follows:
+ * A ''!-SetUp-!'' file is effectively added to the start of each test in the directory (including sub-directories). The file may be ''!-SetUp.htm-!'', ''!-SetUp.html-!'' or ''!-SetUp.xls-!'' (in any mixture of uppercase and lower case).
+ * A ''!-TearDown-!'' file is effectively added to the endof each test in the directory (including sub-directories). The file may be ''!-TearDown.htm-!'', ''!-TearDown.html-!'' or ''!-TearDown.xls-!'' (in any mixture of uppercase and lower case).
+Before running a test, all  ''!-SetUp-!'' files that appear in the current directory and all those above it (up to the level of the ''testDiry'') are (effectively) added to the start of the test. They are added with the top-most first.
+
+All  ''!-TearDown-!'' files that appear in the current directory and all those above it (up to the level of the ''testDiry'') are (effectively) added to the end of the test. They are added with the top-most last.
+
+NB: this differs from the ''!-FitNesse-!'' approach, which only takes the closest ''!-SetUp-!'' or ''!-TearDown-!''.
+!3 Possible future changes
+ * ''!-SuiteSetUp-!'' and ''!-SuiteTearDown-!''
+ * Suite fixtures (currently experimental with ''!-FitNesse-!'')
+ * Provide details to help in the use of spreadsheets, including pitfalls due to limitations of ''Poi''
+---- * ''Copyright (c) 2004, 2005, 2006 Rick Mugridge, http://www.rimuresearch.com''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''
+

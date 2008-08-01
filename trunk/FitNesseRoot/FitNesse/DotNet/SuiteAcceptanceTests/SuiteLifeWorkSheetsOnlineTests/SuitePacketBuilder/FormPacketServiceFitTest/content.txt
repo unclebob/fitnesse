@@ -1,0 +1,9 @@
+!2 ''Classpaths''
+!path c:\views\iig\iigweb\pr\iig\bin\BusinessObjects.dll
+!path C:\Views\IIG\IIGWeb\BusinessObjects\bin\BusinessObjects.dll.config
+
+!|AllianzLife.IIGWeb.BusinessObjects.Test.FitTests.FormPacketServiceFitTest|
+|TestCaseId |StateCode |ProductCode |PremiumSubmitted |EFT |Replacement |Transfer |HighFaceAmount |Insured65OrOlder |LTCRider |RequiredDocuments? |RequestedDocuments? |OtherDocuments? |
+|1|CA |182194|false |false |false |false |false |false |false |CA-NB2240;NB3046-WS;NB5026-WS; NB5051-SR;NB5056-R;NB5057-R; |None |NB2012;NB4019;NB5003-CA;NB5018-WS;NB5023-L;NB5028;S2056-WS;|
+|2|CA |182194|true |true |true |true |true |true |true |CA-NB2240;NB3046-WS;NB5026-WS; NB5051-SR;NB5056-R;NB5057-R; |None  |NB2012;NB4019;NB5003-CA;NB5018-WS;NB5023-L;NB5028;S2056-WS;|
+|3|CA |182194|false |false |false |true |false |FALSE|false |CA-NB2240;NB3046-WS;NB5026-WS; NB5051-SR;NB5056-R;NB5057-R; |None|NB2012;NB4019;NB5003-CA;NB5018-WS;NB5023-L;NB5028;S2056-WS;|

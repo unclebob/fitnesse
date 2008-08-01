@@ -1,0 +1,11 @@
+!|Save Page Requester|
+|uri   |save contents|
+|NewPage|þðæö|
+
+!|Response Requester|
+|uri|status!|contents?|
+|NewPage|200||
+
+!|Response Examiner|
+|type  |pattern|matches!|contents?|
+|contents|þðæö|yes||

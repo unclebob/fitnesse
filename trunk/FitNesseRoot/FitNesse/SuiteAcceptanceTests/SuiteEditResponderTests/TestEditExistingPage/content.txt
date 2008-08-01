@@ -1,0 +1,32 @@
+!2 Test editing an existent page.
+The form should have a normal header, an edit area filled with the current contents of the page, and a save button.
+----
+ * Create a page.
+#
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-SomePage-!|some content||true|
+#
+ * Edit the page.
+#
+|Response Requester.|
+|uri|valid?|
+|!-SomePage?edit-!|true|
+#
+ * Does the page have the appropriate header?
+!|Response Examiner|
+|type|pattern|matches?|value|
+|contents|SomePage|true||
+#
+ * Does the page have a filled text area?
+ * Does the save button invoke the appropriate action.
+#
+!|Response Examiner|
+|type|pattern|matches?|
+|contents|<textarea.*>some content</textarea>|true|
+|contents|<form|true|
+|contents|action="SomePage"|true|
+|contents|<input|true|
+|contents|type="submit"|true|
+|contents|value="Save"|true|
+#

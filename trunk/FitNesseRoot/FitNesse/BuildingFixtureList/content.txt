@@ -1,0 +1,7 @@
+The list of available fixtures is created every time you hit the ''Edit'' button.  The page you are editing is searched for !fixture directives.  These directives name the fixtures to be included in the list, one fixture per directive.
+
+!-!fixture fitnesse.fixtures.PageCreator-!
+
+Parent pages are also searched for !fixture directives, so if you have a parent project page you can put all the !fixtures there.
+
+!note The old method of searching the !-FixtureList-! page has been removed.

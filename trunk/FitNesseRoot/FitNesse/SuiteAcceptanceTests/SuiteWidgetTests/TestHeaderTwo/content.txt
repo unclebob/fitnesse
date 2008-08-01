@@ -1,0 +1,21 @@
+!2 Test the !2 header widget
+If !2 is at the beginning of a line, then the rest of the line will be formatted as Header two.
+----
+!3 First create a page with header two text on it.
+#
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-HeaderTwoTextPage-!|!-!2 Header two-!||true|
+#
+!3 Then request that page
+#
+|Response Requester.|
+|uri|valid?|
+|!-HeaderTwoTextPage-!|true|
+#
+!3 Examine the page to be sure it has the Header Two text
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<h2>Header two</h2>|true||
+

@@ -1,0 +1,25 @@
+!3 This page tests notes.
+A note is created using the !-!note-! widget as follows {{{!note this is a note.}}} The restuling text will be rendered in a small, grey, centered font.
+#
+ * First create a page with a note in it.
+#
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!note hello|
+|enter|page|NotePage|
+#
+ * Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|NotePage|true||
+#
+ * Make sure the html is centered, grey, and small.
+#
+!|Response Examiner|
+|type|string?|
+|contents|<span class="note">hello</span><br/>|
+
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|hello|true||

@@ -1,0 +1,4 @@
+The !fixture widget is used to tell the TableWizard that a fixture should be included in its list of available fixtures.  The list of fixtures is compiled as described in BuildingFixtureList.
+
+|!c '''Markup Text'''|!c '''Displayed As'''|
+|!-!fixture-! !-my.FixtureName-!|!fixture my.FixtureName|

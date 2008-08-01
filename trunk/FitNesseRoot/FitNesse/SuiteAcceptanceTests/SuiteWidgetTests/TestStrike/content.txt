@@ -1,0 +1,34 @@
+!3 This page describes the strike widget on a wiki page.
+When an expression like !---this---! appears on a wiki page, it will get converted to ''strike'' notation like --this--.
+
+The following is a test that describes the syntax and HTML output.
+#
+ * First create a page with strike text on it.
+#
+!|Action fixture.|
+|start|Page Builder|
+|enter|line|one|
+|enter|line|--strike--|
+|enter|line|three|
+|enter|page|StrikeTextPage|
+#
+ * Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|StrikeTextPage|true||
+#
+ * Examine the page to be sure the strike was expressed.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<span class="strike">strike</span>|true||
+
+|Response Examiner.|
+|type|number|string?|
+|line|1|one|
+|line|3|three|
+
+
+
+

@@ -1,0 +1,154 @@
+!2 Test Collapsable sections
+When a section of wiki test is surrounded by:
+ * !-!*** ... ***!-! it is rendered as a collapsable section;
+ * !-!**> ... ***!-! it is rendered as a collapsed section;
+ * !-!**< ... ***!-! it is rendered as a invisible section;
+
+The number of stars is optional; at least one is required at the start and end.
+The formal format for using this widget involved multiple lines and looks like so:
+#---------------------------------------------------
+{{{TOP
+!*** section title
+content
+more content
+****************!
+BOTTOM
+}}}
+
+and will be rendered as:
+TOP
+!*** section title
+content
+more content
+****************!
+BOTTOM
+#---------------------------------------------------
+-----
+{{{TOP
+!**> section title
+content
+more content
+****************!
+BOTTOM
+}}}
+
+and will be rendered as:
+TOP
+!***> section title
+content
+more content
+****************!
+BOTTOM
+#---------------------------------------------------
+-----
+{{{TOP
+!**< section title
+content
+more content
+****************!
+BOTTOM
+}}}
+
+and will be rendered as:
+TOP
+!**< section title
+content
+more content
+****************!
+BOTTOM
+
+----
+!3 First create a page with a collapsable section on it.
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!** My Section|
+|enter|line|line one|
+|enter|line|line two|
+|enter|line|*****!|
+|enter|page|!-SampleCollapsingPage-!|
+
+!3 Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|SampleCollapsingPage|true||
+#
+!3 Examine the page to be sure it has the collapsable section
+#
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|line one.*line two|true||
+
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<div class="collapse_rim">|true|
+|contents|<a href="javascript:expandAll()|true|
+|contents|<a href="javascript:collapseAll()|true|
+|contents|<a href="javascript:toggleCollapsable|true|
+|contents|<span class="meta">My Section|true|
+|contents|<div.*class="collapsable".*>line one<br/>line two(<br/>)?</div>|true|
+
+----
+!3 Next create a page with a collapsed section on it.
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!**> My Section|
+|enter|line|line one|
+|enter|line|line two|
+|enter|line|*****!|
+|enter|page|!-SampleCollapsedPage-!|
+
+!3 Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|SampleCollapsedPage|true||
+#
+!3 Examine the page to be sure it has the collapsed section
+#
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|line one.*line two|true||
+
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<div class="collapse_rim">|true|
+|contents|<a href="javascript:expandAll()|true|
+|contents|<a href="javascript:collapseAll()|true|
+|contents|<a href="javascript:toggleCollapsable|true|
+|contents|<span class="meta">My Section|true|
+|contents|<div.*class="hidden".*>line one<br/>line two(<br/>)?</div>|true|
+
+----
+!3 Lastly, create a page with a hidden (invisible) section on it.
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!**< My Section|
+|enter|line|line one|
+|enter|line|line two|
+|enter|line|*****!|
+|enter|page|!-SampleCollapsingPage-!|
+
+!3 Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|SampleCollapsingPage|true||
+#
+!3 Examine the page to be sure it has the collapsable section
+#
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|line one.*line two|true||
+
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|<div class="collapse_rim">|false|
+|contents|<a href="javascript:expandAll()|false|
+|contents|<a href="javascript:collapseAll()|false|
+|contents|<a href="javascript:toggleCollapsable|false|
+|contents|<span class="meta">My Section|false|
+|contents|<div.*class="invisible".*>line one<br/>line two(<br/>)?</div>|true|

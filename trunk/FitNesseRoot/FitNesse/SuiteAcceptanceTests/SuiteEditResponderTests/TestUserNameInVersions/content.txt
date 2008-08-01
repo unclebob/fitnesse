@@ -1,0 +1,20 @@
+When viewing versions, the user who created each version is listed along with each version.  Anonymous users are omitted.
+
+!|Save Page Requester|
+|uri   |username|password|save contents|
+|TestPage|null|null|no user version|
+|TestPage|tom|cat|Tom's version|
+|TestPage|jerry|mouse|Jerry's version|
+
+!|Response Requester|
+|uri|status!|
+|TestPage?versions|200|
+
+!|Response Examiner|
+|type  |pattern|matches!|contents?|
+|contents|>\d+<|yes||
+
+!|Response Examiner|
+|type  |pattern|matches!|
+|contents|tom|yes|
+|contents|jerry|no|

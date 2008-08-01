@@ -1,0 +1,28 @@
+!3 BUG - when you define a classpath entry on a line immediately following a variable definition, the classpath entry is not procesed and the fixtures are therefore not found.
+----
+
+First, build a page with variable definitions followed immediately by a classpath definition. Also include a test that should pass.
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!define PI {3.141592}|
+|enter|line|!path classes|
+|enter|line|!path fitnesse.jar|
+|enter|line|!-!|fitnesse.testutil.PassFixture|-!|
+|enter|page|!-ClasspathTestPage-!|
+
+Next, request that page with ?test (as though you clicked the test button)
+
+!|Response Requester.|
+|uri|valid?|contents?|
+|!-ClasspathTestPage?test-!|true||
+
+Lastly, ensure that the test passed.
+
+!|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|PassFixture|true||
+
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|Exception|false|

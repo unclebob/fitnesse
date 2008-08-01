@@ -1,0 +1,38 @@
+ * The following are additions to ''!-FitLibrary-!'' that are somewhat experimental in nature.
+ * Or they may simply be incomplete
+ * There is no guarantee that these features will remain unaltered, or that they will even remain in ''!-FitLibrary-!''.
+!3 ''!-SuiteFixtures-!'' in ''!-FitNesse-!''
+ * Fit pages/files (''storytests'') no longer need to mention fixture class names. This means that the same storytests can easily be used with different fixtures for testing at different levels, such as directly into the domain layer and through a GUI or web interface.
+ * Storytests can be filtered for a particular test run. For example, when only the completed storytests should be run on the build machine.
+ * The fixtures for the storytests in a suite can easily share resources, such as database connections.
+ * Each suite can provide different configuration information, such as selecting a DB or Spring configurations
+ * See ''SuiteFixtures'' and .FitNesse.FitLibrarySpecifications.SuiteFixtureSpecifications for further details
+!3 ''!-DomainObjectCheckFixture-!'' and ''!-DomainObjectSetUpFixture-!''
+ * These check and set up domain objects, respectively.
+ * See .FitNesse.FitLibrarySpecifications.DomainObjectCheckFixture and .FitNesse.FitLibrarySpecifications.DomainObjectSetUpFixture
+ * This approach may change
+!3 Entity References
+ * Provide a way to refer to Entities in storytests
+ * As an alternative to having to pass around generated database keys
+ * See .FitNesse.FitLibrarySpecifications.SpecifyReferences
+ * This approach is likely to change
+!3 Nested tables
+ * Nested table are available for setup and checking of domain objects and lists
+ * Sets to be provided later
+ * See .FitNesse.FitLibrarySpecifications.EmbeddedTables
+ * Some of this is likely to change
+!3 State-based extension of ''!-DoFixture-!'' (State pattern)
+ * Allows exactly the same table to be used in workflow storytests for setup or checking (ie, initial state or final state)
+ * When a setup fixture is installed in a ''!-DoFixture-!'', all actions are delegated to it until the setup state is completed.
+ * See .FitNesse.FitLibrarySpecifications.StatefulDoFixture
+ * This approach is likely to change
+!3 Fixture SUT chains
+ * All the ''!-FitLibrary-!'' fixtures may have a SUT (System Under Test) associated with them
+ * If then fixture doesn't declare a required method, the method in the SUT is called instead
+ * Chains of SUTs are permitted
+ * This approach may change
+!3 Optional logging of ''!-FitLibrary-!'' executing, to aid in debugging
+ * This remains to be completed
+
+---- * ''Copyright (c) 2004, 2005, 2006 Rick Mugridge, http://www.rimuresearch.com''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

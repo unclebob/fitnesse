@@ -1,0 +1,38 @@
+!2 ''!-FitNesse-! acceptance tests suites''
+|^SuiteWidgetTests|''Specify the markup language of wiki pages.''|
+|^SuiteWikiPageResponderTests|''Specify general behavior of all wiki pages.''|
+|^SuiteEditResponderTests|''Specify the behavior of edit requests.''|
+|^SuiteResponderTests|''Specify the behavior of the responders.''|
+|^SuiteVirtualWikiTests|''Demonstrate the behavior of virtual wikis''|
+|^SuiteWikiImportTests|''Specify the behavior of the Wiki Import feature''|
+|^SuiteAuthenticationTests|''Specify the authentication design''|
+|^SuiteFixtureTests|''Specify the behavior of various fixtures''|
+|^SuiteTestRunnerTests|''Describe the behavior of the command line test runner''|
+|^SuiteSymbolicLinkTests|''Demonstrate usage and behavior of symbolic links''|
+|^SuiteFitDecoratorTests|''Demonstrate usage and behavior of Fit Decorators''|
+
+!2 ''Classpaths''
+!path classes
+!path lib/fitlibrary.jar
+----
+!2 ''Port''
+!define PORT {8080}
+!define INTERNAL_PORT {9123}
+----
+!2 ''Fixtures''
+!fixture fitnesse.fixtures.PageBuilder
+!fixture fitnesse.fixtures.PageCreator
+!fixture fitnesse.fixtures.ResponseRequester
+!fixture fitnesse.fixtures.ResponseRequester
+!fixture fitnesse.fixtures.ResponseExaminer
+!fixture fitnesse.fixtures.RenderFixture
+----
+!2 ''Utilities''
+ * SuiteAcceptanceTests.PageHeader
+ * SuiteAcceptanceTests.PageFooter
+ * SuiteAcceptanceTests.SetUp
+ * SuiteAcceptanceTests.TearDown
+----
+!2 Collapse Set Up and Tear Down
+!define COLLAPSE_SETUP {true}
+!define COLLAPSE_TEARDOWN {true}

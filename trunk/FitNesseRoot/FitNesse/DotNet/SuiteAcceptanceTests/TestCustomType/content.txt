@@ -1,0 +1,64 @@
+!3 !-FitNesse-! will handle any type that implements a static Parse(string) method and overrides !-ToString()-!.
+
+Parse(string) should construct and return an instance of the Type. The trick is that the !-ToString()-! method must produce the same string that was used to create the instance.
+
+{{{
+string str = "some meaningful string representation of a domain object";
+DomainObject instance = DomainObject.Parse(str);
+Assert.AreEqual(str, instance.ToString());
+}}}
+----
+!|person fixture|three amigos|
+|field|field?|property|property?|set|get?|
+|Grady Booch|Grady Booch|Ivar Jacobson|Ivar Jacobson|Jim Rumbaugh|Jim Rumbaugh|
+
+{{{public class Person
+{
+	private string firstName;
+	private string lastName;
+
+	public static Person Parse(string name)
+	{
+		string[] names = name.Split(' ');
+		return new Person(names[0], names[1]);
+	}
+
+	public Person(string firstName, string lastName)
+	{
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+	public override string ToString()
+	{
+		StringBuilder builder = new StringBuilder(firstName);
+		if (builder.Length > 0 && lastName != null && lastName.Length > 0)
+		{
+			builder.Append(" ");
+		}
+		return builder.Append(lastName).ToString();
+	}
+}
+
+public class PersonFixture : ColumnFixture
+{
+	public Person Field;
+	private Person propertyValue;
+	private Person methodValue;
+
+	public Person Property
+	{
+		set { propertyValue = value; }
+		get { return propertyValue; }
+	}
+
+	public void Set(Person value)
+	{
+		methodValue = value;
+	}
+
+	public Person Get()
+	{
+		return methodValue;
+	}
+}}}}

@@ -1,0 +1,62 @@
+!3 This page tests the construction of tables.
+#
+ * First create a page with comment text on it.
+#
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-|1 Row 1 Cell|-!|
+|enter|page|!-TableTestPage-!|
+#
+ * Then request that page
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-TableTestPage-!|true||
+#
+ * Examine the page to be sure it is empty.
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<table.*<tr>\s*<td>\s*1 Row 1 Cell\s*</td>\s*</tr>\s*</table>|true||
+
+'''Test that spaces inside table cells don't get interpreted.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-| 1 is not a list|-!|
+|enter|page|!-TableTestPageTwo-!|
+#
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-TableTestPageTwo-!|true||
+#
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|1 is not a list|true||
+#
+|Response Examiner.|
+|type|pattern|matches?|
+|contents|<ol>|false|
+|contents|<li>|false|
+#
+
+'''Test that nothing gets interpreted inside literal tables.'''
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!|'''bold'''|''italic''|-!|
+|enter|page|!-TableTestPageThree-!|
+#
+#
+|Response Requester.|
+|uri|valid?|contents?|
+|!-TableTestPageThree-!|true||
+#
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|!-'''bold'''-!|true||
+#
+|Response Examiner.|
+|type|pattern|matches?|
+|contents|!-''italic''-!|true|

@@ -1,0 +1,33 @@
+!3 An !-ActionFixture-! allows you to set values, get values and call methods repeatedly within the same fixture. The first row has one cell with "Action Fixture". The subsequent rows can have 2 or 3 cells:
+
+'''start''' in the left most cell names the fixture that you'll test using ActionFixture
+'''check''' in the left most cell will test the value of the field named in the second cell with the value in the third cell
+'''press''' will execute the method named in the second cell
+'''enter''' will assign the value of the third cell to the the field or property named in the second cell
+----
+|Action Fixture.|
+|start|Count Fixture|
+|check|Counter|0|
+|press|Count|
+|check|Counter|1|
+|press|Count|
+|check|Counter|2|
+|enter|Counter|5|
+|press|Count|
+|check|Counter|6|
+
+
+{{{
+public class CountFixture : Fixture {
+	private int counter = 0;
+
+	public void Count() {
+		counter++;
+	}
+
+	public int Counter {
+		set { counter = value; }
+		get { return counter; }
+	}
+}
+}}}
