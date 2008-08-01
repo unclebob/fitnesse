@@ -1,3 +1,0 @@
-java: http://fitlibrary.sourceforge.net/
-.NET: .FitNesse.DotNet
-

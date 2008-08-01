@@ -1,3 +1,0 @@
-Classpaths are built by finding the [[!path][MarkupPath]] directives on the current page, and on every ancestor page.  These are collected in order so that !path directives on sub pages override !path widgets on parent pages.
-
-!note The old !-ClassPath-! page method as been removed.

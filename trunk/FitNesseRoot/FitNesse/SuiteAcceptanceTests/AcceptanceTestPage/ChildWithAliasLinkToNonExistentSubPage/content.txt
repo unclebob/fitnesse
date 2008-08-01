@@ -1,3 +1,0 @@
-This page contains an alias link to a non existent sub page.
-
-[[link][^NonExistentSubPage]]

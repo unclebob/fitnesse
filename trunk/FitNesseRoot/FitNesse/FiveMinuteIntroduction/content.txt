@@ -1,3 +1,0 @@
-[[A One-Minute Description][OneMinuteDescription]]
-[[A Two-Minute Example][TwoMinuteExample]]
-

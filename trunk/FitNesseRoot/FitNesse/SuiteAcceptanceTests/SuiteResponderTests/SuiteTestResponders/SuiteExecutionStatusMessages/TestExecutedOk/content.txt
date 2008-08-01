@@ -1,8 +1,0 @@
-When everything works just fine we get the message:
- * Tests Executed OK
-
-!define FIXTURE_NAME {PassFixture}
-!define EXPECTED_STATUS_MESSAGE {Tests Executed OK}
-!define EXPECTED_ICON_URL {/files/images/executionStatus/ok.gif}
-
-!include DoTest
