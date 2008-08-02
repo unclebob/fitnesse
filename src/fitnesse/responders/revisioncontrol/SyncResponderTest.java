@@ -9,18 +9,6 @@ import static org.easymock.EasyMock.verify;
 import fitnesse.revisioncontrol.RevisionControlException;
 
 public class SyncResponderTest extends RevisionControlTestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        responder = new SyncResponder();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        verify(revisionController);
-    }
-
     public void testShouldAskRevisionControllerToSyncronizePage() throws Exception {
         expect(revisionController.execute(SYNC, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(VERSIONED);
         replay(revisionController);
@@ -33,11 +21,25 @@ public class SyncResponderTest extends RevisionControlTestCase {
 
     public void testShouldReportErrorMsgIfSyncronizationFails() throws Exception {
         String errorMsg = "Cannot synchronize files from Revision Control";
-        expect(revisionController.execute(SYNC, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andThrow(
-                new RevisionControlException(errorMsg));
+        expect(revisionController.execute(SYNC, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andThrow(new RevisionControlException(errorMsg));
         replay(revisionController);
 
         createPage(FS_PARENT_PAGE);
+        request.setResource(FS_PARENT_PAGE);
+
+        invokeResponderAndCheckSuccessStatus();
+
+        assertSubString(errorMsg, response.getContent());
+    }
+
+    public void testShouldStopSyncronizationIfAnyChildPageThrowErrors() throws Exception {
+        String errorMsg = "Some error";
+        expect(revisionController.execute(SYNC, contentAndPropertiesFilePathFor(FS_SIBLING_CHILD_PAGE))).andThrow(new RevisionControlException(errorMsg));
+        expect(revisionController.execute(SYNC, contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(VERSIONED).anyTimes();
+        replay(revisionController);
+
+        createPage(FS_CHILD_PAGE);
+        createPage(FS_SIBLING_CHILD_PAGE, parentPage);
         request.setResource(FS_PARENT_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
@@ -57,18 +59,15 @@ public class SyncResponderTest extends RevisionControlTestCase {
         invokeResponderAndCheckSuccessStatus();
     }
 
-    public void testShouldStopSyncronizationIfAnyChildPageThrowErrors() throws Exception {
-        String errorMsg = "Some error";
-        expect(revisionController.execute(SYNC, contentAndPropertiesFilePathFor(FS_SIBLING_CHILD_PAGE))).andThrow(
-                new RevisionControlException(errorMsg));
-        replay(revisionController);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        responder = new SyncResponder();
+    }
 
-        createPage(FS_CHILD_PAGE);
-        createPage(FS_SIBLING_CHILD_PAGE, parentPage);
-        request.setResource(FS_PARENT_PAGE);
-
-        invokeResponderAndCheckSuccessStatus();
-
-        assertSubString(errorMsg, response.getContent());
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        verify(revisionController);
     }
 }

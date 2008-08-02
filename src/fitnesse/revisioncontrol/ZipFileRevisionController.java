@@ -35,47 +35,42 @@ public class ZipFileRevisionController implements RevisionController {
         return new SimpleDateFormat("yyyyMMddHHmmss");
     }
 
-    private final Properties properties;
-
-    public ZipFileRevisionController(Properties properties) {
-        this.properties = properties;
-    }
-
     public ZipFileRevisionController() {
         this(new Properties());
     }
 
-    @Override
+    public ZipFileRevisionController(Properties properties) {
+    }
+
     public State add(String... filePaths) throws RevisionControlException {
 
         return ADDED;
     }
 
-    @Override
     public State checkin(String... filePaths) throws RevisionControlException {
 
         return VERSIONED;
     }
 
-    @Override
     public State checkout(String... filePaths) throws RevisionControlException {
 
         return VERSIONED;
     }
 
-    @Override
     public State checkState(String... filePaths) throws RevisionControlException {
 
         return VERSIONED;
     }
 
-    @Override
     public State delete(String... filePaths) throws RevisionControlException {
 
         return DELETED;
     }
 
-    @Override
+    public State execute(RevisionControlOperation operation, String... filePaths) throws RevisionControlException {
+        return VERSIONED;
+    }
+
     public PageData getRevisionData(FileSystemPage page, String label) throws Exception {
         String filename = page.getFileSystemPath() + "/" + label + ".zip";
         File file = new File(filename);
@@ -91,26 +86,25 @@ public class ZipFileRevisionController implements RevisionController {
         return data;
     }
 
-    @Override
     public State getState(String state) {
         return VERSIONED;
     }
 
-    @Override
     public Collection<VersionInfo> history(FileSystemPage page) throws Exception {
         File dir = new File(page.getFileSystemPath());
         File[] files = dir.listFiles();
         Set<VersionInfo> versions = new HashSet<VersionInfo>();
-        if (files != null) {
-            for (File file : files) {
+        if (files != null)
+            for (File file : files)
                 if (isVersionFile(file))
                     versions.add(new VersionInfo(makeVersionName(file)));
-            }
-        }
         return versions;
     }
 
-    @Override
+    public boolean isExternalReversionControlEnabled() {
+        return false;
+    }
+
     public VersionInfo makeVersion(FileSystemPage page, PageData data) throws Exception {
         String dirPath = page.getFileSystemPath();
         Set filesToZip = getFilesToZip(dirPath);
@@ -131,20 +125,21 @@ public class ZipFileRevisionController implements RevisionController {
         return new VersionInfo(version.getName());
     }
 
-    @Override
+    public void prune(FileSystemPage page) throws Exception {
+        PageVersionPruner.pruneVersions(page, history(page));
+    }
+
     public void removeVersion(FileSystemPage page, String versionName) throws Exception {
         String versionFileName = makeVersionFileName(page, versionName);
         File versionFile = new File(versionFileName);
         versionFile.delete();
     }
 
-    @Override
     public State revert(String... filePaths) throws RevisionControlException {
 
         return VERSIONED;
     }
 
-    @Override
     public State update(String... filePaths) throws RevisionControlException {
 
         return VERSIONED;
@@ -167,8 +162,7 @@ public class ZipFileRevisionController implements RevisionController {
         File[] files = dir.listFiles();
         if (files == null)
             return filesToZip;
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : files) {
             if (!(isVersionFile(file) || file.isDirectory()))
                 filesToZip.add(file);
         }
@@ -205,13 +199,11 @@ public class ZipFileRevisionController implements RevisionController {
         File dir = new File(page.getFileSystemPath());
         File[] files = dir.listFiles();
         Set<VersionInfo> versions = new HashSet<VersionInfo>();
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+        if (files != null)
+            for (File file : files) {
                 if (isVersionFile(file))
                     versions.add(new VersionInfo(makeVersionName(file)));
             }
-        }
         return versions;
     }
 
@@ -232,20 +224,5 @@ public class ZipFileRevisionController implements RevisionController {
     private String makeVersionName(File file) {
         String name = file.getName();
         return name.substring(0, name.length() - 4);
-    }
-
-    @Override
-    public void prune(FileSystemPage page) throws Exception {
-        PageVersionPruner.pruneVersions(page, history(page));
-    }
-
-    @Override
-    public State execute(RevisionControlOperation operation, String... filePaths) throws RevisionControlException {
-        return VERSIONED;
-    }
-
-    @Override
-    public boolean isExternalReversionControlEnabled() {
-        return false;
     }
 }
