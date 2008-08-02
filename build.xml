@@ -3,14 +3,14 @@
 		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
 	</description>
 
-	<property name="src" value="src" />
-	<property name="src2" value="srcFitServerTests" />
-	<property name="classes" value="classes" />
-	<property name="lib" value="lib" />
-	<property name="fitnesseRoot" value="FitNesseRoot" />
+	<property name="src" location="src" />
+	<property name="src2" location="srcFitServerTests" />
+	<property name="classes" location="classes" />
+	<property name="lib" location="lib" />
+	<property name="fitnesseRoot" location="FitNesseRoot" />
 	<property name="fitnesseRootZip" value="FitNesseRoot.zip" />
-	<property name="zipDir" value="dist/fitnesse" />
-	<property name="results.dir" value="test-results" />
+	<property name="zipDir" location="dist/fitnesse" />
+	<property name="results.dir" location="test-results" />
 
 	<property name="cobertura.root" value="${lib}/cobertura-1.8" />
 	<property name="cobertura.dir" value="${results.dir}/cobertura" />
@@ -36,7 +36,7 @@
 
 	<target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-	<target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests" />
+	<target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests" description="builds code from scratch, runs all the unit tests and acceptance tests"/>
 	
 	<target name="build_distribution" depends="zip_src, zip_bin" description="The thing you do when distributing a new release." />
 
@@ -320,11 +320,11 @@
 	<target name="execute_fitnesse_tests_using_different_tasks" depends="startFitnesse, runAcceptanceTests, stopFitnesse" />
 
 	<target name="startFitnesse" description="Start fitnesse" depends="load_fitnesse_taskdef">
-		<start-fitnesse wikidirectoryrootpath="." fitnesseport="8080" />
+		<start-fitnesse wikidirectoryrootpath="${basedir}" fitnesseport="8080" />
 	</target>
 
 	<target name="runAcceptanceTests" depends="load_fitnesse_taskdef" description="Execute Fitnesse Acceptance Tests and publishes the test results">
-		<execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8082" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
+		<execute-fitnesse-tests suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080" resultsdir="${results.dir}" resultshtmlpage="fit-results.html" classpathref="classpath" />
 	</target>
 
 	<target name="stopFitnesse" description="Stops fitnesse" depends="load_fitnesse_taskdef">
