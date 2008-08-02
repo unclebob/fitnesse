@@ -55,7 +55,6 @@ public class ComponentFactoryTest extends RegexTestCase {
         FileOutputStream out = new FileOutputStream(file);
         out.write("".getBytes());
         out.close();
-        file.delete();
         TestWidgetInterceptor.widgetsIntercepted.clear();
     }
 
