@@ -1,12 +1,11 @@
 package fitnesse.responders.revisioncontrol;
 
-import static fitnesse.revisioncontrol.NullState.ADDED;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static fitnesse.revisioncontrol.RevisionControlOperation.STATE;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 
 import java.io.File;
 import java.util.HashSet;
@@ -45,8 +44,9 @@ public abstract class RevisionControlTestCase extends TestCase {
         createExternalRoot();
         request = new MockRequest();
         expect(revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
-        expect(revisionController.add((String) anyObject())).andStubReturn(ADDED);
-        expect(revisionController.execute(STATE, rootContentAndPropertiesFilePath())).andStubReturn(VERSIONED);
+        revisionController.add((String) anyObject());
+        expectLastCall().anyTimes();
+        expect(revisionController.checkState(rootContentAndPropertiesFilePath())).andStubReturn(VERSIONED);
     }
 
     @Override
@@ -55,7 +55,7 @@ public abstract class RevisionControlTestCase extends TestCase {
     }
 
     protected void createPage(String pageName) throws Exception {
-        PageCrawler crawler = root.getPageCrawler();
+        final PageCrawler crawler = root.getPageCrawler();
         if (FS_PARENT_PAGE.equals(pageName))
             parentPage = (FileSystemPage) crawler.addPage(root, PathParser.parse(FS_PARENT_PAGE));
         if (FS_CHILD_PAGE.equals(pageName)) {
@@ -69,7 +69,7 @@ public abstract class RevisionControlTestCase extends TestCase {
     }
 
     protected FileSystemPage createPage(String pageName, FileSystemPage parent) throws Exception {
-        PageCrawler crawler = root.getPageCrawler();
+        final PageCrawler crawler = root.getPageCrawler();
         return (FileSystemPage) crawler.addPage(parent, PathParser.parse(pageName));
     }
 
@@ -94,13 +94,13 @@ public abstract class RevisionControlTestCase extends TestCase {
     }
 
     protected String[] contentAndPropertiesFilePathFor(String page) throws Exception {
-        String pageName = folderPath(page);
+        final String pageName = folderPath(page);
         return new String[] { contentFilePathFor(pageName), propertiesFilePathFor(pageName) };
     }
 
     private String folderPath(String page) {
         String pageName = ROOT + "/ExternalRoot";
-        if (page != null) {
+        if (page != null)
             if (FS_PARENT_PAGE.equals(page))
                 pageName += "/" + FS_PARENT_PAGE;
             else if (FS_CHILD_PAGE.equals(page))
@@ -109,7 +109,6 @@ public abstract class RevisionControlTestCase extends TestCase {
                 pageName += "/" + FS_PARENT_PAGE + "/" + FS_SIBLING_CHILD_PAGE;
             else if (FS_GRAND_CHILD_PAGE.equals(page))
                 pageName += "/" + FS_PARENT_PAGE + "/" + FS_CHILD_PAGE + "/" + FS_GRAND_CHILD_PAGE;
-        }
         return pageName;
     }
 

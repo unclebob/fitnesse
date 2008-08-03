@@ -2,12 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders;
 
-import static fitnesse.revisioncontrol.NullState.ADDED;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
-import static fitnesse.revisioncontrol.RevisionControlOperation.STATE;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
@@ -45,15 +44,15 @@ public class WikiPageResponderTest extends RegexTestCase {
 
     public void testResponse() throws Exception {
         crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
-        MockRequest request = new MockRequest();
+        final MockRequest request = new MockRequest();
         request.setResource("ChildPage");
 
-        Responder responder = new WikiPageResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        final Responder responder = new WikiPageResponder();
+        final SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
         assertEquals(200, response.getStatus());
 
-        String body = response.getContent();
+        final String body = response.getContent();
 
         assertSubString("<html>", body);
         assertSubString("<body", body);
@@ -65,10 +64,9 @@ public class WikiPageResponderTest extends RegexTestCase {
 
     public void testAttributeButtons() throws Exception {
         crawler.addPage(root, PathParser.parse("NormalPage"));
-        WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
-        for (int i = 0; i < WikiPage.NON_SECURITY_ATTRIBUTES.length; i++) {
-            String attribute = WikiPage.NON_SECURITY_ATTRIBUTES[i];
-            PageData data = noButtonsPage.getData();
+        final WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
+        for (final String attribute : WikiPage.NON_SECURITY_ATTRIBUTES) {
+            final PageData data = noButtonsPage.getData();
             data.removeAttribute(attribute);
             noButtonsPage.commit(data);
         }
@@ -114,26 +112,26 @@ public class WikiPageResponderTest extends RegexTestCase {
     }
 
     private SimpleResponse requestPage(String name) throws Exception {
-        MockRequest request = new MockRequest();
+        final MockRequest request = new MockRequest();
         request.setResource(name);
-        Responder responder = new WikiPageResponder();
+        final Responder responder = new WikiPageResponder();
         return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     }
 
     public void testShouldGetVirtualPage() throws Exception {
-        WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
+        final WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
         crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child content");
-        WikiPage linkerPage = crawler.addPage(root, PathParser.parse("LinkerPage"), "linker content");
+        final WikiPage linkerPage = crawler.addPage(root, PathParser.parse("LinkerPage"), "linker content");
         FitNesseUtil.bindVirtualLinkToPage(linkerPage, pageOne);
-        SimpleResponse response = requestPage("LinkerPage.ChildPage");
+        final SimpleResponse response = requestPage("LinkerPage.ChildPage");
 
         assertSubString("child content", response.getContent());
     }
 
     public void testVirtualPageIndication() throws Exception {
-        WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
+        final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
         crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-        WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
+        final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
         VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
 
         FitNesseUtil.startFitnesse(root);
@@ -148,39 +146,40 @@ public class WikiPageResponderTest extends RegexTestCase {
     }
 
     public void testImportedPageIndication() throws Exception {
-        WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
-        PageData data = page.getData();
-        WikiImportProperty importProperty = new WikiImportProperty("blah");
+        final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+        final PageData data = page.getData();
+        final WikiImportProperty importProperty = new WikiImportProperty("blah");
         importProperty.addTo(data.getProperties());
         page.commit(data);
 
-        String content = requestPage("SamplePage").getContent();
+        final String content = requestPage("SamplePage").getContent();
 
         assertSubString("<body class=\"imported\">", content);
     }
 
     public void testResponderIsSecureReadOperation() throws Exception {
-        Responder responder = new WikiPageResponder();
+        final Responder responder = new WikiPageResponder();
         assertTrue(responder instanceof SecureResponder);
-        SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
+        final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
         assertEquals(SecureReadOperation.class, operation.getClass());
     }
 
     public void testShouldDisplayRevisionControlMenuIfPageIsEditableOrImportedAndUnderRevisionControl() throws Exception {
-        RevisionController revisionController = createMock(RevisionController.class);
-        String rootDir = "testDir";
-        String pageName = "RevisionControlledPage";
+        final RevisionController revisionController = createMock(RevisionController.class);
+        final String rootDir = "testDir";
+        final String pageName = "RevisionControlledPage";
 
         expect(revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
-        expect(revisionController.add((String) anyObject())).andStubReturn(ADDED);
+        revisionController.add((String) anyObject());
+        expectLastCall().anyTimes();
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePath(rootDir + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
+        expect(revisionController.checkState(contentAndPropertiesFilePath(rootDir + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
         replay(revisionController);
         try {
             FileUtil.createDir(rootDir);
             root = FileSystemPage.makeRoot(rootDir, "ExternalRoot", revisionController);
             root.addChildPage(pageName);
-            SimpleResponse response = requestPage(pageName);
+            final SimpleResponse response = requestPage(pageName);
             assertSubString("<div class=\"main\">Revision Control</div>", response.getContent());
             assertSubString("<a href=\"" + pageName + "?addToRevisionControl\" accesskey=\"a\">Add</a>", response.getContent());
         } finally {
@@ -192,8 +191,8 @@ public class WikiPageResponderTest extends RegexTestCase {
     public void testShouldOnlyShowRevisionControlMenuForFileSystemPage() throws Exception {
         crawler.addPage(root, PathParser.parse("NormalPage"), "normal");
 
-        SimpleResponse response = requestPage("NormalPage");
-        String content = response.getContent();
+        final SimpleResponse response = requestPage("NormalPage");
+        final String content = response.getContent();
         assertHasRegexp("header", content);
         assertHasRegexp("normal", content);
         assertDoesntHaveRegexp("Revision Control", content);

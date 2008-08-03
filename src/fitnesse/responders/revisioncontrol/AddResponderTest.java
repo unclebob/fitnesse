@@ -1,12 +1,10 @@
 package fitnesse.responders.revisioncontrol;
 
-import static fitnesse.revisioncontrol.NullState.ADDED;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
-import static fitnesse.revisioncontrol.RevisionControlOperation.STATE;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import fitnesse.revisioncontrol.RevisionControlException;
@@ -25,7 +23,7 @@ public class AddResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldAskRevisionControllerToAddPage() throws Exception {
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(ADDED);
+        revisionController.add(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
         replay(revisionController);
         createPage(FS_PARENT_PAGE);
         request.setResource(FS_PARENT_PAGE);
@@ -33,9 +31,9 @@ public class AddResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldReportErrorMsgIfAddOperationFails() throws Exception {
-        String errorMsg = "Cannot add files to Revision Control";
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andThrow(
-                new RevisionControlException(errorMsg));
+        final String errorMsg = "Cannot add files to Revision Control";
+        revisionController.add(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        expectLastCall().andThrow(new RevisionControlException(errorMsg));
         replay(revisionController);
 
         createPage(FS_PARENT_PAGE);
@@ -47,7 +45,7 @@ public class AddResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldSkipAddingFilesIfTheyAreAlreadyUnderRevisionControl() throws Exception {
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(ADDED);
+        revisionController.add(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
         replay(revisionController);
         createPage(FS_PARENT_PAGE);
         request.setResource(FS_PARENT_PAGE);
@@ -55,11 +53,11 @@ public class AddResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldAskRevisionControllerToAddAllParentPages() throws Exception {
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(UNKNOWN);
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(ADDED);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(UNKNOWN);
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(ADDED);
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE))).andReturn(ADDED);
+        expect(revisionController.checkState(contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(UNKNOWN);
+        revisionController.add(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        expect(revisionController.checkState(contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(UNKNOWN);
+        revisionController.add(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
+        revisionController.add(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
         replay(revisionController);
 
         createPage(FS_GRAND_CHILD_PAGE);
@@ -69,10 +67,10 @@ public class AddResponderTest extends RevisionControlTestCase {
     }
 
     public void testParentRemainsInSameStateIfAlreadyUnderRevisionControl() throws Exception {
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(VERSIONED);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(UNKNOWN);
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(ADDED);
-        expect(revisionController.execute(ADD, contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE))).andReturn(ADDED);
+        expect(revisionController.checkState(contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(VERSIONED);
+        expect(revisionController.checkState(contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(UNKNOWN);
+        revisionController.add(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
+        revisionController.add(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
         replay(revisionController);
 
         createPage(FS_GRAND_CHILD_PAGE);

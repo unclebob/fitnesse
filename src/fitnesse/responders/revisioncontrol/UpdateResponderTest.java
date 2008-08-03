@@ -1,9 +1,7 @@
 package fitnesse.responders.revisioncontrol;
 
-import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import fitnesse.revisioncontrol.RevisionControlException;
@@ -22,7 +20,7 @@ public class UpdateResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldAskRevisionControllerToUpdatePage() throws Exception {
-        expect(revisionController.execute(UPDATE, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(VERSIONED);
+        revisionController.update(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
         replay(revisionController);
         createPage(FS_PARENT_PAGE);
         request.setResource(FS_PARENT_PAGE);
@@ -30,9 +28,9 @@ public class UpdateResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldReportErrorMsgIfUpdateOperationFails() throws Exception {
-        String errorMsg = "Cannot update files to Revision Control";
-        expect(revisionController.execute(UPDATE, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andThrow(
-                new RevisionControlException(errorMsg));
+        final String errorMsg = "Cannot update files to Revision Control";
+        revisionController.update(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        expectLastCall().andThrow(new RevisionControlException(errorMsg));
         replay(revisionController);
 
         createPage(FS_PARENT_PAGE);

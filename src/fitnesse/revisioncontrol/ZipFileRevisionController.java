@@ -1,7 +1,5 @@
 package fitnesse.revisioncontrol;
 
-import static fitnesse.revisioncontrol.NullState.ADDED;
-import static fitnesse.revisioncontrol.NullState.DELETED;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
 
 import java.io.File;
@@ -42,43 +40,30 @@ public class ZipFileRevisionController implements RevisionController {
     public ZipFileRevisionController(Properties properties) {
     }
 
-    public State add(String... filePaths) throws RevisionControlException {
-
-        return ADDED;
+    public void add(String... filePaths) throws RevisionControlException {
     }
 
-    public State checkin(String... filePaths) throws RevisionControlException {
-
-        return VERSIONED;
+    public void checkin(String... filePaths) throws RevisionControlException {
     }
 
-    public State checkout(String... filePaths) throws RevisionControlException {
-
-        return VERSIONED;
+    public void checkout(String... filePaths) throws RevisionControlException {
     }
 
     public State checkState(String... filePaths) throws RevisionControlException {
-
         return VERSIONED;
     }
 
-    public State delete(String... filePaths) throws RevisionControlException {
-
-        return DELETED;
-    }
-
-    public State execute(RevisionControlOperation operation, String... filePaths) throws RevisionControlException {
-        return VERSIONED;
+    public void delete(String... filePaths) throws RevisionControlException {
     }
 
     public PageData getRevisionData(FileSystemPage page, String label) throws Exception {
-        String filename = page.getFileSystemPath() + "/" + label + ".zip";
-        File file = new File(filename);
+        final String filename = page.getFileSystemPath() + "/" + label + ".zip";
+        final File file = new File(filename);
         if (!file.exists())
             throw new NoSuchVersionException("There is no version '" + label + "'");
 
-        PageData data = new PageData(page);
-        ZipFile zipFile = new ZipFile(file);
+        final PageData data = new PageData(page);
+        final ZipFile zipFile = new ZipFile(file);
         loadVersionContent(zipFile, data);
         loadVersionAttributes(zipFile, data);
         data.addVersions(loadVersions(page));
@@ -86,16 +71,12 @@ public class ZipFileRevisionController implements RevisionController {
         return data;
     }
 
-    public State getState(String state) {
-        return VERSIONED;
-    }
-
     public Collection<VersionInfo> history(FileSystemPage page) throws Exception {
-        File dir = new File(page.getFileSystemPath());
-        File[] files = dir.listFiles();
-        Set<VersionInfo> versions = new HashSet<VersionInfo>();
+        final File dir = new File(page.getFileSystemPath());
+        final File[] files = dir.listFiles();
+        final Set<VersionInfo> versions = new HashSet<VersionInfo>();
         if (files != null)
-            for (File file : files)
+            for (final File file : files)
                 if (isVersionFile(file))
                     versions.add(new VersionInfo(makeVersionName(file)));
         return versions;
@@ -106,18 +87,18 @@ public class ZipFileRevisionController implements RevisionController {
     }
 
     public VersionInfo makeVersion(FileSystemPage page, PageData data) throws Exception {
-        String dirPath = page.getFileSystemPath();
-        Set filesToZip = getFilesToZip(dirPath);
+        final String dirPath = page.getFileSystemPath();
+        final Set filesToZip = getFilesToZip(dirPath);
 
-        VersionInfo version = makeVersionInfo(data);
+        final VersionInfo version = makeVersionInfo(data);
 
         if (filesToZip.size() == 0)
             return new VersionInfo("first_commit", "", new Date());
 
-        String filename = makeVersionFileName(page, version.getName());
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(filename));
+        final String filename = makeVersionFileName(page, version.getName());
+        final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(filename));
 
-        for (Iterator iterator = filesToZip.iterator(); iterator.hasNext();)
+        for (final Iterator iterator = filesToZip.iterator(); iterator.hasNext();)
             addToZip((File) iterator.next(), zos);
 
         zos.finish();
@@ -130,42 +111,37 @@ public class ZipFileRevisionController implements RevisionController {
     }
 
     public void removeVersion(FileSystemPage page, String versionName) throws Exception {
-        String versionFileName = makeVersionFileName(page, versionName);
-        File versionFile = new File(versionFileName);
+        final String versionFileName = makeVersionFileName(page, versionName);
+        final File versionFile = new File(versionFileName);
         versionFile.delete();
     }
 
-    public State revert(String... filePaths) throws RevisionControlException {
-
-        return VERSIONED;
+    public void revert(String... filePaths) throws RevisionControlException {
     }
 
-    public State update(String... filePaths) throws RevisionControlException {
-
-        return VERSIONED;
+    public void update(String... filePaths) throws RevisionControlException {
     }
 
     private void addToZip(File file, ZipOutputStream zos) throws IOException {
-        ZipEntry entry = new ZipEntry(file.getName());
+        final ZipEntry entry = new ZipEntry(file.getName());
         zos.putNextEntry(entry);
-        FileInputStream is = new FileInputStream(file);
-        int size = (int) file.length();
-        byte[] bytes = new byte[size];
+        final FileInputStream is = new FileInputStream(file);
+        final int size = (int) file.length();
+        final byte[] bytes = new byte[size];
         is.read(bytes);
         is.close();
         zos.write(bytes, 0, size);
     }
 
     private Set getFilesToZip(String dirPath) {
-        Set<File> filesToZip = new HashSet<File>();
-        File dir = new File(dirPath);
-        File[] files = dir.listFiles();
+        final Set<File> filesToZip = new HashSet<File>();
+        final File dir = new File(dirPath);
+        final File[] files = dir.listFiles();
         if (files == null)
             return filesToZip;
-        for (File file : files) {
+        for (final File file : files)
             if (!(isVersionFile(file) || file.isDirectory()))
                 filesToZip.add(file);
-        }
         return filesToZip;
     }
 
@@ -174,10 +150,10 @@ public class ZipFileRevisionController implements RevisionController {
     }
 
     private void loadVersionAttributes(ZipFile zipFile, PageData data) throws Exception {
-        ZipEntry attributes = zipFile.getEntry("properties.xml");
+        final ZipEntry attributes = zipFile.getEntry("properties.xml");
         if (attributes != null) {
-            InputStream attributeIS = zipFile.getInputStream(attributes);
-            WikiPageProperties props = new WikiPageProperties(attributeIS);
+            final InputStream attributeIS = zipFile.getInputStream(attributes);
+            final WikiPageProperties props = new WikiPageProperties(attributeIS);
             attributeIS.close();
             data.setProperties(props);
         }
@@ -185,10 +161,10 @@ public class ZipFileRevisionController implements RevisionController {
 
     private void loadVersionContent(ZipFile zipFile, PageData data) throws Exception {
         String content = "";
-        ZipEntry contentEntry = zipFile.getEntry("content.txt");
+        final ZipEntry contentEntry = zipFile.getEntry("content.txt");
         if (contentEntry != null) {
-            InputStream contentIS = zipFile.getInputStream(contentEntry);
-            StreamReader reader = new StreamReader(contentIS);
+            final InputStream contentIS = zipFile.getInputStream(contentEntry);
+            final StreamReader reader = new StreamReader(contentIS);
             content = reader.read((int) contentEntry.getSize());
             reader.close();
         }
@@ -196,14 +172,13 @@ public class ZipFileRevisionController implements RevisionController {
     }
 
     private Collection loadVersions(FileSystemPage page) throws Exception {
-        File dir = new File(page.getFileSystemPath());
-        File[] files = dir.listFiles();
-        Set<VersionInfo> versions = new HashSet<VersionInfo>();
+        final File dir = new File(page.getFileSystemPath());
+        final File[] files = dir.listFiles();
+        final Set<VersionInfo> versions = new HashSet<VersionInfo>();
         if (files != null)
-            for (File file : files) {
+            for (final File file : files)
                 if (isVersionFile(file))
                     versions.add(new VersionInfo(makeVersionName(file)));
-            }
         return versions;
     }
 
@@ -212,9 +187,9 @@ public class ZipFileRevisionController implements RevisionController {
     }
 
     private VersionInfo makeVersionInfo(PageData data) throws Exception {
-        Date time = data.getProperties().getLastModificationTime();
+        final Date time = data.getProperties().getLastModificationTime();
         String versionName = VersionInfo.nextId() + "-" + dateFormat().format(time);
-        String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
+        final String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
         if (user != null && !"".equals(user))
             versionName = user + "-" + versionName;
 
@@ -222,7 +197,7 @@ public class ZipFileRevisionController implements RevisionController {
     }
 
     private String makeVersionName(File file) {
-        String name = file.getName();
+        final String name = file.getName();
         return name.substring(0, name.length() - 4);
     }
 }

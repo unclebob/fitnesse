@@ -39,33 +39,32 @@ public class FileSystemPageRevisionControlTest {
         crawler = root.getPageCrawler();
         reset(revisionController);
         expect(revisionController.history((FileSystemPage) anyObject())).andReturn(Collections.EMPTY_LIST).anyTimes();
-        expect(revisionController.makeVersion((FileSystemPage) anyObject(), (PageData) anyObject())).andReturn(new VersionInfo("PageName"))
-                .anyTimes();
+        expect(revisionController.makeVersion((FileSystemPage) anyObject(), (PageData) anyObject())).andReturn(new VersionInfo("PageName")).anyTimes();
         revisionController.prune((FileSystemPage) anyObject());
         expectLastCall().anyTimes();
     }
 
     @Test
     public void addingAPageShouldMarkBaseDirAdded() throws Exception {
-        String basePath = defaultPath + "/RooT/PageA";
-        expect(revisionController.add(file(basePath).getAbsolutePath())).andReturn(null);
+        final String basePath = defaultPath + "/RooT/PageA";
+        revisionController.add(file(basePath).getAbsolutePath());
         setAddExpectationFor(basePath + FileSystemPage.contentFilename);
         setAddExpectationFor(basePath + FileSystemPage.propertiesFilename);
         replay(revisionController);
-        FileSystemPage levelA = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "Some Content");
+        final FileSystemPage levelA = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "Some Content");
         assertEquals(basePath, levelA.getFileSystemPath());
         assertTrue(file(basePath).exists());
     }
 
     @Test
     public void removingPageShouldMarkBaseDirDeleted() throws Exception {
-        File parent = file(defaultPath + "/RooT/LevelOne");
-        File child = file(defaultPath + "/RooT/LevelOne/LevelTwo");
-        expect(revisionController.add(parent.getAbsolutePath())).andReturn(null);
-        expect(revisionController.add(child.getAbsolutePath())).andReturn(null);
-        expect(revisionController.delete(child.getAbsolutePath())).andReturn(null);
+        final File parent = file(defaultPath + "/RooT/LevelOne");
+        final File child = file(defaultPath + "/RooT/LevelOne/LevelTwo");
+        revisionController.add(parent.getAbsolutePath());
+        revisionController.add(child.getAbsolutePath());
+        revisionController.delete(child.getAbsolutePath());
         replay(revisionController);
-        WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
+        final WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
         crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
         levelOne.removeChildPage("LevelTwo");
         assertTrue(parent.exists());
@@ -74,13 +73,13 @@ public class FileSystemPageRevisionControlTest {
 
     @Test
     public void removingParentPageShouldDeleteAllChildern() throws Exception {
-        File childOne = file(defaultPath + "/RooT/LevelOne");
-        File childTwo = file(defaultPath + "/RooT/LevelOne/LevelTwo");
-        expect(revisionController.add(childOne.getAbsolutePath())).andReturn(null);
-        expect(revisionController.add(childTwo.getAbsolutePath())).andReturn(null);
-        expect(revisionController.delete(childOne.getAbsolutePath())).andReturn(null);
+        final File childOne = file(defaultPath + "/RooT/LevelOne");
+        final File childTwo = file(defaultPath + "/RooT/LevelOne/LevelTwo");
+        revisionController.add(childOne.getAbsolutePath());
+        revisionController.add(childTwo.getAbsolutePath());
+        revisionController.delete(childOne.getAbsolutePath());
         replay(revisionController);
-        WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
+        final WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
         crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
         assertTrue(childOne.exists());
         root.removeChildPage("LevelOne");
@@ -90,26 +89,26 @@ public class FileSystemPageRevisionControlTest {
 
     @Test
     public void shouldAddPageToVersionControlOnFirstCommit() throws Exception {
-        String basePath = defaultPath + "/RooT/PageA";
-        expect(revisionController.add(file(basePath).getAbsolutePath())).andReturn(null);
+        final String basePath = defaultPath + "/RooT/PageA";
+        revisionController.add(file(basePath).getAbsolutePath());
         setAddExpectationFor(basePath + FileSystemPage.contentFilename);
         setAddExpectationFor(basePath + FileSystemPage.propertiesFilename);
         replay(revisionController);
-        FileSystemPage page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"));
+        final FileSystemPage page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"));
         page.doCommit(page.getData());
     }
 
     @Test
     public void shouldNotAddPageToVersionControlOnSubsequentCommits() throws Exception {
-        String basePath = defaultPath + "/RooT/PageA";
-        expect(revisionController.add(file(basePath).getAbsolutePath())).andReturn(null);
+        final String basePath = defaultPath + "/RooT/PageA";
+        revisionController.add(file(basePath).getAbsolutePath());
         setAddExpectationFor(basePath + FileSystemPage.contentFilename);
         setAddExpectationFor(basePath + FileSystemPage.propertiesFilename);
         expect(revisionController.checkState(file(basePath + FileSystemPage.contentFilename).getAbsolutePath())).andReturn(VERSIONED);
         expect(revisionController.checkState(file(basePath + FileSystemPage.propertiesFilename).getAbsolutePath())).andReturn(VERSIONED);
         replay(revisionController);
-        FileSystemPage page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "Sample content");
-        PageData data = page.getData();
+        final FileSystemPage page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "Sample content");
+        final PageData data = page.getData();
         data.setContent("New Content");
         page.doCommit(data);
     }
@@ -126,9 +125,9 @@ public class FileSystemPageRevisionControlTest {
     }
 
     private void setAddExpectationFor(String filePath) throws RevisionControlException {
-        File file = file(filePath);
+        final File file = file(filePath);
         expect(revisionController.checkState(file.getAbsolutePath())).andReturn(UNKNOWN);
-        expect(revisionController.add(file.getAbsolutePath())).andReturn(null);
+        revisionController.add(file.getAbsolutePath());
     }
 
 }

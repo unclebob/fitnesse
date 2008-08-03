@@ -1,9 +1,7 @@
 package fitnesse.responders.revisioncontrol;
 
-import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import fitnesse.revisioncontrol.RevisionControlException;
@@ -22,7 +20,7 @@ public class RevertResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldAskRevisionControllerToRevertPage() throws Exception {
-        expect(revisionController.execute(REVERT, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(VERSIONED);
+        revisionController.revert(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
         replay(revisionController);
 
         createPage(FS_PARENT_PAGE);
@@ -32,9 +30,9 @@ public class RevertResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldReportErrorMsgIfRevertOperationFails() throws Exception {
-        String errorMsg = "Cannot revert files from Revision Control";
-        expect(revisionController.execute(REVERT, contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andThrow(
-                new RevisionControlException(errorMsg));
+        final String errorMsg = "Cannot revert files from Revision Control";
+        revisionController.revert(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        expectLastCall().andThrow(new RevisionControlException(errorMsg));
         replay(revisionController);
 
         createPage(FS_PARENT_PAGE);
@@ -46,7 +44,7 @@ public class RevertResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldOnlyRevertCurrentPage() throws Exception {
-        expect(revisionController.execute(REVERT, contentAndPropertiesFilePathFor(FS_CHILD_PAGE))).andReturn(VERSIONED);
+        revisionController.revert(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
         replay(revisionController);
 
         createPage(FS_GRAND_CHILD_PAGE);

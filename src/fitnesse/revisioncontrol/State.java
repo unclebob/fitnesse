@@ -1,10 +1,6 @@
 package fitnesse.revisioncontrol;
 
-import fitnesse.wiki.WikiPage;
-
-
-public interface State
-{
+public interface State {
     String REVISION_CONTROL_STATE = "RevisionControlState";
 
     RevisionControlOperation[] operations();
@@ -16,6 +12,4 @@ public interface State
     boolean isCheckedOut();
 
     boolean isCheckedIn();
-
-    void persist(WikiPage page) throws Exception;
 }

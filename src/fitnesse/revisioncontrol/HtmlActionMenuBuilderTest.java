@@ -1,9 +1,7 @@
 package fitnesse.revisioncontrol;
 
-import static fitnesse.revisioncontrol.NullState.ADDED;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static fitnesse.revisioncontrol.RevisionControlOperation.STATE;
 import static fitnesse.testutil.RegexTestCase.assertNotSubString;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
 import static org.easymock.EasyMock.anyObject;
@@ -40,10 +38,10 @@ public class HtmlActionMenuBuilderTest extends TestCase
     protected void setUp() throws Exception {
         FileUtil.createDir(ROOT);
         expect(revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
-        expect(revisionController.makeVersion((FileSystemPage) anyObject(), (PageData) anyObject())).andStubReturn(
-                new VersionInfo("PageName"));
+        expect(revisionController.makeVersion((FileSystemPage) anyObject(), (PageData) anyObject())).andStubReturn(new VersionInfo("PageName"));
         expect(revisionController.checkState((String) anyObject())).andStubReturn(VERSIONED);
-        expect(revisionController.add((String) anyObject())).andStubReturn(ADDED);
+        revisionController.add((String) anyObject());
+        expectLastCall().anyTimes();
         revisionController.prune((FileSystemPage) anyObject());
         expectLastCall().asStub();
     }
@@ -55,9 +53,9 @@ public class HtmlActionMenuBuilderTest extends TestCase
     }
 
     private SimpleResponse requestPage(String name) throws Exception {
-        MockRequest request = new MockRequest();
+        final MockRequest request = new MockRequest();
         request.setResource(name);
-        Responder responder = new WikiPageResponder();
+        final Responder responder = new WikiPageResponder();
         return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     }
 
@@ -65,10 +63,10 @@ public class HtmlActionMenuBuilderTest extends TestCase
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(false);
         replay(revisionController);
 
-        String pageName = "EditablePage";
+        final String pageName = "EditablePage";
         createRoot();
         root.addChildPage(pageName);
-        String html = requestPage(pageName).getContent();
+        final String html = requestPage(pageName).getContent();
         assertSubString(link("Edit", pageName, "edit", "e"), html);
         assertRevisionControlItemsNotDisplayed(pageName, html);
     }
@@ -76,65 +74,65 @@ public class HtmlActionMenuBuilderTest extends TestCase
     public void testShouldNotDisplayAnyReversionControlButtonsIfPageIsNotEditableNorImported() throws Exception {
         replay(revisionController);
 
-        String pageName = "NonEditablePage";
+        final String pageName = "NonEditablePage";
         createRoot();
-        WikiPage testPage = root.addChildPage(pageName);
-        PageData pageData = testPage.getData();
+        final WikiPage testPage = root.addChildPage(pageName);
+        final PageData pageData = testPage.getData();
         pageData.removeAttribute("Edit");
         testPage.commit(pageData);
 
-        String html = requestPage(pageName).getContent();
+        final String html = requestPage(pageName).getContent();
         assertNotSubString(link("Edit", pageName, "edit", "e"), html);
         assertRevisionControlItemsNotDisplayed(pageName, html);
     }
 
     public void testShouldDisplayRevisionControlActionMenuHeaderIfWikiIsUnderRevisionControl() throws Exception {
-        String pageName = "UnderVersionControlPage";
+        final String pageName = "UnderVersionControlPage";
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(VERSIONED);
+        expect(revisionController.checkState(contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(VERSIONED);
         replay(revisionController);
 
         createRoot();
         root.addChildPage(pageName);
-        String html = requestPage(pageName).getContent();
+        final String html = requestPage(pageName).getContent();
         assertRevisionControlHeaderPresent(html);
     }
 
     public void testShouldDisplayRevisionControlButtonIfWikiPageIsImported() throws Exception {
-        String pageName = "ImportedWikiPage";
+        final String pageName = "ImportedWikiPage";
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
+        expect(revisionController.checkState(contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
         replay(revisionController);
 
         createRoot();
-        WikiPage testPage = root.addChildPage(pageName);
-        PageData pageData = testPage.getData();
+        final WikiPage testPage = root.addChildPage(pageName);
+        final PageData pageData = testPage.getData();
         pageData.removeAttribute("Edit");
         pageData.setAttribute("WikiImport");
         testPage.commit(pageData);
-        String html = requestPage(pageName).getContent();
+        final String html = requestPage(pageName).getContent();
         assertRevisionControlHeaderPresent(html);
     }
 
     public void testShouldDisplayAddToRevisionControlButtonForPages() throws Exception {
-        String pageName = "NotUnderVersionControlPage";
+        final String pageName = "NotUnderVersionControlPage";
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
+        expect(revisionController.checkState(contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
         replay(revisionController);
 
-        String html = getActionsHtml(pageName);
+        final String html = getActionsHtml(pageName);
         verifyDefaultLinks(html, pageName);
         assertRevisionControlHeaderPresent(html);
         assertAddToRevisionControlButtonIsVisible(pageName, html);
     }
 
     public void testShouldDisplayAssociatedRevisionControlButtonForPages() throws Exception {
-        String pageName = "CheckedInPage";
+        final String pageName = "CheckedInPage";
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(VERSIONED);
+        expect(revisionController.checkState(contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(VERSIONED);
         replay(revisionController);
 
-        String html = getActionsHtml(pageName);
+        final String html = getActionsHtml(pageName);
         verifyDefaultLinks(html, pageName);
         assertRevisionControlHeaderPresent(html);
         assertAddToRevisionControlButtonIsNotVisible(pageName, html);
@@ -144,12 +142,12 @@ public class HtmlActionMenuBuilderTest extends TestCase
     }
 
     public void testShouldNotDisplayRevertButtonForLocalUnchangedPages() throws Exception {
-        String pageName = "UnchangedPage";
+        final String pageName = "UnchangedPage";
         expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-        expect(revisionController.execute(STATE, contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(VERSIONED);
+        expect(revisionController.checkState(contentAndPropertiesFilePath(ROOT + "/ExternalRoot/" + pageName))).andReturn(VERSIONED);
         replay(revisionController);
 
-        String html = getActionsHtml(pageName);
+        final String html = getActionsHtml(pageName);
         verifyDefaultLinks(html, pageName);
         assertAddToRevisionControlButtonIsNotVisible(pageName, html);
         assertUpdateButtonIsVisible(pageName, html);

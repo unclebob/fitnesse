@@ -11,6 +11,7 @@ import java.util.HashSet;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.revisioncontrol.NullState;
+import fitnesse.revisioncontrol.RevisionControlException;
 import fitnesse.revisioncontrol.RevisionControlOperation;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.wiki.FileSystemPage;
@@ -36,32 +37,30 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
     }
 
     public void testShouldReturnPageNotFoundMessageWhenPageDoesNotExist() throws Exception {
-        String pageName = "InvalidPageName";
+        final String pageName = "InvalidPageName";
         request.setResource(pageName);
         invokeResponderAndCheckResponseContains("The requested resource: <i>" + pageName + "</i> was not found.");
     }
 
     public void testShouldReturnInvalidWikiPageMessageIfWikiPageDoesNotExistOnFileSystem() throws Exception {
-        String inMemoryPageName = "InMemoryPage";
+        final String inMemoryPageName = "InMemoryPage";
         root.addChildPage(inMemoryPageName);
         request.setResource(inMemoryPageName);
-        invokeResponderAndCheckResponseContains("The page " + inMemoryPageName + " doesn't support '" + revisionControlOperation
-                + "' operation.");
+        invokeResponderAndCheckResponseContains("The page " + inMemoryPageName + " doesn't support '" + revisionControlOperation + "' operation.");
     }
 
     public void testShouldResolveSymbolicLinkToActualPageAndApplyRevisionControlOperations() throws Exception {
-        String symbolicLinkName = "SymbolicLink";
-        String pageOneName = "PageOne";
-        String symbolicLinkPageName = pageOneName + "." + symbolicLinkName;
+        final String symbolicLinkName = "SymbolicLink";
+        final String pageOneName = "PageOne";
+        final String symbolicLinkPageName = pageOneName + "." + symbolicLinkName;
         createSymbolicLink(symbolicLinkName, pageOneName);
 
         request.setResource(symbolicLinkPageName);
-        invokeResponderAndCheckResponseContains("The page " + symbolicLinkPageName + " doesn't support '" + revisionControlOperation
-                + "' operation.");
+        invokeResponderAndCheckResponseContains("The page " + symbolicLinkPageName + " doesn't support '" + revisionControlOperation + "' operation.");
     }
 
     public void testShouldReportPerformRevisionControlOperation() throws Exception {
-        String expectedResponse = "Attempted to '" + revisionControlOperation + "' the page '" + pageName
+        final String expectedResponse = "Attempted to '" + revisionControlOperation + "' the page '" + pageName
                 + "'. The result was:<br/><br/><pre>Operation: '" + revisionControlOperation + "' was successful.";
         revisionController = createNiceMock(RevisionController.class);
         expect(revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
@@ -76,13 +75,13 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
     }
 
     private void createSymbolicLink(String symbolicLinkName, String pageOneName) throws Exception {
-        String pageTwoName = "PageTwo";
-        WikiPage pageOne = root.addChildPage(pageOneName);
+        final String pageTwoName = "PageTwo";
+        final WikiPage pageOne = root.addChildPage(pageOneName);
         root.addChildPage(pageTwoName);
 
-        PageData data = pageOne.getData();
-        WikiPageProperties properties = data.getProperties();
-        WikiPageProperty symLinks = getSymLinkProperty(properties);
+        final PageData data = pageOne.getData();
+        final WikiPageProperties properties = data.getProperties();
+        final WikiPageProperty symLinks = getSymLinkProperty(properties);
         symLinks.set(symbolicLinkName, pageTwoName);
         pageOne.commit(data);
     }
@@ -95,7 +94,12 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
 
     private class TestRevisionControlResponder extends RevisionControlResponder {
         public TestRevisionControlResponder() {
-            super(new RevisionControlOperation(revisionControlOperation, "", ""));
+            super(new RevisionControlOperation(revisionControlOperation, "", "") {
+
+                @Override
+                public void execute(RevisionController revisionController, String... filePath) throws RevisionControlException {
+                }
+            });
         }
 
         @Override

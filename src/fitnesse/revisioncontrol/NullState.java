@@ -6,7 +6,6 @@ import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKOUT;
 import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
 import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
 import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
-import fitnesse.wiki.WikiPage;
 
 public abstract class NullState implements State {
     protected String state;
@@ -22,9 +21,6 @@ public abstract class NullState implements State {
 
     public boolean isCheckedOut() {
         return true;
-    }
-
-    public void persist(WikiPage page) throws Exception {
     }
 
 }
