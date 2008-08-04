@@ -44,14 +44,6 @@ public class AddResponderTest extends RevisionControlTestCase {
         assertSubString(errorMsg, response.getContent());
     }
 
-    public void testShouldSkipAddingFilesIfTheyAreAlreadyUnderRevisionControl() throws Exception {
-        revisionController.add(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
-        replay(revisionController);
-        createPage(FS_PARENT_PAGE);
-        request.setResource(FS_PARENT_PAGE);
-        invokeResponderAndCheckSuccessStatus();
-    }
-
     public void testShouldAskRevisionControllerToAddAllParentPages() throws Exception {
         expect(revisionController.checkState(contentAndPropertiesFilePathFor(FS_PARENT_PAGE))).andReturn(UNKNOWN);
         revisionController.add(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));

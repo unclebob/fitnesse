@@ -250,7 +250,7 @@ public class FileSystemPage extends CachingPage {
         return absolutePath(contentFilename);
     }
 
-    public boolean isRevisionControlled() {
+    public boolean isExternallyRevisionControlled() {
         return revisioner.isExternalReversionControlEnabled();
     }
 

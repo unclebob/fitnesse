@@ -22,7 +22,7 @@ public class HtmlActionMenuBuilder {
 
     private static boolean shouldDisplayRevisionControlActions(WikiPage wikiPage) throws Exception {
         if (wikiPage instanceof FileSystemPage)
-            return ((FileSystemPage) wikiPage).isRevisionControlled();
+            return ((FileSystemPage) wikiPage).isExternallyRevisionControlled();
         return false;
     }
 
