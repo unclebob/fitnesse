@@ -22,6 +22,17 @@ public class DeleteResponderTest extends RevisionControlTestCase {
         invokeResponderAndCheckSuccessStatus();
     }
 
+    public void testShouldRemovePageReferenceFromParentAfterDeletingChildPage() throws Exception {
+        revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
+        replay(revisionController);
+
+        createPage(FS_GRAND_CHILD_PAGE);
+        request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE + "." + FS_GRAND_CHILD_PAGE);
+
+        invokeResponderAndCheckSuccessStatus();
+        assertNull("Parent page had a reference to child file", childPage.getChildPage(FS_GRAND_CHILD_PAGE));
+    }
+
     public void testShouldDeleteAllChildPages() throws Exception {
         revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
         revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));

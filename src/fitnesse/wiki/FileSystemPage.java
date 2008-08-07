@@ -45,7 +45,7 @@ public class FileSystemPage extends CachingPage {
     public void removeChildPage(String name) throws Exception {
         super.removeChildPage(name);
         final File fileToBeDeleted = new File(getFileSystemPath() + "/" + name);
-        revisioner.delete(fileToBeDeleted.getAbsolutePath());
+        // revisioner.delete(fileToBeDeleted.getAbsolutePath());
         FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
     }
 
@@ -103,7 +103,7 @@ public class FileSystemPage extends CachingPage {
         final FileSystemPage newPage = new FileSystemPage(getFileSystemPath(), name, this, this.revisioner);
         final File baseDir = new File(newPage.getFileSystemPath());
         baseDir.mkdirs();
-        revisioner.add(baseDir.getAbsolutePath());
+        // revisioner.add(baseDir.getAbsolutePath());
         return newPage;
     }
 
@@ -188,12 +188,12 @@ public class FileSystemPage extends CachingPage {
         data.getProperties().setLastModificationTime(new Date());
         saveContent(data.getContent());
         saveAttributes(data.getProperties());
-        addToReversionControl(contentFilePath());
-        addToReversionControl(propertiesFilePath());
+        // addToReversionControl(contentFilePath());
+        // addToReversionControl(propertiesFilePath());
         revisioner.prune(this);
     }
 
-    private void addToReversionControl(String filePath) throws RevisionControlException {
+    protected void addToReversionControl(String filePath) throws RevisionControlException {
         if (revisioner.checkState(filePath).isNotUnderRevisionControl())
             revisioner.add(filePath);
     }

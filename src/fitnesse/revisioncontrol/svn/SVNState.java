@@ -48,15 +48,6 @@ public abstract class SVNState implements State {
         return revisionControlState;
     }
 
-    public static State checkState(String messageFromSVNClient) {
-        for (final SVNState state : states.values())
-            if (state.matchesSVNClientResponse(messageFromSVNClient))
-                return state;
-        return SVNState.UNKNOWN;
-    }
-
-    protected abstract boolean matchesSVNClientResponse(String messageFromSVNClient);
-
     protected boolean contains(String msg, String searchString) {
         return msg.indexOf(searchString) != -1;
     }
@@ -78,11 +69,6 @@ class Versioned extends SVNState {
     public boolean isCheckedIn() {
         return true;
     }
-
-    @Override
-    protected boolean matchesSVNClientResponse(String messageFromSVNClient) {
-        return contains(messageFromSVNClient, "Schedule: normal");
-    }
 }
 
 class Unknown extends SVNState {
@@ -103,8 +89,8 @@ class Unknown extends SVNState {
     }
 
     @Override
-    protected boolean matchesSVNClientResponse(String messageFromSVNClient) {
-        return contains(messageFromSVNClient, "Not a versioned resource") || contains(messageFromSVNClient, "is not a working copy");
+    public boolean isCheckedOut() {
+        return false;
     }
 }
 
@@ -124,11 +110,6 @@ class Deleted extends SVNState {
     public boolean isCheckedIn() {
         return true;
     }
-
-    @Override
-    protected boolean matchesSVNClientResponse(String messageFromSVNClient) {
-        return contains(messageFromSVNClient, "Schedule: delete");
-    }
 }
 
 class Added extends SVNState {
@@ -146,10 +127,5 @@ class Added extends SVNState {
 
     public boolean isCheckedIn() {
         return false;
-    }
-
-    @Override
-    protected boolean matchesSVNClientResponse(String messageFromSVNClient) {
-        return contains(messageFromSVNClient, "Schedule: add");
     }
 }

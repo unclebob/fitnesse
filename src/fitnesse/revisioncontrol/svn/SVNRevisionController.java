@@ -1,13 +1,12 @@
 package fitnesse.revisioncontrol.svn;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
@@ -56,6 +55,7 @@ public class SVNRevisionController implements RevisionController {
                 if (notUnderVersionControl(file))
                     addEntry(file);
             } catch (SVNException e) {
+                e.printStackTrace();
                 throw new RevisionControlException("Unable to add file : " + fileName, e);
             }
         }
@@ -64,10 +64,18 @@ public class SVNRevisionController implements RevisionController {
     public void checkin(String... filePaths) throws RevisionControlException {
         SVNCommitClient commitClient = manager.getCommitClient();
         try {
-            commitClient.doCommit(files(filePaths), false, "Auto Commit", false, false);
+            commitClient.doCommit(files(filePaths), false, "Auto Commit", false, true);
         } catch (SVNException e) {
-            throw new RevisionControlException("Unable to commit files : " + filePaths, e);
+            e.printStackTrace();
+            throw new RevisionControlException("Unable to commit files : " + asString(filePaths), e);
         }
+    }
+
+    private String asString(String[] filePaths) {
+        StringBuilder output = new StringBuilder();
+        for (String filePath : filePaths)
+            output.append(filePath).append("\n");
+        return output.toString();
     }
 
     public void checkout(String... filePaths) throws RevisionControlException {
@@ -75,7 +83,7 @@ public class SVNRevisionController implements RevisionController {
     }
 
     public State checkState(String... filePaths) throws RevisionControlException {
-        State finalState = SVNState.UNKNOWN;
+        State finalState = null;
         for (String fileName : filePaths) {
             State state = getState(fileName);
             if (finalState == null) {
@@ -85,18 +93,19 @@ public class SVNRevisionController implements RevisionController {
             if (finalState != state)
                 throw new RevisionControlException(
                         "Following file should be in the same state, but are in different states. Please check their SVN status and manually sync it up"
-                                + filePaths);
+                                + asString(filePaths));
         }
         return finalState;
     }
 
     public void delete(String... filePaths) throws RevisionControlException {
         SVNWCClient client = manager.getWCClient();
-        for (String fileName : filePaths)
+        for (File file : files(filePaths))
             try {
-                client.doDelete(new File(fileName), false, false);
+                client.doDelete(file, false, false);
             } catch (SVNException e) {
-                throw new RevisionControlException("Unable to delete file : " + fileName, e);
+                e.printStackTrace();
+                throw new RevisionControlException("Unable to delete file : " + file.getAbsolutePath(), e);
             }
     }
 
@@ -126,8 +135,9 @@ public class SVNRevisionController implements RevisionController {
         SVNWCClient client = manager.getWCClient();
         for (String fileName : filePaths)
             try {
-                client.doRevert(new File(fileName), true);
+                client.doRevert(new File(fileName), false);
             } catch (SVNException e) {
+                e.printStackTrace();
                 throw new RevisionControlException("Unable to revert file : " + fileName, e);
             }
     }
@@ -135,35 +145,45 @@ public class SVNRevisionController implements RevisionController {
     public void update(String... filePaths) throws RevisionControlException {
         final SVNUpdateClient client = manager.getUpdateClient();
         client.setIgnoreExternals(true);
-        for (String fileName : filePaths)
+        for (String fileName : filePaths) {
             try {
-                client.doUpdate(new File(fileName), SVNRevision.HEAD, false);
+                client.doUpdate(new File(fileName).getParentFile(), SVNRevision.HEAD, true);
             } catch (SVNException e) {
+                e.printStackTrace();
                 throw new RevisionControlException("Unable to update file : " + fileName, e);
             }
+            break;
+        }
     }
 
     private void addEntry(File wcPath) throws SVNException {
-        manager.getWCClient().doAdd(wcPath, false, false, false, true);
+        manager.getWCClient().doAdd(wcPath, false, wcPath.isDirectory(), true, false);
     }
 
     private File[] files(String... filePaths) {
-        List<File> files = new ArrayList<File>();
-        for (String fileName : filePaths)
-            files.add(new File(fileName));
+        Set<File> files = new HashSet<File>();
+        for (String fileName : filePaths) {
+            File file = new File(fileName);
+            files.add(file);
+            files.add(file.getParentFile());
+        }
         return files.toArray(new File[files.size()]);
     }
 
     private State getState(String fileName) throws RevisionControlException {
+        SVNStatusType status;
         try {
-            SVNStatusType status = getStatus(new File(fileName));
-            State state = states.get(status);
-            if (state != null)
-                return state;
-            throwExceptionForUnhaldedStatues(status, fileName);
+            status = getStatus(new File(fileName));
         } catch (SVNException e) {
+            if (e.getMessage().contains("is not a working copy"))
+                return SVNState.UNKNOWN;
+            e.printStackTrace();
             throw new RevisionControlException("Unable to check the status of file : " + fileName, e);
         }
+        State state = states.get(status);
+        if (state != null)
+            return state;
+        throwExceptionForUnhaldedStatues(status, fileName);
         throw new RevisionControlException(fileName + " is in unknow state. Please update the file and try again");
     }
 
@@ -193,8 +213,8 @@ public class SVNRevisionController implements RevisionController {
         errorMsgs.put(SVNStatusType.STATUS_OBSTRUCTED, " is marked as obstructed by SVN. Please clean up the file/folder and try again");
     }
 
-    private boolean notUnderVersionControl(File file) throws SVNException {
-        return SVNStatusType.UNKNOWN.equals(getStatus(file));
+    private boolean notUnderVersionControl(File file) throws RevisionControlException {
+        return getState(file.getAbsolutePath()).isNotUnderRevisionControl();
     }
 
     private void throwExceptionForUnhaldedStatues(SVNStatusType status, String fileName) throws RevisionControlException {

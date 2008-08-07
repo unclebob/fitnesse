@@ -51,9 +51,8 @@ public abstract class RevisionControlResponder extends BasicResponder {
     }
 
     private WikiPage resolveSymbolicLinks(WikiPage page) throws Exception {
-        while ((page instanceof SymbolicPage)) {
+        while (page instanceof SymbolicPage)
             page = ((SymbolicPage) page).getRealPage();
-        }
         return page;
     }
 

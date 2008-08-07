@@ -1,7 +1,8 @@
 package fitnesse.ant;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -11,282 +12,243 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
-import java.io.File;
-import java.io.IOException;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
 
 /**
- * Task to run fit tests. This task starts the fit server, runs fitnesse tests and publishes the results.
- * <p/>
+ * Task to run fit tests. This task starts the fit server, runs fitnesse tests and publishes the results. <p/>
+ * 
  * <pre>
  * Usage:
  * &lt;taskdef name=&quot;run-fitnesse-tests&quot; classname=&quot;fitnesse.ant.TestRunnerTask&quot; classpathref=&quot;classpath&quot; /&gt;
  * OR
  * &lt;taskdef classpathref=&quot;classpath&quot; resource=&quot;tasks.properties&quot; /&gt;
- * <p/>
+ * &lt;p/&gt;
  * &lt;run-fitnesse-tests wikidirectoryrootpath=&quot;.&quot; suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot; fitnesseport=&quot;8082&quot; resultsdir=&quot;${results.dir}&quot; resultshtmlpage=&quot;fit-results.html&quot; resultsxmlpage=&quot;fit-results.xml&quot; classpathref=&quot;classpath&quot; /&gt;
  * </pre>
  */
-public class TestRunnerTask extends Task
-{
-	private String wikiDirectoryRootPath;
-	private int fitnessePort = 8082;
-	private String suitePage;
-	private String resultsDir = ".";
-	private String resultsHTMLPage;
-	private String resultsXMLPage;
-	private boolean debug = true;
-	private boolean verbose = true;
-	private boolean failOnError = true;
-	private String testRunnerClass = "fitnesse.runner.TestRunner";
-	private Path classpath;
-	private String resultProperty;
+public class TestRunnerTask extends Task {
+    private String wikiDirectoryRootPath;
+    private int fitnessePort = 8082;
+    private String suitePage;
+    private String resultsDir = ".";
+    private String resultsHTMLPage;
+    private String resultsXMLPage;
+    private boolean debug = true;
+    private boolean verbose = true;
+    private boolean failOnError = true;
+    private String testRunnerClass = "fitnesse.runner.TestRunner";
+    private Path classpath;
+    private String resultProperty;
 
-	@Override
-	public void execute() throws BuildException
-	{
-		try
-		{
-			FitNesse.main(new String[]
-				{"-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0"});
-		}
-		catch(Exception e)
-		{
-			throw new BuildException("Failed to start FitNesse. Error Msg: " + e.getMessage(), e);
-		}
-		log("Sucessfully Started Fitnesse on port " + fitnessePort);
-		try
-		{
-			int exitCode = executeRunnerClassAsForked();
-			if(exitCode != 0)
-			{
-				log("Finished executing FitNesse tests: " + exitCode + " failures/exceptions");
-				if(failOnError)
-				{
-					throw new BuildException(exitCode + " FitNesse test failures/exceptions");
-				}
-				else
-				{
-					getProject().setNewProperty(resultProperty, String.valueOf(exitCode));
-				}
-			}
-			else
-			{
-				log("Fitnesse Tests executed successfully");
-			}
-		}
-		catch(Exception e)
-		{
-			if(failOnError)
-			{
-				throw new BuildException(
-					"Got an unexpected error trying to run the fitnesse tests : " + e.getMessage(), e);
-			}
-			else
-			{
-				e.printStackTrace();
-			}
-		}
-		finally
-		{
-			FitNesseContext context = new FitNesseContext();
-			context.port = fitnessePort;
-			try
-			{
-				new FitNesse(context).stop();
-			}
-			catch(Exception e)
-			{
-				throw new BuildException("Failed to stop FitNesse. Error Msg: " + e.getMessage(), e);
-			}
-		}
-	}
+    @Override
+    public void execute() throws BuildException {
+        startFitNesse();
+        try {
+            executeTests();
+        } catch (Exception e) {
+            if (failOnError)
+                throw new BuildException("Got an unexpected error trying to run the fitnesse tests : " + e.getMessage(), e);
+            else
+                e.printStackTrace();
+        } finally {
+            stopFitNesse();
+        }
+    }
 
-	private int executeRunnerClassAsForked() throws BuildException
-	{
-		CommandlineJava cmd = initializeJavaCommand();
+    private void executeTests() {
+        int exitCode = executeRunnerClassAsForked();
+        if (exitCode != 0) {
+            log("Finished executing FitNesse tests: " + exitCode + " failures/exceptions");
+            if (failOnError)
+                throw new BuildException(exitCode + " FitNesse test failures/exceptions");
+            else
+                getProject().setNewProperty(resultProperty, String.valueOf(exitCode));
+        } else
+            log("Fitnesse Tests executed successfully");
+    }
 
-		Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
-		execute.setCommandline(cmd.getCommandline());
-		execute.setNewenvironment(false);
-		execute.setAntRun(getProject());
+    private void stopFitNesse() {
+        FitNesseContext context = new FitNesseContext();
+        context.port = fitnessePort;
+        try {
+            new FitNesse(context).stop();
+        } catch (Exception e) {
+            throw new BuildException("Failed to stop FitNesse. Error Msg: " + e.getMessage(), e);
+        }
+    }
 
-		log(cmd.describeCommand(), Project.MSG_VERBOSE);
-		int retVal;
-		try
-		{
-			retVal = execute.execute();
-		}
-		catch(IOException e)
-		{
-			throw new BuildException("Process fork failed.", e, getLocation());
-		}
+    private void startFitNesse() {
+        try {
+            FitNesse.main(new String[] { "-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o" });
+        } catch (Exception e) {
+            throw new BuildException("Failed to start FitNesse. Error Msg: " + e.getMessage(), e);
+        }
+        log("Sucessfully Started Fitnesse on port " + fitnessePort);
+    }
 
-		return retVal;
-	}
+    private int executeRunnerClassAsForked() throws BuildException {
+        CommandlineJava cmd = initializeJavaCommand();
 
-	private CommandlineJava initializeJavaCommand()
-	{
-		CommandlineJava cmd = new CommandlineJava();
-		cmd.setClassname(testRunnerClass);
-		if(debug)
-			cmd.createArgument().setValue("-debug");
-		if(verbose)
-			cmd.createArgument().setValue("-v");
-		if(resultsHTMLPage != null)
-		{
-			String resultsHTMLPagePath = new File(resultsDir, resultsHTMLPage).getAbsolutePath();
-			cmd.createArgument().setValue("-html");
-			cmd.createArgument().setValue(resultsHTMLPagePath);
-		}
-		if(resultsXMLPage != null)
-		{
-			String resultsHTMLPagePath = new File(resultsDir, resultsXMLPage).getAbsolutePath();
-			cmd.createArgument().setValue("-xml");
-			cmd.createArgument().setValue(resultsHTMLPagePath);
-		}
-		//cmd.createArgument().setValue("-nopath");
-		cmd.createArgument().setValue("localhost");
-		cmd.createArgument().setValue(String.valueOf(fitnessePort));
-		cmd.createArgument().setValue(suitePage);
-		cmd.createClasspath(getProject()).createPath().append(classpath);
-		return cmd;
-	}
+        Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
+        execute.setCommandline(cmd.getCommandline());
+        execute.setNewenvironment(false);
+        execute.setAntRun(getProject());
 
-	/**
-	 * Classpath of the TestRunner class. <b>MUST SET</b>
-	 *
-	 * @param classpath
-	 */
-	public void setClasspath(Path classpath)
-	{
-		this.classpath = classpath;
-	}
+        log(cmd.describeCommand(), Project.MSG_VERBOSE);
+        int retVal;
+        try {
+            retVal = execute.execute();
+        } catch (IOException e) {
+            throw new BuildException("Process fork failed.", e, getLocation());
+        }
 
-	/**
-	 * Debug mode. Defaults to 'true'.
-	 *
-	 * @param debug
-	 */
-	public void setDebug(boolean debug)
-	{
-		this.debug = debug;
-	}
+        return retVal;
+    }
 
-	/**
-	 * Will fail the build if any Fitnesse tests fail. Defaults to 'true'.
-	 *
-	 * @param failOnError
-	 */
-	public void setFailOnError(boolean failOnError)
-	{
-		this.failOnError = failOnError;
-	}
+    private CommandlineJava initializeJavaCommand() {
+        CommandlineJava cmd = new CommandlineJava();
+        cmd.setClassname(testRunnerClass);
+        if (debug)
+            cmd.createArgument().setValue("-debug");
+        if (verbose)
+            cmd.createArgument().setValue("-v");
+        if (resultsHTMLPage != null) {
+            String resultsHTMLPagePath = new File(resultsDir, resultsHTMLPage).getAbsolutePath();
+            cmd.createArgument().setValue("-html");
+            cmd.createArgument().setValue(resultsHTMLPagePath);
+        }
+        if (resultsXMLPage != null) {
+            String resultsHTMLPagePath = new File(resultsDir, resultsXMLPage).getAbsolutePath();
+            cmd.createArgument().setValue("-xml");
+            cmd.createArgument().setValue(resultsHTMLPagePath);
+        }
+        cmd.createArgument().setValue("localhost");
+        cmd.createArgument().setValue(String.valueOf(fitnessePort));
+        cmd.createArgument().setValue(suitePage);
+        cmd.createClasspath(getProject()).createPath().append(classpath);
+        return cmd;
+    }
 
-	/**
-	 * Port on which fitnesse would run. Defaults to <b>8082</b>.
-	 *
-	 * @param fitnessePort
-	 */
-	public void setFitnessePort(int fitnessePort)
-	{
-		this.fitnessePort = fitnessePort;
-	}
+    /**
+     * Classpath of the TestRunner class. <b>MUST SET</b>
+     * 
+     * @param classpath
+     */
+    public void setClasspath(Path classpath) {
+        this.classpath = classpath;
+    }
 
-	/**
-	 * Name of the property which will store the test results. Only valid if failOnError attribute is set to false.
-	 *
-	 * @param resultProperty
-	 */
-	public void setResultProperty(String resultProperty)
-	{
-		this.resultProperty = resultProperty;
-	}
+    /**
+     * Debug mode. Defaults to 'true'.
+     * 
+     * @param debug
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
 
-	/**
-	 * Path to the folder that will contain the fitnesse results page after execution. Only valid if resultsHTMLPage or
-	 * resultsXMLPage attributes are set. Defaults to current directory.
-	 *
-	 * @param resultsDir
-	 */
-	public void setResultsDir(String resultsDir)
-	{
-		this.resultsDir = resultsDir;
-	}
+    /**
+     * Will fail the build if any Fitnesse tests fail. Defaults to 'true'.
+     * 
+     * @param failOnError
+     */
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
+    }
 
-	/**
-	 * If set, stores the fitnesse results in HTML format under the resultsdir folder with the given name. The file name
-	 * must have a '.html' extension.
-	 *
-	 * @param resultsHTMLPage
-	 */
-	public void setResultsHTMLPage(String resultsHTMLPage)
-	{
-		this.resultsHTMLPage = resultsHTMLPage;
-	}
+    /**
+     * Port on which fitnesse would run. Defaults to <b>8082</b>.
+     * 
+     * @param fitnessePort
+     */
+    public void setFitnessePort(int fitnessePort) {
+        this.fitnessePort = fitnessePort;
+    }
 
-	/**
-	 * If set, stores the fitnesse results in XML format under the resultsdir folder with the given name. The file name
-	 * must have a '.xml' extension.
-	 *
-	 * @param resultsXMLPage
-	 */
-	public void setResultsXMLPage(String resultsXMLPage)
-	{
-		this.resultsXMLPage = resultsXMLPage;
-	}
+    /**
+     * Name of the property which will store the test results. Only valid if failOnError attribute is set to false.
+     * 
+     * @param resultProperty
+     */
+    public void setResultProperty(String resultProperty) {
+        this.resultProperty = resultProperty;
+    }
 
-	/**
-	 * Fully qualifies class name of the fitnesse testrunner class. Defaults to 'fitnesse.runner.TestRunner'.
-	 *
-	 * @param runnerClass
-	 */
-	public void setTestRunnerClass(String runnerClass)
-	{
-		this.testRunnerClass = runnerClass;
-	}
+    /**
+     * Path to the folder that will contain the fitnesse results page after execution. Only valid if resultsHTMLPage or
+     * resultsXMLPage attributes are set. Defaults to current directory.
+     * 
+     * @param resultsDir
+     */
+    public void setResultsDir(String resultsDir) {
+        this.resultsDir = resultsDir;
+    }
 
-	/**
-	 * Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest,
-	 * FitNesse.SuiteAcceptanceTests, or FitNesse.AcceptanceTestsSuite. <b>MUST SET.</b>
-	 *
-	 * @param suitePage
-	 */
-	public void setSuitePage(String suitePage)
-	{
-		this.suitePage = suitePage;
-	}
+    /**
+     * If set, stores the fitnesse results in HTML format under the resultsdir folder with the given name. The file name
+     * must have a '.html' extension.
+     * 
+     * @param resultsHTMLPage
+     */
+    public void setResultsHTMLPage(String resultsHTMLPage) {
+        this.resultsHTMLPage = resultsHTMLPage;
+    }
 
-	/**
-	 * Set verbose mode. Defaults to 'true'.
-	 *
-	 * @param verbose
-	 */
-	public void setVerbose(boolean verbose)
-	{
-		this.verbose = verbose;
-	}
+    /**
+     * If set, stores the fitnesse results in XML format under the resultsdir folder with the given name. The file name
+     * must have a '.xml' extension.
+     * 
+     * @param resultsXMLPage
+     */
+    public void setResultsXMLPage(String resultsXMLPage) {
+        this.resultsXMLPage = resultsXMLPage;
+    }
 
-	/**
-	 * Path to the FitnesseRoot filder which contains all the wiki pages. <b>MUST SET</b>.
-	 *
-	 * @param wikiDirectoryRootPath
-	 */
-	public void setWikiDirectoryRootPath(String wikiDirectoryRootPath)
-	{
-		this.wikiDirectoryRootPath = wikiDirectoryRootPath;
-	}
+    /**
+     * Fully qualifies class name of the fitnesse testrunner class. Defaults to 'fitnesse.runner.TestRunner'.
+     * 
+     * @param runnerClass
+     */
+    public void setTestRunnerClass(String runnerClass) {
+        this.testRunnerClass = runnerClass;
+    }
 
-	public Path createClasspath()
-	{
-		if(classpath == null)
-		{
-			classpath = new Path(getProject());
-		}
-		return classpath.createPath();
-	}
+    /**
+     * Partial URL of the wiki page which is declared as a Suite. Ex: FrontPage.SmokeTest,
+     * FitNesse.SuiteAcceptanceTests, or FitNesse.AcceptanceTestsSuite. <b>MUST SET.</b>
+     * 
+     * @param suitePage
+     */
+    public void setSuitePage(String suitePage) {
+        this.suitePage = suitePage;
+    }
 
-	public void setClasspathRef(Reference r)
-	{
-		createClasspath().setRefid(r);
-	}
+    /**
+     * Set verbose mode. Defaults to 'true'.
+     * 
+     * @param verbose
+     */
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    /**
+     * Path to the FitnesseRoot filder which contains all the wiki pages. <b>MUST SET</b>.
+     * 
+     * @param wikiDirectoryRootPath
+     */
+    public void setWikiDirectoryRootPath(String wikiDirectoryRootPath) {
+        this.wikiDirectoryRootPath = wikiDirectoryRootPath;
+    }
+
+    public Path createClasspath() {
+        if (classpath == null)
+            classpath = new Path(getProject());
+        return classpath.createPath();
+    }
+
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
 }

@@ -63,17 +63,11 @@ public class SVNStateTest {
     }
 
     @Test
-    public void shouldReturnStateBasedOnSVNClientResponse() throws Exception {
-        assertEquals(SVNState.ADDED, SVNState.checkState("Schedule: add"));
-        assertEquals(SVNState.VERSIONED, SVNState.checkState("Schedule: normal"));
-        assertEquals(SVNState.DELETED, SVNState.checkState("Schedule: delete"));
-        assertEquals(SVNState.UNKNOWN, SVNState.checkState("Not a versioned resource"));
-        assertEquals(SVNState.UNKNOWN, SVNState.checkState("is not a working copy"));
-    }
-
-    @Test
-    public void shouldDefaultStateToUnknownIfSVNClientResponseIsUnknown() throws Exception {
-        assertEquals(SVNState.UNKNOWN, SVNState.checkState("Something unknown"));
+    public void testIsCheckedOut() throws Exception {
+        assertTrue("Versioned Files should be checked out", SVNState.VERSIONED.isCheckedOut());
+        assertFalse("Files in Unknown State should not be checked out", SVNState.UNKNOWN.isCheckedOut());
+        assertTrue("Files in Deleted State should be checked out", SVNState.DELETED.isCheckedOut());
+        assertTrue("Files in Added State should not be checked out", SVNState.ADDED.isCheckedOut());
     }
 
     private void assertContains(RevisionControlOperation[] operations, RevisionControlOperation... expectedOperations) {
