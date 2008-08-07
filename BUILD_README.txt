@@ -24,3 +24,7 @@ ant test-related targets. When using an IDE, make sure it does not invoke these 
 "normal" tests under the "src" directory.
 
 Direct any questions to the FitNesse yahoo group or to fitnesse@objectmentor.com.
+
+Note: .NET Support (8/6/2008)
+
+We re-installed the dotnet/*.dll and dotnet/*.exe files, taking them from the "fitnessedotnet" release on Sourceforge. This will allow the .NET Acceptance Tests to run right out of this distribution. However, you should consider using "fitnessedotnet". See the page FitNesseRoot/FitNesse/DotNet/context.txt for more information.
