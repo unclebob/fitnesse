@@ -15,7 +15,7 @@ public class PageCreator extends ColumnFixture
 
 	public boolean valid() throws Exception
 	{
-		try
+    try
 		{
 			WikiPage root = FitnesseFixtureContext.root;
 			WikiPagePath pagePath = PathParser.parse(pageName);

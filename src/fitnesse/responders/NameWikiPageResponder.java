@@ -22,6 +22,6 @@ public class NameWikiPageResponder extends BasicWikiPageResponder
 
 	protected String getContentType()
 	{
-		return "text/plain";
+    return "text/plain";
 	}
 }

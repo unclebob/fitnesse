@@ -18,8 +18,8 @@ public class IncludeWidgetTest extends WidgetTestCase
 	protected PageCrawler crawler;
 
 	public void setUp() throws Exception
-	{
-		root = InMemoryPage.makeRoot("RooT");
+	{    
+    root = InMemoryPage.makeRoot("RooT");
 		crawler = root.getPageCrawler();
 		crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
 		page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
@@ -220,13 +220,13 @@ public class IncludeWidgetTest extends WidgetTestCase
 
 	public void testVirtualIncludeNotFoundSeamless() throws Exception
 	{
-		verifyVirtualIncludeNotFound("-seamless IncludedPage");
+    verifyVirtualIncludeNotFound("-seamless IncludedPage");
 	}
 
 	private void verifyVirtualIncludeNotFound(String optionAndPageName)
 		throws Exception
 	{
-		ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "localhost", 9999, PathParser.parse("RealPage.VirtualPage"));
+    ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "localhost", 9999, PathParser.parse("RealPage.VirtualPage"));
 		IncludeWidget widget = createIncludeWidget(virtualPage, optionAndPageName);
 		String output = widget.render();
 		assertHasRegexp("IncludedPage.* does not exist", output);

@@ -91,8 +91,8 @@ public class CollapsableWidget extends ParentWidget
 				return makeImportedEditLinks(pageData, title);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+      ;
+    }
 		return "[[(edit)][" + makeLocalEditLinks(title) + "]]";		
 	}
 
@@ -100,7 +100,6 @@ public class CollapsableWidget extends ParentWidget
 		String[] splitTitle = title.split("\\s+"); 
 		return splitTitle[splitTitle.length-1]+"?edit&amp;redirectToReferer=true&amp;redirectAction=";
 	}
-
 	
 	private String makeImportedEditLinks(PageData pageData, String title) {
 		return "(edit: [[locally]["+makeLocalEditLinks(title) + "]]" +
