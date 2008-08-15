@@ -3,6 +3,18 @@
 		Fitnesse is a wiki wrapper for fit, an acceptance test framework.
 	</description>
 
+	<property name="src" location="src" />
+	<property name="src2" location="srcFitServerTests" />
+	<property name="classes" location="classes" />
+	<property name="lib" location="lib" />
+	<property name="fitnesseRoot" value="FitNesseRoot" />
+	<property name="fitnesseRootZip" value="FitNesseRoot.zip" />
+	<property name="zipDir" location="dist/fitnesse" />
+	<property name="results.dir" location="test-results" />
+
+	<property name="cobertura.root" value="${lib}/cobertura-1.8" />
+	<property name="cobertura.dir" value="${results.dir}/cobertura" />
+
 	<path id="classpath">
 		<pathelement path="classes" />
 		<fileset dir="lib">
