@@ -21,7 +21,7 @@ import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageVersionPruner;
 
 public class FitNesse {
-    public static final String VERSION = "UNRELEASED.  POST:20080812";
+    public static final FitNesseVersion VERSION = new FitNesseVersion();
 
     private FitNesseContext context = new FitNesseContext();
     private SocketService theService;

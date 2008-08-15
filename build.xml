@@ -108,12 +108,20 @@
 		</copy>
 	</target>
 
-	<target name="compile" depends="init" description="compile the source (make)">
+	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
 		<javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" />
 		<javac srcdir="srcFitServerTests" destdir="classes" classpathref="classpath" debug="true" />
 		<copy file="extra/ant/tasks.properties" todir="classes" />
 	</target>
 
+	<target name="stamp-version">
+		<tstamp />
+	 	<filter token="version" value="${DSTAMP}"/>
+	  	<copy filtering="true"
+			file="src/fitnesse/FitNesseVersion.java.template"
+			tofile="src/fitnesse/FitNesseVersion.java" />
+	</target>
+		
 	<target name="clean" description="delete everything in the classes directory">
 		<mkdir dir="classes" />
 		<delete includeemptydirs="true">
