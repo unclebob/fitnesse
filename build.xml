@@ -118,18 +118,16 @@
 		<tstamp />
 	 	<filter token="version" value="${DSTAMP}"/>
 	  	<copy filtering="true"
-			file="src/fitnesse/FitNesseVersion.java.template"
+			file="templates/FitNesseVersion.java.template"
 			tofile="src/fitnesse/FitNesseVersion.java" />
+	  	<copy filtering="true"
+			file="templates/FrontPage.content.txt.template"
+			tofile="FitNesseRoot/FrontPage/content.txt" />
 	</target>
 		
 	<target name="clean" description="delete everything in the classes directory">
+		<delete dir="classes" />
 		<mkdir dir="classes" />
-		<delete includeemptydirs="true">
-			<fileset dir="classes">
-				<include name="**/" />
-				<exclude name=".cvs.txt" />
-			</fileset>
-		</delete>
 		<delete dir="test-results" />
 	</target>
 
