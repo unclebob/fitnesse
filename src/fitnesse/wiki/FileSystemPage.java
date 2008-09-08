@@ -16,7 +16,7 @@ import fitnesse.revisioncontrol.RevisionControlException;
 import fitnesse.revisioncontrol.RevisionControlOperation;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
-import fitnesse.revisioncontrol.ZipFileRevisionController;
+import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
 import fitnesse.util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 

@@ -19,7 +19,7 @@ import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.revisioncontrol.NullRevisionController;
 import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.revisioncontrol.ZipFileRevisionController;
+import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;

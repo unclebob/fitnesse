@@ -16,7 +16,7 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.revisioncontrol.ZipFileRevisionController;
+import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetInterceptor;

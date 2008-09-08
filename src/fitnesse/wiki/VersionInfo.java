@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.*;
@@ -34,7 +35,7 @@ public class VersionInfo implements Comparable, Serializable
 		this.creationTime = creationTime;
 	}
 
-	public VersionInfo(String complexName) throws Exception
+	public VersionInfo(String complexName)
 	{
 		this(complexName, "", new Date());
 		Matcher match = COMPEX_NAME_PATTERN.matcher(complexName);
@@ -43,7 +44,11 @@ public class VersionInfo implements Comparable, Serializable
 			author = match.group(1);
 			if(author == null)
 				author = "";
-			creationTime = makeVersionTimeFormat().parse(match.group(2));
+			try {
+				creationTime = makeVersionTimeFormat().parse(match.group(2));
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

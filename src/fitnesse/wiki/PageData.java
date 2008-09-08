@@ -161,7 +161,7 @@ public class PageData implements Serializable
 		return content;
 	}
 
-	public void setContent(String content) throws Exception
+	public void setContent(String content)
 	{
 		this.content = content;
 	}

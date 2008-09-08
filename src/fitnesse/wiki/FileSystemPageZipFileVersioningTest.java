@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import static fitnesse.revisioncontrol.ZipFileRevisionController.dateFormat;
+import static fitnesse.revisioncontrol.zip.ZipFileRevisionController.dateFormat;
 
 import java.io.File;
 import java.util.Arrays;

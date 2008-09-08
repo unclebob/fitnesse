@@ -2,7 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-public class NoSuchVersionException extends Exception
+public class NoSuchVersionException extends RuntimeException
 {
 	public NoSuchVersionException(String message)
 	{
