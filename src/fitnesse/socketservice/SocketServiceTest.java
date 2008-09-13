@@ -2,9 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.socketservice;
 
+import static fitnesse.socketservice.SocketServer.StreamUtility.GetBufferedReader;
+import static fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream;
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.Socket;
 
 public class SocketServiceTest extends TestCase
@@ -63,7 +67,7 @@ public class SocketServiceTest extends TestCase
 	{
 		ss = new SocketService(portNumber, new HelloService());
 		Socket s = new Socket("localhost", portNumber);
-		BufferedReader br = TestUtility.GetBufferedReader(s);
+		BufferedReader br = GetBufferedReader(s);
 		String answer = br.readLine();
 		s.close();
 		ss.close();
@@ -74,8 +78,8 @@ public class SocketServiceTest extends TestCase
 	{
 		ss = new SocketService(portNumber, new EchoService());
 		Socket s = new Socket("localhost", portNumber);
-		BufferedReader br = TestUtility.GetBufferedReader(s);
-		PrintStream ps = TestUtility.GetPrintStream(s);
+		BufferedReader br = GetBufferedReader(s);
+		PrintStream ps = GetPrintStream(s);
 		ps.println("MyMessage");
 		String answer = br.readLine();
 		s.close();
@@ -87,12 +91,12 @@ public class SocketServiceTest extends TestCase
 	{
 		ss = new SocketService(portNumber, new EchoService());
 		Socket s = new Socket("localhost", portNumber);
-		BufferedReader br = TestUtility.GetBufferedReader(s);
-		PrintStream ps = TestUtility.GetPrintStream(s);
+		BufferedReader br = GetBufferedReader(s);
+		PrintStream ps = GetPrintStream(s);
 
 		Socket s2 = new Socket("localhost", portNumber);
-		BufferedReader br2 = TestUtility.GetBufferedReader(s2);
-		PrintStream ps2 = TestUtility.GetPrintStream(s2);
+		BufferedReader br2 = GetBufferedReader(s2);
+		PrintStream ps2 = GetPrintStream(s2);
 
 		ps2.println("MyMessage2");
 		String answer2 = br2.readLine();
@@ -128,29 +132,13 @@ public class SocketServiceTest extends TestCase
 	}
 }
 
-class TestUtility
-{
-	public static PrintStream GetPrintStream(Socket s) throws IOException
-	{
-		OutputStream os = s.getOutputStream();
-    return new PrintStream(os);
-	}
-
-	public static BufferedReader GetBufferedReader(Socket s) throws IOException
-	{
-		InputStream is = s.getInputStream();
-		InputStreamReader isr = new InputStreamReader(is);
-    return new BufferedReader(isr);
-	}
-}
-
 class HelloService implements SocketServer
 {
 	public void serve(Socket s)
 	{
 		try
 		{
-			PrintStream ps = TestUtility.GetPrintStream(s);
+			PrintStream ps = GetPrintStream(s);
 			ps.println("Hello");
 		}
 		catch(IOException e)
@@ -165,8 +153,8 @@ class EchoService implements SocketServer
 	{
 		try
 		{
-			PrintStream ps = TestUtility.GetPrintStream(s);
-			BufferedReader br = TestUtility.GetBufferedReader(s);
+			PrintStream ps = GetPrintStream(s);
+			BufferedReader br = GetBufferedReader(s);
 			String token = br.readLine();
 			ps.println(token);
 		}

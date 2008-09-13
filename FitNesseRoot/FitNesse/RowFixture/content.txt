@@ -5,8 +5,8 @@ Here is a simplistic example. Let's say that we have asked our application for t
 
 |!-fitnesse.fixtures.PrimeNumberRowFixture-!|
 |prime|
-|2|
 |3|
+|2|
 |5|
 |7|
 |11|

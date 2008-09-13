@@ -3,9 +3,12 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.http.*;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
 import fitnesse.testutil.RegexTestCase;
-import fitnesse.wiki.*;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 
 public class ChunkingResponderTest extends RegexTestCase
 {
@@ -32,7 +35,7 @@ public class ChunkingResponderTest extends RegexTestCase
 	{
 		exception = new Exception("test exception");
 		response = responder.makeResponse(context, new MockRequest());
-		String result = new MockResponseSender(response).sentData();
-		assertSubString("test exception", result);
+		String responseSender = new MockResponseSender(response).sentData();
+		assertSubString("test exception", responseSender);
 	}
 }

@@ -3,7 +3,8 @@
 package fitnesse.socketservice;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.LinkedList;
 
 public class SocketService
@@ -107,4 +108,5 @@ public class SocketService
 			}
 		}
 	}
+
 }
