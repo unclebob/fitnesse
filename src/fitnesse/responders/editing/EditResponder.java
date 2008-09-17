@@ -91,7 +91,7 @@ public class EditResponder implements SecureResponder
 		html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
 		HtmlTag header = makeHeader(resource, title, firstTimeForNewPage);
 		html.header.use(header);
-		html.main.use(makeEditForm(resource, firstTimeForNewPage));
+		html.main.use(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
 
 		return html.html();
 	}
@@ -100,7 +100,7 @@ public class EditResponder implements SecureResponder
 		return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
 	}
 
-	private HtmlTag makeEditForm(String resource, boolean firstTimeForNewPage) throws Exception
+	private HtmlTag makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception
 	{
 		HtmlTag form = new HtmlTag("form");
 		form.addAttribute("name", "f");
@@ -119,7 +119,7 @@ public class EditResponder implements SecureResponder
 			form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
 		}
 
-		form.add(createTextarea(firstTimeForNewPage));
+		form.add(createTextarea(firstTimeForNewPage, defaultNewPageContent));
 		form.add(createButtons());
 		form.add("<br/>Hints:\n<ul>" +
 				 "<li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the \"Save\" button!</li>\n" +
@@ -206,7 +206,7 @@ public class EditResponder implements SecureResponder
 		return saveButton;
 	}
 
-	private HtmlTag createTextarea(boolean firstTimeForNewPage)
+	private HtmlTag createTextarea(boolean firstTimeForNewPage, String defaultNewPageContent)
 	{
 		HtmlTag textarea = new HtmlTag("textarea");
 		textarea.addAttribute("class", CONTENT_INPUT_NAME);
@@ -214,7 +214,7 @@ public class EditResponder implements SecureResponder
 		textarea.addAttribute("rows", "30");
 		textarea.addAttribute("cols", "70");
 		textarea.addAttribute("tabindex", "1");
-		textarea.add(Utils.escapeText(firstTimeForNewPage ? "!contents -R2 -g -p -f -h" : content));
+		textarea.add(Utils.escapeText(firstTimeForNewPage ? defaultNewPageContent : content));
 		return textarea;
 	}
 

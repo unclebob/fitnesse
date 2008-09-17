@@ -53,6 +53,9 @@ public class FitNesse {
         ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
         context.rootPageName = arguments.getRootDirectory();
         context.rootPagePath = context.rootPath + "/" + context.rootPageName;
+        String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+        if (defaultNewPageContent != null)
+        	context.defaultNewPageContent = defaultNewPageContent ;
         RevisionController revisioner = componentFactory.loadRevisionController();
         context.root = componentFactory.getRootPage(FileSystemPage.makeRoot(context.rootPath, context.rootPageName, revisioner));
         context.responderFactory = new ResponderFactory(context.rootPagePath);

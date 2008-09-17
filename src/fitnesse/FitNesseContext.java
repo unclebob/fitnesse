@@ -16,6 +16,7 @@ public class FitNesseContext
 	public String rootPath = ".";
 	public String rootPageName = "FitNesseRoot";
 	public String rootPagePath = "";
+	public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
 	public WikiPage root;
 	public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
 	public Logger logger;

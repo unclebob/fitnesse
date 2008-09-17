@@ -32,10 +32,12 @@ public class ComponentFactory {
     public static final String AUTHENTICATOR = "Authenticator";
     public static final String CONTENT_FILTER = "ContentFilter";
     public static final String REVISION_CONTROLLER = "RevisionController";
+    public static final String DEFAULT_NEWPAGE_CONTENT= "newpage.default.content";
 
     private final Properties loadedProperties;
     private final String propertiesLocation;
-
+    private boolean propertiesAreLoaded = false;
+    
     public ComponentFactory(String propertiesLocation) {
         this(propertiesLocation, new Properties());
     }
@@ -54,6 +56,14 @@ public class ComponentFactory {
         } catch (IOException e) {
             // No properties files means all defaults are loaded
         }
+    }
+    
+    public String getProperty(String propertyName) {
+    	if (propertiesAreLoaded == false) {
+    		loadProperties();
+    		propertiesAreLoaded = true;
+    	}
+    	return loadedProperties.getProperty(propertyName);
     }
 
     private Object createComponent(String componentType) throws Exception {

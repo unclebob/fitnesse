@@ -12,7 +12,7 @@ public class EditResponderTest extends RegexTestCase
 {
 	private WikiPage root;
 	private MockRequest request;
-	private Responder responder;
+	private EditResponder responder;
 	private PageCrawler crawler;
 
 	public void setUp() throws Exception
@@ -36,6 +36,27 @@ public class EditResponderTest extends RegexTestCase
 		assertSubString("<form", body);
 		assertSubString("method=\"post\"", body);
 		assertSubString("child content with &lt;html&gt;", body);
+		assertSubString("name=\"responder\"", body);
+		assertSubString("name=\"" + EditResponder.SAVE_ID + "\"", body);
+		assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
+		assertSubString("type=\"submit\"", body);
+	}
+
+	public void testResponseWhenNonexistentPageRequestsed() throws Exception
+	{
+//		crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
+		request.setResource("NonExistentPage");
+		request.addInput("nonExistent", true);
+
+		FitNesseContext context = new FitNesseContext(root);
+		SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+		assertEquals(200, response.getStatus());
+
+		String body = response.getContent();
+		assertSubString("<html>", body);
+		assertSubString("<form", body);
+		assertSubString("method=\"post\"", body);
+		assertSubString(context.defaultNewPageContent, body);
 		assertSubString("name=\"responder\"", body);
 		assertSubString("name=\"" + EditResponder.SAVE_ID + "\"", body);
 		assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
