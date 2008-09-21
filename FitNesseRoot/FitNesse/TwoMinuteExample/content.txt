@@ -8,7 +8,7 @@ In FitNesse, tests are expressed as tables of '''input''' data and '''expected o
 |numerator|denominator|quotient?|
 |10       |2          |5        |
 |12.6     |3          |4.2      |
-|100      |4          |24       |
+|100      |4          |33       |
 
 In this style of FitNesse test table (ColumnFixture), each row represents a complete scenario of example inputs and outputs. Here, the "numerator" and "denominator" columns are for inputs, and the question mark in the "quotient?" column tells FitNesse that this is our column of expected outputs. Notice our "10/2 = 5" scenario. Try reading it as a question: ''"If I give you a numerator of 10 and denominator of 2, do I get back a 5?"''
 !3 Running our test table: Click the Test button

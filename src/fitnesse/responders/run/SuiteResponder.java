@@ -54,7 +54,9 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	{
     for (WikiPage testPage : testPages) {
       processingQueue.addLast(testPage);
-      String testableHtml = SetupTeardownIncluder.render(testPage.getData());
+      PageData pageData = testPage.getData();
+      SetupTeardownIncluder.includeInto(pageData);
+      String testableHtml = pageData.getHtml();
       if (testableHtml.length() > 0)
         client.send(testableHtml);
       else

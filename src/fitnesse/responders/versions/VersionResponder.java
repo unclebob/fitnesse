@@ -41,12 +41,19 @@ public class VersionResponder implements SecureResponder
 		HtmlPage html = context.htmlPageFactory.newPage();
 		html.title.use("Version " + version + ": " + name);
 		html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version " + version));
-		html.actions.use(HtmlUtil.makeActionLink(name, "Rollback", "responder=rollback&version=" + version, "", false));
+		html.actions.use(makeRollbackLink(name));
 		html.main.use(HtmlUtil.makeNormalWikiPageContent(pageData));
 		return html;
 	}
 
-	public SecureOperation getSecureOperation()
+  private HtmlTag makeRollbackLink(String name) {
+    HtmlUtil.ActionLink link = new HtmlUtil.ActionLink(name, "Rollback");
+    link.setQuery("responder=rollback&version=" + version);
+    link.setShortcutKey("");
+    return link.getHtml();
+  }
+
+  public SecureOperation getSecureOperation()
 	{
 		return new SecureReadOperation();
 	}

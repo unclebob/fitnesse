@@ -72,7 +72,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase
 		assertSubString("1", renderedText);
 	}
 
-   //Test render with periods
+   //Test includeInto with periods
    public void testRenderedTextWithPeriods() throws Exception
    {
       WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot(root), "!define x.y.z (1)\n");

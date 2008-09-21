@@ -50,13 +50,19 @@ public class DirectoryResponder implements SecureResponder
 		HtmlPage page = context.htmlPageFactory.newPage();
 		page.title.use("Files: " + resource);
 		page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
-		page.actions.use(HtmlUtil.makeActionLink("/FrontPage", "FrontPage", null, "f", false));
+    page.actions.use(makeFrontPageLink());
 		page.main.use(makeRightColumn());
 
 		return page.html();
 	}
 
-	private String makeRightColumn() throws Exception
+  private HtmlTag makeFrontPageLink() {
+    HtmlUtil.ActionLink link = new HtmlUtil.ActionLink("/FrontPage", "FrontPage");
+    link.setQuery(null);
+    return link.getHtml();
+  }
+
+  private String makeRightColumn() throws Exception
 	{
 		TagGroup html = new TagGroup();
 		html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));

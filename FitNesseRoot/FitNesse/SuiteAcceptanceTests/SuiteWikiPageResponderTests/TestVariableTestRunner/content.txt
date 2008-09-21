@@ -1,0 +1,17 @@
+!3 If the TEST_RUNNER variable is set on a test page, then the query string on the Test link should be the value of that variable.
+
+Create a test page.
+!|Page creator.|
+|Page name.|Page contents.|page attributes|valid?|
+|SomePage|!define TEST_RUNNER {zap}|Test=true|true|
+
+Request the page
+!|Response Requester.|
+|uri|valid?|contents?|
+|SomePage|true||
+
+Examine the requested page to ensure the correct links are displayed in the correct order.
+!|Response Examiner.|
+|value|inOrder?|
+|<div class="actions">|true|
+|<a href="SomePage?zap" accesskey="t">Test</a>|true|

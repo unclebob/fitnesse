@@ -74,4 +74,8 @@ public class TestSlim {
   public int echoInt(int i) {
     return i;
   }
+
+  public String echoString(String s) {
+    return s;
+  }
 }

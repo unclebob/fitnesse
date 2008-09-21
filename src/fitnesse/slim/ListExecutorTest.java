@@ -12,16 +12,18 @@ import java.util.List;
 
 public class ListExecutorTest {
   private List<Object> statements;
+  private ListExecutor executor;
 
   @Before
   public void setup() {
+    executor = new ListExecutor();
     statements = new ArrayList<Object>();
     statements.add(statement("import", "fitnesse.slim.test"));
     statements.add(statement("make", "testSlim", "TestSlim"));
   }
 
   private void respondsWith(List<Object> expected) {
-    List<Object> result = ListExecutor.execute(statements);
+    List<Object> result = executor.execute(statements);
     assertEquals(expected, result);
   }
 
@@ -46,7 +48,7 @@ public class ListExecutorTest {
   @Test
   public void emptyListReturnsNicely() throws Exception {
     statements.clear();
-    ListExecutor.execute(statements);
+    executor.execute(statements);
     respondsWith(list());
   }
 
@@ -80,7 +82,7 @@ public class ListExecutorTest {
   @Test
   public void describeClass() throws Exception {
     statements.add(statement("describeClass", "Describable"));
-    List<Object> results = ListExecutor.execute(statements);
+    List<Object> results = executor.execute(statements);
     List<Object> description = (List<Object>) results.get(0);
     List<String> variables = (List<String>) description.get(0);
     List<String> methods = (List<String>) description.get(1);

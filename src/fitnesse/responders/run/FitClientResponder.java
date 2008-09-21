@@ -94,7 +94,8 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 	private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws Exception
 	{
 		String pageName = crawler.getRelativeName(page, data.getWikiPage());
-		String testableHtml = SetupTeardownIncluder.render(data, includeSuiteSetup);
+    SetupTeardownIncluder.includeInto(data, includeSuiteSetup);
+    String testableHtml = data.getHtml();
 		String sendableHtml = pageName + "\n" + testableHtml;
 		client.send(sendableHtml);
 	}

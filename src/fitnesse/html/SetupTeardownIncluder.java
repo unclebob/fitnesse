@@ -11,13 +11,13 @@ public class SetupTeardownIncluder {
   private PageCrawler pageCrawler;
 
 
-  public static String render(PageData pageData) throws Exception {
-    return render(pageData, false);
+  public static void includeInto(PageData pageData) throws Exception {
+    includeInto(pageData, false);
   }
 
-  public static String render(PageData pageData, boolean isSuite)
+  public static void includeInto(PageData pageData, boolean isSuite)
     throws Exception {
-    return new SetupTeardownIncluder(pageData).render(isSuite);
+    new SetupTeardownIncluder(pageData).includeInto(isSuite);
   }
 
   private SetupTeardownIncluder(PageData pageData) {
@@ -27,11 +27,10 @@ public class SetupTeardownIncluder {
     newPageContent = new StringBuffer();
   }
 
-  private String render(boolean isSuite) throws Exception {
+  private void includeInto(boolean isSuite) throws Exception {
     this.isSuite = isSuite;
     if (isTestPage())
       includeSetupAndTeardownPages();
-    return pageData.getHtml();
   }
 
   private boolean isTestPage() throws Exception {

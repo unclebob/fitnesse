@@ -22,7 +22,8 @@ public class SetupTeardownIncluderTest extends RegexTestCase {
 
   public void testIncludeSetupTearDownOutsideOfSuite()
     throws Exception {
-    String html = SetupTeardownIncluder.render(pageData);
+    SetupTeardownIncluder.includeInto(pageData);
+    String html = pageData.getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);
@@ -36,7 +37,8 @@ public class SetupTeardownIncluderTest extends RegexTestCase {
   }
 
   public void testIncludeSetupTearDownInsideOfSuite() throws Exception {
-    String html = SetupTeardownIncluder.render(pageData, true);
+    SetupTeardownIncluder.includeInto(pageData, true);
+    String html = pageData.getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);

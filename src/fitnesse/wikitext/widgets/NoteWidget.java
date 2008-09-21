@@ -9,8 +9,6 @@ public class NoteWidget extends ParentWidget
 	public static final String REGEXP = "^!note [^\r\n]*";
 	private static final Pattern pattern = Pattern.compile("^!note (.*)");
 
-	public static final String GREY = "#A0A0A0";
-
 	public NoteWidget(ParentWidget parent, String text) throws Exception
 	{
 		super(parent);

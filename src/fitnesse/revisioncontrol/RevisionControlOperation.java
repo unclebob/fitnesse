@@ -71,7 +71,10 @@ public abstract class RevisionControlOperation {
     }
 
     public HtmlTag makeActionLink(String pageName) {
-        return HtmlUtil.makeActionLink(pageName, name, query, accessKey, false);
+      HtmlUtil.ActionLink link = new HtmlUtil.ActionLink(pageName, name);
+      link.setQuery(query);
+      link.setShortcutKey(accessKey);
+      return link.getHtml();
     }
 
     public String getName() {
