@@ -36,6 +36,7 @@ public class LastModifiedWidgetTest extends WidgetTestCase
 
 	public void testDateFormat() throws Exception
 	{
+		Locale.setDefault(Locale.US);
 		GregorianCalendar date = new GregorianCalendar(2003, 3, 1, 11, 41, 30);
 		String formattedDate = LastModifiedWidget.formatDate(date.getTime());
 		assertEquals("Apr 01, 2003 at 11:41:30 AM", formattedDate);

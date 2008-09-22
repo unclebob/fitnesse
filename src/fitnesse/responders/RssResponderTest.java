@@ -10,6 +10,7 @@ import org.w3c.dom.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class RssResponderTest extends ResponderTestCase
 {
@@ -34,6 +35,7 @@ public class RssResponderTest extends ResponderTestCase
 		SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
 		rfcDate = rfcDateFormat.format(new Date());
 		hostName = java.net.InetAddress.getLocalHost().getHostName();
+		Locale.setDefault(Locale.US);
 	}
 
 	public void testEmptyRssReport() throws Exception

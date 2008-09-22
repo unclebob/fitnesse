@@ -1,6 +1,8 @@
 //EvaluatorWidget: Test module
 package fitnesse.wikitext.widgets;
 
+import java.util.Locale;
+
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -26,7 +28,7 @@ public class EvaluatorWidgetTest extends WidgetTestCase
       
       page = crawler.addPage(root, PathParser.parse("MyPage"), content);
       widgetRoot = new WidgetRoot("", page);
-      
+      Locale.setDefault(Locale.US);      
     }
 
    public void tearDown() throws Exception
