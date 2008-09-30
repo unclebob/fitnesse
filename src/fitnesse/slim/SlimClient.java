@@ -4,8 +4,11 @@ import fitnesse.util.StreamReader;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class SlimClient {
   private Socket client;
@@ -15,7 +18,7 @@ public class SlimClient {
   private String hostName;
   private int port;
 
-  protected void close() throws Exception {
+  public void close() throws Exception {
     reader.close();
     writer.close();
     client.close();
@@ -26,30 +29,47 @@ public class SlimClient {
     this.hostName = hostName;
   }
 
-  protected void connect() throws Exception {
+  public void connect() throws Exception {
     client = new Socket(hostName, port);
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
     slimServerVersion = reader.readLine();
   }
 
-  private String getVersion() {
+  public String getVersion() {
     return slimServerVersion;
   }
 
-  protected boolean isConnected() {
+  public boolean isConnected() {
     return slimServerVersion.startsWith("Slim -- V");
   }
 
-  protected List<Object> invokeAndGetResponse(List<Object> statements) throws Exception {
+  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws Exception {
     String instructions = ListSerializer.serialize(statements);
-    writer.write(String.format("%06d:", instructions.length()));
-    writer.write(instructions);
-    writer.flush();
+    writeString(instructions);
     String resultLength = reader.read(6);
     String colon = reader.read(1);
     String results = reader.read(Integer.parseInt(resultLength));
     List<Object> resultList = ListDeserializer.deserialize(results);
-    return resultList;
+    return resultToMap(resultList);
+  }
+
+  private void writeString(String string) throws IOException {
+    writer.write(String.format("%06d:", string.length()));
+    writer.write(string);
+    writer.flush();
+  }
+
+  public void sendBye() throws IOException {
+    writeString("bye");
+  }
+
+  public static Map<String, Object> resultToMap(List<Object> slimResults) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    for (Object aResult : slimResults) {
+      List<Object> resultList = (List<Object>) aResult;
+      map.put((String)resultList.get(0), resultList.get(1));
+    }
+    return map;
   }
 }

@@ -2,7 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.Iterator;
+import fitnesse.wikitext.WikiWidget;
+
 import java.util.regex.*;
 
 public class TableWidget extends ParentWidget
@@ -11,7 +12,7 @@ public class TableWidget extends ParentWidget
 	public static final String REGEXP = "^!?(?:\\|[^\r\n]*?\\|" + LF + ")+";
 	private static final Pattern pattern = Pattern.compile("(!?)(\\|[^\r\n]*?)\\|" + LF);
 
-	public boolean isTestTable;
+	public boolean isLiteralTable;
 	private int columns = 0;
 
 	public int getColumns()
@@ -19,13 +20,43 @@ public class TableWidget extends ParentWidget
 		return columns;
 	}
 
-	public TableWidget(ParentWidget parent, String text) throws Exception
+  public String asWikiText() throws Exception {
+    StringBuffer wikiText = new StringBuffer();
+    if (isLiteralTable)
+      wikiText.append("!");
+    appendTableWikiText(wikiText);
+    return wikiText.toString();
+  }
+
+  private void appendTableWikiText(StringBuffer wikiText) throws Exception {
+    for (WikiWidget rowWidget : getChildren()) {
+      TableRowWidget row = (TableRowWidget) rowWidget;
+      wikiText.append("|");
+      appendRowWikiText(wikiText, row);
+      wikiText.append("\n");
+    }
+  }
+
+  private void appendRowWikiText(StringBuffer wikiText, TableRowWidget row) throws Exception {
+    for (WikiWidget cellWidget : row.getChildren()) {
+      TableCellWidget cell = (TableCellWidget) cellWidget;
+      appendCellWikiText(wikiText, cell);
+      wikiText.append("|");
+    }
+  }
+
+  private void appendCellWikiText(StringBuffer wikiText, TableCellWidget cell) throws Exception {
+    for (WikiWidget contentWidget : cell.getChildren())
+      wikiText.append(contentWidget.asWikiText());
+  }
+
+  public TableWidget(ParentWidget parent, String text) throws Exception
 	{
 		super(parent);
 		Matcher match = pattern.matcher(text);
 		if(match.find())
 		{
-			isTestTable = "!".equals(match.group(1));
+			isLiteralTable = "!".equals(match.group(1));
 			addRows(text);
 			getMaxNumberOfColumns();
 		}
@@ -35,10 +66,9 @@ public class TableWidget extends ParentWidget
 
 	private void getMaxNumberOfColumns()
 	{
-		for(Iterator i = children.iterator(); i.hasNext();)
-		{
-			TableRowWidget rowWidget = (TableRowWidget) i.next();
-			columns = Math.max(columns, rowWidget.getColumns());
+    for (WikiWidget widget : children) {
+      TableRowWidget rowWidget = (TableRowWidget) widget;
+      columns = Math.max(columns, rowWidget.getColumns());
 		}
 	}
 
@@ -55,8 +85,12 @@ public class TableWidget extends ParentWidget
 		Matcher match = pattern.matcher(text);
 		if(match.find())
 		{
-			new TableRowWidget(this, match.group(2), isTestTable);
+			new TableRowWidget(this, match.group(2), isLiteralTable);
 			addRows(text.substring(match.end()));
 		}
 	}
+
+  public void setLiteralTable(boolean isLiteralTable) {
+    this.isLiteralTable = isLiteralTable;
+  }
 }

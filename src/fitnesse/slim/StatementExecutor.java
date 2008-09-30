@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.PrintStream;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 /**
  * This is the API for executing a SLIM statement.  This class should not know about
@@ -18,7 +21,7 @@ import java.util.Map;
 public class StatementExecutor {
   private Map<String, Object> instances = new HashMap<String, Object>();
   private Map<Class, Converter> converters = new HashMap<Class, Converter>();
-  private Map<String, String> variables = new HashMap<String, String>();
+  private Map<String, Object> variables = new HashMap<String, Object>();
   private List<String> paths = new ArrayList<String>();
 
   public StatementExecutor() {
@@ -31,12 +34,13 @@ public class StatementExecutor {
     addConverter(char.class, new CharConverter());
   }
 
-  public void setVariable(String name, String value) {
+  public void setVariable(String name, Object value) {
     variables.put(name, value);
   }
 
-  public void addPath(String path) {
+  public Object addPath(String path) {
     paths.add(path);
+    return "OK";
   }
 
   public Object getInstance(String instanceName) {
@@ -55,18 +59,15 @@ public class StatementExecutor {
   }
 
   public Object create(String instanceName, String className) {
-    Object instance = tryToCreateInstanceOfDefaultConstructor(className);
-    instances.put(instanceName, instance);
-    return instance;
-  }
-
-  private Object tryToCreateInstanceOfDefaultConstructor(String className) {
     try {
-      return createInstanceOfDefaultConstructor(className);
-    } catch (Exception e) {
-      throw new SlimError(e);
+      Object instance = createInstanceOfDefaultConstructor(className);
+      instances.put(instanceName, instance);
+      return "OK";
+    } catch (Throwable e) {
+      return exceptionToString(e);
     }
   }
+
 
   private Object createInstanceOfDefaultConstructor(String className) throws Exception {
     Class k = searchPathsForClass(className);
@@ -105,30 +106,52 @@ public class StatementExecutor {
     return null;
   }
 
-  public String call(String instanceName, String methodName, String... args) {
-    Object instance = getInstance(instanceName);
+  public Object call(String instanceName, String methodName, Object... args) {
     try {
+      Object instance = getInstance(instanceName);
       return tryToInvokeMethod(instance, methodName, replaceVariables(args));
-    } catch (Exception e) {
-      throw new SlimError(e);
+    } catch (Throwable e) {
+      return exceptionToString(e);
     }
   }
 
-  private String[] replaceVariables(String[] args) {
-    String result[] = new String[args.length];
+  private String exceptionToString(Throwable e) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter pw = new PrintWriter(stringWriter);
+    e.printStackTrace(pw);
+    return SlimServer.EXCEPTION_TAG + stringWriter.toString();
+  }
+
+  private Object[] replaceVariables(Object[] args) {
+    Object result[] = new Object[args.length];
     for (int i = 0; i < args.length; i++)
-      result[i] = replaceIfVariable(args[i]);
+      result[i] = replaceVariable(args[i]);
+    
+    return result;
+  }
+
+  private List<Object> replaceArgsInList(List<Object> objects) {
+    List<Object> result = new ArrayList<Object>();
+    for (Object object : objects)
+      result.add(replaceVariable(object));
 
     return result;
   }
 
-  private String replaceIfVariable(String arg) {
+  private Object replaceVariable(Object object) {
+    if (object instanceof List)
+      return (replaceArgsInList((List<Object>) object));
+    else
+      return (replaceIfVariable((String) object));
+  }
+
+  private Object replaceIfVariable(String arg) {
     if (isVariableReference(arg))
       return replaceVariable(arg);
     return arg;
   }
 
-  private String replaceVariable(String arg) {
+  private Object replaceVariable(String arg) {
     String varName = arg.substring(1);
     if (variables.containsKey(varName))
       return variables.get(varName);
@@ -139,12 +162,14 @@ public class StatementExecutor {
     return arg.charAt(0) == '$';
   }
 
-  private String tryToInvokeMethod(Object instance, String methodName, String args[]) throws Exception {
+  private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Exception {
     Class k = instance.getClass();
     Method method = findMatchingMethod(methodName, k, args.length);
     Object convertedArgs[] = convertArgs(method, args);
     Object retval = method.invoke(instance, convertedArgs);
     Class retType = method.getReturnType();
+    if (retType == List.class && retval instanceof List)
+      return retval;
     return convertToString(retval, retType);
   }
 
@@ -160,107 +185,28 @@ public class StatementExecutor {
     throw new SlimError(String.format("Method %s(%d) not found in %s.", methodName, nArgs, k.getName()));
   }
 
-  private Object[] convertArgs(Method method, String args[]) {
+  private Object[] convertArgs(Method method, Object args[]) {
     Object[] convertedArgs = new Object[args.length];
     Class[] argumentTypes = method.getParameterTypes();
     for (int i = 0; i < argumentTypes.length; i++) {
       Class argumentType = argumentTypes[i];
-      Converter converter = getConverter(argumentType);
-      if (converter != null)
-        convertedArgs[i] = converter.fromString(args[i]);
-      else
-        throw new SlimError(String.format("No converter for argument: %d -- %s", i, argumentType.getName()));
+      if (argumentType == List.class && args[i] instanceof List) {
+        convertedArgs[i] = args[i];
+      } else {
+        Converter converter = getConverter(argumentType);
+        if (converter != null)
+          convertedArgs[i] = converter.fromString((String) args[i]);
+        else
+          throw new SlimError(String.format("No converter for argument: %d -- %s", i, argumentType.getName()));
+      }
     }
     return convertedArgs;
   }
 
-  private String convertToString(Object retval, Class retType) {
+  private Object convertToString(Object retval, Class retType) {
     Converter converter = getConverter(retType);
     if (converter != null)
       return converter.toString(retval);
     else return retval.toString();
-  }
-
-  public List<Object> describeClass(String className) {
-    List<Object> description = new ArrayList<Object>();
-
-    Class k = searchPathsForClass(className);
-    List<String> methods = getMethods(k);
-    List<String> variables = getVariables(k);
-    description.add(variables);
-    description.add(methods);
-    return description;
-  }
-
-  private List<String> getVariables(Class k) {
-    List<String> variableNames = new ArrayList<String>();
-    Field fields[] = k.getFields();
-    for (Field field : fields)
-      variableNames.add(field.getName());
-    return variableNames;
-  }
-
-  private List<String> getMethods(Class k) {
-    List<String> methodNames = new ArrayList<String>();
-    Method methods[] = k.getMethods();
-    for (Method method : methods) {
-      methodNames.add(String.format("%s(%d)", method.getName(), method.getParameterTypes().length));
-    }
-    return methodNames;
-  }
-
-  public Object set(String instanceName, String variableName, String value) {
-    new FieldAccessor(instanceName, variableName).set(value);
-    return null;
-  }
-
-  public Object get(String instanceName, String variableName) {
-    return new FieldAccessor(instanceName, variableName).get();
-  }
-
-  class FieldAccessor {
-    private String instanceName;
-    private String variableName;
-    private final Object instance;
-    private final Field field;
-    private final Converter converter;
-
-    public FieldAccessor(String instanceName, String variableName) {
-      this.instanceName = instanceName;
-      this.variableName = variableName;
-      instance = getInstance(instanceName);
-      Class aClass = instance.getClass();
-      field = getField(aClass, variableName);
-      converter = getConverter(field.getType());
-    }
-
-    public void set(String value) {
-      try {
-        field.set(instance, converter.fromString(value));
-      } catch (IllegalAccessException e) {
-        throw makeAccessException();
-      }
-    }
-
-    private Field getField(Class aClass, String variableName) {
-      try {
-        return aClass.getField(variableName);
-      } catch (NoSuchFieldException e) {
-        throw new SlimError(String.format("Variable %s.%s does not exist", aClass.getName(), variableName)
-        );
-      }
-    }
-
-    private SlimError makeAccessException() {
-      return new SlimError(String.format("Cannot access: %s.%s.", instanceName, variableName));
-    }
-
-    public Object get() {
-      try {
-        return converter.toString(field.get(instance));
-      } catch (IllegalAccessException e) {
-        throw makeAccessException();
-      }
-    }
   }
 }

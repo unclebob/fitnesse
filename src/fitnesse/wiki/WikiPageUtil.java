@@ -26,4 +26,10 @@ public class WikiPageUtil
 		ancestors.addFirst(page);
 		return ancestors;
 	}
+
+  public static void setPageContents(WikiPage page, String pageContents) throws Exception {
+    PageData pageData = page.getData();
+    pageData.setContent(pageContents);
+    page.commit(pageData);
+  }
 }

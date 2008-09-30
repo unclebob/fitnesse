@@ -1,7 +1,7 @@
 package fitnesse.slim;
 
-import static fitnesse.slim.test.StatementUtilities.list;
-import static fitnesse.slim.test.StatementUtilities.statement;
+import static fitnesse.util.ListUtility.list;
+import fitnesse.slim.converters.VoidConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -9,99 +9,109 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ListExecutorTest {
   private List<Object> statements;
   private ListExecutor executor;
+  private List<Object> expectedResults = new ArrayList<Object>();
 
   @Before
   public void setup() {
     executor = new ListExecutor();
     statements = new ArrayList<Object>();
-    statements.add(statement("import", "fitnesse.slim.test"));
-    statements.add(statement("make", "testSlim", "TestSlim"));
+    statements.add(list("i1", "import", "fitnesse.slim.test"));
+    statements.add(list("m1", "make", "testSlim", "TestSlim"));
+    expectedResults.add(list("i1", "OK"));
+    expectedResults.add(list("m1", "OK"));
   }
 
   private void respondsWith(List<Object> expected) {
+    expectedResults.addAll(expected);
     List<Object> result = executor.execute(statements);
-    assertEquals(expected, result);
+    Map<String, Object> expectedMap = SlimClient.resultToMap(expectedResults);
+    Map<String, Object> resultMap = SlimClient.resultToMap(result);
+    assertEquals(expectedMap, resultMap);
   }
 
-  @Test(expected = SlimError.class)
+  @Test()
   public void invalidOperation() throws Exception {
-    statements.add(statement("invalidOperation"));
-    respondsWith(list("shouldn't get here"));
+    statements.add(list("inv1", "invalidOperation"));
+    assertExceptionReturned("inv1");
   }
 
   @Test(expected = SlimError.class)
   public void malformedStatement() throws Exception {
-    statements.add(statement("call", "notEnoughArguments"));
-    respondsWith(list("shouldn't get here"));
+    statements.add(list("id", "call", "notEnoughArguments"));
+    assertExceptionReturned("id");
   }
 
-  @Test(expected = SlimError.class)
+  private void assertExceptionReturned(String returnTag) {
+    Map<String,Object> results = SlimClient.resultToMap(executor.execute(statements));
+    String result = (String)results.get(returnTag);
+    assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1);
+  }
+
+  @Test
   public void noSuchInstance() throws Exception {
-    statements.add(statement("call", "noSuchInstance", "noSuchMethod"));
-    respondsWith(list("Shouldn't get here"));
+    statements.add(list("id", "call", "noSuchInstance", "noSuchMethod"));
+    assertExceptionReturned("id");
   }
 
   @Test
   public void emptyListReturnsNicely() throws Exception {
     statements.clear();
     executor.execute(statements);
+    expectedResults.clear();
     respondsWith(list());
   }
 
   @Test
   public void createWithFullyQualifiedNameWorks() throws Exception {
     statements.clear();
-    statements.add(statement("make", "testSlim", "fitnesse.slim.test.TestSlim"));
-    respondsWith(list());
+    statements.add(list("m1", "make", "testSlim", "fitnesse.slim.test.TestSlim"));
+    expectedResults.clear();
+    respondsWith(list(list("m1", "OK")));
   }
 
   @Test
   public void oneFunctionCall() throws Exception {
-    statements.add(statement("call", "testSlim", "returnString"));
-    respondsWith(list("string"));
+    statements.add(list("id", "call", "testSlim", "returnString"));
+    respondsWith(list(list("id", "string")));
   }
 
   @Test
   public void multiFunctionCall() throws Exception {
-    statements.add(statement("call", "testSlim", "add", "1", "2"));
-    statements.add(statement("call", "testSlim", "add", "3", "4"));
-    respondsWith(list("3", "7"));
+    statements.add(list("id1", "call", "testSlim", "add", "1", "2"));
+    statements.add(list("id2", "call", "testSlim", "add", "3", "4"));
+    respondsWith(list(list("id1", "3"), list("id2", "7")));
   }
 
   @Test
   public void callAndAssign() throws Exception {
-    statements.add(statement("callAndAssign", "v", "testSlim", "add", "5", "6"));
-    statements.add(statement("call", "testSlim", "echoInt", "$v"));
-    respondsWith(list("11", "11"));
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "add", "5", "6"));
+    statements.add(list("id2", "call", "testSlim", "echoInt", "$v"));
+    respondsWith(list(list("id1","11"), list("id2","11")));
   }
 
   @Test
-  public void describeClass() throws Exception {
-    statements.add(statement("describeClass", "Describable"));
-    List<Object> results = executor.execute(statements);
-    List<Object> description = (List<Object>) results.get(0);
-    List<String> variables = (List<String>) description.get(0);
-    List<String> methods = (List<String>) description.get(1);
-    assertListHas(variables, "variable");
-    assertListHas(variables, "baseVariable");
-    assertListHas(methods, "baseMethod(0)");
-    assertListHas(methods, "method(2)");
-  }
-
-  private void assertListHas(List<String> variables, String value) {
-    assertTrue(variables.indexOf(value) != -1);
+  public void passAndReturnList() throws Exception {
+    List<Object> l = list("one", "two");
+    statements.add(list("id", "call", "testSlim", "echoList", l));
+    respondsWith(list(list("id", l)));    
   }
 
   @Test
-  public void getAndSetVariables() throws Exception {
-    statements.add(statement("make", "d", "Describable"));
-    statements.add(statement("set", "d", "variable", "1"));
-    statements.add(statement("get", "d", "variable"));
-    respondsWith(list("1"));
+  public void passAndReturnListWithVariable() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "add", "3", "4"));
+    statements.add(list("id2", "call", "testSlim", "echoList", list("$v")));
+    respondsWith(list(list("id1", "7"), list("id2", list("7"))));
+  }
+
+  @Test
+  public void callToVoidFunctionReturnsVoidValue() throws Exception {
+    statements.add(list("id", "call", "testSlim", "voidFunction"));
+    respondsWith(list(list("id", VoidConverter.voidTag)));
   }
 
 

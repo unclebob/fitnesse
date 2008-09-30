@@ -1,5 +1,7 @@
 package fitnesse.slim;
 
+import fitnesse.slim.converters.VoidConverter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +18,9 @@ public class ListExecutor {
   public List<Object> execute(List<Object> statements) {
     List<Object> result = new ArrayList<Object>();
     for (Object statement : statements) {
-      Object retVal = new Statement((List<String>)statement).execute(executor);
-      if (retVal != null)
+      Object retVal = new Statement((List<Object>)statement).execute(executor);
+      //todo delete this if statement.
+      if (retVal != null && !retVal.equals(VoidConverter.voidTag))
         result.add(retVal);
     }
     return result;

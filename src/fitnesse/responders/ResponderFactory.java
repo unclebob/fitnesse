@@ -12,6 +12,7 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.revisioncontrol.*;
 import fitnesse.responders.run.*;
+import fitnesse.responders.run.slimResponder.SlimResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;

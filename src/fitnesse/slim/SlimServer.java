@@ -4,8 +4,8 @@ import fitnesse.socketservice.SocketServer;
 import fitnesse.util.StreamReader;
 
 import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
 
@@ -13,19 +13,35 @@ public class SlimServer implements SocketServer {
   private StreamReader reader;
   private BufferedWriter writer;
   private ListExecutor executor;
+  public static final String EXCEPTION_TAG = "__EXCEPTION__:";
 
   public void serve(Socket s) {
     try {
       tryProcessInstructions(s);
     } catch (Exception e) {
+    } finally {
       close();
+      closeEnclosingServiceInSeperateThread();
     }
+  }
+
+  private void closeEnclosingServiceInSeperateThread() {
+    new Thread(new Runnable() {
+      public void run() {
+        try {
+          SlimService.instance.close();
+        } catch (Exception e) {
+        }
+      }
+    }
+    ).start();
   }
 
   private void tryProcessInstructions(Socket s) throws Exception {
     initialize(s);
-    while (true)
-      processOneSetOfInstructions();
+    boolean more = true;
+    while (more)
+      more = processOneSetOfInstructions();
   }
 
   private void initialize(Socket s) throws IOException {
@@ -36,11 +52,21 @@ public class SlimServer implements SocketServer {
     writer.flush();
   }
 
-  private void processOneSetOfInstructions() throws Exception {
+  private boolean processOneSetOfInstructions() throws Exception {
     String instructions = getInstructionsFromClient();
     if (instructions != null) {
+      return processTheInstructions(instructions);
+    }
+    return true;
+  }
+
+  private boolean processTheInstructions(String instructions) throws IOException {
+    if (instructions.equalsIgnoreCase("bye")) {
+      return false;
+    } else {
       List<Object> results = executeInstructions(instructions);
       sendResultsToClient(results);
+      return true;
     }
   }
 
@@ -63,7 +89,7 @@ public class SlimServer implements SocketServer {
     writer.flush();
   }
 
-  private void close(){
+  private void close() {
     try {
       reader.close();
       writer.close();

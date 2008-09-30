@@ -1,5 +1,7 @@
 package fitnesse.slim.test;
 
+import java.util.List;
+
 public class TestSlim {
   private boolean niladWasCalled = false;
   private String stringArg;
@@ -8,9 +10,14 @@ public class TestSlim {
   private Integer integerObjectArg;
   private Double doubleObjectArg;
   private char charArg;
+  private List<Object> listArg;
 
   public void nilad() {
     niladWasCalled = true;
+  }
+
+  public void voidFunction() {
+
   }
 
   public boolean niladWasCalled() {
@@ -27,6 +34,14 @@ public class TestSlim {
 
   public void oneString(String arg) {
     stringArg = arg;
+  }
+
+  public void oneList(List<Object> l) {
+    listArg = l;
+  }
+
+  public List<Object> getListArg() {
+    return listArg;
   }
 
   public String getStringArg() {
@@ -68,7 +83,7 @@ public class TestSlim {
   }
 
   public int add(int a, int b) {
-    return a+b;
+    return a + b;
   }
 
   public int echoInt(int i) {
@@ -77,5 +92,13 @@ public class TestSlim {
 
   public String echoString(String s) {
     return s;
+  }
+
+  public List<Object> echoList(List<Object> l) {
+    return l;
+  }
+
+  public void execute() {
+    
   }
 }

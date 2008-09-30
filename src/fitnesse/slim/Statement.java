@@ -1,5 +1,8 @@
 package fitnesse.slim;
 
+import fitnesse.util.ListUtility;
+import static fitnesse.util.ListUtility.list;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,19 +14,19 @@ import java.util.List;
  * to do any actual execution.  
  */
 public class Statement {
-  private ArrayList<String> words = new ArrayList<String>();
+  private ArrayList<Object> words = new ArrayList<Object>();
 
-  public Statement(List<String> statement) {
-    for (String word : statement)
+  public Statement(List<Object> statement) {
+    for (Object word : statement)
       words.add(word);
   }
 
-  public boolean add(String s) {
+  public boolean add(Object s) {
     return words.add(s);
   }
 
-  public boolean addAll(Collection<String> strings) {
-    return words.addAll(strings);
+  public boolean addAll(Collection<Object> objects) {
+    return words.addAll(objects);
   }
 
   private boolean operationIs(String operation) {
@@ -31,13 +34,13 @@ public class Statement {
   }
 
   public String getOperation() {
-    return getWord(0);
+    return getWord(1);
   }
 
   private String getWord(int word) {
     try {
-      return words.get(word);
-    } catch (IndexOutOfBoundsException e) {
+      return (String) words.get(word);
+    } catch (Exception e) {
       throw new SlimError(String.format("Statement missing arguments: %s", toString()));
     }
   }
@@ -45,7 +48,7 @@ public class Statement {
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("[");
-    for (String word : words) {
+    for (Object word : words) {
       result.append(word);
       result.append(",");
     }
@@ -57,68 +60,45 @@ public class Statement {
   }
 
   public Object execute(StatementExecutor executor) {
+    Object retval;
     if (operationIs("make"))
-      return createInstance(executor);
-    if (operationIs("import"))
-      return addPath(executor);
-    if (operationIs("call"))
-      return call(executor);
-    if (operationIs("callAndAssign"))
-      return callAndAssign(executor);
-    if (operationIs("describeClass"))
-      return describeClass(executor);
-    if (operationIs("set"))
-      return set(executor);
-    if (operationIs("get"))
-      return get(executor);
+      retval =  createInstance(executor);
+    else if (operationIs("import"))
+      retval =  addPath(executor);
+    else if (operationIs("call"))
+      retval =  call(executor);
+    else if (operationIs("callAndAssign"))
+      retval =  callAndAssign(executor);
     else
-      throw new SlimError(String.format("Invalid statement operation: %s.", getOperation()));
+      retval = SlimServer.EXCEPTION_TAG +  String.format("Invalid statement operation: %s.", getOperation());
+    return list(getWord(0), retval);
   }
 
-  private Object get(StatementExecutor caller) {
-    String instanceName = getWord(1);
-    String variableName = getWord(2);
-    return caller.get(instanceName, variableName);
+  private Object addPath(StatementExecutor caller) {
+    return caller.addPath(getWord(2));
   }
 
-  private Object set(StatementExecutor caller) {
-    String instanceName = getWord(1);
-    String variableName = getWord(2);
-    String value = getWord(3);
-    return caller.set(instanceName, variableName, value);
+  private Object createInstance(StatementExecutor caller) {
+    String instanceName = getWord(2);
+    String className = getWord(3);
+    return caller.create(instanceName, className);
   }
 
-  private List<Object> describeClass(StatementExecutor caller) {
-    return caller.describeClass(getWord(1));
+  private Object call(StatementExecutor caller) {
+    return callMethodAtIndex(caller, 2);
   }
 
-  private String addPath(StatementExecutor caller) {
-    caller.addPath(getWord(1));
-    return null;
-  }
-
-  private String createInstance(StatementExecutor caller) {
-    String instanceName = getWord(1);
-    String className = getWord(2);
-    caller.create(instanceName, className);
-    return null;
-  }
-
-  private String call(StatementExecutor caller) {
-    return callMethodAtIndex(caller, 1);
-  }
-
-  private String callMethodAtIndex(StatementExecutor caller, int methodIndex) {
+  private Object callMethodAtIndex(StatementExecutor caller, int methodIndex) {
     String instanceName = getWord(methodIndex + 0);
     String methodName = getWord(methodIndex + 1);
-    List<String> argList = words.subList(methodIndex + 2, words.size());
-    String[] args = argList.toArray(new String[argList.size()]);
+    List<Object> argList = words.subList(methodIndex + 2, words.size());
+    Object[] args = argList.toArray(new Object[argList.size()]);
     return caller.call(instanceName, methodName, args);
   }
 
-  public String callAndAssign(StatementExecutor caller) {
-    String result = callMethodAtIndex(caller, 2);
-    caller.setVariable(getWord(1), result);
+  public Object callAndAssign(StatementExecutor caller) {
+    Object result = callMethodAtIndex(caller, 3);
+    caller.setVariable(getWord(2), result);
     return result;
   }
 }
