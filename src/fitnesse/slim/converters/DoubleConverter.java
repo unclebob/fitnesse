@@ -10,4 +10,4 @@ public class DoubleConverter implements Converter {
   public Object fromString(String arg) {
     return Double.parseDouble(arg);
   }
-}
+}  

@@ -11,9 +11,22 @@ public class TestSlim {
   private Double doubleObjectArg;
   private char charArg;
   private List<Object> listArg;
+  private int constructorArg;
+
+  public TestSlim() {
+
+  }
+
+  public TestSlim(int constructorArg) {
+    this.constructorArg = constructorArg;
+  }
 
   public void nilad() {
     niladWasCalled = true;
+  }
+
+  public int returnConstructorArg() {
+    return constructorArg;
   }
 
   public void voidFunction() {

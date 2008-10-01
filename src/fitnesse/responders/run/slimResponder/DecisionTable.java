@@ -2,52 +2,45 @@ package fitnesse.responders.run.slimResponder;
 
 import java.util.*;
 
-public class DecisionTable {
+public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
-  private String instanceName;
-  private Table table;
-  private String id;
-  private List<Object> instructions;
   private Map<String, Integer> vars;
   private Map<String, Integer> funcs;
   private int headerColumns;
-  private int instructionNumber = 0;
   List<Expectation> expectations = new ArrayList<Expectation>();
   public boolean isLiteralTable;
 
   public DecisionTable(Table table, String id) {
-    this.table = table;
-    this.id = id;
+    super(table, id);
     vars = new HashMap<String, Integer>();
     funcs = new HashMap<String, Integer>();
-    instanceName = instancePrefix + "_" + id;
     isLiteralTable = table.isLiteralTable();
   }
 
-  public List<Object> appendInstructionsTo(List<Object> instructions) {
+  protected String getTableType() {
+    return instancePrefix;
+  }
+
+  public void appendInstructions() {
     if (table.getRowCount() < 3)
       throw new SyntaxError("DecisionTables should have at least three rows.");
-    this.instructions = instructions;
     constructFixture();
     invokeRows();
-    return instructions;
   }
 
   private void constructFixture() {
+    Expectation expectation = new Expectation("OK", getInstructionNumber(), 0,0);
+    expectations.add(expectation);
     List<Object> makeInstruction = prepareInstruction();
     makeInstruction.add("make");
-    makeInstruction.add(instanceName);
+    makeInstruction.add(getTableName());
+    String tableHeader = table.getCellContents(0,0);
+    String fixtureName = tableHeader.split(":")[1];
+    makeInstruction.add(fixtureName);
     int columnCount = table.getColumnCountInRow(0);
-    for (int col = 0; col < columnCount; col++)
+    for (int col = 1; col < columnCount; col++)
       makeInstruction.add(table.getCellContents(col, 0));
-    instructions.add(makeInstruction);
-  }
-
-  private List<Object> prepareInstruction() {
-    List<Object> instruction = new ArrayList<Object>();
-    instruction.add(makeInstructionTag(instructionNumber));
-    instructionNumber++;
-    return instruction;
+    addInstruction(makeInstruction);
   }
 
   private void invokeRows() {
@@ -86,12 +79,8 @@ public class DecisionTable {
 
   private void addCall(List<Object> instruction, String functionName) {
     instruction.add("call");
-    instruction.add(instanceName);
+    instruction.add(getTableName());
     instruction.add(functionName);
-  }
-
-  private String makeInstructionTag(int instructionNumber) {
-    return String.format("%s_%d", instanceName, instructionNumber);
   }
 
   private void callFunctions(int row) {
@@ -105,13 +94,13 @@ public class DecisionTable {
   private void callFunction(String func) {
     List<Object> callInstruction = prepareInstruction();
     addCall(callInstruction, func);
-    instructions.add(callInstruction);
+    addInstruction(callInstruction);
   }
 
   private void setExpectation(int row, String func) {
     int col = funcs.get(func);
     String expectedValue = table.getCellContents(col, row);
-    Expectation expectation = new Expectation(expectedValue, instructionNumber, col, row);
+    Expectation expectation = new Expectation(expectedValue, getInstructionNumber(), col, row);
     expectations.add(expectation);
   }
 
@@ -121,7 +110,7 @@ public class DecisionTable {
       List<Object> setInstruction = prepareInstruction();
       addCall(setInstruction, "set" + var);
       setInstruction.add(table.getCellContents(vars.get(var), row));
-      instructions.add(setInstruction);
+      addInstruction(setInstruction);
     }
   }
 
@@ -149,17 +138,18 @@ public class DecisionTable {
   private void evaluateExpectation(Expectation expectation, Map<String, Object> returnValues) {
     String value = (String) returnValues.get(makeInstructionTag(expectation.instructionNumber));
     String expectedValue = expectation.expectedValue;
-    String evaluationMessage = createEvaluationMessage(value, expectedValue);
-
+    String originalContent = table.getCellContents(expectation.col, expectation.row);
+    String evaluationMessage = createEvaluationMessage(value, expectedValue, originalContent);
     table.setCell(expectation.col, expectation.row, evaluationMessage);
   }
 
-  private String createEvaluationMessage(String value, String expectedValue) {
+  private String createEvaluationMessage(String value, String expectedValue, String originalContent) {
     String resultString;
-    if (value.equals(expectedValue))
-      resultString = String.format("!style_pass(%s)", literalize(value));
+    if (value.equals(expectedValue)) {
+      resultString = String.format("!style_pass(%s)", originalContent);
+    }
     else {
-      resultString = String.format("!style_fail(<%s> expected <%s>)", literalize(value), literalize(expectedValue));
+      resultString = String.format("!style_fail(<%s> expected <%s>)", literalize(value), originalContent);
     }
     return resultString;
   }

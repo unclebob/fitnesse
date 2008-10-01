@@ -17,7 +17,7 @@ public class SlimMethodInvocationTest {
   @Before
   public void setUp() {
     caller = new StatementExecutor();
-    caller.create("testSlim", "fitnesse.slim.test.TestSlim");
+    caller.create("testSlim", "fitnesse.slim.test.TestSlim", new Object[0]);
     testSlim = (TestSlim) caller.getInstance("testSlim");
   }
 

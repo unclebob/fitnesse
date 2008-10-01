@@ -1,7 +1,7 @@
 package fitnesse.slim;
 
-import static fitnesse.util.ListUtility.list;
 import fitnesse.slim.converters.VoidConverter;
+import static fitnesse.util.ListUtility.list;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -47,8 +47,8 @@ public class ListExecutorTest {
   }
 
   private void assertExceptionReturned(String returnTag) {
-    Map<String,Object> results = SlimClient.resultToMap(executor.execute(statements));
-    String result = (String)results.get(returnTag);
+    Map<String, Object> results = SlimClient.resultToMap(executor.execute(statements));
+    String result = (String) results.get(returnTag);
     assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1);
   }
 
@@ -81,6 +81,21 @@ public class ListExecutorTest {
   }
 
   @Test
+  public void canPassArgumentsToConstructor() throws Exception {
+    statements.add(list("m2", "make", "testSlim2", "TestSlim", "3"));
+    statements.add(list("c1", "call", "testSlim2", "returnConstructorArg"));
+    statements.add(list("c2", "call", "testSlim", "returnConstructorArg"));
+    respondsWith(
+      list(
+        list("m2", "OK"),
+        list("c1", "3"),
+        list("c2", "0")
+      )
+    );
+  }
+
+
+  @Test
   public void multiFunctionCall() throws Exception {
     statements.add(list("id1", "call", "testSlim", "add", "1", "2"));
     statements.add(list("id2", "call", "testSlim", "add", "3", "4"));
@@ -91,14 +106,14 @@ public class ListExecutorTest {
   public void callAndAssign() throws Exception {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "add", "5", "6"));
     statements.add(list("id2", "call", "testSlim", "echoInt", "$v"));
-    respondsWith(list(list("id1","11"), list("id2","11")));
+    respondsWith(list(list("id1", "11"), list("id2", "11")));
   }
 
   @Test
   public void passAndReturnList() throws Exception {
     List<Object> l = list("one", "two");
     statements.add(list("id", "call", "testSlim", "echoList", l));
-    respondsWith(list(list("id", l)));    
+    respondsWith(list(list("id", l)));
   }
 
   @Test

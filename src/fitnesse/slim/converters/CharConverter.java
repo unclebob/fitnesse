@@ -4,7 +4,7 @@ import fitnesse.slim.Converter;
 
 public class CharConverter implements Converter {
   public String toString(Object o) {
-    return o.toString();
+    return o.toString(); 
   }
 
   public Object fromString(String arg) {

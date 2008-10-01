@@ -20,7 +20,7 @@ public class ListDeserializer {
   public ListDeserializer(String serialized) {
     this.serialized = serialized;
   }
-
+        
 
   public List<Object> deserialize() {
     try {

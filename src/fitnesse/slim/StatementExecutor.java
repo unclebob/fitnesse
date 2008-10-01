@@ -3,13 +3,11 @@ package fitnesse.slim;
 import fitnesse.slim.converters.*;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.PrintStream;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
@@ -58,23 +56,24 @@ public class StatementExecutor {
     return converters.get(k);
   }
 
-  public Object create(String instanceName, String className) {
+  public Object create(String instanceName, String className, Object[] args) {
     try {
-      Object instance = createInstanceOfDefaultConstructor(className);
+      Object instance = createInstanceOfConstructor(className, replaceVariables(args));
       instances.put(instanceName, instance);
       return "OK";
     } catch (Throwable e) {
-      return exceptionToString(e);
+      return exceptionToString(new SlimError("Could not invoke constructor.", e));
     }
   }
 
 
-  private Object createInstanceOfDefaultConstructor(String className) throws Exception {
+  private Object createInstanceOfConstructor(String className, Object[] args) throws Exception {
     Class k = searchPathsForClass(className);
-    Constructor defaultConstructor = getDefaultConstructor(k.getConstructors());
-    if (defaultConstructor == null)
-      throw new SlimError(String.format("Class %s has no default constructor.", className));
-    return defaultConstructor.newInstance();
+    Constructor constructor = getConstructor(k.getConstructors(), args);
+    if (constructor == null)
+      throw new SlimError(String.format("Class %s has no appropriate constructor.", className));
+
+    return constructor.newInstance(convertArgs(args, constructor.getParameterTypes()));
   }
 
   private Class searchPathsForClass(String className) {
@@ -86,7 +85,7 @@ public class StatementExecutor {
       if (k != null)
         return k;
     }
-    throw new SlimError(String.format("Class %s found.", className));
+    throw new SlimError(String.format("Class %s not found.", className));
   }
 
   private Class getClass(String className) {
@@ -97,10 +96,10 @@ public class StatementExecutor {
     }
   }
 
-  private Constructor getDefaultConstructor(Constructor[] constructors) {
+  private Constructor getConstructor(Constructor[] constructors, Object[] args) {
     for (Constructor constructor : constructors) {
       Class arguments[] = constructor.getParameterTypes();
-      if (arguments.length == 0)
+      if (arguments.length == args.length)
         return constructor;
     }
     return null;
@@ -186,8 +185,13 @@ public class StatementExecutor {
   }
 
   private Object[] convertArgs(Method method, Object args[]) {
-    Object[] convertedArgs = new Object[args.length];
     Class[] argumentTypes = method.getParameterTypes();
+    Object[] convertedArgs = convertArgs(args, argumentTypes);
+    return convertedArgs;
+  }
+
+  private Object[] convertArgs(Object[] args, Class[] argumentTypes) {
+    Object[] convertedArgs = new Object[args.length];
     for (int i = 0; i < argumentTypes.length; i++) {
       Class argumentType = argumentTypes[i];
       if (argumentType == List.class && args[i] instanceof List) {

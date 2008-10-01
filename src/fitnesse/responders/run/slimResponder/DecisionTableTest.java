@@ -17,7 +17,7 @@ public class DecisionTableTest {
   private WikiPage root;
   private List<Object> instructions;
   private final String simpleDecisionTable =
-    "|fixture|argument|\n" +
+    "|DT:fixture|argument|\n" +
       "|var|func?|\n" +
       "|3|5|\n" +
       "|7|9|\n";
@@ -30,7 +30,7 @@ public class DecisionTableTest {
 
   private DecisionTable makeDecisionTableAndBuildInstructions(String pageContents) throws Exception {
     DecisionTable dt = makeDecisionTable(pageContents);
-    dt.appendInstructionsTo(instructions);
+    dt.appendInstructions(instructions);
     return dt;
   }
 
@@ -50,7 +50,7 @@ public class DecisionTableTest {
   @Test(expected = DecisionTable.SyntaxError.class)
   public void wrongNumberOfColumns() throws Exception {
     makeDecisionTableAndBuildInstructions(
-      "|fixture|argument|\n" +
+      "|DT:fixture|argument|\n" +
         "|var|var2|\n" +
         "|3|\n" +
         "|7|9|\n"
@@ -77,6 +77,7 @@ public class DecisionTableTest {
     DecisionTable dt = makeDecisionTableAndBuildInstructions(simpleDecisionTable);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
+        list("decisionTable_id_0", "OK"),
         list("decisionTable_id_3", "5"),
         list("decisionTable_id_6", "5")
       )
@@ -85,7 +86,7 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|fixture|argument|\n" +
+      "|!style_pass(DT:fixture)|argument|\n" +
         "|var|func?|\n" +
         "|3|!style_pass(5)|\n" +
         "|7|!style_fail(<5> expected <9>)|\n";
@@ -97,6 +98,7 @@ public class DecisionTableTest {
     DecisionTable dt = makeDecisionTableAndBuildInstructions("!"+simpleDecisionTable);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
+        list("decisionTable_id_0", "OK"),
         list("decisionTable_id_3", "5"),
         list("decisionTable_id_6", "5")
       )
@@ -105,7 +107,7 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!-fixture-!|!-argument-!|\n" +
+      "|!style_pass(!-DT:fixture-!)|!-argument-!|\n" +
         "|!-var-!|!-func?-!|\n" +
         "|!-3-!|!style_pass(!-5-!)|\n" +
         "|!-7-!|!style_fail(<!-5-!> expected <!-9-!>)|\n";

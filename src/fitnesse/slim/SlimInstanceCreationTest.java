@@ -16,23 +16,46 @@ public class SlimInstanceCreationTest {
 
   @Test
   public void canCreateInstance() throws Exception {
-    Object response = caller.create("x", "fitnesse.slim.test.TestSlim");
+    Object response = caller.create("x", "fitnesse.slim.test.TestSlim", new Object[0]);
     assertEquals("OK", response);
     Object x = caller.getInstance("x");
     assertTrue(x instanceof TestSlim);
   }
 
   @Test
+  public void canCreateInstanceWithArguments() throws Exception {
+    Object response = caller.create("x", "fitnesse.slim.test.TestSlim", new Object[]{"3"});
+    assertEquals("OK", response);
+    Object x = caller.getInstance("x");
+    assertTrue(x instanceof TestSlim);
+  }
+
+  @Test
+  public void cantCreateInstanceIfConstructorArgumentBad() throws Exception {
+    String result = (String) caller.create("x", "fitnesse.slim.test.TestSlim", new Object[]{"notInt"});
+    assertException(result);
+  }
+
+  @Test
+  public void cantCreateInstanceIfConstructorArgumentCountIncorrect() throws Exception {
+    String result = (String) caller.create("x", "fitnesse.slim.test.TestSlim", new Object[]{"3","4"});
+    assertException(result);
+  }
+
+
+  @Test
   public void throwsInstanceNotCreatedErrorIfNoSuchClass() throws Exception {
-    String result = (String) caller.create("x", "fitness.slim.test.NoSuchClass");
-    assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1);
+    String result = (String) caller.create("x", "fitnesse.slim.test.NoSuchClass", new Object[0]);
+    assertException(result);
   }
 
   @Test
   public void throwsInstanceNotCreatedErrorIfNoPublicDefaultConstructor() throws Exception {
-    String result = (String) caller.create("x", "fitnesse.slim.test.ClassWithNoPublicDefaultConstructor");
-    assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1);
+    String result = (String) caller.create("x", "fitnesse.slim.test.ClassWithNoPublicDefaultConstructor", new Object[0]);
+    assertException(result);
   }
 
-
+  private void assertException(String result) {
+    assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1);
+  }
 }

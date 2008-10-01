@@ -16,9 +16,12 @@ public class SlimResponder extends WikiPageResponder {
   private CommandRunner slimRunner;
   private SlimClient slimClient;
   private PageData testResults;
-  public List<DecisionTable> testTables = new ArrayList<DecisionTable>();
+  public List<SlimTable> testTables = new ArrayList<SlimTable>();
+  public TableScanner tableScanner;
+  public Map<String, Object> instructionResults;
+  public Map<String, String> exceptions;
+  public List<Object> instructions;
 
-  /* hook for subclasses */
   protected void processWikiPageDataBeforeGeneratingHtml(PageData pageData) throws Exception {
     startSlimConnection();
     processWikiText(pageData);
@@ -32,72 +35,81 @@ public class SlimResponder extends WikiPageResponder {
   }
 
   private void processWikiText(PageData pageData) throws Exception {
-    testResults = pageData;
-    TableScanner tableScanner = new TableScanner(pageData);
-    List<Object> instructions = createInstructions(tableScanner);
-    Map<String, Object> results = slimClient.invokeAndGetResponse(instructions);
-    Map<String, String> exceptions = mapExceptionsToLinks(results);
-    evaluateResults(results);
-    String wikiText = exceptionList(exceptions) + testResultsToWikiText(pageData, tableScanner);
+    runTestsOnPage(pageData);
+    String wikiText = generateWikiTextForTestResults();
     pageData.setContent(wikiText);
+    testResults = pageData;
   }
 
-  private String exceptionList(Map<String, String> exceptions) {
-    StringBuffer exceptionList = new StringBuffer();
-    Set<String> keys = exceptions.keySet();
-    if (keys.size() > 0) {
-      exceptionList.append("!3 !style_fail(Exceptions)\n");
-    }
-    for (String key : keys) {
-      exceptionList.append("!anchor " + key + "\n");
-      exceptionList.append("!* " + key + "\n");
-      exceptionList.append("{{{ " + exceptions.get(key) + "}}}\n*!\n\n");
-    }
-    if (keys.size() > 0)
-      exceptionList.append("----\n");
-    return exceptionList.toString();
+  private String generateWikiTextForTestResults() throws Exception {
+    replaceExceptionsWithLinks();
+    putTestResultsIntoTables();
+    return ExceptionList.toWikiText(exceptions) + testResultsToWikiText();
   }
 
-  private Map<String, String> mapExceptionsToLinks(Map<String, Object> results) {
-    Map<String, String> exceptions = new HashMap<String, String>();
-    Set<String> keys = results.keySet();
-    for (String key : keys) {
-      Object value = results.get(key);
-      if (value instanceof String) {
-        String valueString = (String) value;
-        if (valueString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
-          exceptions.put(key, valueString);
-          results.put(key, String.format("Exception: .#%s", key));
-        }
+  private void runTestsOnPage(PageData pageData) throws Exception {
+    tableScanner = new TableScanner(pageData);
+    instructions = createInstructions();
+    instructionResults = slimClient.invokeAndGetResponse(instructions);
+  }
+
+  private void replaceExceptionsWithLinks() {
+    exceptions = new HashMap<String, String>();
+    Set<String> resultKeys = instructionResults.keySet();
+    for (String resultKey : resultKeys)
+      replaceExceptionWithExceptionLink(resultKey);
+  }
+
+  private void replaceExceptionWithExceptionLink(String resultKey) {
+    Object result = instructionResults.get(resultKey);
+    if (result instanceof String) {
+      String resultString = (String) result;
+      if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
+        exceptions.put(resultKey, resultString);
+        instructionResults.put(resultKey, exceptionResult(resultKey));
       }
     }
-    return exceptions;
   }
 
-  private String testResultsToWikiText(PageData pageData, TableScanner tableScanner) throws Exception {
+  private String exceptionResult(String resultKey) {
+    return String.format("Exception: .#%s", resultKey);
+  }
+
+  private String testResultsToWikiText() throws Exception {
     String wikiText = tableScanner.toWikiText() +
-        "!* Standard Output\n\n" +
-        slimRunner.getOutput() +
-        "*!\n" +
-        "!* Standard Error\n\n" +
-        slimRunner.getError() +
-        "*!\n";
+      "!* Standard Output\n\n" +
+      slimRunner.getOutput() +
+      "*!\n" +
+      "!* Standard Error\n\n" +
+      slimRunner.getError() +
+      "*!\n";
     return wikiText;
   }
 
-  private void evaluateResults(Map<String, Object> results) {
-    for (DecisionTable table : testTables)
-      table.evaluateExpectations(results);
+  private void putTestResultsIntoTables() {
+    for (SlimTable table : testTables)
+      table.evaluateExpectations(instructionResults);
   }
 
-  private List<Object> createInstructions(TableScanner tableScanner) {
+  private List<Object> createInstructions() {
     List<Object> instructions = new ArrayList<Object>();
     for (Table table : tableScanner) {
-      DecisionTable dt = new DecisionTable(table, "id");
-      dt.appendInstructionsTo(instructions);
-      testTables.add(dt);
+      String tableId = "" + testTables.size();
+      SlimTable slimTable = makeSlimTable(table, tableId);
+      slimTable.appendInstructions(instructions);
+      testTables.add(slimTable);
     }
     return instructions;
+  }
+
+  private SlimTable makeSlimTable(Table table, String tableId) {
+    String tableType = table.getCellContents(0, 0);
+    if (tableType.startsWith("DT:"))
+      return new DecisionTable(table, tableId);
+    else if (tableType.equalsIgnoreCase("import"))
+      return new ImportTable(table, tableId);
+    else
+      return new SlimErrorTable(table, tableId);
   }
 
   private void startSlimConnection() throws Exception {
@@ -111,7 +123,7 @@ public class SlimResponder extends WikiPageResponder {
   }
 
   private void waitForConnection(SlimClient slimClient) throws Exception {
-    while (isConnected(slimClient) == false)
+    while (!isConnected(slimClient))
       Thread.sleep(50);
   }
 
@@ -135,4 +147,51 @@ public class SlimResponder extends WikiPageResponder {
   public PageData getTestResults() {
     return testResults;
   }
+
+  public List<Object> getInstructions() {
+    return instructions;
+  }
+
+  static class ExceptionList {
+    private Map<String, String> exceptions;
+    public StringBuffer buffer;
+    public Set<String> keys;
+
+    private ExceptionList(Map<String, String> exceptions) {
+      this.exceptions = exceptions;
+      buffer = new StringBuffer();
+      keys = exceptions.keySet();
+    }
+
+    private String toWikiText() {
+      header();
+      exceptions();
+      footer();
+      return buffer.toString();
+    }
+
+    private void footer() {
+      if (keys.size() > 0)
+        buffer.append("----\n");
+    }
+
+    private void exceptions() {
+      for (String key : keys) {
+        buffer.append("!anchor " + key + "\n");
+        buffer.append("!*> " + key + "\n");
+        buffer.append("{{{ " + exceptions.get(key) + "}}}\n*!\n\n");
+      }
+    }
+
+    private void header() {
+      if (keys.size() > 0) {
+        buffer.append("!3 !style_fail(Exceptions)\n");
+      }
+    }
+
+    private static String toWikiText(Map<String, String> exceptions) {
+      return new ExceptionList(exceptions).toWikiText();
+    }
+  }
 }
+

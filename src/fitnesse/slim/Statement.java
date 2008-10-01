@@ -81,7 +81,8 @@ public class Statement {
   private Object createInstance(StatementExecutor caller) {
     String instanceName = getWord(2);
     String className = getWord(3);
-    return caller.create(instanceName, className);
+    Object[] args = makeArgsArray(4);
+    return caller.create(instanceName, className, args);
   }
 
   private Object call(StatementExecutor caller) {
@@ -91,9 +92,14 @@ public class Statement {
   private Object callMethodAtIndex(StatementExecutor caller, int methodIndex) {
     String instanceName = getWord(methodIndex + 0);
     String methodName = getWord(methodIndex + 1);
-    List<Object> argList = words.subList(methodIndex + 2, words.size());
-    Object[] args = argList.toArray(new Object[argList.size()]);
+    Object[] args = makeArgsArray(methodIndex + 2);
     return caller.call(instanceName, methodName, args);
+  }
+
+  private Object[] makeArgsArray(int argsIndex) {
+    List<Object> argList = words.subList(argsIndex, words.size());
+    Object[] args = argList.toArray(new Object[argList.size()]);
+    return args;
   }
 
   public Object callAndAssign(StatementExecutor caller) {
