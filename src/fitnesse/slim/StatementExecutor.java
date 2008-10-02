@@ -158,7 +158,7 @@ public class StatementExecutor {
   }
 
   private boolean isVariableReference(String arg) {
-    return arg.charAt(0) == '$';
+    return arg.length() > 0 && arg.charAt(0) == '$';
   }
 
   private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Exception {

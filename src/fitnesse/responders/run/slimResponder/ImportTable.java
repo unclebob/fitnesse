@@ -25,6 +25,4 @@ public class ImportTable extends SlimTable {
 
   }
 
-  public void evaluateExpectations(Map<String, Object> returnValues) {
-  }
 }

@@ -1,6 +1,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
+import fitnesse.slim.SlimServer;
 import fitnesse.http.MockRequest;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.*;
@@ -8,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import java.util.List;
 
@@ -22,6 +24,11 @@ public class SlimResponderTest {
 
   private void assertTestResultsContain(String fragment) {
     assertTrue(testResults.indexOf(fragment) != -1);
+  }
+
+  private void assertContainsReferenceToException(String string) {
+    assertTrue(String.format("Should have failing style: %s", string), string.indexOf("!style_fail(") != -1);
+    assertTrue(String.format("Should have reference to exception: %s", string), string.indexOf("Exception: .#") != -1);
   }
 
   private void getResultsForTable(String testTable) throws Exception {
@@ -99,9 +106,24 @@ public class SlimResponderTest {
         "|returnConstructorArgument?|\n" +
         "|3|\n"
     );
+    TableScanner ts = new TableScanner(responder.getTestResults());
+    Table dt = ts.getTable(0);
+    assertContainsReferenceToException(dt.getCellContents(0,0));
     assertTestResultsContain("Could not invoke constructor");
-    assertTestResultsContain("expected <DT:fitnesse.slim.test.TestSlim>");
   }
+
+  @Test
+  public void tableWithBadVariableHasException() throws Exception {
+    getResultsForTable(
+      "|DT:fitnesse.slim.test.TestSlim|\n" +
+        "|noSuchVar|\n" +
+        "|3|\n"
+    );
+    TableScanner ts = new TableScanner(responder.getTestResults());
+    Table dt = ts.getTable(0);
+    assertContainsReferenceToException(dt.getCellContents(0, 2));
+  }
+
 
   @Test
   public void importTable() throws Exception {
@@ -115,7 +137,7 @@ public class SlimResponderTest {
       list(
         list("import_0_0", "import", "fitnesse.slim.test"),
         list("import_0_1", "import", "x.y.z")
-      ), instructions    
+      ), instructions
     );
   }
 

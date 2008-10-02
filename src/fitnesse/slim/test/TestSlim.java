@@ -45,6 +45,10 @@ public class TestSlim {
     return 7;
   }
 
+  public void setString(String arg) {
+    stringArg = arg;
+  }
+
   public void oneString(String arg) {
     stringArg = arg;
   }
@@ -113,5 +117,9 @@ public class TestSlim {
 
   public void execute() {
     
+  }
+
+  public void die() {
+    throw new Error("blah");
   }
 }

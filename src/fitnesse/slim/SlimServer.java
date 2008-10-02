@@ -18,7 +18,7 @@ public class SlimServer implements SocketServer {
   public void serve(Socket s) {
     try {
       tryProcessInstructions(s);
-    } catch (Exception e) {
+    } catch (Throwable e) {
     } finally {
       close();
       closeEnclosingServiceInSeperateThread();
