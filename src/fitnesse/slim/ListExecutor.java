@@ -1,6 +1,6 @@
 package fitnesse.slim;
 
-import fitnesse.slim.converters.VoidConverter;
+import fitnesse.util.ListUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +10,34 @@ import java.util.List;
  */
 public class ListExecutor {
   private StatementExecutor executor;
+  private boolean verbose;
 
   public ListExecutor() {
+    this(false);
+  }
+
+  public ListExecutor(boolean verbose) {
+    this.verbose = verbose;
     this.executor = new StatementExecutor();
   }
 
   public List<Object> execute(List<Object> statements) {
+    String message = "!1 Instructions";
+    verboseMessage(message);
+
     List<Object> result = new ArrayList<Object>();
     for (Object statement : statements) {
-      Object retVal = new Statement((List<Object>)statement).execute(executor);
-      //todo delete this if statement.
-      if (retVal != null && !retVal.equals(VoidConverter.voidTag))
-        result.add(retVal);
+      List<Object> statementList = (List<Object>) statement;
+      verboseMessage(statementList + "\n");
+      Object retVal = new Statement(statementList).execute(executor);
+      verboseMessage(retVal);
+      verboseMessage("------");
+      result.add(retVal);
     }
     return result;
+  }
+
+  private void verboseMessage(Object message) {
+    if (verbose) System.out.println(message);
   }
 }

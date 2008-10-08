@@ -20,6 +20,7 @@ public class SlimTableTest {
     assertEquals("myMethodName", disgraceMethodName("myMethodName"));
     assertEquals("my_method_name", disgraceMethodName("my_method_name"));
     assertEquals("getStringArgs", disgraceMethodName("getStringArgs"));
+    assertEquals("setMyVariableName", disgraceMethodName("set myVariableName"));
   }
 
 

@@ -14,7 +14,6 @@ import java.util.Map;
 public class SlimServiceTest {
   private List<Object> statements;
   private SlimClient slimClient = new SlimClient("localhost", 8099);
-  private SlimService service;
 
   @Before
   public void setUp() throws Exception {
@@ -31,7 +30,7 @@ public class SlimServiceTest {
 
   private boolean tryCreateSlimService() throws Exception {
     try {
-      service = new SlimService(8099);
+      SlimService.main(new String[] {"8099"});
       return true;
     } catch (Exception e) {
       return false;
@@ -124,6 +123,14 @@ public class SlimServiceTest {
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertExceptionWasReturned("id", results);
   }
+
+  @Test
+  public void verboseArgument() throws Exception {
+    String args[] = {"-v", "99"};
+    assertTrue(SlimService.parseCommandLine(args));
+    assertTrue(SlimService.verbose);
+  }
+
 
 }
 

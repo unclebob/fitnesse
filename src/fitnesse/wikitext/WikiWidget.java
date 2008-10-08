@@ -16,7 +16,11 @@ public abstract class WikiWidget
 		addToParent();
 	}
 
-	protected void addToParent()
+  public ParentWidget getParent() {
+    return parent;
+  }
+
+  protected void addToParent()
 	{
 		if(this.parent != null)
 			this.parent.addChild(this);

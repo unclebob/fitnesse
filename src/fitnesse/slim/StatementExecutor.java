@@ -2,14 +2,16 @@ package fitnesse.slim;
 
 import fitnesse.slim.converters.*;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.StringWriter;
-import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is the API for executing a SLIM statement.  This class should not know about
@@ -125,7 +127,7 @@ public class StatementExecutor {
     Object result[] = new Object[args.length];
     for (int i = 0; i < args.length; i++)
       result[i] = replaceVariable(args[i]);
-    
+
     return result;
   }
 
@@ -141,12 +143,22 @@ public class StatementExecutor {
     if (object instanceof List)
       return (replaceArgsInList((List<Object>) object));
     else
-      return (replaceIfVariable((String) object));
+      return (replaceVariablesInString((String) object));
   }
 
-  private Object replaceIfVariable(String arg) {
-    if (isVariableReference(arg))
-      return replaceVariable(arg);
+  private Object replaceVariablesInString(String arg) {
+    Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
+    int startingPosition = 0;
+    while (true) {
+      Matcher symbolMatcher = symbolPattern.matcher(arg.substring(startingPosition));
+      if (symbolMatcher.find()) {
+        String symbolName = symbolMatcher.group(1);
+        if (variables.containsKey(symbolName))
+          arg = arg.replace("$" + symbolName, (String)variables.get(symbolName));
+        startingPosition += symbolMatcher.start(1);
+      } else
+        break;
+    }
     return arg;
   }
 
@@ -190,6 +202,7 @@ public class StatementExecutor {
     return convertedArgs;
   }
 
+  //todo refactor this mess
   private Object[] convertArgs(Object[] args, Class[] argumentTypes) {
     Object[] convertedArgs = new Object[args.length];
     for (int i = 0; i < argumentTypes.length; i++) {

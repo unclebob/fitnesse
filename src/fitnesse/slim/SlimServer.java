@@ -14,6 +14,15 @@ public class SlimServer implements SocketServer {
   private BufferedWriter writer;
   private ListExecutor executor;
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
+  private boolean verbose;
+
+  public SlimServer() {
+    this(false);
+  }
+
+  public SlimServer(boolean verbose) {
+    this.verbose = verbose;
+  }
 
   public void serve(Socket s) {
     try {
@@ -45,7 +54,7 @@ public class SlimServer implements SocketServer {
   }
 
   private void initialize(Socket s) throws IOException {
-    executor = new ListExecutor();
+    executor = new ListExecutor(verbose);
     reader = new StreamReader(s.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
     writer.write(String.format("Slim -- %s\n", SlimVersion.VERSION));

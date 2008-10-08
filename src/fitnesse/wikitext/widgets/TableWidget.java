@@ -80,7 +80,7 @@ public class TableWidget extends ParentWidget
 		return html.toString();
 	}
 
-	private void addRows(String text) throws Exception
+	public void addRows(String text) throws Exception
 	{
 		Matcher match = pattern.matcher(text);
 		if(match.find())

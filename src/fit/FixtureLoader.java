@@ -25,6 +25,10 @@ public class FixtureLoader
 
     return instance;
   }
+  
+  public static void setInstance(FixtureLoader loader) {
+    instance = loader;
+  }
 
   public Set fixturePathElements = new HashSet()
   {

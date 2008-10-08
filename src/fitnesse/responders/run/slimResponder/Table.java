@@ -1,12 +1,13 @@
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.wikitext.widgets.TableWidget;
-import fitnesse.wikitext.widgets.TableRowWidget;
-import fitnesse.wikitext.widgets.TextWidget;
-import fitnesse.wikitext.widgets.TableCellWidget;
+import fitnesse.wikitext.widgets.*;
 import fitnesse.wikitext.WikiWidget;
+import fitnesse.util.StringUtil;
 
 import java.util.List;
+import java.util.regex.Matcher;
+
+import fitlibrary.utility.StringUtility;
 
 public class Table {
   private TableWidget widget;
@@ -16,7 +17,14 @@ public class Table {
   }
 
   public String getCellContents(int columnIndex, int rowIndex) {
-    return getCell(columnIndex, rowIndex).getText();
+    TextWidget textWidget = getCell(columnIndex, rowIndex);
+    String cellText = textWidget.getText();
+    Matcher matcher = LiteralWidget.pattern.matcher(cellText);
+    if (matcher.matches()) {
+      int literalNumber = Integer.parseInt(matcher.group(1));
+      cellText = textWidget.getParent().getLiteral(literalNumber);
+    }
+    return cellText;
   }
 
   private TextWidget getCell(int columnIndex, int rowIndex) {
@@ -67,4 +75,13 @@ public class Table {
   public boolean isLiteralTable() {
       return widget.isLiteralTable;
   }
+
+
+  public int addRow(List<String> list) throws Exception {
+    String rowString = "|" + StringUtil.join(list, "|") + "|\n";
+    widget.addRows(rowString);
+    return getRowCount()-1;
+  }
+
+  
 }

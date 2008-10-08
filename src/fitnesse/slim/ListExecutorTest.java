@@ -110,6 +110,15 @@ public class ListExecutorTest {
   }
 
   @Test
+  public void canReplaceMultipleVariablesInAnArgument() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v1", "testSlim", "echoString", "Bob"));
+    statements.add(list("id2", "callAndAssign", "v2", "testSlim", "echoString", "Martin"));
+    statements.add(list("id3", "call", "testSlim", "echoString", "name: $v1 $v2"));
+    respondsWith(list(list("id1", "Bob"), list("id2", "Martin"), list("id3", "name: Bob Martin")));
+  }
+
+
+  @Test
   public void passAndReturnList() throws Exception {
     List<Object> l = list("one", "two");
     statements.add(list("id", "call", "testSlim", "echoList", l));

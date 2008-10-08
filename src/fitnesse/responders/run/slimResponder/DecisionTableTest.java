@@ -1,7 +1,5 @@
 package fitnesse.responders.run.slimResponder;
 
-import static fitnesse.responders.run.slimResponder.DecisionTable.ReturnedValueExpectation;
-import static fitnesse.responders.run.slimResponder.SlimTable.Expectation;
 import fitnesse.slim.SlimClient;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
@@ -79,6 +77,27 @@ public class DecisionTableTest {
   }
 
   @Test
+  public void canBuildInstructionsForTableWithVariables() throws Exception {
+    makeDecisionTableAndBuildInstructions(
+      "|DT:fixture|\n" +
+        "|var|func?|\n" +
+        "|3|$V=|\n" +
+        "|$V|9|\n"
+    );
+    List<Object> expectedInstructions = list(
+      list("decisionTable_id_0", "make", "decisionTable_id", "fixture"),
+      list("decisionTable_id_1", "call", "decisionTable_id", "setVar", "3"),
+      list("decisionTable_id_2", "call", "decisionTable_id", "execute"),
+      list("decisionTable_id_3", "callAndAssign", "V", "decisionTable_id", "func"),
+      list("decisionTable_id_4", "call", "decisionTable_id", "setVar", "$V"),
+      list("decisionTable_id_5", "call", "decisionTable_id", "execute"),
+      list("decisionTable_id_6", "call", "decisionTable_id", "func")
+    );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+
+  @Test
   public void canEvaluateReturnValuesAndColorizeTable() throws Exception {
     DecisionTable dt = makeDecisionTableAndBuildInstructions(simpleDecisionTable);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
@@ -94,10 +113,10 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|DT:fixture|argument|\n" +
+      "|!style_pass(DT:fixture)|argument|\n" +
         "|var|func?|\n" +
         "|3|!style_pass(5)|\n" +
-        "|7|!style_fail(<5> expected <9>)|\n";
+        "|7|!style_fail([5] expected [9])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -117,10 +136,10 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!-DT:fixture-!|!-argument-!|\n" +
+      "|!style_pass(!-DT:fixture-!)|!-argument-!|\n" +
         "|!-var-!|!-func?-!|\n" +
         "|!-3-!|!style_pass(!-5-!)|\n" +
-        "|!-7-!|!style_fail(<!-5-!> expected <!-9-!>)|\n";
+        "|!-7-!|!style_fail([!-5-!] expected [!-9-!])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -148,89 +167,4 @@ public class DecisionTableTest {
     assertEquals(setInstruction, instructions.get(1));
     assertEquals(callInstruction, instructions.get(3));
   }
-
-  private Expectation makeDummyExpectation(String expected) {
-    Expectation expectation = new ReturnedValueExpectation(expected, 0, 0, 0);
-    return expectation;
-  }
-
-  @Test
-  public void evaluationMessageForBlankInput() throws Exception {
-    String expected = "";
-    Expectation expectation = makeDummyExpectation(expected);
-    assertEquals("!style_pass(BLANK)", expectation.createEvaluationMessage("", "", ""));
-  }
-
-  @Test
-  public void evaluationMessageForBlankExpectation() throws Exception {
-    Expectation expectation = makeDummyExpectation("");
-    assertEquals("!style_ignore(!-ignore-!)", expectation.createEvaluationMessage("ignore", "!-ignore-!", ""));
-  }
-
-  @Test
-  public void lessThanComparisons() throws Exception {
-    Expectation expectation = makeDummyExpectation(" < 5.2");
-    assertEquals("!style_pass(3.0<5.2)", expectation.createEvaluationMessage("3", "", ""));
-    assertEquals("!style_pass(2.0<5.2)", expectation.createEvaluationMessage("2", "", ""));
-    assertEquals("!style_fail(6.0<5.2)", expectation.createEvaluationMessage("6", "", ""));
-    assertEquals("!style_pass(2.8<5.2)", expectation.createEvaluationMessage("2.8", "", ""));
-  }
-
-  @Test
-  public void greaterThanComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" > 5.9");
-    assertEquals("!style_pass(8.0>5.9)", expectation.createEvaluationMessage("8", "", ""));
-    assertEquals("!style_fail(3.6>5.9)", expectation.createEvaluationMessage("3.6", "", ""));
-  }
-
-
-  @Test
-  public void notEqualComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" != 5.9");
-    assertEquals("!style_pass(8.0!=5.9)", expectation.createEvaluationMessage("8", "", ""));
-    assertEquals("!style_fail(5.9!=5.9)", expectation.createEvaluationMessage("5.9", "", ""));
-  }
-
-  @Test
-  public void greaterOrEqualComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" >=  5.9 ");
-    assertEquals("!style_pass(8.0>=5.9)", expectation.createEvaluationMessage("8", "", ""));
-    assertEquals("!style_pass(5.9>=5.9)", expectation.createEvaluationMessage("5.9", "", ""));
-    assertEquals("!style_fail(3.6>=5.9)", expectation.createEvaluationMessage("3.6", "", ""));
-  }
-
-  @Test
-  public void lessOrEqualComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" <= 5.9 ");
-    assertEquals("!style_pass(2.0<=5.9)", expectation.createEvaluationMessage("2", "", ""));
-    assertEquals("!style_pass(5.9<=5.9)", expectation.createEvaluationMessage("5.9", "", ""));
-    assertEquals("!style_fail(8.3<=5.9)", expectation.createEvaluationMessage("8.3", "", ""));
-  }
-
-  @Test
-  public void openIntervalComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" 2.1 < _ < 5.9");
-    assertEquals("!style_pass(2.1<4.3<5.9)", expectation.createEvaluationMessage("4.3", "", ""));
-    assertEquals("!style_fail(2.1<2.1<5.9)", expectation.createEvaluationMessage("2.1", "", ""));
-    assertEquals("!style_fail(2.1<8.3<5.9)", expectation.createEvaluationMessage("8.3", "", ""));
-  }
-
-  @Test
-  public void closedLeftIntervalComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" 2.1 <= _ < 5.9");
-    assertEquals("!style_pass(2.1<=4.3<5.9)", expectation.createEvaluationMessage("4.3", "", ""));
-    assertEquals("!style_pass(2.1<=2.1<5.9)", expectation.createEvaluationMessage("2.1", "", ""));
-    assertEquals("!style_fail(2.1<=8.3<5.9)", expectation.createEvaluationMessage("8.3", "", ""));
-  }
-
-  @Test
-  public void closedRightIntervalComparison() throws Exception {
-    Expectation expectation = makeDummyExpectation(" 2.1 < _ <= 5.9");
-    assertEquals("!style_pass(2.1<4.3<=5.9)", expectation.createEvaluationMessage("4.3", "", ""));
-    assertEquals("!style_fail(2.1<2.1<=5.9)", expectation.createEvaluationMessage("2.1", "", ""));
-    assertEquals("!style_pass(2.1<5.9<=5.9)", expectation.createEvaluationMessage("5.9", "", ""));
-    assertEquals("!style_fail(2.1<8.3<=5.9)", expectation.createEvaluationMessage("8.3", "", ""));
-  }
-
-
 }
