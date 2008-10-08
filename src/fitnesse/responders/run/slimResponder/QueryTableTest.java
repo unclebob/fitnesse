@@ -199,4 +199,65 @@ public class QueryTableTest {
     );
   }
 
+  @Test
+  public void variablesAreReplacedInMatch() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
+    qt.setSymbol("V", "4");
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("queryTable_id_0", "OK"),
+        list("queryTable_id_1",
+          list(
+            list(list("n", "2"), list("2n", "4"))
+          )
+        )
+      )
+    );
+    qt.evaluateExpectations(pseudoResults);
+    assertEquals("|!style_pass(Query:fixture)|argument|\n" +
+      "|n|2n|\n" +
+      "|!style_pass(2)|!style_pass($V->[4])|\n", qt.getTable().toString()
+    );
+  }
+
+  @Test
+  public void variablesAreReplacedInExpected() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
+    qt.setSymbol("V", "5");
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("queryTable_id_0", "OK"),
+        list("queryTable_id_1",
+          list(
+            list(list("n", "2"), list("2n", "4"))
+          )
+        )
+      )
+    );
+    qt.evaluateExpectations(pseudoResults);
+    assertEquals("|!style_pass(Query:fixture)|argument|\n" +
+      "|n|2n|\n" +
+      "|!style_pass(2)|!style_fail([4] expected [$V->[5]])|\n", qt.getTable().toString()
+    );
+  }
+
+  @Test
+  public void variablesAreReplacedInMissing() throws Exception {
+    makeQueryTableAndBuildInstructions(queryTableHeader + "|3|$V|\n");
+    qt.setSymbol("V", "5");
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("queryTable_id_0", "OK"),
+        list("queryTable_id_1",
+          list(
+          )
+        )
+      )
+    );
+    qt.evaluateExpectations(pseudoResults);
+    assertEquals("|!style_pass(Query:fixture)|argument|\n" +
+      "|n|2n|\n" +
+      "|[3] !style_fail(missing)|$V->[5]|\n", qt.getTable().toString()
+    );
+  }
 }

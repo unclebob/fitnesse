@@ -5,6 +5,7 @@ import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -284,12 +285,14 @@ public abstract class SlimTable {
   }
 
   private static class LocalSlimTestContext implements SlimTestContext {
+    private Map<String, String> symbols = new HashMap<String,String>();
 
     public String getSymbol(String symbolName) {
-      return "TILT";
+      return symbols.get(symbolName);
     }
 
     public void setSymbol(String symbolName, String value) {
+      symbols.put(symbolName, value);
     }
   }
 

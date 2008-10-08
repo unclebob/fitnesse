@@ -56,20 +56,33 @@ public class QueryTable extends SlimTable {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
       fail(0, newTableRow, "surplus");
-      for (int col = 0; col < surplusRow.size(); col++) {
-        String surplusField = surplusRow.get(col);
-        if (surplusField == null)
-          failMessage(col, newTableRow, "field not present");
-      }
+      markMissingFields(surplusRow, newTableRow);
+    }
+  }
+
+  private void markMissingFields(List<String> surplusRow, int newTableRow) {
+    for (int col = 0; col < surplusRow.size(); col++) {
+      String surplusField = surplusRow.get(col);
+      if (surplusField == null)
+        failMessage(col, newTableRow, "field not present");
     }
   }
 
   private void scanRowForMatch(int tableRow) throws Exception {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
+      replaceAllvariablesInRow(tableRow);
       fail(0, tableRow, "missing");
     } else {
       markFieldsInMatchedRow(tableRow, matchedRow);
+    }
+  }
+
+  private void replaceAllvariablesInRow(int tableRow) {
+    int columns = table.getColumnCountInRow(tableRow);
+    for (int col=0; col<columns; col++) {
+      String contents = table.getCellContents(col, tableRow);
+      table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(contents));
     }
   }
 
@@ -83,12 +96,15 @@ public class QueryTable extends SlimTable {
   private void markField(int tableRow, int matchedRow, int col) {
     String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
+    table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
     if (actualValue == null)
       fail(col, tableRow, "field not present");
-    else if (expectedValue.equals(actualValue))
+    else if (actualValue.equals(replaceSymbols(expectedValue))) {
       pass(col, tableRow);
-    else
+    }
+    else {
       expected(col, tableRow, actualValue);
+    }
   }
 
   class QueryResults {
@@ -172,7 +188,7 @@ public class QueryTable extends SlimTable {
           int row = rowIterator.next();
           String actualValue = rows.get(row).get(fieldName);
           String expectedValue = table.getCellContents(fieldIndex, tableRow);
-          if (actualValue != null && actualValue.equals(expectedValue)) {
+          if (actualValue != null && actualValue.equals(replaceSymbols(expectedValue))) {
             recordMatch(row);
           } else {
             rowIterator.remove();
