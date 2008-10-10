@@ -97,14 +97,14 @@ public class ListExecutorTest {
 
   @Test
   public void multiFunctionCall() throws Exception {
-    statements.add(list("id1", "call", "testSlim", "add", "1", "2"));
-    statements.add(list("id2", "call", "testSlim", "add", "3", "4"));
+    statements.add(list("id1", "call", "testSlim", "addTo", "1", "2"));
+    statements.add(list("id2", "call", "testSlim", "addTo", "3", "4"));
     respondsWith(list(list("id1", "3"), list("id2", "7")));
   }
 
   @Test
   public void callAndAssign() throws Exception {
-    statements.add(list("id1", "callAndAssign", "v", "testSlim", "add", "5", "6"));
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "addTo", "5", "6"));
     statements.add(list("id2", "call", "testSlim", "echoInt", "$v"));
     respondsWith(list(list("id1", "11"), list("id2", "11")));
   }
@@ -127,7 +127,7 @@ public class ListExecutorTest {
 
   @Test
   public void passAndReturnListWithVariable() throws Exception {
-    statements.add(list("id1", "callAndAssign", "v", "testSlim", "add", "3", "4"));
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "addTo", "3", "4"));
     statements.add(list("id2", "call", "testSlim", "echoList", list("$v")));
     respondsWith(list(list("id1", "7"), list("id2", list("7"))));
   }
@@ -135,7 +135,7 @@ public class ListExecutorTest {
   @Test
   public void callToVoidFunctionReturnsVoidValue() throws Exception {
     statements.add(list("id", "call", "testSlim", "voidFunction"));
-    respondsWith(list(list("id", VoidConverter.voidTag)));
+    respondsWith(list(list("id", VoidConverter.VOID_TAG)));
   }
 
 

@@ -3,10 +3,6 @@ package fitnesse.responders.run.slimResponder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.junit.Assert;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import fitnesse.wikitext.widgets.TableWidget;
 
@@ -14,9 +10,9 @@ public class ReturnedValueExpectationTest {
 
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
     Table t = new Table(new TableWidget(null, ""));
-    SlimTable dt = new DecisionTable(t, "id");
-    SlimTable.Expectation expectation = new ReturnedValueExpectation(expected, 0, 0, 0);
-    expectation.setSlimTable(dt);
+    SlimTable slimTable = new DecisionTable(t, "id");
+    SlimTable.Expectation expectation = slimTable.getReturnedValueExpectation(expected, 0, 0, 0);
+    expectation.setSlimTable(slimTable);
     assertEquals(message, expectation.createEvaluationMessage(value, "!-" + value + "-!", expected));
   }
 
@@ -28,7 +24,7 @@ public class ReturnedValueExpectationTest {
 
   @Test
   public void failingMesage() throws Exception {
-    assertExpectationMessage("expected", "actual", "!style_fail([!-actual-!] expected [expected])");
+    assertExpectationMessage("expected", "actual", "[!-actual-!] !style_fail(expected [expected])");
   }
 
   @Test

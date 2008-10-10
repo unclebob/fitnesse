@@ -58,7 +58,7 @@ public class DecisionTable extends SlimTable {
   private void invokeRow(int row) {
     checkRow(row);
     setVariables(row);
-    callFunction("execute");
+    callFunction(getTableName(), "execute");
     callFunctions(row);
   }
 
@@ -88,7 +88,7 @@ public class DecisionTable extends SlimTable {
       callAndAssign(variableName, functionName);
     } else {
       setFunctionCallExpectation(col, row);
-      callFunction(functionName);
+      callFunction(getTableName(), functionName);
     }
   }
 
@@ -118,7 +118,7 @@ public class DecisionTable extends SlimTable {
       String valueToSet = table.getCellContents(col, row);
       setVariableExpectation(col, row);
       List<Object> setInstruction = prepareInstruction();
-      addCall(setInstruction, "set" + " " + var);
+      addCall(setInstruction, getTableName(), "set" + " " + var);
       setInstruction.add(valueToSet);
       addInstruction(setInstruction);
     }

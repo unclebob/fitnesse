@@ -24,7 +24,7 @@ public class QueryTable extends SlimTable {
       throw new SlimTable.SyntaxError("Query tables must have at least two rows.");
     assignColumns();
     constructFixture();
-    queryId = callFunction("query");
+    queryId = callFunction(getTableName(), "query");
   }
 
   private void assignColumns() {
@@ -36,7 +36,7 @@ public class QueryTable extends SlimTable {
   protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object queryReturn = returnValues.get(queryId);
     if (queryId == null || queryReturn == null || (queryReturn instanceof String)) {
-      fail(0, 0, "Query fixture has no valid query method");
+      failMessage(0, 0, "Query fixture has no valid query method");
       return;
     }
     scanRowsForMatches((List<Object>) queryReturn);
@@ -55,7 +55,7 @@ public class QueryTable extends SlimTable {
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
-      fail(0, newTableRow, "surplus");
+      failMessage(0, newTableRow, "surplus");
       markMissingFields(surplusRow, newTableRow);
     }
   }
@@ -64,7 +64,7 @@ public class QueryTable extends SlimTable {
     for (int col = 0; col < surplusRow.size(); col++) {
       String surplusField = surplusRow.get(col);
       if (surplusField == null)
-        failMessage(col, newTableRow, "field not present");
+        fail(col, newTableRow, "field not present");
     }
   }
 
@@ -72,7 +72,7 @@ public class QueryTable extends SlimTable {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
-      fail(0, tableRow, "missing");
+      failMessage(0, tableRow, "missing");
     } else {
       markFieldsInMatchedRow(tableRow, matchedRow);
     }
@@ -98,7 +98,7 @@ public class QueryTable extends SlimTable {
     String expectedValue = table.getCellContents(col, tableRow);
     table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
     if (actualValue == null)
-      fail(col, tableRow, "field not present");
+      failMessage(col, tableRow, "field not present");
     else if (actualValue.equals(replaceSymbols(expectedValue))) {
       pass(col, tableRow);
     }

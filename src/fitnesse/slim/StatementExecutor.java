@@ -32,6 +32,8 @@ public class StatementExecutor {
     addConverter(Integer.class, new IntConverter());
     addConverter(Double.class, new DoubleConverter());
     addConverter(char.class, new CharConverter());
+    addConverter(boolean.class, new BooleanConverter());
+    addConverter(Boolean.class, new BooleanConverter());
   }
 
   public void setVariable(String name, Object value) {
@@ -160,17 +162,6 @@ public class StatementExecutor {
         break;
     }
     return arg;
-  }
-
-  private Object replaceVariable(String arg) {
-    String varName = arg.substring(1);
-    if (variables.containsKey(varName))
-      return variables.get(varName);
-    return arg;
-  }
-
-  private boolean isVariableReference(String arg) {
-    return arg.length() > 0 && arg.charAt(0) == '$';
   }
 
   private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Exception {

@@ -99,7 +99,7 @@ public class TestSlim {
     return charArg;
   }
 
-  public int add(int a, int b) {
+  public int addTo(int a, int b) {
     return a + b;
   }
 
@@ -113,6 +113,10 @@ public class TestSlim {
 
   public List<Object> echoList(List<Object> l) {
     return l;
+  }
+
+  public boolean echoBoolean(boolean b) {
+    return b;
   }
 
   public void execute() {

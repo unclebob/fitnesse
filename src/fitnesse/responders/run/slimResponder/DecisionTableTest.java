@@ -116,7 +116,7 @@ public class DecisionTableTest {
       "|!style_pass(DT:fixture)|argument|\n" +
         "|var|func?|\n" +
         "|3|!style_pass(5)|\n" +
-        "|7|!style_fail([5] expected [9])|\n";
+        "|7|[5] !style_fail(expected [9])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -139,7 +139,7 @@ public class DecisionTableTest {
       "|!style_pass(!-DT:fixture-!)|!-argument-!|\n" +
         "|!-var-!|!-func?-!|\n" +
         "|!-3-!|!style_pass(!-5-!)|\n" +
-        "|!-7-!|!style_fail([!-5-!] expected [!-9-!])|\n";
+        "|!-7-!|[!-5-!] !style_fail(expected [!-9-!])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 

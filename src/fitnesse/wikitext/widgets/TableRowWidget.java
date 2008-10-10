@@ -36,7 +36,7 @@ public class TableRowWidget extends ParentWidget
 		return html.toString();
 	}
 
-	private void addCells(String text) throws Exception
+	public void addCells(String text) throws Exception
 	{
 		Matcher match = pattern.matcher(text);
 		if(match.find())

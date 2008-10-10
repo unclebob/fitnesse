@@ -3,9 +3,9 @@ package fitnesse.responders.run.slimResponder;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +53,7 @@ public abstract class SlimTable {
       appendInstructions();
     } catch (Throwable e) {
       String tableName = table.getCellContents(0, 0);
-      table.setCell(0, 0, String.format("!style_fail(!-%s: Bad table: %s-!)", tableName, e.getMessage()));
+      table.setCell(0, 0, fail(String.format("!-%s: Bad table: %s-!", tableName, e.getMessage())));
     }
   }
 
@@ -119,55 +119,87 @@ public abstract class SlimTable {
   }
 
   protected void constructFixture() {
-    Expectation expectation = new ConstructionExpectation(getInstructionNumber(), 0, 0);
-    addExpectation(expectation);
-    List<Object> makeInstruction = prepareInstruction();
-    makeInstruction.add("make");
-    makeInstruction.add(getTableName());
     String tableHeader = table.getCellContents(0, 0);
     String fixtureName = tableHeader.split(":")[1];
     String disgracedFixtureName = Disgracer.disgraceClassName(fixtureName);
-    makeInstruction.add(disgracedFixtureName);
-    int columnCount = table.getColumnCountInRow(0);
-    for (int col = 1; col < columnCount; col++)
-      makeInstruction.add(table.getCellContents(col, 0));
+    constructInstance(getTableName(), disgracedFixtureName, 0, 0);
+  }
+
+  protected void constructInstance(String instanceName, String className, int classNameColumn, int row) {
+    Expectation expectation = new ConstructionExpectation(getInstructionNumber(), classNameColumn, row);
+    addExpectation(expectation);
+    List<Object> makeInstruction = prepareInstruction();
+    makeInstruction.add("make");
+    makeInstruction.add(instanceName);
+
+    makeInstruction.add(className);
+    for (String argument : cellsStartingAt(classNameColumn + 1, row))
+      makeInstruction.add(argument);
     addInstruction(makeInstruction);
   }
 
-  protected void addCall(List<Object> instruction, String functionName) {
+  protected String[] cellsStartingAt(int startingColumn, int row) {
+    int columnCount = table.getColumnCountInRow(row);
+    List<String> arguments = new ArrayList<String>();
+    for (int col = startingColumn; col < columnCount; col++)
+      arguments.add(table.getCellContents(col, row));
+    return arguments.toArray(new String[0]);
+  }
+
+  protected void addCall(List<Object> instruction, String instanceName, String functionName) {
     instruction.add("call");
-    instruction.add(getTableName());
+    instruction.add(instanceName);
     instruction.add(Disgracer.disgraceMethodName(functionName));
   }
 
-  protected String callFunction(String functionName) {
+  protected String callFunction(String instanceName, String functionName, String... args) {
     List<Object> callInstruction = prepareInstruction();
-    addCall(callInstruction, functionName);
+    addCall(callInstruction, instanceName, functionName);
+    for (String arg : args)
+      callInstruction.add(arg);
     addInstruction(callInstruction);
     return (String) callInstruction.get(0);
   }
 
-  protected void fail(int col, int row, String failureMessage) {
+  protected void failMessage(int col, int row, String failureMessage) {
     String contents = table.getCellContents(col, row);
-    String failingContents = String.format("[%s] !style_fail(%s)", contents, failureMessage);
+    String failingContents = failMessage(contents, failureMessage);
     table.setCell(col, row, failingContents);
   }
 
-  protected void failMessage(int col, int row, String failureMessage) {
-    String failingContents = String.format("!style_fail(%s)", failureMessage);
+  protected void fail(int col, int row, String value) {
+    String failingContents = fail(value);
     table.setCell(col, row, failingContents);
   }
 
   protected void pass(int col, int row) {
     String contents = table.getCellContents(col, row);
-    String passingContents = String.format("!style_pass(%s)", contents);
+    String passingContents = pass(contents);
     table.setCell(col, row, passingContents);
   }
 
   protected void expected(int col, int tableRow, String actual) {
     String contents = table.getCellContents(col, tableRow);
-    String failureMessage = String.format("!style_fail([%s] expected [%s])", actual, contents);
+    String failureMessage = failMessage(actual, String.format("expected [%s]", contents));
     table.setCell(col, tableRow, failureMessage);
+  }
+
+  protected String fail(String value) {
+    return String.format("!style_fail(%s)", value);
+  }
+
+  protected String failMessage(String value, String message) {
+    return String.format("[%s] !style_fail(%s)", value, message);
+  }
+
+  protected String pass(String value) {
+    return String.format("!style_pass(%s)", value);
+  }
+
+  protected ReturnedValueExpectation getReturnedValueExpectation(
+    String expected, int instructionNumber, int col, int row
+  ) {
+    return new ReturnedValueExpectation(expected, instructionNumber, col, row);
   }
 
   static class Disgracer {
@@ -285,7 +317,7 @@ public abstract class SlimTable {
   }
 
   private static class LocalSlimTestContext implements SlimTestContext {
-    private Map<String, String> symbols = new HashMap<String,String>();
+    private Map<String, String> symbols = new HashMap<String, String>();
 
     public String getSymbol(String symbolName) {
       return symbols.get(symbolName);
@@ -345,32 +377,153 @@ public abstract class SlimTable {
     }
   }
 
-  static class VoidReturnExpectation extends Expectation {
+  class VoidReturnExpectation extends Expectation {
     public VoidReturnExpectation(int instructionNumber, int col, int row) {
       super(null, instructionNumber, col, row);
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
       if (value.indexOf("Exception") != -1)
-        return String.format("!style_fail(%s)", literalizedValue);
+        return fail(literalizedValue);
       else {
         return slimTable.replaceSymbolsWithFullExpansion(originalValue);
       }
     }
   }
 
-  static class ConstructionExpectation extends Expectation {
+  class ConstructionExpectation extends Expectation {
     public ConstructionExpectation(int instructionNumber, int col, int row) {
       super(null, instructionNumber, col, row);
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
       if (value.indexOf("Exception") != -1)
-        return String.format("!style_fail(%s)", literalizedValue);
+        return fail(literalizedValue);
       else {
-        return String.format("!style_pass(%s)", originalValue);
+        return pass(originalValue);
       }
     }
   }
 
+  class ReturnedValueExpectation extends Expectation {
+    public ReturnedValueExpectation(String expected, int instructionNumber, int col, int row) {
+      super(expected, instructionNumber, col, row);
+    }
+
+    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+      String evaluationMessage;
+      String replacedValue = slimTable.replaceSymbols(expectedValue);
+      if (value.equals(replacedValue))
+        evaluationMessage = pass(announceBlank(originalValue));
+      else if (replacedValue.length() == 0)
+        evaluationMessage = String.format("!style_ignore(%s)", literalizedValue);
+      else {
+        String expressionMessage = new Comparator(replacedValue, value, expectedValue).evaluate();
+        if (expressionMessage != null)
+          evaluationMessage = expressionMessage;
+        else
+          evaluationMessage = failMessage(literalizedValue, String.format("expected [%s]", originalValue));
+      }
+
+      return slimTable.replaceSymbolsWithFullExpansion(evaluationMessage);
+    }
+
+    private String announceBlank(String originalValue) {
+      return originalValue.length() == 0 ? "BLANK" : originalValue;
+    }
+
+    class Comparator {
+      private String expression;
+      private String value;
+      private String originalExpression;
+      private Pattern simpleComparison = Pattern.compile(
+        "\\A\\s*_?\\s*((?:[<>]=?)|(?:!=))\\s*(\\d*\\.?\\d+)\\s*\\Z"
+      );
+      private Pattern range = Pattern.compile(
+        "\\A\\s*(\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(\\d*\\.?\\d+)\\s*\\Z"
+      );
+      private double v;
+      private double arg1;
+      private double arg2;
+      public String operation;
+
+      private Comparator(String expression, String value, String originalExpression) {
+        this.expression = expression;
+        this.value = value;
+        this.originalExpression = originalExpression;
+      }
+
+      private String evaluate() {
+        operation = matchSimpleComparison();
+        if (operation != null)
+          return doSimpleComparison();
+
+        Matcher matcher = range.matcher(expression);
+        if (matcher.matches() && canUnpackRange(matcher)) {
+          return doRange(matcher);
+        } else
+          return null;
+      }
+
+      private String doRange(Matcher matcher) {
+        boolean closedLeft = matcher.group(2).equals("=");
+        boolean closedRight = matcher.group(3).equals("=");
+        boolean pass = (arg1 < v && v < arg2) || (closedLeft && arg1 == v) || (closedRight && arg2 == v);
+        return rangeMessage(pass);
+      }
+
+      private String rangeMessage(boolean pass) {
+        String[] fragments = originalExpression.replaceAll(" ", "").split("_");
+        String message = String.format("%s%s%s", fragments[0], value, fragments[1]);
+        return pass ? pass(message) : fail(message);
+
+      }
+
+      private boolean canUnpackRange(Matcher matcher) {
+        try {
+          arg1 = Double.parseDouble(matcher.group(1));
+          arg2 = Double.parseDouble(matcher.group(4));
+          v = Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+          return false;
+        }
+        return true;
+      }
+
+      private String doSimpleComparison() {
+        if (operation.equals("<"))
+          return simpleComparisonMessage(v < arg1);
+        else if (operation.equals(">"))
+          return simpleComparisonMessage(v > arg1);
+        else if (operation.equals(">="))
+          return simpleComparisonMessage(v >= arg1);
+        else if (operation.equals("<="))
+          return simpleComparisonMessage(v <= arg1);
+        else if (operation.equals("!="))
+          return simpleComparisonMessage(v != arg1);
+        else
+          return null;
+      }
+
+      private String simpleComparisonMessage(boolean pass) {
+        String message = String.format("%s%s", value, originalExpression.replaceAll(" ", ""));
+        return pass ? pass(message) : fail(message);
+
+      }
+
+      private String matchSimpleComparison() {
+        Matcher matcher = simpleComparison.matcher(expression);
+        if (matcher.matches()) {
+          try {
+            v = Double.parseDouble(value);
+            arg1 = Double.parseDouble(matcher.group(2));
+            return matcher.group(1);
+          } catch (NumberFormatException e1) {
+            return null;
+          }
+        }
+        return null;
+      }
+    }
+  }
 }

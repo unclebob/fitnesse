@@ -103,7 +103,7 @@ public class QueryTableTest {
       ),
       "|!style_pass(Query:fixture)|argument|\n" +
         "|n|2n|\n" +
-        "|!style_pass(2)|!style_fail([5] expected [4])|\n"
+        "|!style_pass(2)|[5] !style_fail(expected [4])|\n"
     );
   }
 
@@ -237,7 +237,7 @@ public class QueryTableTest {
     qt.evaluateExpectations(pseudoResults);
     assertEquals("|!style_pass(Query:fixture)|argument|\n" +
       "|n|2n|\n" +
-      "|!style_pass(2)|!style_fail([4] expected [$V->[5]])|\n", qt.getTable().toString()
+      "|!style_pass(2)|[4] !style_fail(expected [$V->[5]])|\n", qt.getTable().toString()
     );
   }
 

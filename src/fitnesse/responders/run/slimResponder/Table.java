@@ -27,7 +27,7 @@ public class Table {
     return cellText;
   }
 
-  private TextWidget getCell(int columnIndex, int rowIndex) {
+  protected TextWidget getCell(int columnIndex, int rowIndex) {
     TableRowWidget row = getRow(rowIndex);
     TextWidget cellContents = getCellInRow(row, columnIndex);
     return cellContents;

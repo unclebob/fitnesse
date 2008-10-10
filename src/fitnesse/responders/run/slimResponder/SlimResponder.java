@@ -27,7 +27,7 @@ public class SlimResponder extends WikiPageResponder implements SlimTestContext 
   public List<Object> instructions;
   private String slimFlags;
   private String slimCommand;
-  private boolean fastTest; // for testing only.  Makes responder faster.
+  private boolean fastTest; // for testing only.  Makes responder much faster.
 
 
   protected void processWikiPageDataBeforeGeneratingHtml(PageData pageData) throws Exception {
@@ -41,6 +41,25 @@ public class SlimResponder extends WikiPageResponder implements SlimTestContext 
     slimFlags = pageData.getVariable("SLIM_FLAGS");
     if (slimFlags == null)
       slimFlags = "";
+  }
+
+  private void startSlimConnection() throws Exception {
+    slimOpen = true;
+    String classPath = new ClassPathBuilder().getClasspath(page);
+    String slimArguments = String.format("%s %d", slimFlags, 8085);
+    runSlim(classPath, slimArguments);
+    slimClient = new SlimClient("localhost", 8085);
+    waitForConnection(slimClient);
+  }
+
+  private void runSlim(String classPath, String slimArguments) throws Exception {
+    slimCommand = String.format("java -cp %s fitnesse.slim.SlimService %s", classPath, slimArguments);
+    if (fastTest) {
+      createSlimService(slimArguments);
+    } else {
+      slimRunner = new CommandRunner(slimCommand, "");
+      slimRunner.start();
+    }
   }
 
   private void closeSlimConnection() throws Exception {
@@ -57,16 +76,45 @@ public class SlimResponder extends WikiPageResponder implements SlimTestContext 
     testResults = pageData;
   }
 
-  private String generateWikiTextForTestResults() throws Exception {
-    replaceExceptionsWithLinks();
-    putTestResultsIntoTables();
-    return ExceptionList.toWikiText(exceptions) + testResultsToWikiText();
-  }
-
   private void runTestsOnPage(PageData pageData) throws Exception {
     tableScanner = new TableScanner(pageData);
     instructions = createInstructions();
     instructionResults = slimClient.invokeAndGetResponse(instructions);
+  }
+
+  private List<Object> createInstructions() {
+    List<Object> instructions = new ArrayList<Object>();
+    for (Table table : tableScanner) {
+      String tableId = "" + testTables.size();
+      SlimTable slimTable = makeSlimTable(table, tableId);
+      slimTable.appendInstructions(instructions);
+      testTables.add(slimTable);
+    }
+    return instructions;
+  }
+
+  private SlimTable makeSlimTable(Table table, String tableId) {
+    String tableType = table.getCellContents(0, 0);
+    if (beginsWith(tableType, "DT:"))
+      return new DecisionTable(table, tableId, this);
+    else if (beginsWith(tableType, "Query:"))
+      return new QueryTable(table, tableId, this);
+    else if (beginsWith(tableType, "Script"))
+      return new ScriptTable(table, tableId, this);
+    else if (tableType.equalsIgnoreCase("import"))
+      return new ImportTable(table, tableId);
+    else
+      return new SlimErrorTable(table, tableId);
+  }
+
+  private boolean beginsWith(String tableType, String typeCode) {
+    return tableType.toUpperCase().startsWith(typeCode.toUpperCase());
+  }
+
+  private String generateWikiTextForTestResults() throws Exception {
+    replaceExceptionsWithLinks();
+    putTestResultsIntoTables();
+    return ExceptionList.toWikiText(exceptions) + testResultsToWikiText();
   }
 
   private void replaceExceptionsWithLinks() {
@@ -112,48 +160,6 @@ public class SlimResponder extends WikiPageResponder implements SlimTestContext 
       } catch (Throwable e) {
         exceptions.put("ABORT", exceptionToString(e));
       }
-    }
-  }
-
-  private List<Object> createInstructions() {
-    List<Object> instructions = new ArrayList<Object>();
-    for (Table table : tableScanner) {
-      String tableId = "" + testTables.size();
-      SlimTable slimTable = makeSlimTable(table, tableId);
-      slimTable.appendInstructions(instructions);
-      testTables.add(slimTable);
-    }
-    return instructions;
-  }
-
-  private SlimTable makeSlimTable(Table table, String tableId) {
-    String tableType = table.getCellContents(0, 0);
-    if (tableType.startsWith("DT:"))
-      return new DecisionTable(table, tableId, this);
-    else if (tableType.startsWith("Query:"))
-      return new QueryTable(table, tableId, this);
-    else if (tableType.equalsIgnoreCase("import"))
-      return new ImportTable(table, tableId);
-    else
-      return new SlimErrorTable(table, tableId);
-  }
-
-  private void startSlimConnection() throws Exception {
-    slimOpen = true;
-    String classPath = new ClassPathBuilder().getClasspath(page);
-    String slimArguments = String.format("%s %d", slimFlags, 8085);
-    runSlim(classPath, slimArguments);
-    slimClient = new SlimClient("localhost", 8085);
-    waitForConnection(slimClient);
-  }
-
-  private void runSlim(String classPath, String slimArguments) throws Exception {
-    slimCommand = String.format("java -cp %s fitnesse.slim.SlimService %s", classPath, slimArguments);
-    if (fastTest) {
-      createSlimService(slimArguments);
-    } else {
-      slimRunner = new CommandRunner(slimCommand, "");
-      slimRunner.start();
     }
   }
 
@@ -260,7 +266,7 @@ public class SlimResponder extends WikiPageResponder implements SlimTestContext 
     }
   }
 
-  private String exceptionToString(Throwable e) {
+  public static String exceptionToString(Throwable e) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(stringWriter);
     e.printStackTrace(pw);

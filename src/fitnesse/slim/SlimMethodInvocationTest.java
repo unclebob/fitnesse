@@ -1,6 +1,7 @@
 package fitnesse.slim;
 
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.test.TestSlim;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -48,8 +49,22 @@ public class SlimMethodInvocationTest {
   @Test
   public void methodReturnsVoid() throws Exception {
     Object retval = caller.call("testSlim", "nilad");
-    assertEquals(VoidConverter.voidTag, retval);
+    assertEquals(VoidConverter.VOID_TAG, retval);
   }
+
+  @Test
+  public void methodTakesAndReturnsBooleanTrue() throws Exception {
+    Object retval = caller.call("testSlim", "echoBoolean", "true");
+    assertEquals(BooleanConverter.TRUE, retval);
+  }
+
+  @Test
+  public void methodTakesAndReturnsBooleanFalse() throws Exception {
+    Object retval = caller.call("testSlim", "echoBoolean", "false");
+    assertEquals(BooleanConverter.FALSE, retval);
+  }
+
+
 
   @Test
   public void passOneString() throws Exception {

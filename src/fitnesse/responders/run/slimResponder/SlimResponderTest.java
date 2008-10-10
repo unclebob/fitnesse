@@ -95,6 +95,12 @@ public class SlimResponderTest {
     assertTestResultsContain("Query fixture has no valid query method");
   }
 
+  @Test
+  public void emptyScriptTable() throws Exception {
+    getResultsForPageContents("|Script|\n");
+    assertTestResultsContain("Script tables must at least one statement.");
+  }
+
 
   @Test
   public void simpleDecisionTable() throws Exception {
@@ -158,8 +164,8 @@ public class SlimResponderTest {
     assertEquals("$V<-[Bob]", dt.getCellContents(1, 2));
     assertEquals("$V->[Bob]", dt.getCellContents(0, 3));
     assertEquals("!style_pass($V->[Bob])", dt.getCellContents(1, 3));
-    assertEquals("!style_fail([Bill] expected [$V->[Bob]])", dt.getCellContents(1, 4));
-    assertEquals("!style_fail([John] expected [$Q])", dt.getCellContents(1, 5));
+    assertEquals("[Bill] !style_fail(expected [$V->[Bob]])", dt.getCellContents(1, 4));
+    assertEquals("[John] !style_fail(expected [$Q])", dt.getCellContents(1, 5));
   }
 
   @Test
