@@ -119,6 +119,10 @@ public class TestSlim {
     return b;
   }
 
+  public double echoDouble(double d) {
+    return d;
+  }
+
   public void execute() {
     
   }

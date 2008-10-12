@@ -1,8 +1,8 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.slim.SlimClient;
-import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.VoidConverter;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -170,6 +170,27 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void setSymbol() throws Exception {
+    buildInstructionsFor("|$V=|function|arg|\n");
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0", "callAndAssign", "V", "scriptTableActor", "function", "arg")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void useSymbol() throws Exception {
+    buildInstructionsFor("|function|$V|\n");
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0", "call", "scriptTableActor", "function", "$V")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+
+  @Test
   public void noteDoesNothing() throws Exception {
     buildInstructionsFor("|note|blah|blah|\n");
     List<Object> expectedInstructions = list();
@@ -283,6 +304,21 @@ public class ScriptTableTest {
       ),
       "|Script|\n" +
         "|show|func|3|!style_ignore(kawabunga)|\n"
+    );
+  }
+
+  @Test
+  public void symbolReplacement() throws Exception {
+    assertScriptResults(
+      "|$V=|function|\n" +
+        "|check|funcion|$V|$V|\n",
+      list(
+        list("scriptTable_id_0", "3"),
+        list("scriptTable_id_1", "3")
+      ),
+      "|Script|\n" +
+        "|$V<-[3]|function|\n" +
+        "|check|funcion|$V->[3]|!style_pass($V->[3])|\n"
     );
   }
 

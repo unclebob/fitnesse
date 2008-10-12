@@ -11,8 +11,7 @@ public class ReturnedValueExpectationTest {
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
     Table t = new Table(new TableWidget(null, ""));
     SlimTable slimTable = new DecisionTable(t, "id");
-    SlimTable.Expectation expectation = slimTable.getReturnedValueExpectation(expected, 0, 0, 0);
-    expectation.setSlimTable(slimTable);
+    SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, 0, 0, 0);
     assertEquals(message, expectation.createEvaluationMessage(value, "!-" + value + "-!", expected));
   }
 
@@ -49,6 +48,11 @@ public class ReturnedValueExpectationTest {
   public void greaterThanComparison() throws Exception {
     assertExpectationMessage(" > 5.9", "8", "!style_pass(8>5.9)");
     assertExpectationMessage(" > 5.9", "3.6", "!style_fail(3.6>5.9)");
+  }
+
+  @Test
+  public void approximatelyEquals() throws Exception {
+    assertExpectationMessage("~= 3.0", "2.95", "!style_pass(2.95~=3.0)");
   }
 
 

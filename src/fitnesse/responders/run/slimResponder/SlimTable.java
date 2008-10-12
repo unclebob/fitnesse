@@ -1,5 +1,7 @@
 package fitnesse.responders.run.slimResponder;
 
+import static fitnesse.util.ListUtility.list;
+
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public abstract class SlimTable {
   private List<Object> instructions;
   private boolean isLiteralTable;
   private List<Expectation> expectations = new ArrayList<Expectation>();
+  protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
   public SlimTable(Table table, String id) {
     this(table, id, new LocalSlimTestContext());
@@ -100,7 +103,7 @@ public abstract class SlimTable {
   public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
     literalizeTable();
     for (Expectation expectation : expectations)
-      expectation.evaluateExpectation(returnValues, this);
+      expectation.evaluateExpectation(returnValues);
     evaluateReturnValues(returnValues);
   }
 
@@ -133,8 +136,7 @@ public abstract class SlimTable {
     makeInstruction.add(instanceName);
 
     makeInstruction.add(className);
-    for (String argument : cellsStartingAt(classNameColumn + 1, row))
-      makeInstruction.add(argument);
+    addArgsToInstruction(makeInstruction, cellsStartingAt(classNameColumn + 1, row));
     addInstruction(makeInstruction);
   }
 
@@ -147,18 +149,32 @@ public abstract class SlimTable {
   }
 
   protected void addCall(List<Object> instruction, String instanceName, String functionName) {
-    instruction.add("call");
-    instruction.add(instanceName);
-    instruction.add(Disgracer.disgraceMethodName(functionName));
+    String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
+    List<Object> callHeader = list("call", instanceName, disgracedFunctionName);
+    instruction.addAll(callHeader);
   }
 
   protected String callFunction(String instanceName, String functionName, String... args) {
     List<Object> callInstruction = prepareInstruction();
     addCall(callInstruction, instanceName, functionName);
-    for (String arg : args)
-      callInstruction.add(arg);
+    addArgsToInstruction(callInstruction, args);
     addInstruction(callInstruction);
     return (String) callInstruction.get(0);
+  }
+
+  private void addArgsToInstruction(List<Object> instruction, String... args) {
+    for (String arg : args)
+      instruction.add(arg);
+  }
+
+  protected String callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
+    List<Object> callAndAssignInstruction = prepareInstruction();
+    String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
+    List<Object> callAndAssignHeader = list("callAndAssign", symbolName, instanceName, disgracedFunctionName);
+    callAndAssignInstruction.addAll(callAndAssignHeader);
+    addArgsToInstruction(callAndAssignInstruction, args);
+    addInstruction(callAndAssignInstruction);
+    return (String) callAndAssignInstruction.get(0);
   }
 
   protected void failMessage(int col, int row, String failureMessage) {
@@ -196,10 +212,29 @@ public abstract class SlimTable {
     return String.format("!style_pass(%s)", value);
   }
 
-  protected ReturnedValueExpectation getReturnedValueExpectation(
+  protected ReturnedValueExpectation makeReturnedValueExpectation(
     String expected, int instructionNumber, int col, int row
   ) {
     return new ReturnedValueExpectation(expected, instructionNumber, col, row);
+  }
+
+  public static boolean approximatelyEqual(String standard, String candidate) {
+    try {
+      double candidateValue = Double.parseDouble(candidate);
+      double standardValue = Double.parseDouble(standard);
+      int point = standard.indexOf(".");
+      int precision = 0;
+      if (point != -1)
+        precision = standard.length() - point - 1;
+      double roundingFactor = 0.5;
+      while (precision-- > 0)
+        roundingFactor /= 10;
+      return Math.abs(candidateValue - standardValue) <= roundingFactor;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+
+
   }
 
   static class Disgracer {
@@ -286,12 +321,11 @@ public abstract class SlimTable {
     }
   }
 
-  public abstract static class Expectation {
+  public abstract class Expectation {
     protected String expectedValue;
     protected int col;
     protected int row;
     protected int instructionNumber;
-    protected SlimTable slimTable;
 
     public Expectation(String expected, int instructionNumber, int col, int row) {
       expectedValue = expected;
@@ -300,20 +334,15 @@ public abstract class SlimTable {
       this.col = col;
     }
 
-    protected void evaluateExpectation(Map<String, Object> returnValues, SlimTable slimTable) {
-      this.slimTable = slimTable;
-      String value = (String) returnValues.get(slimTable.makeInstructionTag(instructionNumber));
-      String literalizedValue = slimTable.literalize(value);
-      String originalContent = slimTable.table.getCellContents(col, row);
+    protected void evaluateExpectation(Map<String, Object> returnValues) {
+      String value = (String) returnValues.get(makeInstructionTag(instructionNumber));
+      String literalizedValue = literalize(value);
+      String originalContent = table.getCellContents(col, row);
       String evaluationMessage = createEvaluationMessage(value, literalizedValue, originalContent);
-      slimTable.table.setCell(col, row, evaluationMessage);
+      table.setCell(col, row, evaluationMessage);
     }
 
     protected abstract String createEvaluationMessage(String value, String literalizedValue, String originalValue);
-
-    protected void setSlimTable(SlimTable slimTable) {
-      this.slimTable = slimTable;
-    }
   }
 
   private static class LocalSlimTestContext implements SlimTestContext {
@@ -386,7 +415,7 @@ public abstract class SlimTable {
       if (value.indexOf("Exception") != -1)
         return fail(literalizedValue);
       else {
-        return slimTable.replaceSymbolsWithFullExpansion(originalValue);
+        return replaceSymbolsWithFullExpansion(originalValue);
       }
     }
   }
@@ -405,6 +434,21 @@ public abstract class SlimTable {
     }
   }
 
+  class SymbolAssignmentExpectation extends Expectation {
+    private String symbolName;
+
+    SymbolAssignmentExpectation(String symbolName, int instructionNumber, int col, int row) {
+      super(null, instructionNumber, col, row);
+      this.symbolName = symbolName;
+    }
+
+    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+      setSymbol(symbolName, value);
+      return String.format("$%s<-[%s]", literalize(symbolName), literalizedValue);
+    }
+  }
+
+
   class ReturnedValueExpectation extends Expectation {
     public ReturnedValueExpectation(String expected, int instructionNumber, int col, int row) {
       super(expected, instructionNumber, col, row);
@@ -412,7 +456,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
       String evaluationMessage;
-      String replacedValue = slimTable.replaceSymbols(expectedValue);
+      String replacedValue = replaceSymbols(expectedValue);
       if (value.equals(replacedValue))
         evaluationMessage = pass(announceBlank(originalValue));
       else if (replacedValue.length() == 0)
@@ -425,7 +469,7 @@ public abstract class SlimTable {
           evaluationMessage = failMessage(literalizedValue, String.format("expected [%s]", originalValue));
       }
 
-      return slimTable.replaceSymbolsWithFullExpansion(evaluationMessage);
+      return replaceSymbolsWithFullExpansion(evaluationMessage);
     }
 
     private String announceBlank(String originalValue) {
@@ -437,7 +481,7 @@ public abstract class SlimTable {
       private String value;
       private String originalExpression;
       private Pattern simpleComparison = Pattern.compile(
-        "\\A\\s*_?\\s*((?:[<>]=?)|(?:!=))\\s*(\\d*\\.?\\d+)\\s*\\Z"
+        "\\A\\s*_?\\s*((?:[<>]=?)|(?:[!~]=))\\s*(\\d*\\.?\\d+)\\s*\\Z"
       );
       private Pattern range = Pattern.compile(
         "\\A\\s*(\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(\\d*\\.?\\d+)\\s*\\Z"
@@ -446,6 +490,7 @@ public abstract class SlimTable {
       private double arg1;
       private double arg2;
       public String operation;
+      private String arg1Text;
 
       private Comparator(String expression, String value, String originalExpression) {
         this.expression = expression;
@@ -501,6 +546,8 @@ public abstract class SlimTable {
           return simpleComparisonMessage(v <= arg1);
         else if (operation.equals("!="))
           return simpleComparisonMessage(v != arg1);
+        else if (operation.equals("~="))
+          return simpleComparisonMessage(approximatelyEqual(arg1Text, value));
         else
           return null;
       }
@@ -516,7 +563,8 @@ public abstract class SlimTable {
         if (matcher.matches()) {
           try {
             v = Double.parseDouble(value);
-            arg1 = Double.parseDouble(matcher.group(2));
+            arg1Text = matcher.group(2);
+            arg1 = Double.parseDouble(arg1Text);
             return matcher.group(1);
           } catch (NumberFormatException e1) {
             return null;

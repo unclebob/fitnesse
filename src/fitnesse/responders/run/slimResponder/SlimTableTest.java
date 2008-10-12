@@ -2,7 +2,10 @@ package fitnesse.responders.run.slimResponder;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.*;
+import static fitnesse.responders.run.slimResponder.SlimTable.*;
 
 public class SlimTableTest {
   @Test
@@ -21,6 +24,46 @@ public class SlimTableTest {
     assertEquals("my_method_name", disgraceMethodName("my_method_name"));
     assertEquals("getStringArgs", disgraceMethodName("getStringArgs"));
     assertEquals("setMyVariableName", disgraceMethodName("set myVariableName"));
+  }
+
+  @Test
+  public void trulyEqual() throws Exception {
+    assertTrue(approximatelyEqual("3.0", "3.0"));
+  }
+
+  @Test
+  public void veryUnequal() throws Exception {
+    assertFalse(approximatelyEqual("5", "3"));
+  }
+
+  @Test
+  public void isWithinPrecision() throws Exception {
+    assertTrue(approximatelyEqual("3", "2.5"));
+  }
+
+  @Test
+  public void justTooBig() throws Exception {
+    assertFalse(approximatelyEqual("3.000", "3.0005"));
+  }
+
+  @Test
+  public void justTooSmall() throws Exception {
+    assertFalse(approximatelyEqual("3.0000", "2.999949"));
+  }
+
+  @Test
+  public void justSmallEnough() throws Exception {
+    assertTrue(approximatelyEqual("-3.00", "-2.995"));
+  }
+
+  @Test
+  public void justBigEnough() throws Exception {
+    assertTrue(approximatelyEqual("-3.000000", "-3.000000499"));
+  }
+
+  @Test
+  public void x() throws Exception {
+    assertTrue(approximatelyEqual("3.05", "3.049"));
   }
 
 

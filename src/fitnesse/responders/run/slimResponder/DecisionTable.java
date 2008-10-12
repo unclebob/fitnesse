@@ -7,14 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
   private Map<String, Integer> vars = new HashMap<String, Integer>();
   private Map<String, Integer> funcs = new HashMap<String, Integer>();
   private int headerColumns;
-  private static final Pattern variableAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
   public DecisionTable(Table table, String id) {
     super(table, id);
@@ -83,9 +81,9 @@ public class DecisionTable extends SlimTable {
     int col = funcs.get(functionName);
     Matcher matcher = cellMatchesVariableAssignment(row, col);
     if (matcher.matches()) {
-      String variableName = matcher.group(1);
-      addExpectation(new SymbolAssignmentExpectation(variableName, getInstructionNumber(), col, row));
-      callAndAssign(variableName, functionName);
+      String symbolName = matcher.group(1);
+      addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionNumber(), col, row));
+      callAndAssign(symbolName, functionName);
     } else {
       setFunctionCallExpectation(col, row);
       callFunction(getTableName(), functionName);
@@ -94,13 +92,13 @@ public class DecisionTable extends SlimTable {
 
   private Matcher cellMatchesVariableAssignment(int row, int col) {
     String expected = table.getCellContents(col, row);
-    return variableAssignmentPattern.matcher(expected);
+    return symbolAssignmentPattern.matcher(expected);
   }
 
-  private void callAndAssign(String variableName, String functionName) {
+  private void callAndAssign(String symbolName, String functionName) {
     List<Object> callAndAssignInstruction = prepareInstruction();
     callAndAssignInstruction.add("callAndAssign");
-    callAndAssignInstruction.add(variableName);
+    callAndAssignInstruction.add(symbolName);
     callAndAssignInstruction.add(getTableName());
     callAndAssignInstruction.add(disgraceMethodName(functionName));
     addInstruction(callAndAssignInstruction);
@@ -126,19 +124,5 @@ public class DecisionTable extends SlimTable {
 
   private void setVariableExpectation(int col, int row) {
     addExpectation(new VoidReturnExpectation(getInstructionNumber(), col, row));
-  }
-
-  static class SymbolAssignmentExpectation extends Expectation {
-    private String symbolName;
-
-    SymbolAssignmentExpectation(String symbolName, int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
-      this.symbolName = symbolName;
-    }
-
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      slimTable.setSymbol(symbolName, value);
-      return String.format("$%s<-[%s]", slimTable.literalize(symbolName), literalizedValue);
-    }
   }
 }
