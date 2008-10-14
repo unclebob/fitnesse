@@ -101,6 +101,21 @@ public class SlimResponderTest {
     assertTestResultsContain("Script tables must at least one statement.");
   }
 
+  @Test
+  public void emptyTableTable() throws Exception {
+    getResultsForPageContents("|Table|\n");
+    assertTestResultsContain("Table tables must have at least two rows.");
+  }
+
+  @Test
+  public void tableFixtureHasNoDoTableFunction() throws Exception {
+    getResultsForPageContents(
+      "|Table:fitnesse.slim.test.TestSlim|\n" +
+        "|a|b|\n"
+    );
+    assertTestResultsContain("Table fixture has no valid doTable method");
+  }
+
 
   @Test
   public void simpleDecisionTable() throws Exception {

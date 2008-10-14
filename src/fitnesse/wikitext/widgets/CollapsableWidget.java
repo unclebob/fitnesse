@@ -180,4 +180,8 @@ public class CollapsableWidget extends ParentWidget
 		else
 			return collapsableClosedImg;
 	}
+
+  public String asWikiText() throws Exception {
+    return "";
+  }
 }

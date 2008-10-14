@@ -154,7 +154,7 @@ public abstract class SlimTable {
     instruction.addAll(callHeader);
   }
 
-  protected String callFunction(String instanceName, String functionName, String... args) {
+  protected String callFunction(String instanceName, String functionName, Object... args) {
     List<Object> callInstruction = prepareInstruction();
     addCall(callInstruction, instanceName, functionName);
     addArgsToInstruction(callInstruction, args);
@@ -162,8 +162,8 @@ public abstract class SlimTable {
     return (String) callInstruction.get(0);
   }
 
-  private void addArgsToInstruction(List<Object> instruction, String... args) {
-    for (String arg : args)
+  private void addArgsToInstruction(List<Object> instruction, Object... args) {
+    for (Object arg : args)
       instruction.add(arg);
   }
 

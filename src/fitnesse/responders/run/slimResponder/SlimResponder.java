@@ -99,7 +99,9 @@ public class SlimResponder extends WikiPageResponder implements SlimTestContext 
       return new DecisionTable(table, tableId, this);
     else if (beginsWith(tableType, "Query:"))
       return new QueryTable(table, tableId, this);
-    else if (beginsWith(tableType, "Script"))
+    else if (beginsWith(tableType, "Table"))
+      return new TableTable(table, tableId, this);
+    else if (tableType.equalsIgnoreCase("script"))
       return new ScriptTable(table, tableId, this);
     else if (tableType.equalsIgnoreCase("import"))
       return new ImportTable(table, tableId);

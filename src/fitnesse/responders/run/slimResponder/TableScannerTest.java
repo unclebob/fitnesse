@@ -1,12 +1,11 @@
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 
 public class TableScannerTest {
   private WikiPage root;
@@ -24,6 +23,12 @@ public class TableScannerTest {
     assertEquals(1, t.getRowCount());
     assertEquals(1, t.getColumnCountInRow(0));
     assertEquals("x", t.getCellContents(0, 0));
+  }
+
+  private TableScanner scanTable(String tableString) throws Exception {
+    WikiPageUtil.setPageContents(root, tableString);
+    TableScanner ts = new TableScanner(root.getData());
+    return ts;
   }
 
   @Test
@@ -60,12 +65,6 @@ public class TableScannerTest {
     assertEquals("y", t2.getCellContents(0, 0));
   }
 
-  private TableScanner scanTable(String tableString) throws Exception {
-    WikiPageUtil.setPageContents(root, tableString);
-    TableScanner ts = new TableScanner(root.getData());
-    return ts;
-  }
-
   @Test
   public void twoByTwoTable() throws Exception {
     TableScanner ts = scanTable("|a|b|\n|c|d|\n");
@@ -97,6 +96,18 @@ public class TableScannerTest {
   public void literalsAreTranslated() throws Exception {
     TableScanner ts = scanTable("|!-x-!|\n");
     assertEquals("x", ts.getTable(0).getCellContents(0,0));
+  }
+
+  @Test
+  public void canInclude() throws Exception {
+    PageCrawler crawler = root.getPageCrawler();
+    WikiPage includingPage = crawler.addPage(root, PathParser.parse("IncludingPage"), "!include IncludedPage\n");
+    crawler.addPage(root, PathParser.parse("IncludedPage"), "|a|\n");
+    TableScanner ts = new TableScanner(includingPage.getData());
+    assertEquals(1, ts.getTableCount());
+    Table t = ts.getTable(0);
+    assertEquals("a", t.getCellContents(0, 0));
+    assertTrue(ts.toWikiText(), ts.toWikiText().indexOf("|a|") != -1);
   }
 
 
