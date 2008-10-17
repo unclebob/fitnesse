@@ -4,6 +4,8 @@ package fitnesse.components;
 
 import fit.Counts;
 import fitnesse.util.StreamReader;
+import fitnesse.responders.run.TestSystemListener;
+import fitnesse.responders.run.TestSystem;
 
 import java.io.OutputStream;
 import java.net.Socket;
@@ -11,7 +13,7 @@ import java.net.Socket;
 public class FitClient
 {
 
-	protected FitClientListener listener;
+	protected TestSystemListener listener;
 	protected Socket fitSocket;
 	private OutputStream fitInput;
 	private StreamReader fitOutput;
@@ -22,7 +24,7 @@ public class FitClient
 	protected volatile boolean killed = false;
 	protected Thread fitListeningThread;
 
-	public FitClient(FitClientListener listener) throws Exception
+	public FitClient(TestSystemListener listener) throws Exception
 	{
 		this.listener = listener;
 	}
@@ -95,7 +97,12 @@ public class FitClient
 				else
 				{
 					Counts counts = FitProtocol.readCounts(fitOutput);
-					listener.acceptResults(counts);
+          TestSystem.TestSummary summary = new TestSystem.TestSummary();
+          summary.right = counts.right;
+          summary.wrong = counts.wrong;
+          summary.ignores = counts.ignores;
+          summary.exceptions = counts.exceptions;
+          listener.acceptResults(summary);
 					received++;
 				}
 			}

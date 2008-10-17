@@ -6,12 +6,14 @@ import fit.Counts;
 
 import java.util.regex.*;
 
+import fitnesse.responders.run.TestSystem;
+
 public class PageResult
 {
 	private static final Pattern countsPattern = Pattern.compile("(\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*");
 
 	private StringBuffer contentBuffer = new StringBuffer();
-	private Counts counts;
+	private TestSystem.TestSummary testSummary;
 	private String title;
 
 	public PageResult(String title)
@@ -19,10 +21,10 @@ public class PageResult
 		this.title = title;
 	}
 
-	public PageResult(String title, Counts counts, String startingContent) throws Exception
+	public PageResult(String title, TestSystem.TestSummary testSummary, String startingContent) throws Exception
 	{
 		this(title);
-		this.counts = counts;
+		this.testSummary = testSummary;
 		append(startingContent);
 	}
 
@@ -41,21 +43,21 @@ public class PageResult
 		return title;
 	}
 
-	public Counts counts()
+	public TestSystem.TestSummary testSummary()
 	{
-		return counts;
+		return testSummary;
 	}
 
-	public void setCounts(Counts counts)
+	public void setTestSummary(TestSystem.TestSummary testSummary)
 	{
-		this.counts = counts;
+		this.testSummary = testSummary;
 	}
 
 	public String toString()
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(title).append("\n");
-		buffer.append(counts.toString()).append("\n");
+		buffer.append(testSummary.toString()).append("\n");
 		buffer.append(contentBuffer);
 		return buffer.toString();
 	}
@@ -66,13 +68,13 @@ public class PageResult
 		int secondEndlIndex = resultString.indexOf('\n', firstEndlIndex + 1);
 
 		String title = resultString.substring(0, firstEndlIndex);
-		Counts counts = parseCounts(resultString.substring(firstEndlIndex + 1, secondEndlIndex));
+		TestSystem.TestSummary testSummary = parseCounts(resultString.substring(firstEndlIndex + 1, secondEndlIndex));
 		String content = resultString.substring(secondEndlIndex + 1);
 
-		return new PageResult(title, counts, content);
+		return new PageResult(title, testSummary, content);
 	}
 
-	private static Counts parseCounts(String countString)
+	private static TestSystem.TestSummary parseCounts(String countString)
 	{
 		Matcher matcher = countsPattern.matcher(countString);
 		if(matcher.find())
@@ -81,7 +83,7 @@ public class PageResult
 			int wrong = Integer.parseInt(matcher.group(2));
 			int ignores = Integer.parseInt(matcher.group(3));
 			int exceptions = Integer.parseInt(matcher.group(4));
-			return new Counts(right, wrong, ignores, exceptions);
+			return new TestSystem.TestSummary(right, wrong, ignores, exceptions);
 		}
 		else
 			return null;

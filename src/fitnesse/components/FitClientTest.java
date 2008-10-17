@@ -4,14 +4,16 @@ package fitnesse.components;
 
 import fit.Counts;
 import fitnesse.responders.run.SocketDealer;
+import fitnesse.responders.run.TestSystemListener;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.testutil.*;
 
 import java.util.*;
 
-public class FitClientTest extends RegexTestCase implements FitClientListener
+public class FitClientTest extends RegexTestCase implements TestSystemListener
 {
 	private List<String> outputs = new ArrayList<String>();
-	private List<Counts> counts = new ArrayList<Counts>();
+	private List<TestSystem.TestSummary> counts = new ArrayList<TestSystem.TestSummary>();
 	private CommandRunningFitClient client;
 	private boolean exceptionOccurred = false;
 	private int port = 9080;
@@ -49,9 +51,9 @@ public class FitClientTest extends RegexTestCase implements FitClientListener
 		outputs.add(output);
 	}
 
-	public void acceptResults(Counts counts)
+	public void acceptResults(TestSystem.TestSummary testSummary)
 	{
-		this.counts.add(counts);
+		this.counts.add(testSummary);
 	}
 
 	public void exceptionOccurred(Exception e)
@@ -74,7 +76,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener
 		assertEquals(1, outputs.size());
 		assertEquals(1, counts.size());
 		assertSubString("class", (String) outputs.get(0));
-		assertEquals(1, ((Counts) counts.get(0)).right);
+		assertEquals(1, counts.get(0).right);
 	}
 
 	private void doSimpleRun() throws Exception
@@ -119,7 +121,7 @@ public class FitClientTest extends RegexTestCase implements FitClientListener
 		assertFalse(exceptionOccurred);
 		assertEquals(3, outputs.size());
 		assertEquals(1, counts.size());
-		Counts count = (Counts) counts.get(0);
+		TestSystem.TestSummary count = counts.get(0);
 		assertEquals(1, count.right);
 		assertEquals(1, count.wrong);
 		assertEquals(1, count.exceptions);
@@ -138,9 +140,9 @@ public class FitClientTest extends RegexTestCase implements FitClientListener
 		assertFalse(exceptionOccurred);
 		assertEquals(3, outputs.size());
 		assertEquals(3, counts.size());
-		assertEquals(1, ((Counts) counts.get(0)).right);
-		assertEquals(1, ((Counts) counts.get(1)).wrong);
-		assertEquals(1, ((Counts) counts.get(2)).exceptions);
+		assertEquals(1, (counts.get(0)).right);
+		assertEquals(1, (counts.get(1)).wrong);
+		assertEquals(1, (counts.get(2)).exceptions);
 	}
 
 	public void testDonerIsNotifiedWhenFinished_success() throws Exception

@@ -2,12 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fit.Counts;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
-import fitnesse.components.FitClientListener;
+import fitnesse.responders.run.TestSystemListener;
 import fitnesse.components.FitProtocol;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.http.Request;
@@ -18,7 +17,7 @@ import fitnesse.wiki.*;
 import java.net.Socket;
 import java.util.List;
 
-public class FitClientResponder implements Responder, ResponsePuppeteer, FitClientListener
+public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener
 {
 	private FitNesseContext context;
 	private PageCrawler crawler;
@@ -127,7 +126,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, FitClie
 	{
 	}
 
-	public void acceptResults(Counts counts) throws Exception
+	public void acceptResults(TestSystem.TestSummary testSummary) throws Exception
 	{
 	}
 

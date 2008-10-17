@@ -5,6 +5,7 @@ package fitnesse.runner;
 import fit.Counts;
 import fit.FitServer;
 import fitnesse.components.CommandLine;
+import fitnesse.responders.run.TestSystem;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -118,7 +119,14 @@ public class TestRunner
 
 	private void finalCount() throws Exception
 	{
-		handler.acceptFinalCount(fitServer.getCounts());
+    Counts counts = fitServer.getCounts();
+    TestSystem.TestSummary testSummary = new TestSystem.TestSummary(
+      counts.right,
+      counts.wrong,
+      counts.ignores,
+      counts.exceptions
+    );
+    handler.acceptFinalCount(testSummary);
 	}
 
 	public int exitCode()
@@ -145,8 +153,13 @@ public class TestRunner
 
 	public void acceptResults(PageResult results) throws Exception
 	{
-		Counts counts = results.counts();
-		fitServer.writeCounts(counts);
+		TestSystem.TestSummary testSummary = results.testSummary();
+    Counts counts = new Counts();
+    counts.right = testSummary.right;
+    counts.wrong = testSummary.wrong;
+    counts.ignores = testSummary.ignores;
+    counts.exceptions = testSummary.exceptions;
+    fitServer.writeCounts(counts);
 		handler.acceptResult(results);
 	}
 

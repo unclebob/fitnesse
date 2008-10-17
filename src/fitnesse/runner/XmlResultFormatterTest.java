@@ -5,6 +5,7 @@ package fitnesse.runner;
 import fit.Counts;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.*;
+import fitnesse.responders.run.TestSystem;
 import org.w3c.dom.*;
 
 import java.io.InputStream;
@@ -14,14 +15,14 @@ public class XmlResultFormatterTest extends RegexTestCase
 	private XmlResultFormatter formatter;
 	private PageResult result1;
 	private PageResult result2;
-	private Counts finalCounts;
+	private TestSystem.TestSummary finalSummary;
 
 	public void setUp() throws Exception
 	{
 		formatter = new XmlResultFormatter("localhost:8081", "RootPath");
-		result1 = new PageResult("ResultOne", new Counts(1, 2, 3, 4), "result one content");
-		result2 = new PageResult("ResultTwo", new Counts(4, 3, 2, 1), "result two content");
-		finalCounts = new Counts(5, 5, 5, 5);
+		result1 = new PageResult("ResultOne", new TestSystem.TestSummary(1, 2, 3, 4), "result one content");
+		result2 = new PageResult("ResultTwo", new TestSystem.TestSummary(4, 3, 2, 1), "result two content");
+		finalSummary = new TestSystem.TestSummary(5, 5, 5, 5);
 	}
 
 	public void tearDown() throws Exception
@@ -65,12 +66,12 @@ public class XmlResultFormatterTest extends RegexTestCase
 
 	public void testFinalCounts() throws Exception
 	{
-		formatter.acceptFinalCount(finalCounts);
+		formatter.acceptFinalCount(finalSummary);
 		Document doc = getXmlDoc();
 		NodeList finalCountsList = doc.getElementsByTagName("finalCounts");
 		assertEquals(1, finalCountsList.getLength());
 		Element finalCountElement = (Element) finalCountsList.item(0);
-		checkCounts(finalCounts, finalCountElement);
+		checkCounts(finalSummary, finalCountElement);
 	}
 
 	private void checkResultElement(Element resultElement, PageResult result) throws Exception
@@ -78,16 +79,16 @@ public class XmlResultFormatterTest extends RegexTestCase
 		assertEquals(result.title(), XmlUtil.getTextValue(resultElement, "relativePageName"));
 		assertEquals(result.content(), XmlUtil.getTextValue(resultElement, "content"));
 		Element countsElement = XmlUtil.getElementByTagName(resultElement, "counts");
-		Counts counts = result.counts();
-		checkCounts(counts, countsElement);
+		TestSystem.TestSummary testSummary = result.testSummary();
+		checkCounts(testSummary, countsElement);
 	}
 
-	private void checkCounts(Counts counts, Element countsElement) throws Exception
+	private void checkCounts(TestSystem.TestSummary testSummary, Element countsElement) throws Exception
 	{
-		assertEquals(counts.right + "", XmlUtil.getTextValue(countsElement, "right"));
-		assertEquals(counts.wrong + "", XmlUtil.getTextValue(countsElement, "wrong"));
-		assertEquals(counts.ignores + "", XmlUtil.getTextValue(countsElement, "ignores"));
-		assertEquals(counts.exceptions + "", XmlUtil.getTextValue(countsElement, "exceptions"));
+		assertEquals(testSummary.right + "", XmlUtil.getTextValue(countsElement, "right"));
+		assertEquals(testSummary.wrong + "", XmlUtil.getTextValue(countsElement, "wrong"));
+		assertEquals(testSummary.ignores + "", XmlUtil.getTextValue(countsElement, "ignores"));
+		assertEquals(testSummary.exceptions + "", XmlUtil.getTextValue(countsElement, "exceptions"));
 	}
 
 	private String getXml() throws Exception

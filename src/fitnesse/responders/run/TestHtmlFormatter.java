@@ -2,7 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fit.Counts;
 import fitnesse.html.*;
 
 public class TestHtmlFormatter
@@ -29,14 +28,14 @@ public class TestHtmlFormatter
 		return testSummaryDiv;
 	}
 
-	public String testSummary(Counts counts) throws Exception
+	public String testSummary(TestSystem.TestSummary testSummary) throws Exception
 	{
 		String summaryContent = testPageSummary();
-		summaryContent += "<strong>Assertions:</strong> " + counts.toString();
+		summaryContent += "<strong>Assertions:</strong> " + testSummary.toString();
 
 		HtmlTag script = new HtmlTag("script");
 		script.add("document.getElementById(\"test-summary\").innerHTML = \"" + summaryContent + "\";");
-		script.add("document.getElementById(\"test-summary\").className = \"" + cssClassFor(counts) + "\";");
+		script.add("document.getElementById(\"test-summary\").className = \"" + cssClassFor(testSummary) + "\";");
 		return script.html();
 	}
 
@@ -45,13 +44,13 @@ public class TestHtmlFormatter
 		return "";
 	}
 
-	protected String cssClassFor(Counts count)
+	protected String cssClassFor(TestSystem.TestSummary testSummary)
 	{
-		if(count.wrong > 0)
+		if(testSummary.wrong > 0)
 			return "fail";
-		else if(count.exceptions > 0 || count.right + count.ignores == 0)
+		else if(testSummary.exceptions > 0 || testSummary.right + testSummary.ignores == 0)
 			return "error";
-		else if(count.ignores > 0 && count.right == 0)
+		else if(testSummary.ignores > 0 && testSummary.right == 0)
 			return "ignore";
 		else
 			return "pass";

@@ -6,6 +6,7 @@ import fit.Counts;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
+import fitnesse.responders.run.TestSystem;
 
 import java.io.InputStream;
 
@@ -35,9 +36,9 @@ public class HtmlResultFormatterTest extends RegexTestCase
 
 	public void testUsage() throws Exception
 	{
-		formatter.acceptResult(new PageResult("PageOne", new Counts(1, 0, 0, 0), "page one"));
-		formatter.acceptResult(new PageResult("PageTwo", new Counts(0, 1, 0, 0), "page two"));
-		formatter.acceptFinalCount(new Counts(1, 1, 0, 0));
+		formatter.acceptResult(new PageResult("PageOne", new TestSystem.TestSummary(1, 0, 0, 0), "page one"));
+		formatter.acceptResult(new PageResult("PageTwo", new TestSystem.TestSummary(0, 1, 0, 0), "page two"));
+		formatter.acceptFinalCount(new TestSystem.TestSummary(1, 1, 0, 0));
 
 		String html = getHtml();
 

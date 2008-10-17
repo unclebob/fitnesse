@@ -266,11 +266,11 @@ public class HtmlUtil {
     throws Exception {
     TagGroup actions = new TagGroup();
     if (isTestPage(pageData)) {
-      String testRunner = pageData.getVariable("TEST_RUNNER");
-      if (testRunner == null)
-        testRunner = "test";
+      String testSystem = pageData.getVariable("TEST_SYSTEM");
+      if (testSystem == null || testSystem.equalsIgnoreCase("fit"))
+        testSystem = "test";
       ActionLink link = new ActionLink(localPageName, "Test");
-      link.setQuery(testRunner);
+      link.setQuery(testSystem);
       addLinkToActions(actions, link);
     }
     if (isSuitePage(pageData)) {

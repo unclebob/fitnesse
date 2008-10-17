@@ -175,7 +175,7 @@ public class SuiteResponderTest extends RegexTestCase
 		assertSubString("TestThree", results);
 		assertSubString("TestWithoutTable", results);
 	}
-
+  
 	public void testExitCodeHeader() throws Exception
 	{
 		String results = runSuite();

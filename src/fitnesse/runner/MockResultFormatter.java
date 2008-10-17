@@ -2,15 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
-
 import java.io.*;
 import java.util.*;
+
+import fitnesse.responders.run.TestSystem;
 
 public class MockResultFormatter implements ResultFormatter
 {
 	public List results = new LinkedList();
-	public Counts finalCounts;
+	public TestSystem.TestSummary finalSummary;
 	public StringBuffer output = new StringBuffer("Mock Results:\n");
 
 	public void acceptResult(PageResult result) throws Exception
@@ -19,10 +19,10 @@ public class MockResultFormatter implements ResultFormatter
 		output.append(result.toString());
 	}
 
-	public void acceptFinalCount(Counts count) throws Exception
+	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
 	{
-		finalCounts = count;
-		output.append("Finals Counts: " + count.toString());
+		finalSummary = testSummary;
+		output.append("Finals Counts: " + testSummary.toString());
 	}
 
 	public int getByteCount()

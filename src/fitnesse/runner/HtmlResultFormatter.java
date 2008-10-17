@@ -2,10 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.*;
 import fitnesse.responders.run.SuiteHtmlFormatter;
+import fitnesse.responders.run.TestSystem;
 
 import java.io.InputStream;
 
@@ -70,13 +70,13 @@ public class HtmlResultFormatter implements ResultFormatter
 		String relativePageName = result.title();
 		suiteFormatter.startOutputForNewTest(relativePageName, rootPath + "." + relativePageName);
 		suiteFormatter.acceptOutput(result.content());
-		String resultRow = suiteFormatter.acceptResults(relativePageName, result.counts());
+		String resultRow = suiteFormatter.acceptResults(relativePageName, result.testSummary());
 		buffer.append(resultRow);
 	}
 
-	public void acceptFinalCount(Counts count) throws Exception
+	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
 	{
-		buffer.append(suiteFormatter.testSummary(count));
+		buffer.append(suiteFormatter.testSummary(testSummary));
 		buffer.append(suiteFormatter.testOutput());
 	}
 

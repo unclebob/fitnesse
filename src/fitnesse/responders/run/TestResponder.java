@@ -6,8 +6,8 @@ import fit.Counts;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.components.CommandRunningFitClient;
-import fitnesse.components.FitClientListener;
+import fitnesse.responders.run.TestSystemListener;
+import fitnesse.components.CommandRunner;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
@@ -20,35 +20,36 @@ import fitnesse.wiki.*;
 
 import java.util.LinkedList;
 
-public class TestResponder extends ChunkingResponder implements FitClientListener, SecureResponder {
+public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
   protected static final String emptyPageContent = "OH NO! This page is empty!";
-  public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
   protected static final int htmlDepth = 2;
 
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
 
   protected HtmlPage html;
-  protected CommandRunningFitClient client;
-  protected String command;
+  protected CommandRunner commandRunner;
   protected ExecutionLog log;
   protected PageData data;
   private boolean closed = false;
-  private Counts assertionCounts = new Counts();
+  private TestSystem.TestSummary assertionCounts = new TestSystem.TestSummary();
   protected TestHtmlFormatter formatter;
   protected String classPath;
   private String testableHtml;
+  protected TestSystem testSystem;
 
   protected void doSending() throws Exception {
     data = page.getData();
     startHtml();
-
     sendPreTestNotification();
+    testSystem = new FitTestSystem(context, data, this);
 
+    classPath = new ClassPathBuilder().getClasspath(page);
+    String className = getClassName(data, request);
+    commandRunner = testSystem.start(classPath, className);
+    log = new ExecutionLog(page, commandRunner);
     prepareForExecution();
 
-    startFitClient(classPath);
-
-    if (client.isSuccessfullyStarted())
+    if (testSystem.isSuccessfullyStarted())
       performExecution();
 
     finishSending();
@@ -65,9 +66,8 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
   }
 
   protected void performExecution() throws Exception {
-    client.send(testableHtml);
-    client.done();
-    client.join();
+    testSystem.send(testableHtml);
+    testSystem.bye();
   }
 
   protected void prepareForExecution() throws Exception {
@@ -77,20 +77,11 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
     testableHtml = data.getHtml();
     if (testableHtml.length() == 0)
       testableHtml = handleBlankHtml();
-    classPath = new ClassPathBuilder().getClasspath(page);
   }
 
   protected void startHtml() throws Exception {
     buildHtml();
     addToResponse(formatter.head());
-  }
-
-  protected void startFitClient(String classPath) throws Exception {
-    command = buildCommand(data, getClassName(data, request), classPath);
-    client = new CommandRunningFitClient(this, command, context.port, context.socketDealer);
-    log = new ExecutionLog(page, client.commandRunner);
-
-    client.start();
   }
 
   protected PageCrawler getPageCrawler() {
@@ -99,17 +90,17 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
     return crawler;
   }
 
-  public void acceptResults(Counts counts) throws Exception {
-    assertionCounts.tally(counts);
+  public void acceptResults(TestSystem.TestSummary testSummary) throws Exception {
+    assertionCounts.tally(testSummary);
   }
 
   public synchronized void exceptionOccurred(Exception e) {
     try {
       log.addException(e);
-      log.addReason("Test execution aborted abnormally with error code " + client.commandRunner.getExitCode());
+      log.addReason("Test execution aborted abnormally with error code " + commandRunner.getExitCode());
 
       completeResponse();
-      client.kill();
+      testSystem.kill();
     }
     catch (Exception e1) {
       e1.printStackTrace();
@@ -133,7 +124,7 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
     response.add(HtmlUtil.getHtmlOfInheritedPage("PageFooter", page));
     response.add(formatter.tail());
     response.closeChunks();
-    response.addTrailingHeader("Exit-Code", String.valueOf(client.commandRunner.getExitCode()));
+    response.addTrailingHeader("Exit-Code", String.valueOf(commandRunner.getExitCode()));
     response.closeTrailer();
     response.close();
   }
@@ -187,30 +178,13 @@ public class TestResponder extends ChunkingResponder implements FitClientListene
   }
 
   public String getClassName(PageData data, Request request) throws Exception {
+    //todo No test fails if I replace this with String program = null;
     String program = (String) request.getInput("className");
     if (program == null)
       program = data.getVariable("TEST_RUNNER");
     if (program == null)
       program = "fit.FitServer";
     return program;
-  }
-
-  protected String buildCommand(PageData data, String program, String classPath) throws Exception {
-    String testRunner = data.getVariable("COMMAND_PATTERN");
-    if (testRunner == null)
-      testRunner = DEFAULT_COMMAND_PATTERN;
-    String command = replace(testRunner, "%p", classPath);
-    command = replace(command, "%m", program);
-    return command;
-  }
-
-  // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
-  protected String replace(String value, String mark, String replacement) {
-    int index = value.indexOf(mark);
-    if (index == -1)
-      return value;
-
-    return value.substring(0, index) + replacement + value.substring(index + mark.length());
   }
 
   public SecureOperation getSecureOperation() {

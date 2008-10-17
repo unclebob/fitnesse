@@ -73,7 +73,7 @@ public class TestRunnerTest extends RegexTestCase
 		PageResult pageResult = (PageResult) result1;
 		assertSubString("PassFixture", pageResult.content());
 		assertEquals("", pageResult.title());
-		assertEquals(new Counts(1, 0, 0, 0), pageResult.counts());
+		assertEquals(new TestSystem.TestSummary(1, 0, 0, 0), pageResult.testSummary());
 	}
 
 	public void testResultContentWithSuite() throws Exception
@@ -83,10 +83,10 @@ public class TestRunnerTest extends RegexTestCase
 		List results = mockHandler.results;
 		assertEquals(4, results.size());
 
-		checkResult(results, 0, "TestError", new Counts(0, 0, 0, 1), "ErrorFixture");
-		checkResult(results, 1, "TestFailing", new Counts(0, 1, 0, 0), "FailFixture");
-		checkResult(results, 2, "TestIgnore", new Counts(0, 0, 1, 0), "IgnoreFixture");
-		checkResult(results, 3, "TestPassing", new Counts(1, 0, 0, 0), "PassFixture");
+		checkResult(results, 0, "TestError", new TestSystem.TestSummary(0, 0, 0, 1), "ErrorFixture");
+		checkResult(results, 1, "TestFailing", new TestSystem.TestSummary(0, 1, 0, 0), "FailFixture");
+		checkResult(results, 2, "TestIgnore", new TestSystem.TestSummary(0, 0, 1, 0), "IgnoreFixture");
+		checkResult(results, 3, "TestPassing", new TestSystem.TestSummary(1, 0, 0, 0), "PassFixture");
 	}
 
 	public void testKeepResultFile() throws Exception
@@ -109,7 +109,7 @@ public class TestRunnerTest extends RegexTestCase
 
 		List results = mockHandler.results;
 		assertEquals(1, results.size());
-		checkResult(results, 0, "", new Counts(3, 0, 0, 0), "PassFixture");
+		checkResult(results, 0, "", new TestSystem.TestSummary(3, 0, 0, 0), "PassFixture");
 		PageResult result = (PageResult) results.get(0);
 		String content = result.content();
 		assertSubString("SuiteSetUp", content);
@@ -124,12 +124,13 @@ public class TestRunnerTest extends RegexTestCase
 		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME), "!|fitnesse.testutil.PassFixture|\n");
 	}
 
-	private void checkResult(List results, int i, String s, Counts counts, String content)
+	private void checkResult(List results, int i, String s, TestSystem.TestSummary expectedSummary, String content)
 	{
 		PageResult result = (PageResult) results.get(i);
 		assertEquals(s, result.title());
-		assertEquals(counts, result.counts());
-		assertSubString(content, result.content());
+    TestSystem.TestSummary resultSummary = result.testSummary();
+    assertEquals(expectedSummary, resultSummary);
+    assertSubString(content, result.content());
 	}
 
 	private void testPageResults(String pageName, Counts expectedCounts, int exitCode) throws Exception
@@ -155,7 +156,7 @@ public class TestRunnerTest extends RegexTestCase
 	public void testAcceptResults() throws Exception
 	{
 		PageResult result = new PageResult("SomePage");
-		result.setCounts(new Counts(5, 0, 0, 0));
+		result.setTestSummary(new TestSystem.TestSummary(5, 0, 0, 0));
 	}
 
 	public void testHtmlOption() throws Exception

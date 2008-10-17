@@ -30,8 +30,8 @@ public class TestResultFormattingResponderTest extends RegexTestCase
 		formatter = new MockResultFormatter();
 		responder.formatter = formatter;
 
-		result1 = new PageResult("Result1Title", new Counts(1, 2, 3, 4), "result1 data");
-		result2 = new PageResult("Result2Title", new Counts(4, 3, 2, 1), "result2 data");
+		result1 = new PageResult("Result1Title", new TestSystem.TestSummary(1, 2, 3, 4), "result1 data");
+		result2 = new PageResult("Result2Title", new TestSystem.TestSummary(4, 3, 2, 1), "result2 data");
 
 		context = new FitNesseContext();
 	}
@@ -65,8 +65,12 @@ public class TestResultFormattingResponderTest extends RegexTestCase
 		FitProtocol.writeCounts(counts, output);
 		responder.processResults(input);
 
-		assertEquals(counts, formatter.finalCounts);
-	}
+    TestSystem.TestSummary summary = formatter.finalSummary;
+    assertEquals(counts.right, summary.right);
+    assertEquals(counts.wrong, summary.wrong);
+    assertEquals(counts.ignores, summary.ignores);
+    assertEquals(counts.exceptions, summary.exceptions);
+  }
 
 	public void testMakeResponse() throws Exception
 	{

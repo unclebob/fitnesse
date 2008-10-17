@@ -32,12 +32,12 @@ public class TestHtmlFormatterTest extends RegexTestCase
 
 	public void testTestSummary() throws Exception
 	{
-		String summary = formatter.testSummary(new Counts(4, 0, 0, 0));
+		String summary = formatter.testSummary(new TestSystem.TestSummary(4, 0, 0, 0));
 		assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", summary);
 		assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", summary);
 		assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", summary);
 
-		summary = formatter.testSummary(new Counts(4, 1, 0, 0));
+		summary = formatter.testSummary(new TestSystem.TestSummary(4, 1, 0, 0));
 		assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", summary);
 		assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", summary);
 	}

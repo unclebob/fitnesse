@@ -5,6 +5,7 @@ package fitnesse.runner;
 import fit.Counts;
 import fitnesse.components.*;
 import fitnesse.util.XmlUtil;
+import fitnesse.responders.run.TestSystem;
 import org.w3c.dom.*;
 
 import java.io.*;
@@ -51,13 +52,13 @@ public class XmlResultFormatter implements ResultFormatter
 		Element resultElement = document.createElement("result");
 		XmlUtil.addTextNode(document, resultElement, "relativePageName", result.title());
 		XmlUtil.addCdataNode(document, resultElement, "content", result.content());
-		resultElement.appendChild(makeCountsElement("counts", result.counts()));
+		resultElement.appendChild(makeCountsElement("counts", result.testSummary()));
 		writeElement(resultElement);
 	}
 
-	public void acceptFinalCount(Counts count) throws Exception
+	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
 	{
-		Element countsElement = makeCountsElement("finalCounts", count);
+		Element countsElement = makeCountsElement("finalCounts", testSummary);
 		writeElement(countsElement);
 	}
 
@@ -91,13 +92,13 @@ public class XmlResultFormatter implements ResultFormatter
 		buffer.append(output.toByteArray());
 	}
 
-	private Element makeCountsElement(String name, Counts counts)
+	private Element makeCountsElement(String name, TestSystem.TestSummary testSummary)
 	{
 		Element countsElement = document.createElement(name);
-		XmlUtil.addTextNode(document, countsElement, "right", counts.right + "");
-		XmlUtil.addTextNode(document, countsElement, "wrong", counts.wrong + "");
-		XmlUtil.addTextNode(document, countsElement, "ignores", counts.ignores + "");
-		XmlUtil.addTextNode(document, countsElement, "exceptions", counts.exceptions + "");
+		XmlUtil.addTextNode(document, countsElement, "right", testSummary.right + "");
+		XmlUtil.addTextNode(document, countsElement, "wrong", testSummary.wrong + "");
+		XmlUtil.addTextNode(document, countsElement, "ignores", testSummary.ignores + "");
+		XmlUtil.addTextNode(document, countsElement, "exceptions", testSummary.exceptions + "");
 		return countsElement;
 	}
 }

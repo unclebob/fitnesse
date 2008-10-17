@@ -2,20 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fit.Counts;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.components.FitClientListener;
+import fitnesse.responders.run.TestSystemListener;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.wiki.*;
 
 import java.util.*;
 
-public class SuiteResponder extends TestResponder implements FitClientListener
+public class SuiteResponder extends TestResponder implements TestSystemListener
 {
 	public static final String SUITE_SETUP_NAME = "SuiteSetUp";
 	public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
-
+ 
 	private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
 	private WikiPage currentTest = null;
 	private SuiteHtmlFormatter suiteFormatter;
@@ -37,13 +36,12 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 	{
 		processTestPages(testPages);
 
-		client.done();
-		client.join();
+    testSystem.bye();
 
 		completeResponse();
 	}
 
-	protected void prepareForExecution() throws Exception
+  protected void prepareForExecution() throws Exception
 	{
 		testPages = makePageList();
 
@@ -58,9 +56,9 @@ public class SuiteResponder extends TestResponder implements FitClientListener
       SetupTeardownIncluder.includeInto(pageData);
       String testableHtml = pageData.getHtml();
       if (testableHtml.length() > 0)
-        client.send(testableHtml);
+        testSystem.send(testableHtml);
       else
-        client.send(emptyPageContent);
+        testSystem.send(emptyPageContent);
     }
   }
 
@@ -89,14 +87,14 @@ public class SuiteResponder extends TestResponder implements FitClientListener
 		suiteFormatter.acceptOutput(output);
 	}
 
-	public void acceptResults(Counts counts) throws Exception
+	public void acceptResults(TestSystem.TestSummary testSummary) throws Exception
 	{
-		super.acceptResults(counts);
+		super.acceptResults(testSummary);
 
 		PageCrawler pageCrawler = page.getPageCrawler();
 		WikiPage testPage = processingQueue.removeFirst();
 		String relativeName = pageCrawler.getRelativeName(page, testPage);
-		addToResponse(suiteFormatter.acceptResults(relativeName, counts));
+		addToResponse(suiteFormatter.acceptResults(relativeName, testSummary));
 	}
 
 	protected void makeFormatter() throws Exception

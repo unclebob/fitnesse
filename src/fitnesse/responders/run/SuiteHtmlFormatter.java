@@ -2,7 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fit.Counts;
 import fitnesse.html.*;
 
 public class SuiteHtmlFormatter extends TestHtmlFormatter
@@ -10,7 +9,7 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 	private static final String cssSuffix1 = "1";
 	private static final String cssSuffix2 = "2";
 
-	private Counts pageCounts = new Counts();
+	private TestSystem.TestSummary pageCounts = new TestSystem.TestSummary();
 
 	private String cssSuffix = cssSuffix1;
 	private TagGroup testResultsGroup = new TagGroup();
@@ -30,23 +29,23 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 		return "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
 
-	public void setPageAssertions(Counts pageCounts)
+	public void setPageAssertions(TestSystem.TestSummary pageSummary)
 	{
-		this.pageCounts = pageCounts;
+		this.pageCounts = pageSummary;
 	}
 
-	public String acceptResults(String relativePageName, Counts counts) throws Exception
+	public String acceptResults(String relativePageName, TestSystem.TestSummary testSummary) throws Exception
 	{
 		switchCssSuffix();
 		HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);
 
-		mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(counts), counts.toString()));
+		mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(testSummary), testSummary.toString()));
 
 		HtmlTag link = HtmlUtil.makeLink("#" + relativePageName, relativePageName);
 		link.addAttribute("class", "test_summary_link");
 		mainDiv.add(link);
 
-		pageCounts.tallyPageCounts(counts);
+		pageCounts.tallyPageCounts(testSummary);
 
 		return mainDiv.html(2);
 	}

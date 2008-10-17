@@ -53,15 +53,18 @@ public class TableScanner implements Iterable<Table> {
   private void appendChildWikiText(StringBuffer wikiText, ParentWidget parent) {
     for (WikiWidget widget : parent.getChildren()) {
       appendWidgetText(wikiText, widget);
-      if (widget instanceof IncludeWidget) {
-        IncludeWidget iw = (IncludeWidget) widget;
-        wikiText.append(String.format("!-<div class=\"included\">-!!note Included !-%s-!\n", iw.getPageName()));
-        appendChildWikiText(wikiText, (ParentWidget) widget);
-        wikiText.append("!-</div>-!\n");
-      }
-      if (widget instanceof CollapsableWidget)
+      if (widget instanceof IncludeWidget)
+        surroundTextWithIncludedDiv(wikiText, widget);
+      else if (widget instanceof CollapsableWidget)
         appendChildWikiText(wikiText, (ParentWidget) widget);
     }
+  }
+
+  private void surroundTextWithIncludedDiv(StringBuffer wikiText, WikiWidget widget) {
+    IncludeWidget iw = (IncludeWidget) widget;
+    wikiText.append(String.format("!-<div class=\"included\">-!!note Included !-%s-!\n", iw.getPageName()));
+    appendChildWikiText(wikiText, (ParentWidget) widget);
+    wikiText.append("!-</div>-!\n");
   }
 
   private void appendWidgetText(StringBuffer wikiText, WikiWidget widget) {

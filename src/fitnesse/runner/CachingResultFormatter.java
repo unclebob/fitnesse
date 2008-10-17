@@ -2,11 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
 import fitnesse.components.*;
+import fitnesse.responders.run.TestSystem;
 
 import java.io.*;
 import java.util.*;
+
+import fit.Counts;
 
 public class CachingResultFormatter implements ResultFormatter
 {
@@ -28,14 +30,15 @@ public class CachingResultFormatter implements ResultFormatter
 			((ResultHandler) iterator.next()).acceptResult(result);
 	}
 
-	public void acceptFinalCount(Counts count) throws Exception
+	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		FitProtocol.writeCounts(count, output);
+    Counts counts = new Counts(testSummary.right, testSummary.wrong, testSummary.ignores, testSummary.exceptions);
+    FitProtocol.writeCounts(counts, output);
 		buffer.append(output.toByteArray());
 
 		for(Iterator iterator = subHandlers.iterator(); iterator.hasNext();)
-			((ResultHandler) iterator.next()).acceptFinalCount(count);
+			((ResultHandler) iterator.next()).acceptFinalCount(testSummary);
 	}
 
 	public int getByteCount() throws Exception

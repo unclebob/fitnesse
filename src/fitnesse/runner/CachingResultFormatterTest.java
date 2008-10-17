@@ -5,15 +5,16 @@ package fitnesse.runner;
 import fit.Counts;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
+import fitnesse.responders.run.TestSystem;
 
 public class CachingResultFormatterTest extends RegexTestCase
 {
 	public void testAddResult() throws Exception
 	{
 		CachingResultFormatter formatter = new CachingResultFormatter();
-		PageResult result = new PageResult("PageTitle", new Counts(1, 2, 3, 4), "content");
+		PageResult result = new PageResult("PageTitle", new TestSystem.TestSummary(1, 2, 3, 4), "content");
 		formatter.acceptResult(result);
-		formatter.acceptFinalCount(new Counts(1, 2, 3, 4));
+		formatter.acceptFinalCount(new TestSystem.TestSummary(1, 2, 3, 4));
 
 		String content = new StreamReader(formatter.getResultStream()).read(formatter.getByteCount());
 		assertSubString("0000000060", content);
@@ -30,13 +31,13 @@ public class CachingResultFormatterTest extends RegexTestCase
 		MockResultFormatter mockFormatter = new MockResultFormatter();
 		formatter.addHandler(mockFormatter);
 
-		PageResult result = new PageResult("PageTitle", new Counts(1, 2, 3, 4), "content");
+		PageResult result = new PageResult("PageTitle", new TestSystem.TestSummary(1, 2, 3, 4), "content");
 		formatter.acceptResult(result);
-		Counts counts = new Counts(1, 2, 3, 4);
-		formatter.acceptFinalCount(counts);
+		TestSystem.TestSummary testSummary = new TestSystem.TestSummary(1, 2, 3, 4);
+		formatter.acceptFinalCount(testSummary);
 
 		assertEquals(1, mockFormatter.results.size());
 		assertEquals(result.toString(), mockFormatter.results.get(0).toString());
-		assertEquals(counts, mockFormatter.finalCounts);
+		assertEquals(testSummary, mockFormatter.finalSummary);
 	}
 }

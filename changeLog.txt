@@ -2,7 +2,7 @@
 
 20080920 UB
 Added !style_myStyle(some text) widget.  This translates to <span class="myStyle">some text</span>
-Added TEST_RUNNER variable.  If this variable is defined on a test page, it will replace the ?test
+Added TEST_SYSTEM variable.  If this variable is defined on a test page, it will replace the ?test
   on the test button link with the value of the variable.  So if the variable is 'zap', then ?zap
   will replace ?test on the test button link.  I use this to invoke alternate test runners.
 -- 20080702 RELEASE -------------------------------------------------------------------------------

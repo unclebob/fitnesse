@@ -3,6 +3,7 @@
 package fitnesse.runner;
 
 import fit.*;
+import fitnesse.responders.run.TestSystem;
 
 public class TestRunnerFixtureListener implements FixtureListener
 {
@@ -37,14 +38,19 @@ public class TestRunnerFixtureListener implements FixtureListener
 		}
 	}
 
-	public void tablesFinished(Counts count)
+	public void tablesFinished(Counts counts)
 	{
 		try
 		{
-			currentPageResult.setCounts(count);
+      TestSystem.TestSummary testSummary = new TestSystem.TestSummary();
+      testSummary.right = counts.right;
+      testSummary.wrong = counts.wrong;
+      testSummary.ignores = counts.ignores;
+      testSummary.exceptions = counts.exceptions;
+      currentPageResult.setTestSummary(testSummary);
 			runner.acceptResults(currentPageResult);
 			atStartOfResult = true;
-			counts.tally(count);
+			this.counts.tally(counts);
 		}
 		catch(Exception e)
 		{

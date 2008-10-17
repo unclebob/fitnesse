@@ -4,6 +4,7 @@ package fitnesse.runner;
 
 import fit.Counts;
 import fitnesse.testutil.RegexTestCase;
+import fitnesse.responders.run.TestSystem;
 
 import java.io.*;
 
@@ -20,45 +21,45 @@ public class StandardResultHandlerTest extends RegexTestCase
 
 	public void testHandleResultPassing() throws Exception
 	{
-		String output = getOutputForResultWithCount(new Counts(5, 0, 0, 0));
+		String output = getOutputForResultWithCount(new TestSystem.TestSummary(5, 0, 0, 0));
 		assertSubString(".....", output);
 	}
 
 	public void testHandleResultFailing() throws Exception
 	{
-		String output = getOutputForResultWithCount(new Counts(0, 1, 0, 0));
+		String output = getOutputForResultWithCount(new TestSystem.TestSummary(0, 1, 0, 0));
 		assertSubString("SomePage has failures", output);
 	}
 
 	public void testHandleResultWithErrors() throws Exception
 	{
-		String output = getOutputForResultWithCount(new Counts(0, 0, 0, 1));
+		String output = getOutputForResultWithCount(new TestSystem.TestSummary(0, 0, 0, 1));
 		assertSubString("SomePage has errors", output);
 	}
 
 	public void testHandleErrorWithBlankTitle() throws Exception
 	{
-		String output = getOutputForResultWithCount("", new Counts(0, 0, 0, 1));
+		String output = getOutputForResultWithCount("", new TestSystem.TestSummary(0, 0, 0, 1));
 		assertSubString("The test has errors", output);
 	}
 
 	public void testFinalCount() throws Exception
 	{
-		Counts counts = new Counts(5, 4, 3, 2);
-		handler.acceptFinalCount(counts);
+		TestSystem.TestSummary testSummary = new TestSystem.TestSummary(5, 4, 3, 2);
+		handler.acceptFinalCount(testSummary);
 
-		assertSubString(counts.toString(), bytes.toString());
+		assertSubString(testSummary.toString(), bytes.toString());
 	}
 
-	private String getOutputForResultWithCount(Counts counts) throws Exception
+	private String getOutputForResultWithCount(TestSystem.TestSummary testSummary) throws Exception
 	{
-		return getOutputForResultWithCount("SomePage", counts);
+		return getOutputForResultWithCount("SomePage", testSummary);
 	}
 
-	private String getOutputForResultWithCount(String title, Counts counts) throws Exception
+	private String getOutputForResultWithCount(String title, TestSystem.TestSummary testSummary) throws Exception
 	{
 		PageResult result = new PageResult(title);
-		result.setCounts(counts);
+		result.setTestSummary(testSummary);
 		handler.acceptResult(result);
 		String output = bytes.toString();
 		return output;

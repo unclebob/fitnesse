@@ -2,15 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
-
 import java.io.*;
+
+import fitnesse.responders.run.TestSystem;
 
 //TODO MDM Rename to VerboseResultHandler
 public class StandardResultHandler implements ResultHandler
 {
 	private PrintStream output;
-	private Counts pageCounts = new Counts();
+	private TestSystem.TestSummary pageCounts = new TestSystem.TestSummary();
 
 	public StandardResultHandler(PrintStream output)
 	{
@@ -19,16 +19,16 @@ public class StandardResultHandler implements ResultHandler
 
 	public void acceptResult(PageResult result) throws Exception
 	{
-		Counts counts = result.counts();
-		pageCounts.tallyPageCounts(counts);
-		for(int i = 0; i < counts.right; i++)
+		TestSystem.TestSummary testSummary = result.testSummary();
+		pageCounts.tallyPageCounts(testSummary);
+		for(int i = 0; i < testSummary.right; i++)
 			output.print(".");
-		if(counts.wrong > 0 || counts.exceptions > 0)
+		if(testSummary.wrong > 0 || testSummary.exceptions > 0)
 		{
 			output.println();
-			if(counts.wrong > 0)
+			if(testSummary.wrong > 0)
 				output.println(pageDescription(result) + " has failures");
-			if(counts.exceptions > 0)
+			if(testSummary.exceptions > 0)
 				output.println(pageDescription(result) + " has errors");
 		}
 	}
@@ -41,11 +41,11 @@ public class StandardResultHandler implements ResultHandler
 		return description;
 	}
 
-	public void acceptFinalCount(Counts count) throws Exception
+	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
 	{
 		output.println();
 		output.println("Test Pages: " + pageCounts);
-		output.println("Assertions: " + count);
+		output.println("Assertions: " + testSummary);
 	}
 
 	public int getByteCount()

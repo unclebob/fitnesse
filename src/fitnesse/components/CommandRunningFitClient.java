@@ -17,7 +17,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker
 	private Thread timeoutThread;
 	private Thread earlyTerminationThread;
 
-	public CommandRunningFitClient(FitClientListener listener, String command, int port, SocketDealer dealer)
+	public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer)
 		throws Exception
 	{
 		super(listener);
