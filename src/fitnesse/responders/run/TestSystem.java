@@ -3,25 +3,26 @@ package fitnesse.responders.run;
 import fitnesse.FitNesseContext;
 import fitnesse.components.CommandRunner;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
 public abstract class TestSystem {
   public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
   protected FitNesseContext context;
-  protected PageData data;
+  protected WikiPage page;
   protected TestSystemListener listener;
 
-  public TestSystem(FitNesseContext context, PageData data, TestSystemListener listener) {
+  public TestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener) {
     this.context = context;
-    this.data = data;
+    this.page = page;
     this.listener = listener;
   }
 
-  public abstract CommandRunner start(
+  public abstract ExecutionLog createRunner(
     String classPath, String className
   ) throws Exception;
 
   protected String buildCommand(String program, String classPath) throws Exception {
-    String testRunner = data.getVariable("COMMAND_PATTERN");
+    String testRunner = page.getData().getVariable("COMMAND_PATTERN");
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
     String command = replace(testRunner, "%p", classPath);
@@ -45,6 +46,8 @@ public abstract class TestSystem {
   public abstract boolean isSuccessfullyStarted();
 
   public abstract void kill() throws Exception;
+
+  public abstract void start() throws Exception;
 
   public static class TestSummary {
     public int right = 0;

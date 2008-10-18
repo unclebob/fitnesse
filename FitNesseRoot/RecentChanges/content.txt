@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestVariableTestRunner||11:30:12 Sat, Oct 18, 2008|
 |JunkPageTwo.SuitePage||10:22:25 Fri, Oct 17, 2008|
 |JunkPageTwo.TestPage||10:22:09 Fri, Oct 17, 2008|
 |JunkPageTwo||10:17:44 Fri, Oct 17, 2008|
@@ -10,7 +11,6 @@
 |JunkPage.IncludePage||06:49:06 Tue, Oct 14, 2008|
 |JunkPage||06:48:51 Tue, Oct 14, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestStyle||08:54:46 Sat, Sep 20, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestVariableTestRunner||07:51:18 Sat, Sep 20, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests||07:47:57 Sat, Sep 20, 2008|
 |FrontPage||03:13:00 Wed, Sep 17, 2008|
 |FitNesse.TwoMinuteExample||03:05:02 Wed, Sep 17, 2008|

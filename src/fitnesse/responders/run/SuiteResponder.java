@@ -41,12 +41,11 @@ public class SuiteResponder extends TestResponder implements TestSystemListener
 		completeResponse();
 	}
 
-  protected void prepareForExecution() throws Exception
+  protected String buildClassPath() throws Exception
 	{
 		testPages = makePageList();
-
-		classPath = buildClassPath(testPages, page);
-	}
+    return buildClassPath(testPages, page);
+  }
 
 	private void processTestPages(List<WikiPage> testPages) throws Exception
 	{

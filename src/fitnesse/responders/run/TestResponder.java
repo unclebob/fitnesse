@@ -6,13 +6,10 @@ import fit.Counts;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.responders.run.TestSystemListener;
-import fitnesse.components.CommandRunner;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.html.TagGroup;
-import fitnesse.http.Request;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
@@ -27,27 +24,22 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
 
   protected HtmlPage html;
-  protected CommandRunner commandRunner;
   protected ExecutionLog log;
   protected PageData data;
   private boolean closed = false;
   private TestSystem.TestSummary assertionCounts = new TestSystem.TestSummary();
   protected TestHtmlFormatter formatter;
-  protected String classPath;
-  private String testableHtml;
   protected TestSystem testSystem;
 
   protected void doSending() throws Exception {
     data = page.getData();
     startHtml();
     sendPreTestNotification();
-    testSystem = new FitTestSystem(context, data, this);
-
-    classPath = new ClassPathBuilder().getClasspath(page);
-    String className = getClassName(data, request);
-    commandRunner = testSystem.start(classPath, className);
-    log = new ExecutionLog(page, commandRunner);
-    prepareForExecution();
+    testSystem = new FitTestSystem(context, page, this);
+    String classPath = buildClassPath();
+    String className = getClassName(data);
+    log = testSystem.createRunner(classPath, className);
+    testSystem.start();
 
     if (testSystem.isSuccessfullyStarted())
       performExecution();
@@ -66,17 +58,18 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   protected void performExecution() throws Exception {
+    addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
+
+    SetupTeardownIncluder.includeInto(data, true);
+    String testableHtml = data.getHtml();
+    if (testableHtml.length() == 0)
+      testableHtml = handleBlankHtml();
     testSystem.send(testableHtml);
     testSystem.bye();
   }
 
-  protected void prepareForExecution() throws Exception {
-    addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
-
-    SetupTeardownIncluder.includeInto(data, true);
-    testableHtml = data.getHtml();
-    if (testableHtml.length() == 0)
-      testableHtml = handleBlankHtml();
+  protected String buildClassPath() throws Exception {
+    return new ClassPathBuilder().getClasspath(page);
   }
 
   protected void startHtml() throws Exception {
@@ -97,7 +90,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   public synchronized void exceptionOccurred(Exception e) {
     try {
       log.addException(e);
-      log.addReason("Test execution aborted abnormally with error code " + commandRunner.getExitCode());
+      log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
 
       completeResponse();
       testSystem.kill();
@@ -124,7 +117,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     response.add(HtmlUtil.getHtmlOfInheritedPage("PageFooter", page));
     response.add(formatter.tail());
     response.closeChunks();
-    response.addTrailingHeader("Exit-Code", String.valueOf(commandRunner.getExitCode()));
+    response.addTrailingHeader("Exit-Code", String.valueOf(log.getExitCode()));
     response.closeTrailer();
     response.close();
   }
@@ -177,11 +170,8 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     return group.html();
   }
 
-  public String getClassName(PageData data, Request request) throws Exception {
-    //todo No test fails if I replace this with String program = null;
-    String program = (String) request.getInput("className");
-    if (program == null)
-      program = data.getVariable("TEST_RUNNER");
+  public String getClassName(PageData data) throws Exception {
+    String program = data.getVariable("TEST_RUNNER");
     if (program == null)
       program = "fit.FitServer";
     return program;

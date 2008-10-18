@@ -153,4 +153,8 @@ public class ExecutionLog
 		status.add(HtmlUtil.makeLink(linkHref, executionStatus.getMessage()));
 		return status.html();
 	}
+
+  public int getExitCode() {
+    return runner.getExitCode();
+  }
 }
