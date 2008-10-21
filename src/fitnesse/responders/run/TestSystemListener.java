@@ -10,5 +10,5 @@ public interface TestSystemListener
 
 	public void acceptResults(TestSystem.TestSummary testSummary) throws Exception;
 
-	public void exceptionOccurred(Exception e);
+	public void exceptionOccurred(Throwable e);
 }

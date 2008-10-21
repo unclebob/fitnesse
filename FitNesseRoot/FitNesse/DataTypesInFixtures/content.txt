@@ -10,7 +10,7 @@ You can use all the standard Java data types in RowFixture and ColumnFixture.  T
  * double or Double
  * char or Character
  * boolean or Boolean
-  * Will interpret ''true'', ''yes'', ''y'', ''+'', ''1'' to be true. 
+  * Will interpret ''true'', ''yes'', ''y'', ''+'', ''1'' to be true.
   * All else will be false.
  * Array
   * Any comma separated list of items will be converted into an array.

@@ -118,7 +118,7 @@ tNesse.DotNet.SuiteAcceptanceTests
 
 C:\projects\fitnesse\dotnet>java -cp ..\fitnesse.jar fitnesse.runner.FormattingOption
  dotnet.results html dotnet.html localhost 8080 FitNesse.DotNet.SuiteAcceptanceT
-ests}}} 
+ests}}}
 
 Have a look at the HTML that was generated.
 http://docs.fitnesse.org/files/dotnet/dotnet.html

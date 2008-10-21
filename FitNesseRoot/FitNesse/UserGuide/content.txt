@@ -36,7 +36,7 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |KeywordsInTestTables|''Meaningful and useful keywords in test tables (e.g., null and blank).''|
 |AcceptanceTestPatterns|''Some patterns we have seen emerge while writing FitNesse AcceptanceTests.''|
 
-!2 Tutorial: FitNesse Fixtures 
+!2 Tutorial: FitNesse Fixtures
 Behind each test table is FixtureCode. Learn how to write and run it.
 |FixtureCode|''An intro to the fixture code that lets you run FitNesse tables.''|
 |ClassPath|''Telling FitNesse where your FixtureCode is.''|

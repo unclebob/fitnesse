@@ -1,4 +1,4 @@
-If we try to test a page that is marked secure-test, we'll have to authenticate. 
+If we try to test a page that is marked secure-test, we'll have to authenticate.
 A response with status 401 will be received signifying lack of authentication.
 
 First setup the Authentication module.

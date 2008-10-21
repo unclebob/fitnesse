@@ -1,5 +1,5 @@
 !3 This page tests includes on a wiki page.
-When a !include is the first string on a line in a wiki page, then the argument of the !include is presumed to be another wiki page.  The contents of that wiki page are inserted in place of the !include.  
+When a !include is the first string on a line in a wiki page, then the argument of the !include is presumed to be another wiki page.  The contents of that wiki page are inserted in place of the !include.
 
 The following is a test that demonstrates how this works.
 #

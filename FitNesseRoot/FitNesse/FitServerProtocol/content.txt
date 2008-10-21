@@ -10,7 +10,7 @@ Java usage: !-java fit.FitServer [-v]-! ''host port socketTicket''
 '''Execution:'''
  * '''Connecting'''
   1 Use the ''socketTicket'' to build an HTTP request of the form:
-   * !-GET /?responder=socketCatcher&ticket=-!''socketTicket'' !-HTTP/1.1\r\n\r\n-! 
+   * !-GET /?responder=socketCatcher&ticket=-!''socketTicket'' !-HTTP/1.1\r\n\r\n-!
   1 open socket connection to the given ''host'' and ''port''.
   2 write the http request over the socket (do not precede with size)
   5 receive ''STATUS'' as ''INTEGER''.

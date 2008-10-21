@@ -1,11 +1,11 @@
 !3 A simple list
 
 A list created as follows {{{ 1 Item one
- 2 Item two}}} should be rendered as a two item ordered list. 
+ 2 Item two}}} should be rendered as a two item ordered list.
 #
  * First create a page with a simple table in it.
 #
-!note We use backslash is a way to capture the leading space before the *. 
+!note We use backslash is a way to capture the leading space before the *.
 !|Action Fixture.|
 |start|Page Builder|
 |enter|line|\ 1 Item One|

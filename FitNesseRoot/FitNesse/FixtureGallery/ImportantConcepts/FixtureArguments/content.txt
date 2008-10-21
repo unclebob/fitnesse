@@ -42,7 +42,7 @@ public class ArgumentsTest extends SetFixture{
 		}
 		this.setActualCollection(set);
 		super.doTable(arg0);
-	}	
+	}
 }
 }}}
 # section .NET Source Code
@@ -54,7 +54,7 @@ using System.Text;
 
 namespace info.fitnesse.fixturegallery
 {
-    
+
     public class ArgumentsTest: fit.RowFixture
     {
         public override Type GetTargetClass()

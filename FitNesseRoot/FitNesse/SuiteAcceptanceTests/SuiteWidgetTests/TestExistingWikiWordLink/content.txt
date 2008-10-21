@@ -1,9 +1,9 @@
 !2 Test that ''existing'' WikiPageReference tokens are converted to links.
  * A WikiPageReference is said to be ''existing'' if the page to which it refers already exists in the wiki.
  * A WikiPageReference can be a simple .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.WikiWord, or it can be a WikiPagePath.
- * A WikiPageReference that begins with a dot ("'''.'''") is taken to be relative to the ''root'' of the wiki.  
- * A WikiPageReference that does not begin with a dot is taken to be relative to the parent of the current page. 
----- 
+ * A WikiPageReference that begins with a dot ("'''.'''") is taken to be relative to the ''root'' of the wiki.
+ * A WikiPageReference that does not begin with a dot is taken to be relative to the parent of the current page.
+----
 !3 Test simple relative WikiPageReference.
  * Create pages at the root level.  One page refers to the other.
 |Page creator.|

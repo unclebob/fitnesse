@@ -1,4 +1,4 @@
-!3 This page tests includes of a sub page. 
+!3 This page tests includes of a sub page.
 
 Make sure the !-!include >MySubPage-! syntax works.
 #

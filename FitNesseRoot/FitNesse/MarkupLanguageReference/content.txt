@@ -1,6 +1,6 @@
 !1 Wiki Markup Language Reference
 
-The FitNesse markup language is straightforward to learn, and powerful enough to enable you to create richly-formatted and customized wiki pages. Below is a reference of so-called "widgets" for formatting text and accomplishing other things on wiki pages. 
+The FitNesse markup language is straightforward to learn, and powerful enough to enable you to create richly-formatted and customized wiki pages. Below is a reference of so-called "widgets" for formatting text and accomplishing other things on wiki pages.
 
 |!c '''Markup Syntax'''|
 |[[Italics][MarkupItalics]]|''Setting a word or phrase in italics.''|

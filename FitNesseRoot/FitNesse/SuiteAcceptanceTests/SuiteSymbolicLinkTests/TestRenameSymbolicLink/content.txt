@@ -21,7 +21,7 @@ When we look at the properties page we'll see the rename link.
 |contents|SymLink|true|
 |contents|<a href="javascript:symbolicLinkRename\(.*\);">&nbsp;Rename:</a>|true|
 
-Now click the '''Rename''' link.  
+Now click the '''Rename''' link.
 !|Response Requester.|
 |uri   |status?|
 |LinkingPage?responder=symlink&rename=SymLink&newname=NewLink|303|

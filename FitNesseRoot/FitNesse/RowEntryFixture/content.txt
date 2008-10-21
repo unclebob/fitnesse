@@ -6,7 +6,7 @@ We have seen examples where this was done with the help of a ''valid()'' functio
 
 RowEntryFixture is a better option in many cases.
 
- * RowEntryFixture is an abstract class.  You have to derive from it.  
+ * RowEntryFixture is an abstract class.  You have to derive from it.
  * It derives from ColumnFixture and works just the same way it does.
  * You override the ''enterRow'' function to add your data to the database.
   * If you have trouble adding your data, you throw an exception loaded with a message explaining the problem.

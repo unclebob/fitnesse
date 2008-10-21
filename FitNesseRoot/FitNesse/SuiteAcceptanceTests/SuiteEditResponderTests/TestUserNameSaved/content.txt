@@ -8,7 +8,7 @@ The username is saved when a page is edited.  It is visible through use of the !
 |uri   |status!|contents?|
 |TestPage  |200||
 
-The default user is Anonymous.  Anonymous is used when no one is logged in. 
+The default user is Anonymous.  Anonymous is used when no one is logged in.
 !|Response Examiner|
 |type  |pattern|matches!|contents?|
 |contents|Last modified anonymously.*|yes||

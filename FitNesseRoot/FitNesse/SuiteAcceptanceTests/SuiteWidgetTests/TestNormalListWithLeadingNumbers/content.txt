@@ -1,7 +1,7 @@
 !3 Normal lists with leading numbers
 An old bug in Fitnesse.  If you created a normal list with leading numbers in the text, the parser got confused and thought that the leading numbers were part of a numeric list.
 
-A list created as follows {{{* 50 ways to leave your lover}}} should be rendered as a normal list with "50 ways to leave your lover" as the text of the list. 
+A list created as follows {{{* 50 ways to leave your lover}}} should be rendered as a normal list with "50 ways to leave your lover" as the text of the list.
 #
  * First create a page with a simple table in it.
 #

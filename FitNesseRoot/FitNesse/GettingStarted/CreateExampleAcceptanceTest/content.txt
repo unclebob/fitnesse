@@ -1,4 +1,4 @@
-!3 A step by step example to create an run a simple acceptance test. 
+!3 A step by step example to create an run a simple acceptance test.
 
  1 Edit the FrontPage and add the link !-^ExampleAcceptanceTest-!.  Click save.
   * You should see !-^ExampleAcceptanceTest?-! appear on the screen.
@@ -15,7 +15,7 @@
    * and hit ''save''.
    * beware: if you copy and past the lines above, be sure to remove any white space at the end of the rows. !-FitNesse-! will otherwise not be able to parse the rows.
  1 Click on ''properties''.
-  * click the ''test'' check box 
+  * click the ''test'' check box
   * hit ''save''.
  1 Click on the '''[?]''' after !-ClassPath-!
   * Add the following to the !-ClassPath-! page:

@@ -288,7 +288,13 @@ public class TestResponderTest extends RegexTestCase
 		assertHasRegexp("Output of SuiteTearDown", errorLogContent);
 	}
 
-	private String errorWritingTable(String message)
+  public void testDoSimpleSlimTable() throws Exception {
+    doSimpleRun(simpleSlimDecisionTable());
+    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
+  }
+
+
+  private String errorWritingTable(String message)
 	{
 		return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +
 			"|" + message + "|\n\n";
@@ -315,5 +321,12 @@ public class TestResponderTest extends RegexTestCase
 	{
 		return "|!-fitnesse.testutil.PassFixture-!|\n";
 	}
+
+  private String simpleSlimDecisionTable() {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
+      "|string|get string arg?|\n" +
+      "|wow|wow|\n";
+  }
 
 }

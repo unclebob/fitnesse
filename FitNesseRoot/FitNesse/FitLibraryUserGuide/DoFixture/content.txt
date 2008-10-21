@@ -32,7 +32,7 @@ Each row of the second and third tables define actions. Eg consider the followin
 
 |''user''|sarah|''enters''|fit|''room''|
 
-The first, third and fifth cells contain ''keywords'', which give information about the role of the data that's in the second and fourth cells ("anna" and "lotr"). The ''keywords'' are shown in ''italics'' and are often colored when the tst is run (try it now). The keywords all joined together give the name of the action, ''user enters room''. 
+The first, third and fifth cells contain ''keywords'', which give information about the role of the data that's in the second and fourth cells ("anna" and "lotr"). The ''keywords'' are shown in ''italics'' and are often colored when the tst is run (try it now). The keywords all joined together give the name of the action, ''user enters room''.
 
 The fourth table is a little different, as it's checking the list of users in the given room:
 

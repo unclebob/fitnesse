@@ -1,6 +1,6 @@
 !1 How RowFixture Fixture Code Works
 
-Here is our simplistic prime number test table again: 
+Here is our simplistic prime number test table again:
 
 |!-fitnesse.fixtures.PrimeNumberRowFixture-!|
 |prime|
@@ -12,7 +12,7 @@ Here is our simplistic prime number test table again:
 
 Hit the test button to run this test. OK, we got them all. How does the table tell the code what to expect?
 
-Each data column specifies a query '''key'''. Above, ''prime'' is our only key. We just want to see whether our set of primes contains each of these numbers. 
+Each data column specifies a query '''key'''. Above, ''prime'' is our only key. We just want to see whether our set of primes contains each of these numbers.
 
 Now here is the code for the !-PrimeNumberRowFixture-!:{{{package fitnesse.fixtures;
 
@@ -86,7 +86,7 @@ When you write application code in order to get tests like the above to pass, yo
 
 !2 Learning More
 To learn more about the RowFixture style of test table, see RowFixture.
-To learn more about how FitNesse fixture code works in general, check out FixtureCode. 
+To learn more about how FitNesse fixture code works in general, check out FixtureCode.
 Also check out the other TestTableStyles.
 
 

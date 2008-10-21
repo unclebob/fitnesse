@@ -1,7 +1,7 @@
 !3 Only true page references should be changed during a rename.
 
 There are several widgets that contains strings that might match the pattern for a wiki word.  When
-a page is renamed, those strings should not be affected. 
+a page is renamed, those strings should not be affected.
 
 First build a page with lots of these ''protected'' widgets.
 

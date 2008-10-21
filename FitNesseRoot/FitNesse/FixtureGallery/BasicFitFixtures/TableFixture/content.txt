@@ -35,10 +35,10 @@ public class TableFixtureTest extends TableFixture{
 	protected void doStaticTable(int rows) {
 		 TaxCalculator tc=new TaxCalculator();
 	      double totaltax = 0;
-	      
+
 	      for (int row = 1; row < rows - 3; row++)
 	      {
-	        totaltax += tc.GetTax(getText(row, 1), 
+	        totaltax += tc.GetTax(getText(row, 1),
 	          Double.parseDouble(getText(row, 2)));
 	      }
 	      double taxintable = Double.parseDouble(getText(rows - 2, 2));
@@ -59,7 +59,7 @@ using System.Text;
 
 namespace info.fitnesse.fixturegallery
 {
-    public class TableFixtureTest : global::fitnesse.fixtures.TableFixture 
+    public class TableFixtureTest : global::fitnesse.fixtures.TableFixture
     {
         protected override void DoStaticTable(int rows)
         {

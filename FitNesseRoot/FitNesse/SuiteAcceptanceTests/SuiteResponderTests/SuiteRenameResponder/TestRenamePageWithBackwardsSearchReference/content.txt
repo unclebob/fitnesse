@@ -1,4 +1,4 @@
-!3 When a page is renamed, any links to that page from backwards references pages are changed. 
+!3 When a page is renamed, any links to that page from backwards references pages are changed.
 
 Create the test data.
 

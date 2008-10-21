@@ -1,4 +1,4 @@
-What if you want to specify a time range for your fitnesse fixtures? 
+What if you want to specify a time range for your fitnesse fixtures?
 
 !|Time Range|0|milliseconds min and max|50|milliseconds|
 |Division|

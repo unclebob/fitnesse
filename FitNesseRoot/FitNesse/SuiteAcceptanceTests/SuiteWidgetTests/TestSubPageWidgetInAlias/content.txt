@@ -9,7 +9,7 @@ Sometimes we want to create an alias to a subpage link as follows: !-[[click her
 |uri|valid?|contents?|
 |!-SuperPage-!|true||
 
-The widget should translate into a ? link of the form: 
+The widget should translate into a ? link of the form:
  * ''tag<a title="create page" href="!-SuperPage.SubPage-!?edit&amp;nonExistent=true">[?]</a>''
 |Response Examiner.|
 |type  |pattern|matches?|value|

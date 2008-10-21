@@ -7,7 +7,7 @@ Let's start by looking at the fixture code for the previous example, shown in pa
 The fixture code is as follows:
 ----{{{public class CalculatedDiscount extends fitlibrary.CalculateFixture{
 	private Discount application = new Discount();
-	
+
 	public double discountDollar(double amount) {
 		return application.getDiscount(amount);
 	}
@@ -15,7 +15,7 @@ The fixture code is as follows:
 
 The header labels are used to determine the method name, being the ''expected'' column label followed by each of the ''given'' column labels ("discount" + "$"). This name is converted into a valid Java method name based on [[''extended camel''][.FitLibrary.FitLibraryUserGuide.ExtendedCamelCase]]. While this can result in some weird method names, it does given the Fit test writer considerable freedom of expression.
 !3 In General
- * For each ''expected'' column in a ''!-CalculateFixture-!'' table, there is a distinct method. The name of the method is created from the ''expected'' column label followed by each of the ''given'' column labels. The method has a parameter for each of the ''given'' columns and returns a result which is compared against the ''expected'' value. 
+ * For each ''expected'' column in a ''!-CalculateFixture-!'' table, there is a distinct method. The name of the method is created from the ''expected'' column label followed by each of the ''given'' column labels. The method has a parameter for each of the ''given'' columns and returns a result which is compared against the ''expected'' value.
  * As with [[''!-DoFixture-!''][.FitLibrary.FitLibraryUserGuide.DoFixture.FixtureDetails]], a ''!-SystemUnderTest-!'' object may be associated with a ''!-CalculateFixture-!''. If the fixture itself doesn't have a required method, the one in the ''!-SystemUnderTest-!'' is called instead. This means that the fixture acts as an adapter only when necessary, to map actions in the table into methods in the ''!-SystemUnderTest-!''.
  * To enable a specific string to signify repeating of the previous ''given'' value (" " is used in ''!-ColumnFixture-!''), call the ''!-CalculateFixture-!'' method ''setRepeatString()''.
  * To enable a specific string to signify an exception is ''expected ''("error" is used in ''!-ColumnFixture-!''), call the ''!-CalculateFixture-!'' method ''setExceptionString()''.

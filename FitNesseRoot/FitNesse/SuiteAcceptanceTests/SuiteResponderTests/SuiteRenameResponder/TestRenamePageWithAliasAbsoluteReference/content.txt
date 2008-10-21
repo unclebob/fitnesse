@@ -1,4 +1,4 @@
-!3 When a page is renamed, any alias links that use absolute references to subpages are changed. 
+!3 When a page is renamed, any alias links that use absolute references to subpages are changed.
 
 First build parent & child pages where one refers to the other.
 

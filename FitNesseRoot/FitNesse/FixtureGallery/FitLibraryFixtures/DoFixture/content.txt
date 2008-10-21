@@ -36,13 +36,13 @@ public class DoFixtureTest extends DoFixture {
 	}
 	public boolean charAtIs(int position, char c){
 		return letters.charAt(position)==c;
-	}	
+	}
 	public void setList(char[] array){
 		letters=new String(array);
 	}
 	public char charAt(int position){
 		return letters.charAt(position);
-	}	
+	}
 }
 }}}
 # section .NET Source Code

@@ -4,7 +4,7 @@ Each action in a ''!-DoFixture-!'' table is mapped directly to a method in the f
 Eg, consider the first few tables:
  * The fixture of the first table is a ''!-DoFixture-!'', so the created ''flow fixture object'' handles the rest of the tables:
 | !-ChatStart-! |
- * The second table contains an action, which is mapped into the method ''connectUser()'' of the (initial) ''flow fixture object'', as shown below. 
+ * The second table contains an action, which is mapped into the method ''connectUser()'' of the (initial) ''flow fixture object'', as shown below.
 |''connect user''|sarah|
  * The third table contains two actions which are also applied to the ''flow fixture object''.
 |''user''|sarah|''creates''|fit|''room''|
@@ -13,7 +13,7 @@ Eg, consider the first few tables:
 !3 Some Example Code
 ----{{{public class ChatStart extends fitlibrary.DoFixture {
 	private ChatRoom chat = new ChatRoom();
-	
+
 	public ChatStart() {
 	    setSystemUnderTest(chat);
 	}

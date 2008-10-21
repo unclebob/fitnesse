@@ -6,7 +6,7 @@ Here's the code for the example table:
 ----{{{public class DiscountGroupsSetUp extends fitlibrary.SetUpFixture {
     DiscountApplication app = new DiscountApplication();
     public void futureValueMaxBalanceMinPurchaseDiscountPercent(
-            String futureValue, double maxBalance, double minPurchase, 
+            String futureValue, double maxBalance, double minPurchase,
             double discountPercent) {
         app.addDiscountGroup(futureValue,maxBalance,
                 minPurchase,discountPercent);

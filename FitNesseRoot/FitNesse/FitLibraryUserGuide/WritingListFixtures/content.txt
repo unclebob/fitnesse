@@ -13,7 +13,7 @@ These fixtures can also be used "stand-alone" (ie, not in ''flow'', where the fi
 ----{{{public class StartListing extends fitlibrary.DoFixture {
     private int[] ints;
 
-    public void listIs(int[] ints) { 
+    public void listIs(int[] ints) {
         this.ints = ints;
     }
     public Fixture orderedList() {

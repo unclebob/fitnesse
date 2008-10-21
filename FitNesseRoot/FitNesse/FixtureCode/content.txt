@@ -9,38 +9,38 @@ Let's look at our division test table again:
 |12.6|3|4.2|
 |100|4|33|
 
-What '''really''' happens when we click that test button? (Try clicking it again.) What gets run? 
-   * First, FitNesse submits the test table to the underlying FitFramework (FitNesse is a wiki GUI built on top of Fit). 
+What '''really''' happens when we click that test button? (Try clicking it again.) What gets run?
+   * First, FitNesse submits the test table to the underlying FitFramework (FitNesse is a wiki GUI built on top of Fit).
    * Fit looks for and runs the fixture code corresponding to the test table.
    * By design, the fixture code calls some underlying application code to do the real work, and report results back to the fixture
-   * Fit gives Fitnesse back the results from running the fixture code 
+   * Fit gives Fitnesse back the results from running the fixture code
    * FitNesse figures out whether to turn table cells red or green (or yellow, if an exception was thrown) and displays the results page accordingly
 
 !3 What is Fixture Code?
-The fixture is the Java or C# class that FitNesse and Fit call to process the contents of the table. In the top row of the table above, "eg" specifies a Java package or C# namespace, and "Division" specifies the actual class to be called. 
+The fixture is the Java or C# class that FitNesse and Fit call to process the contents of the table. In the top row of the table above, "eg" specifies a Java package or C# namespace, and "Division" specifies the actual class to be called.
 
-Here is what the Java version of the Division class might look like: 
-{{{ 
+Here is what the Java version of the Division class might look like:
+{{{
 public class Division extends ColumnFixture {
   public double numerator, denominator;
   public double quotient() {
     return numerator/denominator;
   }
-} }}}  
+} }}}
 !3 How Fit Uses Fixture Code to Process the Test Table
 Notice that our Division class extends ColumnFixture (of the several TestTableStyles, this is the one we are currently using). Next notice our public ''numerator'' and ''denominator'' fields: as Fit processes our rows of example data ('''from left to right'''), it stores the values from the ''numerator'' and ''denominator'' columns in the corresponding public fields in our Division class. For each row, it then calls the quotient() method on our Division class, which returns what we would expect it to: the numerator divided by the denominator. So for our Division table, Fit puts 10 in the numerator field and 2 in the denominator field, and then calls quotient(), which uses those two values.
 
 Click the Test button again and see what happens to the column of expected outputs under the ''quotient?'' header. For each cell of expected output, Fit compares the value it expects to get back with what it actually gets. If the return value matches the value in the corresponding table cell, FitNesse turns the cell green. Otherwise FitNesse turns the cell red, and shows both the expected and actual values. (If Fit encounters an exception, or cannot find a fixture, field, or method, it turns the corresponding table cell yellow, and inserts a stack trace.)
 
 Notice one last thing. Our code does none of the work of passing values from those public fields into our public method. Fit handles all of that for us. For each row in our test table, Fit instantiates Division, and uses the magic of reflection to find the right fields, get the right values into them, and then call the right method. That magic is what enables us to keep our fixture code so simple.
-!3 Wait a Minute. That's ''Too'' Simple. 
-How right you are. In the real world, the fixture code would not be doing any of the real work (though a single division operation is not much work). The fixture code would delegate to real application code, which in turn would do the work. In general, fixture code should be '''as thin as possible'''. It should be nothing but '''piping and wiring''' between the FitNesse table and the application code under test. 
+!3 Wait a Minute. That's ''Too'' Simple.
+How right you are. In the real world, the fixture code would not be doing any of the real work (though a single division operation is not much work). The fixture code would delegate to real application code, which in turn would do the work. In general, fixture code should be '''as thin as possible'''. It should be nothing but '''piping and wiring''' between the FitNesse table and the application code under test.
 
-So with that bit of wisdom in our minds, let's look at something a bit more realistic. 
+So with that bit of wisdom in our minds, let's look at something a bit more realistic.
 !2 Something a Bit More Realistic: A Trivia Game
-As much as we might like to, we shall not immediately leap into an application to analyze the seismic data resulting from setting off dozens of sticks of dynamite on the floor of the Gulf of Mexico. Partly because so many fish would die, and partly because that's going too far in the complexity direction. 
+As much as we might like to, we shall not immediately leap into an application to analyze the seismic data resulting from setting off dozens of sticks of dynamite on the floor of the Gulf of Mexico. Partly because so many fish would die, and partly because that's going too far in the complexity direction.
 
-Instead let's imagine that we are building a trivia game. The overall design of our trivia game is straightforward: players take turns rolling a single die, and move around a circular board. When they land on a square, they are asked a trivia question of some category. There will be requirements and test tables later on for answering questions incorrectly, for winning, and so on. 
+Instead let's imagine that we are building a trivia game. The overall design of our trivia game is straightforward: players take turns rolling a single die, and move around a circular board. When they land on a square, they are asked a trivia question of some category. There will be requirements and test tables later on for answering questions incorrectly, for winning, and so on.
 
 For now let's imagine that we are addressing a specific first requirement or user story (call it what you like):
 !3 "You can add players to the game, and you can ask the game how many players are playing."
@@ -54,7 +54,7 @@ How about this for a test table?
 | Al           | true        | 1              |
 | Bertha       | true        | 2              |
 
-It says that if we add a player named Al to our game successfully, the total number of players should be 1, and if we then add a player named Bertha, our total number of players should be 2. 
+It says that if we add a player named Al to our game successfully, the total number of players should be 1, and if we then add a player named Bertha, our total number of players should be 2.
 !3 The Code for !-AddRemovePlayerFixture-!
 What might the fixture code for that look like (so far)? How about this: {{{
 import fit.ColumnFixture;
@@ -62,25 +62,25 @@ import fit.ColumnFixture;
 public class AddRemovePlayerFixture extends ColumnFixture {
   public String playerName;
   private Game theGame;
-	
+
   public boolean addPlayer() {
     theGame = StaticGame.getInstance();
     Player thePlayer = theGame.addPlayer(playerName);
     return theGame.playerIsPlaying(thePlayer);
   }
-	
+
   public int countPlayers() {
     return theGame.getNumberOfPlayers();
   }
-} }}} Yes, I think we have arrived at a more realistic level of complexity. What does this code mean? Well, we have a public string named ''playerName'', as required, and we have methods named ''addPlayer()'' and ''countPlayers()''. Straightforward enough. 
+} }}} Yes, I think we have arrived at a more realistic level of complexity. What does this code mean? Well, we have a public string named ''playerName'', as required, and we have methods named ''addPlayer()'' and ''countPlayers()''. Straightforward enough.
 
-But '''what is that private Game field, and what are those methods calling, and why'''? 
+But '''what is that private Game field, and what are those methods calling, and why'''?
 
 !2 Piping and Wiring: Delegating to Real Code
 Our fixture's ''addPlayer()'' method is indeed thin: it merely calls an ''addPlayer()'' method on a Game class, which does the real work. Here is that Game class, such as it currently is: {{{
 public class Game {
   private ArrayList players;
-	
+
   public Game() {
     players = new ArrayList();
   }
@@ -101,7 +101,7 @@ public class Game {
 } }}}
 Game adds our players to an !-ArrayList-!, and returns the new Player object. The ''playerIsPlaying()'' method reports whether a player is playing, and ''getNumberOfPlayers('') returns the number of players in the collection. Not much of a trivia game yet, but it meets our one requirement: we can add players and count them.
 
-Notice that our fixture code's ''addPlayer()'' method above calls ''playerIsPlaying()'' to determine whether a player was successfully added: a fairly meaningful return value. Notice that our fixture's ''countPlayers()'' is even thinner: it returns the result from a single call to ''getNumberOfPlayers()'' on Game. 
+Notice that our fixture code's ''addPlayer()'' method above calls ''playerIsPlaying()'' to determine whether a player was successfully added: a fairly meaningful return value. Notice that our fixture's ''countPlayers()'' is even thinner: it returns the result from a single call to ''getNumberOfPlayers()'' on Game.
 
 But what is that call  to !-StaticGame-! for?
 !3 What That Call To !-StaticGame-! Is For
@@ -140,9 +140,9 @@ Finally, we'll try to remove a player from the game, and this too should fail:
 | playerName   | removePlayer?  | countPlayers?  |
 | Al           | false          | 2              |
 
-This shows how you can use a sequence of tables to verify a requirement by setting up and testing different states in your application code. 
+This shows how you can use a sequence of tables to verify a requirement by setting up and testing different states in your application code.
 
-Click the Test button to see how it all turns out. 
+Click the Test button to see how it all turns out.
 !3 New Code for removePlayer()
 Our removePlayer() on !-AddRemovePlayerFixture-! works much as addPlayer() does: {{{
 public boolean removePlayer() {
@@ -151,7 +151,7 @@ public boolean removePlayer() {
   theGame.removePlayer(thePlayer);
   return (playerWasRemoved(thePlayer));
 }
-	  
+
 private boolean playerWasRemoved(Player aPlayer) {
   return (!theGame.playerIsPlaying(aPlayer));
 } }}}
@@ -159,7 +159,7 @@ It too shares the Game instance supplied by !-StaticGame-!. And you can see that
 public class GameTurnFixture extends ColumnFixture {
   public int roll;
   private Game theGame;
-	
+
   public String player() {
     theGame = StaticGame.getInstance();
     return theGame.takeTurn(roll);
@@ -169,15 +169,15 @@ public class GameTurnFixture extends ColumnFixture {
     return theGame.gameHasStarted();
   }
 } }}}
-So, as !-AddRemovePlayerFixture-! and !-GameTurnFixture-! are repeatedly called, they make changes to, and check the state of, a single Game object. 
+So, as !-AddRemovePlayerFixture-! and !-GameTurnFixture-! are repeatedly called, they make changes to, and check the state of, a single Game object.
 
-This is a common pattern. One way or another, Fitnesse test tables on a single page often need to share a common object. We grant you that there is more than one way to skin this particular cat. This is the way we chose to skin it. It will show up in examples ahead of us. 
+This is a common pattern. One way or another, Fitnesse test tables on a single page often need to share a common object. We grant you that there is more than one way to skin this particular cat. This is the way we chose to skin it. It will show up in examples ahead of us.
 !2 Summary
   * A fixture is the Java or C# class that FitNesse and Fit use to process a particular test table when the Test button is clicked. For each row of data in a test table, Fit puts its inputs in public corresponding fields, and then calls the specified methods. It uses the return values to determine whether to turn output table cells green or red.
-  * You need to use a ClassPath to specify to Fit where your Java or C# fixture code resides. 
+  * You need to use a ClassPath to specify to Fit where your Java or C# fixture code resides.
   * Fixture code should be as thin as possible: its methods should merely delegate to, and return values from, methods on application code. To process our player-adding test tables above when we click the Test button, Fit uses our !-AddRemovePlayerFixture-! Java class to pass data between the table and underlying Java application classes (Game and Player).
-  * Sometimes fixtures get involved in pulling together test data for input, and formatting returned data for display, but fixtures should contain no business logic. 
-  * Often the test tables on a page need to share an object. We've illustrated the use of a Singleton to solve this problem. Your mileage may vary. 
+  * Sometimes fixtures get involved in pulling together test data for input, and formatting returned data for display, but fixtures should contain no business logic.
+  * Often the test tables on a page need to share an object. We've illustrated the use of a Singleton to solve this problem. Your mileage may vary.
 
 !2 Learning More
 To learn more about the different styles of test tables and the fixture code used to process them, see TestTableStyles.

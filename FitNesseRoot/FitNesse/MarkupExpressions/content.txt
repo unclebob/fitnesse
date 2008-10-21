@@ -1,6 +1,6 @@
 Expressions calculate a result and substitute the result in place of the expression much like variable references.
  * Are enclosed in ''' '' !-${=-! '' ''' and  ''' '' !-=}-! '' ''' delimiters.
- * May appear anywhere a variable is allowed.  
+ * May appear anywhere a variable is allowed.
  * May contain the following operators:
    * + - * / ^
    * unary -

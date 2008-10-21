@@ -189,7 +189,7 @@ public class ScriptTable extends SlimTable {
       try {
         rowWidget.addCells(String.format("|!style_ignore(%s)", value));
       } catch (Throwable e) {
-        return failMessage(value, SlimResponder.exceptionToString(e));
+        return failMessage(value, SlimTestSystem.exceptionToString(e));
       }
       return originalValue;
     }

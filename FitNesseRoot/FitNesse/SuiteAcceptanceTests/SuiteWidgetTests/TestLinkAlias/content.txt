@@ -82,7 +82,7 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |enter|line|!define HOST {localhost:8080}|
 |enter|line|!-[[tag][http://${HOST}/page]]-! works fine.|
 |enter|page|!-HttpLinkPage-!|
- 
+
  * Fetch the page.
 |Response Requester.|
 |uri|valid?|
@@ -127,7 +127,7 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |enter|line|!-[[tag][PageLink${EXPR}]]-! works too.|
 |enter|line|!-[[tag][PageLink${=${X}+${Y}+1=}]]-! works as well.|
 |enter|page|!-HttpExprPage-!|
- 
+
  * Fetch the page.
 |Response Requester.|
 |uri|valid?|contents?|

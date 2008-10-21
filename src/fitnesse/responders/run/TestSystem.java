@@ -1,25 +1,37 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.CommandRunner;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.PageData;
+
+import java.util.Map;
+import java.util.Set;
 
 public abstract class TestSystem {
   public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
-  protected FitNesseContext context;
   protected WikiPage page;
+  protected boolean fastTest;
+  protected static final String emptyPageContent = "OH NO! This page is empty!";
   protected TestSystemListener listener;
 
-  public TestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener) {
-    this.context = context;
+  public TestSystem(WikiPage page, TestSystemListener listener) {
     this.page = page;
     this.listener = listener;
   }
 
-  public abstract ExecutionLog createRunner(
-    String classPath, String className
-  ) throws Exception;
+  public abstract ExecutionLog prepareToStart(String classPath, String className) throws Exception;
+
+  public abstract void start() throws Exception;
+
+  public abstract void sendPageData(PageData pageData) throws Exception;
+
+  public abstract boolean isSuccessfullyStarted();
+
+  public abstract void bye() throws Exception;
+
+
+  public abstract void kill() throws Exception;
+
 
   protected String buildCommand(String program, String classPath) throws Exception {
     String testRunner = page.getData().getVariable("COMMAND_PATTERN");
@@ -39,15 +51,9 @@ public abstract class TestSystem {
     return value.substring(0, index) + replacement + value.substring(index + mark.length());
   }
 
-  public abstract void bye() throws Exception;
-
-  public abstract void send(String s) throws Exception;
-
-  public abstract boolean isSuccessfullyStarted();
-
-  public abstract void kill() throws Exception;
-
-  public abstract void start() throws Exception;
+  public void setFastTest(boolean fastTest) {
+    this.fastTest = fastTest;
+  }
 
   public static class TestSummary {
     public int right = 0;
@@ -101,5 +107,12 @@ public abstract class TestSystem {
         right += 1;
     }
 
+    public void add(TestSummary testSummary) {
+      right += testSummary.right;
+      wrong += testSummary.wrong;
+      ignores += testSummary.ignores;
+      exceptions += testSummary.exceptions;
+    }
   }
+
 }

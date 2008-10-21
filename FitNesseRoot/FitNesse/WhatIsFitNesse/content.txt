@@ -1,12 +1,12 @@
 !2 What Is FitNesse?
- * FitNesse is a collaborative testing and documentation tool.  
+ * FitNesse is a collaborative testing and documentation tool.
   * It provides a ''very simple'' way for teams to:
-   * collaboratively create documents, 
-   * specify tests, 
-   * and run those tests.  
+   * collaboratively create documents,
+   * specify tests,
+   * and run those tests.
 
  * FitNesse is a web server.
-  * It requires '''no configuration or setup'''.  
+  * It requires '''no configuration or setup'''.
   * Just run it and then direct your browser to the machine where it is running.
 
  * FitNesse is a wiki.

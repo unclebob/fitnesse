@@ -130,7 +130,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 	{
 	}
 
-	public void exceptionOccurred(Exception e)
+	public void exceptionOccurred(Throwable e)
 	{
 	}
 }

@@ -1,5 +1,5 @@
  * Bullet lists are created by prefixing a space and an asterisk to a line.
-  * You can create sublists by adding more spaces on the front. 
+  * You can create sublists by adding more spaces on the front.
    1 Numbered lists are created by prefixing a space and a number to a line.
 
 ---- '''Markup Text'''{{{

@@ -3,7 +3,7 @@
 |TriviaGameUserStories.SetUp|
 
 !1 A Suite of Test Pages for Trivia Game User Stories
-This page is a suite of test pages, each of which covers one of the user stories for a trivia game example. 
+This page is a suite of test pages, each of which covers one of the user stories for a trivia game example.
 
 |^EachRegularPlaceHasaCategory|''Story 10: The 12 regular places are each assigned one of the 4 regular categories, in cyclical order.''|
 |^StartingTheGame|''Stories 11,12,13: Once the game has started, players cannot be added or removed.''|

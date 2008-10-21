@@ -1,4 +1,4 @@
-When you edit a test page, !-FitNesse-! gathers up the fixtures and places them into the ''insert fixture'' menu.  The fixtures are found in the !-!fixture-! widgets of the test page, and every ancestor of the test page.  
+When you edit a test page, !-FitNesse-! gathers up the fixtures and places them into the ''insert fixture'' menu.  The fixtures are found in the !-!fixture-! widgets of the test page, and every ancestor of the test page.
 ----
 
 First create a parent page that has a fixture on it
@@ -8,7 +8,7 @@ First create a parent page that has a fixture on it
 |enter|line|!fixture parent|
 |enter|page|ParentPage|
 
-Next create a subpage that also has a fixture on it.  
+Next create a subpage that also has a fixture on it.
 
 !|Action Fixture.|
 |start|Page Builder|

@@ -73,7 +73,6 @@ public class ResponderFactory {
     addResponder("symlink", SymbolicLinkResponder.class);
     addResponder("importAndView", ImportAndViewResponder.class);
     addResponder("getPage", WikiPageResponder.class);
-    addResponder("slim", SlimResponder.class);
     addRespondersForRevisionControlOperations();
   }
 

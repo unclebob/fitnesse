@@ -6,7 +6,7 @@ First we need a page.
 |Page name.   |Page contents.|valid?|
 |ImportingPage|!contents   |true   |
 
-Import the !-SampleWiki-!. 
+Import the !-SampleWiki-!.
 !|Response Requester.|
 |uri   |valid?|
 |ImportingPage?responder=import&remoteUrl=http://localhost:${PORT}/FitNesse.SampleWiki|true|

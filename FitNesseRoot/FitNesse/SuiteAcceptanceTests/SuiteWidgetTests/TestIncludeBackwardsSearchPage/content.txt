@@ -1,4 +1,4 @@
-!3 This page tests includes of a backwards search page. 
+!3 This page tests includes of a backwards search page.
 
 Make sure the !-!include <MyAncestorPage.MyPage-! syntax works.
 #

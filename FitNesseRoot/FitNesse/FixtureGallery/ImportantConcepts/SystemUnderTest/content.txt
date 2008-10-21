@@ -22,7 +22,7 @@ import fitlibrary.DoFixture;
 import info.fitnesse.fixturegallery.domain.*;
 
 public class SystemUnderTest extends DoFixture{
-	
+
 	Queue  queue;
 	public SystemUnderTest (){
 		queue=new Queue();

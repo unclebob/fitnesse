@@ -38,7 +38,7 @@ The character set for properties may be changed via the PROPERTY_CHARACTERS vari
 !3 AcceptanceTests for the ''' !contents ''' widget
  * SuiteAcceptanceTests.SuiteWidgetTests.TestContents
  * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsWithRecursion
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegraced 
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsProperties 
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsFilters 
- * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp 
+ * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsRegraced
+ * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsProperties
+ * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsFilters
+ * SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp

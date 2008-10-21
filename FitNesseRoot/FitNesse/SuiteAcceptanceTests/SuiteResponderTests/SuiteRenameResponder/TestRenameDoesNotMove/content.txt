@@ -1,4 +1,4 @@
-!3 A page may ''not'' be renamed to a name with dots in it. 
+!3 A page may ''not'' be renamed to a name with dots in it.
 !3 Another way of saying this is that renaming a page does not change it's position.
 
 First build the page to rename, and another page to try to move it beneath.

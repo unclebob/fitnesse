@@ -1,5 +1,6 @@
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.responders.run.TestSystem;
 import static fitnesse.util.ListUtility.list;
 
 import static java.lang.Character.isLetterOrDigit;
@@ -21,6 +22,7 @@ public abstract class SlimTable {
   private boolean isLiteralTable;
   private List<Expectation> expectations = new ArrayList<Expectation>();
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
+  private TestSystem.TestSummary testSummary = new TestSystem.TestSummary();
 
   public SlimTable(Table table, String id) {
     this(table, id, new LocalSlimTestContext());
@@ -201,15 +203,21 @@ public abstract class SlimTable {
   }
 
   protected String fail(String value) {
+    testSummary.wrong++;
     return String.format("!style_fail(%s)", value);
   }
 
   protected String failMessage(String value, String message) {
-    return String.format("[%s] !style_fail(%s)", value, message);
+    return String.format("[%s] %s", value, fail(message));
   }
 
   protected String pass(String value) {
+    testSummary.right++;
     return String.format("!style_pass(%s)", value);
+  }
+
+  protected String ignore(String literalizedValue) {
+    return String.format("!style_ignore(%s)", literalizedValue);
   }
 
   protected ReturnedValueExpectation makeReturnedValueExpectation(
@@ -235,6 +243,10 @@ public abstract class SlimTable {
     }
 
 
+  }
+
+  public TestSystem.TestSummary getTestSummary() {
+    return testSummary;
   }
 
   static class Disgracer {
@@ -460,7 +472,7 @@ public abstract class SlimTable {
       if (value.equals(replacedValue))
         evaluationMessage = pass(announceBlank(originalValue));
       else if (replacedValue.length() == 0)
-        evaluationMessage = String.format("!style_ignore(%s)", literalizedValue);
+        evaluationMessage = ignore(literalizedValue);
       else {
         String expressionMessage = new Comparator(replacedValue, value, expectedValue).evaluate();
         if (expressionMessage != null)

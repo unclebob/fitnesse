@@ -6,10 +6,10 @@ You will find 3 .css files in the Files section of FitNesse.
  * fitnesse_print.css
 
 !3 fitnesse_base.css
-This is a critical file that must remain as it is; do not change it.  It defines all of the specific CSS classes required by FitNesse.  Without it, none of the pages would look right at all.  For this reason FitNesse has an updater that will install this file if it is missing and overwrite it if it has been modified.  (This updater runs every time FitNesse is started.)  
+This is a critical file that must remain as it is; do not change it.  It defines all of the specific CSS classes required by FitNesse.  Without it, none of the pages would look right at all.  For this reason FitNesse has an updater that will install this file if it is missing and overwrite it if it has been modified.  (This updater runs every time FitNesse is started.)
 
 !3 fitnesse.css
-This is the place to customize the look and feel of your FitNesse site.  You can redefine or make modifications to the imported classes. 
+This is the place to customize the look and feel of your FitNesse site.  You can redefine or make modifications to the imported classes.
 
 Be careful, though. By default this file simply imports ''fitnesse_base.css''.  Be careful to maintain the import of ''fitnesse_base.css'' or FitNesse page display will look terrible.
 

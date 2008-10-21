@@ -13,7 +13,7 @@ Create an importing page.
 |Page name.   |Page contents.|valid?|
 |ImportingPage|!contents   |true   |
 
-This !-ImportingPage-! will now import the !-ImportingRoot-! page created above. 
+This !-ImportingPage-! will now import the !-ImportingRoot-! page created above.
 '''Auto Update is turned one'''
 !|Response Requester.|
 |uri   |valid?|

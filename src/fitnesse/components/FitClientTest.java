@@ -2,7 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fit.Counts;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.responders.run.TestSystem;
@@ -56,7 +55,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener
 		this.counts.add(testSummary);
 	}
 
-	public void exceptionOccurred(Exception e)
+	public void exceptionOccurred(Throwable e)
 	{
 		exceptionOccurred = true;
 		try

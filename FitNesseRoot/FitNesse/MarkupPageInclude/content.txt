@@ -12,7 +12,7 @@ As a result you will see .FrontPage below:
 !include .FrontPage
 -----
 !3 '''Watch out for !include cycles'''
-Don't include a page that already includes the page that you are including from. ;-)  
+Don't include a page that already includes the page that you are including from. ;-)
 
 !3 Including Test snippets
 It is often useful to include portions of test tables into your tests. You do this to bring in common setup data or common test sequences (possibly modified with variables).  A convenient way to do this is to use the Backwards Search notation as follows:{{{!include <UtilityPage.MyUtility}}}

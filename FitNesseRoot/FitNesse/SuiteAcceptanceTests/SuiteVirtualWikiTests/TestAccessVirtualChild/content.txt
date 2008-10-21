@@ -1,4 +1,4 @@
-In this test we make sure we can fetch the virtual child page.  
+In this test we make sure we can fetch the virtual child page.
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                            |valid?|

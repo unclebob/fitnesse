@@ -40,7 +40,7 @@ public class ExecutionLog
 		errorLogPageName = PathParser.render(errorLogPagePath);
 	}
 
-	public void addException(Exception e)
+	public void addException(Throwable e)
 	{
 		exceptions.add(e);
 	}
@@ -156,5 +156,9 @@ public class ExecutionLog
 
   public int getExitCode() {
     return runner.getExitCode();
+  }
+
+  public CommandRunner getCommandRunner() {
+    return runner;
   }
 }

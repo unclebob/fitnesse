@@ -1,4 +1,4 @@
-!3 When a page is renamed, any internal links to that page are changed. 
+!3 When a page is renamed, any internal links to that page are changed.
 
 If you have a page that refers to itself, then its internal references will be changed.
 

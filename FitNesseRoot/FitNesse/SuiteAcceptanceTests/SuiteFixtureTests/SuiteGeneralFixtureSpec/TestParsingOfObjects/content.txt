@@ -6,13 +6,13 @@ Table cells contain strings.  Fixtures deal with objects.  In order to convert t
 |(0,1)|(0,1)|(0,2)|
 |(1,1)|(1,1)|(2,2)|
 
-It is not always possible to add a parse method on the Object returned by the fixture. 
+It is not always possible to add a parse method on the Object returned by the fixture.
 
-For Ex. if your fixture returns java.awt.Point class which does not have a {{{Object parse(String s);}}} method, this approach won't work. 
+For Ex. if your fixture returns java.awt.Point class which does not have a {{{Object parse(String s);}}} method, this approach won't work.
 
 Following approach can be used to delegate the parse method to a different class (Parse Delegate class). The parse delegate class has the {{{Object parse(String s);}}} method which returns the Object we are interested in.
 
-The following table shows the result of adding two points.  Each point is represented by an ordered pair which represents it's X and Y dimensions. 
+The following table shows the result of adding two points.  Each point is represented by an ordered pair which represents it's X and Y dimensions.
 
 !|fitnesse.testutil.ObjectTranslatePoint|
 |p1|p2|sum?|
@@ -23,7 +23,7 @@ The following table shows the result of adding two points.  Each point is repres
 In the ObjectTranslatePoint fixture, we have a static block which registers the parse delegate object for a give Class type.
 
 Ex:
-{{{static 
+{{{static
 {
         TypeAdapter.registerParseDelegate(java.awt.Point.class, new ObjectDelegatePointParser());
 }
@@ -38,7 +38,7 @@ Ex:
 In the ClassTranslatePoint fixture, we have a static block which registers the parse delegate class for a give Class type.
 
 Ex:
-{{{static 
+{{{static
 {
         TypeAdapter.registerParseDelegate(java.awt.Point.class, ClassDelegatePointParser.class);
 }

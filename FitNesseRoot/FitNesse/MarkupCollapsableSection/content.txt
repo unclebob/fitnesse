@@ -18,7 +18,7 @@ To end a collapsable section,
 use at least one * followed by an !.
 **************!
 
-You'll notice that the section is expanded by default.  
+You'll notice that the section is expanded by default.
 
 !3 Collapsible Sections that Start Closed
 You may designate a section to be closed by default by following the stars on the first line with a right arrow ('''>''').

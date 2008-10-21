@@ -1,7 +1,7 @@
 !3 Convenient access to table cells.
-Sometimes you just want a fixture that lets you access the cells in a table by row and column.  TableFixture provides some simple methods that allow just that.  
- * The (row,column) coordinates are zero based, 
- * with (0,0) being the upper left cell.  
+Sometimes you just want a fixture that lets you access the cells in a table by row and column.  TableFixture provides some simple methods that allow just that.
+ * The (row,column) coordinates are zero based,
+ * with (0,0) being the upper left cell.
 
 The methods of TableFixture are:
 

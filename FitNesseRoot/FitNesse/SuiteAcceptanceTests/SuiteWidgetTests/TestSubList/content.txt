@@ -1,11 +1,11 @@
 !3 A sub list
 
 A list created as follows {{{ * Item one
-  * Item two}}} should be rendered as a list with a sub list. 
+  * Item two}}} should be rendered as a list with a sub list.
 #
  * First create a page with a simple table in it.
 #
-!note We use backslash is a way to capture the leading space before the *. 
+!note We use backslash is a way to capture the leading space before the *.
 !|Action Fixture.|
 |start|Page Builder|
 |enter|line|\ * Item One|

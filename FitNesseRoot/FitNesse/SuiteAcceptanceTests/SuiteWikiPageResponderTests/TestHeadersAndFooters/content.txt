@@ -1,5 +1,5 @@
 !2 This page tests !-PageHeader and PageFooter-!
- * The contents of the !-PageHeader-! should appear at the start of every page.  Likewise the contents of !-PageFooter-! should appear at the end of every page.  
+ * The contents of the !-PageHeader-! should appear at the start of every page.  Likewise the contents of !-PageFooter-! should appear at the end of every page.
  * Sub pages inherit the headers and footers of their parent, unless they have !-PageHeader-! and !-PageFooter-! siblings.
 !3 Test normal header and footer without sub pages.
  * First create a normal page, plus header and footer pages.

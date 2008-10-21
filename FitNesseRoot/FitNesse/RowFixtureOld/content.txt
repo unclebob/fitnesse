@@ -6,7 +6,7 @@
 |DesigningWithRowFixture|''Tips and philosophy for designing with RowFixture.''|
 ----
 !2 !c Basic Functionality of RowFixture
-Each row of a RowFixture represents a query into an array of objects.  The data columns specify the query criteria.  The function columns specify the operations to be performed and the data to be checked.  
+Each row of a RowFixture represents a query into an array of objects.  The data columns specify the query criteria.  The function columns specify the operations to be performed and the data to be checked.
 
 For example, let's say that we have calculated the first five prime numbers.  Let's make sure we got them all.  Hit the test button to run this test.
 

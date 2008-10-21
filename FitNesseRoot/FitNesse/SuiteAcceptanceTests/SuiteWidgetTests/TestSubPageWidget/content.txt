@@ -9,7 +9,7 @@ Sometimes we want to conveniently create a link to a sub page.  We could do this
 |uri|valid?|contents?|
 |SuperPage|true||
 
-The widget should translate into a ? link of the form: 
+The widget should translate into a ? link of the form:
  * ''!-^SubPage-!<a title="create page" href="!-SuperPage.SubPage-!?edit&amp;nonExistent=true">[?]</a>''
 !|Response Examiner.|
 |type  |pattern|matches?|value|

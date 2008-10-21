@@ -1,18 +1,20 @@
 package fitnesse.responders.run;
 
-import fitnesse.components.CommandRunningFitClient;
-import fitnesse.responders.run.TestSystemListener;
 import fitnesse.FitNesseContext;
+import fitnesse.components.CommandRunningFitClient;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public class FitTestSystem extends TestSystem {
   private CommandRunningFitClient client;
+  private FitNesseContext context;
 
   public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener) {
-    super(context, page, listener);
+    super(page, listener);
+    this.context = context;
   }
 
-  public ExecutionLog createRunner(String classPath, String className) throws Exception {
+  public ExecutionLog prepareToStart(String classPath, String className) throws Exception {
     String command = buildCommand(className, classPath);
     client = new CommandRunningFitClient(listener, command, context.port, context.socketDealer);
     return new ExecutionLog(page, client.commandRunner);
@@ -24,8 +26,12 @@ public class FitTestSystem extends TestSystem {
     client.join();
   }
 
-  public void send(String s) throws Exception {
-    client.send(s);
+  public void sendPageData(PageData pageData) throws Exception {
+    String html = pageData.getHtml();
+    if (html.length() == 0)
+      client.send(emptyPageContent);
+    else
+      client.send(html);
   }
 
   public boolean isSuccessfullyStarted() {

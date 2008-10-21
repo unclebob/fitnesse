@@ -102,6 +102,12 @@ public class SlimResponderTest {
   }
 
   @Test
+  public void emptyImportTable() throws Exception {
+    getResultsForPageContents("|Import|\n");
+    assertTestResultsContain("Import tables must have at least two rows.");
+  }
+
+  @Test
   public void emptyTableTable() throws Exception {
     getResultsForPageContents("|Table|\n");
     assertTestResultsContain("Table tables must have at least two rows.");
@@ -198,23 +204,4 @@ public class SlimResponderTest {
     assertEquals("!style_pass(2<$A->[3])", dt.getCellContents(1, 3));
     assertEquals("!style_pass($A->[3]<4<$B->[5])", dt.getCellContents(1, 5));
   }
-
-
-  @Test
-  public void importTable() throws Exception {
-    getResultsForPageContents(
-      "|Import|\n" +
-        "|fitnesse.slim.test|\n" +
-        "|x.y.z|\n"
-    );
-    List<Object> instructions = responder.getInstructions();
-    assertEquals(
-      list(
-        list("import_0_0", "import", "fitnesse.slim.test"),
-        list("import_0_1", "import", "x.y.z")
-      ), instructions
-    );
-  }
-
-
 }

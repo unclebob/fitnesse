@@ -1,6 +1,6 @@
 When you execute a suite page, !-FitNesse-! tests all the subpages
-unless the Prune attribute on the Properties page is set.  
-This example shows just one test subpage of two subpages being executed. 
+unless the Prune attribute on the Properties page is set.
+This example shows just one test subpage of two subpages being executed.
 
 ----
 

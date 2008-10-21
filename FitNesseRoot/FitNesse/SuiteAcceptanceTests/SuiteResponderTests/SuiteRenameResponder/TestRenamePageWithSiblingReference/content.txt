@@ -1,4 +1,4 @@
-!3 When a page is renamed, any links to that page on other pages are changed. 
+!3 When a page is renamed, any links to that page on other pages are changed.
 
 If you have a page that refers to the renamed page, then that reference will be changed.
 

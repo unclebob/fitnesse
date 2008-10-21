@@ -64,7 +64,7 @@ namespace fitnesse.acceptanceTests
 
 		public ValueWrapper(object value)
 		{
-			this.value = value;	
+			this.value = value;
 		}
 
 		public object Value

@@ -1,10 +1,10 @@
 A normal wiki is a collection of pages with a flat structure.  All the pages are peers.  FitNesse, on the other hand, is meant to manage many projects.  We'd like each project to have its own wiki so that name collisions can be avoided.
 
-For example, project one and project two probably use completely different classpaths.  We'd like each project to be able to run acceptance tests using their own classpaths.  So we want a different ClassPath page for each. 
+For example, project one and project two probably use completely different classpaths.  We'd like each project to be able to run acceptance tests using their own classpaths.  So we want a different ClassPath page for each.
 
 FitNesse supports this by allowing you to create sub wikis.  Each wiki page can be the parent of an entire new wiki.  For example the name of this page is .FitNesse.WikiWithinWiki.  Thus, this page is the WikiWithinWiki page whose parent is the .FitNesse page. ''(Put your mouse on each of these links and look at the bottom of the display to see where they will be directed.)''
 
-To create a sub wiki, simply create the parent page, and then add pages below it using the ''!-ParentPage.SubPage-!'' syntax or the shortcut ''!-^SubPage-!'' syntax. For an example, look at the .FitNesse page. 
+To create a sub wiki, simply create the parent page, and then add pages below it using the ''!-ParentPage.SubPage-!'' syntax or the shortcut ''!-^SubPage-!'' syntax. For an example, look at the .FitNesse page.
 
 When a sub page is displayed, any unqualified links are assumed to be at the current level.  If you want to access a global page, you need to precede the link with a dot.  For example the link RecentChanges is really a link to .FitNesse.RecentChanges (which does not exist), whereas the link .RecentChanges is a link to the global page.
 

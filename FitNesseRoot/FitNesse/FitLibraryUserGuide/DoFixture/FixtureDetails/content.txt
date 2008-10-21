@@ -7,7 +7,7 @@ The keywords of an action are concatentated together, with spaces between and co
  * An 'ensure' special action colors the action red if the action returns false or throws an exception. Otherwise it colors it green.
 !3 Auto-Wrapping
 The value returned by the method corresponding to an action may be auto-wrapped with a fixture, as follows:
- * A ''Set'' object is auto-wrapped with a ''!-SetFixture-!''. 
+ * A ''Set'' object is auto-wrapped with a ''!-SetFixture-!''.
  * An ''Object[]'', ''Collection'' or ''Iterator'' is wrapped with an ''!-ArrayFixture-!''.
  * An 'Object' is wrapped with a ''!-DoFixture-!''. But only if it's not one of the above, nor a ''Fixture'', and doesn't have a ''static Object parse(String)'' method.
 This fixture object, or the one returned explicitly, is used to interpret the rest of the table.

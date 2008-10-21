@@ -13,12 +13,12 @@ import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.wiki.*;
 
 import java.util.LinkedList;
 
 public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
-  protected static final String emptyPageContent = "OH NO! This page is empty!";
   protected static final int htmlDepth = 2;
 
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
@@ -33,12 +33,17 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   protected void doSending() throws Exception {
     data = page.getData();
-    startHtml();
-    sendPreTestNotification();
-    testSystem = new FitTestSystem(context, page, this);
     String classPath = buildClassPath();
     String className = getClassName(data);
-    log = testSystem.createRunner(classPath, className);
+    startHtml();
+    sendPreTestNotification();
+
+    if ("slim".equalsIgnoreCase(data.getVariable("TEST_SYSTEM"))) {
+      testSystem = new SlimTestSystem(page, this);
+    } else {
+      testSystem = new FitTestSystem(context, page, this);
+    }
+    log = testSystem.prepareToStart(classPath, className);
     testSystem.start();
 
     if (testSystem.isSuccessfullyStarted())
@@ -59,12 +64,10 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   protected void performExecution() throws Exception {
     addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
-
     SetupTeardownIncluder.includeInto(data, true);
-    String testableHtml = data.getHtml();
-    if (testableHtml.length() == 0)
-      testableHtml = handleBlankHtml();
-    testSystem.send(testableHtml);
+    if (data.getContent().length() == 0)
+      addEmptyContentMessage();
+    testSystem.sendPageData(data);
     testSystem.bye();
   }
 
@@ -87,7 +90,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     assertionCounts.tally(testSummary);
   }
 
-  public synchronized void exceptionOccurred(Exception e) {
+  public synchronized void exceptionOccurred(Throwable e) {
     try {
       log.addException(e);
       log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
@@ -136,9 +139,8 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     response.add(output);
   }
 
-  private String handleBlankHtml() throws Exception {
+  private void addEmptyContentMessage() throws Exception {
     response.add(formatter.messageForBlankHtml());
-    return emptyPageContent;
   }
 
   protected void buildHtml() throws Exception {
@@ -173,8 +175,16 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   public String getClassName(PageData data) throws Exception {
     String program = data.getVariable("TEST_RUNNER");
     if (program == null)
-      program = "fit.FitServer";
+      program = defaultTestRunner(data);
     return program;
+  }
+
+  private String defaultTestRunner(PageData data) throws Exception {
+    String testRunner = data.getVariable("TEST_SYSTEM");
+    if ("slim".equalsIgnoreCase(testRunner))
+      return "fitnesse.slim.SlimService";
+    else
+      return "fit.FitServer";
   }
 
   public SecureOperation getSecureOperation() {

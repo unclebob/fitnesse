@@ -7,7 +7,7 @@ But this had some problems when non-programmers are creating Fit tables:
  * Certain identifiers can't be used, such as "case", "for", "do", etc in Java.
 In addition, unicode can't be used for such names, because in general there is little support for unicode in development tools.
 
-Extended camel is used with all the !-FitLibrary-! fixtures and takes camel casing one step further. It converts a name into a valid identifier in the language concerned. For example, in Java the name "% discount" is translated into "percent discount", which is then camel-cased into "percentDiscount". 
+Extended camel is used with all the !-FitLibrary-! fixtures and takes camel casing one step further. It converts a name into a valid identifier in the language concerned. For example, in Java the name "% discount" is translated into "percent discount", which is then camel-cased into "percentDiscount".
 
 This can result in some weird and/or long identifiers. There's no need to work out such identifiers, however, as an unknown identifier is displayed in a error messages in a Fit table. These weird identifiers don't need to "pollute" the application, as they only need to appear in fixture code.
 

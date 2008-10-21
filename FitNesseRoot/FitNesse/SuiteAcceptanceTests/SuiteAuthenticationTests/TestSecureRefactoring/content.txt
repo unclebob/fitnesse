@@ -1,4 +1,4 @@
-Refactoring a page ''always'' requires authentication.  
+Refactoring a page ''always'' requires authentication.
 A response with status 401 will be received signifying lack of authentication.
 
 First setup the Authentication module.

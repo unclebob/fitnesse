@@ -1,4 +1,4 @@
-There are now 2 buttons on every edit window that have to do with spreadsheets like Excel.  The first '''Spreadsheet to FitNesse''' will convert copied spreadsheep content in to FitNesse tables.  Unlike the previous verion of this button, you must paste the spreadsheet content into the edit window and then click.  
+There are now 2 buttons on every edit window that have to do with spreadsheets like Excel.  The first '''Spreadsheet to FitNesse''' will convert copied spreadsheep content in to FitNesse tables.  Unlike the previous verion of this button, you must paste the spreadsheet content into the edit window and then click.
 
 The second button.'''FitNesse to Spreadsheet''' is new and just as useful.  When clicked it will convert all the tables in the edit window into a format that can be copied and pasted into a spreadsheet.
 

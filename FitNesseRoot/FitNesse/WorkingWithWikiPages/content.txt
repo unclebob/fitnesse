@@ -1,4 +1,4 @@
-!2 Working with Wiki Pages 
+!2 Working with Wiki Pages
 |!c '''Operations'''|
 |[[Page Properties][PageProperties]]|''Enabling and disabling page properties (also called attributes).''|
 |[[Headers and footers][MarkupHeaderAndFooter]]|''Specifying Headers and Footers for wiki pages''|

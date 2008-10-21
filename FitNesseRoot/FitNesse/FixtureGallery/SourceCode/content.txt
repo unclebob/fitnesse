@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player{
-	public String name; 
-	public String postCode; 
+	public String name;
+	public String postCode;
 	public double balance;
 	public double getCreditLimit(){
 		return balance;
@@ -92,7 +92,7 @@ using System.Text;
 
 namespace info.fitnesse.fixturegallery
 {
-    
+
     public class Player
     {
         public static List<Player> players=new List<Player>();

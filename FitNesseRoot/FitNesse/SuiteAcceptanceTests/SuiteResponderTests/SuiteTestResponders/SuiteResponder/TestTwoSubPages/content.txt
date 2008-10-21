@@ -1,5 +1,5 @@
-When you execute a suite page, !-FitNesse-! tests all the subpages.  
-This example shows just one test subpage being executed. 
+When you execute a suite page, !-FitNesse-! tests all the subpages.
+This example shows just one test subpage being executed.
 
 ----
 

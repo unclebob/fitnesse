@@ -7,7 +7,7 @@ Create an importing page.
 |Page name.   |Page contents.|valid?|
 |ImportingPage|!contents   |true   |
 
-This !-ImportingPage-! will now import the !-SampleWiki-! page. 
+This !-ImportingPage-! will now import the !-SampleWiki-! page.
 !|Response Requester.|
 |uri   |valid?|
 |ImportingPage?responder=import&remoteUrl=http://localhost:${PORT}/FitNesse.SampleWiki|true|

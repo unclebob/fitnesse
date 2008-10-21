@@ -14,7 +14,7 @@ When we look at the properties page we'll see the Unlink link.
 |contents|SymLink|true|
 |contents|<a href="LinkingPage\?responder=symlink&removal=SymLink">Unlink&nbsp;</a>|true|
 
-Now click the '''remove''' link.  
+Now click the '''remove''' link.
 !|Response Requester.|
 |uri   |status?|
 |LinkingPage?responder=symlink&removal=SymLink|303|

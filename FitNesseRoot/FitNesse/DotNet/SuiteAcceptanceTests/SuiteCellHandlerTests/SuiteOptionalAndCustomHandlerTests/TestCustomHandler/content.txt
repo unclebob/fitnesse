@@ -1,6 +1,6 @@
 !3 You can easily create and load your own custom handlers.
 
-Here's how we added the !-IntegralRangeHandler-! to !-FitNesse-!, which you use to assert that an int value returned from the application is within a given range. 
+Here's how we added the !-IntegralRangeHandler-! to !-FitNesse-!, which you use to assert that an int value returned from the application is within a given range.
 
 First, we overrode the Match method, which takes a string (the contents of a cell) and a Type. In this example, we want an int followed by ".." followed by an int in the string AND the Type of the field must also be an int. It is very important that the Match method be as unique as possible. For example, there are three substring handlers: substring (..abc..), starts with (abc..) and ends with (..abc). The Match method on the !-StartsWithHandler-! needs to ensure that the text ends with ".." and does NOT start with "..".
 

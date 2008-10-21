@@ -15,11 +15,11 @@ Here is our example test table from the ActionFixture page:
 
 And here is the code for the !-CountFixture-!:{{{public class CountFixture extends Fixture {
   private int counter = 0;
-  
+
   public void count() {
     counter++;
   }
-  
+
   public int counter() {
     return counter;
   }

@@ -1,4 +1,4 @@
-After a Symbolic Link is created, it is possible to view it as a normal page as well as it's children. 
+After a Symbolic Link is created, it is possible to view it as a normal page as well as it's children.
 
 !include CreateRelativeSymbolicLink
 

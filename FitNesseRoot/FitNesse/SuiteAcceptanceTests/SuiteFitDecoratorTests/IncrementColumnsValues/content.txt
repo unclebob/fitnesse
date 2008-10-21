@@ -31,7 +31,7 @@ What if you want to increment the value of one of the columns of your fixture ta
 |5|11|5|
 |5|111|5|
 
-Updates the dates by 5 days. 
+Updates the dates by 5 days.
 !|Increment Columns Value|inDate|of type|date|by|5|
 |Get Dates|
 |inDate|updatedDate()|

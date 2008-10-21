@@ -8,7 +8,7 @@ First setup the Authentication module.
 |username|password|status?|
 |Aladdin|open sesame||
 
-Now request a file from the ''files'' directory.  
+Now request a file from the ''files'' directory.
 We should get a 404 since file reading is allowed, but no such file exists.
 !|Response Requester.|
 |uri|status?|

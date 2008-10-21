@@ -1,9 +1,9 @@
 !1 How to Kill a Software Project
-There are many ways to kill a software project, but this is one of the most common. If you have been in software development for awhile, you may have seen the following scenario before: 
+There are many ways to kill a software project, but this is one of the most common. If you have been in software development for awhile, you may have seen the following scenario before:
 !3 A Project Launches
   * With the world's best intentions, a talented development team launches a project, full of gusto and high hopes.
-  * They articulate their requirements for the system to each other using a natural language such as English, in formal or informal documents. Included are some diagrams, charts, user interface mockups and screenshots, and/or other artifacts. 
-  * Design and programming take place. 
+  * They articulate their requirements for the system to each other using a natural language such as English, in formal or informal documents. Included are some diagrams, charts, user interface mockups and screenshots, and/or other artifacts.
+  * Design and programming take place.
   * Weeks and months go by.
   * Some black-box functional testing takes place.
   * Wait a minute. Something is wrong here...
@@ -15,9 +15,9 @@ At some point, usually late in the project, the team discovers that among other 
   * Subsystems '''cannot be integrated''' with one another, because their interfaces are incompatible.
   * There is increasing dissention and mutual recrimination between team members about these issues. ("I did it the way you told me to!" "No you didn't! You never do!") People are getting angrier; morale is on the way down.
 Management steps in and takes action:
-  * Emergency meetings are scheduled. Even longer than normal, these affairs are particularly acrimonious. 
-  * Everybody works longer and longer hours. We must save the deadline and the system! 
-Despite heroic efforts, problems are not resolved as well as were hoped. The deadline and system remain under threat. 
+  * Emergency meetings are scheduled. Even longer than normal, these affairs are particularly acrimonious.
+  * Everybody works longer and longer hours. We must save the deadline and the system!
+Despite heroic efforts, problems are not resolved as well as were hoped. The deadline and system remain under threat.
 
 And so on. What went wrong? How did we get in this boat together?
 !2 What Went Wrong

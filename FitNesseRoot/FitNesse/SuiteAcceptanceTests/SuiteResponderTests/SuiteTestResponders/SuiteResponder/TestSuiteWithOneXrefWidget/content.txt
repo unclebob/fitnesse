@@ -1,4 +1,4 @@
-When you execute a suite page, !-FitNesse-! tests all the pages mentioned in !-!see-! cross reference widgets. 
+When you execute a suite page, !-FitNesse-! tests all the pages mentioned in !-!see-! cross reference widgets.
 ''Note: the classpath for the cross referenced pages is not determined by the referencing page, it is determined by the referenced pages.''
 
 ----

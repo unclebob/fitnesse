@@ -19,28 +19,28 @@
 | !define LabelNAME {''label-name''}  | !define AnyPagePATH {''!-AnyPagePath-!''} |
 | !define CODE {!-<font style="font-family:Courier New">-!} | !define CODEend (${FONTend}) |
 | !define HDR {!-<div style="margin-top:.5em;font-family:Tahoma;font-size:14pt;font-weight:bold;color:#602060">-!}       | !define HDRend (${TopOfPAGE}${DIVend})   |
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define TOC (|${HDR} Sections ${DIVend}|
-| !c '''[[ ${FitNESSE} Command Line ][#FitNesseCommandLINE   ]] '''|
-| !c '''[[ Character Formatting     ][#CharacterFORMATTING   ]] '''|
-| !c '''[[ Line & Block Formatting  ][#LineBlockFORMATTING   ]] '''|
-| !c '''[[ Links & References       ][#LinksAndREFERENCES    ]] '''|
-| !c '''[[ Includes & Informational ][#IncludesINFORMATIONAL ]] '''|
-| !c '''[[ Variable Usage           ][#VARIABLES             ]] '''|
-| !c '''[[ Global Variables         ][#GlobalVARIABLES       ]] '''|
-| !c '''[[ Global Properties        ][#GlobalPROPERTIES      ]] '''|
-| !c '''[[ Testable Tables          ][#TestTABLES            ]] '''|
-| !c '''[[ Wiki Page Actions        ][#FitNesseACTIONS       ]] '''|
+| !c '''[[ ${FitNESSE} Command Line ][#FitNesseCommandLINE]] '''|
+| !c '''[[ Character Formatting     ][#CharacterFORMATTING]] '''|
+| !c '''[[ Line & Block Formatting  ][#LineBlockFORMATTING]] '''|
+| !c '''[[ Links & References       ][#LinksAndREFERENCES]] '''|
+| !c '''[[ Includes & Informational ][#IncludesINFORMATIONAL]] '''|
+| !c '''[[ Variable Usage           ][#VARIABLES]] '''|
+| !c '''[[ Global Variables         ][#GlobalVARIABLES]] '''|
+| !c '''[[ Global Properties        ][#GlobalPROPERTIES]] '''|
+| !c '''[[ Testable Tables          ][#TestTABLES]] '''|
+| !c '''[[ Wiki Page Actions        ][#FitNesseACTIONS]] '''|
 )
 !define GLOSSARY (|${HDR} Glossary ${DIVend}|
 | ${PagePATH}      |${CODE} ${PageNAME}${DOT}${OPT}${PageNAME}${OPTend} ${CODEend}|
 | ${AnyPagePATH}   |${CODE} ${OPT}${LT}${OR}${DOT}${OR}${GT}${OPTend}${PagePATH} ${CODEend}|
 | Symbolic Link    | A locally-defined alias to any accessible page.${NL}Symbolic links are created by clicking ${BUTTON}Properties${BUTTONend}${NL}and entering information in the bottom section${NL}titled "Symbolic Links". |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define BUTTON {!-<font style="color:white;background-color:darkblue">&nbsp;-!}
 !define BUTTONend {!-&nbsp;</font>-!}
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define FitNesseOptCLASSPATH ('''-cp fitnesse.jar'''${OPT}''';'''${NUL}''other.jar.or.path''${OPTend}...)
 !define FitNesseOptEXPIRE ('''-e''' ''days'')
 !define FitNesseOptOMIT ('''-o''')
@@ -50,43 +50,43 @@
 !define FitNesseOptLOG ('''-l''' ''/log/file/path/and/name'')
 !define FitNesseOptOneAUTH (''username''${NUL}''':'''${NUL}''password'')
 !define FitNesseOptFileAUTH (''/auth/file/path/and/name'')
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HorizontalLINES (|${CODE}''over-text''${NUL}'''!------!'''${NUL}''under-text''${CODEend}|thinnest|
 |${CODE}''over-text''${NUL}'''!-------!'''${NUL}''under-text''${CODEend}|safest - no conflict with workflow phase separators|
 |${CODE}''over-text''${NUL}'''!-----------!'''${NUL}''under-text''${CODEend}|thicker|
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-!define HEADINGS (${BANG}'''1''' ''largest heading text'' 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+!define HEADINGS (${BANG}'''1''' ''largest heading text''
 ${BANG}'''2''' ''middle heading text''
-${BANG}'''3''' ''smallest heading text'' 
+${BANG}'''3''' ''smallest heading text''
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define CollapsibleEXPANDED (${BANG}'''*''' ${OPT}''title''${OPTend}
 ${SPC}${SPC}'' multi-line wiki text ''
 ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****''' ${TEXT}
 '''*'''${BANG}
 )
-!define CollapsibleCOLLAPSED (${BANG}'''*'''${GT} ${OPT}''title''${OPTend} 
+!define CollapsibleCOLLAPSED (${BANG}'''*'''${GT} ${OPT}''title''${OPTend}
 ${SPC}${SPC}'' multi-line wiki text ''
 ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' '''${BANG}****'''${GT} ${TEXT}
 '''*'''${BANG}
 )
-!define CollapsibleINVISIBLE (${BANG}'''*'''${LT} ${OPT}''title''${OPTend} 
+!define CollapsibleINVISIBLE (${BANG}'''*'''${LT} ${OPT}''title''${OPTend}
 ${SPC}${SPC}'' multi-line wiki text ''
 ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${LT} ${TEXT}
 '''*'''${BANG}
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define PageLINKS (|${CODE} ${DOT}R${NUL}ootPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}| from root         |
 |${CODE} S${NUL}ameLevelPage${OPT}${DOT}C${NUL}hildPage${OPTend}   ${CODEend}| sibling           |
 |${CODE} ${GT}C${NUL}hildPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}| child or symbolic |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define CollapSIBLE (|${CODE} ${CollapsibleEXPANDED}  ${CODEend}| expanded  | |
 |${CODE} ${CollapsibleCOLLAPSED} ${CODEend}| collapsed | |
 |${CODE} ${CollapsibleINVISIBLE} ${CODEend}| invisible | ''useful for hidding define's, etc.'' |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HASH {'''!-#-!'''}
 !define LSQUARE {'''['''}
 !define RSQUARE {''']'''}
@@ -96,14 +96,14 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 |${CODE} ${DOT}${HASH}${LabelNAME} ${CODEend}                | left-justified |
 |${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend}| in an alias    |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define ExternalLINKS (|${CODE} '''http:'''${SLASH}${SLASH}''url-path'' ${NL} ${CODEend}| Web    |
 |${CODE} '''http:'''${SLASH}${SLASH}'''files'''${SLASH}''localPath'' ${CODEend}  | Local  |
 |${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}/files'''${SLASH}''localPath''${NUL}${RSQUARE}${RSQUARE} ${CODEend}| Alias  |
 |${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${AnyPagePATH}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend}| Alias  |
 |${CODE} ${TEXT}'''@'''${TEXT}${DOT}${TEXT} ${CODEend}                               | mailto |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define IncludePAGE (|${CODE} ${BANG}'''include''' ${AnyPagePATH}    ${CODEend}| expanded border  |
 |${CODE} ${BANG}'''include -c''' ${AnyPagePATH} ${CODEend}| collapsed border |
 |${CODE} ${BANG}'''include -seamless''' ${AnyPagePATH} ${CODEend}| no border |
@@ -111,19 +111,19 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 |${CODE} ${BANG}'''include -teardown''' ${AnyPagePATH} ${CODEend}| appears like T${NUL}earDown |
 |${CODE} ${BAR}${SPC}${BANG}'''include ''' ${AnyPagePATH}${SPC}${BAR} ${CODEend}| in a table cell |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define PictureINSERT (|${CODE} ${BANG}'''img''' ''url-to-image-file'' ${CODEend}| in-line |
 |${CODE} ${BANG}'''img-l''' ''url-to-image-file'' ${CODEend}| image left-justified, text wraps on right |
 |${CODE} ${BANG}'''img-r''' ''url-to-image-file'' ${CODEend}| image right-justified, text wraps on the left |
 |${CODE} '''[['''${BANG}'''img'''${OPT}'''-l'''${OR}'''-r'''${OPTend} ''url-to-image-file''${NUL}''']['''${NUL}''some-link''${NUL}''']]''' ${CODEend}| as a clickable link |
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define FixtureTABLE (${BANG}${BAR} ''fixture specification'' ${BAR}
 ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}${OPTend}'''...'''${OPTend}
 ${OPT}${BAR} ''optional table row'' ${BAR}${OPT} ''optional 2nd column'' ${BAR}${OPTend}'''...'''${OPTend}
 ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 )
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define SearchForFIXTURE (G${NUL}raceFullName${NL}'''fit.'''G${NUL}raceFullName${NL}G${NUL}raceFullName'''Fixture'''${NL}'''fit.'''G${NUL}raceFullName'''Fixture''')
 
 !define SearchForMETHOD (graceFullMethod${LPAREN}${RPAREN}${NL}'''get'''G${NUL}raceFullMethod${LPAREN}${RPAREN}${NL}'''set'''G${NUL}raceFullMethod${LPAREN}${RPAREN} ${LPAREN}if setter context${RPAREN})
@@ -150,7 +150,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 #*******************************************************************************************
 #*******************************************************************************************
 !3 ${FitNESSE} Cheat Sheet
-!anchor TopOfPAGE 
+!anchor TopOfPAGE
 |${TOC}|${GLOSSARY}|
 #-------------------------------------------------------------------------------------------
 !anchor FitNesseCommandLINE

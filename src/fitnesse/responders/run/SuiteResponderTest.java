@@ -288,4 +288,20 @@ public class SuiteResponderTest extends RegexTestCase
 		test2.commit(data2);
 		test3.commit(data3);
 	}
+  
+//todo here.
+  public void _testCanMixSlimAndFitTests() throws Exception {
+    addTestToSuite("FitTest","|!-fitnesse.testutil.PassFixture-!|\n");
+    addTestToSuite("SlimTest", simpleSlimDecisionTable());
+    String results = runSuite();
+    assertHasRegexp("<td>fitnesse.testutil.PassFixture</td>", results);
+    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
+  }
+
+   private String simpleSlimDecisionTable() {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
+      "|string|get string arg?|\n" +
+      "|wow|wow|\n";
+  }
 }

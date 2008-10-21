@@ -32,6 +32,12 @@ public class SuiteResponder extends TestResponder implements TestSystemListener
 	{
 	}
 
+  protected String buildClassPath() throws Exception
+	{
+		testPages = makePageList();
+    return buildClassPath(testPages, page);
+  }
+
 	protected void performExecution() throws Exception
 	{
 		processTestPages(testPages);
@@ -41,23 +47,13 @@ public class SuiteResponder extends TestResponder implements TestSystemListener
 		completeResponse();
 	}
 
-  protected String buildClassPath() throws Exception
-	{
-		testPages = makePageList();
-    return buildClassPath(testPages, page);
-  }
-
 	private void processTestPages(List<WikiPage> testPages) throws Exception
 	{
     for (WikiPage testPage : testPages) {
       processingQueue.addLast(testPage);
       PageData pageData = testPage.getData();
       SetupTeardownIncluder.includeInto(pageData);
-      String testableHtml = pageData.getHtml();
-      if (testableHtml.length() > 0)
-        testSystem.send(testableHtml);
-      else
-        testSystem.send(emptyPageContent);
+      testSystem.sendPageData(pageData);
     }
   }
 

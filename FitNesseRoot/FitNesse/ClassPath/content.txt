@@ -11,7 +11,7 @@ And on a page, the same definition looks like this:
 !path C:\workspace\TriviaGameFitNesseExample\
 
 !3 How Fit Locates ClassPath Definitions in !-SubWikis-!
-Whenever Fit processes test tables on a given page, it build its own internal class path by finding the !path directives on the current page, and on every ancestor page.  In other words, it looks '''up''' the page hierarchy of [[!-SubWikis-!][SubWiki]]. 
+Whenever Fit processes test tables on a given page, it build its own internal class path by finding the !path directives on the current page, and on every ancestor page.  In other words, it looks '''up''' the page hierarchy of [[!-SubWikis-!][SubWiki]].
 
 This makes it possible for you to use !path directives on sub pages to override !path directives on parent pages. Thus you can create global classpaths, project specific classpaths, and even module-specific classpaths.
 

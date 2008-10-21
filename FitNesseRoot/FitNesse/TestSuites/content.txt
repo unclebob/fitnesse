@@ -9,7 +9,7 @@ Sometimes you will need to delete a test database at the end of each test in a s
 
 To perform operations at the beginning or end of an entire suite, rather than for each test, define the operations on pages named '''!-SuiteSetUp-!''' and '''!-SuiteTearDown-!'''.
 
-!3 SubWiki: the Best Way to Organize TestSuites 
+!3 SubWiki: the Best Way to Organize TestSuites
 
 [[SubWikis][SubWiki]] are convenient for creating a hierarchical structure for your suite of tests.  You can put test pages below subsystems and/or features.  You can organize ClassPath definitions and !fixture statements in the parent pages, so that FitNesse can easily find all of the FixtureCode for the suite, and so that you can easily move that FixtureCode when you need to.
 

@@ -88,18 +88,6 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
-  public void testUsesTestRunnerVariable() throws Exception {
-    String pageName = "TestPage";
-    root.addChildPage(pageName);
-    PageData pageData = new PageData(root.getChildPage(pageName)){
-      public String getVariable(String name) throws Exception {
-        return "myTestRunner";
-      }
-    };
-    String html = HtmlUtil.makeActions(pageData, pageName, pageName, false).html();
-    assertSubString("<a href=\"" + pageName + "?myTestRunner\" accesskey=\"t\">Test</a>", html);
-  }
-
   public void testMakeActionsWithSuffixButtonWhenNameEndsWithTest() throws Exception {
     String pageName = "SomethingTest";
     String html = getActionsHtml(pageName);

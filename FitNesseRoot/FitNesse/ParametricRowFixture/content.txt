@@ -1,6 +1,6 @@
 !3 This fixture is just like a RowFixture except that it allows you to pass arguments into the fixture.
 
-Below you can see a simple ParametricRowFixture that takes a single integer argument and produces the prime factors of that argument.  
+Below you can see a simple ParametricRowFixture that takes a single integer argument and produces the prime factors of that argument.
 
 |!-fitnesse.fixtures.PrimeFactorsFixture-!|6|
 |factor|
@@ -38,7 +38,7 @@ public class PrimeFactorsFixture extends ParametricRowFixture
 }
 
 }}}
-As in RowFixture, the order of the rows is unimportant.  As shown below the rows will be matched and found regardless of their order.  
+As in RowFixture, the order of the rows is unimportant.  As shown below the rows will be matched and found regardless of their order.
 |!-fitnesse.fixtures.PrimeFactorsFixture-!|1000|
 |factor|
 |2|

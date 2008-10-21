@@ -1,5 +1,5 @@
 !3 Included Pages are Collapsable
-When a page is included it is included within a division that is collapsable. 
+When a page is included it is included within a division that is collapsable.
 
 The following is a test that demonstrates how this works.
 #

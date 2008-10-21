@@ -1,6 +1,6 @@
 !2 Seeing How Long ActionFixture Actions Take: !-TimedActionFixture-!
 
-You can used !-TimedActionFixture-! if you want to see visual feedback on how long certain functions take to execute.  
+You can used !-TimedActionFixture-! if you want to see visual feedback on how long certain functions take to execute.
 
 |!-fit.TimedActionFixture-!|
 |start|!-fitnesse.fixtures.DelayedCountFixture-!|
@@ -13,7 +13,7 @@ You can used !-TimedActionFixture-! if you want to see visual feedback on how lo
 |press|count|
 |check|counter|6|
 
-The !-DelayedCountFixture-! used above simply adds a random delay to the ''count'' function.  
+The !-DelayedCountFixture-! used above simply adds a random delay to the ''count'' function.
 
 The !-TimedActionFixture-! does not report any delays that are less than one second.  I don't know why Ward decided to impose this lower limit.  Perhaps he'll remove it one day.
 

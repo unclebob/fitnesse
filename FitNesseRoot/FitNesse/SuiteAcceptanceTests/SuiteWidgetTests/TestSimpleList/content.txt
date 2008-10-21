@@ -1,11 +1,11 @@
 !3 A simple list
 
 A list created as follows {{{ * Item one
- * Item two}}} should be rendered as a two item bullet list. 
+ * Item two}}} should be rendered as a two item bullet list.
 #
  * First create a page with a simple table in it.
 #
-!note We use backslash is a way to capture the leading space before the *. 
+!note We use backslash is a way to capture the leading space before the *.
 !|Action Fixture.|
 |start|Page Builder|
 |enter|line|\ * Item One|

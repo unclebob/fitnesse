@@ -24,7 +24,7 @@ namespace info.fitnesse.fixturegallery
         private Text txt=new Text("");
         public override object  GetTargetObject()
  	    {
-            return txt;           
+            return txt;
         }
     }
 }

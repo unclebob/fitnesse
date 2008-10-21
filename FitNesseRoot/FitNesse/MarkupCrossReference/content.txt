@@ -1,4 +1,4 @@
-You can add a ''Cross Reference'' to another page with the !-!see-! statement. 
+You can add a ''Cross Reference'' to another page with the !-!see-! statement.
 
 |!c '''Markup Text'''|!c '''Displayed as'''|
 |!-!see .FrontPage-!|!see .FrontPage|
