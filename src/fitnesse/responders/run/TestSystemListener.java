@@ -2,13 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fit.Counts;
-
 public interface TestSystemListener
 {
 	public void acceptOutput(String output) throws Exception;
 
-	public void acceptResults(TestSystem.TestSummary testSummary) throws Exception;
+	public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception;
 
 	public void exceptionOccurred(Throwable e);
 }

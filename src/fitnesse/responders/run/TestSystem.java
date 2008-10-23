@@ -1,59 +1,17 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PageData;
 
-import java.util.Map;
-import java.util.Set;
+public interface TestSystem {
+  void sendPageData(PageData pageData) throws Exception;
 
-public abstract class TestSystem {
-  public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
-  protected WikiPage page;
-  protected boolean fastTest;
-  protected static final String emptyPageContent = "OH NO! This page is empty!";
-  protected TestSystemListener listener;
+  void bye() throws Exception;
 
-  public TestSystem(WikiPage page, TestSystemListener listener) {
-    this.page = page;
-    this.listener = listener;
-  }
+  void kill() throws Exception;
 
-  public abstract ExecutionLog prepareToStart(String classPath, String className) throws Exception;
+  void setFastTest(boolean fastTest);
 
-  public abstract void start() throws Exception;
-
-  public abstract void sendPageData(PageData pageData) throws Exception;
-
-  public abstract boolean isSuccessfullyStarted();
-
-  public abstract void bye() throws Exception;
-
-
-  public abstract void kill() throws Exception;
-
-
-  protected String buildCommand(String program, String classPath) throws Exception {
-    String testRunner = page.getData().getVariable("COMMAND_PATTERN");
-    if (testRunner == null)
-      testRunner = DEFAULT_COMMAND_PATTERN;
-    String command = replace(testRunner, "%p", classPath);
-    command = replace(command, "%m", program);
-    return command;
-  }
-
-  // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
-  protected static String replace(String value, String mark, String replacement) {
-    int index = value.indexOf(mark);
-    if (index == -1)
-      return value;
-
-    return value.substring(0, index) + replacement + value.substring(index + mark.length());
-  }
-
-  public void setFastTest(boolean fastTest) {
-    this.fastTest = fastTest;
-  }
+  boolean isSuccessfullyStarted();
 
   public static class TestSummary {
     public int right = 0;
@@ -79,7 +37,7 @@ public abstract class TestSystem {
           exceptions + " exceptions";
     }
 
-    public void tally(TestSummary source) {
+    public void tally(TestSystemBase.TestSummary source) {
       right += source.right;
       wrong += source.wrong;
       ignores += source.ignores;
@@ -87,16 +45,16 @@ public abstract class TestSystem {
     }
 
     public boolean equals(Object o) {
-      if (o == null || !(o instanceof TestSummary))
+      if (o == null || !(o instanceof TestSystemBase.TestSummary))
         return false;
-      TestSummary other = (TestSummary) o;
+      TestSystemBase.TestSummary other = (TestSystemBase.TestSummary) o;
       return right == other.right &&
         wrong == other.wrong &&
         ignores == other.ignores &&
         exceptions == other.exceptions;
     }
 
-    public void tallyPageCounts(TestSummary counts) {
+    public void tallyPageCounts(TestSystemBase.TestSummary counts) {
       if (counts.wrong > 0)
         wrong += 1;
       else if (counts.exceptions > 0)
@@ -107,12 +65,11 @@ public abstract class TestSystem {
         right += 1;
     }
 
-    public void add(TestSummary testSummary) {
+    public void add(TestSystemBase.TestSummary testSummary) {
       right += testSummary.right;
       wrong += testSummary.wrong;
       ignores += testSummary.ignores;
       exceptions += testSummary.exceptions;
     }
   }
-
 }

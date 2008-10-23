@@ -4,13 +4,13 @@ package fitnesse.runner;
 
 import java.io.*;
 
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 //TODO MDM Rename to VerboseResultHandler
 public class StandardResultHandler implements ResultHandler
 {
 	private PrintStream output;
-	private TestSystem.TestSummary pageCounts = new TestSystem.TestSummary();
+	private TestSystemBase.TestSummary pageCounts = new TestSystemBase.TestSummary();
 
 	public StandardResultHandler(PrintStream output)
 	{
@@ -19,7 +19,7 @@ public class StandardResultHandler implements ResultHandler
 
 	public void acceptResult(PageResult result) throws Exception
 	{
-		TestSystem.TestSummary testSummary = result.testSummary();
+		TestSystemBase.TestSummary testSummary = result.testSummary();
 		pageCounts.tallyPageCounts(testSummary);
 		for(int i = 0; i < testSummary.right; i++)
 			output.print(".");
@@ -41,7 +41,7 @@ public class StandardResultHandler implements ResultHandler
 		return description;
 	}
 
-	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
+	public void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception
 	{
 		output.println();
 		output.println("Test Pages: " + pageCounts);

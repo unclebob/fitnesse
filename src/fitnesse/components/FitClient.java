@@ -5,7 +5,7 @@ package fitnesse.components;
 import fit.Counts;
 import fitnesse.util.StreamReader;
 import fitnesse.responders.run.TestSystemListener;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 import java.io.OutputStream;
 import java.net.Socket;
@@ -97,7 +97,7 @@ public class FitClient
 				else
 				{
 					Counts counts = FitProtocol.readCounts(fitOutput);
-          TestSystem.TestSummary summary = new TestSystem.TestSummary();
+          TestSystemBase.TestSummary summary = new TestSystemBase.TestSummary();
           summary.right = counts.right;
           summary.wrong = counts.wrong;
           summary.ignores = counts.ignores;

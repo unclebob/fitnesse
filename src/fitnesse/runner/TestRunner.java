@@ -5,7 +5,7 @@ package fitnesse.runner;
 import fit.Counts;
 import fit.FitServer;
 import fitnesse.components.CommandLine;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -120,7 +120,7 @@ public class TestRunner
 	private void finalCount() throws Exception
 	{
     Counts counts = fitServer.getCounts();
-    TestSystem.TestSummary testSummary = new TestSystem.TestSummary(
+    TestSystemBase.TestSummary testSummary = new TestSystemBase.TestSummary(
       counts.right,
       counts.wrong,
       counts.ignores,
@@ -153,7 +153,7 @@ public class TestRunner
 
 	public void acceptResults(PageResult results) throws Exception
 	{
-		TestSystem.TestSummary testSummary = results.testSummary();
+		TestSystemBase.TestSummary testSummary = results.testSummary();
     Counts counts = new Counts();
     counts.right = testSummary.right;
     counts.wrong = testSummary.wrong;

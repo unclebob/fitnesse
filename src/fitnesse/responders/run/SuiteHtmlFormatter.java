@@ -9,7 +9,7 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 	private static final String cssSuffix1 = "1";
 	private static final String cssSuffix2 = "2";
 
-	private TestSystem.TestSummary pageCounts = new TestSystem.TestSummary();
+	private TestSystemBase.TestSummary pageCounts = new TestSystemBase.TestSummary();
 
 	private String cssSuffix = cssSuffix1;
 	private TagGroup testResultsGroup = new TagGroup();
@@ -29,12 +29,12 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 		return "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
 
-	public void setPageAssertions(TestSystem.TestSummary pageSummary)
+	public void setPageAssertions(TestSystemBase.TestSummary pageSummary)
 	{
 		this.pageCounts = pageSummary;
 	}
 
-	public String acceptResults(String relativePageName, TestSystem.TestSummary testSummary) throws Exception
+	public String acceptResults(String relativePageName, TestSystemBase.TestSummary testSummary) throws Exception
 	{
 		switchCssSuffix();
 		HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);

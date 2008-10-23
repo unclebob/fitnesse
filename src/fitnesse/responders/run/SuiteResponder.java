@@ -82,7 +82,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener
 		suiteFormatter.acceptOutput(output);
 	}
 
-	public void acceptResults(TestSystem.TestSummary testSummary) throws Exception
+	public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception
 	{
 		super.acceptResults(testSummary);
 

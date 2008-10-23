@@ -58,8 +58,8 @@ public class TestResultFormattingResponder implements Responder {
         readingResults = false;
     }
     Counts counts = FitProtocol.readCounts(reader);
-    TestSystem.TestSummary testSummary =
-      new TestSystem.TestSummary(counts.right, counts.wrong, counts.ignores, counts.exceptions);
+    TestSystemBase.TestSummary testSummary =
+      new TestSystemBase.TestSummary(counts.right, counts.wrong, counts.ignores, counts.exceptions);
     formatter.acceptFinalCount(testSummary);
   }
 

@@ -1,6 +1,6 @@
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 import static fitnesse.util.ListUtility.list;
 
 import static java.lang.Character.isLetterOrDigit;
@@ -22,7 +22,7 @@ public abstract class SlimTable {
   private boolean isLiteralTable;
   private List<Expectation> expectations = new ArrayList<Expectation>();
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
-  private TestSystem.TestSummary testSummary = new TestSystem.TestSummary();
+  private TestSystemBase.TestSummary testSummary = new TestSystemBase.TestSummary();
 
   public SlimTable(Table table, String id) {
     this(table, id, new LocalSlimTestContext());
@@ -245,7 +245,7 @@ public abstract class SlimTable {
 
   }
 
-  public TestSystem.TestSummary getTestSummary() {
+  public TestSystemBase.TestSummary getTestSummary() {
     return testSummary;
   }
 

@@ -2,11 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 import java.io.InputStream;
 
@@ -36,9 +35,9 @@ public class HtmlResultFormatterTest extends RegexTestCase
 
 	public void testUsage() throws Exception
 	{
-		formatter.acceptResult(new PageResult("PageOne", new TestSystem.TestSummary(1, 0, 0, 0), "page one"));
-		formatter.acceptResult(new PageResult("PageTwo", new TestSystem.TestSummary(0, 1, 0, 0), "page two"));
-		formatter.acceptFinalCount(new TestSystem.TestSummary(1, 1, 0, 0));
+		formatter.acceptResult(new PageResult("PageOne", new TestSystemBase.TestSummary(1, 0, 0, 0), "page one"));
+		formatter.acceptResult(new PageResult("PageTwo", new TestSystemBase.TestSummary(0, 1, 0, 0), "page two"));
+		formatter.acceptFinalCount(new TestSystemBase.TestSummary(1, 1, 0, 0));
 
 		String html = getHtml();
 

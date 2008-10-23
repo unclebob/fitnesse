@@ -5,12 +5,12 @@ package fitnesse.runner;
 import java.io.*;
 import java.util.*;
 
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 public class MockResultFormatter implements ResultFormatter
 {
 	public List results = new LinkedList();
-	public TestSystem.TestSummary finalSummary;
+	public TestSystemBase.TestSummary finalSummary;
 	public StringBuffer output = new StringBuffer("Mock Results:\n");
 
 	public void acceptResult(PageResult result) throws Exception
@@ -19,7 +19,7 @@ public class MockResultFormatter implements ResultFormatter
 		output.append(result.toString());
 	}
 
-	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
+	public void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception
 	{
 		finalSummary = testSummary;
 		output.append("Finals Counts: " + testSummary.toString());

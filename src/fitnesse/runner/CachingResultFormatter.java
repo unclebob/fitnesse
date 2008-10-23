@@ -3,7 +3,7 @@
 package fitnesse.runner;
 
 import fitnesse.components.*;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 import java.io.*;
 import java.util.*;
@@ -30,7 +30,7 @@ public class CachingResultFormatter implements ResultFormatter
 			((ResultHandler) iterator.next()).acceptResult(result);
 	}
 
-	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
+	public void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
     Counts counts = new Counts(testSummary.right, testSummary.wrong, testSummary.ignores, testSummary.exceptions);

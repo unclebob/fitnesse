@@ -2,10 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
 import fitnesse.components.*;
 import fitnesse.util.XmlUtil;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 import org.w3c.dom.*;
 
 import java.io.*;
@@ -56,7 +55,7 @@ public class XmlResultFormatter implements ResultFormatter
 		writeElement(resultElement);
 	}
 
-	public void acceptFinalCount(TestSystem.TestSummary testSummary) throws Exception
+	public void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception
 	{
 		Element countsElement = makeCountsElement("finalCounts", testSummary);
 		writeElement(countsElement);
@@ -92,7 +91,7 @@ public class XmlResultFormatter implements ResultFormatter
 		buffer.append(output.toByteArray());
 	}
 
-	private Element makeCountsElement(String name, TestSystem.TestSummary testSummary)
+	private Element makeCountsElement(String name, TestSystemBase.TestSummary testSummary)
 	{
 		Element countsElement = document.createElement(name);
 		XmlUtil.addTextNode(document, countsElement, "right", testSummary.right + "");

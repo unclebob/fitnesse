@@ -35,7 +35,7 @@ public class ErrorResponder implements Responder
 		return response;
 	}
 
-	public static String makeExceptionString(Exception e)
+	public static String makeExceptionString(Throwable e)
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(e.toString()).append("\n");

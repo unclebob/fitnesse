@@ -2,12 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
 import fitnesse.http.Request;
 import fitnesse.testutil.*;
 import fitnesse.util.FileUtil;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemBase;
 
 import java.io.*;
 
@@ -18,7 +17,7 @@ public class FormattingOptionTest extends RegexTestCase
 	private CachingResultFormatter formatter;
 	private PageResult result1;
 	private PageResult result2;
-	private TestSystem.TestSummary finalSummary;
+	private TestSystemBase.TestSummary finalSummary;
 	private int port = FitNesseUtil.port;
 
 	public void setUp() throws Exception
@@ -99,9 +98,9 @@ public class FormattingOptionTest extends RegexTestCase
 	private void sampleFormatter() throws Exception
 	{
 		formatter = new CachingResultFormatter();
-		result1 = new PageResult("ResultOne", new TestSystem.TestSummary(1, 2, 3, 4), "result one content");
-		result2 = new PageResult("ResultTwo", new TestSystem.TestSummary(4, 3, 2, 1), "result two content");
-		finalSummary = new TestSystem.TestSummary(5, 5, 5, 5);
+		result1 = new PageResult("ResultOne", new TestSystemBase.TestSummary(1, 2, 3, 4), "result one content");
+		result2 = new PageResult("ResultTwo", new TestSystemBase.TestSummary(4, 3, 2, 1), "result two content");
+		finalSummary = new TestSystemBase.TestSummary(5, 5, 5, 5);
 		formatter.acceptResult(result1);
 		formatter.acceptResult(result2);
 		formatter.acceptFinalCount(finalSummary);

@@ -13,23 +13,20 @@ import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.wiki.*;
 
 import java.util.LinkedList;
 
 public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
   protected static final int htmlDepth = 2;
-
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
-
   protected HtmlPage html;
-  protected ExecutionLog log;
+  protected CompositeExecutionLog log;
   protected PageData data;
   private boolean closed = false;
-  private TestSystem.TestSummary assertionCounts = new TestSystem.TestSummary();
+  private TestSystemBase.TestSummary assertionCounts = new TestSystemBase.TestSummary();
   protected TestHtmlFormatter formatter;
-  protected TestSystem testSystem;
+  protected CompositeTestSystem testSystem;
 
   protected void doSending() throws Exception {
     data = page.getData();
@@ -38,13 +35,10 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     startHtml();
     sendPreTestNotification();
 
-    if ("slim".equalsIgnoreCase(data.getVariable("TEST_SYSTEM"))) {
-      testSystem = new SlimTestSystem(page, this);
-    } else {
-      testSystem = new FitTestSystem(context, page, this);
-    }
-    log = testSystem.prepareToStart(classPath, className);
-    testSystem.start();
+    testSystem = new CompositeTestSystem(context, page, this);
+    log = testSystem.getExecutionLog();
+
+    testSystem.startTestSystem(page, classPath, className);
 
     if (testSystem.isSuccessfullyStarted())
       performExecution();
@@ -86,15 +80,12 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     return crawler;
   }
 
-  public void acceptResults(TestSystem.TestSummary testSummary) throws Exception {
+  public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception {
     assertionCounts.tally(testSummary);
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
     try {
-      log.addException(e);
-      log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
-
       completeResponse();
       testSystem.kill();
     }

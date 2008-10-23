@@ -2,8 +2,8 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.run.ExecutionLog;
-import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
+import fitnesse.responders.run.TestSystemBase;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimService;
 import fitnesse.slim.SlimServer;
@@ -15,7 +15,7 @@ import java.util.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
-public class SlimTestSystem extends TestSystem implements SlimTestContext {
+public class SlimTestSystem extends TestSystemBase implements SlimTestContext {
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
@@ -26,9 +26,8 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
   private Map<String, Object> instructionResults;
   private List<SlimTable> testTables = new ArrayList<SlimTable>();
   private Map<String, String> exceptions = new HashMap<String, String>();
-  private ExecutionLog log;
   private Map<String, String> symbols = new HashMap<String, String>();
-  private TestSystem.TestSummary testSummary;
+  private TestSystemBase.TestSummary testSummary;
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -61,7 +60,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     return slimFlags;
   }
 
-  public ExecutionLog prepareToStart(String classPath, String className) throws Exception {
+  protected ExecutionLog createExecutionLog(String classPath, String className) throws Exception {
     String slimFlags = getSlimFlags();
     String slimArguments = String.format("%s %d", slimFlags, 8085);
     String slimCommandPrefix = buildCommand(className, classPath);
@@ -72,8 +71,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     } else {
       slimRunner = new CommandRunner(slimCommand, "");
     }
-    log = new ExecutionLog(page, slimRunner);
-    return log;
+    return new ExecutionLog(page, slimRunner);
   }
 
   public void start() throws Exception {
@@ -164,8 +162,8 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     String wikiText = generateWikiTextForTestResults();
     pageData.setContent(wikiText);
     testResults = pageData;
-    listener.acceptResults(testSummary);
-    listener.acceptOutput(pageData.getHtml());
+    acceptResults(testSummary);
+    acceptOutput(pageData.getHtml());
   }
 
   private String generateWikiTextForTestResults() throws Exception {
@@ -222,7 +220,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
       testSummary.add(table.getTestSummary());
     } catch (Throwable e) {
       exceptions.put("ABORT", exceptionToString(e));
-      listener.exceptionOccurred(e);
+      exceptionOccurred(e);
     }
   }
 

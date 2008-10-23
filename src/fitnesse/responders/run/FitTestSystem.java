@@ -5,7 +5,7 @@ import fitnesse.components.CommandRunningFitClient;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class FitTestSystem extends TestSystem {
+public class FitTestSystem extends TestSystemBase {
   private CommandRunningFitClient client;
   private FitNesseContext context;
 
@@ -14,9 +14,9 @@ public class FitTestSystem extends TestSystem {
     this.context = context;
   }
 
-  public ExecutionLog prepareToStart(String classPath, String className) throws Exception {
+  protected ExecutionLog createExecutionLog(String classPath, String className) throws Exception {
     String command = buildCommand(className, classPath);
-    client = new CommandRunningFitClient(listener, command, context.port, context.socketDealer);
+    client = new CommandRunningFitClient(this, command, context.port, context.socketDealer);
     return new ExecutionLog(page, client.commandRunner);
   }
 
