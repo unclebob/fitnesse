@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import fitnesse.components.*;
 import fitnesse.util.XmlUtil;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 import org.w3c.dom.*;
 
 import java.io.*;
@@ -55,7 +55,7 @@ public class XmlResultFormatter implements ResultFormatter
 		writeElement(resultElement);
 	}
 
-	public void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception
+	public void acceptFinalCount(TestSummary testSummary) throws Exception
 	{
 		Element countsElement = makeCountsElement("finalCounts", testSummary);
 		writeElement(countsElement);
@@ -91,7 +91,7 @@ public class XmlResultFormatter implements ResultFormatter
 		buffer.append(output.toByteArray());
 	}
 
-	private Element makeCountsElement(String name, TestSystemBase.TestSummary testSummary)
+	private Element makeCountsElement(String name, TestSummary testSummary)
 	{
 		Element countsElement = document.createElement(name);
 		XmlUtil.addTextNode(document, countsElement, "right", testSummary.right + "");

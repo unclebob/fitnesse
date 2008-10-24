@@ -58,7 +58,7 @@ public class ScriptTable extends SlimTable {
   private void actionAndAssign(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String symbolName = symbolAssignmentMatcher.group(1);
-    addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionNumber(), 0, row));    
+    addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionNumber(), 0, row));
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
       String[] args = getArgumentsStartingAt(1 + 1, lastCol, row);
@@ -124,7 +124,7 @@ public class ScriptTable extends SlimTable {
 
   private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row) {
     List<String> arguments = new ArrayList<String>();
-    for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += 2){
+    for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += 2) {
       arguments.add(table.getCellContents(argumentColumn, row));
       addExpectation(new ArgumentExpectation(getInstructionNumber(), argumentColumn, row));
     }
@@ -146,14 +146,16 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      if (value.equals(VoidConverter.VOID_TAG))
+      if (value == null)
+        return failMessage(originalValue, "Returned null value.");
+      else if (value.equals(VoidConverter.VOID_TAG))
         return originalValue;
       else if (value.equals(BooleanConverter.FALSE))
         return fail(originalValue);
       else if (value.equals(BooleanConverter.TRUE))
         return pass(originalValue);
       else
-      return failMessage(originalValue, String.format(" returned unexpected value: [%s]", value));
+        return failMessage(originalValue, String.format(" returned unexpected value: [%s]", value));
     }
   }
 
@@ -163,7 +165,7 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      return value.equals(BooleanConverter.TRUE) ? pass(originalValue) : fail(originalValue);
+      return (value != null && value.equals(BooleanConverter.TRUE)) ? pass(originalValue) : fail(originalValue);
     }
   }
 
@@ -173,7 +175,10 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      return value.equals(BooleanConverter.FALSE) ? pass(originalValue) : fail(originalValue);
+      if (value == null)
+        return pass(originalValue);
+      else
+        return value.equals(BooleanConverter.FALSE) ? pass(originalValue) : fail(originalValue);
     }
   }
 

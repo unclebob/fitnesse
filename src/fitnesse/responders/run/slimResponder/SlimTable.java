@@ -1,6 +1,6 @@
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 import static fitnesse.util.ListUtility.list;
 
 import static java.lang.Character.isLetterOrDigit;
@@ -22,7 +22,7 @@ public abstract class SlimTable {
   private boolean isLiteralTable;
   private List<Expectation> expectations = new ArrayList<Expectation>();
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
-  private TestSystemBase.TestSummary testSummary = new TestSystemBase.TestSummary();
+  private TestSummary testSummary = new TestSummary();
 
   public SlimTable(Table table, String id) {
     this(table, id, new LocalSlimTestContext());
@@ -245,7 +245,7 @@ public abstract class SlimTable {
 
   }
 
-  public TestSystemBase.TestSummary getTestSummary() {
+  public TestSummary getTestSummary() {
     return testSummary;
   }
 
@@ -424,7 +424,7 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      if (value.indexOf("Exception") != -1)
+      if (value != null && value.indexOf("Exception") != -1)
         return fail(literalizedValue);
       else {
         return replaceSymbolsWithFullExpansion(originalValue);
@@ -438,7 +438,7 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      if (value.indexOf("Exception") != -1)
+      if (value != null && value.indexOf("Exception") != -1)
         return fail(literalizedValue);
       else {
         return pass(originalValue);
@@ -469,7 +469,9 @@ public abstract class SlimTable {
     protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
       String evaluationMessage;
       String replacedValue = replaceSymbols(expectedValue);
-      if (value.equals(replacedValue))
+      if (value == null)
+        evaluationMessage = fail("null"); //todo can't be right message.
+      else if (value.equals(replacedValue))
         evaluationMessage = pass(announceBlank(originalValue));
       else if (replacedValue.length() == 0)
         evaluationMessage = ignore(literalizedValue);

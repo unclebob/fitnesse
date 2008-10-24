@@ -5,7 +5,7 @@ package fitnesse.runner;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.StreamReader;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 
 import java.io.InputStream;
 
@@ -35,9 +35,9 @@ public class HtmlResultFormatterTest extends RegexTestCase
 
 	public void testUsage() throws Exception
 	{
-		formatter.acceptResult(new PageResult("PageOne", new TestSystemBase.TestSummary(1, 0, 0, 0), "page one"));
-		formatter.acceptResult(new PageResult("PageTwo", new TestSystemBase.TestSummary(0, 1, 0, 0), "page two"));
-		formatter.acceptFinalCount(new TestSystemBase.TestSummary(1, 1, 0, 0));
+		formatter.acceptResult(new PageResult("PageOne", new TestSummary(1, 0, 0, 0), "page one"));
+		formatter.acceptResult(new PageResult("PageTwo", new TestSummary(0, 1, 0, 0), "page two"));
+		formatter.acceptFinalCount(new TestSummary(1, 1, 0, 0));
 
 		String html = getHtml();
 

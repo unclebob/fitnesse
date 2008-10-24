@@ -5,7 +5,7 @@ package fitnesse.runner;
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.*;
 import fitnesse.responders.run.SuiteHtmlFormatter;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 
 import java.io.InputStream;
 
@@ -74,7 +74,7 @@ public class HtmlResultFormatter implements ResultFormatter
 		buffer.append(resultRow);
 	}
 
-	public void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception
+	public void acceptFinalCount(TestSummary testSummary) throws Exception
 	{
 		buffer.append(suiteFormatter.testSummary(testSummary));
 		buffer.append(suiteFormatter.testOutput());

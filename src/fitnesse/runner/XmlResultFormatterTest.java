@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.util.*;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 import org.w3c.dom.*;
 
 import java.io.InputStream;
@@ -14,14 +14,14 @@ public class XmlResultFormatterTest extends RegexTestCase
 	private XmlResultFormatter formatter;
 	private PageResult result1;
 	private PageResult result2;
-	private TestSystemBase.TestSummary finalSummary;
+	private TestSummary finalSummary;
 
 	public void setUp() throws Exception
 	{
 		formatter = new XmlResultFormatter("localhost:8081", "RootPath");
-		result1 = new PageResult("ResultOne", new TestSystemBase.TestSummary(1, 2, 3, 4), "result one content");
-		result2 = new PageResult("ResultTwo", new TestSystemBase.TestSummary(4, 3, 2, 1), "result two content");
-		finalSummary = new TestSystemBase.TestSummary(5, 5, 5, 5);
+		result1 = new PageResult("ResultOne", new TestSummary(1, 2, 3, 4), "result one content");
+		result2 = new PageResult("ResultTwo", new TestSummary(4, 3, 2, 1), "result two content");
+		finalSummary = new TestSummary(5, 5, 5, 5);
 	}
 
 	public void tearDown() throws Exception
@@ -78,11 +78,11 @@ public class XmlResultFormatterTest extends RegexTestCase
 		assertEquals(result.title(), XmlUtil.getTextValue(resultElement, "relativePageName"));
 		assertEquals(result.content(), XmlUtil.getTextValue(resultElement, "content"));
 		Element countsElement = XmlUtil.getElementByTagName(resultElement, "counts");
-		TestSystemBase.TestSummary testSummary = result.testSummary();
+		TestSummary testSummary = result.testSummary();
 		checkCounts(testSummary, countsElement);
 	}
 
-	private void checkCounts(TestSystemBase.TestSummary testSummary, Element countsElement) throws Exception
+	private void checkCounts(TestSummary testSummary, Element countsElement) throws Exception
 	{
 		assertEquals(testSummary.right + "", XmlUtil.getTextValue(countsElement, "right"));
 		assertEquals(testSummary.wrong + "", XmlUtil.getTextValue(countsElement, "wrong"));

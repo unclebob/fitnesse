@@ -28,7 +28,7 @@ public class TestHtmlFormatter
 		return testSummaryDiv;
 	}
 
-	public String testSummary(TestSystemBase.TestSummary testSummary) throws Exception
+	public String testSummary(TestSummary testSummary) throws Exception
 	{
 		String summaryContent = testPageSummary();
 		summaryContent += "<strong>Assertions:</strong> " + testSummary.toString();
@@ -44,7 +44,7 @@ public class TestHtmlFormatter
 		return "";
 	}
 
-	protected String cssClassFor(TestSystemBase.TestSummary testSummary)
+	protected String cssClassFor(TestSummary testSummary)
 	{
 		if(testSummary.wrong > 0)
 			return "fail";

@@ -3,53 +3,66 @@
 package fitnesse.responders.run;
 
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.responders.run.TestSystemListener;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.wiki.*;
 
 import java.util.*;
 
-public class SuiteResponder extends TestResponder implements TestSystemListener
-{
-	public static final String SUITE_SETUP_NAME = "SuiteSetUp";
-	public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
- 
-	private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
-	private WikiPage currentTest = null;
-	private SuiteHtmlFormatter suiteFormatter;
-	private List<WikiPage> testPages;
+public class SuiteResponder extends TestResponder implements TestSystemListener {
+  public static final String SUITE_SETUP_NAME = "SuiteSetUp";
+  public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
-	protected HtmlTag addSummaryPlaceHolder()
-	{
-		HtmlTag testSummaryDiv = new HtmlTag("div", "Running Tests ...");
-		testSummaryDiv.addAttribute("id", "test-summary");
+  private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
+  private WikiPage currentTest = null;
+  private SuiteHtmlFormatter suiteFormatter;
 
-		return testSummaryDiv;
-	}
+  protected HtmlTag addSummaryPlaceHolder() {
+    HtmlTag testSummaryDiv = new HtmlTag("div", "Running Tests ...");
+    testSummaryDiv.addAttribute("id", "test-summary");
 
-	protected void finishSending() throws Exception
-	{
-	}
+    return testSummaryDiv;
+  }
 
-  protected String buildClassPath() throws Exception
-	{
-		testPages = makePageList();
+  protected void finishSending() throws Exception {
+  }
+
+  protected String buildClassPath() throws Exception {
+    List<WikiPage> testPages = makePageList();
     return buildClassPath(testPages, page);
   }
 
-	protected void performExecution() throws Exception
-	{
-		processTestPages(testPages);
+  protected void performExecution() throws Exception {
+    executeTestPages();
 
-    testSystem.bye();
+    testSystemGroup.bye();
 
-		completeResponse();
-	}
+    completeResponse();
+  }
 
-	private void processTestPages(List<WikiPage> testPages) throws Exception
-	{
-    for (WikiPage testPage : testPages) {
+  private void executeTestPages() throws Exception {
+    Map<String, LinkedList<WikiPage>> suiteMap = makeSuiteMap(page, root, getSuiteFilter());
+    for (String testSystemName : suiteMap.keySet()) {
+      suiteFormatter.announceTestSystem(testSystemName);
+      addToResponse(suiteFormatter.getTestSystemHeader(testSystemName));
+      List<WikiPage> pagesInTestSystem = suiteMap.get(testSystemName);
+      startTestSystemAndExecutePages(testSystemName, pagesInTestSystem);
+    }
+  }
+
+  private void startTestSystemAndExecutePages(String testSystemName, List<WikiPage> testSystemPages) throws Exception {
+    String testRunner = extractRunnerFromTestSystemName(testSystemName);
+    TestSystem testSystem = testSystemGroup.startTestSystem(testSystemName, testRunner, classPath);
+    if (testSystem.isSuccessfullyStarted()) {
+      executeTestSystemPages(testSystemPages, testSystem);
+      waitForTestSystemToSendResults();
+    } else {
+      throw new Exception("Test system not started");
+    }
+  }
+
+  private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
+    for (WikiPage testPage : pagesInTestSystem) {
       processingQueue.addLast(testPage);
       PageData pageData = testPage.getData();
       SetupTeardownIncluder.includeInto(pageData);
@@ -57,203 +70,201 @@ public class SuiteResponder extends TestResponder implements TestSystemListener
     }
   }
 
-	protected void close() throws Exception
-	{
-		response.add(suiteFormatter.testOutput());
-		response.add(suiteFormatter.tail());
-		response.closeChunks();
-		response.addTrailingHeader("Exit-Code", String.valueOf(exitCode()));
-		response.closeTrailer();
-		response.close();
-	}
+  private void waitForTestSystemToSendResults() throws InterruptedException {
+    while (processingQueue.size() > 0)
+      Thread.sleep(50);
+  }
 
-	public void acceptOutput(String output) throws Exception
-	{
-		WikiPage firstInLine = processingQueue.isEmpty() ? null : processingQueue.getFirst();
-		if(firstInLine != null && firstInLine != currentTest)
-		{
-			PageCrawler pageCrawler = page.getPageCrawler();
-			String relativeName = pageCrawler.getRelativeName(page, firstInLine);
-			WikiPagePath fullPath = pageCrawler.getFullPath(firstInLine);
-			String fullPathName = PathParser.render(fullPath);
-			suiteFormatter.startOutputForNewTest(relativeName, fullPathName);
-			currentTest = firstInLine;
-		}
-		suiteFormatter.acceptOutput(output);
-	}
+  private String extractRunnerFromTestSystemName(String testSystemName) {
+    String testSystemComponents[] = testSystemName.split(":");
+    String testRunner = testSystemComponents[testSystemComponents.length - 1];
+    return testRunner;
+  }
 
-	public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception
-	{
-		super.acceptResults(testSummary);
+  protected void close() throws Exception {
+    response.add(suiteFormatter.testOutput());
+    response.add(suiteFormatter.tail());
+    response.closeChunks();
+    response.addTrailingHeader("Exit-Code", String.valueOf(exitCode()));
+    response.closeTrailer();
+    response.close();
+  }
 
-		PageCrawler pageCrawler = page.getPageCrawler();
-		WikiPage testPage = processingQueue.removeFirst();
-		String relativeName = pageCrawler.getRelativeName(page, testPage);
-		addToResponse(suiteFormatter.acceptResults(relativeName, testSummary));
-	}
+  public void acceptOutput(String output) throws Exception {
+    WikiPage firstInLine = processingQueue.isEmpty() ? null : processingQueue.getFirst();
+    if (firstInLine != null && firstInLine != currentTest) {
+      PageCrawler pageCrawler = page.getPageCrawler();
+      String relativeName = pageCrawler.getRelativeName(page, firstInLine);
+      WikiPagePath fullPath = pageCrawler.getFullPath(firstInLine);
+      String fullPathName = PathParser.render(fullPath);
+      suiteFormatter.startOutputForNewTest(relativeName, fullPathName);
+      currentTest = firstInLine;
+    }
+    suiteFormatter.acceptOutput(output);
+  }
 
-	protected void makeFormatter() throws Exception
-	{
-		suiteFormatter = new SuiteHtmlFormatter(html);
-		formatter = suiteFormatter;
-	}
+  public void acceptResults(TestSummary testSummary) throws Exception {
+    super.acceptResults(testSummary);
 
-	protected String pageType()
-	{
-		return "Suite Results";
-	}
+    PageCrawler pageCrawler = page.getPageCrawler();
+    WikiPage testPage = processingQueue.removeFirst();
+    String relativeName = pageCrawler.getRelativeName(page, testPage);
+    addToResponse(suiteFormatter.acceptResults(relativeName, testSummary));
+  }
 
-	public static String buildClassPath(List<WikiPage> testPages, WikiPage page) throws Exception
-	{
-		final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
-		final String pathSeparator = classPathBuilder.getPathSeparator(page);
-		List<String> classPathElements = new ArrayList<String>();
-		Set visitedPages = new HashSet();
+  protected void makeFormatter() throws Exception {
+    suiteFormatter = new SuiteHtmlFormatter(html);
+    formatter = suiteFormatter;
+  }
+
+  protected String pageType() {
+    return "Suite Results";
+  }
+
+  public static String buildClassPath(List<WikiPage> testPages, WikiPage page) throws Exception {
+    final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
+    final String pathSeparator = classPathBuilder.getPathSeparator(page);
+    List<String> classPathElements = new ArrayList<String>();
+    Set visitedPages = new HashSet();
 
     for (WikiPage testPage : testPages)
       addClassPathElements(testPage, classPathElements, visitedPages);
-  
+
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
-	}
-
-	private static void addClassPathElements(WikiPage page, List<String> classPathElements, Set visitedPages) throws Exception
-	{
-		List pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
-		classPathElements.addAll(pathElements);
-	}
-
-	public List<WikiPage> makePageList() throws Exception
-	{
-		String suite = request != null ? (String) request.getInput("suiteFilter") : null;
-		return makePageList(page, root, suite);
-	}
-
-	public static List<WikiPage> makePageList(WikiPage page, WikiPage root, String suite) throws Exception
-	{
-		LinkedList<WikiPage> pages = getAllTestPagesUnder(page, suite);
-		List<WikiPage> referencedPages = gatherCrossReferencedTestPages(page, root);
-		pages.addAll(referencedPages);
-
-		WikiPage suiteSetUp = PageCrawlerImpl.getInheritedPage(SUITE_SETUP_NAME, page);
-		if(suiteSetUp != null)
-		{
-			if(pages.contains(suiteSetUp))
-				pages.remove(suiteSetUp);
-			pages.addFirst(suiteSetUp);
-		}
-		WikiPage suiteTearDown = PageCrawlerImpl.getInheritedPage(SUITE_TEARDOWN_NAME, page);
-		if(suiteTearDown != null)
-		{
-			if(pages.contains(suiteTearDown))
-				pages.remove(suiteTearDown);
-			pages.addLast(suiteTearDown);
-		}
-
-		if(pages.isEmpty())
-		{
-			String name = new WikiPagePath(page).toString();
-			WikiPageDummy dummy = new WikiPageDummy("", "|Comment|\n|No test found with suite filter '" + suite + "' in subwiki !-" + name + "-!!|\n");
-			dummy.setParent(root);
-			pages.add(dummy);
-		}
-		return pages;
-	}
-
-	public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot) throws Exception
-	{
-		return getAllTestPagesUnder(suiteRoot, null);
-	}
-
-	public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception
-	{
-		LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
-		addTestPagesToList(testPages, suiteRoot, suite);
-
-		Collections.sort(testPages, new Comparator<WikiPage>()
-		{
-			public int compare(WikiPage p1, WikiPage p2)
-			{
-				try
-				{
-					PageCrawler crawler = p1.getPageCrawler();
-					WikiPagePath path1 = crawler.getFullPath(p1);
-					WikiPagePath path2 = crawler.getFullPath(p2);
-
-					return path1.compareTo(path2);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-					return 0;
-				}
-			}
-		});
-
-		return testPages;
-	}
-
-	private static void addTestPagesToList(List<WikiPage> testPages, WikiPage context, String suite) throws Exception
-	{
-		PageData data = context.getData();
-		if (! data.hasAttribute(PageData.PropertyPRUNE))
-		{
-			if (data.hasAttribute("Test"))
-			{
-				if(belongsToSuite(context, suite))
-				{
-					testPages.add(context);
-				}
-			}
-
-			ArrayList<WikiPage> children = new ArrayList<WikiPage>();
-			children.addAll(context.getChildren());
-			if(context.hasExtension(VirtualCouplingExtension.NAME))
-			{
-				VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(VirtualCouplingExtension.NAME);
-				children.addAll(extension.getVirtualCoupling().getChildren());
-			}
-			for (WikiPage page : children) {
-				addTestPagesToList(testPages, page, suite);
-			}
-		}
   }
 
-	private static boolean belongsToSuite(WikiPage context, String suite)
-	{
-		if((suite == null) || (suite.trim().length() == 0))
-		{
-			return true;
-		}
-		try
-		{
-			String suitesStr = context.getData().getAttribute(PageData.PropertySUITES);
-			if(suitesStr != null)
-			{
-				StringTokenizer t = new StringTokenizer(suitesStr, ",");
-				while(t.hasMoreTokens())
-				{
-					if(t.nextToken().trim().equalsIgnoreCase(suite))
-					{
-						return true;
-					}
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return false;
-	}
+  private static void addClassPathElements(WikiPage page, List<String> classPathElements, Set visitedPages)
+    throws Exception {
+    List pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
+    classPathElements.addAll(pathElements);
+  }
 
-	public static List<WikiPage> gatherCrossReferencedTestPages(WikiPage testPage, WikiPage root) throws Exception
-	{
-		LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
-		PageData data = testPage.getData();
-		List<String> pageReferences = data.getXrefPages();
-		PageCrawler crawler = testPage.getPageCrawler();
-		WikiPagePath testPagePath = crawler.getFullPath(testPage);
-		WikiPage parent = crawler.getPage(root, testPagePath.parentPath());
+  public List<WikiPage> makePageList() throws Exception {
+    return makePageList(page, root, getSuiteFilter());
+  }
+
+  private String getSuiteFilter() {
+    return request != null ? (String) request.getInput("suiteFilter") : null;
+  }
+
+  public static List<WikiPage> makePageList(WikiPage suitePage, WikiPage root, String suite) throws Exception {
+    LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suite);
+
+    addSetupAndTeardown(suitePage, pages);
+
+    if (pages.isEmpty()) {
+      String name = new WikiPagePath(suitePage).toString();
+      WikiPageDummy dummy = new WikiPageDummy("",
+        "|Comment|\n|No test found with suite filter '" + suite + "' in subwiki !-" + name + "-!!|\n"
+      );
+      dummy.setParent(root);
+      pages.add(dummy);
+    }
+    return pages;
+  }
+
+  private static LinkedList<WikiPage> getAllPagesToRunForThisSuite(WikiPage suitePage, WikiPage root, String suite)
+    throws Exception {
+    LinkedList<WikiPage> pages = getAllTestPagesUnder(suitePage, suite);
+    List<WikiPage> referencedPages = gatherCrossReferencedTestPages(suitePage, root);
+    pages.addAll(referencedPages);
+    return pages;
+  }
+
+  private static void addSetupAndTeardown(WikiPage suitePage, LinkedList<WikiPage> pages) throws Exception {
+    WikiPage suiteSetUp = PageCrawlerImpl.getInheritedPage(SUITE_SETUP_NAME, suitePage);
+    if (suiteSetUp != null) {
+      if (pages.contains(suiteSetUp))
+        pages.remove(suiteSetUp);
+      pages.addFirst(suiteSetUp);
+    }
+    WikiPage suiteTearDown = PageCrawlerImpl.getInheritedPage(SUITE_TEARDOWN_NAME, suitePage);
+    if (suiteTearDown != null) {
+      if (pages.contains(suiteTearDown))
+        pages.remove(suiteTearDown);
+      pages.addLast(suiteTearDown);
+    }
+  }
+
+  public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot) throws Exception {
+    return getAllTestPagesUnder(suiteRoot, null);
+  }
+
+  public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception {
+    LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
+    addTestPagesToList(testPages, suiteRoot, suite);
+
+    Collections.sort(testPages, new Comparator<WikiPage>() {
+      public int compare(WikiPage p1, WikiPage p2) {
+        try {
+          PageCrawler crawler = p1.getPageCrawler();
+          WikiPagePath path1 = crawler.getFullPath(p1);
+          WikiPagePath path2 = crawler.getFullPath(p2);
+
+          return path1.compareTo(path2);
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+          return 0;
+        }
+      }
+    }
+    );
+
+    return testPages;
+  }
+
+  private static void addTestPagesToList(List<WikiPage> testPages, WikiPage context, String suite) throws Exception {
+    PageData data = context.getData();
+    if (!data.hasAttribute(PageData.PropertyPRUNE)) {
+      if (data.hasAttribute("Test")) {
+        if (belongsToSuite(context, suite)) {
+          testPages.add(context);
+        }
+      }
+
+      ArrayList<WikiPage> children = new ArrayList<WikiPage>();
+      children.addAll(context.getChildren());
+      if (context.hasExtension(VirtualCouplingExtension.NAME)) {
+        VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
+          VirtualCouplingExtension.NAME
+        );
+        children.addAll(extension.getVirtualCoupling().getChildren());
+      }
+      for (WikiPage page : children) {
+        addTestPagesToList(testPages, page, suite);
+      }
+    }
+  }
+
+  private static boolean belongsToSuite(WikiPage context, String suite) {
+    if ((suite == null) || (suite.trim().length() == 0)) {
+      return true;
+    }
+    try {
+      String suitesStr = context.getData().getAttribute(PageData.PropertySUITES);
+      if (suitesStr != null) {
+        StringTokenizer t = new StringTokenizer(suitesStr, ",");
+        while (t.hasMoreTokens()) {
+          if (t.nextToken().trim().equalsIgnoreCase(suite)) {
+            return true;
+          }
+        }
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
+  public static List<WikiPage> gatherCrossReferencedTestPages(WikiPage testPage, WikiPage root) throws Exception {
+    LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
+    PageData data = testPage.getData();
+    List<String> pageReferences = data.getXrefPages();
+    PageCrawler crawler = testPage.getPageCrawler();
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    WikiPage parent = crawler.getPage(root, testPagePath.parentPath());
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
       WikiPage referencedPage = crawler.getPage(parent, path);
@@ -261,5 +272,32 @@ public class SuiteResponder extends TestResponder implements TestSystemListener
         pages.add(referencedPage);
     }
     return pages;
-	}
+  }
+
+  public static Map<String, LinkedList<WikiPage>>
+  makeSuiteMap(WikiPage suitePage, WikiPage root, String suiteFilter) throws Exception {
+    Map<String, LinkedList<WikiPage>> map = new HashMap<String, LinkedList<WikiPage>>();
+    List<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suiteFilter);
+    for (WikiPage page : pages) {
+      String testSystemName = TestSystem.getTestSystemName(page.getData());
+      List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, testSystemName);
+      pagesForTestSystem.add(page);
+    }
+
+    for (LinkedList<WikiPage> pagesForTestSystem : map.values()) {
+      addSetupAndTeardown(suitePage, pagesForTestSystem);
+    }
+    return map;
+  }
+
+  private static List<WikiPage> getPagesForTestSystem(Map<String, LinkedList<WikiPage>> map, String testSystemName) {
+    LinkedList<WikiPage> listInMap;
+    if (map.containsKey(testSystemName))
+      listInMap = map.get(testSystemName);
+    else {
+      listInMap = new LinkedList<WikiPage>();
+      map.put(testSystemName, listInMap);
+    }
+    return listInMap;
+  }
 }

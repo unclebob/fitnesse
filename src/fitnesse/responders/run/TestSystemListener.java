@@ -6,7 +6,7 @@ public interface TestSystemListener
 {
 	public void acceptOutput(String output) throws Exception;
 
-	public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception;
+	public void acceptResults(TestSummary testSummary) throws Exception;
 
 	public void exceptionOccurred(Throwable e);
 }

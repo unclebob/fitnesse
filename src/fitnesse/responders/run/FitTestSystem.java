@@ -5,7 +5,7 @@ import fitnesse.components.CommandRunningFitClient;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class FitTestSystem extends TestSystemBase {
+public class FitTestSystem extends TestSystem {
   private CommandRunningFitClient client;
   private FitNesseContext context;
 

@@ -126,7 +126,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 	{
 	}
 
-	public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception
+	public void acceptResults(TestSummary testSummary) throws Exception
 	{
 	}
 

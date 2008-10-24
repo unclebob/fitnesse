@@ -9,13 +9,14 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 	private static final String cssSuffix1 = "1";
 	private static final String cssSuffix2 = "2";
 
-	private TestSystemBase.TestSummary pageCounts = new TestSystemBase.TestSummary();
+	private TestSummary pageCounts = new TestSummary();
 
 	private String cssSuffix = cssSuffix1;
 	private TagGroup testResultsGroup = new TagGroup();
 	private HtmlTag currentOutputDiv;
+  private int pageNumber = 0;
 
-	public SuiteHtmlFormatter(HtmlPage page) throws Exception
+  public SuiteHtmlFormatter(HtmlPage page) throws Exception
 	{
 		super(page);
 
@@ -29,19 +30,19 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 		return "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
 
-	public void setPageAssertions(TestSystemBase.TestSummary pageSummary)
+	public void setPageAssertions(TestSummary pageSummary)
 	{
 		this.pageCounts = pageSummary;
 	}
 
-	public String acceptResults(String relativePageName, TestSystemBase.TestSummary testSummary) throws Exception
+	public String acceptResults(String relativePageName, TestSummary testSummary) throws Exception
 	{
 		switchCssSuffix();
-		HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);
+    HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);
 
 		mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(testSummary), testSummary.toString()));
 
-		HtmlTag link = HtmlUtil.makeLink("#" + relativePageName, relativePageName);
+		HtmlTag link = HtmlUtil.makeLink("#" + relativePageName+pageNumber, relativePageName);
 		link.addAttribute("class", "test_summary_link");
 		mainDiv.add(link);
 
@@ -52,9 +53,10 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 
 	public void startOutputForNewTest(String relativePageName, String qualifiedPageName) throws Exception
 	{
-		HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
+    pageNumber++;
+    HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
 		HtmlTag anchor = HtmlUtil.makeLink(qualifiedPageName, relativePageName);
-		anchor.addAttribute("id", relativePageName);
+		anchor.addAttribute("id", relativePageName+pageNumber);
 		pageNameBar.add(anchor);
 		testResultsGroup.add(pageNameBar);
 		currentOutputDiv = HtmlUtil.makeDivTag("alternating_block_" + cssSuffix);
@@ -78,4 +80,14 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter
 		else
 			cssSuffix = cssSuffix1;
 	}
+
+  public void announceTestSystem(String testSystemName) {
+		HtmlTag outputTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
+		outputTitle.addAttribute("class", "centered");
+		testResultsGroup.add(outputTitle);
+  }
+
+  public String getTestSystemHeader(String testSystemName) {
+    return String.format("<h3>%s</h3>\n", testSystemName);
+  }
 }

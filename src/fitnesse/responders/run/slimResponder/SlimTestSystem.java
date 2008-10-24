@@ -3,7 +3,8 @@ package fitnesse.responders.run.slimResponder;
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSystemListener;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSummary;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimService;
 import fitnesse.slim.SlimServer;
@@ -15,7 +16,7 @@ import java.util.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
-public class SlimTestSystem extends TestSystemBase implements SlimTestContext {
+public class SlimTestSystem extends TestSystem implements SlimTestContext {
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
@@ -27,7 +28,7 @@ public class SlimTestSystem extends TestSystemBase implements SlimTestContext {
   private List<SlimTable> testTables = new ArrayList<SlimTable>();
   private Map<String, String> exceptions = new HashMap<String, String>();
   private Map<String, String> symbols = new HashMap<String, String>();
-  private TestSystemBase.TestSummary testSummary;
+  private TestSummary testSummary;
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -158,12 +159,16 @@ public class SlimTestSystem extends TestSystemBase implements SlimTestContext {
   }
 
   public void sendPageData(PageData pageData) throws Exception {
+    testTables.clear();
+    symbols.clear();
+    exceptions.clear();
+    testSummary.clear();
     runTestsOnPage(pageData);
     String wikiText = generateWikiTextForTestResults();
     pageData.setContent(wikiText);
     testResults = pageData;
-    acceptResults(testSummary);
     acceptOutput(pageData.getHtml());
+    acceptResults(testSummary);
   }
 
   private String generateWikiTextForTestResults() throws Exception {

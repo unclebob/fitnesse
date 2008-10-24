@@ -2,11 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 
 public interface ResultHandler
 {
 	void acceptResult(PageResult result) throws Exception;
 
-	void acceptFinalCount(TestSystemBase.TestSummary testSummary) throws Exception;
+	void acceptFinalCount(TestSummary testSummary) throws Exception;
 }

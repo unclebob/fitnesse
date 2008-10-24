@@ -24,24 +24,21 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   protected CompositeExecutionLog log;
   protected PageData data;
   private boolean closed = false;
-  private TestSystemBase.TestSummary assertionCounts = new TestSystemBase.TestSummary();
+  private TestSummary assertionCounts = new TestSummary();
   protected TestHtmlFormatter formatter;
-  protected CompositeTestSystem testSystem;
+  protected TestSystemGroup testSystemGroup;
+  protected String classPath;
 
   protected void doSending() throws Exception {
     data = page.getData();
-    String classPath = buildClassPath();
-    String className = getClassName(data);
+    classPath = buildClassPath();
     startHtml();
     sendPreTestNotification();
 
-    testSystem = new CompositeTestSystem(context, page, this);
-    log = testSystem.getExecutionLog();
+    testSystemGroup = new TestSystemGroup(context, page, this);
+    log = testSystemGroup.getExecutionLog();
 
-    testSystem.startTestSystem(page, classPath, className);
-
-    if (testSystem.isSuccessfullyStarted())
-      performExecution();
+    performExecution();
 
     finishSending();
   }
@@ -57,12 +54,17 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   protected void performExecution() throws Exception {
-    addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
-    SetupTeardownIncluder.includeInto(data, true);
-    if (data.getContent().length() == 0)
-      addEmptyContentMessage();
-    testSystem.sendPageData(data);
-    testSystem.bye();
+    String testSystemName = TestSystem.getTestSystemName(data);
+    String testRunner = TestSystem.getTestRunner(data);
+    TestSystem testSystem = testSystemGroup.startTestSystem(testSystemName, testRunner, classPath);
+    if (testSystemGroup.isSuccessfullyStarted()) {
+      addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
+      SetupTeardownIncluder.includeInto(data, true);
+      if (data.getContent().length() == 0)
+        addEmptyContentMessage();
+      testSystem.sendPageData(data);
+      testSystemGroup.bye();
+    }
   }
 
   protected String buildClassPath() throws Exception {
@@ -80,14 +82,14 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     return crawler;
   }
 
-  public void acceptResults(TestSystemBase.TestSummary testSummary) throws Exception {
+  public void acceptResults(TestSummary testSummary) throws Exception {
     assertionCounts.tally(testSummary);
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
     try {
       completeResponse();
-      testSystem.kill();
+      testSystemGroup.kill();
     }
     catch (Exception e1) {
       e1.printStackTrace();
@@ -161,21 +163,6 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     group.add(HtmlUtil.makeLink(PathParser.render(fullPath), page.getName()));
     group.add(HtmlUtil.makeItalic(pageType()));
     return group.html();
-  }
-
-  public String getClassName(PageData data) throws Exception {
-    String program = data.getVariable("TEST_RUNNER");
-    if (program == null)
-      program = defaultTestRunner(data);
-    return program;
-  }
-
-  private String defaultTestRunner(PageData data) throws Exception {
-    String testRunner = data.getVariable("TEST_SYSTEM");
-    if ("slim".equalsIgnoreCase(testRunner))
-      return "fitnesse.slim.SlimService";
-    else
-      return "fit.FitServer";
   }
 
   public SecureOperation getSecureOperation() {

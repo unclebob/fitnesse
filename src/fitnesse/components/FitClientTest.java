@@ -4,7 +4,7 @@ package fitnesse.components;
 
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSystemListener;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.*;
 
 import java.util.*;
@@ -12,7 +12,7 @@ import java.util.*;
 public class FitClientTest extends RegexTestCase implements TestSystemListener
 {
 	private List<String> outputs = new ArrayList<String>();
-	private List<TestSystemBase.TestSummary> counts = new ArrayList<TestSystemBase.TestSummary>();
+	private List<TestSummary> counts = new ArrayList<TestSummary>();
 	private CommandRunningFitClient client;
 	private boolean exceptionOccurred = false;
 	private int port = 9080;
@@ -50,7 +50,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener
 		outputs.add(output);
 	}
 
-	public void acceptResults(TestSystemBase.TestSummary testSummary)
+	public void acceptResults(TestSummary testSummary)
 	{
 		this.counts.add(testSummary);
 	}
@@ -120,7 +120,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener
 		assertFalse(exceptionOccurred);
 		assertEquals(3, outputs.size());
 		assertEquals(1, counts.size());
-		TestSystemBase.TestSummary count = counts.get(0);
+		TestSummary count = counts.get(0);
 		assertEquals(1, count.right);
 		assertEquals(1, count.wrong);
 		assertEquals(1, count.exceptions);

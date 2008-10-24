@@ -6,7 +6,7 @@ import fitnesse.http.Request;
 import fitnesse.testutil.*;
 import fitnesse.util.FileUtil;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 
 import java.io.*;
 
@@ -17,7 +17,7 @@ public class FormattingOptionTest extends RegexTestCase
 	private CachingResultFormatter formatter;
 	private PageResult result1;
 	private PageResult result2;
-	private TestSystemBase.TestSummary finalSummary;
+	private TestSummary finalSummary;
 	private int port = FitNesseUtil.port;
 
 	public void setUp() throws Exception
@@ -98,9 +98,9 @@ public class FormattingOptionTest extends RegexTestCase
 	private void sampleFormatter() throws Exception
 	{
 		formatter = new CachingResultFormatter();
-		result1 = new PageResult("ResultOne", new TestSystemBase.TestSummary(1, 2, 3, 4), "result one content");
-		result2 = new PageResult("ResultTwo", new TestSystemBase.TestSummary(4, 3, 2, 1), "result two content");
-		finalSummary = new TestSystemBase.TestSummary(5, 5, 5, 5);
+		result1 = new PageResult("ResultOne", new TestSummary(1, 2, 3, 4), "result one content");
+		result2 = new PageResult("ResultTwo", new TestSummary(4, 3, 2, 1), "result two content");
+		finalSummary = new TestSummary(5, 5, 5, 5);
 		formatter.acceptResult(result1);
 		formatter.acceptResult(result2);
 		formatter.acceptFinalCount(finalSummary);

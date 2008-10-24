@@ -3,7 +3,7 @@
 package fitnesse.runner;
 
 import fit.*;
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 
 public class TestRunnerFixtureListener implements FixtureListener
 {
@@ -42,7 +42,7 @@ public class TestRunnerFixtureListener implements FixtureListener
 	{
 		try
 		{
-      TestSystemBase.TestSummary testSummary = new TestSystemBase.TestSummary();
+      TestSummary testSummary = new TestSummary();
       testSummary.right = counts.right;
       testSummary.wrong = counts.wrong;
       testSummary.ignores = counts.ignores;

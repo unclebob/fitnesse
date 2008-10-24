@@ -4,14 +4,14 @@ package fitnesse.runner;
 
 import java.util.regex.*;
 
-import fitnesse.responders.run.TestSystemBase;
+import fitnesse.responders.run.TestSummary;
 
 public class PageResult
 {
 	private static final Pattern countsPattern = Pattern.compile("(\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*");
 
 	private StringBuffer contentBuffer = new StringBuffer();
-	private TestSystemBase.TestSummary testSummary;
+	private TestSummary testSummary;
 	private String title;
 
 	public PageResult(String title)
@@ -19,7 +19,7 @@ public class PageResult
 		this.title = title;
 	}
 
-	public PageResult(String title, TestSystemBase.TestSummary testSummary, String startingContent) throws Exception
+	public PageResult(String title, TestSummary testSummary, String startingContent) throws Exception
 	{
 		this(title);
 		this.testSummary = testSummary;
@@ -41,12 +41,12 @@ public class PageResult
 		return title;
 	}
 
-	public TestSystemBase.TestSummary testSummary()
+	public TestSummary testSummary()
 	{
 		return testSummary;
 	}
 
-	public void setTestSummary(TestSystemBase.TestSummary testSummary)
+	public void setTestSummary(TestSummary testSummary)
 	{
 		this.testSummary = testSummary;
 	}
@@ -66,13 +66,13 @@ public class PageResult
 		int secondEndlIndex = resultString.indexOf('\n', firstEndlIndex + 1);
 
 		String title = resultString.substring(0, firstEndlIndex);
-		TestSystemBase.TestSummary testSummary = parseCounts(resultString.substring(firstEndlIndex + 1, secondEndlIndex));
+		TestSummary testSummary = parseCounts(resultString.substring(firstEndlIndex + 1, secondEndlIndex));
 		String content = resultString.substring(secondEndlIndex + 1);
 
 		return new PageResult(title, testSummary, content);
 	}
 
-	private static TestSystemBase.TestSummary parseCounts(String countString)
+	private static TestSummary parseCounts(String countString)
 	{
 		Matcher matcher = countsPattern.matcher(countString);
 		if(matcher.find())
@@ -81,7 +81,7 @@ public class PageResult
 			int wrong = Integer.parseInt(matcher.group(2));
 			int ignores = Integer.parseInt(matcher.group(3));
 			int exceptions = Integer.parseInt(matcher.group(4));
-			return new TestSystemBase.TestSummary(right, wrong, ignores, exceptions);
+			return new TestSummary(right, wrong, ignores, exceptions);
 		}
 		else
 			return null;
