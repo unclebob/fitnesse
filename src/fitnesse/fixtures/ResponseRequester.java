@@ -25,7 +25,7 @@ public class ResponseRequester extends ColumnFixture
 
 	public void execute() throws Exception
 	{
-		request = new MockRequest();
+		setRequest(new MockRequest());
 
 		details();
 
@@ -54,4 +54,20 @@ public class ResponseRequester extends ColumnFixture
 	protected void details()
 	{
 	}
+
+  public void setUri(String uri) {
+    this.uri = uri;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public void setRequest(MockRequest request) {
+    this.request = request;
+  }
 }

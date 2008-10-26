@@ -23,7 +23,7 @@ public class PageCreator extends ColumnFixture
 			PageData data = thePage.getData();
 			setAttributes(data);
 			thePage.commit(data);
-			pageAttributes = "";
+			setPageAttributes("");
 		}
 		catch(Exception e)
 		{
@@ -46,5 +46,17 @@ public class PageCreator extends ColumnFixture
 			data.setAttribute(name, value);
 		}
 	}
+
+  public void setPageName(String pageName) {
+    this.pageName = pageName;
+  }
+
+  public void setPageContents(String pageContents) {
+    this.pageContents = pageContents;
+  }
+
+  public void setPageAttributes(String pageAttributes) {
+    this.pageAttributes = pageAttributes;
+  }
 }
 

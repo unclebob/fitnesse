@@ -49,18 +49,18 @@ public class ResponseExaminer extends ColumnFixture
 	public int matchCount() throws Exception
 	{
 		Pattern p = Pattern.compile(Utils.escapeText(pattern), Pattern.MULTILINE + Pattern.DOTALL);
-		value = null;
+		setValue(null);
 		if(type.equals("contents"))
-			value = contents();
+			setValue(contents());
 		else if(type.equals("fullContents"))
-			value = fullContents();
+			setValue(fullContents());
 		else if(type.equals("status"))
-			value = "" + FitnesseFixtureContext.response.getStatus();
+			setValue("" + FitnesseFixtureContext.response.getStatus());
 		else if(type.equals("headers"))
 		{
 			String text = FitnesseFixtureContext.sender.sentData();
 			int headerEnd = text.indexOf("\r\n\r\n");
-			value = text.substring(0, headerEnd + 2);
+			setValue(text.substring(0, headerEnd + 2));
 		}
 
 		matcher = p.matcher(value);
@@ -128,4 +128,20 @@ public class ResponseExaminer extends ColumnFixture
 		String txt2 = txt.replaceAll("(<br */?>)", "$1"+System.getProperty("line.separator"));
 		return "<pre>" + Utils.escapeText(txt2) + "</pre>";
 	}
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public void setPattern(String pattern) {
+    this.pattern = pattern;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  public void setNumber(int number) {
+    this.number = number;
+  }
 }

@@ -24,9 +24,9 @@ public class PageCreatorTest extends TestCase
 	private WikiPage makePage(String pageName, String pageContent, String pageAttributes) throws Exception
 	{
 		PageCreator creator = new PageCreator();
-		creator.pageName = pageName;
-		creator.pageContents = pageContent;
-		creator.pageAttributes = pageAttributes;
+		creator.setPageName(pageName);
+		creator.setPageContents(pageContent);
+		creator.setPageAttributes(pageAttributes);
 		assertTrue(creator.valid());
 		WikiPage testPage = FitnesseFixtureContext.root.getChildPage("TestPage");
 		return testPage;

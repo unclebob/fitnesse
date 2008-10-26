@@ -40,5 +40,4 @@ public class ListSerializerTest {
     list.add(sublist);
     assertEquals("[000001:000024:[000001:000007:element:]:]", ListSerializer.serialize(list));
   }
-
 }
