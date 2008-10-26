@@ -4,19 +4,19 @@ Make sure the !-!include <MyAncestorPage.MyPage-! syntax works.
 #
  * First create a page to be included.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|this subpage was included 3.14159|
-|enter|page|!-ParentPage.MiddlePage.IncludedPage-!|
+|line|this subpage was included 3.14159|
+|page|!-ParentPage.MiddlePage.IncludedPage-!|
 #
  * Next create a page to do the including.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|before|
-|enter|line|!-!include <MiddlePage.IncludedPage-! |
-|enter|line|after|
-|enter|page|!-ParentPage.MiddlePage.MiddlePageTwo.IncludingPage-!|
+|line|before|
+|line|!-&bang;include <MiddlePage.IncludedPage-! |
+|line|after|
+|page|!-ParentPage.MiddlePage.MiddlePageTwo.IncludingPage-!|
 #
  * Then request the including page.
 #
