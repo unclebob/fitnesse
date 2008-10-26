@@ -2,12 +2,12 @@
 #
  * First create a page with line breaks in it.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|one|
-|enter|line||
-|enter|line|two|
-|enter|page|!-LineBreakPage-!|
+|line|one|
+|line||
+|line|two|
+|page|!-LineBreakPage-!|
 #
  * Then request that page
 #
@@ -19,7 +19,7 @@
 #
 |Response Examiner.|
 |type|pattern|matches?|value|
-|contents|!-one.*&lt;br/>.*&lt;br/>.*two.*&lt;br/>.*-!|true||
+|contents|one.*<br/>.*<br/>.*two.*<br/>.*|true||
 
 
 

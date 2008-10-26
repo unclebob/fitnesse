@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !2 Test that HTTP links are rendered correctly
 If a string of the form !-http://-!''some_url'' appears in wiki text, it is converted to a link.
 ----

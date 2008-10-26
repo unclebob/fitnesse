@@ -3,13 +3,13 @@
 
 First, build a page with variable definitions followed immediately by a classpath definition. Also include a test that should pass.
 
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|!define PI {3.141592}|
-|enter|line|!path classes|
-|enter|line|!path fitnesse.jar|
-|enter|line|!-!|fitnesse.testutil.PassFixture|-!|
-|enter|page|!-ClasspathTestPage-!|
+|line|!define PI {3.141592}|
+|line|!path classes|
+|line|!path fitnesse.jar|
+|line|!-!&bar;fitnesse.testutil.PassFixture&bar;-!|
+|page|!-ClasspathTestPage-!|
 
 Next, request that page with ?test (as though you clicked the test button)
 

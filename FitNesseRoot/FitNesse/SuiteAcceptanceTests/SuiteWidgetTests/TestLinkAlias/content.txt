@@ -1,3 +1,5 @@
+!define TEST_SYSTEM {fit}
+
 !2 Test the Link Alias syntax.
 Aliases to links can be created using the !-[[tag][link]]-! syntax.
 The tag is interpreted for markup syntax, so it can be italic, or bold, or an image, etc.  The link can be a relative or global wiki word, or it can be an http link.

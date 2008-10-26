@@ -6,10 +6,10 @@ A list created as follows {{{* 50 ways to leave your lover}}} should be rendered
  * First create a page with a simple table in it.
 #
 !note We use \ here as a way to capture the leading space before the *.
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|\ * 50 ways to leave your lover.|
-|enter|page|NormalListWithLeadingNumericPage|
+|line|\ * 50 ways to leave your lover.|
+|page|NormalListWithLeadingNumericPage|
 #
  * Then request that page
 #

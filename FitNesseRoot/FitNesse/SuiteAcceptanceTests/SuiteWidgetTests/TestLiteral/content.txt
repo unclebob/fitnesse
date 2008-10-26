@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !2 This page tests literals on a wiki page.
 A literal is a string that is not interpreted by the wiki.  All the normal markup syntax is ignored.  Thus you can have wiki words, or multiplie apostrophes or other wiki markup language appear in the clear.
 ----

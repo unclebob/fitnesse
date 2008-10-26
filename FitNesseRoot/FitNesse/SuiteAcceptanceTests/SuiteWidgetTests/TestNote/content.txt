@@ -3,10 +3,10 @@ A note is created using the !-!note-! widget as follows {{{!note this is a note.
 #
  * First create a page with a note in it.
 #
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|!note hello|
-|enter|page|NotePage|
+|line|!note hello|
+|page|NotePage|
 #
  * Then request that page
 #

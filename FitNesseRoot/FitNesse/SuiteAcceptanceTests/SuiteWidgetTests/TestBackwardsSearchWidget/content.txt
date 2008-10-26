@@ -27,9 +27,9 @@ Now check for a page that doesn't exist.
 |uri|valid?|contents?|
 |PageOne.PageTwo.PageThree.PageFour|true||
 
-!|Response Examiner.|
+|Response Examiner.|
 |type  |pattern|matches?|value|
-|contents|&lt;NoSuch<a title="create page" href="NoSuch\?edit&amp;nonExistent=true">\[\?\]</a>|true||
+|contents|!-&lt;NoSuch<a title="create page" href="NoSuch\?edit&amp;nonExistent=true">\[\?\]</a>-!|true||
 
 Now check for a sub page that doesn't exist.
 

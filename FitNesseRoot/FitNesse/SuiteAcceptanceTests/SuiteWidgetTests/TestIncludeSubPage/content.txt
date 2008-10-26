@@ -4,19 +4,19 @@ Make sure the !-!include >MySubPage-! syntax works.
 #
  * First create a page to be included.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|this subpage was included 3.14159|
-|enter|page|!-IncludingPage.IncludedPage-!|
+|line|this subpage was included 3.14159|
+|page|!-IncludingPage.IncludedPage-!|
 #
  * Next create a page to do the including.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|before|
-|enter|line|!-!include >IncludedPage-! |
-|enter|line|after|
-|enter|page|!-IncludingPage-!|
+|line|before|
+|line|!-&bang;include >IncludedPage-! |
+|line|after|
+|page|!-IncludingPage-!|
 #
  * Then request the including page.
 #

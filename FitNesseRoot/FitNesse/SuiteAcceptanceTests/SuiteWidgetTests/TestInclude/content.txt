@@ -5,19 +5,19 @@ The following is a test that demonstrates how this works.
 #
  * First create a page to be included.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|included|
-|enter|page|!-IncludedPage-!|
+|line|included|
+|page|!-IncludedPage-!|
 #
  * Next create a page to do the including.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|before|
-|enter|line|!-!include IncludedPage-! |
-|enter|line|after|
-|enter|page|!-IncludingPage-!|
+|line|before|
+|line|&bang;include !-IncludedPage-! |
+|line|after|
+|page|!-IncludingPage-!|
 #
  * Then request the including page.
 #

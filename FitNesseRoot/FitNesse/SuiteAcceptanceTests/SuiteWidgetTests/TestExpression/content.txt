@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !1 Expressions using the ${= =} mark up
 !3 Syntax:
 '''{{{ $!--!{= expression =} }}}'''

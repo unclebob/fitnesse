@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {slim}
 This page tests bold text on a wiki page.
 
 First create a page with bold text on it.

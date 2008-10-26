@@ -1,13 +1,13 @@
 '''Next create a child'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line        |I came first!|
-|enter|attributes  |Help=First Child's help|
-|enter|page        |!-ParentPage.FirstChild-!|
+|line        |I came first!|
+|attributes  |Help=First Child's help|
+|page        |!-ParentPage.FirstChild-!|
 
 '''Next create a sibling'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line        |I'm younger, but wiser|
-|enter|attributes  |Help=Second Child's help|
-|enter|page        |!-ParentPage.SecondChild-!|
+|line        |I'm younger, but wiser|
+|attributes  |Help=Second Child's help|
+|page        |!-ParentPage.SecondChild-!|

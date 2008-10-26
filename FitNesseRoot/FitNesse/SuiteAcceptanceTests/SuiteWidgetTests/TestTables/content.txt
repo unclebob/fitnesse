@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !3 This page tests the construction of tables.
 #
  * First create a page with comment text on it.

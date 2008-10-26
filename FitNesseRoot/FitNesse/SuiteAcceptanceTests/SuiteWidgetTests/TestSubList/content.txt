@@ -6,11 +6,11 @@ A list created as follows {{{ * Item one
  * First create a page with a simple table in it.
 #
 !note We use backslash is a way to capture the leading space before the *.
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|\ * Item One|
-|enter|line|\  * Item Two|
-|enter|page|SubList|
+|line|\ * Item One|
+|line|\  * Item Two|
+|page|SubList|
 #
  * Then request that page
 #

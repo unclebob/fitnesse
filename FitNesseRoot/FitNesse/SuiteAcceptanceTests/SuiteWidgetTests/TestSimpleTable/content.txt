@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !3 This page tests a simple one-line table.
 A simple table is created as follows {{{|a|b|c|}}} The resulting text will be rendered in a one line table of the form.{{{<table>
 <tr><td>a</td><td>b</td><td>c</td></tr>

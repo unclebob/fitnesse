@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !2 Test that variables are properly defined and expressed on a page.
  * Variables are defined as !-!define name {value}-!.
  * Alternately they are defined as !-!define name (value)-!.

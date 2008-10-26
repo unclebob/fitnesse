@@ -3,13 +3,13 @@
 #-------------------------------------------------
 !3 Test Rollover Help
 '''First create the parent page.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I'm the parent|
-|enter|line|!-!contents-!|
-|enter|page|!-ParentPage-!|
+|line|I'm the parent|
+|line|!-!contents-!|
+|page|!-ParentPage-!|
 
-!include -seamless ContentsTestsIncludeWithHelp
+!include ContentsTestsIncludeWithHelp
 
 '''Then request the parent page.'''
 |Response Requester.|
@@ -19,18 +19,18 @@
 '''...and examine the requested page to insure rollover help text exists'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild" title="First Child's help">FirstChild</a>|true|
-|contents|<a href="ParentPage.SecondChild" title="Second Child's help">SecondChild</a>|true|
+|contents|a href="ParentPage.FirstChild" title="First Child's help">FirstChild</a|true|
+|contents|a href="ParentPage.SecondChild" title="Second Child's help">SecondChild</a|true|
 #-------------------------------------------------
 !3 Explicitly Request Help Text Suffix
 '''First create the parent page.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I'm also the parent|
-|enter|line|!-!contents -h-!|
-|enter|page|!-ParentPage-!|
+|line|I'm also the parent|
+|line|!-!contents -h-!|
+|page|!-ParentPage-!|
 
-!include -seamless ContentsTestsIncludeWithHelp
+!include ContentsTestsIncludeWithHelp
 
 '''Then request the parent page.'''
 |Response Requester.|
@@ -40,20 +40,22 @@
 '''...and examine the requested page to insure help text is visible'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">FirstChild</a><span class="pageHelp">: First Child's help</span>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild</a><span class="pageHelp">: Second Child's help</span>|true|
+|contents|a href="ParentPage.FirstChild">FirstChild</a|true|
+|contents|span class="pageHelp">: First Child's help</span|true|
+|contents|a href="ParentPage.SecondChild">SecondChild</a|true|
+|contents|span class="pageHelp">: Second Child's help</span|true|
 #-------------------------------------------------
 !3 Implicitly Request Help Text Suffix via Variable
 '''First create the parent page.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I'm also the parent|
-|enter|line|!-!define HELP_TOC {true}-!|
-|enter|line|!-!contents-!|
-|enter|line|!-!define HELP_TOC {false}-!|
-|enter|page|!-ParentPage-!|
+|line|I'm also the parent|
+|line|!-!define HELP_TOC {true}-!|
+|line|!-!contents-!|
+|line|!-!define HELP_TOC {false}-!|
+|page|!-ParentPage-!|
 
-!include -seamless ContentsTestsIncludeWithHelp
+!include ContentsTestsIncludeWithHelp
 
 '''Then request the parent page.'''
 |Response Requester.|
@@ -63,5 +65,7 @@
 '''...and examine the requested page to insure help text is visible'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">FirstChild</a><span class="pageHelp">: First Child's help</span>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild</a><span class="pageHelp">: Second Child's help</span>|true|
+|contents|a href="ParentPage.FirstChild">FirstChild</a|true|
+|contents|span class="pageHelp">: First Child's help</span|true|
+|contents|a href="ParentPage.SecondChild">SecondChild</a|true|
+|contents|span class="pageHelp">: Second Child's help</span|true|

@@ -2,12 +2,12 @@
 #
  * First create a page with comment text on it.
 #
-!|Action Fixture|
+!|script|
 |start|Page Builder|
-|enter|line|one|
-|enter|line|#two|
-|enter|line|three|
-|enter|page|CommentTextPage|
+|line|one|
+|line|#two|
+|line|three|
+|page|CommentTextPage|
 #
  * Then request that page
 #

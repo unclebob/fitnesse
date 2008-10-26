@@ -5,7 +5,7 @@ If !c is at the beginning of a line, then the rest of the line will be centered.
 #
 !|Page Creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
-|CenterTextPage|!c This is centered text||yes|
+|CenterTextPage|!c This is centered text||true|
 #
 !3 Then request that page
 #

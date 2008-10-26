@@ -4,10 +4,10 @@ A style is added to text using the !-!style-! widget as follows {{{!style_myStyl
 #
  * First create a page with a note in it.
 #
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|!style_myStyle(hello)|
-|enter|page|StylePage|
+|line|!style_myStyle(hello)|
+|page|StylePage|
 #
  * Then request that page
 #

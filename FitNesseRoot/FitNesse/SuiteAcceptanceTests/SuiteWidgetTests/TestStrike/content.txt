@@ -5,12 +5,12 @@ The following is a test that describes the syntax and HTML output.
 #
  * First create a page with strike text on it.
 #
-!|Action fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|one|
-|enter|line|--strike--|
-|enter|line|three|
-|enter|page|StrikeTextPage|
+|line|one|
+|line|--strike--|
+|line|three|
+|page|StrikeTextPage|
 #
  * Then request that page
 #

@@ -8,19 +8,19 @@ See TestInclude for more info on included pages.
 #
  * First create a page to be included.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|included|
-|enter|page|!-IncludedPage-!|
+|line|included|
+|page|!-IncludedPage-!|
 #
  * Next create a page to do the including.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|before|
-|enter|line|!-!include -c IncludedPage-! |
-|enter|line|after|
-|enter|page|!-IncludingPage-!|
+|line|before|
+|line|!-&bang;include -c IncludedPage-! |
+|line|after|
+|page|!-IncludingPage-!|
 #
  * Then request the including page.
 #

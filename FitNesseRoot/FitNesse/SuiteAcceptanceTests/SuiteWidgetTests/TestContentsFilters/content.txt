@@ -2,11 +2,11 @@
 !include -seamless ContentsUsage
 !3 Explicit Property Option
 '''First create the parent page.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I'm the parent|
-|enter|line|!-!contents -f-!|
-|enter|page|!-ParentPage-!|
+|line|I'm the parent|
+|line|!-!contents -f-!|
+|page|!-ParentPage-!|
 
 !include -seamless ContentsTestsInclude
 
@@ -18,18 +18,18 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">FirstChild \(FC1\)</a>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild \(FC2\)</a>|true|
+|contents|a href="ParentPage.FirstChild">FirstChild \(FC1\)</a>|true|
+|contents|a href="ParentPage.SecondChild">SecondChild \(FC2\)</a>|true|
 
 !3 Indirect via PROPERTY_TOC Variable
 '''First create the parent page.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I'm also the parent|
-|enter|line|!-!define FILTER_TOC {true}-!|
-|enter|line|!-!contents-!|
-|enter|line|!-!define FILTER_TOC {false}-!|
-|enter|page|!-ParentPage-!|
+|line|I'm also the parent|
+|line|!-!define FILTER_TOC {true}-!|
+|line|!-!contents-!|
+|line|!-!define FILTER_TOC {false}-!|
+|page|!-ParentPage-!|
 
 !include -seamless ContentsTestsInclude
 
@@ -41,5 +41,5 @@
 '''...and examine the requested page to be sure that the child pages are included'''
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<a href="ParentPage.FirstChild">FirstChild \(FC1\)</a>|true|
-|contents|<a href="ParentPage.SecondChild">SecondChild \(FC2\)</a>|true|
+|contents|a href="ParentPage.FirstChild">FirstChild \(FC1\)</a|true|
+|contents|a href="ParentPage.SecondChild">SecondChild \(FC2\)</a|true|

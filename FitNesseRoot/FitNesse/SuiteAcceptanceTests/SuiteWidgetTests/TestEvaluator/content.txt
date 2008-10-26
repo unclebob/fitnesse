@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !1 Evaluator of expressions: $!--!{= =}
 !2 Syntax
 '''{{{       $!--!{= [format:] expression =} }}}'''

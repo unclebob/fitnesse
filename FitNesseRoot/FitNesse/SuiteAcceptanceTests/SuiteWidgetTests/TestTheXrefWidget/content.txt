@@ -6,17 +6,17 @@ The !-!see-! widget takes a page name as argument.  It displays the fully qualif
 
 Create some page.
 
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|Dummy Text|
-|enter|page|!-SomePage-!|
+|line|Dummy Text|
+|page|!-SomePage-!|
 
 Create a suite page with a !-!see-! widget
 
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!see SomePage-!|
-|enter|page|!-SuitePage-!|
+|line|!-!see SomePage-!|
+|page|!-SuitePage-!|
 
 Get the Suite page.
 
@@ -32,7 +32,7 @@ Make sure the page name is formatted properly
 
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|!-&lt;b>See: &lt;a href=.*>SomePage&lt;/a>&lt;/b>-!|true|
+|contents|<b>See: <a href=.*>SomePage</a></b>|true|
 
 
 

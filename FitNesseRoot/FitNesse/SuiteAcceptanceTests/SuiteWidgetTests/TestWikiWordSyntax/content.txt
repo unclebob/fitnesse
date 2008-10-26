@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 The best way to see learn about .FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.WikiWord syntax is by example.
 Notice the combination of capital and lower case letters.
 

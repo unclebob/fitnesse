@@ -8,20 +8,20 @@ The following is a test that demonstrates how this works.
 #
  * First create a page to be included.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|included line 1|
-|enter|line|included line 2|
-|enter|page|!-IncludedPage-!|
+|line|included line 1|
+|line|included line 2|
+|page|!-IncludedPage-!|
 #
  * Next create a page to do the including.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|before|
-|enter|line|!-!include -seamless IncludedPage-! |
-|enter|line|after|
-|enter|page|!-IncludingPage-!|
+|line|before|
+|line|!-&bang;include -seamless IncludedPage-! |
+|line|after|
+|page|!-IncludingPage-!|
 #
  * Then request the including page.
 #

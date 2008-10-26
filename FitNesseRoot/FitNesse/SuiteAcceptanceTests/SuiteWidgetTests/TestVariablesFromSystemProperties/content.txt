@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !2 Test that variables can be defined as system properties
  * If Fitnesse can not find a variable definition on any pages it will look to system properties.
 ----

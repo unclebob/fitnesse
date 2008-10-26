@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !3 This page tests a multi-line table.
 A multi-line table is created as follows {{{|a|b|c|
 |d|e|f|}}} The resulting text will be rendered in a one line table of the form.{{{<table>

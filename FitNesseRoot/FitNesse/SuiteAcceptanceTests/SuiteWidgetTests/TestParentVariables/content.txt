@@ -1,3 +1,4 @@
+!define TEST_SYSTEM {fit}
 !2 Test variables declared on parent page.
 When a variable is expressed on a page, if that variable was not defined on that page, then !-FitNesse-! looks on the parent pages until it finds one that has the variable.
 ----

@@ -1,13 +1,13 @@
 '''Next create a child'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I came first!|
-|enter|attributes|Suite=true,Test=true,Suites=FC1|
-|enter|page|!-ParentPage.FirstChild-!|
+|line|I came first!|
+|attributes|Suite=true,Test=true,Suites=FC1|
+|page|!-ParentPage.FirstChild-!|
 
 '''Next create a sibling'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|I'm younger, but wiser|
-|enter|attributes|!-WikiImport-!=true,Prune=true,Suites=FC2|
-|enter|page|!-ParentPage.SecondChild-!|
+|line|I'm younger, but wiser|
+|attributes|!-WikiImport-!=true,Prune=true,Suites=FC2|
+|page|!-ParentPage.SecondChild-!|
