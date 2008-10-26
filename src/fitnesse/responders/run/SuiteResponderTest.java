@@ -327,6 +327,8 @@ public class SuiteResponderTest extends RegexTestCase {
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
     assertHasRegexp("<h3>fit:fit.FitServer</h3>", results);
     assertHasRegexp("<h3>slim:fitnesse.slim.SlimService", results);
+
+
   }
 
 }

@@ -59,7 +59,7 @@ public class ExecutionLog {
     errorLogPage.commit(data);
   }
 
-  private String buildLogContent() {
+  String buildLogContent() {
     StringBuffer buffer = new StringBuffer();
     addEntry(buffer, "Date", makeDateFormat().format(new Date()));
     addEntry(buffer, "Command", runner.getCommand());

@@ -7,11 +7,15 @@ import java.util.Map;
 
 public class CompositeExecutionLog {
   private String errorLogPageName;
+  private WikiPagePath errorLogPagePath;
+  private PageCrawler crawler;
+  private WikiPage root;
 
   public CompositeExecutionLog(WikiPage testPage) throws Exception {
-    PageCrawler crawler = testPage.getPageCrawler();
+    crawler = testPage.getPageCrawler();
+    root = crawler.getRoot(testPage);
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-    WikiPagePath errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
+    errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
     errorLogPageName = PathParser.render(errorLogPagePath);
   }
 
@@ -22,29 +26,21 @@ public class CompositeExecutionLog {
   }
 
   public void publish() throws Exception {
-    for (ExecutionLog log : logs.values())
-      log.publish();
+    String content = buildLogContent();
+
+    WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
+    PageData data = errorLogPage.getData();
+    data.setContent(content);
+    errorLogPage.commit(data);
   }
 
-  public String getExitCode() {
-    if (logs.size() == 1) {
-      ExecutionLog log = logs.values().toArray(new ExecutionLog[1])[0];
-      return String.valueOf(log.getExitCode());
-    } else {
-      return errorCodeList();
+  private String buildLogContent() {
+    StringBuffer logContent = new StringBuffer();
+    for (String testSystemName : logs.keySet()) {
+      logContent.append(String.format("!3 !-%s-!\n", testSystemName));
+      logContent.append(logs.get(testSystemName).buildLogContent());
     }
-  }
-
-  private String errorCodeList() {
-    StringBuffer exitCodeList = new StringBuffer();
-    exitCodeList.append("[");
-    for (ExecutionLog log : logs.values()) {
-      exitCodeList.append(String.valueOf(log.getExitCode()));
-      exitCodeList.append(",");
-    }
-    exitCodeList.deleteCharAt(exitCodeList.length() - 1);
-    exitCodeList.append("]");
-    return exitCodeList.toString();
+    return logContent.toString();
   }
 
   public String executionStatusHtml() throws Exception {

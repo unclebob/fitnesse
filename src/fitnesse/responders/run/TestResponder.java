@@ -113,7 +113,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     response.add(HtmlUtil.getHtmlOfInheritedPage("PageFooter", page));
     response.add(formatter.tail());
     response.closeChunks();
-    response.addTrailingHeader("Exit-Code", String.valueOf(log.getExitCode()));
+    response.addTrailingHeader("Exit-Code", String.valueOf(exitCode()));
     response.closeTrailer();
     response.close();
   }

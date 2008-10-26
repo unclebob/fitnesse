@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.testutil.*;
 import fitnesse.wiki.*;
 
-public class ErrorLogGeneratorTest extends RegexTestCase
+public class ExecutionLogTest extends RegexTestCase
 {
 	private static String ErrorLogName = ExecutionLog.ErrorLogName;
 
@@ -13,25 +13,26 @@ public class ErrorLogGeneratorTest extends RegexTestCase
 	private MockCommandRunner runner;
 	private ExecutionLog log;
 	private WikiPage root;
-	private WikiPage errorLogsParentPage;
 
 	public void setUp() throws Exception
 	{
 		root = InMemoryPage.makeRoot("RooT");
-		errorLogsParentPage = root.addChildPage(ErrorLogName);
 		testPage = root.addChildPage("TestPage");
 		runner = new MockCommandRunner("some command", 123);
 		log = new ExecutionLog(testPage, runner);
 	}
 
-	public void tearDown() throws Exception
-	{
-	}
 
-	public void testPageIsCreated() throws Exception
+  public void testNoErrrorLogPageToBeginWith() throws Exception {
+    assertFalse(root.hasChildPage(ErrorLogName));  
+  }
+
+  public void testPageIsCreated() throws Exception
 	{
 		log.publish();
-		assertTrue(errorLogsParentPage.hasChildPage(testPage.getName()));
+    assertTrue(root.hasChildPage(ErrorLogName));
+    WikiPage errorLogsParentPage = root.getChildPage(ErrorLogName);
+    assertTrue(errorLogsParentPage.hasChildPage(testPage.getName()));
 	}
 
 	public void testErrorLogContentIsReplaced() throws Exception
@@ -61,6 +62,7 @@ public class ErrorLogGeneratorTest extends RegexTestCase
 	private String getGeneratedContent() throws Exception
 	{
 		log.publish();
+    WikiPage errorLogsParentPage = root.getChildPage(ErrorLogName);
 		WikiPage errorLogPage = errorLogsParentPage.getChildPage(testPage.getName());
 		String content = errorLogPage.getData().getContent();
 		return content;

@@ -34,9 +34,6 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
 
   protected void performExecution() throws Exception {
     executeTestPages();
-
-    testSystemGroup.bye();
-
     completeResponse();
   }
 
@@ -59,6 +56,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     } else {
       throw new Exception("Test system not started");
     }
+    testSystem.bye();
   }
 
   private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
