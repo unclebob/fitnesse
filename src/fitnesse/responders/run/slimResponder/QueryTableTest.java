@@ -65,8 +65,8 @@ public class QueryTableTest {
   @Test
   public void nullResultsForNullTable() throws Exception {
     assertQueryResults("", list(),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n"
     );
   }
 
@@ -76,9 +76,9 @@ public class QueryTableTest {
       list(
         list(list("n", "2"), list("2n", "4"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|!style_pass(2)|!style_pass(4)|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-2-!)|!style_pass(!-4-!)|\n"
     );
   }
 
@@ -88,10 +88,10 @@ public class QueryTableTest {
       list(
         list(list("n", "3"), list("2n", "5"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|[2] !style_fail(missing)|4|\n" +
-        "|[3] !style_fail(surplus)|5|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|[!-2-!] !style_fail(missing)|4|\n" +
+        "|[!-3-!] !style_fail(surplus)|5|\n"
     );
   }
 
@@ -101,9 +101,9 @@ public class QueryTableTest {
       list(
         list(list("n", "2"), list("2n", "5"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|!style_pass(2)|[5] !style_fail(expected [4])|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-2-!)|[!-5-!] !style_fail(expected [!-4-!])|\n"
     );
   }
 
@@ -116,10 +116,10 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|!style_pass(2)|!style_pass(4)|\n" +
-        "|!style_pass(3)|!style_pass(6)|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-2-!)|!style_pass(!-4-!)|\n" +
+        "|!style_pass(!-3-!)|!style_pass(!-6-!)|\n"
     );
   }
 
@@ -132,10 +132,10 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|!style_pass(3)|!style_pass(6)|\n" +
-        "|!style_pass(2)|!style_pass(4)|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-3-!)|!style_pass(!-6-!)|\n" +
+        "|!style_pass(!-2-!)|!style_pass(!-4-!)|\n"
     );
   }
 
@@ -148,11 +148,11 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|!style_pass(3)|!style_pass(6)|\n" +
-        "|[99] !style_fail(missing)|99|\n" +
-        "|[2] !style_fail(surplus)|4|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-3-!)|!style_pass(!-6-!)|\n" +
+        "|[!-99-!] !style_fail(missing)|99|\n" +
+        "|[!-2-!] !style_fail(surplus)|4|\n"
     );
   }
 
@@ -165,11 +165,11 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|[99] !style_fail(missing)|99|\n" +
-        "|!style_pass(2)|!style_pass(4)|\n" +
-        "|[3] !style_fail(surplus)|6|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|[!-99-!] !style_fail(missing)|99|\n" +
+        "|!style_pass(!-2-!)|!style_pass(!-4-!)|\n" +
+        "|[!-3-!] !style_fail(surplus)|6|\n"
     );
   }
 
@@ -180,9 +180,9 @@ public class QueryTableTest {
       list(
         list(list("n", "3"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|!style_pass(3)|[4] !style_fail(field not present)|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-3-!)|[!-4-!] !style_fail(field not present)|\n"
     );
   }
 
@@ -193,9 +193,9 @@ public class QueryTableTest {
       list(
         list(list("n", "3"))
       ),
-      "|!style_pass(Query:fixture)|argument|\n" +
-        "|n|2n|\n" +
-        "|[3] !style_fail(surplus)|!style_fail(field not present)|\n"
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|[!-3-!] !style_fail(surplus)|!style_fail(field not present)|\n"
     );
   }
 
@@ -214,9 +214,10 @@ public class QueryTableTest {
       )
     );
     qt.evaluateExpectations(pseudoResults);
-    assertEquals("|!style_pass(Query:fixture)|argument|\n" +
-      "|n|2n|\n" +
-      "|!style_pass(2)|!style_pass($V->[4])|\n", qt.getTable().toString()
+    assertEquals(
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-2-!)|!style_pass(!-$V->[4]-!)|\n", qt.getTable().toString()
     );
   }
 
@@ -235,9 +236,10 @@ public class QueryTableTest {
       )
     );
     qt.evaluateExpectations(pseudoResults);
-    assertEquals("|!style_pass(Query:fixture)|argument|\n" +
-      "|n|2n|\n" +
-      "|!style_pass(2)|[4] !style_fail(expected [$V->[5]])|\n", qt.getTable().toString()
+    assertEquals(
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|!style_pass(!-2-!)|[!-4-!] !style_fail(expected [!-$V->[5]-!])|\n", qt.getTable().toString()
     );
   }
 
@@ -255,9 +257,10 @@ public class QueryTableTest {
       )
     );
     qt.evaluateExpectations(pseudoResults);
-    assertEquals("|!style_pass(Query:fixture)|argument|\n" +
-      "|n|2n|\n" +
-      "|[3] !style_fail(missing)|$V->[5]|\n", qt.getTable().toString()
+    assertEquals(
+      "|!style_pass(!-Query:fixture-!)|!-argument-!|\n" +
+        "|!-n-!|!-2n-!|\n" +
+        "|[!-3-!] !style_fail(missing)|$V->[5]|\n", qt.getTable().toString()
     );
   }
 }

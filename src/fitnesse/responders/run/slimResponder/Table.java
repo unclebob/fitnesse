@@ -19,10 +19,31 @@ public class Table {
   public String getCellContents(int columnIndex, int rowIndex) {
     TextWidget textWidget = getCell(columnIndex, rowIndex);
     String cellText = textWidget.getText();
+    return replaceLiterals(textWidget, cellText);
+  }
+
+  private String replaceLiterals(TextWidget textWidget, String cellText) {
+    cellText = removeProcessedLiterals(textWidget, cellText);
+    cellText = removeUnprocessedLiterals(cellText);
+    return cellText;
+  }
+
+  private static String removeUnprocessedLiterals(String cellText) {
+    Matcher matcher = PreProcessorLiteralWidget.pattern.matcher(cellText);
+    while (matcher.find()) {
+      String replacement = matcher.group(1);
+      cellText = cellText.replace(matcher.group(), replacement);
+    }
+    return cellText;
+  }
+
+  private String removeProcessedLiterals(TextWidget textWidget, String cellText) {
     Matcher matcher = LiteralWidget.pattern.matcher(cellText);
-    if (matcher.matches()) {
+    while (matcher.find()) {
       int literalNumber = Integer.parseInt(matcher.group(1));
-      cellText = textWidget.getParent().getLiteral(literalNumber);
+      String replacement = textWidget.getParent().getLiteral(literalNumber);
+      cellText = cellText.replace(matcher.group(), replacement);
+      matcher = LiteralWidget.pattern.matcher(cellText);
     }
     return cellText;
   }

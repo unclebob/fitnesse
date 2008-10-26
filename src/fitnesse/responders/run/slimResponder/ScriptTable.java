@@ -145,17 +145,19 @@ public class ScriptTable extends SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
-        return failMessage(originalValue, "Returned null value.");
+        return failMessage(literalize(originalValue), "Returned null value.");
       else if (value.equals(VoidConverter.VOID_TAG))
-        return originalValue;
+        return literalize(originalValue);
       else if (value.equals(BooleanConverter.FALSE))
-        return fail(originalValue);
+        return fail(literalize(originalValue));
       else if (value.equals(BooleanConverter.TRUE))
-        return pass(originalValue);
+        return pass(literalize(originalValue));
       else
-        return failMessage(originalValue, String.format(" returned unexpected value: [%s]", value));
+        return failMessage(literalize(originalValue),
+          String.format(" returned unexpected value: [%s]", literalize(value))
+        );
     }
   }
 
@@ -164,8 +166,11 @@ public class ScriptTable extends SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      return (value != null && value.equals(BooleanConverter.TRUE)) ? pass(originalValue) : fail(originalValue);
+    protected String createEvaluationMessage(String value, String originalValue) {
+      return (value != null && value.equals(BooleanConverter.TRUE)) ? pass(literalize(originalValue)) : fail(literalize(
+        originalValue
+      )
+      );
     }
   }
 
@@ -174,11 +179,11 @@ public class ScriptTable extends SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
-        return pass(originalValue);
+        return pass(literalize(originalValue));
       else
-        return value.equals(BooleanConverter.FALSE) ? pass(originalValue) : fail(originalValue);
+        return value.equals(BooleanConverter.FALSE) ? pass(literalize(originalValue)) : fail(literalize(originalValue));
     }
   }
 
@@ -187,14 +192,14 @@ public class ScriptTable extends SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       int lastCol = table.getColumnCountInRow(row) - 1;
       TextWidget textWidget = table.getCell(lastCol, row);
       TableRowWidget rowWidget = (TableRowWidget) textWidget.getParent().getParent();
       try {
-        rowWidget.addCells(String.format("|!style_ignore(%s)", value));
+        rowWidget.addCells(String.format("|!style_ignore(%s)", literalize(value)));
       } catch (Throwable e) {
-        return failMessage(value, SlimTestSystem.exceptionToString(e));
+        return failMessage(literalize(value), SlimTestSystem.exceptionToString(e));
       }
       return originalValue;
     }
@@ -205,8 +210,8 @@ public class ScriptTable extends SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
-      return replaceSymbolsWithFullExpansion(originalValue);
+    protected String createEvaluationMessage(String value, String originalValue) {
+      return literalize(replaceSymbolsWithFullExpansion(originalValue));
     }
   }
 }

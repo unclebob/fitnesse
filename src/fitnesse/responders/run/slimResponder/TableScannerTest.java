@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 public class TableScannerTest {
   private WikiPage root;
@@ -94,8 +93,8 @@ public class TableScannerTest {
 
   @Test
   public void literalsAreTranslated() throws Exception {
-    TableScanner ts = scanTable("|!-x-!|\n");
-    assertEquals("x", ts.getTable(0).getCellContents(0,0));
+    TableScanner ts = scanTable("|!-x-!y!-z-!|\n");
+    assertEquals("xyz", ts.getTable(0).getCellContents(0, 0));
   }
 
   @Test
@@ -108,6 +107,19 @@ public class TableScannerTest {
     Table t = ts.getTable(0);
     assertEquals("a", t.getCellContents(0, 0));
     assertTrue(ts.toWikiText(), ts.toWikiText().indexOf("|a|") != -1);
+  }
+
+  @Test
+  public void removeLiteralsFromTables() throws Exception {
+    String text =
+      "blah !-not in table-!\n" +
+        "|!-in table-!|!-3-!|!-4-!|!-5-!|!-6-!|!-7-!|!-8-!|\n" +
+        "!-5-!\n";
+    String expected =
+      "blah !-not in table-!\n" +
+        "|in table|3|4|5|6|7|8|\n" +
+        "!-5-!\n";
+    assertEquals(expected, TableScanner.removeUnprocessedLiteralsInTables(text));
   }
 
 

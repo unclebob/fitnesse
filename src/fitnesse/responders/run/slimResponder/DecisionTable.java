@@ -27,10 +27,11 @@ public class DecisionTable extends SlimTable {
   }
 
   public void appendInstructions() {
-    if (table.getRowCount() < 3)
+    if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     constructFixture();
-    invokeRows();
+    if (table.getRowCount() > 2)
+      invokeRows();
   }
 
   protected void evaluateReturnValues(Map<String, Object> returnValues) {

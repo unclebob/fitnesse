@@ -69,8 +69,8 @@ public class TableTableTest {
       list(
         list("pass", "pass")
       ),
-      "|!style_pass(Table:fixture)|argument|\n" +
-        "|!style_pass(2)|!style_pass(4)|\n"
+      "|!style_pass(!-Table:fixture-!)|!-argument-!|\n" +
+        "|!style_pass(!-2-!)|!style_pass(!-4-!)|\n"
     );
   }
 
@@ -80,7 +80,7 @@ public class TableTableTest {
       list(
         list("bad", "boy")
       ),
-      "|!style_pass(Table:fixture)|argument|\n" +
+      "|!style_pass(!-Table:fixture-!)|!-argument-!|\n" +
         "|!style_fail(bad)|!style_fail(boy)|\n"
     );
   }

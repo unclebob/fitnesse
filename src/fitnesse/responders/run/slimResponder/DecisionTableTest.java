@@ -30,8 +30,8 @@ public class DecisionTableTest {
     instructions = new ArrayList<Object>();
   }
 
-  private DecisionTable makeDecisionTableAndBuildInstructions(String pageContents) throws Exception {
-    dt = makeDecisionTable(pageContents);
+  private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
+    dt = makeDecisionTable(tableText);
     dt.appendInstructions(instructions);
     return dt;
   }
@@ -45,8 +45,8 @@ public class DecisionTableTest {
   }
 
   @Test
-  public void badTable() throws Exception {
-    makeDecisionTableAndBuildInstructions("|x|\n");
+  public void badTableHasTwoRows() throws Exception {
+    makeDecisionTableAndBuildInstructions("|x|\n|y|\n");
     assertTrue(dt.getTable().getCellContents(0, 0).indexOf("Bad table") != -1);
   }
 
@@ -60,6 +60,27 @@ public class DecisionTableTest {
     );
     assertTrue(dt.getTable().getCellContents(0, 0).indexOf("Bad table") != -1);
   }
+
+  @Test
+  public void decisionTableCanBeConstructorOnly() throws Exception {
+    makeDecisionTableAndBuildInstructions("|fixture|argument|\n");
+    List<Object> expectedInstructions = list(
+      list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument")
+    );
+    assertEquals(expectedInstructions, instructions);
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("decisionTable_id_0", "OK")
+      )
+    );
+    dt.evaluateExpectations(pseudoResults);
+
+    String colorizedTable = dt.getTable().toString();
+    String expectedColorizedTable =
+      "|!style_pass(!-fixture-!)|!-argument-!|\n";
+    assertEquals(expectedColorizedTable, colorizedTable);
+  }
+
 
   @Test
   public void canBuildInstructionsForSimpleDecisionTable() throws Exception {
@@ -113,10 +134,10 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(DT:fixture)|argument|\n" +
-        "|var|func?|\n" +
-        "|3|!style_pass(5)|\n" +
-        "|7|[5] !style_fail(expected [9])|\n";
+      "|!style_pass(!-DT:fixture-!)|!-argument-!|\n" +
+        "|!-var-!|!-func?-!|\n" +
+        "|!-3-!|!style_pass(!-5-!)|\n" +
+        "|!-7-!|[!-5-!] !style_fail(expected [!-9-!])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 

@@ -15,6 +15,7 @@ public class SlimTableTest {
     assertEquals("x.y", disgraceClassName("x.y"));
     assertEquals("x_y", disgraceClassName("x_y"));
     assertEquals("MeAndMrs_jones", disgraceClassName("me and mrs_jones"));
+    assertEquals("PageCreator", disgraceClassName("Page creator."));
   }
 
   @Test

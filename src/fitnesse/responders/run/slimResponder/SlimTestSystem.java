@@ -2,19 +2,20 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.run.ExecutionLog;
-import fitnesse.responders.run.TestSystemListener;
-import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
-import fitnesse.slim.SlimService;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.SlimService;
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
-import java.util.*;
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SlimTestSystem extends TestSystem implements SlimTestContext {
   private CommandRunner slimRunner;
@@ -29,10 +30,12 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
   private Map<String, String> exceptions = new HashMap<String, String>();
   private Map<String, String> symbols = new HashMap<String, String>();
   private TestSummary testSummary;
+  private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
+  private int slimSocket;
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
-    testSummary = new TestSummary(0,0,0,0);
+    testSummary = new TestSummary(0, 0, 0, 0);
   }
 
   public String getSymbol(String symbolName) {
@@ -63,7 +66,8 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
 
   protected ExecutionLog createExecutionLog(String classPath, String className) throws Exception {
     String slimFlags = getSlimFlags();
-    String slimArguments = String.format("%s %d", slimFlags, 8085);
+    slimSocket = getNextSlimSocket();
+    String slimArguments = String.format("%s %d", slimFlags, slimSocket);
     String slimCommandPrefix = buildCommand(className, classPath);
     slimCommand = String.format("%s %s", slimCommandPrefix, slimArguments);
     if (fastTest) {
@@ -75,9 +79,20 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     return new ExecutionLog(page, slimRunner);
   }
 
+  public int getNextSlimSocket() {
+    synchronized (slimSocketOffset) {
+      int base = slimSocketOffset.get();
+      base++;
+      if (base >= 10)
+        base = 0;
+      slimSocketOffset.set(base);
+      return base + 8085;
+    }
+  }
+
   public void start() throws Exception {
     slimRunner.start();
-    slimClient = new SlimClient("localhost", 8085);
+    slimClient = new SlimClient("localhost", slimSocket);
     waitForConnection();
     started = true;
   }
@@ -132,26 +147,36 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     for (Table table : tableScanner) {
       String tableId = "" + testTables.size();
       SlimTable slimTable = makeSlimTable(table, tableId, slimTestContext);
-      slimTable.appendInstructions(instructions);
-      testTables.add(slimTable);
+      if (slimTable != null) {
+        slimTable.appendInstructions(instructions);
+        testTables.add(slimTable);
+      }
     }
     return instructions;
   }
 
   private SlimTable makeSlimTable(Table table, String tableId, SlimTestContext slimTestContext) {
     String tableType = table.getCellContents(0, 0);
-    if (beginsWith(tableType, "DT:"))
+    if (beginsWith(tableType, "dt:") || beginsWith(tableType, "decision:"))
       return new DecisionTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "Query:"))
+    else if (beginsWith(tableType, "query:"))
       return new QueryTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "Table"))
+    else if (beginsWith(tableType, "table"))
       return new TableTable(table, tableId, slimTestContext);
     else if (tableType.equalsIgnoreCase("script"))
       return new ScriptTable(table, tableId, slimTestContext);
+    else if (tableType.equalsIgnoreCase("comment"))
+      return null;
     else if (tableType.equalsIgnoreCase("import"))
       return new ImportTable(table, tableId);
+    else if (doesNotHaveColon(tableType))
+      return new DecisionTable(table, tableId);
     else
       return new SlimErrorTable(table, tableId);
+  }
+
+  private boolean doesNotHaveColon(String tableType) {
+    return tableType.indexOf(":") == -1;
   }
 
   private boolean beginsWith(String tableType, String typeCode) {

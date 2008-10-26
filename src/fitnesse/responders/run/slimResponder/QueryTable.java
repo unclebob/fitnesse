@@ -103,7 +103,7 @@ public class QueryTable extends SlimTable {
       pass(col, tableRow);
     }
     else {
-      expected(col, tableRow, actualValue);
+      expected(col, tableRow, literalize(actualValue));
     }
   }
 

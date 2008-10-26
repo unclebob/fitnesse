@@ -203,8 +203,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", VoidConverter.VOID_TAG)
       ),
-      "|Script|\n" +
-        "|func|\n"
+      "|!-Script-!|\n" +
+        "|!-func-!|\n"
     );
   }
 
@@ -214,8 +214,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.TRUE)
       ),
-      "|Script|\n" +
-        "|!style_pass(func)|\n"
+      "|!-Script-!|\n" +
+        "|!style_pass(!-func-!)|\n"
     );
   }
 
@@ -225,8 +225,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.FALSE)
       ),
-      "|Script|\n" +
-        "|!style_fail(func)|\n"
+      "|!-Script-!|\n" +
+        "|!style_fail(!-func-!)|\n"
     );
   }
 
@@ -236,8 +236,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "3")
       ),
-      "|Script|\n" +
-        "|check|func|!style_pass(3)|\n"
+      "|!-Script-!|\n" +
+        "|!-check-!|!-func-!|!style_pass(!-3-!)|\n"
     );
   }
 
@@ -247,8 +247,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "4")
       ),
-      "|Script|\n" +
-        "|check|func|[4] !style_fail(expected [3])|\n"
+      "|!-Script-!|\n" +
+        "|!-check-!|!-func-!|[!-4-!] !style_fail(expected [!-3-!])|\n"
     );
   }
 
@@ -258,8 +258,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.TRUE)
       ),
-      "|Script|\n" +
-        "|!style_pass(ensure)|func|3|\n"
+      "|!-Script-!|\n" +
+        "|!style_pass(!-ensure-!)|!-func-!|!-3-!|\n"
     );
   }
 
@@ -269,8 +269,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.FALSE)
       ),
-      "|Script|\n" +
-        "|!style_fail(ensure)|func|3|\n"
+      "|!-Script-!|\n" +
+        "|!style_fail(!-ensure-!)|!-func-!|!-3-!|\n"
     );
   }
 
@@ -280,8 +280,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.FALSE)
       ),
-      "|Script|\n" +
-        "|!style_pass(reject)|func|3|\n"
+      "|!-Script-!|\n" +
+        "|!style_pass(!-reject-!)|!-func-!|!-3-!|\n"
     );
   }
 
@@ -291,8 +291,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.TRUE)
       ),
-      "|Script|\n" +
-        "|!style_fail(reject)|func|3|\n"
+      "|!-Script-!|\n" +
+        "|!style_fail(!-reject-!)|!-func-!|!-3-!|\n"
     );
   }
 
@@ -302,8 +302,8 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "kawabunga")
       ),
-      "|Script|\n" +
-        "|show|func|3|!style_ignore(kawabunga)|\n"
+      "|!-Script-!|\n" +
+        "|show|!-func-!|!-3-!|!style_ignore(!-kawabunga-!)|\n"
     );
   }
 
@@ -316,9 +316,9 @@ public class ScriptTableTest {
         list("scriptTable_id_0", "3"),
         list("scriptTable_id_1", "3")
       ),
-      "|Script|\n" +
-        "|$V<-[3]|function|\n" +
-        "|check|funcion|$V->[3]|!style_pass($V->[3])|\n"
+      "|!-Script-!|\n" +
+        "|$V<-[!-3-!]|!-function-!|\n" +
+        "|!-check-!|!-funcion-!|!-$V->[3]-!|!style_pass(!-$V->[3]-!)|\n"
     );
   }
 

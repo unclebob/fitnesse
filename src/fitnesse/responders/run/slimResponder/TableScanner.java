@@ -7,8 +7,10 @@ import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TableScanner implements Iterable<Table> {
   private static final Class[] tableWidgets = new Class[]{IncludeWidget.class, TableWidget.class};
@@ -18,8 +20,30 @@ public class TableScanner implements Iterable<Table> {
 
   public TableScanner(PageData data) throws Exception {
     WikiPage page = data.getWikiPage();
-    widgetRoot = new WidgetRoot(data.getContent(), page, new WidgetBuilder(tableWidgets));
+    String content = data.getContent();
+    content = removeUnprocessedLiteralsInTables(content);
+    widgetRoot = new WidgetRoot(content, page, new WidgetBuilder(tableWidgets));
     scanParentForTables(widgetRoot);
+  }
+
+
+  static String removeUnprocessedLiteralsInTables(String text) {
+    Pattern inTablePattern = Pattern.compile("\\|[^\n\r]*!-(.*?)-![^\n\r]*\\|");
+    Matcher inTableMatcher = inTablePattern.matcher(text);
+    Matcher literalMatcher = PreProcessorLiteralWidget.pattern.matcher(text);
+    while (inTableMatcher.find()) {
+      literalMatcher.region(inTableMatcher.start(), inTableMatcher.end());
+      if (literalMatcher.find()) {
+        String replacement = literalMatcher.group(1);
+        String firstPart = text.substring(0, literalMatcher.start());
+        String lastPart = text.substring(literalMatcher.end());
+        text = firstPart + replacement + lastPart;
+      }
+      inTableMatcher = inTablePattern.matcher(text);
+      literalMatcher = PreProcessorLiteralWidget.pattern.matcher(text);
+    }
+
+    return text;
   }
 
   private void scanParentForTables(ParentWidget parent) {

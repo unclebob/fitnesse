@@ -12,23 +12,23 @@ public class ReturnedValueExpectationTest {
     Table t = new Table(new TableWidget(null, ""));
     SlimTable slimTable = new DecisionTable(t, "id");
     SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, 0, 0, 0);
-    assertEquals(message, expectation.createEvaluationMessage(value, "!-" + value + "-!", expected));
+    assertEquals(message, expectation.createEvaluationMessage(value, expected));
   }
 
 
   @Test
   public void passingMessage() throws Exception {
-    assertExpectationMessage("expected", "expected", "!style_pass(expected)");
+    assertExpectationMessage("expected", "expected", "!style_pass(!-expected-!)");
   }
 
   @Test
   public void failingMesage() throws Exception {
-    assertExpectationMessage("expected", "actual", "[!-actual-!] !style_fail(expected [expected])");
+    assertExpectationMessage("expected", "actual", "[!-actual-!] !style_fail(expected [!-expected-!])");
   }
 
   @Test
   public void evaluationMessageForBlankInput() throws Exception {
-    assertExpectationMessage("", "", "!style_pass(BLANK)");
+    assertExpectationMessage("", "", "!style_pass(!-BLANK-!)");
   }
 
   @Test

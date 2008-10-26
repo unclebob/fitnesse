@@ -10,7 +10,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.PageData;
 
 /*
-This responder is a test rig for SlimResponderTest, which makes sure that the SlimTestSystem works nicely with
+This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
 responders in general.
 */
 public class SlimResponder extends WikiPageResponder implements TestSystemListener {

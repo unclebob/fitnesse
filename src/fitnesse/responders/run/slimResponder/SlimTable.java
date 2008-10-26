@@ -2,6 +2,7 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.responders.run.TestSummary;
 import static fitnesse.util.ListUtility.list;
+import fitnesse.wikitext.Utils;
 
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
@@ -35,6 +36,8 @@ public abstract class SlimTable {
     tableName = getTableType() + "_" + id;
     instructions = new ArrayList<Object>();
     isLiteralTable = table.isLiteralTable();
+    table.setAsNotLiteralTable();
+    literalizeTable();
   }
 
   protected void addExpectation(Expectation e) {
@@ -88,22 +91,18 @@ public abstract class SlimTable {
   }
 
   protected void literalizeTable() {
-    if (isLiteralTable) {
-      table.setAsNotLiteralTable();
-      for (int row = 0; row < table.getRowCount(); row++) {
-        for (int col = 0; col < table.getColumnCountInRow(row); col++) {
-          table.setCell(col, row, literalize(table.getCellContents(col, row)));
-        }
+    for (int row = 0; row < table.getRowCount(); row++) {
+      for (int col = 0; col < table.getColumnCountInRow(row); col++) {
+        table.setCell(col, row, literalize(table.getCellContents(col, row)));
       }
     }
   }
 
   protected String literalize(String contents) {
-    return isLiteralTable ? String.format("!-%s-!", contents) : contents;
+    return String.format("!-%s-!", contents);
   }
 
   public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
-    literalizeTable();
     for (Expectation expectation : expectations)
       expectation.evaluateExpectation(returnValues);
     evaluateReturnValues(returnValues);
@@ -125,9 +124,15 @@ public abstract class SlimTable {
 
   protected void constructFixture() {
     String tableHeader = table.getCellContents(0, 0);
-    String fixtureName = tableHeader.split(":")[1];
+    String fixtureName = getFixtureName(tableHeader);
     String disgracedFixtureName = Disgracer.disgraceClassName(fixtureName);
     constructInstance(getTableName(), disgracedFixtureName, 0, 0);
+  }
+
+  private String getFixtureName(String tableHeader) {
+    if (tableHeader.indexOf(":") == -1)
+      return tableHeader;
+    return tableHeader.split(":")[1];
   }
 
   protected void constructInstance(String instanceName, String className, int classNameColumn, int row) {
@@ -181,7 +186,7 @@ public abstract class SlimTable {
 
   protected void failMessage(int col, int row, String failureMessage) {
     String contents = table.getCellContents(col, row);
-    String failingContents = failMessage(contents, failureMessage);
+    String failingContents = failMessage(literalize(contents), failureMessage);
     table.setCell(col, row, failingContents);
   }
 
@@ -192,13 +197,13 @@ public abstract class SlimTable {
 
   protected void pass(int col, int row) {
     String contents = table.getCellContents(col, row);
-    String passingContents = pass(contents);
+    String passingContents = pass(literalize(contents));
     table.setCell(col, row, passingContents);
   }
 
   protected void expected(int col, int tableRow, String actual) {
     String contents = table.getCellContents(col, tableRow);
-    String failureMessage = failMessage(actual, String.format("expected [%s]", contents));
+    String failureMessage = failMessage(actual, String.format("expected [%s]", literalize(contents)));
     table.setCell(col, tableRow, failureMessage);
   }
 
@@ -216,8 +221,8 @@ public abstract class SlimTable {
     return String.format("!style_pass(%s)", value);
   }
 
-  protected String ignore(String literalizedValue) {
-    return String.format("!style_ignore(%s)", literalizedValue);
+  protected String ignore(String value) {
+    return String.format("!style_ignore(%s)", value);
   }
 
   protected ReturnedValueExpectation makeReturnedValueExpectation(
@@ -280,7 +285,7 @@ public abstract class SlimTable {
     }
 
     private String disgraceClassNameIfNecessary() {
-      if (nameHasDots())
+      if (nameHasDotsBeforeEnd())
         return name;
       else if (isGraceful()) {
         return disgraceClassName();
@@ -294,8 +299,9 @@ public abstract class SlimTable {
       return disgraceName();
     }
 
-    private boolean nameHasDots() {
-      return name.indexOf(".") != -1;
+    private boolean nameHasDotsBeforeEnd() {
+      int dotIndex = name.indexOf(".");
+      return dotIndex != -1 && dotIndex != name.length() - 1;
     }
 
     private String disgraceName() {
@@ -350,11 +356,11 @@ public abstract class SlimTable {
       String value = (String) returnValues.get(makeInstructionTag(instructionNumber));
       String literalizedValue = literalize(value);
       String originalContent = table.getCellContents(col, row);
-      String evaluationMessage = createEvaluationMessage(value, literalizedValue, originalContent);
+      String evaluationMessage = createEvaluationMessage(value, originalContent);
       table.setCell(col, row, evaluationMessage);
     }
 
-    protected abstract String createEvaluationMessage(String value, String literalizedValue, String originalValue);
+    protected abstract String createEvaluationMessage(String value, String originalValue);
   }
 
   private static class LocalSlimTestContext implements SlimTestContext {
@@ -423,11 +429,11 @@ public abstract class SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       if (value != null && value.indexOf("Exception") != -1)
-        return fail(literalizedValue);
+        return fail(literalize(value));
       else {
-        return replaceSymbolsWithFullExpansion(originalValue);
+        return literalize(replaceSymbolsWithFullExpansion(originalValue));
       }
     }
   }
@@ -437,11 +443,11 @@ public abstract class SlimTable {
       super(null, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       if (value != null && value.indexOf("Exception") != -1)
-        return fail(literalizedValue);
+        return fail(String.format("%s (%s)", literalize(originalValue), value));
       else {
-        return pass(originalValue);
+        return pass(literalize(originalValue));
       }
     }
   }
@@ -454,9 +460,9 @@ public abstract class SlimTable {
       this.symbolName = symbolName;
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       setSymbol(symbolName, value);
-      return String.format("$%s<-[%s]", literalize(symbolName), literalizedValue);
+      return String.format("$%s<-[%s]", symbolName, literalize(value));
     }
   }
 
@@ -466,21 +472,23 @@ public abstract class SlimTable {
       super(expected, instructionNumber, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String literalizedValue, String originalValue) {
+    protected String createEvaluationMessage(String value, String originalValue) {
       String evaluationMessage;
       String replacedValue = replaceSymbols(expectedValue);
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (value.equals(replacedValue))
-        evaluationMessage = pass(announceBlank(originalValue));
+        evaluationMessage = pass(literalize(announceBlank(originalValue)));
       else if (replacedValue.length() == 0)
-        evaluationMessage = ignore(literalizedValue);
+        evaluationMessage = ignore(literalize(value));
       else {
         String expressionMessage = new Comparator(replacedValue, value, expectedValue).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
         else
-          evaluationMessage = failMessage(literalizedValue, String.format("expected [%s]", originalValue));
+          evaluationMessage = failMessage(literalize(value),
+            String.format("expected [%s]", literalize(originalValue))
+          );
       }
 
       return replaceSymbolsWithFullExpansion(evaluationMessage);
