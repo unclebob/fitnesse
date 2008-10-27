@@ -22,6 +22,7 @@ public class TableScanner implements Iterable<Table> {
     WikiPage page = data.getWikiPage();
     String content = data.getContent();
     content = removeUnprocessedLiteralsInTables(content);
+    content = replaceEvaluations(new WidgetRoot("", page), content);
     widgetRoot = new WidgetRoot(content, page, new WidgetBuilder(tableWidgets));
     scanParentForTables(widgetRoot);
   }
@@ -43,6 +44,21 @@ public class TableScanner implements Iterable<Table> {
       literalMatcher = PreProcessorLiteralWidget.pattern.matcher(text);
     }
 
+    return text;
+  }
+
+  private String replaceEvaluations(ParentWidget root, String text) {
+    Matcher matcher = EvaluatorWidget.pattern.matcher(text);
+    while (matcher.find()) {
+      EvaluatorWidget evaluatorWidget = new EvaluatorWidget(root, matcher.group());
+      String replacement = null;
+      try {
+        replacement = evaluatorWidget.render();
+      } catch (Exception e) {
+        replacement = "INVALID EXPRESSION";
+      }
+      text = text.replace(matcher.group(), replacement);
+    }
     return text;
   }
 

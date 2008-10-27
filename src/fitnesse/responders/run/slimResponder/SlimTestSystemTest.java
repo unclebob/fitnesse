@@ -2,14 +2,11 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -204,4 +201,17 @@ public class SlimTestSystemTest {
     assertEquals("!style_pass(2<$A->[3])", dt.getCellContents(1, 3));
     assertEquals("!style_pass($A->[3]<4<$B->[5])", dt.getCellContents(1, 5));
   }
+
+  @Test
+  public void tableWithExpression() throws Exception {
+    getResultsForPageContents(
+      "|DT:fitnesse.slim.test.TestSlim|\n" +
+        "|string|getStringArg?|\n" +
+        "|${=3+4=}|7|\n"
+    );
+    TableScanner ts = new TableScanner(responder.getTestResults());
+    Table dt = ts.getTable(0);
+    assertEquals("!style_pass(7)", dt.getCellContents(1, 2));
+  }
+
 }
