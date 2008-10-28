@@ -5,6 +5,7 @@ import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.Utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -77,7 +78,7 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(!-fixture-!)|!-argument-!|\n";
+      "|!style_pass(!<fixture>!)|!<argument>!|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -134,10 +135,10 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(!-DT:fixture-!)|!-argument-!|\n" +
-        "|!-var-!|!-func?-!|\n" +
-        "|!-3-!|!style_pass(!-5-!)|\n" +
-        "|!-7-!|[!-5-!] !style_fail(expected [!-9-!])|\n";
+      "|!style_pass(!<DT:fixture>!)|!<argument>!|\n" +
+        "|!<var>!|!<func?>!|\n" +
+        "|!<3>!|!style_pass(!<5>!)|\n" +
+        "|!<7>!|[!<5>!] !style_fail(expected [!<9>!])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -157,10 +158,10 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(!-DT:fixture-!)|!-argument-!|\n" +
-        "|!-var-!|!-func?-!|\n" +
-        "|!-3-!|!style_pass(!-5-!)|\n" +
-        "|!-7-!|[!-5-!] !style_fail(expected [!-9-!])|\n";
+      "|!style_pass(!<DT:fixture>!)|!<argument>!|\n" +
+        "|!<var>!|!<func?>!|\n" +
+        "|!<3>!|!style_pass(!<5>!)|\n" +
+        "|!<7>!|[!<5>!] !style_fail(expected [!<9>!])|\n";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 

@@ -99,7 +99,7 @@ public abstract class SlimTable {
   }
 
   protected String literalize(String contents) {
-    return String.format("!-%s-!", contents);
+    return String.format("!<%s>!", contents);
   }
 
   public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
@@ -478,7 +478,7 @@ public abstract class SlimTable {
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (value.equals(replacedValue))
-        evaluationMessage = pass(literalize(announceBlank(originalValue)));
+        evaluationMessage = pass(literalize(announceBlank(replaceSymbolsWithFullExpansion(originalValue))));
       else if (replacedValue.length() == 0)
         evaluationMessage = ignore(literalize(value));
       else {
@@ -487,11 +487,11 @@ public abstract class SlimTable {
           evaluationMessage = expressionMessage;
         else
           evaluationMessage = failMessage(literalize(value),
-            String.format("expected [%s]", literalize(originalValue))
+            String.format("expected [%s]", literalize(replaceSymbolsWithFullExpansion(originalValue)))
           );
       }
 
-      return replaceSymbolsWithFullExpansion(evaluationMessage);
+      return evaluationMessage;
     }
 
     private String announceBlank(String originalValue) {
@@ -542,6 +542,7 @@ public abstract class SlimTable {
       private String rangeMessage(boolean pass) {
         String[] fragments = originalExpression.replaceAll(" ", "").split("_");
         String message = String.format("%s%s%s", fragments[0], value, fragments[1]);
+        message = literalize(replaceSymbolsWithFullExpansion(message));
         return pass ? pass(message) : fail(message);
 
       }
@@ -576,6 +577,7 @@ public abstract class SlimTable {
 
       private String simpleComparisonMessage(boolean pass) {
         String message = String.format("%s%s", value, originalExpression.replaceAll(" ", ""));
+        message = literalize(replaceSymbolsWithFullExpansion(message));
         return pass ? pass(message) : fail(message);
 
       }

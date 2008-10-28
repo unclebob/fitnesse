@@ -1,6 +1,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
+import fitnesse.wikitext.Utils;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.*;
 import static org.junit.Assert.assertEquals;
@@ -73,7 +74,7 @@ public class SlimTestSystemTest {
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
     getResultsForPageContents("|XX|\n");
-    assertTestResultsContain("!-XX-! (Exception:");
+    assertTestResultsContain("!<XX>! (Exception:");
     assertTestResultsContain("Class XX not found.");
   }
 
@@ -127,7 +128,7 @@ public class SlimTestSystemTest {
         "|returnInt?|\n" +
         "|7|\n"
     );
-    assertTestResultsContain("!style_pass(!-7-!)");
+    assertTestResultsContain("!style_pass(!<7>!)");
   }
 
   @Test
@@ -177,13 +178,18 @@ public class SlimTestSystemTest {
         "|Bill|$V|\n" +
         "|John|$Q|\n"
     );
-    TableScanner ts = new TableScanner(responder.getTestResults());
+    PageData results = responder.getTestResults();
+    TableScanner ts = new TableScanner(results);
     Table dt = ts.getTable(0);
     assertEquals("$V<-[Bob]", dt.getCellContents(1, 2));
-    assertEquals("$V->[Bob]", dt.getCellContents(0, 3));
-    assertEquals("!style_pass($V->[Bob])", dt.getCellContents(1, 3));
-    assertEquals("[Bill] !style_fail(expected [$V->[Bob]])", dt.getCellContents(1, 4));
-    assertEquals("[John] !style_fail(expected [$Q])", dt.getCellContents(1, 5));
+    assertEquals("$V->[Bob]", unescape(dt.getCellContents(0, 3)));
+    assertEquals("!style_pass($V->[Bob])", unescape(dt.getCellContents(1, 3)));
+    assertEquals("[Bill] !style_fail(expected [$V->[Bob]])", unescape(dt.getCellContents(1, 4)));
+    assertEquals("[John] !style_fail(expected [$Q])", unescape(dt.getCellContents(1, 5)));
+  }
+
+  private String unescape(String x) {
+    return Utils.unescapeWiki(Utils.unescapeHTML(x));
   }
 
   @Test
@@ -198,8 +204,8 @@ public class SlimTestSystemTest {
     );
     TableScanner ts = new TableScanner(responder.getTestResults());
     Table dt = ts.getTable(0);
-    assertEquals("!style_pass(2<$A->[3])", dt.getCellContents(1, 3));
-    assertEquals("!style_pass($A->[3]<4<$B->[5])", dt.getCellContents(1, 5));
+    assertEquals("!style_pass(2<$A->[3])", unescape(dt.getCellContents(1, 3)));
+    assertEquals("!style_pass($A->[3]<4<$B->[5])", unescape(dt.getCellContents(1, 5)));
   }
 
   @Test
