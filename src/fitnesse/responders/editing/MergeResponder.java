@@ -76,7 +76,7 @@ public class MergeResponder implements Responder
 		oldContentTextArea.addAttribute("rows", "25");
 		oldContentTextArea.addAttribute("cols", "50");
 		oldContentTextArea.addAttribute("readonly", "");
-		oldContentTextArea.add(Utils.escapeText(existingContent));
+		oldContentTextArea.add(Utils.escapeHTML(existingContent));
 		return oldContentTextArea;
 	}
 

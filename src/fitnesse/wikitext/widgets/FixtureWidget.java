@@ -16,7 +16,7 @@ public class FixtureWidget extends TextWidget
 		super(parent);
 		Matcher match = pattern.matcher(text);
 		if(match.find())
-			this.text = match.group(1);
+			this.setText(match.group(1));
 	}
 
 	public String render() throws Exception
@@ -26,6 +26,6 @@ public class FixtureWidget extends TextWidget
 
 	public String asWikiText() throws Exception
 	{
-		return "!fixture " + this.text;
+		return "!fixture " + this.getText();
 	}
 }

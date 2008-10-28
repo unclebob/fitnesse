@@ -8,8 +8,8 @@ First, build a page with variable definitions followed immediately by a classpat
 |line|!define PI {3.141592}|
 |line|!path classes|
 |line|!path fitnesse.jar|
-|line|!-!&bar;fitnesse.testutil.PassFixture&bar;-!|
-|page|!-ClasspathTestPage-!|
+|line|&bang;&bar;fitnesse.testutil.PassFixture&bar;|
+|page|ClasspathTestPage|
 
 Next, request that page with ?test (as though you clicked the test button)
 

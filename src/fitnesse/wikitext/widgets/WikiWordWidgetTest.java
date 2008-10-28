@@ -271,7 +271,7 @@ public class WikiWordWidgetTest extends TestCase
 		WikiPage p1 = addPage(root, "PageOne");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(p1), "OldPageName");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals("NewPageName", widget.text);
+		assertEquals("NewPageName", widget.getText());
 	}
 
 	public void testRenamePageInMiddleOfPath() throws Exception
@@ -282,7 +282,7 @@ public class WikiWordWidgetTest extends TestCase
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "TopPage.OldPageName.LastPage");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals("TopPage.NewPageName.LastPage", widget.text);
+		assertEquals("TopPage.NewPageName.LastPage", widget.getText());
 	}
 
 	public void testRenamePageInMiddleOfAbsolutePath() throws Exception
@@ -293,7 +293,7 @@ public class WikiWordWidgetTest extends TestCase
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), ".TopPage.OldPageName.LastPage");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals(".TopPage.NewPageName.LastPage", widget.text);
+		assertEquals(".TopPage.NewPageName.LastPage", widget.getText());
 	}
 
 	public void testRenameSubPage() throws Exception
@@ -304,7 +304,7 @@ public class WikiWordWidgetTest extends TestCase
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "^OldPageName.LastPage");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals(">NewPageName.LastPage", widget.text);
+		assertEquals(">NewPageName.LastPage", widget.getText());
 	}
 
 	public void testRenamePageReferencedByBackwardSearch() throws Exception
@@ -314,7 +314,7 @@ public class WikiWordWidgetTest extends TestCase
 		WikiPage lastPage = addPage(pageToRename, "LastPage");
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(lastPage), "<TopPage.OldPageName");
 		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals("<TopPage.NewPageName", widget.text);
+		assertEquals("<TopPage.NewPageName", widget.getText());
 	}
 
 	public void testBuildBackwardsSearchReferenceHandlesReferentRename() throws Exception
@@ -338,7 +338,7 @@ public class WikiWordWidgetTest extends TestCase
 
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page1), "PageTwo");
 		widget.renameMovedPageIfReferenced(page2, "PageOne");
-		assertEquals(".PageOne.PageTwo", widget.text);
+		assertEquals(".PageOne.PageTwo", widget.getText());
 	}
 
 	public void testRenameMovedPageIfReferenced2() throws Exception
@@ -348,7 +348,7 @@ public class WikiWordWidgetTest extends TestCase
 
 		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page1), ">PageTwo");
 		widget.renameMovedPageIfReferenced(page2, "");
-		assertEquals(".PageTwo", widget.text);
+		assertEquals(".PageTwo", widget.getText());
 	}
 
 	//TODO -MDM- bug I descovered while trying to refactor.

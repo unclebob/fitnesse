@@ -1,14 +1,13 @@
-!define TEST_SYSTEM {fit}
 !2 Test that HTTP links are rendered correctly
 If a string of the form !-http://-!''some_url'' appears in wiki text, it is converted to a link.
 ----
 !3 Check the variables get rendered in links
  * First create a page with a variable and http link on it.
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|!define HOST {localhost:8081}|
-|enter|line|!-http://${HOST}/page-!||
-|enter|page|!-HttpLinkPage-!|
+|line|!define HOST {localhost:8081}|
+|line|http://&dollar;{HOST}/page||
+|page|!-HttpLinkPage-!|
 
  * Then fetch the page.
 |Response Requester.|

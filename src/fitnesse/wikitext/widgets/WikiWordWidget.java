@@ -42,7 +42,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 	private String makeLinkToNonExistentWikiPage(String qualifiedName)
 	{
 		StringBuffer html = new StringBuffer();
-		html.append(Utils.escapeText(getText()));
+		html.append(Utils.escapeHTML(getText()));
 		html.append("<a title=\"create page\" href=\"").append(qualifiedName);
 		html.append("?edit&amp;nonExistent=true");
 		html.append("\">[?]</a>");
@@ -58,7 +58,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer
 
 	private String makeLinkToExistingWikiPage(String qualifiedName, WikiPage wikiPage) throws Exception
 	{
-		HtmlTag link = HtmlUtil.makeLink(qualifiedName, Utils.escapeText(regrace(getText())));
+		HtmlTag link = HtmlUtil.makeLink(qualifiedName, Utils.escapeHTML(regrace(getText())));
 		addHelpText(link, wikiPage);
 		return link.htmlInline();
 	}

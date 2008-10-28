@@ -21,7 +21,8 @@ public class PreProcessorLiteralWidgetTest extends WidgetTestCase
 		assertMatch("!-literal-!");
 		assertMatch("!-this is a literal-!");
 		assertMatch("!-this is\n a literal-!");
-		assertMatch("!- !- !-this is a literal-!");
+    assertMatch("!<this is an escaped literal>!");
+    assertMatch("!- !- !-this is a literal-!");
 		assertMatch("!-!literal-!");
 		assertMatch("!--!");
 		assertNoMatch("!-no");
@@ -36,7 +37,13 @@ public class PreProcessorLiteralWidgetTest extends WidgetTestCase
 		assertEquals("abc", root.getLiteral(0));
 	}
 
-	public void testAsWikiText() throws Exception
+  public void testEscapedLiteral() throws Exception {
+		PreProcessorLiteralWidget widget = new PreProcessorLiteralWidget(root, "!< <br> >!");
+      assertEquals("!lit?0?", widget.render());
+		assertEquals(" &lt;br&gt; ", root.getLiteral(0));
+  }
+
+  public void testAsWikiText() throws Exception
 	{
 		PreProcessorLiteralWidget widget = new PreProcessorLiteralWidget(root, "!-abc-!");
 		assertEquals("!-abc-!", widget.asWikiText());

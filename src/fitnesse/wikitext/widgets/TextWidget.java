@@ -2,49 +2,46 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.*;
+import fitnesse.wikitext.Utils;
+import fitnesse.wikitext.WikiWidget;
 
-public class TextWidget extends WikiWidget implements WidgetWithTextArgument
-{
-	protected String text;
+public class TextWidget extends WikiWidget implements WidgetWithTextArgument {
+  private String text;
 
-	public TextWidget(ParentWidget parent)
-	{
-		super(parent);
-	}
+  public TextWidget(ParentWidget parent) {
+    super(parent);
+  }
 
-	public TextWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-		this.text = text;
-	}
+  public TextWidget(ParentWidget parent, String text) {
+    super(parent);
+    this.setText(text);
+  }
 
-	public String getText()
-	{
-		return text;
-	}
+  public String getText() {
+    return Utils.unescapeWiki(text);
+  }
 
-	public void setText(String newText)
-	{
-		text = newText;
-	}
+  public void setText(String newText) {
+    text = newText;
+  }
 
-	public String render() throws Exception
-	{
-		String html = getText();
-		if(parent.doEscaping())
-			html = Utils.escapeText(html);
+  public String render() throws Exception {
+    String html = getText();
+    if (parent.doEscaping())
+      html = Utils.escapeHTML(html);
 
-		return html;
-	}
+    return html;
+  }
 
-	public String toString()
-	{
-		return super.toString() + " : " + getText();
-	}
+  public String toString() {
+    return super.toString() + " : " + getText();
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return getText();
-	}
+  public String asWikiText() throws Exception {
+    return text;
+  }
+
+  public String getRawText() {
+    return text;
+  }
 }

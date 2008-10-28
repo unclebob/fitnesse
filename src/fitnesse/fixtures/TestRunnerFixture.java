@@ -60,7 +60,7 @@ public class TestRunnerFixture extends ColumnFixture
 		String output = outputBytes.toString();
 		output = output.replaceAll("\r", "");
 		output = output.replaceAll("\n", "\\\\n");
-		output = Utils.escapeText(output);
+		output = Utils.escapeHTML(output);
 
 		return output;
 	}

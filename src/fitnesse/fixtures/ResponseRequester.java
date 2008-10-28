@@ -48,7 +48,7 @@ public class ResponseRequester extends ColumnFixture
 
 	public String contents() throws Exception
 	{
-		return "<pre>" + Utils.escapeText(FitnesseFixtureContext.sender.sentData()) + "</pre>";
+		return "<pre>" + Utils.escapeHTML(FitnesseFixtureContext.sender.sentData()) + "</pre>";
 	}
 
 	protected void details()

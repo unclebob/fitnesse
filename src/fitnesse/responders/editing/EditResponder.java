@@ -214,7 +214,7 @@ public class EditResponder implements SecureResponder
 		textarea.addAttribute("rows", "30");
 		textarea.addAttribute("cols", "70");
 		textarea.addAttribute("tabindex", "1");
-		textarea.add(Utils.escapeText(firstTimeForNewPage ? defaultNewPageContent : content));
+		textarea.add(Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
 		return textarea;
 	}
 

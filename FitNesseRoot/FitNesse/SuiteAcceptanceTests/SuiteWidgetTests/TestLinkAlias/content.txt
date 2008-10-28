@@ -1,5 +1,3 @@
-!define TEST_SYSTEM {fit}
-
 !2 Test the Link Alias syntax.
 Aliases to links can be created using the !-[[tag][link]]-! syntax.
 The tag is interpreted for markup syntax, so it can be italic, or bold, or an image, etc.  The link can be a relative or global wiki word, or it can be an http link.
@@ -79,11 +77,11 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 
 !3 Test variables get rendered in http link alias
  * First create a page with a variable and http link on it.
-!|Action Fixture.|
+!|script|
 |start|Page Builder|
-|enter|line|!define HOST {localhost:8080}|
-|enter|line|!-[[tag][http://${HOST}/page]]-! works fine.|
-|enter|page|!-HttpLinkPage-!|
+|line|&bang;define HOST {localhost:8080}|
+|line|!-[[tag][http://&dollar;{HOST}/page]]-! works fine.|
+|page|!-HttpLinkPage-!|
 
  * Fetch the page.
 |Response Requester.|
@@ -120,15 +118,15 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |!-PageLink10-!|contents||true|
 
  * First create a page with a variables and http link on it.
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!define X {5}-!|
-|enter|line|!-!define Y (4)-!|
-|enter|line|!-!define EXPR (${=3+2-1=})-!|
-|enter|line|!-[[tag][PageLink${= 3 - 2 + 1 =}]]-! works fine.|
-|enter|line|!-[[tag][PageLink${EXPR}]]-! works too.|
-|enter|line|!-[[tag][PageLink${=${X}+${Y}+1=}]]-! works as well.|
-|enter|page|!-HttpExprPage-!|
+|line|!-!define X {5}-!|
+|line|!-!define Y (4)-!|
+|line|!-!define EXPR (${=3+2-1=})-!|
+|line|!-[[tag][PageLink${= 3 - 2 + 1 =}]]-! works fine.|
+|line|!-[[tag][PageLink${EXPR}]]-! works too.|
+|line|!-[[tag][PageLink&dollar;{=&dollar;{X}+&dollar;{Y}+1=}]]-! works as well.|
+|page|!-HttpExprPage-!|
 
  * Fetch the page.
 |Response Requester.|
@@ -150,19 +148,19 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |!-QueryPageRoot.TopPage-!          |!-!anchor QPTopLabel-!||true|
 
  * Create a page of query and fragment links...and a child
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-[[tag1 ][TopPage?edit]]-! has query.|
-|enter|line|!-[[tag2 ][TopPage?edit#QPTopLabel]]-! has query and frag.|
-|enter|line|!-[[tag3 ][TopPage#QPTopLabel]]-! has fragment.|
-|enter|line|!-[[tag4 ][&lt;QueryPageRoot.TopPage?edit]]-! back has query.|
-|enter|line|!-[[tag5 ][.QueryPageRoot.TopPage?edit]]-! root has query.|
-|enter|line|!-[[tag6 ][&lt;QueryPageRoot.TopPage?edit#QPTopLabel]]-! back has query and frag.|
-|enter|line|!-[[tag7 ][&lt;QueryPageRoot.TopPage#QPTopLabel]]-! back has fragment.|
-|enter|line|!-[[tag8 ][>ChildFrag?edit]]-! child has query.|
-|enter|line|!-[[tag9 ][>ChildFrag?edit#QPTopLabel]]-! child has query and frag.|
-|enter|line|!-[[tag10][>ChildFrag#QPTopLabel]]-! child has fragment.|
-|enter|page|!-QueryPageRoot.QueryFragmentLinks-!|
+|line|!-[[tag1 ][TopPage?edit]]-! has query.|
+|line|!-[[tag2 ][TopPage?edit#QPTopLabel]]-! has query and frag.|
+|line|!-[[tag3 ][TopPage#QPTopLabel]]-! has fragment.|
+|line|!-[[tag4 ][<QueryPageRoot.TopPage?edit]]-! back has query.|
+|line|!-[[tag5 ][.QueryPageRoot.TopPage?edit]]-! root has query.|
+|line|!-[[tag6 ][<QueryPageRoot.TopPage?edit#QPTopLabel]]-! back has query and frag.|
+|line|!-[[tag7 ][<QueryPageRoot.TopPage#QPTopLabel]]-! back has fragment.|
+|line|!-[[tag8 ][>ChildFrag?edit]]-! child has query.|
+|line|!-[[tag9 ][>ChildFrag?edit#QPTopLabel]]-! child has query and frag.|
+|line|!-[[tag10][>ChildFrag#QPTopLabel]]-! child has fragment.|
+|page|!-QueryPageRoot.QueryFragmentLinks-!|
 
 |Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|

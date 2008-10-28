@@ -19,12 +19,12 @@ public class ResponseExaminer extends ColumnFixture
 
 	public String contents() throws Exception
 	{
-		return Utils.escapeText(FitnesseFixtureContext.sender.sentData());
+		return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
 	}
 
 	public String fullContents() throws Exception
 	{
-		return Utils.escapeText(FitnesseFixtureContext.sender.sentData());
+		return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
 	}
 
 	public boolean inOrder() throws Exception
@@ -48,7 +48,7 @@ public class ResponseExaminer extends ColumnFixture
 
 	public int matchCount() throws Exception
 	{
-		Pattern p = Pattern.compile(Utils.escapeText(pattern), Pattern.MULTILINE + Pattern.DOTALL);
+		Pattern p = Pattern.compile(Utils.escapeHTML(pattern), Pattern.MULTILINE + Pattern.DOTALL);
 		setValue(null);
 		if(type.equals("contents"))
 			setValue(contents());
@@ -126,7 +126,7 @@ public class ResponseExaminer extends ColumnFixture
 	{
 		String txt = FitnesseFixtureContext.sender.sentData();
 		String txt2 = txt.replaceAll("(<br */?>)", "$1"+System.getProperty("line.separator"));
-		return "<pre>" + Utils.escapeText(txt2) + "</pre>";
+		return "<pre>" + Utils.escapeHTML(txt2) + "</pre>";
 	}
 
   public void setType(String type) {

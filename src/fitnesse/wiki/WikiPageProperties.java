@@ -136,7 +136,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 			}
 		}
 		else if(value != null)
-			element.appendChild(document.createTextNode(Utils.escapeText(value)));
+			element.appendChild(document.createTextNode(Utils.escapeHTML(value)));
 
 		parent.appendChild(element);
 	}

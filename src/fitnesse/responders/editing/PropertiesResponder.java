@@ -274,7 +274,7 @@ public class PropertiesResponder implements SecureResponder
 			}
 			else
 				fullPath = new WikiPagePath();
-			return HtmlUtil.makeLink(fullPath.toString(), Utils.escapeText(linkPath));
+			return HtmlUtil.makeLink(fullPath.toString(), Utils.escapeHTML(linkPath));
 		}
 		else
 			return new RawHtml(linkPath);
