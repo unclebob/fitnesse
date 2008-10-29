@@ -24,9 +24,33 @@ public class TableScanner implements Iterable<Table> {
     content = removeUnprocessedLiteralsInTables(content);
     content = replaceEvaluations(new WidgetRoot("", page), content);
     widgetRoot = new WidgetRoot(content, page, new WidgetBuilder(tableWidgets));
+    replaceAllProcessedLiterals(widgetRoot);
     scanParentForTables(widgetRoot);
   }
 
+  private void replaceAllProcessedLiterals(WikiWidget widget) {
+    if (widget instanceof TextWidget) {
+      replaceProcessedLiterals((TextWidget) widget);
+    } else if (widget instanceof ParentWidget) {
+      ParentWidget parent = (ParentWidget) widget;
+      List<WikiWidget> children = parent.getChildren();
+      for (WikiWidget child : children) {
+        replaceAllProcessedLiterals(child);
+      }
+    }
+  }
+
+  private static void replaceProcessedLiterals(TextWidget textWidget) {
+    String text = textWidget.getRawText();
+    Matcher matcher = LiteralWidget.pattern.matcher(text);
+    while (matcher.find()) {
+      int literalNumber = Integer.parseInt(matcher.group(1));
+      String replacement = String.format("!-%s-!",textWidget.getParent().getLiteral(literalNumber));
+      text = text.replace(matcher.group(), replacement);
+      matcher = LiteralWidget.pattern.matcher(text);
+    }
+    textWidget.setText(text);
+  }
 
   static String removeUnprocessedLiteralsInTables(String text) {
     Pattern inTablePattern = Pattern.compile("\\|[^\n\r]*!-(.*?)-![^\n\r]*\\|");

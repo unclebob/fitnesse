@@ -36,7 +36,7 @@ public class QueryTable extends SlimTable {
   protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object queryReturn = returnValues.get(queryId);
     if (queryId == null || queryReturn == null || (queryReturn instanceof String)) {
-      failMessage(0, 0, "Query fixture has no valid query method");
+      table.appendToCell(0, 0, fail("Query fixture has no valid query method"));
       return;
     }
     scanRowsForMatches((List<Object>) queryReturn);

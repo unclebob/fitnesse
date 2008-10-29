@@ -54,6 +54,11 @@ public class Table {
     return cellContents;
   }
 
+  public void appendToCell(int col, int row, String message) {
+    TextWidget widget = getCell(col, row);
+    widget.setText(widget.getText() + " " + message);
+  }
+
   private TextWidget getCellInRow(TableRowWidget row, int columnIndex) {
     List<WikiWidget> columns = row.getChildren();
     TableCellWidget cell = (TableCellWidget) columns.get(columnIndex);
@@ -103,6 +108,4 @@ public class Table {
     widget.addRows(rowString);
     return getRowCount()-1;
   }
-
-  
 }

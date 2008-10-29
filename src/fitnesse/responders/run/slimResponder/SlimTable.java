@@ -1,8 +1,8 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.responders.run.TestSummary;
+import fitnesse.slim.converters.VoidConverter;
 import static fitnesse.util.ListUtility.list;
-import fitnesse.wikitext.Utils;
 
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
@@ -20,7 +20,6 @@ public abstract class SlimTable {
   private String tableName;
   private int instructionNumber = 0;
   private List<Object> instructions;
-  private boolean isLiteralTable;
   private List<Expectation> expectations = new ArrayList<Expectation>();
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
   private TestSummary testSummary = new TestSummary();
@@ -35,7 +34,6 @@ public abstract class SlimTable {
     this.testContext = testContext;
     tableName = getTableType() + "_" + id;
     instructions = new ArrayList<Object>();
-    isLiteralTable = table.isLiteralTable();
     table.setAsNotLiteralTable();
     literalizeTable();
   }
@@ -221,6 +219,10 @@ public abstract class SlimTable {
     return String.format("!style_pass(%s)", value);
   }
 
+  protected String error(String value) {
+    return String.format("!style_error(%s)", value);
+  }
+
   protected String ignore(String value) {
     return String.format("!style_ignore(%s)", value);
   }
@@ -246,8 +248,6 @@ public abstract class SlimTable {
     } catch (NumberFormatException e) {
       return false;
     }
-
-
   }
 
   public TestSummary getTestSummary() {
@@ -361,6 +361,14 @@ public abstract class SlimTable {
     }
 
     protected abstract String createEvaluationMessage(String value, String originalValue);
+
+    protected String extractExeptionMessage(String value) {
+      return value.substring(2);
+    }
+
+    protected boolean isExceptionMessage(String value) {
+      return value.startsWith("!:");
+    }
   }
 
   private static class LocalSlimTestContext implements SlimTestContext {
@@ -430,10 +438,12 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (value != null && value.indexOf("Exception") != -1)
-        return fail(literalize(value));
-      else {
+      if (VoidConverter.VOID_TAG.equals(value))
         return literalize(replaceSymbolsWithFullExpansion(originalValue));
+      else if (isExceptionMessage(value)) {
+        return error(extractExeptionMessage(value));
+      } else {
+        return String.format("!style_error(Void expected but was: )", literalize(value));
       }
     }
   }
@@ -444,11 +454,12 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (value != null && value.indexOf("Exception") != -1)
-        return fail(String.format("%s (%s)", literalize(originalValue), value));
-      else {
+      if ("OK".equalsIgnoreCase(value))
         return pass(literalize(originalValue));
-      }
+      else if (isExceptionMessage(value))
+        return String.format("%s - %s", literalize(originalValue), error(extractExeptionMessage(value)));
+      else
+        return "!style_error(Unknown construction message:) " + literalize(value);
     }
   }
 
@@ -461,6 +472,8 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
+      if (isExceptionMessage(value))
+        return error(extractExeptionMessage(value));
       setSymbol(symbolName, value);
       return String.format("$%s<-[%s]", symbolName, literalize(value));
     }
@@ -477,6 +490,8 @@ public abstract class SlimTable {
       String replacedValue = replaceSymbols(expectedValue);
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
+      else if (isExceptionMessage(value))
+        return error(extractExeptionMessage(value));
       else if (value.equals(replacedValue))
         evaluationMessage = pass(literalize(announceBlank(replaceSymbolsWithFullExpansion(originalValue))));
       else if (replacedValue.length() == 0)
@@ -485,7 +500,9 @@ public abstract class SlimTable {
         String expressionMessage = new Comparator(replacedValue, value, expectedValue).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
-        else
+        else if (value.indexOf("Exception:") != -1) {
+          evaluationMessage = error(value);
+        } else
           evaluationMessage = failMessage(literalize(value),
             String.format("expected [%s]", literalize(replaceSymbolsWithFullExpansion(originalValue)))
           );

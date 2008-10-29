@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SlimTestSystem extends TestSystem implements SlimTestContext {
   private CommandRunner slimRunner;
@@ -32,6 +34,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
   private TestSummary testSummary;
   private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
   private int slimSocket;
+  private final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -213,10 +216,19 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     if (result instanceof String) {
       String resultString = (String) result;
       if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
-        testSummary.exceptions++;
-        exceptions.put(resultKey, resultString);
-        instructionResults.put(resultKey, exceptionResult(resultKey));
+        replaceException(resultKey, resultString);
       }
+    }
+  }
+
+  private void replaceException(String resultKey, String resultString) {
+    testSummary.exceptions++;
+    Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
+    if (exceptionMessageMatcher.find()) {
+      instructionResults.put(resultKey, "!:"+exceptionMessageMatcher.group(1));
+    } else {
+      exceptions.put(resultKey, resultString);
+      instructionResults.put(resultKey, exceptionResult(resultKey));
     }
   }
 
@@ -225,16 +237,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
   }
 
   private String testResultsToWikiText() throws Exception {
-    String wikiText = tableScanner.toWikiText() +
-      "!*> Standard Output\n\n" +
-      log.getCommandRunner().getOutput() +
-      "*!\n" +
-      "!*> Standard Error\n\n" +
-      log.getCommandRunner().getError() +
-      "*!\n" +
-      "!*> Command Line\n{{{" +
-      getCommandLine() + "}}}\n" +
-      "*!\n";
+    String wikiText = tableScanner.toWikiText();
 
     return wikiText;
   }

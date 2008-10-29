@@ -122,5 +122,11 @@ public class TableScannerTest {
     assertEquals(expected, TableScanner.removeUnprocessedLiteralsInTables(text));
   }
 
+  @Test
+  public void removeUnprocessedLiterals() throws Exception {
+    TableScanner ts = scanTable("!-hi-!\n|x|\n!-there-!\n");
+    assertEquals("!-hi-!\n|x|\n!-there-!\n", ts.toWikiText());
+  }
+
 
 }

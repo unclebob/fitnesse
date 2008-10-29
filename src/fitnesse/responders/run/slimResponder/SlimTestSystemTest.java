@@ -19,7 +19,7 @@ public class SlimTestSystemTest {
   public String testResults;
 
   private void assertTestResultsContain(String fragment) {
-    assertTrue(testResults.indexOf(fragment) != -1);
+    assertTrue(testResults, testResults.indexOf(fragment) != -1);
   }
 
   private void assertContainsReferenceToException(String string) {
@@ -58,24 +58,15 @@ public class SlimTestSystemTest {
   }
 
   @Test
-  public void pageHasStandardInAndOutSectionsAndCommandLine() throws Exception {
-    getResultsForPageContents("");
-    assertTrue(testResults.indexOf("!*> Standard Output\n\n") != -1);
-    assertTrue(testResults.indexOf("!*> Standard Error\n\n") != -1);
-    assertTrue(testResults.indexOf("java -cp classes fitnesse.slim.SlimService") != -1);
-  }
-
-  @Test
   public void verboseOutputIfSlimFlagSet() throws Exception {
     getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-    assertTrue(testResults.indexOf("java -cp classes fitnesse.slim.SlimService -v") != -1);
+    assertTrue(responder.getCommandLine().indexOf("java -cp classes fitnesse.slim.SlimService -v") != -1);
   }
 
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
     getResultsForPageContents("|XX|\n");
-    assertTestResultsContain("!<XX>! (Exception:");
-    assertTestResultsContain("Class XX not found.");
+    assertTestResultsContain("!<XX>! - !style_error(Could not invoke constructor for XX[0])");
   }
 
   @Test
@@ -138,9 +129,7 @@ public class SlimTestSystemTest {
         "|returnInt?|\n" +
         "|7|\n"
     );
-    assertTestResultsContain("!anchor");
-    assertTestResultsContain(".#");
-    assertTestResultsContain("SlimError");
+    assertTestResultsContain("!<DT:NoSuchClass>! - !style_error(Could not invoke constructor for NoSuchClass[0])");
   }
 
   @Test
@@ -152,7 +141,6 @@ public class SlimTestSystemTest {
     );
     TableScanner ts = new TableScanner(responder.getTestResults());
     Table dt = ts.getTable(0);
-    assertContainsReferenceToException(dt.getCellContents(0, 0));
     assertTestResultsContain("Could not invoke constructor");
   }
 
@@ -163,9 +151,7 @@ public class SlimTestSystemTest {
         "|noSuchVar|\n" +
         "|3|\n"
     );
-    TableScanner ts = new TableScanner(responder.getTestResults());
-    Table table = ts.getTable(0);
-    assertContainsReferenceToException(table.getCellContents(0, 2));
+    assertTestResultsContain("!style_error(Method setNoSuchVar[1] not found in fitnesse.slim.test.TestSlim.)");
   }
 
   @Test

@@ -54,5 +54,9 @@ public class SlimResponder extends WikiPageResponder implements TestSystemListen
 
   public void exceptionOccurred(Throwable e) {
   }
+
+  public String getCommandLine() {
+    return testSystem.getCommandLine();
+  }
 }
 
