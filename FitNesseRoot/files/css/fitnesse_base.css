@@ -4,124 +4,120 @@
 
 **********/
 
-body
-{
-	margin: 0px;
-	padding: 0px;
-	font-family: 'Lucida Grande', 'Bitstream Vera Sans', 'trebuchet ms', verdana, tahoma, arial, sans-serif;
-	font-size: 14px;
-	background-color: #FAFAFE; /* #F8F8FC; #F8FCFC; #FFFCF8; #F8FDFF; */
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Lucida Grande', 'Bitstream Vera Sans', 'trebuchet ms', verdana, tahoma, arial, sans-serif;
+    font-size: 1em;
+    background-color: #FAFAFE;
 }
 
-a:link
-{
-	color: #2E2EB2;
-	background: transparent;
+ul, ol {
+    padding-left: 0;
+    margin: 0;
+    list-style-position: inside;
 }
 
-a:visited
-{
-	color: #606099;
-	background: transparent;
+ul {
+    padding-left: 1em;
+    text-indent: -1em;
 }
 
-a:hover
-{
-	color: #8989D9;
-	background: transparent;
-	text-decoration: none;
+ol {
+    padding-left: 1.3em;
+    text-indent: -1.3em;
 }
 
-a:active
-{
-	color: #FF8000;
-	background: transparent;
+a:link, a:visited, a:hover, a:active {
+    background: transparent;
 }
 
-table
-{
-	background: #F8F8F8;
-	margin: 5px;
-	padding: 0px;
-	border: solid #AAAAAA;
-	border-width: 1px 0px 0px 1px;
-/*	font-size: 0.9em;*/
+a:link {
+    color: #2E2EB2;
 }
 
-td, th
-{
-	border: solid #AAAAAA;
-	border-width: 0px 1px 1px 0px;
-	padding: 5px;
+a:visited {
+    color: #606099;
 }
 
-table.confirmation-form
-{
-	border: solid 1px #C6CCB7;
-	padding: 5px;
-	margin: 5px;
+a:hover {
+    color: #8989D9;
+    text-decoration: none;
 }
 
-td.confirmation-form, th.confirmation-form
-{
-	vertical-align: middle;
-	border: solid 0px #C6CCB7;
-	padding: 0px;
-	margin: 0px;
+a:active {
+    color: #FF8000;
 }
 
-
-h1
-{
-	font-size: 28px;
-	font-variant: small-caps;
-	margin: 0.5em
+table, td, th {
+    border: solid #777777;
 }
 
-h2
-{
-	font-size: 24px;
-	font-variant: small-caps;
-	margin: 0.5em
+table {
+    background: #F8F8F8;
+    margin: 5px;
+    padding: 0px;
+    border-width: 1px 0px 0px 1px;
 }
 
-h3
-{
-	font-size: 20px;
-	font-variant: small-caps;
-	margin: 0.5em
+td, th {
+    border-width: 0px 1px 1px 0px;
+    padding: 5px;
 }
 
-h4
-{
-	font-size: 18px;
-	font-style: italic;
-	font-variant: small-caps;
-	margin: 0.5em
+table.confirmation-form {
+    border: solid 1px #C6CCB7;
+    padding: 5px;
+    margin: 5px;
 }
 
-textarea
-{
-	width: 100%;
+td.confirmation-form, th.confirmation-form {
+    vertical-align: middle;
+    border: solid 0px #C6CCB7;
+    padding: 0px;
+    margin: 0px;
 }
 
-textarea.pageContent
-{
-	font-family: monaco, 'Lucida Sans Typewriter';
-	font-size: 12px;
-	height: 100%;
-	rows: 40;
-	columns: 70;
+h1, h2, h3, h4 {
+    font-family: Helvetica, sans-serif;
+    font-variant: small-caps;
 }
 
-pre
-{
-/*	font-size: 1.5em;*/
+h1 {
+    font-size: 1.6em;
 }
 
-img
-{
-	border: 0px;
+h2 {
+    font-size: 1.4emx;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1em;
+    font-style: italic;
+}
+
+textarea {
+    width: 100%;
+}
+
+textarea.pageContent {
+    font-family: monaco, 'Lucida Sans Typewriter';
+    font-size: 12px;
+    height: 100%;
+    rows: 40;
+    columns: 70;
+}
+
+pre {
+/*    font-size: 1.5em;*/
+}
+
+img {
+    border: 0px;
 }
 
 /**********
@@ -130,158 +126,140 @@ img
 
 **********/
 
-div.sidebar
-{
-	background: #D9DFC9;
-	margin: 0px;
-	padding: 5px;
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	width: 130px;
-	height: 1000px;
-	border-right: 1px dotted #C6CCB7;
+div.sidebar {
+    background: #D9DFC9;
+    margin: 0px;
+    padding: 5px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 130px;
+    height: 1000px;
+    border-right: 1px dotted #C6CCB7;
 }
 
-div.art_niche
-{
-	margin: 0px;
-	padding: 0px 0px 5px 0px;
-	position: relative;
-	top: 0px;
-	left: 0px;
-	height: 90px;
-	border-bottom: solid 1px #984D00;
-	background-image: url("/files/images/FitNesseLogo.gif");
-	background-repeat: no-repeat;
-	background-position: center;
+div.art_niche {
+    margin: 0px;
+    padding: 0px 0px 5px 0px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    height: 90px;
+    border-bottom: solid 1px #984D00;
+    background-image: url("/files/images/FitNesseLogo.gif");
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-div.actions
-{
-	margin: 0px;
-	padding-top: 5px;
-	padding-botton: 5px;
+div.actions {
+    margin: 0px;
+    padding-top: 5px;
+    padding-botton: 5px;
 }
 
-div.mainbar
-{
-	margin: 0px;
-	position: absolute;
-	top: 0px;
-	left: 145px;
-	width: 85%;
+div.mainbar {
+    margin: 0px;
+    position: absolute;
+    top: 0px;
+    left: 145px;
+    width: 85%;
 }
 
-div.header
-{
-	margin: 0px;
-	padding: 5px;
-	height: 90px;
-	border-bottom: 1px solid #984D00;
+div.header {
+    margin: 0px;
+    padding: 5px;
+    height: 90px;
+    border-bottom: 1px solid #984D00;
 }
 
-div.footer
-{
-	margin: 0px;
-	padding: 5px;
-	/* Use same color as border color for div.header. */
-	border-top: 1px solid #984D00;
-	font-size: 12px;
-	text-align: center;
+div.footer {
+    margin: 0px;
+    padding: 5px;
+    /* Use same color as border color for div.header. */
+    border-top: 1px solid #984D00;
+    font-size: 12px;
+    text-align: center;
 }
 
-div.contents
-{
-	margin: 2px;
-	padding: 2px;
-	border: 1px solid #F0F0F0;
-}
-div.nested-contents
-{
-	margin: 2px;
-	padding: 2px;
-	border: 0px solid #F0F0F0;
+div.contents {
+    margin: 2px;
+    padding: 2px;
+    border: 1px solid #F0F0F0;
 }
 
-hr
-{
-	/* Use same color as border color for div.header. */
-	color: #984D00;   /* for IE */
-	background-color: #984D00; /* for real browsers */
-	height: 1;
+div.nested-contents {
+    margin: 2px;
+    padding: 2px;
+    border: 0px solid #F0F0F0;
 }
 
-div.main
-{
-	margin: 0px;
-	padding: 5px;
+hr {
+    /* Use same color as border color for div.header. */
+    color: #984D00;   /* for IE */
+    background-color: #984D00; /* for other browsers */
+    height: 1;
 }
 
-div.properties
-{
-	height: 150px;
-	width: 100%;
-	margin: 5px;
-	padding: 5px;
-	border: solid 1px #C6CCB7;
+div.main {
+    margin: 0px;
+    padding: 5px;
 }
 
-div.virtual-wiki-properties
-{
-	height: 80px;
-	width: 100%;
-	margin: 5px;
-	padding: 5px;
-	border: solid 1px #C6CCB7;
+div.properties {
+    height: 150px;
+    width: 100%;
+    margin: 5px;
+    padding: 5px;
+    border: solid 1px #C6CCB7;
 }
 
-#execution-status
-{
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	width: 100px;
-	height: 90px;
-	margin: 5px;
-	text-align: center;
+div.virtual-wiki-properties {
+    height: 80px;
+    width: 100%;
+    margin: 5px;
+    padding: 5px;
+    border: solid 1px #C6CCB7;
 }
 
-#test-summary
-{
-	width: 99%;
-	top: 105px;
-	padding: 2px 2px 2px 5px;
-	margin: 0px 0px 5px 0px;
-	font-size: 1.2em;
-	border: solid black 1px;
+#execution-status {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 100px;
+    height: 90px;
+    margin: 5px;
+    text-align: center;
 }
 
-.actions a:link, .actions a:visited
-{
-	display: block;
-	margin: 0px;
-	line-height: 2.2em;
-	text-indent: .5em;
-	color: black; /*#3D4529;*/
-	font-family: sans-serif, verdana, tahoma, arial, sans-serif;
-	font-size: 14px;
-/*	font-weight: bold;*/
-	background-color: #F8F6D3; /* #EDEAC8; */
-	text-decoration: none;
-	border: solid 1px #8D8360;
-/*	border-width: 0px 0px 2px 0px;*/
+#test-summary {
+    width: 99%;
+    top: 105px;
+    padding: 2px 2px 2px 5px;
+    margin: 0px 0px 5px 0px;
+    font-size: 1.2em;
+    border: solid black 1px;
 }
 
-.actions a:hover
-{
-	color: #3D4529;
-	background-color: #DEDDBD;
+.actions a:link, .actions a:visited {
+    display: block;
+    margin: 0px;
+    line-height: 2.2em;
+    text-indent: .5em;
+    color: black;
+    font-family: sans-serif, verdana, tahoma, arial, sans-serif;
+    font-size: 14px;
+    background-color: #F8F6D3;
+    text-decoration: none;
+    border: solid 1px #8D8360;
 }
 
-.header a:link
-{
-	font-weight: bold;
+.actions a:hover {
+    color: #3D4529;
+    background-color: #DEDDBD;
+}
+
+.header a:link {
+    font-weight: bold;
 }
 
 /**********
@@ -290,186 +268,154 @@ div.virtual-wiki-properties
 
 **********/
 
-.note
-{
-	font-size: 12px;
-	color: #818181;
+.note {
+    font-size: 12px;
+    color: #818181;
 }
 
-.page_title
-{
-	font-size: 36px;
+.page_title {
+    font-size: 2.5em;
 }
 
-span.page_title
-{
-/*	text-shadow: 0px 0px 4px #2E2EB2;*/
+span.page_title {
 }
 
-.page_type
-{
-	font-size: 20px;
-	font-variant: small-caps;
+.page_type {
+    font-size: 1.2px;
+    font-variant: small-caps;
 }
 
-.caps, .resultsHeader
-{
-	font-size: 18px;
-	font-variant: small-caps;
+.caps, .resultsHeader {
+    font-size: 1empx;
+    font-variant: small-caps;
 }
 
-.resultsHeader, .resultsRow2
-{
-	background-color: #EFEFEF;
+.resultsHeader, .resultsRow2 {
+    background-color: #EFEFEF;
 }
 
-.resultsRow1
-{
-	background-color: #FFFFFF;
+.resultsRow1 {
+    background-color: #FFFFFF;
 }
 
-.centered
-{
-	margin: 5px;
-	text-align: center;
+.centered {
+    margin: 5px;
+    text-align: center;
 }
 
-.right
-{
-	float: right;
+.right {
+    float: right;
 }
 
-.left
-{
-	float: left;
+.left {
+    float: left;
 }
 
-.strike
-{
-	text-decoration: line-through;
+.strike {
+    text-decoration: line-through;
 }
 
-.virtual
-{
-	background-image: url("/files/images/virtualPage.jpg");
-	background-position: center top;
-	background-repeat: no-repeat;
+.virtual {
+    background-image: url("/files/images/virtualPage.jpg");
+    background-position: center top;
+    background-repeat: no-repeat;
 }
 
-.imported
-{
-	background-image: url("/files/images/importedPage.jpg");
-	background-position: center top;
-	background-repeat: no-repeat;
+.imported {
+    background-image: url("/files/images/importedPage.jpg");
+    background-position: center top;
+    background-repeat: no-repeat;
 }
 
-.meta
-{
-	color: #BF8660;
-	font-style: italic;
+.meta {
+    color: #BF8660;
+    font-style: italic;
 }
 
-.included, .setup, .teardown, .collapse_rim
-{
-	background: #F9F9F9;
-	margin: 5px 0px 5px 0px;
-	padding: 2px 2px 2px 2px;
-	border: 1px dotted #909090;
+.included, .setup, .teardown, .collapse_rim {
+    background: #F9F9F9;
+    margin: 5px 0px 5px 0px;
+    padding: 2px 2px 2px 2px;
+    border: 1px dotted #909090;
 }
 
-.setup, .teardown
-{
-	background: #FFFFF0;
-	border-color: #FF8000;
+.setup, .teardown {
+    background: #FFFFF0;
+    border-color: #FF8000;
 }
 
-.included
-{
-	background: #F9F9FF;
-	border-color: #2E2EB2;
+.included {
+    background: #F9F9FF;
+    border-color: #2E2EB2;
 }
 
-.collapse_rim
-{
-	border-color: #BF8660;
+.collapse_rim {
+    border-color: #BF8660;
 }
 
-.alternating_row_1, .alternating_row_2
-{
-	display: block;
-	height: 1.5em;
-	width: 100%;
+.alternating_row_1, .alternating_row_2 {
+    display: block;
+    height: 1.5em;
+    width: 100%;
 }
 
-.alternating_row_1, .alternating_block_1
-{
-	background-color: #EFEFEF;
+.alternating_row_1, .alternating_block_1 {
+    background-color: #EFEFEF;
 }
 
-.alternating_row_2, .alternating_block_2
-{
-	background-color: #FFFFFF;
+.alternating_row_2, .alternating_block_2 {
+    background-color: #FFFFFF;
 }
 
-.alternating_block_1, .alternating_block_2
-{
-	border: solid 1px #DFD4A7;
+.alternating_block_1, .alternating_block_2 {
+    border: solid 1px #DFD4A7;
 }
 
-div.collapsable
-{
-	margin: 0px 0px 0px 15px;
-	display: block;
+div.collapsable {
+    margin: 0px 0px 0px 15px;
+    display: block;
 }
 
-div.collapsable-contents
-{
-	margin: 0px 0px 0px 15px;
-	display: block;
+div.collapsable-contents {
+    margin: 0px 0px 0px 15px;
+    display: block;
 }
 
-div.invisible
-{
-	line-height: 0px;
-	margin: 0px 0px 0px 0px;
-	display: none;
-	visibility:hidden;
+div.invisible {
+    line-height: 0px;
+    margin: 0px 0px 0px 0px;
+    display: none;
+    visibility:hidden;
 }
 
-.pageHelp
-{
-	color: #CC6600;
-	font-size: 0.7em;
-	font-style: italic;
-	margin-left: 1.5em;
+.pageHelp {
+    color: #CC6600;
+    font-size: 0.7em;
+    font-style: italic;
+    margin-left: 1.5em;
 }
 
-.hidden
-{
-	display: none;
+.hidden {
+    display: none;
 }
 
-.toc1 ul
-{
-	list-style-type: disc;
-	padding-left: 2em;
-	color: black;
+.toc1 ul {
+    list-style-type: disc;
+    color: black;
 }
 
-.toc2 ul
-{
-	list-style-type: circle;
+.toc3 ul {
+    list-style-type: disc;
+    color: gray;
 }
 
-.toc3 ul
-{
-	list-style-type: disc;
-	color: gray;
+.toc2 ul, .toc4 ul, .toc5 ul, .toc6 ul {
+    list-style-type: circle;
 }
 
-.toc4 ul, .toc5 ul, .toc6 ul
-{
-	list-style-type: circle;
+table {
+    padding: 0;
+    margin: 0;
 }
 
 /**********
@@ -478,70 +424,60 @@ div.invisible
 
 **********/
 
-div.edit_buttons
-{
+div.edit_buttons {
 }
 
-div.nav_break
-{
-	font-size: .3em;
+div.nav_break {
+    font-size: .3em;
 }
 
-div.merge_new
-{
-	float: left;
-	font-size: 1.4em;
-	width: 49%;
+div.merge_new {
+    float: left;
+    font-size: 1.4em;
+    width: 49%;
 }
 
-div.merge_old
-{
-	float: right;
-	font-size: 1.4em;
-	width: 49%;
+div.merge_old {
+    float: right;
+    font-size: 1.4em;
+    width: 49%;
 }
 
-.test_summary_link
-{
-	text-align: right;
+.test_summary_link {
+    text-align: right;
 }
 
-.test_summary_results
-{
-	padding: 0px 5px 0px 5px;
-	text-align: left;
+.test_summary_results {
+    padding: 0px 5px 0px 5px;
+    text-align: left;
 }
 
-.suite_summary
-{
-	margin: 5px;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
+.suite_summary {
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
-.test_output_name
-{
-	margin-top: 10px;
-	background-color: #DFD4A7;
-	font-size: 1.5em;
-	text-indent: 1em;
+.test_output_name {
+    margin-top: 10px;
+    background-color: #DFD4A7;
+    font-size: 1.5em;
+    text-indent: 1em;
 }
 
-table.dirListing
-{
-	background: transparent;
-	margin: 2px;
-	padding: 0px;
-	border: 0px;
-	width: 99%;
-	font-size: 1.0em;
+table.dirListing {
+    background: transparent;
+    margin: 2px;
+    padding: 0px;
+    border: 0px;
+    width: 99%;
+    font-size: 1.0em;
 }
 
-.dirListing td, .dirListing th
-{
-	border: 0px;
-	padding: 1px 3px 1px 3px;
+.dirListing td, .dirListing th {
+    border: 0px;
+    padding: 1px 3px 1px 3px;
 }
 
 /**********
@@ -550,39 +486,31 @@ table.dirListing
 
 **********/
 
-.pass
-{
-	background-color: #AAFFAA;
+.pass {
+    background-color: #AAFFAA;
 }
 
-.fail
-{
-	background-color: #FFAAAA;
+.fail {
+    background-color: #FFAAAA;
 }
 
-.error
-{
-	background-color: #FFFFAA;
+.error {
+    background-color: #FFFFAA;
 }
 
-.ignore
-{
-	background-color: #CCCCCC;
+.ignore {
+    background-color: #CCCCCC;
 }
 
-.fit_stacktrace
-{
-	font-size: 0.7em;
+.fit_stacktrace {
+    font-size: 0.7em;
 }
 
-.fit_label
-{
-	font-style: italic;
-	color: #C08080;
+.fit_label {
+    font-style: italic;
+    color: #C08080;
 }
 
-.fit_grey
-{
-	color: #808080;
+.fit_grey {
+    color: #808080;
 }
-
