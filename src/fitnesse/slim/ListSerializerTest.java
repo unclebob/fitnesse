@@ -7,6 +7,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import fitnesse.util.ListUtility;
+import static fitnesse.util.ListUtility.*;
+
 public class ListSerializerTest {
   private List<Object> list;
 
@@ -40,4 +43,12 @@ public class ListSerializerTest {
     list.add(sublist);
     assertEquals("[000001:000024:[000001:000007:element:]:]", ListSerializer.serialize(list));
   }
+
+  @Test
+  public void serializeListWithNonString() throws Exception {
+    String s = ListSerializer.serialize(list(1));
+    list = ListDeserializer.deserialize(s);
+    assertEquals("1", list.get(0));
+  }
+
 }

@@ -108,24 +108,24 @@ public class WidgetBuilder
 		}
 		return regexp;
 	}
-
-	public void addChildWidgets2(String value, ParentWidget parent) throws Exception
-	{
-		Matcher matcher = getWidgetPattern().matcher(value);
-
-		if(matcher.find())
-		{
-			String preString = value.substring(0, matcher.start());
-			if(!"".equals(preString))
-				new TextWidget(parent, preString);
-			makeWidget(parent, matcher);
-			String postString = value.substring(matcher.end());
-			if(!postString.equals(""))
-				addChildWidgets(postString, parent);
-		}
-		else
-			new TextWidget(parent, value);
-	}
+//
+//	public void addChildWidgets2(String value, ParentWidget parent) throws Exception
+//	{
+//		Matcher matcher = getWidgetPattern().matcher(value);
+//
+//		if(matcher.find())
+//		{
+//			String preString = value.substring(0, matcher.start());
+//			if(!"".equals(preString))
+//				new TextWidget(parent, preString);
+//			makeWidget(parent, matcher);
+//			String postString = value.substring(matcher.end());
+//			if(!postString.equals(""))
+//				addChildWidgets(postString, parent);
+//		}
+//		else
+//			new TextWidget(parent, value);
+//	}
 
 	public WikiWidget makeWidget(ParentWidget parent, Matcher matcher) throws Exception
 	{

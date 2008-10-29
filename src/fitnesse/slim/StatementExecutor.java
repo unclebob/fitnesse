@@ -6,10 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +31,7 @@ public class StatementExecutor {
     addConverter(char.class, new CharConverter());
     addConverter(boolean.class, new BooleanConverter());
     addConverter(Boolean.class, new BooleanConverter());
+    addConverter(Date.class, new DateConverter());
   }
 
   public void setVariable(String name, Object value) {
@@ -49,7 +47,7 @@ public class StatementExecutor {
     Object instance = instances.get(instanceName);
     if (instance != null)
       return instance;
-    throw new SlimError(String.format("No such instance: %s.", instanceName));
+    throw new SlimError(String.format("message:<<No such instance: %s.>>", instanceName));
   }
 
   public void addConverter(Class k, Converter converter) {
@@ -66,7 +64,12 @@ public class StatementExecutor {
       instances.put(instanceName, instance);
       return "OK";
     } catch (Throwable e) {
-      return exceptionToString(new SlimError("Could not invoke constructor.", e));
+      return exceptionToString(
+        new SlimError(
+          String.format("message:<<Could not invoke constructor for %s[%d]>>", className, args.length),
+          e
+        )
+      );
     }
   }
 
@@ -75,7 +78,7 @@ public class StatementExecutor {
     Class k = searchPathsForClass(className);
     Constructor constructor = getConstructor(k.getConstructors(), args);
     if (constructor == null)
-      throw new SlimError(String.format("Class %s has no appropriate constructor.", className));
+      throw new SlimError(String.format("message:<<Class %s has no appropriate constructor.>>", className));
 
     return constructor.newInstance(convertArgs(args, constructor.getParameterTypes()));
   }
@@ -89,7 +92,7 @@ public class StatementExecutor {
       if (k != null)
         return k;
     }
-    throw new SlimError(String.format("Class %s not found.", className));
+    throw new SlimError(String.format("message:<<Class %s not found.>>", className));
   }
 
   private Class getClass(String className) {
@@ -156,7 +159,7 @@ public class StatementExecutor {
       if (symbolMatcher.find()) {
         String symbolName = symbolMatcher.group(1);
         if (variables.containsKey(symbolName))
-          arg = arg.replace("$" + symbolName, (String)variables.get(symbolName));
+          arg = arg.replace("$" + symbolName, (String) variables.get(symbolName));
         startingPosition += symbolMatcher.start(1);
       } else
         break;
@@ -184,7 +187,7 @@ public class StatementExecutor {
       if (hasMatchingName && hasMatchingArguments)
         return method;
     }
-    throw new SlimError(String.format("Method %s(%d) not found in %s.", methodName, nArgs, k.getName()));
+    throw new SlimError(String.format("message:<<Method %s[%d] not found in %s.>>", methodName, nArgs, k.getName()));
   }
 
   private Object[] convertArgs(Method method, Object args[]) {
@@ -205,7 +208,10 @@ public class StatementExecutor {
         if (converter != null)
           convertedArgs[i] = converter.fromString((String) args[i]);
         else
-          throw new SlimError(String.format("No converter for argument: %d -- %s", i, argumentType.getName()));
+          throw new SlimError(String.format("message:<<No converter for argument: %d -- %s.>>", i,
+            argumentType.getName()
+          )
+          );
       }
     }
     return convertedArgs;

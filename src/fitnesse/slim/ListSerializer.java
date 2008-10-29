@@ -44,7 +44,7 @@ public class ListSerializer {
     else if (o instanceof List)
       s = ListSerializer.serialize((List) o);
     else
-      throw new SlimError(String.format("Can't serialize type %s.", o.getClass().getName()));
+      s = o.toString();
     return s;
   }
 
