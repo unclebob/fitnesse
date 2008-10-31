@@ -1,1 +1,5 @@
-!contents -R2 -g -p -f -h
+|Import|
+|myPackage.subPackage.whatever|
+|another.path.to.classes|
+
+The Import table tells the Slim Executor where the fixtures live.  

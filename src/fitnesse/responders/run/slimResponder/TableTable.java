@@ -46,7 +46,7 @@ public class TableTable extends SlimTable {
   protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object tableReturn = returnValues.get(doTableId);
     if (doTableId == null || tableReturn == null || (tableReturn instanceof String)) {
-      failMessage(0, 0, "Table fixture has no valid doTable method");
+      table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
       return;
     }
 
@@ -55,14 +55,25 @@ public class TableTable extends SlimTable {
       evaluateRow(tableResults, row);
   }
 
-  private void evaluateRow(List<List<Object>> tableResults, int row) {
-    List<Object> rowList = tableResults.get(row);
+  private void evaluateRow(List<List<Object>> tableResults, int resultRow) {
+    List<Object> rowList = tableResults.get(resultRow);
     for (int col = 0; col < rowList.size(); col++) {
-      String cellResult = (String) rowList.get(col);
-      if (cellResult.equalsIgnoreCase("pass"))
-        pass(col, row+1);
-      else
-        fail(col, row+1, cellResult);
+      int tableRow = resultRow + 1;
+      colorCell(col, tableRow, (String) rowList.get(col));
+    }
+  }
+
+  private void colorCell(int col, int row, String contents) {
+    if (contents.equalsIgnoreCase("no change") || contents.length() == 0)
+      ; // do nothing
+    else if (contents.equalsIgnoreCase("pass"))
+      pass(col, row);
+    else {
+      String[] resultTokens = contents.split(":");
+      if (resultTokens[0].equalsIgnoreCase("error")) {
+        table.setCell(col, row, error(resultTokens[1]));
+      } else
+        fail(col, row, contents);
     }
   }
 }

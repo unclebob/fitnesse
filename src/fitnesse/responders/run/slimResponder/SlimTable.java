@@ -353,8 +353,8 @@ public abstract class SlimTable {
     }
 
     protected void evaluateExpectation(Map<String, Object> returnValues) {
-      String value = (String) returnValues.get(makeInstructionTag(instructionNumber));
-      String literalizedValue = literalize(value);
+      Object returnValue = returnValues.get(makeInstructionTag(instructionNumber));
+      String value = returnValue.toString();
       String originalContent = table.getCellContents(col, row);
       String evaluationMessage = createEvaluationMessage(value, originalContent);
       table.setCell(col, row, evaluationMessage);
@@ -441,7 +441,7 @@ public abstract class SlimTable {
       if (VoidConverter.VOID_TAG.equals(value))
         return literalize(replaceSymbolsWithFullExpansion(originalValue));
       else if (isExceptionMessage(value)) {
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       } else {
         return String.format("!style_error(Void expected but was: )", literalize(value));
       }
@@ -473,7 +473,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       setSymbol(symbolName, value);
       return String.format("$%s<-[%s]", symbolName, literalize(value));
     }
@@ -491,7 +491,7 @@ public abstract class SlimTable {
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       else if (value.equals(replacedValue))
         evaluationMessage = pass(literalize(announceBlank(replaceSymbolsWithFullExpansion(originalValue))));
       else if (replacedValue.length() == 0)

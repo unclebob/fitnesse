@@ -215,7 +215,7 @@ public class SlimTestSystemTest {
     );
     TableScanner ts = new TableScanner(responder.getTestResults());
     Table dt = ts.getTable(0);
-    assertEquals("!style_error(No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.)", dt.getCellContents(0, 2));
+    assertEquals("x !style_error(No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.)", dt.getCellContents(0, 2));
   }
 
   @Test
@@ -231,6 +231,15 @@ public class SlimTestSystemTest {
 
   private void assertTranslatedException(String expected, String message) {
     assertEquals(expected, SlimTestSystem.translateExceptionMessage(message));
+  }
+
+  @Test
+  public void returnedListsBecomeStrings() throws Exception {
+    getResultsForPageContents("|script|\n" +
+      "|start|fitnesse.slim.test.TestSlim|\n" +
+      "|one list|1,2|\n" +
+      "|check|get list arg|[1, 2]|\n");
+    assertTestResultsContain("!style_pass(!<[1, 2]>!");
   }
 
 

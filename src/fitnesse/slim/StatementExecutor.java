@@ -17,21 +17,29 @@ import java.util.regex.Pattern;
 
 public class StatementExecutor {
   private Map<String, Object> instances = new HashMap<String, Object>();
-  private Map<Class, Converter> converters = new HashMap<Class, Converter>();
   private Map<String, Object> variables = new HashMap<String, Object>();
   private List<String> paths = new ArrayList<String>();
 
   public StatementExecutor() {
-    addConverter(void.class, new VoidConverter());
-    addConverter(String.class, new StringConverter());
-    addConverter(int.class, new IntConverter());
-    addConverter(double.class, new DoubleConverter());
-    addConverter(Integer.class, new IntConverter());
-    addConverter(Double.class, new DoubleConverter());
-    addConverter(char.class, new CharConverter());
-    addConverter(boolean.class, new BooleanConverter());
-    addConverter(Boolean.class, new BooleanConverter());
-    addConverter(Date.class, new DateConverter());
+    Slim.addConverter(void.class, new VoidConverter());
+    Slim.addConverter(String.class, new StringConverter());
+    Slim.addConverter(int.class, new IntConverter());
+    Slim.addConverter(double.class, new DoubleConverter());
+    Slim.addConverter(Integer.class, new IntConverter());
+    Slim.addConverter(Double.class, new DoubleConverter());
+    Slim.addConverter(char.class, new CharConverter());
+    Slim.addConverter(boolean.class, new BooleanConverter());
+    Slim.addConverter(Boolean.class, new BooleanConverter());
+    Slim.addConverter(Date.class, new DateConverter());
+    Slim.addConverter(List.class, new ListConverter());
+    Slim.addConverter(Integer[].class, new IntegerArrayConverter());
+    Slim.addConverter(int[].class, new IntegerArrayConverter());
+    Slim.addConverter(String[].class, new StringArrayConverter());
+    Slim.addConverter(boolean[].class, new BooleanArrayConverter());
+    Slim.addConverter(Boolean[].class, new BooleanArrayConverter());
+    Slim.addConverter(double[].class, new DoubleArrayConverter());  
+    Slim.addConverter(Double[].class, new DoubleArrayConverter());
+
   }
 
   public void setVariable(String name, Object value) {
@@ -50,12 +58,8 @@ public class StatementExecutor {
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
 
-  public void addConverter(Class k, Converter converter) {
-    converters.put(k, converter);
-  }
-
   public Converter getConverter(Class k) {
-    return converters.get(k);
+    return Slim.converters.get(k);
   }
 
   public Object create(String instanceName, String className, Object[] args) {
@@ -218,7 +222,7 @@ public class StatementExecutor {
     Converter converter = getConverter(retType);
     if (converter != null)
       return converter.toString(retval);
-    else if (retval == null)
+    if (retval == null)
       return "null";
     else
       return retval.toString();

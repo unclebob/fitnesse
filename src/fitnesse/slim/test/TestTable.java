@@ -8,8 +8,8 @@ import java.util.List;
 public class TestTable {
   public List doTable(List l) {
     return list(
-      list("pass", "pass", "pass"),
-      list("bill", "bob", "jake")
+      list("pass", "error:huh", ""),
+      list("bill", "no change", "jake")
     );
   }
 }

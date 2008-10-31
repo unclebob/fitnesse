@@ -12,6 +12,10 @@ public class TestSlim {
   private char charArg;
   private List<Object> listArg;
   private int constructorArg;
+  private String[] stringArray;
+  private Integer[] integerArray;
+  private Boolean[] booleanArray;
+  private Double[] doubleArray;
 
   public TestSlim() {
 
@@ -137,6 +141,38 @@ public class TestSlim {
 
   public NoSuchConverter noSuchConverter() {
     return new NoSuchConverter();
+  }
+
+  public void setStringArray(String array[]) {
+    stringArray = array; 
+  }
+
+  public String[] getStringArray() {
+    return stringArray;
+  }
+
+  public void setIntegerArray(Integer array[]) {
+    integerArray = array;
+  }
+
+  public Integer[] getIntegerArray() {
+    return integerArray;
+  }
+
+  public Boolean[] getBooleanArray() {
+    return booleanArray;
+  }
+
+  public void setBooleanArray(Boolean[] booleanArray) {
+    this.booleanArray = booleanArray;
+  }
+
+  public Double[] getDoubleArray() {
+    return doubleArray;
+  }
+
+  public void setDoubleArray(Double[] doubleArray) {
+    this.doubleArray = doubleArray;
   }
 
   class NoSuchConverter {};

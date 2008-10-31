@@ -149,7 +149,7 @@ public class ScriptTable extends SlimTable {
       if (value == null)
         return failMessage(literalize(originalValue), "Returned null value.");
       else if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       else if (value.equals(VoidConverter.VOID_TAG))
         return literalize(originalValue);
       else if (value.equals(BooleanConverter.FALSE))
@@ -170,7 +170,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       return (value != null && value.equals(BooleanConverter.TRUE)) ?
         pass(literalize(originalValue)) : fail(literalize(originalValue));
     }
@@ -185,7 +185,7 @@ public class ScriptTable extends SlimTable {
       if (value == null)
         return pass(literalize(originalValue));
       else if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       else
         return value.equals(BooleanConverter.FALSE) ? pass(literalize(originalValue)) : fail(literalize(originalValue));
     }
@@ -198,7 +198,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       int lastCol = table.getColumnCountInRow(row) - 1;
       TextWidget textWidget = table.getCell(lastCol, row);
       TableRowWidget rowWidget = (TableRowWidget) textWidget.getParent().getParent();
@@ -218,7 +218,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if (isExceptionMessage(value))
-        return error(extractExeptionMessage(value));
+        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       return literalize(replaceSymbolsWithFullExpansion(originalValue));
     }
   }

@@ -76,11 +76,9 @@ There are some standard exception messages that every Slim implementation should
 |MALFORMED_INSTRUCTION [''instruction list'']|Where ''instruction list'' is a comma separated list of the instruction strings.|
 
 !4 Type Conversions
-The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.
+The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.  But we don't want to restrict our fixtures to use only Strings.  So Slim comes with some standard type converters that allow fixtures to take more convenient data types.
 
- * For numerics, the Java format is used. e.g. Integer.parseInt() or Double,parseDouble() calls.
- * Boolen maps to "true" and "false".
- * Dates convert in and out of a date format of the form dd-MMM-yyyy. (e.g. 10-Oct-1970)
+!see DataTypes.
 
 !4 Conclusion
 That's pretty much it.  If you want to port Slim to a new platform, I suggest you look at the code in the fitnesse.slim package.  Pay special attention to the !-ListSerializer-! and !-ListDeserializer-! classes.  Also check out the logic in Statement and !-StatementExecutor-! classes.  The unit tests ought to be expecially educational. You should be able to build equivalent unit tests without much fuss.  Finally, take a look at the unit tests in fitnesse.responders.run.slimResponder.  These should all still run with your new port (although you'll have to replace the command line that invokes the Slim Server).

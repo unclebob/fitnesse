@@ -1,18 +1,3 @@
-|Table:Bowling|
-|3|5|4|/|X||X||3|4|6|/|7|2|3|4|9|-|4|/|3|
-||8 ||28||51||68||75||92||101||108||117|||130|
-
-The "Table" table allows you to write a fixture that accepts an arbitrary table, and returns a table of results.  The table of results has the same geometry as the input table (without the first row).  Each cell of the result table can be one of the following codes:
-
-|Comment|
-|''pass''|The corresponding cell will be colored green.|
-|''<empty string>'' or ''no change''|The corresponding cell will be unchanged|
-|''error:<message>''|The corresponding cell will be colored yellow and its contents will be ''<message>''|
-|''<anything else>''|The corresponding cell will be colored red, and its contents will be ''<anything else>''|
-
-The fixture is written with a doTable method.  This method takes a List argument and returns a List.  The incomming list is a list of rows.  Each row is a list of strings.  The returned list has the same structure.   
-
-Here is the fixture for the above table.{{{
 package fitnesse.slim.test;
 
 import static fitnesse.util.ListUtility.*;
@@ -116,5 +101,3 @@ public class Bowling {
     }
   }
 }
-
-}}}
