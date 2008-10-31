@@ -44,5 +44,19 @@ This should be pretty clear.  Each row is a single instruction in the script.
 
  * The second row is usually the word ''start'' and identifies the name and constructor arguments of the fixture that will be used by the rest of the table.  If you don't have a ''start'', then the previous script table's fixture on this test page will be used. 
 
- * Most instructions involve some kind of function call.  The name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells.  So 
+ * Most instructions involve some kind of function call.  The name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells.  
+
+ * A function alone in a row will turn red or green if it returns a boolean.  Otherwise it will simply remain uncolored.
+
+ * If the word ''check'' is in the first cell of a row, then a function call follows it.  The last cell of the table is the value we expect to be returned by the function, and it will be compared to what the function actually returns.
+
+ * If the word ''ensure'' is in the first cell, then it should be followed by a function that should return a boolean true for green and false for red.
+
+ * If the word ''reject'' is in the first cell, then it should be followed by a function that should return a boolean false for green and true for red.
+
+ * If the word ''note'' is in the first cell, all other cells in that row will be ignored.
+
+ * If the word ''show'' is in the first cell, then it should be followed by a function.  A new cell will be added when the test is run, and it will contain the return value of the function.
+
+
 

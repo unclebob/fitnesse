@@ -31,7 +31,9 @@ public class SlimMethodInvocationTest {
   @Test
   public void throwMethodNotCalledErrorIfNoSuchMethod() throws Exception {
     String response = (String)caller.call("testSlim", "noSuchMethod");
-    assertTrue(response.indexOf(SlimServer.EXCEPTION_TAG) != -1);
+    assertTrue(response,
+      response.indexOf(SlimServer.EXCEPTION_TAG) != -1 && 
+      response.indexOf("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] fitnesse.slim.test.TestSlim.>>") != -1);
   }
 
   @Test

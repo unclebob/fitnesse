@@ -41,7 +41,7 @@ public class Statement {
     try {
       return (String) words.get(word);
     } catch (Exception e) {
-      throw new SlimError(String.format("message:<<Statement missing arguments: %s.>>", toString()));
+      throw new SlimError(String.format("message:<<MALFORMED_INSTRUCTION %s.>>", toString()));
     }
   }
 
@@ -70,7 +70,7 @@ public class Statement {
     else if (operationIs("callAndAssign"))
       retval =  callAndAssign(executor);
     else
-      retval = SlimServer.EXCEPTION_TAG +  String.format("message:<<Invalid statement operation: %s.>>", getOperation());
+      retval = SlimServer.EXCEPTION_TAG +  String.format("message:<<INVALID_STATEMENT: %s.>>", getOperation());
     return list(getWord(0), retval);
   }
 

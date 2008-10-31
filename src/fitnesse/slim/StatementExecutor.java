@@ -47,7 +47,7 @@ public class StatementExecutor {
     Object instance = instances.get(instanceName);
     if (instance != null)
       return instance;
-    throw new SlimError(String.format("message:<<No such instance: %s.>>", instanceName));
+    throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
 
   public void addConverter(Class k, Converter converter) {
@@ -66,8 +66,7 @@ public class StatementExecutor {
     } catch (Throwable e) {
       return exceptionToString(
         new SlimError(
-          String.format("message:<<Could not invoke constructor for %s[%d]>>", className, args.length),
-          e
+          String.format("message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className, args.length)
         )
       );
     }
@@ -78,7 +77,7 @@ public class StatementExecutor {
     Class k = searchPathsForClass(className);
     Constructor constructor = getConstructor(k.getConstructors(), args);
     if (constructor == null)
-      throw new SlimError(String.format("message:<<Class %s has no appropriate constructor.>>", className));
+      throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>", className));
 
     return constructor.newInstance(convertArgs(args, constructor.getParameterTypes()));
   }
@@ -92,7 +91,7 @@ public class StatementExecutor {
       if (k != null)
         return k;
     }
-    throw new SlimError(String.format("message:<<Class %s not found.>>", className));
+    throw new SlimError(String.format("message:<<NO_CLASS %s>>", className));
   }
 
   private Class getClass(String className) {
@@ -187,7 +186,7 @@ public class StatementExecutor {
       if (hasMatchingName && hasMatchingArguments)
         return method;
     }
-    throw new SlimError(String.format("message:<<Method %s[%d] not found in %s.>>", methodName, nArgs, k.getName()));
+    throw new SlimError(String.format("message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>", methodName, nArgs, k.getName()));
   }
 
   private Object[] convertArgs(Method method, Object args[]) {
@@ -208,10 +207,8 @@ public class StatementExecutor {
         if (converter != null)
           convertedArgs[i] = converter.fromString((String) args[i]);
         else
-          throw new SlimError(String.format("message:<<No converter for argument: %d -- %s.>>", i,
-            argumentType.getName()
-          )
-          );
+          throw
+            new SlimError(String.format("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>", argumentType.getName()));
       }
     }
     return convertedArgs;
@@ -221,6 +218,9 @@ public class StatementExecutor {
     Converter converter = getConverter(retType);
     if (converter != null)
       return converter.toString(retval);
-    else return retval.toString();
+    else if (retval == null)
+      return "null";
+    else
+      return retval.toString();
   }
 }

@@ -130,4 +130,14 @@ public class TestSlim {
   public void die() {
     throw new Error("blah");
   }
+
+  public void setNoSuchConverter(NoSuchConverter x) {
+    
+  }
+
+  public NoSuchConverter noSuchConverter() {
+    return new NoSuchConverter();
+  }
+
+  class NoSuchConverter {};
 }

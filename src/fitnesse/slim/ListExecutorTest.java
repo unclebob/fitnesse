@@ -37,25 +37,25 @@ public class ListExecutorTest {
   @Test()
   public void invalidOperation() throws Exception {
     statements.add(list("inv1", "invalidOperation"));
-    assertExceptionReturned("inv1");
+    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation.>>", "inv1");
   }
 
   @Test(expected = SlimError.class)
   public void malformedStatement() throws Exception {
     statements.add(list("id", "call", "notEnoughArguments"));
-    assertExceptionReturned("id");
+    assertExceptionReturned("XX", "id");
   }
 
-  private void assertExceptionReturned(String returnTag) {
+  private void assertExceptionReturned(String message, String returnTag) {
     Map<String, Object> results = SlimClient.resultToMap(executor.execute(statements));
     String result = (String) results.get(returnTag);
-    assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1);
+    assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1 && result.indexOf(message) != -1);
   }
 
   @Test
   public void noSuchInstance() throws Exception {
     statements.add(list("id", "call", "noSuchInstance", "noSuchMethod"));
-    assertExceptionReturned("id");
+    assertExceptionReturned("message:<<NO_INSTANCE noSuchInstance.>>", "id");
   }
 
   @Test

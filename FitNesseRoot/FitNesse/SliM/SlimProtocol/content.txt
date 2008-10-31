@@ -65,6 +65,16 @@ So when you send a list of instructions, what you are really sending is a string
 !4 Exceptions
 Sometimes a function or a constructor will throw an exception in response to a ''make'', ''call'', or ''callAndAssign'' instruction. When this happens, the response value for that instruction will be: "__EXCEPTION__:''<exception string>''".  The ''<exception string>'' ought to be a stack trace or some other relevant debugging information.  If you want a nice yellow message to appear in one of the SLIM tables, then somewhere in the ''<<exception string>>'' put ''message:<<'' in front of the message and ''>>'' after it.  {{{message:<<can't find constructor>>}}}
 
+There are some standard exception messages that every Slim implementation should create.
+
+|COULD_NOT_INVOKE_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class whose instructor cannot be invoked.|
+|NO_METHOD_IN_CLASS ''<some method>'' ''<some class>''|Where ''<some method>'' is the name of the missing method.| 
+|NO_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class that is missing the constructor.|
+|NO_CONVERTER_FOR_ARGUMENT_NUMBER ''<argument type>''|Where ''<argument type>'' is the class that has no corresponding converter.|
+|NO_INSTANCE ''<instance name>''|Where ''<instance name>'' is the name of the missing instance.|
+|NO_CLASS ''<some class>''|Where ''<some class>'' is the class that could not be found.|
+|MALFORMED_INSTRUCTION [''instruction list'']|Where ''instruction list'' is a comma separated list of the instruction strings.|
+
 !4 Type Conversions
 The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.
 

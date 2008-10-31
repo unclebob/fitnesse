@@ -101,19 +101,19 @@ public class SlimServiceTest {
     addImportAndMake();
     statements.add(list("id", "call", "testSlim", "noSuchFunction"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertExceptionWasReturned("id", results);
+    assertContainsException("message:<<NO_METHOD_IN_CLASS noSuchFunction[0] fitnesse.slim.test.TestSlim.>>", "id", results);
   }
 
-  private void assertExceptionWasReturned(String id, Map<String, Object> results) {
+  private void assertContainsException(String message, String id, Map<String, Object> results) {
     String result = (String)results.get(id);
-    assertTrue(result.indexOf(SlimServer.EXCEPTION_TAG) != -1 );
+    assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1  && result.indexOf(message) != -1);
   }
 
   @Test
   public void makeClassThatDoesntExist() throws Exception {
     statements.add(list("m1", "make","me","NoSuchClass"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertExceptionWasReturned("m1", results);
+    assertContainsException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR NoSuchClass[0]>>", "m1", results);
   }
 
   @Test
@@ -121,7 +121,7 @@ public class SlimServiceTest {
     addImportAndMake();
     statements.add(list("id", "call", "noInstance", "f"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertExceptionWasReturned("id", results);
+    assertContainsException("message:<<NO_INSTANCE noInstance.>>", "id", results);
   }
 
   @Test
