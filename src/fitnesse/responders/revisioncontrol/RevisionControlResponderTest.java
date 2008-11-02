@@ -30,54 +30,57 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
-        request = new MockRequest();
-        responder = new TestRevisionControlResponder();
+        this.root = InMemoryPage.makeRoot("RooT");
+        this.context = new FitNesseContext(this.root);
+        this.request = new MockRequest();
+        this.responder = new TestRevisionControlResponder();
     }
 
     public void testShouldReturnPageNotFoundMessageWhenPageDoesNotExist() throws Exception {
+        replay(this.revisionController);
         final String pageName = "InvalidPageName";
-        request.setResource(pageName);
+        this.request.setResource(pageName);
         invokeResponderAndCheckResponseContains("The requested resource: <i>" + pageName + "</i> was not found.");
     }
 
     public void testShouldReturnInvalidWikiPageMessageIfWikiPageDoesNotExistOnFileSystem() throws Exception {
+        replay(this.revisionController);
         final String inMemoryPageName = "InMemoryPage";
-        root.addChildPage(inMemoryPageName);
-        request.setResource(inMemoryPageName);
-        invokeResponderAndCheckResponseContains("The page " + inMemoryPageName + " doesn't support '" + revisionControlOperation + "' operation.");
+        this.root.addChildPage(inMemoryPageName);
+        this.request.setResource(inMemoryPageName);
+        invokeResponderAndCheckResponseContains("The page " + inMemoryPageName + " doesn't support '" + this.revisionControlOperation + "' operation.");
     }
 
     public void testShouldResolveSymbolicLinkToActualPageAndApplyRevisionControlOperations() throws Exception {
+        replay(this.revisionController);
         final String symbolicLinkName = "SymbolicLink";
         final String pageOneName = "PageOne";
         final String symbolicLinkPageName = pageOneName + "." + symbolicLinkName;
         createSymbolicLink(symbolicLinkName, pageOneName);
 
-        request.setResource(symbolicLinkPageName);
-        invokeResponderAndCheckResponseContains("The page " + symbolicLinkPageName + " doesn't support '" + revisionControlOperation + "' operation.");
+        this.request.setResource(symbolicLinkPageName);
+        invokeResponderAndCheckResponseContains("The page " + symbolicLinkPageName + " doesn't support '" + this.revisionControlOperation + "' operation.");
     }
 
     public void testShouldReportPerformRevisionControlOperation() throws Exception {
-        final String expectedResponse = "Attempted to '" + revisionControlOperation + "' the page '" + pageName
-                + "'. The result was:<br/><br/><pre>Operation: '" + revisionControlOperation + "' was successful.";
-        revisionController = createNiceMock(RevisionController.class);
-        expect(revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
-        expect(revisionController.checkState((String) anyObject())).andStubReturn(NullState.UNKNOWN);
-        replay(revisionController);
+        final String expectedResponse = "Attempted to '" + this.revisionControlOperation + "' the page '" + pageName
+                + "'. The result was:<br/><br/><pre>Operation: '" + this.revisionControlOperation + "' was successful.";
+        this.revisionController = createNiceMock(RevisionController.class);
+        expect(this.revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
+        expect(this.revisionController.checkState((String) anyObject())).andStubReturn(NullState.UNKNOWN);
+        replay(this.revisionController);
         createExternalRoot();
-        root.getPageCrawler().addPage(root, PathParser.parse(pageName), "Test Page Content");
-        request.setResource(pageName);
+        this.root.getPageCrawler().addPage(this.root, PathParser.parse(pageName), "Test Page Content");
+        this.request.setResource(pageName);
 
         invokeResponderAndCheckResponseContains(expectedResponse);
-        verify(revisionController);
+        verify(this.revisionController);
     }
 
-    private void createSymbolicLink(String symbolicLinkName, String pageOneName) throws Exception {
+    private void createSymbolicLink(final String symbolicLinkName, final String pageOneName) throws Exception {
         final String pageTwoName = "PageTwo";
-        final WikiPage pageOne = root.addChildPage(pageOneName);
-        root.addChildPage(pageTwoName);
+        final WikiPage pageOne = this.root.addChildPage(pageOneName);
+        this.root.addChildPage(pageTwoName);
 
         final PageData data = pageOne.getData();
         final WikiPageProperties properties = data.getProperties();
@@ -86,7 +89,7 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
         pageOne.commit(data);
     }
 
-    private WikiPageProperty getSymLinkProperty(WikiPageProperties properties) {
+    private WikiPageProperty getSymLinkProperty(final WikiPageProperties properties) {
         WikiPageProperty symLinks = properties.getProperty(SymbolicPage.PROPERTY_NAME);
         symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
         return symLinks;
@@ -94,21 +97,21 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
 
     private class TestRevisionControlResponder extends RevisionControlResponder {
         public TestRevisionControlResponder() {
-            super(new RevisionControlOperation(revisionControlOperation, "", "") {
+            super(new RevisionControlOperation(RevisionControlResponderTest.this.revisionControlOperation, "", "") {
 
                 @Override
-                public void execute(RevisionController revisionController, String... filePath) throws RevisionControlException {
+                public void execute(final RevisionController revisionController, final String... filePath) throws RevisionControlException {
                 }
             });
         }
 
         @Override
-        protected String responseMessage(String resource) throws Exception {
+        protected String responseMessage(final String resource) throws Exception {
             return "End of operation.";
         }
 
         @Override
-        protected void performOperation(FileSystemPage page) throws Exception {
+        protected void performOperation(final FileSystemPage page) throws Exception {
         }
 
     }

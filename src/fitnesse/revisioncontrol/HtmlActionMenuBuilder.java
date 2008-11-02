@@ -12,7 +12,7 @@ public class HtmlActionMenuBuilder {
             final WikiPage wikiPage = pageData.getWikiPage();
             if (shouldDisplayRevisionControlActions(wikiPage)) {
                 tag.add(makeRevisionControlActionMenuHeader());
-                final State state = ((FileSystemPage) wikiPage).checkState();
+                final State state = ((RevisionControllable) wikiPage).checkState();
                 final RevisionControlOperation[] operations = state.operations();
                 for (final RevisionControlOperation operation : operations)
                     tag.add(operation.makeActionLink(pageName));
@@ -22,7 +22,7 @@ public class HtmlActionMenuBuilder {
 
     private static boolean shouldDisplayRevisionControlActions(WikiPage wikiPage) throws Exception {
         if (wikiPage instanceof FileSystemPage)
-            return ((FileSystemPage) wikiPage).isExternallyRevisionControlled();
+            return ((RevisionControllable) wikiPage).isExternallyRevisionControlled();
         return false;
     }
 

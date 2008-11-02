@@ -2,6 +2,7 @@ package fitnesse.revisioncontrol;
 
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
@@ -16,30 +17,33 @@ public class NullRevisionController implements RevisionController {
         this(new Properties());
     }
 
-    public NullRevisionController(Properties properties) {
+    public NullRevisionController(final Properties properties) {
     }
 
-    public void add(String... filePaths) throws RevisionControlException {
+    public void add(final String... filePaths) throws RevisionControlException {
     }
 
-    public void checkin(String... filePaths) throws RevisionControlException {
+    public void checkin(final String... filePaths) throws RevisionControlException {
     }
 
-    public void checkout(String... filePaths) throws RevisionControlException {
+    public void checkout(final String... filePaths) throws RevisionControlException {
     }
 
-    public State checkState(String... filePaths) throws RevisionControlException {
+    public State checkState(final String... filePaths) throws RevisionControlException {
         return UNKNOWN;
     }
 
-    public void delete(String... filePaths) throws RevisionControlException {
+    public void delete(final String... filePaths) throws RevisionControlException {
     }
 
-    public PageData getRevisionData(FileSystemPage page, String label) throws Exception {
+    public void move(final File src, final File dest) throws RevisionControlException {
+    }
+
+    public PageData getRevisionData(final FileSystemPage page, final String label) throws Exception {
         return page.getData();
     }
 
-    public Collection<VersionInfo> history(FileSystemPage page) throws Exception {
+    public Collection<VersionInfo> history(final FileSystemPage page) throws Exception {
         return new HashSet<VersionInfo>();
     }
 
@@ -47,19 +51,19 @@ public class NullRevisionController implements RevisionController {
         return true;
     }
 
-    public VersionInfo makeVersion(FileSystemPage page, PageData data) throws Exception {
+    public VersionInfo makeVersion(final FileSystemPage page, final PageData data) throws Exception {
         return new VersionInfo(page.getFileSystemPath());
     }
 
-    public void prune(FileSystemPage page) {
+    public void prune(final FileSystemPage page) {
     }
 
-    public void removeVersion(FileSystemPage page, String versionName) throws Exception {
+    public void removeVersion(final FileSystemPage page, final String versionName) throws Exception {
     }
 
-    public void revert(String... filePaths) throws RevisionControlException {
+    public void revert(final String... filePaths) throws RevisionControlException {
     }
 
-    public void update(String... filePaths) throws RevisionControlException {
+    public void update(final String... filePaths) throws RevisionControlException {
     }
 }

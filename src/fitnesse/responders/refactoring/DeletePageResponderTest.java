@@ -2,6 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.refactoring;
 
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -12,67 +14,56 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-import java.util.List;
+public class DeletePageResponderTest extends ResponderTestCase {
+    private final String level1Name = "LevelOne";
+    private final WikiPagePath level1Path = PathParser.parse(this.level1Name);
+    private final String level2Name = "LevelTwo";
+    private final WikiPagePath level2Path = PathParser.parse(this.level2Name);
+    private final WikiPagePath level2FullPath = this.level1Path.copy().addNameToEnd(this.level2Name);
+    private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
 
-public class DeletePageResponderTest extends ResponderTestCase
-{
-	final String level1Name = "LevelOne";
-	final WikiPagePath level1Path = PathParser.parse(level1Name);
-	final String level2Name = "LevelTwo";
-	final WikiPagePath level2Path = PathParser.parse(level2Name);
-	final WikiPagePath level2FullPath = level1Path.copy().addNameToEnd(level2Name);
-	final String qualifiedLevel2Name = PathParser.render(level2FullPath);
+    public void testDeleteConfirmation() throws Exception {
+        WikiPage level1 = this.crawler.addPage(this.root, this.level1Path);
+        this.crawler.addPage(level1, this.level2Path);
+        MockRequest request = new MockRequest();
+        request.setResource(this.qualifiedLevel2Name);
+        request.addInput("deletePage", "");
 
-	public void setUp() throws Exception
-	{
-		super.setUp();
-	}
+        SimpleResponse response = (SimpleResponse) this.responder.makeResponse(new FitNesseContext(this.root), request);
+        String content = response.getContent();
+        assertSubString("Are you sure you want to delete " + this.qualifiedLevel2Name, content);
+    }
 
-	public void testDeleteConfirmation() throws Exception
-	{
-		WikiPage level1 = crawler.addPage(root, level1Path);
-		crawler.addPage(level1, level2Path);
-		MockRequest request = new MockRequest();
-		request.setResource(qualifiedLevel2Name);
-		request.addInput("deletePage", "");
+    public void testDeletePage() throws Exception {
+        WikiPage level1 = this.crawler.addPage(this.root, this.level1Path);
+        this.crawler.addPage(level1, this.level2Path);
+        assertTrue(this.crawler.pageExists(this.root, this.level1Path));
+        MockRequest request = new MockRequest();
+        request.setResource(this.level1Name);
+        request.addInput("confirmed", "yes");
 
-		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-		String content = response.getContent();
-		assertSubString("Are you sure you want to delete " + qualifiedLevel2Name, content);
-	}
+        SimpleResponse response = (SimpleResponse) this.responder.makeResponse(new FitNesseContext(this.root), request);
+        String page = response.getContent();
+        assertNotSubString("Are you sure you want to delete", page);
+        assertEquals(303, response.getStatus());
+        assertEquals("root", response.getHeader("Location"));
+        assertFalse(this.crawler.pageExists(this.root, PathParser.parse(this.level1Name)));
 
-	public void testDeletePage() throws Exception
-	{
-		WikiPage level1 = crawler.addPage(root, level1Path);
-		crawler.addPage(level1, level2Path);
-		assertTrue(crawler.pageExists(root, level1Path));
-		MockRequest request = new MockRequest();
-		request.setResource(level1Name);
-		request.addInput("confirmed", "yes");
+        List children = this.root.getChildren();
+        assertEquals(0, children.size());
+    }
 
-		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-		String page = response.getContent();
-		assertNotSubString("Are you sure you want to delete", page);
-		assertEquals(303, response.getStatus());
-		assertEquals("root", response.getHeader("Location"));
-		assertFalse(crawler.pageExists(root, PathParser.parse(level1Name)));
+    public void testDontDeleteFrontPage() throws Exception {
+        this.crawler.addPage(this.root, PathParser.parse("FrontPage"), "Content");
+        this.request.setResource("FrontPage");
+        this.request.addInput("confirmed", "yes");
+        Response response = this.responder.makeResponse(new FitNesseContext(this.root), this.request);
+        assertEquals(303, response.getStatus());
+        assertEquals("FrontPage", response.getHeader("Location"));
+    }
 
-		List children = root.getChildren();
-		assertEquals(0, children.size());
-	}
-
-	public void testDontDeleteFrontPage() throws Exception
-	{
-		crawler.addPage(root, PathParser.parse("FrontPage"), "Content");
-		request.setResource("FrontPage");
-		request.addInput("confirmed", "yes");
-		Response response = responder.makeResponse(new FitNesseContext(root), request);
-		assertEquals(303, response.getStatus());
-		assertEquals("FrontPage", response.getHeader("Location"));
-	}
-
-	protected Responder responderInstance()
-	{
-		return new DeletePageResponder();
-	}
+    @Override
+    protected Responder responderInstance() {
+        return new DeletePageResponder();
+    }
 }

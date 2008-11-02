@@ -12,61 +12,62 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 
-import fitnesse.revisioncontrol.RevisionControlException;
 import fitnesse.revisioncontrol.RevisionControlOperation;
+import fitnesse.revisioncontrol.RevisionControllable;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
 import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
 import fitnesse.util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
-public class FileSystemPage extends CachingPage {
+public class FileSystemPage extends CachingPage implements RevisionControllable {
     public static final String contentFilename = "/content.txt";
     public static final String propertiesFilename = "/properties.xml";
 
     private final String path;
     private final RevisionController revisioner;
 
-    protected FileSystemPage(String path, String name, WikiPage parent, RevisionController revisioner) throws Exception {
+    protected FileSystemPage(final String path, final String name, final WikiPage parent, final RevisionController revisioner) throws Exception {
         super(name, parent);
         this.path = path;
         this.revisioner = revisioner;
     }
 
-    public static WikiPage makeRoot(String path, String name) throws Exception {
+    public static WikiPage makeRoot(final String path, final String name) throws Exception {
         return makeRoot(path, name, new ZipFileRevisionController());
     }
 
-    public static WikiPage makeRoot(String path, String name, RevisionController revisioner) throws Exception {
+    public static WikiPage makeRoot(final String path, final String name, final RevisionController revisioner) throws Exception {
         return new FileSystemPage(path, name, null, revisioner);
     }
 
     @Override
-    public void removeChildPage(String name) throws Exception {
+    public void removeChildPage(final String name) throws Exception {
         super.removeChildPage(name);
         final File fileToBeDeleted = new File(getFileSystemPath() + "/" + name);
-        // revisioner.delete(fileToBeDeleted.getAbsolutePath());
         FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
     }
 
     @Override
-    public boolean hasChildPage(String pageName) throws Exception {
+    public boolean hasChildPage(final String pageName) throws Exception {
         final File f = new File(getFileSystemPath() + "/" + pageName);
         if (f.exists()) {
             addChildPage(pageName);
             return true;
-        } else
-            return false;
+        }
+        return false;
     }
 
     protected synchronized void saveContent(String content) throws Exception {
-        if (content == null)
+        if (content == null) {
             return;
+        }
 
         final String separator = System.getProperty("line.separator");
 
-        if (content.endsWith("|"))
+        if (content.endsWith("|")) {
             content += separator;
+        }
 
         content = content.replaceAll("\r\n", separator);
 
@@ -76,12 +77,13 @@ public class FileSystemPage extends CachingPage {
             writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
             writer.write(content);
         } finally {
-            if (writer != null)
+            if (writer != null) {
                 writer.close();
+            }
         }
     }
 
-    protected synchronized void saveAttributes(WikiPageProperties attributes) throws Exception {
+    protected synchronized void saveAttributes(final WikiPageProperties attributes) throws Exception {
         OutputStream output = null;
         String propertiesFileName = "<unknown>";
         try {
@@ -93,21 +95,21 @@ public class FileSystemPage extends CachingPage {
             e.printStackTrace();
             throw e;
         } finally {
-            if (output != null)
+            if (output != null) {
                 output.close();
+            }
         }
     }
 
     @Override
-    protected WikiPage createChildPage(String name) throws Exception {
+    protected WikiPage createChildPage(final String name) throws Exception {
         final FileSystemPage newPage = new FileSystemPage(getFileSystemPath(), name, this, this.revisioner);
         final File baseDir = new File(newPage.getFileSystemPath());
         baseDir.mkdirs();
-        // revisioner.add(baseDir.getAbsolutePath());
         return newPage;
     }
 
-    private void loadContent(PageData data) throws Exception {
+    private void loadContent(final PageData data) throws Exception {
         String content = "";
         final String name = getFileSystemPath() + contentFilename;
         final File input = new File(name);
@@ -123,13 +125,15 @@ public class FileSystemPage extends CachingPage {
         final File thisDir = new File(getFileSystemPath());
         if (thisDir.exists()) {
             final String[] subFiles = thisDir.list();
-            for (final String subFile : subFiles)
-                if (fileIsValid(subFile, thisDir) && !children.containsKey(subFile))
-                    children.put(subFile, getChildPage(subFile));
+            for (final String subFile : subFiles) {
+                if (fileIsValid(subFile, thisDir) && !this.children.containsKey(subFile)) {
+                    this.children.put(subFile, getChildPage(subFile));
+                }
+            }
         }
     }
 
-    private byte[] readContentBytes(File input) throws FileNotFoundException, IOException {
+    private byte[] readContentBytes(final File input) throws FileNotFoundException, IOException {
         FileInputStream inputStream = null;
         try {
             final byte[] bytes = new byte[(int) input.length()];
@@ -137,40 +141,43 @@ public class FileSystemPage extends CachingPage {
             inputStream.read(bytes);
             return bytes;
         } finally {
-            if (inputStream != null)
+            if (inputStream != null) {
                 inputStream.close();
+            }
         }
     }
 
-    private boolean fileIsValid(String filename, File dir) {
+    private boolean fileIsValid(final String filename, final File dir) {
         if (WikiWordWidget.isWikiWord(filename)) {
             final File f = new File(dir, filename);
-            if (f.isDirectory())
+            if (f.isDirectory()) {
                 return true;
+            }
         }
         return false;
     }
 
     private String getParentFileSystemPath() throws Exception {
-        return parent != null ? ((FileSystemPage) parent).getFileSystemPath() : path;
+        return this.parent != null ? ((FileSystemPage) this.parent).getFileSystemPath() : this.path;
     }
 
     public String getFileSystemPath() throws Exception {
         return getParentFileSystemPath() + "/" + getName();
     }
 
-    private void loadAttributes(PageData data) throws Exception {
+    private void loadAttributes(final PageData data) throws Exception {
         final File file = new File(getFileSystemPath() + propertiesFilename);
-        if (file.exists())
+        if (file.exists()) {
             try {
                 attemptToReadPropertiesFile(file, data);
             } catch (final Exception e) {
                 System.err.println("Could not read properties file:" + file.getPath());
                 e.printStackTrace();
             }
+        }
     }
 
-    private void attemptToReadPropertiesFile(File file, PageData data) throws Exception {
+    private void attemptToReadPropertiesFile(final File file, final PageData data) throws Exception {
         InputStream input = null;
         try {
             final WikiPageProperties props = new WikiPageProperties();
@@ -178,24 +185,18 @@ public class FileSystemPage extends CachingPage {
             props.loadFromXmlStream(input);
             data.setProperties(props);
         } finally {
-            if (input != null)
+            if (input != null) {
                 input.close();
+            }
         }
     }
 
     @Override
-    public void doCommit(PageData data) throws Exception {
+    public void doCommit(final PageData data) throws Exception {
         data.getProperties().setLastModificationTime(new Date());
         saveContent(data.getContent());
         saveAttributes(data.getProperties());
-        // addToReversionControl(contentFilePath());
-        // addToReversionControl(propertiesFilePath());
-        revisioner.prune(this);
-    }
-
-    protected void addToReversionControl(String filePath) throws RevisionControlException {
-        if (revisioner.checkState(filePath).isNotUnderRevisionControl())
-            revisioner.add(filePath);
+        this.revisioner.prune(this);
     }
 
     @Override
@@ -203,12 +204,12 @@ public class FileSystemPage extends CachingPage {
         final PageData pagedata = new PageData(this);
         loadContent(pagedata);
         loadAttributes(pagedata);
-        pagedata.addVersions(revisioner.history(this));
+        pagedata.addVersions(this.revisioner.history(this));
         return pagedata;
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
-        return revisioner.getRevisionData(this, versionName);
+    public PageData getDataVersion(final String versionName) throws Exception {
+        return this.revisioner.getRevisionData(this, versionName);
     }
 
     @Override
@@ -217,12 +218,12 @@ public class FileSystemPage extends CachingPage {
         return makeVersion(data);
     }
 
-    protected VersionInfo makeVersion(PageData data) throws Exception {
+    protected VersionInfo makeVersion(final PageData data) throws Exception {
         return this.revisioner.makeVersion(this, data);
     }
 
-    protected void removeVersion(String versionName) throws Exception {
-        revisioner.removeVersion(this, versionName);
+    protected void removeVersion(final String versionName) throws Exception {
+        this.revisioner.removeVersion(this, versionName);
     }
 
     @Override
@@ -234,15 +235,18 @@ public class FileSystemPage extends CachingPage {
         }
     }
 
-    public void execute(RevisionControlOperation operation) throws Exception {
-        operation.execute(revisioner, contentFilePath(), propertiesFilePath());
+    /**
+     * @see fitnesse.wiki.RevisionControllable#execute(fitnesse.revisioncontrol.RevisionControlOperation)
+     */
+    public void execute(final RevisionControlOperation operation) throws Exception {
+        operation.execute(this.revisioner, contentFilePath(), propertiesFilePath());
     }
 
     private String propertiesFilePath() throws Exception {
         return absolutePath(propertiesFilename);
     }
 
-    private String absolutePath(String fileName) throws Exception {
+    private String absolutePath(final String fileName) throws Exception {
         return new File(getFileSystemPath() + fileName).getAbsolutePath();
     }
 
@@ -251,10 +255,10 @@ public class FileSystemPage extends CachingPage {
     }
 
     public boolean isExternallyRevisionControlled() {
-        return revisioner.isExternalReversionControlEnabled();
+        return this.revisioner.isExternalReversionControlEnabled();
     }
 
     public State checkState() throws Exception {
-        return revisioner.checkState(contentFilePath(), propertiesFilePath());
+        return this.revisioner.checkState(contentFilePath(), propertiesFilePath());
     }
 }

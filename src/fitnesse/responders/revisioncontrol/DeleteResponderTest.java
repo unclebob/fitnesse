@@ -9,90 +9,96 @@ public class DeleteResponderTest extends RevisionControlTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        responder = new DeleteResponder();
+        this.responder = new DeleteResponder();
     }
 
     public void testShouldAskRevisionControllerToDeletePage() throws Exception {
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
-        replay(revisionController);
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
+        replay(this.revisionController);
 
         createPage(FS_GRAND_CHILD_PAGE);
-        request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE + "." + FS_GRAND_CHILD_PAGE);
+        this.request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE + "." + FS_GRAND_CHILD_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
+
+        assertPageDoesNotExists(FS_GRAND_CHILD_PAGE);
     }
 
     public void testShouldRemovePageReferenceFromParentAfterDeletingChildPage() throws Exception {
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
-        replay(revisionController);
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
+        replay(this.revisionController);
 
         createPage(FS_GRAND_CHILD_PAGE);
-        request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE + "." + FS_GRAND_CHILD_PAGE);
+        this.request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE + "." + FS_GRAND_CHILD_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
-        assertNull("Parent page had a reference to child file", childPage.getChildPage(FS_GRAND_CHILD_PAGE));
+        assertNull("Parent page had a reference to child file", this.childPage.getChildPage(FS_GRAND_CHILD_PAGE));
+        assertPageDoesNotExists(FS_GRAND_CHILD_PAGE);
     }
 
     public void testShouldDeleteAllChildPages() throws Exception {
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
-        replay(revisionController);
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        replay(this.revisionController);
 
         createPage(FS_GRAND_CHILD_PAGE);
-        request.setResource(FS_PARENT_PAGE);
+        this.request.setResource(FS_PARENT_PAGE);
         invokeResponderAndCheckSuccessStatus();
+        assertPageDoesNotExists(FS_GRAND_CHILD_PAGE);
+        assertPageDoesNotExists(FS_CHILD_PAGE);
+        assertPageDoesNotExists(FS_PARENT_PAGE);
     }
 
     public void testShouldReportErrorMsgIfDeleteOperationFails() throws Exception {
         final String errorMsg = "Cannot delete files from Revision Control";
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
         expectLastCall().andThrow(new RevisionControlException(errorMsg));
-        replay(revisionController);
+        replay(this.revisionController);
 
         createPage(FS_PARENT_PAGE);
-        request.setResource(FS_PARENT_PAGE);
+        this.request.setResource(FS_PARENT_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
 
-        assertSubString(errorMsg, response.getContent());
+        assertSubString(errorMsg, this.response.getContent());
     }
 
     public void testAfterDeletingPageShouldProvideLinkToParentPage() throws Exception {
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
-        replay(revisionController);
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
+        replay(this.revisionController);
 
         createPage(FS_CHILD_PAGE);
-        request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE);
+        this.request.setResource(FS_PARENT_PAGE + "." + FS_CHILD_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
 
-        assertSubString("Click <a href=\"" + FS_PARENT_PAGE + "\">here</a>", response.getContent());
+        assertSubString("Click <a href=\"" + FS_PARENT_PAGE + "\">here</a>", this.response.getContent());
     }
 
     public void testAfterDeletingTopMostPageShouldProvideLinkToWikiRootPage() throws Exception {
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
-        replay(revisionController);
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_PARENT_PAGE));
+        replay(this.revisionController);
 
         createPage(FS_PARENT_PAGE);
-        request.setResource(FS_PARENT_PAGE);
+        this.request.setResource(FS_PARENT_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
 
-        assertSubString("Click <a href=\"\">here</a>", response.getContent());
+        assertSubString("Click <a href=\"\">here</a>", this.response.getContent());
     }
 
     public void testShouldReportErrorMsgIfChildPagesAreLockedOrCheckedOut() throws Exception {
         final String errorMsg = "Child Page cannot be deleted from Revision Control";
-        revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
+        this.revisionController.delete(contentAndPropertiesFilePathFor(FS_CHILD_PAGE));
         expectLastCall().andThrow(new RevisionControlException(errorMsg));
-        replay(revisionController);
+        replay(this.revisionController);
 
         createPage(FS_CHILD_PAGE);
-        request.setResource(FS_PARENT_PAGE);
+        this.request.setResource(FS_PARENT_PAGE);
 
         invokeResponderAndCheckSuccessStatus();
 
-        assertSubString(errorMsg, response.getContent());
+        assertSubString(errorMsg, this.response.getContent());
     }
 }

@@ -1,5 +1,6 @@
 package fitnesse.revisioncontrol;
 
+import java.io.File;
 import java.util.Collection;
 
 import fitnesse.wiki.FileSystemPage;
@@ -21,6 +22,8 @@ public interface RevisionController {
     public State checkState(String... filePaths) throws RevisionControlException;
 
     public void update(String... filePaths) throws RevisionControlException;
+
+    public void move(File src, File dest) throws RevisionControlException;
 
     public PageData getRevisionData(FileSystemPage page, String label) throws Exception;
 
