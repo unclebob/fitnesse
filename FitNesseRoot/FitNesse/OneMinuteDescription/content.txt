@@ -7,7 +7,7 @@ FitNesse enables customers, testers, and programmers to '''learn what their soft
 
 It's an invaluable way to collaborate on complicated problems (and get them right) early in development.
 
-(''The above description is adapted from James Shore's description of Ward Cunningham's FitFramework, upon which FitNesse depends.'')
+(''The above description is adapted from James Shore's description of Ward Cunningham's FitFramework, which is one of the test systems upon which FitNesse depends.'')
 !3 FitNesse is a software testing tool.
 From another perspective, FitNesse is a lightweight, open-source framework that makes it easy for software teams to:
   * Collaboratively define AcceptanceTests -- web pages containing simple tables of inputs and expected outputs.
@@ -19,7 +19,7 @@ From another perspective, FitNesse is a lightweight, open-source framework that 
   * Just run it and then direct your browser to the machine where it is running (see DownloadingAndInstallingFitNesse).
 !3     --> Want a quick introduction? Check out the TwoMinuteExample.
 ----
-!img http://docs.fitnesse.org/files/images/FtnsArch16jul05.gif
+!img http://files/images/fitnesse_architecture.jpg
 
 
   

@@ -3,12 +3,12 @@ package fitnesse.slim;
 import fitnesse.util.StreamReader;
 
 import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 public class SlimClient {
   private Socket client;
@@ -49,7 +49,8 @@ public class SlimClient {
     writeString(instructions);
     String resultLength = reader.read(6);
     String colon = reader.read(1);
-    String results = reader.read(Integer.parseInt(resultLength));
+    String results = null;
+    results = reader.read(Integer.parseInt(resultLength));
     List<Object> resultList = ListDeserializer.deserialize(results);
     return resultToMap(resultList);
   }
@@ -68,7 +69,7 @@ public class SlimClient {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
       List<Object> resultList = (List<Object>) aResult;
-      map.put((String)resultList.get(0), resultList.get(1));
+      map.put((String) resultList.get(0), resultList.get(1));
     }
     return map;
   }

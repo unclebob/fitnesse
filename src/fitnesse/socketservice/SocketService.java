@@ -78,7 +78,9 @@ public class SocketService
 			Thread t;
 			synchronized(threads)
 			{
-				t = (Thread) threads.getFirst();
+        if (threads.size() < 1)
+          return;
+        t = (Thread) threads.getFirst();
 			}
 			t.join();
 		}

@@ -1,3 +1,6 @@
+!*< hidden
+!define TEST_SYSTEM {slim}
+*!
 [[A One-Minute Description][OneMinuteDescription]]
 [[A Two-Minute Example][TwoMinuteExample]]
 !1 Under The Covers : Fixture Code
@@ -5,34 +8,33 @@ Let's look at our division test table again:
 
 |eg.Division|
 |numerator|denominator|quotient?|
-|10|2|5|
+|10|2|5.0|
 |12.6|3|4.2|
 |100|4|33|
 
 What '''really''' happens when we click that test button? (Try clicking it again.) What gets run?
-   * First, FitNesse submits the test table to the underlying FitFramework (FitNesse is a wiki GUI built on top of Fit).
-   * Fit looks for and runs the fixture code corresponding to the test table.
+   * First, FitNesse submits the test table to [[Slim][.FitNesse.SliM]], the underlying test system (FitNesse is a wiki GUI built on top of Slim).
+   * Slim looks for and runs the fixture code corresponding to the test table.
    * By design, the fixture code calls some underlying application code to do the real work, and report results back to the fixture
    * Fit gives Fitnesse back the results from running the fixture code
    * FitNesse figures out whether to turn table cells red or green (or yellow, if an exception was thrown) and displays the results page accordingly
 
 !3 What is Fixture Code?
-The fixture is the Java or C# class that FitNesse and Fit call to process the contents of the table. In the top row of the table above, "eg" specifies a Java package or C# namespace, and "Division" specifies the actual class to be called.
+The fixture is the Java (or some other supported language) class that Slim to process the contents of the table. In the top row of the table above, "eg" specifies a Java package (or other language namespace), and "Division" specifies the actual class to be called.
 
 Here is what the Java version of the Division class might look like:
 {{{
-public class Division extends ColumnFixture {
-  public double numerator, denominator;
-  public double quotient() {
-    return numerator/denominator;
-  }
+public class Division {
+  private double numerator, denominator;
+  public void setNumerator(double numerator) {this.numerator = numerator;}
+  public void setDenominator(double denominator} {this.denominator = denominator;}
+  public double quotient() {return numerator/denominator;}
 } }}}
-!3 How Fit Uses Fixture Code to Process the Test Table
-Notice that our Division class extends ColumnFixture (of the several TestTableStyles, this is the one we are currently using). Next notice our public ''numerator'' and ''denominator'' fields: as Fit processes our rows of example data ('''from left to right'''), it stores the values from the ''numerator'' and ''denominator'' columns in the corresponding public fields in our Division class. For each row, it then calls the quotient() method on our Division class, which returns what we would expect it to: the numerator divided by the denominator. So for our Division table, Fit puts 10 in the numerator field and 2 in the denominator field, and then calls quotient(), which uses those two values.
+!3 How Slim Uses Fixture Code to Process the Test Table
+The Division table is an example of a [[Decision Table][FitNesse.SliM.DecisionTable]]; just one of many different kinds of tables. Slim processes the rows of example data ('''from left to right'''), it stores the values from the ''numerator'' and ''denominator'' columns in the corresponding fields in our Division class using the setter functions. For each row, it then calls the quotient() method on our Division class, which returns what we would expect it to: the numerator divided by the denominator. So the Decision Table directs Slim to call setNumerator(10) and setDenominator(2); and then to call quotient().  The value is returned to the DecisionTable which colors the appropriate cell.
 
-Click the Test button again and see what happens to the column of expected outputs under the ''quotient?'' header. For each cell of expected output, Fit compares the value it expects to get back with what it actually gets. If the return value matches the value in the corresponding table cell, FitNesse turns the cell green. Otherwise FitNesse turns the cell red, and shows both the expected and actual values. (If Fit encounters an exception, or cannot find a fixture, field, or method, it turns the corresponding table cell yellow, and inserts a stack trace.)
+Click the Test button again and see what happens to the column of expected outputs under the ''quotient?'' header. For each cell of expected output, the Decision Table compares the value it expects to get back with what it actually gets. If the return value matches the value in the corresponding table cell, FitNesse turns the cell green. Otherwise FitNesse turns the cell red, and shows both the expected and actual values. (If Slim encounters an exception, or cannot find a fixture, field, or method, it turns the corresponding table cell yellow, and inserts a stack trace.)
 
-Notice one last thing. Our code does none of the work of passing values from those public fields into our public method. Fit handles all of that for us. For each row in our test table, Fit instantiates Division, and uses the magic of reflection to find the right fields, get the right values into them, and then call the right method. That magic is what enables us to keep our fixture code so simple.
 !3 Wait a Minute. That's ''Too'' Simple.
 How right you are. In the real world, the fixture code would not be doing any of the real work (though a single division operation is not much work). The fixture code would delegate to real application code, which in turn would do the work. In general, fixture code should be '''as thin as possible'''. It should be nothing but '''piping and wiring''' between the FitNesse table and the application code under test.
 
@@ -59,12 +61,16 @@ It says that if we add a player named Al to our game successfully, the total num
 What might the fixture code for that look like (so far)? How about this: {{{
 import fit.ColumnFixture;
 
-public class AddRemovePlayerFixture extends ColumnFixture {
-  public String playerName;
+public class AddRemovePlayerFixture {
+  private String playerName;
   private Game theGame;
 
+  public void setPlayerName(String playerName) {
+    this.playerName = playerName;
+  }
+
   public boolean addPlayer() {
-    theGame = StaticGame.getInstance();
+    theGame = StaticGame.theGame;
     Player thePlayer = theGame.addPlayer(playerName);
     return theGame.playerIsPlaying(thePlayer);
   }
@@ -72,7 +78,7 @@ public class AddRemovePlayerFixture extends ColumnFixture {
   public int countPlayers() {
     return theGame.getNumberOfPlayers();
   }
-} }}} Yes, I think we have arrived at a more realistic level of complexity. What does this code mean? Well, we have a public string named ''playerName'', as required, and we have methods named ''addPlayer()'' and ''countPlayers()''. Straightforward enough.
+} }}} Yes, I think we have arrived at a more realistic level of complexity. What does this code mean? Well, we have a setter named ''setPlayerName'', as required, and we have methods named ''addPlayer()'' and ''countPlayers()''. Straightforward enough.
 
 But '''what is that private Game field, and what are those methods calling, and why'''?
 
@@ -109,14 +115,9 @@ Each row of our table above involves a separate call to our ''!-AddRemovePlayerF
 
 Furthermore, we will have several test pages for our suite of tests for the trivia game. Each of those test pages will use more than one table to set up and test a condition in a Game instance. We need it to be the same Game instance being tested by all the test tables on a page. So we need a Singleton Game instance for the tables and their corresponding fixture classes to share. Here is the code for !-StaticGame-!: {{{
 public abstract class StaticGame {
-  private static Game theGame;
-
-  public static Game getInstance() {
-    if (theGame == null) theGame = new Game();
-  return theGame;
-  }
+  public static Game theGame = new Game();
 } }}}
-It does the classic Singleton thing: it creates an instance of Game if one does not yet exist, and it always returns the same instance of that Game object. And for safety's sake, it is abstract: you cannot instantiate !-StaticGame-!.
+It just a static variable that holds an instance of Game. And for safety's sake, it is abstract: you cannot instantiate !-StaticGame-!.
 
 !2 Enabling Multiple Test Tables to Share a Common Object
 OK. Let's justify that !-StaticGame-! thing a bit more thoroughly. Say we have another requirement that goes like this:
@@ -156,28 +157,40 @@ private boolean playerWasRemoved(Player aPlayer) {
   return (!theGame.playerIsPlaying(aPlayer));
 } }}}
 It too shares the Game instance supplied by !-StaticGame-!. And you can see that our !-GameTurnFixture-! methods do the same: {{{
-public class GameTurnFixture extends ColumnFixture {
-  public int roll;
+public class GameTurnFixture {
+  private int roll;
   private Game theGame;
 
   public String player() {
-    theGame = StaticGame.getInstance();
+    theGame = StaticGame.theGame;
     return theGame.takeTurn(roll);
   }
+
+  public void execute() {
+    StaticGame.theGame.takeTurn(roll);
+  }
+
   public boolean gameHasStarted() {
-    theGame = StaticGame.getInstance();
+    theGame = StaticGame.theGame;
     return theGame.gameHasStarted();
+  }
+
+  public void setRoll(int roll) {
+    this.roll = roll;
   }
 } }}}
 So, as !-AddRemovePlayerFixture-! and !-GameTurnFixture-! are repeatedly called, they make changes to, and check the state of, a single Game object.
 
 This is a common pattern. One way or another, Fitnesse test tables on a single page often need to share a common object. We grant you that there is more than one way to skin this particular cat. This is the way we chose to skin it. It will show up in examples ahead of us.
+
+Note the ''execute'' method of GameTurnFixture.  This will be called after all the setters have been called, and just before the output functions are called.
+
 !2 Summary
-  * A fixture is the Java or C# class that FitNesse and Fit use to process a particular test table when the Test button is clicked. For each row of data in a test table, Fit puts its inputs in public corresponding fields, and then calls the specified methods. It uses the return values to determine whether to turn output table cells green or red.
-  * You need to use a ClassPath to specify to Fit where your Java or C# fixture code resides.
-  * Fixture code should be as thin as possible: its methods should merely delegate to, and return values from, methods on application code. To process our player-adding test tables above when we click the Test button, Fit uses our !-AddRemovePlayerFixture-! Java class to pass data between the table and underlying Java application classes (Game and Player).
+  * A fixture is the class that FitNesse and Slim use to process a particular test table when the Test button is clicked. For each row of data in a test table, Slim sets its inputs using stter methods, and then calls the specified output methods. FitNesse uses the return values to determine whether to turn output table cells green or red.
+  * You need to use a ClassPath to specify to Slim where your fixture code resides.
+  * Fixture code should be as thin as possible: its methods should merely delegate to, and return values from, methods on application code. To process our player-adding test tables above when we click the Test button, Slim uses our !-AddRemovePlayerFixture-! Java class to pass data between the table and underlying Java application classes (Game and Player).
   * Sometimes fixtures get involved in pulling together test data for input, and formatting returned data for display, but fixtures should contain no business logic.
-  * Often the test tables on a page need to share an object. We've illustrated the use of a Singleton to solve this problem. Your mileage may vary.
+  * Often the test tables on a page need to share an object. We've illustrated the use of a static variable to solve this problem. Your mileage may vary.
 
 !2 Learning More
-To learn more about the different styles of test tables and the fixture code used to process them, see TestTableStyles.
+To learn more about the different styles of test tables and the fixture code used to process them, see [[Slim][.FitNesse.SliM]].

@@ -39,7 +39,9 @@ public class ListSerializer {
 
   private String marshalObjectToString(Object o) {
     String s;
-    if (o instanceof String)
+    if (o == null)
+      s = "null";
+    else if (o instanceof String)
       s = (String) o;
     else if (o instanceof List)
       s = ListSerializer.serialize((List) o);

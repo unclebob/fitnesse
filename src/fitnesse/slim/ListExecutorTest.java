@@ -138,5 +138,9 @@ public class ListExecutorTest {
     respondsWith(list(list("id", VoidConverter.VOID_TAG)));
   }
 
-
+  @Test
+  public void callToFunctionReturningNull() throws Exception {
+    statements.add(list("id", "call", "testSlim", "nullString"));
+    respondsWith(list(list("id", null)));
+  }
 }

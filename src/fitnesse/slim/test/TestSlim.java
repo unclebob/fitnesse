@@ -175,5 +175,9 @@ public class TestSlim {
     this.doubleArray = doubleArray;
   }
 
+  public String nullString() {
+    return null;
+  }
+
   class NoSuchConverter {};
 }

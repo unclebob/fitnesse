@@ -44,7 +44,9 @@ That last one was probably puzzling.  Symbols are just strings that are kept in 
 !4 Strings and Lists
 As we will see, slim views a list as a special kind of string.  Therefore functions can take and return lists as well as strings.  The lists must be lists of strings, but since a list is a special kind of string, lists of lists of lists of ... are possible.  The Slim executor will convert back and forth between these forms as needed.
 
-A string is encoded as six digits followed by a colon, followed by the characters of the string.  The six digits are the number of characters in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.
+A string is encoded as six digits followed by a colon, followed by the characters of the string.  The six digits are the number of characters in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.  
+
+If a string is ''<null>'', then the four character string ''null'' will replace it.
 
 A list is encoded as a string that begins with a '[', followed by a ''<length>'' specifying the number of items in the list.  This is followed by that many strings, each terminated by a colon, and then finally a ']'  Thus, this list: ''[hello,world]'' is encoded as the following string: {{{000035:[000002:000005:hello:000005:world:]}}}  Take careful note of all the colons and counts.  Colons are terminators not separators.
 

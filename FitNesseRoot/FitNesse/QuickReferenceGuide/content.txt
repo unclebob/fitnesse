@@ -58,7 +58,8 @@
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HEADINGS (${BANG}'''1''' ''largest heading text''
 ${BANG}'''2''' ''middle heading text''
-${BANG}'''3''' ''smallest heading text''
+${BANG}'''3''' ''smaller heading text''
+and so on up to &bang;6
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define CollapsibleEXPANDED (${BANG}'''*''' ${OPT}''title''${OPTend}
@@ -185,8 +186,10 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 | Comment          |${CODE} '''!-#-!'''${TEXT}    ${CODEend}| ''Can also be used to comment-out markup'' |
 | Italics          |${CODE} '''!-''-!'''${TEXT}'''!-''-!'''   ${CODEend}||
 | Bold             |${CODE} '''!-'''-!'''${TEXT}'''!-'''-!''' ${CODEend}||
+| Style            |${CODE} '''!-!style_<someStyle>(text)-!''' ${CODEend}|The style of ''text'' will be the CSS class ''<someStyle>''|
 | Strike-through   |${CODE} '''!----!'''${TEXT}'''!----!'''   ${CODEend}||
 | "As-is"/escaping |${CODE} '''!-!-!-'''${TEXT}'''-!-!-!''' ${CODEend}| ''Can also be used to insert HTML tags directly''|
+| "As-is"          |${CODE} '''!-!-!<'''${TEXT}'''>!-!-!''' ${CODEend}| ''Will escape HTML tags so they display in plain text.''|
 | Alias Link       |${CODE} '''[['''${TEXT}''']['''${AnyPagePATH}''']]''' ${CODEend}||
 #-------------------------------------------------------------------------------------------
 !anchor LineBlockFORMATTING
@@ -232,9 +235,9 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${CODE} COMMAND_PATTERN   ${CODEend}| !- java -cp %p %m -! | !- java -cp %p %m -! | !- %m %p  -! |
 |${CODE} PATH_SEPARATOR    ${CODEend}| ${SPC} : ${SPC} ''!-(system-dependent)-!'' | ${SPC} : ${SPC} ''!-(system-dependent)-!''|  ${SPC} !-;-! ${SPC} |
 |${CODE} TEST_RUNNER       ${CODEend}| !-fit.FitServer-! | !-fitlibrary.suite.FitLibraryServer-! | !-dotnet\FitServer.exe-! |
-!note N.B.:  If TEST_RUNNER is undefined, the default is ''!-fit.FitServer-!''
 
 |''' NAME '''                        |''' Default '''|''' Values ''' |''' Notes '''|
+|${CODE} TEST_SYSTEM       ${CODEend}| !c fit           | !c fit&bar;slim   |'' Selects the test system to use for this, and descendant pages.|
 |${CODE} COLLAPSE_SETUP    ${CODEend}| !c false         | !c true${BAR}false|'' Collapses all !-SetUps-! ''|
 |${CODE} COLLAPSE_TEARDOWN ${CODEend}| !c false         | !c true${BAR}false|'' Collapses all !-TearDowns-! ''|
 |${CODE} FILTER_TOC        ${CODEend}| !c false         | !c true${BAR}false|'' Append suite fiters to TOC ''|

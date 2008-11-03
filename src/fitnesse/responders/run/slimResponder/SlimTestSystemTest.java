@@ -242,5 +242,13 @@ public class SlimTestSystemTest {
     assertTestResultsContain("!style_pass(!<[1, 2]>!");
   }
 
+  @Test
+  public void nullStringReturned() throws Exception {
+     getResultsForPageContents("|fitnesse.slim.test.TestSlim|\n" +
+      "|nullString?|\n" +
+      "|null|\n");
+    assertTestResultsContain("!style_pass(!<null>!");
+  }
+
 
 }

@@ -9,9 +9,9 @@ ColumnFixture has the advantages of being easy to design and easy to understand.
 |12.6     |3          |4.2      |
 |100      |4          |33       |
 
-The top row of the table provides the name of the FixtureCode that Fit will use to process the table. The second row specifies the inputs and outputs of the fixture; the column headings ''numerator'' and ''denominator'' specify columns of input values, and the ''quotient?'' heading specifies a column of expected return values. So if we divide 10 by 2, we expect to get back 5.
+The top row of the table provides the name of the ColumnFixtureCode that Fit will use to process the table. The second row specifies the inputs and outputs of the fixture; the column headings ''numerator'' and ''denominator'' specify columns of input values, and the ''quotient?'' heading specifies a column of expected return values. So if we divide 10 by 2, we expect to get back 5.
 
-For a description of the fixture code for the Division example, see FixtureCode.
+For a description of the fixture code for the Division example, see ColumnFixtureCode.
 
 !2 A Slightly More Complex Example: A Trivia Game
 Let's imagine that we are building a trivia game. The overall design of our trivia game is straightforward: players take turns rolling a single die, and move around a circular board. When they land on a square, they are asked a trivia question of some category. There are requirements for answering questions incorrectly, for winning, and so on.
@@ -53,7 +53,7 @@ Finally, we'll try to remove a player from the game, and this too should fail:
 
 This shows how you can use a sequence of tables to verify a requirement by setting up and testing different states in your application code. This table sequence also illustrates one of the common AcceptanceTestPatterns: BuildOperateCheck.
 
-For a description of the fixture code for the trivia Game example, see FixtureCode.
+For a description of the fixture code for the trivia Game example, see ColumnFixtureCode.
 
 !2 Another Example: an Inventory System
 Let's say you were writing an inventory system, and you wanted to test its ability to keep track of stocked items.  You might write tables like this:
@@ -78,5 +78,5 @@ Finally we'd write a table that checked to make sure that the inventory had been
 |586|12|
 
 !2 Learning More
-To learn about the fixture code for the above examples, see FixtureCode.
+To learn about the fixture code for the above examples, see ColumnFixtureCode.
 Check out the other TestTableStyles to see which one suites your purposes best.

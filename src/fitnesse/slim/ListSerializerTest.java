@@ -51,4 +51,13 @@ public class ListSerializerTest {
     assertEquals("1", list.get(0));
   }
 
+  @Test
+  public void serializeNullElement() throws Exception {
+    List<Object> list = list();
+    list.add(null);
+    String s = ListSerializer.serialize(list);
+    assertEquals("[000001:000004:null:]", s);
+  }
+
+
 }

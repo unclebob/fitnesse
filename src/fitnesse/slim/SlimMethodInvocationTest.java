@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -145,4 +146,11 @@ public class SlimMethodInvocationTest {
     String resultString = (String) result;
     assertTrue(resultString, resultString.indexOf("message:<<CANT_CONVERT_TO_DOUBLE_LIST>>") != -1);
   }
+
+  @Test
+  public void handleReturnNull() throws Exception {
+    Object result = caller.call("testSlim", "nullString");
+    Assert.assertNull(result);
+  }
+
 }

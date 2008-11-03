@@ -1,7 +1,7 @@
 !1 Improving Readability using ''Graceful Names''
 If you are not yet accustomed to it, you can make your test tables much more pleasant to read by using ''graceful name'' notation.
 
-Say you have a fixture class named ''!-payroll.fixtures.PaycheckInspector-!'' you can references in your fixture tables as ''Paycheck inspector''.  Fit will manipulate that name back into ''!-PaycheckInspector-!'' by removing punctuation and using camel case.  It will then hunt through a list of known packages for the fixture.
+Say you have a fixture class named ''!-payroll.fixtures.PaycheckInspector-!'' you can references in your fixture tables as ''Paycheck inspector''.  Both Fit and Slim will manipulate that name back into ''!-PaycheckInspector-!'' by removing punctuation and using camel case.  They will then hunt through a list of known packages for the fixture.
 
 A similar transformation happens with variable and method names too.
 
@@ -17,7 +17,7 @@ You can have this:
 |employee id|employee name|pay amount?|
 |24|Bob|1500|
 
-You can add to the list of packages that Fit searches by using the ''Import'' fixture as follows.
+You can add to the list of packages by using the ''Import'' fixture as follows.
 
 |Import|
 |payroll.fixtures|
