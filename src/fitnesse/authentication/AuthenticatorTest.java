@@ -15,7 +15,7 @@ public class AuthenticatorTest extends TestCase
 	private WikiPage root;
 	private MockRequest request;
 	private Responder responder;
-	private Class responderType;
+	private Class<? extends Responder> responderType;
 	private WikiPageResponder privilegedResponder;
 	private FitNesseContext context;
 

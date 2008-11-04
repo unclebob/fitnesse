@@ -100,10 +100,10 @@ public class PageCrawlerImpl implements PageCrawler
 		return getOrMakePage(context, path.getNames());
 	}
 
-	private WikiPage getOrMakePage(WikiPage context, List namePieces) throws Exception
+	private WikiPage getOrMakePage(WikiPage context, List<?> namePieces) throws Exception
 	{
 		String first = (String) namePieces.get(0);
-		List rest = namePieces.subList(1, namePieces.size());
+		List<?> rest = namePieces.subList(1, namePieces.size());
 		WikiPage current;
 		if(context.getChildPage(first) == null)
 			current = context.addChildPage(first);
@@ -159,8 +159,8 @@ public class PageCrawlerImpl implements PageCrawler
 			return;
 		//TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.
 		listener.processPage(context);
-		List children = context.getChildren();
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
+		List<?> children = context.getChildren();
+		for(Iterator<?> iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage wikiPage = (WikiPage) iterator.next();
 			traverse(wikiPage, listener);

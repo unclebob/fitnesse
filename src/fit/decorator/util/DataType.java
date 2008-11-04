@@ -163,7 +163,7 @@ public abstract class DataType
         return type;
     }
 
-    private static Object getDataType(String dataType, Map types)
+    private static Object getDataType(String dataType, Map<String, DataType> types)
     {
         return types.get(dataType.toLowerCase());
     }

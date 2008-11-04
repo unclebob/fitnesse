@@ -76,7 +76,7 @@ public class DeletePageResponder implements SecureResponder {
     private String makeMainContent(final WikiPage root, final String qualifiedPageName) throws Exception {
         WikiPagePath path = PathParser.parse(qualifiedPageName);
         WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
-        List children = pageToDelete.getChildren();
+        List<?> children = pageToDelete.getChildren();
         boolean addSubPageWarning = true;
         if (children == null || children.size() == 0) {
             addSubPageWarning = false;

@@ -9,12 +9,12 @@ import java.util.List;
 
 public class StringUtil
 {
-	public static String join(List strings, String delimiter)
+	public static String join(List<?> strings, String delimiter)
 	{
 		if(strings.isEmpty())
 			return "";
 
-		Iterator i = strings.iterator();
+		Iterator<?> i = strings.iterator();
 		StringBuffer joined = new StringBuffer((String) i.next());
 
 		while(i.hasNext())
@@ -29,7 +29,7 @@ public class StringUtil
 
 	public static String[] combineArrays(String[] first, String[] second)
 	{
-		List<String> combinedList = new LinkedList();
+		List<String> combinedList = new LinkedList<String>();
 		combinedList.addAll(Arrays.asList(first));
 		combinedList.addAll(Arrays.asList(second));
 		return combinedList.toArray(new String[combinedList.size()]);

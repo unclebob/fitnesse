@@ -11,7 +11,7 @@ public class ActionFixture extends Fixture
 {
   protected Parse cells;
   public static Fixture actor;
-  protected static Class empty[] = {};
+  protected static Class<?> empty[] = {};
 
   // Traversal ////////////////////////////////
 
@@ -42,7 +42,7 @@ public class ActionFixture extends Fixture
   public void enter() throws Exception
   {
     Method method = method(1);
-    Class type = method.getParameterTypes()[0];
+    Class<?> type = method.getParameterTypes()[0];
     final Parse argumentCell = cells.more.more;
     if(argumentCell == null)
       throw new FitFailureException("You must specify an argument.");
@@ -68,7 +68,7 @@ public class ActionFixture extends Fixture
   {
     TypeAdapter adapter;
     Method theMethod = method(0);
-    Class type = theMethod.getReturnType();
+    Class<?> type = theMethod.getReturnType();
     try
     {
       adapter = TypeAdapter.on(actor, theMethod);

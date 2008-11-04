@@ -238,8 +238,8 @@ public class PropertiesResponder implements SecureResponder
 		WikiPageProperty symLinksProperty = pageData.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinksProperty == null)
 			return;
-		Set symbolicLinkNames = symLinksProperty.keySet();
-		for(Iterator iterator = symbolicLinkNames.iterator(); iterator.hasNext();)
+		Set<?> symbolicLinkNames = symLinksProperty.keySet();
+		for(Iterator<?> iterator = symbolicLinkNames.iterator(); iterator.hasNext();)
 		{
 			String linkName = (String) iterator.next();
 			HtmlElement nameItem = new RawHtml(linkName);

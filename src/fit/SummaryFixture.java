@@ -13,11 +13,11 @@ public class SummaryFixture extends Fixture {
 
     public void doTable(Parse table) {
         summary.put(countsKey, counts());
-        SortedSet keys = new TreeSet(summary.keySet());
+        SortedSet<String> keys = new TreeSet<String>(summary.keySet());
         table.parts.more = rows(keys.iterator());
     }
 
-    protected Parse rows(Iterator keys) {
+    protected Parse rows(Iterator<String> keys) {
         if (keys.hasNext()) {
             Object key = keys.next();
             Parse result =

@@ -1,6 +1,8 @@
 package fitnesse.slim;
 
 public class SlimError extends Error {
+  private static final long serialVersionUID = 1L;
+
   public SlimError(String s) {
     super(s);
   }

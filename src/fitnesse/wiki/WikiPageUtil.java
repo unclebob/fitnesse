@@ -20,7 +20,7 @@ public class WikiPageUtil
 		return ancestors;
 	}
 
-	public static LinkedList getAncestorsStartingWith(WikiPage page) throws Exception
+	public static LinkedList<WikiPage> getAncestorsStartingWith(WikiPage page) throws Exception
 	{
 		LinkedList<WikiPage> ancestors = getAncestorsOf(page);
 		ancestors.addFirst(page);

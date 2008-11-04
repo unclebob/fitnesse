@@ -147,7 +147,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
 		assertFalse(crawler.isRoot(page));
 	}
 
-	Set traversedPages = new HashSet();
+	Set<String> traversedPages = new HashSet<String>();
 
 	public void testTraversal() throws Exception
 	{

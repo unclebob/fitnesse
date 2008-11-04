@@ -43,6 +43,7 @@ public class TableTable extends SlimTable {
     return rowList;
   }
 
+  @SuppressWarnings("unchecked")
   protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object tableReturn = returnValues.get(doTableId);
     if (doTableId == null || tableReturn == null || (tableReturn instanceof String)) {

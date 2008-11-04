@@ -69,13 +69,13 @@ public class CannotLoadFixtureTest extends TestCase
     }
   }
 
-  private String chopOffFixture(Class fixtureClass)
+  private String chopOffFixture(Class<?> fixtureClass)
   {
     return fixtureClass.getName().replaceAll("Fixture", "");
   }
 
   private void assertCannotLoadFixture(String failureMessage,
-      String fixtureName, Class expectedExceptionType) throws Throwable
+      String fixtureName, Class<?> expectedExceptionType) throws Throwable
   {
     try
     {
@@ -90,7 +90,7 @@ public class CannotLoadFixtureTest extends TestCase
   }
 
   private void assertCannotLoadFixtureAfterChoppingOffFixture(
-      String failureMessage, Class fixtureClass, Class expectedExceptionType)
+      String failureMessage, Class<?> fixtureClass, Class<?> expectedExceptionType)
       throws Throwable
   {
     try

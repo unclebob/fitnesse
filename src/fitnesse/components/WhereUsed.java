@@ -15,7 +15,7 @@ public class WhereUsed implements FitNesseTraversalListener, SearchObserver, Wid
 	private SearchObserver observer;
 	private WikiPage currentPage;
 
-	private List hits = new ArrayList();
+	private List<WikiPage> hits = new ArrayList<WikiPage>();
 
 	public WhereUsed(WikiPage root)
 	{
@@ -53,7 +53,7 @@ public class WhereUsed implements FitNesseTraversalListener, SearchObserver, Wid
 		root.getPageCrawler().traverse(root, this);
 	}
 
-	public List findReferencingPages(WikiPage subjectPage) throws Exception
+	public List<WikiPage> findReferencingPages(WikiPage subjectPage) throws Exception
 	{
 		hits.clear();
 		searchForReferencingPages(subjectPage, this);

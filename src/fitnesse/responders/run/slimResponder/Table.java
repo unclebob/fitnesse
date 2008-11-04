@@ -7,8 +7,6 @@ import fitnesse.util.StringUtil;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import fitlibrary.utility.StringUtility;
-
 public class Table {
   private TableWidget widget;
 

@@ -13,12 +13,14 @@ import java.util.*;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable
 {
-	public static final String VIRTUAL_WIKI_ATTRIBUTE = "VirtualWiki";
-	private Map symbolicLinks;
+    private static final long serialVersionUID = 1L;
+
+    public static final String VIRTUAL_WIKI_ATTRIBUTE = "VirtualWiki";
+	private Map<?, ?> symbolicLinks;
 
 	public WikiPageProperties() throws Exception
 	{
-		symbolicLinks = new HashMap();
+		symbolicLinks = new HashMap<Object, Object>();
 	}
 
 	public WikiPageProperties(InputStream inputStream) throws Exception
@@ -37,7 +39,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 	{
 		if(that != null && that.children != null)
 			children = new HashMap<String, WikiPageProperty>(that.children);
-		symbolicLinks = new HashMap(that.symbolicLinks);
+		symbolicLinks = new HashMap<Object, Object>(that.symbolicLinks);
 	}
 
 	public void loadFromXmlStream(InputStream inputStream) throws Exception
@@ -100,10 +102,10 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 	public Element makeRootElement(Document document)
 	{
 		Element root = document.createElement("properties");
-		List keys = new ArrayList(keySet());
+		List<String> keys = new ArrayList<String>(keySet());
 		Collections.sort(keys);
 
-		for(Iterator iterator = keys.iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = keys.iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			WikiPageProperty childProperty = getProperty(key);
@@ -123,8 +125,8 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 			if(value != null)
 				element.setAttribute("value", value);
 
-			Set childKeys = context.keySet();
-			for(Iterator iterator = childKeys.iterator(); iterator.hasNext();)
+			Set<?> childKeys = context.keySet();
+			for(Iterator<?> iterator = childKeys.iterator(); iterator.hasNext();)
 			{
 				String childKey = (String) iterator.next();
 				WikiPageProperty child = context.getProperty(childKey);

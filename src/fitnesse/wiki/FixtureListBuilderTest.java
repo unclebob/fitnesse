@@ -30,7 +30,7 @@ public class FixtureListBuilderTest extends RegexTestCase
 		WikiPage level2 = crawler.addPage(level1, levelTwoPath, "!fixture FixtureThree");
 		crawler.addPage(level2, levelThreePath, "Level three");
 
-		List fixtureNames = builder.getFixtureNames(crawler.getPage(root, fullPath));
+		List<?> fixtureNames = builder.getFixtureNames(crawler.getPage(root, fullPath));
 		assertEquals(3, fixtureNames.size());
 		assertEquals("Fixture.One", fixtureNames.get(1));
 		assertEquals("FixtureTwo", fixtureNames.get(2));
@@ -41,7 +41,7 @@ public class FixtureListBuilderTest extends RegexTestCase
 	{
 		WikiPage parent = crawler.addPage(root, PathParser.parse("ParenT"), "!fixture parent");
 		WikiPage child = crawler.addPage(parent, PathParser.parse("ChilD"), "!fixture child");
-		List fixtureNames = builder.getFixtureNames(child);
+		List<?> fixtureNames = builder.getFixtureNames(child);
 		assertEquals(2, fixtureNames.size());
 		assertTrue(fixtureNames.contains("parent"));
 		assertTrue(fixtureNames.contains("child"));

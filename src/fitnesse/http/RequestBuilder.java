@@ -15,9 +15,9 @@ public class RequestBuilder
 
 	private String resource;
 	private String method = "GET";
-	private List bodyParts = new LinkedList();
-	private HashMap headers = new HashMap();
-	private HashMap inputs = new HashMap();
+	private List<InputStream> bodyParts = new LinkedList<InputStream>();
+	private HashMap<String, String> headers = new HashMap<String, String>();
+	private HashMap<String, Object> inputs = new HashMap<String, Object>();
 	private String host;
 	private int port;
 	private String boundary;
@@ -78,9 +78,9 @@ public class RequestBuilder
 	private void sendHeaders(OutputStream output) throws Exception
 	{
 		addHostHeader();
-		for(Iterator iterator = headers.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();)
 		{
-			String key = (String) iterator.next();
+			String key = iterator.next();
 			output.write((key + ": " + headers.get(key)).getBytes("UTF-8"));
 			output.write(ENDL);
 		}
@@ -96,9 +96,9 @@ public class RequestBuilder
 		}
 		else
 		{
-			for(Iterator iterator = inputs.keySet().iterator(); iterator.hasNext();)
+			for(Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();)
 			{
-				String name = (String) iterator.next();
+				String name = iterator.next();
 				Object value = inputs.get(name);
 				StringBuffer partBuffer = new StringBuffer();
 				partBuffer.append("--").append(getBoundary()).append("\r\n");
@@ -138,9 +138,9 @@ public class RequestBuilder
 
 	private void sendBody(OutputStream output) throws Exception
 	{
-		for(Iterator iterator = bodyParts.iterator(); iterator.hasNext();)
+		for(Iterator<InputStream> iterator = bodyParts.iterator(); iterator.hasNext();)
 		{
-			InputStream input = (InputStream) iterator.next();
+			InputStream input = iterator.next();
 
 			StreamReader reader = new StreamReader(input);
 			while(!reader.isEof())
@@ -168,9 +168,9 @@ public class RequestBuilder
 	{
 		StringBuffer buffer = new StringBuffer();
 		boolean first = true;
-		for(Iterator iterator = inputs.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();)
 		{
-			String key = (String) iterator.next();
+			String key = iterator.next();
 			String value = (String) inputs.get(key);
 			if(!first)
 				buffer.append("&");

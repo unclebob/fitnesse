@@ -2,7 +2,6 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.util.HashMap;

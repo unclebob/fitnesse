@@ -22,12 +22,12 @@ public class TypeAdapter
     public Fixture fixture;
     public Field field;
     public Method method;
-    public Class type;
+    public Class<?> type;
     public boolean isRegex;
-    private static Map<Class, TypeAdapter> PARSE_DELEGATES = new HashMap<Class, TypeAdapter>();
+    private static Map<Class<?>, TypeAdapter> PARSE_DELEGATES = new HashMap<Class<?>, TypeAdapter>();
     // Factory //////////////////////////////////
 
-    public static TypeAdapter on(Fixture target, Class type)
+    public static TypeAdapter on(Fixture target, Class<?> type)
     {
         TypeAdapter a = adapterFor(type);
         a.init(target, type);
@@ -56,7 +56,7 @@ public class TypeAdapter
         return a;
     }
 
-    public static TypeAdapter adapterFor(Class type) throws UnsupportedOperationException
+    public static TypeAdapter adapterFor(Class<?> type) throws UnsupportedOperationException
     {
         if (type.isPrimitive())
         {
@@ -91,7 +91,7 @@ public class TypeAdapter
 
     // Accessors ////////////////////////////////
 
-    public void init(Fixture fixture, Class type)
+    public void init(Fixture fixture, Class<?> type)
     {
         this.fixture = fixture;
         this.type = type;
@@ -159,7 +159,7 @@ public class TypeAdapter
     /**
      * Registers a delegate, a class that will handle parsing of other types of values.
      */
-    public static void registerParseDelegate(Class type, Class parseDelegate)
+    public static void registerParseDelegate(Class<?> type, Class<?> parseDelegate)
     {
         try
         {
@@ -173,7 +173,7 @@ public class TypeAdapter
     /**
      * Registers a delegate object that will handle parsing of other types of values.
      */
-    public static void registerParseDelegate(Class type, Object parseDelegate)
+    public static void registerParseDelegate(Class<?> type, Object parseDelegate)
     {
         try
         {
@@ -343,10 +343,10 @@ public class TypeAdapter
 
     static class ArrayAdapter extends TypeAdapter
     {
-        Class componentType;
+        Class<?> componentType;
         TypeAdapter componentAdapter;
 
-        public void init(Fixture target, Class type)
+        public void init(Fixture target, Class<?> type)
         {
             super.init(target, type);
             componentType = type.getComponentType();
@@ -399,7 +399,7 @@ public class TypeAdapter
     {
         private Method parseMethod;
 
-        public DelegateClassAdapter(Class parseDelegate) throws SecurityException, NoSuchMethodException
+        public DelegateClassAdapter(Class<?> parseDelegate) throws SecurityException, NoSuchMethodException
         {
             this.parseMethod = parseDelegate.getMethod("parse", new Class[]{String.class});
             int modifiers = parseMethod.getModifiers();

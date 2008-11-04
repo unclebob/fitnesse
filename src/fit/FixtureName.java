@@ -33,15 +33,15 @@ public class FixtureName
     return new FixtureName(fixtureName).isFullyQualified();
   }
 
-  public List getPotentialFixtureClassNames(Set fixturePathElements)
+  public List<String> getPotentialFixtureClassNames(Set<String> fixturePathElements)
   {
-    List candidateClassNames = new ArrayList();
+    List<String> candidateClassNames = new ArrayList<String>();
 
     if (!isFullyQualified())
     {
-      for (Iterator i = fixturePathElements.iterator(); i.hasNext();)
+      for (Iterator<String> i = fixturePathElements.iterator(); i.hasNext();)
       {
-        String packageName = (String) i.next();
+        String packageName = i.next();
         addBlahAndBlahFixture(packageName + ".", candidateClassNames);
       }
     }
@@ -50,7 +50,7 @@ public class FixtureName
     return candidateClassNames;
   }
 
-  private void addBlahAndBlahFixture(String qualifiedBy, List candidateClassNames)
+  private void addBlahAndBlahFixture(String qualifiedBy, List<String> candidateClassNames)
   {
     candidateClassNames.add(qualifiedBy + nameAsString);
     candidateClassNames.add(qualifiedBy + nameAsString + "Fixture");

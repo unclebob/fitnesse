@@ -13,8 +13,8 @@ import java.util.*;
 public class VersionSelectionResponder implements Responder
 {
 	private WikiPage page;
-	private List versions;
-	private List ageStrings;
+	private List<VersionInfo> versions;
+	private List<String> ageStrings;
 	private PageData pageData;
 	private String resource;
 
@@ -29,11 +29,11 @@ public class VersionSelectionResponder implements Responder
 
 		pageData = page.getData();
 		versions = getVersionsList(pageData);
-		ageStrings = new ArrayList();
+		ageStrings = new ArrayList<String>();
 		Date now = new GregorianCalendar().getTime();
-		for(Iterator iterator = versions.iterator(); iterator.hasNext();)
+		for(Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();)
 		{
-			VersionInfo version = (VersionInfo) iterator.next();
+			VersionInfo version = iterator.next();
 			ageStrings.add(howLongAgoString(now, version.getCreationTime()));
 		}
 
@@ -79,7 +79,7 @@ public class VersionSelectionResponder implements Responder
 
 	private HtmlTag makeVersionRow(int index)
 	{
-		VersionInfo version = (VersionInfo) versions.get(index);
+		VersionInfo version = versions.get(index);
 		HtmlTag input = HtmlUtil.makeInputTag("radio", "version", version.getName());
 		return makeRow("td", input, version.getName(), version.getAuthor(), ageStrings.get(index).toString());
 	}
@@ -94,9 +94,9 @@ public class VersionSelectionResponder implements Responder
 		return row;
 	}
 
-	public static List getVersionsList(PageData data)
+	public static List<VersionInfo> getVersionsList(PageData data)
 	{
-		List list = new ArrayList(data.getVersions());
+		List<VersionInfo> list = new ArrayList<VersionInfo>(data.getVersions());
 		Collections.sort(list);
 		Collections.reverse(list);
 		return list;

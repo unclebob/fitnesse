@@ -1,5 +1,6 @@
 package fitnesse.slim;
 
+import fitnesse.util.ListUtility;
 import fitnesse.util.StreamReader;
 
 import java.io.BufferedWriter;
@@ -48,7 +49,7 @@ public class SlimClient {
     String instructions = ListSerializer.serialize(statements);
     writeString(instructions);
     String resultLength = reader.read(6);
-    String colon = reader.read(1);
+    reader.read(1);
     String results = null;
     results = reader.read(Integer.parseInt(resultLength));
     List<Object> resultList = ListDeserializer.deserialize(results);
@@ -68,7 +69,7 @@ public class SlimClient {
   public static Map<String, Object> resultToMap(List<Object> slimResults) {
     Map<String, Object> map = new HashMap<String, Object>();
     for (Object aResult : slimResults) {
-      List<Object> resultList = (List<Object>) aResult;
+      List<Object> resultList = ListUtility.uncheckedCast(Object.class, aResult);
       map.put((String) resultList.get(0), resultList.get(1));
     }
     return map;

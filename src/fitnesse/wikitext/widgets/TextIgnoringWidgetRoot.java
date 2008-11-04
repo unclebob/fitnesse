@@ -17,7 +17,7 @@ public class TextIgnoringWidgetRoot extends WidgetRoot
 	}
 
    //Parent Literals: T'I'W'Root ctor with parent's literals
-   public TextIgnoringWidgetRoot(String value, WikiPage page, List literals, WidgetBuilder builder) throws Exception
+   public TextIgnoringWidgetRoot(String value, WikiPage page, List<String> literals, WidgetBuilder builder) throws Exception
    {
       super(null, page, builder, /*isGatheringInfo=*/ true);
       if (literals != null)  this.setLiterals(literals);

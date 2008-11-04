@@ -6,6 +6,8 @@ import java.util.*;
 
 public class SymbolicPage extends BaseWikiPage
 {
+    private static final long serialVersionUID = 1L;
+
 	public static final String PROPERTY_NAME = "SymbolicLinks";
 
 	private WikiPage realPage;
@@ -55,14 +57,14 @@ public class SymbolicPage extends BaseWikiPage
 		realPage.removeChildPage(name);
 	}
 
-	public List getNormalChildren() throws Exception
+	public List<WikiPage> getNormalChildren() throws Exception
 	{
-		List children = realPage.getChildren();
-		List symChildren = new LinkedList();
+		List<?> children = realPage.getChildren();
+		List<WikiPage> symChildren = new LinkedList<WikiPage>();
 		//...Intentionally exclude symbolic links on symbolic pages
 		//   to prevent infinite cyclic symbolic references.
 		//TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage child = (WikiPage) iterator.next();
 			symChildren.add(new SymbolicPage(child.getName(), child, this));

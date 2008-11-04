@@ -34,9 +34,9 @@ public class RecentChangesTest extends RegexTestCase
 		RecentChanges.updateRecentChanges(newPage.getData());
 		assertEquals(true, rootPage.hasChildPage("RecentChanges"));
 		WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-		List lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
+		List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
 		assertEquals(1, lines.size());
-		assertHasRegexp("SomeNewPage", (String) lines.get(0));
+		assertHasRegexp("SomeNewPage", lines.get(0));
 	}
 
 	public void testTwoChanges() throws Exception
@@ -44,10 +44,10 @@ public class RecentChangesTest extends RegexTestCase
 		RecentChanges.updateRecentChanges(page1.getData());
 		RecentChanges.updateRecentChanges(page2.getData());
 		WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-		List lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
+		List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
 		assertEquals(2, lines.size());
-		assertHasRegexp("PageTwo", (String) lines.get(0));
-		assertHasRegexp("PageOne", (String) lines.get(1));
+		assertHasRegexp("PageTwo", lines.get(0));
+		assertHasRegexp("PageOne", lines.get(1));
 	}
 
 	public void testNoDuplicates() throws Exception
@@ -55,9 +55,9 @@ public class RecentChangesTest extends RegexTestCase
 		RecentChanges.updateRecentChanges(page1.getData());
 		RecentChanges.updateRecentChanges(page1.getData());
 		WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-		List lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
+		List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
 		assertEquals(1, lines.size());
-		assertHasRegexp("PageOne", (String) lines.get(0));
+		assertHasRegexp("PageOne", lines.get(0));
 	}
 
 	public void testMaxSize() throws Exception
@@ -72,7 +72,7 @@ public class RecentChangesTest extends RegexTestCase
 		}
 
 		WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-		List lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
+		List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
 		assertEquals(100, lines.size());
 	}
 
@@ -80,7 +80,7 @@ public class RecentChangesTest extends RegexTestCase
 	{
 		RecentChanges.updateRecentChanges(page1.getData());
 		WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-		List lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
+		List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
 		String line = lines.get(0).toString();
 		assertSubString("|PageOne||", line);
 	}
@@ -93,7 +93,7 @@ public class RecentChangesTest extends RegexTestCase
 
 		RecentChanges.updateRecentChanges(page1.getData());
 		WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
-		List lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
+		List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
 		String line = lines.get(0).toString();
 		assertSubString("|PageOne|Aladdin|", line);
 	}

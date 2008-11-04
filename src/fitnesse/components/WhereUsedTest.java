@@ -15,7 +15,7 @@ public class WhereUsedTest extends RegexTestCase implements SearchObserver
 	private WikiPage pageThree;
 	private WhereUsed whereUsed;
 
-	private List hits = new ArrayList();
+	private List<WikiPage> hits = new ArrayList<WikiPage>();
 	private PageCrawler crawler;
 
 	public void hit(WikiPage page) throws Exception
@@ -37,7 +37,7 @@ public class WhereUsedTest extends RegexTestCase implements SearchObserver
 
 	public void testFindReferencingPages() throws Exception
 	{
-		List resultList = whereUsed.findReferencingPages(pageOne);
+		List<WikiPage> resultList = whereUsed.findReferencingPages(pageOne);
 		assertEquals(2, resultList.size());
 		assertEquals(pageTwo, resultList.get(0));
 
@@ -58,7 +58,7 @@ public class WhereUsedTest extends RegexTestCase implements SearchObserver
 	public void testOnlyOneReferencePerPage() throws Exception
 	{
 		WikiPage newPage = crawler.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
-		List resultList = whereUsed.findReferencingPages(pageThree);
+		List<WikiPage> resultList = whereUsed.findReferencingPages(pageThree);
 		assertEquals(1, resultList.size());
 		assertEquals(newPage, resultList.get(0));
 	}
@@ -66,7 +66,7 @@ public class WhereUsedTest extends RegexTestCase implements SearchObserver
 	public void testWordsNotFoundInPreprocessedText() throws Exception
 	{
 		crawler.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
-		List resultList = whereUsed.findReferencingPages(pageThree);
+		List<WikiPage> resultList = whereUsed.findReferencingPages(pageThree);
 		assertEquals(0, resultList.size());
 	}
 

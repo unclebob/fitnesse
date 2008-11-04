@@ -8,7 +8,7 @@ import fit.Parse;
 public class SemaphoreFixture extends Fixture
 {
    private static String SEMAPHORE_SUFFIX = ".semaphore";
-   private static Vector semaphores = new Vector();
+   private static Vector<String> semaphores = new Vector<String>();
    
    @Override
    public void doTable (Parse table)
@@ -103,7 +103,7 @@ public class SemaphoreFixture extends Fixture
    
    public static void ClearSemaphores()
    {
-      for (Iterator iter = semaphores.iterator();  iter.hasNext(); )
-         unlockSemaphore((String)iter.next());
+      for (Iterator<String> iter = semaphores.iterator();  iter.hasNext(); )
+         unlockSemaphore(iter.next());
    }
 }

@@ -12,7 +12,7 @@ public class HandleFixtureDoesNotExtendFixtureTest extends TestCase
 {
 	public void testLearnHowBadFixtureClassIsHandled() throws Exception
 	{
-		List tableLines = Arrays.asList(new String[]
+		List<String> tableLines = Arrays.asList(new String[]
 			{"<table>",
 				"    <tr>",
 				"        <td>fitnesse.fixtures.WouldBeFixture</td>",

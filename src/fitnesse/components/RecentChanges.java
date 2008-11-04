@@ -25,11 +25,11 @@ public class RecentChanges
 		addCurrentPageToRecentChanges(pageData);
 	}
 
-	public static List getRecentChangesLines(PageData recentChangesdata) throws Exception
+	public static List<String> getRecentChangesLines(PageData recentChangesdata) throws Exception
 	{
 		String content = recentChangesdata.getContent();
 		BufferedReader reader = new BufferedReader(new StringReader(content));
-		List lines = new ArrayList();
+		List<String> lines = new ArrayList<String>();
 		String line = null;
 		while((line = reader.readLine()) != null)
 			lines.add(line);
@@ -41,7 +41,7 @@ public class RecentChanges
 		WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot(data.getWikiPage()).getChildPage(RECENT_CHANGES);
 		String resource = resource(data);
 		PageData recentChangesdata = recentChanges.getData();
-		List lines = getRecentChangesLines(recentChangesdata);
+		List<String> lines = getRecentChangesLines(recentChangesdata);
 		removeDuplicate(lines, resource);
 		lines.add(0, makeRecentChangesLine(data));
 		trimExtraLines(lines);
@@ -73,28 +73,28 @@ public class RecentChanges
 		return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(new Date()) + "|";
 	}
 
-	private static void removeDuplicate(List lines, String resource)
+	private static void removeDuplicate(List<String> lines, String resource)
 	{
-		for(ListIterator iterator = lines.listIterator(); iterator.hasNext();)
+		for(ListIterator<String> iterator = lines.listIterator(); iterator.hasNext();)
 		{
-			String s = (String) iterator.next();
+			String s = iterator.next();
 			if(s.startsWith("|" + resource + "|"))
 				iterator.remove();
 		}
 	}
 
-	private static String convertLinesToWikiText(List lines)
+	private static String convertLinesToWikiText(List<String> lines)
 	{
 		StringBuffer buffer = new StringBuffer();
-		for(Iterator iterator = lines.iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = lines.iterator(); iterator.hasNext();)
 		{
-			String s = (String) iterator.next();
+			String s = iterator.next();
 			buffer.append(s).append("\n");
 		}
 		return buffer.toString();
 	}
 
-	private static void trimExtraLines(List lines)
+	private static void trimExtraLines(List<String> lines)
 	{
 		while(lines.size() > 100)
 			lines.remove(100);

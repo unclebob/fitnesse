@@ -21,6 +21,8 @@ import fitnesse.util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class FileSystemPage extends CachingPage implements RevisionControllable {
+    private static final long serialVersionUID = 1L;
+    
     public static final String contentFilename = "/content.txt";
     public static final String propertiesFilename = "/properties.xml";
 

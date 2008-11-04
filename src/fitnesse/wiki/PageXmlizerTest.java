@@ -53,7 +53,7 @@ public class PageXmlizerTest extends RegexTestCase
 		Document doc = xmlizer.xmlize(root);
 		xmlizer.deXmlize(doc, root, new MockXmlizerPageHandler());
 
-		List children = root.getChildren();
+		List<?> children = root.getChildren();
 		assertEquals(1, children.size());
 		WikiPage page = (WikiPage) children.get(0);
 		assertEquals("RooT", page.getName());

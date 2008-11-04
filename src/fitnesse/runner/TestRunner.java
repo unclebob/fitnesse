@@ -165,9 +165,9 @@ public class TestRunner
 
 	public void doFormatting() throws Exception
 	{
-		for(Iterator iterator = formatters.iterator(); iterator.hasNext();)
+		for(Iterator<FormattingOption> iterator = formatters.iterator(); iterator.hasNext();)
 		{
-			FormattingOption option = (FormattingOption) iterator.next();
+			FormattingOption option = iterator.next();
 			if(verbose)
 				output.println("Formatting as " + option.format + " to " + option.filename);
 			option.process(handler.getResultStream(), handler.getByteCount());
@@ -182,14 +182,14 @@ public class TestRunner
 		for(int i = 0; i < items.length; i++)
 		{
 			String item = items[i];
-			addUrlToClasspath(new File(item).toURL());
+			addUrlToClasspath(new File(item).toURI().toURL());
 		}
 	}
 
 	public static void addUrlToClasspath(URL u) throws Exception
 	{
 		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		Class sysclass = URLClassLoader.class;
+		Class<URLClassLoader> sysclass = URLClassLoader.class;
 		Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
 		method.setAccessible(true);
 		method.invoke(sysloader, new Object[]{u});

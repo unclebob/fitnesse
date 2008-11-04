@@ -123,7 +123,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = classPathBuilder.getPathSeparator(page);
     List<String> classPathElements = new ArrayList<String>();
-    Set visitedPages = new HashSet();
+    Set<WikiPage> visitedPages = new HashSet<WikiPage>();
 
     for (WikiPage testPage : testPages)
       addClassPathElements(testPage, classPathElements, visitedPages);
@@ -131,9 +131,9 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
   }
 
-  private static void addClassPathElements(WikiPage page, List<String> classPathElements, Set visitedPages)
+  private static void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
     throws Exception {
-    List pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
+    List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
     classPathElements.addAll(pathElements);
   }
 
@@ -184,11 +184,11 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     }
   }
 
-  public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot) throws Exception {
+  public static LinkedList<WikiPage> getAllTestPagesUnder(WikiPage suiteRoot) throws Exception {
     return getAllTestPagesUnder(suiteRoot, null);
   }
 
-  public static LinkedList getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception {
+  public static LinkedList<WikiPage> getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception {
     LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
     addTestPagesToList(testPages, suiteRoot, suite);
 

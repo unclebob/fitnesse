@@ -2,12 +2,17 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class VirtualCouplingPage implements WikiPage
 {
+    private static final long serialVersionUID = 1L;
+
 	private WikiPage hostPage;
-	private HashMap children = new HashMap();
+	private HashMap<String, WikiPage> children = new HashMap<String, WikiPage>();
 
 	protected VirtualCouplingPage(WikiPage hostPage)
 	{
@@ -17,8 +22,8 @@ public class VirtualCouplingPage implements WikiPage
 	public VirtualCouplingPage(WikiPage hostPage, WikiPage proxy) throws Exception
 	{
 		this.hostPage = hostPage;
-		List proxyChildren = proxy.getChildren();
-		for(Iterator iterator = proxyChildren.iterator(); iterator.hasNext();)
+		List<?> proxyChildren = proxy.getChildren();
+		for(Iterator<?> iterator = proxyChildren.iterator(); iterator.hasNext();)
 		{
 			CommitingPage wikiPage = (CommitingPage) iterator.next();
 			wikiPage.parent = this;
@@ -75,14 +80,14 @@ public class VirtualCouplingPage implements WikiPage
 
 	public WikiPage getChildPage(String name) throws Exception
 	{
-		WikiPage subpage = (WikiPage) children.get(name);
+		WikiPage subpage = children.get(name);
 		if(subpage == null) subpage = hostPage.getChildPage(name);
 		return subpage;
 	}
 
-	public List getChildren() throws Exception
+	public List<WikiPage> getChildren() throws Exception
 	{
-		return new ArrayList(children.values());
+		return new ArrayList<WikiPage>(children.values());
 	}
 
 	public VersionInfo commit(PageData data) throws Exception

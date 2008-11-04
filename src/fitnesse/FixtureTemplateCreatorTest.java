@@ -29,7 +29,7 @@ public class FixtureTemplateCreatorTest extends TestCase
 
 	public void testGetTargetClassFromRowFixture() throws Exception
 	{
-		Class targetClass = templateCreator.getTargetClassFromRowFixture(PrimeNumberRowFixture.class);
+		Class<?> targetClass = templateCreator.getTargetClassFromRowFixture(PrimeNumberRowFixture.class);
 		assertNotNull(targetClass);
 		assertEquals("fitnesse.fixtures.PrimeData", targetClass.getName());
 	}

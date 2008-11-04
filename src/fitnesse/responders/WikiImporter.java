@@ -348,7 +348,9 @@ public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListen
 
 	public static class AuthenticationRequiredException extends Exception
 	{
-		public AuthenticationRequiredException(String message)
+        private static final long serialVersionUID = 1L;
+
+        public AuthenticationRequiredException(String message)
 		{
 			super(message);
 		}

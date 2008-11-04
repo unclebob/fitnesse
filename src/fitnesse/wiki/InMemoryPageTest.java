@@ -43,7 +43,7 @@ public class InMemoryPageTest extends TestCase
 		page1.commit(data);
 
 		data = page1.getData();
-		Set versions = data.getVersions();
+		Set<VersionInfo> versions = data.getVersions();
 
 		assertEquals(3, versions.size());
 	}
@@ -51,10 +51,10 @@ public class InMemoryPageTest extends TestCase
 	public void testVersionAuthor() throws Exception
 	{
 		PageData data = page1.getData();
-		Set versions = data.getVersions();
-		for(Iterator iterator = versions.iterator(); iterator.hasNext();)
+		Set<VersionInfo> versions = data.getVersions();
+		for(Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();)
 		{
-			VersionInfo versionInfo = (VersionInfo) iterator.next();
+			VersionInfo versionInfo = iterator.next();
 			assertEquals("", versionInfo.getAuthor());
 		}
 
@@ -65,9 +65,9 @@ public class InMemoryPageTest extends TestCase
 		data = page1.getData();
 		versions = data.getVersions();
 		boolean joeFound = false;
-		for(Iterator iterator = versions.iterator(); iterator.hasNext();)
+		for(Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();)
 		{
-			VersionInfo versionInfo = (VersionInfo) iterator.next();
+			VersionInfo versionInfo = iterator.next();
 			if("Joe".equals(versionInfo.getAuthor()))
 				joeFound = true;
 		}

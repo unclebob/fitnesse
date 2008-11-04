@@ -8,9 +8,11 @@ package fit;
 
 // Warning: not (yet) a general number usable in all calculations.
 
-public class ScientificDouble extends Number implements Comparable
+public class ScientificDouble extends Number implements Comparable<Number>
 {
-	protected double value;
+    private static final long serialVersionUID = 1L;
+
+    protected double value;
 	protected double precision;
 
 	public ScientificDouble(double value)
@@ -54,14 +56,13 @@ public class ScientificDouble extends Number implements Comparable
 
 	public boolean equals(Object obj)
 	{
-		return compareTo(obj) == 0;
+		return compareTo((Number)obj) == 0;
 	}
 
-	public int compareTo(Object obj)
+	public int compareTo(Number obj)
 	{
-		double other = ((Number) obj).doubleValue();
+		double other = obj.doubleValue();
 		double diff = value - other;
-		// System.out.println(value+" "+precision+" "+diff);
 		if(diff < -precision) return -1;
 		if(diff > precision) return 1;
 		if(Double.isNaN(value) && Double.isNaN(other)) return 0;

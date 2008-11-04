@@ -6,7 +6,9 @@ import java.util.*;
 
 public abstract class ExtendableWikiPage extends BaseWikiPage
 {
-	private Map extensions = new HashMap();
+    private static final long serialVersionUID = 1L;
+
+	private Map<String, Extension> extensions = new HashMap<String, Extension>();
 
 	public ExtendableWikiPage(String name, WikiPage parent)
 	{
@@ -25,6 +27,6 @@ public abstract class ExtendableWikiPage extends BaseWikiPage
 
 	public Extension getExtension(String extensionName)
 	{
-		return (Extension) extensions.get(extensionName);
+		return extensions.get(extensionName);
 	}
 }

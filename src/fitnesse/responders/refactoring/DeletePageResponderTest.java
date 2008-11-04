@@ -49,7 +49,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
         assertEquals("root", response.getHeader("Location"));
         assertFalse(this.crawler.pageExists(this.root, PathParser.parse(this.level1Name)));
 
-        List children = this.root.getChildren();
+        List<?> children = this.root.getChildren();
         assertEquals(0, children.size());
     }
 

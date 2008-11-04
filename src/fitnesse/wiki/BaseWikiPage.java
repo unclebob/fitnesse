@@ -9,9 +9,11 @@ import java.util.*;
 
 public abstract class BaseWikiPage implements WikiPage
 {
+    private static final long serialVersionUID = 1L;
+
 	protected String name;
 	protected WikiPage parent;
-   protected WikiPage parentForVariables;
+    protected WikiPage parentForVariables;
 
 	protected BaseWikiPage(String name, WikiPage parent)
 	{
@@ -53,7 +55,7 @@ public abstract class BaseWikiPage implements WikiPage
 		WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
 		if(symLinksProperty != null)
 		{
-			for(Iterator iterator = symLinksProperty.keySet().iterator(); iterator.hasNext();)
+			for(Iterator<?> iterator = symLinksProperty.keySet().iterator(); iterator.hasNext();)
 			{
 				String linkName = (String) iterator.next();
 				WikiPage page = createSymbolicPage(symLinksProperty, linkName);

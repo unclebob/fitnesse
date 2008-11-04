@@ -128,7 +128,7 @@ public class ResponseParser
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Status: ").append(status).append("\n");
 		buffer.append("Headers: ").append("\n");
-		for(Iterator iterator = headers.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			buffer.append("\t").append(key).append(": ").append(headers.get(key)).append("\n");

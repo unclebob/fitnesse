@@ -120,7 +120,7 @@ public class ZipFileRevisionController implements RevisionController {
 
     public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
         final String dirPath = getFileSystemPath(page);
-        final Set filesToZip = getFilesToZip(dirPath);
+        final Set<File> filesToZip = getFilesToZip(dirPath);
 
         final VersionInfo version = makeVersionInfo(data);
 
@@ -131,8 +131,8 @@ public class ZipFileRevisionController implements RevisionController {
         try {
             final String filename = makeVersionFileName(page, version.getName());
             zos = new ZipOutputStream(new FileOutputStream(filename));
-            for (final Iterator iterator = filesToZip.iterator(); iterator.hasNext();) {
-                addToZip((File) iterator.next(), zos);
+            for (final Iterator<File> iterator = filesToZip.iterator(); iterator.hasNext();) {
+                addToZip(iterator.next(), zos);
             }
             return new VersionInfo(version.getName());
         } catch (Throwable th) {
@@ -178,7 +178,7 @@ public class ZipFileRevisionController implements RevisionController {
         zos.write(bytes, 0, size);
     }
 
-    private Set getFilesToZip(final String dirPath) {
+    private Set<File> getFilesToZip(final String dirPath) {
         final Set<File> filesToZip = new HashSet<File>();
         final File dir = new File(dirPath);
         final File[] files = dir.listFiles();
@@ -239,7 +239,7 @@ public class ZipFileRevisionController implements RevisionController {
         data.setContent(content);
     }
 
-    private Collection loadVersions(final FileSystemPage page) {
+    private Collection<VersionInfo> loadVersions(final FileSystemPage page) {
         final File dir = new File(getFileSystemPath(page));
         final File[] files = dir.listFiles();
         final Set<VersionInfo> versions = new HashSet<VersionInfo>();

@@ -13,7 +13,7 @@ public class SocketService
 	private Thread serviceThread = null;
 	private boolean running = false;
 	private SocketServer server = null;
-	private LinkedList threads = new LinkedList();
+	private LinkedList<Thread> threads = new LinkedList<Thread>();
 
 	public SocketService(int port, SocketServer server) throws Exception
 	{
@@ -80,7 +80,7 @@ public class SocketService
 			{
         if (threads.size() < 1)
           return;
-        t = (Thread) threads.getFirst();
+        t = threads.getFirst();
 			}
 			t.join();
 		}

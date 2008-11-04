@@ -42,7 +42,7 @@ public class PropertiesToXmlUpdate extends PageTraversingUpdate
 		File newPropsFile = new File(path + FileSystemPage.propertiesFilename);
 		WikiPageProperties newProps = new WikiPageProperties();
 
-		for(Iterator iterator = oldProps.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = oldProps.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			String value = (String) oldProps.get(key);

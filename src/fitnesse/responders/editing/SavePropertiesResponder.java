@@ -34,13 +34,13 @@ public class SavePropertiesResponder implements SecureResponder
 
 	private void saveAttributes(Request request, PageData data) throws Exception
 	{
-		List attrs = new LinkedList();
+		List<String> attrs = new LinkedList<String>();
 		attrs.addAll(Arrays.asList(WikiPage.NON_SECURITY_ATTRIBUTES));
 		attrs.addAll(Arrays.asList(WikiPage.SECURITY_ATTRIBUTES));
 
-		for(Iterator i = attrs.iterator(); i.hasNext();)
+		for(Iterator<String> i = attrs.iterator(); i.hasNext();)
 		{
-			String attribute = (String) i.next();
+			String attribute = i.next();
 			if(isChecked(request, attribute))
 				data.setAttribute(attribute);
 			else

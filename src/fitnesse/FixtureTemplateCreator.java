@@ -24,7 +24,7 @@ public class FixtureTemplateCreator
 
 		try
 		{
-			Class fixtureClass = ClassLoader.getSystemClassLoader().loadClass(fixtureName);
+			Class<?> fixtureClass = ClassLoader.getSystemClassLoader().loadClass(fixtureName);
 			Object fixtureInstance = fixtureClass.newInstance();
 
 			if(!Fixture.class.isInstance(fixtureInstance))
@@ -46,31 +46,31 @@ public class FixtureTemplateCreator
 		}
 	}
 
-	private StringBuffer makeRowFixtureTemplate(String defaultTableTemplate, Class fixtureClass)
+	private StringBuffer makeRowFixtureTemplate(String defaultTableTemplate, Class<?> fixtureClass)
 	{
-		Class targetClass = getTargetClassFromRowFixture(fixtureClass);
+		Class<?> targetClass = getTargetClassFromRowFixture(fixtureClass);
 		return makeFixtureTemplate(defaultTableTemplate, targetClass, Object.class);
 	}
 
-	private StringBuffer makeColumnFixtureTemplate(String defaultTableTemplate, Class fixtureClass)
+	private StringBuffer makeColumnFixtureTemplate(String defaultTableTemplate, Class<?> fixtureClass)
 	{
 		return makeFixtureTemplate(defaultTableTemplate, fixtureClass, ColumnFixture.class);
 	}
 
-	private StringBuffer makeFixtureTemplate(String defaultTableTemplate, Class fixtureClass, Class stopClass)
+	private StringBuffer makeFixtureTemplate(String defaultTableTemplate, Class<?> fixtureClass, Class<?> stopClass)
 	{
 		StringBuffer tableTemplate = new StringBuffer(defaultTableTemplate + "\n");
-		List publicFieldsFound = new ArrayList();
-		List publicMethodsFound = new ArrayList();
+		List<Field> publicFieldsFound = new ArrayList<Field>();
+		List<Method> publicMethodsFound = new ArrayList<Method>();
 		getPublicMembers(fixtureClass, publicFieldsFound, publicMethodsFound, stopClass);
 		addCellsForColumnFixture(tableTemplate, publicFieldsFound, publicMethodsFound);
 
 		return tableTemplate;
 	}
 
-	private void getPublicMembers(Class aClass, List publicFields, List publicMethods, Class stopClass)
+	private void getPublicMembers(Class<?> aClass, List<Field> publicFields, List<Method> publicMethods, Class<?> stopClass)
 	{
-		Class currentClass = aClass;
+		Class<?> currentClass = aClass;
 		while(currentClass != stopClass)
 		{
 			Field[] fields = currentClass.getDeclaredFields();
@@ -97,7 +97,7 @@ public class FixtureTemplateCreator
 		}
 	}
 
-	private void addCellsForColumnFixture(StringBuffer tableTemplate, List publicFields, List publicMethods)
+	private void addCellsForColumnFixture(StringBuffer tableTemplate, List<Field> publicFields, List<Method> publicMethods)
 	{
 		StringBuffer headerRow = new StringBuffer("|");
 		StringBuffer valueRow = new StringBuffer("|");
@@ -108,11 +108,11 @@ public class FixtureTemplateCreator
 		tableTemplate.append(headerRow).append("\n").append(valueRow).append("\n");
 	}
 
-	private void addCellsForFieldNamesAndTypes(List publicFields, StringBuffer headerRow, StringBuffer valueRow)
+	private void addCellsForFieldNamesAndTypes(List<Field> publicFields, StringBuffer headerRow, StringBuffer valueRow)
 	{
-		for(Iterator f = publicFields.iterator(); f.hasNext();)
+		for(Iterator<Field> f = publicFields.iterator(); f.hasNext();)
 		{
-			Field field = (Field) f.next();
+			Field field = f.next();
 			String name = field.getName();
 			String type = getShortClassName(field.getType().getName());
 
@@ -127,11 +127,11 @@ public class FixtureTemplateCreator
 		}
 	}
 
-	private void addCellsForMethodNamesAndReturnTypes(List publicMethods, StringBuffer headerRow, StringBuffer valueRow)
+	private void addCellsForMethodNamesAndReturnTypes(List<Method> publicMethods, StringBuffer headerRow, StringBuffer valueRow)
 	{
-		for(Iterator m = publicMethods.iterator(); m.hasNext();)
+		for(Iterator<Method> m = publicMethods.iterator(); m.hasNext();)
 		{
-			Method method = (Method) m.next();
+			Method method = m.next();
 			String name = method.getName() + "()";
 			String type = getShortClassName(method.getReturnType().getName());
 			type = fixClassName(type);
@@ -168,14 +168,14 @@ public class FixtureTemplateCreator
 		return className;
 	}
 
-	protected Class getTargetClassFromRowFixture(Class rowFixtureClass)
+	protected Class<?> getTargetClassFromRowFixture(Class<?> rowFixtureClass)
 	{
-		Class targetClass = null;
+		Class<?> targetClass = null;
 
 		try
 		{
 			Method method_getTargetClass = rowFixtureClass.getMethod("getTargetClass");
-			targetClass = (Class) method_getTargetClass.invoke(rowFixtureClass.newInstance());
+			targetClass = (Class<?>) method_getTargetClass.invoke(rowFixtureClass.newInstance());
 		}
 		catch(NoSuchMethodException nsme)
 		{

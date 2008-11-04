@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TableScanner implements Iterable<Table> {
-  private static final Class[] tableWidgets = new Class[]{IncludeWidget.class, TableWidget.class};
+  private static final Class<?>[] tableWidgets = new Class<?>[]{IncludeWidget.class, TableWidget.class};
   private List<Table> tables = new ArrayList<Table>();
   public ParentWidget widgetRoot;
 

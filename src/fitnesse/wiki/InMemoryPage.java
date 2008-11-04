@@ -3,13 +3,16 @@
 package fitnesse.wiki;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryPage extends CommitingPage
 {
-	protected static final String currentVersionName = "current_version";
+    private static final long serialVersionUID = 1L;
 
-	protected Map versions = new HashMap();
-	protected Map children = new HashMap();
+    protected static final String currentVersionName = "current_version";
+
+	protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
+	protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
 	protected InMemoryPage(String name, String content, WikiPage parent) throws Exception
 	{
@@ -65,12 +68,12 @@ public class InMemoryPage extends CommitingPage
 
 	protected WikiPage getNormalChildPage(String name) throws Exception
 	{
-		return (WikiPage) children.get(name);
+		return children.get(name);
 	}
 
-	public List getNormalChildren() throws Exception
+	public List<WikiPage> getNormalChildren() throws Exception
 	{
-		return new LinkedList(children.values());
+		return new LinkedList<WikiPage>(children.values());
 	}
 
 	public PageData getData() throws Exception
@@ -87,17 +90,17 @@ public class InMemoryPage extends CommitingPage
 
 	public PageData getDataVersion(String versionName) throws Exception
 	{
-		PageData version = (PageData) versions.get(versionName);
+		PageData version = versions.get(versionName);
 		if(version == null)
 			throw new NoSuchVersionException("There is no version '" + versionName + "'");
 
-		Set names = new HashSet(versions.keySet());
+		Set<String> names = new HashSet<String>(versions.keySet());
 		names.remove(currentVersionName);
-		List pageVersions = new LinkedList();
-		for(Iterator iterator = names.iterator(); iterator.hasNext();)
+		List<VersionInfo> pageVersions = new LinkedList<VersionInfo>();
+		for(Iterator<String> iterator = names.iterator(); iterator.hasNext();)
 		{
-			String name = (String) iterator.next();
-			PageData data = (PageData) versions.get(name);
+			String name = iterator.next();
+			PageData data = versions.get(name);
 			pageVersions.add(makeVersionInfo(data, name));
 		}
 		version.addVersions(pageVersions);

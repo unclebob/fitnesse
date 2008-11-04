@@ -89,7 +89,7 @@ public class PathParser
 			renderedPath.append(".");
 		}
 
-		Iterator i = path.getNames().iterator();
+		Iterator<?> i = path.getNames().iterator();
 		if(i.hasNext())
 		{
 			String name = (String) i.next();

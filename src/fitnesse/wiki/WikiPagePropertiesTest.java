@@ -84,7 +84,7 @@ public class WikiPagePropertiesTest extends RegexTestCase
 		properties.set("one");
 		properties.set("two");
 		properties.set("three");
-		Set keys = properties.keySet();
+		Set<?> keys = properties.keySet();
 
 		assertTrue(keys.contains("one"));
 		assertTrue(keys.contains("two"));

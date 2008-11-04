@@ -26,8 +26,8 @@ public class CachingResultFormatter implements ResultFormatter
 		FitProtocol.writeData(result.toString() + "\n", output);
 		buffer.append(output.toByteArray());
 
-		for(Iterator iterator = subHandlers.iterator(); iterator.hasNext();)
-			((ResultHandler) iterator.next()).acceptResult(result);
+		for(Iterator<ResultHandler> iterator = subHandlers.iterator(); iterator.hasNext();)
+			iterator.next().acceptResult(result);
 	}
 
 	public void acceptFinalCount(TestSummary testSummary) throws Exception
@@ -37,8 +37,8 @@ public class CachingResultFormatter implements ResultFormatter
     FitProtocol.writeCounts(counts, output);
 		buffer.append(output.toByteArray());
 
-		for(Iterator iterator = subHandlers.iterator(); iterator.hasNext();)
-			((ResultHandler) iterator.next()).acceptFinalCount(testSummary);
+		for(Iterator<ResultHandler> iterator = subHandlers.iterator(); iterator.hasNext();)
+			iterator.next().acceptFinalCount(testSummary);
 	}
 
 	public int getByteCount() throws Exception

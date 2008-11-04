@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MultiUserAuthenticator extends Authenticator
 {
-	private Map users = new HashMap();
+	private Map<String, String> users = new HashMap<String, String>();
 	private PasswordCipher cipher;
 
 	public MultiUserAuthenticator(String passwdFile) throws Exception
@@ -21,7 +21,7 @@ public class MultiUserAuthenticator extends Authenticator
 		if(username == null || password == null)
 			return false;
 
-		String foundPassword = (String) users.get(username);
+		String foundPassword = users.get(username);
 		if(foundPassword == null)
 			return false;
 
@@ -36,6 +36,6 @@ public class MultiUserAuthenticator extends Authenticator
 
 	public String getPasswd(String user)
 	{
-		return (String) users.get(user);
+		return users.get(user);
 	}
 }

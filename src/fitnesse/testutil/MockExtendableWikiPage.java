@@ -8,6 +8,8 @@ import java.util.List;
 
 public class MockExtendableWikiPage extends ExtendableWikiPage
 {
+    private static final long serialVersionUID = 1L;
+
 	public MockExtendableWikiPage(Extension e)
 	{
 		super("blah", null);
@@ -38,7 +40,7 @@ public class MockExtendableWikiPage extends ExtendableWikiPage
 	{
 	}
 
-	public List getNormalChildren() throws Exception
+	public List<WikiPage> getNormalChildren() throws Exception
 	{
 		return null;
 	}

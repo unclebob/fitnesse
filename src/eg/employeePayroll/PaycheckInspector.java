@@ -12,7 +12,7 @@ public class PaycheckInspector extends RowFixture
     return new Object[0];
   }
 
-  public Class getTargetClass()             // get expected type of row
+  public Class<?> getTargetClass()             // get expected type of row
   {
     return PayCheck.class;
   }

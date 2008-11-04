@@ -8,6 +8,7 @@ package fit;
 
 import junit.framework.TestCase;
 import java.util.LinkedList;
+import java.util.List;
 import java.lang.reflect.Field;
 
 public class RowFixtureTest extends TestCase
@@ -54,9 +55,9 @@ public class RowFixtureTest extends TestCase
     binding.adapter = arrayAdapter;
     fixture.columnBindings = new Binding[]{binding};
 
-    LinkedList computed = new LinkedList();
+    List<BusinessObject> computed = new LinkedList<BusinessObject>();
     computed.add(new BusinessObject(new String[]{"1"}));
-    LinkedList expected = new LinkedList();
+    LinkedList<Parse> expected = new LinkedList<Parse>();
     expected.add(new Parse("tr", "", new Parse("td", "1", null, null), null));
     fixture.match(expected, computed, 0);
     assertEquals("right", 1, fixture.counts.right);
@@ -79,7 +80,7 @@ public class RowFixtureTest extends TestCase
   }
 
   private class SimpleRowFixture extends RowFixture {
-    public Class getTargetClass()             // get expected type of row
+    public Class<?> getTargetClass()             // get expected type of row
     {
       return SimpleBusinessObject.class;
     }
@@ -100,7 +101,7 @@ public class RowFixtureTest extends TestCase
       return new Object[0];
     }
 
-    public Class getTargetClass()             // get expected type of row
+    public Class<?> getTargetClass()             // get expected type of row
     {
       return BusinessObject.class;
     }

@@ -81,7 +81,7 @@ public class SlimServer implements SocketServer {
 
   private String getInstructionsFromClient() throws Exception {
     int instructionLength = Integer.parseInt(reader.read(6));
-    String colon = reader.read(1);
+    reader.read(1);
     String instructions = reader.read(instructionLength);
     return instructions;
   }

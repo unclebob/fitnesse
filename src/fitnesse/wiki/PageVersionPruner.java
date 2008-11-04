@@ -8,24 +8,24 @@ public class PageVersionPruner
 {
 	public static int daysTillVersionsExpire = 14;
 
-	public static void pruneVersions(FileSystemPage page, Collection versions) throws Exception
+	public static void pruneVersions(FileSystemPage page, Collection<VersionInfo> versions) throws Exception
 	{
-		List versionsList = makeSortedVersionList(versions);
+		List<VersionInfo> versionsList = makeSortedVersionList(versions);
 		if(versions.size() > 0)
 		{
-			VersionInfo lastVersion = (VersionInfo) versionsList.get(versionsList.size() - 1);
+			VersionInfo lastVersion = versionsList.get(versionsList.size() - 1);
 			GregorianCalendar expirationDate = makeVersionExpirationDate(lastVersion);
-			for(Iterator iterator = versionsList.iterator(); iterator.hasNext();)
+			for(Iterator<VersionInfo> iterator = versionsList.iterator(); iterator.hasNext();)
 			{
-				VersionInfo version = (VersionInfo) iterator.next();
+				VersionInfo version = iterator.next();
 				removeVersionIfExpired(page, version, expirationDate);
 			}
 		}
 	}
 
-	private static List makeSortedVersionList(Collection versions) throws Exception
+	private static List<VersionInfo> makeSortedVersionList(Collection<VersionInfo> versions) throws Exception
 	{
-		List versionsList = new ArrayList(versions);
+		List<VersionInfo> versionsList = new ArrayList<VersionInfo>(versions);
 		Collections.sort(versionsList);
 		return versionsList;
 	}

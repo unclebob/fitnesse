@@ -148,7 +148,7 @@ public class TOCWidget extends WikiWidget
 			contentsDiv = HtmlUtil.makeDivTag("nested-contents");
 		}
 		HtmlTag list = new HtmlTag("ul");
-		for(Iterator iterator = buildListOfChildPages(wikiPage).iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = buildListOfChildPages(wikiPage).iterator(); iterator.hasNext();)
 		{
 			list.add(buildListItem((WikiPage) iterator.next(), currentDepth));
 		}
@@ -260,18 +260,22 @@ public class TOCWidget extends WikiWidget
 		return (filters.length() > 0)? " (" + filters + ")": ""; 
 	}
 
-	private List buildListOfChildPages(WikiPage wikiPage) throws Exception
+    private List<WikiPage> buildListOfChildPages(WikiPage wikiPage) throws Exception
 	{
-		List childPageList = new ArrayList(wikiPage.getChildren());
+		List<WikiPage> childPageList = new ArrayList<WikiPage>(wikiPage.getChildren());
 		if(wikiPage.hasExtension(VirtualCouplingExtension.NAME))
 		{
 			VirtualCouplingExtension extension = (VirtualCouplingExtension) wikiPage.getExtension(VirtualCouplingExtension.NAME);
 			WikiPage virtualCoupling = extension.getVirtualCoupling();
 			childPageList.addAll(virtualCoupling.getChildren());
 		}
-		Collections.sort(childPageList);
+		sortPageList(childPageList);
 		return childPageList;
 	}
+
+    private void sortPageList(List<WikiPage> childPageList) {
+        Collections.sort(childPageList);
+    }
 
 	private HtmlTag makeDivTag(int currentDepth)
 	{

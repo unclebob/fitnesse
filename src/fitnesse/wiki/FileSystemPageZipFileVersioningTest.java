@@ -41,7 +41,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
         File dir = new File(dirPath);
         String[] filenames = dir.list();
 
-        List list = Arrays.asList(filenames);
+        List<String> list = Arrays.asList(filenames);
         assertTrue(list.contains(firstVersion + ".zip"));
     }
 
@@ -55,7 +55,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     }
 
     public void testGetVersions() throws Exception {
-        Set versionNames = page.getData().getVersions();
+        Set<VersionInfo> versionNames = page.getData().getVersions();
         assertEquals(1, versionNames.size());
         assertTrue(versionNames.contains(firstVersion));
     }
@@ -73,7 +73,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
         PageData data = page.getData();
         data.setContent("new content");
         VersionInfo secondVersion = page.commit(data);
-        Set versionNames = page.getData().getVersions();
+        Set<VersionInfo> versionNames = page.getData().getVersions();
         assertEquals(2, versionNames.size());
         assertTrue(versionNames.contains(firstVersion));
         assertTrue(versionNames.contains(secondVersion));
@@ -82,8 +82,8 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     public void testVersionsExpire() throws Exception {
         PageVersionPruner.daysTillVersionsExpire = 3;
         PageData data = page.makePageData();
-        Set versions = data.getVersions();
-        for (Iterator iterator = versions.iterator(); iterator.hasNext();)
+        Set<VersionInfo> versions = data.getVersions();
+        for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();)
             page.removeVersion(iterator.next().toString());
 
         data.getProperties().setLastModificationTime(dateFormat().parse("20031213000000"));
@@ -100,7 +100,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
         versions = page.makePageData().getVersions();
         assertEquals(3, versions.size());
 
-        List versionsList = new LinkedList(versions);
+        List<VersionInfo> versionsList = new LinkedList<VersionInfo>(versions);
         Collections.sort(versionsList);
         assertTrue(versionsList.get(0).toString().endsWith("20031214000000"));
         assertTrue(versionsList.get(1).toString().endsWith("20031215000000"));
@@ -144,7 +144,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
         VersionInfo previousVersion = page.commit(data);
 
         data = page.getData();
-        Set versions = data.getVersions();
+        Set<VersionInfo> versions = data.getVersions();
         assertEquals(1, versions.size());
         assertEquals(true, versions.contains(previousVersion));
 

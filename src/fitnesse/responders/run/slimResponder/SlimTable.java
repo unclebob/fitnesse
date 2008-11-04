@@ -145,7 +145,7 @@ public abstract class SlimTable {
     addInstruction(makeInstruction);
   }
 
-  protected String[] cellsStartingAt(int startingColumn, int row) {
+  protected Object[] cellsStartingAt(int startingColumn, int row) {
     int columnCount = table.getColumnCountInRow(row);
     List<String> arguments = new ArrayList<String>();
     for (int col = startingColumn; col < columnCount; col++)
@@ -155,7 +155,7 @@ public abstract class SlimTable {
 
   protected void addCall(List<Object> instruction, String instanceName, String functionName) {
     String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
-    List<Object> callHeader = list("call", instanceName, disgracedFunctionName);
+    List<String> callHeader = list("call", instanceName, disgracedFunctionName);
     instruction.addAll(callHeader);
   }
 
@@ -175,9 +175,9 @@ public abstract class SlimTable {
   protected String callAndAssign(String symbolName, String instanceName, String functionName, String... args) {
     List<Object> callAndAssignInstruction = prepareInstruction();
     String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
-    List<Object> callAndAssignHeader = list("callAndAssign", symbolName, instanceName, disgracedFunctionName);
+    List<String> callAndAssignHeader = list("callAndAssign", symbolName, instanceName, disgracedFunctionName);
     callAndAssignInstruction.addAll(callAndAssignHeader);
-    addArgsToInstruction(callAndAssignInstruction, args);
+    addArgsToInstruction(callAndAssignInstruction, (Object[])args);
     addInstruction(callAndAssignInstruction);
     return (String) callAndAssignInstruction.get(0);
   }
@@ -427,6 +427,8 @@ public abstract class SlimTable {
   }
 
   public static class SyntaxError extends Error {
+    private static final long serialVersionUID = 1L;
+
     public SyntaxError(String message) {
       super(message);
     }

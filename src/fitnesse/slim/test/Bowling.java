@@ -5,16 +5,16 @@ import static fitnesse.util.ListUtility.*;
 import java.util.List;
 
 public class Bowling {
-  public List doTable(List<List<String>> table) {
+  public List<?> doTable(List<List<String>> table) {
     Game g = new Game();
-    List rollResults = list("","","","","","","","","","","","","","","","","","","","","");
-    List scoreResults = list("","","","","","","","","","","","","","","","","","","","","");
+    List<?> rollResults = list("","","","","","","","","","","","","","","","","","","","","");
+    List<String> scoreResults = list("","","","","","","","","","","","","","","","","","","","","");
     rollBalls(table, g);
     evaluateScores(g, table.get(1), scoreResults);
     return list(rollResults, scoreResults);
   }
 
-  private void evaluateScores(Game g, List<String> scoreRow, List scoreResults) {
+  private void evaluateScores(Game g, List<String> scoreRow, List<String> scoreResults) {
     for (int frame=0; frame<10; frame++) {
       int actualScore = g.score(frame+1);
       int expectedScore = Integer.parseInt(scoreRow.get(frameCoordinate(frame)));

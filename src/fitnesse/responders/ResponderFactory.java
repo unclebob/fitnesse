@@ -12,8 +12,7 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.revisioncontrol.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.run.slimResponder.SlimResponder;
-import fitnesse.responders.search.SearchFormResponder;
+    import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.versions.RollbackResponder;
@@ -30,11 +29,11 @@ import java.util.Map;
 
 public class ResponderFactory {
   private final String rootPath;
-  private final Map responderMap;
+  private final Map<String, Class<?>> responderMap;
 
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
-    responderMap = new HashMap();
+    responderMap = new HashMap<String, Class<?>>();
     addResponder("dontCreatePage", NotFoundResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
@@ -86,7 +85,7 @@ public class ResponderFactory {
     addResponder(UPDATE.getQuery(), UpdateResponder.class);
   }
 
-  public void addResponder(String key, Class responderClass) {
+  public void addResponder(String key, Class<?> responderClass) {
     responderMap.put(key, responderClass);
   }
 
@@ -124,21 +123,21 @@ public class ResponderFactory {
   private Responder lookupResponder(String responderKey, Responder responder)
     throws NoSuchMethodException, InstantiationException,
     IllegalAccessException, InvocationTargetException {
-    Class responderClass = getResponderClass(responderKey);
+    Class<?> responderClass = getResponderClass(responderKey);
     if (responderClass != null) {
       try {
-        Constructor constructor = responderClass.getConstructor(new Class[]{String.class});
+        Constructor<?> constructor = responderClass.getConstructor(new Class<?>[]{String.class});
         responder = (Responder) constructor.newInstance(new Object[]{rootPath});
       } catch (NoSuchMethodException e) {
-        Constructor constructor = responderClass.getConstructor(new Class[0]);
+        Constructor<?> constructor = responderClass.getConstructor(new Class<?>[0]);
         responder = (Responder) constructor.newInstance(new Object[0]);
       }
     }
     return responder;
   }
 
-  public Class getResponderClass(String responderKey) {
-    return (Class) responderMap.get(responderKey);
+  public Class<?> getResponderClass(String responderKey) {
+    return responderMap.get(responderKey);
   }
 
   private boolean usingResponderKey(String responderKey) {

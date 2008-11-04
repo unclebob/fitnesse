@@ -81,7 +81,7 @@ public class SuiteResponderTest extends RegexTestCase {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
     WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
     WikiPage pageB = crawler.addPage(root, PathParser.parse("PageB"));
-    List xrefTestPages = SuiteResponder.gatherCrossReferencedTestPages(testPage, root);
+    List<?> xrefTestPages = SuiteResponder.gatherCrossReferencedTestPages(testPage, root);
     assertEquals(2, xrefTestPages.size());
     assertTrue(xrefTestPages.contains(pageA));
     assertTrue(xrefTestPages.contains(pageB));
@@ -89,7 +89,7 @@ public class SuiteResponderTest extends RegexTestCase {
 
   public void testBuildClassPath() throws Exception {
     responder.page = suite;
-    List testPages = SuiteResponder.getAllTestPagesUnder(suite);
+    List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
     String classpath = SuiteResponder.buildClassPath(testPages, responder.page);
     assertSubString("classes", classpath);
     assertSubString("dummy.jar", classpath);
@@ -182,7 +182,7 @@ public class SuiteResponderTest extends RegexTestCase {
   public void testGetAllTestPages() throws Exception {
     setUpForGetAllTestPages();
 
-    List testPages = SuiteResponder.getAllTestPagesUnder(suite);
+    List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
     assertEquals(3, testPages.size());
     assertEquals(true, testPages.contains(testPage));
     assertEquals(true, testPages.contains(testPage2));
@@ -199,7 +199,7 @@ public class SuiteResponderTest extends RegexTestCase {
 
   public void testGetAllTestPagesSortsByQulifiedNames() throws Exception {
     setUpForGetAllTestPages();
-    List testPages = SuiteResponder.getAllTestPagesUnder(suite);
+    List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
     assertEquals(3, testPages.size());
     assertEquals(testPage, testPages.get(0));
     assertEquals(testPage2, testPages.get(1));
@@ -210,7 +210,7 @@ public class SuiteResponderTest extends RegexTestCase {
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    List testPages = responder.makePageList();
+    List<?> testPages = responder.makePageList();
     assertEquals(3, testPages.size());
     assertSame(setUp, testPages.get(0));
     assertSame(tearDown, testPages.get(2));

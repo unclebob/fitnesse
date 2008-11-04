@@ -40,7 +40,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
     }
 
     public void testGetChildren() throws Exception {
-        List children = page1.getChildren();
+        List<?> children = page1.getChildren();
         assertEquals(1, children.size());
         assertEquals("SomeOtherPage", ((WikiPage) children.get(0)).getName());
 
@@ -71,7 +71,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
         assertTrue(page3.hasExtension(VirtualCouplingExtension.NAME));
 
         VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
-        List children = extension.getVirtualCoupling().getChildren();
+        List<?> children = extension.getVirtualCoupling().getChildren();
         assertEquals(1, children.size());
         assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
     }

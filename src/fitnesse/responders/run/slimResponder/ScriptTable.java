@@ -109,7 +109,7 @@ public class ScriptTable extends SlimTable {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
     if (!actionName.equals("")) {
       String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row);
-      callFunction("scriptTableActor", actionName, args);
+      callFunction("scriptTableActor", actionName, (Object[])args);
     }
   }
 

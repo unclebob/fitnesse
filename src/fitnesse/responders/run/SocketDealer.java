@@ -6,7 +6,7 @@ import java.util.*;
 
 public class SocketDealer
 {
-	private Map waitingList = new HashMap(17);
+	private Map<Integer, SocketSeeker> waitingList = new HashMap<Integer, SocketSeeker>(17);
 	private int ticketCounter = 1;
 
 	public int seekingSocket(SocketSeeker seeker)
@@ -16,7 +16,7 @@ public class SocketDealer
 		return ticket;
 	}
 
-	public Collection getWaitingList()
+	public Collection<SocketSeeker> getWaitingList()
 	{
 		return waitingList.values();
 	}
@@ -24,7 +24,7 @@ public class SocketDealer
 	public void dealSocketTo(int ticket, SocketDoner doner) throws Exception
 	{
 		Integer key = new Integer(ticket);
-		SocketSeeker seeker = (SocketSeeker) waitingList.get(key);
+		SocketSeeker seeker = waitingList.get(key);
 		seeker.acceptSocketFrom(doner);
 		waitingList.remove(key);
 	}

@@ -6,7 +6,6 @@ import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wikitext.Utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -174,7 +173,7 @@ public class DecisionTableTest {
         "|y|\n"
     );
 
-    List<Object> makeInstruction = list("decisionTable_id_0", "make", "decisionTable_id", "SlimTest");
+    List<String> makeInstruction = list("decisionTable_id_0", "make", "decisionTable_id", "SlimTest");
     assertEquals(makeInstruction, instructions.get(0));
   }
 
@@ -185,8 +184,8 @@ public class DecisionTableTest {
         "|my var|my func?|\n" +
         "|8|7|\n"
     );
-    List<Object> setInstruction = list("decisionTable_id_1", "call", "decisionTable_id", "setMyVar", "8");
-    List<Object> callInstruction = list("decisionTable_id_3", "call", "decisionTable_id", "myFunc");
+    List<String> setInstruction = list("decisionTable_id_1", "call", "decisionTable_id", "setMyVar", "8");
+    List<String> callInstruction = list("decisionTable_id_3", "call", "decisionTable_id", "myFunc");
     assertEquals(setInstruction, instructions.get(1));
     assertEquals(callInstruction, instructions.get(3));
   }

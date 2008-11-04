@@ -20,7 +20,7 @@ public abstract class Response
 	}
 
 	private int status = 200;
-	private HashMap headers = new HashMap(17);
+	private HashMap<String, String> headers = new HashMap<String, String>(17);
 	private String contentType = DEFAULT_CONTENT_TYPE;
 
 	public Response()
@@ -95,7 +95,7 @@ public abstract class Response
 
 	public String getHeader(String key)
 	{
-		return (String) headers.get(key);
+		return headers.get(key);
 	}
 
 	public byte[] getEncodedBytes(String value) throws Exception
@@ -105,10 +105,10 @@ public abstract class Response
 
 	private void makeHeaders(StringBuffer text)
 	{
-		for(Iterator iterator = headers.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();)
 		{
-			String key = (String) iterator.next();
-			String value = (String) headers.get(key);
+			String key = iterator.next();
+			String value = headers.get(key);
 			text.append(key).append(": ").append(value).append(CRLF);
 		}
 	}

@@ -8,9 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.*;
 
-public class VersionInfo implements Comparable, Serializable
+public class VersionInfo implements Comparable<VersionInfo>, Serializable
 {
-	public static final Pattern COMPEX_NAME_PATTERN = Pattern.compile("(?:([a-zA-Z][^\\-]*)-)?(?:\\d+-)?(\\d{14})");
+    private static final long serialVersionUID = 1L;
+
+    public static final Pattern COMPEX_NAME_PATTERN = Pattern.compile("(?:([a-zA-Z][^\\-]*)-)?(?:\\d+-)?(\\d{14})");
 	private static int counter = 0;
 
 	public static SimpleDateFormat makeVersionTimeFormat()
@@ -74,7 +76,7 @@ public class VersionInfo implements Comparable, Serializable
 		return match.group(2);
 	}
 
-	public int compareTo(Object o)
+	public int compareTo(VersionInfo o)
 	{
 		VersionInfo otherVersion;
 		if(o instanceof VersionInfo)

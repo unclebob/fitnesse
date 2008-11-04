@@ -1,6 +1,5 @@
 package fitnesse.slim;
 
-import fitnesse.util.ListUtility;
 import static fitnesse.util.ListUtility.list;
 
 import java.util.ArrayList;

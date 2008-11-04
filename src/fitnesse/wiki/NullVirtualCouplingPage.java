@@ -6,13 +6,15 @@ import java.util.*;
 
 public class NullVirtualCouplingPage extends VirtualCouplingPage
 {
+    private static final long serialVersionUID = 1L;
+
 	public NullVirtualCouplingPage(WikiPage hostPage) throws Exception
 	{
 		super(hostPage);
 	}
 
-	public List getChildren() throws Exception
+	public List<WikiPage> getChildren() throws Exception
 	{
-		return new ArrayList();
+		return new ArrayList<WikiPage>();
 	}
 }

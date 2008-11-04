@@ -111,8 +111,8 @@ public class RenamePageResponder implements SecureResponder
 			WikiPage renamedPage = parentOfPageToRename.addChildPage(newName);
 			renamedPage.commit(data);
 
-			List children = originalPage.getChildren();
-			for(Iterator iterator = children.iterator(); iterator.hasNext();)
+			List<?> children = originalPage.getChildren();
+			for(Iterator<?> iterator = children.iterator(); iterator.hasNext();)
 			{
 				WikiPage child = (WikiPage) iterator.next();
 				MovePageResponder.movePage(root, crawler.getFullPath(child), crawler.getFullPath(renamedPage));

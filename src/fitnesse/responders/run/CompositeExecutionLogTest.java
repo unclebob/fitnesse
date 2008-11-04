@@ -1,13 +1,11 @@
 package fitnesse.responders.run;
 
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.testutil.RegexTestCase;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import static org.junit.Assert.*;
 
 public class CompositeExecutionLogTest {

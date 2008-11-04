@@ -69,7 +69,7 @@ public abstract class ChunkingResponder implements Responder
 		}
 		catch(SocketException e)
 		{
-			// normal. someone stoped the request.
+			// normal. someone stopped the request.
 		}
 		catch(Exception e)
 		{
@@ -107,6 +107,7 @@ public abstract class ChunkingResponder implements Responder
 				{
 					synchronized(response)
 					{
+					    response.notifyAll();
 						response.wait();
 					}
 				}

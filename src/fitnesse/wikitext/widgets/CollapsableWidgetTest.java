@@ -102,7 +102,7 @@ public class CollapsableWidgetTest extends WidgetTestCase
 		assertEquals("div", outerTag.tagName());
 		assertEquals("collapse_rim", outerTag.getAttribute("class"));
 		
-		List childTags = removeNewlineTags(outerTag);
+		List<?> childTags = removeNewlineTags(outerTag);
 
 		HtmlTag collapseAllLinksDiv = (HtmlTag) childTags.get(0);
 		assertEquals("div", collapseAllLinksDiv.tagName());
@@ -151,10 +151,10 @@ public class CollapsableWidgetTest extends WidgetTestCase
 	}
 
 
-	private List removeNewlineTags(HtmlTag tag) throws Exception
+	private List<?> removeNewlineTags(HtmlTag tag) throws Exception
 	{
-		List childTags = new LinkedList(tag.childTags);
-		for(Iterator iterator = childTags.iterator(); iterator.hasNext();)
+		List<?> childTags = new LinkedList<Object>(tag.childTags);
+		for(Iterator<?> iterator = childTags.iterator(); iterator.hasNext();)
 		{
 			HtmlElement element = (HtmlElement) iterator.next();
 			if("".equals(element.html().trim()))

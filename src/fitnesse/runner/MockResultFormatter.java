@@ -9,7 +9,7 @@ import fitnesse.responders.run.TestSummary;
 
 public class MockResultFormatter implements ResultFormatter
 {
-	public List results = new LinkedList();
+	public List<PageResult> results = new LinkedList<PageResult>();
 	public TestSummary finalSummary;
 	public StringBuffer output = new StringBuffer("Mock Results:\n");
 

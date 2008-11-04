@@ -121,7 +121,7 @@ public class MovePageResponder implements SecureResponder
 		PageData oldData = movee.getData();
 		movedData.setProperties(oldData.getProperties());
 		movedData.getProperties().setLastModificationTime(oldData.getProperties().getLastModificationTime());
-		List children = movee.getChildren();
+		List<?> children = movee.getChildren();
 		if(children.size() > 0)
 			moveChildren(children, root, movedPagePath);
 		movedPage.commit(movedData);
@@ -135,9 +135,9 @@ public class MovePageResponder implements SecureResponder
 		return !newParent.hasChildPage(oldWikiPageName);
 	}
 
-	public static void moveChildren(List children, WikiPage root, WikiPagePath newParentPath) throws Exception
+	public static void moveChildren(List<?> children, WikiPage root, WikiPagePath newParentPath) throws Exception
 	{
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = children.iterator(); iterator.hasNext();)
 		{
 			WikiPage page = (WikiPage) iterator.next();
 			movePage(root, page.getPageCrawler().getFullPath(page), newParentPath);

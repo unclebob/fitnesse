@@ -6,6 +6,8 @@ import fitnesse.responders.ErrorResponder;
 
 public class VirtualCouplingExtension implements Extension
 {
+    private static final long serialVersionUID = 1L;
+
 	public static final String NAME = "VirtualCoupling";
 
 	private WikiPage hostPage;

@@ -69,8 +69,8 @@ public class ComponentFactory {
     private Object createComponent(String componentType) throws Exception {
         String componentClassName = loadedProperties.getProperty(componentType);
         if (componentClassName != null) {
-            Class componentClass = Class.forName(componentClassName);
-            Constructor constructor = componentClass.getConstructor(Properties.class);
+            Class<?> componentClass = Class.forName(componentClassName);
+            Constructor<?> constructor = componentClass.getConstructor(Properties.class);
             return constructor.newInstance(loadedProperties);
         }
         return null;
@@ -79,7 +79,7 @@ public class ComponentFactory {
     public WikiPage getRootPage(WikiPage defaultPage) throws Exception {
         String rootPageClassName = loadedProperties.getProperty(WIKI_PAGE_CLASS);
         if (rootPageClassName != null) {
-            Class rootPageClass = Class.forName(rootPageClassName);
+            Class<?> rootPageClass = Class.forName(rootPageClassName);
             Method constructorMethod = rootPageClass.getMethod("makeRoot", Properties.class);
             return (WikiPage) constructorMethod.invoke(rootPageClass, loadedProperties);
         } else
@@ -101,7 +101,7 @@ public class ComponentFactory {
                 String pair = responderPairs[i].trim();
                 String[] values = pair.split(":");
                 String responderKey = values[0];
-                Class responderClass = Class.forName(values[1]);
+                Class<?> responderClass = Class.forName(values[1]);
                 responderFactory.addResponder(responderKey, responderClass);
                 buffer.append("\t\t" + responderKey + ":" + responderClass.getName()).append(endl);
             }
@@ -118,17 +118,17 @@ public class ComponentFactory {
         StringBuffer buffer = new StringBuffer();
         String widgetList = loadedProperties.getProperty(WIKI_WIDGETS);
         if (widgetList != null) {
-            List widgetClasses = new ArrayList();
+            List<Class<?>> widgetClasses = new ArrayList<Class<?>>();
             buffer.append("\tCustom wiki widgets loaded:").append(endl);
             String[] widgetNames = widgetList.split(",");
             for (int i = 0; i < widgetNames.length; i++) {
                 String widgetName = widgetNames[i].trim();
-                Class widgetClass = Class.forName(widgetName);
+                Class<?> widgetClass = Class.forName(widgetName);
                 widgetClasses.add(widgetClass);
                 buffer.append("\t\t" + widgetClass.getName()).append(endl);
             }
             appendExistingWidgets(widgetClasses);
-            Class[] widgetClassesArray = (Class[]) widgetClasses.toArray(new Class[] {});
+            Class<?>[] widgetClassesArray = widgetClasses.toArray(new Class[] {});
             WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder(widgetClassesArray);
         }
 
@@ -149,9 +149,9 @@ public class ComponentFactory {
         return buffer.toString();
     }
 
-    private void appendExistingWidgets(List widgetClasses) {
+    private void appendExistingWidgets(List<Class<?>> widgetClasses) {
         for (int i = 0; i < WidgetBuilder.htmlWidgetClasses.length; i++) {
-            Class htmlWidgetClass = WidgetBuilder.htmlWidgetClasses[i];
+            Class<?> htmlWidgetClass = WidgetBuilder.htmlWidgetClasses[i];
             widgetClasses.add(htmlWidgetClass);
         }
     }

@@ -13,7 +13,7 @@ public class SearcherTest extends TestCase implements SearchObserver
 	WikiPage root;
 	private WikiPage pageTwo;
 
-	private List hits = new ArrayList();
+	private List<WikiPage> hits = new ArrayList<WikiPage>();
 	private PageCrawler crawler;
 	private Searcher searcher;
 
@@ -75,13 +75,13 @@ public class SearcherTest extends TestCase implements SearchObserver
 		Collections.sort(hits, new Comparer());
 
 		assertEquals(2, hits.size());
-		assertEquals("PageOne", ((WikiPage) hits.get(0)).getName());
-		assertEquals("PageOneChild", ((WikiPage) hits.get(1)).getName());
+		assertEquals("PageOne", hits.get(0).getName());
+		assertEquals("PageOneChild", hits.get(1).getName());
 	}
 
-	private void hasNamedPageAtIndex(List results, String name, int index) throws Exception
+	private void hasNamedPageAtIndex(List<WikiPage> results, String name, int index) throws Exception
 	{
-		WikiPage p = (WikiPage) results.get(index);
+		WikiPage p = results.get(index);
 		assertEquals(name, p.getName());
 	}
 
@@ -92,7 +92,7 @@ public class SearcherTest extends TestCase implements SearchObserver
 		Collections.sort(hits, new Comparer());
 	}
 
-	private class Comparer implements Comparator
+	private class Comparer implements Comparator<Object>
 	{
 		public int compare(Object o1, Object o2)
 		{

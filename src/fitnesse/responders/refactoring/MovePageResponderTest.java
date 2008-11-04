@@ -155,7 +155,7 @@ public class MovePageResponderTest extends ResponderTestCase
 		WikiPage movedPage = crawler.getPage(root, destinationPagePath);
 		assertFalse(crawler.pageExists(root, sourceChildOnePath));
 		assertFalse(crawler.pageExists(root, sourceChildTwoPath));
-		List children = movedPage.getChildren();
+		List<?> children = movedPage.getChildren();
 		assertEquals(2, children.size());
 		assertTrue(crawler.pageExists(root, destinationChildOnePath));
 		assertTrue(crawler.pageExists(root, destinationChildTwoPath));

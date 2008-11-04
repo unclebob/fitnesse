@@ -5,6 +5,8 @@ package fit.exception;
 
 public class FitMatcherException extends Exception
 {
+    private static final long serialVersionUID = 1L;
+
 	public FitMatcherException(String message)
 	{
 		super(message);

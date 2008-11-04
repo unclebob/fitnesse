@@ -7,6 +7,8 @@ import fit.exception.FitFailureException;
 
 public class NoSuchMethodFitFailureException extends FitFailureException
 {
+  private static final long serialVersionUID = 1L;
+
   public NoSuchMethodFitFailureException(String name)
   {
     super("Could not find method: " + name + ".");

@@ -15,14 +15,15 @@ public class ChunkedResponse extends Response
 		this.sender = sender;
 		addStandardHeaders();
 		sender.send(makeHttpHeaders().getBytes());
-		isReadyToSend = true;
+		setReadyToSend(true);
 		synchronized(this)
 		{
-			notify();
+			notifyAll();
+			Thread.yield();
 		}
 	}
 
-	public boolean isReadyToSend()
+	public synchronized boolean isReadyToSend()
 	{
 		return isReadyToSend;
 	}
@@ -86,4 +87,8 @@ public class ChunkedResponse extends Response
 	{
 		return bytesSent;
 	}
+
+    private synchronized void setReadyToSend(boolean isReadyToSend) {
+        this.isReadyToSend = isReadyToSend;
+    }
 }

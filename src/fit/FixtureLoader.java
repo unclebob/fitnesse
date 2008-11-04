@@ -30,8 +30,9 @@ public class FixtureLoader
     instance = loader;
   }
 
-  public Set fixturePathElements = new HashSet()
+  public Set<String> fixturePathElements = new HashSet<String>()
   {
+    private static final long serialVersionUID = 1L;
     {
       add("fit");
     }
@@ -59,12 +60,12 @@ public class FixtureLoader
 
   private Fixture instantiateFixture(String fixtureName) throws Throwable
   {
-    Class classForFixture = loadFixtureClass(fixtureName);
+    Class<?> classForFixture = loadFixtureClass(fixtureName);
     FixtureClass fixtureClass = new FixtureClass(classForFixture);
     return fixtureClass.newInstance();
   }
 
-  private Class loadFixtureClass(String fixtureName)
+  private Class<?> loadFixtureClass(String fixtureName)
   {
     try
     {
@@ -83,7 +84,7 @@ public class FixtureLoader
   private Fixture instantiateFirstValidFixtureClass(FixtureName fixtureName)
       throws Throwable
   {
-    for (Iterator i = fixtureName.getPotentialFixtureClassNames(
+    for (Iterator<String> i = fixtureName.getPotentialFixtureClassNames(
         fixturePathElements).iterator(); i.hasNext();)
     {
       String each = (String) i.next();

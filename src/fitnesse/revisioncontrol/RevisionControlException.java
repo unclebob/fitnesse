@@ -2,6 +2,7 @@ package fitnesse.revisioncontrol;
 
 public class RevisionControlException extends Exception
 {
+    private static final long serialVersionUID = 1L;
 
     public RevisionControlException(String errorMsg)
     {

@@ -14,7 +14,7 @@ public class EmployeePayRecordsRowFixture extends RowFixture
 		return records;
 	}
 
-	public Class getTargetClass()
+	public Class<?> getTargetClass()
 	{
 		return EmployeePayRecord.class;
 	}

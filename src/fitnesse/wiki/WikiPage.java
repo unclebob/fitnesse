@@ -8,7 +8,7 @@ import fitnesse.util.StringUtil;
 import java.io.Serializable;
 import java.util.List;
 
-public interface WikiPage extends Serializable, Comparable
+public interface WikiPage extends Serializable, Comparable<Object>
 {
 	public static final String SECURE_READ = "secure-read";
 	public static final String SECURE_WRITE = "secure-write";

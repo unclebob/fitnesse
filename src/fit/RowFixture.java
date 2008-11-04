@@ -7,13 +7,16 @@
 package fit;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+import fitnesse.util.ListUtility;
 
 abstract public class RowFixture extends ColumnFixture
 {
 
 	public Object results[];
-	public List missing = new LinkedList();
-	public List surplus = new LinkedList();
+	public List<Object> missing = new LinkedList<Object>();
+	public List<Object> surplus = new LinkedList<Object>();
 
 	public void doRows(Parse rows)
 	{
@@ -35,9 +38,9 @@ abstract public class RowFixture extends ColumnFixture
 
 	abstract public Object[] query() throws Exception;  // get rows to be compared
 
-	abstract public Class getTargetClass();             // get expected type of row
+	abstract public Class<?> getTargetClass();             // get expected type of row
 
-	protected void match(List expected, List computed, int col)
+	protected void match(List<?> expected, List<?> computed, int col)
 	{
 		if(col >= columnBindings.length)
 		{
@@ -49,14 +52,14 @@ abstract public class RowFixture extends ColumnFixture
 		}
 		else
 		{
-			Map eMap = eSort(expected, col);
-			Map cMap = cSort(computed, col);
-			Set keys = union(eMap.keySet(), cMap.keySet());
-			for(Iterator i = keys.iterator(); i.hasNext();)
+			Map<Object, Object> eMap = eSort(expected, col);
+			Map<Object, Object> cMap = cSort(computed, col);
+			Set<Object> keys = union(eMap.keySet(), cMap.keySet());
+			for(Iterator<Object> i = keys.iterator(); i.hasNext();)
 			{
 				Object key = i.next();
-				List eList = (List) eMap.get(key);
-				List cList = (List) cMap.get(key);
+				List<?> eList = (List<?>) eMap.get(key);
+				List<?> cList = (List<?>) cMap.get(key);
 				if(eList == null)
 				{
 					surplus.addAll(cList);
@@ -77,9 +80,9 @@ abstract public class RowFixture extends ColumnFixture
 		}
 	}
 
-	protected List list(Parse rows)
+	protected List<Parse> list(Parse rows)
 	{
-		List result = new LinkedList();
+		List<Parse> result = new LinkedList<Parse>();
 		while(rows != null)
 		{
 			result.add(rows);
@@ -88,9 +91,9 @@ abstract public class RowFixture extends ColumnFixture
 		return result;
 	}
 
-	protected List list(Object[] rows)
+	protected List<Object> list(Object[] rows)
 	{
-		List result = new LinkedList();
+		List<Object> result = new LinkedList<Object>();
 		for(int i = 0; i < rows.length; i++)
 		{
 			result.add(rows[i]);
@@ -98,11 +101,11 @@ abstract public class RowFixture extends ColumnFixture
 		return result;
 	}
 
-	protected Map eSort(List list, int col)
+	protected Map<Object, Object> eSort(List<?> list, int col)
 	{
 		TypeAdapter a = columnBindings[col].adapter;
-		Map result = new HashMap(list.size());
-		for(Iterator i = list.iterator(); i.hasNext();)
+		Map<Object, Object> result = new ConcurrentHashMap<Object, Object>(list.size());
+		for(Iterator<?> i = list.iterator(); i.hasNext();)
 		{
 			Parse row = (Parse) i.next();
 			Parse cell = row.parts.at(col);
@@ -123,11 +126,11 @@ abstract public class RowFixture extends ColumnFixture
 		return result;
 	}
 
-	protected Map cSort(List list, int col)
+	protected Map<Object, Object> cSort(List<?> list, int col)
 	{
 		TypeAdapter a = columnBindings[col].adapter;
-		Map result = new HashMap(list.size());
-		for(Iterator i = list.iterator(); i.hasNext();)
+		Map<Object, Object> result = new ConcurrentHashMap<Object, Object>(list.size());
+		for(Iterator<?> i = list.iterator(); i.hasNext();)
 		{
 			Object row = i.next();
 			try
@@ -145,33 +148,33 @@ abstract public class RowFixture extends ColumnFixture
 		return result;
 	}
 
-	protected void bin(Map map, Object key, Object row)
+	protected void bin(Map<Object, Object> result, Object key, Object row)
 	{
 		if(key.getClass().isArray())
 		{
 			key = Arrays.asList((Object[]) key);
 		}
-		if(map.containsKey(key))
+		if(result.containsKey(key))
 		{
-			((List) map.get(key)).add(row);
+		    ListUtility.uncheckedCast(Object.class, result.get(key)).add(row);
 		}
 		else
 		{
-			List list = new LinkedList();
+			List<Object> list = new LinkedList<Object>();
 			list.add(row);
-			map.put(key, list);
+			result.put(key, list);
 		}
 	}
 
-	protected Set union(Set a, Set b)
+	protected Set<Object> union(Set<?> a, Set<?> b)
 	{
-		Set result = new HashSet();
+		Set<Object> result = new HashSet<Object>();
 		result.addAll(a);
 		result.addAll(b);
 		return result;
 	}
 
-	protected void check(List eList, List cList)
+	protected void check(List<?> eList, List<?> cList)
 	{
 		if(eList.size() == 0)
 		{
@@ -210,7 +213,7 @@ abstract public class RowFixture extends ColumnFixture
 		}
 	}
 
-	protected void mark(Iterator rows, String message)
+	protected void mark(Iterator<?> rows, String message)
 	{
 		String annotation = label(message);
 		while(rows.hasNext())

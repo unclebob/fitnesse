@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class CachingPage extends CommitingPage {
+    private static final long serialVersionUID = 1L;
+
     public static int cacheTime = 3000;
 
     protected Map<String, WikiPage> children = new HashMap<String, WikiPage>();
-    private transient SoftReference cachedData;
+    private transient SoftReference<PageData> cachedData;
     private transient long cachedDataCreationTime = 0;
 
     public CachingPage(String name, WikiPage parent) throws Exception {
@@ -36,7 +38,7 @@ public abstract class CachingPage extends CommitingPage {
     }
 
     @Override
-    public List getNormalChildren() throws Exception {
+    public List<WikiPage> getNormalChildren() throws Exception {
         loadChildren();
         return getCachedChildren();
     }
@@ -96,7 +98,7 @@ public abstract class CachingPage extends CommitingPage {
 
     public PageData getCachedData() throws Exception {
         if (cachedData != null)
-            return (PageData) cachedData.get();
+            return cachedData.get();
         else
             return null;
     }

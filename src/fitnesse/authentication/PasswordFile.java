@@ -11,7 +11,7 @@ import java.util.*;
 public class PasswordFile
 {
 	private File passwordFile;
-	private Map passwordMap = new HashMap();
+	private Map<String, String> passwordMap = new HashMap<String, String>();
 	private PasswordCipher cipher = new TransparentCipher();
 
 	public PasswordFile(String filename) throws Exception
@@ -26,7 +26,7 @@ public class PasswordFile
 		this.cipher = cipher;
 	}
 
-	public Map getPasswordMap()
+	public Map<String, String> getPasswordMap()
 	{
 		return passwordMap;
 	}
@@ -49,16 +49,16 @@ public class PasswordFile
 
 	private void loadFile() throws Exception
 	{
-		LinkedList lines = getPasswordFileLines();
+		LinkedList<String> lines = getPasswordFileLines();
 		loadCipher(lines);
 		loadPasswords(lines);
 	}
 
-	private void loadPasswords(LinkedList lines)
+	private void loadPasswords(LinkedList<String> lines)
 	{
-		for(Iterator iterator = lines.iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = lines.iterator(); iterator.hasNext();)
 		{
-			String line = (String) iterator.next();
+			String line = iterator.next();
 			if(!"".equals(line))
 			{
 				String[] tokens = line.split(":");
@@ -67,7 +67,7 @@ public class PasswordFile
 		}
 	}
 
-	private void loadCipher(LinkedList lines) throws Exception
+	private void loadCipher(LinkedList<String> lines) throws Exception
 	{
 		if(lines.size() > 0)
 		{
@@ -83,17 +83,17 @@ public class PasswordFile
 
 	public PasswordCipher instantiateCipher(String cipherClassName) throws Exception
 	{
-		Class cipherClass = Class.forName(cipherClassName);
-		Constructor constructor = cipherClass.getConstructor(new Class[]{});
+		Class<?> cipherClass = Class.forName(cipherClassName);
+		Constructor<?> constructor = cipherClass.getConstructor(new Class[]{});
 		cipher = (PasswordCipher) constructor.newInstance(new Object[]{});
 		return cipher;
 	}
 
 	private void savePasswords() throws Exception
 	{
-		List lines = new LinkedList();
+		List<String> lines = new LinkedList<String>();
 		lines.add("!" + cipher.getClass().getName());
-		for(Iterator iterator = passwordMap.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = passwordMap.keySet().iterator(); iterator.hasNext();)
 		{
 			Object user = iterator.next();
 			Object password = passwordMap.get(user);
@@ -102,9 +102,9 @@ public class PasswordFile
 		FileUtil.writeLinesToFile(passwordFile, lines);
 	}
 
-	private LinkedList getPasswordFileLines() throws Exception
+	private LinkedList<String> getPasswordFileLines() throws Exception
 	{
-		LinkedList lines = new LinkedList();
+		LinkedList<String> lines = new LinkedList<String>();
 		if(passwordFile.exists())
 			lines = FileUtil.getFileLines(passwordFile);
 		return lines;

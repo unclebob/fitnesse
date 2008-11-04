@@ -28,6 +28,8 @@ import fitnesse.wikitext.widgets.XRefWidget;
 
 public class PageData implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
 	public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class});
 	public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{FixtureWidget.class});
 	public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
@@ -47,15 +49,15 @@ public class PageData implements Serializable
 	private transient WikiPage wikiPage;
 	private String content;
 	private WikiPageProperties properties = new WikiPageProperties();
-	private Set versions;
+	private Set<VersionInfo> versions;
 	private ParentWidget variableRoot;
-	private List literals;
+	private List<String> literals;
 
 	public PageData(WikiPage page) throws Exception
 	{
 		wikiPage = page;
 		initializeAttributes();
-		versions = new HashSet();
+		versions = new HashSet<VersionInfo>();
 	}
 
 	public PageData(WikiPage page, String content) throws Exception
@@ -182,7 +184,7 @@ public class PageData implements Serializable
 		return variableRoot.getVariable(name);
 	}
 
-	public void setLiterals(List literals)
+	public void setLiterals(List<String> literals)
 	{
 		this.literals = literals;
 	}
@@ -223,12 +225,12 @@ public class PageData implements Serializable
 		return getTextOfWidgets(classpathWidgetBuilder);
 	}
 
-	public List getFixtureNames() throws Exception
+	public List<String> getFixtureNames() throws Exception
 	{
 		return getTextOfWidgets(fixtureWidgetBuilder);
 	}
 
-	public List getXrefPages() throws Exception
+	public List<String> getXrefPages() throws Exception
 	{
 		return getTextOfWidgets(xrefWidgetBuilder);
 	}
@@ -248,12 +250,12 @@ public class PageData implements Serializable
 		return values;
 	}
 
-	public Set getVersions()
+	public Set<VersionInfo> getVersions()
 	{
 		return versions;
 	}
 
-	public void addVersions(Collection newVersions)
+	public void addVersions(Collection<VersionInfo> newVersions)
 	{
 		versions.addAll(newVersions);
 	}

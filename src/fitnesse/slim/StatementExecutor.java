@@ -58,7 +58,7 @@ public class StatementExecutor {
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
 
-  public Converter getConverter(Class k) {
+  public Converter getConverter(Class<?> k) {
     return Slim.converters.get(k);
   }
 
@@ -78,16 +78,16 @@ public class StatementExecutor {
 
 
   private Object createInstanceOfConstructor(String className, Object[] args) throws Exception {
-    Class k = searchPathsForClass(className);
-    Constructor constructor = getConstructor(k.getConstructors(), args);
+    Class<?> k = searchPathsForClass(className);
+    Constructor<?> constructor = getConstructor(k.getConstructors(), args);
     if (constructor == null)
       throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>", className));
 
     return constructor.newInstance(convertArgs(args, constructor.getParameterTypes()));
   }
 
-  private Class searchPathsForClass(String className) {
-    Class k = getClass(className);
+  private Class<?> searchPathsForClass(String className) {
+    Class<?> k = getClass(className);
     if (k != null)
       return k;
     for (String path : paths) {
@@ -98,7 +98,7 @@ public class StatementExecutor {
     throw new SlimError(String.format("message:<<NO_CLASS %s>>", className));
   }
 
-  private Class getClass(String className) {
+  private Class<?> getClass(String className) {
     try {
       return Class.forName(className);
     } catch (ClassNotFoundException e) {
@@ -106,9 +106,9 @@ public class StatementExecutor {
     }
   }
 
-  private Constructor getConstructor(Constructor[] constructors, Object[] args) {
-    for (Constructor constructor : constructors) {
-      Class arguments[] = constructor.getParameterTypes();
+  private Constructor<?> getConstructor(Constructor<?>[] constructors, Object[] args) {
+    for (Constructor<?> constructor : constructors) {
+      Class<?> arguments[] = constructor.getParameterTypes();
       if (arguments.length == args.length)
         return constructor;
     }
@@ -147,6 +147,7 @@ public class StatementExecutor {
     return result;
   }
 
+  @SuppressWarnings("unchecked")
   private Object replaceVariable(Object object) {
     if (object instanceof List)
       return (replaceArgsInList((List<Object>) object));
@@ -171,17 +172,17 @@ public class StatementExecutor {
   }
 
   private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Exception {
-    Class k = instance.getClass();
+    Class<?> k = instance.getClass();
     Method method = findMatchingMethod(methodName, k, args.length);
     Object convertedArgs[] = convertArgs(method, args);
     Object retval = method.invoke(instance, convertedArgs);
-    Class retType = method.getReturnType();
+    Class<?> retType = method.getReturnType();
     if (retType == List.class && retval instanceof List)
       return retval;
     return convertToString(retval, retType);
   }
 
-  private Method findMatchingMethod(String methodName, Class k, int nArgs) {
+  private Method findMatchingMethod(String methodName, Class<? extends Object> k, int nArgs) {
     Method methods[] = k.getMethods();
 
     for (Method method : methods) {
@@ -194,16 +195,16 @@ public class StatementExecutor {
   }
 
   private Object[] convertArgs(Method method, Object args[]) {
-    Class[] argumentTypes = method.getParameterTypes();
+    Class<?>[] argumentTypes = method.getParameterTypes();
     Object[] convertedArgs = convertArgs(args, argumentTypes);
     return convertedArgs;
   }
 
   //todo refactor this mess
-  private Object[] convertArgs(Object[] args, Class[] argumentTypes) {
+  private Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
     Object[] convertedArgs = new Object[args.length];
     for (int i = 0; i < argumentTypes.length; i++) {
-      Class argumentType = argumentTypes[i];
+      Class<?> argumentType = argumentTypes[i];
       if (argumentType == List.class && args[i] instanceof List) {
         convertedArgs[i] = args[i];
       } else {
@@ -218,7 +219,7 @@ public class StatementExecutor {
     return convertedArgs;
   }
 
-  private Object convertToString(Object retval, Class retType) {
+  private Object convertToString(Object retval, Class<?> retType) {
     Converter converter = getConverter(retType);
     if (converter != null)
       return converter.toString(retval);

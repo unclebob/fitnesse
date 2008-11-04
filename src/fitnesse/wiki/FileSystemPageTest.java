@@ -77,9 +77,9 @@ public class FileSystemPageTest extends TestCase {
         crawler.addPage(root, PathParser.parse("BbBb"), "B content");
         crawler.addPage(root, PathParser.parse("CcCc"), "C content");
         new File(defaultPath + "/root/someOtherDir").mkdir();
-        List children = root.getChildren();
+        List<?> children = root.getChildren();
         assertEquals(3, children.size());
-        for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
             WikiPage child = (WikiPage) iterator.next();
             String name = child.getName();
             boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "CcCc".equals(name);

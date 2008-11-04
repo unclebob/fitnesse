@@ -14,6 +14,8 @@ import java.util.List;
 
 public class ProxyPage extends CachingPage implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
 	public static int retrievalCount = 0;
 
 	private String host;
@@ -27,8 +29,8 @@ public class ProxyPage extends CachingPage implements Serializable
 		super(original.getName(), null);
 		realPath = original.getPageCrawler().getFullPath(original);
 
-		List children = original.getChildren();
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
+		List<?> children = original.getChildren();
+		for(Iterator<?> iterator = children.iterator(); iterator.hasNext();)
 		{
 			ProxyPage child = new ProxyPage((WikiPage) iterator.next());
 			child.parent = this;
@@ -73,7 +75,7 @@ public class ProxyPage extends CachingPage implements Serializable
 		{
 			ProxyPage page = retrievePage(getThisPageUrl());
 			children.clear();
-			for(Iterator iterator = page.children.values().iterator(); iterator.hasNext();)
+			for(Iterator<?> iterator = page.children.values().iterator(); iterator.hasNext();)
 			{
 				ProxyPage child = (ProxyPage) iterator.next();
 				child.parent = this;
@@ -107,7 +109,7 @@ public class ProxyPage extends CachingPage implements Serializable
 	{
 		this.host = host;
 		lastLoadChildrenTime = lastLoadTime;
-		for(Iterator i = children.values().iterator(); i.hasNext();)
+		for(Iterator<WikiPage> i = children.values().iterator(); i.hasNext();)
 		{
 			ProxyPage page = (ProxyPage) i.next();
 			page.setTransientValues(host, lastLoadTime);
@@ -122,7 +124,7 @@ public class ProxyPage extends CachingPage implements Serializable
 	public void setHostPort(int port)
 	{
 		hostPort = port;
-		for(Iterator i = children.values().iterator(); i.hasNext();)
+		for(Iterator<WikiPage> i = children.values().iterator(); i.hasNext();)
 		{
 			ProxyPage page = (ProxyPage) i.next();
 			page.setHostPort(port);

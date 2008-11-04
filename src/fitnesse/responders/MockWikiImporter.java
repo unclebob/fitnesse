@@ -27,7 +27,7 @@ public class MockWikiImporter extends WikiImporter
 	public void importWiki(WikiPage page) throws Exception
 	{
 		PageCrawler pageCrawler = page.getPageCrawler();
-		for(Iterator iterator = page.getChildren().iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = page.getChildren().iterator(); iterator.hasNext();)
 			pageCrawler.traverse((WikiPage) iterator.next(), this);
 	}
 

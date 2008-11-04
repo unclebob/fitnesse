@@ -7,6 +7,8 @@ import java.text.MessageFormat;
 
 public abstract class FixtureException extends FitFailureException
 {
+  private static final long serialVersionUID = 1L;
+
   public final String fixtureName;
 
   public FixtureException(String messageFormat, String fixtureName)

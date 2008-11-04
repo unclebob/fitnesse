@@ -2,7 +2,6 @@ package fitnesse.slim.converters;
 
 import fitnesse.slim.Converter;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class ListConverter implements Converter {

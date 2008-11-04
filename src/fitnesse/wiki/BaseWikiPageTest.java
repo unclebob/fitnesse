@@ -30,7 +30,7 @@ public class BaseWikiPageTest extends TestCase
 	{
 		createLink("LinkedPage");
 
-		List children = linkingPage.getChildren();
+		List<WikiPage> children = linkingPage.getChildren();
 		assertEquals(2, children.size());
 		assertEquals("ChildPage", ((WikiPage) children.get(0)).getName());
 

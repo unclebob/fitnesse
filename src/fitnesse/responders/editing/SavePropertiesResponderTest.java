@@ -72,7 +72,7 @@ public class SavePropertiesResponderTest extends RegexTestCase
 		FitNesseUtil.bindVirtualLinkToPage(linker, linkee);
 
 		extension = (VirtualCouplingExtension) linker.getExtension(VirtualCouplingExtension.NAME);
-		List children = extension.getVirtualCoupling().getChildren();
+		List<?> children = extension.getVirtualCoupling().getChildren();
 		assertEquals(1, children.size());
 		WikiPage child = (WikiPage) children.get(0);
 		assertEquals("ChildPageOne", child.getName());

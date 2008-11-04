@@ -66,7 +66,7 @@ public class TestRunnerTest extends RegexTestCase
 	{
 		runner.handler.addHandler(mockHandler);
 		runPage("SuitePage.TestPassing");
-		List results = mockHandler.results;
+		List<PageResult> results = mockHandler.results;
 		assertEquals(1, results.size());
 		Object result1 = results.get(0);
 		assertTrue(result1 instanceof PageResult);
@@ -80,7 +80,7 @@ public class TestRunnerTest extends RegexTestCase
 	{
 		runner.handler.addHandler(mockHandler);
 		runPage("SuitePage");
-		List results = mockHandler.results;
+		List<PageResult> results = mockHandler.results;
 		assertEquals(4, results.size());
 
 		checkResult(results, 0, "TestError", new TestSummary(0, 0, 0, 1), "ErrorFixture");
@@ -107,10 +107,10 @@ public class TestRunnerTest extends RegexTestCase
 
 		runPage("SuitePage.TestPassing");
 
-		List results = mockHandler.results;
+		List<PageResult> results = mockHandler.results;
 		assertEquals(1, results.size());
 		checkResult(results, 0, "", new TestSummary(3, 0, 0, 0), "PassFixture");
-		PageResult result = (PageResult) results.get(0);
+		PageResult result = results.get(0);
 		String content = result.content();
 		assertSubString("SuiteSetUp", content);
 		assertSubString("SuiteTearDown", content);
@@ -124,9 +124,9 @@ public class TestRunnerTest extends RegexTestCase
 		crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME), "!|fitnesse.testutil.PassFixture|\n");
 	}
 
-	private void checkResult(List results, int i, String s, TestSummary expectedSummary, String content)
+	private void checkResult(List<PageResult> results, int i, String s, TestSummary expectedSummary, String content)
 	{
-		PageResult result = (PageResult) results.get(i);
+		PageResult result = results.get(i);
 		assertEquals(s, result.title());
     TestSummary resultSummary = result.testSummary();
     assertEquals(expectedSummary, resultSummary);
@@ -197,7 +197,7 @@ public class TestRunnerTest extends RegexTestCase
 		assertTrue(systemClassLoader instanceof URLClassLoader);
 		URLClassLoader classLoader = (URLClassLoader) systemClassLoader;
 
-		URL sampleUrl = new File("src").toURL();
+		URL sampleUrl = new File("src").toURI().toURL();
 
 		String classpath = classpathAsString(classLoader);
 		assertNotSubString(sampleUrl.toString(), classpath);

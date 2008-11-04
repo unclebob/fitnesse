@@ -14,9 +14,9 @@ public class TagGroup extends HtmlTag
 	public String html(int depth) throws Exception
 	{
 		StringBuffer buffer = new StringBuffer();
-		for(Iterator iterator = childTags.iterator(); iterator.hasNext();)
+		for(Iterator<HtmlElement> iterator = childTags.iterator(); iterator.hasNext();)
 		{
-			HtmlElement element = (HtmlElement) iterator.next();
+			HtmlElement element = iterator.next();
 			if(element instanceof HtmlTag)
 				buffer.append(((HtmlTag) element).html(depth));
 			else

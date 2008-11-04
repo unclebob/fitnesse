@@ -10,7 +10,6 @@ import fitnesse.wiki.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ExecutionLog {
   private WikiPage root;
 
   private CommandRunner runner;
-  private List reasons = new LinkedList();
+  private List<String> reasons = new LinkedList<String>();
   private List<Throwable> exceptions = new LinkedList<Throwable>();
 
   public ExecutionLog(WikiPage testPage, CommandRunner client) throws Exception {

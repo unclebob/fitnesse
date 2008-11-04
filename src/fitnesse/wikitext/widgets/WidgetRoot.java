@@ -150,7 +150,7 @@ public class WidgetRoot extends ParentWidget
 		return doEscaping;
 	}
 
-	public List getLiterals()
+	public List<String> getLiterals()
 	{
 		return literals;
 	}

@@ -30,7 +30,7 @@ public class VersionInfoTest extends TestCase
 
 	public void testSortVersions() throws Exception
 	{
-		List list = new LinkedList();
+		List<VersionInfo> list = new LinkedList<VersionInfo>();
 		VersionInfo toms = new VersionInfo("Tom-45678901234567");
 		VersionInfo anons = new VersionInfo("56789012345678");
 		VersionInfo jerrys = new VersionInfo("Jerry-01234567890123");

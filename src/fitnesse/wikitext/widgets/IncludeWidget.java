@@ -23,8 +23,8 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
   protected WikiPage includedPage; //Retain from getIncludedPageContent()
   protected WikiPage parentPage;
 
-  private static Map optionPrefixMap = buildOptionPrefixMap();
-  private static Map optionCssMap = buildOptionsCssMap();
+  private static Map<String, String> optionPrefixMap = buildOptionPrefixMap();
+  private static Map<String, String> optionCssMap = buildOptionsCssMap();
 
   public IncludeWidget(ParentWidget parent, String text) throws Exception {
     super(parent);
@@ -120,8 +120,8 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
     return false;
   }
 
-  private static Map buildOptionsCssMap() {
-    Map optionCssMap = new HashMap();
+  private static Map<String, String> buildOptionsCssMap() {
+    Map<String, String> optionCssMap = new HashMap<String, String>();
     optionCssMap.put("-setup", "setup");
     optionCssMap.put("-teardown", "teardown");
     optionCssMap.put("-c", "included");
@@ -129,8 +129,8 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
     return optionCssMap;
   }
 
-  private static Map buildOptionPrefixMap() {
-    Map optionPrefixMap = new HashMap();
+  private static Map<String, String> buildOptionPrefixMap() {
+    Map<String, String> optionPrefixMap = new HashMap<String, String>();
     optionPrefixMap.put("-setup", "Set Up: ");
     optionPrefixMap.put("-teardown", "Tear Down: ");
     optionPrefixMap.put("-c", "Included page: ");

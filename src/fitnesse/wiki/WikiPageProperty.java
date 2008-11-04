@@ -6,7 +6,9 @@ import java.util.*;
 
 public class WikiPageProperty implements Serializable
 {
-	private String value;
+    private static final long serialVersionUID = 1L;
+    
+    private String value;
 	protected HashMap<String, WikiPageProperty> children;
 
 	public WikiPageProperty()
@@ -71,9 +73,9 @@ public class WikiPageProperty implements Serializable
 		return children != null && children.containsKey(name);
 	}
 
-	public Set keySet()
+	public Set<String> keySet()
 	{
-		return children == null ? new HashSet() : children.keySet();
+		return children == null ? new HashSet<String>() : children.keySet();
 	}
 
 	public String toString()
@@ -92,7 +94,7 @@ public class WikiPageProperty implements Serializable
 			buffer.append(" = ").append(value);
 		buffer.append("\n");
 
-		for(Iterator iterator = keySet().iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = keySet().iterator(); iterator.hasNext();)
 		{
 			String childKey = (String) iterator.next();
 			WikiPageProperty value = getProperty(childKey);

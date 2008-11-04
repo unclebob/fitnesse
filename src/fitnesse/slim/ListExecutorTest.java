@@ -120,7 +120,7 @@ public class ListExecutorTest {
 
   @Test
   public void passAndReturnList() throws Exception {
-    List<Object> l = list("one", "two");
+    List<String> l = list("one", "two");
     statements.add(list("id", "call", "testSlim", "echoList", l));
     respondsWith(list(list("id", l)));
   }

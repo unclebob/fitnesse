@@ -30,7 +30,7 @@ public class MockResponseSender implements ResponseSender
 	public synchronized void close() throws Exception
 	{
 		closed = true;
-		notify();
+		notifyAll();
 	}
 
 	public Socket getSocket() throws Exception
@@ -46,7 +46,7 @@ public class MockResponseSender implements ResponseSender
 	public void doSending(Response response) throws Exception
 	{
 		response.readyToSend(this);
-		waitForClose(20000);
+		waitForClose(50000);
 	}
 
 	// Utility method that returns when this.closed is true. Throws an exception

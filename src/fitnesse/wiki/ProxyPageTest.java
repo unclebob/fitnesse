@@ -67,7 +67,7 @@ public class ProxyPageTest extends TestCase
 
 	public void testGetAllChildren() throws Exception
 	{
-		List children = proxy.getChildren();
+		List<?> children = proxy.getChildren();
 		assertEquals(2, children.size());
 		WikiPage child = (WikiPage) children.get(0);
 		assertEquals(true, "ChildOne".equals(child.getName()) || "ChildTwo".equals(child.getName()));
@@ -77,14 +77,14 @@ public class ProxyPageTest extends TestCase
 
 	public void testSetHostAndPort() throws Exception
 	{
-		List children = proxy.getChildren();
+		List<?> children = proxy.getChildren();
 		proxy.setTransientValues("a.new.host", new Date().getTime());
 		proxy.setHostPort(123);
 
 		assertEquals("a.new.host", proxy.getHost());
 		assertEquals(123, proxy.getHostPort());
 
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
+		for(Iterator<?> iterator = children.iterator(); iterator.hasNext();)
 		{
 			ProxyPage page = (ProxyPage) iterator.next();
 			assertEquals("a.new.host", page.getHost());

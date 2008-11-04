@@ -7,9 +7,9 @@ import fit.exception.*;
 
 public class FixtureClass
 {
-  private Class klass;
+  private Class<?> klass;
 
-  public FixtureClass(Class klass)
+  public FixtureClass(Class<?> klass)
   {
     this.klass = klass;
   }

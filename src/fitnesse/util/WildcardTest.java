@@ -28,7 +28,7 @@ public class WildcardTest extends TestCase
 	{
 		Wildcard wildcard = new Wildcard("*.jar");
 		File[] files = testDir.listFiles(wildcard);
-		List list = fileArrayToStringList(files);
+		List<String> list = fileArrayToStringList(files);
 		assertEquals(2, files.length);
 		assertTrue(list.contains("one.jar"));
 		assertTrue(list.contains("two.jar"));
@@ -38,7 +38,7 @@ public class WildcardTest extends TestCase
 	{
 		Wildcard wildcard = new Wildcard("*.dll");
 		File[] files = testDir.listFiles(wildcard);
-		List list = fileArrayToStringList(files);
+		List<String> list = fileArrayToStringList(files);
 		assertEquals(2, files.length);
 		assertTrue(list.contains("one.dll"));
 		assertTrue(list.contains("two.dll"));
@@ -48,7 +48,7 @@ public class WildcardTest extends TestCase
 	{
 		Wildcard wildcard = new Wildcard("one*");
 		File[] files = testDir.listFiles(wildcard);
-		List list = fileArrayToStringList(files);
+		List<String> list = fileArrayToStringList(files);
 		assertEquals(3, files.length);
 		assertTrue(list.contains("oneA"));
 		assertTrue(list.contains("one.jar"));
@@ -62,9 +62,9 @@ public class WildcardTest extends TestCase
 		assertEquals(6, files.length);
 	}
 
-	private List fileArrayToStringList(File[] files)
+	private List<String> fileArrayToStringList(File[] files)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		for(int i = 0; i < files.length; i++)
 		{
 			File file = files[i];

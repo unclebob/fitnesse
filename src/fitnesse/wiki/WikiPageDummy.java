@@ -7,11 +7,13 @@ import java.util.*;
 
 public class WikiPageDummy implements WikiPage
 {
+    private static final long serialVersionUID = 1L;
+    
 	public String name;
 	protected String location;
 	private PageData pageData;
 	private WikiPage parent;
-  protected WikiPage parentForVariables;
+    protected WikiPage parentForVariables;
   
 	public static final int daysTillVersionsExpire = 14;
 
@@ -69,9 +71,9 @@ public class WikiPageDummy implements WikiPage
 		return new VersionInfo("mockVersionName", "mockAuthor", new Date());
 	}
 
-	public List getChildren()
+	public List<WikiPage> getChildren()
 	{
-		return new ArrayList();
+		return new ArrayList<WikiPage>();
 	}
 
 	public int compareTo(Object o)

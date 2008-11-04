@@ -61,7 +61,7 @@ public class PageDataTest extends RegexTestCase
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 		WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
-		List paths = page.getData().getClasspaths();
+		List<?> paths = page.getData().getClasspaths();
 		assertTrue(paths.contains("123"));
 		assertTrue(paths.contains("abc"));
 	}
@@ -71,7 +71,7 @@ public class PageDataTest extends RegexTestCase
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 
 		WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
-		List paths = page.getData().getClasspaths();
+		List<?> paths = page.getData().getClasspaths();
 		assertEquals("/my/path.jar", paths.get(0).toString());
 
 		PageData data = root.getData();
@@ -89,7 +89,7 @@ public class PageDataTest extends RegexTestCase
 		crawler.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
 
 		WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
-		List paths = page.getData().getClasspaths();
+		List<?> paths = page.getData().getClasspaths();
 		assertEquals("/my/path.jar", paths.get(0).toString());
 	}
 
@@ -106,7 +106,7 @@ public class PageDataTest extends RegexTestCase
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 		WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!fixture FixtureOne\r\nNot.A.Fixture\r\n!fixture FixtureTwo\n\n!fixture FixtureThree");
-		List fixtureNames = page.getData().getFixtureNames();
+		List<?> fixtureNames = page.getData().getFixtureNames();
 		assertEquals(3, fixtureNames.size());
 		assertEquals("FixtureOne", fixtureNames.get(0));
 		assertEquals("FixtureTwo", fixtureNames.get(1));
@@ -117,7 +117,7 @@ public class PageDataTest extends RegexTestCase
 	{
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 		WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
-		List xrefs = page.getData().getXrefPages();
+		List<?> xrefs = page.getData().getXrefPages();
 		assertEquals("XrefPage", xrefs.get(0));
 	}
 

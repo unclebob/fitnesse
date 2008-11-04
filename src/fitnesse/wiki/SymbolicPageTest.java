@@ -76,7 +76,7 @@ public class SymbolicPageTest extends TestCase
 	{
 		crawler.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
 		crawler.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
-		List children = symPage.getChildren();
+		List<?> children = symPage.getChildren();
 		assertEquals(2, children.size());
 		assertEquals(SymbolicPage.class, children.get(0).getClass());
 		assertEquals(SymbolicPage.class, children.get(1).getClass());
@@ -93,7 +93,7 @@ public class SymbolicPageTest extends TestCase
 		pageTwo.commit(data);
 
 		WikiPage deepPage = crawler.getPage(root, PathParser.parse(pageOnePath + ".SymOne.SymTwo.SymOne.SymTwo.SymOne"));
-		List children = deepPage.getChildren();
+		List<?> children = deepPage.getChildren();
 		assertEquals(1, children.size());
 
 		deepPage = crawler.getPage(root, PathParser.parse(pageTwoPath + ".SymTwo.SymOne.SymTwo.SymOne.SymTwo"));

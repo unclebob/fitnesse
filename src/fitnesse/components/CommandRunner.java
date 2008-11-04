@@ -10,7 +10,7 @@ public class CommandRunner
 {
 	protected Process process;
 	protected String input = "";
-	protected List exceptions = new ArrayList();
+	protected List<Throwable> exceptions = new ArrayList<Throwable>();
 	protected OutputStream stdin;
 	protected InputStream stdout;
 	protected InputStream stderr;
@@ -86,7 +86,7 @@ public class CommandRunner
 		return errorBuffer.toString();
 	}
 
-	public List getExceptions()
+	public List<Throwable> getExceptions()
 	{
 		return exceptions;
 	}

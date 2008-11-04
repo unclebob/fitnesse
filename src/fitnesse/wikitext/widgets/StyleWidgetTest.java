@@ -1,7 +1,6 @@
 package fitnesse.wikitext.widgets;
 
 import org.junit.Test;
-import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.*;
 

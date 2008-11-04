@@ -6,6 +6,8 @@ import fitnesse.wiki.Extension;
 
 public class SimpleExtension implements Extension
 {
+    private static final long serialVersionUID = 1L;
+
 	public String getName()
 	{
 		return "SimpleExtension";

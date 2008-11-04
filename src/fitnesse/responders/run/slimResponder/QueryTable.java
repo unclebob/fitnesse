@@ -2,6 +2,8 @@ package fitnesse.responders.run.slimResponder;
 
 import java.util.*;
 
+import fitnesse.util.ListUtility;
+
 public class QueryTable extends SlimTable {
   private List<String> fieldNames = new ArrayList<String>();
   private String queryId;
@@ -39,7 +41,7 @@ public class QueryTable extends SlimTable {
       table.appendToCell(0, 0, fail("Query fixture has no valid query method"));
       return;
     }
-    scanRowsForMatches((List<Object>) queryReturn);
+    scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
   }
 
   private void scanRowsForMatches(List<Object> queryResultList) throws Exception {
@@ -119,6 +121,7 @@ public class QueryTable extends SlimTable {
       }
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, String> makeRowMap(Object row) {
       Map<String, String> rowMap = new HashMap<String, String>();
       for (List<Object> columnPair : (List<List<Object>>) row) {

@@ -102,7 +102,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase
 		checkFormtterCreated("xml", XmlResultFormatter.class);
 	}
 
-	private void checkFormtterCreated(String format, Class formatterClass) throws Exception
+	private void checkFormtterCreated(String format, Class<?> formatterClass) throws Exception
 	{
 		MockRequest request = new MockRequest();
 		request.addHeader("Host", "locahost:8080");

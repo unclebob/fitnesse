@@ -114,6 +114,8 @@ public class ListDeserializer {
   }
 
   public class SyntaxError extends SlimError {
+    private static final long serialVersionUID = 1L;
+
     public SyntaxError(String s) {
       super(s);
     }

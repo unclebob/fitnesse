@@ -3,7 +3,6 @@ package fitnesse.slim;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.test.TestSlim;
-import fitnesse.util.ListUtility;
 import static fitnesse.util.ListUtility.list;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,8 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
-import java.util.Arrays;
-import java.util.List;
 
 public class SlimMethodInvocationTest {
   private StatementExecutor caller;
@@ -105,19 +102,19 @@ public class SlimMethodInvocationTest {
 
   @Test
   public void convertLists() throws Exception {
-    Object result = caller.call("testSlim", "oneList", "[1 ,2, 3,4, hello Bob]");
+    caller.call("testSlim", "oneList", "[1 ,2, 3,4, hello Bob]");
     assertEquals(list("1","2","3","4","hello Bob"), caller.call("testSlim", "getListArg"));
   }
 
   @Test
   public void convertArraysOfStrings() throws Exception {
-    Object result = caller.call("testSlim", "setStringArray", "[1 ,2, 3,4, hello Bob]");
+    caller.call("testSlim", "setStringArray", "[1 ,2, 3,4, hello Bob]");
     assertEquals("[1, 2, 3, 4, hello Bob]", caller.call("testSlim", "getStringArray"));
   }
 
   @Test
   public void convertArraysOfIntegers() throws Exception {
-    Object result = caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4]");
+    caller.call("testSlim", "setIntegerArray", "[1 ,2, 3,4]");
     assertEquals("[1, 2, 3, 4]", caller.call("testSlim", "getIntegerArray"));
   }
 
@@ -130,13 +127,13 @@ public class SlimMethodInvocationTest {
 
   @Test
   public void convertArraysOfBooleans() throws Exception {
-    Object result = caller.call("testSlim", "setBooleanArray", "[true ,false, false,true]");
+    caller.call("testSlim", "setBooleanArray", "[true ,false, false,true]");
     assertEquals("[true, false, false, true]", caller.call("testSlim", "getBooleanArray"));
   }
 
   @Test
   public void convertArraysOfDoubles() throws Exception {
-    Object result = caller.call("testSlim", "setDoubleArray", "[1 ,2.2, -3e2,0.04]");
+    caller.call("testSlim", "setDoubleArray", "[1 ,2.2, -3e2,0.04]");
     assertEquals("[1.0, 2.2, -300.0, 0.04]", caller.call("testSlim", "getDoubleArray"));
   }
 

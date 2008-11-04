@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 public abstract class CommitingPage extends ExtendableWikiPage
 {
+    private static final long serialVersionUID = 1L;
+
 	protected CommitingPage(String name, WikiPage parent)
 	{
 		super(name, parent);

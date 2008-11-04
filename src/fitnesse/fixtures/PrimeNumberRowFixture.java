@@ -17,7 +17,7 @@ public class PrimeNumberRowFixture extends RowFixture
 		return array;
 	}
 
-	public Class getTargetClass()
+	public Class<?> getTargetClass()
 	{
 		return PrimeData.class;
 	}

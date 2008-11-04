@@ -139,7 +139,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     public static class TestWidgetInterceptor implements WidgetInterceptor {
-        public static List<Class> widgetsIntercepted = new ArrayList<Class>();
+        public static List<Class<?>> widgetsIntercepted = new ArrayList<Class<?>>();
 
         public void intercept(WikiWidget widget) {
             widgetsIntercepted.add(widget.getClass());

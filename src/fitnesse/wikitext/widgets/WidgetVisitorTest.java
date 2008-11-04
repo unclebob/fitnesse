@@ -10,7 +10,7 @@ import java.util.*;
 
 public class WidgetVisitorTest extends TestCase implements WidgetVisitor
 {
-	List visits = new ArrayList();
+	List<WikiWidget> visits = new ArrayList<WikiWidget>();
 	private WikiPage root;
 
 	public void visit(WikiWidget widget)

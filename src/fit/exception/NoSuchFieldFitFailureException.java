@@ -5,6 +5,8 @@ package fit.exception;
 
 public class NoSuchFieldFitFailureException extends FitFailureException
 {
+  private static final long serialVersionUID = 1L;
+
   public NoSuchFieldFitFailureException(String name)
   {
     super("Could not find field: " + name + ".");

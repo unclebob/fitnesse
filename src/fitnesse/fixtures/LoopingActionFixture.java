@@ -10,7 +10,7 @@ import java.util.Stack;
 public class LoopingActionFixture extends ActionFixture
 {
 
-	Stack loopContexts = new Stack();
+	Stack<Parse> loopContexts = new Stack<Parse>();
 	Parse rows;
 
 	boolean isSpecialName(String name)
@@ -60,7 +60,7 @@ public class LoopingActionFixture extends ActionFixture
 		Boolean result = (Boolean) action.invoke(actor);
 		if(result.booleanValue())
 		{
-			rows = (Parse) loopContexts.peek();
+			rows = loopContexts.peek();
 		}
 		else
 		{

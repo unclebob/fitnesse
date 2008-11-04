@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class SimpleCachinePage extends CachingPage
 {
+    private static final long serialVersionUID = 1L;
+
 	private PageData data;
 
 	public SimpleCachinePage(String name, WikiPage parent) throws Exception

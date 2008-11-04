@@ -228,7 +228,7 @@ public class WidgetBuilderTest extends TestCase
 		}
 	}
 
-	private void testWikiWordInParentWidget(String input, Class expectedClass, String wikiWordText, int subChildren) throws Exception
+	private void testWikiWordInParentWidget(String input, Class<?> expectedClass, String wikiWordText, int subChildren) throws Exception
 	{
 		ParentWidget page = new WidgetRoot(input, mockSource);
 		assertEquals(1, page.numberOfChildren());
@@ -241,7 +241,7 @@ public class WidgetBuilderTest extends TestCase
 		testWidgetClassAndText(childWidget, WikiWordWidget.class, wikiWordText);
 	}
 
-	private void testWidgetClassAndText(WikiWidget widget, Class expectedClass, String expectedText)
+	private void testWidgetClassAndText(WikiWidget widget, Class<?> expectedClass, String expectedText)
 	{
 		assertEquals(expectedClass, widget.getClass());
 		if(widget instanceof TextWidget)

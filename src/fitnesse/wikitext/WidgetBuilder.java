@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class WidgetBuilder
 {
-	public static final Class[] htmlWidgetClasses = new Class[]{
+	public static final Class<?>[] htmlWidgetClasses = new Class<?>[]{
 		CommentWidget.class,
 		LiteralWidget.class,
 		WikiWordWidget.class,
@@ -65,14 +65,14 @@ public class WidgetBuilder
 			VariableWidget.class
 		});
 
-	private Class[] widgetClasses;
+	private Class<?>[] widgetClasses;
 	private Pattern widgetPattern;
 	private WidgetData[] widgetDataArray;
 
 	private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
 	private final ReentrantLock widgetDataArraylock = new ReentrantLock();
 
-	public WidgetBuilder(Class[] widgetClasses)
+	public WidgetBuilder(Class<?>[] widgetClasses)
 	{
 		this.widgetClasses = widgetClasses;
 		widgetPattern = buildCompositeWidgetPattern();
@@ -85,7 +85,7 @@ public class WidgetBuilder
 		StringBuffer pattern = new StringBuffer();
 		for(int i = 0; i < widgetClasses.length; i++)
 		{
-			Class widgetClass = widgetClasses[i];
+			Class<?> widgetClass = widgetClasses[i];
 			String regexp = getRegexpFromWidgetClass(widgetClass);
 			pattern.append("(").append(regexp).append(")");
 			if(i != (widgetClasses.length - 1))
@@ -94,7 +94,7 @@ public class WidgetBuilder
 		return Pattern.compile(pattern.toString(), Pattern.DOTALL | Pattern.MULTILINE);
 	}
 
-	private static String getRegexpFromWidgetClass(Class widgetClass)
+	private static String getRegexpFromWidgetClass(Class<?> widgetClass)
 	{
 		String regexp = null;
 		try
@@ -130,15 +130,15 @@ public class WidgetBuilder
 	public WikiWidget makeWidget(ParentWidget parent, Matcher matcher) throws Exception
 	{
 		int group = getGroupMatched(matcher);
-		Class widgetClass = widgetClasses[group - 1];
+		Class<?> widgetClass = widgetClasses[group - 1];
 		return constructWidget(widgetClass, parent, matcher.group());
 	}
 
-	private WikiWidget constructWidget(Class widgetClass, ParentWidget parent, String text) throws Exception
+	private WikiWidget constructWidget(Class<?> widgetClass, ParentWidget parent, String text) throws Exception
 	{
 		try
 		{
-			Constructor widgetConstructor = widgetClass.getConstructor(new Class[]{ParentWidget.class, String.class});
+			Constructor<?> widgetConstructor = widgetClass.getConstructor(new Class<?>[]{ParentWidget.class, String.class});
 			WikiWidget widget = (WikiWidget) widgetConstructor.newInstance(new Object[]{parent, text});
 			for(WidgetInterceptor i : interceptors)
 			{
@@ -175,7 +175,7 @@ public class WidgetBuilder
 		WidgetData[] widgetDataArray = new WidgetData[widgetClasses.length];
 		for(int i = 0; i < widgetClasses.length; i++)
 		{
-			Class widgetClass = widgetClasses[i];
+			Class<?> widgetClass = widgetClasses[i];
 			widgetDataArray[i] = new WidgetData(widgetClass);
 		}
 		return widgetDataArray;
@@ -241,11 +241,11 @@ public class WidgetBuilder
 
 	static class WidgetData
 	{
-		public Class widgetClass;
+		public Class<?> widgetClass;
 		public Pattern pattern;
 		public Matcher match;
 
-		public WidgetData(Class widgetClass)
+		public WidgetData(Class<?> widgetClass)
 		{
 			this.widgetClass = widgetClass;
 			pattern = Pattern.compile(getRegexpFromWidgetClass(widgetClass), Pattern.DOTALL | Pattern.MULTILINE);

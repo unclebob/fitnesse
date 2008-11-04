@@ -191,7 +191,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener
 
 		assertFalse(exceptionOccurred);
 		StringBuffer buffer = new StringBuffer();
-		for(Iterator iterator = outputs.iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = outputs.iterator(); iterator.hasNext();)
 			buffer.append(iterator.next());
 
 		assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());

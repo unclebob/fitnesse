@@ -71,9 +71,9 @@ public class PageXmlizer
 
 	private boolean pageMeetsConditions(WikiPage page) throws Exception
 	{
-		for(Iterator iterator = pageConditions.iterator(); iterator.hasNext();)
+		for(Iterator<XmlizePageCondition> iterator = pageConditions.iterator(); iterator.hasNext();)
 		{
-			XmlizePageCondition xmlizePageCondition = (XmlizePageCondition) iterator.next();
+			XmlizePageCondition xmlizePageCondition = iterator.next();
 			if(!xmlizePageCondition.canBeXmlized(page))
 				return false;
 		}
@@ -104,9 +104,9 @@ public class PageXmlizer
 		List<WikiPage> children = page.getChildren();
 		Collections.sort(children);
 
-		for(Iterator iterator = children.iterator(); iterator.hasNext();)
+		for(Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext();)
 		{
-			WikiPage child = (WikiPage) iterator.next();
+			WikiPage child = iterator.next();
 			addPageXmlToElement(document, childrenElement, child);
 		}
 		pageElement.appendChild(childrenElement);

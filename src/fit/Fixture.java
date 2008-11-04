@@ -25,7 +25,7 @@ public class Fixture
     private static boolean forcedAbort = false;  //Semaphores
     public static void setForcedAbort (boolean state) { forcedAbort = state; }  //Semaphores
 
-    protected Class getTargetClass()
+    protected Class<?> getTargetClass()
     {
         return getClass();
     }
@@ -303,7 +303,7 @@ public class Fixture
         return b.toString();
     }
 
-    public Object parse(String s, Class type) throws Exception
+    public Object parse(String s, Class<?> type) throws Exception
     {
         if (type.equals(String.class))
         {
@@ -389,11 +389,11 @@ public class Fixture
         return symbols.containsKey(name);
     }
 
-    public static boolean hasParseMethod(Class type)
+    public static boolean hasParseMethod(Class<?> type)
     {
         try
         {
-            type.getMethod("parse", new Class[]
+            type.getMethod("parse", new Class<?>[]
             {String.class});
             return true;
         } catch (NoSuchMethodException e)
@@ -402,9 +402,9 @@ public class Fixture
         }
     }
 
-    public static Object callParseMethod(Class type, String s) throws Exception
+    public static Object callParseMethod(Class<?> type, String s) throws Exception
     {
-        Method parseMethod = type.getMethod("parse", new Class[]
+        Method parseMethod = type.getMethod("parse", new Class<?>[]
         {String.class});
         Object o = parseMethod.invoke(null, new Object[]
         {s});
@@ -474,7 +474,7 @@ public class Fixture
 
         private void tryRelationalMatch()
         {
-            Class adapterType = typeAdapter.type;
+            Class<?> adapterType = typeAdapter.type;
             FitFailureException cantParseException = new CouldNotParseFitFailureException(cell.text(), adapterType
                     .getName());
             if (result != null)

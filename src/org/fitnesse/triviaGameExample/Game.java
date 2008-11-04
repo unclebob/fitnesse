@@ -7,7 +7,7 @@ public class Game {
   private boolean gameHasStarted = false;
 
   public Game() {
-    players = new ArrayList();
+    players = new ArrayList<Player>();
   }
 
   public Player addPlayer(String aPlayerName) {

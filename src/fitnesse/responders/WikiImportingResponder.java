@@ -214,9 +214,9 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 			tail.add("Orphans:");
 			tail.add(HtmlUtil.HR);
 
-			for(Iterator iterator = orphans.iterator(); iterator.hasNext();)
+			for(Iterator<WikiPagePath> iterator = orphans.iterator(); iterator.hasNext();)
 			{
-				WikiPagePath path = (WikiPagePath) iterator.next();
+				WikiPagePath path = iterator.next();
 				HtmlTag row = alternatingRow();
 				row.add(PathParser.render(path));
 				tail.add(row);

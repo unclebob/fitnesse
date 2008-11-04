@@ -19,14 +19,14 @@ public class Request
 	private static final Pattern boundaryPattern = Pattern.compile("boundary=(.*)");
 	private static final Pattern multipartHeaderPattern = Pattern.compile("([^ =]+)=\\\"([^\"]*)\\\"");
 
-	private static Collection allowedMethods = buildAllowedMethodList();
+	private static Collection<String> allowedMethods = buildAllowedMethodList();
 
 	protected StreamReader input;
 	protected String requestURI;
 	protected String resource;
 	protected String queryString;
-	protected HashMap inputs = new HashMap();
-	protected HashMap headers = new HashMap();
+	protected HashMap<String, Object> inputs = new HashMap<String, Object>();
+	protected HashMap<String, Object> headers = new HashMap<String, Object>();
 	protected String entityBody = "";
 	protected String requestLine;
 	protected String authorizationUsername;
@@ -34,9 +34,9 @@ public class Request
 	private boolean hasBeenParsed;
 	private long bytesParsed = 0;
 
-	public static Set buildAllowedMethodList()
+	public static Set<String> buildAllowedMethodList()
 	{
-		Set methods = new HashSet(20);
+		Set<String> methods = new HashSet<String>(20);
 		methods.add("GET");
 		methods.add("POST");
 		return methods;
@@ -68,9 +68,9 @@ public class Request
 		parseRequestUri(requestURI);
 	}
 
-	private HashMap parseHeaders(StreamReader reader) throws Exception
+	private HashMap<String, Object> parseHeaders(StreamReader reader) throws Exception
 	{
-		HashMap headers = new HashMap();
+		HashMap<String, Object> headers = new HashMap<String, Object>();
 		String line = reader.readLine();
 		while(!"".equals(line))
 		{
@@ -120,7 +120,7 @@ public class Request
 		while(numberOfBytesToRead - input.numberOfBytesConsumed() > 10)
 		{
 			input.readLine();
-			HashMap headers = parseHeaders(input);
+			HashMap<String, Object> headers = parseHeaders(input);
 			String contentDisposition = (String) headers.get("content-disposition");
 			Matcher matcher = multipartHeaderPattern.matcher(contentDisposition);
 			while(matcher.find())
@@ -143,7 +143,7 @@ public class Request
 		input.resetNumberOfBytesConsumed();
 	}
 
-	private Object createUploadedFile(HashMap headers, StreamReader reader, String boundary) throws Exception
+	private Object createUploadedFile(HashMap<String, Object> headers, StreamReader reader, String boundary) throws Exception
 	{
 		String filename = (String) headers.get("filename");
 		String contentType = (String) headers.get("content-type");
@@ -255,13 +255,13 @@ public class Request
 		return buffer.toString();
 	}
 
-	private void addMap(HashMap map, StringBuffer buffer)
+	private void addMap(HashMap<String, Object> map, StringBuffer buffer)
 	{
 		if(map.size() == 0)
 		{
 			buffer.append("\tempty");
 		}
-		for(Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
+		for(Iterator<String> iterator = map.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			String value = map.get(key) != null ? escape(map.get(key).toString()) : null;

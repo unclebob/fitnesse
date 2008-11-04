@@ -8,6 +8,8 @@ package fit.exception;
 
 public class ClassIsNotFixtureException extends FixtureException
 {
+  private static final long serialVersionUID = 1L;
+
   public ClassIsNotFixtureException(String fixtureName)
   {
     super("Class {0} is not a fixture.", fixtureName);

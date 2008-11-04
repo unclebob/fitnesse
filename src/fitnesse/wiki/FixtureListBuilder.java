@@ -6,14 +6,14 @@ import java.util.*;
 
 public class FixtureListBuilder extends InheritedItemBuilder
 {
-	public List getFixtureNames(WikiPage page) throws Exception
+	public List<String> getFixtureNames(WikiPage page) throws Exception
 	{
-		return getInheritedItems(page, new HashSet(89));
+		return getInheritedItems(page, new HashSet<WikiPage>(89));
 	}
 
-	protected List getItemsFromPage(WikiPage page) throws Exception
+	protected List<String> getItemsFromPage(WikiPage page) throws Exception
 	{
 		PageData pageData = page.getData();
-		return pageData == null ? new ArrayList() : pageData.getFixtureNames();
+		return pageData == null ? new ArrayList<String>() : pageData.getFixtureNames();
 	}
 }

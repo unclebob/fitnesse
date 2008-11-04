@@ -26,7 +26,7 @@ public class VersionSelectionResponderTest extends RegexTestCase
 
 	public void testGetVersionsList() throws Exception
 	{
-		Set set = new HashSet();
+		Set<VersionInfo> set = new HashSet<VersionInfo>();
 		VersionInfo v1 = new VersionInfo("1-12345678901234");
 		VersionInfo v2 = new VersionInfo("2-45612345678901");
 		VersionInfo v3 = new VersionInfo("3-11112345678901");
@@ -39,7 +39,7 @@ public class VersionSelectionResponderTest extends RegexTestCase
 		PageData data = new PageData(page);
 		data.addVersions(set);
 
-		List list = VersionSelectionResponder.getVersionsList(data);
+		List<VersionInfo> list = VersionSelectionResponder.getVersionsList(data);
 		assertEquals(v3, list.get(3));
 		assertEquals(v4, list.get(2));
 		assertEquals(v1, list.get(1));

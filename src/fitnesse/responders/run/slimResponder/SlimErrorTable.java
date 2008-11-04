@@ -1,7 +1,6 @@
 package fitnesse.responders.run.slimResponder;
 
 import java.util.Map;
-import java.util.List;
 
 public class SlimErrorTable extends SlimTable {
   public SlimErrorTable(Table table, String tableId) {

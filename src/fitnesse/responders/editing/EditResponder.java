@@ -162,8 +162,8 @@ public class EditResponder implements SecureResponder
 		wizardOptions.addAttribute("onchange", "addFixture()");
 		wizardOptions.add(HtmlUtil.makeOptionTag("default", "- Insert Fixture Table -"));
 
-		List fixtureNames = new FixtureListBuilder().getFixtureNames(this.page);
-		for(Iterator fixtures = fixtureNames.iterator(); fixtures.hasNext();)
+		List<?> fixtureNames = new FixtureListBuilder().getFixtureNames(this.page);
+		for(Iterator<?> fixtures = fixtureNames.iterator(); fixtures.hasNext();)
 		{
 			String fixture = (String) fixtures.next();
 			wizardOptions.add(HtmlUtil.makeOptionTag(fixture, fixture));

@@ -22,11 +22,6 @@ public class SlimTestSystemTest {
     assertTrue(testResults, testResults.indexOf(fragment) != -1);
   }
 
-  private void assertContainsReferenceToException(String string) {
-    assertTrue(String.format("Should have failing style: %s", string), string.indexOf("!style_fail(") != -1);
-    assertTrue(String.format("Should have reference to exception: %s", string), string.indexOf("Exception: .#") != -1);
-  }
-
   private void getResultsForPageContents(String pageContents) throws Exception {
     request.setResource("TestPage");
     PageData data = testPage.getData();
@@ -140,7 +135,7 @@ public class SlimTestSystemTest {
         "|3|\n"
     );
     TableScanner ts = new TableScanner(responder.getTestResults());
-    Table dt = ts.getTable(0);
+    ts.getTable(0);
     assertTestResultsContain("Could not invoke constructor");
   }
 

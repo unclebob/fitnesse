@@ -20,7 +20,7 @@ public class FileSectionDirectoryListing extends RowFixture
 		return fileWrappers;
 	}
 
-	public Class getTargetClass()
+	public Class<?> getTargetClass()
 	{
 		return FileWrapper.class;
 	}

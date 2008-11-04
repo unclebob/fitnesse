@@ -45,7 +45,7 @@ public class SocketDealerTest extends TestCase
 		SocketSeeker seeker = new SimpleSocketSeeker();
 		dealer.seekingSocket(seeker);
 
-		Collection waiting = dealer.getWaitingList();
+		Collection<SocketSeeker> waiting = dealer.getWaitingList();
 		assertEquals(1, waiting.size());
 		assertTrue(waiting.contains(seeker));
 	}
@@ -89,7 +89,7 @@ public class SocketDealerTest extends TestCase
 	public void testSeekerRemovedAfterDeltTo() throws Exception
 	{
 		doSimpleDealing();
-		Collection waiting = dealer.getWaitingList();
+		Collection<SocketSeeker> waiting = dealer.getWaitingList();
 		assertEquals(0, waiting.size());
 	}
 

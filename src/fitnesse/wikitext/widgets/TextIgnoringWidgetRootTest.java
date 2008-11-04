@@ -23,7 +23,7 @@ public class TextIgnoringWidgetRootTest extends TestCase
 		String text = "Here is some text with '''bold''' and ''italics''.";
 		WikiPageDummy page = new WikiPageDummy("SomePage", text);
 		ParentWidget root = new TextIgnoringWidgetRoot(text, page, WidgetBuilder.htmlWidgetBuilder);
-		List widgets = root.getChildren();
+		List<?> widgets = root.getChildren();
 		assertEquals(2, widgets.size());
 		assertTrue(widgets.get(0) instanceof BoldWidget);
 		assertTrue(widgets.get(1) instanceof ItalicWidget);

@@ -21,10 +21,10 @@ public abstract class SecurePageOperation implements SecureOperation
 		if(page == null)
 			return false;
 
-		List ancestors = WikiPageUtil.getAncestorsStartingWith(page);
-		for(Iterator iterator = ancestors.iterator(); iterator.hasNext();)
+		List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(page);
+		for(Iterator<WikiPage> iterator = ancestors.iterator(); iterator.hasNext();)
 		{
-			WikiPage ancestor = (WikiPage) iterator.next();
+			WikiPage ancestor = iterator.next();
 			if(hasSecurityModeAttribute(ancestor))
 				return true;
 		}

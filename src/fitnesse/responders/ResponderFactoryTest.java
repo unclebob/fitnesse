@@ -303,12 +303,12 @@ public class ResponderFactoryTest extends TestCase {
         assertResponderTypeMatchesInput(UPDATE.getQuery(), UpdateResponder.class);
     }
 
-    private void assertResponderType(Class expectedClass, WikiPage page) throws Exception {
+    private void assertResponderType(Class<?> expectedClass, WikiPage page) throws Exception {
         Responder responder = factory.makeResponder(request, page);
         assertEquals(expectedClass, responder.getClass());
     }
 
-    private void assertResponderTypeMatchesInput(String responderType, Class responderClass) throws Exception {
+    private void assertResponderTypeMatchesInput(String responderType, Class<?> responderClass) throws Exception {
         request.addInput("responder", responderType);
         assertResponderType(responderClass, root);
     }
