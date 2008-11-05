@@ -23,7 +23,7 @@ import fitnesse.wiki.PageVersionPruner;
 public class FitNesse {
     public static final FitNesseVersion VERSION = new FitNesseVersion();
 
-    private FitNesseContext context = new FitNesseContext();
+    private FitNesseContext context;
     private SocketService theService;
     private static String extraOutput;
 
