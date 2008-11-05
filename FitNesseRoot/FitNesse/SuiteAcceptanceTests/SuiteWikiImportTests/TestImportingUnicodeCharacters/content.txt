@@ -10,7 +10,7 @@ Create an importing page.
 This !-ImportingPage-! will now import the !-SampleWiki-! page.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:${PORT}/FitNesse.SampleWiki|true|
+|ImportingPage?responder=import&remoteUrl=http://localhost:${FITNESSE_PORT}/FitNesse.SampleWiki|true|
 
 Make sure the unicode page was imported.
 !|Response Examiner|

@@ -2,7 +2,7 @@ This test makes sure that a !-VirtualWikiNetworkError-! page is created if the v
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                             |valid?|
-|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/InvalidPage|true   |
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${FITNESSE_PORT}/InvalidPage|true   |
 
 !note we fetch the page twice here because the first fetch detects the error after the !-!contents-! has found all the local pages, thus preventing if from listing the !-VirtualWikiNetworkError-! page.  This is probably a bug, but it's not serious enough to break this test at this point.
 

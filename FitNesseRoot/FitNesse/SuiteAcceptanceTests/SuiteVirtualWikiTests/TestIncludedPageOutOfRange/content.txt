@@ -4,7 +4,7 @@ If a virtual page includes another that is outside the virtual subwiki, it shoul
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                            |valid?|
-|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${FITNESSE_PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
 
 !|Response Requester.|
 |uri   |valid?|

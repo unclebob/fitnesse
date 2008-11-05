@@ -2,6 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitNesse;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 
@@ -74,5 +75,12 @@ public class WidgetRootTest extends RegexTestCase
 		assertEquals(2, root.getLiterals().size());
 		assertEquals("first", root.getLiteral(0));
 		assertEquals("second", root.getLiteral(1));
+	}
+	
+	public void testShouldHavePortVariableAvailable() throws Exception
+	{
+	    FitNesse.main(new String[]{ "-p", "9999"});
+	    WidgetRoot root = new WidgetRoot("", rootPage);
+	    assertEquals("9999", root.getVariable("FITNESSE_PORT"));
 	}
 }

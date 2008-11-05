@@ -16,7 +16,7 @@
 !path lib/fitlibrary.jar
 ----
 !2 ''Port''
-!define PORT {8080}
+FitNesse is running on port: ${FITNESSE_PORT}
 !define INTERNAL_PORT {9123}
 ----
 !2 ''Fixtures''

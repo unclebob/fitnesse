@@ -5,7 +5,7 @@ A link to a non-existent page on a virtual child should generate a '''[?]''' tha
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                                    |valid?|
-|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/AcceptanceTestPage|true   |
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${FITNESSE_PORT}/AcceptanceTestPage|true   |
 
 !|Response Requester.|
 |uri   |valid?|
@@ -13,5 +13,5 @@ A link to a non-existent page on a virtual child should generate a '''[?]''' tha
 
 !|Response Examiner|
 |type|pattern|matches?|value|
-|contents|<a href="http://localhost:${PORT}/AcceptanceTestPage\.DoesNotExist\?edit" target="DoesNotExist">\?</a>|true||
+|contents|<a href="http://localhost:${FITNESSE_PORT}/AcceptanceTestPage\.DoesNotExist\?edit" target="DoesNotExist">\?</a>|true||
 

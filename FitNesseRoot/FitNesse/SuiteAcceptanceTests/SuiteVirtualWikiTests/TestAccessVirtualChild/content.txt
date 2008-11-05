@@ -2,7 +2,7 @@ In this test we make sure we can fetch the virtual child page.
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                            |valid?|
-|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${FITNESSE_PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
 
 !|Response Requester.|
 |uri   |valid?|

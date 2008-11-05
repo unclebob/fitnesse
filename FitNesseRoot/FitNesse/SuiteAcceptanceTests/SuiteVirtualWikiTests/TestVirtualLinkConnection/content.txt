@@ -2,7 +2,7 @@ This test makes sure that we can build a simple virtual wiki link.  We create a 
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                            |valid?|
-|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${FITNESSE_PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage|true   |
 
 !|Response Requester.|
 |uri   |valid?|

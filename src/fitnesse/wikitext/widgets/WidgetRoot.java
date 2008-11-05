@@ -93,28 +93,29 @@ public class WidgetRoot extends ParentWidget
 		return childHtml();
 	}
 
-	public String getVariable(String key) throws Exception
-	{
-		String value = (String) variables.get(key);
-      if (key.equals("PAGE_NAME"))  value = page.getName();
-      else if (key.equals("PAGE_PATH"))
-      	value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
-      
-		WikiPage page = getWikiPage();
-		while(value == null && !page.getPageCrawler().isRoot(page))
-		{
-			page = page.getParentForVariables();   //follow parents for variables
-         //Gain access to page data to set parent's literal list
-         PageData pageData = page.getData();
-         pageData.setLiterals(this.getLiterals());
-			value = pageData.getVariable(key);
-		}
-		if(value == null)
-		{
-			value = System.getProperty(key);
-		}
-		return value;
-	}
+	public String getVariable(String key) throws Exception {
+        String value = (String) variables.get(key);
+
+        if (key.equals("PAGE_NAME"))
+            value = page.getName();
+        else if (key.equals("PAGE_PATH"))
+            value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
+        else if (key.equals("FITNESSE_PORT"))
+            value = Integer.toString(fitnesse.FitNesse.fitnesse.getContext().port);
+
+        WikiPage page = getWikiPage();
+        while (value == null && !page.getPageCrawler().isRoot(page)) {
+            page = page.getParentForVariables(); // follow parents for variables
+            // Gain access to page data to set parent's literal list
+            PageData pageData = page.getData();
+            pageData.setLiterals(this.getLiterals());
+            value = pageData.getVariable(key);
+        }
+        if (value == null) {
+            value = System.getProperty(key);
+        }
+        return value;
+    }
 
 	public void addVariable(String key, String value)
 	{

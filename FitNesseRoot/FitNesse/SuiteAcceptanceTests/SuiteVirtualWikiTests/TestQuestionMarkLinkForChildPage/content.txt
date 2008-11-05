@@ -6,7 +6,7 @@ A sub page link to a non-existent page on a virtual child should generate a '''[
 
 !|Page creator.|
 |Page name.   |Page contents.|Page attributes.                                    |valid?|
-|VirtualPage|!contents   |VirtualWiki=http://localhost:${PORT}/AcceptanceTestPage|true   |
+|VirtualPage|!contents   |VirtualWiki=http://localhost:${FITNESSE_PORT}/AcceptanceTestPage|true   |
 
 !|Response Requester.|
 |uri   |valid?|
@@ -14,6 +14,6 @@ A sub page link to a non-existent page on a virtual child should generate a '''[
 
 !|Response Examiner|
 |type|pattern|matches?|value|
-|contents|<a href="http://localhost:${PORT}/AcceptanceTestPage.ChildWithSubPageLinkToNonExistentPage.NonExistentSubPage\?edit" target=".*">\?</a>|true||
+|contents|<a href="http://localhost:${FITNESSE_PORT}/AcceptanceTestPage.ChildWithSubPageLinkToNonExistentPage.NonExistentSubPage\?edit" target=".*">\?</a>|true||
 
 
