@@ -30,7 +30,7 @@ public class WhereUsedResponderTest extends RegexTestCase
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 		MockResponseSender sender = new MockResponseSender();
 		response.readyToSend(sender);
-		sender.waitForClose(500);
+		sender.waitForClose(1000);
 
 		String content = sender.sentData();
 		assertEquals(200, response.getStatus());
