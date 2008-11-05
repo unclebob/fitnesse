@@ -152,6 +152,7 @@ public class FitNesse {
     public FitNesse(FitNesseContext context, boolean makeDirs) {
         this.context = context;
         context.fitnesse = this;
+        FitNesseContext.globalContext = context;
         if (makeDirs)
             establishRequiredDirectories();
     }

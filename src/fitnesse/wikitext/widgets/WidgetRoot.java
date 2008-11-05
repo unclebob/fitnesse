@@ -2,6 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetBuilder;
 
@@ -101,7 +102,7 @@ public class WidgetRoot extends ParentWidget
         else if (key.equals("PAGE_PATH"))
             value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(fitnesse.FitNesse.fitnesse.getContext().port);
+            value = Integer.toString(FitNesseContext.globalContext.port);
 
         WikiPage page = getWikiPage();
         while (value == null && !page.getPageCrawler().isRoot(page)) {

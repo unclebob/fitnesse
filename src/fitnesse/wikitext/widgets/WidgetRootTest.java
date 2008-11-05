@@ -3,8 +3,12 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
 import fitnesse.testutil.RegexTestCase;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 public class WidgetRootTest extends RegexTestCase
 {
@@ -79,8 +83,10 @@ public class WidgetRootTest extends RegexTestCase
 	
 	public void testShouldHavePortVariableAvailable() throws Exception
 	{
-	    FitNesse.main(new String[]{ "-p", "9999"});
+	    FitNesseContext context = new FitNesseContext();
+	    context.port = 9876;
+	    new FitNesse(context, false);
 	    WidgetRoot root = new WidgetRoot("", rootPage);
-	    assertEquals("9999", root.getVariable("FITNESSE_PORT"));
+	    assertEquals("9876", root.getVariable("FITNESSE_PORT"));
 	}
 }

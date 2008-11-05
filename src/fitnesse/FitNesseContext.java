@@ -25,6 +25,7 @@ public class FitNesseContext
 	public HtmlPageFactory htmlPageFactory = new HtmlPageFactory();
 	public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
 	public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
+    public static FitNesseContext globalContext;
 
 	public FitNesseContext()
 	{
@@ -47,4 +48,8 @@ public class FitNesseContext
 
 		return buffer.toString();
 	}
+
+    public static int getPort() {
+        return globalContext != null ? globalContext.port : -1;
+    }
 }
