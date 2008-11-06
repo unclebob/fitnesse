@@ -39,4 +39,8 @@ public class StringUtil
 	{
 		return "".equals(resource);
 	}
+	
+	public static String trimNonNullString(String original) {
+		return original != null ? original.trim() : original;
+	}
 }

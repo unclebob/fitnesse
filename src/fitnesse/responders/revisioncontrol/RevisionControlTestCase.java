@@ -19,6 +19,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.util.FileUtil;
+import fitnesse.util.StandardOutAndErrorRecorder;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -40,9 +41,13 @@ public abstract class RevisionControlTestCase extends TestCase {
     protected FileSystemPage childPage;
     protected FileSystemPage grandChildPage;
     protected RevisionController revisionController = createMock(RevisionController.class);
+	private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
 
+	
     @Override
-    protected void setUp() throws Exception {
+	protected void setUp() throws Exception {
+    	standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
+    	
         reset(this.revisionController);
         createExternalRoot();
         this.request = new MockRequest();
@@ -56,6 +61,7 @@ public abstract class RevisionControlTestCase extends TestCase {
     protected void tearDown() throws Exception {
         FileUtil.deleteFileSystemDirectory(ROOT);
         verify(this.revisionController);
+    	standardOutAndErrorRecorder.stopRecording(false);
     }
 
     protected void createPage(final String pageName) throws Exception {

@@ -8,6 +8,7 @@ import fitnesse.responders.refactoring.DeletePageResponder;
 
 public class RefactoringResponderRelatedTest extends RevisionControlTestCase {
     public void testShouldDeleteVersionedPageFromRevisionControll() throws Exception {
+    	super.setUp();
         this.responder = new DeletePageResponder();
         expect(this.revisionController.checkState(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE))).andReturn(VERSIONED);
         this.revisionController.delete(contentAndPropertiesFilePathFor(FS_GRAND_CHILD_PAGE));

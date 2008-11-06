@@ -1,9 +1,13 @@
 package fitnesse.responders;
 
-import fitnesse.responders.run.*;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
 import junit.framework.TestCase;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.util.StandardOutAndErrorRecorder;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
 public class WikiImportTestEventListenerTest extends TestCase
 {
@@ -14,9 +18,12 @@ public class WikiImportTestEventListenerTest extends TestCase
 	private MockWikiImporterFactory importerFactory;
 	private WikiPage childOne;
 	private WikiPage childTwo;
-
+	private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
+	
 	public void setUp() throws Exception
 	{
+		standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
+		
 		WikiPage root = InMemoryPage.makeRoot("RooT");
 		pageOne = root.addChildPage("PageOne");
 		childOne = pageOne.addChildPage("ChildOne");
@@ -28,6 +35,11 @@ public class WikiImportTestEventListenerTest extends TestCase
 		suiteResponder = new MockSuiteResponder();
 	}
 
+	public void tearDown()
+	{
+		standardOutAndErrorRecorder.stopRecording(false);
+	}
+	
 	public void testRunWithTestingOnePage() throws Exception
 	{
 		addImportPropertyToPage(pageOne, false, true);

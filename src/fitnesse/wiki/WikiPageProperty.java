@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import fitnesse.util.StringUtil;
+
 public class WikiPageProperty implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -17,7 +19,7 @@ public class WikiPageProperty implements Serializable
 
 	public WikiPageProperty(String value)
 	{
-		this.value = value;
+		setValue(value);
 	}
 
 	public String getValue()
@@ -27,7 +29,7 @@ public class WikiPageProperty implements Serializable
 
 	public void setValue(String value)
 	{
-		this.value = value;
+		this.value = StringUtil.trimNonNullString(value);
 	}
 
 	public void set(String name, WikiPageProperty child)
@@ -90,8 +92,8 @@ public class WikiPageProperty implements Serializable
 		for(int i = 0; i < depth; i++)
 			buffer.append("\t");
 		buffer.append(key);
-		if(value != null)
-			buffer.append(" = ").append(value);
+		if(getValue() != null)
+			buffer.append(" = ").append(getValue());
 		buffer.append("\n");
 
 		for(Iterator<?> iterator = keySet().iterator(); iterator.hasNext();)

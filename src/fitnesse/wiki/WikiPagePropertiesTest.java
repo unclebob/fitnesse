@@ -37,15 +37,25 @@ public class WikiPagePropertiesTest extends RegexTestCase
 	
 	public void setUp() throws Exception
 	{
+		installPropertiesFrom(sampleXml);
+	}
+
+	private void installPropertiesFrom(String xmlSample)  throws Exception
+	{
 		InputStream sampleInputStream = new ByteArrayInputStream(sampleXml.getBytes());
 		properties = new WikiPageProperties(sampleInputStream);
 	}
-
+	
 	public void tearDown() throws Exception
 	{
 	}
 
-	public void testLoading() throws Exception
+	public void testLoadingOfXmlWithoutAddedSpaces() throws Exception
+	{
+		validateLoading();
+	}
+	
+	private void validateLoading() throws Exception
 	{
 		assertTrue(properties.has("Edit"));
 		assertTrue(properties.has("Test"));
@@ -100,7 +110,7 @@ public class WikiPagePropertiesTest extends RegexTestCase
 		}
 		catch(NotSerializableException e)
 		{
-			fail("its not serializabl: " + e);
+			fail("its not serializable: " + e);
 		}
 	}
 
@@ -113,5 +123,12 @@ public class WikiPagePropertiesTest extends RegexTestCase
 		props.setLastModificationTime(date);
 		assertEquals("20040101000001", props.get("LastModified"));
 		assertEquals(date, props.getLastModificationTime());
+	}
+	
+	public void testShouldRemoveSpacesFromPropertyValues() throws Exception
+	{
+		String sampleXmlWithSpaces = sampleXml.replaceAll("</", " </");
+		installPropertiesFrom(sampleXmlWithSpaces);
+		validateLoading();
 	}
 }

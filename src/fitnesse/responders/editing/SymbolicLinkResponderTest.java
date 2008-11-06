@@ -36,8 +36,21 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 
 	public void testSubmitGoodForm() throws Exception
 	{
-		request.addInput("linkName", "SymLink");
-		request.addInput("linkPath", "PageTwo");
+		executeSymbolicLinkTestWith("SymLink", "PageTwo");
+	}
+
+	public void testShouldTrimSpacesOnLinkPath() throws Exception {
+		executeSymbolicLinkTestWith("SymLink", "    PageTwo   ");
+	}
+	
+	public void testShouldTrimSpacesOnLinkName() throws Exception {
+		executeSymbolicLinkTestWith("   SymLink   ", "PageTwo");
+	}
+	
+	private void executeSymbolicLinkTestWith(String linkName, String linkPath) throws Exception
+	{
+		request.addInput("linkName", linkName);
+		request.addInput("linkPath", linkPath);
 		Response response = responder.makeResponse(new FitNesseContext(root), request);
 
 		checkPageOneRedirectToProperties(response);
@@ -46,18 +59,10 @@ public class SymbolicLinkResponderTest extends RegexTestCase
 		assertNotNull(symLink);
 		assertEquals(SymbolicPage.class, symLink.getClass());
 	}
-
+	
 	public void testSubmitGoodFormToSiblingChild() throws Exception
 	{
-		request.addInput("linkName", "SymLink");
-		request.addInput("linkPath", "PageTwo.ChildTwo");
-		Response response = responder.makeResponse(new FitNesseContext(root), request);
-
-		checkPageOneRedirectToProperties(response);
-
-		WikiPage symLink = pageOne.getChildPage("SymLink");
-		assertNotNull(symLink);
-		assertEquals(SymbolicPage.class, symLink.getClass());
+		executeSymbolicLinkTestWith("SymLink", "PageTwo.ChildTwo");
 	}
 
 	public void testSubmitGoodFormToChildSibling() throws Exception

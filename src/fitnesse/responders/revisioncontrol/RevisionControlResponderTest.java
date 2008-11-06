@@ -30,6 +30,7 @@ public class RevisionControlResponderTest extends RevisionControlTestCase {
 
     @Override
     protected void setUp() throws Exception {
+    	super.setUp();
         this.root = InMemoryPage.makeRoot("RooT");
         this.context = new FitNesseContext(this.root);
         this.request = new MockRequest();

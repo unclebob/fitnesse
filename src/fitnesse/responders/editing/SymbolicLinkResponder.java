@@ -5,6 +5,7 @@ package fitnesse.responders.editing;
 import fitnesse.*;
 import fitnesse.http.*;
 import fitnesse.responders.*;
+import fitnesse.util.StringUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.widgets.WikiWordWidget;
@@ -83,8 +84,8 @@ public class SymbolicLinkResponder implements Responder
 
 	private void addSymbolicLink(Request request, WikiPage page) throws Exception
 	{
-		String linkName = (String) request.getInput("linkName");
-		String linkPath = (String) request.getInput("linkPath");
+		String linkName = StringUtil.trimNonNullString((String) request.getInput("linkName"));
+		String linkPath = StringUtil.trimNonNullString((String) request.getInput("linkPath"));
 
 		if(isFilePath(linkPath) && !isValidDirectoryPath(linkPath))
 		{

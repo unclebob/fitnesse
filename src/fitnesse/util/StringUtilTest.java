@@ -41,4 +41,19 @@ public class StringUtilTest extends TestCase
 		assertEquals("d", result[3]);
 		assertEquals("e", result[4]);
 	}
+	
+	public void testTrimNullStringReturnsNull() 
+	{
+		assertEquals(null, StringUtil.trimNonNullString(null));
+	}
+	
+	public void testTrimAllSpacesStringResultsInEmptyString()
+	{
+		assertEquals("", StringUtil.trimNonNullString("   "));
+	}
+	
+	public void testTrimStringWithLeadingAndTrailingSpaces()
+	{
+		assertEquals("FitNesse", StringUtil.trimNonNullString(" FitNesse "));
+	}
 }
