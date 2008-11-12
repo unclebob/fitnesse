@@ -139,6 +139,19 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     }
   }
 
+  public void sendPageData(PageData pageData) throws Exception {
+    testTables.clear();
+    symbols.clear();
+    exceptions.clear();
+    testSummary.clear();
+    runTestsOnPage(pageData);
+    String wikiText = generateWikiTextForTestResults();
+    pageData.setContent(wikiText);
+    testResults = pageData;
+    acceptOutputFirst(pageData.getHtml());
+    acceptResultsLast(testSummary);
+  }
+
   void runTestsOnPage(PageData pageData) throws Exception {
     tableScanner = new TableScanner(pageData);
     instructions = createInstructions(this);
@@ -184,19 +197,6 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
 
   private boolean beginsWith(String tableType, String typeCode) {
     return tableType.toUpperCase().startsWith(typeCode.toUpperCase());
-  }
-
-  public void sendPageData(PageData pageData) throws Exception {
-    testTables.clear();
-    symbols.clear();
-    exceptions.clear();
-    testSummary.clear();
-    runTestsOnPage(pageData);
-    String wikiText = generateWikiTextForTestResults();
-    pageData.setContent(wikiText);
-    testResults = pageData;
-    acceptOutput(pageData.getHtml());
-    acceptResults(testSummary);
   }
 
   private String generateWikiTextForTestResults() throws Exception {

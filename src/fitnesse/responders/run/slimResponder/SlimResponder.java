@@ -46,10 +46,10 @@ public class SlimResponder extends WikiPageResponder implements TestSystemListen
     this.fastTest = fastTest;
   }
 
-  public void acceptOutput(String output) throws Exception {
+  public void acceptOutputFirst(String output) throws Exception {
   }
 
-  public void acceptResults(TestSummary testSummary) throws Exception {
+  public void acceptResultsLast(TestSummary testSummary) throws Exception {
   }
 
   public void exceptionOccurred(Throwable e) {

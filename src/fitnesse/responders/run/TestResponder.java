@@ -6,6 +6,7 @@ import fit.Counts;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.XmlWriter;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
@@ -13,8 +14,13 @@ import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
+import fitnesse.http.Response;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
 public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
@@ -24,12 +30,19 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   protected CompositeExecutionLog log;
   protected PageData data;
   private boolean closed = false;
-  private TestSummary assertionCounts = new TestSummary();
+  protected TestSummary assertionCounts = new TestSummary();
   protected TestHtmlFormatter formatter;
   protected TestSystemGroup testSystemGroup;
   protected String classPath;
+  protected Boolean xmlFormat = false;
+  protected Document testResultsDocument;
+  protected Element testResultsElement;
+  private StringBuffer outputBuffer;
 
   protected void doSending() throws Exception {
+    if (response.getFormat() == Response.Format.XML) {
+      xmlFormat = true;
+    }
     data = page.getData();
     classPath = buildClassPath();
     startHtml();
@@ -72,18 +85,20 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   protected void startHtml() throws Exception {
-    buildHtml();
-    addToResponse(formatter.head());
+    if (xmlFormat) {
+      testResultsDocument = XmlUtil.newDocument();
+      testResultsElement = testResultsDocument.createElement("testResults");
+      testResultsDocument.appendChild(testResultsElement);
+    } else {
+      buildHtml();
+      addToResponse(formatter.head());
+    }
   }
 
   protected PageCrawler getPageCrawler() {
     PageCrawler crawler = root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     return crawler;
-  }
-
-  public void acceptResults(TestSummary testSummary) throws Exception {
-    assertionCounts.tally(testSummary);
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
@@ -99,8 +114,18 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   protected synchronized void completeResponse() throws Exception {
     if (!closed) {
       closed = true;
-      log.publish();
-      addLogAndClose();
+      if (xmlFormat) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        XmlWriter writer = new XmlWriter(os);
+        writer.write(testResultsDocument);
+        writer.close();
+        response.add(os.toByteArray());
+        response.closeChunks();
+        response.close();
+      } else {
+        log.publish();
+        addLogAndClose();
+      }
     }
   }
 
@@ -128,8 +153,47 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
       response.add(output);
   }
 
-  public void acceptOutput(String output) throws Exception {
-    response.add(output);
+  public void acceptResultsLast(TestSummary testSummary) throws Exception {
+    if (xmlFormat) {
+      addTestResultsToXmlDocument(testSummary, page.getName());
+    } else {
+      assertionCounts.tally(testSummary);
+    }
+  }
+
+  protected void addTestResultsToXmlDocument(TestSummary testSummary, String pageName) throws Exception {
+    Element resultElement = testResultsDocument.createElement("result");
+    testResultsElement.appendChild(resultElement);
+    addCountsToResult(testSummary, resultElement);
+
+    XmlUtil.addCdataNode(testResultsDocument, resultElement, "content", outputBuffer.toString());
+    outputBuffer = null;
+
+    XmlUtil.addTextNode(testResultsDocument, resultElement, "relativePageName", pageName);
+  }
+
+  private void addCountsToResult(TestSummary testSummary, Element resultElement) {
+    Element counts = testResultsDocument.createElement("counts");
+    resultElement.appendChild(counts);
+    XmlUtil.addTextNode(testResultsDocument, counts, "right", Integer.toString(testSummary.right));
+    XmlUtil.addTextNode(testResultsDocument, counts, "wrong", Integer.toString(testSummary.wrong));
+    XmlUtil.addTextNode(testResultsDocument, counts, "ignores", Integer.toString(testSummary.ignores));
+    XmlUtil.addTextNode(testResultsDocument, counts, "exceptions", Integer.toString(testSummary.exceptions));
+  }
+
+  public void acceptOutputFirst(String output) throws Exception {
+    if (xmlFormat == true) {
+      appendHtmlToBuffer(output);
+    } else {
+      response.add(output);
+    }
+  }
+
+  private void appendHtmlToBuffer(String output) {
+    if (outputBuffer == null) {
+      outputBuffer = new StringBuffer();
+    }
+    outputBuffer.append(output);
   }
 
   private void addEmptyContentMessage() throws Exception {

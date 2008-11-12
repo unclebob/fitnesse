@@ -26,7 +26,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener
 		receiver = new CustomFitSocketReceiver(port);
 	}
 
-	private class CustomFitSocketReceiver extends FitSocketReceiver
+  private class CustomFitSocketReceiver extends FitSocketReceiver
 	{
 		public CustomFitSocketReceiver(int port)
 		{
@@ -45,12 +45,12 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener
 		receiver.close();
 	}
 
-	public void acceptOutput(String output)
+	public void acceptOutputFirst(String output)
 	{
 		outputs.add(output);
 	}
 
-	public void acceptResults(TestSummary testSummary)
+	public void acceptResultsLast(TestSummary testSummary)
 	{
 		this.counts.add(testSummary);
 	}

@@ -3,10 +3,17 @@
 package fitnesse.http;
 
 import fitnesse.testutil.RegexTestCase;
+import static fitnesse.testutil.RegexTestCase.*;
 
 import java.net.Socket;
 
-public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+
+public class ChunkedResponseTest implements ResponseSender
 {
 	private ChunkedResponse response;
 	private boolean closed = false;
@@ -28,19 +35,22 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		return null;
 	}
 
+  @Before
 	public void setUp() throws Exception
 	{
 		buffer = new StringBuffer();
 
-		response = new ChunkedResponse();
+		response = new ChunkedResponse("html");
 		response.readyToSend(this);
 	}
 
+  @After
 	public void tearDown() throws Exception
 	{
 		response.closeAll();
 	}
 
+  @Test
 	public void testHeaders() throws Exception
 	{
 		assertTrue(response.isReadyToSend());
@@ -50,6 +60,19 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertHasRegexp("Content-Type: text/html", text);
 	}
 
+  @Test
+  public void xmlHeaders() throws Exception {
+    response = new ChunkedResponse("xml");
+    response.readyToSend(this);
+    assertTrue(response.isReadyToSend());
+		assertTrue(response.isReadyToSend());
+		String text = buffer.toString();
+		assertHasRegexp("Transfer-Encoding: chunked", text);
+		assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));
+		assertHasRegexp("Content-Type: text/xml", text);
+  }
+
+  @Test
 	public void testOneChunk() throws Exception
 	{
 		buffer = new StringBuffer();
@@ -59,6 +82,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertEquals("e\r\nsome more text\r\n", text);
 	}
 
+  @Test
 	public void testTwoChunks() throws Exception
 	{
 		buffer = new StringBuffer();
@@ -69,6 +93,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertEquals("3\r\none\r\n3\r\ntwo\r\n", text);
 	}
 
+  @Test
 	public void testSimpleClosing() throws Exception
 	{
 		assertFalse(closed);
@@ -79,6 +104,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertTrue(closed);
 	}
 
+  @Test
 	public void testClosingInSteps() throws Exception
 	{
 		assertFalse(closed);
@@ -94,6 +120,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertTrue(closed);
 	}
 
+  @Test
 	public void testContentSize() throws Exception
 	{
 		response.add("12345");
@@ -101,6 +128,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertEquals(5, response.getContentSize());
 	}
 
+  @Test
 	public void testNoNullPointerException() throws Exception
 	{
 		String s = null;
@@ -114,6 +142,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		}
 	}
 
+  @Test
 	public void testTrailingHeaders() throws Exception
 	{
 		response.closeChunks();
@@ -125,6 +154,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		assertTrue(closed);
 	}
 
+  @Test
 	public void testCantAddZeroLengthBytes() throws Exception
 	{
 		int originalLength = buffer.length();
@@ -133,6 +163,7 @@ public class ChunkedResponseTest extends RegexTestCase implements ResponseSender
 		response.closeAll();
 	}
 
+  @Test
 	public void testUnicodeCharacters() throws Exception
 	{
 		response.add("\uba80\uba81\uba82\uba83");

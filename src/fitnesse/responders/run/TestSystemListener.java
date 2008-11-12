@@ -4,9 +4,9 @@ package fitnesse.responders.run;
 
 public interface TestSystemListener
 {
-	public void acceptOutput(String output) throws Exception;
+	public void acceptOutputFirst(String output) throws Exception;
 
-	public void acceptResults(TestSummary testSummary) throws Exception;
+	public void acceptResultsLast(TestSummary testSummary) throws Exception;
 
 	public void exceptionOccurred(Throwable e);
 }

@@ -3,18 +3,30 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.util.XmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.testutil.RegexTestCase;
+import static fitnesse.testutil.RegexTestCase.*;
 import fitnesse.wiki.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedList;
 
-public class SuiteResponderTest extends RegexTestCase {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+public class SuiteResponderTest {
   private MockRequest request;
   private SuiteResponder responder;
   private WikiPage root;
@@ -33,6 +45,7 @@ public class SuiteResponderTest extends RegexTestCase {
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
 
+  @Before
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
@@ -65,6 +78,7 @@ public class SuiteResponderTest extends RegexTestCase {
     return testPage;
   }
 
+  @After
   public void tearDown() throws Exception {
     receiver.close();
   }
@@ -77,6 +91,7 @@ public class SuiteResponderTest extends RegexTestCase {
     return results;
   }
 
+  @Test
   public void testGatherXRefTestPages() throws Exception {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
     WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
@@ -87,6 +102,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertTrue(xrefTestPages.contains(pageB));
   }
 
+  @Test
   public void testBuildClassPath() throws Exception {
     responder.page = suite;
     List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
@@ -95,6 +111,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertSubString("dummy.jar", classpath);
   }
 
+  @Test
   public void testWithOneTest() throws Exception {
     String results = runSuite();
     assertSubString("href=\"#TestOne1\"", results);
@@ -104,6 +121,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertSubString("PassFixture", results);
   }
 
+  @Test
   public void testPageWithXref() throws Exception {
     PageData data = suite.getData();
     data.setContent("!see XrefOne\r\n!see XrefTwo\n!see XrefThree\n");
@@ -116,6 +134,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertSubString("href=\"#XrefTwo3\"", results);
   }
 
+  @Test
   public void testWithTwoTests() throws Exception {
     addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
     String results = runSuite();
@@ -130,6 +149,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertSubString("FailFixture", results);
   }
 
+  @Test
   public void testWithPrunedPage() throws Exception {
     WikiPage pageTwo = addTestToSuite("TestTwo",
       "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n"
@@ -149,6 +169,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertNotSubString("FailFixture", results);
   }
 
+  @Test
   public void testSuiteWithEmptyPage() throws Exception {
     suite = crawler.addPage(root, PathParser.parse("SuiteWithEmptyPage"), "This is the empty page test suite\n");
     addTestPage(suite, "TestThatIsEmpty", "");
@@ -162,6 +183,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertNotSubString("Exception", errorLogContent);
   }
 
+  @Test
   public void testSuiteWithOneTestWithoutTable() throws Exception {
     addTestToSuite("TestWithoutTable", "This test has not table");
     addTestToSuite("TestTwo", fitPassFixture);
@@ -174,11 +196,13 @@ public class SuiteResponderTest extends RegexTestCase {
     assertSubString("TestWithoutTable", results);
   }
 
+  @Test
   public void testExitCodeHeader() throws Exception {
     String results = runSuite();
     assertSubString("Exit-Code: 0", results);
   }
 
+  @Test
   public void testGetAllTestPages() throws Exception {
     setUpForGetAllTestPages();
 
@@ -197,6 +221,7 @@ public class SuiteResponderTest extends RegexTestCase {
     testChildPage.commit(data);
   }
 
+  @Test
   public void testGetAllTestPagesSortsByQulifiedNames() throws Exception {
     setUpForGetAllTestPages();
     List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
@@ -206,6 +231,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertEquals(testChildPage, testPages.get(2));
   }
 
+  @Test
   public void testSetUpAndTearDown() throws Exception {
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
@@ -216,11 +242,13 @@ public class SuiteResponderTest extends RegexTestCase {
     assertSame(tearDown, testPages.get(2));
   }
 
+  @Test
   public void testExecutionStatusAppears() throws Exception {
     String results = runSuite();
     assertHasRegexp(divWithIdAndContent("execution-status", ".*?"), results);
   }
 
+  @Test
   public void testTestSummaryInformationIncludesPageSummary() throws Exception {
     String results = runSuite();
     assertHasRegexp(divWithIdAndContent("test-summary",
@@ -229,6 +257,7 @@ public class SuiteResponderTest extends RegexTestCase {
     );
   }
 
+  @Test
   public void testFormatTestSummaryInformation() throws Exception {
     String results = runSuite();
     assertHasRegexp(divWithIdAndContent("test-summary",
@@ -242,6 +271,7 @@ public class SuiteResponderTest extends RegexTestCase {
       "!path lib/dummy.jar\n";
   }
 
+  @Test
   public void testNonMatchingSuiteFilter() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=xxx");
@@ -251,6 +281,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertDoesntHaveRegexp(".*href=\"#TestThree\".*", results);
   }
 
+  @Test
   public void testSimpleMatchingSuiteFilter() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=foo");
@@ -260,6 +291,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertDoesntHaveRegexp(".*href=\"#TestThree.*", results);
   }
 
+  @Test
   public void testSecondMatchingSuiteFilter() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=smoke");
@@ -280,6 +312,7 @@ public class SuiteResponderTest extends RegexTestCase {
     test3.commit(data3);
   }
 
+  @Test
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestToSuite("SlimTest", simpleSlimDecisionTable);
     Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeSuiteMap(suite, root, null);
@@ -295,6 +328,7 @@ public class SuiteResponderTest extends RegexTestCase {
     assertEquals(slimPage, slimList.get(0));
   }
 
+  @Test
   public void testPagesForTestSystemAreSurroundedBySuiteSetupAndTeardown() throws Exception {
     WikiPage slimPage = addTestToSuite("SlimTest", simpleSlimDecisionTable);
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
@@ -320,6 +354,7 @@ public class SuiteResponderTest extends RegexTestCase {
   }
 
 
+  @Test
   public void testCanMixSlimAndFitTests() throws Exception {
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
@@ -327,8 +362,35 @@ public class SuiteResponderTest extends RegexTestCase {
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
     assertHasRegexp("<h3>fit:fit.FitServer</h3>", results);
     assertHasRegexp("<h3>slim:fitnesse.slim.SlimService", results);
+  }
 
+  @Test
+  public void xmlFormat() throws Exception {
+    request.addInput("format", "xml");
+    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+    String results = runSuite();
+    Document testResultsDocument = TestResponderTest.getXmlDocumentFromResults(results);
+    Element testResultsElement = testResultsDocument.getDocumentElement();
+    assertEquals("testResults", testResultsElement.getNodeName());
+    NodeList resultList = testResultsElement.getElementsByTagName("result");
+    assertEquals(2, resultList.getLength());
+    Element testResult;
 
+    for (int elementIndex = 0; elementIndex < 2; elementIndex++) {
+      testResult = (Element) resultList.item(elementIndex);
+      String pageName = XmlUtil.getTextValue(testResult, "relativePageName");
+      if ("SlimTest".equals(pageName)) {
+        TestResponderTest.assertCounts(testResult, "2", "0", "0", "0");
+        assertSubString("DT:fitnesse.slim.test.TestSlim", XmlUtil.getTextValue(testResult, "content"));
+      } else if ("TestOne".equals(pageName)) {
+        TestResponderTest.assertCounts(testResult, "1", "0", "0", "0");        
+        assertSubString("PassFixture", XmlUtil.getTextValue(testResult, "content"));
+      } else {
+        fail(pageName);
+      }
+    }
+    Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
+    TestResponderTest.assertCounts(finalCounts,"2", "0", "0", "0");
   }
 
 }

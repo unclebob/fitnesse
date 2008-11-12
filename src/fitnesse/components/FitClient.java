@@ -92,7 +92,7 @@ public class FitClient
 					String readValue = fitOutput.read(size);
 					if(fitOutput.byteCount() < size)
 						throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-					listener.acceptOutput(readValue);
+					listener.acceptOutputFirst(readValue);
 				}
 				else
 				{
@@ -102,7 +102,7 @@ public class FitClient
           summary.wrong = counts.wrong;
           summary.ignores = counts.ignores;
           summary.exceptions = counts.exceptions;
-          listener.acceptResults(summary);
+          listener.acceptResultsLast(summary);
 					received++;
 				}
 			}

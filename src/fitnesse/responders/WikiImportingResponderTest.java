@@ -34,7 +34,7 @@ public class WikiImportingResponderTest extends RegexTestCase
 	{
 		responder = new WikiImportingResponder();
 		responder.path = new WikiPagePath();
-		ChunkedResponse response = new ChunkedResponse();
+		ChunkedResponse response = new ChunkedResponse("html");
 		response.readyToSend(new MockResponseSender());
 		responder.setResponse(response);
 		responder.getImporter().setDeleteOrphanOption(false);

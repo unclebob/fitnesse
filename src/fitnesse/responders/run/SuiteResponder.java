@@ -6,8 +6,11 @@ import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.wiki.*;
+import fitnesse.util.XmlUtil;
 
 import java.util.*;
+
+import org.w3c.dom.Element;
 
 public class SuiteResponder extends TestResponder implements TestSystemListener {
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";
@@ -16,6 +19,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
   private WikiPage currentTest = null;
   private SuiteHtmlFormatter suiteFormatter;
+  private TestSummary xmlPageCounts = new TestSummary();
 
   protected HtmlTag addSummaryPlaceHolder() {
     HtmlTag testSummaryDiv = new HtmlTag("div", "Running Tests ...");
@@ -34,14 +38,28 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
 
   protected void performExecution() throws Exception {
     executeTestPages();
+    if (xmlFormat) {
+      addFinalCounts();
+    }
     completeResponse();
+  }
+
+  private void addFinalCounts() {
+    Element finalCounts = testResultsDocument.createElement("finalCounts");
+    testResultsElement.appendChild(finalCounts);
+    XmlUtil.addTextNode(testResultsDocument, finalCounts, "right", Integer.toString(xmlPageCounts.right));
+    XmlUtil.addTextNode(testResultsDocument, finalCounts, "wrong", Integer.toString(xmlPageCounts.wrong));
+    XmlUtil.addTextNode(testResultsDocument, finalCounts, "ignores", Integer.toString(xmlPageCounts.ignores));
+    XmlUtil.addTextNode(testResultsDocument, finalCounts, "exceptions", Integer.toString(xmlPageCounts.exceptions));
   }
 
   private void executeTestPages() throws Exception {
     Map<String, LinkedList<WikiPage>> suiteMap = makeSuiteMap(page, root, getSuiteFilter());
     for (String testSystemName : suiteMap.keySet()) {
-      suiteFormatter.announceTestSystem(testSystemName);
-      addToResponse(suiteFormatter.getTestSystemHeader(testSystemName));
+      if (!xmlFormat) {
+        suiteFormatter.announceTestSystem(testSystemName);
+        addToResponse(suiteFormatter.getTestSystemHeader(testSystemName));
+      }
       List<WikiPage> pagesInTestSystem = suiteMap.get(testSystemName);
       startTestSystemAndExecutePages(testSystemName, pagesInTestSystem);
     }
@@ -88,26 +106,36 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     response.close();
   }
 
-  public void acceptOutput(String output) throws Exception {
+  public void acceptOutputFirst(String output) throws Exception {
     WikiPage firstInLine = processingQueue.isEmpty() ? null : processingQueue.getFirst();
     if (firstInLine != null && firstInLine != currentTest) {
       PageCrawler pageCrawler = page.getPageCrawler();
       String relativeName = pageCrawler.getRelativeName(page, firstInLine);
       WikiPagePath fullPath = pageCrawler.getFullPath(firstInLine);
       String fullPathName = PathParser.render(fullPath);
-      suiteFormatter.startOutputForNewTest(relativeName, fullPathName);
+      if (!xmlFormat) {
+        suiteFormatter.startOutputForNewTest(relativeName, fullPathName);
+      }
       currentTest = firstInLine;
     }
-    suiteFormatter.acceptOutput(output);
+    if (xmlFormat) {
+      super.acceptOutputFirst(output);
+    } else {
+      suiteFormatter.acceptOutput(output);
+    }
   }
 
-  public void acceptResults(TestSummary testSummary) throws Exception {
-    super.acceptResults(testSummary);
-
+  public void acceptResultsLast(TestSummary testSummary) throws Exception {
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPage testPage = processingQueue.removeFirst();
     String relativeName = pageCrawler.getRelativeName(page, testPage);
-    addToResponse(suiteFormatter.acceptResults(relativeName, testSummary));
+    if (xmlFormat) {
+      addTestResultsToXmlDocument(testSummary, relativeName);
+      xmlPageCounts.tallyPageCounts(testSummary);
+    } else {
+      assertionCounts.tally(testSummary);
+      addToResponse(suiteFormatter.acceptResults(relativeName, testSummary));
+    }
   }
 
   protected void makeFormatter() throws Exception {

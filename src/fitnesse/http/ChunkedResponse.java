@@ -10,7 +10,11 @@ public class ChunkedResponse extends Response
 	private int bytesSent = 0;
 	private boolean isReadyToSend = false;
 
-	public void readyToSend(ResponseSender sender) throws Exception
+  public ChunkedResponse(String format) {
+    super(format);
+  }
+
+  public void readyToSend(ResponseSender sender) throws Exception
 	{
 		this.sender = sender;
 		addStandardHeaders();

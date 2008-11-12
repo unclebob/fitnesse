@@ -28,7 +28,8 @@ public abstract class ChunkingResponder implements Responder
 		this.context = context;
 		this.request = request;
 		this.root = context.root;
-		response = new ChunkedResponse();
+    String format = (String)request.getInput("format");
+		response = new ChunkedResponse(format);
 
 		getRequestedPage(request);
 		if(page == null && shouldRespondWith404())

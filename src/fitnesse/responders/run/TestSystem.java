@@ -63,12 +63,12 @@ public abstract class TestSystem implements TestSystemListener {
     return parts[0];
   }
 
-  public void acceptOutput(String output) throws Exception {
-    testSystemListener.acceptOutput(output);
+  public void acceptOutputFirst(String output) throws Exception {
+    testSystemListener.acceptOutputFirst(output);
   }
 
-  public void acceptResults(TestSummary testSummary) throws Exception {
-    testSystemListener.acceptResults(testSummary);
+  public void acceptResultsLast(TestSummary testSummary) throws Exception {
+    testSystemListener.acceptResultsLast(testSummary);
   }
 
   public void exceptionOccurred(Throwable e) {

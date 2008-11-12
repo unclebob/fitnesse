@@ -10,11 +10,12 @@ public class SimpleResponse extends Response
 
 	public SimpleResponse()
 	{
-	}
+    super("html");
+  }
 
 	public SimpleResponse(int status)
 	{
-		super(status);
+		super("html", status);
 	}
 
 	public void readyToSend(ResponseSender sender) throws Exception

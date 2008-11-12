@@ -10,7 +10,8 @@ public class PuppetResponse extends Response
 
 	public PuppetResponse(ResponsePuppeteer puppeteer)
 	{
-		this.puppeteer = puppeteer;
+    super("html");
+    this.puppeteer = puppeteer;
 	}
 
 	public void readyToSend(ResponseSender sender) throws Exception

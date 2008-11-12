@@ -11,7 +11,11 @@ public class InputStreamResponse extends Response
 	private StreamReader reader;
 	private int contentSize = 0;
 
-	public void readyToSend(ResponseSender sender) throws Exception
+  public InputStreamResponse() {
+    super("html");
+  }
+
+  public void readyToSend(ResponseSender sender) throws Exception
 	{
 		try {
 			addStandardHeaders();

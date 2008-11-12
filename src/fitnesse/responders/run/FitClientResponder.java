@@ -122,11 +122,11 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 		return "The page " + resource + " was not found.";
 	}
 
-	public void acceptOutput(String output) throws Exception
+	public void acceptOutputFirst(String output) throws Exception
 	{
 	}
 
-	public void acceptResults(TestSummary testSummary) throws Exception
+	public void acceptResultsLast(TestSummary testSummary) throws Exception
 	{
 	}
 
