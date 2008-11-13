@@ -25,8 +25,9 @@ public class FitServer
 	private int socketToken;
 
 	private Socket socket;
+  private boolean noExit;
 
-	public FitServer(String host, int port, boolean verbose)
+  public FitServer(String host, int port, boolean verbose)
 	{
 		this.host = host;
 		this.port = port;
@@ -41,7 +42,8 @@ public class FitServer
 	{
 		FitServer fitServer = new FitServer();
 		fitServer.run(argv);
-		System.exit(fitServer.exitCode());
+		if (!fitServer.noExit) 
+      System.exit(fitServer.exitCode());
 	}
 
 	public void run(String argv[]) throws Exception
@@ -105,13 +107,14 @@ public class FitServer
 
 	public void args(String[] argv)
 	{
-		CommandLine commandLine = new CommandLine("[-v] host port socketToken");
+		CommandLine commandLine = new CommandLine("[-v][-x] host port socketToken");
 		if(commandLine.parse(argv))
 		{
 			host = commandLine.getArgument("host");
 			port = Integer.parseInt(commandLine.getArgument("port"));
 			socketToken = Integer.parseInt(commandLine.getArgument("socketToken"));
 			verbose = commandLine.hasOption("v");
+      noExit = commandLine.hasOption("x");
 		}
 		else
 			usage();

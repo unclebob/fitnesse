@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public abstract class Response {
-  public Format getFormat() {
-    return format;
-  }
 
   public enum Format {
     XML, HTML
@@ -44,6 +41,14 @@ public abstract class Response {
   public Response(String format, int status) {
     this(format);
     this.status = status;
+  }
+
+  public boolean isXmlFormat() {
+    return format == Format.XML;
+  }
+
+  public boolean isHtmlFormat() {
+    return format == Format.HTML;
   }
 
   public abstract void readyToSend(ResponseSender sender) throws Exception;

@@ -44,6 +44,7 @@ public class TestResponderTest {
     errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
+    responder.setFastTest(true);
     context = new FitNesseContext(root);
     context.port = port;
 
@@ -103,6 +104,7 @@ public class TestResponderTest {
 
   @Test
   public void testStandardOutput() throws Exception {
+    responder.setFastTest(false);
     String content = classpathWidgets()
       + outputWritingTable("output1")
       + outputWritingTable("output2")
@@ -117,6 +119,7 @@ public class TestResponderTest {
 
   @Test
   public void testErrorOutput() throws Exception {
+    responder.setFastTest(false);
     String content = classpathWidgets()
       + errorWritingTable("error1")
       + errorWritingTable("error2")
@@ -157,6 +160,7 @@ public class TestResponderTest {
 
   @Test
   public void testFixtureThatCrashes() throws Exception {
+    responder.setFastTest(false);
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
     request.setResource(testPage.getName());
 
@@ -247,6 +251,7 @@ public class TestResponderTest {
 
   @Test
   public void testExecutionStatusOutputCaptured() throws Exception {
+    responder.setFastTest(false);
     doSimpleRun(outputWritingTable("blah"));
     assertEquals("Output Captured", getExecutionStatusMessage());
     assertEquals("output.gif", getExecutionStatusIconFilename());
@@ -254,6 +259,7 @@ public class TestResponderTest {
 
   @Test
   public void testExecutionStatusError() throws Exception {
+    responder.setFastTest(false);
     doSimpleRun(crashFixtureTable());
     assertEquals("Errors Occurred", getExecutionStatusMessage());
     assertEquals("error.gif", getExecutionStatusIconFilename());
@@ -261,6 +267,7 @@ public class TestResponderTest {
 
   @Test
   public void testExecutionStatusErrorHasPriority() throws Exception {
+    responder.setFastTest(false);
     doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
     assertEquals("Errors Occurred", getExecutionStatusMessage());
   }
@@ -307,6 +314,7 @@ public class TestResponderTest {
 
   @Test
   public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
+    responder.setFastTest(false);
     WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
     crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));

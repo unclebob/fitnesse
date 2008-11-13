@@ -1,4 +1,6 @@
 
+20081112 UB
+Added ?format=xml to TestResponder and SuiteResponder so that you can get test results using REST.
 
 20080920 UB
 Added !style_myStyle(some text) widget.  This translates to <span class="myStyle">some text</span>

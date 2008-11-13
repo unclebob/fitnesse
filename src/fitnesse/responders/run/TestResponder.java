@@ -16,7 +16,6 @@ import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
-import fitnesse.http.Response;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -34,21 +33,19 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   protected TestHtmlFormatter formatter;
   protected TestSystemGroup testSystemGroup;
   protected String classPath;
-  protected Boolean xmlFormat = false;
   protected Document testResultsDocument;
   protected Element testResultsElement;
   private StringBuffer outputBuffer;
+  private boolean fastTest = false;
 
   protected void doSending() throws Exception {
-    if (response.getFormat() == Response.Format.XML) {
-      xmlFormat = true;
-    }
     data = page.getData();
     classPath = buildClassPath();
     startHtml();
     sendPreTestNotification();
 
     testSystemGroup = new TestSystemGroup(context, page, this);
+    testSystemGroup.setFastTest(fastTest);
     log = testSystemGroup.getExecutionLog();
 
     performExecution();
@@ -85,7 +82,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   protected void startHtml() throws Exception {
-    if (xmlFormat) {
+    if (response.isXmlFormat()) {
       testResultsDocument = XmlUtil.newDocument();
       testResultsElement = testResultsDocument.createElement("testResults");
       testResultsDocument.appendChild(testResultsElement);
@@ -114,7 +111,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   protected synchronized void completeResponse() throws Exception {
     if (!closed) {
       closed = true;
-      if (xmlFormat) {
+      if (response.isXmlFormat()) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         XmlWriter writer = new XmlWriter(os);
         writer.write(testResultsDocument);
@@ -154,7 +151,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   public void acceptResultsLast(TestSummary testSummary) throws Exception {
-    if (xmlFormat) {
+    if (response.isXmlFormat()) {
       addTestResultsToXmlDocument(testSummary, page.getName());
     } else {
       assertionCounts.tally(testSummary);
@@ -182,7 +179,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   public void acceptOutputFirst(String output) throws Exception {
-    if (xmlFormat == true) {
+    if (response.isXmlFormat()) {
       appendHtmlToBuffer(output);
     } else {
       response.add(output);
@@ -250,5 +247,9 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   public static void registerListener(TestEventListener listener) {
     eventListeners.add(listener);
+  }
+
+  public void setFastTest(boolean fastTest) {
+    this.fastTest = fastTest;
   }
 }

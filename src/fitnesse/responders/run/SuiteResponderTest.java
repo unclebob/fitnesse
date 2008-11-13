@@ -59,6 +59,7 @@ public class SuiteResponderTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     responder = new SuiteResponder();
+    responder.setFastTest(true);
     responder.page = suite;
     context = new FitNesseContext(root);
     context.port = port;

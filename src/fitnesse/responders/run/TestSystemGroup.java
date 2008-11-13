@@ -13,6 +13,7 @@ public class TestSystemGroup {
   private WikiPage page;
   private TestSystemListener testSystemListener;
   private CompositeExecutionLog log;
+  private boolean fastTest = false;
 
   public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) throws Exception {
     this.context = context;
@@ -42,9 +43,7 @@ public class TestSystemGroup {
   }
 
   public void setFastTest(boolean fastTest) {
-    for (TestSystem testSystem : testSystems.values()) {
-      testSystem.setFastTest(fastTest);
-    }
+    this.fastTest = fastTest;
   }
 
   public boolean isSuccessfullyStarted() {
@@ -58,6 +57,7 @@ public class TestSystemGroup {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(testSystemName)) {
       testSystem = makeTestSystem(testSystemName);
+      testSystem.setFastTest(fastTest);
       testSystems.put(testSystemName, testSystem);
       log.add(testSystemName, testSystem.getExecutionLog(classPath, testRunner));
       testSystem.start();

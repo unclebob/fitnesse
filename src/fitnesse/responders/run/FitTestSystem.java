@@ -16,7 +16,7 @@ public class FitTestSystem extends TestSystem {
 
   protected ExecutionLog createExecutionLog(String classPath, String className) throws Exception {
     String command = buildCommand(className, classPath);
-    client = new CommandRunningFitClient(this, command, context.port, context.socketDealer);
+    client = new CommandRunningFitClient(this, command, context.port, context.socketDealer, fastTest);
     return new ExecutionLog(page, client.commandRunner);
   }
 

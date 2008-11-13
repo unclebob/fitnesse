@@ -98,7 +98,7 @@ public abstract class ChunkingResponder implements Responder
 			return request.getResource();
 	}
 
-	protected class RespondingRunnable implements Runnable
+  protected class RespondingRunnable implements Runnable
 	{
 		public void run()
 		{

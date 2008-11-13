@@ -38,7 +38,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
 
   protected void performExecution() throws Exception {
     executeTestPages();
-    if (xmlFormat) {
+    if (response.isXmlFormat()) {
       addFinalCounts();
     }
     completeResponse();
@@ -56,7 +56,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   private void executeTestPages() throws Exception {
     Map<String, LinkedList<WikiPage>> suiteMap = makeSuiteMap(page, root, getSuiteFilter());
     for (String testSystemName : suiteMap.keySet()) {
-      if (!xmlFormat) {
+      if (response.isHtmlFormat()) {
         suiteFormatter.announceTestSystem(testSystemName);
         addToResponse(suiteFormatter.getTestSystemHeader(testSystemName));
       }
@@ -108,20 +108,25 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
 
   public void acceptOutputFirst(String output) throws Exception {
     WikiPage firstInLine = processingQueue.isEmpty() ? null : processingQueue.getFirst();
-    if (firstInLine != null && firstInLine != currentTest) {
+    boolean isNewTest = firstInLine != null && firstInLine != currentTest;
+    if (isNewTest) {
+      currentTest = firstInLine;
+      outputHeader(firstInLine);
+    }
+    if (response.isXmlFormat()) {
+      super.acceptOutputFirst(output);
+    } else if (response.isHtmlFormat()) {
+      suiteFormatter.acceptOutput(output);
+    }
+  }
+
+  private void outputHeader(WikiPage firstInLine) throws Exception {
+    if (response.isHtmlFormat()) {
       PageCrawler pageCrawler = page.getPageCrawler();
       String relativeName = pageCrawler.getRelativeName(page, firstInLine);
       WikiPagePath fullPath = pageCrawler.getFullPath(firstInLine);
       String fullPathName = PathParser.render(fullPath);
-      if (!xmlFormat) {
-        suiteFormatter.startOutputForNewTest(relativeName, fullPathName);
-      }
-      currentTest = firstInLine;
-    }
-    if (xmlFormat) {
-      super.acceptOutputFirst(output);
-    } else {
-      suiteFormatter.acceptOutput(output);
+      suiteFormatter.startOutputForNewTest(relativeName, fullPathName);
     }
   }
 
@@ -129,7 +134,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPage testPage = processingQueue.removeFirst();
     String relativeName = pageCrawler.getRelativeName(page, testPage);
-    if (xmlFormat) {
+    if (response.isXmlFormat()) {
       addTestResultsToXmlDocument(testSummary, relativeName);
       xmlPageCounts.tallyPageCounts(testSummary);
     } else {
