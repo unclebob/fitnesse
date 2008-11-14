@@ -86,6 +86,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
       testResultsDocument = XmlUtil.newDocument();
       testResultsElement = testResultsDocument.createElement("testResults");
       testResultsDocument.appendChild(testResultsElement);
+      XmlUtil.addTextNode(testResultsDocument, testResultsElement, "rootPath", page.getName());
     } else {
       buildHtml();
       addToResponse(formatter.head());

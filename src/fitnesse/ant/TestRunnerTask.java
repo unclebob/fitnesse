@@ -32,9 +32,7 @@ public class TestRunnerTask extends Task {
     private int fitnessePort = 8082;
     private String suitePage;
     private String resultsDir = ".";
-    private String resultsHTMLPage;
     private String resultsXMLPage;
-    private boolean debug = true;
     private boolean verbose = true;
     private boolean failOnError = true;
     private String testRunnerClass = "fitnesse.runner.TestRunner";
@@ -109,15 +107,8 @@ public class TestRunnerTask extends Task {
     private CommandlineJava initializeJavaCommand() {
         CommandlineJava cmd = new CommandlineJava();
         cmd.setClassname(testRunnerClass);
-        if (debug)
-            cmd.createArgument().setValue("-debug");
         if (verbose)
             cmd.createArgument().setValue("-v");
-        if (resultsHTMLPage != null) {
-            String resultsHTMLPagePath = new File(resultsDir, resultsHTMLPage).getAbsolutePath();
-            cmd.createArgument().setValue("-html");
-            cmd.createArgument().setValue(resultsHTMLPagePath);
-        }
         if (resultsXMLPage != null) {
             String resultsHTMLPagePath = new File(resultsDir, resultsXMLPage).getAbsolutePath();
             cmd.createArgument().setValue("-xml");
@@ -139,14 +130,6 @@ public class TestRunnerTask extends Task {
         this.classpath = classpath;
     }
 
-    /**
-     * Debug mode. Defaults to 'true'.
-     * 
-     * @param debug
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
 
     /**
      * Will fail the build if any Fitnesse tests fail. Defaults to 'true'.
@@ -183,16 +166,6 @@ public class TestRunnerTask extends Task {
      */
     public void setResultsDir(String resultsDir) {
         this.resultsDir = resultsDir;
-    }
-
-    /**
-     * If set, stores the fitnesse results in HTML format under the resultsdir folder with the given name. The file name
-     * must have a '.html' extension.
-     * 
-     * @param resultsHTMLPage
-     */
-    public void setResultsHTMLPage(String resultsHTMLPage) {
-        this.resultsHTMLPage = resultsHTMLPage;
     }
 
     /**

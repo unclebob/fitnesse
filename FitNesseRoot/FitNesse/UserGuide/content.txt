@@ -52,6 +52,8 @@ Answers to all your other FitNesse questions.
 |[[Development Environment][TestDevelopmentEnvironment]]|''Setting up your test development environment''|
 |FitNesseUtilities|''Running FitNesse from a command line, Log files, import, export, and other similar matters.''|
 |[[Customizing Test Execution][CustomizingTestExecution]]|''Modify the way tests are executed''|
+|[[Running Tests from the Command Line][CommandLineTestRunner]]|''Running tests from the command line for ant and cruise control, etc.''|
+|[[RESTful Test Running][RestfulTests]]|''Getting test results from the web''|
 |[[Multi-Language Fitnesse][MultiLanguageFitNesse]] |''Running tests written in languages other than Java''|
 |[[Security][SecurityDescription]] |''Managing the security of wiki pages''|
 |CustomizingLookAndFeel|''Changing the colors and layout of the various pages''|

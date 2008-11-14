@@ -6,192 +6,203 @@ import fit.Counts;
 import fit.FitServer;
 import fitnesse.components.CommandLine;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.util.StreamReader;
+import fitnesse.util.XmlUtil;
 
-import java.io.File;
-import java.io.PrintStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TestRunner
-{
-	private String host;
-	private int port;
-	private String pageName;
-	private FitServer fitServer;
-	public TestRunnerFixtureListener fixtureListener;
-	public CachingResultFormatter handler;
-	private PrintStream output;
-	public List<FormattingOption> formatters = new LinkedList<FormattingOption>();
-	private boolean debug;
-	public boolean verbose;
-	public boolean usingDownloadedPaths = true;
-	private String suiteFilter = null;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-	public TestRunner() throws Exception
-	{
-		this(System.out);
-	}
+public class TestRunner {
+  private String outputFileName;
+  private String host;
+  private int port;
+  private String pageName;
+  private PrintStream output;
+  private String suiteFilter = null;
+  private StreamReader socketReader;
+  private Document testResultsDocument;
+  private TestSummary counts;
+  private boolean verbose;
 
-	public TestRunner(PrintStream output) throws Exception
-	{
-		this.output = output;
-		handler = new CachingResultFormatter();
-	}
+  public TestRunner() throws Exception {
+    this(System.out);
+  }
 
-	public static void main(String[] args) throws Exception
-	{
-		TestRunner runner = new TestRunner();
-		runner.run(args);
-		System.exit(runner.exitCode());
-	}
+  public TestRunner(PrintStream output) throws Exception {
+    this.output = output;
+  }
 
-	public void args(String[] args) throws Exception
-	{
-		CommandLine commandLine = new CommandLine("[-debug] [-v] [-results file] [-html file] [-xml file] [-nopath] [-suiteFilter filter] host port pageName");
-		if(!commandLine.parse(args))
-			usage();
+  public static void main(String[] args) throws Exception {
+    TestRunner runner = new TestRunner();
+    runner.run(args);
+    System.exit(runner.exitCode());
+  }
 
-		host = commandLine.getArgument("host");
-		port = Integer.parseInt(commandLine.getArgument("port"));
-		pageName = commandLine.getArgument("pageName");
+  public void args(String[] args) throws Exception {
+    CommandLine commandLine = new CommandLine("[-v] [-xml file] [-suiteFilter filter] host port pageName");
+    if (!commandLine.parse(args))
+      usage();
 
-		if(commandLine.hasOption("debug"))
-			debug = true;
-		if(commandLine.hasOption("v"))
-		{
-			verbose = true;
-			handler.addHandler(new StandardResultHandler(output));
-		}
-		if(commandLine.hasOption("nopath"))
-			usingDownloadedPaths = false;
-		if(commandLine.hasOption("results"))
-			formatters.add(new FormattingOption("raw", commandLine.getOptionArgument("results", "file"), output, host, port, pageName));
-		if(commandLine.hasOption("html"))
-			formatters.add(new FormattingOption("html", commandLine.getOptionArgument("html", "file"), output, host, port, pageName));
-		if(commandLine.hasOption("xml"))
-			formatters.add(new FormattingOption("xml", commandLine.getOptionArgument("xml", "file"), output, host, port, pageName));
+    host = commandLine.getArgument("host");
+    port = Integer.parseInt(commandLine.getArgument("port"));
+    pageName = commandLine.getArgument("pageName");
 
-		if(commandLine.hasOption("suiteFilter"))
-			suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
-	}
+    if (commandLine.hasOption("v"))
+      verbose = true;
+    if (commandLine.hasOption("xml"))
+      outputFileName = commandLine.getOptionArgument("xml", "file");
+    if (commandLine.hasOption("suiteFilter"))
+      suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
+  }
 
-	private void usage()
-	{
-		System.out.println("usage: java fitnesse.runner.TestRunner [options] host port page-name");
-		System.out.println("\t-v \tverbose: prints test progress to stdout");
-		System.out.println("\t-results <filename|'stdout'>\tsave raw test results to a file or dump to standard output");
-		System.out.println("\t-html <filename|'stdout'>\tformat results as HTML and save to a file or dump to standard output");
-		System.out.println("\t-debug \tprints FitServer protocol actions to stdout");
-		System.out.println("\t-nopath \tprevents downloaded path elements from being added to classpath");
-		System.out.println("\t-suiteFilter <filter> \texecutes only tests which are flagged with the given filter");
-		System.exit(-1);
-	}
+  private void usage() {
+    System.out.println("usage: java fitnesse.runner.TestRunner [options] host port page-name");
+    System.out.println("\t-v\tPrint test results.");
+    System.out.println("\t-suiteFilter <filter> \texecutes only tests which are flagged with the given filter");
 
-	public void run(String[] args) throws Exception
-	{
-		args(args);
-		fitServer = new FitServer(host, port, debug);
-		fixtureListener = new TestRunnerFixtureListener(this);
-		fitServer.fixtureListener = fixtureListener;
-		fitServer.establishConnection(makeHttpRequest());
-		fitServer.validateConnection();
-		if(usingDownloadedPaths)
-			processClasspathDocument();
-		fitServer.process();
-		finalCount();
-		fitServer.closeConnection();
-		fitServer.exit();
-		doFormatting();
-		handler.cleanUp();
-	}
+    System.exit(-1);
+  }
 
-	private void processClasspathDocument() throws Exception
-	{
-		String classpathItems = fitServer.readDocument();
-		if(verbose)
-			output.println("Adding to classpath: " + classpathItems);
-		addItemsToClasspath(classpathItems);
-	}
+  public void run(String[] args) throws Exception {
+    args(args);
+    requestTest();
+    discardHeaders();
+    String xmlDocumentString = getXmlDocument();
+    testResultsDocument = XmlUtil.newDocument(xmlDocumentString);
+    gatherCounts();
+    writeOutputFile();
+    verboseOutput();
+  }
 
-	private void finalCount() throws Exception
-	{
-    Counts counts = fitServer.getCounts();
-    TestSummary testSummary = new TestSummary(
-      counts.right,
-      counts.wrong,
-      counts.ignores,
-      counts.exceptions
-    );
-    handler.acceptFinalCount(testSummary);
-	}
+  private void verboseOutput() throws Exception {
+    if (verbose) {
+      Element testResultsElement = testResultsDocument.getDocumentElement();
+      String rootPath = XmlUtil.getTextValue(testResultsElement, "rootPath");
+      output.println(String.format("Test Runner for Root Path: %s", rootPath));
+      NodeList results = testResultsElement.getElementsByTagName("result");
+      for (int i=0; i<results.getLength(); i++) {
+        Element result = (Element) results.item(i);
+        showResult(result);
+      }
+    }
+  }
 
-	public int exitCode()
-	{
-		return fitServer == null ? -1 : fitServer.exitCode();
-	}
+  private void showResult(Element result) throws Exception {
+    String page = XmlUtil.getTextValue(result, "relativePageName");
+    Element counts = XmlUtil.getElementByTagName(result, "counts");
+    int right = Integer.parseInt(XmlUtil.getTextValue(counts, "right"));
+    int wrong = Integer.parseInt(XmlUtil.getTextValue(counts, "wrong"));
+    int ignores = Integer.parseInt(XmlUtil.getTextValue(counts, "ignores"));
+    int exceptions = Integer.parseInt(XmlUtil.getTextValue(counts, "exceptions"));
+    output.println(String.format("Page:%s right:%d, wrong:%d, ignored:%d, exceptions:%d", page, right, wrong, ignores, exceptions));
+  }
 
-	public String makeHttpRequest()
-	{
-		String request = "GET /" + pageName + "?responder=fitClient";
-		if(usingDownloadedPaths)
-			request += "&includePaths=yes";
-		if(suiteFilter != null)
-		{
-			request += "&suiteFilter=" + suiteFilter;
-		}
-		return request + " HTTP/1.1\r\n\r\n";
-	}
+  private void writeOutputFile() throws Exception {
+    if (outputFileName != null) {
+      String xmlDocument = XmlUtil.xmlAsString(testResultsDocument);
+      OutputStream os = getOutputStream();
+      os.write(xmlDocument.getBytes());
+      os.close();
+    }
+  }
 
-	public Counts getCounts()
-	{
-		return fitServer.getCounts();
-	}
+  private OutputStream getOutputStream() throws FileNotFoundException {
+    if ("stdout".equalsIgnoreCase(outputFileName))
+      return output;
+    else
+     return new FileOutputStream(outputFileName);
+  }
 
-	public void acceptResults(PageResult results) throws Exception
-	{
-		TestSummary testSummary = results.testSummary();
-    Counts counts = new Counts();
-    counts.right = testSummary.right;
-    counts.wrong = testSummary.wrong;
-    counts.ignores = testSummary.ignores;
-    counts.exceptions = testSummary.exceptions;
-    fitServer.writeCounts(counts);
-		handler.acceptResult(results);
-	}
+  private void gatherCounts() throws Exception {
+    Element testResults = testResultsDocument.getDocumentElement();
+    Element finalCounts = XmlUtil.getElementByTagName(testResults, "finalCounts");
+    String right = XmlUtil.getTextValue(finalCounts, "right");
+    String wrong = XmlUtil.getTextValue(finalCounts, "wrong");
+    String ignores = XmlUtil.getTextValue(finalCounts, "ignores");
+    String exceptions = XmlUtil.getTextValue(finalCounts, "exceptions");
+    counts = new TestSummary(Integer.parseInt(right), Integer.parseInt(wrong), Integer.parseInt(ignores), Integer.parseInt(exceptions));
+  }
 
-	public void doFormatting() throws Exception
-	{
-		for(Iterator<FormattingOption> iterator = formatters.iterator(); iterator.hasNext();)
-		{
-			FormattingOption option = iterator.next();
-			if(verbose)
-				output.println("Formatting as " + option.format + " to " + option.filename);
-			option.process(handler.getResultStream(), handler.getByteCount());
-		}
-	}
+  public int exitCode() {
+    int exitStatus = 0;
+    if (counts.wrong > 0)
+      exitStatus++;
+    if (counts.exceptions > 0)
+      exitStatus++;
 
-	public static void addItemsToClasspath(String classpathItems) throws Exception
-	{
-		final String separator = System.getProperty("path.separator");
-		System.setProperty("java.class.path", System.getProperty("java.class.path") + separator + classpathItems);
-		String[] items = classpathItems.split(separator);
-		for(int i = 0; i < items.length; i++)
-		{
-			String item = items[i];
-			addUrlToClasspath(new File(item).toURI().toURL());
-		}
-	}
+    return exitStatus;
+  }
 
-	public static void addUrlToClasspath(URL u) throws Exception
-	{
-		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		Class<URLClassLoader> sysclass = URLClassLoader.class;
-		Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
-		method.setAccessible(true);
-		method.invoke(sysloader, new Object[]{u});
-	}
+  private String getXmlDocument() throws Exception {
+    StringBuffer xmlDocumentBuffer = new StringBuffer();
+    while (true) {
+      String sizeLine = socketReader.readLine();
+      if (sizeLine.equals(""))
+        continue;
+      int size = Integer.parseInt(sizeLine, 16);
+      if (size == 0)
+        break;
+      String chunk = socketReader.read(size);
+      xmlDocumentBuffer.append(chunk);
+    }
+    return xmlDocumentBuffer.toString();
+  }
+
+  private void discardHeaders() throws Exception {
+    while (true) {
+      String line = socketReader.readLine();
+      if (line.equals(""))
+        break;
+    }
+  }
+
+  private void requestTest() throws IOException {
+    Socket socket = new Socket(host, port);
+    OutputStream socketOutput = socket.getOutputStream();
+    socketReader = new StreamReader(socket.getInputStream());
+    byte[] bytes = makeHttpRequest().getBytes("UTF-8");
+    socketOutput.write(bytes);
+    socketOutput.flush();
+  }
+
+  public String makeHttpRequest() {
+    String request = "GET /" + pageName + "?responder=suite";
+    if (suiteFilter != null)
+      request += "&suiteFilter=" + suiteFilter;
+    request += "&format=xml";
+
+    return request + " HTTP/1.1\r\n\r\n";
+  }
+
+  public TestSummary getCounts() throws Exception {
+    return counts;
+  }
+
+  public static void addItemsToClasspath(String classpathItems) throws Exception {
+    final String separator = System.getProperty("path.separator");
+    System.setProperty("java.class.path", System.getProperty("java.class.path") + separator + classpathItems);
+    String[] items = classpathItems.split(separator);
+    for (int i = 0; i < items.length; i++) {
+      String item = items[i];
+      addUrlToClasspath(new File(item).toURI().toURL());
+    }
+  }
+
+  public static void addUrlToClasspath(URL u) throws Exception {
+    URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+    Class<URLClassLoader> sysclass = URLClassLoader.class;
+    Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
+    method.setAccessible(true);
+    method.invoke(sysloader, new Object[]{u});
+  }
 }

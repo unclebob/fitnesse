@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.BeforeClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +36,7 @@ public class TestRunnerTest {
   private int port;
   private WikiPage root;
   private TestRunner runner;
-  private MockResultFormatter mockHandler;
+  private ByteArrayOutputStream outputBytes;
 
   @Before
   public void setUp() throws Exception {
@@ -45,8 +46,8 @@ public class TestRunnerTest {
     FitNesseUtil.startFitnesse(root);
     port = FitNesseUtil.port;
 
-    runner = new TestRunner(new PrintStream(new ByteArrayOutputStream()));
-    mockHandler = new MockResultFormatter();
+    outputBytes = new ByteArrayOutputStream();
+    runner = new TestRunner(new PrintStream(outputBytes));
   }
 
   @After
@@ -57,77 +58,34 @@ public class TestRunnerTest {
 
   @Test
   public void testOnePassingTest() throws Exception {
-    testPageResults("SuitePage.TestPassing", new Counts(1, 0, 0, 0), 0);
+    testPageResults("SuitePage.TestPassing", new TestSummary(1, 0, 0, 0), 0);
   }
 
   @Test
   public void testOneFailingTest() throws Exception {
-    testPageResults("SuitePage.TestFailing", new Counts(0, 1, 0, 0), 1);
+    testPageResults("SuitePage.TestFailing", new TestSummary(0, 1, 0, 0), 1);
   }
 
   @Test
   public void testOneErrorTest() throws Exception {
-    testPageResults("SuitePage.TestError", new Counts(0, 0, 0, 1), 1);
+    testPageResults("SuitePage.TestError", new TestSummary(0, 0, 0, 1), 1);
   }
 
   @Test
   public void testOneIgnoreTest() throws Exception {
-    testPageResults("SuitePage.TestIgnore", new Counts(0, 0, 1, 0), 0);
+    testPageResults("SuitePage.TestIgnore", new TestSummary(0, 0, 1, 0), 0);
   }
 
   @Test
   public void testSuite() throws Exception {
-    testPageResults("SuitePage", new Counts(1, 1, 1, 1), 2);
+    testPageResults("SuitePage", new TestSummary(1, 1, 1, 1), 2);
   }
 
   @Test
-  public void testResultContentWithOneTest() throws Exception {
-    runner.handler.addHandler(mockHandler);
-    runPage("SuitePage.TestPassing");
-    List<PageResult> results = mockHandler.results;
-    assertEquals(1, results.size());
-    Object result1 = results.get(0);
-    assertTrue(result1 instanceof PageResult);
-    PageResult pageResult = (PageResult) result1;
-    assertSubString("PassFixture", pageResult.content());
-    assertEquals("", pageResult.title());
-    assertEquals(new TestSummary(1, 0, 0, 0), pageResult.testSummary());
-  }
-
-  @Test
-  public void testResultContentWithSuite() throws Exception {
-    runner.handler.addHandler(mockHandler);
-    runPage("SuitePage");
-    List<PageResult> results = mockHandler.results;
-    assertEquals(4, results.size());
-
-    checkResult(results, 0, "TestError", new TestSummary(0, 0, 0, 1), "ErrorFixture");
-    checkResult(results, 1, "TestFailing", new TestSummary(0, 1, 0, 0), "FailFixture");
-    checkResult(results, 2, "TestIgnore", new TestSummary(0, 0, 1, 0), "IgnoreFixture");
-    checkResult(results, 3, "TestPassing", new TestSummary(1, 0, 0, 0), "PassFixture");
-  }
-
-  @Test
-  public void testKeepResultFile() throws Exception {
-    runPage("-results testFile.txt", "SuitePage");
-    assertTrue(new File("testFile.txt").exists());
-    String content = FileUtil.getFileContent("testFile.txt");
-    assertSubString("TestError", content);
-    assertSubString("TestPassing", content);
-    assertSubString("TestFailing", content);
-    assertSubString("TestIgnore", content);
-  }
-
-  @Test
-  public void testHtmlFile() throws Exception {
-    runPage("-html testFile.txt", "SuitePage");
-    assertTrue(new File("testFile.txt").exists());
-    String content = FileUtil.getFileContent("testFile.txt");
-    assertSubString("<span class=\"test_summary_results pass\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>", content);
-    assertSubString("<td class=\"ignore\">fitnesse.testutil.IgnoreFixture</td>", content);
-    assertSubString("<td>fitnesse.testutil.ErrorFixture</td>", content);
-    assertSubString("<td>fitnesse.testutil.FailFixture</td>", content);
-    assertSubString("<tr><td>fitnesse.testutil.PassFixture</td>", content);
+  public void verbose() throws Exception {
+    runPage("-v", "SuitePage.TestPassing");
+    assertEquals("Test Runner for Root Path: TestPassing\n" +
+      "Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0\n", outputBytes.toString());
   }
 
   @Test
@@ -138,7 +96,6 @@ public class TestRunnerTest {
     Document testResultsDocument = XmlUtil.newDocument(xmlContent);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
-    assertEquals("localhost:1999", XmlUtil.getTextValue(testResultsElement, "host"));
     assertEquals("SuitePage", XmlUtil.getTextValue(testResultsElement, "rootPath"));
 
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
@@ -173,42 +130,9 @@ public class TestRunnerTest {
     assertEquals(exceptions, XmlUtil.getTextValue(counts, "exceptions"));
   }
 
-  @Test
-  public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
-    addSuiteSetUpTearDown();
-    runner.handler.addHandler(mockHandler);
-
-    runPage("SuitePage.TestPassing");
-
-    List<PageResult> results = mockHandler.results;
-    assertEquals(1, results.size());
-    checkResult(results, 0, "", new TestSummary(3, 0, 0, 0), "PassFixture");
-    PageResult result = results.get(0);
-    String content = result.content();
-    assertSubString("SuiteSetUp", content);
-    assertSubString("SuiteTearDown", content);
-  }
-
-  private void addSuiteSetUpTearDown() throws Exception {
-    PageCrawler crawler = root.getPageCrawler();
-    WikiPage suitePage = crawler.getPage(root, PathParser.parse("SuitePage"));
-    crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME), "!|fitnesse.testutil.PassFixture|\n");
-    crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME),
-      "!|fitnesse.testutil.PassFixture|\n"
-    );
-  }
-
-  private void checkResult(List<PageResult> results, int i, String s, TestSummary expectedSummary, String content) {
-    PageResult result = results.get(i);
-    assertEquals(s, result.title());
-    TestSummary resultSummary = result.testSummary();
-    assertEquals(expectedSummary, resultSummary);
-    assertSubString(content, result.content());
-  }
-
-  private void testPageResults(String pageName, Counts expectedCounts, int exitCode) throws Exception {
+  private void testPageResults(String pageName, TestSummary expectedCounts, int exitCode) throws Exception {
     runPage(pageName);
-    Counts counts = runner.getCounts();
+    TestSummary counts = runner.getCounts();
     assertEquals(expectedCounts, counts);
     assertEquals(exitCode, runner.exitCode());
   }
@@ -227,41 +151,6 @@ public class TestRunnerTest {
   public void testAcceptResults() throws Exception {
     PageResult result = new PageResult("SomePage");
     result.setTestSummary(new TestSummary(5, 0, 0, 0));
-  }
-
-  @Test
-  public void testHtmlOption() throws Exception {
-    runner.args(new String[]
-      {"-html", "stdout", "blah", "80", "blah"}
-    );
-    assertEquals(1, runner.formatters.size());
-    FormattingOption option = runner.formatters.get(0);
-    assertEquals("html", option.format);
-  }
-
-  @Test
-  public void testVerboseOption() throws Exception {
-    runner.args(new String[]
-      {"-v", "blah", "80", "blah"}
-    );
-    assertEquals(1, runner.handler.subHandlers.size());
-    Object o = runner.handler.subHandlers.get(0);
-    assertTrue(o instanceof StandardResultHandler);
-    assertTrue(runner.verbose);
-  }
-
-  @Test
-  public void testNoPathOption() throws Exception {
-    assertTrue(runner.usingDownloadedPaths);
-    String request = runner.makeHttpRequest();
-    assertSubString("includePaths", request);
-
-    runner.args(new String[]
-      {"-nopath", "blah", "80", "blah"}
-    );
-    assertFalse(runner.usingDownloadedPaths);
-    request = runner.makeHttpRequest();
-    assertNotSubString("includePaths", request);
   }
 
   @Test
@@ -305,7 +194,7 @@ public class TestRunnerTest {
 
   @Test
   public void testNonMatchingSuiteFilter() throws Exception {
-    runPage("-results testFile.txt -suiteFilter xxx", "SuitePage");
+    runPage("-xml testFile.txt -suiteFilter xxx", "SuitePage");
     assertTrue(new File("testFile.txt").exists());
     String content = FileUtil.getFileContent("testFile.txt");
     assertDoesntHaveRegexp(".*TestPassing.*", content);
@@ -316,7 +205,7 @@ public class TestRunnerTest {
 
   @Test
   public void testSimpleMatchingSuiteFilter() throws Exception {
-    runPage("-results testFile.txt -suiteFilter foo", "SuitePage");
+    runPage("-xml testFile.txt -suiteFilter foo", "SuitePage");
     assertTrue(new File("testFile.txt").exists());
     String content = FileUtil.getFileContent("testFile.txt");
     assertHasRegexp(".*TestPassing.*", content);
@@ -327,7 +216,7 @@ public class TestRunnerTest {
 
   @Test
   public void testSecondMatchingSuiteFilter() throws Exception {
-    runPage("-results testFile.txt -suiteFilter smoke", "SuitePage");
+    runPage("-xml testFile.txt -suiteFilter smoke", "SuitePage");
     assertTrue(new File("testFile.txt").exists());
     String content = FileUtil.getFileContent("testFile.txt");
     assertDoesntHaveRegexp(".*TestPassing.*", content);

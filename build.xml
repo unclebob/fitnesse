@@ -115,6 +115,8 @@
 	</target>
 
 	<target name="stamp-version">
+        <delete file="src/fitnesse/FitNesseVersion.java" />
+        <delete file="FitNesseRoot/FrontPage/content.txt" />
 		<tstamp />
 	 	<filter token="version" value="${DSTAMP}"/>
 	  	<copy filtering="true"
@@ -167,7 +169,7 @@
 	</target>
 
 	<target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef" description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-		<run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080" resultsdir="test-results" resultshtmlpage="fit-results.html" resultsxmlpage="fit-results.xml" classpathref="classpath" />
+		<run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080" resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath" />
 	</target>
 
 	<target name="release" depends="testbuild, build_distribution" />

@@ -394,4 +394,19 @@ public class SuiteResponderTest {
     TestResponderTest.assertCounts(finalCounts,"2", "0", "0", "0");
   }
 
+  @Test
+  public void xmlForSingleTestPageNameIsParenthetic() throws Exception {
+    request.setResource("SuitePage.TestOne");
+    request.addInput("format", "xml");
+    String results = runSuite();
+    Document testResultsDocument = TestResponderTest.getXmlDocumentFromResults(results);
+    Element testResultsElement = testResultsDocument.getDocumentElement();
+    assertEquals("testResults", testResultsElement.getNodeName());
+    NodeList resultList = testResultsElement.getElementsByTagName("result");
+    assertEquals(1, resultList.getLength());
+    Element result = (Element) resultList.item(0);
+    String pageName = XmlUtil.getTextValue(result, "relativePageName");
+    assertEquals("(TestOne)", pageName);
+  }
+
 }

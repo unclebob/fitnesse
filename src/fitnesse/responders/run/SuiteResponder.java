@@ -44,7 +44,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     completeResponse();
   }
 
-  private void addFinalCounts() {
+  private void addFinalCounts() throws Exception {
     Element finalCounts = testResultsDocument.createElement("finalCounts");
     testResultsElement.appendChild(finalCounts);
     XmlUtil.addTextNode(testResultsDocument, finalCounts, "right", Integer.toString(xmlPageCounts.right));
@@ -134,6 +134,8 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     PageCrawler pageCrawler = page.getPageCrawler();
     WikiPage testPage = processingQueue.removeFirst();
     String relativeName = pageCrawler.getRelativeName(page, testPage);
+    if ("".equals(relativeName))
+      relativeName = String.format("(%s)",testPage.getName());
     if (response.isXmlFormat()) {
       addTestResultsToXmlDocument(testSummary, relativeName);
       xmlPageCounts.tallyPageCounts(testSummary);
@@ -180,6 +182,8 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
 
   public static List<WikiPage> makePageList(WikiPage suitePage, WikiPage root, String suite) throws Exception {
     LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suite);
+    if (suitePage.getData().hasAttribute("Test"))
+      pages.add(suitePage);
 
     addSetupAndTeardown(suitePage, pages);
 
