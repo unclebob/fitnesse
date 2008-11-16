@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.CreateSamplePages||16:49:58 Sat, Nov 15, 2008|
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerExitValue||15:14:40 Sat, Nov 15, 2008|
 |FitNesse.CommandLineTestRunner||16:54:04 Fri, Nov 14, 2008|
 |FitNesse.RestfulTests||16:49:52 Fri, Nov 14, 2008|
 |FitNesse.UserGuide||16:43:17 Fri, Nov 14, 2008|
@@ -96,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests||11:25:04 Sat, Oct 25, 2008|
 |FitNesse.SuiteAcceptanceTests.TearDown||11:23:42 Sat, Oct 25, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestBoldText||11:18:12 Sat, Oct 25, 2008|
-|JunkParent.FitTest2||16:35:49 Fri, Oct 24, 2008|
-|JunkParent.SuiteTearDown||16:08:55 Fri, Oct 24, 2008|

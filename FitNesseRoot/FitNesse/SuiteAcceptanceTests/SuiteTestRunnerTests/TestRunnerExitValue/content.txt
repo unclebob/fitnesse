@@ -3,9 +3,9 @@ The TestRunner will exit with a 0 when all tests pass.  Otherwise the number of 
 !include CreateSamplePages
 
 !|Test Runner Fixture|
-|page name|exit code?|
-|SuiteFodder.TestPassing|0|
-|SuiteFodder.TestFailing|1|
-|SuiteFodder.TestIgnoring|0|
-|SuiteFodder.TestCrashing|1|
-|SuiteFodder|2|
+|page name               |args  |exit code?|output?|
+|SuiteFodder.TestPassing |-debug|0         |       |
+|SuiteFodder.TestFailing |      |1         |       |
+|SuiteFodder.TestIgnoring|      |0         |       |
+|SuiteFodder.TestCrashing|      |1         |       |
+|SuiteFodder             |      |2         |       |

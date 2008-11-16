@@ -1,6 +1,7 @@
 !|Action Fixture.|
 |start|Page Builder|
 |enter|line|!-!path classes-!|
+|enter|line|&bang;path fitnesse.jar|
 |enter|line|!-!contents-!|
 |enter|page|SuiteFodder|
 
