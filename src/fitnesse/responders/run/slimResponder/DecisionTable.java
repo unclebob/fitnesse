@@ -2,10 +2,7 @@ package fitnesse.responders.run.slimResponder;
 
 import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class DecisionTable extends SlimTable {
@@ -13,6 +10,7 @@ public class DecisionTable extends SlimTable {
   private Map<String, Integer> vars = new HashMap<String, Integer>();
   private Map<String, Integer> funcs = new HashMap<String, Integer>();
   private int headerColumns;
+  private Set<String> executeInstructions = new HashSet<String>();
 
   public DecisionTable(Table table, String id) {
     super(table, id);
@@ -54,10 +52,14 @@ public class DecisionTable extends SlimTable {
     }
   }
 
+  public boolean shouldIgnoreException(String resultKey, String resultString) {
+    return executeInstructions.contains(resultKey);
+  }
+
   private void invokeRow(int row) {
     checkRow(row);
     setVariables(row);
-    callFunction(getTableName(), "execute");
+    executeInstructions.add(callFunction(getTableName(), "execute"));
     callFunctions(row);
   }
 

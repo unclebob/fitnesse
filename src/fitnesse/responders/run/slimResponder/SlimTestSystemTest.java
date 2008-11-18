@@ -76,7 +76,7 @@ public class SlimTestSystemTest {
       "|Query:fitnesse.slim.test.TestSlim|\n" +
         "|x|y|\n"
     );
-    assertTestResultsContain("Query fixture has no valid query method");
+    assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim.");
   }
 
   @Test
@@ -115,6 +115,16 @@ public class SlimTestSystemTest {
         "|7|\n"
     );
     assertTestResultsContain("!style_pass(!<7>!)");
+  }
+
+  @Test
+  public void decisionTableWithNoExecuteDoesNotCountExceptionsForExecute() throws Exception {
+     getResultsForPageContents(
+      "|DT:fitnesse.slim.test.DummyDecisionTable|\n" +
+        "|x?|\n" +
+        "|1|\n"
+    );
+    assertEquals(0, responder.getTestSummary().exceptions);
   }
 
   @Test

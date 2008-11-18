@@ -31,7 +31,7 @@ The fixture for this table is:
   }
 
   public String loginMessage() {
-    return message;  
+    return message;
   }
 
   public int numberOfLoginAttempts() {
@@ -39,12 +39,12 @@ The fixture for this table is:
   }
 } }}}
 
-This should be pretty clear.  Each row is a single instruction in the script.  
+This should be pretty clear.  Each row is a single instruction in the script.
  * The first row is simply the word "Script".
 
- * The second row is usually the word ''start'' and identifies the name and constructor arguments of the fixture that will be used by the rest of the table.  If you don't have a ''start'', then the previous script table's fixture on this test page will be used. 
+ * The second row is usually the word ''start'' and identifies the name and constructor arguments of the fixture that will be used by the rest of the table.  If you don't have a ''start'', then the previous script table's fixture on this test page will be used.
 
- * Most instructions involve some kind of function call.  The name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells.  
+ * Most instructions involve some kind of function call.  The name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells.
 
  * A function alone in a row will turn red or green if it returns a boolean.  Otherwise it will simply remain uncolored.
 

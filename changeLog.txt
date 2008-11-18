@@ -1,3 +1,8 @@
+20081118 UB
+Fixed some bugs in Decision Table that misreported exceptions when the execute
+method was not present.
+
+Fixed bug in QueryTable that misreported when the query method returned null.
 
 20081112 UB
 Added ?format=xml to TestResponder and SuiteResponder so that you can get test results using REST.

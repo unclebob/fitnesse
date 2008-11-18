@@ -44,7 +44,7 @@ That last one was probably puzzling.  Symbols are just strings that are kept in 
 !4 Strings and Lists
 As we will see, slim views a list as a special kind of string.  Therefore functions can take and return lists as well as strings.  The lists must be lists of strings, but since a list is a special kind of string, lists of lists of lists of ... are possible.  The Slim executor will convert back and forth between these forms as needed.
 
-A string is encoded as six digits followed by a colon, followed by the characters of the string.  The six digits are the number of characters in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.  
+A string is encoded as six digits followed by a colon, followed by the characters of the string.  The six digits are the number of characters in the string, not including the digits themselves.  Thus, the empty string is "000000:".  This length encoding scheme is used in other places so we'll use the token ''<length>'' to mean six digits followed by a colon.
 
 If a string is ''<null>'', then the four character string ''null'' will replace it.
 
@@ -70,7 +70,7 @@ Sometimes a function or a constructor will throw an exception in response to a '
 There are some standard exception messages that every Slim implementation should create.
 
 |COULD_NOT_INVOKE_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class whose instructor cannot be invoked.|
-|NO_METHOD_IN_CLASS ''<some method>'' ''<some class>''|Where ''<some method>'' is the name of the missing method.| 
+|NO_METHOD_IN_CLASS ''<some method>'' ''<some class>''|Where ''<some method>'' is the name of the missing method.|
 |NO_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class that is missing the constructor.|
 |NO_CONVERTER_FOR_ARGUMENT_NUMBER ''<argument type>''|Where ''<argument type>'' is the class that has no corresponding converter.|
 |NO_INSTANCE ''<instance name>''|Where ''<instance name>'' is the name of the missing instance.|

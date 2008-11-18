@@ -1,8 +1,8 @@
 package fitnesse.responders.run.slimResponder;
 
-import java.util.*;
-
 import fitnesse.util.ListUtility;
+
+import java.util.*;
 
 public class QueryTable extends SlimTable {
   private List<String> fieldNames = new ArrayList<String>();
@@ -37,11 +37,18 @@ public class QueryTable extends SlimTable {
 
   protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object queryReturn = returnValues.get(queryId);
-    if (queryId == null || queryReturn == null || (queryReturn instanceof String)) {
-      table.appendToCell(0, 0, fail("Query fixture has no valid query method"));
+    if (queryId == null || queryReturn == null) {
+      table.appendToCell(0, 0, error("query method did not return a list."));
       return;
+    } else if (queryReturn instanceof String) {
+      String message = (String) queryReturn;
+      if (isExceptionMessage(message))
+        table.appendToCell(0, 0, error(extractExeptionMessage(message)));
+      else
+        table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
+    } else {
+      scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
     }
-    scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
   }
 
   private void scanRowsForMatches(List<Object> queryResultList) throws Exception {
@@ -82,7 +89,7 @@ public class QueryTable extends SlimTable {
 
   private void replaceAllvariablesInRow(int tableRow) {
     int columns = table.getColumnCountInRow(tableRow);
-    for (int col=0; col<columns; col++) {
+    for (int col = 0; col < columns; col++) {
       String contents = table.getCellContents(col, tableRow);
       table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(contents));
     }
@@ -103,8 +110,7 @@ public class QueryTable extends SlimTable {
       failMessage(col, tableRow, "field not present");
     else if (actualValue.equals(replaceSymbols(expectedValue))) {
       pass(col, tableRow);
-    }
-    else {
+    } else {
       expected(col, tableRow, literalize(actualValue));
     }
   }
@@ -121,7 +127,6 @@ public class QueryTable extends SlimTable {
       }
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, String> makeRowMap(Object row) {
       Map<String, String> rowMap = new HashMap<String, String>();
       for (List<Object> columnPair : (List<List<Object>>) row) {

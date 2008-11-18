@@ -8,6 +8,6 @@ You can use relational comparisons for the numeric values in your table cells.
 
 You can use all the normal operators: <, >, <=, >=, !=.
 
-The ''~='' relational operator means ''approximately equal''.  It applies to floating point numbers.  So if ''~=3.0'' then the ''3.0'' sets the precision so that 2.95 or 3.049 will both show equality.  It is the number of decimals on the right side of the operator that determines the precision.  
+The ''~='' relational operator means ''approximately equal''.  It applies to floating point numbers.  So if ''~=3.0'' then the ''3.0'' sets the precision so that 2.95 or 3.049 will both show equality.  It is the number of decimals on the right side of the operator that determines the precision.
 
 So 2.5~=3 but 2.5 is not ~= 3.0.

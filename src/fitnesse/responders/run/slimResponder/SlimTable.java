@@ -17,7 +17,7 @@ public abstract class SlimTable {
   protected Table table;
   private SlimTestContext testContext;
   protected String id;
-  private String tableName;
+  protected String tableName;
   private int instructionNumber = 0;
   private List<Object> instructions;
   private List<Expectation> expectations = new ArrayList<Expectation>();
@@ -177,7 +177,7 @@ public abstract class SlimTable {
     String disgracedFunctionName = Disgracer.disgraceMethodName(functionName);
     List<String> callAndAssignHeader = list("callAndAssign", symbolName, instanceName, disgracedFunctionName);
     callAndAssignInstruction.addAll(callAndAssignHeader);
-    addArgsToInstruction(callAndAssignInstruction, (Object[])args);
+    addArgsToInstruction(callAndAssignInstruction, (Object[]) args);
     addInstruction(callAndAssignInstruction);
     return (String) callAndAssignInstruction.get(0);
   }
@@ -252,6 +252,19 @@ public abstract class SlimTable {
 
   public TestSummary getTestSummary() {
     return testSummary;
+  }
+
+
+  protected String extractExeptionMessage(String value) {
+    return value.substring(2);
+  }
+
+  protected boolean isExceptionMessage(String value) {
+    return value.startsWith("!:");
+  }
+
+  public boolean shouldIgnoreException(String resultKey, String resultString) {
+    return false;
   }
 
   static class Disgracer {
@@ -361,14 +374,6 @@ public abstract class SlimTable {
     }
 
     protected abstract String createEvaluationMessage(String value, String originalValue);
-
-    protected String extractExeptionMessage(String value) {
-      return value.substring(2);
-    }
-
-    protected boolean isExceptionMessage(String value) {
-      return value.startsWith("!:");
-    }
   }
 
   private static class LocalSlimTestContext implements SlimTestContext {

@@ -186,7 +186,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     else if (tableType.equalsIgnoreCase("import"))
       return new ImportTable(table, tableId);
     else if (doesNotHaveColon(tableType))
-      return new DecisionTable(table, tableId);
+      return new DecisionTable(table, tableId, slimTestContext);
     else
       return new SlimErrorTable(table, tableId);
   }
@@ -213,12 +213,23 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
 
   private void replaceExceptionWithExceptionLink(String resultKey) {
     Object result = instructionResults.get(resultKey);
-    if (result instanceof String) {
-      String resultString = (String) result;
-      if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
+    if (result instanceof String)
+      replaceIfUnignoredException(resultKey, (String) result);
+  }
+
+  private void replaceIfUnignoredException(String resultKey, String resultString) {
+    if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
+      if (shouldReportException(resultKey, resultString))
         replaceException(resultKey, resultString);
-      }
     }
+  }
+
+  private boolean shouldReportException(String resultKey, String resultString) {
+    for (SlimTable table : testTables) {
+      if (table.shouldIgnoreException(resultKey, resultString))
+        return false;
+    }
+    return true;
   }
 
   private void replaceException(String resultKey, String resultString) {
@@ -287,6 +298,10 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     PrintWriter pw = new PrintWriter(stringWriter);
     e.printStackTrace(pw);
     return SlimServer.EXCEPTION_TAG + stringWriter.toString();
+  }
+
+  public TestSummary getTestSummary() {
+    return testSummary;
   }
 
   static class ExceptionList {

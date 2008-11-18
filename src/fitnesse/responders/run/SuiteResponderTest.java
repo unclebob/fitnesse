@@ -8,7 +8,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.testutil.RegexTestCase;
 import static fitnesse.testutil.RegexTestCase.*;
 import fitnesse.wiki.*;
 
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.LinkedList;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
@@ -316,7 +314,7 @@ public class SuiteResponderTest {
   @Test
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestToSuite("SlimTest", simpleSlimDecisionTable);
-    Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeSuiteMap(suite, root, null);
+    Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
 
     String fitTestSystemName = TestSystem.getTestSystemName(testPage.getData());
     String slimTestSystemName = TestSystem.getTestSystemName(slimPage.getData());
@@ -335,7 +333,7 @@ public class SuiteResponderTest {
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeSuiteMap(suite, root, null);
+    Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
     String fitTestSystemName = TestSystem.getTestSystemName(testPage.getData());
     String slimTestSystemName = TestSystem.getTestSystemName(slimPage.getData());
 

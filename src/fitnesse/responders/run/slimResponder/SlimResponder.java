@@ -42,6 +42,10 @@ public class SlimResponder extends WikiPageResponder implements TestSystemListen
     return testSystem.getTestResults();
   }
 
+  public TestSummary getTestSummary() {
+    return testSystem.getTestSummary();
+  }
+
   protected void setFastTest(boolean fastTest) {
     this.fastTest = fastTest;
   }

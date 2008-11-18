@@ -54,14 +54,23 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   }
 
   private void executeTestPages() throws Exception {
-    Map<String, LinkedList<WikiPage>> suiteMap = makeSuiteMap(page, root, getSuiteFilter());
-    for (String testSystemName : suiteMap.keySet()) {
-      if (response.isHtmlFormat()) {
-        suiteFormatter.announceTestSystem(testSystemName);
-        addToResponse(suiteFormatter.getTestSystemHeader(testSystemName));
-      }
-      List<WikiPage> pagesInTestSystem = suiteMap.get(testSystemName);
-      startTestSystemAndExecutePages(testSystemName, pagesInTestSystem);
+    Map<String, LinkedList<WikiPage>> pagesByTestSystem;
+    pagesByTestSystem = makeMapOfPagesByTestSystem(page, root, getSuiteFilter());
+    for (String testSystemName : pagesByTestSystem.keySet())
+      executePagesInTestSystem(testSystemName, pagesByTestSystem);
+  }
+
+  private void executePagesInTestSystem(String testSystemName,
+                                        Map<String, LinkedList<WikiPage>> pagesByTestSystem) throws Exception {
+    List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(testSystemName);
+    announceTestSystem(testSystemName);
+    startTestSystemAndExecutePages(testSystemName, pagesInTestSystem);
+  }
+
+  private void announceTestSystem(String testSystemName) throws Exception {
+    if (response.isHtmlFormat()) {
+      suiteFormatter.announceTestSystem(testSystemName);
+      addToResponse(suiteFormatter.getTestSystemHeader(testSystemName));
     }
   }
 
@@ -135,7 +144,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     WikiPage testPage = processingQueue.removeFirst();
     String relativeName = pageCrawler.getRelativeName(page, testPage);
     if ("".equals(relativeName))
-      relativeName = String.format("(%s)",testPage.getName());
+      relativeName = String.format("(%s)", testPage.getName());
     if (response.isXmlFormat()) {
       addTestResultsToXmlDocument(testSummary, relativeName);
       xmlPageCounts.tallyPageCounts(testSummary);
@@ -310,7 +319,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   }
 
   public static Map<String, LinkedList<WikiPage>>
-  makeSuiteMap(WikiPage suitePage, WikiPage root, String suiteFilter) throws Exception {
+  makeMapOfPagesByTestSystem(WikiPage suitePage, WikiPage root, String suiteFilter) throws Exception {
     Map<String, LinkedList<WikiPage>> map = new HashMap<String, LinkedList<WikiPage>>();
     List<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suiteFilter);
     for (WikiPage page : pages) {

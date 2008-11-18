@@ -17,7 +17,7 @@ The results come back in the following form:
                 </content>
 	</result>
 	<result>
-	     ...		
+	     ...
 
 	<finalCounts>
 		<right>182</right>

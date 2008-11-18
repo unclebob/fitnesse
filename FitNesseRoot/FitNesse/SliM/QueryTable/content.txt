@@ -37,7 +37,7 @@ public class EmployeesHiredBefore {
       );
   }
 } }}}
-Note the ''list'' function simply builds an !<ArrayList>! from it's arguments.  It's in the !-ListUtility-! class
+Note the ''list'' function simply builds an !-ArrayList-! from it's arguments.  It's in the !-ListUtility-! class
 
 The first thing to notice is the ''Query:'' in the first cell of the table.  This tells the Slim table processor that this is a query table.  Next notice the constructor argument.  (See ConstructorArguments).  The column headers are ''field names''.  The fixture class must have a ''query'' method that returns a list of rows.  Each row is a list of fields.  Each field is a two-element list composed of the ''field name'' and it's string value.
 

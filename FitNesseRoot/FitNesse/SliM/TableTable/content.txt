@@ -10,7 +10,7 @@ The "Table" table allows you to write a fixture that accepts an arbitrary table,
 |''error:<message>''|The corresponding cell will be colored yellow and its contents will be ''<message>''|
 |''<anything else>''|The corresponding cell will be colored red, and its contents will be ''<anything else>''|
 
-The fixture is written with a doTable method.  This method takes a List argument and returns a List.  The incomming list is a list of rows.  Each row is a list of strings.  The returned list has the same structure.   
+The fixture is written with a doTable method.  This method takes a List argument and returns a List.  The incomming list is a list of rows.  Each row is a list of strings.  The returned list has the same structure.
 
 Here is the fixture for the above table.{{{
 package fitnesse.slim.test;
