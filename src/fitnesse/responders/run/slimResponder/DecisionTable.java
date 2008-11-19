@@ -53,14 +53,20 @@ public class DecisionTable extends SlimTable {
   }
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
-    return executeInstructions.contains(resultKey);
+    boolean isExecuteInstruction = executeInstructions.contains(resultKey);
+    boolean isNoSuchMethodException = resultString.indexOf("NO_METHOD_IN_CLASS") != -1;
+    return isExecuteInstruction && isNoSuchMethodException;
   }
 
   private void invokeRow(int row) {
     checkRow(row);
     setVariables(row);
-    executeInstructions.add(callFunction(getTableName(), "execute"));
+    callExecute(row);
     callFunctions(row);
+  }
+
+  private void callExecute(int row) {
+    executeInstructions.add(callFunction(getTableName(), "execute"));
   }
 
   private void checkRow(int row) {

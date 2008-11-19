@@ -128,6 +128,17 @@ public class SlimTestSystemTest {
   }
 
   @Test
+  public void decisionTableWithExecuteThatThrowsDoesShowsException() throws Exception {
+     getResultsForPageContents(
+      "|DT:fitnesse.slim.test.DecisionTableExecuteThrows|\n" +
+        "|x?|\n" +
+        "|1|\n"
+    );
+    assertEquals(1, responder.getTestSummary().exceptions);
+    assertTestResultsContain("EXECUTE_THROWS");
+  }
+
+  @Test
   public void tableWithException() throws Exception {
     getResultsForPageContents(
       "|DT:NoSuchClass|\n" +

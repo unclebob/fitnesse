@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -147,7 +148,6 @@ public class StatementExecutor {
     return result;
   }
 
-  @SuppressWarnings("unchecked")
   private Object replaceVariable(Object object) {
     if (object instanceof List)
       return (replaceArgsInList((List<Object>) object));
@@ -171,15 +171,25 @@ public class StatementExecutor {
     return arg;
   }
 
-  private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Exception {
+  private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Throwable {
     Class<?> k = instance.getClass();
     Method method = findMatchingMethod(methodName, k, args.length);
     Object convertedArgs[] = convertArgs(method, args);
-    Object retval = method.invoke(instance, convertedArgs);
+    Object retval = callMethod(instance, method, convertedArgs);
     Class<?> retType = method.getReturnType();
     if (retType == List.class && retval instanceof List)
       return retval;
     return convertToString(retval, retType);
+  }
+
+  private Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
+    Object retval = null;
+    try {
+      retval = method.invoke(instance, convertedArgs);
+    } catch (InvocationTargetException e) {
+      throw e.getCause();
+    }
+    return retval;
   }
 
   private Method findMatchingMethod(String methodName, Class<? extends Object> k, int nArgs) {
