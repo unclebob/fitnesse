@@ -128,5 +128,11 @@ public class TableScannerTest {
     assertEquals("!-hi-!\n|x|\n!-there-!\n", ts.toWikiText());
   }
 
+  @Test
+  public void replaceVariables() throws Exception {
+    TableScanner ts = scanTable("!define X {Y}\n|${X}|\n");
+    assertEquals("!define X {Y}\n|Y|\n", ts.toWikiText());
+  }
+
 
 }

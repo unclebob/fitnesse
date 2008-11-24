@@ -21,6 +21,7 @@ public class TableScanner implements Iterable<Table> {
   public TableScanner(PageData data) throws Exception {
     WikiPage page = data.getWikiPage();
     String content = data.getContent();
+    content = replaceVariables(page, content);
     content = removeUnprocessedLiteralsInTables(content);
     content = replaceEvaluations(new WidgetRoot("", page), content);
     widgetRoot = new WidgetRoot(content, page, new WidgetBuilder(tableWidgets));
@@ -45,7 +46,7 @@ public class TableScanner implements Iterable<Table> {
     Matcher matcher = LiteralWidget.pattern.matcher(text);
     while (matcher.find()) {
       int literalNumber = Integer.parseInt(matcher.group(1));
-      String replacement = String.format("!-%s-!",textWidget.getParent().getLiteral(literalNumber));
+      String replacement = String.format("!-%s-!", textWidget.getParent().getLiteral(literalNumber));
       text = text.replace(matcher.group(), replacement);
       matcher = LiteralWidget.pattern.matcher(text);
     }
@@ -69,6 +70,16 @@ public class TableScanner implements Iterable<Table> {
     }
 
     return text;
+  }
+
+  private String replaceVariables(WikiPage page, String content) throws Exception {
+    Matcher matcher = VariableWidget.pattern.matcher(content);
+    while (matcher.find()) {
+      String replacement = page.getData().getVariable(matcher.group(1));
+      if (replacement != null)
+        content = content.replace(matcher.group(), replacement);
+    }
+    return content;
   }
 
   private String replaceEvaluations(ParentWidget root, String text) {

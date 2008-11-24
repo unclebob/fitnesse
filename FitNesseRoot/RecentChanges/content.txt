@@ -1,11 +1,12 @@
+|ProjectPage.JukeBox.JukeBoxStories.YouDecide||10:41:57 Mon, Nov 24, 2008|
+|ProjectPage.JukeBox.SongInventory||08:37:03 Mon, Nov 24, 2008|
+|ProjectPage.JukeBox.JukeBoxStories||08:28:29 Mon, Nov 24, 2008|
+|ProjectPage.JukeBox.JukeBoxStories.PlayThreeSongs||21:44:03 Sun, Nov 23, 2008|
+|ProjectPage.JukeBox.JukeBoxStories.PlayOneSong||21:40:17 Sun, Nov 23, 2008|
+|ProjectPage.JukeBox.SetUp||21:39:37 Sun, Nov 23, 2008|
 |JunkParent.SlimTest||18:24:48 Tue, Nov 18, 2008|
 |FrontPage||10:27:05 Tue, Nov 18, 2008|
-|ProjectPage.JukeBox.JukeBoxStories.PlayThreeSongs||01:49:19 Tue, Nov 18, 2008|
-|ProjectPage.JukeBox.JukeBoxStories.PlayOneSong||01:49:07 Tue, Nov 18, 2008|
 |ProjectPage.JukeBox.JukeBoxStories.CreditsAccumulateWithPayment||01:48:51 Tue, Nov 18, 2008|
-|ProjectPage.JukeBox.SetUp||01:48:39 Tue, Nov 18, 2008|
-|ProjectPage.JukeBox.JukeBoxStories||01:46:58 Tue, Nov 18, 2008|
-|ProjectPage.JukeBox.SongInventory||12:37:10 Mon, Nov 17, 2008|
 |ProjectPage.JukeBox||12:14:43 Mon, Nov 17, 2008|
 |ProjectPage.JukeBox.JukeBoxStories.PaymentDeterminesCredits||12:04:43 Mon, Nov 17, 2008|
 |ProjectPage||11:58:43 Mon, Nov 17, 2008|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsIncludeWithHelp||19:54:02 Sat, Oct 25, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp||19:53:27 Sat, Oct 25, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsFilters||19:48:52 Sat, Oct 25, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsInclude||19:47:22 Sat, Oct 25, 2008|
