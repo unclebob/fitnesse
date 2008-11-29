@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
 public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
+  private static final String PATH_SEPARATOR = System.getProperty("path.separator");
   protected static final int htmlDepth = 2;
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected HtmlPage html;
@@ -39,6 +40,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   private boolean fastTest = false;
 
   protected void doSending() throws Exception {
+    fastTest |= request.hasInput("debug");
     data = page.getData();
     classPath = buildClassPath();
     startHtml();
@@ -252,5 +254,9 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   public void setFastTest(boolean fastTest) {
     this.fastTest = fastTest;
+  }
+
+  public boolean isFastTest() {
+    return fastTest;
   }
 }

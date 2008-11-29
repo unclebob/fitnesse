@@ -61,7 +61,7 @@ public class SlimTestSystemTest {
   @Test
   public void tableWithoutPrefixWillBeConstructed() throws Exception {
     getResultsForPageContents("|XX|\n");
-    assertTestResultsContain("!<XX>! - !style_error(Could not invoke constructor for XX[0])");
+    assertTestResultsContain("!<XX>! !style_error(Could not invoke constructor for XX[0])");
   }
 
   @Test
@@ -145,7 +145,7 @@ public class SlimTestSystemTest {
         "|returnInt?|\n" +
         "|7|\n"
     );
-    assertTestResultsContain("!<DT:NoSuchClass>! - !style_error(Could not invoke constructor for NoSuchClass[0])");
+    assertTestResultsContain("!<DT:NoSuchClass>! !style_error(Could not invoke constructor for NoSuchClass[0])");
   }
 
   @Test

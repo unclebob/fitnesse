@@ -12,7 +12,7 @@ public class ReturnedValueExpectationTest {
   }
   
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
-    Table t = new Table(new TableWidget(null, ""));
+    WikiWidgetTable t = new WikiWidgetTable(new TableWidget(null, ""));
     SlimTable slimTable = new DecisionTable(t, "id");
     SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, 0, 0, 0);
     assertEquals(message, unescape(expectation.createEvaluationMessage(value, expected)));

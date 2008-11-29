@@ -101,7 +101,7 @@ public class TableScanner implements Iterable<Table> {
     List<WikiWidget> widgets = parent.getChildren();
     for (WikiWidget widget : widgets) {
       if (widget instanceof TableWidget)
-        tables.add(new Table((TableWidget) widget));
+        tables.add(new WikiWidgetTable((TableWidget) widget));
       else if (widget instanceof ParentWidget)
         scanParentForTables((ParentWidget) widget);
     }

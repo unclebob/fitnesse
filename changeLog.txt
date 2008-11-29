@@ -1,3 +1,8 @@
+20081128 UB
+ * Added &debug flag to TestResponder url.  This forces the test to run ''inside'' the fitnesse process.  If you are running fitnesse in a debugger, you can breakpoint your fixtures.
+ * Symbols can be java properties or environment variables.  Symbols first, env variables second, java properties third.
+ * If the first cell of a script table is a symbol assignment ($V=) then the rest must be a function call.  The symbol is assigned the return value of the function.
+
 20081118 UB
 Fixed some bugs in Decision Table that misreported exceptions when the execute
 method was not present.

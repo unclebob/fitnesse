@@ -2,8 +2,6 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
-import fitnesse.wikitext.widgets.TableRowWidget;
-import fitnesse.wikitext.widgets.TextWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ public class ScriptTable extends SlimTable {
   }
 
   private void appendInstructionForRow(int row) {
-    String firstCell = table.getCellContents(0, row);
+    String firstCell = table.getCellContents(0, row).trim();
     if (firstCell.equalsIgnoreCase("start"))
       startActor(row);
     else if (firstCell.equalsIgnoreCase("check"))
@@ -50,9 +48,8 @@ public class ScriptTable extends SlimTable {
       note(row);
     else if (isSymbolAssignment(firstCell))
       actionAndAssign(row);
-    else {
+    else if (firstCell.length() > 0)
       action(row);
-    }
   }
 
   private void actionAndAssign(int row) {
@@ -107,10 +104,8 @@ public class ScriptTable extends SlimTable {
 
   private void invokeAction(int startingCol, int endingCol, int row) {
     String actionName = getActionNameStartingAt(startingCol, endingCol, row);
-    if (!actionName.equals("")) {
-      String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row);
-      callFunction("scriptTableActor", actionName, (Object[])args);
-    }
+    String[] args = getArgumentsStartingAt(startingCol + 1, endingCol, row);
+    callFunction("scriptTableActor", actionName, (Object[]) args);
   }
 
   private String getActionNameStartingAt(int startingCol, int endingCol, int row) {
@@ -148,8 +143,6 @@ public class ScriptTable extends SlimTable {
     protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
         return failMessage(literalize(originalValue), "Returned null value.");
-      else if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       else if (value.equals(VoidConverter.VOID_TAG))
         return literalize(originalValue);
       else if (value.equals(BooleanConverter.FALSE))
@@ -169,8 +162,6 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       return (value != null && value.equals(BooleanConverter.TRUE)) ?
         pass(literalize(originalValue)) : fail(literalize(originalValue));
     }
@@ -184,8 +175,6 @@ public class ScriptTable extends SlimTable {
     protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
         return pass(literalize(originalValue));
-      else if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       else
         return value.equals(BooleanConverter.FALSE) ? pass(literalize(originalValue)) : fail(literalize(originalValue));
     }
@@ -197,13 +186,8 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
-      int lastCol = table.getColumnCountInRow(row) - 1;
-      TextWidget textWidget = table.getCell(lastCol, row);
-      TableRowWidget rowWidget = (TableRowWidget) textWidget.getParent().getParent();
       try {
-        rowWidget.addCells(String.format("|!style_ignore(%s)", literalize(value)));
+        table.appendCellToRow(row, String.format("|!style_ignore(%s)", literalize(value)));
       } catch (Throwable e) {
         return failMessage(literalize(value), SlimTestSystem.exceptionToString(e));
       }
@@ -217,8 +201,6 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       return literalize(replaceSymbolsWithFullExpansion(originalValue));
     }
   }

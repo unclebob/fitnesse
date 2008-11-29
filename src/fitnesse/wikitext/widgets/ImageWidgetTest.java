@@ -22,16 +22,16 @@ public class ImageWidgetTest extends WidgetTestCase
 	public void testWidget() throws Exception
 	{
 		ImageWidget widget = new ImageWidget(new MockWidgetRoot(), "http://host.com/file.jpg");
-		assertEquals("<img src=\"http://host.com/file.jpg\">", widget.render());
+		assertEquals("<img src=\"http://host.com/file.jpg\"/>", widget.render());
 
 		widget = new ImageWidget(new MockWidgetRoot(), "!img http://files/file.jpg");
-		assertEquals("<img src=\"/files/file.jpg\">", widget.render());
+		assertEquals("<img src=\"/files/file.jpg\"/>", widget.render());
 
 		widget = new ImageWidget(new MockWidgetRoot(), "!img-l http://files/file.jpg");
-		assertEquals("<img src=\"/files/file.jpg\" class=\"left\">", widget.render());
+		assertEquals("<img src=\"/files/file.jpg\" class=\"left\"/>", widget.render());
 
 		widget = new ImageWidget(new MockWidgetRoot(), "!img /files/file.jpg");
-		assertEquals("<img src=\"/files/file.jpg\">", widget.render());
+		assertEquals("<img src=\"/files/file.jpg\"/>", widget.render());
 	}
 
 	public void testAsWikiText() throws Exception

@@ -7,6 +7,7 @@
 |ensure|login with username|Bob|and password|xyzzy|
 |note|this is a comment|
 |show|number of login attempts|
+|$symbol=|login message|
 
 The fixture for this table is:
 {{{public class LoginDialogDriver {
@@ -57,6 +58,8 @@ This should be pretty clear.  Each row is a single instruction in the script.
  * If the word ''note'' is in the first cell, all other cells in that row will be ignored.
 
  * If the word ''show'' is in the first cell, then it should be followed by a function.  A new cell will be added when the test is run, and it will contain the return value of the function.
+
+ * If a symbol assignment is in the first cell, then it should be followed by a functions.  The symbol is assigned the value returned by that function.
 
 
 

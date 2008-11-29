@@ -73,6 +73,7 @@ public class PageData implements Serializable
 		content = data.content;
 		properties = new WikiPageProperties(data.properties);
 		versions.addAll(data.versions);
+    variableRoot = data.variableRoot;
 	}
 
 	public String getStringOfAllAttributes()

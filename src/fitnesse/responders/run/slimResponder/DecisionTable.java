@@ -3,7 +3,6 @@ package fitnesse.responders.run.slimResponder;
 import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName;
 
 import java.util.*;
-import java.util.regex.Matcher;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
@@ -88,29 +87,14 @@ public class DecisionTable extends SlimTable {
 
   private void callFunctionInRow(String functionName, int row) {
     int col = funcs.get(functionName);
-    Matcher matcher = cellMatchesVariableAssignment(row, col);
-    if (matcher.matches()) {
-      String symbolName = matcher.group(1);
-      addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionNumber(), col, row));
-      callAndAssign(symbolName, functionName);
+    String assignedSymbol = ifSymbolAssignment(row, col);
+    if (assignedSymbol != null) {
+      addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionNumber(), col, row));
+      callAndAssign(assignedSymbol, functionName);
     } else {
       setFunctionCallExpectation(col, row);
       callFunction(getTableName(), functionName);
     }
-  }
-
-  private Matcher cellMatchesVariableAssignment(int row, int col) {
-    String expected = table.getCellContents(col, row);
-    return symbolAssignmentPattern.matcher(expected);
-  }
-
-  private void callAndAssign(String symbolName, String functionName) {
-    List<Object> callAndAssignInstruction = prepareInstruction();
-    callAndAssignInstruction.add("callAndAssign");
-    callAndAssignInstruction.add(symbolName);
-    callAndAssignInstruction.add(getTableName());
-    callAndAssignInstruction.add(disgraceMethodName(functionName));
-    addInstruction(callAndAssignInstruction);
   }
 
   private void setFunctionCallExpectation(int col, int row) {

@@ -43,7 +43,7 @@ public class ImageWidget extends WikiWidget
 				html.append("right");
 			html.append("\"");
 		}
-		html.append(">");
+		html.append("/>");
 
 		return html.toString();
 	}

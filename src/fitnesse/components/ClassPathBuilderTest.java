@@ -32,8 +32,7 @@ public class ClassPathBuilderTest extends RegexTestCase
 		assertEquals(expected, builder.getClasspath(root.getChildPage("TestPage")));
 	}
 
-	//Todo get this test to pass...
-	public void _testPathSeparatorVariable() throws Exception
+	public void testPathSeparatorVariable() throws Exception
 	{
 		WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"),
 			"!path fitnesse.jar\n" +

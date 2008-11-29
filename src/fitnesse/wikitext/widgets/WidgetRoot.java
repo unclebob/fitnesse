@@ -111,6 +111,9 @@ public class WidgetRoot extends ParentWidget {
       value = pageData.getVariable(key);
     }
     if (value == null) {
+      value = System.getenv(key);
+    }
+    if (value == null) {
       value = System.getProperty(key);
     }
     return value;

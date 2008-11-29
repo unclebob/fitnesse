@@ -250,6 +250,16 @@ public class TestResponderTest {
   }
 
   @Test
+  public void debugTest() throws Exception {
+    responder.setFastTest(false);
+    request.addInput("debug", "");
+    doSimpleRun(passFixtureTable());
+    assertEquals("Tests Executed OK", getExecutionStatusMessage());
+    assertEquals("ok.gif", getExecutionStatusIconFilename());
+    assertTrue("should be fast test", responder.isFastTest());
+  }
+
+  @Test
   public void testExecutionStatusOutputCaptured() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(outputWritingTable("blah"));

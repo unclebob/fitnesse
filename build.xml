@@ -72,6 +72,7 @@
 				<include name="build.xml" />
 				<include name="dotnet/**" />
 				<include name="BUILD_README.txt" />
+        <include name="templates/**" />
 				<exclude name="**/fitnesse*.zip" />
 			</fileset>
 		</zip>

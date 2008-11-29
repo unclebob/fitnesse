@@ -5,6 +5,7 @@ package fitnesse.components;
 import fitnesse.util.Wildcard;
 import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.PageData;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ public class ClassPathBuilder extends InheritedItemBuilder
 
 	public String getPathSeparator(WikiPage page) throws Exception
 	{
-		String separator = page.getData().getVariable("PATH_SEPARATOR");
+    PageData pageData = page.getData();
+    String separator = pageData.getVariable("PATH_SEPARATOR");
 		if(separator == null)
 			separator = (String) System.getProperties().get("path.separator");
 

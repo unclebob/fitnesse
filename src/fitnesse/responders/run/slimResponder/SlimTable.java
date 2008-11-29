@@ -34,7 +34,9 @@ public abstract class SlimTable {
     this.testContext = testContext;
     tableName = getTableType() + "_" + id;
     instructions = new ArrayList<Object>();
-    table.setAsNotLiteralTable();
+    //todo remove this cast.  Slim Tables should know nothing about wiki stuff.
+    WikiWidgetTable wwt = (WikiWidgetTable) table;
+    wwt.setAsNotLiteralTable();
     literalizeTable();
   }
 
@@ -260,11 +262,26 @@ public abstract class SlimTable {
   }
 
   protected boolean isExceptionMessage(String value) {
-    return value.startsWith("!:");
+    return value != null && value.startsWith("!:");
   }
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
     return false;
+  }
+
+  protected String ifSymbolAssignment(int row, int col) {
+    String expected = table.getCellContents(col, row);
+    Matcher matcher = symbolAssignmentPattern.matcher(expected);
+    return matcher.find() ? matcher.group(1) : null;
+  }
+
+  protected void callAndAssign(String symbolName, String functionName) {
+    List<Object> callAndAssignInstruction = prepareInstruction();
+    callAndAssignInstruction.add("callAndAssign");
+    callAndAssignInstruction.add(symbolName);
+    callAndAssignInstruction.add(getTableName());
+    callAndAssignInstruction.add(fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName(functionName));
+    addInstruction(callAndAssignInstruction);
   }
 
   static class Disgracer {
@@ -369,8 +386,18 @@ public abstract class SlimTable {
       Object returnValue = returnValues.get(makeInstructionTag(instructionNumber));
       String value = returnValue.toString();
       String originalContent = table.getCellContents(col, row);
-      String evaluationMessage = createEvaluationMessage(value, originalContent);
+      String evaluationMessage;
+      evaluationMessage = evaluationMessage(value, originalContent);
       table.setCell(col, row, evaluationMessage);
+    }
+
+    private String evaluationMessage(String value, String originalContent) {
+      String evaluationMessage;
+      if (isExceptionMessage(value))
+        evaluationMessage = literalize(originalContent) + " " + error(extractExeptionMessage(value));
+      else
+        evaluationMessage = createEvaluationMessage(value, originalContent);
+      return evaluationMessage;
     }
 
     protected abstract String createEvaluationMessage(String value, String originalValue);
@@ -447,11 +474,8 @@ public abstract class SlimTable {
     protected String createEvaluationMessage(String value, String originalValue) {
       if (VoidConverter.VOID_TAG.equals(value))
         return literalize(replaceSymbolsWithFullExpansion(originalValue));
-      else if (isExceptionMessage(value)) {
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
-      } else {
-        return String.format("!style_error(Void expected but was: )", literalize(value));
-      }
+      else
+        return String.format("!style_error(Void expected but was: %s)", literalize(value));
     }
   }
 
@@ -463,8 +487,6 @@ public abstract class SlimTable {
     protected String createEvaluationMessage(String value, String originalValue) {
       if ("OK".equalsIgnoreCase(value))
         return pass(literalize(originalValue));
-      else if (isExceptionMessage(value))
-        return String.format("%s - %s", literalize(originalValue), error(extractExeptionMessage(value)));
       else
         return "!style_error(Unknown construction message:) " + literalize(value);
     }
@@ -479,8 +501,6 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       setSymbol(symbolName, value);
       return String.format("$%s<-[%s]", symbolName, literalize(value));
     }
@@ -497,8 +517,6 @@ public abstract class SlimTable {
       String replacedValue = replaceSymbols(expectedValue);
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
-      else if (isExceptionMessage(value))
-        return literalize(originalValue) + " " + error(extractExeptionMessage(value));
       else if (value.equals(replacedValue))
         evaluationMessage = pass(literalize(announceBlank(replaceSymbolsWithFullExpansion(originalValue))));
       else if (replacedValue.length() == 0)

@@ -322,6 +322,4 @@ public class ScriptTableTest {
         "|!<check>!|!<funcion>!|!<$V->[3]>!|!style_pass(!<$V->[3]>!)|\n"
     );
   }
-
-
 }
