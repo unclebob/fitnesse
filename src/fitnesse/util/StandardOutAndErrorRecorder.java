@@ -6,76 +6,71 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class StandardOutAndErrorRecorder {
-	private PrintStream originalErrStream;
-	private PrintStream originalOutStream;
-	private ByteArrayOutputStream recordedErrStream;
-	private ByteArrayOutputStream recordedOutStream;
-	
-	public StandardOutAndErrorRecorder()
-	{
-		beginRecording();
-	}
-	
-	private void beginRecording() 
-	{
-		recordOriginalStreams();
-		redirectStreams();
-	}
+  private PrintStream originalErrStream;
+  private PrintStream originalOutStream;
+  private ByteArrayOutputStream recordedErrStream;
+  private ByteArrayOutputStream recordedOutStream;
 
-	private void redirectStreams() {
-		recordedErrStream = new ByteArrayOutputStream();
-		System.setErr(new PrintStream(recordedErrStream));
-		
-		recordedOutStream = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(recordedOutStream));
-	}
+  public StandardOutAndErrorRecorder() {
+    beginRecording();
+  }
 
-	private void recordOriginalStreams() {
-		originalErrStream = System.err;
-		originalOutStream = System.out;
-	}
-	
-	public void stopRecording(boolean report)
-	{
-		closeAllStreams();
-		replaceOriginalStreams();
-		reportStreams(report);
-		nullAllStreams();
-	}
+  private void beginRecording() {
+    recordOriginalStreams();
+    redirectStreams();
+  }
 
-	private void reportStreams(boolean report) {
-		if(report)
-		{
-			System.out.print(recordedOutStream.toString());
-			System.err.print(recordedErrStream.toString());
-		}
-	}
+  private void redirectStreams() {
+    recordedErrStream = new ByteArrayOutputStream();
+    System.setErr(new PrintStream(recordedErrStream));
 
-	private void replaceOriginalStreams() {
-		System.setErr(originalErrStream);
-		System.setOut(originalOutStream);
-	}
+    recordedOutStream = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(recordedOutStream));
+  }
 
-	private void closeAllStreams() {
-		closeStream(recordedOutStream);
-		closeStream(recordedErrStream);
-		closeStream(System.err);
-		closeStream(System.out);
-	}
+  private void recordOriginalStreams() {
+    originalErrStream = System.err;
+    originalOutStream = System.out;
+  }
 
-	private void nullAllStreams() {
-		originalErrStream = null;
-		originalOutStream = null;
-		recordedErrStream = null;
-		recordedOutStream = null;
-	}
+  public void stopRecording(boolean report) {
+    closeAllStreams();
+    replaceOriginalStreams();
+    reportStreams(report);
+    nullAllStreams();
+  }
 
-	private void closeStream(Closeable stream)
-	{
-		try {
-			recordedOutStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+  private void reportStreams(boolean report) {
+    if (report) {
+      System.out.print(recordedOutStream.toString());
+      System.err.print(recordedErrStream.toString());
+    }
+  }
+
+  private void replaceOriginalStreams() {
+    System.setErr(originalErrStream);
+    System.setOut(originalOutStream);
+  }
+
+  private void closeAllStreams() {
+    closeStream(recordedOutStream);
+    closeStream(recordedErrStream);
+    closeStream(System.err);
+    closeStream(System.out);
+  }
+
+  private void nullAllStreams() {
+    originalErrStream = null;
+    originalOutStream = null;
+    recordedErrStream = null;
+    recordedOutStream = null;
+  }
+
+  private void closeStream(Closeable stream) {
+    try {
+      recordedOutStream.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

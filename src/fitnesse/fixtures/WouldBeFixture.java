@@ -8,10 +8,8 @@ package fitnesse.fixtures;
  * @author jbrains
  * @see HandleFixtureDoesNotExtendFixtureTest
  */
-public class WouldBeFixture
-{
-	public String go()
-	{
-		return "OK!";
-	}
+public class WouldBeFixture {
+  public String go() {
+    return "OK!";
+  }
 }

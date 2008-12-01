@@ -1,14 +1,14 @@
 package fitnesse.slim;
 
-import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlim;
 import static fitnesse.util.ListUtility.list;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 
 public class SlimMethodInvocationTest {
@@ -30,10 +30,10 @@ public class SlimMethodInvocationTest {
 
   @Test
   public void throwMethodNotCalledErrorIfNoSuchMethod() throws Exception {
-    String response = (String)caller.call("testSlim", "noSuchMethod");
+    String response = (String) caller.call("testSlim", "noSuchMethod");
     assertTrue(response,
-      response.indexOf(SlimServer.EXCEPTION_TAG) != -1 && 
-      response.indexOf("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] fitnesse.slim.test.TestSlim.>>") != -1);
+      response.indexOf(SlimServer.EXCEPTION_TAG) != -1 &&
+        response.indexOf("message:<<NO_METHOD_IN_CLASS noSuchMethod[0] fitnesse.slim.test.TestSlim.>>") != -1);
   }
 
   @Test
@@ -65,7 +65,6 @@ public class SlimMethodInvocationTest {
     Object retval = caller.call("testSlim", "echoBoolean", "false");
     assertEquals(BooleanConverter.FALSE, retval);
   }
-
 
 
   @Test
@@ -103,7 +102,7 @@ public class SlimMethodInvocationTest {
   @Test
   public void convertLists() throws Exception {
     caller.call("testSlim", "oneList", "[1 ,2, 3,4, hello Bob]");
-    assertEquals(list("1","2","3","4","hello Bob"), caller.call("testSlim", "getListArg"));
+    assertEquals(list("1", "2", "3", "4", "hello Bob"), caller.call("testSlim", "getListArg"));
   }
 
   @Test

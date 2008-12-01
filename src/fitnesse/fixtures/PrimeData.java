@@ -2,12 +2,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.fixtures;
 
-public class PrimeData
-{
-	public PrimeData(int prime)
-	{
-		this.prime = prime;
-	}
+public class PrimeData {
+  public PrimeData(int prime) {
+    this.prime = prime;
+  }
 
-	public int prime;
+  public int prime;
 }

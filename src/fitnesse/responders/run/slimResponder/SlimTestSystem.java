@@ -237,7 +237,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
     if (exceptionMessageMatcher.find()) {
       String exceptionMessage = exceptionMessageMatcher.group(1);
-      instructionResults.put(resultKey, "!:"+translateExceptionMessage(exceptionMessage));
+      instructionResults.put(resultKey, "!:" + translateExceptionMessage(exceptionMessage));
     } else {
       exceptions.put(resultKey, resultString);
       instructionResults.put(resultKey, exceptionResult(resultKey));
@@ -259,9 +259,9 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     else if (tokens[0].equals("NO_CLASS"))
       return String.format("Could not find class %s", tokens[1]);
     else if (tokens[0].equals("MALFORMED_INSTRUCTION"))
-      return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ")+1));
+      return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
 
-    return exceptionMessage; 
+    return exceptionMessage;
   }
 
   private String exceptionResult(String resultKey) {

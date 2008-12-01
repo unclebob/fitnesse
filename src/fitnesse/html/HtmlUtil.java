@@ -68,13 +68,12 @@ public class HtmlUtil {
   }
 
 
-
   public static class ActionLink {
     public ActionLink(String pageName, String linkName) {
       this.pageName = pageName;
       this.linkName = linkName;
       this.query = linkName.toLowerCase();
-      this.shortcutKey = query.substring(0,1);
+      this.shortcutKey = query.substring(0, 1);
       this.newWindow = false;
     }
 

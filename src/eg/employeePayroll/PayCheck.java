@@ -4,8 +4,7 @@ package eg.employeePayroll;
 
 import java.util.Date;
 
-public class PayCheck
-{
+public class PayCheck {
   public int id;
   public double amount;
   public int number;

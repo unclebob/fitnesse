@@ -1,7 +1,7 @@
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StyleWidget extends ParentWidget {
   public static final String REGEXP = "!style_\\w+\\([^\r\n\\)]*\\)";

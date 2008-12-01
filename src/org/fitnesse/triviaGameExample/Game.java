@@ -42,7 +42,7 @@ public class Game {
   public void removePlayer(Player thePlayer) {
     if (gameHasStarted)
       return;
-    
+
   }
 
   public boolean gameHasStarted() {

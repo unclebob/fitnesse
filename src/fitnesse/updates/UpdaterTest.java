@@ -6,23 +6,20 @@ import fitnesse.wiki.PathParser;
 
 import java.io.File;
 
-public class UpdaterTest extends UpdateTestCase
-{
+public class UpdaterTest extends UpdateTestCase {
 
-	public void setUp() throws Exception
-	{
-		super.setUp();
-		Updater.testing = true;
-		crawler.addPage(root, PathParser.parse("PageOne"));
-	}
+  public void setUp() throws Exception {
+    super.setUp();
+    Updater.testing = true;
+    crawler.addPage(root, PathParser.parse("PageOne"));
+  }
 
-	public void testProperties() throws Exception
-	{
-		File file = new File("testDir/RooT/properties");
-		assertFalse(file.exists());
-		Updater updater = new Updater(context);
-		updater.updates = new Update[]{};
-		updater.update();
-		assertTrue(file.exists());
-	}
+  public void testProperties() throws Exception {
+    File file = new File("testDir/RooT/properties");
+    assertFalse(file.exists());
+    Updater updater = new Updater(context);
+    updater.updates = new Update[]{};
+    updater.update();
+    assertTrue(file.exists());
+  }
 }

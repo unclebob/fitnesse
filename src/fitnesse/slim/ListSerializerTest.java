@@ -1,13 +1,12 @@
 package fitnesse.slim;
 
+import static fitnesse.util.ListUtility.list;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static fitnesse.util.ListUtility.*;
 
 public class ListSerializerTest {
   private List<Object> list;

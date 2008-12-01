@@ -4,50 +4,49 @@ package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
 import fitnesse.util.FileUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
 
-public abstract class UpdateTestCase extends TestCase
-{
-	public static final String testDir = "testDir";
-	public static final String rootName = "RooT";
+public abstract class UpdateTestCase extends TestCase {
+  public static final String testDir = "testDir";
+  public static final String rootName = "RooT";
 
-	protected WikiPage root;
-	protected Update update;
-	protected Updater updater;
-	protected WikiPage pageOne;
-	protected WikiPage pageTwo;
-	protected FitNesseContext context;
-	protected PageCrawler crawler;
+  protected WikiPage root;
+  protected Update update;
+  protected Updater updater;
+  protected WikiPage pageOne;
+  protected WikiPage pageTwo;
+  protected FitNesseContext context;
+  protected PageCrawler crawler;
 
-	public void setUp() throws Exception
-	{
-		context = new FitNesseContext();
-		context.rootPath = testDir;
-		context.rootPageName = rootName;
-		context.rootPagePath = testDir + "/" + rootName;
+  public void setUp() throws Exception {
+    context = new FitNesseContext();
+    context.rootPath = testDir;
+    context.rootPageName = rootName;
+    context.rootPagePath = testDir + "/" + rootName;
 
-		FileUtil.makeDir(testDir);
-		root = FileSystemPage.makeRoot(context.rootPath, context.rootPageName);
-		crawler = root.getPageCrawler();
-		context.root = root;
+    FileUtil.makeDir(testDir);
+    root = FileSystemPage.makeRoot(context.rootPath, context.rootPageName);
+    crawler = root.getPageCrawler();
+    context.root = root;
 
-		pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
-		pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
+    pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
+    pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
-		updater = new Updater(context);
-		update = makeUpdate();
-	}
+    updater = new Updater(context);
+    update = makeUpdate();
+  }
 
-	public void tearDown() throws Exception
-	{
-		FileUtil.deleteFileSystemDirectory(testDir);
-	}
+  public void tearDown() throws Exception {
+    FileUtil.deleteFileSystemDirectory(testDir);
+  }
 
-	protected Update makeUpdate() throws Exception
-	{
-		return null;
-	}
+  protected Update makeUpdate() throws Exception {
+    return null;
+  }
 
-	;
+  ;
 }

@@ -10,7 +10,7 @@ import java.util.List;
  * Specifies the syntactic operations for a Slim statement.  A Slim statement is a list of strings.
  * The first string is the operation name.  Other strings are arguments of the operation.  This class knows
  * that syntax, and knows how to decompose it into StatementExecutor calls.  This class DOES NOT know how
- * to do any actual execution.  
+ * to do any actual execution.
  */
 public class Statement {
   private ArrayList<Object> words = new ArrayList<Object>();
@@ -61,15 +61,15 @@ public class Statement {
   public Object execute(StatementExecutor executor) {
     Object retval;
     if (operationIs("make"))
-      retval =  createInstance(executor);
+      retval = createInstance(executor);
     else if (operationIs("import"))
-      retval =  addPath(executor);
+      retval = addPath(executor);
     else if (operationIs("call"))
-      retval =  call(executor);
+      retval = call(executor);
     else if (operationIs("callAndAssign"))
-      retval =  callAndAssign(executor);
+      retval = callAndAssign(executor);
     else
-      retval = SlimServer.EXCEPTION_TAG +  String.format("message:<<INVALID_STATEMENT: %s.>>", getOperation());
+      retval = SlimServer.EXCEPTION_TAG + String.format("message:<<INVALID_STATEMENT: %s.>>", getOperation());
     return list(getWord(0), retval);
   }
 

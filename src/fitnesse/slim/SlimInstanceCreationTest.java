@@ -38,7 +38,7 @@ public class SlimInstanceCreationTest {
 
   @Test
   public void cantCreateInstanceIfConstructorArgumentCountIncorrect() throws Exception {
-    String result = (String) caller.create("x", "fitnesse.slim.test.TestSlim", new Object[]{"3","4"});
+    String result = (String) caller.create("x", "fitnesse.slim.test.TestSlim", new Object[]{"3", "4"});
     assertException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR fitnesse.slim.test.TestSlim[2]>>", result);
   }
 

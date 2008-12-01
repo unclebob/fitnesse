@@ -22,7 +22,7 @@ public class LoginDialogDriver {
   }
 
   public String loginMessage() {
-    return message;  
+    return message;
   }
 
   public int numberOfLoginAttempts() {

@@ -2,24 +2,21 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
-import fit.FitServer;
 import fitnesse.components.CommandLine;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.util.StreamReader;
-import fitnesse.util.XmlUtil;
 import fitnesse.util.StringUtil;
-
-import java.io.*;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.Socket;
-import java.util.*;
-
+import fitnesse.util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 
 public class TestRunner {
   private String outputFileName;
@@ -105,7 +102,7 @@ public class TestRunner {
       String rootPath = XmlUtil.getTextValue(testResultsElement, "rootPath");
       output.println(String.format("Test Runner for Root Path: %s", rootPath));
       NodeList results = testResultsElement.getElementsByTagName("result");
-      for (int i=0; i<results.getLength(); i++) {
+      for (int i = 0; i < results.getLength(); i++) {
         Element result = (Element) results.item(i);
         showResult(result);
       }
@@ -124,7 +121,7 @@ public class TestRunner {
 
   private void writeOutputFile() throws Exception {
     if (outputFileName != null) {
-      debug (String.format("Writing: %s", outputFileName));
+      debug(String.format("Writing: %s", outputFileName));
       String xmlDocument = XmlUtil.xmlAsString(testResultsDocument);
       OutputStream os = getOutputStream();
       os.write(xmlDocument.getBytes());
@@ -138,7 +135,7 @@ public class TestRunner {
     if ("stdout".equalsIgnoreCase(outputFileName))
       return output;
     else
-     return new FileOutputStream(outputFileName);
+      return new FileOutputStream(outputFileName);
   }
 
   private void gatherCounts() throws Exception {

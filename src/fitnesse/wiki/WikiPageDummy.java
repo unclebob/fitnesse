@@ -3,124 +3,105 @@
 
 package fitnesse.wiki;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-public class WikiPageDummy implements WikiPage
-{
-    private static final long serialVersionUID = 1L;
-    
-	public String name;
-	protected String location;
-	private PageData pageData;
-	private WikiPage parent;
-    protected WikiPage parentForVariables;
-  
-	public static final int daysTillVersionsExpire = 14;
+public class WikiPageDummy implements WikiPage {
+  private static final long serialVersionUID = 1L;
 
-	public WikiPageDummy(String name, String content) throws Exception
-	{
-		this.name = name;
-		pageData = new PageData(this, content);
-	}
+  public String name;
+  protected String location;
+  private PageData pageData;
+  private WikiPage parent;
+  protected WikiPage parentForVariables;
 
-	public WikiPageDummy(String location)
-	{
-		this.location = location;
-		name = "Default";
-	}
+  public static final int daysTillVersionsExpire = 14;
 
-	public WikiPageDummy()
-	{
-		location = null;
-		name = "Default";
-	}
+  public WikiPageDummy(String name, String content) throws Exception {
+    this.name = name;
+    pageData = new PageData(this, content);
+  }
 
-	public String getName()
-	{
-		return name;
-	}
+  public WikiPageDummy(String location) {
+    this.location = location;
+    name = "Default";
+  }
 
-	public WikiPage getParent()
-	{
-		return parent;
-	}
+  public WikiPageDummy() {
+    location = null;
+    name = "Default";
+  }
 
-   public void setParentForVariables(WikiPage parent)
-   {
-     parentForVariables = parent;
-   }
+  public String getName() {
+    return name;
+  }
 
-   public WikiPage getParentForVariables() throws Exception
-   {
-     return parentForVariables == null ? this : parentForVariables;
-   }
+  public WikiPage getParent() {
+    return parent;
+  }
 
-   public void setParent(WikiPage parent)
-   {
-     this.parent = this.parentForVariables = parent;
-	}
+  public void setParentForVariables(WikiPage parent) {
+    parentForVariables = parent;
+  }
 
-	public PageData getData() throws Exception
-	{
-		return pageData;
-	}
+  public WikiPage getParentForVariables() throws Exception {
+    return parentForVariables == null ? this : parentForVariables;
+  }
 
-	public VersionInfo commit(PageData data) throws Exception
-	{
-		pageData = data;
-		return new VersionInfo("mockVersionName", "mockAuthor", new Date());
-	}
+  public void setParent(WikiPage parent) {
+    this.parent = this.parentForVariables = parent;
+  }
 
-	public List<WikiPage> getChildren()
-	{
-		return new ArrayList<WikiPage>();
-	}
+  public PageData getData() throws Exception {
+    return pageData;
+  }
 
-	public int compareTo(Object o)
-	{
-		return 0;
-	}
+  public VersionInfo commit(PageData data) throws Exception {
+    pageData = data;
+    return new VersionInfo("mockVersionName", "mockAuthor", new Date());
+  }
 
-	public PageData getDataVersion(String versionName) throws Exception
-	{
-		return null;
-	}
+  public List<WikiPage> getChildren() {
+    return new ArrayList<WikiPage>();
+  }
 
-	public void removeChildPage(String name) throws Exception
-	{
-	}
+  public int compareTo(Object o) {
+    return 0;
+  }
 
-	public PageCrawler getPageCrawler()
-	{
-		return new PageCrawlerImpl();
-	}
+  public PageData getDataVersion(String versionName) throws Exception {
+    return null;
+  }
 
-	public WikiPage addChildPage(String name) throws Exception
-	{
-		return null;
-	}
+  public void removeChildPage(String name) throws Exception {
+  }
 
-	public boolean hasChildPage(String name) throws Exception
-	{
-		return false;
-	}
+  public PageCrawler getPageCrawler() {
+    return new PageCrawlerImpl();
+  }
 
-	public WikiPage getChildPage(String name) throws Exception
-	{
-		return null;
-	}
+  public WikiPage addChildPage(String name) throws Exception {
+    return null;
+  }
 
-	public boolean hasExtension(String extensionName)
-	{
-		return false;
-	}
+  public boolean hasChildPage(String name) throws Exception {
+    return false;
+  }
 
-	public Extension getExtension(String extensionName)
-	{
-		return null;
-	}
-	
-	public String getHelpText () throws Exception
-	{	return "Dummy help text";
-	}
+  public WikiPage getChildPage(String name) throws Exception {
+    return null;
+  }
+
+  public boolean hasExtension(String extensionName) {
+    return false;
+  }
+
+  public Extension getExtension(String extensionName) {
+    return null;
+  }
+
+  public String getHelpText() throws Exception {
+    return "Dummy help text";
+  }
 }

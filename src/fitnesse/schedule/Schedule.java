@@ -3,11 +3,10 @@
 package fitnesse.schedule;
 
 // Runs scheduled tasks.
-public interface Schedule
-{
-	public void add(ScheduleItem item) throws Exception;
+public interface Schedule {
+  public void add(ScheduleItem item) throws Exception;
 
-	public void start() throws Exception;
+  public void start() throws Exception;
 
-	public void stop() throws Exception;
+  public void stop() throws Exception;
 }

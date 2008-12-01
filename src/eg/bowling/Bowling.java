@@ -2,14 +2,20 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package eg.bowling;
 
-public interface Bowling
-{
-	int currentFrame();
-	int currentBall();
-	int scoreableFrame();
-	boolean validGame();
-	boolean gameOver();
-	boolean isGameOver();
-	void roll(int pins);
-	int score(int frame);
+public interface Bowling {
+  int currentFrame();
+
+  int currentBall();
+
+  int scoreableFrame();
+
+  boolean validGame();
+
+  boolean gameOver();
+
+  boolean isGameOver();
+
+  void roll(int pins);
+
+  int score(int frame);
 }

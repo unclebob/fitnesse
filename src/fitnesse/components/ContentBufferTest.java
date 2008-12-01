@@ -5,60 +5,54 @@ package fitnesse.components;
 import fitnesse.util.StreamReader;
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.File;
+import java.io.InputStream;
 
-public class ContentBufferTest extends TestCase
-{
-	protected void tearDown() throws Exception
-	{
-		System.gc();
-	}
+public class ContentBufferTest extends TestCase {
+  protected void tearDown() throws Exception {
+    System.gc();
+  }
 
-	public void testName() throws Exception
-	{
-		String name = new ContentBuffer().getFile().getName();
-		assertTrue(name.startsWith("FitNesse-"));
-		assertTrue(name.endsWith(".tmp"));
+  public void testName() throws Exception {
+    String name = new ContentBuffer().getFile().getName();
+    assertTrue(name.startsWith("FitNesse-"));
+    assertTrue(name.endsWith(".tmp"));
 
-		name = new ContentBuffer(".html").getFile().getName();
-		assertTrue(name.startsWith("FitNesse-"));
-		assertTrue(name.endsWith(".html"));
-	}
+    name = new ContentBuffer(".html").getFile().getName();
+    assertTrue(name.startsWith("FitNesse-"));
+    assertTrue(name.endsWith(".html"));
+  }
 
-	public void testSimpleUsage() throws Exception
-	{
-		ContentBuffer buffer = new ContentBuffer();
-		buffer.append("some content");
-		assertEquals("some content", buffer.getContent());
-	}
+  public void testSimpleUsage() throws Exception {
+    ContentBuffer buffer = new ContentBuffer();
+    buffer.append("some content");
+    assertEquals("some content", buffer.getContent());
+  }
 
-	public void testGettingInputStream() throws Exception
-	{
-		ContentBuffer buffer = new ContentBuffer();
-		buffer.append("some content");
+  public void testGettingInputStream() throws Exception {
+    ContentBuffer buffer = new ContentBuffer();
+    buffer.append("some content");
 
-		int bytes = buffer.getSize();
-		assertEquals(12, bytes);
+    int bytes = buffer.getSize();
+    assertEquals(12, bytes);
 
-		InputStream input = buffer.getInputStream();
-		String content = new StreamReader(input).read(12);
-		assertEquals("some content", content);
-	}
+    InputStream input = buffer.getInputStream();
+    String content = new StreamReader(input).read(12);
+    assertEquals("some content", content);
+  }
 
-	public void testDelete() throws Exception
-	{
-		ContentBuffer buffer = new ContentBuffer();
-		File file = buffer.getFile();
+  public void testDelete() throws Exception {
+    ContentBuffer buffer = new ContentBuffer();
+    File file = buffer.getFile();
 
-		assertTrue(file.exists());
-		buffer.delete();
-		assertFalse(file.exists());
-	}
+    assertTrue(file.exists());
+    buffer.delete();
+    assertFalse(file.exists());
+  }
 
-	public void testUnicode() throws Exception
-	{
-		ContentBuffer buffer = new ContentBuffer();
-		buffer.append("??¾š");
-		assertEquals("??¾š", new StreamReader(buffer.getInputStream()).read(buffer.getSize()));
-	}
+  public void testUnicode() throws Exception {
+    ContentBuffer buffer = new ContentBuffer();
+    buffer.append("??¾š");
+    assertEquals("??¾š", new StreamReader(buffer.getInputStream()).read(buffer.getSize()));
+  }
 }

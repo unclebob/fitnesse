@@ -3,26 +3,25 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.util.XmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
 import static fitnesse.testutil.RegexTestCase.*;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.LinkedList;
-
-import org.junit.Before;
 import org.junit.After;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class SuiteResponderTest {
   private MockRequest request;
@@ -380,14 +379,14 @@ public class SuiteResponderTest {
         TestResponderTest.assertCounts(testResult, "2", "0", "0", "0");
         assertSubString("DT:fitnesse.slim.test.TestSlim", XmlUtil.getTextValue(testResult, "content"));
       } else if ("TestOne".equals(pageName)) {
-        TestResponderTest.assertCounts(testResult, "1", "0", "0", "0");        
+        TestResponderTest.assertCounts(testResult, "1", "0", "0", "0");
         assertSubString("PassFixture", XmlUtil.getTextValue(testResult, "content"));
       } else {
         fail(pageName);
       }
     }
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
-    TestResponderTest.assertCounts(finalCounts,"2", "0", "0", "0");
+    TestResponderTest.assertCounts(finalCounts, "2", "0", "0", "0");
   }
 
   @Test

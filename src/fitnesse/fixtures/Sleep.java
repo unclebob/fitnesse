@@ -2,20 +2,17 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.fixtures;
 
-import fit.*;
+import fit.Fixture;
+import fit.Parse;
 
-public class Sleep extends Fixture
-{
-	public void doTable(Parse table)
-	{
-		String args[] = getArgs();
-		long millis = Long.parseLong(args[0]);
-		try
-		{
-			Thread.sleep(millis);
-		}
-		catch(InterruptedException e)
-		{
-		}
-	}
+public class Sleep extends Fixture {
+  public void doTable(Parse table) {
+    String args[] = getArgs();
+    long millis = Long.parseLong(args[0]);
+    try {
+      Thread.sleep(millis);
+    }
+    catch (InterruptedException e) {
+    }
+  }
 }

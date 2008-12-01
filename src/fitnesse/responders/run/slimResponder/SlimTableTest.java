@@ -1,11 +1,10 @@
 package fitnesse.responders.run.slimResponder;
 
+import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceClassName;
+import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName;
+import static fitnesse.responders.run.slimResponder.SlimTable.approximatelyEqual;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.*;
-import static fitnesse.responders.run.slimResponder.SlimTable.*;
 
 public class SlimTableTest {
   @Test

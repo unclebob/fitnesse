@@ -5,370 +5,337 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class WikiWordWidgetTest extends TestCase
-{
-	private WikiPage root;
-	private PageCrawler crawler;
+public class WikiWordWidgetTest extends TestCase {
+  private WikiPage root;
+  private PageCrawler crawler;
 
-	public void setUp() throws Exception
-	{
-		root = InMemoryPage.makeRoot("RooT");
-		crawler = root.getPageCrawler();
-	}
+  public void setUp() throws Exception {
+    root = InMemoryPage.makeRoot("RooT");
+    crawler = root.getPageCrawler();
+  }
 
-	public void tearDown() throws Exception
-	{
-	}
+  public void tearDown() throws Exception {
+  }
 
-	public void testIsSingleWikiWord() throws Exception
-	{
-		assertTrue(WikiWordWidget.isSingleWikiWord("WikiWord"));
-		assertFalse(WikiWordWidget.isSingleWikiWord("notWikiWord"));
-		assertFalse(WikiWordWidget.isSingleWikiWord("NotSingle.WikiWord"));
-	}
+  public void testIsSingleWikiWord() throws Exception {
+    assertTrue(WikiWordWidget.isSingleWikiWord("WikiWord"));
+    assertFalse(WikiWordWidget.isSingleWikiWord("notWikiWord"));
+    assertFalse(WikiWordWidget.isSingleWikiWord("NotSingle.WikiWord"));
+  }
 
-	public void testGoodWikiWordsAreAccepted() throws Exception
-	{
-		checkWord(true, "WikiWord");
-		checkWord(true, "WordWordWord");
-		checkWord(true, "RcM");
-		checkWord(true, "WikiWordWithManyWords");
-		checkWord(true, "WidgetRoot.ChildPage");
-		checkWord(true, "GrandPa.FatheR.SoN");
-		checkWord(true, ".RootPage.ChildPage");
-		checkWord(true, "^SubPage");
-		checkWord(true, "^SubPage.SubPage");
-		checkWord(true, ">SubPage");
-		checkWord(true, ">SubPage.SubPage");
-		checkWord(true, "<MyPage.YourPage");
-	}
+  public void testGoodWikiWordsAreAccepted() throws Exception {
+    checkWord(true, "WikiWord");
+    checkWord(true, "WordWordWord");
+    checkWord(true, "RcM");
+    checkWord(true, "WikiWordWithManyWords");
+    checkWord(true, "WidgetRoot.ChildPage");
+    checkWord(true, "GrandPa.FatheR.SoN");
+    checkWord(true, ".RootPage.ChildPage");
+    checkWord(true, "^SubPage");
+    checkWord(true, "^SubPage.SubPage");
+    checkWord(true, ">SubPage");
+    checkWord(true, ">SubPage.SubPage");
+    checkWord(true, "<MyPage.YourPage");
+  }
 
-	public void testBadWikiWordsAreRejected() throws Exception
-	{
-		checkWord(false, "HelloDDouble");
-		checkWord(false, "Hello");
-		checkWord(false, "lowerCaseAtStart");
-		checkWord(false, ">.MyPage");
-		checkWord(false, "RcMMdM");
-		checkWord(false, "WikiPage.");
-		checkWord(false, "WikiPage. ");
-	}
+  public void testBadWikiWordsAreRejected() throws Exception {
+    checkWord(false, "HelloDDouble");
+    checkWord(false, "Hello");
+    checkWord(false, "lowerCaseAtStart");
+    checkWord(false, ">.MyPage");
+    checkWord(false, "RcMMdM");
+    checkWord(false, "WikiPage.");
+    checkWord(false, "WikiPage. ");
+  }
 
-	public void testWikiWordsWithSlashAndDotFail() throws Exception
-	{
-		checkWord(false, "WikiPage/SubPage");
-		checkWord(false, "/WikiPage");
-		checkWord(false, "WikiPage/");
-		checkWord(false, "./WikiPage");
-		checkWord(false, "../WikiPage");
-		checkWord(false, "../../WikiPage");
+  public void testWikiWordsWithSlashAndDotFail() throws Exception {
+    checkWord(false, "WikiPage/SubPage");
+    checkWord(false, "/WikiPage");
+    checkWord(false, "WikiPage/");
+    checkWord(false, "./WikiPage");
+    checkWord(false, "../WikiPage");
+    checkWord(false, "../../WikiPage");
 
-		checkWord(false, "WikiWord/../WikiWord");
-		checkWord(false, "./../WikiWord");
-		checkWord(false, ".././WikiWord");
-		checkWord(false, "WikiWord/./WikiWord");
-		checkWord(false, "/../WikiWord");
-		checkWord(false, "/./WikiWord");
-		checkWord(false, "..");
-		checkWord(false, "../..");
-	}
+    checkWord(false, "WikiWord/../WikiWord");
+    checkWord(false, "./../WikiWord");
+    checkWord(false, ".././WikiWord");
+    checkWord(false, "WikiWord/./WikiWord");
+    checkWord(false, "/../WikiWord");
+    checkWord(false, "/./WikiWord");
+    checkWord(false, "..");
+    checkWord(false, "../..");
+  }
 
-	public void testWikiWordRegexpWithDigits() throws Exception
-	{
-		checkWord(true, "TestPage1");
-		checkWord(true, "ParentPage1.SubPage5");
-		checkWord(true, "The123Page");
-		checkWord(false, "123Page");
-		checkWord(false, "Page123");
-	}
+  public void testWikiWordRegexpWithDigits() throws Exception {
+    checkWord(true, "TestPage1");
+    checkWord(true, "ParentPage1.SubPage5");
+    checkWord(true, "The123Page");
+    checkWord(false, "123Page");
+    checkWord(false, "Page123");
+  }
 
-	public void testHtmlForNormalLink() throws Exception
-	{
-		WikiPage page = addPage(root, "PageOne");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
-		assertEquals(makeExpectedNonExistentWikiWord("WikiWord", "WikiWord"), widget.render());
-		page = addPage(root, "WikiWord");
-		widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
-		assertEquals("<a href=\"WikiWord\">WikiWord</a>", widget.render());
-	}
+  public void testHtmlForNormalLink() throws Exception {
+    WikiPage page = addPage(root, "PageOne");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
+    assertEquals(makeExpectedNonExistentWikiWord("WikiWord", "WikiWord"), widget.render());
+    page = addPage(root, "WikiWord");
+    widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
+    assertEquals("<a href=\"WikiWord\">WikiWord</a>", widget.render());
+  }
 
-	private String makeExpectedNonExistentWikiWord(String wikiWord, String fullWikiWord) {
-		return wikiWord+"<a title=\"create page\" href=\""+fullWikiWord+"?edit&amp;nonExistent=true\">[?]</a>";
-	}
+  private String makeExpectedNonExistentWikiWord(String wikiWord, String fullWikiWord) {
+    return wikiWord + "<a title=\"create page\" href=\"" + fullWikiWord + "?edit&amp;nonExistent=true\">[?]</a>";
+  }
 
-	//todo the ^ widget is deprecated.  Remove it by 7/2007? (DeanW: There is no real point in removing this, as it
-	// is "harmless" and it will break some user's tests.)
-	public void testSubPageWidget() throws Exception
-	{
-		WikiPage superPage = addPage(root, "SuperPage");
-		PageData data = superPage.getData();
-		data.setContent("^SubPage");
-		superPage.commit(data);
-		String renderedText = superPage.getData().getHtml();
-		assertEquals(makeExpectedNonExistentWikiWord("^SubPage", "SuperPage.SubPage"), renderedText);
-		addPage(superPage, "SubPage");
-		renderedText = superPage.getData().getHtml();
-		assertEquals("<a href=\"SuperPage.SubPage\">^SubPage</a>", renderedText);
-	}
+  //todo the ^ widget is deprecated.  Remove it by 7/2007? (DeanW: There is no real point in removing this, as it
+  // is "harmless" and it will break some user's tests.)
+  public void testSubPageWidget() throws Exception {
+    WikiPage superPage = addPage(root, "SuperPage");
+    PageData data = superPage.getData();
+    data.setContent("^SubPage");
+    superPage.commit(data);
+    String renderedText = superPage.getData().getHtml();
+    assertEquals(makeExpectedNonExistentWikiWord("^SubPage", "SuperPage.SubPage"), renderedText);
+    addPage(superPage, "SubPage");
+    renderedText = superPage.getData().getHtml();
+    assertEquals("<a href=\"SuperPage.SubPage\">^SubPage</a>", renderedText);
+  }
 
-	public void testGTSubPageWidget() throws Exception
-	{
-		WikiPage superPage = addPage(root, "SuperPage");
-		PageData data = superPage.getData();
-		data.setContent(">SubPage");
-		superPage.commit(data);
-		String renderedText = superPage.getData().getHtml();
-		assertEquals(makeExpectedNonExistentWikiWord("&gt;SubPage", "SuperPage.SubPage"), renderedText);
-		addPage(superPage, "SubPage");
-		renderedText = superPage.getData().getHtml();
-		assertEquals("<a href=\"SuperPage.SubPage\">&gt;SubPage</a>", renderedText);
-	}
+  public void testGTSubPageWidget() throws Exception {
+    WikiPage superPage = addPage(root, "SuperPage");
+    PageData data = superPage.getData();
+    data.setContent(">SubPage");
+    superPage.commit(data);
+    String renderedText = superPage.getData().getHtml();
+    assertEquals(makeExpectedNonExistentWikiWord("&gt;SubPage", "SuperPage.SubPage"), renderedText);
+    addPage(superPage, "SubPage");
+    renderedText = superPage.getData().getHtml();
+    assertEquals("<a href=\"SuperPage.SubPage\">&gt;SubPage</a>", renderedText);
+  }
 
-	public void testBackwardSearchWidget() throws Exception
-	{
-		WikiPage top = addPage(root, "TopPage");
-		WikiPage target = addPage(top, "TargetPage");
-		WikiPage referer = addPage(target, "ReferingPage");
-      @SuppressWarnings("unused")
-		WikiPage subTarget = addPage(target, "SubTarget");
+  public void testBackwardSearchWidget() throws Exception {
+    WikiPage top = addPage(root, "TopPage");
+    WikiPage target = addPage(top, "TargetPage");
+    WikiPage referer = addPage(target, "ReferingPage");
+    @SuppressWarnings("unused")
+    WikiPage subTarget = addPage(target, "SubTarget");
 
-		String actual = WikiWordWidget.expandPrefix(referer, "<TargetPage.SubTarget");
-		assertEquals(".TopPage.TargetPage.SubTarget", actual);
+    String actual = WikiWordWidget.expandPrefix(referer, "<TargetPage.SubTarget");
+    assertEquals(".TopPage.TargetPage.SubTarget", actual);
 
-		actual = WikiWordWidget.expandPrefix(referer, "<NoSuchPage");
-		assertEquals(".NoSuchPage", actual);
+    actual = WikiWordWidget.expandPrefix(referer, "<NoSuchPage");
+    assertEquals(".NoSuchPage", actual);
 
-		PageData data = referer.getData();
-		data.setContent("<TargetPage.SubTarget");
-		referer.commit(data);
-		String renderedLink = referer.getData().getHtml();
-		assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
-	}
+    PageData data = referer.getData();
+    data.setContent("<TargetPage.SubTarget");
+    referer.commit(data);
+    String renderedLink = referer.getData().getHtml();
+    assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
+  }
 
-   public void testHtmlForNormalLinkRegraced() throws Exception
-   {
-      WikiPage page = addPage(root, "PageOne");
-      WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "Wiki42Word");
-      assertEquals(makeExpectedNonExistentWikiWord("Wiki42Word", "Wiki42Word"), widget.render());
-      page = addPage(root, "Wiki42Word");
-      ParentWidget root = new WidgetRoot(page);
-      root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
-      widget = new WikiWordWidget(root, "Wiki42Word");
-      assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
-   }
+  public void testHtmlForNormalLinkRegraced() throws Exception {
+    WikiPage page = addPage(root, "PageOne");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "Wiki42Word");
+    assertEquals(makeExpectedNonExistentWikiWord("Wiki42Word", "Wiki42Word"), widget.render());
+    page = addPage(root, "Wiki42Word");
+    ParentWidget root = new WidgetRoot(page);
+    root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
+    widget = new WikiWordWidget(root, "Wiki42Word");
+    assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
+  }
 
-   public void testGTSubPageWidgetRegraced() throws Exception
-   {
-      WikiPage superPage = addPage(root, "SuperPage");
-      WikiPage childPage = addPage(superPage, "SubPage");
-      
-      PageData data = superPage.getData();
-      data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
-      superPage.commit(data);
+  public void testGTSubPageWidgetRegraced() throws Exception {
+    WikiPage superPage = addPage(root, "SuperPage");
+    WikiPage childPage = addPage(superPage, "SubPage");
 
-      data = childPage.getData();
-      data.setContent(">Sub123Page");
-      childPage.commit(data);
+    PageData data = superPage.getData();
+    data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
+    superPage.commit(data);
 
-      String renderedText = childPage.getData().getHtml();
-      assertEquals(makeExpectedNonExistentWikiWord("&gt;Sub123Page", "SuperPage.SubPage.Sub123Page"), renderedText);
-      
-      addPage(childPage, "Sub123Page");
-      renderedText = childPage.getData().getHtml();
-      assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt;Sub 123 Page</a>", renderedText);
-   }
+    data = childPage.getData();
+    data.setContent(">Sub123Page");
+    childPage.commit(data);
 
-   public void testBackwardSearchWidgetRegraced() throws Exception
-   {
-      WikiPage top = addPage(root, "TopPage");
-      WikiPage target = addPage(top, "TargetPage");
-      WikiPage referer = addPage(target, "ReferingPage");
-      @SuppressWarnings("unused")
-      WikiPage subTarget = addPage(target, "SubTarget");
-      
-      PageData data = top.getData();
-      data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
-      top.commit(data);
-      
-      data = referer.getData();
-      data.setContent("<TargetPage.SubTarget");
-      referer.commit(data);
-      String renderedLink = referer.getData().getHtml();
-      assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;Target Page .Sub Target</a>", renderedLink);
-   }
+    String renderedText = childPage.getData().getHtml();
+    assertEquals(makeExpectedNonExistentWikiWord("&gt;Sub123Page", "SuperPage.SubPage.Sub123Page"), renderedText);
 
-	private WikiPage addPage(WikiPage parent, String childName) throws Exception
-	{
-		return crawler.addPage(parent, PathParser.parse(childName));
-	}
+    addPage(childPage, "Sub123Page");
+    renderedText = childPage.getData().getHtml();
+    assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt;Sub 123 Page</a>", renderedText);
+  }
 
-	private void checkWord(boolean expectedMatch, String word)
-	{
-		Pattern p = Pattern.compile(WikiWordWidget.REGEXP, Pattern.DOTALL | Pattern.MULTILINE);
-		Matcher match = p.matcher(word);
-		final boolean matches = match.find();
-		final boolean matchEquals = matches ? word.equals(match.group(0)) : false;
-		boolean pass = (matches && matchEquals);
-		if(!expectedMatch)
-			pass = !pass;
+  public void testBackwardSearchWidgetRegraced() throws Exception {
+    WikiPage top = addPage(root, "TopPage");
+    WikiPage target = addPage(top, "TargetPage");
+    WikiPage referer = addPage(target, "ReferingPage");
+    @SuppressWarnings("unused")
+    WikiPage subTarget = addPage(target, "SubTarget");
 
-		String failureMessage = word + (matches ? (" found " + (matchEquals ? "" : "but matched " + match.group(0))) : " not found");
-		assertTrue(failureMessage, pass);
-	}
+    PageData data = top.getData();
+    data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
+    top.commit(data);
 
-	public void testIsWikiWord() throws Exception
-	{
-		assertEquals(true, WikiWordWidget.isWikiWord("HelloThere"));
-		assertEquals(false, WikiWordWidget.isWikiWord("not.a.wiki.word"));
-	}
+    data = referer.getData();
+    data.setContent("<TargetPage.SubTarget");
+    referer.commit(data);
+    String renderedLink = referer.getData().getHtml();
+    assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;Target Page .Sub Target</a>", renderedLink);
+  }
 
-	public void testAsWikiText() throws Exception
-	{
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(addPage(root, "SomePage")), "OldText");
-		assertEquals("OldText", widget.asWikiText());
-		widget.setText("NewText");
-		assertEquals("NewText", widget.asWikiText());
-	}
+  private WikiPage addPage(WikiPage parent, String childName) throws Exception {
+    return crawler.addPage(parent, PathParser.parse(childName));
+  }
 
-	public void testQualifiedReferenceToSubReference() throws Exception
-	{
-		WikiPage myPage = addPage(root, "MyPage");
-		addPage(myPage, "SubPage");
+  private void checkWord(boolean expectedMatch, String word) {
+    Pattern p = Pattern.compile(WikiWordWidget.REGEXP, Pattern.DOTALL | Pattern.MULTILINE);
+    Matcher match = p.matcher(word);
+    final boolean matches = match.find();
+    final boolean matchEquals = matches ? word.equals(match.group(0)) : false;
+    boolean pass = (matches && matchEquals);
+    if (!expectedMatch)
+      pass = !pass;
 
-		//todo ^ is deprecated, remove by 7/2007
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(myPage), "^SubPage");
-		assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
+    String failureMessage = word + (matches ? (" found " + (matchEquals ? "" : "but matched " + match.group(0))) : " not found");
+    assertTrue(failureMessage, pass);
+  }
 
-		widget = new WikiWordWidget(new WidgetRoot(myPage), ">SubPage");
-		assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
-	}
+  public void testIsWikiWord() throws Exception {
+    assertEquals(true, WikiWordWidget.isWikiWord("HelloThere"));
+    assertEquals(false, WikiWordWidget.isWikiWord("not.a.wiki.word"));
+  }
 
-	public void testQualifiedReferenceToRelativeReference() throws Exception
-	{
-		WikiPage myPage = addPage(root, "MyPage");
-		addPage(root, "MyBrother");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(myPage), "MyBrother");
-		assertEquals("MyBrother", widget.makeRenamedRelativeReference(PathParser.parse(".MyBrother")));
+  public void testAsWikiText() throws Exception {
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(addPage(root, "SomePage")), "OldText");
+    assertEquals("OldText", widget.asWikiText());
+    widget.setText("NewText");
+    assertEquals("NewText", widget.asWikiText());
+  }
 
-		WikiPage subPageOne = addPage(myPage, "SubPageOne");
-		addPage(myPage, "SubPageTwo");
-		widget = new WikiWordWidget(new WidgetRoot(subPageOne), "SubPageTwo");
-		assertEquals("SubPageTwo", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.SubPageTwo")));
-	}
+  public void testQualifiedReferenceToSubReference() throws Exception {
+    WikiPage myPage = addPage(root, "MyPage");
+    addPage(myPage, "SubPage");
 
-	public void testRefersTo() throws Exception
-	{
-		assertTrue(WikiWordWidget.refersTo(".PageOne", ".PageOne"));
-		assertTrue(WikiWordWidget.refersTo(".PageOne.PageTwo", ".PageOne"));
-		assertFalse(WikiWordWidget.refersTo(".PageOne.PageTwo", ".PageOne.PageTw"));
-	}
+    //todo ^ is deprecated, remove by 7/2007
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(myPage), "^SubPage");
+    assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
 
-	public void testSimpleRenamePage() throws Exception
-	{
-		WikiPage pageToRename = addPage(root, "OldPageName");
-		WikiPage p1 = addPage(root, "PageOne");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(p1), "OldPageName");
-		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals("NewPageName", widget.getText());
-	}
+    widget = new WikiWordWidget(new WidgetRoot(myPage), ">SubPage");
+    assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
+  }
 
-	public void testRenamePageInMiddleOfPath() throws Exception
-	{
-		WikiPage topPage = addPage(root, "TopPage");
-		WikiPage pageToRename = addPage(topPage, "OldPageName");
-      @SuppressWarnings("unused")
-		WikiPage lastPage = addPage(pageToRename, "LastPage");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "TopPage.OldPageName.LastPage");
-		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals("TopPage.NewPageName.LastPage", widget.getText());
-	}
+  public void testQualifiedReferenceToRelativeReference() throws Exception {
+    WikiPage myPage = addPage(root, "MyPage");
+    addPage(root, "MyBrother");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(myPage), "MyBrother");
+    assertEquals("MyBrother", widget.makeRenamedRelativeReference(PathParser.parse(".MyBrother")));
 
-	public void testRenamePageInMiddleOfAbsolutePath() throws Exception
-	{
-		WikiPage topPage = addPage(root, "TopPage");
-		WikiPage pageToRename = addPage(topPage, "OldPageName");
-      @SuppressWarnings("unused")
-		WikiPage lastPage = addPage(pageToRename, "LastPage");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), ".TopPage.OldPageName.LastPage");
-		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals(".TopPage.NewPageName.LastPage", widget.getText());
-	}
+    WikiPage subPageOne = addPage(myPage, "SubPageOne");
+    addPage(myPage, "SubPageTwo");
+    widget = new WikiWordWidget(new WidgetRoot(subPageOne), "SubPageTwo");
+    assertEquals("SubPageTwo", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.SubPageTwo")));
+  }
 
-	public void testRenameSubPage() throws Exception
-	{
-		WikiPage topPage = addPage(root, "TopPage");
-		WikiPage pageToRename = addPage(topPage, "OldPageName");
-      @SuppressWarnings("unused")
-		WikiPage lastPage = addPage(pageToRename, "LastPage");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "^OldPageName.LastPage");
-		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals(">NewPageName.LastPage", widget.getText());
-	}
+  public void testRefersTo() throws Exception {
+    assertTrue(WikiWordWidget.refersTo(".PageOne", ".PageOne"));
+    assertTrue(WikiWordWidget.refersTo(".PageOne.PageTwo", ".PageOne"));
+    assertFalse(WikiWordWidget.refersTo(".PageOne.PageTwo", ".PageOne.PageTw"));
+  }
 
-	public void testRenamePageReferencedByBackwardSearch() throws Exception
-	{
-		WikiPage topPage = addPage(root, "TopPage");
-		WikiPage pageToRename = addPage(topPage, "OldPageName");
-		WikiPage lastPage = addPage(pageToRename, "LastPage");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(lastPage), "<TopPage.OldPageName");
-		widget.renamePageIfReferenced(pageToRename, "NewPageName");
-		assertEquals("<TopPage.NewPageName", widget.getText());
-	}
+  public void testSimpleRenamePage() throws Exception {
+    WikiPage pageToRename = addPage(root, "OldPageName");
+    WikiPage p1 = addPage(root, "PageOne");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(p1), "OldPageName");
+    widget.renamePageIfReferenced(pageToRename, "NewPageName");
+    assertEquals("NewPageName", widget.getText());
+  }
 
-	public void testBuildBackwardsSearchReferenceHandlesReferentRename() throws Exception
-	{
-		WikiPagePath parent = PathParser.parse(".AaA.BbB.CcC");
-		WikiPagePath renamedPathToReferent = PathParser.parse(".AaA.BbB.CcC.NeW");
-		assertEquals("<CcC.NeW", WikiWordWidget.buildBackwardSearchReference(parent, renamedPathToReferent));
-	}
+  public void testRenamePageInMiddleOfPath() throws Exception {
+    WikiPage topPage = addPage(root, "TopPage");
+    WikiPage pageToRename = addPage(topPage, "OldPageName");
+    @SuppressWarnings("unused")
+    WikiPage lastPage = addPage(pageToRename, "LastPage");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "TopPage.OldPageName.LastPage");
+    widget.renamePageIfReferenced(pageToRename, "NewPageName");
+    assertEquals("TopPage.NewPageName.LastPage", widget.getText());
+  }
 
-	public void testBuildBackwardsSearchReferenceHandlesReferentRenameOfFirstName() throws Exception
-	{
-		WikiPagePath parent = PathParser.parse(".AaA");
-		WikiPagePath renamedPathToReferent = PathParser.parse(".RrR.BbB");
-		assertEquals("<RrR.BbB", WikiWordWidget.buildBackwardSearchReference(parent, renamedPathToReferent));
-	}
+  public void testRenamePageInMiddleOfAbsolutePath() throws Exception {
+    WikiPage topPage = addPage(root, "TopPage");
+    WikiPage pageToRename = addPage(topPage, "OldPageName");
+    @SuppressWarnings("unused")
+    WikiPage lastPage = addPage(pageToRename, "LastPage");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), ".TopPage.OldPageName.LastPage");
+    widget.renamePageIfReferenced(pageToRename, "NewPageName");
+    assertEquals(".TopPage.NewPageName.LastPage", widget.getText());
+  }
 
-	public void testRenameMovedPageIfReferenced1() throws Exception
-	{
-		WikiPage page1 = addPage(root, "PageOne");
-		WikiPage page2 = addPage(root, "PageTwo");
+  public void testRenameSubPage() throws Exception {
+    WikiPage topPage = addPage(root, "TopPage");
+    WikiPage pageToRename = addPage(topPage, "OldPageName");
+    @SuppressWarnings("unused")
+    WikiPage lastPage = addPage(pageToRename, "LastPage");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(topPage), "^OldPageName.LastPage");
+    widget.renamePageIfReferenced(pageToRename, "NewPageName");
+    assertEquals(">NewPageName.LastPage", widget.getText());
+  }
 
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page1), "PageTwo");
-		widget.renameMovedPageIfReferenced(page2, "PageOne");
-		assertEquals(".PageOne.PageTwo", widget.getText());
-	}
+  public void testRenamePageReferencedByBackwardSearch() throws Exception {
+    WikiPage topPage = addPage(root, "TopPage");
+    WikiPage pageToRename = addPage(topPage, "OldPageName");
+    WikiPage lastPage = addPage(pageToRename, "LastPage");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(lastPage), "<TopPage.OldPageName");
+    widget.renamePageIfReferenced(pageToRename, "NewPageName");
+    assertEquals("<TopPage.NewPageName", widget.getText());
+  }
 
-	public void testRenameMovedPageIfReferenced2() throws Exception
-	{
-		WikiPage page1 = addPage(root, "PageOne");
-		WikiPage page2 = addPage(page1, "PageTwo");
+  public void testBuildBackwardsSearchReferenceHandlesReferentRename() throws Exception {
+    WikiPagePath parent = PathParser.parse(".AaA.BbB.CcC");
+    WikiPagePath renamedPathToReferent = PathParser.parse(".AaA.BbB.CcC.NeW");
+    assertEquals("<CcC.NeW", WikiWordWidget.buildBackwardSearchReference(parent, renamedPathToReferent));
+  }
 
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page1), ">PageTwo");
-		widget.renameMovedPageIfReferenced(page2, "");
-		assertEquals(".PageTwo", widget.getText());
-	}
+  public void testBuildBackwardsSearchReferenceHandlesReferentRenameOfFirstName() throws Exception {
+    WikiPagePath parent = PathParser.parse(".AaA");
+    WikiPagePath renamedPathToReferent = PathParser.parse(".RrR.BbB");
+    assertEquals("<RrR.BbB", WikiWordWidget.buildBackwardSearchReference(parent, renamedPathToReferent));
+  }
 
-	//TODO -MDM- bug I descovered while trying to refactor.
-	public void testmakeRenamedRelativeReference() throws Exception
-	{
-		addPage(root, "FitNesse");
-		addPage(root, "FitNesse.SuiteAcceptanceTests");
-		WikiPage parentPage = addPage(root, "FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests");
-		WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(parentPage), "WikiWord");
-		widget.parentPage = parentPage;
+  public void testRenameMovedPageIfReferenced1() throws Exception {
+    WikiPage page1 = addPage(root, "PageOne");
+    WikiPage page2 = addPage(root, "PageTwo");
 
-		try
-		{
-			widget.makeRenamedRelativeReference(PathParser.parse(".FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.WikiWord"));
-			//Not sure what the result should be but it's the exception that's causing trouble.
-		}
-		catch(Exception e)
-		{
-			fail(e.getMessage());
-		}
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page1), "PageTwo");
+    widget.renameMovedPageIfReferenced(page2, "PageOne");
+    assertEquals(".PageOne.PageTwo", widget.getText());
+  }
 
-	}
+  public void testRenameMovedPageIfReferenced2() throws Exception {
+    WikiPage page1 = addPage(root, "PageOne");
+    WikiPage page2 = addPage(page1, "PageTwo");
+
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page1), ">PageTwo");
+    widget.renameMovedPageIfReferenced(page2, "");
+    assertEquals(".PageTwo", widget.getText());
+  }
+
+  //TODO -MDM- bug I descovered while trying to refactor.
+  public void testmakeRenamedRelativeReference() throws Exception {
+    addPage(root, "FitNesse");
+    addPage(root, "FitNesse.SuiteAcceptanceTests");
+    WikiPage parentPage = addPage(root, "FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(parentPage), "WikiWord");
+    widget.parentPage = parentPage;
+
+    try {
+      widget.makeRenamedRelativeReference(PathParser.parse(".FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.WikiWord"));
+      //Not sure what the result should be but it's the exception that's causing trouble.
+    }
+    catch (Exception e) {
+      fail(e.getMessage());
+    }
+
+  }
 }

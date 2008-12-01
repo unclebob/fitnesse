@@ -1,22 +1,22 @@
 package fitnesse.slim.test;
 
-import static fitnesse.util.ListUtility.*;
+import static fitnesse.util.ListUtility.list;
 
 import java.util.List;
 
 public class Bowling {
   public List<?> doTable(List<List<String>> table) {
     Game g = new Game();
-    List<?> rollResults = list("","","","","","","","","","","","","","","","","","","","","");
-    List<String> scoreResults = list("","","","","","","","","","","","","","","","","","","","","");
+    List<?> rollResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+    List<String> scoreResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
     rollBalls(table, g);
     evaluateScores(g, table.get(1), scoreResults);
     return list(rollResults, scoreResults);
   }
 
   private void evaluateScores(Game g, List<String> scoreRow, List<String> scoreResults) {
-    for (int frame=0; frame<10; frame++) {
-      int actualScore = g.score(frame+1);
+    for (int frame = 0; frame < 10; frame++) {
+      int actualScore = g.score(frame + 1);
       int expectedScore = Integer.parseInt(scoreRow.get(frameCoordinate(frame)));
       if (expectedScore == actualScore)
         scoreResults.set(frameCoordinate(frame), "pass");
@@ -26,7 +26,7 @@ public class Bowling {
   }
 
   private int frameCoordinate(int frame) {
-    return frame < 9 ? frame*2+1 : frame*2+2;
+    return frame < 9 ? frame * 2 + 1 : frame * 2 + 2;
   }
 
   private void rollBalls(List<List<String>> table, Game g) {
@@ -65,7 +65,7 @@ public class Bowling {
     public int score(int frame) {
       int score = 0;
       int firstBall = 0;
-      for (int f=0; f<frame; f++) {
+      for (int f = 0; f < frame; f++) {
         if (isStrike(firstBall)) {
           score += 10 + nextTwoBallsForStrike(firstBall);
           firstBall += 1;
@@ -81,19 +81,19 @@ public class Bowling {
     }
 
     private int twoBallsInFrame(int firstBall) {
-      return rolls[firstBall] + rolls[firstBall+1];
+      return rolls[firstBall] + rolls[firstBall + 1];
     }
 
     private int nextBallForSpare(int firstBall) {
-      return rolls[firstBall+2];
+      return rolls[firstBall + 2];
     }
 
     private int nextTwoBallsForStrike(int firstBall) {
-      return rolls[firstBall+1] + rolls[firstBall+2];
+      return rolls[firstBall + 1] + rolls[firstBall + 2];
     }
 
     private boolean isSpare(int firstBall) {
-      return rolls[firstBall] + rolls[firstBall+1] == 10;
+      return rolls[firstBall] + rolls[firstBall + 1] == 10;
     }
 
     private boolean isStrike(int firstBall) {

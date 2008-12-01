@@ -3,10 +3,10 @@ package fitnesse.revisioncontrol;
 
 public interface RevisionControllable {
 
-    void execute(RevisionControlOperation operation) throws Exception;
+  void execute(RevisionControlOperation operation) throws Exception;
 
-    boolean isExternallyRevisionControlled();
+  boolean isExternallyRevisionControlled();
 
-    State checkState() throws Exception;
+  State checkState() throws Exception;
 
 }

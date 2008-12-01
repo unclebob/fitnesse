@@ -14,117 +14,96 @@ import fitnesse.wiki.WikiPagePath;
 
 import java.net.SocketException;
 
-public abstract class ChunkingResponder implements Responder
-{
-	protected WikiPage root;
-	public WikiPage page;
-	protected WikiPagePath path;
-	protected Request request;
-	protected ChunkedResponse response;
-	protected FitNesseContext context;
+public abstract class ChunkingResponder implements Responder {
+  protected WikiPage root;
+  public WikiPage page;
+  protected WikiPagePath path;
+  protected Request request;
+  protected ChunkedResponse response;
+  protected FitNesseContext context;
 
-	public Response makeResponse(FitNesseContext context, Request request) throws Exception
-	{
-		this.context = context;
-		this.request = request;
-		this.root = context.root;
-    String format = (String)request.getInput("format");
-		response = new ChunkedResponse(format);
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.context = context;
+    this.request = request;
+    this.root = context.root;
+    String format = (String) request.getInput("format");
+    response = new ChunkedResponse(format);
 
-		getRequestedPage(request);
-		if(page == null && shouldRespondWith404())
-			return pageNotFoundResponse(context, request);
+    getRequestedPage(request);
+    if (page == null && shouldRespondWith404())
+      return pageNotFoundResponse(context, request);
 
-		Thread respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
-		respondingThread.start();
+    Thread respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
+    respondingThread.start();
 
-		return response;
-	}
+    return response;
+  }
 
-	private void getRequestedPage(Request request) throws Exception
-	{
-		path = PathParser.parse(request.getResource());
-		page = getPageCrawler().getPage(root, path);
-	}
+  private void getRequestedPage(Request request) throws Exception {
+    path = PathParser.parse(request.getResource());
+    page = getPageCrawler().getPage(root, path);
+  }
 
-	protected PageCrawler getPageCrawler()
-	{
-		return root.getPageCrawler();
-	}
+  protected PageCrawler getPageCrawler() {
+    return root.getPageCrawler();
+  }
 
-	private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception
-	{
-		return new NotFoundResponder().makeResponse(context, request);
-	}
+  private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
+    return new NotFoundResponder().makeResponse(context, request);
+  }
 
-	protected boolean shouldRespondWith404()
-	{
-		return true;
-	}
+  protected boolean shouldRespondWith404() {
+    return true;
+  }
 
-	private void startSending()
-	{
-		try
-		{
-			doSending();
-		}
-		catch(SocketException e)
-		{
-			// normal. someone stopped the request.
-		}
-		catch(Exception e)
-		{
-			addExceptionAndCloseResponse(e);
-		}
-	}
+  private void startSending() {
+    try {
+      doSending();
+    }
+    catch (SocketException e) {
+      // normal. someone stopped the request.
+    }
+    catch (Exception e) {
+      addExceptionAndCloseResponse(e);
+    }
+  }
 
-	private void addExceptionAndCloseResponse(Exception e)
-	{
-		try
-		{
-			response.add(ErrorResponder.makeExceptionString(e));
-			response.closeAll();
-		}
-		catch(Exception e1)
-		{
-		}
-	}
+  private void addExceptionAndCloseResponse(Exception e) {
+    try {
+      response.add(ErrorResponder.makeExceptionString(e));
+      response.closeAll();
+    }
+    catch (Exception e1) {
+    }
+  }
 
-  protected String getRenderedPath()
-	{
-		if(path != null)
-			return PathParser.render(path);
-		else
-			return request.getResource();
-	}
+  protected String getRenderedPath() {
+    if (path != null)
+      return PathParser.render(path);
+    else
+      return request.getResource();
+  }
 
-  protected class RespondingRunnable implements Runnable
-	{
-		public void run()
-		{
-			while(!response.isReadyToSend())
-			{
-				try
-				{
-					synchronized(response)
-					{
-					    response.notifyAll();
-						response.wait();
-					}
-				}
-				catch(InterruptedException e)
-				{
-					//ok
-				}
-			}
-			startSending();
-		}
-	}
+  protected class RespondingRunnable implements Runnable {
+    public void run() {
+      while (!response.isReadyToSend()) {
+        try {
+          synchronized (response) {
+            response.notifyAll();
+            response.wait();
+          }
+        }
+        catch (InterruptedException e) {
+          //ok
+        }
+      }
+      startSending();
+    }
+  }
 
-	public void setRequest(Request request)
-	{
-		this.request = request;
-	}
+  public void setRequest(Request request) {
+    this.request = request;
+  }
 
-	protected abstract void doSending() throws Exception;
+  protected abstract void doSending() throws Exception;
 }

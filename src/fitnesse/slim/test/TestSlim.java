@@ -128,7 +128,7 @@ public class TestSlim {
   }
 
   public void execute() {
-    
+
   }
 
   public void die() {
@@ -136,7 +136,7 @@ public class TestSlim {
   }
 
   public void setNoSuchConverter(NoSuchConverter x) {
-    
+
   }
 
   public NoSuchConverter noSuchConverter() {
@@ -144,7 +144,7 @@ public class TestSlim {
   }
 
   public void setStringArray(String array[]) {
-    stringArray = array; 
+    stringArray = array;
   }
 
   public String[] getStringArray() {
@@ -179,5 +179,8 @@ public class TestSlim {
     return null;
   }
 
-  class NoSuchConverter {};
+  class NoSuchConverter {
+  }
+
+  ;
 }

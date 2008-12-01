@@ -4,10 +4,8 @@ package fitnesse.testutil;
 
 import fit.Fixture;
 
-public class CrashFixture extends Fixture
-{
-	public CrashFixture()
-	{
-		System.exit(1);
-	}
+public class CrashFixture extends Fixture {
+  public CrashFixture() {
+    System.exit(1);
+  }
 }

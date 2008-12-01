@@ -6,30 +6,26 @@ import fit.RowFixture;
 
 import java.util.ArrayList;
 
-public class PrimeFactorsFixture extends RowFixture
-{
-	public static class Factor
-	{
-		public Factor(int factor)
-		{
-			this.factor = factor;
-		}
+public class PrimeFactorsFixture extends RowFixture {
+  public static class Factor {
+    public Factor(int factor) {
+      this.factor = factor;
+    }
 
-		public int factor;
-	}
+    public int factor;
+  }
 
-	public Object[] query()
-	{
-		int n = Integer.parseInt(args[0]);
-		ArrayList<Factor> factors = new ArrayList<Factor>();
-		for(int f = 2; n > 1; f++)
-			for(; n % f == 0; n /= f)
-				factors.add(new Factor(f));
-		return factors.toArray(new Factor[0]);
-	}
+  public Object[] query() {
+    int n = Integer.parseInt(args[0]);
+    ArrayList<Factor> factors = new ArrayList<Factor>();
+    for (int f = 2; n > 1; f++)
+      for (; n % f == 0; n /= f)
+        factors.add(new Factor(f));
+    return factors.toArray(new Factor[0]);
+  }
 
-	public Class<?> getTargetClass()             // get expected type of row
-	{
-		return Factor.class;
-	}
+  public Class<?> getTargetClass()             // get expected type of row
+  {
+    return Factor.class;
+  }
 }

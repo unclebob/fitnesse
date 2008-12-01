@@ -6,8 +6,8 @@ public class Utils {
 
   private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
   private static final String[] specialHtmlEscapes = new String[]{"&amp;", "&lt;", "&gt;"};
-  private static final String[] specialWikiChars = new String[] {"!","|","$"};
-  private static final String[] specialWikiEscapes = new String[]{"&bang;","&bar;","&dollar;"};
+  private static final String[] specialWikiChars = new String[]{"!", "|", "$"};
+  private static final String[] specialWikiEscapes = new String[]{"&bang;", "&bar;", "&dollar;"};
 
   public static String escapeHTML(String value) {
     for (int i = 0; i < specialHtmlChars.length; i++)

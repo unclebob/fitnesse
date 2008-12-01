@@ -5,14 +5,12 @@ package fitnesse.fixtures;
 import fit.ColumnFixture;
 import fitnesse.authentication.OneUserAuthenticator;
 
-public class AuthenticatorSetup extends ColumnFixture
-{
-	public String username;
-	public String password;
+public class AuthenticatorSetup extends ColumnFixture {
+  public String username;
+  public String password;
 
-	public String status()
-	{
-		FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(username, password);
-		return "ok";
-	}
+  public String status() {
+    FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(username, password);
+    return "ok";
+  }
 }

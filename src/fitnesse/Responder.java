@@ -2,9 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse;
 
-import fitnesse.http.*;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
 
-public interface Responder
-{
-	public Response makeResponse(FitNesseContext context, Request request) throws Exception;
+public interface Responder {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception;
 }

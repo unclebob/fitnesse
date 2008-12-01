@@ -5,7 +5,6 @@ package fitnesse.authentication;
 import fitnesse.FitNesseContext;
 import fitnesse.http.Request;
 
-public interface SecureOperation
-{
-	public abstract boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception;
+public interface SecureOperation {
+  public abstract boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception;
 }

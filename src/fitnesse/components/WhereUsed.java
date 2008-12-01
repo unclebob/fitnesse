@@ -3,74 +3,66 @@
 package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.*;
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class WhereUsed implements FitNesseTraversalListener, SearchObserver, WidgetVisitor
-{
-	private WikiPage root;
-	private WikiPage subjectPage;
-	private SearchObserver observer;
-	private WikiPage currentPage;
+public class WhereUsed implements FitNesseTraversalListener, SearchObserver, WidgetVisitor {
+  private WikiPage root;
+  private WikiPage subjectPage;
+  private SearchObserver observer;
+  private WikiPage currentPage;
 
-	private List<WikiPage> hits = new ArrayList<WikiPage>();
+  private List<WikiPage> hits = new ArrayList<WikiPage>();
 
-	public WhereUsed(WikiPage root)
-	{
-		this.root = root;
-	}
+  public WhereUsed(WikiPage root) {
+    this.root = root;
+  }
 
-	public void hit(WikiPage referencingPage) throws Exception
-	{
-	}
+  public void hit(WikiPage referencingPage) throws Exception {
+  }
 
-	public void visit(WikiWidget widget) throws Exception
-	{
-	}
+  public void visit(WikiWidget widget) throws Exception {
+  }
 
-	public void visit(WikiWordWidget widget) throws Exception
-	{
-		if(hits.contains(currentPage))
-			return;
-		WikiPage referencedPage = widget.getReferencedPage();
-		if(referencedPage != null && referencedPage.equals(subjectPage))
-		{
-			hits.add(currentPage);
-			observer.hit(currentPage);
-		}
-	}
+  public void visit(WikiWordWidget widget) throws Exception {
+    if (hits.contains(currentPage))
+      return;
+    WikiPage referencedPage = widget.getReferencedPage();
+    if (referencedPage != null && referencedPage.equals(subjectPage)) {
+      hits.add(currentPage);
+      observer.hit(currentPage);
+    }
+  }
 
-	public void visit(AliasLinkWidget widget) throws Exception
-	{
-	}
+  public void visit(AliasLinkWidget widget) throws Exception {
+  }
 
-	public void searchForReferencingPages(WikiPage subjectPage, SearchObserver observer) throws Exception
-	{
-		this.observer = observer;
-		this.subjectPage = subjectPage;
-		root.getPageCrawler().traverse(root, this);
-	}
+  public void searchForReferencingPages(WikiPage subjectPage, SearchObserver observer) throws Exception {
+    this.observer = observer;
+    this.subjectPage = subjectPage;
+    root.getPageCrawler().traverse(root, this);
+  }
 
-	public List<WikiPage> findReferencingPages(WikiPage subjectPage) throws Exception
-	{
-		hits.clear();
-		searchForReferencingPages(subjectPage, this);
-		return hits;
-	}
+  public List<WikiPage> findReferencingPages(WikiPage subjectPage) throws Exception {
+    hits.clear();
+    searchForReferencingPages(subjectPage, this);
+    return hits;
+  }
 
-	public void processPage(WikiPage currentPage) throws Exception
-	{
-		this.currentPage = currentPage;
-		String content = currentPage.getData().getContent();
-		WidgetBuilder referenceWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class, WikiWordWidget.class, PreformattedWidget.class});
-		ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceWidgetBuilder);
-		widgetRoot.acceptVisitor(this);
-	}
+  public void processPage(WikiPage currentPage) throws Exception {
+    this.currentPage = currentPage;
+    String content = currentPage.getData().getContent();
+    WidgetBuilder referenceWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class, WikiWordWidget.class, PreformattedWidget.class});
+    ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceWidgetBuilder);
+    widgetRoot.acceptVisitor(this);
+  }
 
-	public String getSearchPattern() throws Exception
-	{
-		return subjectPage.getName();
-	}
+  public String getSearchPattern() throws Exception {
+    return subjectPage.getName();
+  }
 }

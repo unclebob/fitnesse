@@ -4,13 +4,11 @@ package fitnesse.testutil;
 
 import fit.ColumnFixture;
 
-public class VectorSum extends ColumnFixture
-{
-	public CartesianVector v1;
-	public CartesianVector v2;
+public class VectorSum extends ColumnFixture {
+  public CartesianVector v1;
+  public CartesianVector v2;
 
-	public CartesianVector sum()
-	{
-		return v1.add(v2);
-	}
+  public CartesianVector sum() {
+    return v1.add(v2);
+  }
 }

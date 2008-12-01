@@ -2,40 +2,36 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
-public class FrontPageUpdate implements Update
-{
-	private Updater updater;
+public class FrontPageUpdate implements Update {
+  private Updater updater;
 
-	public FrontPageUpdate(Updater updater)
-	{
-		this.updater = updater;
-	}
+  public FrontPageUpdate(Updater updater) {
+    this.updater = updater;
+  }
 
-	public String getName()
-	{
-		return "FrontPageUpdate";
-	}
+  public String getName() {
+    return "FrontPageUpdate";
+  }
 
-	public String getMessage()
-	{
-		return "Creating FrontPage";
-	}
+  public String getMessage() {
+    return "Creating FrontPage";
+  }
 
-	public boolean shouldBeApplied() throws Exception
-	{
-		return !updater.getRoot().hasChildPage("FrontPage");
-	}
+  public boolean shouldBeApplied() throws Exception {
+    return !updater.getRoot().hasChildPage("FrontPage");
+  }
 
-	public void doUpdate() throws Exception
-	{
-		WikiPage frontPage = updater.getRoot().getPageCrawler().addPage(updater.getRoot(), PathParser.parse("FrontPage"));
-		PageData data = new PageData(frontPage);
-		data.setContent(content);
-		frontPage.commit(data);
-	}
+  public void doUpdate() throws Exception {
+    WikiPage frontPage = updater.getRoot().getPageCrawler().addPage(updater.getRoot(), PathParser.parse("FrontPage"));
+    PageData data = new PageData(frontPage);
+    data.setContent(content);
+    frontPage.commit(data);
+  }
 
-	private static String content = "\n\n\n" +
-		"!c !3 Welcome to the Wonderful World of !-FitNesse-!!";
+  private static String content = "\n\n\n" +
+    "!c !3 Welcome to the Wonderful World of !-FitNesse-!!";
 }

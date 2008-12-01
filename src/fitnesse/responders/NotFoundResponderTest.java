@@ -10,36 +10,33 @@ import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
-public class NotFoundResponderTest extends RegexTestCase
-{
-	public void testResponse() throws Exception
-	{
-		MockRequest request = new MockRequest();
-		request.setResource("some page");
+public class NotFoundResponderTest extends RegexTestCase {
+  public void testResponse() throws Exception {
+    MockRequest request = new MockRequest();
+    request.setResource("some page");
 
-		Responder responder = new NotFoundResponder();
-		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    Responder responder = new NotFoundResponder();
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
 
-		assertEquals(404, response.getStatus());
+    assertEquals(404, response.getStatus());
 
-		String body = response.getContent();
+    String body = response.getContent();
 
-		assertHasRegexp("<html>", body);
-		assertHasRegexp("<body", body);
-		assertHasRegexp("some page", body);
-		assertHasRegexp("Not Found", body);
-	}
+    assertHasRegexp("<html>", body);
+    assertHasRegexp("<body", body);
+    assertHasRegexp("some page", body);
+    assertHasRegexp("Not Found", body);
+  }
 
-	public void testHasEditLinkForWikiWords() throws Exception
-	{
-		MockRequest request = new MockRequest();
-		request.setResource("PageOne.PageTwo");
-		WikiPage root = InMemoryPage.makeRoot("RooT");
+  public void testHasEditLinkForWikiWords() throws Exception {
+    MockRequest request = new MockRequest();
+    request.setResource("PageOne.PageTwo");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
 
-		Responder responder = new NotFoundResponder();
-		SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    Responder responder = new NotFoundResponder();
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
-		assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
-	}
+    assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
+  }
 
 }

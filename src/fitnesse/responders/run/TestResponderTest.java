@@ -3,24 +3,25 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.util.XmlUtil;
-import fitnesse.authentication.*;
-import fitnesse.http.*;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureTestOperation;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
 import fitnesse.responders.SecureResponder;
-import fitnesse.testutil.*;
+import fitnesse.testutil.FitSocketReceiver;
 import static fitnesse.testutil.RegexTestCase.*;
+import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
-
-import java.util.regex.*;
-
-import org.junit.Before;
 import org.junit.After;
-import org.junit.Test;
-import org.junit.Ignore;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import junit.framework.Assert;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TestResponderTest {
   private WikiPage root;
@@ -218,7 +219,7 @@ public class TestResponderTest {
     return testResultsDocument;
   }
 
-   static void assertCounts(Element counts, String right, String wrong, String ignores, String exceptions)
+  static void assertCounts(Element counts, String right, String wrong, String ignores, String exceptions)
     throws Exception {
     assertEquals(right, XmlUtil.getTextValue(counts, "right"));
     assertEquals(wrong, XmlUtil.getTextValue(counts, "wrong"));

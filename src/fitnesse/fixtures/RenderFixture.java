@@ -6,14 +6,12 @@ import fit.ColumnFixture;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 
-public class RenderFixture extends ColumnFixture
-{
-	public String text;
+public class RenderFixture extends ColumnFixture {
+  public String text;
 
-	public String rendered() throws Exception
-	{
-		ParentWidget root = new WidgetRoot(text, FitnesseFixtureContext.root);
-		return root.render();
-	}
+  public String rendered() throws Exception {
+    ParentWidget root = new WidgetRoot(text, FitnesseFixtureContext.root);
+    return root.render();
+  }
 
 }

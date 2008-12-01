@@ -6,31 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public abstract class InheritedItemBuilder
-{
-	protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) throws Exception
-	{
-		List<String> items = new ArrayList<String>();
-		addItemsFromPage(page, items);
+public abstract class InheritedItemBuilder {
+  protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) throws Exception {
+    List<String> items = new ArrayList<String>();
+    addItemsFromPage(page, items);
 
-		List<WikiPage> ancestors = WikiPageUtil.getAncestorsOf(page);
-		for(WikiPage ancestor : ancestors)
-		{
-			if(!visitedPages.contains(ancestor))
-			{
-				visitedPages.add(ancestor);
-				addItemsFromPage(ancestor, items);
-			}
+    List<WikiPage> ancestors = WikiPageUtil.getAncestorsOf(page);
+    for (WikiPage ancestor : ancestors) {
+      if (!visitedPages.contains(ancestor)) {
+        visitedPages.add(ancestor);
+        addItemsFromPage(ancestor, items);
+      }
 
-		}
-		return items;
-	}
+    }
+    return items;
+  }
 
-	private void addItemsFromPage(WikiPage itemPage, List<String> items) throws Exception
-	{
-		List<String> itemsOnThisPage = getItemsFromPage(itemPage);
-		items.addAll(itemsOnThisPage);
-	}
+  private void addItemsFromPage(WikiPage itemPage, List<String> items) throws Exception {
+    List<String> itemsOnThisPage = getItemsFromPage(itemPage);
+    items.addAll(itemsOnThisPage);
+  }
 
-	protected abstract List<String> getItemsFromPage(WikiPage page) throws Exception;
+  protected abstract List<String> getItemsFromPage(WikiPage page) throws Exception;
 }

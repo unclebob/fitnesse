@@ -4,13 +4,13 @@ package eg;
 
 import fit.ColumnFixture;
 
-public class Division extends ColumnFixture
-{
-	public double numerator;
-	public double denominator;
-	public double quotient() {
-		return numerator/denominator;
-	}
+public class Division extends ColumnFixture {
+  public double numerator;
+  public double denominator;
+
+  public double quotient() {
+    return numerator / denominator;
+  }
 
   public void setNumerator(double numerator) {
     this.numerator = numerator;

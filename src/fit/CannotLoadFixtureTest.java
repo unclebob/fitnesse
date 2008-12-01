@@ -3,105 +3,92 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import fit.exception.ClassIsNotFixtureException;
+import fit.exception.FixtureException;
+import fit.exception.NoDefaultConstructorFixtureException;
+import fit.exception.NoSuchFixtureException;
+import fitnesse.fixtures.NoDefaultConstructorFixture;
+import fitnesse.fixtures.WouldBeFixture;
 import junit.framework.TestCase;
-import fit.exception.*;
-import fitnesse.fixtures.*;
 
-public class CannotLoadFixtureTest extends TestCase
-{
+public class CannotLoadFixtureTest extends TestCase {
   private FixtureLoader fixtureLoader;
 
-  protected void setUp() throws Exception
-  {
+  protected void setUp() throws Exception {
     fixtureLoader = new FixtureLoader();
   }
 
-  public void testFixtureClassDoesNotExtendFixture() throws Throwable
-  {
+  public void testFixtureClassDoesNotExtendFixture() throws Throwable {
     assertCannotLoadFixture(
-        "Successfully loaded a fixture that does not extend Fixture!",
-        WouldBeFixture.class.getName(), ClassIsNotFixtureException.class);
+      "Successfully loaded a fixture that does not extend Fixture!",
+      WouldBeFixture.class.getName(), ClassIsNotFixtureException.class);
   }
 
   public void testFixtureClassNotEndingInFixtureDoesNotExtendFixture()
-      throws Throwable
-  {
+    throws Throwable {
     assertCannotLoadFixtureAfterChoppingOffFixture(
-        "Successfully loaded a fixture that does not extend Fixture!",
-        WouldBeFixture.class, ClassIsNotFixtureException.class);
+      "Successfully loaded a fixture that does not extend Fixture!",
+      WouldBeFixture.class, ClassIsNotFixtureException.class);
   }
 
-  public void testFixtureHasNoDefaultConstructor() throws Throwable
-  {
+  public void testFixtureHasNoDefaultConstructor() throws Throwable {
     assertCannotLoadFixture(
-        "Successfully loaded a fixture with no default constructor!",
-        NoDefaultConstructorFixture.class.getName(),
-        NoDefaultConstructorFixtureException.class);
+      "Successfully loaded a fixture with no default constructor!",
+      NoDefaultConstructorFixture.class.getName(),
+      NoDefaultConstructorFixtureException.class);
   }
 
   public void testFixtureClassNotEndingInFixtureHasNoDefaultConstructor()
-      throws Throwable
-  {
+    throws Throwable {
     assertCannotLoadFixtureAfterChoppingOffFixture(
-        "Successfully loaded a fixture with no default constructor!",
-        NoDefaultConstructorFixture.class,
-        NoDefaultConstructorFixtureException.class);
+      "Successfully loaded a fixture with no default constructor!",
+      NoDefaultConstructorFixture.class,
+      NoDefaultConstructorFixtureException.class);
   }
 
-  public void testFixtureNameNotFound() throws Throwable
-  {
+  public void testFixtureNameNotFound() throws Throwable {
     assertCannotLoadFixture("Successfully loaded a nonexistent fixture!",
-        "BlahBlahBlah", NoSuchFixtureException.class);
+      "BlahBlahBlah", NoSuchFixtureException.class);
   }
 
   public void testFixtureNameNotFoundEvenAfterAddingOnFixture()
-      throws Throwable
-  {
-    try
-    {
+    throws Throwable {
+    try {
       fixtureLoader.disgraceThenLoad("BlahBlahBlah");
       fail("Successfully loaded a nonexistent fixture!");
     }
-    catch (FixtureException expected)
-    {
+    catch (FixtureException expected) {
       assertEquals(NoSuchFixtureException.class, expected.getClass());
       assertEquals("BlahBlahBlah", expected.fixtureName);
     }
   }
 
-  private String chopOffFixture(Class<?> fixtureClass)
-  {
+  private String chopOffFixture(Class<?> fixtureClass) {
     return fixtureClass.getName().replaceAll("Fixture", "");
   }
 
   private void assertCannotLoadFixture(String failureMessage,
-      String fixtureName, Class<?> expectedExceptionType) throws Throwable
-  {
-    try
-    {
+                                       String fixtureName, Class<?> expectedExceptionType) throws Throwable {
+    try {
       fixtureLoader.disgraceThenLoad(fixtureName);
       fail(failureMessage);
     }
-    catch (FixtureException expected)
-    {
+    catch (FixtureException expected) {
       assertEquals(expectedExceptionType, expected.getClass());
       assertEquals(fixtureName, expected.fixtureName);
     }
   }
 
   private void assertCannotLoadFixtureAfterChoppingOffFixture(
-      String failureMessage, Class<?> fixtureClass, Class<?> expectedExceptionType)
-      throws Throwable
-  {
-    try
-    {
+    String failureMessage, Class<?> fixtureClass, Class<?> expectedExceptionType)
+    throws Throwable {
+    try {
       fixtureLoader.disgraceThenLoad(chopOffFixture(fixtureClass));
       fail(failureMessage);
     }
-    catch (FixtureException expected)
-    {
+    catch (FixtureException expected) {
       assertEquals("Got exception: " + expected, expectedExceptionType,
-          expected.getClass());
+        expected.getClass());
       assertEquals(fixtureClass.getName(), expected.fixtureName);
     }
   }

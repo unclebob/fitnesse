@@ -3,8 +3,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-public interface FixtureListener
-{
-	public void tableFinished(Parse table);
-	public void tablesFinished(Counts count);
+public interface FixtureListener {
+  public void tableFinished(Parse table);
+
+  public void tablesFinished(Counts count);
 }

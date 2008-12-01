@@ -1,4 +1,5 @@
 package org.fitnesse.triviaGameExample;
+
 public class Player {
   private String name;
 

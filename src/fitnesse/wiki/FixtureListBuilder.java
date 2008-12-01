@@ -2,18 +2,17 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wiki;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
-public class FixtureListBuilder extends InheritedItemBuilder
-{
-	public List<String> getFixtureNames(WikiPage page) throws Exception
-	{
-		return getInheritedItems(page, new HashSet<WikiPage>(89));
-	}
+public class FixtureListBuilder extends InheritedItemBuilder {
+  public List<String> getFixtureNames(WikiPage page) throws Exception {
+    return getInheritedItems(page, new HashSet<WikiPage>(89));
+  }
 
-	protected List<String> getItemsFromPage(WikiPage page) throws Exception
-	{
-		PageData pageData = page.getData();
-		return pageData == null ? new ArrayList<String>() : pageData.getFixtureNames();
-	}
+  protected List<String> getItemsFromPage(WikiPage page) throws Exception {
+    PageData pageData = page.getData();
+    return pageData == null ? new ArrayList<String>() : pageData.getFixtureNames();
+  }
 }

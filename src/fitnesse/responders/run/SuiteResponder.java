@@ -5,12 +5,11 @@ package fitnesse.responders.run;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
-import fitnesse.wiki.*;
 import fitnesse.util.XmlUtil;
+import fitnesse.wiki.*;
+import org.w3c.dom.Element;
 
 import java.util.*;
-
-import org.w3c.dom.Element;
 
 public class SuiteResponder extends TestResponder implements TestSystemListener {
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";

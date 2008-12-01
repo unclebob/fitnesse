@@ -1,15 +1,15 @@
 package fitnesse.revisioncontrol;
 
 public interface State {
-    String REVISION_CONTROL_STATE = "RevisionControlState";
+  String REVISION_CONTROL_STATE = "RevisionControlState";
 
-    RevisionControlOperation[] operations();
+  RevisionControlOperation[] operations();
 
-    boolean isNotUnderRevisionControl();
+  boolean isNotUnderRevisionControl();
 
-    String toString();
+  String toString();
 
-    boolean isCheckedOut();
+  boolean isCheckedOut();
 
-    boolean isCheckedIn();
+  boolean isCheckedIn();
 }

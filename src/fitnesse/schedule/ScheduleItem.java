@@ -2,9 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.schedule;
 
-public interface ScheduleItem
-{
-	public boolean shouldRun(long time) throws Exception;
+public interface ScheduleItem {
+  public boolean shouldRun(long time) throws Exception;
 
-	public void run(long time) throws Exception;
+  public void run(long time) throws Exception;
 }

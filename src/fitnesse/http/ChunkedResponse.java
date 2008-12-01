@@ -2,8 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.http;
 
-import fitnesse.responders.ChunkingResponder;
-
 import java.nio.ByteBuffer;
 
 public class ChunkedResponse extends Response {

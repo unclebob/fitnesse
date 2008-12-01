@@ -7,12 +7,10 @@
 package fit.exception;
 
 
-public class NoSuchFixtureException extends FixtureException
-{
+public class NoSuchFixtureException extends FixtureException {
   private static final long serialVersionUID = 1L;
 
-  public NoSuchFixtureException(String fixtureName)
-  {
+  public NoSuchFixtureException(String fixtureName) {
     super("Could not find fixture: {0}.", fixtureName);
   }
 }

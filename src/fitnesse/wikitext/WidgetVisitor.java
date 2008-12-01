@@ -2,13 +2,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
-import fitnesse.wikitext.widgets.*;
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
-public interface WidgetVisitor
-{
-	public void visit(WikiWidget widget) throws Exception;
+public interface WidgetVisitor {
+  public void visit(WikiWidget widget) throws Exception;
 
-	public void visit(WikiWordWidget widget) throws Exception;
+  public void visit(WikiWordWidget widget) throws Exception;
 
-	public void visit(AliasLinkWidget widget) throws Exception;
+  public void visit(AliasLinkWidget widget) throws Exception;
 }

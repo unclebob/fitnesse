@@ -6,128 +6,107 @@ import fit.ColumnFixture;
 import fitnesse.wikitext.Utils;
 
 import java.util.StringTokenizer;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class ResponseExaminer extends ColumnFixture
-{
-	public String type;
-	public String pattern;
-	public String value;
-	public int number;
-	private Matcher matcher;
-	private int currentLine = 0;
+public class ResponseExaminer extends ColumnFixture {
+  public String type;
+  public String pattern;
+  public String value;
+  public int number;
+  private Matcher matcher;
+  private int currentLine = 0;
 
-	public String contents() throws Exception
-	{
-		return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
-	}
+  public String contents() throws Exception {
+    return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
+  }
 
-	public String fullContents() throws Exception
-	{
-		return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
-	}
+  public String fullContents() throws Exception {
+    return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
+  }
 
-	public boolean inOrder() throws Exception
-	{
-		if(value == null)
-		{
-			return false;
-		}
-		String pageContent = FitnesseFixtureContext.sender.sentData();
-		String[] lines = arrayifyLines(pageContent);
-		for(int i = currentLine; i < lines.length; i++)
-		{
-			if(value.equals(lines[i].trim()))
-			{
-				currentLine = i;
-				return true;
-			}
-		}
-		return false;
-	}
+  public boolean inOrder() throws Exception {
+    if (value == null) {
+      return false;
+    }
+    String pageContent = FitnesseFixtureContext.sender.sentData();
+    String[] lines = arrayifyLines(pageContent);
+    for (int i = currentLine; i < lines.length; i++) {
+      if (value.equals(lines[i].trim())) {
+        currentLine = i;
+        return true;
+      }
+    }
+    return false;
+  }
 
-	public int matchCount() throws Exception
-	{
-		Pattern p = Pattern.compile(Utils.escapeHTML(pattern), Pattern.MULTILINE + Pattern.DOTALL);
-		setValue(null);
-		if(type.equals("contents"))
-			setValue(contents());
-		else if(type.equals("fullContents"))
-			setValue(fullContents());
-		else if(type.equals("status"))
-			setValue("" + FitnesseFixtureContext.response.getStatus());
-		else if(type.equals("headers"))
-		{
-			String text = FitnesseFixtureContext.sender.sentData();
-			int headerEnd = text.indexOf("\r\n\r\n");
-			setValue(text.substring(0, headerEnd + 2));
-		}
+  public int matchCount() throws Exception {
+    Pattern p = Pattern.compile(Utils.escapeHTML(pattern), Pattern.MULTILINE + Pattern.DOTALL);
+    setValue(null);
+    if (type.equals("contents"))
+      setValue(contents());
+    else if (type.equals("fullContents"))
+      setValue(fullContents());
+    else if (type.equals("status"))
+      setValue("" + FitnesseFixtureContext.response.getStatus());
+    else if (type.equals("headers")) {
+      String text = FitnesseFixtureContext.sender.sentData();
+      int headerEnd = text.indexOf("\r\n\r\n");
+      setValue(text.substring(0, headerEnd + 2));
+    }
 
-		matcher = p.matcher(value);
-		int matches = 0;
-		for(matches = 0; matcher.find(); matches++) ;
-		return matches;
-	}
+    matcher = p.matcher(value);
+    int matches = 0;
+    for (matches = 0; matcher.find(); matches++) ;
+    return matches;
+  }
 
-	public boolean matches() throws Exception
-	{
-		return matchCount() > 0;
-	}
+  public boolean matches() throws Exception {
+    return matchCount() > 0;
+  }
 
-	public String string() throws Exception
-	{
-		String value = null;
-		if(type.equals("contents"))
-		{
-			return FitnesseFixtureContext.page.getData().getHtml();
-		}
-		else if(type.equals("line"))
-		{
-			String pageContent = FitnesseFixtureContext.page.getData().getHtml();
-			String lineizedContent = convertBreaksToLineSeparators(pageContent);
-			StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
-			for(int i = number; i != 0; i--)
-				value = tokenizedLines.nextToken();
-			return value.trim();
-		}
-		else
-		{
-			throw new Exception("Bad type in ResponseExaminer");
-		}
-	}
+  public String string() throws Exception {
+    String value = null;
+    if (type.equals("contents")) {
+      return FitnesseFixtureContext.page.getData().getHtml();
+    } else if (type.equals("line")) {
+      String pageContent = FitnesseFixtureContext.page.getData().getHtml();
+      String lineizedContent = convertBreaksToLineSeparators(pageContent);
+      StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
+      for (int i = number; i != 0; i--)
+        value = tokenizedLines.nextToken();
+      return value.trim();
+    } else {
+      throw new Exception("Bad type in ResponseExaminer");
+    }
+  }
 
-	private StringTokenizer tokenizeLines(String lineizedContent)
-	{
-		return new StringTokenizer(lineizedContent, System.getProperty("line.separator"));
-	}
+  private StringTokenizer tokenizeLines(String lineizedContent) {
+    return new StringTokenizer(lineizedContent, System.getProperty("line.separator"));
+  }
 
-	private String[] arrayifyLines(String lineizedContent)
-	{
-		return lineizedContent.split(System.getProperty("line.separator"));
-	}
+  private String[] arrayifyLines(String lineizedContent) {
+    return lineizedContent.split(System.getProperty("line.separator"));
+  }
 
-	private String convertBreaksToLineSeparators(String pageContent)
-	{
-		String lineizedContent = pageContent.replaceAll("<br/>", System.getProperty("line.separator"));
-		return lineizedContent;
-	}
+  private String convertBreaksToLineSeparators(String pageContent) {
+    String lineizedContent = pageContent.replaceAll("<br/>", System.getProperty("line.separator"));
+    return lineizedContent;
+  }
 
-	public String found()
-	{
-		return matcher.group(0);
-	}
+  public String found() {
+    return matcher.group(0);
+  }
 
-	public String source()
-	{
-		return value;
-	}
-	
-	public String wrappedHtml () throws Exception
-	{
-		String txt = FitnesseFixtureContext.sender.sentData();
-		String txt2 = txt.replaceAll("(<br */?>)", "$1"+System.getProperty("line.separator"));
-		return "<pre>" + Utils.escapeHTML(txt2) + "</pre>";
-	}
+  public String source() {
+    return value;
+  }
+
+  public String wrappedHtml() throws Exception {
+    String txt = FitnesseFixtureContext.sender.sentData();
+    String txt2 = txt.replaceAll("(<br */?>)", "$1" + System.getProperty("line.separator"));
+    return "<pre>" + Utils.escapeHTML(txt2) + "</pre>";
+  }
 
   public void setType(String type) {
     this.type = type;

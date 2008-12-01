@@ -9,39 +9,35 @@ import fitnesse.http.Response;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
-public class RollbackResponderTest extends TestCase
-{
+public class RollbackResponderTest extends TestCase {
   private WikiPage page;
-	private Response response;
+  private Response response;
 
-	public void setUp() throws Exception
-	{
+  public void setUp() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "original content");
-		PageData data = page.getData();
-		data.setContent("new stuff");
-		data.setProperties(new WikiPageProperties());
-		VersionInfo commitRecord = page.commit(data);
+    PageData data = page.getData();
+    data.setContent("new stuff");
+    data.setProperties(new WikiPageProperties());
+    VersionInfo commitRecord = page.commit(data);
 
-		MockRequest request = new MockRequest();
-		request.setResource("PageOne");
-		request.addInput("version", commitRecord.getName());
+    MockRequest request = new MockRequest();
+    request.setResource("PageOne");
+    request.addInput("version", commitRecord.getName());
 
-		Responder responder = new RollbackResponder();
-		response = responder.makeResponse(new FitNesseContext(root), request);
-	}
+    Responder responder = new RollbackResponder();
+    response = responder.makeResponse(new FitNesseContext(root), request);
+  }
 
-	public void tearDown() throws Exception
-	{
-	}
+  public void tearDown() throws Exception {
+  }
 
-	public void testStuff() throws Exception
-	{
-		assertEquals(303, response.getStatus());
-		assertEquals("PageOne", response.getHeader("Location"));
+  public void testStuff() throws Exception {
+    assertEquals(303, response.getStatus());
+    assertEquals("PageOne", response.getHeader("Location"));
 
-		PageData data = page.getData();
-		assertEquals("original content", data.getContent());
-		assertEquals(true, data.hasAttribute("Edit"));
-	}
+    PageData data = page.getData();
+    assertEquals("original content", data.getContent());
+    assertEquals(true, data.hasAttribute("Edit"));
+  }
 }

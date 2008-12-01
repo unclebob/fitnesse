@@ -2,30 +2,27 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
-public class FrontPageUpdateTest extends UpdateTestCase
-{
-	protected Update makeUpdate() throws Exception
-	{
-		return new FrontPageUpdate(updater);
-	}
+public class FrontPageUpdateTest extends UpdateTestCase {
+  protected Update makeUpdate() throws Exception {
+    return new FrontPageUpdate(updater);
+  }
 
-	public void testShouldUpdate() throws Exception
-	{
-		assertTrue(update.shouldBeApplied());
-		updater.getRoot().addChildPage("FrontPage");
-		assertFalse(update.shouldBeApplied());
-	}
+  public void testShouldUpdate() throws Exception {
+    assertTrue(update.shouldBeApplied());
+    updater.getRoot().addChildPage("FrontPage");
+    assertFalse(update.shouldBeApplied());
+  }
 
-	public void testProperties() throws Exception
-	{
-		update.doUpdate();
-		WikiPage page = updater.getRoot().getChildPage("FrontPage");
-		assertNotNull(page);
+  public void testProperties() throws Exception {
+    update.doUpdate();
+    WikiPage page = updater.getRoot().getChildPage("FrontPage");
+    assertNotNull(page);
 
-		PageData data = page.getData();
-		assertTrue(data.hasAttribute("Edit"));
-		assertTrue(data.hasAttribute("Properties"));
-	}
+    PageData data = page.getData();
+    assertTrue(data.hasAttribute("Edit"));
+    assertTrue(data.hasAttribute("Properties"));
+  }
 }

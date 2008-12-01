@@ -5,10 +5,8 @@ package fit;
 
 import junit.framework.TestCase;
 
-public class ScientificDoubleTest extends TestCase
-{
-  public void testScientificDouble()
-  {
+public class ScientificDoubleTest extends TestCase {
+  public void testScientificDouble() {
     Double pi = new Double(3.141592653589793);
     assertEquals(ScientificDouble.valueOf("3.14"), pi);
     assertEquals(ScientificDouble.valueOf("3.142"), pi);

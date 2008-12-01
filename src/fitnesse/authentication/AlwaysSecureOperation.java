@@ -5,10 +5,8 @@ package fitnesse.authentication;
 import fitnesse.FitNesseContext;
 import fitnesse.http.Request;
 
-public class AlwaysSecureOperation implements SecureOperation
-{
-	public boolean shouldAuthenticate(FitNesseContext context, Request request)
-	{
-		return true;
-	}
+public class AlwaysSecureOperation implements SecureOperation {
+  public boolean shouldAuthenticate(FitNesseContext context, Request request) {
+    return true;
+  }
 }

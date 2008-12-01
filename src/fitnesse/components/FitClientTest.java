@@ -3,197 +3,177 @@
 package fitnesse.components;
 
 import fitnesse.responders.run.SocketDealer;
-import fitnesse.responders.run.TestSystemListener;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.*;
+import fitnesse.responders.run.TestSystemListener;
+import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.testutil.MockSocket;
+import fitnesse.testutil.RegexTestCase;
+import fitnesse.testutil.SimpleSocketDoner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class FitClientTest extends RegexTestCase implements TestSystemListener
-{
-	private List<String> outputs = new ArrayList<String>();
-	private List<TestSummary> counts = new ArrayList<TestSummary>();
-	private CommandRunningFitClient client;
-	private boolean exceptionOccurred = false;
-	private int port = 9080;
-	private FitSocketReceiver receiver;
-	private SimpleSocketDoner doner;
+public class FitClientTest extends RegexTestCase implements TestSystemListener {
+  private List<String> outputs = new ArrayList<String>();
+  private List<TestSummary> counts = new ArrayList<TestSummary>();
+  private CommandRunningFitClient client;
+  private boolean exceptionOccurred = false;
+  private int port = 9080;
+  private FitSocketReceiver receiver;
+  private SimpleSocketDoner doner;
 
-	public void setUp() throws Exception
-	{
-		CommandRunningFitClient.TIMEOUT = 5000;
-		client = new CommandRunningFitClient(this, "java -cp classes fit.FitServer -v", port, new SocketDealer());
-		receiver = new CustomFitSocketReceiver(port);
-	}
+  public void setUp() throws Exception {
+    CommandRunningFitClient.TIMEOUT = 5000;
+    client = new CommandRunningFitClient(this, "java -cp classes fit.FitServer -v", port, new SocketDealer());
+    receiver = new CustomFitSocketReceiver(port);
+  }
 
-  private class CustomFitSocketReceiver extends FitSocketReceiver
-	{
-		public CustomFitSocketReceiver(int port)
-		{
-			super(port, null);
-		}
+  private class CustomFitSocketReceiver extends FitSocketReceiver {
+    public CustomFitSocketReceiver(int port) {
+      super(port, null);
+    }
 
-		protected void dealSocket(int ticket) throws Exception
-		{
-			doner = new SimpleSocketDoner(socket);
-			client.acceptSocketFrom(doner);
-		}
-	}
+    protected void dealSocket(int ticket) throws Exception {
+      doner = new SimpleSocketDoner(socket);
+      client.acceptSocketFrom(doner);
+    }
+  }
 
-	public void tearDown() throws Exception
-	{
-		receiver.close();
-	}
+  public void tearDown() throws Exception {
+    receiver.close();
+  }
 
-	public void acceptOutputFirst(String output)
-	{
-		outputs.add(output);
-	}
+  public void acceptOutputFirst(String output) {
+    outputs.add(output);
+  }
 
-	public void acceptResultsLast(TestSummary testSummary)
-	{
-		this.counts.add(testSummary);
-	}
+  public void acceptResultsLast(TestSummary testSummary) {
+    this.counts.add(testSummary);
+  }
 
-	public void exceptionOccurred(Throwable e)
-	{
-		exceptionOccurred = true;
-		try
-		{
-			client.kill();
-		}
-		catch(Exception e1)
-		{
-			e1.printStackTrace();
-		}
-	}
+  public void exceptionOccurred(Throwable e) {
+    exceptionOccurred = true;
+    try {
+      client.kill();
+    }
+    catch (Exception e1) {
+      e1.printStackTrace();
+    }
+  }
 
-	public void testOneRunUsage() throws Exception
-	{
-		doSimpleRun();
-		assertFalse(exceptionOccurred);
-		assertEquals(1, outputs.size());
-		assertEquals(1, counts.size());
-		assertSubString("class", (String) outputs.get(0));
-		assertEquals(1, counts.get(0).right);
-	}
+  public void testOneRunUsage() throws Exception {
+    doSimpleRun();
+    assertFalse(exceptionOccurred);
+    assertEquals(1, outputs.size());
+    assertEquals(1, counts.size());
+    assertSubString("class", (String) outputs.get(0));
+    assertEquals(1, counts.get(0).right);
+  }
 
-	private void doSimpleRun() throws Exception
-	{
-		receiver.receiveSocket();
-		client.start();
-		client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
-		client.done();
-		client.join();
-	}
+  private void doSimpleRun() throws Exception {
+    receiver.receiveSocket();
+    client.start();
+    client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
+    client.done();
+    client.join();
+  }
 
-	public void testStandardError() throws Exception
-	{
-		client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
-		client.start();
-		client.join();
-		assertTrue(exceptionOccurred);
-		assertSubString("Exception", client.commandRunner.getError());
-	}
+  public void testStandardError() throws Exception {
+    client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
+    client.start();
+    client.join();
+    assertTrue(exceptionOccurred);
+    assertSubString("Exception", client.commandRunner.getError());
+  }
 
-	public void testDosntwaitForTimeoutOnBadCommand() throws Exception
-	{
-		CommandRunningFitClient.TIMEOUT = 5000;
-		long startTime = System.currentTimeMillis();
-		client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
-		client.start();
-		client.join();
-		assertTrue(exceptionOccurred);
-		assertTrue(System.currentTimeMillis() - startTime < CommandRunningFitClient.TIMEOUT);
+  public void testDosntwaitForTimeoutOnBadCommand() throws Exception {
+    CommandRunningFitClient.TIMEOUT = 5000;
+    long startTime = System.currentTimeMillis();
+    client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
+    client.start();
+    client.join();
+    assertTrue(exceptionOccurred);
+    assertTrue(System.currentTimeMillis() - startTime < CommandRunningFitClient.TIMEOUT);
 
-	}
+  }
 
-	public void testOneRunWithManyTables() throws Exception
-	{
-		receiver.receiveSocket();
-		client.start();
-		client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table>" +
-			"<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
-			"<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
-		client.done();
-		client.join();
-		assertFalse(exceptionOccurred);
-		assertEquals(3, outputs.size());
-		assertEquals(1, counts.size());
-		TestSummary count = counts.get(0);
-		assertEquals(1, count.right);
-		assertEquals(1, count.wrong);
-		assertEquals(1, count.exceptions);
-	}
+  public void testOneRunWithManyTables() throws Exception {
+    receiver.receiveSocket();
+    client.start();
+    client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table>" +
+      "<table><tr><td>fitnesse.testutil.FailFixture</td></tr></table>" +
+      "<table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
+    client.done();
+    client.join();
+    assertFalse(exceptionOccurred);
+    assertEquals(3, outputs.size());
+    assertEquals(1, counts.size());
+    TestSummary count = counts.get(0);
+    assertEquals(1, count.right);
+    assertEquals(1, count.wrong);
+    assertEquals(1, count.exceptions);
+  }
 
-	public void testManyRuns() throws Exception
-	{
-		receiver.receiveSocket();
-		client.start();
-		client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
-		client.send("<html><table><tr><td>fitnesse.testutil.FailFixture</td></tr></table></html>");
-		client.send("<html><table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
-		client.done();
-		client.join();
+  public void testManyRuns() throws Exception {
+    receiver.receiveSocket();
+    client.start();
+    client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
+    client.send("<html><table><tr><td>fitnesse.testutil.FailFixture</td></tr></table></html>");
+    client.send("<html><table><tr><td>fitnesse.testutil.ErrorFixture</td></tr></table></html>");
+    client.done();
+    client.join();
 
-		assertFalse(exceptionOccurred);
-		assertEquals(3, outputs.size());
-		assertEquals(3, counts.size());
-		assertEquals(1, (counts.get(0)).right);
-		assertEquals(1, (counts.get(1)).wrong);
-		assertEquals(1, (counts.get(2)).exceptions);
-	}
+    assertFalse(exceptionOccurred);
+    assertEquals(3, outputs.size());
+    assertEquals(3, counts.size());
+    assertEquals(1, (counts.get(0)).right);
+    assertEquals(1, (counts.get(1)).wrong);
+    assertEquals(1, (counts.get(2)).exceptions);
+  }
 
-	public void testDonerIsNotifiedWhenFinished_success() throws Exception
-	{
-		doSimpleRun();
-		assertTrue(doner.finished);
-	}
+  public void testDonerIsNotifiedWhenFinished_success() throws Exception {
+    doSimpleRun();
+    assertTrue(doner.finished);
+  }
 
-	public void testReadyForSending() throws Exception
-	{
-		CommandRunningFitClient.TIMEOUT = 5000;
-		Thread startThread = new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					client.start();
-				}
-				catch(InterruptedException ie)
-				{
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		};
-		startThread.start();
-		Thread.sleep(100);
-		assertFalse(client.isSuccessfullyStarted());
+  public void testReadyForSending() throws Exception {
+    CommandRunningFitClient.TIMEOUT = 5000;
+    Thread startThread = new Thread() {
+      public void run() {
+        try {
+          client.start();
+        }
+        catch (InterruptedException ie) {
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    };
+    startThread.start();
+    Thread.sleep(100);
+    assertFalse(client.isSuccessfullyStarted());
 
-		client.acceptSocketFrom(new SimpleSocketDoner(new MockSocket("")));
-		Thread.sleep(100);
-		assertTrue(client.isSuccessfullyStarted());
+    client.acceptSocketFrom(new SimpleSocketDoner(new MockSocket("")));
+    Thread.sleep(100);
+    assertTrue(client.isSuccessfullyStarted());
 
-		startThread.interrupt();
-	}
+    startThread.interrupt();
+  }
 
-	public void testUnicodeCharacters() throws Exception
-	{
-		receiver.receiveSocket();
-		client.start();
-		client.send("<html><table><tr><td>fitnesse.testutil.EchoFixture</td><td>\uba80\uba81\uba82\uba83</td></tr></table></html>");
-		client.done();
-		client.join();
+  public void testUnicodeCharacters() throws Exception {
+    receiver.receiveSocket();
+    client.start();
+    client.send("<html><table><tr><td>fitnesse.testutil.EchoFixture</td><td>\uba80\uba81\uba82\uba83</td></tr></table></html>");
+    client.done();
+    client.join();
 
-		assertFalse(exceptionOccurred);
-		StringBuffer buffer = new StringBuffer();
-		for(Iterator<String> iterator = outputs.iterator(); iterator.hasNext();)
-			buffer.append(iterator.next());
+    assertFalse(exceptionOccurred);
+    StringBuffer buffer = new StringBuffer();
+    for (Iterator<String> iterator = outputs.iterator(); iterator.hasNext();)
+      buffer.append(iterator.next());
 
-		assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
-	}
+    assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
+  }
 }

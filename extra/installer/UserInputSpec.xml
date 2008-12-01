@@ -19,15 +19,18 @@
                  txt="Must supply a valid expiration time"/>
     </field>
     <field type="check" variable="OMIT_UPDATES">
-      <description txt="Property updates allow newer versions of FitNesse to update property files automatically when dropped in" id="omit"/>
+      <description
+        txt="Property updates allow newer versions of FitNesse to update property files automatically when dropped in"
+        id="omit"/>
       <spec txt="Allow Property Updates?" id="omit.label" true="" false="-o" set="true"/>
     </field>
-  </panel>  
+  </panel>
 
   <panel order="1">
     <createForPack name="Windows Service"/>
     <field type="title" txt="Note - Windows Service" bold="true" id="title"/>
-    <field type="staticText" txt="The FitNesse Service has been installed, but not started.  Please visit the Services Control Panel to start it."
+    <field type="staticText"
+           txt="The FitNesse Service has been installed, but not started.  Please visit the Services Control Panel to start it."
            id="service.text"/>
   </panel>
 </userInput>

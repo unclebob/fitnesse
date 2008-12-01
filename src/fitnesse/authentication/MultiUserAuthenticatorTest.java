@@ -4,44 +4,40 @@ package fitnesse.authentication;
 
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
-public class MultiUserAuthenticatorTest extends TestCase
-{
-	private File passwd;
-	private PrintStream ps;
-	private final String passwordFilename = "testpasswd";
-	private MultiUserAuthenticator a;
+public class MultiUserAuthenticatorTest extends TestCase {
+  private File passwd;
+  private PrintStream ps;
+  private final String passwordFilename = "testpasswd";
+  private MultiUserAuthenticator a;
 
-	protected void setUp() throws Exception
-	{
-		passwd = new File(passwordFilename);
-		ps = new PrintStream(new FileOutputStream(passwd));
-		ps.println("uncle:bob");
-		ps.println("micah:boy");
-		ps.close();
-		a = new MultiUserAuthenticator(passwordFilename);
-	}
+  protected void setUp() throws Exception {
+    passwd = new File(passwordFilename);
+    ps = new PrintStream(new FileOutputStream(passwd));
+    ps.println("uncle:bob");
+    ps.println("micah:boy");
+    ps.close();
+    a = new MultiUserAuthenticator(passwordFilename);
+  }
 
-	protected void tearDown() throws Exception
-	{
-		passwd.delete();
-	}
+  protected void tearDown() throws Exception {
+    passwd.delete();
+  }
 
-	public void testBuildAuthenticator() throws Exception
-	{
-		assertEquals(2, a.userCount());
-		assertEquals("bob", a.getPasswd("uncle"));
-		assertEquals("boy", a.getPasswd("micah"));
-	}
+  public void testBuildAuthenticator() throws Exception {
+    assertEquals(2, a.userCount());
+    assertEquals("bob", a.getPasswd("uncle"));
+    assertEquals("boy", a.getPasswd("micah"));
+  }
 
-	public void testAuthenticRequest() throws Exception
-	{
-		assertTrue(a.isAuthenticated("uncle", "bob"));
-	}
+  public void testAuthenticRequest() throws Exception {
+    assertTrue(a.isAuthenticated("uncle", "bob"));
+  }
 
-	public void testInauthenticRequest() throws Exception
-	{
-		assertFalse(a.isAuthenticated("bill", "boob"));
-	}
+  public void testInauthenticRequest() throws Exception {
+    assertFalse(a.isAuthenticated("bill", "boob"));
+  }
 }

@@ -5,10 +5,8 @@ package fit;
 
 import junit.framework.TestCase;
 
-public class GracefulNamerTest extends TestCase
-{
-  public void testIsGracefulName() throws Exception
-  {
+public class GracefulNamerTest extends TestCase {
+  public void testIsGracefulName() throws Exception {
     assertTrue(GracefulNamer.isGracefulName("My Nice Fixture"));
     assertTrue(GracefulNamer.isGracefulName("My_Nice Fixture"));
     assertTrue(GracefulNamer.isGracefulName("My-Nice-Fixture"));
@@ -17,9 +15,8 @@ public class GracefulNamerTest extends TestCase
     assertFalse(GracefulNamer.isGracefulName("MyNiceFixture"));
     assertFalse(GracefulNamer.isGracefulName("my.package.Fixture"));
   }
-	
-  public void testUnGracefulName() throws Exception
-  {
+
+  public void testUnGracefulName() throws Exception {
     assertEquals("BadCompany", GracefulNamer.disgrace("Bad Company"));
     assertEquals("BadCompany", GracefulNamer.disgrace("bad company"));
     assertEquals("BadCompany", GracefulNamer.disgrace("Bad-Company"));
@@ -30,13 +27,12 @@ public class GracefulNamerTest extends TestCase
     assertEquals("Bad123Company", GracefulNamer.disgrace("bad 123company"));
     assertEquals("Bad123Company", GracefulNamer.disgrace("   bad  \t123  company   "));
     assertEquals("Bad123Company", GracefulNamer.disgrace("Bad123Company"));
-    
+
     // Just to let you know... probably not what you want.
     assertEquals("MyNamespaceBad123Company", GracefulNamer.disgrace("My.Namespace.Bad123Company"));
   }
 
-  public void testRegracingName() throws Exception
-  {
+  public void testRegracingName() throws Exception {
     assertEquals("Company", GracefulNamer.regrace("Company"));
     assertEquals("Bad Company", GracefulNamer.regrace("BadCompany"));
     assertEquals("Bad Company Two", GracefulNamer.regrace("BadCompanyTwo"));
@@ -51,11 +47,10 @@ public class GracefulNamerTest extends TestCase
     assertEquals(">Bad Company Two .Child Page", GracefulNamer.regrace(">BadCompanyTwo.ChildPage"));
     assertEquals("<Bad Company Two .Child Page", GracefulNamer.regrace("<BadCompanyTwo.ChildPage"));
   }
-  
-	public void testEmptyString() throws Exception
-	{
-		assertEquals("", GracefulNamer.disgrace(""));
-	}
+
+  public void testEmptyString() throws Exception {
+    assertEquals("", GracefulNamer.disgrace(""));
+  }
 
 
 }

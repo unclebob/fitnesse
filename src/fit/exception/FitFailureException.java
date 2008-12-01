@@ -15,10 +15,10 @@ package fit.exception;
  * But it's trapped by Fixture.exception print the contained message instead of a stackdump of the exception.
  */
 public class FitFailureException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-    
-	public FitFailureException(String s) {
-		super(s);
-	}
+  private static final long serialVersionUID = 1L;
+
+  public FitFailureException(String s) {
+    super(s);
+  }
 }
 

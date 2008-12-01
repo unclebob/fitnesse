@@ -2,17 +2,16 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PagePointer;
+import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WidgetBuilder;
 
-public class MockWidgetRoot extends WidgetRoot
-{
-	public MockWidgetRoot() throws Exception
-	{
-		super(null, new PagePointer(new WikiPageDummy("RooT"), new WikiPagePath()), WidgetBuilder.htmlWidgetBuilder);
-	}
+public class MockWidgetRoot extends WidgetRoot {
+  public MockWidgetRoot() throws Exception {
+    super(null, new PagePointer(new WikiPageDummy("RooT"), new WikiPagePath()), WidgetBuilder.htmlWidgetBuilder);
+  }
 
-	protected void buildWidgets(String value) throws Exception
-	{
-	}
+  protected void buildWidgets(String value) throws Exception {
+  }
 }

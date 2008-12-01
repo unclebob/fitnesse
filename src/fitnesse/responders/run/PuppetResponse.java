@@ -2,29 +2,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-import fitnesse.http.*;
+import fitnesse.http.Response;
+import fitnesse.http.ResponseSender;
 
-public class PuppetResponse extends Response
-{
-	private ResponsePuppeteer puppeteer;
+public class PuppetResponse extends Response {
+  private ResponsePuppeteer puppeteer;
 
-	public PuppetResponse(ResponsePuppeteer puppeteer)
-	{
+  public PuppetResponse(ResponsePuppeteer puppeteer) {
     super("html");
     this.puppeteer = puppeteer;
-	}
+  }
 
-	public void readyToSend(ResponseSender sender) throws Exception
-	{
-		puppeteer.readyToSend(sender);
-	}
+  public void readyToSend(ResponseSender sender) throws Exception {
+    puppeteer.readyToSend(sender);
+  }
 
-	protected void addSpecificHeaders()
-	{
-	}
+  protected void addSpecificHeaders() {
+  }
 
-	public int getContentSize()
-	{
-		return 0;
-	}
+  public int getContentSize() {
+    return 0;
+  }
 }

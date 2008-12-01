@@ -4,12 +4,10 @@ package fitnesse.responders;
 
 import fitnesse.wiki.WikiPage;
 
-public class PageDataWikiPageResponder extends BasicWikiPageResponder
-{
-	protected String contentFrom(WikiPage requestedPage)
-		throws Exception
-	{
-		return requestedPage.getData().getContent();
-	}
+public class PageDataWikiPageResponder extends BasicWikiPageResponder {
+  protected String contentFrom(WikiPage requestedPage)
+    throws Exception {
+    return requestedPage.getData().getContent();
+  }
 
 }

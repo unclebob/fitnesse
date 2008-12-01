@@ -2,7 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.run;
 
-public interface SocketSeeker
-{
-	public void acceptSocketFrom(SocketDoner doner) throws Exception;
+public interface SocketSeeker {
+  public void acceptSocketFrom(SocketDoner doner) throws Exception;
 }

@@ -4,24 +4,20 @@ package fitnesse.html;
 
 import java.util.Iterator;
 
-public class TagGroup extends HtmlTag
-{
-	public TagGroup()
-	{
-		super("group");
-	}
+public class TagGroup extends HtmlTag {
+  public TagGroup() {
+    super("group");
+  }
 
-	public String html(int depth) throws Exception
-	{
-		StringBuffer buffer = new StringBuffer();
-		for(Iterator<HtmlElement> iterator = childTags.iterator(); iterator.hasNext();)
-		{
-			HtmlElement element = iterator.next();
-			if(element instanceof HtmlTag)
-				buffer.append(((HtmlTag) element).html(depth));
-			else
-				buffer.append(element.html());
-		}
-		return buffer.toString();
-	}
+  public String html(int depth) throws Exception {
+    StringBuffer buffer = new StringBuffer();
+    for (Iterator<HtmlElement> iterator = childTags.iterator(); iterator.hasNext();) {
+      HtmlElement element = iterator.next();
+      if (element instanceof HtmlTag)
+        buffer.append(((HtmlTag) element).html(depth));
+      else
+        buffer.append(element.html());
+    }
+    return buffer.toString();
+  }
 }

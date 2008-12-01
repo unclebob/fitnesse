@@ -1,8 +1,8 @@
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.wikitext.widgets.*;
-import fitnesse.wikitext.WikiWidget;
 import fitnesse.util.StringUtil;
+import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.widgets.*;
 
 import java.util.List;
 import java.util.regex.Matcher;

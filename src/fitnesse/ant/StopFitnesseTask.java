@@ -1,7 +1,9 @@
 package fitnesse.ant;
 
-import fitnesse.*;
-import org.apache.tools.ant.*;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * Task to stop fitnesse.
@@ -15,33 +17,28 @@ import org.apache.tools.ant.*;
  * &lt;stop-fitnesse fitnesseport=&quot;8082&quot; /&gt;
  * </pre>
  */
-public class StopFitnesseTask extends Task
-{
-	private int fitnessePort = 8082;
+public class StopFitnesseTask extends Task {
+  private int fitnessePort = 8082;
 
-	@Override
-	public void execute() throws BuildException
-	{
-		FitNesseContext context = new FitNesseContext();
-		context.port = fitnessePort;
-		try
-		{
-			new FitNesse(context).stop();
-			log("Sucessfully stoped Fitnesse on port " + fitnessePort);
-		}
-		catch(Exception e)
-		{
-			throw new BuildException("Failed to stop FitNesse. Error Msg: " + e.getMessage(), e);
-		}
-	}
+  @Override
+  public void execute() throws BuildException {
+    FitNesseContext context = new FitNesseContext();
+    context.port = fitnessePort;
+    try {
+      new FitNesse(context).stop();
+      log("Sucessfully stoped Fitnesse on port " + fitnessePort);
+    }
+    catch (Exception e) {
+      throw new BuildException("Failed to stop FitNesse. Error Msg: " + e.getMessage(), e);
+    }
+  }
 
-	/**
-	 * Port on which fitnesse would run. Defaults to <b>8082</b>.
-	 *
-	 * @param fitnessePort
-	 */
-	public void setFitnessePort(int fitnessePort)
-	{
-		this.fitnessePort = fitnessePort;
-	}
+  /**
+   * Port on which fitnesse would run. Defaults to <b>8082</b>.
+   *
+   * @param fitnessePort
+   */
+  public void setFitnessePort(int fitnessePort) {
+    this.fitnessePort = fitnessePort;
+  }
 }

@@ -1,7 +1,5 @@
 package fitnesse.responders.run.slimResponder;
 
-import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName;
-
 import java.util.*;
 
 public class DecisionTable extends SlimTable {

@@ -4,7 +4,6 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
-public interface SearchObserver
-{
-	public void hit(WikiPage page) throws Exception;
+public interface SearchObserver {
+  public void hit(WikiPage page) throws Exception;
 }

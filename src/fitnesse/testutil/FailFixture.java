@@ -2,12 +2,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.testutil;
 
-import fit.*;
+import fit.Fixture;
+import fit.Parse;
 
-public class FailFixture extends Fixture
-{
-	public void doTable(Parse parse)
-	{
-		wrong(parse);
-	}
+public class FailFixture extends Fixture {
+  public void doTable(Parse parse) {
+    wrong(parse);
+  }
 }

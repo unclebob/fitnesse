@@ -3,12 +3,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit.exception;
 
-public class CouldNotParseFitFailureException extends FitFailureException
-{
+public class CouldNotParseFitFailureException extends FitFailureException {
   private static final long serialVersionUID = 1L;
 
-  public CouldNotParseFitFailureException(String text, String type)
-  {
+  public CouldNotParseFitFailureException(String text, String type) {
     super("Could not parse: " + text + ", expected type: " + type + ".");
   }
 }

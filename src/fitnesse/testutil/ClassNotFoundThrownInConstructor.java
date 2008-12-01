@@ -4,10 +4,8 @@ package fitnesse.testutil;
 
 import fit.Fixture;
 
-public class ClassNotFoundThrownInConstructor extends Fixture
-{
-	public ClassNotFoundThrownInConstructor() throws ClassNotFoundException
-	{
-		Class.forName("NoSuchClass");
-	}
+public class ClassNotFoundThrownInConstructor extends Fixture {
+  public ClassNotFoundThrownInConstructor() throws ClassNotFoundException {
+    Class.forName("NoSuchClass");
+  }
 }

@@ -2,9 +2,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.html;
 
-public abstract class HtmlElement
-{
-	public static final String endl = System.getProperty("line.separator");
+public abstract class HtmlElement {
+  public static final String endl = System.getProperty("line.separator");
 
-	public abstract String html() throws Exception;
+  public abstract String html() throws Exception;
 }

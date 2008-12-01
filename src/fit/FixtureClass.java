@@ -3,45 +3,37 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fit.exception.*;
+import fit.exception.ClassIsNotFixtureException;
+import fit.exception.NoDefaultConstructorFixtureException;
 
-public class FixtureClass
-{
+public class FixtureClass {
   private Class<?> klass;
 
-  public FixtureClass(Class<?> klass)
-  {
+  public FixtureClass(Class<?> klass) {
     this.klass = klass;
   }
 
-  public Fixture newInstance() throws IllegalAccessException
-  {
+  public Fixture newInstance() throws IllegalAccessException {
     // Instantiate according to policies?
     // Example: policy #1 -- has default constructor
     // ...
 
     String fixtureClassName = klass.getName();
 
-    try
-    {
+    try {
       Object fixtureAsObject = klass.newInstance();
 
-      if (fixtureAsObject instanceof Fixture)
-      {
+      if (fixtureAsObject instanceof Fixture) {
         return (Fixture) fixtureAsObject;
-      }
-      else
-      {
+      } else {
         throw new ClassIsNotFixtureException(fixtureClassName);
       }
     }
-    catch (IllegalAccessException unhandled)
-    {
+    catch (IllegalAccessException unhandled) {
       // TODO: Handle constructor not public?
       throw unhandled;
     }
-    catch (InstantiationException e)
-    {
+    catch (InstantiationException e) {
       // TODO: Handle interface/abstract class case?
       throw new NoDefaultConstructorFixtureException(fixtureClassName);
     }

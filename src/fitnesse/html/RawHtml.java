@@ -2,17 +2,14 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.html;
 
-public class RawHtml extends HtmlElement
-{
-	private String html;
+public class RawHtml extends HtmlElement {
+  private String html;
 
-	public RawHtml(String html)
-	{
-		this.html = html;
-	}
+  public RawHtml(String html) {
+    this.html = html;
+  }
 
-	public String html()
-	{
-		return html;
-	}
+  public String html() {
+    return html;
+  }
 }

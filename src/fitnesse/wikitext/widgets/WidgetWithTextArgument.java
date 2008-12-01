@@ -2,7 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-public interface WidgetWithTextArgument
-{
-	String getText() throws Exception;
+public interface WidgetWithTextArgument {
+  String getText() throws Exception;
 }

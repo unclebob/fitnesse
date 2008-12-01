@@ -2,24 +2,19 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.runner;
 
-import fit.Counts;
 import fitnesse.responders.run.FitClientResponderTest;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import static fitnesse.testutil.RegexTestCase.*;
 import fitnesse.util.FileUtil;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.BeforeClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,7 +25,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
 
 public class TestRunnerTest {
   private int port;

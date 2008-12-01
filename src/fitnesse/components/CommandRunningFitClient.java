@@ -2,9 +2,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.components;
 
-import fitnesse.responders.run.*;
-import fitnesse.testutil.MockCommandRunner;
 import fit.FitServer;
+import fitnesse.responders.run.SocketDealer;
+import fitnesse.responders.run.SocketDoner;
+import fitnesse.responders.run.SocketSeeker;
+import fitnesse.responders.run.TestSystemListener;
+import fitnesse.testutil.MockCommandRunner;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;

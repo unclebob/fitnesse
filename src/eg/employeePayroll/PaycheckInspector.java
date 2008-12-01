@@ -3,10 +3,8 @@
 package eg.employeePayroll;
 
 import fit.RowFixture;
-import eg.employeePayroll.PayCheck;
 
-public class PaycheckInspector extends RowFixture
-{
+public class PaycheckInspector extends RowFixture {
   public Object[] query() throws Exception  // get rows to be compared
   {
     return new Object[0];

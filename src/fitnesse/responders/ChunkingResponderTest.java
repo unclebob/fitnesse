@@ -10,32 +10,27 @@ import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
-public class ChunkingResponderTest extends RegexTestCase
-{
+public class ChunkingResponderTest extends RegexTestCase {
 
-	private Exception exception;
-	private Response response;
-	private FitNesseContext context;
-	private WikiPage root = new WikiPageDummy();
-	private ChunkingResponder responder = new ChunkingResponder()
-	{
-		protected void doSending() throws Exception
-		{
-			throw exception;
-		}
-	};
+  private Exception exception;
+  private Response response;
+  private FitNesseContext context;
+  private WikiPage root = new WikiPageDummy();
+  private ChunkingResponder responder = new ChunkingResponder() {
+    protected void doSending() throws Exception {
+      throw exception;
+    }
+  };
 
-	protected void setUp() throws Exception
-	{
-		context = new FitNesseContext();
-		context.root = root;
-	}
+  protected void setUp() throws Exception {
+    context = new FitNesseContext();
+    context.root = root;
+  }
 
-	public void testException() throws Exception
-	{
-		exception = new Exception("test exception");
-		response = responder.makeResponse(context, new MockRequest());
-		String responseSender = new MockResponseSender(response).sentData();
-		assertSubString("test exception", responseSender);
-	}
+  public void testException() throws Exception {
+    exception = new Exception("test exception");
+    response = responder.makeResponse(context, new MockRequest());
+    String responseSender = new MockResponseSender(response).sentData();
+    assertSubString("test exception", responseSender);
+  }
 }

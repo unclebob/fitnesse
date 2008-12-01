@@ -4,28 +4,25 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class FixtureWidget extends TextWidget
-{
-	public static final String REGEXP = "^!fixture [^\r\n]*";
-	private static final Pattern pattern = Pattern.compile("^!fixture (.*)");
+public class FixtureWidget extends TextWidget {
+  public static final String REGEXP = "^!fixture [^\r\n]*";
+  private static final Pattern pattern = Pattern.compile("^!fixture (.*)");
 
-	public FixtureWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-			this.setText(match.group(1));
-	}
+  public FixtureWidget(ParentWidget parent, String text) {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find())
+      this.setText(match.group(1));
+  }
 
-	public String render() throws Exception
-	{
-		return HtmlUtil.metaText("fixture: " + getText());
-	}
+  public String render() throws Exception {
+    return HtmlUtil.metaText("fixture: " + getText());
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return "!fixture " + this.getText();
-	}
+  public String asWikiText() throws Exception {
+    return "!fixture " + this.getText();
+  }
 }

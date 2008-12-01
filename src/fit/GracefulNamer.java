@@ -6,26 +6,24 @@
 // later.
 package fit;
 
-import java.util.regex.*;
 import fitnesse.wiki.PathParser;
 
-public class GracefulNamer
-{
-  private static Pattern disgracefulNamePattern = Pattern
-      .compile("\\w(?:[.]|\\w)*[^.]");
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-  public static boolean isGracefulName(String fixtureName)
-  {
+public class GracefulNamer {
+  private static Pattern disgracefulNamePattern = Pattern
+    .compile("\\w(?:[.]|\\w)*[^.]");
+
+  public static boolean isGracefulName(String fixtureName) {
     Matcher matcher = disgracefulNamePattern.matcher(fixtureName);
     return !matcher.matches();
   }
 
-  public static String disgrace(String fixtureName)
-  {
+  public static String disgrace(String fixtureName) {
     GracefulNamer namer = new GracefulNamer();
 
-    for (int i = 0; i < fixtureName.length(); i++)
-    {
+    for (int i = 0; i < fixtureName.length(); i++) {
       char c = fixtureName.charAt(i);
       if (Character.isLetter(c))
         namer.currentState.letter(c);
@@ -38,30 +36,28 @@ public class GracefulNamer
     return namer.finalName.toString();
   }
 
-  public static String regrace(String disgracefulName)
-  {
+  public static String regrace(String disgracefulName) {
     final char separator = PathParser.PATH_SEPARATOR.charAt(0);
     char c = '?';
     GracefulNamer namer = new GracefulNamer();
     if (disgracefulName.length() > 0)
-       namer.finalName.append(c = disgracefulName.charAt(0));
+      namer.finalName.append(c = disgracefulName.charAt(0));
 
     boolean isGrabbingDigits = false, wasSeparator = (PathParser.isPathPrefix(c));
-    for (int i = 1; i < disgracefulName.length(); i++)
-    {  c = disgracefulName.charAt(i);
-       if (   (Character.isUpperCase(c))
-           || (Character.isDigit(c) && !isGrabbingDigits)
-           || (c == separator)
-          )
-       {
-          if (!wasSeparator) namer.finalName.append(" ");
-          wasSeparator = (c == separator);
-       }
+    for (int i = 1; i < disgracefulName.length(); i++) {
+      c = disgracefulName.charAt(i);
+      if ((Character.isUpperCase(c))
+        || (Character.isDigit(c) && !isGrabbingDigits)
+        || (c == separator)
+        ) {
+        if (!wasSeparator) namer.finalName.append(" ");
+        wasSeparator = (c == separator);
+      }
 
-       isGrabbingDigits = (Character.isDigit(c));
-       namer.finalName.append(c);
+      isGrabbingDigits = (Character.isDigit(c));
+      namer.finalName.append(c);
     }
-    
+
     return namer.finalName.toString();
   }
 
@@ -69,12 +65,10 @@ public class GracefulNamer
 
   private GracefulNameState currentState = new OutOfWordState();
 
-  private GracefulNamer()
-  {
+  private GracefulNamer() {
   }
 
-  private interface GracefulNameState
-  {
+  private interface GracefulNameState {
     public void letter(char c);
 
     public void digit(char c);
@@ -82,60 +76,48 @@ public class GracefulNamer
     public void other(char c);
   }
 
-  private class InWordState implements GracefulNameState
-  {
-    public void letter(char c)
-    {
+  private class InWordState implements GracefulNameState {
+    public void letter(char c) {
       finalName.append(c);
     }
 
-    public void digit(char c)
-    {
+    public void digit(char c) {
       finalName.append(c);
       currentState = new InNumberState();
     }
 
-    public void other(char c)
-    {
+    public void other(char c) {
       currentState = new OutOfWordState();
     }
   }
 
-  private class InNumberState implements GracefulNameState
-  {
-    public void letter(char c)
-    {
+  private class InNumberState implements GracefulNameState {
+    public void letter(char c) {
       finalName.append(Character.toUpperCase(c));
       currentState = new InWordState();
     }
 
-    public void digit(char c)
-    {
+    public void digit(char c) {
       finalName.append(c);
     }
 
-    public void other(char c)
-    {
+    public void other(char c) {
       currentState = new OutOfWordState();
     }
   }
 
-  private class OutOfWordState implements GracefulNameState
-  {
-    public void letter(char c)
-    {
+  private class OutOfWordState implements GracefulNameState {
+    public void letter(char c) {
       finalName.append(Character.toUpperCase(c));
       currentState = new InWordState();
     }
 
-    public void digit(char c)
-    {
+    public void digit(char c) {
       finalName.append(c);
       currentState = new InNumberState();
     }
 
-    public void other(char c)
-    {
+    public void other(char c) {
     }
   }
 }

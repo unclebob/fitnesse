@@ -1,17 +1,17 @@
 package fitnesse.slim;
 
-import java.util.List;
-
 import fitnesse.util.ListUtility;
+
+import java.util.List;
 
 /**
  * Packs up a list into a serialized string using a special format.  The list items must be strings, or lists.
  * They will be recursively serialized.
- *
+ * <p/>
  * Format:  [iiiiii:llllll:item...]
  * All lists (including lists within lists) begin with [ and end with ].  After the [ is the 6 digit number of items
  * in the list followed by a :.  Then comes each item which is composed of a 6 digit length a : and then the value
- * of the item followed by a :.  
+ * of the item followed by a :.
  */
 public class ListSerializer {
   private StringBuffer result;

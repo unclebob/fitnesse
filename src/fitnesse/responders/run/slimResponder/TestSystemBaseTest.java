@@ -1,13 +1,13 @@
 package fitnesse.responders.run.slimResponder;
 
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.Before;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class TestSystemBaseTest {
   private WikiPage root;
@@ -23,7 +23,7 @@ public class TestSystemBaseTest {
   public void buildFullySpecifiedTestSystemName() throws Exception {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"),
       "!define TEST_SYSTEM {system}\n" +
-      "!define TEST_RUNNER {runner}\n");
+        "!define TEST_RUNNER {runner}\n");
     String testSystemName = TestSystem.getTestSystemName(testPage.getData());
     Assert.assertEquals("system:runner", testSystemName);
   }
@@ -48,7 +48,6 @@ public class TestSystemBaseTest {
     String testSystemName = TestSystem.getTestSystemName(testPage.getData());
     Assert.assertEquals("X:fit.FitServer", testSystemName);
   }
-
 
 
 }

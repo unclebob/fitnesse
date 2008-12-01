@@ -7,35 +7,30 @@ import fitnesse.wikitext.WidgetBuilder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PreformattedWidget extends ParentWidget
-{
-	public static final String REGEXP = "\\{\\{\\{.+?\\}\\}\\}";
-	private static final Pattern pattern = Pattern.compile("\\{{3}(.+?)\\}{3}", Pattern.DOTALL);
+public class PreformattedWidget extends ParentWidget {
+  public static final String REGEXP = "\\{\\{\\{.+?\\}\\}\\}";
+  private static final Pattern pattern = Pattern.compile("\\{{3}(.+?)\\}{3}", Pattern.DOTALL);
 
-	public PreformattedWidget(ParentWidget parent, String text) throws Exception
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-			addChildWidgets(match.group(1));
-	}
+  public PreformattedWidget(ParentWidget parent, String text) throws Exception {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find())
+      addChildWidgets(match.group(1));
+  }
 
-	public String render() throws Exception
-	{
-		StringBuffer html = new StringBuffer("<pre>");
-		html.append(childHtml()).append("</pre>");
+  public String render() throws Exception {
+    StringBuffer html = new StringBuffer("<pre>");
+    html.append(childHtml()).append("</pre>");
 
-		return html.toString();
-	}
+    return html.toString();
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return "{{{" + childWikiText() + "}}}";
-	}
+  public String asWikiText() throws Exception {
+    return "{{{" + childWikiText() + "}}}";
+  }
 
-	public WidgetBuilder getBuilder()
-	{
-		return WidgetBuilder.literalVariableEvaluatorWidgetBuilder;
-	}
+  public WidgetBuilder getBuilder() {
+    return WidgetBuilder.literalVariableEvaluatorWidgetBuilder;
+  }
 }
 

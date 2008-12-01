@@ -3,6 +3,5 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-public class Comment extends Fixture
-{
+public class Comment extends Fixture {
 }

@@ -4,9 +4,8 @@ package fitnesse.responders.run;
 
 import java.net.Socket;
 
-public interface SocketDoner
-{
-	public Socket donateSocket();
+public interface SocketDoner {
+  public Socket donateSocket();
 
-	public void finishedWithSocket() throws Exception;
+  public void finishedWithSocket() throws Exception;
 }

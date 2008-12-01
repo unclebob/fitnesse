@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import java.io.Serializable;
 
-public interface Extension extends Serializable
-{
-	public String getName();
+public interface Extension extends Serializable {
+  public String getName();
 }

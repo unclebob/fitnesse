@@ -6,29 +6,24 @@ import fitnesse.responders.run.SocketDoner;
 
 import java.net.Socket;
 
-public class SimpleSocketDoner implements SocketDoner
-{
-	public Socket socket;
-	public boolean finished = false;
+public class SimpleSocketDoner implements SocketDoner {
+  public Socket socket;
+  public boolean finished = false;
 
-	public SimpleSocketDoner()
-	{
-		socket = new MockSocket("SimpleSocketDoner");
-	}
+  public SimpleSocketDoner() {
+    socket = new MockSocket("SimpleSocketDoner");
+  }
 
-	public SimpleSocketDoner(Socket socket)
-	{
-		this.socket = socket;
-	}
+  public SimpleSocketDoner(Socket socket) {
+    this.socket = socket;
+  }
 
-	public Socket donateSocket()
-	{
-		return socket;
-	}
+  public Socket donateSocket() {
+    return socket;
+  }
 
-	public void finishedWithSocket() throws Exception
-	{
-		finished = true;
-		socket.close();
-	}
+  public void finishedWithSocket() throws Exception {
+    finished = true;
+    socket.close();
+  }
 }

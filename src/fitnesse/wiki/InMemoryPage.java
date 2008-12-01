@@ -5,120 +5,103 @@ package fitnesse.wiki;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InMemoryPage extends CommitingPage
-{
-    private static final long serialVersionUID = 1L;
+public class InMemoryPage extends CommitingPage {
+  private static final long serialVersionUID = 1L;
 
-    protected static final String currentVersionName = "current_version";
+  protected static final String currentVersionName = "current_version";
 
-	protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
-	protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
+  protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
+  protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
-	protected InMemoryPage(String name, String content, WikiPage parent) throws Exception
-	{
-		super(name, parent);
-		addExtention(new VirtualCouplingExtension(this));
-		versions.put(currentVersionName, new PageData(this, content));
-	}
+  protected InMemoryPage(String name, String content, WikiPage parent) throws Exception {
+    super(name, parent);
+    addExtention(new VirtualCouplingExtension(this));
+    versions.put(currentVersionName, new PageData(this, content));
+  }
 
-	public WikiPage addChildPage(String name) throws Exception
-	{
-		WikiPage page = createChildPage(name);
-		children.put(name, page);
-		return page;
-	}
+  public WikiPage addChildPage(String name) throws Exception {
+    WikiPage page = createChildPage(name);
+    children.put(name, page);
+    return page;
+  }
 
-	public static WikiPage makeRoot(String name) throws Exception
-	{
-		InMemoryPage root = new InMemoryPage(name, "", null);
-		return root;
-	}
+  public static WikiPage makeRoot(String name) throws Exception {
+    InMemoryPage root = new InMemoryPage(name, "", null);
+    return root;
+  }
 
-	public static WikiPage makeRoot(Properties props) throws Exception
-	{
-		return makeRoot(props.getProperty("FitNesseRoot", "FitNesseRoot"));
-	}
+  public static WikiPage makeRoot(Properties props) throws Exception {
+    return makeRoot(props.getProperty("FitNesseRoot", "FitNesseRoot"));
+  }
 
-	protected WikiPage createChildPage(String name) throws Exception
-	{
-		BaseWikiPage newPage = new InMemoryPage(name, "", this);
-		children.put(newPage.getName(), newPage);
-		return newPage;
-	}
+  protected WikiPage createChildPage(String name) throws Exception {
+    BaseWikiPage newPage = new InMemoryPage(name, "", this);
+    children.put(newPage.getName(), newPage);
+    return newPage;
+  }
 
-	public void removeChildPage(String name) throws Exception
-	{
-		children.remove(name);
-	}
+  public void removeChildPage(String name) throws Exception {
+    children.remove(name);
+  }
 
-	public boolean hasChildPage(String pageName)
-	{
-		return children.containsKey(pageName);
-	}
+  public boolean hasChildPage(String pageName) {
+    return children.containsKey(pageName);
+  }
 
-	protected VersionInfo makeVersion() throws Exception
-	{
-		PageData current = getDataVersion(currentVersionName);
+  protected VersionInfo makeVersion() throws Exception {
+    PageData current = getDataVersion(currentVersionName);
 
-		String name = String.valueOf(VersionInfo.nextId());
-		VersionInfo version = makeVersionInfo(current, name);
-		versions.put(version.getName(), current);
-		return version;
-	}
+    String name = String.valueOf(VersionInfo.nextId());
+    VersionInfo version = makeVersionInfo(current, name);
+    versions.put(version.getName(), current);
+    return version;
+  }
 
-	protected WikiPage getNormalChildPage(String name) throws Exception
-	{
-		return children.get(name);
-	}
+  protected WikiPage getNormalChildPage(String name) throws Exception {
+    return children.get(name);
+  }
 
-	public List<WikiPage> getNormalChildren() throws Exception
-	{
-		return new LinkedList<WikiPage>(children.values());
-	}
+  public List<WikiPage> getNormalChildren() throws Exception {
+    return new LinkedList<WikiPage>(children.values());
+  }
 
-	public PageData getData() throws Exception
-	{
-		return new PageData(getDataVersion(currentVersionName));
-	}
+  public PageData getData() throws Exception {
+    return new PageData(getDataVersion(currentVersionName));
+  }
 
-	public void doCommit(PageData newData) throws Exception
-	{
-		newData.setWikiPage(this);
-		newData.getProperties().setLastModificationTime(new Date());
-		versions.put(currentVersionName, newData);
-	}
+  public void doCommit(PageData newData) throws Exception {
+    newData.setWikiPage(this);
+    newData.getProperties().setLastModificationTime(new Date());
+    versions.put(currentVersionName, newData);
+  }
 
-	public PageData getDataVersion(String versionName) throws Exception
-	{
-		PageData version = versions.get(versionName);
-		if(version == null)
-			throw new NoSuchVersionException("There is no version '" + versionName + "'");
+  public PageData getDataVersion(String versionName) throws Exception {
+    PageData version = versions.get(versionName);
+    if (version == null)
+      throw new NoSuchVersionException("There is no version '" + versionName + "'");
 
-		Set<String> names = new HashSet<String>(versions.keySet());
-		names.remove(currentVersionName);
-		List<VersionInfo> pageVersions = new LinkedList<VersionInfo>();
-		for(Iterator<String> iterator = names.iterator(); iterator.hasNext();)
-		{
-			String name = iterator.next();
-			PageData data = versions.get(name);
-			pageVersions.add(makeVersionInfo(data, name));
-		}
-		version.addVersions(pageVersions);
-		return new PageData(version);
-	}
+    Set<String> names = new HashSet<String>(versions.keySet());
+    names.remove(currentVersionName);
+    List<VersionInfo> pageVersions = new LinkedList<VersionInfo>();
+    for (Iterator<String> iterator = names.iterator(); iterator.hasNext();) {
+      String name = iterator.next();
+      PageData data = versions.get(name);
+      pageVersions.add(makeVersionInfo(data, name));
+    }
+    version.addVersions(pageVersions);
+    return new PageData(version);
+  }
 
-	public int numberOfVersions()
-	{
-		return versions.size() - 1;
-	}
+  public int numberOfVersions() {
+    return versions.size() - 1;
+  }
 
-	protected VersionInfo makeVersionInfo(PageData current, String name) throws Exception
-	{
-		String author = current.getAttribute(WikiPage.LAST_MODIFYING_USER);
-		if(author == null)
-			author = "";
-		Date date = current.getProperties().getLastModificationTime();
-		VersionInfo version = new VersionInfo(name, author, date);
-		return version;
-	}
+  protected VersionInfo makeVersionInfo(PageData current, String name) throws Exception {
+    String author = current.getAttribute(WikiPage.LAST_MODIFYING_USER);
+    if (author == null)
+      author = "";
+    Date date = current.getProperties().getLastModificationTime();
+    VersionInfo version = new VersionInfo(name, author, date);
+    return version;
+  }
 }

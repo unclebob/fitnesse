@@ -4,10 +4,8 @@ package fitnesse.authentication;
 
 import fitnesse.wiki.WikiPage;
 
-public class SecureTestOperation extends SecurePageOperation
-{
-	protected String getSecurityMode()
-	{
-		return WikiPage.SECURE_TEST;
-	}
+public class SecureTestOperation extends SecurePageOperation {
+  protected String getSecurityMode() {
+    return WikiPage.SECURE_TEST;
+  }
 }

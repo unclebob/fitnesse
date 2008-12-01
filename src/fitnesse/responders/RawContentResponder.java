@@ -3,30 +3,33 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.authentication.*;
-import fitnesse.http.*;
-import fitnesse.wiki.*;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
-public class RawContentResponder implements SecureResponder
-{
-	public Response makeResponse(FitNesseContext context, Request request) throws Exception
-	{
-		String resource = request.getResource();
-		WikiPagePath path = PathParser.parse(resource);
-		WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
-		if(page == null)
-			return new NotFoundResponder().makeResponse(context, request);
-		PageData pageData = page.getData();
+public class RawContentResponder implements SecureResponder {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    String resource = request.getResource();
+    WikiPagePath path = PathParser.parse(resource);
+    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+    if (page == null)
+      return new NotFoundResponder().makeResponse(context, request);
+    PageData pageData = page.getData();
 
-		SimpleResponse response = new SimpleResponse();
-		response.setMaxAge(0);
-		response.setContent(pageData.getContent());
+    SimpleResponse response = new SimpleResponse();
+    response.setMaxAge(0);
+    response.setContent(pageData.getContent());
 
-		return response;
-	}
+    return response;
+  }
 
-	public SecureOperation getSecureOperation()
-	{
-		return new SecureReadOperation();
-	}
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
+  }
 }

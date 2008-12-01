@@ -2,18 +2,17 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.testutil;
 
-import fitnesse.responders.run.*;
+import fitnesse.responders.run.SocketDoner;
+import fitnesse.responders.run.SocketSeeker;
 
 import java.net.Socket;
 
-public class SimpleSocketSeeker implements SocketSeeker
-{
-	public SocketDoner doner;
-	public Socket socket;
+public class SimpleSocketSeeker implements SocketSeeker {
+  public SocketDoner doner;
+  public Socket socket;
 
-	public void acceptSocketFrom(SocketDoner doner) throws Exception
-	{
-		this.doner = doner;
-		this.socket = doner.donateSocket();
-	}
+  public void acceptSocketFrom(SocketDoner doner) throws Exception {
+    this.doner = doner;
+    this.socket = doner.donateSocket();
+  }
 }

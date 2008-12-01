@@ -5,12 +5,10 @@ package fit.exception;
 
 import java.text.ParseException;
 
-public class FitParseException extends ParseException
-{
-    private static final long serialVersionUID = 1L;
+public class FitParseException extends ParseException {
+  private static final long serialVersionUID = 1L;
 
-	public FitParseException(String s, int i)
-	{
-		super(s, i);
-	}
+  public FitParseException(String s, int i) {
+    super(s, i);
+  }
 }

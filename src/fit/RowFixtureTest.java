@@ -7,35 +7,30 @@
 package fit;
 
 import junit.framework.TestCase;
+
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
-import java.lang.reflect.Field;
 
-public class RowFixtureTest extends TestCase
-{
+public class RowFixtureTest extends TestCase {
 
-  class BusinessObject
-  {
+  class BusinessObject {
     private String[] strs;
 
-    public BusinessObject(String[] strs)
-    {
+    public BusinessObject(String[] strs) {
       this.strs = strs;
     }
 
-    public String[] getStrings()
-    {
+    public String[] getStrings() {
       return strs;
     }
   }
 
-  public RowFixtureTest(String name)
-  {
+  public RowFixtureTest(String name) {
     super(name);
   }
 
-  public void testMatch() throws Exception
-  {
+  public void testMatch() throws Exception {
 
     /*
     Now back to the bug I found: The problem stems from the fact
@@ -50,7 +45,7 @@ public class RowFixtureTest extends TestCase
 
     RowFixture fixture = new TestRowFixture();
     TypeAdapter arrayAdapter = TypeAdapter.on(fixture,
-                                              BusinessObject.class.getMethod("getStrings", new Class[0]));
+      BusinessObject.class.getMethod("getStrings", new Class[0]));
     Binding binding = new Binding.QueryBinding();
     binding.adapter = arrayAdapter;
     fixture.columnBindings = new Binding[]{binding};
@@ -66,8 +61,7 @@ public class RowFixtureTest extends TestCase
     assertEquals("surplus", 0, fixture.surplus.size());
   }
 
-  public void testBindColumnToField() throws Exception
-  {
+  public void testBindColumnToField() throws Exception {
     RowFixture fixture = new SimpleRowFixture();
     Parse table = new Parse("<table><tr><td>field</td></tr></table>");
     Parse tableHead = table.parts.parts;
@@ -94,8 +88,8 @@ public class RowFixtureTest extends TestCase
   private class SimpleBusinessObject {
     public int field;
   }
-  private class TestRowFixture extends RowFixture
-  {
+
+  private class TestRowFixture extends RowFixture {
     public Object[] query() throws Exception  // get rows to be compared
     {
       return new Object[0];

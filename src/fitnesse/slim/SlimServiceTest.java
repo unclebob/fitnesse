@@ -30,7 +30,7 @@ public class SlimServiceTest {
 
   private boolean tryCreateSlimService() throws Exception {
     try {
-      SlimService.main(new String[] {"8099"});
+      SlimService.main(new String[]{"8099"});
       return true;
     } catch (Exception e) {
       return false;
@@ -70,7 +70,7 @@ public class SlimServiceTest {
     addImportAndMake();
     for (int i = 0; i < 1000; i++)
       addEchoInt(String.format("id_%d", i), Integer.toString(i));
-    Map<String,Object> result = slimClient.invokeAndGetResponse(statements);
+    Map<String, Object> result = slimClient.invokeAndGetResponse(statements);
     for (int i = 0; i < 1000; i++)
       assertEquals(i, Integer.parseInt((String) result.get(String.format("id_%d", i))));
   }
@@ -105,13 +105,13 @@ public class SlimServiceTest {
   }
 
   private void assertContainsException(String message, String id, Map<String, Object> results) {
-    String result = (String)results.get(id);
-    assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1  && result.indexOf(message) != -1);
+    String result = (String) results.get(id);
+    assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1 && result.indexOf(message) != -1);
   }
 
   @Test
   public void makeClassThatDoesntExist() throws Exception {
-    statements.add(list("m1", "make","me","NoSuchClass"));
+    statements.add(list("m1", "make", "me", "NoSuchClass"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
     assertContainsException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR NoSuchClass[0]>>", "m1", results);
   }

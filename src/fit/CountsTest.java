@@ -5,18 +5,16 @@ package fit;
 
 import junit.framework.TestCase;
 
-public class CountsTest extends TestCase
-{
-	public void testEquality() throws Exception
-	{
-		assertFalse(new Counts().equals(null));
-		assertFalse(new Counts().equals(""));
+public class CountsTest extends TestCase {
+  public void testEquality() throws Exception {
+    assertFalse(new Counts().equals(null));
+    assertFalse(new Counts().equals(""));
 
-		assertEquals(new Counts(), new Counts());
-		assertEquals(new Counts(0, 0, 0, 0), new Counts(0, 0, 0, 0));
-		assertEquals(new Counts(1, 1, 1, 1), new Counts(1, 1, 1, 1));
-		assertEquals(new Counts(5, 0, 1, 3), new Counts(5, 0, 1, 3));
+    assertEquals(new Counts(), new Counts());
+    assertEquals(new Counts(0, 0, 0, 0), new Counts(0, 0, 0, 0));
+    assertEquals(new Counts(1, 1, 1, 1), new Counts(1, 1, 1, 1));
+    assertEquals(new Counts(5, 0, 1, 3), new Counts(5, 0, 1, 3));
 
-		assertFalse(new Counts(1, 0, 0, 0).equals(new Counts(0, 0, 0, 0)));
-	}
+    assertFalse(new Counts(1, 0, 0, 0).equals(new Counts(0, 0, 0, 0)));
+  }
 }

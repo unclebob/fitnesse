@@ -3,39 +3,35 @@
 package fitnesse.updates;
 
 import fitnesse.components.FitNesseTraversalListener;
-import fitnesse.wiki.*;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.WikiPage;
 
 import java.util.Properties;
 
-public abstract class PageTraversingUpdate implements FitNesseTraversalListener, Update
-{
-	private Properties properties;
-	private WikiPage root;
+public abstract class PageTraversingUpdate implements FitNesseTraversalListener, Update {
+  private Properties properties;
+  private WikiPage root;
 
-	public PageTraversingUpdate(Updater updater)
-	{
-		properties = updater.getProperties();
-		root = updater.getRoot();
-	}
+  public PageTraversingUpdate(Updater updater) {
+    properties = updater.getProperties();
+    root = updater.getRoot();
+  }
 
-	public void doUpdate() throws Exception
-	{
-		root.getPageCrawler().traverse(root, this);
-		properties.setProperty(getName(), "applied");
-	}
+  public void doUpdate() throws Exception {
+    root.getPageCrawler().traverse(root, this);
+    properties.setProperty(getName(), "applied");
+  }
 
-	public abstract void processPage(WikiPage currentPage) throws Exception;
+  public abstract void processPage(WikiPage currentPage) throws Exception;
 
-	public boolean shouldBeApplied() throws Exception
-	{
-		boolean usesFileSystem = root instanceof FileSystemPage;
-		boolean hasBeenApplied = properties.getProperty(getName()) != null;
+  public boolean shouldBeApplied() throws Exception {
+    boolean usesFileSystem = root instanceof FileSystemPage;
+    boolean hasBeenApplied = properties.getProperty(getName()) != null;
 
-		return usesFileSystem && !hasBeenApplied;
-	}
+    return usesFileSystem && !hasBeenApplied;
+  }
 
-	public String getSearchPattern() throws Exception
-	{
-		return ".*";
-	}
+  public String getSearchPattern() throws Exception {
+    return ".*";
+  }
 }

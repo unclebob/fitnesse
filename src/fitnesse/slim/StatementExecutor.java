@@ -5,8 +5,8 @@ import fitnesse.slim.converters.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +38,7 @@ public class StatementExecutor {
     Slim.addConverter(String[].class, new StringArrayConverter());
     Slim.addConverter(boolean[].class, new BooleanArrayConverter());
     Slim.addConverter(Boolean[].class, new BooleanArrayConverter());
-    Slim.addConverter(double[].class, new DoubleArrayConverter());  
+    Slim.addConverter(double[].class, new DoubleArrayConverter());
     Slim.addConverter(Double[].class, new DoubleArrayConverter());
 
   }

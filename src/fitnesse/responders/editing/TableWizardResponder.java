@@ -2,33 +2,30 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.responders.editing;
 
-import fitnesse.components.*;
+import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.CommandRunner;
 import fitnesse.wiki.WikiPage;
 
-public class TableWizardResponder extends EditResponder
-{
-	protected String createPageContent() throws Exception
-	{
-		String textAreaContent = (String) request.getInput("text");
-		String fixtureName = (String) request.getInput("fixture");
-		String template = createFixtureTableTemplate(fixtureName);
-		if(!template.equals(""))
-			template = "\n" + template;
-		return textAreaContent + template;
-	}
+public class TableWizardResponder extends EditResponder {
+  protected String createPageContent() throws Exception {
+    String textAreaContent = (String) request.getInput("text");
+    String fixtureName = (String) request.getInput("fixture");
+    String template = createFixtureTableTemplate(fixtureName);
+    if (!template.equals(""))
+      template = "\n" + template;
+    return textAreaContent + template;
+  }
 
-	private String createFixtureTableTemplate(String fixtureName) throws Exception
-	{
-		String commandLine = createCommandLine(page, fixtureName);
-		CommandRunner runner = new CommandRunner(commandLine, null);
-		runner.run();
-		return runner.getOutput() + runner.getError();
-	}
+  private String createFixtureTableTemplate(String fixtureName) throws Exception {
+    String commandLine = createCommandLine(page, fixtureName);
+    CommandRunner runner = new CommandRunner(commandLine, null);
+    runner.run();
+    return runner.getOutput() + runner.getError();
+  }
 
-	protected String createCommandLine(WikiPage page, String fixtureName) throws Exception
-	{
-		String classpath = new ClassPathBuilder().getClasspath(page);
+  protected String createCommandLine(WikiPage page, String fixtureName) throws Exception {
+    String classpath = new ClassPathBuilder().getClasspath(page);
 
-		return "java -cp " + classpath + " fitnesse.FixtureTemplateCreator " + fixtureName;
-	}
+    return "java -cp " + classpath + " fitnesse.FixtureTemplateCreator " + fixtureName;
+  }
 }

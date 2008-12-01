@@ -2,31 +2,25 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-public class MetaWidgetTest extends WidgetTestCase
-{
-	public void setUp() throws Exception
-	{
-	}
+public class MetaWidgetTest extends WidgetTestCase {
+  public void setUp() throws Exception {
+  }
 
-	public void tearDown() throws Exception
-	{
-	}
+  public void tearDown() throws Exception {
+  }
 
-	public void testRegexp() throws Exception
-	{
-		assertMatches(MetaWidget.REGEXP, "!meta some string");
-		assertMatches(MetaWidget.REGEXP, "!meta '''BoldWikiWord'''");
-	}
+  public void testRegexp() throws Exception {
+    assertMatches(MetaWidget.REGEXP, "!meta some string");
+    assertMatches(MetaWidget.REGEXP, "!meta '''BoldWikiWord'''");
+  }
 
-	public void testItalicWidgetRendersHtmlItalics() throws Exception
-	{
-		MetaWidget widget = new MetaWidget(new MockWidgetRoot(), "!meta text");
-		assertEquals("<span class=\"meta\">text</span>", widget.render());
-	}
+  public void testItalicWidgetRendersHtmlItalics() throws Exception {
+    MetaWidget widget = new MetaWidget(new MockWidgetRoot(), "!meta text");
+    assertEquals("<span class=\"meta\">text</span>", widget.render());
+  }
 
-	protected String getRegexp()
-	{
-		return MetaWidget.REGEXP;
-	}
+  protected String getRegexp() {
+    return MetaWidget.REGEXP;
+  }
 
 }

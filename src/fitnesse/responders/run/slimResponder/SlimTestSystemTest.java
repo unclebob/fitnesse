@@ -1,9 +1,9 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
-import fitnesse.wikitext.Utils;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.Utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -119,7 +119,7 @@ public class SlimTestSystemTest {
 
   @Test
   public void decisionTableWithNoExecuteDoesNotCountExceptionsForExecute() throws Exception {
-     getResultsForPageContents(
+    getResultsForPageContents(
       "|DT:fitnesse.slim.test.DummyDecisionTable|\n" +
         "|x?|\n" +
         "|1|\n"
@@ -129,7 +129,7 @@ public class SlimTestSystemTest {
 
   @Test
   public void decisionTableWithExecuteThatThrowsDoesShowsException() throws Exception {
-     getResultsForPageContents(
+    getResultsForPageContents(
       "|DT:fitnesse.slim.test.DecisionTableExecuteThrows|\n" +
         "|x?|\n" +
         "|1|\n"
@@ -260,7 +260,7 @@ public class SlimTestSystemTest {
 
   @Test
   public void nullStringReturned() throws Exception {
-     getResultsForPageContents("|fitnesse.slim.test.TestSlim|\n" +
+    getResultsForPageContents("|fitnesse.slim.test.TestSlim|\n" +
       "|nullString?|\n" +
       "|null|\n");
     assertTestResultsContain("!style_pass(!<null>!");

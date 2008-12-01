@@ -4,56 +4,48 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class VariableWidget extends ParentWidget
-{
-	public static final String REGEXP = "\\$\\{[\\w\\.]+\\}";
-	public static final Pattern pattern = Pattern.compile("\\$\\{([\\w\\.]+)\\}", Pattern.MULTILINE + Pattern.DOTALL);
-   
-	private String name = null;
-	private String renderedText;
-	private boolean rendered;
+public class VariableWidget extends ParentWidget {
+  public static final String REGEXP = "\\$\\{[\\w\\.]+\\}";
+  public static final Pattern pattern = Pattern.compile("\\$\\{([\\w\\.]+)\\}", Pattern.MULTILINE + Pattern.DOTALL);
 
-	public VariableWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-		{
-			name = match.group(1);
-		}
-	}
+  private String name = null;
+  private String renderedText;
+  private boolean rendered;
 
-	public String render() throws Exception
-	{
-		if(!rendered)
-			doRender();
-		return renderedText;
-	}
+  public VariableWidget(ParentWidget parent, String text) {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find()) {
+      name = match.group(1);
+    }
+  }
 
-	private void doRender() throws Exception
-	{
-		String value = parent.getVariable(name);
-		if(value != null)
-		{
-			addChildWidgets(value);
-			renderedText = childHtml();
-		}
-		else
-			renderedText = makeUndefinedVariableExpression(name);
-		rendered = true;
-	}
+  public String render() throws Exception {
+    if (!rendered)
+      doRender();
+    return renderedText;
+  }
 
-	private String makeUndefinedVariableExpression(String name) throws Exception
-	{
-		return HtmlUtil.metaText("undefined variable: " + name);
-	}
+  private void doRender() throws Exception {
+    String value = parent.getVariable(name);
+    if (value != null) {
+      addChildWidgets(value);
+      renderedText = childHtml();
+    } else
+      renderedText = makeUndefinedVariableExpression(name);
+    rendered = true;
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return "${" + name + "}";
-	}
+  private String makeUndefinedVariableExpression(String name) throws Exception {
+    return HtmlUtil.metaText("undefined variable: " + name);
+  }
+
+  public String asWikiText() throws Exception {
+    return "${" + name + "}";
+  }
 }
 
 

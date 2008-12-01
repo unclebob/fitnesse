@@ -4,36 +4,30 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-public class FixtureWidgetTest extends WidgetTestCase
-{
-	public void testFixtureWidgetRendersProperly() throws Exception
-	{
-		assertWidgetRendersToContain("!fixture some.FixtureName", "fixture: some.FixtureName");
-	}
+public class FixtureWidgetTest extends WidgetTestCase {
+  public void testFixtureWidgetRendersProperly() throws Exception {
+    assertWidgetRendersToContain("!fixture some.FixtureName", "fixture: some.FixtureName");
+  }
 
-	private void assertWidgetRendersToContain(final String text, final String substring)
-		throws Exception
-	{
-		WikiWidget widget = makeWidget(text);
-		String html = widget.render();
-		assertSubString(substring, html);
-	}
+  private void assertWidgetRendersToContain(final String text, final String substring)
+    throws Exception {
+    WikiWidget widget = makeWidget(text);
+    String html = widget.render();
+    assertSubString(substring, html);
+  }
 
-	private FixtureWidget makeWidget(final String text)
-		throws Exception
-	{
-		return new FixtureWidget(new MockWidgetRoot(), text);
-	}
+  private FixtureWidget makeWidget(final String text)
+    throws Exception {
+    return new FixtureWidget(new MockWidgetRoot(), text);
+  }
 
-	public void testAsWikiText() throws Exception
-	{
-		final String FIXTURE_WIDGET = "!fixture myFixture";
-		FixtureWidget w = new FixtureWidget(new MockWidgetRoot(), FIXTURE_WIDGET);
-		assertEquals(FIXTURE_WIDGET, w.asWikiText());
-	}
+  public void testAsWikiText() throws Exception {
+    final String FIXTURE_WIDGET = "!fixture myFixture";
+    FixtureWidget w = new FixtureWidget(new MockWidgetRoot(), FIXTURE_WIDGET);
+    assertEquals(FIXTURE_WIDGET, w.asWikiText());
+  }
 
-	protected String getRegexp()
-	{
-		return FixtureWidget.REGEXP;
-	}
+  protected String getRegexp() {
+    return FixtureWidget.REGEXP;
+  }
 }

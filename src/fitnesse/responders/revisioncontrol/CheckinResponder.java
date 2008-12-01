@@ -5,13 +5,13 @@ import fitnesse.wiki.FileSystemPage;
 
 public class CheckinResponder extends RevisionControlResponder {
 
-    public CheckinResponder() {
-        super(CHECKIN);
-    }
+  public CheckinResponder() {
+    super(CHECKIN);
+  }
 
-    @Override
-    protected void performOperation(FileSystemPage page) throws Exception {
-        page.execute(CHECKIN);
-    }
+  @Override
+  protected void performOperation(FileSystemPage page) throws Exception {
+    page.execute(CHECKIN);
+  }
 
 }

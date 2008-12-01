@@ -8,33 +8,28 @@ package fit;
 
 import junit.framework.TestCase;
 
-public class FixtureLoaderTest extends TestCase
-{
+public class FixtureLoaderTest extends TestCase {
   private FixtureLoader fixtureLoader;
 
-  protected void setUp() throws Exception
-  {
+  protected void setUp() throws Exception {
     fixtureLoader = new FixtureLoader();
   }
 
   public void testLoadFixturesFromPreviouslyRememberedPackages()
-      throws Throwable
-  {
+    throws Throwable {
     Fixture f1 = fixtureLoader.disgraceThenLoad("fit.FixtureOne");
     assertEquals("fit.FixtureOne", f1.getClass().getName());
     Fixture f2 = fixtureLoader.disgraceThenLoad("FixtureTwo");
     assertEquals("fit.FixtureTwo", f2.getClass().getName());
   }
 
-  public void testLoadFixturesWithGracefulName() throws Throwable
-  {
+  public void testLoadFixturesWithGracefulName() throws Throwable {
     fixtureLoader.disgraceThenLoad("fit.FixtureOne");
     Fixture f2 = fixtureLoader.disgraceThenLoad("fixture two");
     assertEquals("fit.FixtureTwo", f2.getClass().getName());
   }
 
-  public void testLoadFixturesWithFixtureImplied() throws Throwable
-  {
+  public void testLoadFixturesWithFixtureImplied() throws Throwable {
     fixtureLoader.disgraceThenLoad("fit.TheThirdFixture");
     Fixture fixture = fixtureLoader.disgraceThenLoad("the third");
     assertEquals("fit.TheThirdFixture", fixture.getClass().getName());

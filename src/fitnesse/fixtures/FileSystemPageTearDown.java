@@ -6,12 +6,10 @@ import fit.Fixture;
 
 import java.io.File;
 
-public class FileSystemPageTearDown extends Fixture
-{
-	public FileSystemPageTearDown() throws Exception
-	{
-		fitnesse.util.FileUtil.deleteFileSystemDirectory(new File(FitnesseFixtureContext.baseDir));
-		FitnesseFixtureContext.root = null;
+public class FileSystemPageTearDown extends Fixture {
+  public FileSystemPageTearDown() throws Exception {
+    fitnesse.util.FileUtil.deleteFileSystemDirectory(new File(FitnesseFixtureContext.baseDir));
+    FitnesseFixtureContext.root = null;
 
-	}
+  }
 }

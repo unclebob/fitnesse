@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class ListConverter implements Converter {
   public String toString(Object o) {
     if (o == null) return "null";
-    return o.toString(); 
+    return o.toString();
   }
 
   public Object fromString(String arg) {
@@ -19,7 +19,7 @@ public class ListConverter implements Converter {
     if (arg.startsWith("["))
       arg = arg.substring(1);
     if (arg.endsWith("]"))
-      arg = arg.substring(0, arg.length()-1);
+      arg = arg.substring(0, arg.length() - 1);
     String[] strings = arg.split(",");
     for (int i = 0; i < strings.length; i++)
       strings[i] = strings[i].trim();

@@ -4,13 +4,20 @@ package fitnesse.fixtures;
 
 import fit.ColumnFixture;
 
-public class ColumnFixtureTestFixture extends ColumnFixture
-{
-	public int input;
-	public int output() {return input;}
+public class ColumnFixtureTestFixture extends ColumnFixture {
+  public int input;
 
-	public Integer integerInput;
-	public Integer integerOutput() { return integerInput; }
-	
-	public boolean exception() throws Exception {throw new Exception("I thowed up");}
+  public int output() {
+    return input;
+  }
+
+  public Integer integerInput;
+
+  public Integer integerOutput() {
+    return integerInput;
+  }
+
+  public boolean exception() throws Exception {
+    throw new Exception("I thowed up");
+  }
 }

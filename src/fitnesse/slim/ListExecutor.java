@@ -1,9 +1,9 @@
 package fitnesse.slim;
 
+import fitnesse.util.ListUtility;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import fitnesse.util.ListUtility;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.

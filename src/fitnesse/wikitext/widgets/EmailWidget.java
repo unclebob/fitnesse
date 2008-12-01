@@ -6,32 +6,28 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-public class EmailWidget extends WikiWidget
-{
+public class EmailWidget extends WikiWidget {
 
-	public static final String REGEXP = "[\\w-_.]+@[\\w-_.]+\\.[\\w-_.]+";
+  public static final String REGEXP = "[\\w-_.]+@[\\w-_.]+\\.[\\w-_.]+";
 
-	private String emailAddress;
+  private String emailAddress;
 
-	public EmailWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-		emailAddress = text;
-	}
+  public EmailWidget(ParentWidget parent, String text) {
+    super(parent);
+    emailAddress = text;
+  }
 
-	public String render() throws Exception
-	{
-		StringBuffer html = new StringBuffer("<a href=\"mailto:");
-		html.append(emailAddress);
-		html.append("\">");
-		html.append(emailAddress);
-		html.append("</a>");
+  public String render() throws Exception {
+    StringBuffer html = new StringBuffer("<a href=\"mailto:");
+    html.append(emailAddress);
+    html.append("\">");
+    html.append(emailAddress);
+    html.append("</a>");
 
-		return html.toString();
-	}
+    return html.toString();
+  }
 
-	public String asWikiText()
-	{
-		return emailAddress;
-	}
+  public String asWikiText() {
+    return emailAddress;
+  }
 }

@@ -1,6 +1,6 @@
 package fitnesse.slim.test;
 
-import static fitnesse.util.ListUtility.*;
+import static fitnesse.util.ListUtility.list;
 
 import java.util.List;
 

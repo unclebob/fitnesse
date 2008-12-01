@@ -2,44 +2,40 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import fitnesse.html.HtmlUtil;
 
-public class VariableDefinitionWidget extends ParentWidget
-{
-	public static final String REGEXP = "^!define [\\w\\.]+ +(?:(?:\\{[^}]*\\})|(?:\\([^)]*\\)))";
-	private static final Pattern pattern =
-	  Pattern.compile("^!define ([\\w\\.]+) +([\\{\\(])(.*)[\\}\\)]",
-		                Pattern.DOTALL + Pattern.MULTILINE);
-   
-	public String name;
-	public String value;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-	public VariableDefinitionWidget(ParentWidget parent, String text) throws Exception
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-		{
-			name = match.group(1);
-			value = match.group(3);
-		}
-	}
+public class VariableDefinitionWidget extends ParentWidget {
+  public static final String REGEXP = "^!define [\\w\\.]+ +(?:(?:\\{[^}]*\\})|(?:\\([^)]*\\)))";
+  private static final Pattern pattern =
+    Pattern.compile("^!define ([\\w\\.]+) +([\\{\\(])(.*)[\\}\\)]",
+      Pattern.DOTALL + Pattern.MULTILINE);
 
-	public String render() throws Exception
-	{
-		this.parent.addVariable(name, value);
-		return HtmlUtil.metaText("variable defined: " + name + "=" + value);
-	}
+  public String name;
+  public String value;
 
-	public String asWikiText() throws Exception
-	{
-		String text = "!define " + name + " ";
-		if(value.indexOf("{") == -1)
-			text += "{" + value + "}";
-		else
-			text += "(" + value + ")";
-		return text;
-	}
+  public VariableDefinitionWidget(ParentWidget parent, String text) throws Exception {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find()) {
+      name = match.group(1);
+      value = match.group(3);
+    }
+  }
+
+  public String render() throws Exception {
+    this.parent.addVariable(name, value);
+    return HtmlUtil.metaText("variable defined: " + name + "=" + value);
+  }
+
+  public String asWikiText() throws Exception {
+    String text = "!define " + name + " ";
+    if (value.indexOf("{") == -1)
+      text += "{" + value + "}";
+    else
+      text += "(" + value + ")";
+    return text;
+  }
 }

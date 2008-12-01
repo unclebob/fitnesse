@@ -6,11 +6,9 @@ import fit.Fixture;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.FileSystemPage;
 
-public class FileSystemPageSetUp extends Fixture
-{
-	public FileSystemPageSetUp() throws Exception
-	{
-		FitnesseFixtureContext.root = FileSystemPage.makeRoot(FitnesseFixtureContext.baseDir, "RooT");
-		FitnesseFixtureContext.responderFactory = new ResponderFactory(FitnesseFixtureContext.baseDir);
-	}
+public class FileSystemPageSetUp extends Fixture {
+  public FileSystemPageSetUp() throws Exception {
+    FitnesseFixtureContext.root = FileSystemPage.makeRoot(FitnesseFixtureContext.baseDir, "RooT");
+    FitnesseFixtureContext.responderFactory = new ResponderFactory(FitnesseFixtureContext.baseDir);
+  }
 }

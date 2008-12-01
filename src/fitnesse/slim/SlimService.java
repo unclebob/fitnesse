@@ -1,7 +1,7 @@
 package fitnesse.slim;
 
-import fitnesse.socketservice.SocketService;
 import fitnesse.components.CommandLine;
+import fitnesse.socketservice.SocketService;
 
 import java.util.Arrays;
 
@@ -32,7 +32,7 @@ public class SlimService extends SocketService {
   public SlimService(int port) throws Exception {
     this(port, false);
   }
-  
+
   public SlimService(int port, boolean verbose) throws Exception {
     super(port, new SlimServer(verbose));
     instance = this;

@@ -5,8 +5,8 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.run.ExecutionLog;
-import fitnesse.responders.run.TestSystemListener;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystemListener;
 import fitnesse.wiki.PageData;
 
 /*

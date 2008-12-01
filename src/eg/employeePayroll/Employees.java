@@ -4,15 +4,13 @@ package eg.employeePayroll;
 
 import fitnesse.fixtures.RowEntryFixture;
 
-public class Employees extends RowEntryFixture
-{
+public class Employees extends RowEntryFixture {
   public int id;
   public String name;
   public String address;
   public double salary;
 
-  public void enterRow() throws Exception
-  {
+  public void enterRow() throws Exception {
 
   }
 }

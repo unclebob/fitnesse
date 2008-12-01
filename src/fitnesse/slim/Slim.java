@@ -1,7 +1,7 @@
 package fitnesse.slim;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Slim {
   static Map<Class<?>, Converter> converters = new HashMap<Class<?>, Converter>();

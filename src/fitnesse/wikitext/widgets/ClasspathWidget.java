@@ -8,40 +8,33 @@ import fitnesse.wikitext.WidgetBuilder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgument
-{
-	public static final String REGEXP = "^!path [^\r\n]*";
-	private static final Pattern pattern = Pattern.compile("^!path (.*)");
-	private String pathText;
+public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgument {
+  public static final String REGEXP = "^!path [^\r\n]*";
+  private static final Pattern pattern = Pattern.compile("^!path (.*)");
+  private String pathText;
 
-	public ClasspathWidget(ParentWidget parent, String text) throws Exception
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-		{
-			pathText = match.group(1);
-			addChildWidgets(pathText);
-		}
-	}
+  public ClasspathWidget(ParentWidget parent, String text) throws Exception {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find()) {
+      pathText = match.group(1);
+      addChildWidgets(pathText);
+    }
+  }
 
-	public WidgetBuilder getBuilder()
-	{
-		return WidgetBuilder.variableEvaluatorWidgetBuilder;
-	}
+  public WidgetBuilder getBuilder() {
+    return WidgetBuilder.variableEvaluatorWidgetBuilder;
+  }
 
-	public String render() throws Exception
-	{
-		return HtmlUtil.metaText("classpath: " + childHtml());
-	}
+  public String render() throws Exception {
+    return HtmlUtil.metaText("classpath: " + childHtml());
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return "!path " + pathText;
-	}
+  public String asWikiText() throws Exception {
+    return "!path " + pathText;
+  }
 
-	public String getText() throws Exception
-	{
-		return childHtml();
-	}
+  public String getText() throws Exception {
+    return childHtml();
+  }
 }

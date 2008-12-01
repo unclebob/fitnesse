@@ -2,7 +2,6 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.authentication;
 
-public interface PasswordCipher
-{
-	public String encrypt(String password) throws Exception;
+public interface PasswordCipher {
+  public String encrypt(String password) throws Exception;
 }

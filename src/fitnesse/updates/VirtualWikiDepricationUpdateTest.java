@@ -2,22 +2,22 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.updates;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
-public class VirtualWikiDepricationUpdateTest extends UpdateTestCase
-{
-	protected Update makeUpdate()
-	{
-		return new VirtualWikiDeprecationUpdate(updater);
-	}
+public class VirtualWikiDepricationUpdateTest extends UpdateTestCase {
+  protected Update makeUpdate() {
+    return new VirtualWikiDeprecationUpdate(updater);
+  }
 
-	public void testDoVisiting() throws Exception
-	{
-		WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "!virtualwiki http://some.url");
-		PageTraversingUpdate update2 = (PageTraversingUpdate) update;
-		update2.processPage(page);
+  public void testDoVisiting() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "!virtualwiki http://some.url");
+    PageTraversingUpdate update2 = (PageTraversingUpdate) update;
+    update2.processPage(page);
 
-		PageData data = page.getData();
-		assertEquals("http://some.url", data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));
-	}
+    PageData data = page.getData();
+    assertEquals("http://some.url", data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));
+  }
 }

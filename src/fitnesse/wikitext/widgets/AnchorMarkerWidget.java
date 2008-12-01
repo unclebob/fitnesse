@@ -5,26 +5,24 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.WikiWidget;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class AnchorMarkerWidget extends WikiWidget
-{
-	public static final String REGEXP = ".#\\w+";
-	private static final Pattern pattern = Pattern.compile(".#(\\w*)");
+public class AnchorMarkerWidget extends WikiWidget {
+  public static final String REGEXP = ".#\\w+";
+  private static final Pattern pattern = Pattern.compile(".#(\\w*)");
 
-	private String text, anchorName;
+  private String text, anchorName;
 
-	public AnchorMarkerWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-		this.text = text;
-		Matcher match = pattern.matcher(this.text);
-		if(match.find())
-			anchorName = match.group(1);
-	}
+  public AnchorMarkerWidget(ParentWidget parent, String text) {
+    super(parent);
+    this.text = text;
+    Matcher match = pattern.matcher(this.text);
+    if (match.find())
+      anchorName = match.group(1);
+  }
 
-	public String render() throws Exception
-	{
-		return HtmlUtil.makeLink("#" + anchorName, ".#" + anchorName).html();
-	}
+  public String render() throws Exception {
+    return HtmlUtil.makeLink("#" + anchorName, ".#" + anchorName).html();
+  }
 }

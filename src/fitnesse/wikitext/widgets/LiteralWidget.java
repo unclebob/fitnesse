@@ -4,33 +4,28 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class LiteralWidget extends WikiWidget
-{
-   public static final String REGEXP = "!lit\\?\\d+\\?";
-   public static final Pattern pattern = Pattern.compile("!lit\\?(\\d+)\\?", Pattern.MULTILINE + Pattern.DOTALL);
-	private int literalNumber;
+public class LiteralWidget extends WikiWidget {
+  public static final String REGEXP = "!lit\\?\\d+\\?";
+  public static final Pattern pattern = Pattern.compile("!lit\\?(\\d+)\\?", Pattern.MULTILINE + Pattern.DOTALL);
+  private int literalNumber;
 
-	public LiteralWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-		{
-			literalNumber = Integer.parseInt(match.group(1));
-		}
-	}
+  public LiteralWidget(ParentWidget parent, String text) {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find()) {
+      literalNumber = Integer.parseInt(match.group(1));
+    }
+  }
 
-	public String render() throws Exception
-	{
-		return parent.getLiteral(literalNumber);
-	}
+  public String render() throws Exception {
+    return parent.getLiteral(literalNumber);
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return "!-" + parent.getLiteral(literalNumber) + "-!";
-	}
+  public String asWikiText() throws Exception {
+    return "!-" + parent.getLiteral(literalNumber) + "-!";
+  }
 }
 

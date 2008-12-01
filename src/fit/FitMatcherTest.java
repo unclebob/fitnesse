@@ -5,35 +5,28 @@ package fit;
 
 import junit.framework.TestCase;
 
-public class FitMatcherTest extends TestCase
-{
-  private void assertMatch(String expression, Number parameter) throws Exception
-  {
+public class FitMatcherTest extends TestCase {
+  private void assertMatch(String expression, Number parameter) throws Exception {
     FitMatcher matcher = new FitMatcher(expression, parameter);
     assertTrue(matcher.matches());
   }
 
-  private void assertNoMatch(String expression, Number parameter) throws Exception
-  {
+  private void assertNoMatch(String expression, Number parameter) throws Exception {
     FitMatcher matcher = new FitMatcher(expression, parameter);
     assertFalse(matcher.matches());
   }
 
-  private void assertException(String expression, Object parameter)
-  {
+  private void assertException(String expression, Object parameter) {
     FitMatcher matcher = new FitMatcher(expression, parameter);
-    try
-    {
+    try {
       matcher.matches();
       fail();
     }
-    catch(Exception e)
-    {
+    catch (Exception e) {
     }
   }
 
-  public void testSimpleMatches() throws Exception
-  {
+  public void testSimpleMatches() throws Exception {
     assertMatch("_<3", new Integer(2));
     assertNoMatch("_<3", new Integer(3));
     assertMatch("_<4", new Integer(3));
@@ -51,22 +44,19 @@ public class FitMatcherTest extends TestCase
     assertNoMatch(">=2", new Double(1));
   }
 
-  public void testExceptions() throws Exception
-  {
+  public void testExceptions() throws Exception {
     assertException("X", new Integer(1));
     assertException("<32", "xxx");
   }
 
-  public void testMessage() throws Exception
-  {
+  public void testMessage() throws Exception {
     FitMatcher matcher = new FitMatcher("_>25", new Integer(3));
     assertEquals("<b>3</b>>25", matcher.message());
     matcher = new FitMatcher(" < 32", new Integer(5));
     assertEquals("<b>5</b> < 32", matcher.message());
   }
 
-  public void testTrichotomy() throws Exception
-  {
+  public void testTrichotomy() throws Exception {
     assertMatch("5<_<32", new Integer(8));
     assertNoMatch("5<_<32", new Integer(5));
     assertNoMatch("5<_<32", new Integer(32));

@@ -11,10 +11,10 @@ public class BooleanConverter implements Converter {
       arg.equalsIgnoreCase("true") ||
         arg.equalsIgnoreCase("yes") ||
         arg.equals(TRUE)
-      );
+    );
   }
 
   public String toString(Object o) {
-    return ((Boolean) o ) ? TRUE : FALSE;
+    return ((Boolean) o) ? TRUE : FALSE;
   }
 }

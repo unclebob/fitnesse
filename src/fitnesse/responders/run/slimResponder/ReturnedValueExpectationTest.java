@@ -1,16 +1,15 @@
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.wikitext.Utils;
+import fitnesse.wikitext.widgets.TableWidget;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-
-import fitnesse.wikitext.widgets.TableWidget;
-import fitnesse.wikitext.Utils;
 
 public class ReturnedValueExpectationTest {
   private String unescape(String x) {
     return Utils.unescapeWiki(Utils.unescapeHTML(x));
   }
-  
+
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
     WikiWidgetTable t = new WikiWidgetTable(new TableWidget(null, ""));
     SlimTable slimTable = new DecisionTable(t, "id");

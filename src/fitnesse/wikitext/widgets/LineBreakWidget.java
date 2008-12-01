@@ -4,24 +4,20 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
-public class LineBreakWidget extends WikiWidget
-{
-	public static final String REGEXP = "(?:(?:\r\n)|\n|\r)";
+public class LineBreakWidget extends WikiWidget {
+  public static final String REGEXP = "(?:(?:\r\n)|\n|\r)";
 
-	public LineBreakWidget(ParentWidget parent, String text)
-	{
-		super(parent);
-	}
+  public LineBreakWidget(ParentWidget parent, String text) {
+    super(parent);
+  }
 
-	public String render() throws Exception
-	{
-		return "<br/>";
-	}
+  public String render() throws Exception {
+    return "<br/>";
+  }
 
-	public String asWikiText() throws Exception
-	{
-		return "\n";
-	}
+  public String asWikiText() throws Exception {
+    return "\n";
+  }
 
 }
 

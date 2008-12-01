@@ -3,13 +3,16 @@
 package fitnesse.http;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 public abstract class Response {
 
   public enum Format {
     XML, HTML
   }
+
   public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 
   protected static final String CRLF = "\r\n";

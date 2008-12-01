@@ -92,6 +92,6 @@ public class TableWidgetTest extends WidgetTestCase {
   public void testCanBuildWikiTextFromTestTable() throws Exception {
     String testTable = "!|a|b|\n|c|d|\n";
     TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
-    assertEquals(testTable, table.asWikiText());    
+    assertEquals(testTable, table.asWikiText());
   }
 }

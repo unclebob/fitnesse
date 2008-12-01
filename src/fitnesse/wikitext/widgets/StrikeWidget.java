@@ -2,33 +2,31 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // created by Jason Sypher
 
-public class StrikeWidget extends ParentWidget
-{
-	public static final String REGEXP = "--(?:[^-].+?)--";
-	private static final Pattern pattern = Pattern.compile("--(.+?)--", Pattern.MULTILINE + Pattern.DOTALL);
+public class StrikeWidget extends ParentWidget {
+  public static final String REGEXP = "--(?:[^-].+?)--";
+  private static final Pattern pattern = Pattern.compile("--(.+?)--", Pattern.MULTILINE + Pattern.DOTALL);
 
 // The following regexp is intersting becuase each addition char
 // in the string to match would double the time it took to parse.
 //	public static final String REGEXP = "--(?:(?:[^-]+[-]?[^-]+)+)--";
 
-	public StrikeWidget(ParentWidget parent, String text) throws Exception
-	{
-		super(parent);
-		Matcher match = pattern.matcher(text);
-		if(match.find())
-			addChildWidgets(match.group(1));
-	}
+  public StrikeWidget(ParentWidget parent, String text) throws Exception {
+    super(parent);
+    Matcher match = pattern.matcher(text);
+    if (match.find())
+      addChildWidgets(match.group(1));
+  }
 
-	public String render() throws Exception
-	{
-		StringBuffer strike = new StringBuffer("<span class=\"strike\">");
-		strike.append(childHtml()).append("</span>");
-		return strike.toString();
+  public String render() throws Exception {
+    StringBuffer strike = new StringBuffer("<span class=\"strike\">");
+    strike.append(childHtml()).append("</span>");
+    return strike.toString();
 
-	}
+  }
 
 }
