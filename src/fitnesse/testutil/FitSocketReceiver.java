@@ -22,9 +22,10 @@ public class FitSocketReceiver
 		this.dealer = dealer;
 	}
 
-	public void receiveSocket() throws Exception
+	public int receiveSocket() throws Exception
 	{
 		serverSocket = new ServerSocket(port);
+		port = serverSocket.getLocalPort();
 		new Thread()
 		{
 			public void run()
@@ -47,6 +48,7 @@ public class FitSocketReceiver
 				}
 			}
 		}.start();
+		return port;
 	}
 
 	protected void dealSocket(int ticket) throws Exception

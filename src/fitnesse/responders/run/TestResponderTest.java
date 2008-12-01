@@ -27,7 +27,6 @@ public class TestResponderTest {
   private MockRequest request;
   private TestResponder responder;
   private FitNesseContext context;
-  private int port = 9123;
   private Response response;
   private MockResponseSender sender;
   private WikiPage testPage;
@@ -46,10 +45,9 @@ public class TestResponderTest {
     responder = new TestResponder();
     responder.setFastTest(true);
     context = new FitNesseContext(root);
-    context.port = port;
 
-    receiver = new FitSocketReceiver(port, context.socketDealer);
-    receiver.receiveSocket();
+    receiver = new FitSocketReceiver(0, context.socketDealer);
+    context.port = receiver.receiveSocket();
   }
 
   @After

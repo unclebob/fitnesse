@@ -29,7 +29,6 @@ public class SuiteResponderTest {
   private SuiteResponder responder;
   private WikiPage root;
   private WikiPage suite;
-  private int port = 9123;
   private FitNesseContext context;
   private FitSocketReceiver receiver;
   private WikiPage testPage;
@@ -60,9 +59,8 @@ public class SuiteResponderTest {
     responder.setFastTest(true);
     responder.page = suite;
     context = new FitNesseContext(root);
-    context.port = port;
 
-    receiver = new FitSocketReceiver(port, context.socketDealer);
+    receiver = new FitSocketReceiver(0, context.socketDealer);
   }
 
   private WikiPage addTestToSuite(String name, String content) throws Exception {
@@ -83,7 +81,7 @@ public class SuiteResponderTest {
   }
 
   private String runSuite() throws Exception {
-    receiver.receiveSocket();
+    context.port = receiver.receiveSocket();
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender(response);
     String results = sender.sentData();
