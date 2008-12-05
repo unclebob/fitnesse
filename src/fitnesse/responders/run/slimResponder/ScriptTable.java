@@ -143,16 +143,14 @@ public class ScriptTable extends SlimTable {
     protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
         return failMessage(literalize(originalValue), "Returned null value.");
-      else if (value.equals(VoidConverter.VOID_TAG))
+      else if (value.equals(VoidConverter.VOID_TAG) || value.equals("null"))
         return literalize(originalValue);
       else if (value.equals(BooleanConverter.FALSE))
         return fail(literalize(originalValue));
       else if (value.equals(BooleanConverter.TRUE))
         return pass(literalize(originalValue));
       else
-        return failMessage(literalize(originalValue),
-          String.format(" returned unexpected value: [%s]", literalize(value))
-        );
+        return literalize(originalValue);
     }
   }
 

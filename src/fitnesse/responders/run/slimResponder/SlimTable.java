@@ -1,7 +1,6 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.responders.run.TestSummary;
-import fitnesse.slim.converters.VoidConverter;
 import static fitnesse.util.ListUtility.list;
 
 import static java.lang.Character.isLetterOrDigit;
@@ -222,6 +221,7 @@ public abstract class SlimTable {
   }
 
   protected String error(String value) {
+    testSummary.exceptions++;
     return String.format("!style_error(%s)", value);
   }
 
@@ -388,7 +388,8 @@ public abstract class SlimTable {
       String originalContent = table.getCellContents(col, row);
       String evaluationMessage;
       evaluationMessage = evaluationMessage(value, originalContent);
-      table.setCell(col, row, evaluationMessage);
+      if (evaluationMessage != null)
+        table.setCell(col, row, evaluationMessage);
     }
 
     private String evaluationMessage(String value, String originalContent) {
@@ -472,10 +473,17 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      if (VoidConverter.VOID_TAG.equals(value))
-        return literalize(replaceSymbolsWithFullExpansion(originalValue));
-      else
-        return String.format("!style_error(Void expected but was: %s)", literalize(value));
+      return literalize(replaceSymbolsWithFullExpansion(originalValue));
+    }
+  }
+
+  class SilentReturnExpectation extends Expectation {
+    public SilentReturnExpectation(int instructionNumber, int col, int row) {
+      super(null, instructionNumber, col, row);
+    }
+
+    protected String createEvaluationMessage(String value, String originalValue) {
+      return null;
     }
   }
 

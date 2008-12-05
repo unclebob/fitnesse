@@ -91,7 +91,9 @@ public class StatementExecutor {
     Class<?> k = getClass(className);
     if (k != null)
       return k;
-    for (String path : paths) {
+    List<String> reversedPaths = new ArrayList<String>(paths);
+    Collections.reverse(reversedPaths);
+    for (String path : reversedPaths) {
       k = getClass(path + "." + className);
       if (k != null)
         return k;

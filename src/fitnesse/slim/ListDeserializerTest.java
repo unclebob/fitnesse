@@ -22,7 +22,7 @@ public class ListDeserializerTest {
   }
 
   @Test(expected = ListDeserializer.SyntaxError.class)
-  public void cantDeseriailzeNullString() throws Exception {
+  public void cantDeserializeNullString() throws Exception {
     ListDeserializer.deserialize(null);
   }
 

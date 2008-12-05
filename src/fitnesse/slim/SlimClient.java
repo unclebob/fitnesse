@@ -31,10 +31,23 @@ public class SlimClient {
   }
 
   public void connect() throws Exception {
-    client = new Socket(hostName, port);
+    for (int tries = 0; tryConnect() == false; tries++) {
+      if (tries > 100)
+        throw new SlimError("Could not connect to socket after many retries");
+      Thread.sleep(50);
+    }
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
     slimServerVersion = reader.readLine();
+  }
+
+  private boolean tryConnect() {
+    try {
+      client = new Socket(hostName, port);
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
   }
 
   public String getVersion() {

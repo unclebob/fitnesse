@@ -23,7 +23,7 @@ public class SlimServiceTest {
     slimClient.connect();
   }
 
-  private void createSlimService() throws Exception {
+  protected void createSlimService() throws Exception {
     while (!tryCreateSlimService())
       Thread.sleep(10);
   }
@@ -39,6 +39,10 @@ public class SlimServiceTest {
 
   @After
   public void after() throws Exception {
+    teardown();
+  }
+
+  protected void teardown() throws Exception {
     slimClient.sendBye();
     slimClient.close();
   }
@@ -61,8 +65,12 @@ public class SlimServiceTest {
   }
 
   private void addImportAndMake() {
-    statements.add(list("i1", "import", "fitnesse.slim.test"));
+    statements.add(list("i1", "import", getImport()));
     statements.add(list("m1", "make", "testSlim", "TestSlim"));
+  }
+
+  protected String getImport() {
+    return "fitnesse.slim.test";
   }
 
   @Test
@@ -101,7 +109,7 @@ public class SlimServiceTest {
     addImportAndMake();
     statements.add(list("id", "call", "testSlim", "noSuchFunction"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertContainsException("message:<<NO_METHOD_IN_CLASS noSuchFunction[0] fitnesse.slim.test.TestSlim.>>", "id", results);
+    assertContainsException("message:<<NO_METHOD_IN_CLASS", "id", results);
   }
 
   private void assertContainsException(String message, String id, Map<String, Object> results) {
@@ -113,7 +121,7 @@ public class SlimServiceTest {
   public void makeClassThatDoesntExist() throws Exception {
     statements.add(list("m1", "make", "me", "NoSuchClass"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertContainsException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR NoSuchClass[0]>>", "m1", results);
+    assertContainsException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR", "m1", results);
   }
 
   @Test
@@ -121,7 +129,7 @@ public class SlimServiceTest {
     addImportAndMake();
     statements.add(list("id", "call", "noInstance", "f"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertContainsException("message:<<NO_INSTANCE noInstance.>>", "id", results);
+    assertContainsException("message:<<NO_INSTANCE", "id", results);
   }
 
   @Test

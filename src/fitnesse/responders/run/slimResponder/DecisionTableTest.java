@@ -126,8 +126,10 @@ public class DecisionTableTest {
       list(
         list("decisionTable_id_0", "OK"),
         list("decisionTable_id_1", VoidConverter.VOID_TAG),
+        list("decisionTable_id_2", VoidConverter.VOID_TAG),
         list("decisionTable_id_3", "5"),
         list("decisionTable_id_4", VoidConverter.VOID_TAG),
+        list("decisionTable_id_5", VoidConverter.VOID_TAG),
         list("decisionTable_id_6", "5")
       )
     );
@@ -149,8 +151,10 @@ public class DecisionTableTest {
       list(
         list("decisionTable_id_0", "OK"),
         list("decisionTable_id_1", VoidConverter.VOID_TAG),
+        list("decisionTable_id_2", VoidConverter.VOID_TAG),
         list("decisionTable_id_3", "5"),
         list("decisionTable_id_4", VoidConverter.VOID_TAG),
+        list("decisionTable_id_5", VoidConverter.VOID_TAG),
         list("decisionTable_id_6", "5")
       )
     );

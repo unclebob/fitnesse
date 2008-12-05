@@ -210,6 +210,17 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void actionReturningNullHasNoEffectOnColor() throws Exception {
+    assertScriptResults("|func|\n",
+      list(
+        list("scriptTable_id_0", "null")
+      ),
+      "|!<Script>!|\n" +
+        "|!<func>!|\n"
+    );
+  }
+
+  @Test
   public void trueActionPasses() throws Exception {
     assertScriptResults("|func|\n",
       list(

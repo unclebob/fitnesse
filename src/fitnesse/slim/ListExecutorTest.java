@@ -81,6 +81,14 @@ public class ListExecutorTest {
   }
 
   @Test
+  public void oneFunctionCallToShowThatLaterImportsTakePrecedence() throws Exception {
+    statements.add(0,list("i2", "import", "fitnesse.slim.test.testSlimInThisPackageShouldNotBeTheOneUsed"));
+    statements.add(list("id", "call", "testSlim", "returnString"));
+    expectedResults.add(0, list("i2", "OK"));
+    respondsWith(list(list("id", "string")));
+  }
+
+  @Test
   public void canPassArgumentsToConstructor() throws Exception {
     statements.add(list("m2", "make", "testSlim2", "TestSlim", "3"));
     statements.add(list("c1", "call", "testSlim2", "returnConstructorArg"));

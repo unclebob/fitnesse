@@ -266,5 +266,14 @@ public class SlimTestSystemTest {
     assertTestResultsContain("!style_pass(!<null>!");
   }
 
+  @Test
+  public void reportableExceptionsAreReported() throws Exception {
+    getResultsForPageContents(
+      "|fitnesse.slim.test.ExecuteThrowsReportableException|\n" +
+        "|x|\n" +
+        "|1|\n");
+    assertTestResultsContain("A Reportable Exception");
+  }
+
 
 }
