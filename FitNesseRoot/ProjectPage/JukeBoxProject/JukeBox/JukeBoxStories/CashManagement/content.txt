@@ -1,0 +1,12 @@
+|script|
+|check|cash balance|0.0|
+|deposit|.25|
+|check|cash balance|0.25|
+|deposit|.25|
+|check|cash balance|0.5|
+|deposit|1.0|
+|check|cash balance|1.5|
+|check|deposits|[0.25, 0.25, 1.0]|
+|reset cash|
+|check|cash balance|0.0|
+|check|deposits|[]|

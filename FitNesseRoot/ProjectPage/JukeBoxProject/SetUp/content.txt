@@ -1,0 +1,6 @@
+|Import|
+|jukebox.fixtures|
+
+|Script|
+|start|juke box|
+

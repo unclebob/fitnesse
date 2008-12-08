@@ -1,3 +1,6 @@
+|RecentChanges||07:33:28 Mon, Dec 08, 2008|
+|ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PlayThreeSongs||13:20:00 Sun, Dec 07, 2008|
+|ProjectPage.JukeBoxProject.JukeBox.QueryList||10:15:30 Sun, Dec 07, 2008|
 |JunkParent.RubyTests.JukeBox.JukeBox.JukeBoxStories.CashManagement||14:32:23 Fri, Dec 05, 2008|
 |JunkParent.RubyTests.JukeBox.SuiteTearDown||10:30:27 Fri, Dec 05, 2008|
 |JunkParent.RubyTests.JukeBox.SuiteSetUp||10:30:11 Fri, Dec 05, 2008|
@@ -95,6 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestWikiWordSyntax||08:13:11 Sun, Oct 26, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestVariablesFromSystemProperties||08:12:25 Sun, Oct 26, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestVariables||08:11:59 Sun, Oct 26, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestTheXrefWidget||08:11:10 Sun, Oct 26, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestTables||08:09:35 Sun, Oct 26, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestSubList||08:08:40 Sun, Oct 26, 2008|

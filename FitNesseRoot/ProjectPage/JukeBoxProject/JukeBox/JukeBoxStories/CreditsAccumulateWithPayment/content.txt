@@ -1,0 +1,15 @@
+As you deposit money, your credits accumulate
+
+|script|
+|start|Juke Box|
+|check|credits|0|
+|deposit|.25|
+|check|credits|1|
+|deposit|.25|
+|check|credits|${=1+1=}|
+|deposit|1.00|
+|check|credits|${=1+1+5=}|
+|deposit|5.00|
+|check|credits|${=1+1+5+25=}|
+|deposit|10.00|
+|check|credits|${=1+1+5+25+60=}|

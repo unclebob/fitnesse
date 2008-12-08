@@ -1,0 +1,5 @@
+ * Use HTML instead of wiki text in Slim Tables.
+ * Check and Show should both allow $X= symbol assignments.
+ * Scenarios for Composed Tests.
+ * Some widget or mechanism to allow test suites to be composed of external HTML files (i.e. not in the wiki).
+ * Allow tests and suites from foreign wikis.

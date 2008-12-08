@@ -1,0 +1,4 @@
+!define TEST_SYSTEM {fit}
+
+!|fitnesse.testutil.PassFixture|
+

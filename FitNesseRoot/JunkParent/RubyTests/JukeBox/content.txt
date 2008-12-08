@@ -1,0 +1,3 @@
+Juke Box Project in Ruby
+!path /Users/unclebob/projects/ruby/JukeBox/lib
+!contents

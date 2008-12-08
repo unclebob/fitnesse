@@ -1,0 +1,11 @@
+This page contains the stories for the <JukeBox project
+
+>PaymentDeterminesCredits
+>CreditsAccumulateWithPayment
+>PlayOneSong
+>PlayThreeSongs
+>YouDecide
+>CashManagement
+
+
+

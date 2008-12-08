@@ -46,6 +46,11 @@ public class SocketService {
         Socket s = serverSocket.accept();
         startServerThread(s);
       }
+      catch (java.lang.OutOfMemoryError e) {
+        System.err.println("Can't create new thread.  Out of Memory.  Aborting");
+        e.printStackTrace();
+        System.exit(99);
+      }
       catch (IOException e) {
       }
     }

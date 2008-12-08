@@ -1,0 +1,30 @@
+The '''Scenario''' keyword creates a table using ''script'' table syntax, but that acts like a decision table fixture.
+The blank cells in front of ''requires'' and ''provides'' are optional.  Prefix blank cells are ignored
+
+The scenario provides its own setup and teardown.  Is this appropriate?
+
+The ''get'' keyword may just be an alias for ''check''.  
+
+!|Scenario|Wiki text is translated|
+||Requires|wiki_text|
+||Provides|translated_text|
+|start clean fitnesse instance|
+|check|create page|NewPage|with text|start:wiki_text:end|true|
+|get|request page|NewPage|$html=|
+|provide|translated_text|extract from|$html|between|start:|and|:end|
+|shutdown fitnesse|
+
+The driver for the scenario has to be set up before it can be invoked.  This makes the driver polymorphic with respect to the scenario!
+
+|script|
+|start|fitnesse pages|
+
+The decision table doesn't know where it gets the fixture from.  So it's polymorphic too.  You can use a standard SLIM fixture on the SUT,
+or you can !include an scenario.  So the fixture is polymorphic with respect to the decision table.
+
+!|Wiki text is translated|
+|wiki_text|translated_text?|
+|''text''|<i>text</i>|
+|'''text'''|<b>text</b>|
+
+
