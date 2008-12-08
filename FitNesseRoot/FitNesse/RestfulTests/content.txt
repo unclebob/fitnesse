@@ -1,0 +1,29 @@
+You can get an XML test report back from either a test or suite execution by appending the {{{format=xml}}} parameter to the end of the URL.  For example, to get the results of the entire FitNesse acceptance test suite simply issue the following URL:{{{http://localhost:8080/FitNesse.SuiteAcceptanceTests?suite&format=xml}}}
+
+The results come back in the following form:
+{{{
+<testResults>
+	<rootPath>SuiteAcceptanceTests</rootPath>
+	<result>
+		<relativePageName>SuiteWidgetTests.TestBrokenWikiWordLink</relativePageName>
+		<counts>
+			<right>24</right>
+			<wrong>0</wrong>
+			<ignores>0</ignores>
+			<exceptions>0</exceptions>
+		</counts>
+		<content>
+                        <![CDATA[HTML OF TEST PAGE
+                </content>
+	</result>
+	<result>
+	     ...
+
+	<finalCounts>
+		<right>182</right>
+		<wrong>0</wrong>
+		<ignores>0</ignores>
+		<exceptions>0</exceptions>
+	</finalCounts>
+</testResults>
+}}}

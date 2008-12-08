@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/213/trunk/srcFitServerTests/fit
+END
+DotNetFitServerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/213/trunk/srcFitServerTests/fit/DotNetFitServerTest.java
+END
+RubyFitServerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/213/trunk/srcFitServerTests/fit/RubyFitServerTest.java
+END
+CppFitServerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/213/trunk/srcFitServerTests/fit/CppFitServerTest.java
+END

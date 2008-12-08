@@ -1,0 +1,26 @@
+!3 The !-DotNet FitServer-! will look for your Fixture in any of the namespaces defined in an Import table.
+
+By default, the !-DotNet FitServer-! includes the "fit" namespace. This test suite includes the "fitnesse.acceptanceTests" namespace in the !-SetUp-! fixture, and clears all namespaces (except "fit") after each test in the !-TearDown-! fixture.
+----
+Show that only "fit" and "fitnesse.acceptanceTests" are present. (If there are any other namespaces present already, this table will show a failure).
+
+!|Namespace Inspector|
+|Namespace |
+|fit|
+|fitnesse.acceptanceTests|
+|fitnesse.handlers|
+
+Add "some.namespace".
+
+!|Import|
+|some.namespace|
+
+Show that "some.namespace" is present.
+
+!|Namespace Inspector|
+|Namespace |
+|fit|
+|fitnesse.acceptanceTests|
+|fitnesse.handlers|
+|some.namespace|
+

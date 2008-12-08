@@ -1,0 +1,35 @@
+!3 [[!-RowFixture-!][.FitNesse.RowFixture]] supports multiple instances with like properties
+|people row fixture cleaner|
+
+Load one person
+|people loader fixture|
+|first name|last name|
+|john|doe|
+
+Is he there?
+|people row fixture|
+|first name|last name|
+|john|doe|
+
+Load another person
+|people loader fixture|
+|first name|last name|
+|jane|roe|
+
+Are they both there?
+|people row fixture|
+|first name|last name|
+|john|doe|
+|jane|roe|
+
+Load another just like the first
+|people loader fixture|
+|first name|last name|
+|john|doe|
+
+Are all three there?
+|people row fixture|
+|first name|last name|
+|john|doe|
+|john|doe|
+|jane|roe|

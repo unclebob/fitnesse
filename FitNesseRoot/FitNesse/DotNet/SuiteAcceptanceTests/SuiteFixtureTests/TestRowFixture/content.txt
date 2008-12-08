@@ -1,0 +1,10 @@
+Row fixtures work correctly with arrays.
+
+!|ArrayOfStringsFixture|
+|field|save!|
+|a,b,c||
+
+!|ArrayOfStringsRowFixture|
+|field|
+|a,b,c|
+

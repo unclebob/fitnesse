@@ -1,0 +1,15 @@
+Tables for this fixture are exactly the same as ''!-RowFixture-!'', but are purely for the convenience of programmers writing fixture code.
+
+|!-StartListing-!|
+|list is|1,2,3,4|
+
+|''param row list''|
+|''item''|
+|3|
+|4|
+|1|
+|2|
+
+For details of the code, see ''WritingListFixtures''.
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

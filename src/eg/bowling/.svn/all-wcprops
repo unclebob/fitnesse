@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling
+END
+BowlingScorer.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/BowlingScorer.java
+END
+Bowling.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/Bowling.java
+END
+BowlingGame.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/BowlingGame.java
+END
+BowlingGameTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/BowlingGameTest.java
+END

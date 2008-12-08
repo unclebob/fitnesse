@@ -1,0 +1,26 @@
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!path classes-!|
+|enter|line|&bang;path fitnesse.jar|
+|enter|line|!-!contents-!|
+|enter|page|SuiteFodder|
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!|fitnesse.testutil.PassFixture|-!|
+|enter|page| SuiteFodder.TestPassing|
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!|fitnesse.testutil.FailFixture|-!|
+|enter|page| SuiteFodder.TestFailing|
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!|fitnesse.testutil.IgnoreFixture|-!|
+|enter|page| SuiteFodder.TestIgnoring|
+
+!|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!|fitnesse.testutil.ErrorFixture|-!|
+|enter|page| SuiteFodder.TestCrashing|

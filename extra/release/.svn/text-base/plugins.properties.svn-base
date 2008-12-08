@@ -1,0 +1,3 @@
+# The default text that used in the editor for new pages.
+# For multi-line text, put a \n between each line.
+newpage.default.content=!contents -R2 -g -p -f -h

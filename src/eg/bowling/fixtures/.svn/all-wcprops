@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/fixtures
+END
+SimpleScoreGame.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/fixtures/SimpleScoreGame.java
+END
+GameTiming.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/fixtures/GameTiming.java
+END
+FinalScore.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/fixtures/FinalScore.java
+END
+ScoreGame.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/eg/bowling/fixtures/ScoreGame.java
+END

@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/responders/run
+END
+MockTestEventListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/MockTestEventListener.java
+END
+TestResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/383/trunk/src/fitnesse/responders/run/TestResponder.java
+END
+TestResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/TestResponderTest.java
+END
+TestSystemGroup.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/376/trunk/src/fitnesse/responders/run/TestSystemGroup.java
+END
+SuiteHtmlFormatter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SuiteHtmlFormatter.java
+END
+SuiteHtmlFormatterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SuiteHtmlFormatterTest.java
+END
+ExecutionLog.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/368/trunk/src/fitnesse/responders/run/ExecutionLog.java
+END
+ExecutionLogTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/ExecutionLogTest.java
+END
+SocketCatchingResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SocketCatchingResponder.java
+END
+SocketCatchingResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SocketCatchingResponderTest.java
+END
+SocketDoner.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SocketDoner.java
+END
+TestSystem.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/375/trunk/src/fitnesse/responders/run/TestSystem.java
+END
+HtmlFormatterClient.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/HtmlFormatterClient.java
+END
+SocketSeeker.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SocketSeeker.java
+END
+TestHtmlFormatter.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/TestHtmlFormatter.java
+END
+TestHtmlFormatterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/TestHtmlFormatterTest.java
+END
+CompositeExecutionLog.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/348/trunk/src/fitnesse/responders/run/CompositeExecutionLog.java
+END
+CompositeExecutionLogTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/CompositeExecutionLogTest.java
+END
+TestResultFormattingResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/346/trunk/src/fitnesse/responders/run/TestResultFormattingResponder.java
+END
+TestResultFormattingResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/TestResultFormattingResponderTest.java
+END
+FitClientResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/FitClientResponder.java
+END
+FitClientResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/FitClientResponderTest.java
+END
+SocketDealer.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SocketDealer.java
+END
+SocketDealerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SocketDealerTest.java
+END
+ExecutionStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/ExecutionStatus.java
+END
+SuiteResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SuiteResponder.java
+END
+SuiteResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/SuiteResponderTest.java
+END
+ExposeThreadingIssueInMockResponseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/ExposeThreadingIssueInMockResponseTest.java
+END
+TestEventListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/TestEventListener.java
+END
+FitTestSystem.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/376/trunk/src/fitnesse/responders/run/FitTestSystem.java
+END
+ResponsePuppeteer.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/ResponsePuppeteer.java
+END
+TestSystemListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/TestSystemListener.java
+END
+PuppetResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/run/PuppetResponse.java
+END
+TestSummary.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/346/trunk/src/fitnesse/responders/run/TestSummary.java
+END

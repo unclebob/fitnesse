@@ -1,0 +1,8 @@
+To set the style of a word or phrase use the !-!style_<class>(text)-! widget.
+
+|!c '''Markup Text'''|!c '''Displayed as'''|
+|!-!style_error(an error)-!|!style_error(an error)|
+|!-!style_pass(pass)-!|!style_pass(pass)|
+|!-!style_fail(fail)-!|!style_fail(fail)|
+|!-!style_ignore(ignore)-!|!style_ignore(ignore)|
+|!-!style_caps(Caps)-!|!style_caps(Caps)|

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring
+END
+DeletePageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/DeletePageResponder.java
+END
+DeletePageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/DeletePageResponderTest.java
+END
+RefactorPageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/RefactorPageResponder.java
+END
+RefactorPageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/RefactorPageResponderTest.java
+END
+MovePageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/MovePageResponder.java
+END
+MovePageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/MovePageResponderTest.java
+END
+RenamePageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/RenamePageResponder.java
+END
+RenamePageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/refactoring/RenamePageResponderTest.java
+END

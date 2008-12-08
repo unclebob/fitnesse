@@ -1,0 +1,13 @@
+|Import|
+
+!contents -R2 -g -p -f -h
+
+!define TEST_SYSTEM {slim}
+#!define SLIM_FLAGS {-v}
+
+!-&lt;br&gt;-!
+!-<hr>-!
+
+&bar;hi&bar;
+
+

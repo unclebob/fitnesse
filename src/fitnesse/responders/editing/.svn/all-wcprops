@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing
+END
+EditResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/EditResponder.java
+END
+EditResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/EditResponderTest.java
+END
+PropertiesResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/PropertiesResponder.java
+END
+PropertiesResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/PropertiesResponderTest.java
+END
+ContentFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/ContentFilter.java
+END
+SaveResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/SaveResponder.java
+END
+SaveResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/SaveResponderTest.java
+END
+MergeResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/MergeResponder.java
+END
+MergeResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/MergeResponderTest.java
+END
+SymbolicLinkResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/SymbolicLinkResponder.java
+END
+SymbolicLinkResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/SymbolicLinkResponderTest.java
+END
+TableWizardResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/TableWizardResponder.java
+END
+TableWizardResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/TableWizardResponderTest.java
+END
+SavePropertiesResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/SavePropertiesResponder.java
+END
+SavePropertiesResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/editing/SavePropertiesResponderTest.java
+END

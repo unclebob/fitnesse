@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol
+END
+UpdateResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/UpdateResponderTest.java
+END
+UpdateResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/UpdateResponder.java
+END
+AddResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/AddResponder.java
+END
+AddResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/AddResponderTest.java
+END
+RevisionControlResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/RevisionControlResponder.java
+END
+RevisionControlResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/RevisionControlResponderTest.java
+END
+DeleteResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/DeleteResponder.java
+END
+DeleteResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/DeleteResponderTest.java
+END
+CheckinResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/CheckinResponder.java
+END
+CheckinResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/CheckinResponderTest.java
+END
+RefactoringResponderRelatedTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/RefactoringResponderRelatedTest.java
+END
+CheckoutResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/CheckoutResponder.java
+END
+CheckoutResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/CheckoutResponderTest.java
+END
+RevertResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/RevertResponder.java
+END
+RevertResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/RevertResponderTest.java
+END
+RevisionControlTestCase.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/RevisionControlTestCase.java
+END
+SyncResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/SyncResponderTest.java
+END
+SyncResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/revisioncontrol/SyncResponder.java
+END

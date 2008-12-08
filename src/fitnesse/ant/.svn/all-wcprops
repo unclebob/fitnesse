@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ant
+END
+StartFitnesseTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ant/StartFitnesseTask.java
+END
+ExecuteFitnesseTestsTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ant/ExecuteFitnesseTestsTask.java
+END
+StopFitnesseTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ant/StopFitnesseTask.java
+END
+TestRunnerTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ant/TestRunnerTask.java
+END

@@ -1,0 +1,20 @@
+!c !3 TestRunner
+
+!3 Reasons for running FitNesse tests from the command line.
+ * Can be included in build scripts like ANT
+ * Can generate XML output to a file
+
+!3 Using the TestRunner
+{{{
+usage: java fitnesse.runner.TestRunner [options] host port page-name
+        -v                              verbose: prints test progress to stdout
+        -xml <file>                     Sends xml test results to the file.  If file is 'stdout' sends xml to standard out.
+        -suiteFilter <filter>           runs only those tests of a suite which have been marked with the respective filter
+}}}
+There are three required arguments: '''host port page-name'''.  The command to run the FitNesse test suite on your local instance of FitNesse is:
+{{{java -cp fitnesse.jar fitnesse.runner.TestRunner localhost 80 FitNesse.SuiteAcceptanceTests}}}
+The TestRunner, regardless of options, exits with the number of pages with failures + exceptions that occurred during execution. An exit value of 0 means all the tests passed. Adding the '''-v''' prints a summary of the test results on standard out. The page designated by '''page-name''' may be either a suite or test page.
+
+For the XML format see RestfulTests
+
+More details about suite filters can be found [[here][TestSuites]].

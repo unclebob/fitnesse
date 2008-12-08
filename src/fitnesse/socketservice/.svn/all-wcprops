@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/socketservice
+END
+SocketServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/socketservice/SocketServer.java
+END
+SocketService.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/socketservice/SocketService.java
+END
+SocketServiceTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/socketservice/SocketServiceTest.java
+END

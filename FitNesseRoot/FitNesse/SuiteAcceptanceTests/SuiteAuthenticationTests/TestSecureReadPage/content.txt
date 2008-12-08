@@ -1,0 +1,26 @@
+Make a request for an Secure page with out supplying any credentials.  It should fail.
+
+First setup the Authentication module.
+!|Authenticator Setup|
+|username|password|status?|
+|Aladdin|open sesame||
+
+Create a page to be requested.
+!|Page creator.|
+|Page name.|page attributes|valid?|
+|FrontPage |secure-read=true|true|
+
+Now request a page.  We should not get it. (401 means security error)
+!|Response Requester.|
+|uri|status?|
+|FrontPage |401     |
+
+When we supply bad credintials it should still not work.
+!|Response Requester.|
+|uri|username|password|status?|
+|FrontPage |Aladdin|open please|401|
+
+Proper credentials give a successfull response.
+!|Response Requester.|
+|uri|username|password|status?|
+|FrontPage |Aladdin|open sesame|200|

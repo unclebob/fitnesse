@@ -1,0 +1,32 @@
+!|FileSection|setup|
+
+Requesting a file from the ''files''' directory does not require authentication, but requesting a directory does.
+A response with status 401 will be received signifying lack of authentication.
+
+First setup the Authentication module.
+!|Authenticator Setup|
+|username|password|status?|
+|Aladdin|open sesame||
+
+Now request a file from the ''files'' directory.
+We should get a 404 since file reading is allowed, but no such file exists.
+!|Response Requester.|
+|uri|status?|
+|files/someFile |404     |
+
+Now request the files directory.  We should get a 401 since we didn't suply any credentials.
+!|Response Requester.|
+|uri|status?|
+|files/ |401     |
+
+When we supply bad credintials we get a 401.
+!|Response Requester.|
+|uri|username|password|status?|
+|files/ |Aladdin|open please|401|
+
+Proper credentials give a ''not found'' (404) response; because requested file doesn't exist in this context.
+!|Response Requester.|
+|uri|username|password|status?|
+|files/blah |Aladdin|open sesame|404|
+
+!|FileSection|teardown|

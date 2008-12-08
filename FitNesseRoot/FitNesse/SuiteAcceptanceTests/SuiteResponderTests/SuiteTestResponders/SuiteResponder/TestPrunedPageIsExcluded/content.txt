@@ -1,0 +1,58 @@
+When you execute a suite page, !-FitNesse-! tests all the subpages
+unless the Prune attribute on the Properties page is set.
+This example shows just one test subpage of two subpages being executed.
+
+----
+
+Create a Suite page
+
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-!path classes-!|
+|enter|line|!-!path fitnesse.jar-!|
+|enter|page|!-SuitePage-!|
+
+Create two sub pages: 1 is tested, 2 is pruned/ignored
+
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
+|enter|page|!-SuitePage.TestPageOne-!|
+
+|Action Fixture.|
+|start|Page Builder|
+|enter|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
+|enter|attributes|Prune=true|
+|enter|page|!-SuitePage.TestPageTwo-!|
+
+Now run the suite page.
+
+|Response Requester.|
+|uri   |valid?|
+|!-SuitePage?responder=suite-!|true|
+
+|Response Examiner.|
+|contents?|
+||
+
+The suite should report only the one TestPage and should show no errors.
+
+|Response Examiner.|
+|type  |pattern|matches?|
+|contents|!-TestPageOne-!|true|
+|contents|!-TestPageTwo-!|false|
+|contents|Test Pages:.*1 right|true|
+
+The error log page should not have any errors
+
+|Response Requester.|
+|uri   |valid?|
+|!-ErrorLogs.SuitePage-!|true|
+
+|Response Examiner.|
+|contents?|
+||
+
+|Response Examiner.|
+|type  |pattern|matches?|
+|contents|Exit code.*0.*Time|true|

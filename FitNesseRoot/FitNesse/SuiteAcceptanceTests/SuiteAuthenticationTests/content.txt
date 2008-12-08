@@ -1,0 +1,15 @@
+^TestSecureReadPage
+^TestInsecureReadPage
+^TestReadChildOfSecurePage
+^TestSecureEditPage
+^TestSecureSavePage
+^TestSecureProperties
+^TestSecureSaveProperties
+^TestSecureTestPage
+^TestSecureSuitePage
+^TestSecureFilesAccess
+^TestSecureRefactoring
+^TestSearchingIsReadLevel
+
+
+

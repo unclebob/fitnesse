@@ -1,0 +1,12 @@
+!3 If you want a string value to include leading or trailing whitespace, use the syntax for escaping literals:
+
+precede it with !-!--!
+follow it with !--!-!
+
+for example, " value" would be represented as !-!--! value!--!-!
+
+|string|
+|field|field?||
+|value|!-value-!|"value"|
+|!- value-!|!- value-!|" value"|
+|!- value-!|fail[value]|" value" fails against "value"|

@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil
+END
+SimpleSocketSeeker.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/SimpleSocketSeeker.java
+END
+MockSocket.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/MockSocket.java
+END
+ErrorWritingFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ErrorWritingFixture.java
+END
+CrashFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/CrashFixture.java
+END
+OutputWritingFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/OutputWritingFixture.java
+END
+Echo.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/Echo.java
+END
+FitSocketReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/FitSocketReceiver.java
+END
+ClassNotFoundThrownInConstructor.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ClassNotFoundThrownInConstructor.java
+END
+FailFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/FailFixture.java
+END
+MockCommandRunner.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/344/trunk/src/fitnesse/testutil/MockCommandRunner.java
+END
+EchoFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/EchoFixture.java
+END
+CartesianVector.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/CartesianVector.java
+END
+CartesianVectorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/CartesianVectorTest.java
+END
+DummyClassForWizardTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/DummyClassForWizardTests.java
+END
+ObjectTranslatePoint.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ObjectTranslatePoint.java
+END
+ErrorFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ErrorFixture.java
+END
+SimpleCachinePage.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/SimpleCachinePage.java
+END
+MockExtendableWikiPage.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/MockExtendableWikiPage.java
+END
+RegexTestCase.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/RegexTestCase.java
+END
+TranslatePoint.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/TranslatePoint.java
+END
+TestSuiteMaker.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/TestSuiteMaker.java
+END
+PassFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/PassFixture.java
+END
+FitNesseUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/FitNesseUtil.java
+END
+SimpleAuthenticator.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/SimpleAuthenticator.java
+END
+SimpleExtension.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/SimpleExtension.java
+END
+ClassDelegatePointParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ClassDelegatePointParser.java
+END
+ClassDelegatePointParserTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ClassDelegatePointParserTest.java
+END
+VectorSum.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/VectorSum.java
+END
+ObjectDelegatePointParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ObjectDelegatePointParser.java
+END
+IgnoreFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/IgnoreFixture.java
+END
+SimpleSocketDoner.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/SimpleSocketDoner.java
+END
+ClassTranslatePoint.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/testutil/ClassTranslatePoint.java
+END

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator
+END
+CopyAndAppendLastRow.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/CopyAndAppendLastRow.java
+END
+CopyAndAppendLastRowTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/CopyAndAppendLastRowTest.java
+END
+IncrementColumnsValue.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/IncrementColumnsValue.java
+END
+IncrementColumnsValueTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/IncrementColumnsValueTest.java
+END
+FixtureDecoratorTestCase.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/FixtureDecoratorTestCase.java
+END
+TestFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/TestFixture.java
+END
+FixtureDecorator.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/FixtureDecorator.java
+END
+Loop.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/Loop.java
+END
+LoopTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/LoopTest.java
+END

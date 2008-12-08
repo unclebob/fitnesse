@@ -1,0 +1,539 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets
+END
+LiteralWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LiteralWidget.java
+END
+PreformattedWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/PreformattedWidget.java
+END
+LinkWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LinkWidget.java
+END
+MockWidgetRoot.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/MockWidgetRoot.java
+END
+VariableDefinitionWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VariableDefinitionWidget.java
+END
+WikiWordWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/WikiWordWidgetTest.java
+END
+BlankParentWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/BlankParentWidget.java
+END
+EvaluatorWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/EvaluatorWidgetTest.java
+END
+NoteWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/NoteWidget.java
+END
+AliasLinkWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/AliasLinkWidget.java
+END
+VirtualWikiWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VirtualWikiWidget.java
+END
+TableRowWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TableRowWidget.java
+END
+AnchorDeclarationWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/AnchorDeclarationWidgetTest.java
+END
+BoldWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/164/trunk/src/fitnesse/wikitext/widgets/BoldWidget.java
+END
+CollapsableWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/CollapsableWidget.java
+END
+ClasspathWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ClasspathWidgetTest.java
+END
+FixtureWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/FixtureWidgetTest.java
+END
+EmailWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/EmailWidgetTest.java
+END
+TableCellWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TableCellWidgetTest.java
+END
+HeaderWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/HeaderWidgetTest.java
+END
+ParentWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/356/trunk/src/fitnesse/wikitext/widgets/ParentWidget.java
+END
+ListItemWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ListItemWidget.java
+END
+LineBreakWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LineBreakWidget.java
+END
+StyleWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/StyleWidgetTest.java
+END
+StrikeWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/StrikeWidget.java
+END
+CommentWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/231/trunk/src/fitnesse/wikitext/widgets/CommentWidget.java
+END
+PreProcessorLiteralWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/PreProcessorLiteralWidgetTest.java
+END
+LastModifiedWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LastModifiedWidget.java
+END
+XRefWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/XRefWidget.java
+END
+ItalicWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ItalicWidgetTest.java
+END
+ListWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ListWidgetTest.java
+END
+WidgetTestCase.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/WidgetTestCase.java
+END
+AnchorMarkerWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/AnchorMarkerWidgetTest.java
+END
+HruleWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/HruleWidget.java
+END
+CenterWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/231/trunk/src/fitnesse/wikitext/widgets/CenterWidget.java
+END
+ImageWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ImageWidget.java
+END
+IncludeWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/368/trunk/src/fitnesse/wikitext/widgets/IncludeWidget.java
+END
+WidgetRoot.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/383/trunk/src/fitnesse/wikitext/widgets/WidgetRoot.java
+END
+TextWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/356/trunk/src/fitnesse/wikitext/widgets/TextWidgetTest.java
+END
+TOCWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TOCWidget.java
+END
+TextIgnoringWidgetRoot.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TextIgnoringWidgetRoot.java
+END
+VariableWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VariableWidget.java
+END
+MetaWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/MetaWidgetTest.java
+END
+TableWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TableWidgetTest.java
+END
+LiteralWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LiteralWidgetTest.java
+END
+PreformattedWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/PreformattedWidgetTest.java
+END
+LinkWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LinkWidgetTest.java
+END
+VariableDefinitionWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VariableDefinitionWidgetTest.java
+END
+WidgetVisitorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/WidgetVisitorTest.java
+END
+WikiWordWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/WikiWordWidget.java
+END
+EvaluatorWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/EvaluatorWidget.java
+END
+NoteWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/NoteWidgetTest.java
+END
+AliasLinkWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/AliasLinkWidgetTest.java
+END
+VirtualWikiWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VirtualWikiWidgetTest.java
+END
+TableRowWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TableRowWidgetTest.java
+END
+AnchorDeclarationWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/AnchorDeclarationWidget.java
+END
+BoldWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/BoldWidgetTest.java
+END
+CollapsableWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/CollapsableWidgetTest.java
+END
+ClasspathWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ClasspathWidget.java
+END
+FixtureWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/FixtureWidget.java
+END
+EmailWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/EmailWidget.java
+END
+TableCellWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TableCellWidget.java
+END
+HeaderWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/HeaderWidget.java
+END
+ParentWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ParentWidgetTest.java
+END
+ListItemWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ListItemWidgetTest.java
+END
+LineBreakWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LineBreakWidgetTest.java
+END
+StyleWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/StyleWidget.java
+END
+StrikeWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/StrikeWidgetTest.java
+END
+CommentWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/CommentWidgetTest.java
+END
+PreProcessorLiteralWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/PreProcessorLiteralWidget.java
+END
+LastModifiedWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/LastModifiedWidgetTest.java
+END
+XRefWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/XRefWidgetTest.java
+END
+ItalicWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ItalicWidget.java
+END
+ListWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ListWidget.java
+END
+AnchorMarkerWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/AnchorMarkerWidget.java
+END
+HruleWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/HruleWidgetTest.java
+END
+CenterWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/CenterWidgetTest.java
+END
+ImageWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/ImageWidgetTest.java
+END
+IncludeWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/IncludeWidgetTest.java
+END
+WidgetRootTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/WidgetRootTest.java
+END
+WidgetWithTextArgument.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/WidgetWithTextArgument.java
+END
+TextWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/356/trunk/src/fitnesse/wikitext/widgets/TextWidget.java
+END
+TOCWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TOCWidgetTest.java
+END
+TextIgnoringWidgetRootTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TextIgnoringWidgetRootTest.java
+END
+VariableWidgetTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VariableWidgetTest.java
+END
+MetaWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/MetaWidget.java
+END
+TableWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/TableWidget.java
+END
+VariableExpandingWidgetRoot.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/VariableExpandingWidgetRoot.java
+END
+MockWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/widgets/MockWidget.java
+END

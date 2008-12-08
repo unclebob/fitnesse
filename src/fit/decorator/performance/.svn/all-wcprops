@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/performance
+END
+MaxTime.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/performance/MaxTime.java
+END
+MaxTimeTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/performance/MaxTimeTest.java
+END
+TimeBasedFixtureDecorator.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/performance/TimeBasedFixtureDecorator.java
+END
+TimeRange.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/performance/TimeRange.java
+END
+TimeRangeTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/performance/TimeRangeTest.java
+END

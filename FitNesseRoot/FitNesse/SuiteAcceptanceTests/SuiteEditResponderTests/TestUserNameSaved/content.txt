@@ -1,0 +1,29 @@
+The username is saved when a page is edited.  It is visible through use of the !-!lastmodified-! widget.
+
+!|Page Creator|
+|page name|page contents|valid!|
+|TestPage|!lastmodified|yes|
+
+!|Response Requester|
+|uri   |status!|contents?|
+|TestPage  |200||
+
+The default user is Anonymous.  Anonymous is used when no one is logged in.
+!|Response Examiner|
+|type  |pattern|matches!|contents?|
+|contents|Last modified anonymously.*|yes||
+
+When a page is saved with a user spcified....
+!|Save Page Requester|
+|uri   |username|password|save contents|status!|contents?|
+|TestPage|Aladdin|open sesame|!lastmodified|303||
+
+and then viewed...
+!|Response Requester|
+|uri   |status!|contents?|
+|TestPage  |200||
+
+Aladdin will be displayed as the user who last modified this page.
+!|Response Examiner|
+|type  |pattern|matches!|contents?|
+|contents|Last modified by Aladdin.*|yes||

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Installer for FitNesse.  Requires IzPack (http://www.izforge.com/izpack)
+  To build:
+    IZPACK_HOME/bin/compile installer.xml -o fitnesse_install.jar
+-->
+<installation version="1.0">
+  <info>
+    <appname>FitNesse</appname>
+    <appversion>20040914</appversion>
+    <authors>
+      <author name="Bob Martin" email="unclebob@objectmentor.com"/>
+      <author name="Micah Martin" email="fitnesse@objectmentor.com"/>
+    </authors>
+    <url>http://www.fitnesse.org</url>
+  </info>
+
+  <guiprefs resizable="no" width="680" height="480"/>
+
+  <locale>
+    <langpack iso3="eng"/>
+  </locale>
+
+  <resources>
+    <res id="InfoPanel.info" src="extra/release/README.txt"/>
+    <res id="LicencePanel.licence" src="extra/release/license.txt"/>
+    <res id="userInputSpec.xml" src="extra/installer/UserInputSpec.xml"/>
+    <res id="Installer.image" src="extra/images/FitNesseInstallerLogo.png"/>
+    <res id="useNativeLAF" src="extra/installer/emptyFile"/>
+  </resources>
+
+  <panels>
+    <panel classname="HelloPanel"/>
+    <panel classname="LicencePanel"/>
+    <panel classname="TargetPanel"/>
+    <panel classname="PacksPanel"/>
+    <panel classname="UserInputPanel"/>
+    <panel classname="InstallPanel"/>
+    <panel classname="UserInputPanel"/>
+    <panel classname="FinishPanel"/>
+  </panels>
+
+  <packs>
+    <pack name="Base" required="yes">
+      <description>Base Installation</description>
+      <fileset dir="dist/fitnesse" targetdir="$INSTALL_PATH">
+        <include name="**"/>
+      </fileset>
+      <fileset dir="distribution" targetdir="$INSTALL_PATH">
+        <include name="**"/>
+      </fileset>
+      <fileset dir="extra/release" targetdir="$INSTALL_PATH">
+        <include name="*"/>
+      </fileset>
+      <executable targetfile="$INSTALL_PATH/run.sh" stage="never"/>
+    </pack>
+    <pack name="Windows Service" required="no">
+      <os family="windows"/>
+      <description>Install FitNesse as a Windows Service</description>
+      <fileset dir="extra/installer/wrapper/windows" targetdir="$INSTALL_PATH/wrapper">
+        <include name="**"/>
+      </fileset>
+      <parsable targetfile="$INSTALL_PATH/wrapper/fitnesse.conf"/>
+      <parsable targetfile="$INSTALL_PATH/wrapper/InstallFitNesseSvc.bat"/>
+      <parsable targetfile="$INSTALL_PATH/wrapper/UninstallFitNesseSvc.bat"/>
+      <parsable targetfile="$INSTALL_PATH/wrapper/FitNesseConsole.bat"/>
+      <executable targetfile="$INSTALL_PATH/wrapper/InstallFitNesseSvc.bat" stage="postinstall"/>
+      <executable targetfile="$INSTALL_PATH/wrapper/UninstallFitNesseSvc.bat" stage="uninstall"/>
+    </pack>
+  </packs>
+</installation>

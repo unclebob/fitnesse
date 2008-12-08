@@ -1,0 +1,36 @@
+!2 Starting FitNesse
+
+In the standard distribution there is a file named ''run.bat'' for windows and ''run.sh'' for Unix, Linux, and OS X.  Double-clicking this file should get things going in most cases.  The main class that gets executed is '''!-fitnesse.FitNesse-!'''.  Here is how to invoke this class:
+{{{Usage: java fitnesse.FitNesse [-pdrleoa]
+        -p <port number> {80}
+        -d <working directory> {.}
+        -r <page root directory> {FitNesseRoot}
+        -l <log directory> {no logging}
+        -e <days> {14} Number of days before page versions expire
+        -o omit updates
+        -a {user:pwd | user-file-name} enable authentication.
+}}}
+The values shown between braces are the default values.
+
+Most of the options here speak for themselves.  The most commonly used option is '''-p port_number''', which allows you to change the port on which the FitNesse server will start.
+
+You can also pass these options to the ''run.bat'' and ''run.sh'' scripts. The ''run.sh'' script also accepts one or more '''-J JVM_option''' flags for passing options to the JVM. If you like to double-click the script file to start it and you always use particular options, such as a different port number, then consider editing the file to add these options.
+
+See PasswordFile for a description of how to set up per user authentication.
+
+!2 Stopping FitNesse
+
+Pressing ''ctrl-c'' generally works well for development use.  However, it's not sufficient for automated control.
+
+There are now ''stop.bat'' and ''stop.sh'' scripts to stop a running server. Invoke them with the same '''-p port_number''' option used to start the server.
+
+Both scripts run java with a class to stop FitNesse. You can invoke this class directly, as well:
+{{{Usage: java fitnesse.Shutdown [-pa]
+        -h <hostname> {localhost}
+        -p <port number> {80}
+        -c <username> <password> Supply user credentials.  Use when FitNesse has authentication activated.
+}}}
+This command will send an HTTP request to the designated server.  If the server is using authentication then the '''-c''' option should be used with appropriate username and password.
+
+Alternatively you may manually type a URL to shutdown a server.
+http://hostname:port/?responder=shutdown

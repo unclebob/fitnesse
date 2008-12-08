@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<testResults>
+	<result>
+		<counts>
+			<right>0</right>
+			<wrong>0</wrong>
+			<ignores>0</ignores>
+			<exceptions>1</exceptions>
+		</counts>
+		<content><![CDATA[<table border="1" cellspacing="0" class="error">
+<tr><td>fitnesse.testutil.ErrorFixture</td>
+</tr>
+</table>
+]]></content>
+		<relativePageName>TestCrashing</relativePageName>
+	</result>
+	<result>
+		<counts>
+			<right>0</right>
+			<wrong>1</wrong>
+			<ignores>0</ignores>
+			<exceptions>0</exceptions>
+		</counts>
+		<content><![CDATA[<table border="1" cellspacing="0" class="fail">
+<tr><td>fitnesse.testutil.FailFixture</td>
+</tr>
+</table>
+]]></content>
+		<relativePageName>TestFailing</relativePageName>
+	</result>
+	<result>
+		<counts>
+			<right>0</right>
+			<wrong>0</wrong>
+			<ignores>1</ignores>
+			<exceptions>0</exceptions>
+		</counts>
+		<content><![CDATA[<table border="1" cellspacing="0">
+<tr><td class="ignore">fitnesse.testutil.IgnoreFixture</td>
+</tr>
+</table>
+]]></content>
+		<relativePageName>TestIgnoring</relativePageName>
+	</result>
+	<result>
+		<counts>
+			<right>1</right>
+			<wrong>0</wrong>
+			<ignores>0</ignores>
+			<exceptions>0</exceptions>
+		</counts>
+		<content><![CDATA[<table border="1" cellspacing="0" class="pass">
+<tr><td>fitnesse.testutil.PassFixture</td>
+</tr>
+</table>
+]]></content>
+		<relativePageName>TestPassing</relativePageName>
+	</result>
+	<rootPath>SuiteFodder</rootPath>
+	<finalCounts>
+		<right>1</right>
+		<wrong>1</wrong>
+		<ignores>1</ignores>
+		<exceptions>1</exceptions>
+	</finalCounts>
+</testResults>

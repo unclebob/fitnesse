@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svnroot/fitnesse/!svn/ver/388/trunk/src/fitnesse
+END
+Responder.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/Responder.java
+END
+FixtureTemplateCreator.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FixtureTemplateCreator.java
+END
+FixtureTemplateCreatorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FixtureTemplateCreatorTest.java
+END
+Arguments.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/Arguments.java
+END
+ArgumentsTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ArgumentsTest.java
+END
+FitNesseServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/231/trunk/src/fitnesse/FitNesseServer.java
+END
+FitNesseServerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesseServerTest.java
+END
+TestRunner.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/TestRunner.java
+END
+TestRunnerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/TestRunnerTest.java
+END
+Shutdown.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/Shutdown.java
+END
+ShutdownTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ShutdownTest.java
+END
+FitNesse.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesse.java
+END
+FitNesseContext.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesseContext.java
+END
+FitNesseMainTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesseMainTest.java
+END
+FitNesseContextTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesseContextTest.java
+END
+FitFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitFilter.java
+END
+ComponentFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ComponentFactory.java
+END
+ComponentFactoryTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/ComponentFactoryTest.java
+END
+FitNesseExpediter.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesseExpediter.java
+END
+FitNesseExpediterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/FitNesseExpediterTest.java
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol
+END
+RevisionControllable.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/RevisionControllable.java
+END
+RevisionControlOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/RevisionControlOperation.java
+END
+RevisionControlOperationTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/RevisionControlOperationTest.java
+END
+State.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/State.java
+END
+RevisionController.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/RevisionController.java
+END
+NullState.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/NullState.java
+END
+NullRevisionController.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/NullRevisionController.java
+END
+HtmlActionMenuBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/HtmlActionMenuBuilder.java
+END
+HtmlActionMenuBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/HtmlActionMenuBuilderTest.java
+END
+RevisionControlException.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/RevisionControlException.java
+END

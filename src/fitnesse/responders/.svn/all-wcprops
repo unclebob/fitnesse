@@ -1,0 +1,257 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/responders
+END
+MockWikiImporter.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/MockWikiImporter.java
+END
+DefaultResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/DefaultResponder.java
+END
+RawContentResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/RawContentResponder.java
+END
+RawContentResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/RawContentResponderTest.java
+END
+PageDataWikiPageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/PageDataWikiPageResponder.java
+END
+PageDataWikiPageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/PageDataWikiPageResponderTest.java
+END
+ImportAndViewResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ImportAndViewResponder.java
+END
+ImportAndViewResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ImportAndViewResponderTest.java
+END
+NotFoundResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/NotFoundResponder.java
+END
+NotFoundResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/NotFoundResponderTest.java
+END
+WikiImportingResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImportingResponder.java
+END
+WikiImportingResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImportingResponderTest.java
+END
+NameWikiPageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/NameWikiPageResponder.java
+END
+BasicWikiPageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/BasicWikiPageResponder.java
+END
+ChunkingResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ChunkingResponder.java
+END
+ChunkingResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ChunkingResponderTest.java
+END
+RssResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/RssResponder.java
+END
+RssResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/RssResponderTest.java
+END
+NameResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/NameResponderTest.java
+END
+BasicResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/BasicResponder.java
+END
+UnauthorizedResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/UnauthorizedResponder.java
+END
+WikiImportProperty.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImportProperty.java
+END
+WikiImportPropertyTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImportPropertyTest.java
+END
+WikiImportTestEventListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImportTestEventListener.java
+END
+WikiImportTestEventListenerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImportTestEventListenerTest.java
+END
+SecureResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/SecureResponder.java
+END
+SerializedPageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/SerializedPageResponder.java
+END
+SerializedPageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/SerializedPageResponderTest.java
+END
+ErrorResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ErrorResponder.java
+END
+ErrorResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ErrorResponderTest.java
+END
+WikiImporterFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImporterFactory.java
+END
+WikiPageResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/331/trunk/src/fitnesse/responders/WikiPageResponder.java
+END
+WikiPageResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiPageResponderTest.java
+END
+WikiImporterClient.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImporterClient.java
+END
+WikiImporter.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImporter.java
+END
+WikiImporterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/WikiImporterTest.java
+END
+MockWikiImporterFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/MockWikiImporterFactory.java
+END
+ResponderFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ResponderFactory.java
+END
+ResponderFactoryTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ResponderFactoryTest.java
+END
+ResponderTestCase.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ResponderTestCase.java
+END
+ShutdownResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ShutdownResponder.java
+END
+ShutdownResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/ShutdownResponderTest.java
+END

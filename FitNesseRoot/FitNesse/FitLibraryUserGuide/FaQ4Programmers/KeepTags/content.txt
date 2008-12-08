@@ -1,0 +1,25 @@
+!3 Sometimes, the HTML tags used within a table cell are important to the test.
+ * But they get stripped off automatically by Fit.
+ * So, instead use a ''!-TaggedString-!'' in the declaration of the corresponding method: either/or for the result type and the argument type(s).
+ * Eg,
+|!-fitlibrary.specify.DoWithTags-!|
+ * The next 4 tables pass because the strings, including tags, are consistent:
+|check|tagged text|!-<b>bold</b>-!|
+
+|check|tag text|!-<b>bold</b>-!|!-<b>bold</b>-!|
+
+|check|tag text|!-<table><tr><td>one</td></tr></table>-!|!-<table><tr><td>one</td></tr></table>-!|
+
+|check|tag text|!-<ul><li>one</li></li>two</li></ul>-!|!-<ul><li>one</li></li>two</li></ul>-!|
+ * But this fails because the tags aren't consistent
+|check|tag text|!-<b>bold</b>-!|bold|
+
+----{{{public class DoWithTags extends DoFixture {
+	public TaggedString taggedText() {
+		return new TaggedString("<b>bold</b>");
+	}
+	public TaggedString tagText(TaggedString s) {
+		return s;
+	}
+}
+}}}----

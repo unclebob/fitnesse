@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/fitnesse/!svn/ver/388/trunk/src/fitnesse/slim
+END
+SlimMethodInvocationTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/SlimMethodInvocationTest.java
+END
+SlimClient.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/SlimClient.java
+END
+Statement.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/Statement.java
+END
+Slim.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/Slim.java
+END
+ListSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/ListSerializer.java
+END
+ListSerializerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/ListSerializerTest.java
+END
+Converter.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/328/trunk/src/fitnesse/slim/Converter.java
+END
+SlimVersion.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/328/trunk/src/fitnesse/slim/SlimVersion.java
+END
+ListDeserializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/ListDeserializer.java
+END
+ListDeserializerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/ListDeserializerTest.java
+END
+SlimError.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/368/trunk/src/fitnesse/slim/SlimError.java
+END
+SlimInstanceCreationTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/SlimInstanceCreationTest.java
+END
+StatementExecutor.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/StatementExecutor.java
+END
+SlimService.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/SlimService.java
+END
+SlimServiceTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/SlimServiceTest.java
+END
+ListExecutor.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/ListExecutor.java
+END
+ListExecutorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/ListExecutorTest.java
+END
+SlimServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/368/trunk/src/fitnesse/slim/SlimServer.java
+END

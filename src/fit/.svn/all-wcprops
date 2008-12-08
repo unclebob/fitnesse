@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit
+END
+Comment.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/Comment.java
+END
+TimedActionFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/TimedActionFixture.java
+END
+FitServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FitServer.java
+END
+FitServerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FitServerTest.java
+END
+Binding.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/Binding.java
+END
+BindingTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/BindingTest.java
+END
+FixtureSupplier.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureSupplier.java
+END
+Counts.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/Counts.java
+END
+CountsTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/CountsTest.java
+END
+GracefulNamer.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/GracefulNamer.java
+END
+GracefulNamerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/GracefulNamerTest.java
+END
+ScientificDouble.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ScientificDouble.java
+END
+ScientificDoubleTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ScientificDoubleTest.java
+END
+RowFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/RowFixture.java
+END
+RowFixtureTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/RowFixtureTest.java
+END
+PrimitiveFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/PrimitiveFixture.java
+END
+ImportFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ImportFixture.java
+END
+ActionFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ActionFixture.java
+END
+FriendlyErrorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FriendlyErrorTest.java
+END
+SemaphoreFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/SemaphoreFixture.java
+END
+FixtureListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureListener.java
+END
+ColumnFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ColumnFixture.java
+END
+ColumnFixtureTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ColumnFixtureTest.java
+END
+SummaryFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/SummaryFixture.java
+END
+FileRunner.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FileRunner.java
+END
+Parse.java
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/Parse.java
+END
+ParseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/ParseTest.java
+END
+FixtureClass.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureClass.java
+END
+FixtureLoader.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureLoader.java
+END
+FixtureLoaderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureLoaderTest.java
+END
+TypeAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/TypeAdapter.java
+END
+TypeAdapterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/TypeAdapterTest.java
+END
+FitMatcher.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FitMatcher.java
+END
+FitMatcherTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FitMatcherTest.java
+END
+Fixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/Fixture.java
+END
+FixtureTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureTest.java
+END
+FixtureName.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/FixtureName.java
+END
+NullFixtureListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/NullFixtureListener.java
+END
+CannotLoadFixtureTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/CannotLoadFixtureTest.java
+END
+WikiRunner.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/WikiRunner.java
+END

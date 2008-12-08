@@ -1,0 +1,9 @@
+!include <JukeBox.SongInventory
+
+|script|
+|deposit|0.25|
+|select|$STAIRWAY|
+|check|credits|0|
+|check|now playing|Stairway to Heaven|
+|song finished|
+|check|now playing|none|

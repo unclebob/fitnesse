@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/fitnesse/!svn/ver/330/trunk/extra/release
+END
+license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svnroot/fitnesse/!svn/ver/3/trunk/extra/release/license.txt
+END
+run.bat
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/278/trunk/extra/release/run.bat
+END
+stop.bat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/fitnesse/!svn/ver/280/trunk/extra/release/stop.bat
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/fitnesse/!svn/ver/271/trunk/extra/release/README.txt
+END
+plugins.properties
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/330/trunk/extra/release/plugins.properties
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/fitnesse/!svn/ver/272/trunk/extra/release/run.sh
+END
+stop.sh
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/282/trunk/extra/release/stop.sh
+END

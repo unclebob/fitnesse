@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/test
+END
+Describable.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/Describable.java
+END
+DecisionTableExecuteThrows.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/DecisionTableExecuteThrows.java
+END
+Bowling.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/Bowling.java
+END
+DummyDecisionTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/DummyDecisionTable.java
+END
+TestSlim.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/TestSlim.java
+END
+LoginDialogDriver.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/LoginDialogDriver.java
+END
+ShouldIBuyMilk.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/358/trunk/src/fitnesse/slim/test/ShouldIBuyMilk.java
+END
+TestQuery.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/TestQuery.java
+END
+TestTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/TestTable.java
+END
+ClassWithNoPublicDefaultConstructor.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/fitnesse/!svn/ver/328/trunk/src/fitnesse/slim/test/ClassWithNoPublicDefaultConstructor.java
+END
+ExecuteThrowsReportableException.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/test/ExecuteThrowsReportableException.java
+END
+DescribableBase.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/test/DescribableBase.java
+END

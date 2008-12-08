@@ -1,0 +1,68 @@
+!3 !c This tutorial describes the RowFixture element of the [[FIT][http://fit.c2.com]] framework.  It is composed of the following sections:
+|!-fit.Fixture-!|
+|RowFixture|''This page.  Describes the basic functions of the fixture''|
+|RowFixtureFunctions|''Describes using functions in a RowFixture''|
+|RowFixtureMultipleKeys|''Describes how RowFixture deals with multiple keys.''|
+|DesigningWithRowFixture|''Tips and philosophy for designing with RowFixture.''|
+----
+!2 !c Basic Functionality of RowFixture
+Each row of a RowFixture represents a query into an array of objects.  The data columns specify the query criteria.  The function columns specify the operations to be performed and the data to be checked.
+
+For example, let's say that we have calculated the first five prime numbers.  Let's make sure we got them all.  Hit the test button to run this test.
+
+|!-fitnesse.fixtures.PrimeNumberRowFixture-!|
+|prime|
+|2|
+|3|
+|5|
+|7|
+|11|
+
+OK, we got them all.  Now here is the code for the !-PrimeNumberRowFixture-!:{{{package fitnesse.fixtures;
+
+import fit.RowFixture;
+
+public class PrimeNumberRowFixture extends RowFixture {
+  public Object[] query() throws Exception {
+    PrimeData[] array = new PrimeData[5];
+    array[0] = new PrimeData(11);
+    array[1] = new PrimeData(5);
+    array[2] = new PrimeData(3);
+    array[3] = new PrimeData(7);
+    array[4] = new PrimeData(2);
+    return array;
+  }
+
+  public Class getTargetClass() {
+    return PrimeData.class;
+  }
+} }}} And here is the code for !-PrimeData-! {{{package fitnesse.fixtures;
+
+public class PrimeData {
+  public int prime;
+  public PrimeData(int prime) {
+    this.prime = prime;
+  }
+} }}}  Notice that the column header in the table corresponds to the public member variable ''prime'' in !-PrimeData-!.  Notice also that the order of the elements in the array is not the same as the order of elements in the table.  That's what RowFixture does!  It makes the order of the entries in the table independent of the order of the entries in the array.  It ''querys'' the array for its elements.
+
+The following table shows what happens when you ask for an element that doesn't exist. ''(Note the extra 12.'')
+
+|!-fitnesse.fixtures.PrimeNumberRowFixture-!|
+|prime|
+|2|
+|3|
+|5|
+|7|
+|11|
+|12|
+
+And this table shows what happens when you don't ask for an element that exists.  ''(Note the 11 is missing.)''
+
+|!-fitnesse.fixtures.PrimeNumberRowFixture-!|
+|prime|
+|2|
+|3|
+|5|
+|7|
+
+!img http://files/images/runArrow.gif For more on RowFixture see: RowFixtureFunctions.

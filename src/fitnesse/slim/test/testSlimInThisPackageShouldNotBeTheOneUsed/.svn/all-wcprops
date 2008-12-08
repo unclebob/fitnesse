@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/test/testSlimInThisPackageShouldNotBeTheOneUsed
+END
+TestSlim.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/fitnesse/!svn/ver/387/trunk/src/fitnesse/slim/test/testSlimInThisPackageShouldNotBeTheOneUsed/TestSlim.java
+END

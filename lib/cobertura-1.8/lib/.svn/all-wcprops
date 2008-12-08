@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/135/trunk/lib/cobertura-1.8/lib
+END
+log4j-1.2.9.jar
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/135/trunk/lib/cobertura-1.8/lib/log4j-1.2.9.jar
+END
+jakarta-oro-2.0.8.jar
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/135/trunk/lib/cobertura-1.8/lib/jakarta-oro-2.0.8.jar
+END
+jakarta-oro-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/135/trunk/lib/cobertura-1.8/lib/jakarta-oro-license.txt
+END
+asm-2.2.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/135/trunk/lib/cobertura-1.8/lib/asm-2.2.1.jar
+END
+log4j-license.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/135/trunk/lib/cobertura-1.8/lib/log4j-license.txt
+END

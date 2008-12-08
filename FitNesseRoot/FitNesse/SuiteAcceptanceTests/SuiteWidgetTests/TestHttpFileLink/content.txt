@@ -1,0 +1,16 @@
+!2 Test that HTTP "files" links are rendered correctly
+If a string of the form !-http://files...-! appears in wiki text, it is converted to a link to the files directory of the current server.
+----
+!3 Check the creation of an HTTP link.
+ * First create a page with an http link on it.
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-HttpLinkPage-!|!-http://files/x-!||true|
+ * Then fetch the page.
+|Response Requester.|
+|uri|valid?|
+|!-HttpLinkPage-!|true|
+ * Then check that the link was properly rendered.
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<a href="/files/x">!-http://files/x-!</a>|true||

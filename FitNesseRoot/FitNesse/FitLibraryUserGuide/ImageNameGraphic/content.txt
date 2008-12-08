@@ -1,0 +1,21 @@
+Here we use images in a GridFixture; they can be used as a value with any of the FitLibrary fixtures.
+!|fitlibrary.specify.GridFixtureUnderTest|
+
+|images|
+|!img http://files/gameImages/wall.jpg |!img http://files/gameImages/space.jpg |!img http://files/gameImages/box.jpg |!img http://files/gameImages/space.jpg |!img http://files/gameImages/wall.jpg |
+The corresponding code:
+----{{{public class GridFixtureUnderTest extends DoFixture {
+    public Fixture images() {
+        return new GridFixture(new ImageNameGraphic[][] {
+          {     new ImageNameGraphic("images/wall.jpg"),
+        	new ImageNameGraphic("gameImages/space.jpg"),
+        	new ImageNameGraphic("gameImages/box.jpg"),
+        	new ImageNameGraphic("gameImages/space.jpg"),
+        	new ImageNameGraphic("gameImages/wall.jpg") }});
+    }
+
+}}}----
+Because the type is ''!-ImageNameGraphic-!'', the values in the grid are treated specially.  The file name for the image is compared against the file name in the ''!-ImageNameGraphic-!''. An ''!-ImageNameGraphic-!'' is a MetaTypeAdapter.
+
+---- * ''Copyright (c) 2004, 2005, 2006 Rick Mugridge, http://www.rimuresearch.com''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

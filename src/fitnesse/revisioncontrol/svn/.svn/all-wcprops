@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/svn
+END
+SVNState.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/svn/SVNState.java
+END
+SVNStateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/svn/SVNStateTest.java
+END
+SVNRevisionController.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/revisioncontrol/svn/SVNRevisionController.java
+END

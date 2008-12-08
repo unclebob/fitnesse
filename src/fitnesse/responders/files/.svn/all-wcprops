@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files
+END
+FileResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/FileResponder.java
+END
+FileResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/FileResponderTest.java
+END
+RenameFileConfirmationResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/RenameFileConfirmationResponder.java
+END
+RenameFileConfirmationResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/RenameFileConfirmationResponderTest.java
+END
+SampleFileUtility.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/SampleFileUtility.java
+END
+UploadResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/UploadResponder.java
+END
+UploadResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/UploadResponderTest.java
+END
+CreateDirectoryResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/CreateDirectoryResponder.java
+END
+CreateDirectoryResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/CreateDirectoryResponderTest.java
+END
+DeleteFileResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/DeleteFileResponder.java
+END
+DeleteFileResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/DeleteFileResponderTest.java
+END
+DirectoryResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/DirectoryResponder.java
+END
+DirectoryResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/DirectoryResponderTest.java
+END
+RenameFileResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/RenameFileResponder.java
+END
+RenameFileResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/RenameFileResponderTest.java
+END
+DeleteConfirmationResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/DeleteConfirmationResponder.java
+END
+DeleteConfirmationResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/files/DeleteConfirmationResponderTest.java
+END

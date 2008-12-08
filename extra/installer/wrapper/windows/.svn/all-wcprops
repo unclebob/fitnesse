@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/installer/wrapper/windows
+END
+fitnesse.conf
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/3/trunk/extra/installer/wrapper/windows/fitnesse.conf
+END
+FitNesseConsole.bat
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/3/trunk/extra/installer/wrapper/windows/FitNesseConsole.bat
+END
+InstallFitNesseSvc.bat
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/3/trunk/extra/installer/wrapper/windows/InstallFitNesseSvc.bat
+END
+wrapper.dll
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/installer/wrapper/windows/wrapper.dll
+END
+UninstallFitNesseSvc.bat
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/3/trunk/extra/installer/wrapper/windows/UninstallFitNesseSvc.bat
+END
+wrapper.jar
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/installer/wrapper/windows/wrapper.jar
+END

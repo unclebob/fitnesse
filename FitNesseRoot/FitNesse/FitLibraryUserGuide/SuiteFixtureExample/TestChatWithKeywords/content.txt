@@ -1,0 +1,14 @@
+ * This has keywords, and it's selected to be run
+|''keywords''|complete,connect|
+
+|''chat''|
+
+|''connect user''|sarah|
+
+|''user''|sarah|''creates''|fit|''room''|
+|''user''|sarah|''enters''|fit|''room''|
+
+|''users in room''|fit|
+|''name''|
+|sarah|
+

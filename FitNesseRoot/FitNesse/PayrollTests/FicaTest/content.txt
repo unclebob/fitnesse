@@ -1,0 +1,34 @@
+!1 !c Simple Acceptance Test for Social Security
+!2 We want to test that social securithy deductions are being made from the paycheck.
+Social Security is 5% up to $80,000
+----
+|!-payrollTest.FicaValues-!|
+|rate|limit|
+|0.05|80000|
+
+Add a few employees.
+
+|payrollTest.Employees|
+|id|name|address|salary|valid?|
+|1|Jeff Languid|10 Adamant St; Laurel, MD 20707|1005.00|true|
+|2|Kelp Holland|12B Baker St; Cottonmouth, IL 60066|2000.00|true|
+
+Next we pay them.
+
+|!-payrollTest.PayDay-!|
+|payDate|checkNumber|valid?|
+|1/31/2001|1000|true|
+
+We make sure their paychecks are correct.  The blank cells will be filled in by the PaycheckInspector fixture.  The cells with data in them already will be checked.
+
+|!-payrollTest.PaycheckInspector-!|
+|id|amount|fica|number|name|date|
+|1|954.75|50.25||||
+|2|1900|100||||
+
+Finally we make sure that the output contained two, and only two paychecks, and that they had the right check numbers.
+
+|!-payrollTest.PaycheckInspector-!|
+|number|
+|1000|
+|1001|

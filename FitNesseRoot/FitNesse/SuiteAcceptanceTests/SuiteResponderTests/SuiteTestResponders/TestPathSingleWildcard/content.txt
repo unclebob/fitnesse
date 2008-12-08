@@ -1,0 +1,9 @@
+!path lib/*.jar
+
+The lib directory should at least contain testsingle.jar
+
+!|Java Properties|
+|show|property|java.class.path|
+|property|java.class.path|should match|.*lib[/\\]dummy\.jar.*|
+
+

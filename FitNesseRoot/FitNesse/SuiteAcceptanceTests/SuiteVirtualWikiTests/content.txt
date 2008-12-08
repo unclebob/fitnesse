@@ -1,0 +1,11 @@
+This suite specifies the behavior of the virtual wiki feature.  These tests use some special pages that exist in ''this'' wiki.  The pages are .FitNesse.SuiteAcceptanceTests.AcceptanceTestPage and its children.
+
+^TestVirtualLinkConnection
+^TestVirtualLinkError
+^TestAccessVirtualChild
+^TestQuestionMarkLinkDefersToRemoteServer
+^TestQuestionMarkLinkForChildPage
+^TestAliasLinkToNonExistentPageDefersToRemoteServer
+^TestAliasLinkToNonExistentSubPage
+^TestIncludedPageInRange
+^TestIncludedPageOutOfRange

@@ -1,0 +1,38 @@
+ConstraintFixture is a variation of CalculateFixture that has an implied expected value of true (or false).
+
+For example, the following ConstraintFixture table just has given columns and is checking the constraint that the ''a'' value is less than the ''b'' value:
+
+|!-fitlibrary.specify.SucceedConstraint-!|
+|a|b|
+|1|2|
+|2|5|
+
+The two rows are colored green because the constraint is satisfied. For each value row, the method ''aB()'' is called in the class ''!-SucceedConstraint-!'', as follows:
+----{{{public class SucceedConstraint extends ConstraintFixture {
+	public boolean aB(int a, int b) {
+		return a < b;
+	}
+}
+}}}----
+If the method returns ''true'' the row passes, otherwise it is colored red.
+
+We can also have a fixture that expects the result to be false, such that a is '''not''' less than ''b'':
+
+|!-fitlibrary.specify.FailConstraint-!|
+|b|a|
+|1|2|
+|2|5|
+
+The fixture class is as follow:
+----{{{public class FailConstraint extends ConstraintFixture {
+	public FailConstraint() {
+		super(false);
+	}
+	public boolean bA(int b, int a) {
+		return a < b;
+	}
+}
+}}}----
+Notice how it passes the expected value of ''false'' to the superclass.
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

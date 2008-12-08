@@ -1,0 +1,7 @@
+|script|
+|start|simple script|
+|set arg|x|
+|check|get arg|x|
+|show|get arg|
+|$X=|get arg|
+|check|get arg|$X|

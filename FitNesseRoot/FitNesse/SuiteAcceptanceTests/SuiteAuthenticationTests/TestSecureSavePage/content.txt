@@ -1,0 +1,26 @@
+If you try to save a page marked secure-write, you'll need to authenticate.
+
+First setup the Authentication module.
+!|Authenticator Setup|
+|username|password|status?|
+|Aladdin|open sesame||
+
+Create a page to be edited.
+!|Page creator.|
+|Page name.|page contents.|page attributes|valid?|
+|FrontPage |contents|secure-write=true|true|
+
+Now request a page.  We should get a 401 since we didn't suply any credentials.
+!|Response Requester.|
+|uri|status?|
+|FrontPage?responder=saveData&pageContent=hi+there&saveId=0&ticketId=0 |401     |
+
+When we supply bad credentials we get a 401.
+!|Response Requester.|
+|uri|username|password|status?|
+|FrontPage?responder=saveData&pageContent=hi+there&saveId=0&ticketId=0|Aladdin|open please|401|
+
+Proper credentials give a successfull response (303 is a redirect to the saved page).
+!|Response Requester.|
+|uri|username|password|status?|
+|FrontPage?responder=saveData&pageContent=hi+there&saveId=0&ticketId=0|Aladdin|open sesame|303|

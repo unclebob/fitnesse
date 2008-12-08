@@ -1,0 +1,38 @@
+The username of the person who last modified a page is displayed in the properties view of the modified page.
+
+!|Save Page Requester|
+|uri   |username|password|save contents|
+|PageOne|Aladdin|open sesame|page one|
+|PageTwo|Genie|rubadubdub|page two|
+|PageThree|null|null|page three|
+
+Get the properties for the page that Aladdin edited.
+!|Response Requester|
+|uri|status!|contents?|
+|PageOne?properties|200||
+
+Aladdin's name is on the page.
+!|Response Examiner|
+|type  |pattern|matches!|
+|contents|Aladdin|yes|
+
+Get that properties for the page that Genie edited
+!|Response Requester|
+|uri|status!|contents?|
+|PageTwo?properties|200||
+
+Genie's name is on the page.
+!|Response Examiner|
+|type  |pattern|matches!|
+|contents|Genie|yes|
+
+Get the page that was edited anonymously.
+!|Response Requester|
+|uri|status!|contents?|
+|PageThree?properties|200||
+
+Nobody's name is on it.
+!|Response Examiner|
+|type  |pattern|matches!|
+|contents|Aladdin|no|
+|contents|Genie|no|

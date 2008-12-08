@@ -1,0 +1,20 @@
+!2 Downloading and Installing FitNesse
+It really takes very little time and effort to get FitNesse running on your machine.
+ 1 Go to http://fitnesse.org/FitNesse.DownLoad and click on "'''Full Distribution'''". Save the fitnesse.zip to some directory.  Let's call that directory ''root''.
+ 2 Unzip fitnesse.zip.
+  * This should create a ''fitnesse'' directory below ''root'' with the following files and folders:
+  * !-FitNesseRoot-!, README.txt, dotnet, license.txt, fitnesse.jar, run.bat, run.sh
+ 3 Now go to the ''root''/fitnesse folder and double-click run.bat
+  * If you have nothing running on port 80 on your machine, you should see a message similar to the following:
+   * Fitnesse (''date code'') Started...
+    * on port      80
+    * using path   '.'
+    * using dir    '!-FitNesseRoot-!'
+    * Not logging.
+  * If you don't see this, check out FitNesseWontStart.
+ 4 Start up a browser and go to http://localhost
+  * ''or if you had to edit run.bat in step 3 then go to http://localhost:8080.''
+ 5 The main FitNesse screen should come up. That's it. You're ready to start using FitNesse.
+!2 Learning More
+If you have not yet done so, check out the TwoMinuteExample. To learn more about what FitNesse acceptance testing is all about, see AcceptanceTests.  If you are ready to start creating FitNesse pages and test tables, check out EditingFitNessePages and CreatingTestTables.
+

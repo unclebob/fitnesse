@@ -1,0 +1,2 @@
+Moved !-TableFixture-! to fitnesse.fixtures namespace (per java version and FIT book).
+Fixed bug in which methods were executed 3 times (instead of once) in column fixtures.

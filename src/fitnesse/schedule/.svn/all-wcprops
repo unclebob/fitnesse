@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/schedule
+END
+NullSchedule.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/schedule/NullSchedule.java
+END
+ScheduleItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/schedule/ScheduleItem.java
+END
+Schedule.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/schedule/Schedule.java
+END
+ScheduleTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/schedule/ScheduleTest.java
+END
+ScheduleImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/schedule/ScheduleImpl.java
+END

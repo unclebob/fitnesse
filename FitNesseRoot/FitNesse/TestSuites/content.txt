@@ -1,0 +1,28 @@
+!1 Suites of Tests
+A suite is a collection of test pages that can all be run together, and whose results are then collected for you on a single results page. For an example of a Suite of tests, see TriviaGameUserStories.
+
+!3 Setting up a '''Suite''' page.
+You can run all the test pages in a sub-wiki by setting the "Suite" property of a page (see [[Page Properties][PageProperties]]).  That page will then include a "Suite" button that will execute all the test pages in that hierarchy.
+
+!3 !-SetUp-! and !-TearDown-!
+Sometimes you will need to delete a test database at the end of each test in a suite, or create an empty database at the beginning of each test.  Operations like this can be performed by writing special fixtures that perform these functions in their constructors.  These fixtures can then be invoked in the '''!-SetUp-!''' and '''!-TearDown-!''' pages of the suite.  See SetUpAndTearDownPages.
+
+To perform operations at the beginning or end of an entire suite, rather than for each test, define the operations on pages named '''!-SuiteSetUp-!''' and '''!-SuiteTearDown-!'''.
+
+!3 SubWiki: the Best Way to Organize TestSuites
+
+[[SubWikis][SubWiki]] are convenient for creating a hierarchical structure for your suite of tests.  You can put test pages below subsystems and/or features.  You can organize ClassPath definitions and !fixture statements in the parent pages, so that FitNesse can easily find all of the FixtureCode for the suite, and so that you can easily move that FixtureCode when you need to.
+
+!3 Suite Cross References
+
+Sometimes you want to compose a test suite from test pages that are in many different modules, subsystems, or features.  For example you might want a test suite that lists all the test pages for the current iteration, or you might want a test suite that lists all the currently passing tests, or you may want to create a test suite for all the quickly executing tests, and another for all the slow tests.
+
+To do this you can use the [['''!-!see-!'''][MarkupCrossReference]] command in a test suite.  Any test pages referenced by '''!-!see-!''' on a suite page will be executed as part of that suite.
+
+!3 Suite Filters
+
+There is an alternative to the !-!see-! command to aggregate some tests into a suite: the so-called suite filter.
+
+The properties page offers a field labeled ''Suites'' where you can enter a comma-separated list of keywords. You can execute only those tests in a subwiki (i.e. filter the tests) which have been marked with a certain keyword. For this purpose, the desired keyword has to be passed as an additional request parameter named '''suiteFilter''' to FitNesse like this:
+{{{http://<host>:<port>/<suite path and test name>?responder=suite&suiteFilter=smoke}}}
+Typically, you will need only a few of such filtered suites, so it is suggested to build a link on the front page or so which contains the respective suite filter parameters. (If you simply click on the ''Suites'' button to run a suite, the !-suiteFilter-! is not set, so all tests in the respective subwiki are run.)

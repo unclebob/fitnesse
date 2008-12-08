@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/366/trunk/src/org/fitnesse/triviaGameExample/fitnesseFixtures
+END
+StaticGame.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svnroot/fitnesse/!svn/ver/366/trunk/src/org/fitnesse/triviaGameExample/fitnesseFixtures/StaticGame.java
+END
+GameTurnFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svnroot/fitnesse/!svn/ver/366/trunk/src/org/fitnesse/triviaGameExample/fitnesseFixtures/GameTurnFixture.java
+END
+AddRemovePlayerFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svnroot/fitnesse/!svn/ver/366/trunk/src/org/fitnesse/triviaGameExample/fitnesseFixtures/AddRemovePlayerFixture.java
+END

@@ -1,0 +1,40 @@
+9
+
+dir
+382
+https://fitnesse.svn.sourceforge.net/svnroot/fitnesse/trunk/lib/testDirectory
+https://fitnesse.svn.sourceforge.net/svnroot/fitnesse
+
+
+
+2008-07-02T13:23:40.979578Z
+288
+robertmartin
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+57a019cf-8a1a-0410-8d1a-f715e8e97b57
+
+dummy.jar
+file
+
+
+
+
+2008-07-02T13:21:12.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2008-07-02T13:23:40.979578Z
+288
+robertmartin
+

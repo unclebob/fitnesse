@@ -1,0 +1,23 @@
+Here's the code for the example table:
+|!-DiscountGroupsSetUp-!|
+|future value|max balance|min purchase|discount %|
+|low|0.00|0.00|0|
+|medium|0.00|500.00|5|
+----{{{public class DiscountGroupsSetUp extends fitlibrary.SetUpFixture {
+    DiscountApplication app = new DiscountApplication();
+    public void futureValueMaxBalanceMinPurchaseDiscountPercent(
+            String futureValue, double maxBalance, double minPurchase,
+            double discountPercent) {
+        app.addDiscountGroup(futureValue,maxBalance,
+                minPurchase,discountPercent);
+    }
+} }}}----
+For each row of the table, the method ''futureValueMaxBalanceMinPurchaseDiscountPercent()'' is called with each of the values.
+!3 In General
+ * The method name is derived from concatenating all of the ''given'' labels and converting into a valid identifier using [[''extended camel casing''][.FitLibraryUserGuide.ExtendedCamelCase]].
+ * The method ''setUp()'' may be overridden in a subclass; this is called before the rows are processed.
+ * The method ''setUp()'' may also be overridden; this is called after all the rows have been processed.
+ * As with [[''!-CalculateFixture-!''][.FitLibraryUserGuide.CalculateFixture.WritingFixtures]] and [[''!-DoFixture-!''][.FitLibraryUserGuide.DoFixture.FixtureDetails]], a ''!-SystemUnderTest-!'' object may be associated with a ''!-SetUpFixture-!''. If the fixture itself doesn't have a required method, the one in the ''!-SystemUnderTest-!'' is called instead. This means that the fixture acts as an adapter only when necessary, to map actions in the table into methods in the ''!-SystemUnderTest-!''.
+---- * ''Copyright (c) 2004 Rick Mugridge, University of Auckland, New Zealand.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''
+

@@ -1,0 +1,33 @@
+Let's look at what happens when an action fails.
+
+| !-ChatStart-! |
+
+|''connect user''|sarah|
+
+|''user''|sarah|''creates''|fit|''room''|
+
+There should be no occupants in the "fitNesse" room:
+
+|check|''occupants''|fit|0|
+
+Sarah can't enter an unknown room:
+
+|''user''|sarah|''enters''|unfit|''room''|
+
+We can expect that, by putting ''reject'' in the first cell:
+
+|reject|''user''|sarah|''enters''|unfit|''room''|
+
+and an unknown user can't create a room:
+
+|reject|''user''|george|''creates''|unfit|''room''|
+
+Sarah hasn't entered the room, so she can't be in there:
+
+|''users in room''|fit|
+|''name''|
+|sarah|
+
+Here's a ''DoFixtureSummary''.
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

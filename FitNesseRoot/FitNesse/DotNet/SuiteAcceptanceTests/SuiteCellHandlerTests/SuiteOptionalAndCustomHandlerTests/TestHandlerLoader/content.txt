@@ -1,0 +1,79 @@
+!3 You can manipulate the list of loaded cell handlers using the !-CellHandlerLoaderFixture-!.
+----
+Here are the defaults.
+
+!|cell handler inspector|
+|Name|
+|DefaultCellHandler|
+|BlankKeywordHandler|
+|NullKeywordHandler|
+|ErrorKeywordHandler|
+|EmptyCellHandler|
+|BoolHandler|
+|SymbolSaveHandler|
+|SymbolRecallHandler|
+|FailKeywordHandler|
+|ExceptionKeywordHandler|
+
+Now clear the handlers..
+!|cell handler loader|
+|clear|
+
+and the list should be empty.
+!|cell handler inspector|
+|Name|
+
+No reload the defaults..
+!|cell handler loader|
+|loadDefaults|
+
+and they should all be in the list.
+!|cell handler inspector|
+|Name|
+|DefaultCellHandler|
+|BlankKeywordHandler|
+|NullKeywordHandler|
+|ErrorKeywordHandler|
+|EmptyCellHandler|
+|BoolHandler|
+|SymbolSaveHandler|
+|SymbolRecallHandler|
+|FailKeywordHandler|
+|ExceptionKeywordHandler|
+
+Add an optional handler..
+!|cell handler loader|
+|load|SubstringHandler|
+
+and it should be in the list.
+!|cell handler inspector|
+|Name|
+|DefaultCellHandler|
+|BlankKeywordHandler|
+|NullKeywordHandler|
+|ErrorKeywordHandler|
+|EmptyCellHandler|
+|BoolHandler|
+|SymbolSaveHandler|
+|SymbolRecallHandler|
+|FailKeywordHandler|
+|ExceptionKeywordHandler|
+|SubstringHandler|
+
+Remove a single handler..
+!|cell handler loader|
+|remove|SubstringHandler|
+
+and it should not be in the list.
+!|cell handler inspector|
+|Name|
+|DefaultCellHandler|
+|BlankKeywordHandler|
+|NullKeywordHandler|
+|ErrorKeywordHandler|
+|EmptyCellHandler|
+|BoolHandler|
+|SymbolSaveHandler|
+|SymbolRecallHandler|
+|FailKeywordHandler|
+|ExceptionKeywordHandler|

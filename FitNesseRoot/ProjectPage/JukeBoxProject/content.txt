@@ -1,0 +1,4 @@
+This is the top of the JukeBox project.
+!define TEST_SYSTEM {slim}
+!path /Users/unclebob/projects/JukeBox/out/production/JukeBox
+!contents -R2 -g -p -f -h

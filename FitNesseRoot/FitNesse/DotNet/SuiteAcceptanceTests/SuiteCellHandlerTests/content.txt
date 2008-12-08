@@ -1,0 +1,7 @@
+'''NOTE: These will only work for !-ColumnFixture-!, though they may be supported in !-RowFixture-! in a future release.'''
+
+!-CellHandlers-! allow !-FitNesse-! to figure out how to handle a cell based on certain characters or keywords in that cell. In Column Fixtures, the text in the column header will determine whether to input new data or examine existing data (^TestQuerySymbols).
+
+The individual cells in a column will be handled in different ways depending on the patterns that exist in the cells. There are default handlers (^SuiteDefaultCellHandlerTests), optional handlers that are available in [[!-FitNesse-!][.FitNesse]] (^SuiteOptionalAndCustomHandlerTests) and a mechanism for adding your own handlers (^SuiteOptionalAndCustomHandlerTests).
+
+!contents

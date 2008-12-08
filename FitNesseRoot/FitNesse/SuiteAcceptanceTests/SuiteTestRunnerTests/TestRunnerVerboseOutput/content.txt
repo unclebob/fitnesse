@@ -1,0 +1,11 @@
+When no other options are supplied, the TestRunner will print simple messages to standard out.  For each passing assertion a . will be printed.  When an error or failure occurs, the failing page's name is diaplayed along with a brief message. The final counts are printed at the end of execution.
+
+!include CreateSamplePages
+
+!|Test Runner Fixture|
+|args|page name|output?|
+|-v|SuiteFodder.TestPassing|Test Runner for Root Path: TestPassing\nPage:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0\n|
+|-v|SuiteFodder.TestFailing|Test Runner for Root Path: TestFailing\nPage:(TestFailing) right:0, wrong:1, ignored:0, exceptions:0\n|
+|-v|SuiteFodder.TestIgnoring|Test Runner for Root Path: TestIgnoring\nPage:(TestIgnoring) right:0, wrong:0, ignored:1, exceptions:0\n|
+|-v|SuiteFodder.TestCrashing|Test Runner for Root Path: TestCrashing\nPage:(TestCrashing) right:0, wrong:0, ignored:0, exceptions:1\n|
+|-v|SuiteFodder|Test Runner for Root Path: SuiteFodder\nPage:TestCrashing right:0, wrong:0, ignored:0, exceptions:1\nPage:TestFailing right:0, wrong:1, ignored:0, exceptions:0\nPage:TestIgnoring right:0, wrong:0, ignored:1, exceptions:0\nPage:TestPassing right:1, wrong:0, ignored:0, exceptions:0\n|

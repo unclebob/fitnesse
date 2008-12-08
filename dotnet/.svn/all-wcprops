@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svnroot/fitnesse/!svn/ver/333/trunk/dotnet
+END
+FitLibrary.dll
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/333/trunk/dotnet/FitLibrary.dll
+END
+FitServer.exe
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/fitnesse/!svn/ver/333/trunk/dotnet/FitServer.exe
+END
+TestRunner.exe
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/333/trunk/dotnet/TestRunner.exe
+END
+fit.dll
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/fitnesse/!svn/ver/333/trunk/dotnet/fit.dll
+END

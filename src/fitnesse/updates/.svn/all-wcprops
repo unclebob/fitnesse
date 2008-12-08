@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates
+END
+VirtualWikiDepricationUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/VirtualWikiDepricationUpdateTest.java
+END
+Updater.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/Updater.java
+END
+UpdaterTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/UpdaterTest.java
+END
+AttributeAdderUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/AttributeAdderUpdate.java
+END
+ReplacingFileUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/ReplacingFileUpdate.java
+END
+ReplacingFileUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/ReplacingFileUpdateTest.java
+END
+SymLinkPropertyFormatUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/SymLinkPropertyFormatUpdate.java
+END
+SymLinkPropertyFormatUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/SymLinkPropertyFormatUpdateTest.java
+END
+UpdateTestCase.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/UpdateTestCase.java
+END
+WikiImportPropertyFormatUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/WikiImportPropertyFormatUpdate.java
+END
+WikiImportPropertyFormatUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/WikiImportPropertyFormatUpdateTest.java
+END
+FileUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/FileUpdate.java
+END
+FileUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/FileUpdateTest.java
+END
+Update.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/Update.java
+END
+PropertiesToXmlUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/PropertiesToXmlUpdate.java
+END
+PropertiesToXmlUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/PropertiesToXmlUpdateTest.java
+END
+PageTraversingUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/PageTraversingUpdate.java
+END
+FrontPageUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/FrontPageUpdate.java
+END
+FrontPageUpdateTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/FrontPageUpdateTest.java
+END
+VirtualWikiDeprecationUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/updates/VirtualWikiDeprecationUpdate.java
+END

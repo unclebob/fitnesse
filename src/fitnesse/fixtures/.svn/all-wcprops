@@ -1,0 +1,269 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures
+END
+FileSection.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FileSection.java
+END
+PrimeData.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PrimeData.java
+END
+Sleep.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/Sleep.java
+END
+WouldBeFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/WouldBeFixture.java
+END
+EmployeePayRecordsRowFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/EmployeePayRecordsRowFixture.java
+END
+LoopingActionFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/LoopingActionFixture.java
+END
+HandleFixtureDoesNotExtendFixtureTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/HandleFixtureDoesNotExtendFixtureTest.java
+END
+StringFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/StringFixture.java
+END
+TestRunnerFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/TestRunnerFixture.java
+END
+PageBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PageBuilder.java
+END
+PrimeNumberRowFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PrimeNumberRowFixture.java
+END
+ComplexAddFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/ComplexAddFixture.java
+END
+EmployeePayRecord.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/EmployeePayRecord.java
+END
+ActionFixtureTestFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/ActionFixtureTestFixture.java
+END
+AuthenticatorSetup.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/AuthenticatorSetup.java
+END
+SavePageRequester.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/SavePageRequester.java
+END
+FitnesseFixtureContext.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FitnesseFixtureContext.java
+END
+CountFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/CountFixture.java
+END
+RowEntryFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/RowEntryFixture.java
+END
+RowEntryFixtureTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/RowEntryFixtureTest.java
+END
+SetUp.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/SetUp.java
+END
+FileSystemPageSetUp.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FileSystemPageSetUp.java
+END
+ClasspathPrintingFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/ClasspathPrintingFixture.java
+END
+FileSectionFileAdder.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FileSectionFileAdder.java
+END
+PrimeFactorsFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PrimeFactorsFixture.java
+END
+RowEntryExample.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/RowEntryExample.java
+END
+ColumnFixtureTestFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/ColumnFixtureTestFixture.java
+END
+NullAndBlankFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/NullAndBlankFixture.java
+END
+FileSectionDirectoryListing.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FileSectionDirectoryListing.java
+END
+TearDown.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/TearDown.java
+END
+FitNesseStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FitNesseStatus.java
+END
+FileSystemPageTearDown.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/FileSystemPageTearDown.java
+END
+PayCheckRecord.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PayCheckRecord.java
+END
+RenderFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/RenderFixture.java
+END
+DelayedCountFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/DelayedCountFixture.java
+END
+ResponseExaminer.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/ResponseExaminer.java
+END
+SystemPropertySetterFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/SystemPropertySetterFixture.java
+END
+PageCreator.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PageCreator.java
+END
+PageCreatorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PageCreatorTest.java
+END
+PayCheckRecordFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/PayCheckRecordFixture.java
+END
+JavaProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/JavaProperties.java
+END
+NoDefaultConstructorFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/NoDefaultConstructorFixture.java
+END
+ResponseRequester.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/ResponseRequester.java
+END
+TableFixture.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/fixtures/TableFixture.java
+END

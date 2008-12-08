@@ -1,0 +1,21 @@
+!2 Test the !1 header widget
+If !1 is at the beginning of a line, then the rest of the line will be formatted as Header one.
+----
+!3 First create a page with header one text on it.
+#
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-HeaderOneTextPage-!|!-!1 Header one-!||true|
+#
+!3 Then request that page
+#
+|Response Requester.|
+|uri|valid?|
+|!-HeaderOneTextPage-!|true|
+#
+!3 Examine the page to be sure it has the Header One text
+#
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|<h1>Header one</h1>|true||
+

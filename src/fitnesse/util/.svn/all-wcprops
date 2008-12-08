@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util
+END
+Expression.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/Expression.java
+END
+ListUtility.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/ListUtility.java
+END
+StringUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/StringUtil.java
+END
+StringUtilTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/StringUtilTest.java
+END
+Wildcard.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/Wildcard.java
+END
+WildcardTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/WildcardTest.java
+END
+StandardOutAndErrorRecorder.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/StandardOutAndErrorRecorder.java
+END
+FileUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/FileUtil.java
+END
+FileUtilTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/FileUtilTest.java
+END
+StreamReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/StreamReader.java
+END
+StreamReaderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/StreamReaderTest.java
+END
+XmlUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/XmlUtil.java
+END
+XmlUtilTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/util/XmlUtilTest.java
+END

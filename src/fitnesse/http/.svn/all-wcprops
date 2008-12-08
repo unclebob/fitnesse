@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http
+END
+RequestBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/RequestBuilder.java
+END
+RequestBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/RequestBuilderTest.java
+END
+ResponseSender.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/ResponseSender.java
+END
+ChunkedResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/ChunkedResponse.java
+END
+ChunkedResponseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/ChunkedResponseTest.java
+END
+MockRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/MockRequest.java
+END
+SimpleResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/SimpleResponse.java
+END
+SimpleResponseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/SimpleResponseTest.java
+END
+MockResponseSender.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/MockResponseSender.java
+END
+ResponseParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/ResponseParser.java
+END
+ResponseParserTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/ResponseParserTest.java
+END
+Request.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/Request.java
+END
+RequestTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/RequestTest.java
+END
+InputStreamResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/InputStreamResponse.java
+END
+InputStreamResponseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/InputStreamResponseTest.java
+END
+UploadedFile.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/UploadedFile.java
+END
+HttpException.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/HttpException.java
+END
+Response.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/http/Response.java
+END

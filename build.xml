@@ -1,0 +1,184 @@
+<project name="Fitnesse" default="all" basedir=".">
+  <description>
+    Fitnesse is a wiki wrapper for fit, an acceptance test framework.
+  </description>
+
+  <property name="src" location="src"/>
+  <property name="src2" location="srcFitServerTests"/>
+  <property name="classes" location="classes"/>
+  <property name="lib" location="lib"/>
+  <property name="fitnesseRoot" value="FitNesseRoot"/>
+  <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
+  <property name="zipDir" location="dist/fitnesse"/>
+  <property name="results.dir" location="test-results"/>
+
+  <property name="cobertura.root" value="${lib}/cobertura-1.8"/>
+  <property name="cobertura.dir" value="${results.dir}/cobertura"/>
+
+  <path id="classpath">
+    <pathelement path="classes"/>
+    <fileset dir="lib">
+      <include name="*.jar"/>
+      <exclude name="dummy.jar"/>
+    </fileset>
+  </path>
+
+  <target name="all" depends="testbuild"
+          description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests."/>
+
+  <target name="build" depends="clean, compile" description="clean, then compile the source"/>
+
+  <target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests"
+          description="builds code from scratch, runs all the unit tests and acceptance tests"/>
+
+  <target name="build_distribution" depends="zip_src, zip_bin"
+          description="The thing you do when distributing a new release."/>
+
+  <target name="assemble_bin" depends="clean_dist, jar, copy_distribution"
+          description="create the binary distribution"/>
+
+  <target name="copy_distribution" description="just copy the files into dist">
+    <tstamp/>
+    <copy todir="dist/fitnesse">
+      <fileset dir="extra/release" includes="**"/>
+      <fileset dir="dist" includes="fitnesse.jar"/>
+      <fileset dir=".">
+        <include name="FitNesseRoot/**"/>
+        <include name="lib/**"/>
+        <exclude name="**/*.zip"/>
+        <exclude name="**/.DS_Store"/>
+        <exclude name="**/Thumbs.db"/>
+      </fileset>
+      <fileset dir="lib" includes="fitlibrary.jar"/>
+    </copy>
+    <mkdir dir="dist/fitnesse/dotnet"/>
+    <mkdir dir="dotnet"/>
+    <copy todir="dist/fitnesse/dotnet">
+      <fileset dir="dotnet">
+        <include name="*.exe"/>
+        <include name="*.dll"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="zip_bin" depends="assemble_bin" description="zip up the binary distribution">
+    <zip zipfile="fitnesse${DSTAMP}.zip" basedir="dist" includes="fitnesse/**" excludes="**/Thumbs.db"/>
+  </target>
+
+  <target name="zip_src" depends="clean_dist" description="Packages all the source into a .zip file">
+    <tstamp/>
+    <zip zipfile="fitnesse_src${DSTAMP}.zip">
+      <fileset dir=".">
+        <include name="src/**"/>
+        <include name="srcFitServerTests/**"/>
+        <include name="lib/**"/>
+        <include name="extra/**"/>
+        <include name="build.xml"/>
+        <include name="dotnet/**"/>
+        <include name="BUILD_README.txt"/>
+        <include name="templates/**"/>
+        <exclude name="**/fitnesse*.zip"/>
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="jar" depends="build, copyResources" description="generate the jar file">
+    <mkdir dir="dist"/>
+    <delete file="dist/fitnesse.jar"/>
+
+    <jar jarfile="dist/fitnesse.jar" basedir="classes">
+      <include name="**/*.class"/>
+      <exclude name="**/*Test.class"/>
+      <exclude name="**/*TestSuite.class"/>
+      <include name="files/**"/>
+      <include name="tasks.properties"/>
+      <manifest>
+        <attribute name="Built-By" value="Object Mentor, Inc."/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="copyResources" description="copy images, css, and other resources into the classes directory">
+    <delete dir="classes/files"/>
+    <mkdir dir="classes/files"/>
+    <copy todir="classes/files">
+      <fileset dir="extra">
+        <include name="images/**/*.gif"/>
+        <include name="images/**/*.jpg"/>
+        <include name="css/*.css"/>
+        <include name="javascript/*.js"/>
+        <exclude name="juUnitTestLink.js"/>
+        <exclude name="**/unused/**"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile" depends="init, stamp-version" description="compile the source (make)">
+    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true"/>
+    <javac srcdir="srcFitServerTests" destdir="classes" classpathref="classpath" debug="true"/>
+    <copy file="extra/ant/tasks.properties" todir="classes"/>
+  </target>
+
+  <target name="stamp-version">
+    <delete file="src/fitnesse/FitNesseVersion.java"/>
+    <delete file="FitNesseRoot/FrontPage/content.txt"/>
+    <tstamp/>
+    <filter token="version" value="${DSTAMP}"/>
+    <copy filtering="true"
+          file="templates/FitNesseVersion.java.template"
+          tofile="src/fitnesse/FitNesseVersion.java"/>
+    <copy filtering="true"
+          file="templates/FrontPage.content.txt.template"
+          tofile="FitNesseRoot/FrontPage/content.txt"/>
+  </target>
+
+  <target name="clean" description="delete everything in the classes directory">
+    <delete dir="classes"/>
+    <mkdir dir="classes"/>
+    <delete dir="test-results"/>
+  </target>
+
+  <target name="unit_test" depends="compile" description="run the unit tests">
+    <junit fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
+      <classpath refid="classpath"/>
+      <formatter type="xml" usefile="true"/>
+      <formatter type="plain" usefile="false"/>
+      <batchtest todir="test-results">
+        <fileset dir="src">
+          <include name="**/*Test.java"/>
+          <exclude name="**/ShutdownResponderTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="clean_dist" description="clean out the distribution folder">
+    <mkdir dir="dist"/>
+    <delete>
+      <fileset dir="dist">
+        <include name="fitnesse*.zip"/>
+        <include name="fitnesse.jar"/>
+        <exclude name="FitNesseRoot"/>
+      </fileset>
+    </delete>
+    <delete dir="dist/fitnesse"/>
+  </target>
+
+  <target name="init">
+    <mkdir dir="classes"/>
+    <mkdir dir="test-results/cobertura"/>
+  </target>
+
+  <target name="load_fitnesse_taskdef">
+    <taskdef classpathref="classpath" resource="tasks.properties"/>
+  </target>
+
+  <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef"
+          description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
+    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080"
+                        resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath"/>
+  </target>
+
+  <target name="release" depends="testbuild, build_distribution"/>
+
+</project>

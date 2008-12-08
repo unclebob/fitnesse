@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/images/executionStatus
+END
+output.gif
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/images/executionStatus/output.gif
+END
+error.gif
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/images/executionStatus/error.gif
+END
+ok.gif
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/14/trunk/extra/images/executionStatus/ok.gif
+END

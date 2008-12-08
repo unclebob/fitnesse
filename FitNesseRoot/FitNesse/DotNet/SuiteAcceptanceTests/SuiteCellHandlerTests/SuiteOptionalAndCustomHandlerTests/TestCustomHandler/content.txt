@@ -1,0 +1,76 @@
+!3 You can easily create and load your own custom handlers.
+
+Here's how we added the !-IntegralRangeHandler-! to !-FitNesse-!, which you use to assert that an int value returned from the application is within a given range.
+
+First, we overrode the Match method, which takes a string (the contents of a cell) and a Type. In this example, we want an int followed by ".." followed by an int in the string AND the Type of the field must also be an int. It is very important that the Match method be as unique as possible. For example, there are three substring handlers: substring (..abc..), starts with (abc..) and ends with (..abc). The Match method on the !-StartsWithHandler-! needs to ensure that the text ends with ".." and does NOT start with "..".
+
+The second thing you must do is override the Check method (you can also override Input, Save, Recall and Execute methods, though these are far less useful). In this example, we test that the actual int is >= the left number and <= the right number in the expression.
+
+{{{public class IntegralRangeHandler : DefaultCellHandler
+{
+	private static Regex matchExpression = new Regex("^-?[0-9]*\\.\\.-?[0-9]*$");
+	public override bool Match(string searchString, Type type)
+	{
+		return type == typeof (int) && matchExpression.IsMatch(searchString);
+	}
+
+	public override void HandleCheck(Fixture fixture, Parse cell, Accessor accessor)
+	{
+		if (IsInRange(Actual(accessor, fixture), LowEnd(Args(cell)), HighEnd(Args(cell))))
+		{
+			fixture.Right(cell);
+		}
+		else
+		{
+			fixture.Wrong(cell, accessor.Get(fixture).ToString());
+		}
+	}
+
+	private string[] Args(Parse cell)
+	{
+		return cell.Text().Split('.');
+	}
+
+	private int Actual(Accessor accessor, Fixture fixture)
+	{
+		return (int) accessor.Get(fixture);
+	}
+
+	private int HighEnd(string[] args)
+	{
+		return Convert.ToInt32(args[args.Length - 1]);
+	}
+
+	private int LowEnd(string[] args)
+	{
+		return Convert.ToInt32(args[0]);
+	}
+
+	private bool IsInRange(int actual, int low, int high)
+	{
+		return actual >= low && actual <= high;
+	}
+}}}}
+
+To use this handler, load it using the !-CellHandlerLoaderFixture-!...
+!|cell handler loader|
+|load|integral range handler|
+
+or load it within your own fixture...
+{{{public class CustomFixture : ColumnFixture {
+	public CustomFixture {
+		CellOperation.LoadHandler(new IntegralRangeHandler());
+	}
+	...
+}
+}}}
+
+and then use it!
+|int fixture|
+|field|field?|
+|39|37..42|
+
+Lastly, this clears all the cell handlers and loads the defaults. This is not required, but if you use a lot of custom handlers you may run into matching collisions (i.e. two Match methods that both return true for the same expression). Clearing them is advisable.
+!|cell handler loader|
+|clear|
+|loadDefaults|

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext
+END
+Utils.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/Utils.java
+END
+EchoWidgetInterceptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/EchoWidgetInterceptor.java
+END
+WidgetInterceptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/WidgetInterceptor.java
+END
+WikiTextTranslatorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/WikiTextTranslatorTest.java
+END
+WidgetVisitor.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/WidgetVisitor.java
+END
+MovedPageReferenceRenamingVisitor.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/MovedPageReferenceRenamingVisitor.java
+END
+WikiWidget.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/WikiWidget.java
+END
+WidgetBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/WidgetBuilder.java
+END
+WidgetBuilderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/WidgetBuilderTest.java
+END
+PageReferenceRenamingVisitor.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/wikitext/PageReferenceRenamingVisitor.java
+END

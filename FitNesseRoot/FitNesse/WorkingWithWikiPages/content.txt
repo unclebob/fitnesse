@@ -1,0 +1,7 @@
+!2 Working with Wiki Pages
+|!c '''Operations'''|
+|[[Page Properties][PageProperties]]|''Enabling and disabling page properties (also called attributes).''|
+|[[Headers and footers][MarkupHeaderAndFooter]]|''Specifying Headers and Footers for wiki pages''|
+|[[Refactoring pages][RefactoringWikiPages]]|''Renaming, moving, and deleting existing pages.''|
+|[[Where Used][WhereUsed]]|''Finding out which pages reference the current page.''|
+|ShortcutKeys|''The shortcuts for the buttons.''|

@@ -1,0 +1,11 @@
+FileCompareFixture takes two files or two directories and compares them. The differences is presented as an HTML list, showing the structure (but only enough to show differences). This list includes links to the files concerned.
+
+!|fitlibrary.CompareFilesFixture|
+!2 Differing file contents
+|check|''file''|testFiles/threeLines.txt|''same as''|testFiles/differingThreeLines.txt|!-threeLines.txt<ul><li><i>Files differ at byte position 9</i></li><li>differingThreeLines.txt</li></ul>-!|
+!2 The two directories are equal
+!|check|directory|testFiles/diry1|same as|testFiles/diry2|diry1|
+!2 Differing directories due to different files
+!|check|directory|testFiles/diry3|same as|testFiles/diry4|!-diry3<ul><li>threeLines.txt<ul><li><i>Missing</i></li></ul> </li><li>empty.txt<ul><li><i>Surplus</i></li></ul></li></ul>-!|
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

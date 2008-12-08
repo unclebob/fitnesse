@@ -1,0 +1,23 @@
+!3 The [[.NET][.FitNesse.DotNet]] Fit server will handle arrays of primitive and custom types
+----
+|array of ints|
+|field|field?|property|property?|set|get?|
+|1,2,3|1,2,3|4,5,6,7|4,5,6,7|9,0|9,0|
+
+|array of strings|
+|field|field?|property|property?|set|get?|
+|1,2,3|1,2,3|4,5,6,7|4,5,6,7|9,0|9,0|
+|this, is, an, array, of, strings|this, is, an, array, of, strings|this, is, an, array, of, strings|this, is, an, array, of, strings|this, is, an, array, of, strings|this, is, an, array, of, strings|
+
+|array of bools|
+|field|field?|property|property?|set|get?|
+|true|true|false|false|true|true|
+|false, true, false|false, true, false|false, true, false|false, true, false|false, true, false|false, true, false|
+
+!see TestPrimitiveTypeConversion
+
+|array of people|
+|field|field?|property|property?|set|get?|
+|john doe, jane roe|john doe, jane roe|first last, first last|first last, first last|c sharp, dot net|c sharp, dot net|
+
+!see TestCustomTypeConversion

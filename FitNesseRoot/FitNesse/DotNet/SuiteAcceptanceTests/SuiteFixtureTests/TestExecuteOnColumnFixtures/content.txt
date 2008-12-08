@@ -1,0 +1,18 @@
+!3 Column Fixtures have a virtual Execute() method which is called before the first output operation in a given row. You can override this method to handle some processing after input/before output.
+----
+!|ExecuteExampleFixture|
+|int field|int field?|
+|1|2|
+|2|4|
+
+{{{
+	public class ExecuteExampleFixture : ColumnFixture
+	{
+		public int IntField;
+
+		public override void Execute()
+		{
+			IntField = IntField*2;
+		}
+	}
+}}}

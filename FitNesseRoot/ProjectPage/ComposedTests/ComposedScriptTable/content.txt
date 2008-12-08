@@ -1,0 +1,35 @@
+This syntax of the ''Scenario'' table uses dofixture style function naming.  The scenario's name is: ''LoginWith''
+and it requires two arguments.  The leading underscores are not required, I just put them there to make sure the
+argument names aren't confused with text.
+
+|Scenario|Login|_user|with|_password|
+||provides|_message|
+|enter|_user|into|username|field|
+|enter|_password|into|password|field|
+|provide|_message|login|
+
+Now you can invoke the scenario from a script table just as you would if it were a fixture.  
+This makes the fixture polymorphic with respect to the script table.
+
+|script|
+|start|login driver|
+|check|login|bob|with|xyzzy|Welcome bob|
+|check|login|bill|with|qqbbc|Invalid Password|
+
+If you have a scenario defined with ''requires'' keywords, you should still be able to use it as follows:
+
+
+|Scenario|Login|
+||requires|_user|
+||requires|_password|
+||provides|_message|
+|enter|_user|into|username|field|
+|enter|_password|into|password|field|
+|provide|_message|login|
+
+Note the blank cell between the arguments.  Is this really necessary? Probably.
+
+|script|
+|start|login driver|
+|check|login|bob||xyzzy|Welcome bob|
+|check|login|bill||qqbbc|Invalid Password|

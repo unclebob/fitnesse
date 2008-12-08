@@ -1,0 +1,14 @@
+!3 The !-DotNet FitServer-! allows you to name class members (fields, properties and methods) gracefully ("calculate tax!" rather than "!-CalculateTax!-!")
+----
+
+!|member finder test|
+|the field|the field?|the property|the property?|the setter method|the getter method?|
+|first value|first value|second value|second value|third value|third value|
+
+!|member finder test fixture|
+|The Field|The Field?|The Property|The Property?|The Setter Method|The Getter Method?|
+|first value|first value|second value|second value|third value|third value|
+
+!|MemberFinderTestFixture|
+|THE-FIELD|THE-FIELD?|THE?&#PROPERTY|THE+-=PROPERTY?|The*Setter*Method|The*Getter*Method?|
+|first value|first value|second value|second value|third value|third value|

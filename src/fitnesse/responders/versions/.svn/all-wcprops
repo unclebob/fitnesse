@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions
+END
+VersionResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions/VersionResponder.java
+END
+VersionResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions/VersionResponderTest.java
+END
+RollbackResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions/RollbackResponder.java
+END
+RollbackResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions/RollbackResponderTest.java
+END
+VersionSelectionResponder.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions/VersionSelectionResponder.java
+END
+VersionSelectionResponderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/responders/versions/VersionSelectionResponderTest.java
+END

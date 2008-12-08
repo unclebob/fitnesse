@@ -1,0 +1,25 @@
+<!--
+ Copyright (C) 2004 by Alain Bienvenue. All rights reserved.
+ Released under the terms of the GNU General Public License version 2 or later.
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>All Tests</title>
+</head>
+<body>
+
+<script language="JavaScript" type="text/javascript" src="jsUnitTestLink.js"></script>
+<script language="javascript">
+  function suite() {
+    var suite = new top.jsUnitTestSuite();
+    suite.addTestPage("../../extra/javascript/SpreadsheetTranslatorTest.html");
+    suite.addTestPage("../../extra/javascript/CollapsableWidgetTest.html");
+    suite.addTestPage("../../extra/javascript/ClientSideSortTest.html");
+    return suite;
+  }
+</script>
+</body>
+</html>

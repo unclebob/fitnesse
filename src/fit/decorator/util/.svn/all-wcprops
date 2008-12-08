@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util
+END
+Timer.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/Timer.java
+END
+DefaultTimer.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/DefaultTimer.java
+END
+PointDataType.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/PointDataType.java
+END
+Table.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/Table.java
+END
+TableTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/TableTest.java
+END
+Delta.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/Delta.java
+END
+DeltaTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/DeltaTest.java
+END
+DataType.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/DataType.java
+END
+DataTypeTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/DataTypeTest.java
+END
+TestCaseHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fit/decorator/util/TestCaseHelper.java
+END

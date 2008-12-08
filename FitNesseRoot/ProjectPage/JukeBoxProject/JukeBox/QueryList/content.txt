@@ -1,0 +1,6 @@
+
+|query:play list|
+|index|id|title|
+|1|$STAIRWAY|Stairway to Heaven|
+|2|$INAGADDADAVIDA|In-A-Gadda-Da-Vida|
+|3|$VIVALAVIDA|Viva la Vida|

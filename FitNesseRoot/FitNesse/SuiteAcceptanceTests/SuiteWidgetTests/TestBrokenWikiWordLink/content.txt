@@ -1,0 +1,17 @@
+!2 Test the rendering of a broken WikiPageReference.
+ * A broken WikiPageReference is a reference to a page that does not not exist.
+ * It should be rendered as a '''[?]'''.  The '''[?]''' is a link to the wiki page followed by '''?edit'''
+----
+!3 Test that a broken link renders as a '''[?]'''.
+ * Create a page at the root level that refers to a page that doesn't exist.
+!|Page Creator|
+|Page name.|Page contents.|valid?|
+|ReferencePage|SomePage|true|
+ * Then request the page with the reference
+!|Response Requester|
+|uri|valid?|
+|ReferencePage|true|
+ * Make sure the rendered page has a broken link.
+!|Response Examiner|
+|type|pattern|matches?|value|
+|contents|SomePage<a title="create page" href="SomePage\?edit&amp;nonExistent=true">\[\?\]</a>|true||

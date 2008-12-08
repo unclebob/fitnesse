@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svnroot/fitnesse/!svn/ver/310/trunk/lib
+END
+fitlibrary.jar
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svnroot/fitnesse/!svn/ver/298/trunk/lib/fitlibrary.jar
+END
+junit.jar
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/fitnesse/!svn/ver/301/trunk/lib/junit.jar
+END
+xerces.jar
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/fitnesse/!svn/ver/134/trunk/lib/xerces.jar
+END
+dummy.jar
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/fitnesse/!svn/ver/288/trunk/lib/dummy.jar
+END
+easymock.jar
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svnroot/fitnesse/!svn/ver/305/trunk/lib/easymock.jar
+END
+svnkit.jar
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/fitnesse/!svn/ver/310/trunk/lib/svnkit.jar
+END
+ant.jar
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svnroot/fitnesse/!svn/ver/134/trunk/lib/ant.jar
+END

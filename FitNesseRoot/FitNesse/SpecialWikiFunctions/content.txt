@@ -1,0 +1,7 @@
+ * The page .RecentChanges contains a list of the pages that have been most recently changed.
+ * The '''[Search]''' button allows you to search the whole wiki for a regular expression.
+ * SisterSites -- Cross Referencing with other wikis sites.
+ * RootPage -- Accessing the root page of the entire wiki so you can put variables, fixtures, and paths in.
+ * Run suites from the command line with the CommandLineTestRunner
+
+

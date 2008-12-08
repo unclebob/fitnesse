@@ -1,0 +1,23 @@
+!3 This page tests the style widget.
+A style is added to text using the !-!style-! widget as follows {{{!style_myStyle(some text) }}} The resulting text will be rendered as
+{{{<span class="myStyle">some text</span>}}}.
+#
+ * First create a page with a note in it.
+#
+!|script|
+|start|Page Builder|
+|line|!style_myStyle(hello)|
+|page|StylePage|
+#
+ * Then request that page
+#
+!|Response Requester.|
+|uri|valid?|contents?|
+|StylePage|true||
+#
+ * Make sure the html is right.
+#
+!|Response Examiner|
+|type|string?|
+|contents|<span class="myStyle">hello</span><br/>|
+

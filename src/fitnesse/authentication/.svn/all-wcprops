@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication
+END
+Password.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/Password.java
+END
+PasswordFile.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/PasswordFile.java
+END
+PasswordFileTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/PasswordFileTest.java
+END
+PasswordTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/PasswordTest.java
+END
+SecureReadOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/SecureReadOperation.java
+END
+SecurePageOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/SecurePageOperation.java
+END
+SecureOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/SecureOperation.java
+END
+SecureOperationTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/SecureOperationTest.java
+END
+SecureTestOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/SecureTestOperation.java
+END
+Authenticator.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/Authenticator.java
+END
+AuthenticatorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/AuthenticatorTest.java
+END
+OneUserAuthenticator.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/OneUserAuthenticator.java
+END
+HashingCipher.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/HashingCipher.java
+END
+HashingCipherTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/HashingCipherTest.java
+END
+SecureWriteOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/SecureWriteOperation.java
+END
+PromiscuousAuthenticator.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/PromiscuousAuthenticator.java
+END
+MultiUserAuthenticator.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/MultiUserAuthenticator.java
+END
+MultiUserAuthenticatorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/MultiUserAuthenticatorTest.java
+END
+AlwaysSecureOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/AlwaysSecureOperation.java
+END
+TransparentCipher.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/TransparentCipher.java
+END
+PasswordCipher.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/authentication/PasswordCipher.java
+END

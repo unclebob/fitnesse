@@ -1,0 +1,20 @@
+This page tests italic text on a wiki page.
+
+First create a page with italic text on it.
+
+|Page creator.|
+|Page name.|Page contents.|Page attributes.|valid?|
+|!-ItalicTextPage-!|!-This is ''italic'' text-!||true|
+
+Then request that page
+
+|Response Requester.|
+|uri|valid?|
+|!-ItalicTextPage-!|true|
+
+Examine the page to be sure it has the normal text
+
+|Response Examiner.|
+|type|pattern|matches?|value|
+|contents|This is <i>italic</i> text|true||
+

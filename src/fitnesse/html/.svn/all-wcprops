@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html
+END
+HtmlTag.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlTag.java
+END
+HtmlTagTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlTagTest.java
+END
+HtmlPage.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlPage.java
+END
+HtmlPageTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlPageTest.java
+END
+HtmlUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlUtil.java
+END
+HtmlUtilTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svnroot/fitnesse/!svn/ver/368/trunk/src/fitnesse/html/HtmlUtilTest.java
+END
+HtmlTableListingBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlTableListingBuilder.java
+END
+HtmlElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlElement.java
+END
+RawHtml.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/RawHtml.java
+END
+HtmlComment.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlComment.java
+END
+TagGroup.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/TagGroup.java
+END
+HtmlPageFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/HtmlPageFactory.java
+END
+SetupTeardownIncluder.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svnroot/fitnesse/!svn/ver/331/trunk/src/fitnesse/html/SetupTeardownIncluder.java
+END
+SetupTeardownIncluderTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/331/trunk/src/fitnesse/html/SetupTeardownIncluderTest.java
+END
+ChunkedResultsListingUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/ChunkedResultsListingUtil.java
+END
+ChunkedResultsListingUtilTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/html/ChunkedResultsListingUtilTest.java
+END

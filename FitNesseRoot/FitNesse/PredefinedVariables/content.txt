@@ -1,0 +1,39 @@
+!3 Predefined
+The following variables are predefined and read-only:
+ * !-$-!{PAGE_NAME}:  Global variable returning the name of the current page. e.g., This page's name is: "${PAGE_NAME}"
+ * !-$-!{PAGE_PATH}: Global variable returning the absolute path to the current page. e.g. this page's path is "${PAGE_PATH}"
+ * !-$-!{FITNESSE_PORT}: Global variable returning the port on which this FitNesse server is hosted. e.g. FitNesse is running on port "${FITNESSE_PORT}"
+
+!3 May Be Defined
+Depending upon your installation, the following variables may be predefined in the root page and may be overridden at any point to instill a new default:
+
+'''Test/Suite Execution'''
+|''' NAME '''|'''default'''|'''!- FitLibrary (Unix)-!'''|'''.NET'''|
+|COMMAND_PATTERN    |!- java -cp %p %m   -!|!- java -cp %p %m -!|!- %m %p  -!|
+|PATH_SEPARATOR     | : ''!- (system-dependent) -!''|: ''!- (system-dependent) -!''|!- ;     -!|
+|TEST_RUNNER        |!-fit.FitServer-!|!-fitlibrary.suite.FitLibraryServer-!|!-dotnet\FitServer.exe<br/>
+dotnet2\FitServer.exe-!|
+
+'''!-SetUp and TearDown Appearance-!'''
+|''' NAME '''         |''' Default '''|''' Values '''    |''' Notes '''|
+| COLLAPSE_SETUP      | false |true!-|-!false    |'' Displays all !-SetUp-! include pages collapsed when true''|
+| COLLAPSE_TEARDOWN   | false |true!-|-!false    |'' Displays all !-TearDown-! include pages collapsed when true''|
+
+'''Table of Contents (!contents)'''
+|''' NAME '''         |''' Default '''|''' Values '''    |''' Notes '''|
+| FILTER_TOC          | false         |true!-|-!false    |'' Append suite fiters to TOC (-f flag) when true ''|
+| HELP_PREFIX_TOC     | :<''space''>  |''any string''    |'' Define prefix for help text suffix ''|
+| HELP_TOC            | false         |true!-|-!false    |'' Append help text to TOC (-h flag) when true ''|
+| MORE_SUFFIX_TOC     | <''space''>...|''any string''    |'' Define sequence to show more TOC levels ''|
+| PROPERTY_CHARACTERS |!- *+@>- -!    |''any characters''|'' Define property icons for TOC ''|
+| PROPERTY_TOC        | false         |true!-|-!false    |'' Append property icons to TOC (-p flag) when true ''|
+| REGRACE_TOC         | false         |true!-|-!false    |'' Makes !contents list graceful (-g flag) when true ''|
+
+'''Others'''
+|''' NAME '''         |''' Default '''|''' Values '''    |''' Notes '''|
+| REGRACE_LINK | false | true!-|-!false    |'' Displays all WikiWord links as graceful names when true''|
+| RSS_PREFIX   | ''none'' | ''any string'' |'' Used locally as a prefix for RSS content links ''|
+| PAGE_NAME    | read-only | string |'' Contains the current page's name ''|
+| PAGE_PATH    | read-only | string |'' Contains the current page's wiki path ''|
+
+!note (See the ''root'' page for overrides)

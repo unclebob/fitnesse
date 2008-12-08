@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/converters
+END
+DoubleArrayConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/362/trunk/src/fitnesse/slim/converters/DoubleArrayConverter.java
+END
+DoubleConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/335/trunk/src/fitnesse/slim/converters/DoubleConverter.java
+END
+IntConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svnroot/fitnesse/!svn/ver/328/trunk/src/fitnesse/slim/converters/IntConverter.java
+END
+ListConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/converters/ListConverter.java
+END
+IntegerArrayConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/362/trunk/src/fitnesse/slim/converters/IntegerArrayConverter.java
+END
+CharConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/converters/CharConverter.java
+END
+DateConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/converters/DateConverter.java
+END
+BooleanArrayConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svnroot/fitnesse/!svn/ver/362/trunk/src/fitnesse/slim/converters/BooleanArrayConverter.java
+END
+BooleanConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svnroot/fitnesse/!svn/ver/386/trunk/src/fitnesse/slim/converters/BooleanConverter.java
+END
+VoidConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svnroot/fitnesse/!svn/ver/339/trunk/src/fitnesse/slim/converters/VoidConverter.java
+END
+StringArrayConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svnroot/fitnesse/!svn/ver/362/trunk/src/fitnesse/slim/converters/StringArrayConverter.java
+END
+StringConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svnroot/fitnesse/!svn/ver/328/trunk/src/fitnesse/slim/converters/StringConverter.java
+END
