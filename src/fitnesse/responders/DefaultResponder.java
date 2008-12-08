@@ -27,7 +27,7 @@ public class DefaultResponder extends BasicResponder {
     buffer.append("Because you can see this page something has gone wrong.<br/>");
     buffer.append("If you continue to get this page, please let us know how.<br/>");
     buffer.append("Thanks,<br/>");
-    buffer.append("<ul><li><a href=\"mailto:fitnesse@objectmentor.com\">The FitNesse development team.</a></ul>");
+    buffer.append("<ul><li><a href=\"mailto:unclebob@objectmentor.com\">The FitNesse development team.</a></ul>");
     return buffer.toString();
   }
 
