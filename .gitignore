@@ -1,4 +1,5 @@
 FitNesseRoot/ErrorLogs/
+test-results/
 dist/
 classes/
 .svn
