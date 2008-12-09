@@ -17,11 +17,27 @@ public class WikiWidgetTable implements Table {
   public String getCellContents(int columnIndex, int rowIndex) {
     TextWidget textWidget = getCell(columnIndex, rowIndex);
     String cellText = textWidget.getText();
-    return replaceLiterals(textWidget, cellText);
+    return replaceLiteralsAndVariables(textWidget, cellText);
   }
 
-  private String replaceLiterals(TextWidget textWidget, String cellText) {
+  private String replaceLiteralsAndVariables(TextWidget textWidget, String cellText) {
     cellText = removeUnprocessedLiterals(cellText);
+    cellText = replaceVariables(textWidget, cellText);
+    return cellText;
+  }
+
+  private String replaceVariables(WikiWidget widget, String cellText) {
+    Matcher matcher = VariableWidget.pattern.matcher(cellText);
+    while (matcher.find()) {
+      String replacement = null;
+      try {
+        replacement = widget.getWikiPage().getData().getVariable(matcher.group(1));
+      } catch (Exception e) {
+        replacement = null;
+      }
+      if (replacement != null)
+        cellText = cellText.replace(matcher.group(), replacement);
+    }
     return cellText;
   }
 
