@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TableScannerTest {
+public class WikiTableScannerTest {
   private WikiPage root;
 
   @Before
@@ -16,7 +16,7 @@ public class TableScannerTest {
 
   private void checkOneRowTable() throws Exception {
     PageData data = root.getData();
-    TableScanner ts = new TableScanner(data);
+    TableScanner ts = new WikiTableScanner(data);
     assertEquals(1, ts.getTableCount());
     Table t = ts.getTable(0);
     assertEquals(1, t.getRowCount());
@@ -26,7 +26,7 @@ public class TableScannerTest {
 
   private TableScanner scanTable(String tableString) throws Exception {
     WikiPageUtil.setPageContents(root, tableString);
-    TableScanner ts = new TableScanner(root.getData());
+    TableScanner ts = new WikiTableScanner(root.getData());
     return ts;
   }
 
@@ -34,7 +34,7 @@ public class TableScannerTest {
   public void noTables() throws Exception {
     PageData data = root.getData();
     data.setContent("");
-    TableScanner ts = new TableScanner(data);
+    TableScanner ts = new WikiTableScanner(data);
     assertEquals(0, ts.getTableCount());
   }
 
@@ -102,7 +102,7 @@ public class TableScannerTest {
     PageCrawler crawler = root.getPageCrawler();
     WikiPage includingPage = crawler.addPage(root, PathParser.parse("IncludingPage"), "!include IncludedPage\n");
     crawler.addPage(root, PathParser.parse("IncludedPage"), "|a|\n");
-    TableScanner ts = new TableScanner(includingPage.getData());
+    TableScanner ts = new WikiTableScanner(includingPage.getData());
     assertEquals(1, ts.getTableCount());
     Table t = ts.getTable(0);
     assertEquals("a", t.getCellContents(0, 0));
@@ -119,7 +119,7 @@ public class TableScannerTest {
       "blah !-not in table-!\n" +
         "|in table|3|4|5|6|7|8|\n" +
         "!-5-!\n";
-    assertEquals(expected, TableScanner.removeUnprocessedLiteralsInTables(text));
+    assertEquals(expected, WikiTableScanner.removeUnprocessedLiteralsInTables(text));
   }
 
   @Test

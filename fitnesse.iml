@@ -21,29 +21,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/aspectjrt.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="file://$MODULE_DIR$/lib/aspectj1.5/doc/aspectj5rt-api" />
-          <root url="file://$MODULE_DIR$/lib/aspectj1.5/doc/runtime-api" />
-        </JAVADOC>
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/log4j-1.2.14.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/log4j-1.2.14-src.zip!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/ant.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -81,6 +58,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/xerces.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/htmlparser.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

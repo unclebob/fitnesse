@@ -31,7 +31,7 @@ public class ImportTableTest {
 
   private ImportTable makeImportTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new TableScanner(root.getData());
+    TableScanner ts = new WikiTableScanner(root.getData());
     Table t = ts.getTable(0);
     return new ImportTable(t, "id");
   }

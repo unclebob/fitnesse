@@ -1,4 +1,6 @@
 FitNesseRoot/ErrorLogs/
+FitNesseRoot/RecentChanges/
+src/fitnesse/FitNesseVersion.java
 test-results/
 dist/
 classes/
@@ -6,5 +8,6 @@ classes/
 *-*.zip
 *.ipr
 fitnesse*.zip
+.DS_Store
 
 

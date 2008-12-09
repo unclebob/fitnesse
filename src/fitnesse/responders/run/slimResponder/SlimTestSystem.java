@@ -153,7 +153,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
   }
 
   void runTestsOnPage(PageData pageData) throws Exception {
-    tableScanner = new TableScanner(pageData);
+    tableScanner = new WikiTableScanner(pageData);
     instructions = createInstructions(this);
     instructionResults = slimClient.invokeAndGetResponse(instructions);
   }

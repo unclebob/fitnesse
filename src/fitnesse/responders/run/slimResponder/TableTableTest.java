@@ -35,7 +35,7 @@ public class TableTableTest {
 
   private TableTable makeTableTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new TableScanner(root.getData());
+    TableScanner ts = new WikiTableScanner(root.getData());
     Table t = ts.getTable(0);
     return new TableTable(t, "id");
   }

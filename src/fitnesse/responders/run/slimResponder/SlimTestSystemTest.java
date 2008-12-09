@@ -155,7 +155,7 @@ public class SlimTestSystemTest {
         "|returnConstructorArgument?|\n" +
         "|3|\n"
     );
-    TableScanner ts = new TableScanner(responder.getTestResults());
+    TableScanner ts = new WikiTableScanner(responder.getTestResults());
     ts.getTable(0);
     assertTestResultsContain("Could not invoke constructor");
   }
@@ -181,7 +181,7 @@ public class SlimTestSystemTest {
         "|John|$Q|\n"
     );
     PageData results = responder.getTestResults();
-    TableScanner ts = new TableScanner(results);
+    TableScanner ts = new WikiTableScanner(results);
     Table dt = ts.getTable(0);
     assertEquals("$V<-[Bob]", dt.getCellContents(1, 2));
     assertEquals("$V->[Bob]", unescape(dt.getCellContents(0, 3)));
@@ -204,7 +204,7 @@ public class SlimTestSystemTest {
         "|5|$B=|\n" +
         "|4|$A<_<$B|\n"
     );
-    TableScanner ts = new TableScanner(responder.getTestResults());
+    TableScanner ts = new WikiTableScanner(responder.getTestResults());
     Table dt = ts.getTable(0);
     assertEquals("!style_pass(2<$A->[3])", unescape(dt.getCellContents(1, 3)));
     assertEquals("!style_pass($A->[3]<4<$B->[5])", unescape(dt.getCellContents(1, 5)));
@@ -217,7 +217,7 @@ public class SlimTestSystemTest {
         "|string|getStringArg?|\n" +
         "|${=3+4=}|7|\n"
     );
-    TableScanner ts = new TableScanner(responder.getTestResults());
+    TableScanner ts = new WikiTableScanner(responder.getTestResults());
     Table dt = ts.getTable(0);
     assertEquals("!style_pass(7)", dt.getCellContents(1, 2));
   }
@@ -229,7 +229,7 @@ public class SlimTestSystemTest {
         "|noSuchConverter|noSuchConverter?|\n" +
         "|x|x|\n"
     );
-    TableScanner ts = new TableScanner(responder.getTestResults());
+    TableScanner ts = new WikiTableScanner(responder.getTestResults());
     Table dt = ts.getTable(0);
     assertEquals("x !style_error(No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.)", dt.getCellContents(0, 2));
   }

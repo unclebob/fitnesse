@@ -39,7 +39,7 @@ public class DecisionTableTest {
 
   private DecisionTable makeDecisionTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new TableScanner(root.getData());
+    TableScanner ts = new WikiTableScanner(root.getData());
     Table t = ts.getTable(0);
     DecisionTable dt = new DecisionTable(t, "id");
     return dt;

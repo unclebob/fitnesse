@@ -37,7 +37,7 @@ public class QueryTableTest {
 
   private QueryTable makeQueryTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new TableScanner(root.getData());
+    TableScanner ts = new WikiTableScanner(root.getData());
     Table t = ts.getTable(0);
     return new QueryTable(t, "id");
   }
