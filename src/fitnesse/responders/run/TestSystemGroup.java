@@ -2,6 +2,8 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.responders.run.slimResponder.WikiSlimTestSystem;
+import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
 import java.util.HashMap;
@@ -67,7 +69,7 @@ public class TestSystemGroup {
 
   private TestSystem makeTestSystem(String testSystemName) throws Exception {
     if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(testSystemName)))
-      return new SlimTestSystem(page, testSystemListener);
+      return new HtmlSlimTestSystem(page, testSystemListener);
     else
       return new FitTestSystem(context, page, testSystemListener);
   }

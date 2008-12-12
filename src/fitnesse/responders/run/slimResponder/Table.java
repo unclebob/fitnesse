@@ -18,4 +18,14 @@ public interface Table {
   int addRow(List<String> list) throws Exception;
 
   void appendCellToRow(int row, String contents) throws Exception;
+
+  String literalize(String s);
+
+  String error(String s);
+
+  String pass(String s);
+
+  String fail(String s);
+
+  String ignore(String s);
 }

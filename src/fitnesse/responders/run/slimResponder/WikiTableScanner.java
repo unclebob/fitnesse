@@ -100,8 +100,11 @@ public class WikiTableScanner implements TableScanner {
   private void scanParentForTables(ParentWidget parent) {
     List<WikiWidget> widgets = parent.getChildren();
     for (WikiWidget widget : widgets) {
-      if (widget instanceof TableWidget)
-        tables.add(new WikiWidgetTable((TableWidget) widget));
+      if (widget instanceof TableWidget) {
+        WikiWidgetTable table = new WikiWidgetTable((TableWidget) widget);
+        literalizeTable(table);
+        tables.add(table);
+      }
       else if (widget instanceof ParentWidget)
         scanParentForTables((ParentWidget) widget);
     }
@@ -123,6 +126,10 @@ public class WikiTableScanner implements TableScanner {
     StringBuffer wikiText = new StringBuffer();
     appendChildWikiText(wikiText, widgetRoot);
     return wikiText.toString();
+  }
+
+  public String toHtml() {
+    return "TILT";
   }
 
   private void appendChildWikiText(StringBuffer wikiText, ParentWidget parent) {
@@ -147,6 +154,19 @@ public class WikiTableScanner implements TableScanner {
       wikiText.append(widget.asWikiText());
     } catch (Exception e) {
       wikiText.append(String.format("Can't append widget text %s, %s\n", e.getClass().getName(), e.getMessage()));
+    }
+  }
+
+  private static String literalize(String contents) {
+    return String.format("!<%s>!", contents);
+  }
+
+  static void literalizeTable(WikiWidgetTable wwt) {
+    wwt.setAsNotLiteralTable();
+    for (int row = 0; row < wwt.getRowCount(); row++) {
+      for (int col = 0; col < wwt.getColumnCountInRow(row); col++) {
+        wwt.setCell(col, row, literalize(wwt.getCellContents(col, row)));
+      }
     }
   }
 }

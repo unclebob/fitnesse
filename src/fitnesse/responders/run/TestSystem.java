@@ -100,5 +100,5 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void kill() throws Exception;
 
-  public abstract void sendPageData(PageData pageData) throws Exception;
+  public abstract String runTestsAndGenerateHtml(PageData pageData) throws Exception;
 }

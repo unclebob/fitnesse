@@ -181,6 +181,4 @@ public class TestSlim {
 
   class NoSuchConverter {
   }
-
-  ;
 }

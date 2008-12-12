@@ -37,7 +37,7 @@ public class QueryTableTest {
 
   private QueryTable makeQueryTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new WikiTableScanner(root.getData());
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
     return new QueryTable(t, "id");
   }
@@ -66,8 +66,10 @@ public class QueryTableTest {
   @Test
   public void nullResultsForNullTable() throws Exception {
     assertQueryResults("", list(),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n]" +
+        "]"
     );
   }
 
@@ -77,9 +79,11 @@ public class QueryTableTest {
       list(
         list(list("n", "2"), list("2n", "4"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<2>!)|!style_pass(!<4>!)|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(2), pass(4)]" +
+        "]"
     );
   }
 
@@ -89,10 +93,12 @@ public class QueryTableTest {
       list(
         list(list("n", "3"), list("2n", "5"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|[!<2>!] !style_fail(missing)|4|\n" +
-        "|[!<3>!] !style_fail(surplus)|5|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[[2] fail(missing), 4], " +
+        "[[3] fail(surplus), 5]" +
+        "]"
     );
   }
 
@@ -102,9 +108,11 @@ public class QueryTableTest {
       list(
         list(list("n", "2"), list("2n", "5"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<2>!)|[!<5>!] !style_fail(expected [!<4>!])|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(2), [5] fail(expected [4])]" +
+        "]"
     );
   }
 
@@ -117,10 +125,12 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<2>!)|!style_pass(!<4>!)|\n" +
-        "|!style_pass(!<3>!)|!style_pass(!<6>!)|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(2), pass(4)], " +
+        "[pass(3), pass(6)]" +
+        "]"
     );
   }
 
@@ -133,10 +143,12 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<3>!)|!style_pass(!<6>!)|\n" +
-        "|!style_pass(!<2>!)|!style_pass(!<4>!)|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(3), pass(6)], " +
+        "[pass(2), pass(4)]" +
+        "]"
     );
   }
 
@@ -149,11 +161,13 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<3>!)|!style_pass(!<6>!)|\n" +
-        "|[!<99>!] !style_fail(missing)|99|\n" +
-        "|[!<2>!] !style_fail(surplus)|4|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(3), pass(6)], " +
+        "[[99] fail(missing), 99], " +
+        "[[2] fail(surplus), 4]" +
+        "]"
     );
   }
 
@@ -166,11 +180,13 @@ public class QueryTableTest {
         list(list("n", "2"), list("2n", "4")),
         list(list("n", "3"), list("2n", "6"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|[!<99>!] !style_fail(missing)|99|\n" +
-        "|!style_pass(!<2>!)|!style_pass(!<4>!)|\n" +
-        "|[!<3>!] !style_fail(surplus)|6|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[[99] fail(missing), 99], " +
+        "[pass(2), pass(4)], " +
+        "[[3] fail(surplus), 6]" +
+        "]"
     );
   }
 
@@ -181,9 +197,11 @@ public class QueryTableTest {
       list(
         list(list("n", "3"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<3>!)|[!<4>!] !style_fail(field not present)|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(3), [4] fail(field not present)]" +
+        "]"
     );
   }
 
@@ -194,9 +212,11 @@ public class QueryTableTest {
       list(
         list(list("n", "3"))
       ),
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|[!<3>!] !style_fail(surplus)|!style_fail(field not present)|\n"
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[[3] fail(surplus), fail(field not present)]" +
+        "]"
     );
   }
 
@@ -216,9 +236,12 @@ public class QueryTableTest {
     );
     qt.evaluateExpectations(pseudoResults);
     assertEquals(
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<2>!)|!style_pass(!<$V->[4]>!)|\n", Utils.unescapeWiki(qt.getTable().toString())
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(2), pass($V->[4])]" +
+        "]",
+      Utils.unescapeWiki(qt.getTable().toString())
     );
   }
 
@@ -238,9 +261,11 @@ public class QueryTableTest {
     );
     qt.evaluateExpectations(pseudoResults);
     assertEquals(
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|!style_pass(!<2>!)|[!<4>!] !style_fail(expected [!<$V->[5]>!])|\n",
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[pass(2), [4] fail(expected [$V->[5]])]" +
+        "]",
       Utils.unescapeWiki(qt.getTable().toString())
     );
   }
@@ -260,9 +285,11 @@ public class QueryTableTest {
     );
     qt.evaluateExpectations(pseudoResults);
     assertEquals(
-      "|!style_pass(!<Query:fixture>!)|!<argument>!|\n" +
-        "|!<n>!|!<2n>!|\n" +
-        "|[!<3>!] !style_fail(missing)|$V->[5]|\n", qt.getTable().toString()
+      "[" +
+        "[pass(Query:fixture), argument], " +
+        "[n, 2n], " +
+        "[[3] fail(missing), $V->[5]]" +
+        "]", qt.getTable().toString()
     );
   }
 }

@@ -34,21 +34,27 @@
     <SUITE FILE_PATH="coverage/FitNesse$Coverage.ic" NAME="Coverage" MODIFIED="1227543051779" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>fitnesse.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$fitnesse.html in FitNesse$fitnesse.html in FitNesse.es" NAME="fitnesse.html in FitNesse" MODIFIED="1221905723839" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$SlimResponder$fitnesse.responders.run.slimResponder in FitNesse.es" NAME="SlimResponder" MODIFIED="1226332974832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$fitnesse.responders.run in FitNesse$fitnesse.responders.run in FitNesse.es" NAME="fitnesse.responders.run in FitNesse" MODIFIED="1224251310604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$HtmlUtilTest$HtmlUtilTest.es" NAME="HtmlUtilTest" MODIFIED="1221910871340" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>fitnesse.html.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/FitNesse$HtmlSlimTestSystemTest.ic" NAME="HtmlSlimTestSystemTest" MODIFIED="1229035059001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>fitnesse.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$SuiteResponderTest$SuiteResponderTest.es" NAME="SuiteResponderTest" MODIFIED="1224241665946" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>fitnesse.responders.run.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/FitNesse$SlimResponder.ic" NAME="SlimResponder" MODIFIED="1228851692307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/FitNesse$SlimResponder.ic" NAME="SlimResponder" MODIFIED="1229031664131" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>fitnesse.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$slim$fitnesse.slim in FitNesse.es" NAME="slim" MODIFIED="1225452514849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/FitNesse$WikiSlimTestSystemTest.ic" NAME="WikiSlimTestSystemTest" MODIFIED="1228946927811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>fitnesse.*</FILTER>
+    </SUITE>
     <SUITE FILE_PATH="coverage/FitNesse$SlimResponder..es" NAME="SlimResponder" MODIFIED="1227542368342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$Coverage$default package.es" NAME="Coverage" MODIFIED="1221905467984" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$fitnesse.html in FitNesse$fitnesse.html in FitNesse.es" NAME="fitnesse.html in FitNesse" MODIFIED="1221905723839" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$fitnesse.responders.run in FitNesse$fitnesse.responders.run in FitNesse.es" NAME="fitnesse.responders.run in FitNesse" MODIFIED="1224251310604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="../IntelliJIDEA70/coverage/FitNesse$slim$fitnesse.slim in FitNesse.es" NAME="slim" MODIFIED="1225452514849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="emma" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -143,37 +149,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WikiTableScanner.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiTableScanner.java">
+      <file leaf-file-name="HtmlTable.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="46" selection-start="413" selection-end="413" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="77" column="70" selection-start="2117" selection-end="2117" vertical-scroll-proportion="-7.269231">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TableScanner.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/TableScanner.java">
+      <file leaf-file-name="TestResponderTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponderTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="19" selection-start="95" selection-end="95" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HtmlTableScanner.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTableScanner.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="4" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SlimTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTable.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="1281" selection-end="1281" vertical-scroll-proportion="0.0">
+            <state line="348" column="87" selection-start="13114" selection-end="13114" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -182,57 +172,71 @@
       <file leaf-file-name="SlimTestSystem.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTestSystem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="132" column="199" selection-start="3949" selection-end="3949" vertical-scroll-proportion="0.35203367">
+            <state line="298" column="78" selection-start="9989" selection-end="9989" vertical-scroll-proportion="0.612855">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HtmlTableScannerTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTableScannerTest.java">
+      <file leaf-file-name="CollapsableWidgetTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CollapsableWidgetTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="58" selection-start="2932" selection-end="2932" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WikiTableScannerTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiTableScannerTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="24" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0">
+            <state line="13" column="13" selection-start="418" selection-end="418" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WikiWidgetTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiWidgetTable.java">
+      <file leaf-file-name="CollapsableWidget.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CollapsableWidget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="42" selection-start="253" selection-end="253" vertical-scroll-proportion="0.0">
+            <state line="15" column="13" selection-start="501" selection-end="501" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Table.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
+      <file leaf-file-name="HtmlUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/html/HtmlUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="0" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0">
+            <state line="146" column="24" selection-start="4200" selection-end="4200" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HtmlTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
+      <file leaf-file-name="AnchorMarkerWidgetTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/AnchorMarkerWidgetTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="39" selection-start="1891" selection-end="1891" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="6" column="13" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AnchorDeclarationWidgetTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/AnchorDeclarationWidgetTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="13" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AnchorMarkerWidget.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/AnchorMarkerWidget.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="72" selection-start="806" selection-end="867" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HtmlSlimTestSystem.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlSlimTestSystem.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="30" selection-start="604" selection-end="604" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -270,7 +274,218 @@
     <ConfirmationsSetting value="2" id="Remove" />
   </component>
   <component name="ProjectPane">
-    <subPane />
+    <subPane>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="wikitext" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="wikitext" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="widgets" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="responders" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="responders" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="run" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="responders" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="run" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="slimResponder" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </subPane>
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
@@ -329,11 +544,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="fitnesse.responders.run.slimResponder.WikiTableScanner" />
+      <recent name="fitnesse.responders.run.slimResponder.SlimTestSystem" />
       <recent name="fitnesse.slim.Slim" />
       <recent name="fitnesse.responders.run.TestSystemBase" />
-      <recent name="fitnesse.responders.run.slimResponder.SlimTestSystem" />
       <recent name="fitnesse.responders.run.TestSystem" />
-      <recent name="fitnesse.responders.run.slimResponder.SlimTable" />
     </key>
     <key name="CreateClassDialog.RecentsKey">
       <recent name="fitnesse.responders.run.slimResponder" />
@@ -351,17 +566,17 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="JUnit.All">
-    <tempConfiguration default="false" name="HtmlTableScannerTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
+  <component name="RunManager" selected="JUnit.TestResponderTest">
+    <tempConfiguration default="false" name="TestResponderTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
-        <option name="PATTERN" value="fitnesse.responders.run.slimResponder.*" />
+        <option name="PATTERN" value="fitnesse.responders.run.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <module name="FitNesse" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fitnesse.responders.run.slimResponder" />
-      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.run.slimResponder.HtmlTableScannerTest" />
+      <option name="PACKAGE_NAME" value="fitnesse.responders.run" />
+      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.run.TestResponderTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -642,7 +857,7 @@
         <option name="Make" value="true" />
       </method>
     </configuration>
-    <configuration default="false" name="SlimResponder" type="JUnit" factoryName="JUnit" enabled="true" merge="false" sample_coverage="true" runner="idea">
+    <configuration default="false" name="SlimResponder" type="JUnit" factoryName="JUnit" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
         <option name="PATTERN" value="fitnesse.*" />
         <option name="ENABLED" value="true" />
@@ -749,8 +964,16 @@
       <item index="5" class="java.lang.String" itemvalue="JUnit.SlimResponder" />
       <item index="6" class="java.lang.String" itemvalue="JUnit.slim" />
       <item index="7" class="java.lang.String" itemvalue="JUnit.SuiteResponderTest.xmlFormat" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.HtmlTableScannerTest" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.TestResponderTest" />
     </list>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
@@ -926,8 +1149,8 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="10" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16461785" sideWeight="0.70504284" order="0" side_tool="false" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32254994" sideWeight="0.5" order="2" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16408338" sideWeight="0.7059943" order="0" side_tool="false" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32159847" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12725015" sideWeight="0.69447577" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33111322" sideWeight="0.5" order="20" side_tool="false" />
@@ -936,9 +1159,9 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24906467" sideWeight="0.6603235" order="2" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282588" sideWeight="0.5" order="18" side_tool="false" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28829685" sideWeight="0.5" order="3" side_tool="false" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28734538" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39499035" sideWeight="0.5" order="5" side_tool="false" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39486203" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32635584" sideWeight="0.5" order="12" side_tool="false" />
       <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3282588" sideWeight="0.5" order="11" side_tool="false" />
@@ -1057,118 +1280,116 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/socketservice/SocketService.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ScriptTableTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="84" selection-start="2003" selection-end="2003" vertical-scroll-proportion="0.0">
+        <state line="306" column="61" selection-start="8981" selection-end="8981" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/TableTableTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="74" selection-start="3157" selection-end="3157" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiTableScanner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="18" selection-start="385" selection-end="385" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="50" selection-start="2530" selection-end="2530" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystemGroup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="21" selection-start="2294" selection-end="2294" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTestSystemTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="13" selection-start="321" selection-end="321" vertical-scroll-proportion="0.0">
+        <state line="25" column="68" selection-start="854" selection-end="855" vertical-scroll-proportion="116.38461">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ColumnFixtureTestFixture.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/AnchorMarkerWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="226" selection-end="226" vertical-scroll-proportion="0.0">
+        <state line="25" column="72" selection-start="806" selection-end="867" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimErrorTable.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/html/HtmlUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="44" selection-start="435" selection-end="435" vertical-scroll-proportion="0.0">
+        <state line="146" column="24" selection-start="4200" selection-end="4200" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/VariableWidget.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/AnchorDeclarationWidgetTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="83" selection-start="1411" selection-end="1411" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/EchoFixture.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/AnchorMarkerWidgetTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiWidgetTable.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlSlimTestSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="42" selection-start="253" selection-end="253" vertical-scroll-proportion="0.0">
+        <state line="18" column="30" selection-start="604" selection-end="604" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/TableScanner.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponderTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="19" selection-start="95" selection-end="95" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0">
+        <state line="348" column="87" selection-start="13114" selection-end="13114" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="39" selection-start="1891" selection-end="1891" vertical-scroll-proportion="0.0">
+        <state line="77" column="70" selection-start="2117" selection-end="2117" vertical-scroll-proportion="-7.269231">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiTableScannerTest.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CollapsableWidgetTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="24" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0">
+        <state line="13" column="13" selection-start="418" selection-end="418" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTableScannerTest.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CollapsableWidget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="58" selection-start="2932" selection-end="2932" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiTableScanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="46" selection-start="413" selection-end="413" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="1281" selection-end="1281" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTableScanner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="4" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0">
+        <state line="15" column="13" selection-start="501" selection-end="501" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTestSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="199" selection-start="3949" selection-end="3949" vertical-scroll-proportion="0.35203367">
+        <state line="298" column="78" selection-start="9989" selection-end="9989" vertical-scroll-proportion="0.612855">
           <folding />
         </state>
       </provider>

@@ -87,15 +87,15 @@ public class WikiPageResponder implements SecureResponder {
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
     html.actions.use(HtmlUtil.makeActions(pageData));
     SetupTeardownIncluder.includeInto(pageData);
-    processWikiPageDataBeforeGeneratingHtml(pageData);
-    String contentHtml = pageData.getHtml();
+    String contentHtml = generateHtml(pageData);
     html.main.use(HtmlUtil.addHeaderAndFooter(page, contentHtml));
     handleSpecialProperties(html, page, fullPathName);
     return html.html();
   }
 
   /* hook for subclasses */
-  protected void processWikiPageDataBeforeGeneratingHtml(PageData pageData) throws Exception {
+  protected String generateHtml(PageData pageData) throws Exception {
+    return pageData.getHtml();
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page, String pageName) throws Exception {

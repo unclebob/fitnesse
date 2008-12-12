@@ -11,30 +11,31 @@ import fitnesse.slim.SlimService;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.html.HtmlUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-public class SlimTestSystem extends TestSystem implements SlimTestContext {
+public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
   private List<Object> instructions;
   private boolean started;
-  private TableScanner tableScanner;
-  private PageData testResults;
-  private Map<String, Object> instructionResults;
-  private List<SlimTable> testTables = new ArrayList<SlimTable>();
-  private Map<String, String> exceptions = new HashMap<String, String>();
+  protected TableScanner tableScanner;
+  protected PageData testResults;
+  protected Map<String, Object> instructionResults;
+  protected List<SlimTable> testTables = new ArrayList<SlimTable>();
+  protected Map<String, String> exceptions = new HashMap<String, String>();
   private Map<String, String> symbols = new HashMap<String, String>();
-  private TestSummary testSummary;
+  protected TestSummary testSummary;
   private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
   private int slimSocket;
-  private final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
+  protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -139,24 +140,28 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     }
   }
 
-  public void sendPageData(PageData pageData) throws Exception {
+  public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
     testTables.clear();
     symbols.clear();
     exceptions.clear();
     testSummary.clear();
     runTestsOnPage(pageData);
-    String wikiText = generateWikiTextForTestResults();
-    pageData.setContent(wikiText);
     testResults = pageData;
-    acceptOutputFirst(pageData.getHtml());
+    String html = createHtmlResults();
+    acceptOutputFirst(html);
     acceptResultsLast(testSummary);
+    return html;
   }
 
+  protected abstract String createHtmlResults() throws Exception;
+
   void runTestsOnPage(PageData pageData) throws Exception {
-    tableScanner = new WikiTableScanner(pageData);
+    tableScanner = scanTheTables(pageData);
     instructions = createInstructions(this);
     instructionResults = slimClient.invokeAndGetResponse(instructions);
   }
+
+  protected abstract TableScanner scanTheTables(PageData pageData) throws Exception;
 
   private List<Object> createInstructions(SlimTestContext slimTestContext) {
     List<Object> instructions = new ArrayList<Object>();
@@ -199,13 +204,59 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     return tableType.toUpperCase().startsWith(typeCode.toUpperCase());
   }
 
-  private String generateWikiTextForTestResults() throws Exception {
-    replaceExceptionsWithLinks();
-    evaluateTables();
-    return ExceptionList.toWikiText(exceptions) + testResultsToWikiText();
+  private WikiSlimTestSystem ts;
+
+  static String translateExceptionMessage(String exceptionMessage) {
+    String tokens[] = exceptionMessage.split(" ");
+    if (tokens[0].equals("COULD_NOT_INVOKE_CONSTRUCTOR"))
+      return "Could not invoke constructor for " + tokens[1];
+    else if (tokens[0].equals("NO_METHOD_IN_CLASS"))
+      return String.format("Method %s not found in %s", tokens[1], tokens[2]);
+    else if (tokens[0].equals("NO_CONSTRUCTOR"))
+      return String.format("Could not find constructor for %s", tokens[1]);
+    else if (tokens[0].equals("NO_CONVERTER_FOR_ARGUMENT_NUMBER"))
+      return String.format("No converter for %s", tokens[1]);
+    else if (tokens[0].equals("NO_INSTANCE"))
+      return String.format("The instance %s does not exist", tokens[1]);
+    else if (tokens[0].equals("NO_CLASS"))
+      return String.format("Could not find class %s", tokens[1]);
+    else if (tokens[0].equals("MALFORMED_INSTRUCTION"))
+      return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
+
+    return exceptionMessage;
   }
 
-  private void replaceExceptionsWithLinks() {
+  public PageData getTestResults() {
+    return testResults;
+  }
+
+  public static String exceptionToString(Throwable e) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter pw = new PrintWriter(stringWriter);
+    e.printStackTrace(pw);
+    return SlimServer.EXCEPTION_TAG + stringWriter.toString();
+  }
+
+  public TestSummary getTestSummary() {
+    return testSummary;
+  }
+
+  protected void evaluateTables() {
+    for (SlimTable table : testTables)
+      evaluateTable(table);
+  }
+
+  private void evaluateTable(SlimTable table) {
+    try {
+      table.evaluateExpectations(instructionResults);
+      testSummary.add(table.getTestSummary());
+    } catch (Throwable e) {
+      exceptions.put("ABORT", exceptionToString(e));
+      exceptionOccurred(e);
+    }
+  }
+
+  protected void replaceExceptionsWithLinks() {
     Set<String> resultKeys = instructionResults.keySet();
     for (String resultKey : resultKeys)
       replaceExceptionWithExceptionLink(resultKey);
@@ -244,64 +295,8 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
     }
   }
 
-  static String translateExceptionMessage(String exceptionMessage) {
-    String tokens[] = exceptionMessage.split(" ");
-    if (tokens[0].equals("COULD_NOT_INVOKE_CONSTRUCTOR"))
-      return "Could not invoke constructor for " + tokens[1];
-    else if (tokens[0].equals("NO_METHOD_IN_CLASS"))
-      return String.format("Method %s not found in %s", tokens[1], tokens[2]);
-    else if (tokens[0].equals("NO_CONSTRUCTOR"))
-      return String.format("Could not find constructor for %s", tokens[1]);
-    else if (tokens[0].equals("NO_CONVERTER_FOR_ARGUMENT_NUMBER"))
-      return String.format("No converter for %s", tokens[1]);
-    else if (tokens[0].equals("NO_INSTANCE"))
-      return String.format("The instance %s does not exist", tokens[1]);
-    else if (tokens[0].equals("NO_CLASS"))
-      return String.format("Could not find class %s", tokens[1]);
-    else if (tokens[0].equals("MALFORMED_INSTRUCTION"))
-      return String.format("The instruction %s is malformed", exceptionMessage.substring(exceptionMessage.indexOf(" ") + 1));
-
-    return exceptionMessage;
-  }
-
   private String exceptionResult(String resultKey) {
-    return String.format("Exception: .#%s", resultKey);
-  }
-
-  private String testResultsToWikiText() throws Exception {
-    String wikiText = tableScanner.toWikiText();
-
-    return wikiText;
-  }
-
-  private void evaluateTables() {
-    for (SlimTable table : testTables)
-      evaluateTable(table);
-  }
-
-  private void evaluateTable(SlimTable table) {
-    try {
-      table.evaluateExpectations(instructionResults);
-      testSummary.add(table.getTestSummary());
-    } catch (Throwable e) {
-      exceptions.put("ABORT", exceptionToString(e));
-      exceptionOccurred(e);
-    }
-  }
-
-  public PageData getTestResults() {
-    return testResults;
-  }
-
-  public static String exceptionToString(Throwable e) {
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter pw = new PrintWriter(stringWriter);
-    e.printStackTrace(pw);
-    return SlimServer.EXCEPTION_TAG + stringWriter.toString();
-  }
-
-  public TestSummary getTestSummary() {
-    return testSummary;
+    return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
   }
 
   static class ExceptionList {
@@ -315,7 +310,7 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
       keys = exceptions.keySet();
     }
 
-    private String toWikiText() {
+    private String toHtml() {
       header();
       exceptions();
       footer();
@@ -324,25 +319,34 @@ public class SlimTestSystem extends TestSystem implements SlimTestContext {
 
     private void footer() {
       if (keys.size() > 0)
-        buffer.append("----\n");
+        buffer.append("<hr/>");
     }
 
     private void exceptions() {
       for (String key : keys) {
-        buffer.append("!anchor " + key + "\n");
-        buffer.append("!*> " + key + "\n");
-        buffer.append("{{{ " + exceptions.get(key) + "}}}\n*!\n\n");
+        buffer.append(String.format("<a name=\"%s\"/><b>%s</b>", key, key));
+        String collapsibleSectionFormat = "<div class=\"collapse_rim\">" +
+          "<div style=\"float: right;\" class=\"meta\"><a href=\"javascript:expandAll();\">Expand All</a> | <a href=\"javascript:collapseAll();\">Collapse All</a></div>" +
+          "<a href=\"javascript:toggleCollapsable('%d');\">" +
+          "<img src=\"/files/images/collapsableClosed.gif\" class=\"left\" id=\"img%d\"/>" +
+          "</a>" +
+          "&nbsp;<span class=\"meta\">%s </span>\n" +
+          "\n" +
+          "\t<div class=\"hidden\" id=\"%d\"><pre>%s</pre></div>\n" +
+          "</div>";
+        long id = new Random().nextLong();
+        buffer.append(String.format(collapsibleSectionFormat, id, id, key, id, exceptions.get(key)));
       }
     }
 
     private void header() {
       if (keys.size() > 0) {
-        buffer.append("!3 !style_fail(Exceptions)\n");
+        buffer.append("<H3> <span class=\"fail\">Exceptions</span></H3><br/>");
       }
     }
 
-    private static String toWikiText(Map<String, String> exceptions) {
-      return new ExceptionList(exceptions).toWikiText();
+    protected static String toHtml(Map<String, String> exceptions) {
+      return new ExceptionList(exceptions).toHtml();
     }
   }
 }

@@ -88,7 +88,7 @@ public class WikiTableScannerTest {
   public void canDumpTablesBackToWikiText() throws Exception {
     String contents = "junk\n|a|b|\njunk\n|c|d|\njunk\n";
     TableScanner ts = scanTable(contents);
-    assertEquals(contents, ts.toWikiText());
+    assertEquals("junk\n|!<a>!|!<b>!|\njunk\n|!<c>!|!<d>!|\njunk\n", ts.toWikiText());
   }
 
   @Test
@@ -106,7 +106,7 @@ public class WikiTableScannerTest {
     assertEquals(1, ts.getTableCount());
     Table t = ts.getTable(0);
     assertEquals("a", t.getCellContents(0, 0));
-    assertTrue(ts.toWikiText(), ts.toWikiText().indexOf("|a|") != -1);
+    assertTrue(ts.toWikiText(), ts.toWikiText().indexOf("|!<a>!|") != -1);
   }
 
   @Test
@@ -125,13 +125,13 @@ public class WikiTableScannerTest {
   @Test
   public void removeUnprocessedLiterals() throws Exception {
     TableScanner ts = scanTable("!-hi-!\n|x|\n!-there-!\n");
-    assertEquals("!-hi-!\n|x|\n!-there-!\n", ts.toWikiText());
+    assertEquals("!-hi-!\n|!<x>!|\n!-there-!\n", ts.toWikiText());
   }
 
   @Test
   public void replaceVariables() throws Exception {
     TableScanner ts = scanTable("!define X {Y}\n|${X}|\n");
-    assertEquals("!define X {Y}\n|Y|\n", ts.toWikiText());
+    assertEquals("!define X {Y}\n|!<Y>!|\n", ts.toWikiText());
   }
 
 

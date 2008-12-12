@@ -36,7 +36,7 @@ public class ScriptTableTest {
 
   private ScriptTable makeScriptTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new WikiTableScanner(root.getData());
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
     return new ScriptTable(t, "id");
   }
@@ -204,8 +204,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", VoidConverter.VOID_TAG)
       ),
-      "|!<Script>!|\n" +
-        "|!<func>!|\n"
+      "[[Script], [func]]"
     );
   }
 
@@ -215,8 +214,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "null")
       ),
-      "|!<Script>!|\n" +
-        "|!<func>!|\n"
+      "[[Script], [func]]"
     );
   }
 
@@ -226,8 +224,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.TRUE)
       ),
-      "|!<Script>!|\n" +
-        "|!style_pass(!<func>!)|\n"
+      "[[Script], [pass(func)]]"
     );
   }
 
@@ -237,8 +234,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.FALSE)
       ),
-      "|!<Script>!|\n" +
-        "|!style_fail(!<func>!)|\n"
+      "[[Script], [fail(func)]]"
     );
   }
 
@@ -248,8 +244,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "3")
       ),
-      "|!<Script>!|\n" +
-        "|!<check>!|!<func>!|!style_pass(!<3>!)|\n"
+      "[[Script], [check, func, pass(3)]]"
     );
   }
 
@@ -259,8 +254,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "4")
       ),
-      "|!<Script>!|\n" +
-        "|!<check>!|!<func>!|[!<4>!] !style_fail(expected [!<3>!])|\n"
+      "[[Script], [check, func, [4] fail(expected [3])]]"
     );
   }
 
@@ -270,8 +264,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.TRUE)
       ),
-      "|!<Script>!|\n" +
-        "|!style_pass(!<ensure>!)|!<func>!|!<3>!|\n"
+      "[[Script], [pass(ensure), func, 3]]"
     );
   }
 
@@ -281,8 +274,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.FALSE)
       ),
-      "|!<Script>!|\n" +
-        "|!style_fail(!<ensure>!)|!<func>!|!<3>!|\n"
+      "[[Script], [fail(ensure), func, 3]]"
     );
   }
 
@@ -292,8 +284,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.FALSE)
       ),
-      "|!<Script>!|\n" +
-        "|!style_pass(!<reject>!)|!<func>!|!<3>!|\n"
+      "[[Script], [pass(reject), func, 3]]"
     );
   }
 
@@ -303,8 +294,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", BooleanConverter.TRUE)
       ),
-      "|!<Script>!|\n" +
-        "|!style_fail(!<reject>!)|!<func>!|!<3>!|\n"
+      "[[Script], [fail(reject), func, 3]]"
     );
   }
 
@@ -314,8 +304,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "kawabunga")
       ),
-      "|!<Script>!|\n" +
-        "|show|!<func>!|!<3>!|!style_ignore(!<kawabunga>!)|\n"
+      "[[Script], [show, func, 3, |!style_ignore(kawabunga)]]"
     );
   }
 
@@ -328,9 +317,7 @@ public class ScriptTableTest {
         list("scriptTable_id_0", "3"),
         list("scriptTable_id_1", "3")
       ),
-      "|!<Script>!|\n" +
-        "|$V<-[!<3>!]|!<function>!|\n" +
-        "|!<check>!|!<funcion>!|!<$V->[3]>!|!style_pass(!<$V->[3]>!)|\n"
+      "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]"
     );
   }
 }

@@ -74,7 +74,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
       SetupTeardownIncluder.includeInto(data, true);
       if (data.getContent().length() == 0)
         addEmptyContentMessage();
-      testSystem.sendPageData(data);
+      testSystem.runTestsAndGenerateHtml(data);
       testSystemGroup.bye();
     }
   }

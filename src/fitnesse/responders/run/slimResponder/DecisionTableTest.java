@@ -39,7 +39,7 @@ public class DecisionTableTest {
 
   private DecisionTable makeDecisionTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new WikiTableScanner(root.getData());
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
     DecisionTable dt = new DecisionTable(t, "id");
     return dt;
@@ -78,7 +78,7 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(!<fixture>!)|!<argument>!|\n";
+      "[[pass(fixture), argument]]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -137,10 +137,12 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(!<DT:fixture>!)|!<argument>!|\n" +
-        "|!<var>!|!<func?>!|\n" +
-        "|!<3>!|!style_pass(!<5>!)|\n" +
-        "|!<7>!|[!<5>!] !style_fail(expected [!<9>!])|\n";
+      "[" +
+        "[pass(DT:fixture), argument], " +
+        "[var, func?], " +
+        "[3, pass(5)], " +
+        "[7, [5] fail(expected [9])]" +
+        "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 
@@ -162,10 +164,12 @@ public class DecisionTableTest {
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
-      "|!style_pass(!<DT:fixture>!)|!<argument>!|\n" +
-        "|!<var>!|!<func?>!|\n" +
-        "|!<3>!|!style_pass(!<5>!)|\n" +
-        "|!<7>!|[!<5>!] !style_fail(expected [!<9>!])|\n";
+      "[" +
+        "[pass(DT:fixture), argument], " +
+        "[var, func?], " +
+        "[3, pass(5)], " +
+        "[7, [5] fail(expected [9])]" +
+        "]";
     assertEquals(expectedColorizedTable, colorizedTable);
   }
 

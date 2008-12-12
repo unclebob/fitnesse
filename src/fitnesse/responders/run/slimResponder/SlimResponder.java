@@ -13,22 +13,25 @@ import fitnesse.wiki.PageData;
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
 responders in general.
 */
-public class SlimResponder extends WikiPageResponder implements TestSystemListener {
+public abstract class SlimResponder extends WikiPageResponder implements TestSystemListener {
   private boolean slimOpen = false;
   ExecutionLog log;
   private boolean fastTest = false;
   SlimTestSystem testSystem;
 
 
-  protected void processWikiPageDataBeforeGeneratingHtml(PageData pageData) throws Exception {
-    testSystem = new SlimTestSystem(pageData.getWikiPage(), this);
+  protected String generateHtml(PageData pageData) throws Exception {
+    testSystem = getTestSystem(pageData);
     String classPath = new ClassPathBuilder().getClasspath(page);
     log = testSystem.getExecutionLog(classPath, "fitnesse.slim.SlimService");
     testSystem.start();
     testSystem.setFastTest(fastTest);
-    testSystem.sendPageData(pageData);
+    String html = testSystem.runTestsAndGenerateHtml(pageData);
     testSystem.bye();
+    return html;
   }
+
+  protected abstract SlimTestSystem getTestSystem(PageData pageData);
 
   public SecureOperation getSecureOperation() {
     return new SecureTestOperation();

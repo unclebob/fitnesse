@@ -2,6 +2,7 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.responders.run.TestSummary;
 import static fitnesse.util.ListUtility.list;
+import fitnesse.wikitext.Utils;
 
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
@@ -33,10 +34,6 @@ public abstract class SlimTable {
     this.testContext = testContext;
     tableName = getTableType() + "_" + id;
     instructions = new ArrayList<Object>();
-    //todo remove this cast.  Slim Tables should know nothing about wiki stuff.
-    WikiWidgetTable wwt = (WikiWidgetTable) table;
-    wwt.setAsNotLiteralTable();
-    literalizeTable();
   }
 
   protected void addExpectation(Expectation e) {
@@ -87,18 +84,6 @@ public abstract class SlimTable {
 
   protected void addInstruction(List<Object> instruction) {
     instructions.add(instruction);
-  }
-
-  protected void literalizeTable() {
-    for (int row = 0; row < table.getRowCount(); row++) {
-      for (int col = 0; col < table.getColumnCountInRow(row); col++) {
-        table.setCell(col, row, literalize(table.getCellContents(col, row)));
-      }
-    }
-  }
-
-  protected String literalize(String contents) {
-    return String.format("!<%s>!", contents);
   }
 
   public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
@@ -185,7 +170,7 @@ public abstract class SlimTable {
 
   protected void failMessage(int col, int row, String failureMessage) {
     String contents = table.getCellContents(col, row);
-    String failingContents = failMessage(literalize(contents), failureMessage);
+    String failingContents = failMessage(table.literalize(contents), failureMessage);
     table.setCell(col, row, failingContents);
   }
 
@@ -196,19 +181,19 @@ public abstract class SlimTable {
 
   protected void pass(int col, int row) {
     String contents = table.getCellContents(col, row);
-    String passingContents = pass(literalize(contents));
+    String passingContents = pass(table.literalize(contents));
     table.setCell(col, row, passingContents);
   }
 
   protected void expected(int col, int tableRow, String actual) {
     String contents = table.getCellContents(col, tableRow);
-    String failureMessage = failMessage(actual, String.format("expected [%s]", literalize(contents)));
+    String failureMessage = failMessage(actual, String.format("expected [%s]", table.literalize(contents)));
     table.setCell(col, tableRow, failureMessage);
   }
 
   protected String fail(String value) {
     testSummary.wrong++;
-    return String.format("!style_fail(%s)", value);
+    return table.fail(value);
   }
 
   protected String failMessage(String value, String message) {
@@ -217,16 +202,16 @@ public abstract class SlimTable {
 
   protected String pass(String value) {
     testSummary.right++;
-    return String.format("!style_pass(%s)", value);
+    return table.pass(value);
   }
 
   protected String error(String value) {
     testSummary.exceptions++;
-    return String.format("!style_error(%s)", value);
+    return table.error(value);
   }
 
   protected String ignore(String value) {
-    return String.format("!style_ignore(%s)", value);
+    return table.ignore(value);
   }
 
   protected ReturnedValueExpectation makeReturnedValueExpectation(
@@ -395,7 +380,7 @@ public abstract class SlimTable {
     private String evaluationMessage(String value, String originalContent) {
       String evaluationMessage;
       if (isExceptionMessage(value))
-        evaluationMessage = literalize(originalContent) + " " + error(extractExeptionMessage(value));
+        evaluationMessage = table.literalize(originalContent) + " " + error(extractExeptionMessage(value));
       else
         evaluationMessage = createEvaluationMessage(value, originalContent);
       return evaluationMessage;
@@ -473,7 +458,7 @@ public abstract class SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      return literalize(replaceSymbolsWithFullExpansion(originalValue));
+      return table.literalize(replaceSymbolsWithFullExpansion(originalValue));
     }
   }
 
@@ -494,9 +479,9 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if ("OK".equalsIgnoreCase(value))
-        return pass(literalize(originalValue));
+        return pass(table.literalize(originalValue));
       else
-        return "!style_error(Unknown construction message:) " + literalize(value);
+        return "!style_error(Unknown construction message:) " + table.literalize(value);
     }
   }
 
@@ -510,7 +495,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       setSymbol(symbolName, value);
-      return String.format("$%s<-[%s]", symbolName, literalize(value));
+      return String.format("$%s<-[%s]", symbolName, table.literalize(value));
     }
   }
 
@@ -526,9 +511,9 @@ public abstract class SlimTable {
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (value.equals(replacedValue))
-        evaluationMessage = pass(literalize(announceBlank(replaceSymbolsWithFullExpansion(originalValue))));
+        evaluationMessage = pass(table.literalize(announceBlank(replaceSymbolsWithFullExpansion(originalValue))));
       else if (replacedValue.length() == 0)
-        evaluationMessage = ignore(literalize(value));
+        evaluationMessage = ignore(table.literalize(value));
       else {
         String expressionMessage = new Comparator(replacedValue, value, expectedValue).evaluate();
         if (expressionMessage != null)
@@ -536,8 +521,8 @@ public abstract class SlimTable {
         else if (value.indexOf("Exception:") != -1) {
           evaluationMessage = error(value);
         } else
-          evaluationMessage = failMessage(literalize(value),
-            String.format("expected [%s]", literalize(replaceSymbolsWithFullExpansion(originalValue)))
+          evaluationMessage = failMessage(table.literalize(value),
+            String.format("expected [%s]", table.literalize(replaceSymbolsWithFullExpansion(originalValue)))
           );
       }
 
@@ -592,7 +577,7 @@ public abstract class SlimTable {
       private String rangeMessage(boolean pass) {
         String[] fragments = originalExpression.replaceAll(" ", "").split("_");
         String message = String.format("%s%s%s", fragments[0], value, fragments[1]);
-        message = literalize(replaceSymbolsWithFullExpansion(message));
+        message = table.literalize(replaceSymbolsWithFullExpansion(message));
         return pass ? pass(message) : fail(message);
 
       }
@@ -627,7 +612,7 @@ public abstract class SlimTable {
 
       private String simpleComparisonMessage(boolean pass) {
         String message = String.format("%s%s", value, originalExpression.replaceAll(" ", ""));
-        message = literalize(replaceSymbolsWithFullExpansion(message));
+        message = table.literalize(replaceSymbolsWithFullExpansion(message));
         return pass ? pass(message) : fail(message);
 
       }

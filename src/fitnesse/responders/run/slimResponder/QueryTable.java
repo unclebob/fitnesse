@@ -111,7 +111,7 @@ public class QueryTable extends SlimTable {
     else if (actualValue.equals(replaceSymbols(expectedValue))) {
       pass(col, tableRow);
     } else {
-      expected(col, tableRow, literalize(actualValue));
+      expected(col, tableRow, table.literalize(actualValue));
     }
   }
 

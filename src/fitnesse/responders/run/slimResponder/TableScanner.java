@@ -10,4 +10,6 @@ public interface TableScanner extends Iterable<Table> {
   public Iterator<Table> iterator();
 
   public String toWikiText();
+
+  public String toHtml();
 }

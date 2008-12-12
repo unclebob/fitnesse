@@ -90,7 +90,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
       processingQueue.addLast(testPage);
       PageData pageData = testPage.getData();
       SetupTeardownIncluder.includeInto(pageData);
-      testSystem.sendPageData(pageData);
+      testSystem.runTestsAndGenerateHtml(pageData);
     }
   }
 

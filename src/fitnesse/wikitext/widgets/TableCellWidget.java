@@ -36,7 +36,7 @@ public class TableCellWidget extends ParentWidget {
       cellTag.addAttribute("colspan", computeColSpan());
     }
     if (childHtml().equals(""))
-      cellTag.add("&nbsp;");
+      cellTag.add("&nbsp;"); // Some browsers don't like empty table cells.
     else
       cellTag.add(childHtml());
     return cellTag.html();

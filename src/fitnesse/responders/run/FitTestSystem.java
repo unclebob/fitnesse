@@ -26,12 +26,13 @@ public class FitTestSystem extends TestSystem {
     client.join();
   }
 
-  public void sendPageData(PageData pageData) throws Exception {
+  public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
     String html = pageData.getHtml();
     if (html.length() == 0)
       client.send(emptyPageContent);
     else
       client.send(html);
+    return html;
   }
 
   public boolean isSuccessfullyStarted() {

@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.wikitext.Utils;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.MockRequest;
@@ -350,7 +351,7 @@ public class TestResponderTest {
   @Test
   public void testDoSimpleSlimTable() throws Exception {
     doSimpleRun(simpleSlimDecisionTable());
-    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
+    assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
   }
 
 

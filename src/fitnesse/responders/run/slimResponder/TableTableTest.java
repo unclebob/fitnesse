@@ -35,7 +35,7 @@ public class TableTableTest {
 
   private TableTable makeTableTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
-    TableScanner ts = new WikiTableScanner(root.getData());
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
     return new TableTable(t, "id");
   }
@@ -68,8 +68,7 @@ public class TableTableTest {
       list(
         list("pass", "pass")
       ),
-      "|!style_pass(!<Table:fixture>!)|!<argument>!|\n" +
-        "|!style_pass(!<2>!)|!style_pass(!<4>!)|\n"
+      "[[pass(Table:fixture), argument], [pass(2), pass(4)]]"
     );
   }
 
@@ -79,8 +78,7 @@ public class TableTableTest {
       list(
         list("bad", "boy")
       ),
-      "|!style_pass(!<Table:fixture>!)|!<argument>!|\n" +
-        "|!style_fail(bad)|!style_fail(boy)|\n"
+      "[[pass(Table:fixture), argument], [fail(bad), fail(boy)]]"
     );
   }
 
@@ -90,8 +88,7 @@ public class TableTableTest {
       list(
         list("no change", "no change")
       ),
-      "|!style_pass(!<Table:fixture>!)|!<argument>!|\n" +
-        "|!<2>!|!<4>!|\n"
+      "[[pass(Table:fixture), argument], [2, 4]]"
     );
   }
 
@@ -101,8 +98,7 @@ public class TableTableTest {
       list(
         list("", "")
       ),
-      "|!style_pass(!<Table:fixture>!)|!<argument>!|\n" +
-        "|!<2>!|!<4>!|\n"
+      "[[pass(Table:fixture), argument], [2, 4]]"
     );
   }
 
@@ -112,8 +108,7 @@ public class TableTableTest {
       list(
         list("error:myError", "error:anError")
       ),
-      "|!style_pass(!<Table:fixture>!)|!<argument>!|\n" +
-        "|!style_error(myError)|!style_error(anError)|\n"
+      "[[pass(Table:fixture), argument], [error(myError), error(anError)]]"
     );
   }
 }

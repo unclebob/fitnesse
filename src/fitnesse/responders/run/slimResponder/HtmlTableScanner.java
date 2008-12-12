@@ -12,11 +12,12 @@ import java.util.List;
 
 public class HtmlTableScanner implements TableScanner {
   private List<Table> tables = new ArrayList<Table>();
+  private NodeList htmlTree;
 
   public HtmlTableScanner(String page) throws ParserException {
     Parser parser = new Parser(page);
-    NodeList nodes = parser.parse(null);
-    scanForTables(nodes);
+    htmlTree = parser.parse(null);
+    scanForTables(htmlTree);
   }
 
   private void scanForTables(NodeList nodes) {
@@ -60,5 +61,9 @@ public class HtmlTableScanner implements TableScanner {
       }
     }
     return b.toString();
+  }
+
+  public String toHtml() {
+    return htmlTree.toHtml();
   }
 }

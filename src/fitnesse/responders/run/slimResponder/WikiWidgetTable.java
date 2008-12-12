@@ -117,4 +117,24 @@ public class WikiWidgetTable implements Table {
     TableRowWidget rowWidget = (TableRowWidget) textWidget.getParent().getParent();
     rowWidget.addCells(contents);
   }
+
+  public String literalize(String contents) {
+    return String.format("!<%s>!", contents);
+  }
+
+  public String error(String s) {
+    return String.format("!style_error(%s)", s);
+  }
+
+  public String pass(String s) {
+    return String.format("!style_pass(%s)", s);    
+  }
+
+  public String fail(String s) {
+    return String.format("!style_fail(%s)", s);
+  }
+
+  public String ignore(String s) {
+    return String.format("!style_ignore(%s)", s);
+  }
 }
