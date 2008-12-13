@@ -158,28 +158,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PageCreator.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/PageCreator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="0" selection-start="866" selection-end="866" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FitnesseFixtureContext.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/FitnesseFixtureContext.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="20" selection-start="549" selection-end="549" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ResponseExaminer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseExaminer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="14" selection-start="1132" selection-end="1132" vertical-scroll-proportion="0.7302405">
+            <state line="45" column="0" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.52380955">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestSystemGroup.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystemGroup.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="45" selection-start="112" selection-end="112" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -229,15 +220,6 @@
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiWidgetTable.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="141" column="36" selection-start="4193" selection-end="4193" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HtmlTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="0" selection-start="964" selection-end="964" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1144,14 +1126,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="22" width="1920" height="1174" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="Dataflow to this" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="10" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16408338" sideWeight="0.59847766" order="0" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16408338" sideWeight="0.7059943" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32159847" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12725015" sideWeight="0.69447577" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" />
@@ -1161,9 +1143,9 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24906467" sideWeight="0.6603235" order="2" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282588" sideWeight="0.5" order="18" side_tool="false" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28734538" sideWeight="0.5" order="3" side_tool="false" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28734538" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39486203" sideWeight="0.5" order="5" side_tool="false" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39486203" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32635584" sideWeight="0.5" order="12" side_tool="false" />
       <window_info id="SVN Repositories" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3282588" sideWeight="0.5" order="11" side_tool="false" />
@@ -1282,27 +1264,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ReturnedValueExpectationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="62" selection-start="762" selection-end="762" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTestSystemTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="227" column="80" selection-start="7388" selection-end="7388" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/Utils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="13" selection-start="199" selection-end="199" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTestSystem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="212" column="101" selection-start="6985" selection-end="6985" vertical-scroll-proportion="-24.307692">
@@ -1391,9 +1352,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystemGroup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="45" selection-start="112" selection-end="112" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseExaminer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="14" selection-start="1132" selection-end="1132" vertical-scroll-proportion="0.7302405">
+        <state line="45" column="0" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.52380955">
           <folding />
         </state>
       </provider>

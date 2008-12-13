@@ -1,8 +1,6 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.responders.run.slimResponder.WikiSlimTestSystem;
 import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 

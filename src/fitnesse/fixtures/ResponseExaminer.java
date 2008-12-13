@@ -43,7 +43,6 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public int matchCount() throws Exception {
-    String escapedPattern = Utils.escapeHTML(pattern);
     Pattern p = Pattern.compile(pattern, Pattern.MULTILINE + Pattern.DOTALL);
     setValue(null);
     if (type.equals("contents"))
