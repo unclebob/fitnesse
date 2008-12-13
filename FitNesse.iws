@@ -179,7 +179,7 @@
       <file leaf-file-name="ScriptTable.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ScriptTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="15" selection-start="3088" selection-end="3088" vertical-scroll-proportion="-4.6923075">
+            <state line="189" column="32" selection-start="6968" selection-end="6968" vertical-scroll-proportion="-23.23077">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -187,13 +187,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DecisionTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/DecisionTable.java">
+      <file leaf-file-name="MockResponseSender.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="92" column="12" selection-start="2832" selection-end="2832" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="49" column="0" selection-start="1282" selection-end="1282" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -201,7 +199,7 @@
       <file leaf-file-name="SlimTable.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="506" column="155" selection-start="16083" selection-end="16083" vertical-scroll-proportion="0.0">
+            <state line="460" column="59" selection-start="14512" selection-end="14512" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -210,7 +208,16 @@
       <file leaf-file-name="Table.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="17" selection-start="89" selection-end="89" vertical-scroll-proportion="0.0">
+            <state line="4" column="0" selection-start="72" selection-end="72" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QueryTable.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/QueryTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="113" column="41" selection-start="4004" selection-end="4004" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -228,7 +235,7 @@
       <file leaf-file-name="HtmlTable.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="13" selection-start="370" selection-end="370" vertical-scroll-proportion="0.26906475">
+            <state line="79" column="3" selection-start="2285" selection-end="2285" vertical-scroll-proportion="1.0298954">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -1289,13 +1296,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="21" selection-start="883" selection-end="883" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/FitnesseFixtureContext.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="20" selection-start="549" selection-end="549" vertical-scroll-proportion="0.0">
@@ -1316,22 +1316,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ScriptTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="15" selection-start="3088" selection-end="3088" vertical-scroll-proportion="-4.6923075">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="506" column="155" selection-start="16083" selection-end="16083" vertical-scroll-proportion="0.0">
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1363,16 +1347,46 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/QueryTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="41" selection-start="4004" selection-end="4004" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ScriptTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="189" column="32" selection-start="6968" selection-end="6968" vertical-scroll-proportion="-23.23077">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="0" selection-start="1282" selection-end="1282" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="460" column="59" selection-start="14512" selection-end="14512" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="17" selection-start="89" selection-end="89" vertical-scroll-proportion="0.0">
+        <state line="4" column="0" selection-start="72" selection-end="72" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="13" selection-start="370" selection-end="370" vertical-scroll-proportion="0.26906475">
+        <state line="79" column="3" selection-start="2285" selection-end="2285" vertical-scroll-proportion="1.0298954">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

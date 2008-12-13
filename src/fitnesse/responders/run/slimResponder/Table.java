@@ -19,8 +19,6 @@ public interface Table {
 
   void appendCellToRow(int row, String contents) throws Exception;
 
-  String literalize(String s);
-
   String error(String s);
 
   String pass(String s);

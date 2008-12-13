@@ -142,15 +142,15 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
-        return failMessage(table.literalize(originalValue), "Returned null value.");
+        return failMessage(originalValue, "Returned null value.");
       else if (value.equals(VoidConverter.VOID_TAG) || value.equals("null"))
-        return table.literalize(originalValue);
+        return originalValue;
       else if (value.equals(BooleanConverter.FALSE))
-        return fail(table.literalize(originalValue));
+        return fail(originalValue);
       else if (value.equals(BooleanConverter.TRUE))
-        return pass(table.literalize(originalValue));
+        return pass(originalValue);
       else
-        return table.literalize(originalValue);
+        return originalValue;
     }
   }
 
@@ -161,7 +161,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       return (value != null && value.equals(BooleanConverter.TRUE)) ?
-        pass(table.literalize(originalValue)) : fail(table.literalize(originalValue));
+        pass(originalValue) : fail(originalValue);
     }
   }
 
@@ -172,9 +172,9 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       if (value == null)
-        return pass(table.literalize(originalValue));
+        return pass(originalValue);
       else
-        return value.equals(BooleanConverter.FALSE) ? pass(table.literalize(originalValue)) : fail(table.literalize(originalValue));
+        return value.equals(BooleanConverter.FALSE) ? pass(originalValue) : fail(originalValue);
     }
   }
 
@@ -185,9 +185,9 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       try {
-        table.appendCellToRow(row, String.format("|!style_ignore(%s)", table.literalize(value)));
+        table.appendCellToRow(row, String.format("|!style_ignore(%s)", value));
       } catch (Throwable e) {
-        return failMessage(table.literalize(value), SlimTestSystem.exceptionToString(e));
+        return failMessage(value, SlimTestSystem.exceptionToString(e));
       }
       return originalValue;
     }
@@ -199,7 +199,7 @@ public class ScriptTable extends SlimTable {
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      return table.literalize(replaceSymbolsWithFullExpansion(originalValue));
+      return replaceSymbolsWithFullExpansion(originalValue);
     }
   }
 }

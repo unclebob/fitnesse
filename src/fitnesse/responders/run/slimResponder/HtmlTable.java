@@ -79,10 +79,6 @@ public class HtmlTable implements Table {
     row.appendCell(contents);
   }
 
-  public String literalize(String s) {
-    return s;
-  }
-
   public String error(String s) {
     return String.format("<span class=\"error\">%s</span>", s);
   }
