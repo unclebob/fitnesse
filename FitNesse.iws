@@ -158,10 +158,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ResponseExaminer.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ResponseExaminer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseExaminer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="0" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.52380955">
+            <state line="45" column="0" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -210,17 +210,28 @@
       <file leaf-file-name="Table.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="0" selection-start="72" selection-end="72" vertical-scroll-proportion="0.0">
+            <state line="4" column="17" selection-start="89" selection-end="89" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WikiWidgetTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiWidgetTable.java">
+      <file leaf-file-name="ReturnedValueExpectationTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ReturnedValueExpectationTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="141" column="36" selection-start="4193" selection-end="4193" vertical-scroll-proportion="0.0">
+            <state line="100" column="74" selection-start="3758" selection-end="3758" vertical-scroll-proportion="0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HtmlTable.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="13" selection-start="370" selection-end="370" vertical-scroll-proportion="0.26906475">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -550,22 +561,22 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="Application.fitnesse">
-    <tempConfiguration default="false" name="SuiteResponderTest.testCanMixSlimAndFitTests" type="JUnit" factoryName="JUnit" enabled="false" merge="false" sample_coverage="true" runner="emma">
+  <component name="RunManager" selected="JUnit.All">
+    <tempConfiguration default="false" name="ReturnedValueExpectationTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
-        <option name="PATTERN" value="fitnesse.responders.run.*" />
+        <option name="PATTERN" value="fitnesse.responders.run.slimResponder.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <module name="FitNesse" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <option name="PACKAGE_NAME" value="fitnesse.responders.run" />
-      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.run.SuiteResponderTest" />
-      <option name="METHOD_NAME" value="testCanMixSlimAndFitTests" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="fitnesse.responders.run.slimResponder" />
+      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.run.slimResponder.ReturnedValueExpectationTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="ADDITIONAL_CLASS_PATH" />
@@ -948,7 +959,7 @@
       <item index="5" class="java.lang.String" itemvalue="JUnit.SlimResponder" />
       <item index="6" class="java.lang.String" itemvalue="JUnit.slim" />
       <item index="7" class="java.lang.String" itemvalue="JUnit.SuiteResponderTest.xmlFormat" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.SuiteResponderTest.testCanMixSlimAndFitTests" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.ReturnedValueExpectationTest" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1299,27 +1310,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="0" selection-start="964" selection-end="964" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="72" selection-end="72" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/WikiWidgetTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="141" column="36" selection-start="4193" selection-end="4193" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/DecisionTable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="92" column="12" selection-start="2832" selection-end="2832" vertical-scroll-proportion="0.0">
@@ -1361,8 +1351,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseExaminer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="0" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.52380955">
+        <state line="45" column="0" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/ReturnedValueExpectationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="74" selection-start="3758" selection-end="3758" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/Table.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="17" selection-start="89" selection-end="89" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/HtmlTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="370" selection-end="370" vertical-scroll-proportion="0.26906475">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

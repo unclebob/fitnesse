@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HtmlTable implements Table {
+  private static Pattern coloredCellPattern = Pattern.compile("<span class=\"(\\w*)\">(.*)(</span>)");
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
 
@@ -112,10 +113,31 @@ public class HtmlTable implements Table {
     return tag;
   }
 
+
+  // This terrible algorithm is an example of either my hatred, or my ignorance, of regular expressions.
+  public static String colorize(String content) {
+    while (true) {
+      int firstMatchEnd = content.indexOf("</span>");
+      if (firstMatchEnd != -1) {
+        firstMatchEnd += "</span>".length();
+        Matcher matcher = coloredCellPattern.matcher(content);
+        matcher.region(0, firstMatchEnd);
+        if (matcher.find()) {
+          String color = matcher.group(1);
+          String coloredString = matcher.group(2);
+          content = content.replace(matcher.group(), String.format("%s(%s)", color, coloredString));
+        } else
+          break;
+      } else {
+        break;
+      }
+    }
+    return content;
+  }
+
   class Row {
     private List<Cell> cells = new ArrayList<Cell>();
     private CompositeTag rowNode;
-    private Pattern coloredCellPattern = Pattern.compile("<span class=\"(\\w*)\">(.*)(</span>)");
 
     public Row(CompositeTag rowNode) {
       this.rowNode = rowNode;
@@ -156,32 +178,9 @@ public class HtmlTable implements Table {
     public List<String> asList() {
       List<String> list = new ArrayList<String>();
       for (Cell cell : cells) {
-        String content = cell.getContent();
-        content = colorize(content);
-        list.add(content);
+        list.add(colorize(cell.getContent()));
       }
       return list;
-    }
-
-    // This terrible algorithm is an example of either my hatred, or my ignorance, of regular expressions.
-    private String colorize(String content) {
-      while (true) {
-        int firstMatchEnd = content.indexOf("</span>");
-        if (firstMatchEnd != -1) {
-          firstMatchEnd += "</span>".length();
-          Matcher matcher = coloredCellPattern.matcher(content);
-          matcher.region(0, firstMatchEnd);
-          if (matcher.find()) {
-            String color = matcher.group(1);
-            String coloredString = matcher.group(2);
-            content = content.replace(matcher.group(), String.format("%s(%s)", color, coloredString));
-          } else
-            break;
-        } else {
-          break;
-        }
-      }
-      return content;
     }
   }
 
