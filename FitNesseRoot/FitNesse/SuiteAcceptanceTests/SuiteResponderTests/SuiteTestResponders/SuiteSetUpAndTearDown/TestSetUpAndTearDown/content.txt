@@ -15,7 +15,7 @@
 |!-NormalPage-!|true|
  * Ensure that the header and and footer text appear in the normal page.
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(header).*(normal).*(footer)-!|true||
  * Ensure that setup and teardown are not in this page.
 |Response Examiner.|
@@ -28,7 +28,7 @@
 |!-TestPage-!|true|
  * Ensure that the setup and and teardown text appear in the test page along with the header and footer.
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(header).*(set up).*(test).*(tear down).*(footer)-!|true||
 ----
 !3 Test that sub pages inherit setups and tear downs.
@@ -42,7 +42,7 @@
 |!-NormalPage.TestSubPage-!|true|
  * Ensure that the setup and and teardown text are inherited by the sub page.
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(header).*(set up).*(test sub page).*(tear down).*(footer)-!|true||
 ----
 !3 Test that sub setups and sub teardowns override inherited setups and teardowns.
@@ -57,7 +57,7 @@
 |!-NormalPage.TestSubPage-!|true|
  * Ensure that the sub header and and sub footer text are inherited override their parents..
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(header).*(sub setup).*(test sub page).*(sub teardown).*(footer)-!|true||
 
 

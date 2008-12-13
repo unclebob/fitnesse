@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestSystemGroup {
-  private Map<String, TestSystem> testSystems = new HashMap<String, TestSystem>();
+  private Map<TestSystem.Descriptor, TestSystem> testSystems = new HashMap<TestSystem.Descriptor, TestSystem>();
   private FitNesseContext context;
   private WikiPage page;
   private TestSystemListener testSystemListener;
@@ -22,10 +22,6 @@ public class TestSystemGroup {
     this.page = page;
     this.testSystemListener = listener;
     log = new CompositeExecutionLog(page);
-  }
-
-  public void add(String testSystemName, TestSystem testSystem) {
-    testSystems.put(testSystemName, testSystem);
   }
 
   public CompositeExecutionLog getExecutionLog() throws Exception {
@@ -55,20 +51,20 @@ public class TestSystemGroup {
     return true;
   }
 
-  TestSystem startTestSystem(String testSystemName, String testRunner, String classPath) throws Exception {
+  TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws Exception {
     TestSystem testSystem = null;
-    if (!testSystems.containsKey(testSystemName)) {
-      testSystem = makeTestSystem(testSystemName);
+    if (!testSystems.containsKey(descriptor)) {
+      testSystem = makeTestSystem(descriptor);
       testSystem.setFastTest(fastTest);
-      testSystems.put(testSystemName, testSystem);
-      log.add(testSystemName, testSystem.getExecutionLog(classPath, testRunner));
+      testSystems.put(descriptor, testSystem);
+      log.add(descriptor.testSystemName, testSystem.getExecutionLog(classPath, descriptor));
       testSystem.start();
     }
     return testSystem;
   }
 
-  private TestSystem makeTestSystem(String testSystemName) throws Exception {
-    if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(testSystemName)))
+  private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) throws Exception {
+    if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
       return new HtmlSlimTestSystem(page, testSystemListener);
     else
       return new FitTestSystem(context, page, testSystemListener);

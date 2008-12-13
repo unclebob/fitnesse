@@ -11,7 +11,6 @@ import fitnesse.slim.SlimService;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.html.HtmlUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -68,11 +67,11 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return slimFlags;
   }
 
-  protected ExecutionLog createExecutionLog(String classPath, String className) throws Exception {
+  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception {
     String slimFlags = getSlimFlags();
     slimSocket = getNextSlimSocket();
     String slimArguments = String.format("%s %d", slimFlags, slimSocket);
-    String slimCommandPrefix = buildCommand(className, classPath);
+    String slimCommandPrefix = buildCommand(descriptor, classPath);
     slimCommand = String.format("%s %s", slimCommandPrefix, slimArguments);
     if (fastTest) {
       slimRunner = new MockCommandRunner();
@@ -204,8 +203,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return tableType.toUpperCase().startsWith(typeCode.toUpperCase());
   }
 
-  private WikiSlimTestSystem ts;
-
   static String translateExceptionMessage(String exceptionMessage) {
     String tokens[] = exceptionMessage.split(" ");
     if (tokens[0].equals("COULD_NOT_INVOKE_CONSTRUCTOR"))
@@ -324,7 +321,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
     private void exceptions() {
       for (String key : keys) {
-        buffer.append(String.format("<a name=\"%s\"/><b>%s</b>", key, key));
+        buffer.append(String.format("<a name=\"%s\"/><b></b>", key));
         String collapsibleSectionFormat = "<div class=\"collapse_rim\">" +
           "<div style=\"float: right;\" class=\"meta\"><a href=\"javascript:expandAll();\">Expand All</a> | <a href=\"javascript:collapseAll();\">Collapse All</a></div>" +
           "<a href=\"javascript:toggleCollapsable('%d');\">" +

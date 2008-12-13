@@ -27,7 +27,7 @@
  * Inspect the text to see if the variable was expressed.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|xKey is xValue|true||
 
 
@@ -58,5 +58,5 @@
  * Inspect the text to see if the variable was expressed.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|xKey is xValueFromPage|true||

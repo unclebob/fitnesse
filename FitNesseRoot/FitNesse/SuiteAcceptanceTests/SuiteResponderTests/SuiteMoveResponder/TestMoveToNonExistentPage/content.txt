@@ -18,7 +18,7 @@ Then try move that page to a non-existent target..
 Make sure we get an error message.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|Cannot move|true||
 
 Make sure that the sub page is still beneath !-ParentPage-!.

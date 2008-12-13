@@ -21,4 +21,4 @@ The newly created symbolic link will be listed along with a link to the linked p
 !|Response Examiner.|
 |type  |pattern|matches?|
 |contents|SymLink|true|
-|contents|<a href=".LinkingPage.LinkedChild">&gt;LinkedChild</a>|true|
+|contents|<a href=".LinkingPage.LinkedChild">>LinkedChild</a>|true|

@@ -53,17 +53,17 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   }
 
   private void executeTestPages() throws Exception {
-    Map<String, LinkedList<WikiPage>> pagesByTestSystem;
+    Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem;
     pagesByTestSystem = makeMapOfPagesByTestSystem(page, root, getSuiteFilter());
-    for (String testSystemName : pagesByTestSystem.keySet())
-      executePagesInTestSystem(testSystemName, pagesByTestSystem);
+    for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet())
+      executePagesInTestSystem(descriptor, pagesByTestSystem);
   }
 
-  private void executePagesInTestSystem(String testSystemName,
-                                        Map<String, LinkedList<WikiPage>> pagesByTestSystem) throws Exception {
-    List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(testSystemName);
-    announceTestSystem(testSystemName);
-    startTestSystemAndExecutePages(testSystemName, pagesInTestSystem);
+  private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
+                                        Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem) throws Exception {
+    List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
+    announceTestSystem(String.format("%s:%s",descriptor.testSystemName, descriptor.testRunner));
+    startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
   }
 
   private void announceTestSystem(String testSystemName) throws Exception {
@@ -73,9 +73,8 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     }
   }
 
-  private void startTestSystemAndExecutePages(String testSystemName, List<WikiPage> testSystemPages) throws Exception {
-    String testRunner = extractRunnerFromTestSystemName(testSystemName);
-    TestSystem testSystem = testSystemGroup.startTestSystem(testSystemName, testRunner, classPath);
+  private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<WikiPage> testSystemPages) throws Exception {
+    TestSystem testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
     if (testSystem.isSuccessfullyStarted()) {
       executeTestSystemPages(testSystemPages, testSystem);
       waitForTestSystemToSendResults();
@@ -317,13 +316,13 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     return pages;
   }
 
-  public static Map<String, LinkedList<WikiPage>>
+  public static Map<TestSystem.Descriptor, LinkedList<WikiPage>>
   makeMapOfPagesByTestSystem(WikiPage suitePage, WikiPage root, String suiteFilter) throws Exception {
-    Map<String, LinkedList<WikiPage>> map = new HashMap<String, LinkedList<WikiPage>>();
+    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = new HashMap<TestSystem.Descriptor, LinkedList<WikiPage>>();
     List<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suiteFilter);
     for (WikiPage page : pages) {
-      String testSystemName = TestSystem.getTestSystemName(page.getData());
-      List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, testSystemName);
+      TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData());
+      List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, descriptor);
       pagesForTestSystem.add(page);
     }
 
@@ -333,13 +332,13 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     return map;
   }
 
-  private static List<WikiPage> getPagesForTestSystem(Map<String, LinkedList<WikiPage>> map, String testSystemName) {
+  private static List<WikiPage> getPagesForTestSystem(Map<TestSystem.Descriptor, LinkedList<WikiPage>> map, TestSystem.Descriptor descriptor) {
     LinkedList<WikiPage> listInMap;
-    if (map.containsKey(testSystemName))
-      listInMap = map.get(testSystemName);
+    if (map.containsKey(descriptor))
+      listInMap = map.get(descriptor);
     else {
       listInMap = new LinkedList<WikiPage>();
-      map.put(testSystemName, listInMap);
+      map.put(descriptor, listInMap);
     }
     return listInMap;
   }

@@ -137,4 +137,8 @@ public class WikiWidgetTable implements Table {
   public String ignore(String s) {
     return String.format("!style_ignore(%s)", s);
   }
+
+  public String getUnescapedCellContents(int col, int row) {
+    return getCellContents(col, row);
+  }
 }

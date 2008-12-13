@@ -19,7 +19,7 @@ The !-NameResponder-! is activated by a url of the form {{{[somePage]?names}}} I
  * Does the response name the page?
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-PageOne-!|true||
 
 #

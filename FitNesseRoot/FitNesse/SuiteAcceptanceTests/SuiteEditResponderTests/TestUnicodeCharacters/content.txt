@@ -3,7 +3,7 @@
 |NewPage|þðæö|
 
 !|Response Requester|
-|uri|status!|contents?|
+|uri|status?|contents?|
 |NewPage|200||
 
 !|Response Examiner|

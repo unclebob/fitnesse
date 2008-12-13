@@ -14,6 +14,6 @@ Then request that page
 
 Examine the page to be sure it has the bold text
 
-|Response Examiner|
+!|Response Examiner|
 |type|pattern|matches?|value|
 |contents|This is <a href="mailto:an@email.com">an@email.com</a> text|true||

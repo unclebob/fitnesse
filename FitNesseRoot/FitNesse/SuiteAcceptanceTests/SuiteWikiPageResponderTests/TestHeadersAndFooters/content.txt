@@ -14,7 +14,7 @@
 |!-NormalPage-!|true|
  * Ensure that the header and and footer text appear in the normal page.
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(header).*(normal).*(footer)-!|true||
 ----
 !3 Test that sub pages inherit headers and footers.
@@ -28,7 +28,7 @@
 |!-NormalPage.SubPage-!|true|
  * Ensure that the header and and footer text are inherited by the sub page.
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(header).*(sub page).*(footer)-!|true||
 ----
 !3 Test that sub headers and sub footers override inherited headers and footers.
@@ -43,7 +43,7 @@
 |!-NormalPage.SubPage-!|true|
  * Ensure that the sub header and and sub footer text are inherited override their parents..
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-(sub header).*(sub page).*(sub footer)-!|true||
 
 

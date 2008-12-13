@@ -9,7 +9,7 @@ The form should have a normal header, a blank edit area, a save button.
 #
  * Does the page have the appropriate header?
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|SomeNonExistentPage|true||
 #
  * Does the page have an empty text area?

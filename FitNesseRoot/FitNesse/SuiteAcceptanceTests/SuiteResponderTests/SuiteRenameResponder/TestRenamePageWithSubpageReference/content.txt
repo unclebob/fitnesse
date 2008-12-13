@@ -23,8 +23,8 @@ Make sure that the new target name is present and that the old name is not.
 
 !|Response Examiner.|
 |type  |pattern|matches?|
-|contents|&gt;NewChild|true|
+|contents|>NewChild|true|
 |contents|href="ParentPage\.NewChild"|true|
-|contents|&gt;ChildPage|false|
+|contents|>ChildPage|false|
 
 

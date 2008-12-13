@@ -135,7 +135,7 @@ public abstract class SlimTable {
     int columnCount = table.getColumnCountInRow(row);
     List<String> arguments = new ArrayList<String>();
     for (int col = startingColumn; col < columnCount; col++)
-      arguments.add(table.getCellContents(col, row));
+      arguments.add(table.getUnescapedCellContents(col, row));
     return arguments.toArray(new String[0]);
   }
 
@@ -265,7 +265,7 @@ public abstract class SlimTable {
     callAndAssignInstruction.add("callAndAssign");
     callAndAssignInstruction.add(symbolName);
     callAndAssignInstruction.add(getTableName());
-    callAndAssignInstruction.add(fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName(functionName));
+    callAndAssignInstruction.add(Disgracer.disgraceMethodName(functionName));
     addInstruction(callAndAssignInstruction);
   }
 
@@ -507,7 +507,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       String evaluationMessage;
-      String replacedValue = replaceSymbols(expectedValue);
+      String replacedValue = Utils.unescapeHTML(replaceSymbols(expectedValue));
       if (value == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (value.equals(replacedValue))

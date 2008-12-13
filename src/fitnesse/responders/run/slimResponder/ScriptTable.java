@@ -120,7 +120,7 @@ public class ScriptTable extends SlimTable {
   private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row) {
     List<String> arguments = new ArrayList<String>();
     for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += 2) {
-      arguments.add(table.getCellContents(argumentColumn, row));
+      arguments.add(table.getUnescapedCellContents(argumentColumn, row));
       addExpectation(new ArgumentExpectation(getInstructionNumber(), argumentColumn, row));
     }
     return arguments.toArray(new String[arguments.size()]);

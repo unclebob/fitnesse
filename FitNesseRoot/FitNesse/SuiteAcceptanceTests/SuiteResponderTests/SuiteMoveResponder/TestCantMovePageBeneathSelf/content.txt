@@ -17,7 +17,7 @@ Then try to move the child page below the grandhild page.
 Make sure we get an error message.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|Cannot move|true||
 
 Make sure the page didn't really move.
@@ -27,7 +27,7 @@ Make sure the page didn't really move.
 |!-ParentPage.ChildPage-!|true||
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|child page|true||
 
 Make sure that the grandchild page still exists
@@ -37,6 +37,6 @@ Make sure that the grandchild page still exists
 |!-ParentPage.ChildPage.GrandchildPage-!|true||
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|grandchild page|true||
 

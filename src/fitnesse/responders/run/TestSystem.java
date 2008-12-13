@@ -16,20 +16,25 @@ public abstract class TestSystem implements TestSystemListener {
     this.testSystemListener = testSystemListener;
   }
 
-  public ExecutionLog getExecutionLog(String classPath, String className) throws Exception {
-    log = createExecutionLog(classPath, className);
+  public ExecutionLog getExecutionLog(String classPath, TestSystem.Descriptor descriptor) throws Exception {
+    log = createExecutionLog(classPath, descriptor);
     return log;
   }
 
-  protected abstract ExecutionLog createExecutionLog(String classPath, String className) throws Exception;
+  protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception;
 
-  protected String buildCommand(String program, String classPath) throws Exception {
-    String testRunner = page.getData().getVariable("COMMAND_PATTERN");
+  protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) throws Exception {;
+    String commandPattern = descriptor.commandPattern;
+    String command = replace(commandPattern, "%p", classPath);
+    command = replace(command, "%m", descriptor.testRunner);
+    return command;
+  }
+
+  private static String getCommandPattern(PageData pageData) throws Exception {
+    String testRunner = pageData.getVariable("COMMAND_PATTERN");
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
-    String command = replace(testRunner, "%p", classPath);
-    command = replace(command, "%m", program);
-    return command;
+    return testRunner;
   }
 
   // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
@@ -56,6 +61,13 @@ public abstract class TestSystem implements TestSystemListener {
     if (testSystemName == null)
       return "fit";
     return testSystemName;
+  }
+
+  public static String getPathSeparator(PageData pageData) throws Exception {
+    String separator = pageData.getVariable("PATH_SEPARATOR");
+    if (separator == null)
+      separator = (String) System.getProperties().get("path.separator");
+    return separator;
   }
 
   public static String getTestSystemType(String testSystemName) throws Exception {
@@ -101,4 +113,39 @@ public abstract class TestSystem implements TestSystemListener {
   public abstract void kill() throws Exception;
 
   public abstract String runTestsAndGenerateHtml(PageData pageData) throws Exception;
+
+  public static Descriptor getDescriptor(PageData data) throws Exception {
+    String testSystemName = getTestSystem(data);
+    String testRunner = getTestRunner(data);
+    String commandPattern = getCommandPattern(data);
+    String pathSeparator = getPathSeparator(data);
+    return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator);
+  }
+
+
+  public static class Descriptor {
+    public String testSystemName;
+    public String testRunner;
+    public String commandPattern;
+    public String pathSeparator;
+
+    public Descriptor(String testSystemName, String testRunner, String commandPattern, String pathSeparator) {
+      this.testSystemName = testSystemName;
+      this.testRunner = testRunner;
+      this.commandPattern = commandPattern;
+      this.pathSeparator = pathSeparator;
+    }
+
+    public int hashCode() {
+      return testSystemName.hashCode()^testRunner.hashCode()^commandPattern.hashCode()^pathSeparator.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+      Descriptor d = (Descriptor) obj;
+      return d.testSystemName.equals(testSystemName) &&
+        d.testRunner.equals(testRunner) &&
+        d.commandPattern.equals(commandPattern) &&
+        d.pathSeparator.equals(pathSeparator);
+    }
+  }
 }

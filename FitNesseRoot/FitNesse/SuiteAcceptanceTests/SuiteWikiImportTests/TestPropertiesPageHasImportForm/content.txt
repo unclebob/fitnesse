@@ -13,7 +13,7 @@ Request the properties view of this page.
 
 Now lets look at the form.
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|Wiki Import.|true||
 
 !|Response Examiner|

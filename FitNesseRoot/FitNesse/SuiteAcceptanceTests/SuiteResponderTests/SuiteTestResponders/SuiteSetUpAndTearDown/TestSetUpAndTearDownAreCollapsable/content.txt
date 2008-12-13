@@ -14,7 +14,7 @@
 
  * Ensure that the setup and and teardown text appear in the test page along with the header and footer.
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|.*(set up).*(test).*(tear down).*|true||
 
 !|Response Examiner.|

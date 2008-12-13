@@ -1,5 +1,7 @@
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.wikitext.Utils;
+
 import java.util.*;
 
 public class DecisionTable extends SlimTable {
@@ -104,7 +106,7 @@ public class DecisionTable extends SlimTable {
     Set<String> varKeys = vars.keySet();
     for (String var : varKeys) {
       int col = vars.get(var);
-      String valueToSet = table.getCellContents(col, row);
+      String valueToSet = table.getUnescapedCellContents(col, row);
       setVariableExpectation(col, row);
       List<Object> setInstruction = prepareInstruction();
       addCall(setInstruction, getTableName(), "set" + " " + var);

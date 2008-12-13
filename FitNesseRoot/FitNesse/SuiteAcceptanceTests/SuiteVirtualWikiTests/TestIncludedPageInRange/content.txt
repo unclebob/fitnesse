@@ -11,5 +11,5 @@ If a virtual page includes another that is in the same virtual subwiki, it shoul
 |VirtualPage.IncludingPage|true|
 
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|included page|true||

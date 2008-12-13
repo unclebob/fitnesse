@@ -12,13 +12,15 @@ import java.util.regex.Pattern;
 public class ResponseExaminer extends ColumnFixture {
   public String type;
   public String pattern;
-  public String value;
+  public String line;
+  private String value;
   public int number;
   private Matcher matcher;
   private int currentLine = 0;
 
   public String contents() throws Exception {
-    return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
+    String sentData = FitnesseFixtureContext.sender.sentData();
+    return Utils.escapeHTML(sentData);
   }
 
   public String fullContents() throws Exception {
@@ -26,13 +28,13 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public boolean inOrder() throws Exception {
-    if (value == null) {
+    if (line == null) {
       return false;
     }
     String pageContent = FitnesseFixtureContext.sender.sentData();
     String[] lines = arrayifyLines(pageContent);
     for (int i = currentLine; i < lines.length; i++) {
-      if (value.equals(lines[i].trim())) {
+      if (line.equals(lines[i].trim())) {
         currentLine = i;
         return true;
       }
@@ -41,10 +43,11 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public int matchCount() throws Exception {
-    Pattern p = Pattern.compile(Utils.escapeHTML(pattern), Pattern.MULTILINE + Pattern.DOTALL);
+    String escapedPattern = Utils.escapeHTML(pattern);
+    Pattern p = Pattern.compile(pattern, Pattern.MULTILINE + Pattern.DOTALL);
     setValue(null);
     if (type.equals("contents"))
-      setValue(contents());
+      setValue(Utils.unescapeHTML(FitnesseFixtureContext.sender.sentData()));
     else if (type.equals("fullContents"))
       setValue(fullContents());
     else if (type.equals("status"))

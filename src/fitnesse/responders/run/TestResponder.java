@@ -66,9 +66,8 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   protected void performExecution() throws Exception {
-    String testSystemName = TestSystem.getTestSystemName(data);
-    String testRunner = TestSystem.getTestRunner(data);
-    TestSystem testSystem = testSystemGroup.startTestSystem(testSystemName, testRunner, classPath);
+    TestSystem.Descriptor descriptor = TestSystem.getDescriptor(data);
+    TestSystem testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
     if (testSystemGroup.isSuccessfullyStarted()) {
       addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
       SetupTeardownIncluder.includeInto(data, true);

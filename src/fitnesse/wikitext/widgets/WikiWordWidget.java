@@ -45,7 +45,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     StringBuffer html = new StringBuffer();
     html.append(Utils.escapeHTML(getText()));
     html.append("<a title=\"create page\" href=\"").append(qualifiedName);
-    html.append("?edit&amp;nonExistent=true");
+    html.append("?edit&nonExistent=true");
     html.append("\">[?]</a>");
     return html.toString();
   }

@@ -17,7 +17,7 @@ Then rename that page.
 Make sure that we got an error message.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|Cannot rename|true||
 
 The renamed page should not exist.

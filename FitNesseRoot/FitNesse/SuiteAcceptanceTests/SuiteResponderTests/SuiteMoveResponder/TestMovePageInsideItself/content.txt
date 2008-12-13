@@ -17,5 +17,5 @@ Then try to move the sub page inside itself.  We should get an error (400).
 We should be told that we cannot move the page.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|Cannot move|true||

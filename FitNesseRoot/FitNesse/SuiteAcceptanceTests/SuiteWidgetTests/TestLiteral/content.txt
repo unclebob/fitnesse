@@ -18,7 +18,7 @@ Then request that page
 Examine the page to be sure it has the normal text
 
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|This is literal text|true||
 ----
 !3 Test literal text with markup syntax in it.
@@ -37,7 +37,7 @@ Then request that page
 Examine the page to be sure it has the normal text
 
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-This is ''literal'' text-!|true||
 
 

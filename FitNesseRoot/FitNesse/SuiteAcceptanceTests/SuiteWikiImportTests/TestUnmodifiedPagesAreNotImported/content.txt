@@ -32,7 +32,7 @@ Importing again will show that no pages were imported since none had changed.
 |ImportingPage?responder=import|true|
 
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|0 pages were imported|true|
 |contents|3 pages were unmodified|true|
 

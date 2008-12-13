@@ -24,7 +24,7 @@ Next fetch the moved page.
 Make sure that the sub page can be referenced in it's new location.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|child page|true||
 
 Make sure that the grandchild page can be referenced in its new location
@@ -34,7 +34,7 @@ Make sure that the grandchild page can be referenced in its new location
 |!-NewParentPage.ChildPage.GrandchildPage-!|true||
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|grandchild page|true||
 
 Make sure that there is no sub page beneath !-ParentPage-!.

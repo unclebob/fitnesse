@@ -51,7 +51,7 @@
  * Inspect the text to see if the variable was expressed.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|x is 1|true||
 
 ----
@@ -77,7 +77,7 @@
  * Inspect the text to see if the variable was expressed.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|xLitPAREN is xLitPAREN|true||
 |contents|xLitBRACE is xLitBRACE|true||
 
@@ -115,7 +115,7 @@
  * Inspect the text to see if the variables were expressed properly.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|~xy. is 1~|true||
 |contents|~x.y is 2~|true||
 |contents|~.xy is 3~|true||

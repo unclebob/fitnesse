@@ -24,7 +24,7 @@ Next fetch reference page and make sure the reference has been changed.
 |!-ReferencePage-!|true||
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-ParentPageAy.ChildDee.ChildCee.ChildEee-!|true||
 
 Make sure we can't get the old A.B.C page.

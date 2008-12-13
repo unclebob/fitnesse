@@ -31,9 +31,14 @@ public class HtmlTable implements Table {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
 
+
+  public String getUnescapedCellContents(int col, int row) {
+    return Utils.unescapeHTML(getCellContents(col, row));
+  }
+
   public void appendToCell(int col, int row, String message) {
     Cell cell = rows.get(row).getColumn(col);
-    cell.setContent(cell.getUnescapedContent() + message);
+    cell.setContent(cell.getEscapedContent() + message);
   }
 
   public int getRowCount() {
@@ -92,7 +97,6 @@ public class HtmlTable implements Table {
   public String ignore(String s) {
     return String.format("<span class=\"ignore\">%s</span>", s);
   }
-
 
   private Tag newTag(Class klass) {
     Tag tag = null;
@@ -198,10 +202,10 @@ public class HtmlTable implements Table {
     }
 
     public String getContent() {
-      return Utils.unescapeHTML(getUnescapedContent());
+      return getEscapedContent();
     }
 
-    public String getUnescapedContent() {
+    public String getEscapedContent() {
       String unescaped = columnNode.getChildrenHTML();
       //Some browsers need &nbsp; inside an empty table cell, so we remove it here.
       return "&nbsp;".equals(unescaped) ? "" : unescaped;

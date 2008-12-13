@@ -23,7 +23,7 @@ Next fetch the page.
 Make sure that the new name is present and that the old name is not.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-ThePage-!|true||
 
 |Response Examiner.|

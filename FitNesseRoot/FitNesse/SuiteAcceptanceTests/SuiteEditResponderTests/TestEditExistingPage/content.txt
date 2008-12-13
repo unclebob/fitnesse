@@ -15,7 +15,7 @@ The form should have a normal header, an edit area filled with the current conte
 #
  * Does the page have the appropriate header?
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|SomePage|true||
 #
  * Does the page have a filled text area?

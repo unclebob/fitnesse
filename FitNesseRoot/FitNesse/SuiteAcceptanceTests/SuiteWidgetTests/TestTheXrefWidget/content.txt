@@ -30,7 +30,7 @@ Get the Suite page.
 
 Make sure the page name is formatted properly
 
-|Response Examiner.|
+!|Response Examiner.|
 |type  |pattern|matches?|
 |contents|<b>See: <a href=.*>SomePage</a></b>|true|
 

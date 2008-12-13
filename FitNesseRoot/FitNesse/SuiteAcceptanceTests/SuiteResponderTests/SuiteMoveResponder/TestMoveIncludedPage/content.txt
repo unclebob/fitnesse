@@ -22,7 +22,7 @@ Make sure that the refering page now !includes the old page at the new location.
 |!-ReferingPage-!|true||
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-.NewParentPage.SubPage-!|true||
 
 |Response Examiner.|

@@ -26,7 +26,7 @@ When a variable is expressed on a page, if that variable was not defined on that
  * Make sure variable was expressed.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|x is 1|true||
 ----
 !3 Make sure child variables override parent variables.
@@ -47,5 +47,5 @@ When a variable is expressed on a page, if that variable was not defined on that
  * Make sure variable definition from sub page was expressed.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|x is 2|true||

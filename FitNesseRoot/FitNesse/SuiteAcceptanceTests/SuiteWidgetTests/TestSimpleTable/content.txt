@@ -20,7 +20,7 @@ A simple table is created as follows {{{|a|b|c|}}} The resulting text will be re
  * Make sure the html is correct for a simple table.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|a|true||
 
 |Response Examiner.|

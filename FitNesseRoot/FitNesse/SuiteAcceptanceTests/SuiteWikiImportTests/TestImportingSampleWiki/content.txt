@@ -19,7 +19,7 @@ This !-ImportingPage-! will now import the !-SampleWiki-! page.
 
 The above request will initiate a chunked response where all the imported pages are listed.
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|ChildPageOne|true||
 
 !|Response Examiner|

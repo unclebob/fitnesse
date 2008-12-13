@@ -12,7 +12,7 @@ Request the page
 
 Examine the requested page to ensure the correct links are displayed in the correct order.
 !|Response Examiner.|
-|value|inOrder?|
+|line|inOrder?|
 |<div class="actions">|true|
 |<a href="SomePage?test" accesskey="t">Test</a>|true|
 |<a href="SomePage?edit" accesskey="e">Edit</a>|true|

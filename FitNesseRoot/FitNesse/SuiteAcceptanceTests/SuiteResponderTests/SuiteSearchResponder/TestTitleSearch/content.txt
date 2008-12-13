@@ -14,7 +14,7 @@ First let's perform a silly search.  We'll look for a page named blah.
 
 Let's make sure the titles in and information is correct.
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-Title Search Results for 'blah'-!|true||
 
 Make sure we get !-PageAbc-! in the result list.
@@ -29,7 +29,7 @@ Now search for ABC.
 
 Make sure we get !-PageAbc-! in the result list.
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-PageAbc-!|true||
 
 Now search for xyz.
@@ -39,7 +39,7 @@ Now search for xyz.
 
 Make sure we get !-XyzPage-! in the result list.  Searches are case insensitive.
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-XyzPage-!|true||
 
 Now search for the word page.

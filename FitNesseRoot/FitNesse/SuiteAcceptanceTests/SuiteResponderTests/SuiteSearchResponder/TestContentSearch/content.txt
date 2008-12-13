@@ -14,7 +14,7 @@ Search for a page !-PageAbc-!
 
 Check for the proper title.
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|Content Search|true||
 
 Since no page, not even !-PageAbc-! contains that content, no results will be returned.
@@ -30,7 +30,7 @@ Now search for ABC.
 
 Make sure we get !-PageAbc-! in the result list.
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-PageAbc-!|true||
 
 Now search for xyz.
@@ -40,7 +40,7 @@ Now search for xyz.
 
 Make sure we get !-XyzPage-! in the result list.  Searches are case insensitive.
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-XyzPage-!|true||
 
 Now search for the word page.

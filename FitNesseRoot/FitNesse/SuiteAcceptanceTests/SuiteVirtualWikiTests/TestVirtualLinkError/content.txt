@@ -12,5 +12,5 @@ This test makes sure that a !-VirtualWikiNetworkError-! page is created if the v
 |VirtualPage|true|
 
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|VirtualWikiNetworkError|true||

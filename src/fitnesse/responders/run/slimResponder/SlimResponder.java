@@ -7,6 +7,7 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.PageData;
 
 /*
@@ -23,7 +24,9 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
   protected String generateHtml(PageData pageData) throws Exception {
     testSystem = getTestSystem(pageData);
     String classPath = new ClassPathBuilder().getClasspath(page);
-    log = testSystem.getExecutionLog(classPath, "fitnesse.slim.SlimService");
+    TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData());
+    descriptor.testRunner = "fitnesse.slim.SlimService";
+    log = testSystem.getExecutionLog(classPath, descriptor);
     testSystem.start();
     testSystem.setFastTest(fastTest);
     String html = testSystem.runTestsAndGenerateHtml(pageData);

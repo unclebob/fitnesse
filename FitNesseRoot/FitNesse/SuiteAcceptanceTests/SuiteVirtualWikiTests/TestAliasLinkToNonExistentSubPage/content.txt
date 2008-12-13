@@ -9,5 +9,5 @@ An alias link to a non-existent page on a virtual child should generate a '''[?]
 |VirtualPage.ChildWithAliasLinkToNonExistentSubPage|true|
 
 !|Response Examiner|
-|type|pattern|matches?|value|
-|contents|<a title="create page" href="http://localhost:${FITNESSE_PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage\.ChildWithAliasLinkToNonExistentSubPage\.NonExistentSubPage\?edit&amp;nonExistent=true" target=".*">\[\?\]</a>|true||
+|type|pattern|matches?|wrapped html?|
+|contents|<a title="create page" href="http://localhost:${FITNESSE_PORT}/FitNesse.SuiteAcceptanceTests.AcceptanceTestPage\.ChildWithAliasLinkToNonExistentSubPage\.NonExistentSubPage\?edit&nonExistent=true" target=".*">\[\?\]</a>|true||

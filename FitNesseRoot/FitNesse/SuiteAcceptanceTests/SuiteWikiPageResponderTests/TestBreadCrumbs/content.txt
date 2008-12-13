@@ -46,7 +46,7 @@
 
  * Examine the requested page to be sure the link to itself is displayed.
 !|Response Examiner.|
-|value|inOrder?|
+|line|inOrder?|
 |<a href="/TopLevelPage">TopLevelPage</a>.|true|
 |<a href="/TopLevelPage.SecondLevelPage">SecondLevelPage</a>.|true|
 |<a href="/TopLevelPage.SecondLevelPage.ThirdLevelPage">ThirdLevelPage</a>.|true|

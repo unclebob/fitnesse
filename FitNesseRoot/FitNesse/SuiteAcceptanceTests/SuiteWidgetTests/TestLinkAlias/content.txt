@@ -54,8 +54,8 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |!-HttpLinkPage-!|!-[[tag][http://fitnesse.org]]-!||true|
  * Fetch the page.
 |Response Requester.|
-|uri|valid?|
-|!-HttpLinkPage-!|true|
+|uri|valid?|contents?|
+|!-HttpLinkPage-!|true||
  * Make sure the link is properly constructed.
 |Response Examiner.|
 |type|pattern|matches?|value|
@@ -80,7 +80,7 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 !|script|
 |start|Page Builder|
 |line|&bang;define HOST {localhost:8080}|
-|line|!-[[tag][http://&dollar;{HOST}/page]]-! works fine.|
+|line|!-[[tag][http://${HOST}/page]]-! works fine.|
 |page|!-HttpLinkPage-!|
 
  * Fetch the page.
@@ -113,8 +113,8 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
  * Create pages to refer to
 |Page creator.|
 |Page name.|Page contents.|Page attributes.|valid?|
-|!-PageLink2 -!|contents||true|
-|!-PageLink4 -!|contents||true|
+|!-PageLink2-!|contents||true|
+|!-PageLink4-!|contents||true|
 |!-PageLink10-!|contents||true|
 
  * First create a page with a variables and http link on it.
@@ -125,7 +125,7 @@ The tag is interpreted for markup syntax, so it can be italic, or bold, or an im
 |line|!-!define EXPR (${=3+2-1=})-!|
 |line|!-[[tag][PageLink${= 3 - 2 + 1 =}]]-! works fine.|
 |line|!-[[tag][PageLink${EXPR}]]-! works too.|
-|line|!-[[tag][PageLink&dollar;{=&dollar;{X}+&dollar;{Y}+1=}]]-! works as well.|
+|line|!-[[tag][PageLink${=${X}+${Y}+1=}]]-! works as well.|
 |page|!-HttpExprPage-!|
 
  * Fetch the page.

@@ -17,7 +17,7 @@
  * Examine the page to be sure it is empty.
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|<table.*<tr>\s*<td>\s*1 Row 1 Cell\s*</td>\s*</tr>\s*</table>|true||
 
 '''Test that spaces inside table cells don't get interpreted.'''
@@ -33,7 +33,7 @@
 #
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|1 is not a list|true||
 #
 |Response Examiner.|
@@ -55,7 +55,7 @@
 #
 #
 |Response Examiner.|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|!-'''bold'''-!|true||
 #
 |Response Examiner.|

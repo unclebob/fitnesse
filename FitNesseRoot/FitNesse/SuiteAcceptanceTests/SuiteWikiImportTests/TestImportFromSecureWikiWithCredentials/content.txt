@@ -14,5 +14,5 @@ This !-ImportingPage-! will now import the secure wiki page.  Credentials for ac
 
 The import should succeed just like normal.
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|1 page was imported|true||

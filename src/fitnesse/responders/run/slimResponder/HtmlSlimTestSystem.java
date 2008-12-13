@@ -16,6 +16,8 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   protected String createHtmlResults() throws Exception {
     replaceExceptionsWithLinks();
     evaluateTables();
-    return ExceptionList.toHtml(exceptions)+ tableScanner.toHtml();
+    String exceptions = ExceptionList.toHtml(this.exceptions);
+    String testResultHtml = tableScanner.toHtml();
+    return exceptions + testResultHtml;
   }
 }

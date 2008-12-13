@@ -23,5 +23,5 @@ Next fetch old parent page and make sure the reference has been changed.
 |!-ParentPage-!|true||
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|!-NewParentPage.SubPage-!|true||

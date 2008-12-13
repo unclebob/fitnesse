@@ -23,7 +23,7 @@ Update the imported wiki.
 
 The !-ChildPageOne-! page will be listed.
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|0 pages were imported|true||
 
 When we view !-ChildPageOne-!...

@@ -70,11 +70,11 @@ A format is a specifier that describes the rendering of the numeric result.  The
 ''' Build expression page '''
 !|script|
 | start | Page Builder|
-| line |!- ~2a:&dollar;{=3=}~   -!|
-| line |!- ~2b:&dollar;{= 4.2 =}~  -!|
-| line |!- ~2c:&dollar;{= 2E+1 =}~ -!|
-| line |!- ~2d:&dollar;{=  2.3E+42  =}~ -!|
-| line |!- ~2e:&dollar;{=  4.2E + 24  =}~ -!|
+| line |!- ~2a:${=3=}~   -!|
+| line |!- ~2b:${= 4.2 =}~  -!|
+| line |!- ~2c:${= 2E+1 =}~ -!|
+| line |!- ~2d:${=  2.3E+42  =}~ -!|
+| line |!- ~2e:${=  4.2E + 24  =}~ -!|
 | page | ExpressionPage  |
 
 ''' Render it '''
@@ -108,11 +108,11 @@ A format is a specifier that describes the rendering of the numeric result.  The
 ''' Build expression page '''
 !|script|
 | start | Page Builder|
-| line |!- ~3a:&dollar;{=1+1=}~ -!|
-| line |!- ~3b:&dollar;{=2 + 2=}~ -!|
-| line |!- ~3c:&dollar;{= 3 + 3=}~ -!|
-| line |!- ~3d:&dollar;{=4 + 4 =}~ -!|
-| line |!- ~3e:&dollar;{=5 +5 =}~ -!|
+| line |!- ~3a:${=1+1=}~ -!|
+| line |!- ~3b:${=2 + 2=}~ -!|
+| line |!- ~3c:${= 3 + 3=}~ -!|
+| line |!- ~3d:${=4 + 4 =}~ -!|
+| line |!- ~3e:${=5 +5 =}~ -!|
 | page | ExpressionPage  |
 
 ''' Render it '''
@@ -146,19 +146,19 @@ A format is a specifier that describes the rendering of the numeric result.  The
 ''' Build expression page '''
 !|script|
 | start | Page Builder|
-| line |!- ~4plus:&dollar;{= 1 + 2 =}~     -!|
-| line |!- ~4minus:&dollar;{= 2 - 3 =}~    -!|
-| line |!- ~4unary:&dollar;{= -12 =}~      -!|
-| line |!- ~4mult:&dollar;{= 3 * 4 =}~     -!|
-| line |!- ~4div:&dollar;{= 4 / 5 =}~      -!|
-| line |!- ~4exp:&dollar;{=%2d: 5 ^ 6 =}~  -!|
-| line |!- ~4sin1:&dollar;{=%5.4f: sin0.39269875   =}~ -!|
-| line |!- ~4sin2:&dollar;{=%5.4f: sin 0.39269875  =}~ -!|
-| line |!- ~4sin3:&dollar;{=%5.4f: sin(0.39269875) =}~ -!|
-| line |!- ~4sin4:&dollar;{=%5.4f: sin(3.14159/8)  =}~ -!|
-| line |!- ~4sin5:&dollar;{=%5.4f: sin (3.14159/8) =}~ -!|
-| line |!- ~4cos:&dollar;{=%5.4f: cos(3.14159 / 8) =}~ -!|
-| line |!- ~4tan:&dollar;{=%5.4f: tan(3.14159 / 8) =}~ -!|
+| line |!- ~4plus:${= 1 + 2 =}~     -!|
+| line |!- ~4minus:${= 2 - 3 =}~    -!|
+| line |!- ~4unary:${= -12 =}~      -!|
+| line |!- ~4mult:${= 3 * 4 =}~     -!|
+| line |!- ~4div:${= 4 / 5 =}~      -!|
+| line |!- ~4exp:${=%2d: 5 ^ 6 =}~  -!|
+| line |!- ~4sin1:${=%5.4f: sin0.39269875   =}~ -!|
+| line |!- ~4sin2:${=%5.4f: sin 0.39269875  =}~ -!|
+| line |!- ~4sin3:${=%5.4f: sin(0.39269875) =}~ -!|
+| line |!- ~4sin4:${=%5.4f: sin(3.14159/8)  =}~ -!|
+| line |!- ~4sin5:${=%5.4f: sin (3.14159/8) =}~ -!|
+| line |!- ~4cos:${=%5.4f: cos(3.14159 / 8) =}~ -!|
+| line |!- ~4tan:${=%5.4f: tan(3.14159 / 8) =}~ -!|
 | page | ExpressionPage  |
 
 ''' Render it '''
@@ -200,10 +200,10 @@ A format is a specifier that describes the rendering of the numeric result.  The
 ''' Build expression page '''
 !|script|
 | start | Page Builder|
-| line |!- ~5a:&dollar;{= 2 * 3 + 4 / 2 - 3             =}~ -!|
-| line |!- ~5b:&dollar;{= 2 * ( 3 + 4 ) / 2 - 3         =}~ -!|
-| line |!- ~5c:&dollar;{= 2 * ( 3 + 4 ) / ( 2 - 3 )     =}~ -!|
-| line |!- ~5d:&dollar;{= 2 * ( 3 + ( 4 / ( 2 - 3 ) ) ) =}~ -!|
+| line |!- ~5a:${= 2 * 3 + 4 / 2 - 3             =}~ -!|
+| line |!- ~5b:${= 2 * ( 3 + 4 ) / 2 - 3         =}~ -!|
+| line |!- ~5c:${= 2 * ( 3 + 4 ) / ( 2 - 3 )     =}~ -!|
+| line |!- ~5d:${= 2 * ( 3 + ( 4 / ( 2 - 3 ) ) ) =}~ -!|
 | page | ExpressionPage  |
 
 ''' Render it '''
@@ -236,21 +236,21 @@ A format is a specifier that describes the rendering of the numeric result.  The
 ''' Build expression page '''
 !|script|
 | start | Page Builder|
-| line |!- ~6a:&dollar;{=%d:2                =}~ -!|
-| line |!- ~6b:&dollar;{= %d : 3.2           =}~ -!|
-| line |!- ~6c:&dollar;{=%02d: 2 + 1        =}~  -!|
-| line |!- ~6d:&dollar;{= %4.4f: 2.2 / 3.4 =}~   -!|
-| line |!- ~6e:&dollar;{=%03o: 16 =}~            -!|
-| line |!- ~6f:&dollar;{= %03o : 18 =}~          -!|
-| line |!- ~6g:&dollar;{=%03x: 26 =}~            -!|
-| line |!- ~6h:&dollar;{=%03X: 27 =}~            -!|
-| line |!- ~6i:&dollar;{= %-12s : 123 =}~        -!|
-| line |!- ~6j:&dollar;{=%TY: 73422123127 =}~    -!|
-| line |!- ~6k:&dollar;{=%b: 27 =}~              -!|
-| line |!- ~6l:&dollar;{=%b: 0 =}~               -!|
-| line |!- ~6m:&dollar;{=%B: 27 =}~              -!|
-| line |!- ~6n:&dollar;{=%B: 0 =}~               -!|
-| line |!- ~6o:&dollar;{= % d : 3.2          =}~ -!|
+| line |!- ~6a:${=%d:2                =}~ -!|
+| line |!- ~6b:${= %d : 3.2           =}~ -!|
+| line |!- ~6c:${=%02d: 2 + 1        =}~  -!|
+| line |!- ~6d:${= %4.4f: 2.2 / 3.4 =}~   -!|
+| line |!- ~6e:${=%03o: 16 =}~            -!|
+| line |!- ~6f:${= %03o : 18 =}~          -!|
+| line |!- ~6g:${=%03x: 26 =}~            -!|
+| line |!- ~6h:${=%03X: 27 =}~            -!|
+| line |!- ~6i:${= %-12s : 123 =}~        -!|
+| line |!- ~6j:${=%TY: 73422123127 =}~    -!|
+| line |!- ~6k:${=%b: 27 =}~              -!|
+| line |!- ~6l:${=%b: 0 =}~               -!|
+| line |!- ~6m:${=%B: 27 =}~              -!|
+| line |!- ~6n:${=%B: 0 =}~               -!|
+| line |!- ~6o:${= % d : 3.2          =}~ -!|
 | page | ExpressionPage  |
 
 ''' Render it '''

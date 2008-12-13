@@ -26,8 +26,8 @@ Make sure that the references have been changed.
 
 !|Response Examiner.|
 |type  |pattern|matches?|
-|contents|<a href="RenamedTopPage\.TargetPage">&lt;RenamedTopPage\.TargetPage</a>|true|
-|contents|<a href="RenamedTopPage\.MiddlePage\.MiddleTarget">&lt;RenamedTopPage\.MiddlePage\.MiddleTarget</a>|true|
+|contents|<a href="RenamedTopPage\.TargetPage"><RenamedTopPage\.TargetPage</a>|true|
+|contents|<a href="RenamedTopPage\.MiddlePage\.MiddleTarget"><RenamedTopPage\.MiddlePage\.MiddleTarget</a>|true|
 
 Rename the middle page.
 
@@ -43,5 +43,5 @@ Next fetch the referring page.
 
 !|Response Examiner.|
 |type  |pattern|matches?|
-|contents|<a href="RenamedTopPage\.TargetPage">&lt;RenamedTopPage\.TargetPage</a>|true|
-|contents|<a href="RenamedTopPage\.RenamedMiddlePage\.MiddleTarget">&lt;RenamedTopPage\.RenamedMiddlePage\.MiddleTarget</a>|true|
+|contents|<a href="RenamedTopPage\.TargetPage"><RenamedTopPage\.TargetPage</a>|true|
+|contents|<a href="RenamedTopPage\.RenamedMiddlePage\.MiddleTarget"><RenamedTopPage\.RenamedMiddlePage\.MiddleTarget</a>|true|

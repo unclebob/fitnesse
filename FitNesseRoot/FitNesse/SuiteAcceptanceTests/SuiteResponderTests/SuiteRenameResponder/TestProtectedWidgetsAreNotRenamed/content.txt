@@ -38,7 +38,7 @@ Next fetch the page.
 Make sure that the new page name does not appear.
 
 |Response Examiner.|
-|type  |pattern|matchCount()|value|
+|type  |pattern|matchCount()|wrapped html?|
 |contents|!-RenamedPage&lt;/a>-!|1||
 
 

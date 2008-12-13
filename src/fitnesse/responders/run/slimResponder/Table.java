@@ -28,4 +28,6 @@ public interface Table {
   String fail(String s);
 
   String ignore(String s);
+
+  String getUnescapedCellContents(int col, int row);
 }

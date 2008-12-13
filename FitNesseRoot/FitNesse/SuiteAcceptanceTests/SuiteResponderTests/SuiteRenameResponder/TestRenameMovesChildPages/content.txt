@@ -22,6 +22,6 @@ Next fetch the child page using the parent's new name.
 The child page's content should be the same.
 
 |Response Examiner.|
-|type  |pattern|matches?|value|
+|type  |pattern|matches?|wrapped html?|
 |contents|child page|true||
 

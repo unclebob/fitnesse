@@ -15,6 +15,8 @@ public class HtmlTableScanner implements TableScanner {
   private NodeList htmlTree;
 
   public HtmlTableScanner(String page) throws ParserException {
+    if (page == null || page.equals(""))
+      page = "<i>This page intentionally left blank.</i>";
     Parser parser = new Parser(page);
     htmlTree = parser.parse(null);
     scanForTables(htmlTree);

@@ -311,12 +311,12 @@ public class SuiteResponderTest {
   @Test
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestToSuite("SlimTest", simpleSlimDecisionTable);
-    Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
+    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
 
-    String fitTestSystemName = TestSystem.getTestSystemName(testPage.getData());
-    String slimTestSystemName = TestSystem.getTestSystemName(slimPage.getData());
-    List<WikiPage> fitList = map.get(fitTestSystemName);
-    List<WikiPage> slimList = map.get(slimTestSystemName);
+    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData());
+    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData());
+    List<WikiPage> fitList = map.get(fitDescriptor);
+    List<WikiPage> slimList = map.get(slimDescriptor);
 
     assertEquals(1, fitList.size());
     assertEquals(1, slimList.size());
@@ -330,12 +330,12 @@ public class SuiteResponderTest {
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    Map<String, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
-    String fitTestSystemName = TestSystem.getTestSystemName(testPage.getData());
-    String slimTestSystemName = TestSystem.getTestSystemName(slimPage.getData());
+    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
+    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData());
+    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData());
 
-    List<WikiPage> fitList = map.get(fitTestSystemName);
-    List<WikiPage> slimList = map.get(slimTestSystemName);
+    List<WikiPage> fitList = map.get(fitDescriptor);
+    List<WikiPage> slimList = map.get(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());

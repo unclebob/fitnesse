@@ -14,8 +14,8 @@ public class FitTestSystem extends TestSystem {
     this.context = context;
   }
 
-  protected ExecutionLog createExecutionLog(String classPath, String className) throws Exception {
-    String command = buildCommand(className, classPath);
+  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception {
+    String command = buildCommand(descriptor, classPath);
     client = new CommandRunningFitClient(this, command, context.port, context.socketDealer, fastTest);
     return new ExecutionLog(page, client.commandRunner);
   }

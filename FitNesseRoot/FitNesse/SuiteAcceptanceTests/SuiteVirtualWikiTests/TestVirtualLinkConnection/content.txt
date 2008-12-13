@@ -9,5 +9,5 @@ This test makes sure that we can build a simple virtual wiki link.  We create a 
 |VirtualPage|true|
 
 !|Response Examiner|
-|type|pattern|matches?|value|
+|type|pattern|matches?|wrapped html?|
 |contents|ChildOne|true||
