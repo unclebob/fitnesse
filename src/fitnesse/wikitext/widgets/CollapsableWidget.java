@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CollapsableWidget extends ParentWidget {
-  private static final String ENDL = LineBreakWidget.REGEXP;
+  private static final String ENDL = LINE_BREAK_PATTERN;
   public static final String REGEXP = "!\\*+[<>]? .*?" + ENDL + ".*?" + ENDL + "\\*+!" + ENDL + "?";
   private static final Pattern pattern = Pattern.compile("!\\*+([<>])? (.*?)" + ENDL + "(.*?)" + ENDL + "\\*+!", Pattern.MULTILINE + Pattern.DOTALL);
   //invisible: N.B., add to fitnesse_base.css:

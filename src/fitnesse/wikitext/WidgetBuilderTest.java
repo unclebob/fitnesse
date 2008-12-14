@@ -2,6 +2,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.widgets.*;
@@ -126,14 +127,6 @@ public class WidgetBuilderTest extends TestCase {
     assertEquals(TableWidget.class, widget.getClass());
   }
 
-  public void testLineBreak() throws Exception {
-    ParentWidget page = new WidgetRoot("\n\r\n\r", mockSource);
-    assertEquals(3, page.numberOfChildren());
-    while (page.hasNextChild()) {
-      assertEquals(LineBreakWidget.class, page.nextChild().getClass());
-    }
-  }
-
   public void testList() throws Exception {
     ParentWidget page = new WidgetRoot(" *Item1\n", mockSource);
     assertEquals(1, page.numberOfChildren());
@@ -229,6 +222,31 @@ public class WidgetBuilderTest extends TestCase {
       thread.start();
     }
     assertEquals(false, failFlag.get());
+  }
+  //Parsing Line Breaks used to be very slow because it was done with the LineBreakWidget
+  //which used regular expressions.  Now we just have the text widget replace line ends
+  // with <br/>.  This is much faster.  This test is here to make sure it stays fast.
+  public void testParsingManyLineBreaksIsFast() throws Exception {
+    StringBuffer b = new StringBuffer();
+    for (int i = 0; i < 100; i++)
+      b.append("****************************************************************\n");
+    for (int i = 0; i < 100; i++)
+      b.append("****************************************************************\r");
+    for (int i = 0; i < 100; i++)
+      b.append("****************************************************************\r\n");
+
+    long start = System.currentTimeMillis();
+    ParentWidget root = new WidgetRoot(b.toString(), mockSource);
+    String html = root.childHtml();
+    long stop = System.currentTimeMillis();
+
+    StringBuffer expected = new StringBuffer();
+    for (int i = 0; i < 300; i++)
+      expected.append("****************************************************************<br/>");
+
+    assertEquals(expected.toString(), html);
+    long duration = stop - start;
+    assertTrue(String.format("parsing took %s ms.", duration), duration < 100);
   }
 
   class WidgetBuilderThread implements Runnable {

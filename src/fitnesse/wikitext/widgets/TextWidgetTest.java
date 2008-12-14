@@ -30,4 +30,9 @@ public class TextWidgetTest extends TestCase {
     assertEquals("text \\! \\$ \\|", widget.asWikiText());
   }
 
+  public void testNewLines() throws Exception {
+    TextWidget widget = new TextWidget(new MockWidgetRoot(), "one\ntwo\rthree\r\n");
+    assertEquals("one<br/>two<br/>three<br/>", widget.render());    
+  }
+
 }

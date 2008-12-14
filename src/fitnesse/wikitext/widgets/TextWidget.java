@@ -29,6 +29,9 @@ public class TextWidget extends WikiWidget implements WidgetWithTextArgument {
     String html = getText();
     if (parent.doEscaping())
       html = Utils.escapeHTML(html);
+    html = html.replaceAll("\r\n", "\n");
+    html = html.replaceAll("\r", "\n");
+    html = html.replaceAll("\n", "<br/>");
 
     return html;
   }

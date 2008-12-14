@@ -1,7 +1,7 @@
 !3 This page tests comments on a wiki page.
-#
+#-----
  * First create a page with comment text on it.
-#
+#-----
 !|script|
 |start|Page Builder|
 |line|one|

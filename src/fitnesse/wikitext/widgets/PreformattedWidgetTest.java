@@ -24,7 +24,7 @@ public class PreformattedWidgetTest extends RegexTestCase {
 
   public void testMultiLine() throws Exception {
     PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(), "{{{\npreformatted text\n}}}");
-    assertEquals("<pre>\npreformatted text\n</pre>", widget.render());
+    assertEquals("<pre><br/>preformatted text<br/></pre>", widget.render());
   }
 
   public void testAsWikiText() throws Exception {

@@ -138,7 +138,7 @@ public abstract class ParentWidget extends WikiWidget {
   }
 
   protected String stripTrialingWhiteSpaceInLines(String value) {
-    return Pattern.compile("[ \\t]+(" + LineBreakWidget.REGEXP + ")").matcher(value).replaceAll("$1");
+    return Pattern.compile("[ \\t]+(" + LINE_BREAK_PATTERN + ")").matcher(value).replaceAll("$1");
   }
 
   public static class LiteralProcessingWidgetRoot extends ParentWidget {

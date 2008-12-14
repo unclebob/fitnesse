@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class TableCellWidget extends ParentWidget {
   @SuppressWarnings("unused")
-  private static Pattern NEWLINE_PATTERN = Pattern.compile("\\\\(" + LineBreakWidget.REGEXP + ")");
+  private static Pattern NEWLINE_PATTERN = Pattern.compile("\\\\(" + LINE_BREAK_PATTERN + ")");
 
   private TableRowWidget parentRow = null;
   private boolean isLiteral;

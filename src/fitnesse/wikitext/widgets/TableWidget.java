@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TableWidget extends ParentWidget {
-  public static final String LF = LineBreakWidget.REGEXP;
+  public static final String LF = LINE_BREAK_PATTERN;
   public static final String REGEXP = "^!?(?:\\|[^\r\n]*?\\|" + LF + ")+";
   private static final Pattern pattern = Pattern.compile("(!?)(\\|[^\r\n]*?)\\|" + LF);
 

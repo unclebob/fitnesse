@@ -9,8 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AnchorMarkerWidget extends WikiWidget {
-  public static final String REGEXP = ".#\\w+";
-  private static final Pattern pattern = Pattern.compile(".#(\\w*)");
+  public static final String REGEXP = "\\.#\\w+";
+  private static final Pattern pattern = Pattern.compile("\\.#(\\w*)");
 
   private String text, anchorName;
 

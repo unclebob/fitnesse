@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ListWidget extends ParentWidget {
-  public static final String REGEXP = "(?:^[ \\t]+[\\*\\d][^\r\n]*" + LineBreakWidget.REGEXP + "?)+";
+  public static final String REGEXP = "(?:^[ \\t]+[\\*\\d][^\r\n]*" + LINE_BREAK_PATTERN + "?)+";
   private static final Pattern pattern = Pattern.compile("([ \\t]+)([\\*\\d])([^\r\n]*)");
 
   private boolean ordered = false;

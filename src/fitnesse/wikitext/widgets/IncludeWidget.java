@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class IncludeWidget extends ParentWidget implements PageReferencer {
   public static final String REGEXP =
-    "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + LineBreakWidget.REGEXP + "?";
+    "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + LINE_BREAK_PATTERN + "?";
   static final Pattern pattern = Pattern.compile("^!include *(-setup|-teardown|-seamless|-c)? (.*)");
 
   public static final String COLLAPSE_SETUP = "COLLAPSE_SETUP";

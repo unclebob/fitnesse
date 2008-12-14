@@ -8,6 +8,7 @@ import fitnesse.wikitext.widgets.ParentWidget;
 
 public abstract class WikiWidget {
   protected ParentWidget parent = null;
+  public static final String LINE_BREAK_PATTERN = "(?:(?:\r\n)|\n|\r)";
 
   protected WikiWidget(ParentWidget parent) {
     this.parent = parent;
