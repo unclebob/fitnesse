@@ -1,7 +1,5 @@
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.wikitext.Utils;
-
 import java.util.*;
 
 public class DecisionTable extends SlimTable {
@@ -9,7 +7,7 @@ public class DecisionTable extends SlimTable {
   private Map<String, Integer> vars = new HashMap<String, Integer>();
   private Map<String, Integer> funcs = new HashMap<String, Integer>();
   private int headerColumns;
-  private Set<String> executeInstructions = new HashSet<String>();
+  private Set<String> dontReportExceptionsInTheseInstructions = new HashSet<String>();
 
   public DecisionTable(Table table, String id) {
     super(table, id);
@@ -52,20 +50,21 @@ public class DecisionTable extends SlimTable {
   }
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
-    boolean isExecuteInstruction = executeInstructions.contains(resultKey);
+    boolean shouldNotReport = dontReportExceptionsInTheseInstructions.contains(resultKey);
     boolean isNoSuchMethodException = resultString.indexOf("NO_METHOD_IN_CLASS") != -1;
-    return isExecuteInstruction && isNoSuchMethodException;
+    return shouldNotReport && isNoSuchMethodException;
   }
 
   private void invokeRow(int row) {
     checkRow(row);
+    callUnreportedFunction("reset");
     setVariables(row);
-    callExecute(row);
+    callUnreportedFunction("execute");
     callFunctions(row);
   }
 
-  private void callExecute(int row) {
-    executeInstructions.add(callFunction(getTableName(), "execute"));
+  private void callUnreportedFunction(String functionName) {
+    dontReportExceptionsInTheseInstructions.add(callFunction(getTableName(), functionName));
   }
 
   private void checkRow(int row) {

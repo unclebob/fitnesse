@@ -37,6 +37,9 @@ public class ShouldIBuyMilk {
 
   public void execute() {
   }
+
+  public void reset() {
+  }
 } }}}
 
 That pretty much explains it all.  But let's look at the details a bit more closely.
@@ -50,8 +53,9 @@ Next, there's the row of column headers.  If you look carefully at them you'll s
 The last column header does have a ''?''.  Decision Table considers it to be an output and so calls it as a function and expects a return value.  That return value is compared to the contents of the column and turns the corresponding cell red or green depending whether it matches.  Note that the cell that contains 'nope' does not match the 'no' that is returned.
 
 The flow is very simple.  The table is processed one row at a time.
- 1 First all the inputs are loaded by calling the appropriate set functions.
- 2 Then the ''execute'' function of the fixture is called.
+ 1 First the reset function is called (if present), just in case you want to prepare or clean up.
+ 1 Then all the inputs are loaded by calling the appropriate set functions.
+ 2 Then the ''execute'' function of the fixture is called (if present).
  3 Finally all the output functions are called and the return values compared to their table cells.
 
 There's not much more to it than that.
