@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class SlimTestSystemTest {
+public class SlimTestSystemTest {
   private WikiPage root;
   private PageCrawler crawler;
   private FitNesseContext context;
@@ -46,7 +46,9 @@ public abstract class SlimTestSystemTest {
     testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
   }
 
-  protected abstract SlimResponder getSlimResponder();
+  protected SlimResponder getSlimResponder() {
+    return new HtmlSlimResponder();
+  }
 
 
   @Test
