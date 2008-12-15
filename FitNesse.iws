@@ -196,7 +196,16 @@
       <file leaf-file-name="FitClientTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClientTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="46" selection-start="1814" selection-end="1814" vertical-scroll-proportion="0.41582733">
+            <state line="90" column="2" selection-start="2795" selection-end="2795" vertical-scroll-proportion="-1.1007195">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommandRunningFitClient.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunningFitClient.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="110" column="14" selection-start="3358" selection-end="3358" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -241,16 +250,7 @@
       <file leaf-file-name="FitClient.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="0" selection-start="859" selection-end="859" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WikiPageProperty.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/wiki/WikiPageProperty.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="101" column="0" selection-start="2566" selection-end="2566" vertical-scroll-proportion="0.0">
+            <state line="46" column="14" selection-start="1389" selection-end="1389" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -444,19 +444,19 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="JUnit.All">
-    <tempConfiguration default="false" name="TestResponderTest.testTestSummaryAppears" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
+  <component name="RunManager" selected="JUnit.FitClientTest">
+    <tempConfiguration default="false" name="FitClientTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
-        <option name="PATTERN" value="fitnesse.responders.run.*" />
+        <option name="PATTERN" value="fitnesse.components.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <module name="FitNesse" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fitnesse.responders.run" />
-      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.run.TestResponderTest" />
-      <option name="METHOD_NAME" value="testTestSummaryAppears" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="fitnesse.components" />
+      <option name="MAIN_CLASS_NAME" value="fitnesse.components.FitClientTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -842,7 +842,7 @@
       <item index="5" class="java.lang.String" itemvalue="JUnit.SlimResponder" />
       <item index="6" class="java.lang.String" itemvalue="JUnit.slim" />
       <item index="7" class="java.lang.String" itemvalue="JUnit.SuiteResponderTest.xmlFormat" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.TestResponderTest.testTestSummaryAppears" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.FitClientTest" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1024,7 +1024,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="22" width="1920" height="1174" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="Dataflow to this" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" />
@@ -1041,7 +1041,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24906467" sideWeight="0.6631779" order="2" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282588" sideWeight="0.5" order="18" side_tool="false" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28734538" sideWeight="0.5" order="3" side_tool="false" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28734538" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39486203" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" />
@@ -1162,13 +1162,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystemListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="0" selection-start="372" selection-end="372" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockRequest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="9" selection-start="278" selection-end="278" vertical-scroll-proportion="0.0">
@@ -1225,13 +1218,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="0" selection-start="859" selection-end="859" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/PuppetResponse.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="0" selection-start="562" selection-end="562" vertical-scroll-proportion="0.0">
@@ -1267,9 +1253,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="14" selection-start="1389" selection-end="1389" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunningFitClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="14" selection-start="3358" selection-end="3358" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClientTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="46" selection-start="1814" selection-end="1814" vertical-scroll-proportion="0.41582733">
+        <state line="90" column="2" selection-start="2795" selection-end="2795" vertical-scroll-proportion="-1.1007195">
           <folding />
         </state>
       </provider>
