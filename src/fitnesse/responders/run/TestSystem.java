@@ -23,7 +23,8 @@ public abstract class TestSystem implements TestSystemListener {
 
   protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception;
 
-  protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) throws Exception {;
+  protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) throws Exception {
+    ;
     String commandPattern = descriptor.commandPattern;
     String command = replace(commandPattern, "%p", classPath);
     command = replace(command, "%m", descriptor.testRunner);
@@ -84,6 +85,8 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   public void exceptionOccurred(Throwable e) {
+    //todo remove sout
+    System.err.println("TestSystem.exceptionOcurred:" + e.getMessage());
     log.addException(e);
     log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
     testSystemListener.exceptionOccurred(e);
@@ -137,7 +140,7 @@ public abstract class TestSystem implements TestSystemListener {
     }
 
     public int hashCode() {
-      return testSystemName.hashCode()^testRunner.hashCode()^commandPattern.hashCode()^pathSeparator.hashCode();
+      return testSystemName.hashCode() ^ testRunner.hashCode() ^ commandPattern.hashCode() ^ pathSeparator.hashCode();
     }
 
     public boolean equals(Object obj) {

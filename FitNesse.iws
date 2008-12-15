@@ -78,19 +78,6 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunningFitClient.java" line="59" class="fitnesse.components.CommandRunningFitClient" package="fitnesse.components">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/src/fitnesse/fixtures/PageBuilder.java" line="31" class="fitnesse.fixtures.PageBuilder" package="fitnesse.fixtures">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -162,93 +149,91 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WidgetBuilderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/WidgetBuilderTest.java">
+      <file leaf-file-name="FitServer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fit/FitServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="238" column="127" selection-start="9536" selection-end="9536" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tasks.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/extra/ant/tasks.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="150" column="37" selection-start="4544" selection-end="4544" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExecuteFitnesseTestsTask.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/ant/ExecuteFitnesseTestsTask.java">
+      <file leaf-file-name="FitProtocol.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitProtocol.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="212" column="43" selection-start="6423" selection-end="6426" vertical-scroll-proportion="-22.692308">
+            <state line="55" column="105" selection-start="1885" selection-end="1885" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DecisionTable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/DecisionTable.java">
+      <file leaf-file-name="CommandRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="65" column="32" selection-start="2009" selection-end="2009" vertical-scroll-proportion="0.0">
+            <state line="49" column="85" selection-start="1506" selection-end="1506" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DecisionTableTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/DecisionTableTest.java">
+      <file leaf-file-name="CommandRunningFitClient.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunningFitClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="193" column="147" selection-start="7162" selection-end="7162" vertical-scroll-proportion="0.6820144">
+            <state line="172" column="30" selection-start="5007" selection-end="5007" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ColumnFixture.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fit/ColumnFixture.java">
+      <file leaf-file-name="TestSystemListener.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystemListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="6" selection-start="698" selection-end="703" vertical-scroll-proportion="-12.730769">
+            <state line="9" column="0" selection-start="372" selection-end="372" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CollapsableWidget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CollapsableWidget.java">
+      <file leaf-file-name="TestSystem.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="37" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
+            <state line="86" column="0" selection-start="3033" selection-end="3033" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IncludeWidget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/IncludeWidget.java">
+      <file leaf-file-name="TestResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="85" selection-start="574" selection-end="574" vertical-scroll-proportion="0.0">
+            <state line="102" column="0" selection-start="3601" selection-end="3601" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ListWidget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/ListWidget.java">
+      <file leaf-file-name="SlimResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimResponder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="70" selection-start="376" selection-end="376" vertical-scroll-proportion="0.0">
+            <state line="64" column="0" selection-start="1973" selection-end="1973" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CenterWidget.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CenterWidget.java">
+      <file leaf-file-name="FitClientTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClientTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="58" selection-start="366" selection-end="366" vertical-scroll-proportion="0.0">
+            <state line="54" column="14" selection-start="1782" selection-end="1782" vertical-scroll-proportion="0.3323741">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FitClientResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/FitClientResponder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="116" column="0" selection-start="3853" selection-end="3853" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -433,7 +418,7 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="Application.fitnesse">
+  <component name="RunManager" selected="JUnit.All">
     <tempConfiguration default="false" name="DecisionTableTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
         <option name="PATTERN" value="fitnesse.responders.run.slimResponder.*" />
@@ -1151,76 +1136,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/PreformattedWidgetTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="56" selection-start="1284" selection-end="1284" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/TextWidgetTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="81" selection-start="1346" selection-end="1346" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/WidgetBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="13" selection-start="472" selection-end="472" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/TableWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="34" selection-start="379" selection-end="379" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/TableCellWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="69" selection-start="449" selection-end="449" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/ParentWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="40" selection-start="3698" selection-end="3698" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/ListWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="70" selection-start="376" selection-end="376" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/IncludeWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="85" selection-start="574" selection-end="574" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CollapsableWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="37" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/CenterWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="58" selection-start="366" selection-end="366" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/WidgetBuilderTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="238" column="127" selection-start="9536" selection-end="9536" vertical-scroll-proportion="0.0">
@@ -1260,7 +1175,77 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/DecisionTableTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="193" column="147" selection-start="7162" selection-end="7162" vertical-scroll-proportion="0.6820144">
+        <state line="182" column="75" selection-start="6827" selection-end="6827" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fit/FitServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="150" column="37" selection-start="4544" selection-end="4544" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitProtocol.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="105" selection-start="1885" selection-end="1885" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="85" selection-start="1506" selection-end="1506" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/CommandRunningFitClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="172" column="30" selection-start="5007" selection-end="5007" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/FitClientResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="116" column="0" selection-start="3853" selection-end="3853" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="0" selection-start="3033" selection-end="3033" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="0" selection-start="3601" selection-end="3601" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/slimResponder/SlimResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="0" selection-start="1973" selection-end="1973" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestSystemListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="372" selection-end="372" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/components/FitClientTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="14" selection-start="1782" selection-end="1782" vertical-scroll-proportion="0.3323741">
           <folding />
         </state>
       </provider>

@@ -63,6 +63,8 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
   }
 
   public void exceptionOccurred(Throwable e) {
+    //todo remove sout
+    System.err.println("SlimResponder.exceptionOcurred:" + e.getMessage());
   }
 
   public String getCommandLine() {

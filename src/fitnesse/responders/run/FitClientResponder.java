@@ -115,5 +115,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   }
 
   public void exceptionOccurred(Throwable e) {
+    //todo remove sout
+    System.err.println("FitClientResponder.exceptionOcurred:" + e.getMessage());
   }
 }

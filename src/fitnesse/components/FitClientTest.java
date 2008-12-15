@@ -53,7 +53,8 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   }
 
   public void exceptionOccurred(Throwable e) {
-    exceptionOccurred = true;
+    //todo remove sout
+    System.err.println("FitClientTest.exceptionOcurred:" + e.getMessage());    exceptionOccurred = true;
     try {
       client.kill();
     }

@@ -101,6 +101,8 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
+    //todo remove sout
+    System.err.println("TestResponder.exceptionOcurred:" + e.getMessage());
     try {
       completeResponse();
       testSystemGroup.kill();
