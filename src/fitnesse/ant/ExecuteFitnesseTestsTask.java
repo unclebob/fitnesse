@@ -75,7 +75,9 @@ public class ExecuteFitnesseTestsTask extends Task {
     CommandlineJava cmd = initializeJavaCommand();
 
     Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
-    execute.setCommandline(cmd.getCommandline());
+    String[] commandLine = cmd.getCommandline();
+    System.out.printf("Executing: %s\n", commandLine);
+    execute.setCommandline(commandLine);
     execute.setNewenvironment(false);
     execute.setAntRun(getProject());
 

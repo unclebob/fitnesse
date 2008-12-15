@@ -74,7 +74,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   private void doSimpleRun() throws Exception {
     receiver.receiveSocket();
     client.start();
-    Thread.sleep(50);
+    Thread.sleep(100);
     client.send("<html><table><tr><td>fitnesse.testutil.PassFixture</td></tr></table></html>");
     client.done();
     client.join();
@@ -83,7 +83,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
   public void testStandardError() throws Exception {
     client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
     client.start();
-    Thread.sleep(50);
+    Thread.sleep(100);
     client.join();
     assertTrue(exceptionOccurred);
     assertSubString("Exception", client.commandRunner.getError());

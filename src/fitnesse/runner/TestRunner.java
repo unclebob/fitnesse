@@ -116,7 +116,8 @@ public class TestRunner {
     int wrong = Integer.parseInt(XmlUtil.getTextValue(counts, "wrong"));
     int ignores = Integer.parseInt(XmlUtil.getTextValue(counts, "ignores"));
     int exceptions = Integer.parseInt(XmlUtil.getTextValue(counts, "exceptions"));
-    output.println(String.format("Page:%s right:%d, wrong:%d, ignored:%d, exceptions:%d", page, right, wrong, ignores, exceptions));
+    String marker = (wrong>0 || exceptions>0) ? "*" : " ";
+    output.println(String.format("%s Page:%s right:%d, wrong:%d, ignored:%d, exceptions:%d", marker, page, right, wrong, ignores, exceptions));
   }
 
   private void writeOutputFile() throws Exception {

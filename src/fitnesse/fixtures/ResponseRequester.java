@@ -35,7 +35,8 @@ public class ResponseRequester extends ColumnFixture {
     FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(FitnesseFixtureContext.root, path);
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
     FitnesseFixtureContext.response = expediter.createGoodResponse(request);
-    FitnesseFixtureContext.sender = new MockResponseSender(FitnesseFixtureContext.response);
+    FitnesseFixtureContext.sender = new MockResponseSender();
+    FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
   }
 
   public int status() throws Exception {

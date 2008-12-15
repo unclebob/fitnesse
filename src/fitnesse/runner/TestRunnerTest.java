@@ -76,10 +76,17 @@ public class TestRunnerTest {
   }
 
   @Test
-  public void verbose() throws Exception {
+  public void verbosePassing() throws Exception {
     runPage("-v", "SuitePage.TestPassing");
     assertEquals("Test Runner for Root Path: TestPassing\n" +
-      "Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0\n", outputBytes.toString());
+      "  Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0\n", outputBytes.toString());
+  }
+
+  @Test
+  public void verboseFailing() throws Exception {
+    runPage("-v", "SuitePage.TestFailing");
+    assertEquals("Test Runner for Root Path: TestFailing\n" +
+      "* Page:(TestFailing) right:0, wrong:1, ignored:0, exceptions:0\n", outputBytes.toString());    
   }
 
   @Test
