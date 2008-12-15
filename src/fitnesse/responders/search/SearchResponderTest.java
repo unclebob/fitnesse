@@ -76,7 +76,7 @@ public class SearchResponderTest extends RegexTestCase {
     Response response = responder.makeResponse(new FitNesseContext(root), request);
     MockResponseSender sender = new MockResponseSender();
     response.readyToSend(sender);
-    sender.waitForClose(1000);
+    sender.waitForClose(5000);
     return sender.sentData();
   }
 

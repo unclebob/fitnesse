@@ -14,7 +14,7 @@
 
 !|Response Requester|
 |uri|status?|
-|NotFixturePage?test|200|
+|NotFixturePage?test&debug|200|
 
  * The error message should show up in the response
 
