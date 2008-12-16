@@ -73,7 +73,8 @@ public class ExposeThreadingIssueInMockResponseTest {
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
-    sender = new MockResponseSender(response);
+    sender = new MockResponseSender();
+    sender.doSending(response);
 
     results = sender.sentData();
   }

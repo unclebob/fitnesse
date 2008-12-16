@@ -14,11 +14,6 @@ public class MockResponseSender implements ResponseSender {
     socket = new MockSocket("Mock");
   }
 
-  public MockResponseSender(Response response) throws Exception {
-    this();
-    doSending(response);
-  }
-
   public void send(byte[] bytes) throws Exception {
     socket.getOutputStream().write(bytes);
   }

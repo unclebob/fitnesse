@@ -97,11 +97,15 @@ public class SearchResponderTest extends RegexTestCase {
     responder.setRequest(request);
 
     request.addInput("searchType", "something with the word title in it");
-    new MockResponseSender(responder.makeResponse(new FitNesseContext(root), request));
+    Response response = responder.makeResponse(new FitNesseContext(root), request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
     assertTrue(searcher.titleSearchCalled);
 
     request.addInput("searchType", "something with the word content in it");
-    new MockResponseSender(responder.makeResponse(new FitNesseContext(root), request));
+    response = responder.makeResponse(new FitNesseContext(root), request);
+    sender = new MockResponseSender();
+    sender.doSending(response);
     assertTrue(searcher.contentSearchCalled);
   }
 

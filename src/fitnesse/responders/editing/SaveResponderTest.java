@@ -132,7 +132,9 @@ public class SaveResponderTest extends RegexTestCase {
 
     Response response = responder.makeResponse(new FitNesseContext(root), request);
     assertEquals(200, response.getStatus());
-    assertSubString("Your changes will not be saved!", new MockResponseSender(response).sentData());
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    assertSubString("Your changes will not be saved!", sender.sentData());
   }
 
   private void createAndSaveANewPage(String pageName) throws Exception {

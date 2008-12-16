@@ -43,7 +43,8 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   public void testActionsOfMakeResponse() throws Exception {
     Response response = makeSampleResponse(baseUrl);
-    new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
 
     assertEquals(2, testData.pageTwo.getChildren().size());
     WikiPage importedPageOne = testData.pageTwo.getChildPage("PageOne");
@@ -68,7 +69,8 @@ public class WikiImportingResponderTest extends RegexTestCase {
     testData.pageTwo.commit(data);
 
     Response response = makeSampleResponse("blah");
-    new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
 
     data = testData.pageTwo.getData();
     assertEquals("page one", data.getContent());
@@ -78,7 +80,8 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   public void testImportPropertiesGetAdded() throws Exception {
     Response response = makeSampleResponse(baseUrl);
-    new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
 
     checkProperties(testData.pageTwo, baseUrl, true, null);
 
@@ -111,7 +114,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   public void testHtmlOfMakeResponse() throws Exception {
     Response response = makeSampleResponse(baseUrl);
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
 
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
@@ -126,12 +131,15 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   public void testHtmlOfMakeResponseWithNoModifications() throws Exception {
     Response response = makeSampleResponse(baseUrl);
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
 
     // import a second time... nothing was modified
     createResponder();
     response = makeSampleResponse(baseUrl);
-    content = new MockResponseSender(response).sentData();
+    sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
 
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
@@ -169,7 +177,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
     MockRequest request = makeRequest(baseUrl + "PageOne");
 
     Response response = responder.makeResponse(new FitNesseContext(testData.localRoot), request);
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
 
     assertNotNull(testData.pageTwo.getChildPage("ChildOne"));
     assertSubString("href=\"PageTwo.ChildOne\"", content);
@@ -180,7 +190,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
     String remoteUrl = baseUrl + "PageDoesntExist";
     Response response = makeSampleResponse(remoteUrl);
 
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
     assertSubString("The remote resource, " + remoteUrl + ", was not found.", content);
   }
 
@@ -188,7 +200,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
     String remoteUrl = baseUrl + "blah";
     Response response = makeSampleResponse(remoteUrl);
 
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
     assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
   }
 
@@ -196,8 +210,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
     makeSecurePage(testData.remoteRoot);
 
     Response response = makeSampleResponse(baseUrl);
-    String content = new MockResponseSender(response).sentData();
-
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
     checkRemoteLoginForm(content);
   }
 
@@ -220,8 +235,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
     makeSecurePage(childPage);
 
     Response response = makeSampleResponse(baseUrl);
-    String content = new MockResponseSender(response).sentData();
-
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
     assertSubString("The wiki at " + baseUrl + "PageOne requires authentication.", content);
     assertSubString("<form", content);
   }
@@ -233,7 +249,9 @@ public class WikiImportingResponderTest extends RegexTestCase {
     request.addInput("remoteUsername", "joe");
     request.addInput("remotePassword", "blow");
     Response response = getResponse(request);
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
 
     assertNotSubString("requires authentication", content);
     assertSubString("3 pages were imported.", content);

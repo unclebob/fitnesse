@@ -40,8 +40,9 @@ public class FileResponderTest extends RegexTestCase {
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     response = responder.makeResponse(context, request);
     assertEquals(InputStreamResponse.class, response.getClass());
-    String responseString = new MockResponseSender(response).sentData();
-    assertSubString("file1 content", responseString);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    assertSubString("file1 content", sender.sentData());
   }
 
   public void testSpacesInFileName() throws Exception {

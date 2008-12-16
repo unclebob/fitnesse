@@ -92,7 +92,8 @@ public class FitClientResponderTest extends RegexTestCase {
     if (addPaths)
       request.addInput("includePaths", "blah");
     response = responder.makeResponse(context, request);
-    sender = new MockResponseSender(response);
+    sender = new MockResponseSender();
+    sender.doSending(response);
     String result = sender.sentData();
     return result;
   }

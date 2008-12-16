@@ -82,7 +82,8 @@ public class SuiteResponderTest {
   private String runSuite() throws Exception {
     context.port = receiver.receiveSocket();
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
     String results = sender.sentData();
     return results;
   }

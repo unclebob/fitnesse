@@ -26,7 +26,8 @@ public class RawContentResponderTest extends ResponderTestCase {
     crawler.addPage(root, PathParser.parse("SimplePage"), content);
     request.setResource("SimplePage");
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
     String result = sender.sentData();
     return result;
   }

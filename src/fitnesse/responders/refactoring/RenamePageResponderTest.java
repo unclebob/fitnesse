@@ -130,7 +130,9 @@ public class RenamePageResponderTest extends ResponderTestCase {
   }
 
   private String getResponseContent(Response response) throws Exception {
-    return new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    return sender.sentData();
   }
 
   private Response doRename(String fromName, String toName, boolean renameReferences) throws Exception {

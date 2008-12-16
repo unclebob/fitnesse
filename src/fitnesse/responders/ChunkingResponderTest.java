@@ -30,7 +30,9 @@ public class ChunkingResponderTest extends RegexTestCase {
   public void testException() throws Exception {
     exception = new Exception("test exception");
     response = responder.makeResponse(context, new MockRequest());
-    String responseSender = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String responseSender = sender.sentData();
     assertSubString("test exception", responseSender);
   }
 }

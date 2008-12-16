@@ -83,7 +83,9 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     request.addInput("results", output.toString());
 
     Response response = responder.makeResponse(context, request);
-    String content = new MockResponseSender(response).sentData();
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    String content = sender.sentData();
 
     assertSubString("Mock Results", content);
   }

@@ -73,7 +73,8 @@ public class TestResponderTest {
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
-    sender = new MockResponseSender(response);
+    sender = new MockResponseSender();
+    sender.doSending(response);
 
     results = sender.sentData();
   }
@@ -87,7 +88,8 @@ public class TestResponderTest {
     request.setResource(testPage.getName());
 
     response = responder.makeResponse(context, request);
-    sender = new MockResponseSender(response);
+    sender = new MockResponseSender();
+    sender.doSending(response);
     sender.sentData();
 
     WikiPagePath errorLogPath = PathParser.parse("ErrorLogs.EmptyTestPage");
@@ -137,7 +139,8 @@ public class TestResponderTest {
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
     String results = sender.sentData();
 
     assertHasRegexp("ErrorLog", results);
@@ -152,7 +155,8 @@ public class TestResponderTest {
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
     String results = sender.sentData();
 
     assertSubString("Exit-Code: 0", results);
@@ -165,7 +169,8 @@ public class TestResponderTest {
     request.setResource(testPage.getName());
 
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
 
     String results = sender.sentData();
     assertSubString("ErrorLog", results);
@@ -335,7 +340,8 @@ public class TestResponderTest {
     request.setResource(resource);
 
     Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender(response);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
     results = sender.sentData();
 
     assertEquals("Output Captured", getExecutionStatusMessage());
