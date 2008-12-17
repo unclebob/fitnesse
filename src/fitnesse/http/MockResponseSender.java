@@ -5,10 +5,11 @@ package fitnesse.http;
 import fitnesse.testutil.MockSocket;
 
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;
-  private boolean closed = false;
+  private AtomicBoolean closed = new AtomicBoolean(false);
 
   public MockResponseSender() {
     socket = new MockSocket("Mock");
@@ -19,7 +20,7 @@ public class MockResponseSender implements ResponseSender {
   }
 
   public synchronized void close() throws Exception {
-    closed = true;
+    closed.set(true);
     notifyAll();
   }
 
@@ -39,14 +40,14 @@ public class MockResponseSender implements ResponseSender {
   // Utility method that returns when this.closed is true. Throws an exception
   // if the timeout is reached.
   public synchronized void waitForClose(final long timeoutMillis) throws Exception {
-    if (!closed) {
+    if (!closed.get()) {
       wait(timeoutMillis);
-      if (!closed)
+      if (!closed.get())
         throw new Exception("MockResponseSender could not be closed");
     }
   }
 
   public boolean isClosed() {
-    return closed;
+    return closed.get();
   }
 }

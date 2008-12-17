@@ -175,55 +175,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WikiImportingResponderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/WikiImportingResponderTest.java">
+      <file leaf-file-name="ChunkingResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ChunkingResponder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="180" column="0" selection-start="7241" selection-end="7241" vertical-scroll-proportion="0.0">
+            <state line="88" column="0" selection-start="2493" selection-end="2493" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileResponderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/files/FileResponderTest.java">
+      <file leaf-file-name="ChunkingResponderTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ChunkingResponderTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="23" selection-start="1298" selection-end="1298" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RenamePageResponderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/refactoring/RenamePageResponderTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="130" column="10" selection-start="5301" selection-end="5301" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ExposeThreadingIssueInMockResponseTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/ExposeThreadingIssueInMockResponseTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="76" column="31" selection-start="2469" selection-end="2469" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FitClientResponderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/FitClientResponderTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="95" column="31" selection-start="3653" selection-end="3653" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SuiteResponderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/SuiteResponderTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="31" selection-start="2904" selection-end="2904" vertical-scroll-proportion="0.0">
+            <state line="28" column="60" selection-start="898" selection-end="898" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -232,60 +196,98 @@
       <file leaf-file-name="TestResponderTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponderTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="343" column="31" selection-start="12786" selection-end="12786" vertical-scroll-proportion="0.0">
+            <state line="89" column="94" selection-start="2924" selection-end="2924" vertical-scroll-proportion="0.0">
               <folding>
-                <marker date="1229405397000" expanded="true" signature="3352:3438" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="3500:3902" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="3961:4354" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="4426:4925" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="4991:5403" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="5469:5912" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="5981:6080" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="6154:6414" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="6484:6598" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="6651:7432" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="7511:7880" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="8009:8284" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="8348:8594" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="8646:8892" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="8957:9129" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="9182:9486" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="9563:9779" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="9847:10055" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="10134:10305" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="10371:10487" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="10564:10874" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="10946:11116" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="11201:11411" placeholder="{...}" />
-                <marker date="1229405397000" expanded="true" signature="11474:11863" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="3352:3438" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="3500:3902" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="3961:4354" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="4426:4925" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="4991:5403" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="5469:5912" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="5981:6080" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="6154:6414" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="6484:6598" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="6651:7432" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="7511:7880" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="8009:8284" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="8348:8594" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="8646:8892" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="8957:9129" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="9182:9486" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="9563:9779" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="9847:10055" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="10134:10305" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="10371:10487" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="10564:10874" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="10946:11116" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="11201:11411" placeholder="{...}" />
+                <marker date="1229409574000" expanded="true" signature="11474:11863" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestResultFormattingResponderTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResultFormattingResponderTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="76" column="23" selection-start="2817" selection-end="2817" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SearchResponderTest.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="SearchResponderTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponderTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="93" column="23" selection-start="3686" selection-end="3686" vertical-scroll-proportion="0.0">
+            <state line="16" column="22" selection-start="610" selection-end="610" vertical-scroll-proportion="0.18085106">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MockResponseSender.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SearchResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="46" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResultResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/ResultResponder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="17" selection-start="900" selection-end="900" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ChunkedResponse.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/http/ChunkedResponse.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="73" column="5" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListExecutorTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/slim/ListExecutorTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="92" column="27" selection-start="3204" selection-end="3206" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListExecutor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/slim/ListExecutor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="10" column="13" selection-start="208" selection-end="208" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MockResponseSender.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="3" selection-start="440" selection-end="440" vertical-scroll-proportion="0.26906475">
-              <folding />
+            <state line="53" column="0" selection-start="1407" selection-end="1407" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -385,6 +387,84 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="slim" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="schedule" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="FitNesseGit" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="fitnesse" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="responders" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -553,8 +633,8 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="JUnit.All">
-    <tempConfiguration default="false" name="SearchResponderTest.testActivatingProperSearch" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
+  <component name="RunManager" selected="Application.fitnesse">
+    <tempConfiguration default="false" name="SearchResponderTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
         <option name="PATTERN" value="fitnesse.responders.search.*" />
         <option name="ENABLED" value="true" />
@@ -564,8 +644,8 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="fitnesse.responders.search" />
       <option name="MAIN_CLASS_NAME" value="fitnesse.responders.search.SearchResponderTest" />
-      <option name="METHOD_NAME" value="testActivatingProperSearch" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -951,7 +1031,7 @@
       <item index="5" class="java.lang.String" itemvalue="JUnit.SlimResponder" />
       <item index="6" class="java.lang.String" itemvalue="JUnit.slim" />
       <item index="7" class="java.lang.String" itemvalue="JUnit.SuiteResponderTest.xmlFormat" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.SearchResponderTest.testActivatingProperSearch" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.SearchResponderTest" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1136,7 +1216,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="22" width="1920" height="1174" extended-state="0" />
+    <frame x="0" y="22" width="1920" height="1174" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
@@ -1144,7 +1224,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="10" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16408338" sideWeight="0.7059943" order="0" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.08498129" sideWeight="0.5061846" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32159847" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12725015" sideWeight="0.69447577" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" />
@@ -1154,7 +1234,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24906467" sideWeight="0.7059943" order="2" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282588" sideWeight="0.5" order="18" side_tool="false" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28734538" sideWeight="0.5" order="3" side_tool="false" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.48715508" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39486203" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" />
@@ -1275,139 +1355,141 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/runner/TestRunnerTest.java">
+    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="88" selection-start="2373" selection-end="2373" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseRequester.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="71" selection-start="622" selection-end="622" vertical-scroll-proportion="0.0">
+        <state line="140" column="16" selection-start="5286" selection-end="5286" vertical-scroll-proportion="-9.083333">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/http/Response.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="23" selection-start="1603" selection-end="1603" vertical-scroll-proportion="0.0">
+        <state line="56" column="0" selection-start="1580" selection-end="1580" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/ChunkedResponseTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="14" selection-start="549" selection-end="549" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/ResponseSender.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="0" selection-start="241" selection-end="241" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/FitNesseExpediter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="14" selection-start="1737" selection-end="1737" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="153" column="17" selection-start="5053" selection-end="5053" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/slim/ListExecutorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="92" column="27" selection-start="3204" selection-end="3206" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/slim/ListExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="13" selection-start="208" selection-end="208" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ChunkingResponderTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="20" selection-start="919" selection-end="919" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/RawContentResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="36" selection-start="1080" selection-end="1080" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/editing/SaveResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="123" column="24" selection-start="5010" selection-end="5010" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/files/FileResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="23" selection-start="1298" selection-end="1298" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/refactoring/RenamePageResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="130" column="10" selection-start="5301" selection-end="5301" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/ExposeThreadingIssueInMockResponseTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="31" selection-start="2469" selection-end="2469" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/FitClientResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="31" selection-start="3653" selection-end="3653" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/SuiteResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="31" selection-start="2904" selection-end="2904" vertical-scroll-proportion="0.0">
+        <state line="28" column="60" selection-start="898" selection-end="898" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponderTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="343" column="31" selection-start="12786" selection-end="12786" vertical-scroll-proportion="0.0">
+        <state line="89" column="94" selection-start="2924" selection-end="2924" vertical-scroll-proportion="0.0">
           <folding>
-            <marker date="1229405397000" expanded="true" signature="3352:3438" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="3500:3902" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="3961:4354" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="4426:4925" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="4991:5403" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="5469:5912" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="5981:6080" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="6154:6414" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="6484:6598" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="6651:7432" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="7511:7880" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="8009:8284" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="8348:8594" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="8646:8892" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="8957:9129" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="9182:9486" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="9563:9779" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="9847:10055" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="10134:10305" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="10371:10487" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="10564:10874" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="10946:11116" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="11201:11411" placeholder="{...}" />
-            <marker date="1229405397000" expanded="true" signature="11474:11863" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="3352:3438" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="3500:3902" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="3961:4354" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="4426:4925" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="4991:5403" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="5469:5912" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="5981:6080" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="6154:6414" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="6484:6598" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="6651:7432" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="7511:7880" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="8009:8284" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="8348:8594" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="8646:8892" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="8957:9129" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="9182:9486" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="9563:9779" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="9847:10055" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="10134:10305" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="10371:10487" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="10564:10874" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="10946:11116" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="11201:11411" placeholder="{...}" />
+            <marker date="1229409574000" expanded="true" signature="11474:11863" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/WikiImportingResponderTest.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="180" column="0" selection-start="7241" selection-end="7241" vertical-scroll-proportion="0.0">
+        <state line="6" column="46" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResultFormattingResponderTest.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/ResultResponder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="23" selection-start="2817" selection-end="2817" vertical-scroll-proportion="0.0">
+        <state line="24" column="17" selection-start="900" selection-end="900" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponderTest.java">
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ChunkingResponder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="23" selection-start="3686" selection-end="3686" vertical-scroll-proportion="0.0">
+        <state line="88" column="0" selection-start="2493" selection-end="2493" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/ChunkedResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="5" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="3" selection-start="440" selection-end="440" vertical-scroll-proportion="0.26906475">
+        <state line="53" column="0" selection-start="1407" selection-end="1407" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="22" selection-start="610" selection-end="610" vertical-scroll-proportion="0.18085106">
           <folding />
         </state>
       </provider>
