@@ -11,6 +11,9 @@ import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+
+import fitnesse.util.StringUtil;
 
 /**
  * Task to run fit tests. This task runs fitnesse tests and publishes the results.
@@ -76,7 +79,7 @@ public class ExecuteFitnesseTestsTask extends Task {
 
     Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
     String[] commandLine = cmd.getCommandline();
-    System.out.printf("Executing: %s\n", commandLine);
+    System.out.printf("Executing: %s\n", StringUtil.join(Arrays.asList(commandLine), " "));
     execute.setCommandline(commandLine);
     execute.setNewenvironment(false);
     execute.setAntRun(getProject());

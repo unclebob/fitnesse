@@ -178,7 +178,7 @@
       <file leaf-file-name="ChunkingResponder.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ChunkingResponder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="88" column="0" selection-start="2493" selection-end="2493" vertical-scroll-proportion="0.0">
+            <state line="68" column="60" selection-start="2060" selection-end="2060" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -227,10 +227,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SearchResponderTest.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SearchResponderTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponderTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="22" selection-start="610" selection-end="610" vertical-scroll-proportion="0.18085106">
+            <state line="19" column="20" selection-start="721" selection-end="721" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ExecuteFitnesseTestsTask.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/ant/ExecuteFitnesseTestsTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="81" column="59" selection-start="2768" selection-end="2768" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -248,7 +257,7 @@
       <file leaf-file-name="ResultResponder.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/ResultResponder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="17" selection-start="900" selection-end="900" vertical-scroll-proportion="0.0">
+            <state line="32" column="15" selection-start="1245" selection-end="1245" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -257,16 +266,7 @@
       <file leaf-file-name="ChunkedResponse.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/http/ChunkedResponse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="73" column="5" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListExecutorTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/slim/ListExecutorTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="92" column="27" selection-start="3204" selection-end="3206" vertical-scroll-proportion="0.0">
+            <state line="40" column="8" selection-start="1037" selection-end="1037" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -281,10 +281,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MockResponseSender.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MockResponseSender.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="0" selection-start="1407" selection-end="1407" vertical-scroll-proportion="0.0">
+            <state line="18" column="64" selection-start="578" selection-end="578" vertical-scroll-proportion="0.578">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -633,7 +633,7 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="Application.fitnesse">
+  <component name="RunManager" selected="JUnit.All">
     <tempConfiguration default="false" name="SearchResponderTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
         <option name="PATTERN" value="fitnesse.responders.search.*" />
@@ -1224,7 +1224,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="10" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.08498129" sideWeight="0.5061846" order="0" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.08498129" sideWeight="0.50648147" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32159847" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12725015" sideWeight="0.69447577" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" />
@@ -1234,7 +1234,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24906467" sideWeight="0.7059943" order="2" side_tool="false" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3282588" sideWeight="0.5" order="18" side_tool="false" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.48715508" sideWeight="0.5" order="3" side_tool="false" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.48703703" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39486203" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" />
@@ -1355,13 +1355,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="16" selection-start="5286" selection-end="5286" vertical-scroll-proportion="-9.083333">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/http/Response.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="56" column="0" selection-start="1580" selection-end="1580" vertical-scroll-proportion="0.0">
@@ -1450,6 +1443,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/ant/ExecuteFitnesseTestsTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="81" column="59" selection-start="2768" selection-end="2768" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/ResultResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="15" selection-start="1245" selection-end="1245" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="46" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0">
@@ -1457,40 +1464,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/ResultResponder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="17" selection-start="900" selection-end="900" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ChunkingResponder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="0" selection-start="2493" selection-end="2493" vertical-scroll-proportion="0.0">
+        <state line="68" column="60" selection-start="2060" selection-end="2060" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/http/ChunkedResponse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="5" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0">
+        <state line="40" column="8" selection-start="1037" selection-end="1037" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="20" selection-start="721" selection-end="721" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/http/MockResponseSender.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="0" selection-start="1407" selection-end="1407" vertical-scroll-proportion="0.0">
+        <state line="18" column="64" selection-start="578" selection-end="578" vertical-scroll-proportion="0.578">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/search/SearchResponderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="22" selection-start="610" selection-end="610" vertical-scroll-proportion="0.18085106">
-          <folding />
         </state>
       </provider>
     </entry>
