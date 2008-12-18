@@ -1,0 +1,53 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.5
+Created-By: 1.5.0_10-b03 (Sun Microsystems Inc.)
+Bundle-Name: Agitar's public API Plug-in
+Bundle-SymbolicName: com.agitar.eclipse.api; singleton=true
+Bundle-Localization: plugin
+Bundle-Activator: com.agitar.eclipse.api.APIPlugin
+Provide-Package: com.agitar.eclipse.api,com.agitar.eclipse.api.quickfi
+ x,com.agitar.eclipse.api.variable,com.agitar.eclipse.api.runner,com.a
+ gitar.lib,org.apache.tools.ant.taskdefs.rmic,org.apache.commons.httpc
+ lient.params,org.apache.commons.httpclient.auth,com.agitar.testrunner
+ .parser,org.apache.commons.httpclient.methods.multipart,org.apache.to
+ ols.ant.taskdefs.cvslib,org.apache.tools.ant.filters,org.apache.tools
+ .ant.types.selectors,org.apache.commons.httpclient.util,junit.runner,
+ org.apache.tools.ant.types.selectors.modifiedselector,org.apache.tool
+ s.ant.util,org.apache.tools.zip,com.agitar.lib.mockingbird.java.io,or
+ g.apache.tools.ant.helper,org.apache.commons.codec,org.apache.xalan.x
+ path,junit.awtui,org.apache.tools.ant.filters.util,com.agitar.lib.moc
+ kingbird.tape,org.apache.tools.tar,org.apache.xalan.xslt,org.apache.t
+ ools.ant,com.agitar.lib.mockingbird.invocation,org.apache.tools.ant.t
+ askdefs.email,com.agitar.lib.junit,com.agitar.lib.mockingbird.java.ut
+ il,com.agitar.literunner,user.agitar.invocation,junit.swingui,org.apa
+ che.commons.codec.net,org.apache.tools.mail,com.agitar.lib.intercepto
+ r,org.apache.tools.ant.util.facade,org.apache.xalan.xslt.extensions,o
+ rg.apache.tools.ant.taskdefs.condition,org.apache.tools.ant.taskdefs,
+ org.apache.tools.ant.types,org.apache.xalan.xslt.trace,org.apache.com
+ mons.httpclient.protocol,com.agitar.testrunner,org.apache.commons.cod
+ ec.digest,com.agitar.lib.mockingbird,org.apache.tools.ant.util.regexp
+ ,org.apache.commons.logging.impl,org.apache.tools.ant.launch,org.apac
+ he.tools.bzip2,org.apache.commons.httpclient.cookie,org.apache.common
+ s.httpclient.methods,com.agitar.instrument,org.apache.tools.ant.taskd
+ efs.compilers,org.apache.tools.ant.types.mappers,org.apache.xalan.xpa
+ th.dtm,com.agitar.concretemock,org.apache.tools.ant.types.resolver,or
+ g.apache.commons.codec.binary,org.apache.xalan.xpath.res,org.apache.t
+ ools.ant.taskdefs.optional.junit,junit.extensions,org.apache.tools.an
+ t.loader,org.apache.xalan.xslt.client,org.apache.xalan.xpath.xdom,org
+ .apache.commons.logging,junit.textui,org.apache.commons.httpclient,or
+ g.apache.xalan.xpath.xml,com.agitar.mockingbird.instrumenter,org.apac
+ he.tools.ant.input,com.agitar.junit.runner,org.apache.tools.ant.liste
+ ner,org.apache.xalan.xslt.res,junit.framework,org.apache.commons.code
+ c.language
+Eclipse-LazyStart: false
+Bundle-Version: 4.2.0.401405
+Bundle-Vendor: Agitar Software
+Bundle-ClassPath: com.agitar.eclipse.api.jar,com.agitar.mockingbird.ja
+ r,com.agitar.testrunner.jar,lib/ant-junit.jar,lib/ant-launcher.jar,li
+ b/ant.jar,lib/commons-codec-1.3.jar,lib/commons-httpclient-3.0.1.jar,
+ lib/commons-logging.jar,lib/junit.jar,lib/xalan.jar
+Require-Bundle: org.eclipse.jdt.core,org.eclipse.core.runtime,org.ecli
+ pse.core.resources,org.eclipse.ui.workbench,org.eclipse.jdt.ui,org.ec
+ lipse.jface.text,org.eclipse.swt,org.eclipse.jface,org.eclipse.debug.
+ core,com.agitar.eclipse.coverage;reprovide=true
+

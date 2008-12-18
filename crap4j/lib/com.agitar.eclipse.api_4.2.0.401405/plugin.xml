@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+  <extension-point id="runner" name="Agitar JUnit Test Runner"/>
+  <extension point="org.eclipse.jdt.core.classpathVariableInitializer">
+     <classpathVariableInitializer 
+       variable="AGITAR_TEST_LIB"
+       class="com.agitar.eclipse.api.variable.AgitarTestLibVariableInitializer"/>
+     <classpathVariableInitializer 
+       variable="AGITAR_MOCK_OBJECTS"
+			 class="com.agitar.eclipse.api.variable.AgitarTestLibVariableInitializer"/>
+	</extension>     
+	<extension point="org.eclipse.jdt.ui.quickFixProcessors">
+     <quickFixProcessor
+       name="Tiger Quick Fix Processor"
+       class="com.agitar.eclipse.api.quickfix.TigerQuickFixProcessor"
+       id="com.agitar.eclipse.api.quickfix.TigerQuickFixProcessor">
+     </quickFixProcessor>
+  </extension>
+</plugin>

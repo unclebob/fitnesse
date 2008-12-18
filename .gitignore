@@ -2,6 +2,7 @@ FitNesseRoot/ErrorLogs/
 FitNesseRoot/RecentChanges/
 src/fitnesse/FitNesseVersion.java
 test-results/
+agitar/
 dist/
 classes/
 .svn

@@ -1,0 +1,55 @@
+<project name="superrunner_ant">
+
+	<!-- import this script into your project build script to get access
+         to Agitator tasks. The default location for this script is the eclipse directory.
+        -->
+	<!-- to set agitar.eclipse.dir manually uncomment the following line and set your location -->
+	<!--	<property name="agitar.eclipse.dir" value="${basedir}"/> -->
+
+	<dirname property="agitar.eclipse.dir" file="${ant.file.superrunner_ant}/../../.." />
+    <property name="agitar.startup.path" value="${agitar.eclipse.dir}/startup.jar"/>
+
+    <condition property="unix.environment" value="-ws gtk">
+    	<and>
+	    	<os family="unix"/>
+    		<not><os family="mac"/></not>
+    	</and>
+    </condition>
+
+    <!-- in case it wasn't unix, set it to empty string -->
+    <property name="unix.environment" value=""/>
+
+    <condition property="isJavaVersionBad">
+         <or>
+           <equals arg1="${ant.java.version}" arg2="1.0" />
+           <equals arg1="${ant.java.version}" arg2="1.1" />
+           <equals arg1="${ant.java.version}" arg2="1.2" />
+           <equals arg1="${ant.java.version}" arg2="1.3" />
+         </or>
+    </condition>
+    <fail if="isJavaVersionBad" 
+    	message="The minimum java version supported by AgitarOne is 1.4.2. The version being used is ${ant.java.version}."/>
+	
+    <tempfile property="temp.file" prefix="agitar" destdir="${java.io.tmpdir}"/>
+
+    <java fork="true" classname="org.eclipse.core.launcher.Main"
+		outputproperty="pluginpaths.file" errorproperty="err.prop">
+	
+		<arg line="-data ${temp.file} -application com.agitar.eclipse.cmdline.PluginPath ${unix.environment} com.agitar.eclipse.testrunner,com.agitar.eclipse.coverage,com.agitar.eclipse.api"/>
+		
+		<classpath>
+			<pathelement location="${agitar.startup.path}"/>
+		</classpath>
+    </java>
+
+    <property file="${pluginpaths.file}"/>
+    <echo level="info" message="Deleting temporary file ${pluginpaths.file}"/>
+    <delete file="${pluginpaths.file}"/>
+    
+    <fail if="pluginpaths.err" message="Could not locate plugin paths for some plugins: ${pluginpaths.err}"/>
+    	
+	<import file="${com.agitar.eclipse.api.plugin.dir}/config/superrunner_import.xml" />
+
+	<!-- delete the temporary directory that was created -->
+	<delete dir="${temp.file}"/>
+</project>

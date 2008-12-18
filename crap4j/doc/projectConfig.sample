@@ -1,0 +1,25 @@
+# This is an example project configuration file that runs crap4j on itself.
+
+# Root directory of the project. Any relative paths for the other 
+# parameters are made relative to this.
+#projectDir=c:\Documents and Settings\Agitar\My Documents\crap4j
+projectDir=/Users/bobevans/Documents/projects/svnworkspace/crap4j
+
+# The directory where reports will be sent.
+# If unspecified, this defaults to <projectDir>/agitar/reports/crap4j.
+outputDir=
+
+# NOTE: Use the platform-specific path separators whenever there are 
+# multiple directories.
+
+# The classpath of libraries used by the project. 
+libClasspaths=dist/crap4j/lib/asm-xml-3.0.jar:dist/crap4j/lib/asm-util-3.0.jar:dist/crap4j/lib/asm-tree-3.0.jar:dist/crap4j/lib/asm-commons-3.0.jar:dist/crap4j/lib/asm-analysis-3.0.jar:dist/crap4j/lib/asm-3.0.jar:dist/crap4j/lib/args4j-2.0.1.jar:dist/crap4j/lib/com.agitar.eclipse.coverage_4.2.0.401405/com.agitar.coverage.jar
+
+# Directories containing the project's test class files.
+testClassDirs=test_bin:integration_tests_bin:agitar/test_bin
+
+# Directories containing project's class files, i.e., the classes to be analyzed.
+classDirs=bin
+
+# Directories containing the project's source files, i.e., the source files to be analyzed.
+sourceDirs=src
