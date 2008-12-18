@@ -8,96 +8,109 @@ import junit.framework.TestCase;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class RequestTest extends TestCase {
   PipedOutputStream output;
   Request request;
   public Thread parseThread;
   public Exception exception;
+  ByteArrayOutputStream messageBuffer;
 
   public void setUp() throws Exception {
     output = new PipedOutputStream();
     request = new Request(new PipedInputStream(output));
+    messageBuffer = new ByteArrayOutputStream();
   }
 
   public void tearDown() throws Exception {
     output.close();
   }
 
-  private void writeToPipe(String value) throws Exception {
-    byte[] bytes = value.getBytes();
-    output.write(bytes);
+  private void appendToMessage(StringBuffer buffer) throws Exception {
+    messageBuffer.write(buffer.toString().getBytes());
+  }
+
+  private void appendToMessage(String value) throws Exception {
+    messageBuffer.write(value.getBytes());
+  }
+
+  private void appendToMessage(byte[] bytes) throws Exception {
+    messageBuffer.write(bytes);
+  }
+
+  private void parseMessage() throws Exception {
+    ByteArrayInputStream stream = new ByteArrayInputStream(messageBuffer.toByteArray());
+    request = new Request(stream);
+    try {
+      request.parse();
+    } catch(Exception record) {
+      exception = record;
+    }
   }
 
   public void testMultilevelRequest() throws Exception {
-    startParsing();
-    writeToPipe("GET /SomePage.SubPage?edit HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /SomePage.SubPage?edit HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertEquals("SomePage.SubPage", request.getResource());
   }
 
   public void testSimpleRequest() throws Exception {
     assertFalse(request.hasBeenParsed());
-    startParsing();
-    writeToPipe("GET /request-uri HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /request-uri HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertTrue(request.hasBeenParsed());
     assertEquals("/request-uri", request.getRequestUri());
   }
 
   public void testMalformedRequestLine() throws Exception {
-    startParsing();
-    writeToPipe("/resource HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("/resource HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertNotNull("no exception was thrown", exception);
     assertEquals("The request string is malformed and can not be parsed", exception.getMessage());
   }
 
   public void testBadMethod() throws Exception {
-    startParsing();
-    writeToPipe("DELETE /resource HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("DELETE /resource HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertNotNull("no exception was thrown", exception);
     assertEquals("The DELETE method is not currently supported", exception.getMessage());
   }
 
   public void testQueryStringValueWithNoQueryString() throws Exception {
-    startParsing();
-    writeToPipe("GET /resource HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /resource HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertEquals("", request.getQueryString());
   }
 
   public void testParsingRequestUri() throws Exception {
-    startParsing();
-    writeToPipe("GET /resource?queryString HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /resource?queryString HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertEquals("resource", request.getResource());
     assertEquals("queryString", request.getQueryString());
   }
 
   public void testCanGetQueryStringValues() throws Exception {
-    startParsing();
-    writeToPipe("GET /resource?key1=value1&key2=value2 HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /resource?key1=value1&key2=value2 HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     checkInputs();
   }
 
   public void testHeaders() throws Exception {
-    startParsing();
-    writeToPipe("GET /something HTTP/1.1\r\n");
-    writeToPipe("Content-Length: 0\r\n");
-    writeToPipe("Accept: text/html\r\n");
-    writeToPipe("Connection: Keep-Alive\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /something HTTP/1.1\r\n");
+    appendToMessage("Content-Length: 0\r\n");
+    appendToMessage("Accept: text/html\r\n");
+    appendToMessage("Connection: Keep-Alive\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertEquals(true, request.hasHeader("Content-Length"));
     assertEquals("0", request.getHeader("Content-Length"));
     assertEquals(true, request.hasHeader("Accept"));
@@ -109,30 +122,27 @@ public class RequestTest extends TestCase {
   }
 
   public void testEntityBodyWithoutContentLength() throws Exception {
-    startParsing();
-    writeToPipe("GET /something HTTP/1.1\r\n");
-    writeToPipe("\r\nThis is the Entity Body");
-    finishParsing();
+    appendToMessage("GET /something HTTP/1.1\r\n");
+    appendToMessage("\r\nThis is the Entity Body");
+    parseMessage();
     assertEquals("", request.getBody());
   }
 
   public void testEntityBodyIsRead() throws Exception {
-    startParsing();
-    writeToPipe("GET /something HTTP/1.1\r\n");
-    writeToPipe("Content-Length: 23\r\n");
-    writeToPipe("\r\n");
-    writeToPipe("This is the Entity Body");
-    finishParsing();
+    appendToMessage("GET /something HTTP/1.1\r\n");
+    appendToMessage("Content-Length: 23\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("This is the Entity Body");
+    parseMessage();
     assertEquals("This is the Entity Body", request.getBody());
   }
 
   public void testEntityBodyParametersAreParsed() throws Exception {
-    startParsing();
-    writeToPipe("GET /something HTTP/1.1\r\n");
-    writeToPipe("Content-Length: 23\r\n");
-    writeToPipe("\r\n");
-    writeToPipe("key1=value1&key2=value2");
-    finishParsing();
+    appendToMessage("GET /something HTTP/1.1\r\n");
+    appendToMessage("Content-Length: 23\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("key1=value1&key2=value2");
+    parseMessage();
     checkInputs();
   }
 
@@ -146,39 +156,36 @@ public class RequestTest extends TestCase {
   }
 
   public void testPostMethod() throws Exception {
-    startParsing();
-    writeToPipe("POST /something HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("POST /something HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertNull("POST method should be allowed", exception);
   }
 
   public void testSimpleInputStyle() throws Exception {
-    startParsing();
-    writeToPipe("GET /abc?something HTTP/1.1\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /abc?something HTTP/1.1\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     assertEquals(true, request.hasInput("something"));
   }
 
   public void testOperaPostRequest() throws Exception {
-    startParsing();
-    writeToPipe("POST /HelloThere HTTP/1.1\r\n");
-    writeToPipe("User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; MSIE 5.5; Windows NT 5.1) Opera 7.02  [en]\r\n");
-    writeToPipe("Host: localhost:75\r\n");
-    writeToPipe("Accept: text/html, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\n");
-    writeToPipe("Accept-Language: en\r\n");
-    writeToPipe("Accept-Charset: windows-1252, utf-8, utf-16, iso-8859-1;q=0.6, *;q=0.1\r\n");
-    writeToPipe("Accept-Encoding: deflate, gzip, x-gzip, identity, *;q=0\r\n");
-    writeToPipe("Referer: http://localhost:75/HeloThere?edit=\r\n");
-    writeToPipe("Connection: Keep-Alive, TE\r\n");
-    writeToPipe("TE: deflate, gzip, chunked, identity, trailers\r\n");
-    writeToPipe("Content-type: application/x-www-form-urlencoded\r\n");
-    writeToPipe("Content-length: 67\r\n");
-    writeToPipe("\r\n");
-    writeToPipe("saveId=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
+    appendToMessage("POST /HelloThere HTTP/1.1\r\n");
+    appendToMessage("User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; MSIE 5.5; Windows NT 5.1) Opera 7.02  [en]\r\n");
+    appendToMessage("Host: localhost:75\r\n");
+    appendToMessage("Accept: text/html, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1\r\n");
+    appendToMessage("Accept-Language: en\r\n");
+    appendToMessage("Accept-Charset: windows-1252, utf-8, utf-16, iso-8859-1;q=0.6, *;q=0.1\r\n");
+    appendToMessage("Accept-Encoding: deflate, gzip, x-gzip, identity, *;q=0\r\n");
+    appendToMessage("Referer: http://localhost:75/HeloThere?edit=\r\n");
+    appendToMessage("Connection: Keep-Alive, TE\r\n");
+    appendToMessage("TE: deflate, gzip, chunked, identity, trailers\r\n");
+    appendToMessage("Content-type: application/x-www-form-urlencoded\r\n");
+    appendToMessage("Content-length: 67\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("saveId=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
 
-    finishParsing();
+    parseMessage();
 
     assertTrue(request.hasInput("saveId"));
     assertTrue(request.hasInput("Edit"));
@@ -195,14 +202,14 @@ public class RequestTest extends TestCase {
         buffer.append(i);
     }
 
-    startParsing();
-    writeToPipe("POST /HelloThere HTTP/1.1\r\n");
-    writeToPipe("Content-length: 10021\r\n");
-    writeToPipe("\r\n");
-    writeToPipe("saveId=12345&content=");
-    writeToPipe(buffer.toString());
+    appendToMessage("POST /HelloThere HTTP/1.1\r\n");
+    appendToMessage("Content-length: 10021\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("saveId=12345&content=");
+    appendToMessage(buffer);
 
-    finishParsing();
+    parseMessage();
+
     assertEquals(buffer.toString(), request.getInput("content"));
   }
 
@@ -225,13 +232,12 @@ public class RequestTest extends TestCase {
       "\r\n" +
       "----bob--\r\n";
 
-    startParsing();
-    writeToPipe("GET /request-uri HTTP/1.1\r\n");
-    writeToPipe("Content-Length: " + content.length() + "\r\n");
-    writeToPipe("Content-Type: multipart/form-data; boundary=--bob\r\n");
-    writeToPipe("\r\n");
-    writeToPipe(content);
-    finishParsing();
+    appendToMessage("GET /request-uri HTTP/1.1\r\n");
+    appendToMessage("Content-Length: " + content.length() + "\r\n");
+    appendToMessage("Content-Type: multipart/form-data; boundary=--bob\r\n");
+    appendToMessage("\r\n");
+    appendToMessage(content);
+    parseMessage();
 
     if (exception != null) {
       throw exception;
@@ -252,13 +258,12 @@ public class RequestTest extends TestCase {
       "file contents\r\n" +
       "----bob--\r\n";
 
-    startParsing();
-    writeToPipe("GET /request-uri HTTP/1.1\r\n");
-    writeToPipe("Content-Length: " + content.length() + "\r\n");
-    writeToPipe("Content-Type: multipart/form-data; boundary=--bob\r\n");
-    writeToPipe("\r\n");
-    writeToPipe(content);
-    finishParsing();
+    appendToMessage("GET /request-uri HTTP/1.1\r\n");
+    appendToMessage("Content-Length: " + content.length() + "\r\n");
+    appendToMessage("Content-Type: multipart/form-data; boundary=--bob\r\n");
+    appendToMessage("\r\n");
+    appendToMessage(content);
+    parseMessage();
 
     testUploadedFile("file1", "mike dile.txt", "text/plain", "file contents");
   }
@@ -276,13 +281,12 @@ public class RequestTest extends TestCase {
       "test2\r\n" +
       "-----------------------------7d32df3a80058--\r\n";
 
-    startParsing();
-    writeToPipe("GET /request-uri HTTP/1.1\r\n");
-    writeToPipe("Content-Length: " + content.length() + "\r\n");
-    writeToPipe("Content-Type: multipart/form-data; boundary=---------------------------7d32df3a80058\r\n");
-    writeToPipe("\r\n");
-    writeToPipe(content);
-    finishParsing();
+    appendToMessage("GET /request-uri HTTP/1.1\r\n");
+    appendToMessage("Content-Length: " + content.length() + "\r\n");
+    appendToMessage("Content-Type: multipart/form-data; boundary=---------------------------7d32df3a80058\r\n");
+    appendToMessage("\r\n");
+    appendToMessage(content);
+    parseMessage();
 
     testUploadedFile("file", "C:\\test.txt", "text/plain", "test");
     testUploadedFile("file2", "C:\\test2.txt", "text/plain", "test2");
@@ -294,25 +298,23 @@ public class RequestTest extends TestCase {
     assertNotNull(file);
     assertEquals(filename, file.getName());
     assertEquals(contentType, file.getType());
-    assertEquals(content, new String(FileUtil.getFileContent(file.getFile())));
+    assertEquals(content, FileUtil.getFileContent(file.getFile()));
   }
 
   public void testUploadingBinaryFile() throws Exception {
-    startParsing();
-    writeToPipe("GET /request-uri HTTP/1.1\r\n");
-    writeToPipe("Content-Length: " + (83) + "\r\n");
-    writeToPipe("Content-Type: multipart/form-data; boundary=--bob\r\n");
-    writeToPipe("\r\n");
+    appendToMessage("GET /request-uri HTTP/1.1\r\n");
+    appendToMessage("Content-Length: " + (83) + "\r\n");
+    appendToMessage("Content-Type: multipart/form-data; boundary=--bob\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("----bob\r\n");
+    appendToMessage("Content-Disposition: name=\"n\"; filename=\"f\"\r\n");
+    appendToMessage("\r\n");
+    appendToMessage(new byte[]{(byte) 0x9D, (byte) 0x90, (byte) 0x81});
+    appendToMessage("file contents");
+    appendToMessage("\r\n");
+    appendToMessage("----bob--");
 
-    writeToPipe("----bob\r\n");
-    writeToPipe("Content-Disposition: name=\"n\"; filename=\"f\"\r\n");
-    writeToPipe("\r\n");
-    output.write(new byte[]{(byte) 0x9D, (byte) 0x90, (byte) 0x81});
-    output.write("file contents".getBytes());
-    writeToPipe("\r\n");
-
-    writeToPipe("----bob--");
-    finishParsing();
+    parseMessage();
 
     UploadedFile file = (UploadedFile) request.getInput("n");
     assertNotNull(file);
@@ -325,28 +327,21 @@ public class RequestTest extends TestCase {
   }
 
   public void testCanGetCredentials() throws Exception {
-    startParsing();
-    writeToPipe("GET /abc?something HTTP/1.1\r\n");
-    writeToPipe("Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
+    appendToMessage("GET /abc?something HTTP/1.1\r\n");
+    appendToMessage("Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
     request.getCredentials();
     assertEquals("Aladdin", request.getAuthorizationUsername());
     assertEquals("open sesame", request.getAuthorizationPassword());
   }
 
   public void testDoenstChokeOnMissingPassword() throws Exception {
-    startParsing();
-    writeToPipe("GET /abc?something HTTP/1.1\r\n");
-    writeToPipe("Authorization: Basic " + Base64.encode("Aladin") + "\r\n");
-    writeToPipe("\r\n");
-    finishParsing();
-    try {
-      request.getCredentials();
-    }
-    catch (Exception e) {
-      fail("Exception: " + e.getMessage());
-    }
+    appendToMessage("GET /abc?something HTTP/1.1\r\n");
+    appendToMessage("Authorization: Basic " + Base64.encode("Aladin") + "\r\n");
+    appendToMessage("\r\n");
+    parseMessage();
+    request.getCredentials();
   }
 
   public void testGetUserpass() throws Exception {
@@ -354,49 +349,18 @@ public class RequestTest extends TestCase {
   }
 
   public void testUnicodeCharacters() throws Exception {
-    startParsing();
-    writeToPipe("GET /?key=%EB%AA%80%EB%AA%81%EB%AA%82%EB%AA%83 HTTP/1.1\r\n\r\n");
-    finishParsing();
+    appendToMessage("GET /?key=%EB%AA%80%EB%AA%81%EB%AA%82%EB%AA%83 HTTP/1.1\r\n\r\n");
+    parseMessage();
     assertEquals("\uba80\uba81\uba82\uba83", request.getInput("key"));
   }
 
   public void testParsingProgress() throws Exception {
-    startParsing();
-    writeToPipe("GET /something HTTP/1.1\r\n");
-    output.flush();
-    Thread.sleep(20);
-    assertEquals(25, request.numberOfBytesParsed());
-    writeToPipe("Content-Length: 23\r\n");
-    output.flush();
-    Thread.sleep(20);
-    assertEquals(45, request.numberOfBytesParsed());
-    writeToPipe("\r\n");
-    writeToPipe("This is ");
-    output.flush();
-    Thread.sleep(20);
-    assertEquals(55, request.numberOfBytesParsed());
-    writeToPipe("the Entity Body");
-    output.flush();
-    Thread.sleep(20);
+    appendToMessage("GET /something HTTP/1.1\r\n");
+    appendToMessage("Content-Length: 23\r\n");
+    appendToMessage("\r\n");
+    appendToMessage("This is ");
+    appendToMessage("the Entity Body");
+    parseMessage();
     assertEquals(70, request.numberOfBytesParsed());
-    finishParsing();
-  }
-
-  private void startParsing() {
-    parseThread = new Thread() {
-      public synchronized void run() {
-        try {
-          request.parse();
-        }
-        catch (Exception e) {
-          exception = e;
-        }
-      }
-    };
-    parseThread.start();
-  }
-
-  private void finishParsing() throws Exception {
-    parseThread.join();
   }
 }
