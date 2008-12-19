@@ -5,6 +5,7 @@ package fitnesse.http;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TimeZone;
 
 public abstract class Response {
@@ -130,89 +131,51 @@ public abstract class Response {
     return getReasonPhrase(status);
   }
 
+  private static Map<Integer, String> reasonCodes = new HashMap<Integer, String>() {{
+    put(100, "Continue");
+    put(101, "Switching Protocols");
+    put(200, "OK");
+    put(201, "Created");
+    put(202, "Accepted");
+    put(203, "Non-Authoritative Information");
+    put(204, "No Content");
+    put(205, "Reset Content");
+    put(300, "Multiple Choices");
+    put(301, "Moved Permanently");
+    put(302, "Found");
+    put(303, "See Other");
+    put(304, "Not Modified");
+    put(305, "Use Proxy");
+    put(307, "Temporary Redirect");
+    put(400, "Bad Request");
+    put(401, "Unauthorized");
+    put(402, "Payment Required");
+    put(403, "Forbidden");
+    put(404, "Not Found");
+    put(405, "Method Not Allowed");
+    put(406, "Not Acceptable");
+    put(407, "Proxy Authentication Required");
+    put(408, "Request Time-out");
+    put(409, "Conflict");
+    put(410, "Gone");
+    put(411, "Length Required");
+    put(412, "Precondition Failed");
+    put(413, "Request Entity Too Large");
+    put(414, "Request-URI Too Large");
+    put(415, "Unsupported Media Type");
+    put(416, "Requested range not satisfiable");
+    put(417, "Expectation Failed");
+    put(500, "Internal Server Error");
+    put(501, "Not Implemented");
+    put(502, "Bad Gateway");
+    put(503, "Service Unavailable");
+    put(504, "Gateway Time-out");
+    put(505, "HTTP Version not supported");
+  }};
+
   public static String getReasonPhrase(int status) {
-    switch (status) {
-      case 100:
-        return "Continue";
-      case 101:
-        return "Switching Protocols";
-      case 200:
-        return "OK";
-      case 201:
-        return "Created";
-      case 202:
-        return "Accepted";
-      case 203:
-        return "Non-Authoritative Information";
-      case 204:
-        return "No Content";
-      case 205:
-        return "Reset Content";
-      case 300:
-        return "Multiple Choices";
-      case 301:
-        return "Moved Permanently";
-      case 302:
-        return "Found";
-      case 303:
-        return "See Other";
-      case 304:
-        return "Not Modified";
-      case 305:
-        return "Use Proxy";
-      case 307:
-        return "Temporary Redirect";
-      case 400:
-        return "Bad Request";
-      case 401:
-        return "Unauthorized";
-      case 402:
-        return "Payment Required";
-      case 403:
-        return "Forbidden";
-      case 404:
-        return "Not Found";
-      case 405:
-        return "Method Not Allowed";
-      case 406:
-        return "Not Acceptable";
-      case 407:
-        return "Proxy Authentication Required";
-      case 408:
-        return "Request Time-out";
-      case 409:
-        return "Conflict";
-      case 410:
-        return "Gone";
-      case 411:
-        return "Length Required";
-      case 412:
-        return "Precondition Failed";
-      case 413:
-        return "Request Entity Too Large";
-      case 414:
-        return "Request-URI Too Large";
-      case 415:
-        return "Unsupported Media Type";
-      case 416:
-        return "Requested range not satisfiable";
-      case 417:
-        return "Expectation Failed";
-      case 500:
-        return "Internal Server Error";
-      case 501:
-        return "Not Implemented";
-      case 502:
-        return "Bad Gateway";
-      case 503:
-        return "Service Unavailable";
-      case 504:
-        return "Gateway Time-out";
-      case 505:
-        return "HTTP Version not supported";
-      default:
-        return "Unknown Status";
-    }
+    String reasonPhrase = reasonCodes.get(status);
+    return reasonPhrase == null ? "Unknown Status" : reasonPhrase;
   }
 }
 
