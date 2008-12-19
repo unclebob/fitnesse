@@ -27,5 +27,4 @@ The FitNesse markup language is straightforward to learn, and powerful enough to
 |[[Generating tables of contents][MarkupContents]]|''Generate a table of contents for a SubWiki.''|
 |[[Page Inlining][MarkupPageInclude]]|''Pulling the content from one page into another.''|
 |[[Last Modification Time][LastModificationTime]]|''Showing the time that a page was last modified.''|
-|[[Fixture Specifiers][MarkupFixture]]|''Specify a fixture to be displayed by the TableWizard.''|
 |[[Collapsable Sections][MarkupCollapsableSection]]|''Making a section of content collapsable and expandable''|

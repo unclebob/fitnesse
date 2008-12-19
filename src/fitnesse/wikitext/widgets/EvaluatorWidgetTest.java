@@ -113,6 +113,36 @@ public class EvaluatorWidgetTest extends WidgetTestCase {
     assertEquals("27", eval.render());
   }
 
+  public void testNegativeExponent() throws Exception {
+    EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%.2f: 10.0^-1 =}");
+    assertEquals("0.10", eval.render());
+  }
+
+  public void testNegativeMantissa() throws Exception {
+    EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%.2f: (-10.0)^-1 =}");
+    assertEquals("-0.10", eval.render());
+  }
+
+  public void testFractionalExponentAndNegativeMantissaIsNaN() throws Exception {
+    EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%.2f: (-10.0)^(1/2) =}");
+    assertEquals("NaN", eval.render());
+  }
+
+  public void testNegativeMantissaAndPositiveIntegralExponent() throws Exception {
+    EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%.2f: (-10.0)^2 =}");
+    assertEquals("100.00", eval.render());
+  }
+
+  public void testNegativeMantissaAndNegativeIntegralExponent() throws Exception {
+    EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%.2f: (-10.0)^(-2) =}");
+    assertEquals("0.01", eval.render());
+  }
+
+  public void testNegativeMantissaExponentIsZero() throws Exception {
+    EvaluatorWidget eval = new EvaluatorWidget(widgetRoot, "${=%d: (-10)^0 =}");
+    assertEquals("1", eval.render());
+  }
+
   public void testSine() throws Exception {
     assertEquals("1.8509", new EvaluatorWidget(widgetRoot, "${=%5.4f: 1 + sin 45 =}").render());
   }

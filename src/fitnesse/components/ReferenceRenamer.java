@@ -43,7 +43,6 @@ public abstract class ReferenceRenamer implements FitNesseTraversalListener {
     LinkWidget.class,
     ImageWidget.class,
     AliasLinkWidget.class,
-    ClasspathWidget.class,
-    FixtureWidget.class,
+    ClasspathWidget.class
   });
 }

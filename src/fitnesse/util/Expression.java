@@ -15,24 +15,24 @@ public class Expression {
     StringBuffer temp = new StringBuffer();
     while (s.length() > 0 && Character.isDigit(s.charAt(0))) {
       temp.append(Integer.parseInt("" + s.charAt(0)));
-      s = s.substring(1);
+      advance();
     }
     if (s.length() > 0 && s.charAt(0) == '.') {
       temp.append('.');
-      s = s.substring(1);
+      advance();
       while (s.length() > 0 && Character.isDigit(s.charAt(0))) {
         temp.append(Integer.parseInt("" + s.charAt(0)));
-        s = s.substring(1);
+        advance();
       }
     }
     if (s.length() > 0 && (s.charAt(0) == 'e' || s.charAt(0) == 'E')) {
       temp.append('e');
-      s = s.substring(1);
+      advance();
       temp.append(s.charAt(0));
-      s = s.substring(1);
+      advance();
       while (s.length() > 0 && Character.isDigit(s.charAt(0))) {
         temp.append(Integer.parseInt("" + s.charAt(0)));
-        s = s.substring(1);
+        advance();
       }
     }
 
@@ -50,9 +50,9 @@ public class Expression {
   private double paren() {
     double ans;
     if (s.charAt(0) == '(') {
-      s = s.substring(1);
+      advance();
       ans = add();
-      s = s.substring(1);
+      advance();
     } else {
       ans = term();
     }
@@ -66,45 +66,64 @@ public class Expression {
     boolean neg = false;
     if (s.charAt(0) == '-') {
       neg = true;
-      s = s.substring(1);
+      advance();
     }
-    double ans = paren();
+    double result = paren();
     while (s.length() > 0) {
       if (s.charAt(0) == '^') {
-        s = s.substring(1);
-        boolean expNeg = false;
-        if (s.charAt(0) == '-') {
-          expNeg = true;
-          s = s.substring(1);
-        }
-        double e = paren();
-        if (ans < 0) {    // if it's negative
-          double x = 1;
-          if (Math.ceil(e) == e) {  // only raise to an integer
-            if (expNeg)
-              e *= -1;
-            if (e == 0)
-              ans = 1;
-            else if (e > 0)
-              for (int i = 0; i < e; i++)
-                x *= ans;
-            else
-              for (int i = 0; i < -e; i++)
-                x /= ans;
-            ans = x;
-          } else {
-            ans = Math.log(-1);  // otherwise make it NaN
-          }
-        } else if (expNeg)
-          ans = Math.exp(-e * Math.log(ans));
-        else
-          ans = Math.exp(e * Math.log(ans));
+        result = exponentiate(result);
       } else
         break;
     }
     if (neg)
-      ans *= -1;
-    return ans;
+      result *= -1;
+    return result;
+  }
+
+  private double exponentiate(double result) {
+    advance();
+    boolean expNeg = false;
+    if (s.charAt(0) == '-') {
+      expNeg = true;
+      advance();
+    }
+    double e = paren();
+    if (result < 0)
+      result = exponentiateNegativeNumber(result, expNeg, e);
+    else if (expNeg)
+      result = Math.exp(-e * Math.log(result));
+    else
+      result = Math.exp(e * Math.log(result));
+    return result;
+  }
+
+  private void advance() {
+    s = s.substring(1);
+  }
+
+  private double exponentiateNegativeNumber(double result, boolean expNeg, double e) {
+    if (Math.ceil(e) == e) {
+      result = calculateIntegralExponent(result, expNeg, e);
+    } else {
+      result = Double.NaN; 
+    }
+    return result;
+  }
+
+  private double calculateIntegralExponent(double result, boolean expNeg, double e) {
+    double x = 1;
+    if (expNeg)
+      e *= -1;
+    if (e == 0)
+      result = 1;
+    else if (e > 0)
+      for (int i = 0; i < e; i++)
+        x *= result;
+    else
+      for (int i = 0; i < -e; i++)
+        x /= result;
+    result = x;
+    return result;
   }
 
   /*
@@ -140,10 +159,10 @@ public class Expression {
     if (s.length() > 0) {
       while (s.length() > 0) {
         if (s.charAt(0) == '*') {
-          s = s.substring(1);
+          advance();
           ans *= trig();
         } else if (s.charAt(0) == '/') {
-          s = s.substring(1);
+          advance();
           ans /= trig();
         } else break;
       }
@@ -158,10 +177,10 @@ public class Expression {
     double ans = mul();
     while (s.length() > 0) {
       if (s.charAt(0) == '+') {
-        s = s.substring(1);
+        advance();
         ans += mul();
       } else if (s.charAt(0) == '-') {
-        s = s.substring(1);
+        advance();
         ans -= mul();
       } else {
         break;

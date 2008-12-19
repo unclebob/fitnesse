@@ -16,14 +16,6 @@
 !2 ''Port''
 !define PORT {8082}
 ----
-!2 ''Fixtures''
-!fixture fitnesse.fixtures.PageBuilder
-!fixture fitnesse.fixtures.PageCreator
-!fixture fitnesse.fixtures.ResponseRequester
-!fixture fitnesse.fixtures.ResponseRequester
-!fixture fitnesse.fixtures.ResponseExaminer
-!fixture fitnesse.fixtures.RenderFixture
-----
 !2 ''Utilities''
  * SuiteAcceptanceTests.PageHeader
  * SuiteAcceptanceTests.PageFooter

@@ -122,46 +122,18 @@ public class EditResponder implements SecureResponder {
       "<li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the \"Save\" button!</li>\n" +
       "<li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>\n" +
       "</ul>");
-    HtmlTag wizardForm = makeWizardForm(resource);
 
     TagGroup group = new TagGroup();
     group.add(form);
-    group.add(wizardForm);
 
     return group;
-  }
-
-  private HtmlTag makeWizardForm(String resource) {
-    HtmlTag wizardForm = new HtmlTag("form");
-    wizardForm.addAttribute("name", "tableWizardForm");
-    wizardForm.addAttribute("action", resource);
-    wizardForm.addAttribute("method", "post");
-    wizardForm.add(HtmlUtil.makeInputTag("hidden", "responder", "tableWizard"));
-    wizardForm.add(HtmlUtil.makeInputTag("hidden", "text", ""));
-    wizardForm.add(HtmlUtil.makeInputTag("hidden", "fixture", ""));
-    return wizardForm;
   }
 
   private HtmlTag createButtons() throws Exception {
     HtmlTag buttons = HtmlUtil.makeDivTag("edit_buttons");
     buttons.add(makeSaveButton());
     buttons.add(makeScriptButtons());
-    buttons.add(makeWizardOptions());
     return buttons;
-  }
-
-  private HtmlTag makeWizardOptions() throws Exception {
-    HtmlTag wizardOptions = new HtmlTag("select");
-    wizardOptions.addAttribute("name", "fixtureTable");
-    wizardOptions.addAttribute("onchange", "addFixture()");
-    wizardOptions.add(HtmlUtil.makeOptionTag("default", "- Insert Fixture Table -"));
-
-    List<?> fixtureNames = new FixtureListBuilder().getFixtureNames(this.page);
-    for (Iterator<?> fixtures = fixtureNames.iterator(); fixtures.hasNext();) {
-      String fixture = (String) fixtures.next();
-      wizardOptions.add(HtmlUtil.makeOptionTag(fixture, fixture));
-    }
-    return wizardOptions;
   }
 
   private HtmlTag makeScriptButtons() {
@@ -170,16 +142,6 @@ public class EditResponder implements SecureResponder {
     includeJavaScriptFile("/files/javascript/SpreadsheetTranslator.js", scripts);
     includeJavaScriptFile("/files/javascript/spreadsheetSupport.js", scripts);
     includeJavaScriptFile("/files/javascript/fitnesse.js", scripts);
-
-    HtmlTag wizardScript = new HtmlTag("script");
-    wizardScript.add("\nfunction addFixture()\n" +
-      "{\n" +
-      "\tdocument.tableWizardForm.text.value = document.f." + CONTENT_INPUT_NAME + ".value;\n" +
-      "\tdocument.tableWizardForm.fixture.value = document.f.fixtureTable.options[document.f.fixtureTable.selectedIndex].value;\n" +
-      "\tdocument.tableWizardForm.submit();\n" +
-      "\tenableSaveOnControlS(document.tableWizardForm, document.tableWizardForm)" +
-      "}");
-    scripts.add(wizardScript);
 
     return scripts;
   }

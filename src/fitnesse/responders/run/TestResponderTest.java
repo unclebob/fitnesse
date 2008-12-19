@@ -360,7 +360,6 @@ public class TestResponderTest {
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
   }
 
-
   private String errorWritingTable(String message) {
     return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +
       "|" + message + "|\n\n";

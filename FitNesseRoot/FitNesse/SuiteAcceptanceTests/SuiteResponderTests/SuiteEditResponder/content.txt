@@ -1,3 +1,0 @@
-This is a suite of tests that specify the behavior of the edit responder.
-
-^TestLinearFixtureInheritance

@@ -142,11 +142,6 @@ public class PageReferenceRenamerTest extends RegexTestCase {
     checkChangesOnPageOne(PATH_WIDGET, PATH_WIDGET);
   }
 
-  public void testFixtureNotChanged() throws Exception {
-    final String FIXTURE_WIDGET = "!fixture PageTwo";
-    checkChangesOnPageOne(FIXTURE_WIDGET, FIXTURE_WIDGET);
-  }
-
   public void testAliasTagNotChanged() throws Exception {
     final String ALIAS_LINK = "[[PageTwo][MyPageTwo]]";
     checkChangesOnPageOne(ALIAS_LINK, ALIAS_LINK);

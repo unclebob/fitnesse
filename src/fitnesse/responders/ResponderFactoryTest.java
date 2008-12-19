@@ -187,10 +187,6 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderTypeMatchesInput("movePage", MovePageResponder.class);
   }
 
-  public void testCreateTableWizardResponder() throws Exception {
-    assertResponderTypeMatchesInput("tableWizard", TableWizardResponder.class);
-  }
-
   public void testSocketCatcher() throws Exception {
     assertResponderTypeMatchesInput("socketCatcher", SocketCatchingResponder.class);
   }

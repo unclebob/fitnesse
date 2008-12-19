@@ -16,7 +16,6 @@ public class PageData implements Serializable {
   private static final long serialVersionUID = 1L;
 
   public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class});
-  public static WidgetBuilder fixtureWidgetBuilder = new WidgetBuilder(new Class[]{FixtureWidget.class});
   public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
 
   public static WidgetBuilder
@@ -183,10 +182,6 @@ public class PageData implements Serializable {
 
   public List<String> getClasspaths() throws Exception {
     return getTextOfWidgets(classpathWidgetBuilder);
-  }
-
-  public List<String> getFixtureNames() throws Exception {
-    return getTextOfWidgets(fixtureWidgetBuilder);
   }
 
   public List<String> getXrefPages() throws Exception {

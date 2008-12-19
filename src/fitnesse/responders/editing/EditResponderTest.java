@@ -42,7 +42,6 @@ public class EditResponderTest extends RegexTestCase {
   }
 
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
-//		crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
     request.setResource("NonExistentPage");
     request.addInput("nonExistent", true);
 
@@ -83,55 +82,10 @@ public class EditResponderTest extends RegexTestCase {
     assertMatches("spreadsheetSupport.js", body);
   }
 
-  public void testTableWizard() throws Exception {
-    final String TOP_LEVEL = "LevelOne";
-    final String MID_LEVEL = "LevelTwo";
-    final String BOTTOM_LEVEL = "LevelThree";
-
-    final String FIXTURE_ONE = "FixtureOne";
-    final String FIXTURE_TWO = "FixtureTwo";
-    final String FIXTURE_THREE = "FixtureThree";
-
-    buildPageHierarchyWithFixtures(TOP_LEVEL, MID_LEVEL, BOTTOM_LEVEL, FIXTURE_ONE, FIXTURE_TWO, FIXTURE_THREE);
-    final String pathName = TOP_LEVEL + PathParser.PATH_SEPARATOR + MID_LEVEL + PathParser.PATH_SEPARATOR + BOTTOM_LEVEL;
-    String body = invokeEditResponder(pathName);
-
-    assertTrue(body.indexOf("<select name=\"fixtureTable\"") != -1);
-    assertSubString("<option value=\"default\">- Insert Fixture Table -", body);
-    assertSubString("<option value=\"" + FIXTURE_ONE + "\">" + FIXTURE_ONE, body);
-    assertSubString("<option value=\"" + FIXTURE_TWO + "\">" + FIXTURE_TWO, body);
-    assertSubString("<option value=\"" + FIXTURE_THREE + "\">" + FIXTURE_THREE, body);
-    assertTrue(body.indexOf("Not.A.Fixture") == -1);
-  }
-
-  private String invokeEditResponder(final String pathName) throws Exception {
-    request.setResource(pathName);
-
-    WikiPagePath path = PathParser.parse(pathName);
-    setTestAttributeForPage(crawler.getPage(root, path));
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-    return response.getContent();
-  }
-
-  private void buildPageHierarchyWithFixtures(final String TOP_LEVEL, final String MID_LEVEL, final String BOTTOM_LEVEL, final String FIXTURE_ONE, final String FIXTURE_TWO, final String FIXTURE_THREE) throws Exception {
-    WikiPagePath topLevelPath = PathParser.parse(TOP_LEVEL);
-    WikiPagePath midLevelPath = PathParser.parse(MID_LEVEL);
-    WikiPagePath bottomLevelPath = PathParser.parse(BOTTOM_LEVEL);
-
-    WikiPage topPage = crawler.addPage(root, topLevelPath, "!fixture " + FIXTURE_ONE + "\r\nNot.A.Fixture\r\n!fixture " + FIXTURE_TWO);
-    WikiPage level2 = crawler.addPage(topPage, midLevelPath, "!fixture " + FIXTURE_THREE);
-    crawler.addPage(level2, bottomLevelPath, "Level three");
-  }
 
   public void testMissingPageDoesNotGetCreated() throws Exception {
     request.setResource("MissingPage");
     responder.makeResponse(new FitNesseContext(root), request);
     assertFalse(root.hasChildPage("MissingPage"));
-  }
-
-  private void setTestAttributeForPage(WikiPage page) throws Exception {
-    PageData data = page.getData();
-    data.setAttribute("Test", "true");
-    page.commit(data);
   }
 }

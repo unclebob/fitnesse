@@ -234,17 +234,6 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     return new SecureTestOperation();
   }
 
-  protected String cssClassFor(Counts count) {
-    if (count.wrong > 0)
-      return "fail";
-    else if (count.exceptions > 0 || count.right + count.ignores == 0)
-      return "error";
-    else if (count.ignores > 0 && count.right == 0)
-      return "ignore";
-    else
-      return "pass";
-  }
-
   protected int exitCode() {
     return assertionCounts.wrong + assertionCounts.exceptions;
   }

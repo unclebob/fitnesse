@@ -35,7 +35,6 @@ public class WidgetBuilder {
     VirtualWikiWidget.class,
     StrikeWidget.class,
     LastModifiedWidget.class,
-    FixtureWidget.class,
     XRefWidget.class,
     MetaWidget.class,
     EmailWidget.class,

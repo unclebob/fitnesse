@@ -37,7 +37,6 @@ public class ResponderFactory {
     addResponder("dontCreatePage", NotFoundResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
-    addResponder("tableWizard", TableWizardResponder.class);
     addResponder("search", SearchResponder.class);
     addResponder("searchForm", SearchFormResponder.class);
     addResponder("test", TestResponder.class);

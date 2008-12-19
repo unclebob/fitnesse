@@ -8,7 +8,6 @@ First build a page with lots of these ''protected'' widgets.
 |Action Fixture.|
 |start|Page Builder|
 |enter|line|!-!path TargetPage-!|
-|enter|line|!-!fixture TargetPage-!|
 |enter|line|!-http://objectmentor.com/TargetPage-!|
 |enter|line|!-!img http://objectmentor.com/TargetPage.jpg-!|
 |enter|line|!-{{{TargetPage}}}-!|

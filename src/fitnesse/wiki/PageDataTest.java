@@ -91,16 +91,6 @@ public class PageDataTest extends RegexTestCase {
     assertHasRegexp("undefined variable", renderedContent);
   }
 
-  public void testGetFixtureNames() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!fixture FixtureOne\r\nNot.A.Fixture\r\n!fixture FixtureTwo\n\n!fixture FixtureThree");
-    List<?> fixtureNames = page.getData().getFixtureNames();
-    assertEquals(3, fixtureNames.size());
-    assertEquals("FixtureOne", fixtureNames.get(0));
-    assertEquals("FixtureTwo", fixtureNames.get(1));
-    assertEquals("FixtureThree", fixtureNames.get(2));
-  }
-
   public void testGetCrossReferences() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
