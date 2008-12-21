@@ -6,12 +6,18 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.*;
 import fitnesse.testutil.RegexTestCase;
+import static fitnesse.testutil.RegexTestCase.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class FileResponderTest extends RegexTestCase {
+public class FileResponderTest {
   MockRequest request;
   private final String HTTP_DATE_REGEXP = "[SMTWF][a-z]{2}\\,\\s[0-9]{2}\\s[JFMASOND][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}\\sGMT";
   private Response response;
@@ -20,6 +26,7 @@ public class FileResponderTest extends RegexTestCase {
   private Locale saveLocale;
   // Example: "Tue, 02 Apr 2003 22:18:49 GMT"
 
+  @Before
   public void setUp() throws Exception {
     request = new MockRequest();
     context = new FitNesseContext();
@@ -29,22 +36,25 @@ public class FileResponderTest extends RegexTestCase {
     saveLocale = Locale.getDefault();
   }
 
+  @After
   public void tearDown() throws Exception {
     if (response != null) response.readyToSend(new MockResponseSender());
     SampleFileUtility.deleteSampleFiles();
     Locale.setDefault(saveLocale);
   }
 
+  @Test
   public void testFileContent() throws Exception {
     request.setResource("files/testFile1");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     response = responder.makeResponse(context, request);
-    assertEquals(InputStreamResponse.class, response.getClass());
+    RegexTestCase.assertEquals(InputStreamResponse.class, response.getClass());
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     assertSubString("file1 content", sender.sentData());
   }
 
+  @Test
   public void testSpacesInFileName() throws Exception {
     String restoredPath = FileResponder.restoreRealSpacesInFileName("files/test%20File%20With%20Spaces%20In%20Name");
     assertEquals("files/test File With Spaces In Name", restoredPath);
@@ -54,6 +64,7 @@ public class FileResponderTest extends RegexTestCase {
     assertEquals("files/file4 with spaces.txt", responder.resource);
   }
 
+  @Test
   public void testLastModifiedHeader() throws Exception {
     Locale.setDefault(Locale.US);
     request.setResource("files/testFile1");
@@ -63,6 +74,7 @@ public class FileResponderTest extends RegexTestCase {
     assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
   }
 
+  @Test
   public void test304IfNotModified() throws Exception {
     Locale.setDefault(Locale.US);
     Calendar now = new GregorianCalendar();
@@ -80,7 +92,6 @@ public class FileResponderTest extends RegexTestCase {
     request.setResource("files/testFile1");
     request.addHeader("If-Modified-Since", tomorrow);
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
-    responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(304, notModifiedResponse.getStatus());
     assertEquals("", notModifiedResponse.getContent());
@@ -88,6 +99,16 @@ public class FileResponderTest extends RegexTestCase {
     assertNotNull(notModifiedResponse.getHeader("Cache-Control"));
   }
 
+  @Test
+  public void testRecoverFromUnparseableDateInIfNotModifiedHeader() throws Exception {
+    request.setResource("files/testFile1");
+    request.addHeader("If-Modified-Since", "Unparseable Date");
+    responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    response = responder.makeResponse(context, request);
+    assertEquals(200, response.getStatus());
+  }
+
+  @Test
   public void testNotFoundFile() throws Exception {
     request.setResource("files/something/that/aint/there");
     Responder notFoundResponder = FileResponder.makeResponder(request, SampleFileUtility.base);
@@ -96,6 +117,7 @@ public class FileResponderTest extends RegexTestCase {
     assertHasRegexp("files/something/that/aint/there", response.getContent());
   }
 
+  @Test
   public void testCssMimeType() throws Exception {
     SampleFileUtility.addFile("/files/fitnesse.css", "body{color: red;}");
     request.setResource("files/fitnesse.css");

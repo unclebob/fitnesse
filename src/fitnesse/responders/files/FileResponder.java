@@ -80,7 +80,8 @@ public class FileResponder implements Responder {
           return true;
       }
       catch (ParseException e) {
-        e.printStackTrace();
+        //Some browsers use local date formats that we can't parse.
+        //So just ignore this exception if we can't parse the date.
       }
     }
     return false;

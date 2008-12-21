@@ -179,24 +179,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TestResponder.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/run/TestResponder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="234" column="3" selection-start="7988" selection-end="7988" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EditResponder.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/editing/EditResponder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="143" column="68" selection-start="5541" selection-end="5541" vertical-scroll-proportion="-13.884615">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="EditResponderTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/editing/EditResponderTest.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -224,10 +206,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PageReferenceRenamerTest.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="PageReferenceRenamerTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/components/PageReferenceRenamerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="145" column="17" selection-start="6198" selection-end="6198" vertical-scroll-proportion="0.8446475">
+            <state line="134" column="86" selection-start="5855" selection-end="5855" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResponseExaminer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseExaminer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="48" column="84" selection-start="1496" selection-end="1496" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileResponder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/files/FileResponder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="63" column="86" selection-start="2092" selection-end="2092" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InputStreamResponse.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/http/InputStreamResponse.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="29" column="96" selection-start="772" selection-end="772" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileResponderTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/files/FileResponderTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="83" selection-start="1495" selection-end="1495" vertical-scroll-proportion="0.6891892">
               <folding />
             </state>
           </provider>
@@ -236,7 +254,7 @@
       <file leaf-file-name="WidgetBuilder.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/WidgetBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="0" selection-start="1073" selection-end="1073" vertical-scroll-proportion="0.0">
+            <state line="194" column="136" selection-start="6102" selection-end="6102" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -246,15 +264,6 @@
         <entry file="file://$PROJECT_DIR$/src/fitnesse/components/ReferenceRenamer.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="45" column="25" selection-start="1506" selection-end="1506" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ResponderFactory.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/ResponderFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="0" selection-start="1662" selection-end="1662" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -402,88 +411,6 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="wikitext" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesseGit" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="fitnesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="wikitext" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="widgets" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesseGit" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="fitnesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="wiki" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="FitNesseGit" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="fitnesse" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
           <option name="myItemId" value="responders" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
@@ -514,7 +441,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="editing" />
+          <option name="myItemId" value="files" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -600,18 +527,18 @@
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
   <component name="RunManager" selected="JUnit.All">
-    <tempConfiguration default="false" name="TableWizardResponderTest.testResponseForNonFixture" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
+    <tempConfiguration default="false" name="FileResponderTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false" runner="emma">
       <pattern>
-        <option name="PATTERN" value="fitnesse.responders.editing.*" />
+        <option name="PATTERN" value="fitnesse.responders.files.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <module name="FitNesse" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="fitnesse.responders.editing" />
-      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.editing.TableWizardResponderTest" />
-      <option name="METHOD_NAME" value="testResponseForNonFixture" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="fitnesse.responders.files" />
+      <option name="MAIN_CLASS_NAME" value="fitnesse.responders.files.FileResponderTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -997,7 +924,7 @@
       <item index="5" class="java.lang.String" itemvalue="JUnit.SlimResponder" />
       <item index="6" class="java.lang.String" itemvalue="JUnit.slim" />
       <item index="7" class="java.lang.String" itemvalue="JUnit.SuiteResponderTest.xmlFormat" />
-      <item index="8" class="java.lang.String" itemvalue="JUnit.TableWizardResponderTest.testResponseForNonFixture" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.FileResponderTest" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1325,29 +1252,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/Response.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="154" column="74" selection-start="4108" selection-end="4108" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/widgets/EvaluatorWidgetTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="95" selection-start="4857" selection-end="4857" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/util/Expression.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="77" selection-start="1961" selection-end="1961" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/eg/bowling/fixtures/ScoreGame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="58" selection-start="853" selection-end="853" vertical-scroll-proportion="0.0">
@@ -1422,13 +1326,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/WidgetBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="0" selection-start="1073" selection-end="1073" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/components/ReferenceRenamer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="45" column="25" selection-start="1506" selection-end="1506" vertical-scroll-proportion="0.0">
@@ -1452,7 +1349,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fitnesse/components/PageReferenceRenamerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="145" column="17" selection-start="6198" selection-end="6198" vertical-scroll-proportion="0.8446475">
+        <state line="134" column="86" selection-start="5855" selection-end="5855" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/fixtures/ResponseExaminer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="84" selection-start="1496" selection-end="1496" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/http/InputStreamResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="96" selection-start="772" selection-end="772" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/wikitext/WidgetBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="194" column="136" selection-start="6102" selection-end="6102" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/files/FileResponder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="86" selection-start="2092" selection-end="2092" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fitnesse/responders/files/FileResponderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="83" selection-start="1495" selection-end="1495" vertical-scroll-proportion="0.6891892">
           <folding />
         </state>
       </provider>
