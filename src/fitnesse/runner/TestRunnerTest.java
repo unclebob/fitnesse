@@ -27,6 +27,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class TestRunnerTest {
+  static String endl = System.getProperty("line.separator");
+
   private int port;
   private WikiPage root;
   private TestRunner runner;
@@ -78,15 +80,17 @@ public class TestRunnerTest {
   @Test
   public void verbosePassing() throws Exception {
     runPage("-v", "SuitePage.TestPassing");
-    assertEquals("Test Runner for Root Path: TestPassing\n" +
-      "  Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0\n", outputBytes.toString());
+    assertEquals("Test Runner for Root Path: TestPassing" + endl +
+      "  Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0" + endl,
+      outputBytes.toString());
   }
 
   @Test
   public void verboseFailing() throws Exception {
     runPage("-v", "SuitePage.TestFailing");
-    assertEquals("Test Runner for Root Path: TestFailing\n" +
-      "* Page:(TestFailing) right:0, wrong:1, ignored:0, exceptions:0\n", outputBytes.toString());    
+    assertEquals("Test Runner for Root Path: TestFailing" + endl +
+      "* Page:(TestFailing) right:0, wrong:1, ignored:0, exceptions:0" + endl,
+      outputBytes.toString());
   }
 
   @Test
