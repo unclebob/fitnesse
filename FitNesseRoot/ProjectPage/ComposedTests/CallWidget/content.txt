@@ -1,0 +1,27 @@
+Another idea is to use a simple widget that replaces !include and !define.  
+
+On a page named LoginAttempt:
+!|script|
+|start clean fitnesse instance|
+|create page|NewPage|with text|start:${WIKI_TEXT}:end|
+|$html=|request page|NewPage|
+|check|extract from|$html|between|start:|and|:end|${TRANSLATED_TEXT}|
+|shutdown fitnesse|
+
+Now on the page with the tests: 
+The driver for the scenario has to be set up before it can be invoked.  This makes the driver polymorphic with respect to the scenario!
+
+|script|
+|start|fitnesse pages|
+
+Now you can call the page.
+
+{{{!call LoginAttempt(WIKI_TEXT="''text''", TRANSLATED_TEXT="<i>text</i>")
+!call LoginAttempt(WIKI_TEXT="'''text'''", TRANSLATED_TEXT="<b>text</b>")}}}
+Or maybe something like this:
+{{{>|LoginAttempt|
+|WIKI_TEXT|TRANSLATED_TEXT|
+|''text''|<i>text</i>|
+|'''text'''|<b>text</b>|}}}
+This could render as many tables, each in a collapsed section given the title for the row.  The title can be given the pass or fail class after test execution...
+
