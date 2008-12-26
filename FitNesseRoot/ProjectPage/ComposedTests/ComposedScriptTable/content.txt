@@ -1,35 +1,39 @@
-This syntax of the ''Scenario'' table uses dofixture style function naming.  The scenario's name is: ''LoginWith''
-and it requires two arguments.  The leading underscores are not required, I just put them there to make sure the
-argument names aren't confused with text.
+A scenario table can be called from another script or scenario table.  Think of the table below as a callable script.
 
-|Scenario|Login|_user|with|_password|
-||provides|_message|
-|enter|_user|into|username|field|
-|enter|_password|into|password|field|
-|provide|_message|login|
+|scenario|Login|user|with password|password|giving message|message?|and status|status?|
+|enter|$user|into|username|field|
+|enter|$password|into|password|field|
+|$message=|login|
+|$status=|login status|
 
-Now you can invoke the scenario from a script table just as you would if it were a fixture.  
+You can invoke it from another script table just as you would if it were a fixture.  
 This makes the fixture polymorphic with respect to the script table.
+The return values of the script are marked with ?.  
 
 |script|
 |start|login driver|
-|check|login|bob|with|xyzzy|Welcome bob|
-|check|login|bill|with|qqbbc|Invalid Password|
+|check|Login|bob|with password|xyzzy|giving message|Welcome Bob|and status|>0|
+|check|Login|bill|with password|qqbbc|giving message|Invalid Password|and status|-1|
 
-If you have a scenario defined with ''requires'' keywords, you should still be able to use it as follows:
-
-
-|Scenario|Login|
-||requires|_user|
-||requires|_password|
-||provides|_message|
-|enter|_user|into|username|field|
-|enter|_password|into|password|field|
-|provide|_message|login|
-
-Note the blank cell between the arguments.  Is this really necessary? Probably.
+Or you can use the output symbol name instead of the return value as follows:
 
 |script|
 |start|login driver|
-|check|login|bob||xyzzy|Welcome bob|
-|check|login|bill||qqbbc|Invalid Password|
+|Login|bob|with password|xyzzy|giving message and status|
+|check|$message|Welcome Bob|
+|check|$status|>0|
+
+If you don't like the clutter of the keywords:
+
+|scenario|Login|user||password||message?||status?|
+|enter|$user|into|username|field|
+|enter|$password|into|password|field|
+|$message=|login|
+|$status=|login status|
+
+Note the blank cell between the arguments.
+
+|script|
+|start|login driver|
+|check|Login|bob||xyzzy||Welcome bob||>0|
+|check|Login|bill||qqbbc||Invalid Password||-1|

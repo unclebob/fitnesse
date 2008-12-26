@@ -1,17 +1,14 @@
-The '''Scenario''' keyword creates a table using ''script'' table syntax, but that acts like a decision table fixture.
-The blank cells in front of ''requires'' and ''provides'' are optional.  Prefix blank cells are ignored
+A small change to the syntax of a script table can let it act like a decision table fixture.  The decision table column heads are simply listed after the word "scenario".  They act like symbols as far as the script is concerned.
 
 The scenario provides its own setup and teardown.  Is this appropriate?
 
-The ''get'' keyword may just be an alias for ''check''.  
 
-!|Scenario|Wiki text is translated|
-||Requires|wiki_text|
-||Provides|translated_text|
+
+!|scenario|Wiki text is translated|wiki_text|translated_text?|
 |start clean fitnesse instance|
-|check|create page|NewPage|with text|start:wiki_text:end|true|
-|get|request page|NewPage|$html=|
-|provide|translated_text|extract from|$html|between|start:|and|:end|
+|check|create page|NewPage|with text|start:$wiki_text:end|true|
+|$html=|request page|NewPage|
+|$translated_text=|extract from|$html|between|start:|and|:end|
 |shutdown fitnesse|
 
 The driver for the scenario has to be set up before it can be invoked.  This makes the driver polymorphic with respect to the scenario!
