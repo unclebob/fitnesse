@@ -10,5 +10,5 @@ classes/
 *.ipr
 fitnesse*.zip
 .DS_Store
-
+target/
 

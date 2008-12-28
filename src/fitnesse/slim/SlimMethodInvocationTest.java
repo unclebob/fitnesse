@@ -94,7 +94,7 @@ public class SlimMethodInvocationTest {
   @Test
   public void passManyArgs() throws Exception {
     caller.call("testSlim", "manyArgs", "1", "2.1", "c");
-    assertEquals(1, testSlim.getIntegerObjectArg());
+    assertEquals(1, testSlim.getIntegerObjectArg().intValue());
     assertEquals(2.1, testSlim.getDoubleObjectArg(), .00001);
     assertEquals('c', testSlim.getCharArg());
   }
