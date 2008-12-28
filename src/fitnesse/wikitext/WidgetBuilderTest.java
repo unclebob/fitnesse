@@ -219,7 +219,11 @@ public class WidgetBuilderTest extends TestCase {
     for (int i = 0; i < 25000; i++) {
       WidgetBuilderThread widgetBuilderThread = new WidgetBuilderThread(widgetBuilder, text, parent, failFlag);
       Thread thread = new Thread(widgetBuilderThread);
-      thread.start();
+      try {
+        thread.start();
+      } catch (OutOfMemoryError e) {
+        break;
+      }
     }
     assertEquals(false, failFlag.get());
   }

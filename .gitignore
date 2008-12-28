@@ -11,4 +11,6 @@ classes/
 fitnesse*.zip
 .DS_Store
 target/
+fitnesse.iml
+fitnesse.ipr
 
