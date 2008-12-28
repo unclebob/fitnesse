@@ -1,11 +1,11 @@
 Another idea is to use a simple widget that replaces !include and !define.  
 
-On a page named LoginAttempt:
+On a page named !-LoginAttempt-!:
 !|script|
 |start clean fitnesse instance|
-|create page|NewPage|with text|start:${WIKI_TEXT}:end|
+|create page|NewPage|with text|start:!-${WIKI_TEXT}-!:end|
 |$html=|request page|NewPage|
-|check|extract from|$html|between|start:|and|:end|${TRANSLATED_TEXT}|
+|check|extract from|$html|between|start:|and|:end|!-${TRANSLATED_TEXT}-!|
 |shutdown fitnesse|
 
 Now on the page with the tests: 
