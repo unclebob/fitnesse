@@ -1,6 +1,6 @@
+FitNesseRoot/JunkParent/
 FitNesseRoot/ErrorLogs/
 FitNesseRoot/RecentChanges/
-src/fitnesse/FitNesseVersion.java
 test-results/
 agitar/
 dist/
@@ -13,4 +13,6 @@ fitnesse*.zip
 target/
 fitnesse.iml
 fitnesse.ipr
+fitnesse.iws
+FitNesse.iws
 
