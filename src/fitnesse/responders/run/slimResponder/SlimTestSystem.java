@@ -35,6 +35,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
   private int slimSocket;
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
+  private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -47,6 +48,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public void setSymbol(String symbolName, String value) {
     symbols.put(symbolName, value);
+  }
+
+  public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
+    scenarios.put(scenarioName, scenarioTable);
   }
 
   public boolean isSuccessfullyStarted() {
@@ -185,6 +190,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       return new TableTable(table, tableId, slimTestContext);
     else if (tableType.equalsIgnoreCase("script"))
       return new ScriptTable(table, tableId, slimTestContext);
+    else if (tableType.equalsIgnoreCase("scenario"))
+      return new ScenarioTable(table, tableId, slimTestContext);
     else if (tableType.equalsIgnoreCase("comment"))
       return null;
     else if (tableType.equalsIgnoreCase("import"))
@@ -294,6 +301,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private String exceptionResult(String resultKey) {
     return String.format("Exception: <a href=#%s>%s</a>", resultKey, resultKey);
+  }
+
+  public Map<String, ScenarioTable> getScenarios() {
+    return scenarios;
   }
 
   static class ExceptionList {

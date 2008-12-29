@@ -285,5 +285,17 @@ public class SlimTestSystemTest {
     assertTestResultsContain("A Reportable Exception");
   }
 
+  @Test
+  public void emptyScenarioTable() throws Exception {
+    getResultsForPageContents("|Scenario|\n");
+    assertTestResultsContain("Scenario tables must have a name.");
+  }
+
+  @Test
+  public void scenarioTableIsRegistered() throws Exception {
+    getResultsForPageContents("|Scenario|myScenario|\n");
+    assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
+  }
+
 
 }

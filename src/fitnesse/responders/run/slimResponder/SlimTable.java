@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public abstract class SlimTable {
   protected Table table;
-  private SlimTestContext testContext;
+  protected SlimTestContext testContext;
   protected String id;
   protected String tableName;
   private int instructionNumber = 0;
@@ -398,6 +398,9 @@ public abstract class SlimTable {
 
     public void setSymbol(String symbolName, String value) {
       symbols.put(symbolName, value);
+    }
+
+    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
     }
   }
 
