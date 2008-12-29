@@ -65,6 +65,10 @@ public class HtmlTable implements Table {
     return asList().toString();
   }
 
+  public String toHtml() {
+    return tableNode.toHtml();
+  }
+
   public int addRow(List<String> list) throws Exception {
     Row row = new Row();
     rows.add(row);

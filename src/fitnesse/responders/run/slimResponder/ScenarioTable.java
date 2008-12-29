@@ -1,8 +1,12 @@
 package fitnesse.responders.run.slimResponder;
 
+import org.htmlparser.util.ParserException;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import fitnesse.slim.SlimError;
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
@@ -73,5 +77,25 @@ public class ScenarioTable extends SlimTable {
 
   public Set<String> getOutputs() {
     return outputs;
+  }
+
+  public void call(Map<String, String> scenarioArguments, SlimTable parentTable) {
+    String script = getTable().toHtml();
+    for (String arg : scenarioArguments.keySet()) {
+      if (getInputs().contains(arg)) {
+        script = script.replaceAll("@"+arg, scenarioArguments.get(arg));
+      } else {
+        throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
+      }
+    }
+
+    try {
+      TableScanner ts = new HtmlTableScanner(script);
+      ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.testContext);
+      parentTable.addChildTable(t);
+      t.appendInstructions(parentTable.instructions);
+    } catch (ParserException e) {
+      throw new SlimError(e);
+    }
   }
 }

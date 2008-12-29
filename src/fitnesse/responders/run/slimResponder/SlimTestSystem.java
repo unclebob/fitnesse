@@ -54,6 +54,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     scenarios.put(scenarioName, scenarioTable);
   }
 
+  public ScenarioTable getScenario(String scenarioName) {
+    return scenarios.get(scenarioName);
+  }
+
   public boolean isSuccessfullyStarted() {
     return started;
   }

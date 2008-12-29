@@ -19,10 +19,12 @@ public abstract class SlimTable {
   protected String id;
   protected String tableName;
   private int instructionNumber = 0;
-  private List<Object> instructions;
+  protected List<Object> instructions;
   private List<Expectation> expectations = new ArrayList<Expectation>();
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
   private TestSummary testSummary = new TestSummary();
+  private SlimTable parent = null;
+  private List<SlimTable> children = new ArrayList<SlimTable>();
 
   public SlimTable(Table table, String id) {
     this(table, id, new LocalSlimTestContext());
@@ -34,6 +36,13 @@ public abstract class SlimTable {
     this.testContext = testContext;
     tableName = getTableType() + "_" + id;
     instructions = new ArrayList<Object>();
+  }
+
+  public void addChildTable(SlimTable table) {
+    table.id = id+"."+children.size();
+    table.tableName = table.tableName+"."+children.size();
+    table.parent = this;
+    children.add(table);
   }
 
   protected void addExpectation(Expectation e) {
@@ -107,10 +116,19 @@ public abstract class SlimTable {
   }
 
   protected void constructFixture() {
+    String fixtureName = getFixtureName();
+    constructFixture(fixtureName);
+  }
+
+  protected void constructFixture(String fixtureName) {
+    constructInstance(getTableName(), fixtureName, 0, 0);
+  }
+
+  protected String getFixtureName() {
     String tableHeader = table.getCellContents(0, 0);
     String fixtureName = getFixtureName(tableHeader);
     String disgracedFixtureName = Disgracer.disgraceClassName(fixtureName);
-    constructInstance(getTableName(), disgracedFixtureName, 0, 0);
+    return disgracedFixtureName;
   }
 
   private String getFixtureName(String tableHeader) {
@@ -401,6 +419,10 @@ public abstract class SlimTable {
     }
 
     public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
+    }
+
+    public ScenarioTable getScenario(String scenarioName) {
+      return null;
     }
   }
 

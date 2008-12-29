@@ -35,18 +35,6 @@ public class ScenarioTableTest {
     return st;
   }
 
-  private void assertTableResults(String tableRows, List<Object> tableResults, String table) throws Exception {
-    makeScenarioTable(tableRows);
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      list(
-        list("scenarioTable_id_0", "OK"),
-        list("scenarioTable_id_1", tableResults)
-      )
-    );
-    st.evaluateExpectations(pseudoResults);
-    assertEquals(table, st.getTable().toString());
-  }
-
   @Test
   public void noArgs() throws Exception {
     makeScenarioTable("|scenario|myScenario|\n");

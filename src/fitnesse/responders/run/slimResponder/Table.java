@@ -13,6 +13,8 @@ public interface Table {
 
   String toString();
 
+  String toHtml();
+
   void setCell(int col, int row, String contents);
 
   int addRow(List<String> list) throws Exception;

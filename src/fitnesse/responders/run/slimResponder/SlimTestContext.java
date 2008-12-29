@@ -6,4 +6,6 @@ public interface SlimTestContext {
   void setSymbol(String symbolName, String value);
 
   void addScenario(String scenarioName, ScenarioTable scenarioTable);
+
+  ScenarioTable getScenario(String scenarioName);
 }

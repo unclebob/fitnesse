@@ -24,9 +24,37 @@ public class DecisionTable extends SlimTable {
   public void appendInstructions() {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
-    constructFixture();
-    if (table.getRowCount() > 2)
-      invokeRows();
+    String fixtureName = getFixtureName();
+    ScenarioTable scenario = testContext.getScenario(fixtureName);
+    if (scenario != null) {
+      callScenario(scenario);
+    } else {
+      constructFixture(fixtureName);
+      if (table.getRowCount() > 2)
+        invokeRows();
+    }
+  }
+
+  private void callScenario(ScenarioTable scenario) {
+    parseColumnHeader();
+    for (int row = 2; row < table.getRowCount(); row++)
+      callScenarioForRow(scenario, row);
+  }
+
+  private void callScenarioForRow(ScenarioTable scenario, int row) {
+    checkRow(row);
+    scenario.call(getArgumentsForRow(row), this);
+  }
+
+  private Map<String, String> getArgumentsForRow(int row) {
+    Map<String, String>scenarioArguments = new HashMap<String,String>();
+    for (String var : vars.keySet()) {
+      String disgracedVar = Disgracer.disgraceMethodName(var);
+      int col = vars.get(var);
+      String valueToSet = table.getUnescapedCellContents(col, row);
+      scenarioArguments.put(disgracedVar, valueToSet);
+    }
+    return scenarioArguments;
   }
 
   protected void evaluateReturnValues(Map<String, Object> returnValues) {
