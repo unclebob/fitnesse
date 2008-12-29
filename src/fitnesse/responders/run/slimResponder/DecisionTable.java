@@ -43,7 +43,7 @@ public class DecisionTable extends SlimTable {
 
   private void callScenarioForRow(ScenarioTable scenario, int row) {
     checkRow(row);
-    scenario.call(getArgumentsForRow(row), this);
+    scenario.call(getArgumentsForRow(row), this, row);
   }
 
   private Map<String, String> getArgumentsForRow(int row) {

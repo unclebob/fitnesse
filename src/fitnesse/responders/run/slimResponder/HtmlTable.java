@@ -28,6 +28,10 @@ public class HtmlTable implements Table {
     }
   }
 
+  public TableTag getTableNode() {
+    return tableNode;
+  }
+
   public String getCellContents(int columnIndex, int rowIndex) {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
@@ -81,6 +85,11 @@ public class HtmlTable implements Table {
   public void appendCellToRow(int rowIndex, String contents) throws Exception {
     Row row = rows.get(rowIndex);
     row.appendCell(contents);
+  }
+
+  public void appendCellToRow(int rowIndex, Table table) {
+    Row row = rows.get(rowIndex);
+    row.appendCell(table);
   }
 
   public String error(String s) {
@@ -167,8 +176,18 @@ public class HtmlTable implements Table {
 
     public void appendCell(String contents) {
       Cell newCell = new Cell(contents);
+      appendCell(newCell);
+    }
+
+    private void appendCell(Cell newCell) {
       rowNode.getChildren().add(newCell.getColumnNode());
       cells.add(newCell);
+    }
+
+    public void appendCell(Table table) {
+      HtmlTable htmlTable = (HtmlTable) table;
+      Cell newCell = new Cell(htmlTable.getTableNode());
+      appendCell(newCell);
     }
 
     public CompositeTag getRowNode() {
@@ -198,6 +217,11 @@ public class HtmlTable implements Table {
       text.setChildren(new NodeList());
       columnNode = (TableColumn) newTag(TableColumn.class);
       columnNode.setChildren(new NodeList(text));
+    }
+
+    public Cell(TableTag tableNode) {
+      columnNode = (TableColumn) newTag(TableColumn.class);
+      columnNode.setChildren(new NodeList(tableNode));
     }
 
     public String getContent() {

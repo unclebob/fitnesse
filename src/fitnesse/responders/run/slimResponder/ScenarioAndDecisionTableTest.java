@@ -1,5 +1,6 @@
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.slim.SlimClient;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -85,8 +86,36 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
     List<Object> expectedInstructions =
       list(
         list("scriptTable_did.0_0", "call", "scriptTableActor", "loginPasswordPin", "bob", "xyzzy", "7734"),
-        list("scriptTable_did.1_0", "call", "scriptTableActor", "loginPasswordPin", "bill", "yabba", "8892")        
+        list("scriptTable_did.1_0", "call", "scriptTableActor", "loginPasswordPin", "bill", "yabba", "8892")
       );
     assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void simpleInputAndOutput() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|output|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|DT:EchoGiving|\n" +
+        "|input|output|\n" +
+        "|7|7|\n"
+    );
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_did.0_0", "call", "scriptTableActor", "echo", "7")
+      );
+    assertEquals(expectedInstructions, instructions);
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_did.0_0", "7")
+      )
+    );
+    dt.evaluateExpectations(pseudoResults);
+
+    String scriptTable = dt.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
+    assertEquals(expectedScript, scriptTable);
   }
 }

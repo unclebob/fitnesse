@@ -30,4 +30,6 @@ public interface Table {
   String ignore(String s);
 
   String getUnescapedCellContents(int col, int row);
+
+  void appendCellToRow(int row, Table table);
 }

@@ -79,8 +79,24 @@ public class ScenarioTable extends SlimTable {
     return outputs;
   }
 
-  public void call(Map<String, String> scenarioArguments, SlimTable parentTable) {
+  public void call(Map<String, String> scenarioArguments, SlimTable parentTable, int row) {
     String script = getTable().toHtml();
+    script = replaceArgsInScriptTable(script, scenarioArguments);
+    insertAndProcessScript(script, parentTable, row);
+  }
+
+  private void insertAndProcessScript(String script, SlimTable parentTable, int row) {
+    try {
+      TableScanner ts = new HtmlTableScanner(script);
+      ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.testContext);
+      parentTable.addChildTable(t, row);
+      t.appendInstructions(parentTable.instructions);
+    } catch (Exception e) {
+      throw new SlimError(e);
+    }
+  }
+
+  private String replaceArgsInScriptTable(String script, Map<String, String> scenarioArguments) {
     for (String arg : scenarioArguments.keySet()) {
       if (getInputs().contains(arg)) {
         script = script.replaceAll("@"+arg, scenarioArguments.get(arg));
@@ -88,14 +104,6 @@ public class ScenarioTable extends SlimTable {
         throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
       }
     }
-
-    try {
-      TableScanner ts = new HtmlTableScanner(script);
-      ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.testContext);
-      parentTable.addChildTable(t);
-      t.appendInstructions(parentTable.instructions);
-    } catch (ParserException e) {
-      throw new SlimError(e);
-    }
+    return script;
   }
 }

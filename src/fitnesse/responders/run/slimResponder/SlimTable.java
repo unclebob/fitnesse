@@ -38,11 +38,18 @@ public abstract class SlimTable {
     instructions = new ArrayList<Object>();
   }
 
-  public void addChildTable(SlimTable table) {
+  public void addChildTable(SlimTable table, int row) throws Exception {
     table.id = id+"."+children.size();
     table.tableName = table.tableName+"."+children.size();
     table.parent = this;
     children.add(table);
+
+    Table t = getTable();
+    t.appendCellToRow(row, table.getTable());
+  }
+
+  public SlimTable getChild(int i) {
+    return children.get(i);
   }
 
   protected void addExpectation(Expectation e) {
@@ -96,6 +103,8 @@ public abstract class SlimTable {
   }
 
   public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
+    for (SlimTable child : children)
+      child.evaluateExpectations(returnValues);
     for (Expectation expectation : expectations)
       expectation.evaluateExpectation(returnValues);
     evaluateReturnValues(returnValues);
