@@ -38,6 +38,10 @@ public abstract class SlimTable {
     instructions = new ArrayList<Object>();
   }
 
+  public SlimTable getParent() {
+    return parent;
+  }
+
   public void addChildTable(SlimTable table, int row) throws Exception {
     table.id = id+"."+children.size();
     table.tableName = table.tableName+"."+children.size();

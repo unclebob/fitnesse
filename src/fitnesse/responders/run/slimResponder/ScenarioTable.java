@@ -1,12 +1,11 @@
 package fitnesse.responders.run.slimResponder;
 
-import org.htmlparser.util.ParserException;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import fitnesse.slim.SlimError;
+import fitnesse.responders.run.TestSummary;
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
@@ -90,6 +89,7 @@ public class ScenarioTable extends SlimTable {
       TableScanner ts = new HtmlTableScanner(script);
       ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.testContext);
       parentTable.addChildTable(t, row);
+      parentTable.addExpectation(new ScenarioExpectation(t, row));
       t.appendInstructions(parentTable.instructions);
     } catch (Exception e) {
       throw new SlimError(e);
@@ -105,5 +105,26 @@ public class ScenarioTable extends SlimTable {
       }
     }
     return script;
+  }
+
+  private class ScenarioExpectation extends Expectation {
+    private ScriptTable scriptTable;
+
+    private ScenarioExpectation(ScriptTable scriptTable, int row) {
+      super(null, -1, -1, row);  // We don't care about anything but the row.
+      this.scriptTable = scriptTable;
+    }
+
+    protected void evaluateExpectation(Map<String, Object> returnValues) {
+      TestSummary counts = scriptTable.getTestSummary();
+      boolean testStatus = (counts.wrong + counts.exceptions) == 0;
+      SlimTable parent = scriptTable.getParent();
+      parent.getTable().setTestStatusOnRow(row, testStatus);
+      parent.getTestSummary().add(scriptTable.getTestSummary());
+    }
+
+    protected String createEvaluationMessage(String value, String originalValue) {
+      return null;
+    }
   }
 }

@@ -1,6 +1,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.slim.SlimClient;
+import static fitnesse.testutil.RegexTestCase.assertSubString;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -92,7 +93,7 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
   }
 
   @Test
-  public void simpleInputAndOutput() throws Exception {
+  public void simpleInputAndOutputPassing() throws Exception {
     makeTables(
       "!|scenario|echo|input|giving|output|\n" +
         "|check|echo|@input|@output|\n" +
@@ -101,11 +102,6 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
         "|input|output|\n" +
         "|7|7|\n"
     );
-    List<Object> expectedInstructions =
-      list(
-        list("scriptTable_did.0_0", "call", "scriptTableActor", "echo", "7")
-      );
-    assertEquals(expectedInstructions, instructions);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
         list("scriptTable_did.0_0", "7")
@@ -117,5 +113,40 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
+    String dtHtml = dt.getTable().toString();
+    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
+    assertEquals(1, dt.getTestSummary().right);
+    assertEquals(0, dt.getTestSummary().wrong);
+    assertEquals(0, dt.getTestSummary().ignores);
+    assertEquals(0, dt.getTestSummary().exceptions);
+  }
+
+  @Test
+  public void simpleInputAndOutputFailing() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|output|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|DT:EchoGiving|\n" +
+        "|input|output|\n" +
+        "|7|8|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_did.0_0", "7")
+      )
+    );
+    dt.evaluateExpectations(pseudoResults);
+
+    String scriptTable = dt.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving, output], [check, echo, 7, [7] fail(expected [8])]]";
+    assertEquals(expectedScript, scriptTable);
+    String dtHtml = dt.getTable().toString();
+    assertSubString("<span id=\"test_status\" class=fail>Scenario</span>", dtHtml);
+    assertEquals(0, dt.getTestSummary().right);
+    assertEquals(1, dt.getTestSummary().wrong);
+    assertEquals(0, dt.getTestSummary().ignores);
+    assertEquals(0, dt.getTestSummary().exceptions);
   }
 }

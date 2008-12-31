@@ -1,7 +1,11 @@
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.slim.SlimError;
 import fitnesse.wikitext.Utils;
 import org.htmlparser.Node;
+import org.htmlparser.Parser;
 import org.htmlparser.Tag;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.*;
@@ -9,6 +13,7 @@ import org.htmlparser.util.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +95,11 @@ public class HtmlTable implements Table {
   public void appendCellToRow(int rowIndex, Table table) {
     Row row = rows.get(rowIndex);
     row.appendCell(table);
+  }
+
+  public void setTestStatusOnRow(int rowIndex, boolean testStatus) {
+    Row row = rows.get(rowIndex);
+    row.setTestStatus(testStatus);
   }
 
   public String error(String s) {
@@ -185,9 +195,70 @@ public class HtmlTable implements Table {
     }
 
     public void appendCell(Table table) {
-      HtmlTable htmlTable = (HtmlTable) table;
-      Cell newCell = new Cell(htmlTable.getTableNode());
+      try {
+        doAppendCollapsableSection((HtmlTable) table);
+      } catch (Exception e) {
+        throw new SlimError(e);
+      }
+
+    }
+
+    private void doAppendCollapsableSection(HtmlTable htmlTable) throws Exception {
+      Node collapsableDiv = getCollapsableDiv();
+      NodeList children = collapsableDiv.getChildren();
+      Node hiddenDiv = findHiddenDiv(children);
+      hiddenDiv.setChildren(new NodeList(htmlTable.getTableNode()));
+      Cell newCell = new Cell(collapsableDiv);
       appendCell(newCell);
+    }
+
+    private Node findHiddenDiv(NodeList children) {
+      Node hiddenDiv = null;
+      for (int i = 0; i < children.size(); i++) {
+        Node n = children.elementAt(i);
+        if (n instanceof Div) {
+          Div div = (Div) n;
+          if ("hidden".equals(div.getAttribute("class"))) {
+            hiddenDiv = n;
+            break;
+          }
+        }
+      }
+      return hiddenDiv;
+    }
+
+    private Node getCollapsableDiv() throws Exception {
+      String collapsableSectionHtml = makeCollapsableSection();
+      Parser parser = new Parser(collapsableSectionHtml);
+      NodeList htmlTree = parser.parse(null);
+      Node collapsableDiv = htmlTree.elementAt(0);
+      return collapsableDiv;
+    }
+
+    public String makeCollapsableSection() throws Exception {
+      String id = new Random().nextLong() + "";
+      HtmlTag outerDiv;
+
+      outerDiv = HtmlUtil.makeDivTag("collapse_rim");
+
+      HtmlTag image = new HtmlTag("img");
+      image.addAttribute("src", "/files/images/collapsableClosed.gif");
+      image.addAttribute("class", "left");
+      image.addAttribute("id", "img" + id);
+
+      HtmlTag anchor = new HtmlTag("a", image);
+      anchor.addAttribute("href", "javascript:toggleCollapsable('" + id + "');");
+
+      outerDiv.add(anchor);
+      HtmlTag span = new HtmlTag("span", "Scenario");
+      span.addAttribute("id", "test_status");
+      outerDiv.add(span);
+      HtmlTag collapsablediv = HtmlUtil.makeDivTag("hidden");
+      collapsablediv.addAttribute("id", id);
+      collapsablediv.add("");
+      outerDiv.add(collapsablediv);
+
+      return outerDiv.html();
     }
 
     public CompositeTag getRowNode() {
@@ -200,6 +271,41 @@ public class HtmlTable implements Table {
         list.add(colorize(cell.getContent()));
       }
       return list;
+    }
+
+    public void setTestStatus(boolean testStatus) {
+      NodeList cells = rowNode.getChildren();
+      Node lastCell = cells.elementAt(cells.size() - 1);
+      Tag statusNode = findById(lastCell, "test_status");
+      statusNode.setAttribute("class", testStatus ? "pass" : "fail");
+    }
+
+    private Tag findById(Node node, String id) {
+      if (hasId(node, id))
+        return (Tag) node;
+      return findChildMatchingId(node, id);
+    }
+
+    private Tag findChildMatchingId(Node node, String id) {
+      NodeList children = node.getChildren();
+      if (children != null) {
+        for (int i = 0; i < children.size(); i++) {
+          Node child = children.elementAt(i);
+          Tag found = findById(child, id);
+          if (found != null)
+            return found;
+        }
+      }
+      return null;
+    }
+
+    private boolean hasId(Node node, String id) {
+      if (node instanceof Tag) {
+        Tag t = (Tag) node;
+        if (id.equals(t.getAttribute("id")))
+          return true;
+      }
+      return false;
     }
   }
 
@@ -219,9 +325,9 @@ public class HtmlTable implements Table {
       columnNode.setChildren(new NodeList(text));
     }
 
-    public Cell(TableTag tableNode) {
+    public Cell(Node node) {
       columnNode = (TableColumn) newTag(TableColumn.class);
-      columnNode.setChildren(new NodeList(tableNode));
+      columnNode.setChildren(new NodeList(node));
     }
 
     public String getContent() {

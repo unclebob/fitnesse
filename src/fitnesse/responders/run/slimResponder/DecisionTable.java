@@ -4,9 +4,6 @@ import java.util.*;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
-  private Map<String, Integer> vars = new HashMap<String, Integer>();
-  private Map<String, Integer> funcs = new HashMap<String, Integer>();
-  private int headerColumns;
   private Set<String> dontReportExceptionsInTheseInstructions = new HashSet<String>();
 
   public DecisionTable(Table table, String id) {
@@ -27,54 +24,13 @@ public class DecisionTable extends SlimTable {
     String fixtureName = getFixtureName();
     ScenarioTable scenario = testContext.getScenario(fixtureName);
     if (scenario != null) {
-      callScenario(scenario);
+      new ScenarioCaller().call(scenario);
     } else {
-      constructFixture(fixtureName);
-      if (table.getRowCount() > 2)
-        invokeRows();
+      new FixtureCaller().call(fixtureName);
     }
-  }
-
-  private void callScenario(ScenarioTable scenario) {
-    parseColumnHeader();
-    for (int row = 2; row < table.getRowCount(); row++)
-      callScenarioForRow(scenario, row);
-  }
-
-  private void callScenarioForRow(ScenarioTable scenario, int row) {
-    checkRow(row);
-    scenario.call(getArgumentsForRow(row), this, row);
-  }
-
-  private Map<String, String> getArgumentsForRow(int row) {
-    Map<String, String>scenarioArguments = new HashMap<String,String>();
-    for (String var : vars.keySet()) {
-      String disgracedVar = Disgracer.disgraceMethodName(var);
-      int col = vars.get(var);
-      String valueToSet = table.getUnescapedCellContents(col, row);
-      scenarioArguments.put(disgracedVar, valueToSet);
-    }
-    return scenarioArguments;
   }
 
   protected void evaluateReturnValues(Map<String, Object> returnValues) {
-  }
-
-  private void invokeRows() {
-    parseColumnHeader();
-    for (int row = 2; row < table.getRowCount(); row++)
-      invokeRow(row);
-  }
-
-  private void parseColumnHeader() {
-    headerColumns = table.getColumnCountInRow(1);
-    for (int col = 0; col < headerColumns; col++) {
-      String cell = table.getCellContents(col, 1);
-      if (cell.endsWith("?"))
-        funcs.put(cell.substring(0, cell.length() - 1), col);
-      else
-        vars.put(cell, col);
-    }
   }
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {
@@ -83,66 +39,121 @@ public class DecisionTable extends SlimTable {
     return shouldNotReport && isNoSuchMethodException;
   }
 
-  private void invokeRow(int row) {
-    checkRow(row);
-    callUnreportedFunction("reset");
-    setVariables(row);
-    callUnreportedFunction("execute");
-    callFunctions(row);
-  }
+  private class DecisionTableCaller {
+    protected Map<String, Integer> vars = new HashMap<String, Integer>();
+    protected Map<String, Integer> funcs = new HashMap<String, Integer>();
+    protected int headerColumns;
 
-  private void callUnreportedFunction(String functionName) {
-    dontReportExceptionsInTheseInstructions.add(callFunction(getTableName(), functionName));
-  }
+    protected void parseColumnHeader() {
+      headerColumns = table.getColumnCountInRow(1);
+      for (int col = 0; col < headerColumns; col++) {
+        String cell = table.getCellContents(col, 1);
+        if (cell.endsWith("?"))
+          funcs.put(cell.substring(0, cell.length() - 1), col);
+        else
+          vars.put(cell, col);
+      }
+    }
 
-  private void checkRow(int row) {
-    int columns = table.getColumnCountInRow(row);
-    if (columns < headerColumns)
-      throw new SyntaxError(
-        String.format("Table has %d header column(s), but row %d only has %d column(s).",
-          headerColumns, row, columns
-        )
-      );
-  }
-
-  private void callFunctions(int row) {
-    Set<String> funcKeys = funcs.keySet();
-    for (String functionName : funcKeys) {
-      callFunctionInRow(functionName, row);
+    protected void checkRow(int row) {
+      int columns = table.getColumnCountInRow(row);
+      if (columns < headerColumns)
+        throw new SyntaxError(
+          String.format("Table has %d header column(s), but row %d only has %d column(s).",
+            headerColumns, row, columns
+          )
+        );
     }
   }
 
-  private void callFunctionInRow(String functionName, int row) {
-    int col = funcs.get(functionName);
-    String assignedSymbol = ifSymbolAssignment(row, col);
-    if (assignedSymbol != null) {
-      addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionNumber(), col, row));
-      callAndAssign(assignedSymbol, functionName);
-    } else {
-      setFunctionCallExpectation(col, row);
-      callFunction(getTableName(), functionName);
+  private class ScenarioCaller extends DecisionTableCaller {
+    public void call(ScenarioTable scenario) {
+      parseColumnHeader();
+      for (int row = 2; row < table.getRowCount(); row++)
+        callScenarioForRow(scenario, row);
+    }
+
+    private void callScenarioForRow(ScenarioTable scenario, int row) {
+      checkRow(row);
+      scenario.call(getArgumentsForRow(row), DecisionTable.this, row);
+    }
+
+    private Map<String, String> getArgumentsForRow(int row) {
+      Map<String, String> scenarioArguments = new HashMap<String, String>();
+      for (String var : vars.keySet()) {
+        String disgracedVar = Disgracer.disgraceMethodName(var);
+        int col = vars.get(var);
+        String valueToSet = table.getUnescapedCellContents(col, row);
+        scenarioArguments.put(disgracedVar, valueToSet);
+      }
+      return scenarioArguments;
     }
   }
 
-  private void setFunctionCallExpectation(int col, int row) {
-    String expectedValue = table.getCellContents(col, row);
-    addExpectation(new ReturnedValueExpectation(expectedValue, getInstructionNumber(), col, row));
-  }
-
-  private void setVariables(int row) {
-    Set<String> varKeys = vars.keySet();
-    for (String var : varKeys) {
-      int col = vars.get(var);
-      String valueToSet = table.getUnescapedCellContents(col, row);
-      setVariableExpectation(col, row);
-      List<Object> setInstruction = prepareInstruction();
-      addCall(setInstruction, getTableName(), "set" + " " + var);
-      setInstruction.add(valueToSet);
-      addInstruction(setInstruction);
+  private class FixtureCaller extends DecisionTableCaller {
+    public void call(String fixtureName) {
+      constructFixture(fixtureName);
+      if (table.getRowCount() > 2)
+        invokeRows();
     }
-  }
 
-  private void setVariableExpectation(int col, int row) {
-    addExpectation(new VoidReturnExpectation(getInstructionNumber(), col, row));
+    private void invokeRows() {
+      parseColumnHeader();
+      for (int row = 2; row < table.getRowCount(); row++)
+        invokeRow(row);
+    }
+
+    private void invokeRow(int row) {
+      checkRow(row);
+      callUnreportedFunction("reset");
+      setVariables(row);
+      callUnreportedFunction("execute");
+      callFunctions(row);
+    }
+
+    private void callUnreportedFunction(String functionName) {
+      dontReportExceptionsInTheseInstructions.add(callFunction(getTableName(), functionName));
+    }
+
+    private void callFunctions(int row) {
+      Set<String> funcKeys = funcs.keySet();
+      for (String functionName : funcKeys) {
+        callFunctionInRow(functionName, row);
+      }
+    }
+
+    private void callFunctionInRow(String functionName, int row) {
+      int col = funcs.get(functionName);
+      String assignedSymbol = ifSymbolAssignment(row, col);
+      if (assignedSymbol != null) {
+        addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionNumber(), col, row));
+        callAndAssign(assignedSymbol, functionName);
+      } else {
+        setFunctionCallExpectation(col, row);
+        callFunction(getTableName(), functionName);
+      }
+    }
+
+    private void setFunctionCallExpectation(int col, int row) {
+      String expectedValue = table.getCellContents(col, row);
+      addExpectation(new ReturnedValueExpectation(expectedValue, getInstructionNumber(), col, row));
+    }
+
+    private void setVariables(int row) {
+      Set<String> varKeys = vars.keySet();
+      for (String var : varKeys) {
+        int col = vars.get(var);
+        String valueToSet = table.getUnescapedCellContents(col, row);
+        setVariableExpectation(col, row);
+        List<Object> setInstruction = prepareInstruction();
+        addCall(setInstruction, getTableName(), "set" + " " + var);
+        setInstruction.add(valueToSet);
+        addInstruction(setInstruction);
+      }
+    }
+
+    private void setVariableExpectation(int col, int row) {
+      addExpectation(new VoidReturnExpectation(getInstructionNumber(), col, row));
+    }
   }
 }
