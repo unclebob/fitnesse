@@ -85,8 +85,6 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   public void exceptionOccurred(Throwable e) {
-    //todo remove sout
-    System.err.println("TestSystem.exceptionOcurred:" + e.getMessage());
     log.addException(e);
     log.addReason("Test execution aborted abnormally with error code " + log.getExitCode());
     testSystemListener.exceptionOccurred(e);

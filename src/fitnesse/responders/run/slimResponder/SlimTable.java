@@ -4,12 +4,9 @@ import fitnesse.responders.run.TestSummary;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wikitext.Utils;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -400,7 +397,11 @@ public abstract class SlimTable {
 
     protected void evaluateExpectation(Map<String, Object> returnValues) {
       Object returnValue = returnValues.get(instructionTag);
-      String value = returnValue.toString();
+      String value;
+      if (returnValue == null)
+        value = "null";
+      else
+        value = returnValue.toString();
       String originalContent = table.getCellContents(col, row);
       String evaluationMessage;
       evaluationMessage = evaluationMessage(value, originalContent);
