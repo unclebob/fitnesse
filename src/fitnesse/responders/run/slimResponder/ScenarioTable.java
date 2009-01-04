@@ -2,6 +2,7 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.responders.run.TestSummary;
 import fitnesse.slim.SlimError;
+import fitnesse.util.StringUtil;
 
 import java.util.*;
 
@@ -16,10 +17,6 @@ public class ScenarioTable extends SlimTable {
     super(table, tableId, testContext);
   }
 
-  public ScenarioTable(Table t, String id) {
-    super(t, id);
-  }
-
   protected String getTableType() {
     return instancePrefix;
   }
@@ -31,7 +28,7 @@ public class ScenarioTable extends SlimTable {
   private void parseTable() {
     validateHeader();
     name = getScenarioName();
-    testContext.addScenario(name, this);
+    getTestContext().addScenario(name, this);
     getScenarioArguments();
 
   }
@@ -61,7 +58,7 @@ public class ScenarioTable extends SlimTable {
       throw new SyntaxError("Scenario tables must have a name.");
   }
 
-  protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
   }
 
   public String getName() {
@@ -92,10 +89,10 @@ public class ScenarioTable extends SlimTable {
   private void insertAndProcessScript(String script, SlimTable parentTable, int row) {
     try {
       TableScanner ts = new HtmlTableScanner(script);
-      ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.testContext);
+      ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.getTestContext());
       parentTable.addChildTable(t, row);
-      parentTable.addExpectation(new ScenarioExpectation(t, row));
       t.appendInstructions(parentTable.instructions);
+      parentTable.addExpectation(new ScenarioExpectation(t, row));
     } catch (Exception e) {
       throw new SlimError(e);
     }
@@ -104,7 +101,9 @@ public class ScenarioTable extends SlimTable {
   private String replaceArgsInScriptTable(String script, Map<String, String> scenarioArguments) {
     for (String arg : scenarioArguments.keySet()) {
       if (getInputs().contains(arg)) {
-        script = script.replaceAll("@" + arg, scenarioArguments.get(arg));
+        String argument = scenarioArguments.get(arg);
+        String replacement = replaceSymbols(argument);
+        script = StringUtil.replaceAll(script, "@" + arg, replacement);
       } else {
         throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
       }

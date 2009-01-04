@@ -8,4 +8,6 @@ public interface SlimTestContext {
   void addScenario(String scenarioName, ScenarioTable scenarioTable);
 
   ScenarioTable getScenario(String scenarioName);
+
+  void addExpectation(SlimTable.Expectation e);
 }

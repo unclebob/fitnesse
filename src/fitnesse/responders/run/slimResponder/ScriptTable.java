@@ -15,10 +15,6 @@ public class ScriptTable extends SlimTable {
     super(table, tableId, context);
   }
 
-  public ScriptTable(Table table, String tableId) {
-    super(table, tableId);
-  }
-
   protected String getTableType() {
     return "scriptTable";
   }
@@ -72,7 +68,7 @@ public class ScriptTable extends SlimTable {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String actionName = getActionNameStartingAt(0, lastCol, row);
     String[] args = getArgumentsStartingAt(0 + 1, lastCol, row);
-    ScenarioTable scenario = testContext.getScenario(Disgracer.disgraceClassName(actionName));
+    ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
     if (scenario != null) {
       scenario.call(args, this, row);
     } else {
@@ -139,7 +135,7 @@ public class ScriptTable extends SlimTable {
     constructInstance("scriptTableActor", className, classNameColumn, row);
   }
 
-  protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
   }
 
   private class ScriptActionExpectation extends Expectation {

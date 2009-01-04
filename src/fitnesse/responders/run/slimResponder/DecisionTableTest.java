@@ -24,6 +24,7 @@ public class DecisionTableTest {
       "|3|5|\n" +
       "|7|9|\n";
   public DecisionTable dt;
+  private MockSlimTestContext testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -41,7 +42,8 @@ public class DecisionTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    DecisionTable dt = new DecisionTable(t, "id");
+    testContext = new MockSlimTestContext();
+    DecisionTable dt = new DecisionTable(t, "id", testContext);
     return dt;
   }
 
@@ -74,7 +76,7 @@ public class DecisionTableTest {
         list("decisionTable_id_0", "OK")
       )
     );
-    dt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
@@ -138,7 +140,7 @@ public class DecisionTableTest {
         list("decisionTable_id_8", "5")
       )
     );
-    dt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =
@@ -167,7 +169,7 @@ public class DecisionTableTest {
         list("decisionTable_id_8", "5")
       )
     );
-    dt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
 
     String colorizedTable = dt.getTable().toString();
     String expectedColorizedTable =

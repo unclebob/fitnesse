@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ImportTable extends SlimTable {
-  public ImportTable(Table table, String tableId) {
-    super(table, tableId);
+  public ImportTable(Table table, String id, SlimTestContext testContext) {
+    super(table, id, testContext);
   }
 
   protected String getTableType() {
@@ -28,9 +28,10 @@ public class ImportTable extends SlimTable {
       }
     }
 
+
   }
 
-  protected void evaluateReturnValues(Map<String, Object> returnValues) {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
 }

@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class ReturnedValueExpectationTest {
+  private MockSlimTestContext testContext;
+
   private String unescape(String x) {
     return Utils.unescapeWiki(Utils.unescapeHTML(x));
   }
@@ -13,7 +15,8 @@ public class ReturnedValueExpectationTest {
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
     TableScanner ts = new HtmlTableScanner("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
-    SlimTable slimTable = new DecisionTable(t, "id");
+    testContext = new MockSlimTestContext();
+    SlimTable slimTable = new DecisionTable(t, "id", testContext);
     SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, "", 0, 0);
     assertEquals(message, HtmlTable.colorize(unescape(expectation.createEvaluationMessage(value, expected))));
   }

@@ -15,29 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScenarioAndDecisionTableTest implements SlimTestContext {
+public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
   private WikiPage root;
   private List<Object> instructions;
   private ScenarioTable st;
   private DecisionTable dt;
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-
-  public String getSymbol(String symbolName) {
-    return symbols.get(symbolName);
-  }
-
-  public void setSymbol(String symbolName, String value) {
-    symbols.put(symbolName, value);
-  }
-
-  public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-    scenarios.put(scenarioName, scenarioTable);
-  }
-
-  public ScenarioTable getScenario(String scenarioName) {
-    return scenarios.get(scenarioName);
-  }
 
   @Before
   public void setUp() throws Exception {
@@ -107,7 +91,7 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
         list("scriptTable_did.0_0", "7")
       )
     );
-    dt.evaluateExpectations(pseudoResults);
+    evaluateExpectations(pseudoResults);
 
     String scriptTable = dt.getChild(0).getTable().toString();
     String expectedScript =
@@ -136,7 +120,7 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
         list("scriptTable_did.0_0", "7")
       )
     );
-    dt.evaluateExpectations(pseudoResults);
+    evaluateExpectations(pseudoResults);
 
     String scriptTable = dt.getChild(0).getTable().toString();
     String expectedScript =

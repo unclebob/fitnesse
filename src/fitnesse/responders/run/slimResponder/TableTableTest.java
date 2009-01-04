@@ -20,6 +20,7 @@ public class TableTableTest {
     "|Table:fixture|argument|\n";
 
   public TableTable tt;
+  private MockSlimTestContext testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -37,7 +38,8 @@ public class TableTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    return new TableTable(t, "id");
+    testContext = new MockSlimTestContext();
+    return new TableTable(t, "id", testContext);
   }
 
   private void assertTableResults(String tableRows, List<Object> tableResults, String table) throws Exception {
@@ -48,7 +50,8 @@ public class TableTableTest {
         list("tableTable_id_1", tableResults)
       )
     );
-    tt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
+    tt.evaluateReturnValues(pseudoResults);
     assertEquals(table, tt.getTable().toString());
   }
 

@@ -16,6 +16,7 @@ public class ImportTableTest {
   private List<Object> instructions;
   private final String importTableHeader = "|Import|\n";
   public ImportTable importTable;
+  private MockSlimTestContext testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -34,7 +35,8 @@ public class ImportTableTest {
     String html = root.getData().getHtml();
     TableScanner ts = new HtmlTableScanner(html);
     Table t = ts.getTable(0);
-    return new ImportTable(t, "id");
+    testContext = new MockSlimTestContext();
+    return new ImportTable(t, "id", testContext);
   }
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {

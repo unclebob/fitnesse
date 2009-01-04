@@ -22,6 +22,7 @@ public class QueryTableTest {
       "|n|2n|\n";
 
   public QueryTable qt;
+  private MockSlimTestContext testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -39,7 +40,8 @@ public class QueryTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    return new QueryTable(t, "id");
+    testContext = new MockSlimTestContext();
+    return new QueryTable(t, "id", testContext);
   }
 
   private void assertQueryResults(String queryRows, List<Object> queryResults, String table) throws Exception {
@@ -49,7 +51,8 @@ public class QueryTableTest {
       list("queryTable_id_1", queryResults)
     )
     );
-    qt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
+    qt.evaluateReturnValues(pseudoResults);
     assertEquals(table, qt.getTable().toString());
   }
 
@@ -234,7 +237,8 @@ public class QueryTableTest {
         )
       )
     );
-    qt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
+    qt.evaluateReturnValues(pseudoResults);
     assertEquals(
       "[" +
         "[pass(Query:fixture), argument], " +
@@ -259,7 +263,8 @@ public class QueryTableTest {
         )
       )
     );
-    qt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
+    qt.evaluateReturnValues(pseudoResults);
     assertEquals(
       "[" +
         "[pass(Query:fixture), argument], " +
@@ -283,7 +288,8 @@ public class QueryTableTest {
         )
       )
     );
-    qt.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
+    qt.evaluateReturnValues(pseudoResults);
     assertEquals(
       "[" +
         "[pass(Query:fixture), argument], " +

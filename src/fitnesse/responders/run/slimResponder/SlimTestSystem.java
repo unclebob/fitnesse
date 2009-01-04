@@ -16,8 +16,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
   private CommandRunner slimRunner;
@@ -36,6 +36,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private int slimSocket;
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+  private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -56,6 +57,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public ScenarioTable getScenario(String scenarioName) {
     return scenarios.get(scenarioName);
+  }
+
+  public void addExpectation(SlimTable.Expectation e) {
+    expectations.add(e);
   }
 
   public boolean isSuccessfullyStarted() {
@@ -199,11 +204,11 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     else if (tableType.equalsIgnoreCase("comment"))
       return null;
     else if (tableType.equalsIgnoreCase("import"))
-      return new ImportTable(table, tableId);
+      return new ImportTable(table, tableId, slimTestContext);
     else if (doesNotHaveColon(tableType))
       return new DecisionTable(table, tableId, slimTestContext);
     else
-      return new SlimErrorTable(table, tableId);
+      return new SlimErrorTable(table, tableId, slimTestContext);
   }
 
   private boolean doesNotHaveColon(String tableType) {
@@ -249,14 +254,26 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return testSummary;
   }
 
+  protected void evaluateExpectations() {
+    for (SlimTable.Expectation e : expectations) {
+      try {
+        e.evaluateExpectation(instructionResults);
+      } catch (Throwable ex) {
+        exceptions.put("ABORT", exceptionToString(ex));
+        exceptionOccurred(ex);
+      }
+    }
+  }
+
   protected void evaluateTables() {
+    evaluateExpectations();
     for (SlimTable table : testTables)
       evaluateTable(table);
   }
 
   private void evaluateTable(SlimTable table) {
     try {
-      table.evaluateExpectations(instructionResults);
+      table.evaluateReturnValues(instructionResults);
       testSummary.add(table.getTestSummary());
     } catch (Throwable e) {
       exceptions.put("ABORT", exceptionToString(e));

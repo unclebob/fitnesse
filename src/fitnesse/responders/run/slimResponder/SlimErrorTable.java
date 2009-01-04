@@ -3,8 +3,8 @@ package fitnesse.responders.run.slimResponder;
 import java.util.Map;
 
 public class SlimErrorTable extends SlimTable {
-  public SlimErrorTable(Table table, String tableId) {
-    super(table, tableId);
+  public SlimErrorTable(Table table, String id, SlimTestContext testContext) {
+    super(table, id, testContext);
   }
 
   protected String getTableType() {
@@ -20,6 +20,6 @@ public class SlimErrorTable extends SlimTable {
     table.setCell(0, 0, errorMessage);
   }
 
-  protected void evaluateReturnValues(Map<String, Object> returnValues) {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 }

@@ -21,6 +21,7 @@ public class ScriptTableTest {
   private List<Object> instructions;
   private final String scriptTableHeader = "|Script|\n";
   public ScriptTable st;
+  private MockSlimTestContext testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -38,7 +39,8 @@ public class ScriptTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    return new ScriptTable(t, "id");
+    testContext = new MockSlimTestContext();
+    return new ScriptTable(t, "id", testContext);
   }
 
   private void assertScriptResults(String sriptStatements, List<Object> scriptResults, String table) throws Exception {
@@ -46,7 +48,7 @@ public class ScriptTableTest {
     List<Object> resultList = list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(resultList);
-    st.evaluateExpectations(pseudoResults);
+    testContext.evaluateExpectations(pseudoResults);
     assertEquals(table, Utils.unescapeWiki(st.getTable().toString()));
   }
 

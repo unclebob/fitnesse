@@ -6,10 +6,6 @@ public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
   private Set<String> dontReportExceptionsInTheseInstructions = new HashSet<String>();
 
-  public DecisionTable(Table table, String id) {
-    super(table, id);
-  }
-
   public DecisionTable(Table table, String id, SlimTestContext context) {
     super(table, id, context);
   }
@@ -22,7 +18,7 @@ public class DecisionTable extends SlimTable {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
     String fixtureName = getFixtureName();
-    ScenarioTable scenario = testContext.getScenario(fixtureName);
+    ScenarioTable scenario = getTestContext().getScenario(fixtureName);
     if (scenario != null) {
       new ScenarioCaller().call(scenario);
     } else {
@@ -30,7 +26,7 @@ public class DecisionTable extends SlimTable {
     }
   }
 
-  protected void evaluateReturnValues(Map<String, Object> returnValues) {
+  public void evaluateReturnValues(Map<String, Object> returnValues) {
   }
 
   public boolean shouldIgnoreException(String resultKey, String resultString) {

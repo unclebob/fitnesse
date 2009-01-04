@@ -8,10 +8,6 @@ import java.util.Map;
 public class TableTable extends SlimTable {
   private String doTableId;
 
-  public TableTable(Table table, String id) {
-    super(table, id);
-  }
-
   public TableTable(Table table, String tableId, SlimTestContext slimTestContext) {
     super(table, tableId, slimTestContext);
   }
@@ -44,7 +40,7 @@ public class TableTable extends SlimTable {
   }
 
   @SuppressWarnings("unchecked")
-  protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object tableReturn = returnValues.get(doTableId);
     if (doTableId == null || tableReturn == null || (tableReturn instanceof String)) {
       table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));

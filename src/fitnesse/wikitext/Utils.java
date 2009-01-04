@@ -2,6 +2,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.wikitext;
 
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
 public class Utils {
 
   private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
@@ -31,5 +34,12 @@ public class Utils {
     for (int i = 0; i < specialWikiChars.length; i++)
       value = value.replace(specialWikiChars[i], specialWikiEscapes[i]);
     return value;
+  }
+
+  public static String getStackTrace(Throwable e) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter pw = new PrintWriter(stringWriter);
+    e.printStackTrace(pw);
+    return stringWriter.toString();
   }
 }

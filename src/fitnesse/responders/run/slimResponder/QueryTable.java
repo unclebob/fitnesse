@@ -9,10 +9,6 @@ public class QueryTable extends SlimTable {
   private String queryId;
   private QueryResults queryResults;
 
-  public QueryTable(Table table, String id) {
-    super(table, id);
-  }
-
   public QueryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
   }
@@ -35,7 +31,7 @@ public class QueryTable extends SlimTable {
       fieldNames.add(table.getCellContents(col, 1));
   }
 
-  protected void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
     Object queryReturn = returnValues.get(queryId);
     if (queryId == null || queryReturn == null) {
       table.appendToCell(0, 0, error("query method did not return a list."));

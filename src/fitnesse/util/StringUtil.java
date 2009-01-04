@@ -38,4 +38,20 @@ public class StringUtil {
   public static String trimNonNullString(String original) {
     return original != null ? original.trim() : original;
   }
+
+  public static String replaceAll(String original, String target, String replacement) {
+    StringBuffer result = new StringBuffer();
+    int fromIndex = 0;
+    while (true) {
+      int foundIndex = original.indexOf(target, fromIndex);
+      if (foundIndex == -1) {
+        result.append(original.substring(fromIndex));
+        break;
+      }
+      result.append(original.substring(fromIndex, foundIndex));
+      result.append(replacement);
+      fromIndex = foundIndex + target.length();
+    }
+    return result.toString();
+  }
 }

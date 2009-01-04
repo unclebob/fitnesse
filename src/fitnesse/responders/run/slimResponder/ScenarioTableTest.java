@@ -19,6 +19,7 @@ public class ScenarioTableTest {
   private WikiPage root;
   private List<Object> instructions;
   public ScenarioTable st;
+  private MockSlimTestContext testContext;
 
   @Before
   public void setUp() throws Exception {
@@ -30,7 +31,8 @@ public class ScenarioTableTest {
     WikiPageUtil.setPageContents(root, pageContents);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    st = new ScenarioTable(t, "id");
+    testContext = new MockSlimTestContext();
+    st = new ScenarioTable(t, "id", testContext);
     st.appendInstructions(instructions);
     return st;
   }

@@ -4,6 +4,8 @@ import fitnesse.responders.run.TestSummary;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wikitext.Utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
@@ -15,20 +17,15 @@ import java.util.regex.Pattern;
 
 public abstract class SlimTable {
   protected Table table;
-  protected SlimTestContext testContext;
+  private SlimTestContext testContext;
   protected String id;
   protected String tableName;
   private int instructionNumber = 0;
   protected List<Object> instructions;
-  private List<Expectation> expectations = new ArrayList<Expectation>();
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
   private TestSummary testSummary = new TestSummary();
   private SlimTable parent = null;
   private List<SlimTable> children = new ArrayList<SlimTable>();
-
-  public SlimTable(Table table, String id) {
-    this(table, id, new LocalSlimTestContext());
-  }
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;
@@ -57,7 +54,7 @@ public abstract class SlimTable {
   }
 
   protected void addExpectation(Expectation e) {
-    expectations.add(e);
+    testContext.addExpectation(e);
   }
 
   public String replaceSymbols(String s) {
@@ -77,7 +74,7 @@ public abstract class SlimTable {
       appendInstructions();
     } catch (Throwable e) {
       String tableName = table.getCellContents(0, 0);
-      table.setCell(0, 0, fail(String.format("!-%s: Bad table: %s-!", tableName, e.getMessage())));
+      table.setCell(0, 0, fail(String.format("%s: Bad table: <br/><pre>%s</pre>", tableName, Utils.getStackTrace(e))));
     }
   }
 
@@ -105,16 +102,16 @@ public abstract class SlimTable {
   protected void addInstruction(List<Object> instruction) {
     instructions.add(instruction);
   }
+//
+//  public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
+//    for (SlimTable child : children)
+//      child.evaluateExpectations(returnValues);
+//    for (Expectation expectation : expectations)
+//      expectation.evaluateExpectation(returnValues);
+//    evaluateReturnValues(returnValues);
+//  }
 
-  public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
-    for (SlimTable child : children)
-      child.evaluateExpectations(returnValues);
-    for (Expectation expectation : expectations)
-      expectation.evaluateExpectation(returnValues);
-    evaluateReturnValues(returnValues);
-  }
-
-  protected abstract void evaluateReturnValues(Map<String, Object> returnValues) throws Exception;
+  public abstract void evaluateReturnValues(Map<String, Object> returnValues) throws Exception;
 
   public String getSymbol(String variableName) {
     return testContext.getSymbol(variableName);
@@ -299,6 +296,10 @@ public abstract class SlimTable {
     addInstruction(callAndAssignInstruction);
   }
 
+  public SlimTestContext getTestContext() {
+    return testContext;
+  }
+
   static class Disgracer {
     public boolean capitalizeNextWord;
     public StringBuffer disgracedName;
@@ -417,25 +418,6 @@ public abstract class SlimTable {
     }
 
     protected abstract String createEvaluationMessage(String value, String originalValue);
-  }
-
-  private static class LocalSlimTestContext implements SlimTestContext {
-    private Map<String, String> symbols = new HashMap<String, String>();
-
-    public String getSymbol(String symbolName) {
-      return symbols.get(symbolName);
-    }
-
-    public void setSymbol(String symbolName, String value) {
-      symbols.put(symbolName, value);
-    }
-
-    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-    }
-
-    public ScenarioTable getScenario(String scenarioName) {
-      return null;
-    }
   }
 
   class SymbolReplacer {
