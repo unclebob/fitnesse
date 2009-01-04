@@ -14,7 +14,7 @@ public class ReturnedValueExpectationTest {
     TableScanner ts = new HtmlTableScanner("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
     SlimTable slimTable = new DecisionTable(t, "id");
-    SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, 0, 0, 0);
+    SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, "", 0, 0);
     assertEquals(message, HtmlTable.colorize(unescape(expectation.createEvaluationMessage(value, expected))));
   }
 

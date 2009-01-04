@@ -1,16 +1,14 @@
 package fitnesse.responders.run.slimResponder;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import fitnesse.slim.SlimError;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.slim.SlimError;
+
+import java.util.*;
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";
   private String name;
-  private Set<String> inputs = new HashSet<String>();
+  private List<String> inputs = new ArrayList<String>();
   private Set<String> outputs = new HashSet<String>();
   private final int colsInHeader = table.getColumnCountInRow(0);
 
@@ -71,7 +69,7 @@ public class ScenarioTable extends SlimTable {
   }
 
   public Set<String> getInputs() {
-    return inputs;
+    return new HashSet<String>(inputs);
   }
 
   public Set<String> getOutputs() {
@@ -82,6 +80,13 @@ public class ScenarioTable extends SlimTable {
     String script = getTable().toHtml();
     script = replaceArgsInScriptTable(script, scenarioArguments);
     insertAndProcessScript(script, parentTable, row);
+  }
+
+  public void call(String[] args, ScriptTable parentTable, int row) {
+    Map<String, String> scenarioArguments = new HashMap<String, String>();
+    for (int i = 0; i < inputs.size(); i++)
+      scenarioArguments.put(inputs.get(i), args[i]);
+    call(scenarioArguments, parentTable, row);
   }
 
   private void insertAndProcessScript(String script, SlimTable parentTable, int row) {
@@ -99,7 +104,7 @@ public class ScenarioTable extends SlimTable {
   private String replaceArgsInScriptTable(String script, Map<String, String> scenarioArguments) {
     for (String arg : scenarioArguments.keySet()) {
       if (getInputs().contains(arg)) {
-        script = script.replaceAll("@"+arg, scenarioArguments.get(arg));
+        script = script.replaceAll("@" + arg, scenarioArguments.get(arg));
       } else {
         throw new SyntaxError(String.format("The argument %s is not an input to the scenario.", arg));
       }
@@ -111,7 +116,7 @@ public class ScenarioTable extends SlimTable {
     private ScriptTable scriptTable;
 
     private ScenarioExpectation(ScriptTable scriptTable, int row) {
-      super(null, -1, -1, row);  // We don't care about anything but the row.
+      super(null, "", -1, row);  // We don't care about anything but the row.
       this.scriptTable = scriptTable;
     }
 

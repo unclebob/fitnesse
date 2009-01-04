@@ -126,7 +126,7 @@ public class DecisionTable extends SlimTable {
       int col = funcs.get(functionName);
       String assignedSymbol = ifSymbolAssignment(row, col);
       if (assignedSymbol != null) {
-        addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionNumber(), col, row));
+        addExpectation(new SymbolAssignmentExpectation(assignedSymbol, getInstructionTag(), col, row));
         callAndAssign(assignedSymbol, functionName);
       } else {
         setFunctionCallExpectation(col, row);
@@ -136,7 +136,7 @@ public class DecisionTable extends SlimTable {
 
     private void setFunctionCallExpectation(int col, int row) {
       String expectedValue = table.getCellContents(col, row);
-      addExpectation(new ReturnedValueExpectation(expectedValue, getInstructionNumber(), col, row));
+      addExpectation(new ReturnedValueExpectation(expectedValue, getInstructionTag(), col, row));
     }
 
     private void setVariables(int row) {
@@ -153,7 +153,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private void setVariableExpectation(int col, int row) {
-      addExpectation(new VoidReturnExpectation(getInstructionNumber(), col, row));
+      addExpectation(new VoidReturnExpectation(getInstructionTag(), col, row));
     }
   }
 }

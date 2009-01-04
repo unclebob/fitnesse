@@ -77,7 +77,7 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
   public void manyInputsAndRows() throws Exception {
     makeTables(
       "!|scenario|login|user name|password|password|pin|pin|\n" +
-        "|login|@userName|password|@password|pin|@pin|\n" +
+        "|login|@userName|with password|@password|and pin|@pin|\n" +
         "\n" +
         "!|DT:LoginPasswordPin|\n" +
         "|user name|password|pin|\n" +
@@ -86,8 +86,8 @@ public class ScenarioAndDecisionTableTest implements SlimTestContext {
     );
     List<Object> expectedInstructions =
       list(
-        list("scriptTable_did.0_0", "call", "scriptTableActor", "loginPasswordPin", "bob", "xyzzy", "7734"),
-        list("scriptTable_did.1_0", "call", "scriptTableActor", "loginPasswordPin", "bill", "yabba", "8892")
+        list("scriptTable_did.0_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
+        list("scriptTable_did.1_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
       );
     assertEquals(expectedInstructions, instructions);
   }

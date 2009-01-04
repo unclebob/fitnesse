@@ -43,8 +43,8 @@ public abstract class SlimTable {
   }
 
   public void addChildTable(SlimTable table, int row) throws Exception {
-    table.id = id+"."+children.size();
-    table.tableName = table.tableName+"."+children.size();
+    table.id = id + "." + children.size();
+    table.tableName = table.tableName + "." + children.size();
     table.parent = this;
     children.add(table);
 
@@ -94,8 +94,8 @@ public abstract class SlimTable {
     return String.format("%s_%d", tableName, instructionNumber);
   }
 
-  protected int getInstructionNumber() {
-    return instructionNumber;
+  protected String getInstructionTag() {
+    return makeInstructionTag(instructionNumber);
   }
 
   protected String getTableName() {
@@ -151,7 +151,7 @@ public abstract class SlimTable {
   }
 
   protected void constructInstance(String instanceName, String className, int classNameColumn, int row) {
-    Expectation expectation = new ConstructionExpectation(getInstructionNumber(), classNameColumn, row);
+    Expectation expectation = new ConstructionExpectation(getInstructionTag(), classNameColumn, row);
     addExpectation(expectation);
     List<Object> makeInstruction = prepareInstruction();
     makeInstruction.add("make");
@@ -246,9 +246,8 @@ public abstract class SlimTable {
   }
 
   protected ReturnedValueExpectation makeReturnedValueExpectation(
-    String expected, int instructionNumber, int col, int row
-  ) {
-    return new ReturnedValueExpectation(expected, instructionNumber, col, row);
+    String expected, String instructionTag, int col, int row) {
+    return new ReturnedValueExpectation(expected, instructionTag, col, row);
   }
 
   public static boolean approximatelyEqual(String standard, String candidate) {
@@ -389,17 +388,17 @@ public abstract class SlimTable {
     protected String expectedValue;
     protected int col;
     protected int row;
-    protected int instructionNumber;
+    protected String instructionTag;
 
-    public Expectation(String expected, int instructionNumber, int col, int row) {
+    public Expectation(String expected, String instructionTag, int col, int row) {
       expectedValue = expected;
       this.row = row;
-      this.instructionNumber = instructionNumber;
+      this.instructionTag = instructionTag;
       this.col = col;
     }
 
     protected void evaluateExpectation(Map<String, Object> returnValues) {
-      Object returnValue = returnValues.get(makeInstructionTag(instructionNumber));
+      Object returnValue = returnValues.get(instructionTag);
       String value = returnValue.toString();
       String originalContent = table.getCellContents(col, row);
       String evaluationMessage;
@@ -491,8 +490,8 @@ public abstract class SlimTable {
   }
 
   class VoidReturnExpectation extends Expectation {
-    public VoidReturnExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    public VoidReturnExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -501,8 +500,8 @@ public abstract class SlimTable {
   }
 
   class SilentReturnExpectation extends Expectation {
-    public SilentReturnExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    public SilentReturnExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -511,8 +510,8 @@ public abstract class SlimTable {
   }
 
   class ConstructionExpectation extends Expectation {
-    public ConstructionExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    public ConstructionExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -526,8 +525,8 @@ public abstract class SlimTable {
   class SymbolAssignmentExpectation extends Expectation {
     private String symbolName;
 
-    SymbolAssignmentExpectation(String symbolName, int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    SymbolAssignmentExpectation(String symbolName, String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
       this.symbolName = symbolName;
     }
 
@@ -539,8 +538,8 @@ public abstract class SlimTable {
 
 
   class ReturnedValueExpectation extends Expectation {
-    public ReturnedValueExpectation(String expected, int instructionNumber, int col, int row) {
-      super(expected, instructionNumber, col, row);
+    public ReturnedValueExpectation(String expected, String instructionTag, int col, int row) {
+      super(expected, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {

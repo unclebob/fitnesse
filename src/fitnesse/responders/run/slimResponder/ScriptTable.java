@@ -55,7 +55,7 @@ public class ScriptTable extends SlimTable {
   private void actionAndAssign(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
     String symbolName = symbolAssignmentMatcher.group(1);
-    addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionNumber(), 0, row));
+    addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionTag(), 0, row));
     String actionName = getActionNameStartingAt(1, lastCol, row);
     if (!actionName.equals("")) {
       String[] args = getArgumentsStartingAt(1 + 1, lastCol, row);
@@ -70,8 +70,15 @@ public class ScriptTable extends SlimTable {
 
   private void action(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
-    addExpectation(new ScriptActionExpectation(getInstructionNumber(), 0, row));
-    invokeAction(0, lastCol, row);
+    String actionName = getActionNameStartingAt(0, lastCol, row);
+    String[] args = getArgumentsStartingAt(0 + 1, lastCol, row);
+    ScenarioTable scenario = testContext.getScenario(Disgracer.disgraceClassName(actionName));
+    if (scenario != null) {
+      scenario.call(args, this, row);
+    } else {
+      addExpectation(new ScriptActionExpectation(getInstructionTag(), 0, row));
+      callFunction("scriptTableActor", actionName, (Object[]) args);
+    }
   }
 
   private void note(int row) {
@@ -79,18 +86,18 @@ public class ScriptTable extends SlimTable {
 
   private void show(int row) {
     int lastCol = table.getColumnCountInRow(row) - 1;
-    addExpectation(new ShowActionExpectation(getInstructionNumber(), 0, row));
+    addExpectation(new ShowActionExpectation(getInstructionTag(), 0, row));
     invokeAction(1, lastCol, row);
   }
 
   private void ensure(int row) {
-    addExpectation(new EnsureActionExpectation(getInstructionNumber(), 0, row));
+    addExpectation(new EnsureActionExpectation(getInstructionTag(), 0, row));
     int lastCol = table.getColumnCountInRow(row) - 1;
     invokeAction(1, lastCol, row);
   }
 
   private void reject(int row) {
-    addExpectation(new RejectActionExpectation(getInstructionNumber(), 0, row));
+    addExpectation(new RejectActionExpectation(getInstructionTag(), 0, row));
     int lastCol = table.getColumnCountInRow(row) - 1;
     invokeAction(1, lastCol, row);
   }
@@ -98,7 +105,7 @@ public class ScriptTable extends SlimTable {
   private void checkAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     String expected = table.getCellContents(lastColInAction, row);
-    addExpectation(new ReturnedValueExpectation(expected, getInstructionNumber(), lastColInAction, row));
+    addExpectation(new ReturnedValueExpectation(expected, getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
 
@@ -121,7 +128,7 @@ public class ScriptTable extends SlimTable {
     List<String> arguments = new ArrayList<String>();
     for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += 2) {
       arguments.add(table.getUnescapedCellContents(argumentColumn, row));
-      addExpectation(new ArgumentExpectation(getInstructionNumber(), argumentColumn, row));
+      addExpectation(new ArgumentExpectation(getInstructionTag(), argumentColumn, row));
     }
     return arguments.toArray(new String[arguments.size()]);
   }
@@ -136,8 +143,8 @@ public class ScriptTable extends SlimTable {
   }
 
   private class ScriptActionExpectation extends Expectation {
-    private ScriptActionExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    private ScriptActionExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -155,8 +162,8 @@ public class ScriptTable extends SlimTable {
   }
 
   private class EnsureActionExpectation extends Expectation {
-    public EnsureActionExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    public EnsureActionExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -166,8 +173,8 @@ public class ScriptTable extends SlimTable {
   }
 
   private class RejectActionExpectation extends Expectation {
-    public RejectActionExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    public RejectActionExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -179,8 +186,8 @@ public class ScriptTable extends SlimTable {
   }
 
   private class ShowActionExpectation extends Expectation {
-    public ShowActionExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    public ShowActionExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
@@ -194,12 +201,17 @@ public class ScriptTable extends SlimTable {
   }
 
   private class ArgumentExpectation extends Expectation {
-    private ArgumentExpectation(int instructionNumber, int col, int row) {
-      super(null, instructionNumber, col, row);
+    private ArgumentExpectation(String instructionTag, int col, int row) {
+      super(null, instructionTag, col, row);
+    }
+
+    protected void evaluateExpectation(Map<String, Object> returnValues) {
+      String originalContent = table.getCellContents(col, row);
+        table.setCell(col, row, replaceSymbolsWithFullExpansion(originalContent));
     }
 
     protected String createEvaluationMessage(String value, String originalValue) {
-      return replaceSymbolsWithFullExpansion(originalValue);
+      return null;
     }
   }
 }
