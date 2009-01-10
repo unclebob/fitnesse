@@ -38,25 +38,28 @@ public class DecisionTable extends SlimTable {
   private class DecisionTableCaller {
     protected Map<String, Integer> vars = new HashMap<String, Integer>();
     protected Map<String, Integer> funcs = new HashMap<String, Integer>();
-    protected int headerColumns;
+    protected int columnHeaders;
 
-    protected void parseColumnHeader() {
-      headerColumns = table.getColumnCountInRow(1);
-      for (int col = 0; col < headerColumns; col++) {
-        String cell = table.getCellContents(col, 1);
-        if (cell.endsWith("?"))
-          funcs.put(cell.substring(0, cell.length() - 1), col);
-        else
-          vars.put(cell, col);
-      }
+    protected void gatherFunctionsAndVariablesFromColumnHeader() {
+      columnHeaders = table.getColumnCountInRow(1);
+      for (int col = 0; col < columnHeaders; col++)
+        putColumnHeaderInFunctionOrVariableList(col);
+    }
+
+    private void putColumnHeaderInFunctionOrVariableList(int col) {
+      String cell = table.getCellContents(col, 1);
+      if (cell.endsWith("?"))
+        funcs.put(cell.substring(0, cell.length() - 1), col);
+      else
+        vars.put(cell, col);
     }
 
     protected void checkRow(int row) {
       int columns = table.getColumnCountInRow(row);
-      if (columns < headerColumns)
+      if (columns < columnHeaders)
         throw new SyntaxError(
           String.format("Table has %d header column(s), but row %d only has %d column(s).",
-            headerColumns, row, columns
+            columnHeaders, row, columns
           )
         );
     }
@@ -64,7 +67,7 @@ public class DecisionTable extends SlimTable {
 
   private class ScenarioCaller extends DecisionTableCaller {
     public void call(ScenarioTable scenario) {
-      parseColumnHeader();
+      gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
         callScenarioForRow(scenario, row);
     }
@@ -94,7 +97,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private void invokeRows() {
-      parseColumnHeader();
+      gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
         invokeRow(row);
     }

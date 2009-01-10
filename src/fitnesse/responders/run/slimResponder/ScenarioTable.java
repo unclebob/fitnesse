@@ -81,7 +81,7 @@ public class ScenarioTable extends SlimTable {
 
   public void call(String[] args, ScriptTable parentTable, int row) {
     Map<String, String> scenarioArguments = new HashMap<String, String>();
-    for (int i = 0; i < inputs.size(); i++)
+    for (int i = 0; i < inputs.size() && i < args.length; i++)
       scenarioArguments.put(inputs.get(i), args[i]);
     call(scenarioArguments, parentTable, row);
   }

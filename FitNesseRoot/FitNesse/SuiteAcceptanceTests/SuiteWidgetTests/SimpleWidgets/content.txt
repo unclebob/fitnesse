@@ -1,0 +1,34 @@
+!|scenario|widget|wikiText|renders|htmlText|
+|create page|WidgetPage|with content|@wikiText|
+|check|request page|WidgetPage|200|
+|ensure|content matches|@htmlText|
+|show|content|
+
+|script|
+|start|page driver|
+
+!|widget renders|
+|wiki text|html text|
+|this is ''italic'' text|this is <i>italic</i> text|italic widget|
+|this is '''bold''' text|this is <b>bold</b> text|bold widget|
+|!1 header|<h1>header</h1>|
+|!2 header|<h2>header</h2>|
+|!3 header|<h3>header</h3>|
+|!4 header|<h4>header</h4>|
+|!5 header|<h5>header</h5>|
+|!6 header|<h6>header</h6>|
+|http://files/x|<a href="/files/x">http://files/x</a>|file link|
+|http://fitnesse.org|<a href="http://fitnesse.org">http://fitnesse.org</a>|http link|
+|SomePage|SomePage<a title="create page" href="SomePage\?edit&nonExistent=true">\[\?\]</a>|missing wiki word|
+|[[tag][WidgetPage]]|<a href="WidgetPage">tag</a>|link alias|
+|[[tag][http://fitnesse.org]]|<a href="http://fitnesse\.org">tag</a>|http link alias|
+|[[tag][http://files/x]]|<a href="/files/x">tag</a>|files alias|
+|!- !-This is literal text-!-!|This is literal text|simple literal|
+|!- !-This is ''literal'' text-! -!|!-This is ''literal'' text-!|literal text with markup|
+
+
+
+
+
+
+

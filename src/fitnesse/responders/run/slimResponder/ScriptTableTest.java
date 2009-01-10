@@ -306,7 +306,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "kawabunga")
       ),
-      "[[Script], [show, func, 3, |!style_ignore(kawabunga)]]"
+      "[[Script], [show, func, 3, kawabunga]]"
     );
   }
 

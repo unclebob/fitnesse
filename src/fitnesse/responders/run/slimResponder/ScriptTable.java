@@ -188,7 +188,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String value, String originalValue) {
       try {
-        table.appendCellToRow(row, String.format("|!style_ignore(%s)", value));
+        table.appendCellToRow(row, value);
       } catch (Throwable e) {
         return failMessage(value, SlimTestSystem.exceptionToString(e));
       }

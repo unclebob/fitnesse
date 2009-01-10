@@ -99,14 +99,6 @@ public abstract class SlimTable {
   protected void addInstruction(List<Object> instruction) {
     instructions.add(instruction);
   }
-//
-//  public void evaluateExpectations(Map<String, Object> returnValues) throws Exception {
-//    for (SlimTable child : children)
-//      child.evaluateExpectations(returnValues);
-//    for (Expectation expectation : expectations)
-//      expectation.evaluateExpectation(returnValues);
-//    evaluateReturnValues(returnValues);
-//  }
 
   public abstract void evaluateReturnValues(Map<String, Object> returnValues) throws Exception;
 

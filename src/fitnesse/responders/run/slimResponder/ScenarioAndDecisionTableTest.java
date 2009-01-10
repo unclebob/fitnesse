@@ -133,4 +133,50 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     assertEquals(0, dt.getTestSummary().ignores);
     assertEquals(0, dt.getTestSummary().exceptions);
   }
+
+  @Test
+  public void scenarioHasTooFewArguments() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|DT:EchoGiving|\n" +
+        "|input|output|\n" +
+        "|7|8|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_did.0_0", "7")
+      )
+    );
+    evaluateExpectations(pseudoResults);
+    String dtHtml = dt.getTable().toString();
+    assertSubString("<span class=\"fail\">DT:EchoGiving: Bad table:", dtHtml);
+    assertSubString("The argument output is not an input to the scenario.", dtHtml);
+  }
+
+  @Test
+  public void scenarioHasExtraArgumentsThatAreIgnored() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|output||output2|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|DT:EchoGiving|\n" +
+        "|input|output|\n" +
+        "|7|7|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_did.0_0", "7")
+      )
+    );
+    evaluateExpectations(pseudoResults);
+
+    String scriptTable = dt.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
+    assertEquals(expectedScript, scriptTable);
+    String dtHtml = dt.getTable().toString();
+    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
+  }
 }

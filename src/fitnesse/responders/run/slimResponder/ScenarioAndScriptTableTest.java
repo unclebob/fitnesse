@@ -159,5 +159,58 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       "[[scenario, echo, input, giving, output], [check, echo, $V->[7], pass($V->[7])]]";
     assertEquals(expectedScript, scriptTable);
   }
+  
+  @Test
+  public void scenarioHasTooFewArguments() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|echo|7|giving|7|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_id.0_0", "7")
+      )
+    );
+
+    evaluateExpectations(pseudoResults);
+
+    String scriptTable = script.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving], [check, echo, 7, [7] fail(expected [@output])]]";
+    assertEquals(expectedScript, scriptTable);
+  }
+
+  @Test
+  public void scenarioExtraArgumentsAreIgnored() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|output||output2|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|echo|7|giving|7|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_id.0_0", "7")
+      )
+    );
+
+    evaluateExpectations(pseudoResults);
+
+    String scriptTable = script.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
+    assertEquals(expectedScript, scriptTable);
+    String dtHtml = script.getTable().toString();
+    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
+    assertEquals(1, script.getTestSummary().right);
+    assertEquals(0, script.getTestSummary().wrong);
+    assertEquals(0, script.getTestSummary().ignores);
+    assertEquals(0, script.getTestSummary().exceptions);
+  }
+
 
 }
