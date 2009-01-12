@@ -100,6 +100,8 @@
       <include name="tasks.properties"/>
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
+        <attribute name="Main-Class" value="fitnesse.FitNesse"/>
+        <attribute name="Class-Path" value="lib/htmlparser.jar"/>
       </manifest>
     </jar>
   </target>
@@ -108,7 +110,7 @@
     <delete dir="classes/files"/>
     <mkdir dir="classes/files"/>
     <copy todir="classes/files">
-      <fileset dir="extra">
+      <fileset dir="FitNesseRoot/files">
         <include name="images/**/*.gif"/>
         <include name="images/**/*.jpg"/>
         <include name="css/*.css"/>

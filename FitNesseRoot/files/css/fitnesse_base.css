@@ -88,7 +88,7 @@ h1 {
 }
 
 h2 {
-  font-size: 1.4 emx;
+  font-size: 1.4em;
 }
 
 h3 {
@@ -285,7 +285,7 @@ span.page_title {
 }
 
 .caps, .resultsHeader {
-  font-size: 1 empx;
+  font-size: 1em;
   font-variant: small-caps;
 }
 
@@ -312,6 +312,11 @@ span.page_title {
 
 .strike {
   text-decoration: line-through;
+}
+
+.code {
+  font-family: monaco, 'Lucida Sans Typewriter';
+  font-size: 12px;
 }
 
 .virtual {
