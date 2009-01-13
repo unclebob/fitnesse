@@ -50,7 +50,6 @@ public class SlimTestSystemTest {
     return new HtmlSlimResponder();
   }
 
-
   @Test
   public void slimResponderStartsAndQuitsSlim() throws Exception {
     responder.setFastTest(false);

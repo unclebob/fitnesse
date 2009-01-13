@@ -33,7 +33,7 @@ public class SlimClient {
   public void connect() throws Exception {
     for (int tries = 0; tryConnect() == false; tries++) {
       if (tries > 100)
-        throw new SlimError("Could not connect to socket after many retries");
+        throw new SlimError("Could not start Slim.");
       Thread.sleep(50);
     }
     reader = new StreamReader(client.getInputStream());

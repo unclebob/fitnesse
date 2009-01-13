@@ -8,6 +8,7 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
+import fitnesse.slim.SlimError;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -110,8 +111,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   public void start() throws Exception {
     slimRunner.start();
     slimClient = new SlimClient("localhost", slimSocket);
-    waitForConnection();
-    started = true;
+    try {
+      waitForConnection();
+      started = true;
+    } catch (SlimError e) {
+      testSystemListener.exceptionOccurred(e);
+    }
   }
 
   public String getCommandLine() {
