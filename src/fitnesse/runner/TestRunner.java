@@ -98,26 +98,35 @@ public class TestRunner {
 
   private void verboseOutput() throws Exception {
     if (verbose) {
+      int pageCounts = 0;
+      TestSummary suiteSummary = new TestSummary();
       Element testResultsElement = testResultsDocument.getDocumentElement();
       String rootPath = XmlUtil.getTextValue(testResultsElement, "rootPath");
       output.println(String.format("Test Runner for Root Path: %s", rootPath));
       NodeList results = testResultsElement.getElementsByTagName("result");
       for (int i = 0; i < results.getLength(); i++) {
         Element result = (Element) results.item(i);
-        showResult(result);
+        TestSummary pageSummary = showResult(result);
+        suiteSummary.add(pageSummary);
+        pageCounts++;
       }
+      output.println("Test Pages: " + pageCounts);
+      output.println("Assertions: " + suiteSummary);
     }
   }
 
-  private void showResult(Element result) throws Exception {
+  private TestSummary showResult(Element result) throws Exception {
     String page = XmlUtil.getTextValue(result, "relativePageName");
     Element counts = XmlUtil.getElementByTagName(result, "counts");
     int right = Integer.parseInt(XmlUtil.getTextValue(counts, "right"));
     int wrong = Integer.parseInt(XmlUtil.getTextValue(counts, "wrong"));
     int ignores = Integer.parseInt(XmlUtil.getTextValue(counts, "ignores"));
     int exceptions = Integer.parseInt(XmlUtil.getTextValue(counts, "exceptions"));
-    String marker = (wrong>0 || exceptions>0) ? "*" : " ";
-    output.println(String.format("%s Page:%s right:%d, wrong:%d, ignored:%d, exceptions:%d", marker, page, right, wrong, ignores, exceptions));
+    TestSummary testSummary = new TestSummary(right, wrong, ignores, exceptions);
+    String marker = (wrong > 0 || exceptions > 0) ? "*" : " ";
+    output.println(String.format("%s Page:%s right:%d, wrong:%d, ignored:%d, exceptions:%d",
+      marker, page, right, wrong, ignores, exceptions));
+    return testSummary;
   }
 
   private void writeOutputFile() throws Exception {
