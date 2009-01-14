@@ -98,7 +98,7 @@ public class TestRunner {
 
   private void verboseOutput() throws Exception {
     if (verbose) {
-      int pageCounts = 0;
+      TestSummary pageCounts = new TestSummary();
       TestSummary suiteSummary = new TestSummary();
       Element testResultsElement = testResultsDocument.getDocumentElement();
       String rootPath = XmlUtil.getTextValue(testResultsElement, "rootPath");
@@ -108,7 +108,7 @@ public class TestRunner {
         Element result = (Element) results.item(i);
         TestSummary pageSummary = showResult(result);
         suiteSummary.add(pageSummary);
-        pageCounts++;
+        pageCounts.tallyPageCounts(pageSummary);
       }
       output.println("Test Pages: " + pageCounts);
       output.println("Assertions: " + suiteSummary);
