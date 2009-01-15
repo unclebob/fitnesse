@@ -43,8 +43,9 @@ Behind each test table is FixtureCode. Learn how to write and run it.
 |TestTableStyles|''The styles of FitNesse test tables, and corresponding FixtureCode they use.''|
 
 !2 FitNesse Plugins
-There are several plugins for FitNesse that are avaiable at the following URL:
-http://www.fitnesse.org/PluginsPage
+There are several plugins for FitNesse that are avaiable at the following URL: http://www.fitnesse.org/PluginsPage
+|[[Source Code Control][>SourceCodeControl]]|''How to create a plugin for marrying !-FitNesse-! to your SCM system.''|
+|[[git plugin][>SourceCodeControl.GitPlugin]]|''This plugin ships with FitNesse.''|
 
 !2 FitNesse Reference
 Answers to all your other FitNesse questions.

@@ -77,10 +77,10 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
       cmSystem.edit(contentPath);
       writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
       writer.write(content);
-      cmSystem.update(contentPath);
     } finally {
       if (writer != null) {
         writer.close();
+        cmSystem.update(contentPath);
       }
     }
   }
@@ -93,7 +93,6 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
       output = new FileOutputStream(propertiesFileName);
       cmSystem.edit(propertiesFileName);
       attributes.save(output);
-      cmSystem.update(propertiesFileName);
     } catch (final Exception e) {
       System.err.println("Failed to save properties file: \"" + propertiesFileName + "\" (exception: " + e + ").");
       e.printStackTrace();
@@ -101,6 +100,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     } finally {
       if (output != null) {
         output.close();
+        cmSystem.update(propertiesFileName);
       }
     }
   }
