@@ -110,8 +110,10 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     final FileSystemPage newPage = new FileSystemPage(getFileSystemPath(), name, this, this.revisioner);
     String newPagePath = newPage.getFileSystemPath();
     final File baseDir = new File(newPagePath);
-    baseDir.mkdirs();
-    cmSystem.update(newPagePath);
+    if (baseDir.exists() == false) {
+      baseDir.mkdirs();
+      cmSystem.update(newPagePath);
+    }
     return newPage;
   }
 
@@ -289,7 +291,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
           Method updateMethod = cmSystem.getMethod(method, String.class, String.class);
           updateMethod.invoke(null, newPagePath, getCmSystemVariable());
         } catch (Exception e) {
-          System.err.println("Could not invoke static "+method+"(path,payload) of " + getCmSystemClassName());
+          System.err.println("Could not invoke static " + method + "(path,payload) of " + getCmSystemClassName());
           e.printStackTrace();
         }
       }
@@ -297,7 +299,13 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
 
     private String getCmSystemClassName() throws Exception {
       String cmSystemVariable = getCmSystemVariable();
-      return cmSystemVariable == null ? null : cmSystemVariable.split(" ")[0];
+      if (cmSystemVariable == null)
+        return null;
+      String cmSystemClassName = cmSystemVariable.split(" ")[0].trim();
+      if (cmSystemClassName == null || cmSystemClassName == "")
+        return null;
+
+      return cmSystemClassName;
     }
 
     private String getCmSystemVariable() throws Exception {
