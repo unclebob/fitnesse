@@ -1,7 +1,7 @@
-FitNesseRoot/JunkParent/
+FitNesseRoot/JunkParent/*
 FitNesseRoot/properties
-FitNesseRoot/ProjectPage
-FitNesseRoot/ErrorLogs/
+FitNesseRoot/ProjectPage/*
+FitNesseRoot/ErrorLogs/*
 test-results/
 agitar/
 dist/

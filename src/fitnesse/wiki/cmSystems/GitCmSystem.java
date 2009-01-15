@@ -45,6 +45,7 @@ public class GitCmSystem {
   }
 
   private static void execute(String method, String command) throws Exception {
+    Thread.sleep(200);  //Seems to be needed to allow directories to sync.
     CommandRunner runner = new CommandRunner(command, "");
     runner.start();
     if (runner.getOutput().length() + runner.getError().length() > 0) {

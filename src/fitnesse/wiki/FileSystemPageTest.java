@@ -9,6 +9,7 @@ import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.BeforeClass;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +24,12 @@ public class FileSystemPageTest {
   private PageCrawler crawler;
 
   private static List<String> cmMethodCalls = new ArrayList<String>();
+
+  @BeforeClass
+  public static void initialize() {
+    FileUtil.deleteFileSystemDirectory(base);
+    FileUtil.deleteFileSystemDirectory("RooT");
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -208,22 +215,52 @@ public class FileSystemPageTest {
   }
 
   @Test
+  public void cmPluginNotCalledIfBlank() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {}");
+    cmMethodCalls.clear();
+    page.addChildPage("CreatedPage");
+    assertEquals(0, cmMethodCalls.size());
+  }
+
+  @Test
   public void cmPluginCalledForCreate() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    cmMethodCalls.clear();
     page.addChildPage("CreatedPage");
     assertEquals(1, cmMethodCalls.size());
     assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
   }
 
   @Test
-  public void cmPluginCalledForWrite() throws Exception {
+  public void cmPluginCalledIfNoPayload() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest}");
+    cmMethodCalls.clear();
+    page.addChildPage("CreatedPage");
+    assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest", cmMethodCalls.get(0));
+    assertEquals(1, cmMethodCalls.size());
+  }
+
+  @Test
+  public void cmPluginEditAndUpdateCalledForReWrite() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    cmMethodCalls.clear();
     page.commit(page.getData());
     assertEquals(4, cmMethodCalls.size());
     assertEquals("edit " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
     assertEquals("update " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
     assertEquals("edit " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
     assertEquals("update " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(3));
+  }
+
+  @Test
+  public void cmPluginEditNotCalledIfNewPage() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    cmMethodCalls.clear();
+    crawler.addPage(page, PathParser.parse("NewPage"),"raw content");
+    assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+    assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
+    assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
+    assertEquals(3, cmMethodCalls.size());
   }
 
   @Test

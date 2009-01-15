@@ -1,3 +1,2 @@
 !path classes
 !path fitnesse.jar
-----

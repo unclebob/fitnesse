@@ -74,7 +74,8 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     final File output = new File(contentPath);
     OutputStreamWriter writer = null;
     try {
-      cmSystem.edit(contentPath);
+      if (output.exists())
+        cmSystem.edit(contentPath);
       writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
       writer.write(content);
     } finally {
@@ -87,20 +88,22 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
 
   protected synchronized void saveAttributes(final WikiPageProperties attributes) throws Exception {
     OutputStream output = null;
-    String propertiesFileName = "<unknown>";
+    String propertiesFilePath = "<unknown>";
     try {
-      propertiesFileName = getFileSystemPath() + propertiesFilename;
-      output = new FileOutputStream(propertiesFileName);
-      cmSystem.edit(propertiesFileName);
+      propertiesFilePath = getFileSystemPath() + propertiesFilename;
+      File propertiesFile = new File(propertiesFilePath);
+      if (propertiesFile.exists())
+        cmSystem.edit(propertiesFilePath);
+      output = new FileOutputStream(propertiesFile);
       attributes.save(output);
     } catch (final Exception e) {
-      System.err.println("Failed to save properties file: \"" + propertiesFileName + "\" (exception: " + e + ").");
+      System.err.println("Failed to save properties file: \"" + propertiesFilePath + "\" (exception: " + e + ").");
       e.printStackTrace();
       throw e;
     } finally {
       if (output != null) {
         output.close();
-        cmSystem.update(propertiesFileName);
+        cmSystem.update(propertiesFilePath);
       }
     }
   }
@@ -302,7 +305,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
       if (cmSystemVariable == null)
         return null;
       String cmSystemClassName = cmSystemVariable.split(" ")[0].trim();
-      if (cmSystemClassName == null || cmSystemClassName == "")
+      if (cmSystemClassName == null || cmSystemClassName.equals(""))
         return null;
 
       return cmSystemClassName;
