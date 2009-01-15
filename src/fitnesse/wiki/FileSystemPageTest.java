@@ -5,28 +5,35 @@ package fitnesse.wiki;
 
 import fitnesse.revisioncontrol.NullRevisionController;
 import fitnesse.util.FileUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class FileSystemPageTest extends TestCase {
+public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";
   private static final File base = new File(defaultPath);
   private FileSystemPage root;
   private PageCrawler crawler;
 
-  @Override
+  private static List<String> cmMethodCalls = new ArrayList<String>();
+
+  @Before
   public void setUp() throws Exception {
+    cmMethodCalls.clear();
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
     root = (FileSystemPage) FileSystemPage.makeRoot(defaultPath, "RooT", new NullRevisionController());
     crawler = root.getPageCrawler();
   }
 
-  @Override
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory(base);
     FileUtil.deleteFileSystemDirectory("RooT");
@@ -36,18 +43,21 @@ public class FileSystemPageTest extends TestCase {
     current.mkdir();
   }
 
+  @Test
   public void testCreateBase() throws Exception {
     FileSystemPage levelA = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "");
     assertEquals("./teststorage/RooT/PageA", levelA.getFileSystemPath());
     assertTrue(new File(defaultPath + "/RooT/PageA").exists());
   }
 
+  @Test
   public void testTwoLevel() throws Exception {
     WikiPage levelA = crawler.addPage(root, PathParser.parse("PageA"));
     crawler.addPage(levelA, PathParser.parse("PageB"));
     assertTrue(new File(defaultPath + "/RooT/PageA/PageB").exists());
   }
 
+  @Test
   public void testContent() throws Exception {
     WikiPagePath rootPath = PathParser.parse("root");
     assertEquals("", crawler.getPage(root, rootPath).getData().getContent());
@@ -58,6 +68,7 @@ public class FileSystemPageTest extends TestCase {
     assertEquals("B content", crawler.getPage(root, bPath).getData().getContent());
   }
 
+  @Test
   public void testBigContent() throws Exception {
     StringBuffer buffer = new StringBuffer();
     for (int i = 0; i < 1000; i++)
@@ -67,11 +78,13 @@ public class FileSystemPageTest extends TestCase {
     assertTrue(buffer.toString().equals(content));
   }
 
+  @Test
   public void testPageExists() throws Exception {
     crawler.addPage(root, PathParser.parse("AaAa"), "A content");
     assertTrue(root.hasChildPage("AaAa"));
   }
 
+  @Test
   public void testGetChidren() throws Exception {
     crawler.addPage(root, PathParser.parse("AaAa"), "A content");
     crawler.addPage(root, PathParser.parse("BbBb"), "B content");
@@ -87,6 +100,7 @@ public class FileSystemPageTest extends TestCase {
     }
   }
 
+  @Test
   public void testRemovePage() throws Exception {
     WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
     crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
@@ -97,6 +111,7 @@ public class FileSystemPageTest extends TestCase {
     assertFalse(fileTwo.exists());
   }
 
+  @Test
   public void testDelTree() throws Exception {
     WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
     crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
@@ -108,6 +123,7 @@ public class FileSystemPageTest extends TestCase {
     assertFalse(childOne.exists());
   }
 
+  @Test
   public void testDefaultAttributes() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"), "something");
     assertTrue(page.getData().hasAttribute("Edit"));
@@ -116,6 +132,7 @@ public class FileSystemPageTest extends TestCase {
     assertFalse(page.getData().hasAttribute("TestSuite"));
   }
 
+  @Test
   public void testPersistentAttributes() throws Exception {
     crawler.addPage(root, PathParser.parse("FrontPage"));
     WikiPage createdPage = root.getChildPage("FrontPage");
@@ -130,6 +147,7 @@ public class FileSystemPageTest extends TestCase {
     assertTrue(page.getData().hasAttribute("Search"));
   }
 
+  @Test
   public void testCachedInfo() throws Exception {
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
     WikiPage child1 = crawler.addPage(page1, PathParser.parse("ChildOne"), "child one");
@@ -137,16 +155,19 @@ public class FileSystemPageTest extends TestCase {
     assertSame(child1, child);
   }
 
+  @Test
   public void testCanFindExistingPages() throws Exception {
     crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
     WikiPage newRoot = FileSystemPage.makeRoot(defaultPath, "RooT");
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 
+  @Test
   public void testGetPath() throws Exception {
     assertEquals(defaultPath + "/RooT", root.getFileSystemPath());
   }
 
+  @Test
   public void testLastModifiedTime() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
     page.commit(page.getData());
@@ -155,12 +176,14 @@ public class FileSystemPageTest extends TestCase {
     assertTrue(now.getTime() - lastModified.getTime() <= 1000);
   }
 
+  @Test
   public void testUnicodeCharacters() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "\uba80\uba81\uba82\uba83");
     PageData data = page.getData();
     assertEquals("\uba80\uba81\uba82\uba83", data.getContent());
   }
 
+  @Test
   public void testLoadChildrenWhenPageIsDeletedManualy() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
     page.getChildren();
@@ -170,5 +193,46 @@ public class FileSystemPageTest extends TestCase {
     } catch (Exception e) {
       fail("No Exception should be thrown");
     }
+  }
+
+  public static void cmUpdate(String file, String payload) {
+    cmMethodCalls.add(String.format("update %s|%s", file, payload));
+  }
+
+  public static void cmEdit(String file, String payload) {
+    cmMethodCalls.add(String.format("edit %s|%s", file, payload));
+  }
+
+  public static void cmDelete(String file, String payload) {
+    cmMethodCalls.add(String.format("delete %s|%s", file, payload));
+  }
+
+  @Test
+  public void cmPluginCalledForCreate() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    page.addChildPage("CreatedPage");
+    assertEquals(1, cmMethodCalls.size());
+    assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+  }
+
+  @Test
+  public void cmPluginCalledForWrite() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    page.commit(page.getData());
+    assertEquals(4, cmMethodCalls.size());
+    assertEquals("edit " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+    assertEquals("update " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
+    assertEquals("edit " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
+    assertEquals("update " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(3));
+  }
+
+  @Test
+  public void cmPluginCalledForDelete() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
+    page.addChildPage("CreatedPage");
+    cmMethodCalls.clear();
+    page.removeChildPage("CreatedPage");
+    assertEquals(1, cmMethodCalls.size());
+    assertEquals("delete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
   }
 }

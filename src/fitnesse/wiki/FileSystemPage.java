@@ -11,6 +11,7 @@ import fitnesse.util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 public class FileSystemPage extends CachingPage implements RevisionControllable {
@@ -21,6 +22,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
 
   private final String path;
   private final RevisionController revisioner;
+  private CmSystem cmSystem = new CmSystem();
 
   protected FileSystemPage(final String path, final String name, final WikiPage parent, final RevisionController revisioner) throws Exception {
     super(name, parent);
@@ -39,8 +41,10 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
   @Override
   public void removeChildPage(final String name) throws Exception {
     super.removeChildPage(name);
-    final File fileToBeDeleted = new File(getFileSystemPath() + "/" + name);
+    String pathToDelete = getFileSystemPath() + "/" + name;
+    final File fileToBeDeleted = new File(pathToDelete);
     FileUtil.deleteFileSystemDirectory(fileToBeDeleted);
+    cmSystem.delete(pathToDelete);
   }
 
   @Override
@@ -66,11 +70,14 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
 
     content = content.replaceAll("\r\n", separator);
 
-    final File output = new File(getFileSystemPath() + contentFilename);
+    String contentPath = getFileSystemPath() + contentFilename;
+    final File output = new File(contentPath);
     OutputStreamWriter writer = null;
     try {
+      cmSystem.edit(contentPath);
       writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
       writer.write(content);
+      cmSystem.update(contentPath);
     } finally {
       if (writer != null) {
         writer.close();
@@ -84,7 +91,9 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     try {
       propertiesFileName = getFileSystemPath() + propertiesFilename;
       output = new FileOutputStream(propertiesFileName);
+      cmSystem.edit(propertiesFileName);
       attributes.save(output);
+      cmSystem.update(propertiesFileName);
     } catch (final Exception e) {
       System.err.println("Failed to save properties file: \"" + propertiesFileName + "\" (exception: " + e + ").");
       e.printStackTrace();
@@ -99,8 +108,10 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
   @Override
   protected WikiPage createChildPage(final String name) throws Exception {
     final FileSystemPage newPage = new FileSystemPage(getFileSystemPath(), name, this, this.revisioner);
-    final File baseDir = new File(newPage.getFileSystemPath());
+    String newPagePath = newPage.getFileSystemPath();
+    final File baseDir = new File(newPagePath);
     baseDir.mkdirs();
+    cmSystem.update(newPagePath);
     return newPage;
   }
 
@@ -255,5 +266,42 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
 
   public State checkState() throws Exception {
     return this.revisioner.checkState(contentFilePath(), propertiesFilePath());
+  }
+
+  class CmSystem {
+    public void update(String fileName) throws Exception {
+      invokeCmMethod("cmUpdate", fileName);
+    }
+
+
+    public void edit(String fileName) throws Exception {
+      invokeCmMethod("cmEdit", fileName);
+    }
+
+    public void delete(String fileToBeDeleted) throws Exception {
+      invokeCmMethod("cmDelete", fileToBeDeleted);
+    }
+
+    private void invokeCmMethod(String method, String newPagePath) throws Exception {
+      if (getCmSystemClassName() != null) {
+        try {
+          Class cmSystem = Class.forName(getCmSystemClassName());
+          Method updateMethod = cmSystem.getMethod(method, String.class, String.class);
+          updateMethod.invoke(null, newPagePath, getCmSystemVariable());
+        } catch (Exception e) {
+          System.err.println("Could not invoke static "+method+"(path,payload) of " + getCmSystemClassName());
+          e.printStackTrace();
+        }
+      }
+    }
+
+    private String getCmSystemClassName() throws Exception {
+      String cmSystemVariable = getCmSystemVariable();
+      return cmSystemVariable == null ? null : cmSystemVariable.split(" ")[0];
+    }
+
+    private String getCmSystemVariable() throws Exception {
+      return getData().getVariable("CM_SYSTEM");
+    }
   }
 }
