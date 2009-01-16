@@ -180,7 +180,7 @@ public class FileSystemPageTest {
     page.commit(page.getData());
     Date now = new Date();
     Date lastModified = page.getData().getProperties().getLastModificationTime();
-    assertTrue(now.getTime() - lastModified.getTime() <= 1000);
+    assertTrue(now.getTime() - lastModified.getTime() <= 5000);
   }
 
   @Test
