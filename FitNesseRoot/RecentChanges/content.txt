@@ -1,3 +1,5 @@
+|FitNesse.UserGuide.SourceCodeControl||13:39:54 Fri, Jan 16, 2009|
+|FitNesse.MarkupStyle||12:26:37 Fri, Jan 16, 2009|
 |ErrorLogs||17:47:42 Thu, Jan 15, 2009|
 |DandyRandy.WiggleRoom||17:45:01 Thu, Jan 15, 2009|
 |DandyRandy.DiggleRoom||17:44:49 Thu, Jan 15, 2009|
@@ -23,7 +25,6 @@
 |JunkerPage||17:19:32 Thu, Jan 15, 2009|
 |JunkRot.JunkSub||14:42:30 Thu, Jan 15, 2009|
 |JunkRot||14:42:20 Thu, Jan 15, 2009|
-|FitNesse.UserGuide.SourceCodeControl||14:37:43 Thu, Jan 15, 2009|
 |FitNesse.UserGuide.SourceCodeControl.GitPlugin||13:20:22 Thu, Jan 15, 2009|
 |FitNesse.UserGuide||13:17:12 Thu, Jan 15, 2009|
 |FrontPage||12:50:15 Thu, Jan 15, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestContentSearch||07:12:21 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithSubpageReference||07:11:35 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithBackwardsSearchReference||07:11:01 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageThatRefersToItself||07:09:57 Sat, Dec 13, 2008|

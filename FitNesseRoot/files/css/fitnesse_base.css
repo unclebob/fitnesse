@@ -315,8 +315,78 @@ span.page_title {
 }
 
 .code {
-  font-family: monaco, 'Lucida Sans Typewriter';
-  font-size: 12px;
+  font-family: courier, 'Lucida Sans Typewriter';
+  font-size: 16px;
+  color: #004000;
+  font-weight: bold;
+}
+
+.red {
+  color: red;
+}
+
+.orange {
+  color: orange;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.green {
+  color: green;
+}
+
+.blue {
+  color: blue;
+}
+
+.indigo {
+  color: indigo;
+}
+
+.violet {
+  color: violet;
+}
+
+.pink {
+  color: pink;
+}
+
+.lightYellow {
+  color: lightYellow;
+}
+
+.lightGreen {
+  color: lightGreen;
+}
+
+.lightBlue {
+  color: lightBlue;
+}
+
+.chocolate {
+  color: chocolate;
+}
+
+.darkOrange {
+  color: darkOrange;
+}
+
+.darkRed {
+  color: darkRed;
+}
+
+.olive {
+  color: olive;
+}
+
+.darkBlue {
+  color: darkBlue;
+}
+
+.darkGreen {
+  color: darkGreen;
 }
 
 .virtual {

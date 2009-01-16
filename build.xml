@@ -104,6 +104,7 @@
         <attribute name="Class-Path" value="lib/htmlparser.jar"/>
       </manifest>
     </jar>
+    <delete dir="classes/files"/>    
   </target>
 
   <target name="copyResources" description="copy images, css, and other resources into the classes directory">
