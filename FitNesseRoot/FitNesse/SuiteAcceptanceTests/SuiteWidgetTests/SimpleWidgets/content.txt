@@ -33,6 +33,8 @@
 |!-''x''-!|<i>x</i>|''David Hookers bug.  Single character italics didn't parse correctly.''|
 |!---strike---!|<span class="strike">strike</span>|
 |!-!style_myStyle(hello)-!|<span class="myStyle">hello</span>|
+|!-!style_myStyle[hello]-!|<span class="myStyle">hello</span>|
+|!-!style_myStyle{hello}-!|<span class="myStyle">hello</span>|
 |WikiWord|WikiWord<a title="create page" href="WikiWord\?edit&nonExistent=true">\[\?\]</a>|
 |MdM|MdM<a title="create page" href="MdM\?edit&nonExistent=true">\[\?\]</a>|
 |AbCdEfGhIjKlMnOpQrTuVxYz|AbCdEfGhIjKlMnOpQrTuVxYz<a title="create page" href="AbCdEfGhIjKlMnOpQrTuVxYz\?edit&nonExistent=true">\[\?\]</a>|

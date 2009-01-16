@@ -1,3 +1,5 @@
+|FitNesse.UserGuide.SourceCodeControl.GitPlugin||14:31:36 Fri, Jan 16, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||14:19:49 Fri, Jan 16, 2009|
 |FitNesse.UserGuide.SourceCodeControl||13:39:54 Fri, Jan 16, 2009|
 |FitNesse.MarkupStyle||12:26:37 Fri, Jan 16, 2009|
 |ErrorLogs||17:47:42 Thu, Jan 15, 2009|
@@ -25,7 +27,6 @@
 |JunkerPage||17:19:32 Thu, Jan 15, 2009|
 |JunkRot.JunkSub||14:42:30 Thu, Jan 15, 2009|
 |JunkRot||14:42:20 Thu, Jan 15, 2009|
-|FitNesse.UserGuide.SourceCodeControl.GitPlugin||13:20:22 Thu, Jan 15, 2009|
 |FitNesse.UserGuide||13:17:12 Thu, Jan 15, 2009|
 |FrontPage||12:50:15 Thu, Jan 15, 2009|
 |ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories||12:27:59 Thu, Jan 15, 2009|
@@ -43,7 +44,6 @@
 |FitNesse.SliM.SetUp||10:25:20 Sun, Jan 11, 2009|
 |FitNesse.SliM||10:03:36 Sun, Jan 11, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets.DavidHookersBug||07:39:38 Sun, Jan 11, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||07:39:23 Sun, Jan 11, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestLinkAlias||07:28:49 Sun, Jan 11, 2009|
 |JunkParent.ScenarioTable||10:02:56 Sat, Jan 10, 2009|
 |JunkParent.JunkPage||13:18:21 Tue, Dec 30, 2008|
