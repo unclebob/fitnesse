@@ -31,7 +31,7 @@ public class CommandRunner {
     this.input = input;
   }
 
-  public void start() throws Exception {
+  public void asynchronousStart() throws Exception {
     Runtime rt = Runtime.getRuntime();
     startTime = System.currentTimeMillis();
     process = rt.exec(command);
@@ -46,7 +46,7 @@ public class CommandRunner {
   }
 
   public void run() throws Exception {
-    start();
+    asynchronousStart();
     join();
   }
 

@@ -4,9 +4,12 @@ package fitnesse.responders.run;
 
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.testutil.RegexTestCase;
+import static fitnesse.testutil.RegexTestCase.*;
 import fitnesse.wiki.*;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ExecutionLogTest extends RegexTestCase {
+public class ExecutionLogTest {
   private static String ErrorLogName = ExecutionLog.ErrorLogName;
 
   private WikiPage testPage;
@@ -14,6 +17,7 @@ public class ExecutionLogTest extends RegexTestCase {
   private ExecutionLog log;
   private WikiPage root;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     testPage = root.addChildPage("TestPage");
@@ -22,18 +26,21 @@ public class ExecutionLogTest extends RegexTestCase {
   }
 
 
+  @Test
   public void testNoErrrorLogPageToBeginWith() throws Exception {
     assertFalse(root.hasChildPage(ErrorLogName));
   }
 
-  public void testPageIsCreated() throws Exception {
+  @Test
+    public void testPageIsCreated() throws Exception {
     log.publish();
     assertTrue(root.hasChildPage(ErrorLogName));
     WikiPage errorLogsParentPage = root.getChildPage(ErrorLogName);
     assertTrue(errorLogsParentPage.hasChildPage(testPage.getName()));
   }
 
-  public void testErrorLogContentIsReplaced() throws Exception {
+  @Test
+    public void testErrorLogContentIsReplaced() throws Exception {
     WikiPage errorLogPage = root.getPageCrawler().addPage(root, PathParser.parse("ErrorLogs.TestPage"));
     PageData data = errorLogPage.getData();
     data.setContent("old content");
@@ -44,7 +51,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertNotSubString("old content", content);
   }
 
-  public void testBasicContent() throws Exception {
+  @Test
+    public void testBasicContent() throws Exception {
     String content = getGeneratedContent();
 
     assertSubString("'''Command: '''", content);
@@ -55,6 +63,12 @@ public class ExecutionLogTest extends RegexTestCase {
     assertSubString("'''Time elapsed: '''", content);
   }
 
+  @Test
+  public void testPageLink() throws Exception {
+    String content = getGeneratedContent();
+    assertSubString("|'''Test Page: '''|.TestPage|", content);
+  }
+
   private String getGeneratedContent() throws Exception {
     log.publish();
     WikiPage errorLogsParentPage = root.getChildPage(ErrorLogName);
@@ -63,7 +77,8 @@ public class ExecutionLogTest extends RegexTestCase {
     return content;
   }
 
-  public void testNoExtraLogTextWasGenerated() throws Exception {
+  @Test
+    public void testNoExtraLogTextWasGenerated() throws Exception {
     String content = getGeneratedContent();
 
     assertNotSubString("Exception", content);
@@ -71,7 +86,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertNotSubString("Standard Output", content);
   }
 
-  public void testStdout() throws Exception {
+  @Test
+    public void testStdout() throws Exception {
     runner.setOutput("standard output that got printed");
     String content = getGeneratedContent();
 
@@ -79,7 +95,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertSubString("standard output that got printed", content);
   }
 
-  public void testStderr() throws Exception {
+  @Test
+    public void testStderr() throws Exception {
     runner.setError("standard error that got printed");
     String content = getGeneratedContent();
 
@@ -87,7 +104,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertSubString("standard error that got printed", content);
   }
 
-  public void testException() throws Exception {
+  @Test
+    public void testException() throws Exception {
     log.addException(new Exception("I made this"));
     String content = getGeneratedContent();
 
@@ -95,7 +113,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertSubString("I made this", content);
   }
 
-  public void testExecutionReport_Ok() throws Exception {
+  @Test
+    public void testExecutionReport_Ok() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
     ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
@@ -111,7 +130,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertSame(ExecutionStatus.OK, result);
   }
 
-  public void testExecutionReport_Output() throws Exception {
+  @Test
+    public void testExecutionReport_Output() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
     mockCommandRunner.setOutput("I wrote something here");
@@ -128,7 +148,8 @@ public class ExecutionLogTest extends RegexTestCase {
     assertSame(ExecutionStatus.OUTPUT, result);
   }
 
-  public void testExecutionReport_Error() throws Exception {
+  @Test
+    public void testExecutionReport_Error() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
     ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);

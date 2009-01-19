@@ -34,7 +34,7 @@ public class CompositeExecutionLog {
     errorLogPage.commit(data);
   }
 
-  private String buildLogContent() {
+  private String buildLogContent() throws Exception {
     StringBuffer logContent = new StringBuffer();
     for (String testSystemName : logs.keySet()) {
       logContent.append(String.format("!3 !-%s-!\n", testSystemName));

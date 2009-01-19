@@ -23,7 +23,7 @@ public class MockCommandRunner extends CommandRunner {
   public void kill() throws Exception {
   }
 
-  public void start() throws Exception {
+  public void asynchronousStart() throws Exception {
   }
 
   public void setOutput(String output) {

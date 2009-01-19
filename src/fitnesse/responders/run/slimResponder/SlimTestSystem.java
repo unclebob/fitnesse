@@ -109,7 +109,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public void start() throws Exception {
-    slimRunner.start();
+    slimRunner.asynchronousStart();
     slimClient = new SlimClient("localhost", slimSocket);
     try {
       waitForConnection();

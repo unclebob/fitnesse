@@ -1,3 +1,4 @@
+|FitNesse.DownloadingAndInstallingFitNesse||11:30:30 Mon, Jan 19, 2009|
 |FitNesse.UserGuide.SourceCodeControl.GitPlugin||14:31:36 Fri, Jan 16, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||14:19:49 Fri, Jan 16, 2009|
 |FitNesse.UserGuide.SourceCodeControl||13:39:54 Fri, Jan 16, 2009|
@@ -38,7 +39,6 @@
 |JunkParent.GitPage||12:00:34 Thu, Jan 15, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||11:35:19 Wed, Jan 14, 2009|
 |JunkParent.SlimTestNoPath||16:26:24 Tue, Jan 13, 2009|
-|FitNesse.DownloadingAndInstallingFitNesse||11:01:53 Mon, Jan 12, 2009|
 |FitNesse.FitNesseWontStart||10:58:25 Mon, Jan 12, 2009|
 |FitNesse.SliM.ScenarioTable||10:49:04 Sun, Jan 11, 2009|
 |FitNesse.SliM.SetUp||10:25:20 Sun, Jan 11, 2009|

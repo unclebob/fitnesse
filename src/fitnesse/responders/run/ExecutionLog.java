@@ -26,11 +26,13 @@ public class ExecutionLog {
   private WikiPagePath errorLogPagePath;
   private WikiPage root;
 
+  private WikiPage testPage;
   private CommandRunner runner;
   private List<String> reasons = new LinkedList<String>();
   private List<Throwable> exceptions = new LinkedList<Throwable>();
 
   public ExecutionLog(WikiPage testPage, CommandRunner client) throws Exception {
+    this.testPage = testPage;
     runner = client;
 
     crawler = testPage.getPageCrawler();
@@ -58,12 +60,13 @@ public class ExecutionLog {
     errorLogPage.commit(data);
   }
 
-  String buildLogContent() {
+  String buildLogContent() throws Exception {
     StringBuffer buffer = new StringBuffer();
-    addEntry(buffer, "Date", makeDateFormat().format(new Date()));
-    addEntry(buffer, "Command", runner.getCommand());
-    addEntry(buffer, "Exit code", String.valueOf(runner.getExitCode()));
-    addEntry(buffer, "Time elapsed", (double) runner.getExecutionTime() / 1000.0 + " seconds");
+    addLiteralEntry(buffer, "Date", makeDateFormat().format(new Date()));
+    addEntry(buffer, "Test Page", "." + PathParser.render(crawler.getFullPath(testPage)));
+    addLiteralEntry(buffer, "Command", runner.getCommand());
+    addLiteralEntry(buffer, "Exit code", String.valueOf(runner.getExitCode()));
+    addLiteralEntry(buffer, "Time elapsed", (double) runner.getExecutionTime() / 1000.0 + " seconds");
     if (runner.wroteToOutputStream())
       addOutputBlock(buffer);
     if (runner.wroteToErrorStream())
@@ -73,8 +76,16 @@ public class ExecutionLog {
     return buffer.toString();
   }
 
+  private void addLiteralEntry(StringBuffer buffer, String key, String value) {
+    addEntry(buffer, key, literalize(value));
+  }
+
   private void addEntry(StringBuffer buffer, String key, String value) {
-    buffer.append("|'''").append(key).append(": '''|").append("!-").append(value).append("-!").append("|\n");
+    buffer.append("|'''").append(key).append(": '''|").append(value).append("|\n");
+  }
+
+  private String literalize(String s) {
+    return String.format("!-%s-!", s);
   }
 
   private void addOutputBlock(StringBuffer buffer) {

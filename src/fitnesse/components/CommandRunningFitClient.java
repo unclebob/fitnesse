@@ -71,7 +71,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   public void start() throws Exception {
     try {
-      commandRunner.start();
+      commandRunner.asynchronousStart();
       timeoutThread = new Thread(new TimeoutRunnable(), "FitClient timeout");
       timeoutThread.start();
       earlyTerminationThread = new Thread(new EarlyTerminationRunnable(), "FitClient early termination");
