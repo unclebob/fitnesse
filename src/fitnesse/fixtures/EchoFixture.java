@@ -10,4 +10,8 @@ public class EchoFixture {
   public void setName(String name) {
     this.name = name;
   }
+
+  public String echo(String s) {
+    return s;
+  }
 }

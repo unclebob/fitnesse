@@ -49,7 +49,9 @@ This should be pretty clear.  Each row is a single instruction in the script.
 
  * A function alone in a row will turn red or green if it returns a boolean.  Otherwise it will simply remain uncolored.
 
- * If the word ''check'' is in the first cell of a row, then a function call follows it.  The last cell of the table is the value we expect to be returned by the function, and it will be compared to what the function actually returns.
+ * If the word ''check'' is in the first cell of a row, then a function call follows it.  The last cell of the table is the expression we expect to be matched by what the function actually returns.
+
+ * If the word ''check not'' is in the first cell of a row, then a function call follows it.  The last cell of the table is the expression we expect !style_red(''not'') to be matched by what the function actually returns.
 
  * If the word ''ensure'' is in the first cell, then it should be followed by a function that should return a boolean true for green and false for red.
 

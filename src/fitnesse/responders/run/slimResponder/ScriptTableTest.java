@@ -133,6 +133,16 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void checkNotWithFunction() throws Exception {
+    buildInstructionsFor("|check not|function|arg|result|\n");
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
   public void checkWithFunctionAndTrailingName() throws Exception {
     buildInstructionsFor("|check|function|arg|trail|result|\n");
     List<Object> expectedInstructions =
@@ -251,12 +261,32 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void checkNotFails() throws Exception {
+    assertScriptResults("|check not|func|3|\n",
+      list(
+        list("scriptTable_id_0", "3")
+      ),
+      "[[Script], [check not, func, fail(3)]]"
+    );
+  }
+
+  @Test
   public void checkFails() throws Exception {
     assertScriptResults("|check|func|3|\n",
       list(
         list("scriptTable_id_0", "4")
       ),
       "[[Script], [check, func, [4] fail(expected [3])]]"
+    );
+  }
+
+  @Test
+  public void checkNotPasses() throws Exception {
+    assertScriptResults("|check not|func|3|\n",
+      list(
+        list("scriptTable_id_0", "4")
+      ),
+      "[[Script], [check not, func, [4] pass(expected [3])]]"
     );
   }
 

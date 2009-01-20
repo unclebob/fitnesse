@@ -1,3 +1,6 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators||11:37:21 Tue, Jan 20, 2009|
+|FitNesse.SliM.ScriptTable||11:22:39 Tue, Jan 20, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||09:55:49 Tue, Jan 20, 2009|
 |FitNesse.DownloadingAndInstallingFitNesse||11:30:30 Mon, Jan 19, 2009|
 |FitNesse.UserGuide.SourceCodeControl.GitPlugin||14:31:36 Fri, Jan 16, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||14:19:49 Fri, Jan 16, 2009|
@@ -52,7 +55,6 @@
 |ProjectPage.ComposedTests||10:20:17 Fri, Dec 26, 2008|
 |ProjectPage.ComposedTests.ComposedScriptTable||09:10:35 Mon, Dec 22, 2008|
 |ProjectPage.ComposedTests.ComposedDecisionTable||09:08:57 Mon, Dec 22, 2008|
-|FitNesse.SliM.ScriptTable||06:56:35 Mon, Dec 22, 2008|
 |ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PlayOneSong||06:55:37 Mon, Dec 22, 2008|
 |FitNesse.MarkupLanguageReference||20:45:44 Thu, Dec 18, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestProtectedWidgetsAreNotRenamed||20:29:14 Thu, Dec 18, 2008|
@@ -96,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestTitleSearch||07:13:54 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestSearchForm||07:12:52 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestContentSearch||07:12:21 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithSubpageReference||07:11:35 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenamePageWithBackwardsSearchReference||07:11:01 Sat, Dec 13, 2008|

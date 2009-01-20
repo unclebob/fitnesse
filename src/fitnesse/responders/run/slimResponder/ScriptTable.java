@@ -34,6 +34,8 @@ public class ScriptTable extends SlimTable {
       startActor(row);
     else if (firstCell.equalsIgnoreCase("check"))
       checkAction(row);
+    else if (firstCell.equalsIgnoreCase("check not"))
+      checkNotAction(row);
     else if (firstCell.equalsIgnoreCase("reject"))
       reject(row);
     else if (firstCell.equalsIgnoreCase("ensure"))
@@ -102,6 +104,13 @@ public class ScriptTable extends SlimTable {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     String expected = table.getCellContents(lastColInAction, row);
     addExpectation(new ReturnedValueExpectation(expected, getInstructionTag(), lastColInAction, row));
+    invokeAction(1, lastColInAction - 1, row);
+  }
+
+  private void checkNotAction(int row) {
+    int lastColInAction = table.getColumnCountInRow(row) - 1;
+    String expected = table.getCellContents(lastColInAction, row);
+    addExpectation(new RejectedValueExpectation(expected, getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
 

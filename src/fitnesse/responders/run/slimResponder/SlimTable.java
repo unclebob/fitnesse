@@ -527,7 +527,7 @@ public abstract class SlimTable {
       else if (replacedValue.length() == 0)
         evaluationMessage = ignore(value);
       else {
-        String expressionMessage = new Comparator(replacedValue, value, expectedValue).evaluate();
+        String expressionMessage = new Comparator(this, replacedValue, value, expectedValue).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
         else if (value.indexOf("Exception:") != -1) {
@@ -545,104 +545,136 @@ public abstract class SlimTable {
       return originalValue.length() == 0 ? "BLANK" : originalValue;
     }
 
-    class Comparator {
-      private String expression;
-      private String value;
-      private String originalExpression;
-      private Pattern simpleComparison = Pattern.compile(
-        "\\A\\s*_?\\s*((?:[<>]=?)|(?:[!~]=))\\s*(\\d*\\.?\\d+)\\s*\\Z"
-      );
-      private Pattern range = Pattern.compile(
-        "\\A\\s*(\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(\\d*\\.?\\d+)\\s*\\Z"
-      );
-      private double v;
-      private double arg1;
-      private double arg2;
-      public String operation;
-      private String arg1Text;
+    protected String pass(String message) {
+      return SlimTable.this.pass(message);
+    }
 
-      private Comparator(String expression, String value, String originalExpression) {
-        this.expression = expression;
-        this.value = value;
-        this.originalExpression = originalExpression;
-      }
+    protected String fail(String message) {
+      return SlimTable.this.fail(message);
+    }
 
-      private String evaluate() {
-        operation = matchSimpleComparison();
-        if (operation != null)
-          return doSimpleComparison();
+    protected String failMessage(String value, String message) {
+      return String.format("[%s] %s", value, fail(message));
+    }
+  }
 
-        Matcher matcher = range.matcher(expression);
-        if (matcher.matches() && canUnpackRange(matcher)) {
-          return doRange(matcher);
-        } else
-          return null;
-      }
+  class RejectedValueExpectation extends ReturnedValueExpectation {
+    public RejectedValueExpectation(String expected, String instructionTag, int col, int row) {
+      super(expected, instructionTag, col, row);
+    }
 
-      private String doRange(Matcher matcher) {
-        boolean closedLeft = matcher.group(2).equals("=");
-        boolean closedRight = matcher.group(3).equals("=");
-        boolean pass = (arg1 < v && v < arg2) || (closedLeft && arg1 == v) || (closedRight && arg2 == v);
-        return rangeMessage(pass);
-      }
+    protected String pass(String message) {
+      return super.fail(message);
+    }
 
-      private String rangeMessage(boolean pass) {
-        String[] fragments = originalExpression.replaceAll(" ", "").split("_");
-        String message = String.format("%s%s%s", fragments[0], value, fragments[1]);
-        message = replaceSymbolsWithFullExpansion(message);
-        return pass ? pass(message) : fail(message);
+    protected String fail(String message) {
+      return super.pass(message);
+    }
+  }
 
-      }
+  class Comparator {
+    private String expression;
+    private String value;
+    private String originalExpression;
+    private Pattern simpleComparison = Pattern.compile(
+      "\\A\\s*_?\\s*(!?(?:(?:[<>]=?)|(?:[~]?=)))\\s*(\\d*\\.?\\d+)\\s*\\Z"
+    );
+    private Pattern range = Pattern.compile(
+      "\\A\\s*(\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(\\d*\\.?\\d+)\\s*\\Z"
+    );
+    private double v;
+    private double arg1;
+    private double arg2;
+    public String operation;
+    private String arg1Text;
+    private ReturnedValueExpectation returnedValueExpectation;
 
-      private boolean canUnpackRange(Matcher matcher) {
-        try {
-          arg1 = Double.parseDouble(matcher.group(1));
-          arg2 = Double.parseDouble(matcher.group(4));
-          v = Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-          return false;
-        }
-        return true;
-      }
+    private Comparator(ReturnedValueExpectation returnedValueExpectation, String expression, String value, String originalExpression) {
+      this.returnedValueExpectation = returnedValueExpectation;
+      this.expression = expression;
+      this.value = value;
+      this.originalExpression = originalExpression;
+    }
 
-      private String doSimpleComparison() {
-        if (operation.equals("<"))
-          return simpleComparisonMessage(v < arg1);
-        else if (operation.equals(">"))
-          return simpleComparisonMessage(v > arg1);
-        else if (operation.equals(">="))
-          return simpleComparisonMessage(v >= arg1);
-        else if (operation.equals("<="))
-          return simpleComparisonMessage(v <= arg1);
-        else if (operation.equals("!="))
-          return simpleComparisonMessage(v != arg1);
-        else if (operation.equals("~="))
-          return simpleComparisonMessage(approximatelyEqual(arg1Text, value));
-        else
-          return null;
-      }
+    private String evaluate() {
+      operation = matchSimpleComparison();
+      if (operation != null)
+        return doSimpleComparison();
 
-      private String simpleComparisonMessage(boolean pass) {
-        String message = String.format("%s%s", value, originalExpression.replaceAll(" ", ""));
-        message = replaceSymbolsWithFullExpansion(message);
-        return pass ? pass(message) : fail(message);
-
-      }
-
-      private String matchSimpleComparison() {
-        Matcher matcher = simpleComparison.matcher(expression);
-        if (matcher.matches()) {
-          try {
-            v = Double.parseDouble(value);
-            arg1Text = matcher.group(2);
-            arg1 = Double.parseDouble(arg1Text);
-            return matcher.group(1);
-          } catch (NumberFormatException e1) {
-            return null;
-          }
-        }
+      Matcher matcher = range.matcher(expression);
+      if (matcher.matches() && canUnpackRange(matcher)) {
+        return doRange(matcher);
+      } else
         return null;
+    }
+
+    private String doRange(Matcher matcher) {
+      boolean closedLeft = matcher.group(2).equals("=");
+      boolean closedRight = matcher.group(3).equals("=");
+      boolean pass = (arg1 < v && v < arg2) || (closedLeft && arg1 == v) || (closedRight && arg2 == v);
+      return rangeMessage(pass);
+    }
+
+    private String rangeMessage(boolean pass) {
+      String[] fragments = originalExpression.replaceAll(" ", "").split("_");
+      String message = String.format("%s%s%s", fragments[0], value, fragments[1]);
+      message = replaceSymbolsWithFullExpansion(message);
+      return pass ? returnedValueExpectation.pass(message) : returnedValueExpectation.fail(message);
+
+    }
+
+    private boolean canUnpackRange(Matcher matcher) {
+      try {
+        arg1 = Double.parseDouble(matcher.group(1));
+        arg2 = Double.parseDouble(matcher.group(4));
+        v = Double.parseDouble(value);
+      } catch (NumberFormatException e) {
+        return false;
       }
+      return true;
+    }
+
+    private String doSimpleComparison() {
+      if (operation.equals("<") || operation.equals("!>="))
+        return simpleComparisonMessage(v < arg1);
+      else if (operation.equals(">") || operation.equals("!<="))
+        return simpleComparisonMessage(v > arg1);
+      else if (operation.equals(">=") || operation.equals("!<"))
+        return simpleComparisonMessage(v >= arg1);
+      else if (operation.equals("<=") || operation.equals("!>"))
+        return simpleComparisonMessage(v <= arg1);
+      else if (operation.equals("!="))
+        return simpleComparisonMessage(v != arg1);
+      else if (operation.equals("="))
+        return simpleComparisonMessage(v == arg1);
+      else if (operation.equals("~="))
+        return simpleComparisonMessage(approximatelyEqual(arg1Text, value));
+      else if (operation.equals("!~="))
+        return simpleComparisonMessage(!approximatelyEqual(arg1Text, value));
+      else
+        return null;
+    }
+
+    private String simpleComparisonMessage(boolean pass) {
+      String message = String.format("%s%s", value, originalExpression.replaceAll(" ", ""));
+      message = replaceSymbolsWithFullExpansion(message);
+      return pass ? returnedValueExpectation.pass(message) : returnedValueExpectation.fail(message);
+
+    }
+
+    private String matchSimpleComparison() {
+      Matcher matcher = simpleComparison.matcher(expression);
+      if (matcher.matches()) {
+        try {
+          v = Double.parseDouble(value);
+          arg1Text = matcher.group(2);
+          arg1 = Double.parseDouble(arg1Text);
+          return matcher.group(1);
+        } catch (NumberFormatException e1) {
+          return null;
+        }
+      }
+      return null;
     }
   }
 }
