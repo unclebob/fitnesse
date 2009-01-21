@@ -128,10 +128,14 @@
   </target>
 
   <target name="stamp-version">
+    <delete file="pom.xml"/>
     <delete file="src/fitnesse/FitNesseVersion.java"/>
     <delete file="FitNesseRoot/FrontPage/content.txt"/>
     <tstamp/>
     <filter token="version" value="${DSTAMP}"/>
+    <copy filtering="true"
+          file="templates/pom.xml.template"
+          tofile="pom.xml"/>
     <copy filtering="true"
           file="templates/FitNesseVersion.java.template"
           tofile="src/fitnesse/FitNesseVersion.java"/>
