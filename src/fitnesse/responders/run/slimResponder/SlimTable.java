@@ -538,7 +538,7 @@ public abstract class SlimTable {
           );
       }
 
-      return evaluationMessage;
+      return evaluationMessage;                                     
     }
 
     private String announceBlank(String originalValue) {

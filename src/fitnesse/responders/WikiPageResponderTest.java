@@ -143,6 +143,19 @@ public class WikiPageResponderTest extends RegexTestCase {
 
     assertSubString("<body class=\"imported\">", content);
   }
+  
+  public void testImportedPageIndicationNotOnRoot() throws Exception {
+    final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
+    final PageData data = page.getData();
+    final WikiImportProperty importProperty = new WikiImportProperty("blah");
+    importProperty.setRoot(true);
+    importProperty.addTo(data.getProperties());
+    page.commit(data);
+
+    final String content = requestPage("SamplePage").getContent();
+
+    assertNotSubString("<body class=\"imported\">", content);
+  }
 
   public void testResponderIsSecureReadOperation() throws Exception {
     final Responder responder = new WikiPageResponder();

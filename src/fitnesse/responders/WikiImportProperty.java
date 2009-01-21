@@ -47,7 +47,8 @@ public class WikiImportProperty extends WikiPageProperty {
 
   public static boolean isImported(PageData pageData) {
     try {
-      return pageData.getProperties().has(PROPERTY_NAME);
+      WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
+      return importProperty != null && !importProperty.isRoot();
     } catch (Exception e) {
     }
     return false;
