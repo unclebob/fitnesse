@@ -82,6 +82,12 @@ public class EditResponderTest extends RegexTestCase {
     assertMatches("spreadsheetSupport.js", body);
   }
 
+  public void testFormatterScriptsExist() throws Exception {
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    String body = response.getContent();
+    assertMatches("WikiFormatter.js", body);
+    assertMatches("wikiFormatterSupport.js", body);
+  }
 
   public void testMissingPageDoesNotGetCreated() throws Exception {
     request.setResource("MissingPage");

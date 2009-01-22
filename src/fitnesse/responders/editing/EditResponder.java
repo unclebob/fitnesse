@@ -141,6 +141,8 @@ public class EditResponder implements SecureResponder {
 
     includeJavaScriptFile("/files/javascript/SpreadsheetTranslator.js", scripts);
     includeJavaScriptFile("/files/javascript/spreadsheetSupport.js", scripts);
+    includeJavaScriptFile("/files/javascript/WikiFormatter.js", scripts);
+    includeJavaScriptFile("/files/javascript/wikiFormatterSupport.js", scripts);
     includeJavaScriptFile("/files/javascript/fitnesse.js", scripts);
 
     return scripts;
