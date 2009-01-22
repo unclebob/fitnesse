@@ -1,3 +1,5 @@
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.tools;
 
 import fitnesse.util.FileUtil;
@@ -39,6 +41,7 @@ class LicenseAdder extends LicenseManager {
   }
 
   protected void doFile(File file) throws Exception {
+    System.out.println("Adding license to " + file.getPath());
     List<String> lines = FileUtil.getFileLines(file);
     lines.addAll(0, license);
     FileUtil.writeLinesToFile(file, lines);
@@ -47,6 +50,7 @@ class LicenseAdder extends LicenseManager {
 
 class LicenseRemover extends LicenseManager {
   protected void doFile(File file) throws Exception {
+    System.out.println("Removing license from " + file.getPath());
     LinkedList<String> lines = FileUtil.getFileLines(file);
     for (int i = 0; i < lines.size(); i++) {
       if (lines.get(i).startsWith("// Copyright (C) ")) {

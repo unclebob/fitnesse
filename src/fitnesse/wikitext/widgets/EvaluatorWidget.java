@@ -1,3 +1,5 @@
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 // Derived from copyrighted code by Object Mentor, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
 //EvaluatorWidget: Created using VariableWidget & Expression
