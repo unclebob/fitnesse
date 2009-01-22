@@ -29,7 +29,7 @@ public class ScriptTableTest {
     instructions = new ArrayList<Object>();
   }
 
-  private ScriptTable makeScriptTableAndBuildInstructions(String pageContents) throws Exception {
+  private ScriptTable buildInstructionsForWholeTable(String pageContents) throws Exception {
     st = makeScriptTable(pageContents);
     st.appendInstructions(instructions);
     return st;
@@ -53,7 +53,7 @@ public class ScriptTableTest {
   }
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {
-    makeScriptTableAndBuildInstructions(scriptTableHeader + scriptStatements);
+    buildInstructionsForWholeTable(scriptTableHeader + scriptStatements);
   }
 
   @Test
@@ -73,8 +73,27 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void scriptWithActor() throws Exception {
+    buildInstructionsForWholeTable("|script|Bob|\n");
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0", "make", "scriptTableActor", "Bob")
+      );
+    assertEquals(expectedInstructions, instructions);  }
+
+  @Test
   public void startStatementWithArguments() throws Exception {
     buildInstructionsFor("|start|Bob martin|x|y|\n");
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0", "make", "scriptTableActor", "BobMartin", "x", "y")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void scriptStatementWithArguments() throws Exception {
+    buildInstructionsForWholeTable("|script|Bob martin|x|y|\n");
     List<Object> expectedInstructions =
       list(
         list("scriptTable_id_0", "make", "scriptTableActor", "BobMartin", "x", "y")

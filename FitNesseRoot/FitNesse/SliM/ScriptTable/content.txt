@@ -1,5 +1,4 @@
-|script|
-|start|login dialog driver|Bob|xyzzy|
+|script|login dialog driver|Bob|xyzzy|
 |login with username|Bob|and password|xyzzy|
 |check|login message|Bob logged in.|
 |reject|login with username|Bob|and password|bad password|
@@ -41,9 +40,7 @@ The fixture for this table is:
 } }}}
 
 This should be pretty clear.  Each row is a single instruction in the script.
- * The first row is simply the word "Script".
-
- * The second row is usually the word ''start'' and identifies the name and constructor arguments of the fixture that will be used by the rest of the table.  If you don't have a ''start'', then the previous script table's fixture on this test page will be used.
+ * The first row is simply the word "Script" followed by the name and constructor arguments of the fixture (known as the "actor") that will be used by the rest of the table.  If there is no actor specified then the previous script table's actor on this test page will be used.
 
  * Most instructions involve some kind of function call.  The name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells.
 
@@ -62,6 +59,8 @@ This should be pretty clear.  Each row is a single instruction in the script.
  * If the word ''show'' is in the first cell, then it should be followed by a function.  A new cell will be added when the test is run, and it will contain the return value of the function.
 
  * If a symbol assignment is in the first cell, then it should be followed by a functions.  The symbol is assigned the value returned by that function.
+
+ * If the word ''start'' appears in the first cell, then the rest of the row is the name and constructor arguments for a new actor, which replaces the existing actor.
 
 
 

@@ -1,5 +1,7 @@
+|FitNesse.SliM.ScriptTable||12:34:14 Thu, Jan 22, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||12:23:56 Thu, Jan 22, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators||12:23:25 Thu, Jan 22, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||10:44:34 Thu, Jan 22, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||10:38:24 Wed, Jan 21, 2009|
 |JunkParent.WaPa||10:31:37 Wed, Jan 21, 2009|
 |JunkParent||10:31:15 Wed, Jan 21, 2009|
 |JunkParent.ImportHead.ImportChild||08:56:31 Wed, Jan 21, 2009|
@@ -12,8 +14,6 @@
 |JunkParent.JunkPage||15:09:19 Tue, Jan 20, 2009|
 |JunkPage||14:39:04 Tue, Jan 20, 2009|
 |JunkParent.SlimTest||14:30:43 Tue, Jan 20, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators||11:37:21 Tue, Jan 20, 2009|
-|FitNesse.SliM.ScriptTable||11:22:39 Tue, Jan 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests||09:55:49 Tue, Jan 20, 2009|
 |FitNesse.DownloadingAndInstallingFitNesse||11:30:30 Mon, Jan 19, 2009|
 |FitNesse.UserGuide.SourceCodeControl.GitPlugin||14:31:36 Fri, Jan 16, 2009|

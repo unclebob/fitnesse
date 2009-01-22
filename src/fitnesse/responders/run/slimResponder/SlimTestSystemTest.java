@@ -2,7 +2,6 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
@@ -86,9 +85,9 @@ public class SlimTestSystemTest {
   }
 
   @Test
-  public void emptyScriptTable() throws Exception {
-    getResultsForPageContents("|Script|\n");
-    assertTestResultsContain("Script tables must at least one statement.");
+  public void scriptTableWithBadConstructor() throws Exception {
+    getResultsForPageContents("|Script|NoSuchClass|\n");
+    assertTestResultsContain("<span class=\"error\">Could not invoke constructor for NoSuchClass");
   }
 
   @Test

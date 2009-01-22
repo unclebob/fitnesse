@@ -18,8 +18,7 @@
 |reject|content matches|Edit Locally|
 |reject|content matches|Edit Remotely|
 
-!|script|
-|start|page driver|
+!|script|page driver|
 
 *!
 

@@ -21,11 +21,15 @@ public class ScriptTable extends SlimTable {
 
   public void appendInstructions() {
     int rows = table.getRowCount();
-    if (rows < 2)
-      throw new SlimTable.SyntaxError("Script tables must at least one statement.");
+    if (isScript() && table.getColumnCountInRow(0) > 1)
+      startActor(0);
     for (int row = 1; row < rows; row++)
       appendInstructionForRow(row);
 
+  }
+
+  private boolean isScript() {
+    return "script".equalsIgnoreCase(table.getCellContents(0,0));
   }
 
   private void appendInstructionForRow(int row) {

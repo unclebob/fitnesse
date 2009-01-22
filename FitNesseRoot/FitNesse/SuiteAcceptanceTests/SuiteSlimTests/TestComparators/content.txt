@@ -4,8 +4,7 @@
 |scenario|comparator|a|rejects|b|
 |check not|echo|@b|@a|
 
-|script|
-|start|echo fixture|
+|script|echo fixture|
 ||
 |comparator|=5|accepts|5|
 |comparator|=5|rejects|6|
