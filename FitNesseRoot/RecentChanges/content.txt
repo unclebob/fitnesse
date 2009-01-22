@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||10:44:34 Thu, Jan 22, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||10:38:24 Wed, Jan 21, 2009|
 |JunkParent.WaPa||10:31:37 Wed, Jan 21, 2009|
 |JunkParent||10:31:15 Wed, Jan 21, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestAliasLinkToNonExistentPageDefersToRemoteServer||07:21:27 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestAccessVirtualChild||07:20:44 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingSubPageSymbolicLink||07:19:06 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.TestCreatingNestedBackSymbolicLink||07:18:37 Sat, Dec 13, 2008|
