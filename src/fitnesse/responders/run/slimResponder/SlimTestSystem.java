@@ -14,6 +14,7 @@ import fitnesse.slim.SlimError;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.slimTables.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

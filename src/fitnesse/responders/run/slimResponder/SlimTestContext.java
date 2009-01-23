@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.slimTables.ScenarioTable;
+import fitnesse.slimTables.SlimTable;
+
 public interface SlimTestContext {
   String getSymbol(String symbolName);
 

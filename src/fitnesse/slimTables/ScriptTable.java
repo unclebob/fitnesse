@@ -1,9 +1,11 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
 
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,7 +218,7 @@ public class ScriptTable extends SlimTable {
       super(null, instructionTag, col, row);
     }
 
-    protected void evaluateExpectation(Map<String, Object> returnValues) {
+    public void evaluateExpectation(Map<String, Object> returnValues) {
       String originalContent = table.getCellContents(col, row);
         table.setCell(col, row, replaceSymbolsWithFullExpansion(originalContent));
     }

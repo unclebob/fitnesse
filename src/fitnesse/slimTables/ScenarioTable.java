@@ -1,8 +1,9 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
 
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimError;
 import fitnesse.util.StringUtil;
 
@@ -121,7 +122,7 @@ public class ScenarioTable extends SlimTable {
       this.scriptTable = scriptTable;
     }
 
-    protected void evaluateExpectation(Map<String, Object> returnValues) {
+    public void evaluateExpectation(Map<String, Object> returnValues) {
       TestSummary counts = scriptTable.getTestSummary();
       boolean testStatus = (counts.wrong + counts.exceptions) == 0;
       SlimTable parent = scriptTable.getParent();

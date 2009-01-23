@@ -1,29 +1,32 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
 
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPageUtil;
+import static fitnesse.util.ListUtility.list;
 import fitnesse.slim.SlimClient;
 import static fitnesse.testutil.RegexTestCase.assertSubString;
-import static fitnesse.util.ListUtility.list;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 
-public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+public class ScenarioAndScriptTableTest extends MockSlimTestContext {
   private WikiPage root;
   private List<Object> instructions;
   private ScenarioTable st;
-  private DecisionTable dt;
+  private ScriptTable script;
   private Map<String, String> symbols = new HashMap<String, String>();
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+  private ArrayList<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
 
   @Before
   public void setUp() throws Exception {
@@ -37,9 +40,9 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     Table t = ts.getTable(0);
     st = new ScenarioTable(t, "s_id", this);
     t = ts.getTable(1);
-    dt = new DecisionTable(t, "did", this);
+    script = new ScriptTable(t, "id", this);
     st.appendInstructions(instructions);
-    dt.appendInstructions(instructions);
+    script.appendInstructions(instructions);
   }
 
   @Test
@@ -48,13 +51,12 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "!|scenario|myScenario|input|\n" +
         "|function|@input|\n" +
         "\n" +
-        "!|DT:myScenario|\n" +
-        "|input|\n" +
-        "|7|\n"
+        "!|script|\n" +
+        "|myScenario|7|\n"
     );
     List<Object> expectedInstructions =
       list(
-        list("scriptTable_did.0_0", "call", "scriptTableActor", "function", "7")
+        list("scriptTable_id.0_0", "call", "scriptTableActor", "function", "7")
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -65,18 +67,18 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "!|scenario|login|user name|password|password|pin|pin|\n" +
         "|login|@userName|with password|@password|and pin|@pin|\n" +
         "\n" +
-        "!|DT:LoginPasswordPin|\n" +
-        "|user name|password|pin|\n" +
-        "|bob|xyzzy|7734|\n" +
-        "|bill|yabba|8892|\n"
+        "!|script|\n" +
+        "|login|bob|password|xyzzy|pin|7734|\n" +
+        "|login|bill|password|yabba|pin|8892|\n"
     );
     List<Object> expectedInstructions =
       list(
-        list("scriptTable_did.0_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
-        list("scriptTable_did.1_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
+        list("scriptTable_id.0_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
+        list("scriptTable_id.1_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
       );
     assertEquals(expectedInstructions, instructions);
   }
+
 
   @Test
   public void simpleInputAndOutputPassing() throws Exception {
@@ -84,27 +86,27 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "!|scenario|echo|input|giving|output|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|7|\n"
+        "!|script|\n" +
+        "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_did.0_0", "7")
+        list("scriptTable_id.0_0", "7")
       )
     );
+
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = dt.getChild(0).getTable().toString();
+    String scriptTable = script.getChild(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
+    String dtHtml = script.getTable().toString();
     assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
-    assertEquals(1, dt.getTestSummary().right);
-    assertEquals(0, dt.getTestSummary().wrong);
-    assertEquals(0, dt.getTestSummary().ignores);
-    assertEquals(0, dt.getTestSummary().exceptions);
+    assertEquals(1, script.getTestSummary().right);
+    assertEquals(0, script.getTestSummary().wrong);
+    assertEquals(0, script.getTestSummary().ignores);
+    assertEquals(0, script.getTestSummary().exceptions);
   }
 
   @Test
@@ -113,72 +115,104 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "!|scenario|echo|input|giving|output|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|8|\n"
+        "!|script|\n" +
+        "|echo|7|giving|8|\n"
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_did.0_0", "7")
+        list("scriptTable_id.0_0", "7")
       )
     );
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = dt.getChild(0).getTable().toString();
+    String scriptTable = script.getChild(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output], [check, echo, 7, [7] fail(expected [8])]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
+    String dtHtml = script.getTable().toString();
     assertSubString("<span id=\"test_status\" class=fail>Scenario</span>", dtHtml);
-    assertEquals(0, dt.getTestSummary().right);
-    assertEquals(1, dt.getTestSummary().wrong);
-    assertEquals(0, dt.getTestSummary().ignores);
-    assertEquals(0, dt.getTestSummary().exceptions);
+    assertEquals(0, script.getTestSummary().right);
+    assertEquals(1, script.getTestSummary().wrong);
+    assertEquals(0, script.getTestSummary().ignores);
+    assertEquals(0, script.getTestSummary().exceptions);
   }
 
+  @Test
+  public void inputAndOutputWithSymbol() throws Exception {
+    makeTables(
+      "!|scenario|echo|input|giving|output|\n" +
+        "|check|echo|@input|@output|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|$V=|echo|7|\n" +
+        "|echo|$V|giving|$V|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("scriptTable_id_0", "7"),
+        list("scriptTable_id.0_0", "7")
+      )
+    );
+
+    evaluateExpectations(pseudoResults);
+
+    String scriptTable = script.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving, output], [check, echo, $V->[7], pass($V->[7])]]";
+    assertEquals(expectedScript, scriptTable);
+  }
+  
   @Test
   public void scenarioHasTooFewArguments() throws Exception {
     makeTables(
       "!|scenario|echo|input|giving|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|8|\n"
+        "!|script|\n" +
+        "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_did.0_0", "7")
+        list("scriptTable_id.0_0", "7")
       )
     );
+
     evaluateExpectations(pseudoResults);
-    String dtHtml = dt.getTable().toString();
-    assertSubString("<span class=\"fail\">DT:EchoGiving: Bad table:", dtHtml);
-    assertSubString("The argument output is not an input to the scenario.", dtHtml);
+
+    String scriptTable = script.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, input, giving], [check, echo, 7, [7] fail(expected [@output])]]";
+    assertEquals(expectedScript, scriptTable);
   }
 
   @Test
-  public void scenarioHasExtraArgumentsThatAreIgnored() throws Exception {
+  public void scenarioExtraArgumentsAreIgnored() throws Exception {
     makeTables(
       "!|scenario|echo|input|giving|output||output2|\n" +
         "|check|echo|@input|@output|\n" +
         "\n" +
-        "!|DT:EchoGiving|\n" +
-        "|input|output|\n" +
-        "|7|7|\n"
+        "!|script|\n" +
+        "|echo|7|giving|7|\n"
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_did.0_0", "7")
+        list("scriptTable_id.0_0", "7")
       )
     );
+
     evaluateExpectations(pseudoResults);
 
-    String scriptTable = dt.getChild(0).getTable().toString();
+    String scriptTable = script.getChild(0).getTable().toString();
     String expectedScript =
       "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
-    String dtHtml = dt.getTable().toString();
+    String dtHtml = script.getTable().toString();
     assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
+    assertEquals(1, script.getTestSummary().right);
+    assertEquals(0, script.getTestSummary().wrong);
+    assertEquals(0, script.getTestSummary().ignores);
+    assertEquals(0, script.getTestSummary().exceptions);
   }
+
+
 }

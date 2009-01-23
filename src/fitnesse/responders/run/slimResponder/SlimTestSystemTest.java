@@ -3,6 +3,9 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
+import fitnesse.slimTables.HtmlTableScanner;
+import fitnesse.slimTables.Table;
+import fitnesse.slimTables.TableScanner;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;

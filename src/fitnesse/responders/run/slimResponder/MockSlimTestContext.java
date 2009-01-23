@@ -2,12 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import com.sun.jndi.ldap.LdapClient;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+
+import fitnesse.slimTables.ScenarioTable;
+import fitnesse.slimTables.SlimTable;
 
 public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();

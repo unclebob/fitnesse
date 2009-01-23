@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
 
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
@@ -8,6 +8,7 @@ import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;

@@ -1,10 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
 
-import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceClassName;
-import static fitnesse.responders.run.slimResponder.SlimTable.Disgracer.disgraceMethodName;
-import static fitnesse.responders.run.slimResponder.SlimTable.approximatelyEqual;
+import static fitnesse.slimTables.SlimTable.Disgracer.disgraceClassName;
+import static fitnesse.slimTables.SlimTable.Disgracer.disgraceMethodName;
+import static fitnesse.slimTables.SlimTable.approximatelyEqual;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

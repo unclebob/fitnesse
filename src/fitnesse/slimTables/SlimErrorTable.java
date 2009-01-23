@@ -1,6 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
+
+import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 import java.util.Map;
 
