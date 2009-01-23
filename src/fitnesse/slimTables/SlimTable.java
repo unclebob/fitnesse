@@ -201,6 +201,11 @@ public abstract class SlimTable {
     table.setCell(col, row, failingContents);
   }
 
+  protected void ignore(int col, int row, String value) {
+    String content = ignore(value);
+    table.setCell(col, row, content);
+  }
+
   protected void pass(int col, int row) {
     String contents = table.getCellContents(col, row);
     String passingContents = pass(contents);

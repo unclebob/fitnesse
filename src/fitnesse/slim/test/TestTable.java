@@ -10,7 +10,7 @@ public class TestTable {
   public List<?> doTable(List<?> l) {
     return list(
       list("pass", "error:huh", ""),
-      list("bill", "no change", "jake")
+      list("bill", "no change", "pass:jake")
     );
   }
 }

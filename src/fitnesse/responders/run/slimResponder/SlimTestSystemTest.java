@@ -103,8 +103,8 @@ public class SlimTestSystemTest {
 
   @Test
   public void emptyTableTable() throws Exception {
-    getResultsForPageContents("|Table|\n");
-    assertTestResultsContain("Table tables must have at least two rows.");
+    getResultsForPageContents("!|Table:TableFixture|\n");
+    assertTestResultsContain("<span class=\"error\">Could not invoke constructor for TableFixture[0]</span>");
   }
 
   @Test
