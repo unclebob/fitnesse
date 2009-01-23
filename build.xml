@@ -151,7 +151,7 @@
   </target>
 
   <target name="unit_test" depends="compile" description="run the unit tests">
-    <junit fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
+    <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
       <classpath refid="classpath"/>
       <formatter type="xml" usefile="true"/>
       <formatter type="plain" usefile="false"/>
