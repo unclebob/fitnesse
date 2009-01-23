@@ -18,6 +18,7 @@ public class TestSlim {
   private Integer[] integerArray;
   private Boolean[] booleanArray;
   private Double[] doubleArray;
+  private Zork zork;
 
   public TestSlim() {
 
@@ -179,6 +180,15 @@ public class TestSlim {
 
   public String nullString() {
     return null;
+  }
+
+  public Zork oneZork(Zork zork) {
+    this.zork = zork;
+    return zork;
+  }
+
+  public Zork getZork() {
+    return zork;
   }
 
   class NoSuchConverter {

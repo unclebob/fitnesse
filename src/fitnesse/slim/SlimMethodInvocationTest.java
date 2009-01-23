@@ -5,6 +5,7 @@ package fitnesse.slim;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlim;
+import fitnesse.slim.test.Zork;
 import static fitnesse.util.ListUtility.list;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
@@ -91,6 +92,13 @@ public class SlimMethodInvocationTest {
   public void passOneList() throws Exception {
     caller.call("testSlim", "oneList", list("one", "two"));
     assertEquals(list("one", "two"), testSlim.getListArg());
+  }
+
+  @Test
+  public void passAndReturnOneZorkWithPropertyEditor() throws Exception {
+    Object retval = caller.call("testSlim", "oneZork", "zork_42");
+    assertEquals(new Zork(42), testSlim.getZork());
+    assertEquals("zork_42", retval);
   }
 
   @Test

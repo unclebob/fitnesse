@@ -1,3 +1,4 @@
+|FitNesse.SliM.CustomTypes||15:26:00 Fri, Jan 23, 2009|
 |FitNesse.WritingFitTables.BowlingGameProject.SuiteGames.TestGamesWithFancyFixture||12:08:45 Fri, Jan 23, 2009|
 |FitNesse.SliM.TableTable||11:46:10 Fri, Jan 23, 2009|
 |FitNesse.SliM.TableTable.ReportTables||11:36:20 Fri, Jan 23, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestLiteral||07:24:40 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestVirtualLinkError||07:23:37 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestVirtualLinkConnection||07:23:18 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestIncludedPageOutOfRange||07:22:59 Sat, Dec 13, 2008|

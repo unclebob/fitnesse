@@ -12,6 +12,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 
 /**
  * This is the API for executing a SLIM statement.  This class should not know about
@@ -62,7 +64,14 @@ public class StatementExecutor {
   }
 
   public Converter getConverter(Class<?> k) {
-    return Slim.converters.get(k);
+    Converter c =  Slim.converters.get(k);
+    if (c != null)
+       return c;
+    PropertyEditor pe = PropertyEditorManager.findEditor(k);
+    if (pe != null) {
+      return new PropertyEditorConverter(pe);
+    }
+    return null;
   }
 
   public Object create(String instanceName, String className, Object[] args) {
