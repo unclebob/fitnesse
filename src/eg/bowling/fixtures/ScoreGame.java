@@ -21,19 +21,22 @@ public class ScoreGame extends TableFixture {
   }
 
   private void doRolls() {
-    for (int roll = 0; roll < 21; roll++) {
-      int pins = parseRoll(roll);
-      if (pins == SPARE)
-        spare(roll);
-      else if (pins == STRIKE)
-        strike(roll);
-      else if (pins == BLANK)
-        blank(roll);
-      else if (pins == ERROR)
-        wrongRoll(roll);
-      else {
-        roll(pins);
-      }
+    for (int roll = 0; roll < 21; roll++)
+      doRoll(roll);
+  }
+
+  private void doRoll(int roll) {
+    int pins = parseRoll(roll);
+    if (pins == SPARE)
+      spare(roll);
+    else if (pins == STRIKE)
+      strike(roll);
+    else if (pins == BLANK)
+      blank(roll);
+    else if (pins == ERROR)
+      wrongRoll(roll);
+    else {
+      roll(pins);
     }
   }
 
@@ -73,21 +76,26 @@ public class ScoreGame extends TableFixture {
   }
 
   private void strike(int rollNumber) {
-    if (rollNumber == 18)
+    if (tenthFrameStrike(rollNumber)) {
       roll(10);
-    else if (rollNumber == 19 && parseRoll(18) == STRIKE)
-      roll(10);
-    else if (rollNumber == 20 && (parseRoll(19) == STRIKE || parseRoll(19) == SPARE))
-      roll(10);
-    else if (odd(rollNumber))
-      wrongRoll(rollNumber);
-    else {
-      int previousRoll = parseRoll(rollNumber - 1);
-      if (previousRoll != BLANK)
-        wrongRoll(rollNumber);
-      else
-        roll(10);
+      return;
     }
+    if (odd(rollNumber)) {
+      wrongRoll(rollNumber);
+      return;
+    }
+    int previousRoll = parseRoll(rollNumber - 1);
+    if (previousRoll != BLANK)
+      wrongRoll(rollNumber);
+    else
+      roll(10);
+
+  }
+
+  private boolean tenthFrameStrike(int rollNumber) {
+    return rollNumber == 18 ||
+      (rollNumber == 19 && parseRoll(18) == STRIKE) ||
+      (rollNumber == 20 && (parseRoll(19) == STRIKE || parseRoll(19) == SPARE));
   }
 
   private boolean odd(int rollNumber) {
@@ -108,15 +116,17 @@ public class ScoreGame extends TableFixture {
   }
 
   private void doScores() {
-    for (int frame = 0; frame < 10; frame++) {
-      int expectedScore = getScore(frame);
-      int actualScore = game.score(frame + 1);
-      if (expectedScore == actualScore)
-        rightScore(frame);
-      else
-        wrongScore(frame, "" + actualScore);
-    }
+    for (int frame = 0; frame < 10; frame++)
+      scoreFrame(frame);
+  }
 
+  private void scoreFrame(int frame) {
+    int expectedScore = getScore(frame);
+    int actualScore = game.score(frame + 1);
+    if (expectedScore == actualScore)
+      rightScore(frame);
+    else
+      wrongScore(frame, "" + actualScore);
   }
 
   private void rightScore(int frame) {
