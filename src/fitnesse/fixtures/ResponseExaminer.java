@@ -44,6 +44,15 @@ public class ResponseExaminer extends ColumnFixture {
 
   public int matchCount() throws Exception {
     Pattern p = Pattern.compile(pattern, Pattern.MULTILINE + Pattern.DOTALL);
+    extractValueFromResponse();
+
+    matcher = p.matcher(value);
+    int matches = 0;
+    for (matches = 0; matcher.find(); matches++) ;
+    return matches;
+  }
+
+  public void extractValueFromResponse() throws Exception {
     setValue(null);
     if (type.equals("contents"))
       setValue(Utils.unescapeHTML(FitnesseFixtureContext.sender.sentData()));
@@ -56,11 +65,6 @@ public class ResponseExaminer extends ColumnFixture {
       int headerEnd = text.indexOf("\r\n\r\n");
       setValue(text.substring(0, headerEnd + 2));
     }
-
-    matcher = p.matcher(value);
-    int matches = 0;
-    for (matches = 0; matcher.find(); matches++) ;
-    return matches;
   }
 
   public boolean matches() throws Exception {
@@ -124,5 +128,9 @@ public class ResponseExaminer extends ColumnFixture {
 
   public void setNumber(int number) {
     this.number = number;
+  }
+
+  public String getValue() {
+    return value;
   }
 }

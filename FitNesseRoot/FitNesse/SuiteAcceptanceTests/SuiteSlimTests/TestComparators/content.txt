@@ -1,3 +1,4 @@
+!*> Scenarios
 |scenario|comparator|a|accepts|b|
 |check|echo|@b|@a|
 
@@ -5,7 +6,9 @@
 |check not|echo|@b|@a|
 
 |script|echo fixture|
-||
+
+*!
+|script|
 |comparator|=5|accepts|5|
 |comparator|=5|rejects|6|
 ||

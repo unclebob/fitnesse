@@ -25,6 +25,12 @@ public class PageDriver {
     return examiner.matches();
   }
 
+  public boolean contentContains(String subString) throws Exception {
+    examiner.type = "contents";
+    examiner.extractValueFromResponse();
+    return examiner.getValue().indexOf(subString) != -1;
+  }
+
   public String content() throws Exception {
     return requester.contents();
   }

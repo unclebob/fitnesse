@@ -1,46 +1,20 @@
 !2 The Backwards Search widget.
-Sometimes we want to search backwards through a path to a named page.  For example, if we are on the page !-.PageOne.PageTwo.PageThree.PageFour-! we might be able to say !-<PageTwo-! to search backwards to !-PageTwo-!.  Now let's say there is a page named !-.PageOne.PageTwo.AnotherPage-! and we are on !-.PageOne.PageTwo.PageThree.PageFour-!  We could say !-<PageTwo.AnotherPage-!
+Sometimes we want to search backwards through a path to a named page.  For example, if we are on the page !style_code(!-.PageOne.PageTwo.PageThree.PageFour-!) we might be able to say !style_code(!<<PageTwo>!) to search backwards to !style_code(!-PageTwo-!).  Now let's say there is a page named !style_code(!<.PageOne.PageTwo.AnotherPage>!) and we are on !style_code(!-.PageOne.PageTwo.PageThree.PageFour-!)  We could say !style_code(!<<PageTwo.AnotherPage>!)
 
-!|Page creator.|
-|Page name.                        |Page contents.      |valid?|
-|PageOne                           |                    |true  |
-|PageOne.PageTwo                   |                    |true  |
-|PageOne.PageTwo.AnotherPage               |                    |true  |
-|PageOne.PageTwo.PageThree         |                    |true  |
-|PageOne.PageTwo.PageThree.PageFour|<PageTwo.AnotherPage|true  |
+!*> Scenarios
+!include -c <SuiteAcceptanceTest.ScenarioLibrary
 
-!|Response Requester.|
-|uri|valid?|contents?|
-|PageOne.PageTwo.PageThree.PageFour|true||
+|script|page driver|
 
-!|Response Examiner.|
-|type  |pattern|matches?|value|
-|contents|href="PageOne.PageTwo.AnotherPage"|true||
-
-Now check for a page that doesn't exist.
-
-!|Page creator.|
-|Page name.                        |Page contents.      |valid?|
-|PageOne.PageTwo.PageThree.PageFour|<NoSuch             |true  |
-
-!|Response Requester.|
-|uri|valid?|contents?|
-|PageOne.PageTwo.PageThree.PageFour|true||
-
-!|Response Examiner.|
-|type  |pattern|matches?|value|
-|contents|<NoSuch<a title="create page" href="NoSuch\?edit&nonExistent=true">\[\?\]</a>|true||
-
-Now check for a sub page that doesn't exist.
-
-!|Page creator.|
-|Page name.                        |Page contents.      |valid?|
-|PageOne.PageTwo.PageThree.PageFour|<PageOne.NoSuch     |true  |
-
-!|Response Requester.|
-|uri|valid?|contents?|
-|PageOne.PageTwo.PageThree.PageFour|true||
-
-!|Response Examiner.|
-|type  |pattern|matches?|value|
-|contents|!<<PageOne\.NoSuch<a title="create page" href="PageOne\.NoSuch\?edit&nonExistent=true">\[\?\]</a>>!|true||
+*!
+!|script|
+|create page|PageOne.PageTwo.AnotherPage|
+|create page|PageOne.PageTwo.PageThree.PageFour|with content|<PageTwo.AnotherPage|
+||
+|page|PageOne.PageTwo.PageThree.PageFour|should have link to|PageOne.PageTwo.AnotherPage|
+||
+|create page|PageOne.PageTwo|with content|<NoSuchPage|
+|page|PageOne.PageTwo|should have creating link to|NoSuchPage|
+||
+|create page|PageOne.PageX|with content|<PageOne.NoSuchPage|
+|page|PageOne.PageX|should have creating link to|PageOne.NoSuchPage|

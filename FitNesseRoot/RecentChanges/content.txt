@@ -1,3 +1,8 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestBackwardsSearchWidget||17:07:43 Fri, Jan 23, 2009|
+|SuiteAcceptanceTest.ScenarioLibrary||17:07:13 Fri, Jan 23, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators||16:04:11 Fri, Jan 23, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||15:52:05 Fri, Jan 23, 2009|
+|FitNesse.MarkupPageInclude||15:51:24 Fri, Jan 23, 2009|
 |FitNesse.SliM.CustomTypes||15:26:00 Fri, Jan 23, 2009|
 |FitNesse.WritingFitTables.BowlingGameProject.SuiteGames.TestGamesWithFancyFixture||12:08:45 Fri, Jan 23, 2009|
 |FitNesse.SliM.TableTable||11:46:10 Fri, Jan 23, 2009|
@@ -6,8 +11,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||10:13:19 Fri, Jan 23, 2009|
 |FitNesse.MarkupVariables||08:04:55 Fri, Jan 23, 2009|
 |FitNesse.SliM.ScriptTable||12:34:14 Thu, Jan 22, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||12:23:56 Thu, Jan 22, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators||12:23:25 Thu, Jan 22, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||10:44:34 Thu, Jan 22, 2009|
 |JunkParent.WaPa||10:31:37 Wed, Jan 21, 2009|
 |JunkParent||10:31:15 Wed, Jan 21, 2009|
@@ -95,6 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestSimpleTable||07:27:44 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestParentVariables||07:26:16 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestMultiLineTable||07:25:24 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestLiteral||07:24:40 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestVirtualLinkError||07:23:37 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestVirtualLinkConnection||07:23:18 Sat, Dec 13, 2008|

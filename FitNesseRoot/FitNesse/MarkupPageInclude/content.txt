@@ -11,6 +11,10 @@ As a result you will see .FrontPage below:
 -----
 !include .FrontPage
 -----
+|'''Parameters:'''|
+|!style_code(-seamless)|''causes the included page to be rendered without an enclosing box.''|
+|!style_code(-c)|''causes the included page to be collapsed.''|
+
 !3 '''Watch out for !include cycles'''
 Don't include a page that already includes the page that you are including from. ;-)
 

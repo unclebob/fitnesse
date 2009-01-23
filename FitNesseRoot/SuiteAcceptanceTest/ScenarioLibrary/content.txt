@@ -1,0 +1,10 @@
+!|scenario|create page|page|
+|create page|@page|with content|nothing|
+
+|scenario|page|source|should have link to|target|
+|check|request page|@source|200|
+|ensure|content contains|<a href="@target">|
+
+!|scenario|page|source|should have creating link to|target|
+|check|request page|@source|200|
+|ensure|content contains|@target<a title="create page" href="@target?edit&nonExistent=true">[?]</a>|
