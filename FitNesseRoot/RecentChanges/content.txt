@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||10:13:19 Fri, Jan 23, 2009|
+|JunkParent.SlimTest||10:00:23 Fri, Jan 23, 2009|
 |FitNesse.MarkupVariables||08:04:55 Fri, Jan 23, 2009|
 |FitNesse.SliM.ScriptTable||12:34:14 Thu, Jan 22, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||12:23:56 Thu, Jan 22, 2009|
@@ -14,7 +16,6 @@
 |JunkParent.RubyTests||08:50:45 Wed, Jan 21, 2009|
 |JunkParent.JunkPage||15:09:19 Tue, Jan 20, 2009|
 |JunkPage||14:39:04 Tue, Jan 20, 2009|
-|JunkParent.SlimTest||14:30:43 Tue, Jan 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests||09:55:49 Tue, Jan 20, 2009|
 |FitNesse.DownloadingAndInstallingFitNesse||11:30:30 Mon, Jan 19, 2009|
 |FitNesse.UserGuide.SourceCodeControl.GitPlugin||14:31:36 Fri, Jan 16, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestIncludedPageInRange||07:22:38 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestAliasLinkToNonExistentSubPage||07:22:17 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestAliasLinkToNonExistentPageDefersToRemoteServer||07:21:27 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteVirtualWikiTests.TestAccessVirtualChild||07:20:44 Sat, Dec 13, 2008|

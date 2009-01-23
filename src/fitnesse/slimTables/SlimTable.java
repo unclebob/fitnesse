@@ -147,15 +147,17 @@ public abstract class SlimTable {
     makeInstruction.add(instanceName);
 
     makeInstruction.add(className);
-    addArgsToInstruction(makeInstruction, cellsStartingAt(classNameColumn + 1, row));
+    addArgsToInstruction(makeInstruction, gatherConstructorArgumentsStartingAt(classNameColumn + 1, row));
     addInstruction(makeInstruction);
   }
 
-  protected Object[] cellsStartingAt(int startingColumn, int row) {
+  protected Object[] gatherConstructorArgumentsStartingAt(int startingColumn, int row) {
     int columnCount = table.getColumnCountInRow(row);
     List<String> arguments = new ArrayList<String>();
-    for (int col = startingColumn; col < columnCount; col++)
+    for (int col = startingColumn; col < columnCount; col++) {
       arguments.add(table.getUnescapedCellContents(col, row));
+      addExpectation(new VoidReturnExpectation(getInstructionTag(), col, row));
+    }
     return arguments.toArray(new String[0]);
   }
 

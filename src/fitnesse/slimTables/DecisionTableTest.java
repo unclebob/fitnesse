@@ -2,17 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
 import static fitnesse.util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class DecisionTableTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     instructions = new ArrayList<Object>();
+    testContext = new MockSlimTestContext();
   }
 
   private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
@@ -45,7 +47,6 @@ public class DecisionTableTest {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    testContext = new MockSlimTestContext();
     DecisionTable dt = new DecisionTable(t, "id", testContext);
     return dt;
   }
