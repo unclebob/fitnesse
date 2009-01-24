@@ -112,6 +112,10 @@ textarea.pageContent {
   columns: 70;
 }
 
+textarea.no_wrap {
+  overflow: scroll;
+}
+
 pre {
 /*    font-size: 1.5em;*/
 }
@@ -499,6 +503,15 @@ table {
 **********/
 
 div.edit_buttons {
+  float: left;
+}
+
+div.edit_options {
+  float: right;
+}
+
+div.hints {
+  clear: both;
 }
 
 div.nav_break {

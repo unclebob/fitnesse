@@ -118,15 +118,30 @@ public class EditResponder implements SecureResponder {
 
     form.add(createTextarea(firstTimeForNewPage, defaultNewPageContent));
     form.add(createButtons());
-    form.add("<br/>Hints:\n<ul>" +
+    form.add(createOptions());
+    form.add("<div class=\"hints\"><br />Hints:\n<ul>" +
       "<li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the \"Save\" button!</li>\n" +
       "<li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>\n" +
-      "</ul>");
+      "</ul></div>");
 
     TagGroup group = new TagGroup();
     group.add(form);
 
     return group;
+  }
+  
+  private HtmlTag createOptions() throws Exception {
+    HtmlTag options = HtmlUtil.makeDivTag("edit_options");
+    options.add(makeScriptOptions());
+    return options;
+  }
+
+  private HtmlTag makeScriptOptions() {
+    TagGroup scripts = new TagGroup();
+
+    includeJavaScriptFile("/files/javascript/textareaWrapSupport.js", scripts);
+
+    return scripts;
   }
 
   private HtmlTag createButtons() throws Exception {
