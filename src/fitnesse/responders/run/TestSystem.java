@@ -26,7 +26,6 @@ public abstract class TestSystem implements TestSystemListener {
   protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception;
 
   protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) throws Exception {
-    ;
     String commandPattern = descriptor.commandPattern;
     String command = replace(commandPattern, "%p", classPath);
     command = replace(command, "%m", descriptor.testRunner);

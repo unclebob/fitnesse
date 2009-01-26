@@ -7,11 +7,13 @@ import static fitnesse.util.ListUtility.list;
 import java.util.List;
 
 public class Bowling {
+  private Game g;
+
   public List<?> doTable(List<List<String>> table) {
-    Game g = new Game();
+    g = new Game();
     List<?> rollResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
     List<String> scoreResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
-    rollBalls(table, g);
+    rollBalls(table);
     evaluateScores(g, table.get(1), scoreResults);
     return list(rollResults, scoreResults);
   }
@@ -31,29 +33,42 @@ public class Bowling {
     return frame < 9 ? frame * 2 + 1 : frame * 2 + 2;
   }
 
-  private void rollBalls(List<List<String>> table, Game g) {
+  private void rollBalls(List<List<String>> table) {
     List<String> rollRow = table.get(0);
     for (int frame = 0; frame < 10; frame++) {
       String firstRoll = rollRow.get(frame * 2);
       String secondRoll = rollRow.get(frame * 2 + 1);
-      if (firstRoll.equalsIgnoreCase("X"))
-        g.roll(10);
-      else {
-        int firstRollInt = 0;
-        if (firstRoll.equals("-"))
-          g.roll(0);
-        else {
-          firstRollInt = Integer.parseInt(firstRoll);
-          g.roll(firstRollInt);
-        }
-        if (secondRoll.equals("/"))
-          g.roll(10 - firstRollInt);
-        else if (secondRoll.equals("-"))
-          g.roll(0);
-        else
-          g.roll(Integer.parseInt(secondRoll));
-      }
+      rollFrame(firstRoll, secondRoll);
     }
+  }
+
+  private void rollFrame(String firstRoll, String secondRoll) {
+    if (firstRoll.equalsIgnoreCase("X"))
+      g.roll(10);
+    else {
+      int firstRollInt = parseFirstRoll(firstRoll);
+      parseSecondRoll(secondRoll, firstRollInt);
+    }
+  }
+
+  private void parseSecondRoll(String secondRoll, int firstRollInt) {
+    if (secondRoll.equals("/"))
+      g.roll(10 - firstRollInt);
+    else if (secondRoll.equals("-"))
+      g.roll(0);
+    else
+      g.roll(Integer.parseInt(secondRoll));
+  }
+
+  private int parseFirstRoll(String firstRoll) {
+    int firstRollInt = 0;
+    if (firstRoll.equals("-"))
+      g.roll(0);
+    else {
+      firstRollInt = Integer.parseInt(firstRoll);
+      g.roll(firstRollInt);
+    }
+    return firstRollInt;
   }
 
   private class Game {
@@ -65,41 +80,71 @@ public class Bowling {
     }
 
     public int score(int frame) {
-      int score = 0;
-      int firstBall = 0;
-      for (int f = 0; f < frame; f++) {
+      return new Scorer(frame).score();
+    }
+
+    private class Scorer {
+      private int frame;
+      private int score;
+      private int firstBall;
+
+      public Scorer(int frame) {
+        this.frame = frame;
+        score = 0;
+        firstBall = 0;
+      }
+
+      public int score() {
+        for (int f = 0; f < frame; f++)
+          scoreFrame();
+      
+        return score;
+      }
+
+      private void scoreFrame() {
         if (isStrike(firstBall)) {
-          score += 10 + nextTwoBallsForStrike(firstBall);
-          firstBall += 1;
+          scoreStrike();
         } else if (isSpare(firstBall)) {
-          score += 10 + nextBallForSpare(firstBall);
-          firstBall += 2;
+          scoreSpare();
         } else {
-          score += twoBallsInFrame(firstBall);
-          firstBall += 2;
+          scoreNoMark();
         }
       }
-      return score;
-    }
 
-    private int twoBallsInFrame(int firstBall) {
-      return rolls[firstBall] + rolls[firstBall + 1];
-    }
+      private void scoreNoMark() {
+        score += twoBallsInFrame(firstBall);
+        firstBall += 2;
+      }
 
-    private int nextBallForSpare(int firstBall) {
-      return rolls[firstBall + 2];
-    }
+      private void scoreSpare() {
+        score += 10 + nextBallForSpare(firstBall);
+        firstBall += 2;
+      }
 
-    private int nextTwoBallsForStrike(int firstBall) {
-      return rolls[firstBall + 1] + rolls[firstBall + 2];
-    }
+      private void scoreStrike() {
+        score += 10 + nextTwoBallsForStrike(firstBall);
+        firstBall += 1;
+      }
 
-    private boolean isSpare(int firstBall) {
-      return rolls[firstBall] + rolls[firstBall + 1] == 10;
-    }
+      private int twoBallsInFrame(int firstBall) {
+        return rolls[firstBall] + rolls[firstBall + 1];
+      }
 
-    private boolean isStrike(int firstBall) {
-      return rolls[firstBall] == 10;
+      private int nextBallForSpare(int firstBall) {
+        return rolls[firstBall + 2];
+      }
+
+      private int nextTwoBallsForStrike(int firstBall) {
+        return rolls[firstBall + 1] + rolls[firstBall + 2];
+      }
+
+      private boolean isSpare(int firstBall) {
+        return rolls[firstBall] + rolls[firstBall + 1] == 10;
+      }
+
+      private boolean isStrike(int firstBall) {
+        return rolls[firstBall] == 10;
+      }
     }
   }
 }
