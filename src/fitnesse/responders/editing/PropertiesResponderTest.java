@@ -9,6 +9,8 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
+import static org.junit.Assert.assertEquals;
+import org.json.JSONObject;
 
 public class PropertiesResponderTest extends RegexTestCase {
   private WikiPage root;
@@ -64,6 +66,39 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_READ + "\"/>", content);
     assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_WRITE + "\"/>", content);
     assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_TEST + "\"/>", content);
+  }
+
+  public void testJsonResponse() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
+    PageData data = page.getData();
+    data.setContent("some content");
+    WikiPageProperties properties = data.getProperties();
+    properties.set("Test", "true");
+    page.commit(data);
+
+    MockRequest request = new MockRequest();
+    request.setResource("PageOne");
+    request.addInput("format", "json");
+
+    Responder responder = new PropertiesResponder();
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    assertEquals("text/json", response.getContentType());
+    String jsonText = response.getContent();
+    JSONObject jsonObject = new JSONObject(jsonText);
+    assertTrue(jsonObject.getBoolean("Test"));
+    assertTrue(jsonObject.getBoolean("Search"));
+    assertTrue(jsonObject.getBoolean("Edit"));
+    assertTrue(jsonObject.getBoolean("Properties"));
+    assertTrue(jsonObject.getBoolean("Versions"));
+    assertTrue(jsonObject.getBoolean("Refactor"));
+    assertTrue(jsonObject.getBoolean("WhereUsed"));
+    assertTrue(jsonObject.getBoolean("RecentChanges"));
+
+    assertFalse(jsonObject.getBoolean("Suite"));
+    assertFalse(jsonObject.getBoolean("Prune"));
+    assertFalse(jsonObject.getBoolean(WikiPage.SECURE_READ));
+    assertFalse(jsonObject.getBoolean(WikiPage.SECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(WikiPage.SECURE_TEST));
   }
 
   public void testGetVirtualWikiValue() throws Exception {

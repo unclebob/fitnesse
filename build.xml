@@ -101,7 +101,7 @@
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
         <attribute name="Main-Class" value="fitnesse.FitNesse"/>
-        <attribute name="Class-Path" value="lib/htmlparser.jar"/>
+        <attribute name="Class-Path" value="lib/htmlparser.jar lib/json.jar"/>
       </manifest>
     </jar>
     <delete dir="classes/files"/>    

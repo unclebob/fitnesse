@@ -14,6 +14,7 @@ import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -22,27 +23,52 @@ public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
   public PageData pageData;
   private String resource;
+  private SimpleResponse response;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    SimpleResponse response = new SimpleResponse();
+    response = new SimpleResponse();
     resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(context.root, path)) {
+    if (!crawler.pageExists(context.root, path))
       crawler.setDeadEndStrategy(new MockingPageCrawler());
-      page = crawler.getPage(context.root, path);
-    } else
-      page = crawler.getPage(context.root, path);
+    page = crawler.getPage(context.root, path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
 
     pageData = page.getData();
-    String html = makeHtml(context);
-
-    response.setContent(html);
+    makeContent(context, request);
     response.setMaxAge(0);
 
     return response;
+  }
+
+  private void makeContent(FitNesseContext context, Request request) throws Exception {
+    if ("json".equals(request.getInput("format"))) {
+      JSONObject jsonObject = makeJson();
+      response.setContent(jsonObject.toString(1));
+    } else {
+      String html = makeHtml(context);
+      response.setContent(html);
+    }
+  }
+
+  private JSONObject makeJson() throws Exception {
+    response.setContentType("text/json");
+    JSONObject jsonObject = new JSONObject();
+    String attributes[] = new String[]{
+      "Test", "Search", "Edit", "Properties", "Versions",
+      "Refactor", "WhereUsed", "RecentChanges", "Suite", "Prune",
+      WikiPage.SECURE_READ, WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST
+    };
+    for (String attribute : attributes)
+      addJsonAttribute(jsonObject, attribute);
+
+    return jsonObject;
+  }
+
+  private void addJsonAttribute(JSONObject jsonObject, String attribute) throws Exception {
+    jsonObject.put(attribute, pageData.hasAttribute(attribute));
   }
 
   private String makeHtml(FitNesseContext context) throws Exception {
