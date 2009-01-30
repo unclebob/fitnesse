@@ -9,7 +9,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
-import static org.junit.Assert.assertEquals;
 import org.json.JSONObject;
 
 public class PropertiesResponderTest extends RegexTestCase {
@@ -51,21 +50,19 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertHasRegexp("<input.*value=\"Save Properties\".*>", content);
 
     assertHasRegexp("<input.*value=\"saveProperties\"", content);
+    for (String attribute : new String[]{"Test", "Search", "Edit", "Properties", "Versions", "Refactor", "WhereUsed", "RecentChanges"})
+      assertCheckboxChecked(attribute, content);
 
-    assertSubString("<input type=\"checkbox\" name=\"Test\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Suite\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/>", content);
+    for (String attribute : new String[]{"Suite", "Prune", WikiPage.SECURE_READ, WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST})
+      assertCheckboxNotChecked(content, attribute);
+  }
 
-    assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_READ + "\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_WRITE + "\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"" + WikiPage.SECURE_TEST + "\"/>", content);
+  private void assertCheckboxNotChecked(String content, String attribute) {
+    assertSubString("<input type=\"checkbox\" name=\"" + attribute + "\"/>", content);
+  }
+
+  private void assertCheckboxChecked(String attribute, String content) {
+    assertSubString("<input type=\"checkbox\" name=\"" + attribute + "\" checked=\"true\"/>", content);
   }
 
   public void testJsonResponse() throws Exception {
