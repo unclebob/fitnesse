@@ -38,7 +38,6 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     return new FileSystemPage(path, name, null, revisioner);
   }
 
-  @Override
   public void removeChildPage(final String name) throws Exception {
     super.removeChildPage(name);
     String pathToDelete = getFileSystemPath() + "/" + name;
@@ -47,7 +46,6 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     cmSystem.delete(pathToDelete);
   }
 
-  @Override
   public boolean hasChildPage(final String pageName) throws Exception {
     final File f = new File(getFileSystemPath() + "/" + pageName);
     if (f.exists()) {
