@@ -4,25 +4,6 @@
 First, build a page with variable definitions followed immediately by a classpath definition. Also include a test that should pass.
 
 !|script|
-|start|Page Builder|
-|line|!define PI {3.141592}|
-|line|!path classes|
-|line|!path fitnesse.jar|
-|line|&bang;&bar;fitnesse.testutil.PassFixture&bar;|
-|page|ClasspathTestPage|
-
-Next, request that page with ?test (as though you clicked the test button)
-
-!|Response Requester.|
-|uri|valid?|contents?|
-|!-ClasspathTestPage?test-!|true||
-
-Lastly, ensure that the test passed.
-
-!|Response Examiner.|
-|type|pattern|matches?|value|
-|contents|PassFixture|true||
-
-!|Response Examiner.|
-|type|pattern|matches?|
-|contents|Exception|false|
+|given page|ClasspathTestPage|with content|!define PI {3.141592}!-<br>-!!path classes!-<br>-!!path fitnesse.jar!-<br>-!&bang;&bar;fitnesse.testutil.PassFixture&bar;!-<br>-!----|
+|its test results should contain|PassFixture|
+|and should not contain|Exception|

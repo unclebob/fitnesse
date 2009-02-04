@@ -22,9 +22,9 @@
 *!
 
 !|script|
-|create page|ImportingPage|
-|create page|ImportedPage|
-|create page|ImportedPage.ImportedChild|
+|given page|ImportingPage|
+|given page|ImportedPage|
+|given page|ImportedPage.ImportedChild|
 |import|ImportedPage|into|ImportingPage|
 |Water mark and edit buttons should be on page|ImportingPage.ImportedChild|
 ||

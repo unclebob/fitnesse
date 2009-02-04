@@ -1,12 +1,11 @@
-!define TEST_SYSTEM {fit}
 !3 This page tests the construction of tables.
 #
  * First create a page with comment text on it.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-|1 Row 1 Cell|-!|
-|enter|page|!-TableTestPage-!|
+|line|!-|1 Row 1 Cell|-!|
+|page|!-TableTestPage-!|
 #
  * Then request that page
 #
@@ -21,10 +20,10 @@
 |contents|<table.*<tr>\s*<td>\s*1 Row 1 Cell\s*</td>\s*</tr>\s*</table>|true||
 
 '''Test that spaces inside table cells don't get interpreted.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-| 1 is not a list|-!|
-|enter|page|!-TableTestPageTwo-!|
+|line|!-| 1 is not a list|-!|
+|page|!-TableTestPageTwo-!|
 #
 #
 |Response Requester.|
@@ -43,10 +42,10 @@
 #
 
 '''Test that nothing gets interpreted inside literal tables.'''
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!|'''bold'''|''italic''|-!|
-|enter|page|!-TableTestPageThree-!|
+|line|!-!|'''bold'''|''italic''|-!|
+|page|!-TableTestPageThree-!|
 #
 #
 |Response Requester.|

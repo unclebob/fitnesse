@@ -1,10 +1,68 @@
-!|scenario|create page|page|
-|create page|@page|with content|nothing|
+!|scenario|given page|page|with content|content|
+|create page|@page|with content|@content|
+|$IT=|echo|@page|
+
+!|scenario|given page|page|
+|given page|@page|with content|nothing|
 
 |scenario|page|source|should have link to|target|
 |check|request page|@source|200|
 |ensure|content contains|<a href="@target">|
 
+!|scenario|it should have link to|target|
+|page|$IT|should have link to|@target|
+
 !|scenario|page|source|should have creating link to|target|
 |check|request page|@source|200|
 |ensure|content contains|@target<a title="create page" href="@target?edit&nonExistent=true">[?]</a>|
+
+!|scenario|it should have creating link to|target|
+|page|$IT|should have creating link to|@target|
+
+!|scenario|page|source|should contain|text|
+|check|request page|@source|200|
+|ensure|content contains|@text|
+|show|content|
+
+!|scenario|page|source|should match|text|
+|check|request page|@source|200|
+|ensure|content matches|@text|
+|show|content|
+
+!|scenario|it should contain|text|
+|page|$IT|should contain|@text|
+
+!|scenario|it should match|text|
+|page|$IT|should match|@text|
+
+!|scenario|test results for page|source|should contain|text|
+|check|request page|@source?test|200|
+|ensure|content contains|@text|
+|show|content|
+
+!|scenario|its test results should contain|text|
+|test results for page|$IT|should contain|@text|
+
+!|scenario|test ressults for page|source|should not contain|text|
+|check|request page|@source?test|200|
+|reject|content contains|@text|
+|show|content|
+
+!|scenario|and should contain|text|
+|ensure|content contains|@text|
+|show|content|
+
+!|scenario|and should match|text|
+|ensure|content matches|@text|
+|show|content|
+
+!|scenario|and should not contain|text|
+|reject|content contains|@text|
+|show|content|
+
+!|scenario|widget|wikiText|should render|htmlText|
+|create page|WidgetPage|with content|@wikiText|
+|check|request page|WidgetPage|200|
+|ensure|content matches|@htmlText|
+|show|content|
+

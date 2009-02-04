@@ -57,98 +57,38 @@ more content
 ****************!
 BOTTOM
 
-----
-!3 First create a page with a collapsable section on it.
+!*> Scenarios
+!|scenario|given a page with a collapsible section containing|text|
+|given page|PageWithCollapsibleSection|with content|!** My Section!-<br>-!@text!-<br>-!****!|
+
+!|scenario|given a page with a collapsed section containing|text|
+|given page|PageWithCollapsibleSection|with content|!*> My Section!-<br>-!@text!-<br>-!****!|
+
+!|scenario|given a page with an invisible section containing|text|
+|given page|PageWithCollapsibleSection|with content|!*< My Section!-<br>-!@text!-<br>-!****!|
+
+!|scenario|the content|text|should be in a div of class|class|
+|it should match|div.*class="@class".*>@text(<br/>)?</div>|
+
+!|scenario|it should have|text|within a|class|div|
+|the content|@text|should be in a div of class|@class|
+|and it should have a collapsible div|
+
+!|scenario|and it should have a collapsible div|
+|and should contain|div class="collapse_rim">|
+|and should contain|a href="javascript:expandAll()|
+|and should contain|a href="javascript:collapseAll()|
+|and should contain|a href="javascript:toggleCollapsable|
+|and should contain|span class="meta">My Section|
+
+*!
 
 !|script|
-|start|Page Builder|
-|line|!** My Section|
-|line|line one|
-|line|line two|
-|line|*****!|
-|page|!-SampleCollapsingPage-!|
-
-!3 Then request that page
-#
-!|Response Requester.|
-|uri|valid?|contents?|
-|SampleCollapsingPage|true||
-#
-!3 Examine the page to be sure it has the collapsable section
-#
-!|Response Examiner.|
-|type|pattern|matches?|value|
-|contents|line one.*line two|true||
-
-!|Response Examiner.|
-|type|pattern|matches?|
-|contents|div class="collapse_rim">|true|
-|contents|a href="javascript:expandAll()|true|
-|contents|a href="javascript:collapseAll()|true|
-|contents|a href="javascript:toggleCollapsable|true|
-|contents|span class="meta">My Section|true|
-|contents|div.*class="collapsable".*>line one<br/>line two(<br/>)?</div>|true|
-
-----
-!3 Next create a page with a collapsed section on it.
-
-!|script|
-|start|Page Builder|
-|line|!**> My Section|
-|line|line one|
-|line|line two|
-|line|*****!|
-|page|!-SampleCollapsedPage-!|
-
-!3 Then request that page
-#
-!|Response Requester.|
-|uri|valid?|contents?|
-|SampleCollapsedPage|true||
-#
-!3 Examine the page to be sure it has the collapsed section
-#
-!|Response Examiner.|
-|type|pattern|matches?|value|
-|contents|line one.*line two|true||
-
-!|Response Examiner.|
-|type|pattern|matches?|
-|contents|div class="collapse_rim">|true|
-|contents|a href="javascript:expandAll()|true|
-|contents|a href="javascript:collapseAll()|true|
-|contents|a href="javascript:toggleCollapsable|true|
-|contents|span class="meta">My Section|true|
-|contents|div.*class="hidden".*>line one<br/>line two(<br/>)?</div>|true|
-
-----
-!3 Lastly, create a page with a hidden (invisible) section on it.
-
-!|script|
-|start|Page Builder|
-|line|!**< My Section|
-|line|line one|
-|line|line two|
-|line|*****!|
-|page|!-SampleCollapsingPage-!|
-
-!3 Then request that page
-#
-!|Response Requester.|
-|uri|valid?|contents?|
-|SampleCollapsingPage|true||
-#
-!3 Examine the page to be sure it has the collapsable section
-#
-!|Response Examiner.|
-|type|pattern|matches?|value|
-|contents|line one.*line two|true||
-
-!|Response Examiner.|
-|type|pattern|matches?|
-|contents|div class="collapse_rim">|false|
-|contents|a href="javascript:expandAll()|false|
-|contents|a href="javascript:collapseAll()|false|
-|contents|a href="javascript:toggleCollapsable|false|
-|contents|span class="meta">My Section|false|
-|contents|div.*class="invisible".*>line one<br/>line two(<br/>)?</div>|true|
+|given a page with a collapsible section containing|line one!-<br/>-!line two|
+|it should have|line one!-<br/>-!line two|within a|collapsable|div|
+||
+|given a page with a collapsed section containing|line one!-<br/>-!line two|
+|it should have|line one!-<br/>-!line two|within a|hidden|div|
+||
+|given a page with an invisible section containing|line one!-<br/>-!line two|
+|the content|line one!-<br/>-!line two|should be in a div of class|invisible|

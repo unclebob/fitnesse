@@ -34,4 +34,8 @@ public class PageDriver {
   public String content() throws Exception {
     return requester.contents();
   }
+
+  public String echo(String it) {
+    return it;
+  }
 }

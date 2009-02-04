@@ -1,4 +1,3 @@
-!define TEST_SYSTEM {fit}
 !2 Test that variables are properly defined and expressed on a page.
  * Variables are defined as !-!define name {value}-!.
  * Alternately they are defined as !-!define name (value)-!.
@@ -9,13 +8,13 @@
 #
  * Create a page with a variable definition and use..
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!define x {1}-!|
-|enter|line|!-x is ${x}-!|
-|enter|line|!-PAGE_NAME is ${PAGE_NAME}-!|
-|enter|line|!-PAGE_PATH is ${PAGE_PATH}-!|
-|enter|page|!-VariablePage-!|
+|line|!-!define x {1}-!|
+|line|!-x is ${x}-!|
+|line|!-PAGE_NAME is ${PAGE_NAME}-!|
+|line|!-PAGE_PATH is ${PAGE_PATH}-!|
+|page|!-VariablePage-!|
 #
  * Fetch that page.
 #
@@ -36,11 +35,11 @@
 #
  * Create a page with a variable definition and use..
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!define x (1)-!|
-|enter|line|!-x is ${x}-!|
-|enter|page|!-ParenVariablePage-!|
+|line|!-!define x (1)-!|
+|line|!-x is ${x}-!|
+|page|!-ParenVariablePage-!|
 #
  * Fetch that page.
 #
@@ -60,13 +59,13 @@
 #
  * Create a page with a variable definition and use..
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!-!define xLitBRACE {!-!-!-xLitBRACE-!-!-!}|
-|enter|line|!!--!define xLitPAREN (!-!-!-xLitPAREN-!-!-!)|
-|enter|line|!-xLitBRACE is ${xLitBRACE}-!|
-|enter|line|!-xLitPAREN is ${xLitPAREN}-!|
-|enter|page|!-ParenVariablePage-!|
+|line|!-!-!define xLitBRACE {!-!-!-xLitBRACE-!-!-!}|
+|line|!!--!define xLitPAREN (!-!-!-xLitPAREN-!-!-!)|
+|line|!-xLitBRACE is ${xLitBRACE}-!|
+|line|!-xLitPAREN is ${xLitPAREN}-!|
+|page|!-ParenVariablePage-!|
 #
  * Fetch that page.
 #
@@ -86,25 +85,25 @@
 #
  * Create a page with a variable definitions with periods.
 #
-|Action Fixture.|
+|script|
 |start|Page Builder|
-|enter|line|!-!define xy. (1)-!|
-|enter|line|!-!define x.y (2)-!|
-|enter|line|!-!define .xy (3)-!|
-|enter|line|!-!define .x.y. (4)-!|
-|enter|line|!-!define .xy. (5)-!|
-|enter|line|!-!define .x.y (6)-!|
-|enter|line|!-!define x.y. (7)-!|
-|enter|line|!-!define x..y (8)-!|
-|enter|line|!-~xy. is ${xy.}~-!|
-|enter|line|!-~x.y is ${x.y}~-!|
-|enter|line|!-~.xy is ${.xy}~-!|
-|enter|line|!-~.x.y. is ${.x.y.}~-!|
-|enter|line|!-~.xy. is ${.xy.}~-!|
-|enter|line|!-~.x.y is ${.x.y}~-!|
-|enter|line|!-~x.y. is ${x.y.}~-!|
-|enter|line|!-~x..y is ${x..y}~-!|
-|enter|page|!-ParenVariablePage-!|
+|line|!-!define xy. (1)-!|
+|line|!-!define x.y (2)-!|
+|line|!-!define .xy (3)-!|
+|line|!-!define .x.y. (4)-!|
+|line|!-!define .xy. (5)-!|
+|line|!-!define .x.y (6)-!|
+|line|!-!define x.y. (7)-!|
+|line|!-!define x..y (8)-!|
+|line|!-~xy. is ${xy.}~-!|
+|line|!-~x.y is ${x.y}~-!|
+|line|!-~.xy is ${.xy}~-!|
+|line|!-~.x.y. is ${.x.y.}~-!|
+|line|!-~.xy. is ${.xy.}~-!|
+|line|!-~.x.y is ${.x.y}~-!|
+|line|!-~x.y. is ${x.y.}~-!|
+|line|!-~x..y is ${x..y}~-!|
+|page|!-ParenVariablePage-!|
 #
  * Fetch that page.
 #

@@ -1,13 +1,4 @@
-!|scenario|widget|wikiText|renders|htmlText|
-|create page|WidgetPage|with content|@wikiText|
-|check|request page|WidgetPage|200|
-|ensure|content matches|@htmlText|
-|show|content|
-
-|script|
-|start|page driver|
-
-!|widget renders|
+!|widget should render|
 |wiki text|html text|
 |normal text|normal text|
 |this is ''italic'' text|this is <i>italic</i> text|italic widget|
