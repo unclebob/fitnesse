@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||16:35:45 Thu, Feb 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||17:33:06 Wed, Feb 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestCollapsableSections||17:23:30 Wed, Feb 04, 2009|
 |SuiteAcceptanceTest.ScenarioLibrary||16:51:36 Wed, Feb 04, 2009|
@@ -94,7 +95,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests||20:20:23 Thu, Dec 18, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestNoDefaultConstructor||11:20:18 Mon, Dec 15, 2008|
 |FitNesse.SliM.DecisionTable||08:27:31 Sun, Dec 14, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||06:27:34 Sun, Dec 14, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestNavigationWithTest||07:36:34 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestNavigationWithSuite||07:36:13 Sat, Dec 13, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestNavigationDefault||07:35:51 Sat, Dec 13, 2008|

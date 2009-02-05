@@ -35,6 +35,12 @@ public class PageDriver {
     return requester.contents();
   }
 
+  public String lineIs(int lineNumber) throws Exception {
+    examiner.type = "line";
+    examiner.number = lineNumber;
+    return examiner.string();
+  }
+
   public String echo(String it) {
     return it;
   }
