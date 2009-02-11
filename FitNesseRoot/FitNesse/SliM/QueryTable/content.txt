@@ -18,6 +18,10 @@ public class EmployeesHiredBefore {
     this.date = date;
   }
 
+  public void table(List<List<String>> table) {
+    //optional function
+  }
+
   public List<Object> query() {
 
     return
@@ -41,4 +45,6 @@ Note the ''list'' function simply builds an !-ArrayList-! from it's arguments.  
 
 The first thing to notice is the ''Query:'' in the first cell of the table.  This tells the Slim table processor that this is a query table.  Next notice the constructor argument.  (See ConstructorArguments).  The column headers are ''field names''.  The fixture class must have a ''query'' method that returns a list of rows.  Each row is a list of fields.  Each field is a two-element list composed of the ''field name'' and it's string value.
 
-Each row in the table is checked to see if there is a match in the query response.  The fields are matched left to right.  If the leftmost field matches, then the row is considered to be "found".  Fields that don't matched are marked in error as in the 10-Oct-1974 field above.  If the first cell of a row cannot be matched, then the row is considered ''missing''.  If there is an unmatched row remaining in the query response, it is added to the table and marked ''surplus''. The order of the rows is irrelevant.
+Each row in the table is checked to see if there is a match in the query response.  The fields are matched left to right.  If the leftmost field matches, then the row is considered to be "found".  Fields that don't matche are marked in error as in the 10-Oct-1974 field above.  If the first cell of a row cannot be matched, then the row is considered ''missing''.  If there is an unmatched row remaining in the query response, it is added to the table and marked ''surplus''. The order of the rows is irrelevant.
+
+If a !style_code(table) method is declared in the fixture it will be called before the !style_code(query) function is called.  It will be passed a list of rows which are themselves lists of cells.  The rows and cells represent the all but the first row of the table.  This is the same format at the !style_code(doTable) method of Table table, and the !style_code(table) method of Decision table.

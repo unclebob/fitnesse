@@ -96,6 +96,7 @@ public class DecisionTable extends SlimTable {
   private class FixtureCaller extends DecisionTableCaller {
     public void call(String fixtureName) {
       constructFixture(fixtureName);
+      dontReportExceptionsInTheseInstructions.add(callFunction(getTableName(), "table", tableAsList()));
       if (table.getRowCount() > 2)
         invokeRows();
     }

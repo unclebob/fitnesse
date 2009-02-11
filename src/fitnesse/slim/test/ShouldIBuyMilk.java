@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
+import java.util.List;
+
 public class ShouldIBuyMilk {
   private int dollars;
   private int pints;
@@ -28,5 +30,8 @@ public class ShouldIBuyMilk {
 
   public void execute() {
 
+  }
+
+  public void table(List<List<String>> table) {
   }
 }

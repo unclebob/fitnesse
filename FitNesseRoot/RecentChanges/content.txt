@@ -1,3 +1,7 @@
+|FitNesse.SliM.QueryTable||13:18:23 Wed, Feb 11, 2009|
+|FitNesse.SliM.DecisionTable||13:08:10 Wed, Feb 11, 2009|
+|FrontPage||10:34:49 Wed, Feb 11, 2009|
+|ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PlayThreeSongs||09:52:10 Wed, Feb 11, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||16:35:45 Thu, Feb 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||17:33:06 Wed, Feb 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestCollapsableSections||17:23:30 Wed, Feb 04, 2009|
@@ -19,7 +23,6 @@
 |FitNesse.UserGuide.SourceCodeControl.GitPlugin||09:13:11 Tue, Feb 03, 2009|
 |NikKrimm.ZoeKrimm||14:19:51 Mon, Feb 02, 2009|
 |NikKrimm||14:18:24 Mon, Feb 02, 2009|
-|FrontPage||12:21:38 Wed, Jan 28, 2009|
 |ProjectPage.JukeBoxProject||08:00:41 Wed, Jan 28, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators||16:04:11 Fri, Jan 23, 2009|
 |FitNesse.MarkupPageInclude||15:51:24 Fri, Jan 23, 2009|
@@ -94,7 +97,4 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestProtectedWidgetsAreNotRenamed||20:29:14 Thu, Dec 18, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests||20:20:23 Thu, Dec 18, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestNoDefaultConstructor||11:20:18 Mon, Dec 15, 2008|
-|FitNesse.SliM.DecisionTable||08:27:31 Sun, Dec 14, 2008|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestNavigationWithTest||07:36:34 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestNavigationWithSuite||07:36:13 Sat, Dec 13, 2008|
-|FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestNavigationDefault||07:35:51 Sat, Dec 13, 2008|

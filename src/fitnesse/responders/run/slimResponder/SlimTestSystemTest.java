@@ -128,10 +128,30 @@ public class SlimTestSystemTest {
   }
 
   @Test
-  public void decisionTableWithNoExecuteDoesNotCountExceptionsForExecute() throws Exception {
+  public void decisionTableIgnoresMethodMissingForResetExecuteaAndTable() throws Exception {
     getResultsForPageContents(
       "!|DT:fitnesse.slim.test.DummyDecisionTable|\n" +
         "|x?|\n" +
+        "|1|\n"
+    );
+    assertEquals(0, responder.getTestSummary().exceptions);
+  }
+
+  @Test
+  public void decisionTableWithNoResetDoesNotCountExceptionsForExecute() throws Exception {
+    getResultsForPageContents(
+      "!|DT:fitnesse.slim.test.DummyDecisionTableWithExecuteButNoReset|\n" +
+        "|x?|\n" +
+        "|1|\n"
+    );
+    assertEquals(0, responder.getTestSummary().exceptions);
+  }
+
+  @Test
+  public void queryTableWithoutTableFunctionIgnoresMissingMethodException() throws Exception {
+    getResultsForPageContents(
+      "!|query:fitnesse.slim.test.DummyQueryTableWithNoTableMethod|\n" +
+        "|x|\n" +
         "|1|\n"
     );
     assertEquals(0, responder.getTestSummary().exceptions);
