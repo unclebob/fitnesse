@@ -51,7 +51,8 @@ public class QueryTableTest {
     makeQueryTableAndBuildInstructions(queryTableHeader + queryRows);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(list(
       list("queryTable_id_0", "OK"),
-      list("queryTable_id_1", queryResults)
+      list("queryTable_id_1", "blah"),
+      list("queryTable_id_2", queryResults)
     )
     );
     testContext.evaluateExpectations(pseudoResults);
@@ -64,7 +65,8 @@ public class QueryTableTest {
     makeQueryTableAndBuildInstructions(queryTableHeader);
     List<Object> expectedInstructions = list(
       list("queryTable_id_0", "make", "queryTable_id", "fixture", "argument"),
-      list("queryTable_id_1", "call", "queryTable_id", "query")
+      list("queryTable_id_1", "call", "queryTable_id", "table", list(list("n", "2n"))),
+      list("queryTable_id_2", "call", "queryTable_id", "query")
     );
     assertEquals(expectedInstructions, instructions);
   }
@@ -233,7 +235,7 @@ public class QueryTableTest {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
         list("queryTable_id_0", "OK"),
-        list("queryTable_id_1",
+        list("queryTable_id_2",
           list(
             list(list("n", "2"), list("2n", "4"))
           )
@@ -259,7 +261,7 @@ public class QueryTableTest {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
         list("queryTable_id_0", "OK"),
-        list("queryTable_id_1",
+        list("queryTable_id_2",
           list(
             list(list("n", "2"), list("2n", "4"))
           )
@@ -285,7 +287,7 @@ public class QueryTableTest {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
         list("queryTable_id_0", "OK"),
-        list("queryTable_id_1",
+        list("queryTable_id_2",
           list(
           )
         )

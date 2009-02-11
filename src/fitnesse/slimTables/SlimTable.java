@@ -299,6 +299,22 @@ public abstract class SlimTable {
     return testContext;
   }
 
+  protected List<Object> tableAsList() {
+    List<Object> tableArgument = list();
+    int rows = table.getRowCount();
+    for (int row = 1; row < rows; row++)
+      tableArgument.add(tableRowAsList(row));
+    return tableArgument;
+  }
+
+  private List<Object> tableRowAsList(int row) {
+    List<Object> rowList = list();
+    int cols = table.getColumnCountInRow(row);
+    for (int col = 0; col < cols; col++)
+      rowList.add(table.getCellContents(col, row));
+    return rowList;
+  }
+
   static class Disgracer {
     public boolean capitalizeNextWord;
     public StringBuffer disgracedName;

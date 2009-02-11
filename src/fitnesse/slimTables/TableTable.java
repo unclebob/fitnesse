@@ -25,22 +25,6 @@ public class TableTable extends SlimTable {
     doTableId = callFunction(getTableName(), "doTable", tableAsList());
   }
 
-  private List<Object> tableAsList() {
-    List<Object> tableArgument = list();
-    int rows = table.getRowCount();
-    for (int row = 1; row < rows; row++)
-      tableArgument.add(tableRowAsList(row));
-    return tableArgument;
-  }
-
-  private List<Object> tableRowAsList(int row) {
-    List<Object> rowList = list();
-    int cols = table.getColumnCountInRow(row);
-    for (int col = 0; col < cols; col++)
-      rowList.add(table.getCellContents(col, row));
-    return rowList;
-  }
-
   public void evaluateReturnValues(Map<String, Object> returnValues)
     throws Exception {
     if (doTableMethodIsInvalid(returnValues)) {

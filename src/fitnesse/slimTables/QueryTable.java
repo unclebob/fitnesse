@@ -11,6 +11,7 @@ public class QueryTable extends SlimTable {
   private List<String> fieldNames = new ArrayList<String>();
   private String queryId;
   private QueryResults queryResults;
+  private String tableInstruction;
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
@@ -25,7 +26,14 @@ public class QueryTable extends SlimTable {
       throw new SlimTable.SyntaxError("Query tables must have at least two rows.");
     assignColumns();
     constructFixture();
+    tableInstruction = callFunction(getTableName(), "table", tableAsList());
     queryId = callFunction(getTableName(), "query");
+  }
+
+  public boolean shouldIgnoreException(String resultKey, String resultString) {
+    boolean isTableInstruction = resultKey.equals(tableInstruction);
+    boolean isNoMethodException = resultString.indexOf("NO_METHOD_IN_CLASS") != -1;
+    return isTableInstruction && isNoMethodException;
   }
 
   private void assignColumns() {
