@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||13:35:40 Wed, Feb 11, 2009|
+|SuiteAcceptanceTest.ScenarioLibrary||13:34:19 Wed, Feb 11, 2009|
 |FitNesse.SliM.QueryTable||13:18:23 Wed, Feb 11, 2009|
 |FitNesse.SliM.DecisionTable||13:08:10 Wed, Feb 11, 2009|
 |FrontPage||10:34:49 Wed, Feb 11, 2009|
@@ -5,7 +7,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||16:35:45 Thu, Feb 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||17:33:06 Wed, Feb 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestCollapsableSections||17:23:30 Wed, Feb 04, 2009|
-|SuiteAcceptanceTest.ScenarioLibrary||16:51:36 Wed, Feb 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestBrokenWikiWordLink||16:29:21 Wed, Feb 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestBackwardsSearchWidget||16:28:01 Wed, Feb 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||16:20:04 Wed, Feb 04, 2009|
@@ -34,7 +35,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||10:13:19 Fri, Jan 23, 2009|
 |FitNesse.MarkupVariables||08:04:55 Fri, Jan 23, 2009|
 |FitNesse.SliM.ScriptTable||12:34:14 Thu, Jan 22, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||10:44:34 Thu, Jan 22, 2009|
 |JunkParent.WaPa||10:31:37 Wed, Jan 21, 2009|
 |JunkParent||10:31:15 Wed, Jan 21, 2009|
 |JunkParent.ImportHead.ImportChild||08:56:31 Wed, Jan 21, 2009|

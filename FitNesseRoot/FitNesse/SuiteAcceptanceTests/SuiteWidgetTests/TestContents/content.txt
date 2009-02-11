@@ -1,20 +1,11 @@
 !3 !-!contents-!
-!include ContentsUsage
-'''First create the parent page.'''
-|script|
-|start|Page Builder  |
-|line |I'm the parent|
-|line |!-!contents-! |
-|page |!-ParentPage-!|
 
-!include ContentsTestsInclude
-'''Then request the parent page.'''
-|Response Requester.|
-|uri           |valid?|contents?|
-|!-ParentPage-!|true  |         |
+Ensure the contents widget builds links to child pages.
 
-'''...and examine the requested page to be sure that the child pages are included'''
-!|Response Examiner.|
-|type    |pattern                                       |matches?|
-|contents|a href="ParentPage.FirstChild">FirstChild</a  |true    |
-|contents|a href="ParentPage.SecondChild">SecondChild</a|true    |
+!|script|
+|given page|ParentPage|with content|!contents|
+|given page|ParentPage.FirstChild|
+|given page|ParentPage.SecondChild|
+|page|ParentPage|should have link to|ParentPage.FirstChild|
+|and it should have link to|ParentPage.SecondChild|
+
