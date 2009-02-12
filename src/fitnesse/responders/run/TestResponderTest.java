@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
 import fitnesse.wikitext.Utils;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
@@ -206,6 +207,9 @@ public class TestResponderTest {
     Document testResultsDocument = getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
+    String version = XmlUtil.getTextValue(testResultsElement, "FitNesseVersion");
+    assertEquals(new FitNesseVersion().toString(), version);
+
     Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
     Element counts = XmlUtil.getElementByTagName(result, "counts");
     assertCounts(counts, "1", "0", "0", "0");

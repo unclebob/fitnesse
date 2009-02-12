@@ -16,6 +16,7 @@ import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.*;
+import fitnesse.FitNesseVersion;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -87,6 +88,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
       testResultsDocument = XmlUtil.newDocument();
       testResultsElement = testResultsDocument.createElement("testResults");
       testResultsDocument.appendChild(testResultsElement);
+      XmlUtil.addTextNode(testResultsDocument, testResultsElement, "FitNesseVersion", new FitNesseVersion().toString());
       XmlUtil.addTextNode(testResultsDocument, testResultsElement, "rootPath", page.getName());
     } else {
       buildHtml();
