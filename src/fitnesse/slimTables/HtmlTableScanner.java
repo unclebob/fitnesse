@@ -4,6 +4,8 @@ package fitnesse.slimTables;
 
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
+import org.htmlparser.lexer.Lexer;
+import org.htmlparser.lexer.Page;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
@@ -19,8 +21,8 @@ public class HtmlTableScanner implements TableScanner {
   public HtmlTableScanner(String page) throws ParserException {
     if (page == null || page.equals(""))
       page = "<i>This page intentionally left blank.</i>";
-    page = String.format("<body>%s</body>", page);
-    Parser parser = new Parser(page);
+
+    Parser parser = new Parser(new Lexer(new Page(page)));
     htmlTree = parser.parse(null);
     scanForTables(htmlTree);
   }

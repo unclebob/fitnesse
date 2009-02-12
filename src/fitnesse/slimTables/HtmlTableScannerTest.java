@@ -145,7 +145,7 @@ public class HtmlTableScannerTest {
 
   @Test
   public void canConvertGunkBackToHtml() throws Exception {
-    String html = "<body>gunk<table>gunk<tr>gunk<td>x</td>gunk<br>gunk</tr>gunk</table>gunk</body>";
+    String html = "gunk<body>gunk<table>gunk<tr>gunk<td>x</td>gunk<br>gunk</tr>gunk</table>gunk</body>";
     scan(html);
     assertEquals(ts.toHtml(), html);
   }
