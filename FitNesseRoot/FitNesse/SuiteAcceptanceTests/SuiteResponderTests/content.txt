@@ -1,13 +1,14 @@
 The incoming URL determines which responder gets activated.  There are many different types of responders (and more every iteration!)
 
-^SuiteFileSection
-^SuiteMoveResponder
-^SuitePropertiesResponder
-^SuiteRenameResponder
-^SuiteRunResponder
-^SuiteSearchResponder
-^SuiteTestResponders
-^SuiteVersionResponder
-^TestNameResponder
-^TestRssResponder
-^TestShutdown
+>SuiteFileSection
+>SuiteMoveResponder
+>SuitePropertiesResponder
+>SuiteRenameResponder
+>SuiteRunResponder
+>SuiteSearchResponder
+>SuiteTestResponders
+>SuiteVersionResponder
+>TestNameResponder
+>TestRssResponder
+>TestShutdown
+>TestPacketResponder
