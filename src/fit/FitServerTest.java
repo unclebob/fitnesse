@@ -152,6 +152,7 @@ public class FitServerTest extends RegexTestCase {
   }
 
   private void prepareSessionProcess() throws Exception {
+    checkForCompetingProcesses();
     String commandWithArguments = command() + " -v localhost 1234 23";
     process = Runtime.getRuntime().exec(commandWithArguments);
 
@@ -161,6 +162,24 @@ public class FitServerTest extends RegexTestCase {
     watchForOutput(process.getErrorStream(), System.err);
 
     establishConnection();
+  }
+
+  private void checkForCompetingProcesses() throws Exception {
+    String lookupCommand = "lsof -i:1234";
+    Process lookupProcess = null;
+    int result = 1;
+    try {
+      lookupProcess = Runtime.getRuntime().exec(lookupCommand);
+      result = lookupProcess.waitFor();
+    } catch (IOException ex) {
+      // Thrown in case where 'lsof' cannot be found. Not sure of behavior on windows.
+      System.err.println("Unable to determine if another process is using port 1234 (git instaweb is a known conflict).");
+      System.err.println("If any test from FitServerTest fails inexplicably make sure to eliminate competing processes.");
+    }
+
+    if (result == 0) {
+      throw new IOException("Another process currently using port 1234.");
+    }
   }
 
   private void establishConnection() throws Exception {
