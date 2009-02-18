@@ -216,7 +216,7 @@ public class WidgetBuilderTest extends TestCase {
 
     //This is our best attempt to get a race condition
     //by creating large number of threads.
-    for (int i = 0; i < 25000; i++) {
+    for (int i = 0; i < 1000; i++) {
       WidgetBuilderThread widgetBuilderThread = new WidgetBuilderThread(widgetBuilder, text, parent, failFlag);
       Thread thread = new Thread(widgetBuilderThread);
       try {
@@ -250,7 +250,7 @@ public class WidgetBuilderTest extends TestCase {
 
     assertEquals(expected.toString(), html);
     long duration = stop - start;
-    assertTrue(String.format("parsing took %s ms.", duration), duration < 100);
+    assertTrue(String.format("parsing took %s ms.", duration), duration < 500);
   }
 
   class WidgetBuilderThread implements Runnable {
