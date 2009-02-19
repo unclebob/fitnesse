@@ -5,8 +5,8 @@ package fitnesse.fixtures;
 import fit.ColumnFixture;
 
 public class SystemPropertySetterFixture extends ColumnFixture {
-  private String key;
-  private String value;
+  public String key;
+  public String value;
 
   public void execute() {
     System.getProperties().setProperty(key, value);
