@@ -45,7 +45,7 @@ public class PacketResponder implements Responder {
     String html = page.getData().getHtml();
     TableScanner scanner = new HtmlTableScanner(html);
     addTablesToPacket(scanner);
-    response.setContent(String.format("load_data(%s)", packet.toString(1)));
+    response.setContent(packet.toString(1));
   }
 
   private void addTablesToPacket(TableScanner scanner) throws JSONException {
