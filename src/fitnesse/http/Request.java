@@ -301,6 +301,8 @@ public class Request {
   }
 
   public void getCredentials() throws Exception {
+    if (authorizationUsername != null)
+      return;
     if (hasHeader("Authorization")) {
       String authHeader = getHeader("Authorization").toString();
       String userpass = getUserpass(authHeader);
@@ -322,5 +324,10 @@ public class Request {
 
   public long numberOfBytesParsed() {
     return bytesParsed + input.numberOfBytesConsumed();
+  }
+
+  public void setCredentials(String username, String password) {
+    authorizationUsername = username;
+    authorizationPassword = password;
   }
 }
