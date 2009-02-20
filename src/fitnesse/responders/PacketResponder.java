@@ -23,9 +23,11 @@ public class PacketResponder implements Responder {
   private WikiPage page;
   private JSONObject packet;
   List<JSONObject> tables = new ArrayList<JSONObject>();
+  private String jsonpFunction;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     response = new SimpleResponse();
+    jsonpFunction = (String) request.getInput("jsonp");
     String pageName = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(pageName);
@@ -45,7 +47,10 @@ public class PacketResponder implements Responder {
     String html = page.getData().getHtml();
     TableScanner scanner = new HtmlTableScanner(html);
     addTablesToPacket(scanner);
-    response.setContent(packet.toString(1));
+    if (jsonpFunction != null)
+      response.setContent(String.format("%s(%s)", jsonpFunction, packet.toString(1)));
+    else
+      response.setContent(packet.toString(1));
   }
 
   private void addTablesToPacket(TableScanner scanner) throws JSONException {

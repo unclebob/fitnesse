@@ -122,4 +122,10 @@ public class PacketResponderTest {
     JSONObject expected = new JSONObject(expectedString);
     assertPageWithTableResponseWith(table, expected.toString(1));
   }
+
+  @Test
+  public void jsonpQueryArgument() throws Exception {
+    request.addInput("jsonp", "load");
+    assertPageWithTableResponseWith("|cell|\n", "load({\"tables\": [{\"cell\": {}}]})");
+  }
 }
