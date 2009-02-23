@@ -14,6 +14,13 @@ import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
+/**
+ * This test runs the list of tests that it is given, on slim or fit or multiple types of 
+ * servers.  
+ * 
+ * @author Clare McLennan
+ */
+
 public class MultipleTestsRunner implements TestSystemListener{
   
   private final ResultsListener resultsListener;
