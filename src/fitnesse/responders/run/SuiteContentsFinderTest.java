@@ -24,14 +24,17 @@ public class SuiteContentsFinderTest {
   private WikiPage testPage2;
   private WikiPage testChildPage;
   private String suitePageName;
-  
+  private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
+  "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
+  "|string|get string arg?|\n" +
+  "|wow|wow|\n";
+
   @Before
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     PageData data = root.getData();
-    data.setContent(classpathWidgets());
     root.commit(data);
     suite = crawler.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
     testPage = addTestPage(suite, "TestOne", "My test");
@@ -91,6 +94,22 @@ public class SuiteContentsFinderTest {
     assertEquals(testPage2, testPages.get(1));
     assertEquals(testChildPage, testPages.get(2));
   }
+  
+  @Test
+  public void testPagesForTestSystemAreSurroundedBySuiteSetupAndTeardown() throws Exception {
+    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
+    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
+    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, root, null);
+    List<WikiPage> testPages = finder.makePageList();
+
+    assertEquals(4, testPages.size());
+    assertEquals(setUp, testPages.get(0));
+    assertEquals(slimPage, testPages.get(1));
+    assertEquals(testPage, testPages.get(2));
+    assertEquals(tearDown, testPages.get(3));
+  }
 
   @Test
   public void testSetUpAndTearDown() throws Exception {
@@ -105,9 +124,6 @@ public class SuiteContentsFinderTest {
     assertSame(tearDown, testPages.get(2));
   }
   
-  private String classpathWidgets() {
-    return "!path classes\n" +
-      "!path lib/dummy.jar\n";
-  }
+
 
 }

@@ -20,6 +20,7 @@ public class MultipleTestsRunner implements TestSystemListener{
   private final FitNesseContext fitNesseContext;
   private final WikiPage page;
   private final List<WikiPage> testPagesToRun;
+  private boolean isFastTest = false;
 
   private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
   private WikiPage currentTest = null;
@@ -36,8 +37,20 @@ public class MultipleTestsRunner implements TestSystemListener{
     this.fitNesseContext = fitNesseContext;
   }
   
+  /**
+   * Fast test must be called before you run execute test pages
+   * @param isFastTest
+   */
+  public void setFastTest(boolean isFastTest) {
+    this.isFastTest = isFastTest;
+  }
+  
   public void executeTestPages() throws Exception {
-    testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
+    synchronized (this) {
+      testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
+    }
+    testSystemGroup.setFastTest(isFastTest);
+    
     resultsListener.setExecutionLog(testSystemGroup.getExecutionLog());
     Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem = makeMapOfPagesByTestSystem(); 
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
@@ -79,8 +92,7 @@ public class MultipleTestsRunner implements TestSystemListener{
   }
 
 
-  
-  private Map<TestSystem.Descriptor, LinkedList<WikiPage>> makeMapOfPagesByTestSystem() throws Exception {
+  Map<TestSystem.Descriptor, LinkedList<WikiPage>> makeMapOfPagesByTestSystem() throws Exception {
     Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = new HashMap<TestSystem.Descriptor, LinkedList<WikiPage>>();
   //  List<WikiPage> pages = getAllPagesToRunForThisSuite();
     for (WikiPage testPage : testPagesToRun) {
@@ -88,11 +100,6 @@ public class MultipleTestsRunner implements TestSystemListener{
       List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, descriptor);
       pagesForTestSystem.add(testPage);
     }
-
-    // where do we add set up and tear down pages???
-//    for (LinkedList<WikiPage> pagesForTestSystem : map.values()) {
- //     addSetupAndTeardown(pagesForTestSystem);
-  //  }
     return map;
   }
   
@@ -146,8 +153,14 @@ public class MultipleTestsRunner implements TestSystemListener{
   }
 
   @Override
-  public void exceptionOccurred(Throwable e) {
-    // TODO Auto-generated method stub
-    
+  public synchronized void exceptionOccurred(Throwable e) {
+    System.err.println("MultipleTestsRunner.exceptionOcurred:" + e.getMessage());
+    try {
+      testSystemGroup.kill();
+      resultsListener.errorOccured();
+    }
+    catch (Exception e1) {
+      e1.printStackTrace();
+    }
   }
 }

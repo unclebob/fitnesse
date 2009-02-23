@@ -94,7 +94,7 @@ public class SuiteResponder extends TestResponder implements ResultsListener {
   @Override
   public void processTestOutput(String output) throws Exception {
     if (response.isXmlFormat()) {
-      super.acceptOutputFirst(output);
+      super.processTestOutput(output);
     } else if (response.isHtmlFormat()) {
       suiteFormatter.acceptOutput(output);
     }

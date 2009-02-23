@@ -13,4 +13,6 @@ public interface ResultsListener {
   public void processTestOutput(String output) throws Exception;
 
   public void processTestResults(WikiPage test, TestSummary testSummary) throws Exception;
+  
+  public void errorOccured();
 }

@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,11 +12,9 @@ import org.w3c.dom.Element;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
-import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.XmlWriter;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
-import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.SecureResponder;
@@ -25,10 +24,11 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
-  private static final String PATH_SEPARATOR = System.getProperty("path.separator");
+
+public class TestResponder extends ChunkingResponder implements ResultsListener, SecureResponder {
   protected static final int htmlDepth = 2;
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected HtmlPage html;
@@ -37,23 +37,17 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   private boolean closed = false;
   protected TestSummary assertionCounts = new TestSummary();
   protected TestHtmlFormatter formatter;
-  protected TestSystemGroup testSystemGroup;
-  protected String classPath;
   protected Document testResultsDocument;
   protected Element testResultsElement;
   private StringBuffer outputBuffer;
+  MultipleTestsRunner runner = null;
   private boolean fastTest = false;
 
   protected void doSending() throws Exception {
     fastTest |= request.hasInput("debug");
     data = page.getData();
-    classPath = buildClassPath();
     startHtml();
     sendPreTestNotification();
-
-    testSystemGroup = new TestSystemGroup(context, page, this);
-    testSystemGroup.setFastTest(fastTest);
-    log = testSystemGroup.getExecutionLog();
 
     performExecution();
 
@@ -71,22 +65,18 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   }
 
   protected void performExecution() throws Exception {
-    
-    
-    TestSystem.Descriptor descriptor = TestSystem.getDescriptor(data);
-    TestSystem testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
-    if (testSystemGroup.isSuccessfullyStarted()) {
-      addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
-      SetupTeardownIncluder.includeInto(data, true);
-      if (data.getContent().length() == 0)
-        addEmptyContentMessage();
-      testSystem.runTestsAndGenerateHtml(data);
-      testSystemGroup.bye();
+    if (page.getData().getContent().length() == 0) {
+      addEmptyContentMessage();
     }
-  }
-
-  protected String buildClassPath() throws Exception {
-    return new ClassPathBuilder().getClasspath(page);
+    
+    List<WikiPage> test2run = new SuiteContentsFinder(page, root, null).makePageListForSingleTest();
+    
+    synchronized (this) {
+      runner = new MultipleTestsRunner(test2run, context, page, this);
+      runner.setFastTest(fastTest);
+    }
+    
+    runner.executeTestPages();
   }
 
   protected void startHtml() throws Exception {
@@ -106,18 +96,6 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     PageCrawler crawler = root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     return crawler;
-  }
-
-  public synchronized void exceptionOccurred(Throwable e) {
-    //todo remove sout
-    System.err.println("TestResponder.exceptionOcurred:" + e.getMessage());
-    try {
-      completeResponse();
-      testSystemGroup.kill();
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
   }
 
   protected synchronized void completeResponse() throws Exception {
@@ -162,14 +140,6 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
       response.add(output);
   }
 
-  public void acceptResultsLast(TestSummary testSummary) throws Exception {
-    if (response.isXmlFormat()) {
-      addTestResultsToXmlDocument(testSummary, page.getName());
-    } else {
-      assertionCounts.tally(testSummary);
-    }
-  }
-
   protected void addTestResultsToXmlDocument(TestSummary testSummary, String pageName) throws Exception {
     Element resultElement = testResultsDocument.createElement("result");
     testResultsElement.appendChild(resultElement);
@@ -188,14 +158,6 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     XmlUtil.addTextNode(testResultsDocument, counts, "wrong", Integer.toString(testSummary.wrong));
     XmlUtil.addTextNode(testResultsDocument, counts, "ignores", Integer.toString(testSummary.ignores));
     XmlUtil.addTextNode(testResultsDocument, counts, "exceptions", Integer.toString(testSummary.exceptions));
-  }
-
-  public void acceptOutputFirst(String output) throws Exception {
-    if (response.isXmlFormat()) {
-      appendHtmlToBuffer(output);
-    } else {
-      response.add(output);
-    }
   }
 
   private void appendHtmlToBuffer(String output) {
@@ -256,5 +218,48 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   public boolean isFastTest() {
     return fastTest;
+  }
+
+  @Override
+  public void announceStartNewTest(WikiPage test) throws Exception {
+    addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
+  }
+
+  @Override
+  public void announceStartTestSystem(String testSystemName, String testRunner)
+      throws Exception {
+  }
+
+  @Override
+  public void processTestOutput(String output) throws Exception {
+    if (response.isXmlFormat()) {
+      appendHtmlToBuffer(output);
+    } else {
+      response.add(output);
+    }
+  }
+
+  @Override
+  public void processTestResults(WikiPage test, TestSummary testSummary)
+      throws Exception {
+    if (response.isXmlFormat()) {
+      addTestResultsToXmlDocument(testSummary, test.getName());
+    } else {
+      assertionCounts.tally(testSummary);
+    }
+  }
+
+  @Override
+  public void setExecutionLog(CompositeExecutionLog log) {
+    this.log = log;
+  }
+  
+  @Override
+  public void errorOccured() {
+    try {
+      completeResponse();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

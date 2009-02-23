@@ -2,26 +2,33 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.testutil.FitSocketReceiver;
-import static fitnesse.testutil.RegexTestCase.*;
-import fitnesse.util.XmlUtil;
-import fitnesse.wiki.*;
-import org.junit.After;
+import static fitnesse.testutil.RegexTestCase.assertDoesntHaveRegexp;
+import static fitnesse.testutil.RegexTestCase.assertHasRegexp;
+import static fitnesse.testutil.RegexTestCase.assertNotSubString;
+import static fitnesse.testutil.RegexTestCase.assertSubString;
+import static fitnesse.testutil.RegexTestCase.divWithIdAndContent;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.util.XmlUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class SuiteResponderTest {
   private MockRequest request;
@@ -30,10 +37,7 @@ public class SuiteResponderTest {
   private WikiPage suite;
   private FitNesseContext context;
   private FitSocketReceiver receiver;
-  private WikiPage testPage;
   private PageCrawler crawler;
-  private WikiPage testPage2;
-  private WikiPage testChildPage;
   private String suitePageName;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
   private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
@@ -50,7 +54,7 @@ public class SuiteResponderTest {
     data.setContent(classpathWidgets());
     root.commit(data);
     suite = crawler.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
-    testPage = addTestToSuite("TestOne", fitPassFixture);
+    addTestToSuite("TestOne", fitPassFixture);
 
     request = new MockRequest();
     request.setResource(suitePageName);

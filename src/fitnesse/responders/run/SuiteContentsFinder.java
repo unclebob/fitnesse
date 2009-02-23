@@ -33,6 +33,15 @@ public class SuiteContentsFinder {
 
   }
   
+  public List<WikiPage> makePageListForSingleTest() throws Exception {
+    LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
+    if (suitePage.getData().hasAttribute("Test")) {
+      pages.add(suitePage);
+      addSetupAndTeardown(pages);
+    }
+    return pages;
+  }
+  
   public List<WikiPage> makePageList() throws Exception {
     LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite();
 
