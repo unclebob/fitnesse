@@ -21,13 +21,13 @@ public class SuiteContentsFinder {
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
   
-  private final WikiPage suitePage;
+  private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final String suiteFilter;
 
-  public SuiteContentsFinder(final WikiPage suitePage, final WikiPage root,
+  public SuiteContentsFinder(final WikiPage pageToRun, final WikiPage root,
       final String suite) {
-    this.suitePage = suitePage;
+    this.pageToRun = pageToRun;
     this.wikiRootPage = root;
     this.suiteFilter = suite;
 
@@ -35,7 +35,7 @@ public class SuiteContentsFinder {
   
   public List<WikiPage> makePageListForSingleTest() throws Exception {
     LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
-    pages.add(suitePage);
+    pages.add(pageToRun);
     addSetupAndTeardown(pages);
 
     return pages;
@@ -45,7 +45,7 @@ public class SuiteContentsFinder {
     LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite();
 
     if (pages.isEmpty()) {
-      String name = new WikiPagePath(suitePage).toString();
+      String name = new WikiPagePath(pageToRun).toString();
       WikiPageDummy dummy = new WikiPageDummy("",
         "|Comment|\n|No test found with suite filter '" + suiteFilter + "' in subwiki !-" + name + "-!!|\n"
       );
@@ -56,13 +56,13 @@ public class SuiteContentsFinder {
   }
 
   private void addSetupAndTeardown(LinkedList<WikiPage> pages) throws Exception {
-    WikiPage suiteSetUp = PageCrawlerImpl.getInheritedPage(SUITE_SETUP_NAME, suitePage);
+    WikiPage suiteSetUp = PageCrawlerImpl.getInheritedPage(SUITE_SETUP_NAME, pageToRun);
     if (suiteSetUp != null) {
       if (pages.contains(suiteSetUp))
         pages.remove(suiteSetUp);
       pages.addFirst(suiteSetUp);
     }
-    WikiPage suiteTearDown = PageCrawlerImpl.getInheritedPage(SUITE_TEARDOWN_NAME, suitePage);
+    WikiPage suiteTearDown = PageCrawlerImpl.getInheritedPage(SUITE_TEARDOWN_NAME, pageToRun);
     if (suiteTearDown != null) {
       if (pages.contains(suiteTearDown))
         pages.remove(suiteTearDown);
@@ -81,7 +81,7 @@ public class SuiteContentsFinder {
   
   private LinkedList<WikiPage> getAllTestPagesUnder() throws Exception {
     LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
-    addTestPagesToList(testPages, suitePage);
+    addTestPagesToList(testPages, pageToRun);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
@@ -149,10 +149,10 @@ public class SuiteContentsFinder {
 
   protected List<WikiPage> gatherCrossReferencedTestPages() throws Exception {
     LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
-    PageData data = suitePage.getData();
+    PageData data = pageToRun.getData();
     List<String> pageReferences = data.getXrefPages();
-    PageCrawler crawler = suitePage.getPageCrawler();
-    WikiPagePath testPagePath = crawler.getFullPath(suitePage);
+    PageCrawler crawler = pageToRun.getPageCrawler();
+    WikiPagePath testPagePath = crawler.getFullPath(pageToRun);
     WikiPage parent = crawler.getPage(wikiRootPage, testPagePath.parentPath());
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
