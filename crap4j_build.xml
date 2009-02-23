@@ -3,6 +3,16 @@
     The crap4j runner for FitNesse
   </description>
 
+  <property name="CRAP4J_HOME" value="crap4j"/>
+
+  <taskdef name="crap4j" classname="org.crap4j.anttask.Crap4jAntTask">
+    <classpath>
+      <fileset dir="${CRAP4J_HOME}/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+    </classpath>
+  </taskdef>
+  
   <import file="build.xml"/>
 
   <target name="run-crap4j" depends="compile">

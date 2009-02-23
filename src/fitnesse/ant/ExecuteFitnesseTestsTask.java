@@ -41,6 +41,7 @@ public class ExecuteFitnesseTestsTask extends Task {
   private String fitnesseHost = "localhost";
   private int fitnessePort;
   private String suitePage;
+  private String suiteFilter;
   private String resultsDir = ".";
   private String resultsHTMLPage;
   private String resultsXMLPage;
@@ -115,7 +116,10 @@ public class ExecuteFitnesseTestsTask extends Task {
       cmd.createArgument().setValue("-xml");
       cmd.createArgument().setValue(resultsHTMLPagePath);
     }
-    cmd.createArgument().setValue("-nopath");
+    if (suiteFilter != null) {
+      cmd.createArgument().setValue("-suiteFilter");
+      cmd.createArgument().setValue(suiteFilter);
+    }
     cmd.createArgument().setValue(fitnesseHost);
     cmd.createArgument().setValue(String.valueOf(fitnessePort));
     cmd.createArgument().setValue(suitePage);
@@ -139,6 +143,15 @@ public class ExecuteFitnesseTestsTask extends Task {
    */
   public void setClasspath(Path classpath) {
     this.classpath = classpath;
+  }
+
+  /**
+   * Name of the filter to be passed to TestRunner to specify a subset of tests to run.
+   *
+   * @param suiteFilter
+   */
+  public void setSuiteFilter(String suiteFilter) {
+    this.suiteFilter = suiteFilter;
   }
 
   /**

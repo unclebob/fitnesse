@@ -11,15 +11,6 @@
   <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
   <property name="zipDir" location="dist/fitnesse"/>
   <property name="results.dir" location="test-results"/>
-  <property name="CRAP4J_HOME" value="crap4j"/>
-
-  <taskdef name="crap4j" classname="org.crap4j.anttask.Crap4jAntTask">
-    <classpath>
-      <fileset dir="${CRAP4J_HOME}/lib">
-        <include name="**/*.jar"/>
-      </fileset>
-    </classpath>
-  </taskdef>
 
   <path id="classpath">
     <pathelement path="classes"/>

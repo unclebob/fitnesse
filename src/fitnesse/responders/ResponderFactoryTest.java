@@ -219,6 +219,10 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderTypeMatchesInput("symlink", SymbolicLinkResponder.class);
   }
 
+  public void testPacketResponder() throws Exception {
+    assertResponderTypeMatchesInput("packet", PacketResponder.class);
+  }
+
   public void testWillDisplayVirtualPages() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import org.json.JSONObject;
+
 public class PageDriver {
   private PageCreator creator = new PageCreator();
   private ResponseRequester requester = new ResponseRequester();
@@ -29,6 +31,20 @@ public class PageDriver {
     examiner.type = "contents";
     examiner.extractValueFromResponse();
     return examiner.getValue().indexOf(subString) != -1;
+  }
+
+  public boolean containsJsonPacket(String packet) throws Exception {
+    packet = ResponseExaminer.convertBreaksToLineSeparators(packet);
+    System.out.println("packet = " + packet);
+    JSONObject expected = new JSONObject(packet);
+    String contentString = requester.contents();
+    int jsonStart = contentString.indexOf("{");
+    if (jsonStart == -1)
+      return false;
+    contentString = contentString.substring(jsonStart);
+    System.out.println("contentString = " + contentString);
+    JSONObject actual = new JSONObject(contentString);
+    return expected.toString(1).equals(actual.toString(1));
   }
 
   public String content() throws Exception {

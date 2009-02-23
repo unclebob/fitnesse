@@ -95,7 +95,7 @@ public class ResponseExaminer extends ColumnFixture {
     return lineizedContent.split(System.getProperty("line.separator"));
   }
 
-  private String convertBreaksToLineSeparators(String pageContent) {
+  public static String convertBreaksToLineSeparators(String pageContent) {
     String lineizedContent = pageContent.replaceAll("<br/>", System.getProperty("line.separator"));
     return lineizedContent;
   }
