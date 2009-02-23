@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.responders.run.SuiteResponder;
-import fitnesse.testutil.RegexTestCase;
-
 import java.util.List;
+
+import fitnesse.responders.run.SuiteContentsFinder;
+import fitnesse.testutil.RegexTestCase;
 
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;
@@ -104,8 +104,8 @@ public class PageDataTest extends RegexTestCase {
     WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
     WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
     WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
-    WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME));
-    WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME));
+    WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SuiteContentsFinder.SUITE_SETUP_NAME));
+    WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SuiteContentsFinder.SUITE_TEARDOWN_NAME));
 
     PageData data = new PageData(normalPage);
     assertTrue(data.hasAttribute("Edit"));

@@ -88,25 +88,7 @@ public class SuiteResponderTest {
     return results;
   }
 
-  @Test
-  public void testGatherXRefTestPages() throws Exception {
-    WikiPage testPage = crawler.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
-    WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
-    WikiPage pageB = crawler.addPage(root, PathParser.parse("PageB"));
-    List<?> xrefTestPages = SuiteResponder.gatherCrossReferencedTestPages(testPage, root);
-    assertEquals(2, xrefTestPages.size());
-    assertTrue(xrefTestPages.contains(pageA));
-    assertTrue(xrefTestPages.contains(pageB));
-  }
 
-  @Test
-  public void testBuildClassPath() throws Exception {
-    responder.page = suite;
-    List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
-    String classpath = SuiteResponder.buildClassPath(testPages, responder.page);
-    assertSubString("classes", classpath);
-    assertSubString("dummy.jar", classpath);
-  }
 
   @Test
   public void testWithOneTest() throws Exception {
@@ -199,45 +181,11 @@ public class SuiteResponderTest {
     assertSubString("Exit-Code: 0", results);
   }
 
-  @Test
-  public void testGetAllTestPages() throws Exception {
-    setUpForGetAllTestPages();
 
-    List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
-    assertEquals(3, testPages.size());
-    assertEquals(true, testPages.contains(testPage));
-    assertEquals(true, testPages.contains(testPage2));
-    assertEquals(true, testPages.contains(testChildPage));
-  }
 
-  private void setUpForGetAllTestPages() throws Exception {
-    testPage2 = addTestToSuite("TestPageTwo", "test page two");
-    testChildPage = testPage2.addChildPage("TestChildPage");
-    PageData data = testChildPage.getData();
-    data.setAttribute("Test");
-    testChildPage.commit(data);
-  }
 
-  @Test
-  public void testGetAllTestPagesSortsByQulifiedNames() throws Exception {
-    setUpForGetAllTestPages();
-    List<WikiPage> testPages = SuiteResponder.getAllTestPagesUnder(suite);
-    assertEquals(3, testPages.size());
-    assertEquals(testPage, testPages.get(0));
-    assertEquals(testPage2, testPages.get(1));
-    assertEquals(testChildPage, testPages.get(2));
-  }
 
-  @Test
-  public void testSetUpAndTearDown() throws Exception {
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    List<?> testPages = responder.makePageList();
-    assertEquals(3, testPages.size());
-    assertSame(setUp, testPages.get(0));
-    assertSame(tearDown, testPages.get(2));
-  }
 
   @Test
   public void testExecutionStatusAppears() throws Exception {
@@ -308,48 +256,6 @@ public class SuiteResponderTest {
     test2.commit(data2);
     test3.commit(data3);
   }
-
-  @Test
-  public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
-    WikiPage slimPage = addTestToSuite("SlimTest", simpleSlimDecisionTable);
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
-
-    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData());
-    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData());
-    List<WikiPage> fitList = map.get(fitDescriptor);
-    List<WikiPage> slimList = map.get(slimDescriptor);
-
-    assertEquals(1, fitList.size());
-    assertEquals(1, slimList.size());
-    assertEquals(testPage, fitList.get(0));
-    assertEquals(slimPage, slimList.get(0));
-  }
-
-  @Test
-  public void testPagesForTestSystemAreSurroundedBySuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = addTestToSuite("SlimTest", simpleSlimDecisionTable);
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
-
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = SuiteResponder.makeMapOfPagesByTestSystem(suite, root, null);
-    TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData());
-    TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData());
-
-    List<WikiPage> fitList = map.get(fitDescriptor);
-    List<WikiPage> slimList = map.get(slimDescriptor);
-
-    assertEquals(3, fitList.size());
-    assertEquals(3, slimList.size());
-
-    assertEquals(setUp, fitList.get(0));
-    assertEquals(testPage, fitList.get(1));
-    assertEquals(tearDown, fitList.get(2));
-
-    assertEquals(setUp, slimList.get(0));
-    assertEquals(slimPage, slimList.get(1));
-    assertEquals(tearDown, slimList.get(2));
-  }
-
 
   @Test
   public void testCanMixSlimAndFitTests() throws Exception {

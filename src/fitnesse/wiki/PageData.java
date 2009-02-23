@@ -2,15 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.*;
-
-import java.io.Serializable;
-import java.util.*;
+import fitnesse.wikitext.widgets.ClasspathWidget;
+import fitnesse.wikitext.widgets.IncludeWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.PreformattedWidget;
+import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
+import fitnesse.wikitext.widgets.VariableDefinitionWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WidgetWithTextArgument;
+import fitnesse.wikitext.widgets.XRefWidget;
 
 public class PageData implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -85,8 +98,8 @@ public class PageData implements Serializable {
     if (pageName.startsWith("Test") || pageName.endsWith("Test"))
       properties.set("Test", "true");
     if ((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
-      !pageName.equals(SuiteResponder.SUITE_SETUP_NAME) &&
-      !pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME)) {
+      !pageName.equals(SuiteContentsFinder.SUITE_SETUP_NAME) &&
+      !pageName.equals(SuiteContentsFinder.SUITE_TEARDOWN_NAME)) {
       properties.set("Suite", "true");
     }
   }

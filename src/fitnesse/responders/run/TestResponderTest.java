@@ -336,8 +336,8 @@ public class TestResponderTest {
     responder.setFastTest(false);
     WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
     WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
-    crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
-    crawler.addPage(suitePage, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    crawler.addPage(suitePage, PathParser.parse(SuiteContentsFinder.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    crawler.addPage(suitePage, PathParser.parse(SuiteContentsFinder.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
 
     WikiPagePath testPagePath = crawler.getFullPath(testPage);
     String resource = PathParser.render(testPagePath);
