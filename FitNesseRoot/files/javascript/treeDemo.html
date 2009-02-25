@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Tree Demo</title>
+  <link type="text/css" rel="stylesheet"
+        href="http://yui.yahooapis.com/2.7.0/build/treeview/assets/skins/sam/treeview.css">
+  <script src="http://yui.yahooapis.com/2.7.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+  <script src="http://yui.yahooapis.com/2.7.0/build/treeview/treeview-min.js"></script>
+
+  <script src="http://yui.yahooapis.com/2.7.0/build/yahoo/yahoo-min.js"></script>
+  <script src="http://yui.yahooapis.com/2.7.0/build/event/event-min.js"></script>
+  <script src="http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js"></script>
+
+  <script src="http://yui.yahooapis.com/2.7.0/build/json/json-min.js"></script>
+  
+  <script src="/files/javascript/jquery-1.3.2.min.js"></script>
+</head>
+<body>
+<h1>Tree Loading Demos</h1>
+
+
+<h2>Front Page Children from FitNesse</h2>
+
+<div id="front_page_children_list">
+</div>
+
+<a onclick="front_page_children_tree_init()">Click Me</a>
+
+<script type="text/javascript">
+  var front_page_children_tree;
+  function front_page_children_tree_init() {
+
+    front_page_children_tree = new YAHOO.widget.TreeView("front_page_children_list");
+
+    var callback = {
+      success: function(o) {
+        var list = $(o.responseText.split('\n'));
+        var root = front_page_children_tree.getRoot();
+        list.filter(function(){return this.length>0;}).each( function(index){
+          
+          new YAHOO.widget.TextNode({label:this}, root, false);
+          
+        });
+        front_page_children_tree.render();
+      }
+    };
+    var transaction = YAHOO.util.Connect.asyncRequest('GET', '/root?names', callback, null);
+  }
+</script>
+
+
+<h2>Example Tree</h2>
+
+<div id="treeDiv1">
+  <ul>
+    <li>List 0
+      <ul>
+        <li>List 0-0
+          <ul>
+            <li>item 0-0-0</li>
+            <li>item 0-0-1</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>item 0-1
+      <ul>
+        <li><a target="_new" href="www.elsewhere.com" title="go elsewhere">elsewhere</a>
+          <ul>
+            <li>item 0-1-0</li>
+            <li>item 0-1-1</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<a onclick="treeInit();">Initialize Tree</a>
+
+<script type="text/javascript">
+  var tree;
+  function treeInit() {
+    tree = new YAHOO.widget.TreeView("treeDiv1");
+    tree.render();
+  }
+
+</script>
+</body>
+</html>

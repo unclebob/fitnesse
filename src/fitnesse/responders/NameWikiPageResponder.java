@@ -12,7 +12,7 @@ public class NameWikiPageResponder extends BasicWikiPageResponder {
     StringBuffer contents = new StringBuffer();
     for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext();) {
       WikiPage child = (WikiPage) iterator.next();
-      contents.append(child.getName() + Character.LINE_SEPARATOR);
+      contents.append(child.getName() + System.getProperty("line.separator"));
     }
     return contents.toString();
   }
