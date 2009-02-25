@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import java.io.InputStream;
+
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -9,8 +11,6 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
-
-import java.io.InputStream;
 
 public class HtmlResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;
@@ -27,10 +27,25 @@ public class HtmlResultFormatter implements ResultFormatter {
     buffer = new ContentBuffer(".html");
 
     createPage(pageFactory, rootPath);
-    suiteFormatter = new SuiteHtmlFormatter(page);
-    buffer.append(suiteFormatter.head());
+    suiteFormatter = createCustomFormatter();
+    suiteFormatter.writeHead(null);
   }
 
+  private SuiteHtmlFormatter createCustomFormatter() throws Exception {
+    SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(null, null) {
+      @Override
+      protected void writeData(String output) throws Exception {
+        buffer.append(output);
+      }
+      
+      @Override
+      protected HtmlPage buildHtml(String pageType) throws Exception {
+        return page;
+      }
+    };
+    return formatter;
+  }
+  
   private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
     page = pageFactory.newPage();
     page.head.use(makeBaseTag());
@@ -65,20 +80,19 @@ public class HtmlResultFormatter implements ResultFormatter {
 
   public void acceptResult(PageResult result) throws Exception {
     String relativePageName = result.title();
-    suiteFormatter.startOutputForNewTest(relativePageName, rootPath + "." + relativePageName);
-    suiteFormatter.acceptOutput(result.content());
-    String resultRow = suiteFormatter.acceptResults(relativePageName, result.testSummary());
-    buffer.append(resultRow);
+    suiteFormatter.announceStartNewTest(relativePageName, rootPath + "." + relativePageName);
+    suiteFormatter.processTestOutput(result.content());
+    suiteFormatter.processTestResults(relativePageName, result.testSummary());
   }
 
   public void acceptFinalCount(TestSummary testSummary) throws Exception {
-    buffer.append(suiteFormatter.testSummary(testSummary));
-    buffer.append(suiteFormatter.testOutput());
+    suiteFormatter.testSummary(testSummary);
+    suiteFormatter.finishWritingOutput();
   }
 
   private void close() throws Exception {
     if (!closed) {
-      buffer.append(suiteFormatter.tail());
+      suiteFormatter.finishWritingOutput();
       closed = true;
     }
   }
