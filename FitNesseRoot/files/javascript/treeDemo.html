@@ -22,6 +22,19 @@
 <h1>Tree Loading Demos</h1>
 
 
+<div id="test_results">
+  <ul>
+    <li><a onclick="check_root_pages_get_loaded()">check_root_pages_get_loaded</a></li>
+    <li><a onclick="check_first_level_child_pages_get_loaded()">check_first_level_child_pages_get_loaded</a></li>
+    <li><a onclick="first_level_node_fitness_path_is_label()">first_level_fitness_path_is_label</a></li>
+    <li><a onclick="second_level_node_fitness_path_is_parent_dot_node_label()">second_level_node_fitness_path_is_parent_dot_node_label</a></li>
+    <li><a onclick="node_has_href_property_with_fitnesse_path()">node_has_href_property_with_fitnesse_path</a></li>
+    <li><a onclick="node_has_target_property()">node_has_target_property</a></li>
+  </ul>
+  <div id="pass" style="display:none;width:100%;height:100%;background-color:green">Pass</div>
+  <div id="fail" style="display:none;width:100%;height:100%;background-color:red">Fail</div>
+</div>
+
 <h2>Front Page Children from FitNesse</h2>
 
 <div id="front_page_children_list">
@@ -31,16 +44,7 @@
 
 <br/><br/><br/><br/><br/>
 
-<div id="test_results" style="width:200px">
-  <ul>
-    <li><a onclick="check_root_pages_get_loaded()">Check Root Pages Get Loaded</a></li>
-    <li><a onclick="check_first_level_child_pages_get_loaded()">check_first_level_child_pages_get_loaded</a></li>
-    <li><a onclick="first_level_node_fitness_path_is_label()">first_level_fitness_path_is_label</a></li>
-    <li><a onclick="second_level_node_fitness_path_is_parent_dot_node_label()">second_level_node_fitness_path_is_parent_dot_node_label</a></li>
-  </ul>
-  <div id="pass" style="display:none;width:100%;height:100%;background-color:green">Pass</div>
-  <div id="fail" style="display:none;width:100%;height:100%;background-color:red">Fail</div>
-</div>
+
 
 <script type="text/javascript">
   function assertEqual(expected, actual)
@@ -54,7 +58,6 @@
       fail_div.show();
     }
   }
-
 
   function first_level_node_fitness_path_is_label(){
     add_fitnesse_methods_to_YUI_textnode();
@@ -91,6 +94,32 @@
 
     $.getJSON = original_getJSON;
   }
+
+  function noop(){};
+
+  function node_has_href_property_with_fitnesse_path(){
+    with_root_pages(
+        function(root_pages){
+          var node = tree.getNodeByProperty('label',root_pages[0]);
+          assertEqual("/" + node.fitnesse_path(), node.href);
+        },
+        noop
+      );
+
+  }
+
+    function node_has_target_property(){
+    with_root_pages(
+        function(root_pages){
+          var node = tree.getNodeByProperty('label',root_pages[0]);
+          assertEqual("page_frame", node.target);
+        },
+        noop
+      );
+
+  }
+
+
 
   function check_root_pages_get_loaded() {
     with_root_pages(

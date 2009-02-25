@@ -13,7 +13,8 @@ function add_fitnesse_methods_to_YUI_textnode() {
 
 function add_nodes_to_parent(child_node_names, parent_node) {
   $(child_node_names).sort().each(function() {
-    var node = new YAHOO.widget.TextNode({label:this}, parent_node, false);
+    var node = new YAHOO.widget.TextNode({label:this, target:"page_frame"}, parent_node, false);
+    node.href = "/" + node.fitnesse_path();
   });
 }
 
@@ -29,6 +30,9 @@ function tree_init(div_id) {
       tree.render();
     }
     );
+  tree.subscribe("clickEvent", function(node) {
+    return false;
+  });
 }
 function load_child_nodes(node, fnLoadComplete)
 {
