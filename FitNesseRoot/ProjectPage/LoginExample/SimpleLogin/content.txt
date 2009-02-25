@@ -1,0 +1,5 @@
+
+!|script|
+|given a user named                           |Bob|with password|xyzzy|
+|He should be able to log in with password    |xyzzy                  |
+|He should not be able to log in with password|ppqqp                  |

@@ -1,0 +1,4 @@
+!define TEST_SYSTEM {slim}
+!path /Users/unclebob/projects/SlimExamples/LoginExample/classes
+>SimpleLogin
+
