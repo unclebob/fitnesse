@@ -13,7 +13,7 @@
   <script src="http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js"></script>
 
   <script src="http://yui.yahooapis.com/2.7.0/build/json/json-min.js"></script>
-  
+
   <script src="/files/javascript/jquery-1.3.2.min.js"></script>
 </head>
 <body>
@@ -33,22 +33,58 @@
 
     front_page_children_tree = new YAHOO.widget.TreeView("front_page_children_list");
 
-    var callback = {
-      success: function(o) {
-        var list = $(o.responseText.split('\n'));
+    $.getJSON("/root?names&format=json",
+      function(json) {
         var root = front_page_children_tree.getRoot();
-        list.filter(function(){return this.length>0;}).each( function(index){
-          
-          new YAHOO.widget.TextNode({label:this}, root, false);
-          
+        $(json).sort().each(function() {
+          new YAHOO.widget.TextNode({label:this}, root, false).className = "page_name";
         });
         front_page_children_tree.render();
+
       }
-    };
-    var transaction = YAHOO.util.Connect.asyncRequest('GET', '/root?names', callback, null);
+      );
   }
 </script>
 
+<br/><br/><br/><br/><br/>
+
+<div id="test_results" style="width:200px">
+  <a onclick="check_root_pages_get_loaded()">Check Root Pages Get Loaded</a>
+
+  <div id="pass" style="display:none;width:100%;height:100%;background-color:green">Pass</div>
+  <div id="fail" style="display:none;width:100%;height:100%;background-color:red">Fail</div>
+</div>
+
+<script type="text/javascript">
+  function assertEqual(expected, actual)
+  {
+    if (expected == actual) {
+      var success_div = $('#test_results #pass');
+      success_div.show();
+    } else {
+      var fail_div = $('#test_results #fail');
+      fail_div.text("Expected: " + expected + " Actual: " + actual);
+      fail_div.show();
+    }
+  }
+
+
+  function check_root_pages_get_loaded() {
+    var original_getJSON = $.getJSON;
+    var pages = ['PageOne', 'PageTwo'];
+    $.getJSON = function(url, callback) {
+      callback(pages);
+    };
+
+    front_page_children_tree_init();
+    var nodes = $('div#front_page_children_list table.page_name span.ygtvlabel');
+    assertEqual(2, nodes.length);
+    assertEqual("PageOne", $(nodes[0]).text());
+    assertEqual("PageTwo", nodes[1].text());
+    $.getJSON = original_getJSON;
+  }
+
+</script>
 
 <h2>Example Tree</h2>
 

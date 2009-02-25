@@ -11,7 +11,10 @@ import fitnesse.wiki.WikiPagePath;
 
 // TODO This class could just be "WikiPageResponder" (already exists)
 public abstract class BasicWikiPageResponder extends BasicResponder {
+  protected Request request;
+
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.request = request;
     WikiPage requestedPage = getRequestedPage(request, context);
 
     Response response;
