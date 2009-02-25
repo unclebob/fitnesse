@@ -15,6 +15,24 @@
   <script src="http://yui.yahooapis.com/2.7.0/build/json/json-min.js"></script>
 
   <script src="/files/javascript/jquery-1.3.2.min.js"></script>
+
+  <script type="text/javascript">
+    function add_fitnesse_methods_to_YUI_textnode(){
+      YAHOO.widget.TextNode.prototype.fitnesse_path = function() {
+        var node_list = this.path_labels();
+        return node_list.join('.');
+      };
+      YAHOO.widget.TextNode.prototype.path_labels = function() {
+        if(!this.parent.path_labels){
+          return [this.label];
+        }
+        return this.parent.path_labels().concat(this.label);
+      };
+    }
+    $(document).ready(add_fitnesse_methods_to_YUI_textnode);
+
+
+  </script>
 </head>
 <body>
 <h1>Tree Loading Demos</h1>
@@ -28,6 +46,12 @@
 <a onclick="tree_init()">Click Me</a>
 
 <script type="text/javascript">
+  function add_nodes_to_parent(child_node_names, parent_node) {
+    $(child_node_names).sort().each(function() {
+      var node = new YAHOO.widget.TextNode({label:this}, parent_node, false);
+    });
+  }
+  
   var tree;
   function tree_init() {
 
@@ -40,40 +64,14 @@
       }
       );
   }
-
-
   function load_child_nodes(node, fnLoadComplete)
   {
     var callback = function(json) {
       add_nodes_to_parent(json, node);
       fnLoadComplete();
     };
-
-
     var url = "/" + node.fitnesse_path() + "?names&format=json";
     $.getJSON(url, callback);
-
-  }
-
-  function construct_fitnesse_path() {
-    var node_list = this.path_labels();
-    return node_list.join('.');
-  }
-
-  function path_labels()
-  {
-    if(!this.parent.path_labels){
-      return [this.label];
-    }
-    return this.parent.path_labels().concat(this.label);
-  }
-
-  function add_nodes_to_parent(child_node_names, parent_node) {
-    $(child_node_names).sort().each(function() {
-      var node = new YAHOO.widget.TextNode({label:this}, parent_node, false);
-      node.fitnesse_path = construct_fitnesse_path;
-      node.path_labels = path_labels;
-    });
   }
 </script>
 
