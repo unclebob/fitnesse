@@ -25,32 +25,67 @@
 <div id="front_page_children_list">
 </div>
 
-<a onclick="front_page_children_tree_init()">Click Me</a>
+<a onclick="tree_init()">Click Me</a>
 
 <script type="text/javascript">
-  var front_page_children_tree;
-  function front_page_children_tree_init() {
+  var tree;
+  function tree_init() {
 
-    front_page_children_tree = new YAHOO.widget.TreeView("front_page_children_list");
-
+    tree = new YAHOO.widget.TreeView("front_page_children_list");
+    tree.setDynamicLoad(load_child_nodes, 1);
     $.getJSON("/root?names&format=json",
       function(json) {
-        var root = front_page_children_tree.getRoot();
-        $(json).sort().each(function() {
-          new YAHOO.widget.TextNode({label:this}, root, false).className = "page_name";
-        });
-        front_page_children_tree.render();
-
+        add_nodes_to_parent(json, tree.getRoot());
+        tree.render();
       }
       );
+  }
+
+
+  function load_child_nodes(node, fnLoadComplete)
+  {
+    var callback = function(json) {
+      add_nodes_to_parent(json, node);
+      fnLoadComplete();
+    };
+
+
+    var url = "/" + node.fitnesse_path() + "?names&format=json";
+    $.getJSON(url, callback);
+
+  }
+
+  function construct_fitnesse_path() {
+    var node_list = this.path_labels();
+    return node_list.join('.');
+  }
+
+  function path_labels()
+  {
+    if(!this.parent.path_labels){
+      return [this.label];
+    }
+    return this.parent.path_labels().concat(this.label);
+  }
+
+  function add_nodes_to_parent(child_node_names, parent_node) {
+    $(child_node_names).sort().each(function() {
+      var node = new YAHOO.widget.TextNode({label:this}, parent_node, false);
+      node.fitnesse_path = construct_fitnesse_path;
+      node.path_labels = path_labels;
+    });
   }
 </script>
 
 <br/><br/><br/><br/><br/>
 
 <div id="test_results" style="width:200px">
-  <a onclick="check_root_pages_get_loaded()">Check Root Pages Get Loaded</a>
-
+  <ul>
+    <li><a onclick="check_root_pages_get_loaded()">Check Root Pages Get Loaded</a></li>
+    <li><a onclick="check_first_level_child_pages_get_loaded()">check_first_level_child_pages_get_loaded</a></li>
+    <li><a onclick="first_level_node_fitness_path_is_label()">first_level_fitness_path_is_label</a></li>
+    <li><a onclick="second_level_node_fitness_path_is_parent_dot_node_label()">second_level_node_fitness_path_is_parent_dot_node_label</a></li>
+  </ul>
   <div id="pass" style="display:none;width:100%;height:100%;background-color:green">Pass</div>
   <div id="fail" style="display:none;width:100%;height:100%;background-color:red">Fail</div>
 </div>
@@ -69,59 +104,73 @@
   }
 
 
-  function check_root_pages_get_loaded() {
+  function first_level_node_fitness_path_is_label(){
+    var tree = new YAHOO.widget.TreeView("front_page_children_list");
+    var root = tree.getRoot();
+    add_nodes_to_parent(['this_node'],root);
+    var new_node = tree.getNodeByProperty('label', 'this_node');
+    assertEqual('this_node', new_node.fitnesse_path());
+  }
+
+  function second_level_node_fitness_path_is_parent_dot_node_label(){
+    var tree = new YAHOO.widget.TreeView("front_page_children_list");
+    var root = tree.getRoot();
+    add_nodes_to_parent(['this_node'],root);
+    var first_level_node = tree.getNodeByProperty('label', 'this_node');
+    add_nodes_to_parent(['second_level_node'], first_level_node);
+    var node = tree.getNodeByProperty('label', 'second_level_node');
+    assertEqual('this_node.second_level_node', node.fitnesse_path());
+  }
+
+
+  function with_root_pages(verify_this, after_this)
+  {
     var original_getJSON = $.getJSON;
     var pages = ['PageOne', 'PageTwo'];
     $.getJSON = function(url, callback) {
       callback(pages);
     };
 
-    front_page_children_tree_init();
-    var nodes = $('div#front_page_children_list table.page_name span.ygtvlabel');
-    assertEqual(2, nodes.length);
-    assertEqual("PageOne", $(nodes[0]).text());
-    assertEqual("PageTwo", nodes[1].text());
+    tree_init();
+    after_this(pages);
+    verify_this(pages);
+
     $.getJSON = original_getJSON;
   }
 
-</script>
-
-<h2>Example Tree</h2>
-
-<div id="treeDiv1">
-  <ul>
-    <li>List 0
-      <ul>
-        <li>List 0-0
-          <ul>
-            <li>item 0-0-0</li>
-            <li>item 0-0-1</li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li>item 0-1
-      <ul>
-        <li><a target="_new" href="www.elsewhere.com" title="go elsewhere">elsewhere</a>
-          <ul>
-            <li>item 0-1-0</li>
-            <li>item 0-1-1</li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-
-<a onclick="treeInit();">Initialize Tree</a>
-
-<script type="text/javascript">
-  var tree;
-  function treeInit() {
-    tree = new YAHOO.widget.TreeView("treeDiv1");
-    tree.render();
+  function check_root_pages_get_loaded() {
+    with_root_pages(
+      function(root_pages) {
+        var nodes = tree.getRoot().children;
+        assertEqual(root_pages.length, nodes.length);
+        assertEqual(root_pages[0], nodes[0].label);
+        assertEqual(root_pages[1], nodes[1].label);
+      },
+      function() {
+      }
+      );
   }
+  function check_first_level_child_pages_get_loaded() {
+    with_root_pages(
+      function(root_pages) {
+        var page_one = tree.getNodeByProperty('label', root_pages[0]);
+        var nodes = page_one.children;
+        assertEqual(2, nodes.length);
+        assertEqual("ChildOne", nodes[0].label);
+        assertEqual("ChildTwo", nodes[1].label);
+      },
+      function(root_pages) {
+        var child_pages = ['ChildOne', 'ChildTwo'];
+        $.getJSON = function(url, callback) {
+          callback(child_pages);
+        };
+        var page_one = tree.getNodeByProperty('label', root_pages[0]);
+        load_child_nodes(page_one, function() {
+        });
+      }
 
+      );
+  }
 </script>
 </body>
 </html>
