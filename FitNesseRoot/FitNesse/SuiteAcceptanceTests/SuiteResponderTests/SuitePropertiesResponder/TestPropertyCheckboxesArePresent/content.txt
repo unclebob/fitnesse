@@ -10,12 +10,18 @@ Request the page
 |uri|valid?|
 |SomePage?properties|true|
 
+Ensure that the Page type radios are present
+!|Response Examiner.|
+|type|pattern|matches?|
+|contents|Page type:|true|
+|contents|<input type="radio" name="PageType" value="Normal" checked="checked"/> - Normal|true|
+|contents|<input type="radio" name="PageType" value="Test"/> - Test|true|
+|contents|<input type="radio" name="PageType" value="Suite"/> - Suite|true|
+
 Ensure that the Action links are present
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|Actions:|true|
-|contents|<input type="checkbox" name="Test"/> - Test|true|
-|contents|<input type="checkbox" name="Suite"/> - Suite|true|
 |contents|<input type="checkbox" name="Edit" checked="true"/> - Edit|true|
 |contents|<input type="checkbox" name="Versions" checked="true"/> - Versions|true|
 |contents|<input type="checkbox" name="Properties" checked="true"/> - Properties|true|

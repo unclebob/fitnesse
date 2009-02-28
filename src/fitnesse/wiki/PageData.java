@@ -19,11 +19,11 @@ public class PageData implements Serializable {
   public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
 
   public static WidgetBuilder
-    variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]
-    {IncludeWidget.class,
+  variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]
+                                                                {IncludeWidget.class,
       PreformattedWidget.class,
       VariableDefinitionWidget.class
-    });
+                                                                });
 
   public static final String PropertyHELP = "Help";
   public static final String PropertyPRUNE = "Prune";
@@ -82,13 +82,13 @@ public class PageData implements Serializable {
       handleInvalidPageName(wikiPage);
       return;
     }
-    if (pageName.startsWith("Test") || pageName.endsWith("Test"))
-      properties.set("Test", "true");
+
     if ((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
-      !pageName.equals(SuiteResponder.SUITE_SETUP_NAME) &&
-      !pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME)) {
+        !pageName.equals(SuiteResponder.SUITE_SETUP_NAME) &&
+        !pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME))
       properties.set("Suite", "true");
-    }
+    else if (pageName.startsWith("Test") || pageName.endsWith("Test"))
+      properties.set("Test", "true");
   }
 
   // TODO: Should be written to a real logger, but it doesn't like FitNesse's logger is
@@ -192,12 +192,11 @@ public class PageData implements Serializable {
     ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage, builder);
     List<WikiWidget> widgets = root.getChildren();
     List<String> values = new ArrayList<String>();
-    for (WikiWidget widget : widgets) {
+    for (WikiWidget widget : widgets)
       if (widget instanceof WidgetWithTextArgument)
         values.add(((WidgetWithTextArgument) widget).getText());
       else
         widget.render();
-    }
     return values;
   }
 
