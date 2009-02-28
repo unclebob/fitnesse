@@ -8,6 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.util.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,6 +113,8 @@ public class FitNesseExpediter implements ResponseSender {
 
   public Response createGoodResponse(Request request) throws Exception {
     Response response;
+    if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
+      request.setResource("files/html/index.html");
     Responder responder = context.responderFactory.makeResponder(request, context.root);
     responder = context.authenticator.authenticate(context, request, responder);
     response = responder.makeResponse(context, request);

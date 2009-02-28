@@ -6,7 +6,7 @@ public class MockRequest extends Request {
   private Exception parseException = null;
 
   public MockRequest() {
-    resource = "";
+    super.setResource("");
   }
 
   public void setRequestUri(String value) {
@@ -18,7 +18,7 @@ public class MockRequest extends Request {
   }
 
   public void setResource(String value) {
-    resource = value;
+    super.setResource(value);
   }
 
   public void setBody(String value) {

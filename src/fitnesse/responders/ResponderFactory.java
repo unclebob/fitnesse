@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.Responder;
+import fitnesse.util.StringUtil;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
@@ -103,13 +104,13 @@ public class ResponderFactory {
   public Responder makeResponder(Request request, WikiPage root) throws Exception {
     Responder responder = new DefaultResponder();
     String resource = request.getResource();
-    if ("".equals(resource))
-      resource = "FrontPage";
     String responderKey = getResponderKey(request);
     if (usingResponderKey(responderKey))
       responder = lookupResponder(responderKey, responder);
     else {
-      if (resource.startsWith("files/") || resource.equals("files"))
+      if (StringUtil.isBlank(resource))
+        responder = new WikiPageResponder();
+      else if (resource.startsWith("files/") || resource.equals("files"))
         responder = FileResponder.makeResponder(request, rootPath);
       else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource))
         responder = new WikiPageResponder();
