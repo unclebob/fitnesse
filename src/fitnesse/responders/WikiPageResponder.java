@@ -13,7 +13,6 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.revisioncontrol.HtmlActionMenuBuilder;
-import fitnesse.util.StringUtil;
 import fitnesse.wiki.*;
 
 public class WikiPageResponder implements SecureResponder {
@@ -32,24 +31,15 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    String pageName = getPageNameOrDefault(request, "FrontPage");
-    loadPage(pageName, context);
+    loadPage(request.getResource(), context);
     if (page == null)
       return notFoundResponse(context, request);
     else
       return makePageResponse(context);
   }
 
-  private String getPageNameOrDefault(Request request, String defaultPageName) {
-    String pageName = request.getResource();
-    if (StringUtil.isBlank(pageName))
-      pageName = defaultPageName;
-
-    return pageName;
-  }
-
-  protected void loadPage(String resource, FitNesseContext context) throws Exception {
-    WikiPagePath path = PathParser.parse(resource);
+  protected void loadPage(String pageName, FitNesseContext context) throws Exception {
+    WikiPagePath path = PathParser.parse(pageName);
     crawler = context.root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page = crawler.getPage(context.root, path);

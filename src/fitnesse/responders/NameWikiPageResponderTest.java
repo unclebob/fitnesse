@@ -6,10 +6,17 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.RegexTestCase;
+import static fitnesse.testutil.RegexTestCase.*;
 import fitnesse.wiki.*;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.junit.Before;
+import org.junit.Test;
 
-public class NameResponderTest extends RegexTestCase {
+import java.util.Set;
+import java.util.HashSet;
+
+public class NameWikiPageResponderTest {
   private WikiPage root;
   private NameWikiPageResponder responder;
   private MockRequest request;
@@ -21,7 +28,8 @@ public class NameResponderTest extends RegexTestCase {
   private WikiPagePath pageTwoPath;
   private WikiPagePath frontPagePath;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     responder = new NameWikiPageResponder();
@@ -36,12 +44,14 @@ public class NameResponderTest extends RegexTestCase {
     frontPagePath = PathParser.parse(frontPageName);
   }
 
+  @Test
   public void testTextPlain() throws Exception {
 
     Response r = responder.makeResponse(new FitNesseContext(root), request);
     assertEquals("text/plain", r.getContentType());
   }
 
+  @Test
   public void testPageNamesFromRoot() throws Exception {
     crawler.addPage(root, pageOnePath);
     crawler.addPage(root, pageTwoPath);
@@ -51,6 +61,7 @@ public class NameResponderTest extends RegexTestCase {
     assertHasRegexp(pageTwoName, response.getContent());
   }
 
+  @Test
   public void testPageNamesFromASubPage() throws Exception {
     WikiPage frontPage = crawler.addPage(root, frontPagePath);
     crawler.addPage(frontPage, pageOnePath);
@@ -66,5 +77,23 @@ public class NameResponderTest extends RegexTestCase {
     assertHasRegexp(pageOneName, response.getContent());
     assertHasRegexp(pageTwoName, response.getContent());
     assertDoesntHaveRegexp(frontPageName, response.getContent());
+  }
+
+  @Test
+  public void jsonFormat() throws Exception {
+    crawler.addPage(root, pageOnePath);
+    crawler.addPage(root, pageTwoPath);
+    request.setResource("");
+    request.addInput("format", "json");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    JSONArray actual = new JSONArray(response.getContent());
+    assertEquals(2, actual.length());
+    Set<String> actualSet = new HashSet<String>();
+    actualSet.add(actual.getString(0));
+    actualSet.add(actual.getString(1));
+    Set<String> expectedSet = new HashSet<String>();
+    expectedSet.add(pageOneName);
+    expectedSet.add(pageTwoName);
+    assertEquals(expectedSet, actualSet); 
   }
 }

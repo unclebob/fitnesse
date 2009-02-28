@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Tree Demo</title>
+  <link type="text/css" rel="stylesheet"
+        href="http://yui.yahooapis.com/2.7.0/build/treeview/assets/skins/sam/treeview.css">
+  <script src="http://yui.yahooapis.com/2.7.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+  <script src="http://yui.yahooapis.com/2.7.0/build/treeview/treeview-min.js"></script>
+
+  <script src="http://yui.yahooapis.com/2.7.0/build/yahoo/yahoo-min.js"></script>
+  <script src="http://yui.yahooapis.com/2.7.0/build/event/event-min.js"></script>
+  <script src="http://yui.yahooapis.com/2.7.0/build/connection/connection-min.js"></script>
+
+  <script src="http://yui.yahooapis.com/2.7.0/build/json/json-min.js"></script>
+
+  <script src="/files/javascript/jquery-1.3.2.min.js"></script>
+
+  <script src="/files/javascript/fitnesseTreeControl.js"></script>
+</head>
+<body>
+<h1>Tree Loading Demos</h1>
+
+
+<div id="test_results">
+  <ul>
+    <li><a onclick="check_root_pages_get_loaded()">check_root_pages_get_loaded</a></li>
+    <li><a onclick="check_first_level_child_pages_get_loaded()">check_first_level_child_pages_get_loaded</a></li>
+    <li><a onclick="first_level_node_fitness_path_is_label()">first_level_fitness_path_is_label</a></li>
+    <li><a onclick="second_level_node_fitness_path_is_parent_dot_node_label()">second_level_node_fitness_path_is_parent_dot_node_label</a></li>
+    <li><a onclick="node_has_href_property_with_fitnesse_path()">node_has_href_property_with_fitnesse_path</a></li>
+    <li><a onclick="node_has_target_property()">node_has_target_property</a></li>
+  </ul>
+  <div id="pass" style="display:none;width:100%;height:100%;background-color:green">Pass</div>
+  <div id="fail" style="display:none;width:100%;height:100%;background-color:red">Fail</div>
+</div>
+
+<h2>Front Page Children from FitNesse</h2>
+
+<div id="front_page_children_list">
+</div>
+
+<a onclick="tree_init('front_page_children_list')">Click Me</a>
+
+<br/><br/><br/><br/><br/>
+
+
+
+<script type="text/javascript">
+  function assertEqual(expected, actual)
+  {
+    if (expected == actual) {
+      var success_div = $('#test_results #pass');
+      success_div.show();
+    } else {
+      var fail_div = $('#test_results #fail');
+      fail_div.text("Expected: " + expected + " Actual: " + actual);
+      fail_div.show();
+    }
+  }
+
+  function first_level_node_fitness_path_is_label(){
+    add_fitnesse_methods_to_YUI_textnode();
+    var tree = new YAHOO.widget.TreeView("front_page_children_list");
+    var root = tree.getRoot();
+    add_nodes_to_parent(['this_node'],root);
+    var new_node = tree.getNodeByProperty('label', 'this_node');
+    assertEqual('this_node', new_node.fitnesse_path());
+  }
+
+  function second_level_node_fitness_path_is_parent_dot_node_label(){
+    add_fitnesse_methods_to_YUI_textnode();
+    var tree = new YAHOO.widget.TreeView("front_page_children_list");
+    var root = tree.getRoot();
+    add_nodes_to_parent(['this_node'],root);
+    var first_level_node = tree.getNodeByProperty('label', 'this_node');
+    add_nodes_to_parent(['second_level_node'], first_level_node);
+    var node = tree.getNodeByProperty('label', 'second_level_node');
+    assertEqual('this_node.second_level_node', node.fitnesse_path());
+  }
+
+
+  function with_root_pages(verify_this, after_this)
+  {
+    var original_getJSON = $.getJSON;
+    var pages = ['PageOne', 'PageTwo'];
+    $.getJSON = function(url, callback) {
+      callback(pages);
+    };
+
+    tree_init('front_page_children_list');
+    after_this(pages);
+    verify_this(pages);
+
+    $.getJSON = original_getJSON;
+  }
+
+  function noop(){};
+
+  function node_has_href_property_with_fitnesse_path(){
+    with_root_pages(
+        function(root_pages){
+          var node = tree.getNodeByProperty('label',root_pages[0]);
+          assertEqual("/" + node.fitnesse_path(), node.href);
+        },
+        noop
+      );
+
+  }
+
+    function node_has_target_property(){
+    with_root_pages(
+        function(root_pages){
+          var node = tree.getNodeByProperty('label',root_pages[0]);
+          assertEqual("page_frame", node.target);
+        },
+        noop
+      );
+
+  }
+
+
+
+  function check_root_pages_get_loaded() {
+    with_root_pages(
+      function(root_pages) {
+        var nodes = tree.getRoot().children;
+        assertEqual(root_pages.length, nodes.length);
+        assertEqual(root_pages[0], nodes[0].label);
+        assertEqual(root_pages[1], nodes[1].label);
+      },
+      function() {
+      }
+      );
+  }
+  function check_first_level_child_pages_get_loaded() {
+    with_root_pages(
+      function(root_pages) {
+        var page_one = tree.getNodeByProperty('label', root_pages[0]);
+        var nodes = page_one.children;
+        assertEqual(2, nodes.length);
+        assertEqual("ChildOne", nodes[0].label);
+        assertEqual("ChildTwo", nodes[1].label);
+      },
+      function(root_pages) {
+        var child_pages = ['ChildOne', 'ChildTwo'];
+        $.getJSON = function(url, callback) {
+          callback(child_pages);
+        };
+        var page_one = tree.getNodeByProperty('label', root_pages[0]);
+        load_child_nodes(page_one, function() {
+        });
+      }
+
+      );
+  }
+</script>
+</body>
+</html>

@@ -23,7 +23,7 @@ public class Request {
 
   protected StreamReader input;
   protected String requestURI;
-  protected String resource;
+  private String resource;
   protected String queryString;
   protected HashMap<String, Object> inputs = new HashMap<String, Object>();
   protected HashMap<String, Object> headers = new HashMap<String, Object>();
@@ -175,6 +175,10 @@ public class Request {
 
   public String getResource() {
     return resource;
+  }
+
+  public void setResource(String resource) {
+    this.resource = resource;
   }
 
   public String getQueryString() {
