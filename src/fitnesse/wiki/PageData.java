@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
@@ -83,12 +84,21 @@ public class PageData implements Serializable {
       return;
     }
 
+    if (isErrorLogsPage())
+      return;
+
     if ((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
         !pageName.equals(SuiteResponder.SUITE_SETUP_NAME) &&
         !pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME))
       properties.set("Suite", "true");
     else if (pageName.startsWith("Test") || pageName.endsWith("Test"))
       properties.set("Test", "true");
+  }
+
+  private boolean isErrorLogsPage() throws Exception {
+    PageCrawler crawler = wikiPage.getPageCrawler();
+    String relativePagePath = crawler.getRelativeName(crawler.getRoot(wikiPage), wikiPage);
+    return relativePagePath.startsWith(ExecutionLog.ErrorLogName);
   }
 
   // TODO: Should be written to a real logger, but it doesn't like FitNesse's logger is

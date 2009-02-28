@@ -105,6 +105,7 @@ public class PageDataTest extends RegexTestCase {
     WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
     WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
     WikiPage suitePage3 = crawler.addPage(root, PathParser.parse("TestPageSuite"));
+    WikiPage errorLogsPage = crawler.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
     WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SuiteResponder.SUITE_SETUP_NAME));
     WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SuiteResponder.SUITE_TEARDOWN_NAME));
 
@@ -135,6 +136,10 @@ public class PageDataTest extends RegexTestCase {
     data = new PageData(suitePage3);
     assertFalse(data.hasAttribute("Test"));
     assertTrue(data.hasAttribute("Suite"));
+
+    data = new PageData(errorLogsPage);
+    assertFalse(data.hasAttribute("Test"));
+    assertFalse(data.hasAttribute("Suite"));
 
     data = new PageData(suiteSetupPage);
     assertFalse(data.hasAttribute("Suite"));
