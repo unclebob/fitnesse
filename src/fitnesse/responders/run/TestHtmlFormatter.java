@@ -48,6 +48,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   @Override
   public void announceStartNewTest(WikiPage test) throws Exception {
+    writeData(HtmlUtil.getHtmlOfInheritedPage("PageHeader", getPage()));
   }
 
   @Override
@@ -136,14 +137,14 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return getAssertionCounts().wrong + getAssertionCounts().exceptions;
   }
   
-  public String messageForBlankHtml() throws Exception {
+  public void addMessageForBlankHtml() throws Exception {
     TagGroup html = new TagGroup();
     HtmlTag h2 = new HtmlTag("h2");
     h2.addAttribute("class", "centered");
     h2.add("Oops!  Did you forget to add to some content to this ?");
     html.add(h2.html());
     html.add(HtmlUtil.HR.html());
-    return html.html();
+    writeData(html.html());
   }
 
   public TestSummary getAssertionCounts() {

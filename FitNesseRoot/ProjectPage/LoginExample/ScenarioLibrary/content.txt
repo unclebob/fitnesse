@@ -1,0 +1,17 @@
+!*> Scenarios
+!|scenario|given a user named|name|with password|password|
+|check |send request|@name?create&password=@password&permission=user|200|
+|$USER=|echo        |@name                                              |
+
+!|scenario|He should be able to log in with password|password|
+|Login user|$USER     |with password|@password|
+|check     |message is|Login successful.      |
+
+!|scenario|Login user|user|with password|password|
+|check|send request|@user?login&password=@password|200|
+
+!|scenario|He should not be able to log in with password|password|
+|Login user|$USER     |with password|@password|
+|check not |message is|Login successful.      |
+
+*!

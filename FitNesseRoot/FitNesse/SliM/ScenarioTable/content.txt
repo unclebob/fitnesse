@@ -21,7 +21,7 @@ The basic format looks like this:
 
 *!
 
-The first word in the table is ''Scenario''.  Following that is the signature of the scenario.  This signature is a lot like a function declaration.  The name of the scenario in the table above is ''WidgetRenders'', and it takes two arguments: ''wikiText'' and ''htmlText''.  Notice how this look a lot like a function call in a ScriptTable.  The name is composed of every other table cell appropriately camel-cased.  The arguments are the intervening cells, also appropriately camel-cased.  Scenario names will be camel-cased with a leading upper-case letter.  Arguments will be camel-cased with a leading ''lower-case'' letter.
+The first word in the table is ''Scenario''.  Following that is the signature of the scenario.  This signature is a lot like a function declaration.  The name of the scenario in the table above is ''WidgetRenders'', and it takes two arguments: ''wikiText'' and ''htmlText''.  Notice how this looks a lot like a function call in a ScriptTable.  The name is composed of every other table cell appropriately camel-cased.  The arguments are the intervening cells, also appropriately camel-cased.  Scenario names will be camel-cased with a leading upper-case letter.  Arguments will be camel-cased with a leading ''lower-case'' letter.
 
 The body of the scenario uses the arguments by prefixing them with an '@' sign. The token that follows the '@' ''must be the camel-cased name of the argument.'' 
 

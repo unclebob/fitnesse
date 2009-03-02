@@ -2,19 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.util.StringUtil;
 import fitnesse.wiki.WikiPage;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import org.json.JSONArray;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
   protected String contentFrom(WikiPage requestedPage)
     throws Exception {
-    StringBuffer contents = new StringBuffer();
+    List<String> pages = new ArrayList<String>();
     for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext();) {
       WikiPage child = (WikiPage) iterator.next();
-      contents.append(child.getName() + Character.LINE_SEPARATOR);
+      pages.add(child.getName());
     }
-    return contents.toString();
+
+    String format = (String) request.getInput("format");
+    if ("json".equalsIgnoreCase(format)) {
+      JSONArray jsonPages = new JSONArray(pages);
+      return jsonPages.toString(); 
+    }
+    return StringUtil.join(pages, System.getProperty("line.separator"));
   }
 
   protected String getContentType() {

@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 
 import fitnesse.FitNesseVersion;
 import fitnesse.components.XmlWriter;
+import fitnesse.html.HtmlUtil;
 import fitnesse.util.XmlUtil;
 import fitnesse.wiki.WikiPage;
 
@@ -22,7 +23,7 @@ public abstract class XmlFormatter extends BaseFormatter {
 
   @Override
   public void announceStartNewTest(WikiPage test) throws Exception {
-    
+    appendHtmlToBuffer(HtmlUtil.getHtmlOfInheritedPage("PageHeader", getPage()));
   }
 
   @Override

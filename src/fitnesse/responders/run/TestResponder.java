@@ -19,7 +19,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected BaseFormatter formatter;
   private boolean isClosed = false;
   
-  MultipleTestsRunner runner = null;
   private boolean fastTest = false;
 
   protected void doSending() throws Exception {
@@ -88,22 +87,16 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void performExecution() throws Exception {
-    if (page.getData().getContent().length() == 0) {
-      addEmptyContentMessage();
-    }
-    
     List<WikiPage> test2run = new SuiteContentsFinder(page, root, null).makePageListForSingleTest();
     
-    synchronized (this) {
-      runner = new MultipleTestsRunner(test2run, context, page, formatter);
-      runner.setFastTest(fastTest);
-    }
+    MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatter);
+    runner.setFastTest(fastTest);
+    
+    if (page.getData().getContent().length() == 0 && formatter instanceof TestHtmlFormatter) {
+      ((TestHtmlFormatter) formatter).addMessageForBlankHtml();
+    }    
     
     runner.executeTestPages();
-  }
-
-  private void addEmptyContentMessage() throws Exception {
-   // response.add(formatter.messageForBlankHtml());
   }
 
   public SecureOperation getSecureOperation() {
@@ -159,10 +152,5 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       response.closeChunks();
       response.close();
     }
-  }
-
-  
-  public void announceStartNewTest(WikiPage test) throws Exception {
-//    addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
   }
 }

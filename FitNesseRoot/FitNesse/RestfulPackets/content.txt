@@ -27,3 +27,7 @@ If you get the packet for this page by accessing http://localhost:${FITNESSE_POR
  }
 ]}
 }}}
+
+!3 JSONP
+If you'd like to use ''JSONP'' to fetch the packets. (Or any kind of script injection tecnique).  You can get fitnesse to return the appropriate format by adding !style_code(&jsonp=some_function) on the end of the url.  This will wrap the JSON packet in a function call that looks like this !style_code[some_function({...})]  So, for example, try this link: !style_code(http://localhost:${FITNESSE_PORT}/FitNesse.RestfulPackets?packet&jsonp=load_me).
+

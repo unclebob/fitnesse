@@ -55,13 +55,6 @@ public class FitNesseServerTest extends RegexTestCase {
     assertSubString("The request string is malformed and can not be parsed", output);
   }
 
-  public void testFrontPageRequest() throws Exception {
-    crawler.addPage(root, PathParser.parse("FrontPage"), "This is the FrontPage content");
-    String output = getSocketOutput("GET / HTTP/1.1\r\n\r\n", root);
-    String expected = "This is the .* content";
-    assertTrue("Should have content", hasSubString(expected, output));
-  }
-
   public void testSomeOtherPage() throws Exception {
     crawler.addPage(root, pageOnePath, "Page One Content");
     String output = getSocketOutput("GET /PageOne HTTP/1.1\r\n\r\n", root);
