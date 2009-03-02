@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import fitnesse.FitNesseContext;
+import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -97,7 +98,7 @@ public class SuiteResponderTest {
   @Test
   public void testWithOneTest() throws Exception {
     String results = runSuite();
-    assertSubString("href=\"#TestOne1\"", results);
+    assertSubString("href=\\\"#TestOne1\\\"", results);
     assertSubString("1 right", results);
     assertSubString("id=\"TestOne1\"", results);
     assertSubString(" href=\"SuitePage.TestOne\"", results);
@@ -113,8 +114,8 @@ public class SuiteResponderTest {
     addTestPage(root, "XrefTwo", fitPassFixture);
 
     String results = runSuite();
-    assertSubString("href=\"#XrefOne2\"", results);
-    assertSubString("href=\"#XrefTwo3\"", results);
+    assertSubString("href=\\\"#XrefOne2\\\"", results);
+    assertSubString("href=\\\"#XrefTwo3\\\"", results);
   }
 
   @Test
@@ -122,8 +123,8 @@ public class SuiteResponderTest {
     addTestToSuite("TestTwo", "|!-fitnesse.testutil.FailFixture-!|\n\n|!-fitnesse.testutil.FailFixture-!|\n");
     String results = runSuite();
 
-    assertSubString("href=\"#TestOne1\"", results);
-    assertSubString("href=\"#TestTwo2\"", results);
+    assertSubString("href=\\\"#TestOne1\\\"", results);
+    assertSubString("href=\\\"#TestTwo2\\\"", results);
     assertSubString("1 right", results);
     assertSubString("2 wrong", results);
     assertSubString("id=\"TestOne1\"", results);
@@ -142,8 +143,8 @@ public class SuiteResponderTest {
     pageTwo.commit(data);
     String results = runSuite();
 
-    assertSubString("href=\"#TestOne1\"", results);
-    assertNotSubString("href=\"#TestTwo2\"", results);
+    assertSubString("href=\\\"#TestOne1\\\"", results);
+    assertNotSubString("href=\\\"#TestTwo2\\\"", results);
     assertSubString("1 right", results);
     assertSubString("0 wrong", results);
     assertSubString("id=\"TestOne1\"", results);
@@ -225,9 +226,9 @@ public class SuiteResponderTest {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=xxx");
     String results = runSuite();
-    assertDoesntHaveRegexp(".*href=\"#TestOne\".*", results);
-    assertDoesntHaveRegexp(".*href=\"#TestTwo\".*", results);
-    assertDoesntHaveRegexp(".*href=\"#TestThree\".*", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestOne\\\".*", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestTwo\\\".*", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestThree\\\".*", results);
   }
 
   @Test
@@ -235,9 +236,9 @@ public class SuiteResponderTest {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=foo");
     String results = runSuite();
-    assertDoesntHaveRegexp(".*href=\"#TestOne.*", results);
-    assertHasRegexp(".*href=\"#TestTwo1\".*", results);
-    assertDoesntHaveRegexp(".*href=\"#TestThree.*", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestOne.*", results);
+    assertSubString("href=\\\"#TestTwo1\\\"", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestThree.*", results);
   }
 
   @Test
@@ -245,9 +246,9 @@ public class SuiteResponderTest {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=smoke");
     String results = runSuite();
-    assertDoesntHaveRegexp(".*href=\"#TestOne.*", results);
-    assertDoesntHaveRegexp(".*href=\"#TestTwo.*", results);
-    assertHasRegexp(".*href=\"#TestThree1\".*", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestOne.*", results);
+    assertDoesntHaveRegexp(".*href=\\\"#TestTwo.*", results);
+    assertSubString("href=\\\"#TestThree1\\\"", results);
   }
 
   private void addTestPagesWithSuiteProperty() throws Exception {
@@ -314,5 +315,4 @@ public class SuiteResponderTest {
     String pageName = XmlUtil.getTextValue(result, "relativePageName");
     assertEquals("(TestOne)", pageName);
   }
-
 }

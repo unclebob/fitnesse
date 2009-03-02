@@ -126,7 +126,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   public String testSummary(TestSummary testSummary) throws Exception {
     String summaryContent = testPageSummary();
     summaryContent += "<strong>Assertions:</strong> " + testSummary.toString();
-
     HtmlTag script = new HtmlTag("script");
     script.add("document.getElementById(\"test-summary\").innerHTML = \"" + summaryContent + "\";");
     script.add("document.getElementById(\"test-summary\").className = \"" + cssClassFor(testSummary) + "\";");
