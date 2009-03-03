@@ -24,10 +24,10 @@ public class StringUtil {
     return joined.toString();
   }
 
-  public static String[] combineArrays(String[] first, String[] second) {
+  public static String[] combineArrays(String[]... arrays) {
     List<String> combinedList = new LinkedList<String>();
-    combinedList.addAll(Arrays.asList(first));
-    combinedList.addAll(Arrays.asList(second));
+    for (String[] array : arrays)
+      combinedList.addAll(Arrays.asList(array));
     return combinedList.toArray(new String[combinedList.size()]);
   }
 

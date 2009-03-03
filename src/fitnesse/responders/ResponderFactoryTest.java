@@ -179,6 +179,14 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderTypeMatchesInput("saveProperties", SavePropertiesResponder.class);
   }
 
+  public void testCreateSearchPropertiesResponder() throws Exception {
+    assertResponderTypeMatchesInput("searchProperties", SearchPropertiesResponder.class);
+  }
+
+  public void testCreateExecuteSearchPropertiesResponder() throws Exception {
+    assertResponderTypeMatchesInput("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
+  }
+
   public void testCreateWhereUsedResponder() throws Exception {
     assertResponderTypeMatchesInput("whereUsed", WhereUsedResponder.class);
   }
