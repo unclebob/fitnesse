@@ -38,6 +38,8 @@ public class SavePropertiesResponder implements SecureResponder {
   }
 
   private void saveAttributes(Request request, PageData data) throws Exception {
+    setPageTypeAttribute(request, data);
+
     List<String> attrs = new LinkedList<String>();
     attrs.addAll(Arrays.asList(WikiPage.NON_SECURITY_ATTRIBUTES));
     attrs.addAll(Arrays.asList(WikiPage.SECURITY_ATTRIBUTES));
@@ -70,6 +72,28 @@ public class SavePropertiesResponder implements SecureResponder {
     data.setAttribute(PageData.PropertyHELP, helpText);
   }
 
+  private void setPageTypeAttribute(Request request, PageData data)
+  throws Exception {
+    String pageType = getPageType(request);
+
+    if (pageType == null)
+      return;
+
+    List<String> types = new LinkedList<String>();
+    types.addAll(Arrays.asList(WikiPage.PAGE_TYPE_ATTRIBUTES));
+    data.setAttribute(pageType);
+
+    for (Iterator<String> i = types.iterator(); i.hasNext();) {
+      String type = i.next();
+      if (!pageType.equals(type))
+        data.removeAttribute(type);
+    }
+  }
+
+  private String getPageType(Request request) {
+    return (String) request.getInput(WikiPage.PAGE_TYPE_ATTRIBUTE);
+  }
+
   private boolean isChecked(Request request, String name) {
     return (request.getInput(name) != null);
   }
@@ -78,4 +102,3 @@ public class SavePropertiesResponder implements SecureResponder {
     return new AlwaysSecureOperation();
   }
 }
-

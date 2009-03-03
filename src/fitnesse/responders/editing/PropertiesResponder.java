@@ -127,6 +127,7 @@ public class PropertiesResponder implements SecureResponder {
     trisection.addAttribute("style", "width:100%");
     HtmlTag checkBoxesSection = new HtmlTag("div");
     checkBoxesSection.addAttribute("class", "properties");
+    checkBoxesSection.add(makePageTypeRadiosHtml(pageData));
     checkBoxesSection.add(makeTestActionCheckboxesHtml(pageData));
     checkBoxesSection.add(makeNavigationCheckboxesHtml(pageData));
     checkBoxesSection.add(makeSecurityCheckboxesHtml(pageData));
@@ -146,6 +147,49 @@ public class PropertiesResponder implements SecureResponder {
     buttonSection.add(saveButton);
     form.add(buttonSection);
     return form;
+  }
+
+  public HtmlTag makePageTypeRadiosHtml(PageData pageData) throws Exception {
+    return makeAttributeRadiosHtml("Page type: ", WikiPage.PAGE_TYPE_ATTRIBUTES, WikiPage.PAGE_TYPE_ATTRIBUTE, pageData);
+  }
+
+  private HtmlTag makeAttributeRadiosHtml(String label, String[] attributes, String radioGroup, PageData pageData)
+  throws Exception {
+    HtmlTag div = new HtmlTag("div");
+    div.addAttribute("style", "float: left; width: 150px;");
+
+    div.add(label);
+    String checkedAttribute = getCheckedAttribute(pageData, attributes);
+    for (int i = 0; i < attributes.length; i++) {
+      String attribute = attributes[i];
+      div.add(HtmlUtil.BR);
+      div.add(makeAttributeRadio(radioGroup, attribute, pageData, attribute.equals(checkedAttribute)));
+    }
+    div.add(HtmlUtil.BR);
+    div.add(HtmlUtil.BR);
+    return div;
+  }
+
+  private String getCheckedAttribute(PageData pageData, String[] attributes) throws Exception {
+    for (int i = attributes.length - 1; i > 0; i--) {
+      if (pageData.hasAttribute(attributes[i]))
+        return attributes[i];
+    }
+    return attributes[0];
+  }
+
+  private HtmlTag makeAttributeRadio(String group, String attribute, PageData pageData, boolean checked) throws Exception {
+      HtmlTag radioButton = makeRadioButton(group, attribute);
+      if (checked)
+        radioButton.addAttribute("checked", "checked");
+      return radioButton;
+  }
+
+  private HtmlTag makeRadioButton(String group, String attribute) {
+    HtmlTag checkbox = HtmlUtil.makeInputTag("radio", group);
+    checkbox.addAttribute("value", attribute);
+    checkbox.tail = " - " + attribute;
+    return checkbox;
   }
 
   private HtmlTag makeVirtualWikiHtml() throws Exception {

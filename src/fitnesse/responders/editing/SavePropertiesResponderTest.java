@@ -34,7 +34,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     page = crawler.addPage(root, PathParser.parse("PageOne"));
 
     request = new MockRequest();
-    request.addInput("Test", "on");
+    request.addInput("PageType", "Test");
     request.addInput("Properties", "on");
     request.addInput("Search", "on");
     request.addInput("RecentChanges", "on");
