@@ -15,6 +15,7 @@ If you want a test page to be run under SLIM, you simply set the TEST_SYSTEM var
 The first cell of a slim table tells you what kind of table it is. Here are the table types so far:
 |[[Decision Table][>DecisionTable]]|Supplies the inputs and outputs for decisions.  This is similar to the Fit Column Fixture|
 |[[Query Table][>QueryTable]]|Supplies the expected results of a query.  This is similar to the Fit Row Fixture|
+|[[Ordered query Table][>OrderedQueryTable]]|Supplies the expected results of a query.  The rows are expected to be in order.  This is similar to the Fit Row Fixture|
 |[[Script Table][>ScriptTable]]|A series of actions and checks.  Similar to Do Fixture.|
 |[[Table Table][>TableTable]]|Whatever you want it to be!|
 |[[Import][>ImportTable]]|Add a path to the fixture search path.|
