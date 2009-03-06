@@ -265,9 +265,6 @@ public class HtmlUtil {
     throws Exception {
     TagGroup actions = new TagGroup();
     if (isTestPage(pageData)) {
-//      String testSystem = pageData.getVariable("TEST_SYSTEM");
-//      if (testSystem == null || testSystem.equalsIgnoreCase("fit"))
-//        testSystem = "test";
       ActionLink link = new ActionLink(localPageName, "Test");
       link.setQuery("test");
       addLinkToActions(actions, link);

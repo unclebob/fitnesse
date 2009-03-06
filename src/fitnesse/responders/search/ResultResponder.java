@@ -23,14 +23,14 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
   }
 
   protected void doSending() throws Exception {
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage html = context.htmlPageFactory.newPage();
     String renderedPath = getRenderedPath();
-    page.title.use(getTitle() + ": " + renderedPath);
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(renderedPath, getTitle()));
-    page.main.use(HtmlPage.BreakPoint);
-    page.divide();
+    html.title.use(getTitle() + ": " + renderedPath);
+    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(renderedPath, getTitle()));
+    html.main.use(HtmlPage.BreakPoint);
+    html.divide();
 
-    response.add(page.preDivision);
+    response.add(html.preDivision);
     response.add(buildClientSideSortScriptTag().html());
     response.add(buildFeedbackDiv().html());
     response.add(getTableOpen());
@@ -41,7 +41,7 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
     response.add(getTableClose());
     response.add(buildTableSorterScript().html());
     response.add(buildFeedbackModificationScript().html());
-    response.add(page.postDivision);
+    response.add(html.postDivision);
     response.closeAll();
   }
 
