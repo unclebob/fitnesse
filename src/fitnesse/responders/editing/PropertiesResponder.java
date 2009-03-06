@@ -16,10 +16,10 @@ import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import org.json.JSONObject;
 
-import java.util.Iterator;
 import java.util.Set;
 
 public class PropertiesResponder implements SecureResponder {
+  public static final String SUITES = "Suites";
   private WikiPage page;
   public PageData pageData;
   private String resource;
@@ -107,6 +107,7 @@ public class PropertiesResponder implements SecureResponder {
   private HtmlTag makeFormSections() throws Exception {
     TagGroup html = new TagGroup();
     html.add(makePropertiesForm());
+    html.add(makeSearchForm());
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
     if (importProperty != null)
@@ -149,6 +150,16 @@ public class PropertiesResponder implements SecureResponder {
     return form;
   }
 
+  private HtmlTag makeSearchForm() throws Exception {
+    HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
+    form.add(HtmlUtil.HR);
+    form.add("Search pages for selected properties.");
+    form.add(HtmlUtil.BR);
+    form.add(HtmlUtil.makeInputTag("hidden", "responder", "searchProperties"));
+    form.add(HtmlUtil.makeInputTag("submit", "Search", "Search Properties"));
+    return form;
+  }
+
   public HtmlTag makePageTypeRadiosHtml(PageData pageData) throws Exception {
     return makeAttributeRadiosHtml("Page type: ", WikiPage.PAGE_TYPE_ATTRIBUTES, WikiPage.PAGE_TYPE_ATTRIBUTE, pageData);
   }
@@ -160,10 +171,9 @@ public class PropertiesResponder implements SecureResponder {
 
     div.add(label);
     String checkedAttribute = getCheckedAttribute(pageData, attributes);
-    for (int i = 0; i < attributes.length; i++) {
-      String attribute = attributes[i];
+    for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
-      div.add(makeAttributeRadio(radioGroup, attribute, pageData, attribute.equals(checkedAttribute)));
+      div.add(makeAttributeRadio(radioGroup, attribute, attribute.equals(checkedAttribute)));
     }
     div.add(HtmlUtil.BR);
     div.add(HtmlUtil.BR);
@@ -178,7 +188,7 @@ public class PropertiesResponder implements SecureResponder {
     return attributes[0];
   }
 
-  private HtmlTag makeAttributeRadio(String group, String attribute, PageData pageData, boolean checked) throws Exception {
+  private HtmlTag makeAttributeRadio(String group, String attribute, boolean checked) throws Exception {
       HtmlTag radioButton = makeRadioButton(group, attribute);
       if (checked)
         radioButton.addAttribute("checked", "checked");
@@ -234,7 +244,7 @@ public class PropertiesResponder implements SecureResponder {
     form.add(HtmlUtil.HR);
     form.add(new HtmlTag("b", "Wiki Import Update"));
     form.add(HtmlUtil.BR);
-    String buttonMessage = "";
+    String buttonMessage;
     form.add(HtmlUtil.makeLink(page.getName(), page.getName()));
     if (importProps.isRoot()) {
       form.add(" imports its subpages from ");
@@ -295,9 +305,8 @@ public class PropertiesResponder implements SecureResponder {
     WikiPageProperty symLinksProperty = pageData.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty == null)
       return;
-    Set<?> symbolicLinkNames = symLinksProperty.keySet();
-    for (Iterator<?> iterator = symbolicLinkNames.iterator(); iterator.hasNext();) {
-      String linkName = (String) iterator.next();
+    Set<String> symbolicLinkNames = symLinksProperty.keySet();
+    for (String linkName : symbolicLinkNames) {
       HtmlElement nameItem = new RawHtml(linkName);
       HtmlElement pathItem = makeHtmlForSymbolicPath(symLinksProperty, linkName);
       //---Unlink---
@@ -356,7 +365,7 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   public HtmlTag makeSuitesHtml(PageData pageData) throws Exception {
-    return makeInputField("Suites:", PageData.PropertySUITES, "Suites", 40, pageData);
+    return makeInputField("Suites:", PageData.PropertySUITES, SUITES, 40, pageData);
   }
 
   public HtmlTag makeHelpTextHtml(PageData pageData) throws Exception {
@@ -389,8 +398,7 @@ public class PropertiesResponder implements SecureResponder {
     div.addAttribute("style", "float: left; width: 150px;");
 
     div.add(label);
-    for (int i = 0; i < attributes.length; i++) {
-      String attribute = attributes[i];
+    for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
       div.add(makeAttributeCheckbox(attribute, pageData));
     }

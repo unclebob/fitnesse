@@ -2,9 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.util;
 
-import org.junit.Test;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class StringUtilTest {
   @Test
@@ -34,13 +33,17 @@ public class StringUtilTest {
   public void testCombineArraysWithMixedNumbers() {
     String[] first = new String[]{"a", "b", "c"};
     String[] second = new String[]{"d", "e"};
-    String[] result = StringUtil.combineArrays(first, second);
-    assertEquals(5, result.length);
+    String[] third = new String[]{"f", "g", "h"};
+    String[] result = StringUtil.combineArrays(first, second, third);
+    assertEquals(8, result.length);
     assertEquals("a", result[0]);
     assertEquals("b", result[1]);
     assertEquals("c", result[2]);
     assertEquals("d", result[3]);
     assertEquals("e", result[4]);
+    assertEquals("f", result[5]);
+    assertEquals("g", result[6]);
+    assertEquals("h", result[7]);
   }
 
   @Test
