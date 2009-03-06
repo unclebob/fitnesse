@@ -201,6 +201,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     String tableType = table.getCellContents(0, 0);
     if (beginsWith(tableType, "dt:") || beginsWith(tableType, "decision:"))
       return new DecisionTable(table, tableId, slimTestContext);
+    else if (beginsWith(tableType, "ordered query:"))
+      return new OrderedQueryTable(table, tableId, slimTestContext);
     else if (beginsWith(tableType, "query:"))
       return new QueryTable(table, tableId, slimTestContext);
     else if (beginsWith(tableType, "table"))

@@ -90,6 +90,21 @@ public class SlimTestSystemTest {
   }
 
   @Test
+  public void emptyOrderedQueryTable() throws Exception {
+    getResultsForPageContents("|ordered query:x|\n");
+    assertTestResultsContain("Query tables must have at least two rows.");
+  }
+
+  @Test
+  public void orderedQueryFixtureHasNoQueryFunction() throws Exception {
+    getResultsForPageContents(
+      "!|ordered query:fitnesse.slim.test.TestSlim|\n" +
+        "|x|y|\n"
+    );
+    assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+  }
+
+  @Test
   public void scriptTableWithBadConstructor() throws Exception {
     getResultsForPageContents("|Script|NoSuchClass|\n");
     assertTestResultsContain("<span class=\"error\">Could not invoke constructor for NoSuchClass");

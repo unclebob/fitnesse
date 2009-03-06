@@ -150,6 +150,7 @@
         <fileset dir="src">
           <include name="**/*Test.java"/>
           <exclude name="**/ShutdownResponderTest.java"/>
+          <exclude name="**/QueryTableBaseTest.java"/>
         </fileset>
       </batchtest>
     </junit>
