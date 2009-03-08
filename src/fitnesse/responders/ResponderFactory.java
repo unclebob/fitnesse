@@ -12,9 +12,7 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.revisioncontrol.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.SearchFormResponder;
-import fitnesse.responders.search.SearchResponder;
-import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.search.*;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
@@ -49,7 +47,6 @@ public class ResponderFactory {
     addResponder("names", NameWikiPageResponder.class);
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
-    addResponder("searchProperties", SearchPropertiesResponder.class);
     addResponder("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
     addResponder("refactor", RefactorPageResponder.class);

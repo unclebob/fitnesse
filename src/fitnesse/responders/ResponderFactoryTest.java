@@ -12,9 +12,7 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.revisioncontrol.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.SearchFormResponder;
-import fitnesse.responders.search.SearchResponder;
-import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.search.*;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
@@ -177,10 +175,6 @@ public class ResponderFactoryTest extends TestCase {
 
   public void testCreateSavePropertiesResponder() throws Exception {
     assertResponderTypeMatchesInput("saveProperties", SavePropertiesResponder.class);
-  }
-
-  public void testCreateSearchPropertiesResponder() throws Exception {
-    assertResponderTypeMatchesInput("searchProperties", SearchPropertiesResponder.class);
   }
 
   public void testCreateExecuteSearchPropertiesResponder() throws Exception {

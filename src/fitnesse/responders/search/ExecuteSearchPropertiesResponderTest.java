@@ -1,9 +1,9 @@
-package fitnesse.responders.editing;
+package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
+import static fitnesse.responders.search.SearchFormResponder.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import static fitnesse.responders.editing.SearchPropertiesResponder.*;
 import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.*;
 

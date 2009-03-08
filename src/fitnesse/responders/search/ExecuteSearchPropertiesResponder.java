@@ -1,4 +1,4 @@
-package fitnesse.responders.editing;
+package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
@@ -9,8 +9,10 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.SecureResponder;
-import static fitnesse.responders.editing.SearchPropertiesResponder.ATTRIBUTE;
-import static fitnesse.responders.editing.SearchPropertiesResponder.SELECTED;
+import fitnesse.responders.editing.PropertiesResponder;
+import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
+import static fitnesse.responders.search.SearchFormResponder.SELECTED;
+import static fitnesse.responders.search.SearchFormResponder.*;
 import fitnesse.util.StringUtil;
 import fitnesse.wiki.*;
 
@@ -265,9 +267,6 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
   private HtmlTag makeSuitesTextField(String suites) {
     return new HtmlTag("label", suites);
-//        HtmlTag text = HtmlUtil.makeInputTag("text", PropertiesResponder.SUITES, suites);
-//        disableInputTag(text);
-//        return text;
   }
 
   private HtmlTag makeAttributeCheckbox(String name, boolean attributeOn) {
@@ -308,7 +307,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
     for (String attributeName : attributeNames) {
       if (request.hasInput(attributeName + ATTRIBUTE + SELECTED)) {
-        attributes.put(attributeName, isChecked(request, attributeName + SearchPropertiesResponder.VALUE));
+        attributes.put(attributeName, isChecked(request, attributeName + VALUE));
       }
     }
 
@@ -316,7 +315,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
   }
 
   private boolean getExcludeSetUpTearDownFromInput(Request request) {
-    return request.hasInput(SearchPropertiesResponder.EXCLUDE_SET_UP_TEAR_DOWN);
+    return request.hasInput(EXCLUDE_SET_UP_TEAR_DOWN);
   }
 
   private String getFullPagePath(WikiPage page) throws Exception {

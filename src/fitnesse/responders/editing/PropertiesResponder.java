@@ -107,7 +107,6 @@ public class PropertiesResponder implements SecureResponder {
   private HtmlTag makeFormSections() throws Exception {
     TagGroup html = new TagGroup();
     html.add(makePropertiesForm());
-    html.add(makeSearchForm());
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
     if (importProperty != null)
@@ -147,16 +146,6 @@ public class PropertiesResponder implements SecureResponder {
     saveButton.addAttribute("accesskey", "s");
     buttonSection.add(saveButton);
     form.add(buttonSection);
-    return form;
-  }
-
-  private HtmlTag makeSearchForm() throws Exception {
-    HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
-    form.add(HtmlUtil.HR);
-    form.add("Search pages for selected properties.");
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "searchProperties"));
-    form.add(HtmlUtil.makeInputTag("submit", "Search", "Search Properties"));
     return form;
   }
 
