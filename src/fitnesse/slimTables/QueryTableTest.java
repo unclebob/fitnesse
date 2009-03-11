@@ -19,9 +19,9 @@ public class QueryTableTest extends QueryTableBaseTest {
     assertQueryResults(
       "|3|6|\n" +
         "|2|4|\n",
-      fitnesse.util.ListUtility.list(
-        fitnesse.util.ListUtility.list(fitnesse.util.ListUtility.list("n", "2"), fitnesse.util.ListUtility.list("2n", "4")),
-        fitnesse.util.ListUtility.list(fitnesse.util.ListUtility.list("n", "3"), fitnesse.util.ListUtility.list("2n", "6"))
+      util.ListUtility.list(
+        util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
+        util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
       ),
       "[" +
         headRow +

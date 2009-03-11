@@ -5,7 +5,7 @@ package fit;
 
 import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 public class BindingTest extends RegexTestCase {
   private TestFixture fixture;

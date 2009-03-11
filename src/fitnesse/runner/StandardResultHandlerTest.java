@@ -3,7 +3,7 @@
 package fitnesse.runner;
 
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

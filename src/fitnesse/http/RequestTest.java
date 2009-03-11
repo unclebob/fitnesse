@@ -3,7 +3,7 @@
 package fitnesse.http;
 
 import fitnesse.components.Base64;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import junit.framework.TestCase;
 
 import java.io.PipedInputStream;

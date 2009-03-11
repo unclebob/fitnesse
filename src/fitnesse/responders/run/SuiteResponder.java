@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Element;
 

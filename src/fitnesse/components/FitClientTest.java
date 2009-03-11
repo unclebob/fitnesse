@@ -7,7 +7,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.testutil.SimpleSocketDoner;
 
 import java.util.ArrayList;

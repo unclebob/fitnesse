@@ -5,8 +5,8 @@ package fitnesse.runner;
 import fitnesse.http.Request;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.FileUtil;
+import util.RegexTestCase;
+import util.FileUtil;
 import fitnesse.wiki.InMemoryPage;
 
 import java.io.ByteArrayInputStream;

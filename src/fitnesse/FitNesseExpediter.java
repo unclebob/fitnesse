@@ -8,7 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

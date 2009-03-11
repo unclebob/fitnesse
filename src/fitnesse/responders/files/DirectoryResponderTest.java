@@ -7,7 +7,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 public class DirectoryResponderTest extends RegexTestCase {
   MockRequest request;

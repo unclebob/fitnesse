@@ -11,8 +11,8 @@ import fitnesse.http.SimpleResponse;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.FileUtil;
+import util.RegexTestCase;
+import util.FileUtil;
 import fitnesse.wiki.*;
 import static org.easymock.EasyMock.*;
 

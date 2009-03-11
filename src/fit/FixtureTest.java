@@ -3,7 +3,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 import java.text.ParseException;
 import java.util.Date;

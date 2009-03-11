@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import fit.GracefulNamer;
+import util.GracefulNamer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.ParentWidget;
 
@@ -24,7 +24,6 @@ public abstract class WikiWidget {
       this.parent.addChild(this);
   }
 
-  //TODO-DaC what's a better name for this?
   public abstract String render() throws Exception;
 
   public void acceptVisitor(WidgetVisitor visitor) throws Exception {
@@ -45,6 +44,7 @@ public abstract class WikiWidget {
 
   public String regrace(String disgracefulName) {
     String newName = disgracefulName;
+    //todo don't use the GracefulNamer for this.  It's only for java instance and variable names.  Write a different tool.
     if (isRegracing()) newName = GracefulNamer.regrace(disgracefulName);
     return newName;
   }

@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import fit.TypeAdapter;
+import fit.decorator.util.ClassDelegatePointParser;
 
 import java.awt.*;
 

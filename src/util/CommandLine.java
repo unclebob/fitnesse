@@ -1,13 +1,11 @@
-// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package util;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CommandLine extends Option {
   private static Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");

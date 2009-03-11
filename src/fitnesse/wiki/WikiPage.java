@@ -3,7 +3,7 @@
 
 package fitnesse.wiki;
 
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 
 import java.io.Serializable;
 import java.util.List;

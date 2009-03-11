@@ -1,6 +1,6 @@
 package fitnesse.slimTables;
 
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import org.junit.Test;
 
 public class OrderedQueryTableTest extends QueryTableBaseTest {

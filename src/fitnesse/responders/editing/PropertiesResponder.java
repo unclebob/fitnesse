@@ -39,10 +39,9 @@ public class PropertiesResponder implements SecureResponder {
     pageData = page.getData();
     makeContent(context, request);
     response.setMaxAge(0);
-
     return response;
   }
-
+       
   private void makeContent(FitNesseContext context, Request request) throws Exception {
     if ("json".equals(request.getInput("format"))) {
       JSONObject jsonObject = makeJson();

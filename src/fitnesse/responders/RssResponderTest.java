@@ -5,7 +5,7 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import org.w3c.dom.Document;

@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.util.FileUtil;
-import fitnesse.util.XmlUtil;
+import util.FileUtil;
+import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

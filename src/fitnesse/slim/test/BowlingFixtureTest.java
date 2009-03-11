@@ -1,10 +1,8 @@
 package fitnesse.slim.test;
 
 import org.junit.Test;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
-import fitnesse.util.ListUtility;
-import static fitnesse.util.ListUtility.*;
+import static util.ListUtility.*;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fit;
 
 import fit.Counts;
-import fitnesse.util.StreamReader;
+import util.StreamReader;
 
 import java.io.IOException;
 import java.io.OutputStream;

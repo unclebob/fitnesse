@@ -13,7 +13,7 @@ import fitnesse.responders.editing.SaveResponder;
 import fitnesse.revisioncontrol.NullRevisionController;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;

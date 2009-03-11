@@ -3,14 +3,14 @@
 package fitnesse.responders.run;
 
 import fit.Counts;
+import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.FitProtocol;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.runner.*;
-import fitnesse.util.StreamReader;
+import util.StreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

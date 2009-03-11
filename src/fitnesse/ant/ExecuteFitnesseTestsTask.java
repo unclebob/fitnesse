@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 
 /**
  * Task to run fit tests. This task runs fitnesse tests and publishes the results.

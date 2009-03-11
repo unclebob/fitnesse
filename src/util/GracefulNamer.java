@@ -4,9 +4,7 @@
 // Copyright (C) 2003,2004 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the GNU General Public License version 2 or
 // later.
-package fit;
-
-import fitnesse.wiki.PathParser;
+package util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,14 +34,16 @@ public class GracefulNamer {
     return namer.finalName.toString();
   }
 
+  //todo OH FRATZ!  Graceful names was for java method and instance names, not wiki page names!  Get all this wiki page name stuff out of here.
   public static String regrace(String disgracefulName) {
-    final char separator = PathParser.PATH_SEPARATOR.charAt(0);
+    final char separator = '.';
     char c = '?';
     GracefulNamer namer = new GracefulNamer();
     if (disgracefulName.length() > 0)
       namer.finalName.append(c = disgracefulName.charAt(0));
 
-    boolean isGrabbingDigits = false, wasSeparator = (PathParser.isPathPrefix(c));
+    boolean isGrabbingDigits = false;
+    boolean wasSeparator = c == '.' || c == '<' || c == '>';
     for (int i = 1; i < disgracefulName.length(); i++) {
       c = disgracefulName.charAt(i);
       if ((Character.isUpperCase(c))

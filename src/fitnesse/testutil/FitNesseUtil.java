@@ -5,7 +5,7 @@ package fitnesse.testutil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;

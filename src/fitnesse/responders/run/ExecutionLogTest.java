@@ -3,8 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.testutil.RegexTestCase;
-import static fitnesse.testutil.RegexTestCase.*;
+import static util.RegexTestCase.*;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;

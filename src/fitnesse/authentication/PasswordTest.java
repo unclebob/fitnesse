@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 public class PasswordTest extends RegexTestCase {
   private Password password;

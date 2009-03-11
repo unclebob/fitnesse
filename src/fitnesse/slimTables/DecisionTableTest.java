@@ -5,7 +5,7 @@ package fitnesse.slimTables;
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -13,7 +13,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;

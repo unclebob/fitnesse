@@ -4,7 +4,7 @@ package fitnesse.slimTables;
 
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import fitnesse.wikitext.Utils;
 
 import static java.lang.Character.isLetterOrDigit;

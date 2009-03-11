@@ -3,7 +3,7 @@
 package fitnesse;
 
 import fitnesse.http.ResponseParser;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 import java.net.UnknownHostException;
 

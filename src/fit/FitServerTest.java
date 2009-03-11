@@ -3,9 +3,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fitnesse.components.FitProtocol;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.StreamReader;
+import fit.FitProtocol;
+import util.RegexTestCase;
+import util.StreamReader;
 
 import java.io.*;
 import java.net.ServerSocket;

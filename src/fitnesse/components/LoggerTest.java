@@ -3,7 +3,7 @@
 
 package fitnesse.components;
 
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;

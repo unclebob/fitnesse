@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

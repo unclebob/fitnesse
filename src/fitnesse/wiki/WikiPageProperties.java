@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.components.XmlWriter;
-import fitnesse.util.XmlUtil;
+import util.XmlWriter;
+import util.XmlUtil;
 import fitnesse.wikitext.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.util;
+package util;
 
 public class Expression {
   /*
@@ -107,7 +107,7 @@ public class Expression {
     if (Math.ceil(e) == e) {
       result = calculateIntegralExponent(result, expNeg, e);
     } else {
-      result = Double.NaN; 
+      result = Double.NaN;
     }
     return result;
   }

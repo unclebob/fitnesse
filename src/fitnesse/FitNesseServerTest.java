@@ -8,7 +8,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.*;
 
 import java.util.regex.Pattern;

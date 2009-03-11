@@ -7,7 +7,7 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import junit.framework.TestCase;
 
 import java.io.File;

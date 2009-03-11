@@ -3,7 +3,7 @@
 package fitnesse.components;
 
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;

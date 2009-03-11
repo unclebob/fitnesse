@@ -1,6 +1,6 @@
 package fit.decorator.util;
 
-import fitnesse.testutil.ClassDelegatePointParser;
+import fit.decorator.util.ClassDelegatePointParser;
 
 import java.awt.*;
 

@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.components.CommandLine;
+import util.CommandLine;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 
 import java.io.*;
 

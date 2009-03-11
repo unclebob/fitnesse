@@ -18,7 +18,7 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import static fitnesse.revisioncontrol.RevisionControlOperation.*;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
 

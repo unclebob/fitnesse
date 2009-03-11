@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.components.CommandRunner;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.WikiPageDummy;
 
 public class TestHtmlFormatterTest extends RegexTestCase {

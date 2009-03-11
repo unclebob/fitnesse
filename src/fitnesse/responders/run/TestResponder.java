@@ -2,11 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fit.Counts;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.components.XmlWriter;
+import util.XmlWriter;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
@@ -14,7 +13,7 @@ import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.*;
 import fitnesse.FitNesseVersion;
 import org.w3c.dom.Document;

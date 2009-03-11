@@ -7,7 +7,7 @@ import fitnesse.revisioncontrol.RevisionControllable;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
 import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
 import java.io.*;

@@ -1,10 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.fixtures;
+package fit.testFxtr;
 
 import fit.Fixture;
 import fit.Parse;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 import junit.framework.TestCase;
 
 import java.util.Arrays;
@@ -15,7 +15,7 @@ public class HandleFixtureDoesNotExtendFixtureTest extends TestCase {
     List<String> tableLines = Arrays.asList(new String[]
       {"<table>",
         "    <tr>",
-        "        <td>fitnesse.fixtures.WouldBeFixture</td>",
+        "        <td>fit.testFxtr.WouldBeFixture</td>",
         "    </tr>",
         "</table>"});
 
@@ -26,9 +26,9 @@ public class HandleFixtureDoesNotExtendFixtureTest extends TestCase {
     new Fixture().doTables(tableForFaultyFixture);
     String fixtureClassCellText = tableForFaultyFixture.at(0, 0, 0).body;
 
-    assertEquals("fitnesse.fixtures.WouldBeFixture<hr/> "
+    assertEquals("fit.testFxtr.WouldBeFixture<hr/> "
       + "<span class=\"fit_label\">"
-      + "Class fitnesse.fixtures.WouldBeFixture is not a fixture." + "</span>",
+      + "Class fit.testFxtr.WouldBeFixture is not a fixture." + "</span>",
       fixtureClassCellText);
   }
 

@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 
 import java.util.List;
 

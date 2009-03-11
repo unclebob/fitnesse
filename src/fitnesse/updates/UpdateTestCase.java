@@ -3,7 +3,7 @@
 package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;

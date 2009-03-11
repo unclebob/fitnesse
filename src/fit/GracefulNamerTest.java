@@ -4,6 +4,7 @@
 package fit;
 
 import junit.framework.TestCase;
+import util.GracefulNamer;
 
 public class GracefulNamerTest extends TestCase {
   public void testIsGracefulName() throws Exception {

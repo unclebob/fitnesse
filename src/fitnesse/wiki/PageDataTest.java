@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import java.util.List;
 
 import fitnesse.responders.run.SuiteResponder;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;

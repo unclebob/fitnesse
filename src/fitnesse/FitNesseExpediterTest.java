@@ -10,7 +10,7 @@ import fitnesse.http.ResponseParser;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.UnauthorizedResponder;
 import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 
 import java.io.IOException;

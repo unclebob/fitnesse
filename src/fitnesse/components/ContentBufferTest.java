@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.util.StreamReader;
+import util.StreamReader;
 import junit.framework.TestCase;
 
 import java.io.File;

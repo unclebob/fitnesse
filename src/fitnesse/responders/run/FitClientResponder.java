@@ -6,7 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
-import fitnesse.components.FitProtocol;
+import fit.FitProtocol;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;

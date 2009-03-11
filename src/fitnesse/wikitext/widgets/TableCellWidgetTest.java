@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wikitext.WikiWidget;
 
 public class TableCellWidgetTest extends RegexTestCase {

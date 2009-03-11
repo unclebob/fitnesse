@@ -5,7 +5,7 @@ package fitnesse.responders.revisioncontrol;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
 import fitnesse.revisioncontrol.RevisionControlException;
-import static fitnesse.testutil.RegexTestCase.assertSubString;
+import static util.RegexTestCase.assertSubString;
 import static org.easymock.EasyMock.*;
 
 public class AddResponderTest extends RevisionControlTestCase {

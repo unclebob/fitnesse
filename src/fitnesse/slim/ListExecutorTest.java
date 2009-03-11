@@ -3,7 +3,7 @@
 package fitnesse.slim;
 
 import fitnesse.slim.converters.VoidConverter;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;

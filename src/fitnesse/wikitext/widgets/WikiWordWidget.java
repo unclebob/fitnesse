@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.components.PageReferencer;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

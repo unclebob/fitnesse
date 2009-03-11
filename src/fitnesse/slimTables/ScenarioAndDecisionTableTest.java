@@ -3,8 +3,8 @@
 package fitnesse.slimTables;
 
 import fitnesse.slim.SlimClient;
-import static fitnesse.testutil.RegexTestCase.assertSubString;
-import static fitnesse.util.ListUtility.list;
+import static util.RegexTestCase.assertSubString;
+import static util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;

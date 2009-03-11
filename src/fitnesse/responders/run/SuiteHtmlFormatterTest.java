@@ -4,7 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
   private HtmlPage page;

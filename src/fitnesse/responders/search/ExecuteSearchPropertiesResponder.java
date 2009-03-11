@@ -13,7 +13,7 @@ import fitnesse.responders.editing.PropertiesResponder;
 import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
 import static fitnesse.responders.search.SearchFormResponder.SELECTED;
 import static fitnesse.responders.search.SearchFormResponder.*;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 import fitnesse.wiki.*;
 
 import java.util.*;

@@ -1,3 +1,8 @@
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestTackOnFixtureNotFixture||03:06:47 Wed, Mar 11, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestNotFixture||03:06:13 Wed, Mar 11, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec||03:05:40 Wed, Mar 11, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestNoDefaultConstructor||03:05:26 Wed, Mar 11, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestCannotResolveGracefullyNamedFixture||03:04:50 Wed, Mar 11, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||17:55:13 Sun, Mar 08, 2009|
 |JunkPage.JunkTest||17:18:00 Fri, Mar 06, 2009|
 |ProjectPage.JukeBoxProject.SetUp||08:31:08 Thu, Mar 05, 2009|
@@ -93,8 +98,3 @@
 |JunkerPage||17:19:32 Thu, Jan 15, 2009|
 |JunkRot.JunkSub||14:42:30 Thu, Jan 15, 2009|
 |JunkRot||14:42:20 Thu, Jan 15, 2009|
-|ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories||12:27:59 Thu, Jan 15, 2009|
-|JunkParent.GitPage.GitSubPage.GitSubSubPage.GitSubSubSubPage||12:01:05 Thu, Jan 15, 2009|
-|JunkParent.GitPage.GitSubPage.GitSubSubPage||12:00:56 Thu, Jan 15, 2009|
-|JunkParent.GitPage.GitSubPage||12:00:44 Thu, Jan 15, 2009|
-|JunkParent.GitPage||12:00:34 Thu, Jan 15, 2009|

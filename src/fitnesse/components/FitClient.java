@@ -3,9 +3,10 @@
 package fitnesse.components;
 
 import fit.Counts;
+import fit.FitProtocol;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
-import fitnesse.util.StreamReader;
+import util.StreamReader;
 
 import java.io.OutputStream;
 import java.net.Socket;

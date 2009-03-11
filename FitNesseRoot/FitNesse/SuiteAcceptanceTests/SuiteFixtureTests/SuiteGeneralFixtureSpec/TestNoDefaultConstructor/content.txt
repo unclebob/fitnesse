@@ -9,7 +9,7 @@
 |enter|attributes|Test=true|
 |enter|line|!-!path ./classes-!|
 |enter|line|!-!path ./fitnesse.jar-!|
-|enter|line|!-|-!!-!-fitnesse.fixtures.NoDefaultConstructorFixture-!-!!-|-!|
+|enter|line|!-|-!!-!-fit.testFxtr.NoDefaultConstructorFixture-!-!!-|-!|
 |enter|page|!-NotFixturePage-!|
 
 !|Response Requester|
@@ -20,4 +20,4 @@
 
 !|Response examiner|
 |type|pattern|matches?|contents?|
-|contents|Class fitnesse.fixtures.NoDefaultConstructorFixture has no default constructor.|true||
+|contents|Class fit.testFxtr.NoDefaultConstructorFixture has no default constructor.|true||

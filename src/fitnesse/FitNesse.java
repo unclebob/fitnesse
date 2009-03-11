@@ -6,7 +6,7 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.components.CommandLine;
+import util.CommandLine;
 import fitnesse.components.Logger;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;

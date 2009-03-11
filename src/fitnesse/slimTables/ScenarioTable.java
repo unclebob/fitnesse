@@ -5,7 +5,7 @@ package fitnesse.slimTables;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimError;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 
 import java.util.*;
 

@@ -4,7 +4,7 @@ package fitnesse.fixtures;
 
 import fit.Fixture;
 import fit.Parse;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 
 import java.io.File;
 

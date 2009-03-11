@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;

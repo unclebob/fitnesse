@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.util.ListUtility;
-import fitnesse.util.StreamReader;
+import util.ListUtility;
+import util.StreamReader;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

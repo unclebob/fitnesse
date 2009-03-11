@@ -4,8 +4,8 @@ package fitnesse.runner;
 
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.StreamReader;
+import util.RegexTestCase;
+import util.StreamReader;
 
 import java.io.InputStream;
 
