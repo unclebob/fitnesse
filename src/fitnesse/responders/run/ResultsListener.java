@@ -11,7 +11,8 @@ import fitnesse.wiki.WikiPage;
 public interface ResultsListener {
   
   public void announceStartTestSystem(String testSystemName, String testRunner) throws Exception;
-  public void setExecutionLog(CompositeExecutionLog log);
+  
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception;
 
   public void announceStartNewTest(WikiPage test) throws Exception;
 

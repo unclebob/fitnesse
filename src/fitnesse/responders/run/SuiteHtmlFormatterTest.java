@@ -30,13 +30,13 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testTestSummary() throws Exception {
- //   formatter.setPageAssertions(new TestSummary(12, 0, 0, 0));
     formatter.processTestResults("TestName", new TestSummary(49, 0, 0, 0));
-    formatter.processTestResults("TestName", new TestSummary(1, 0, 2, 0));
+    formatter.processTestResults("TestName2", new TestSummary(1, 0, 2, 0));
+    formatter.processTestResults("TestName3", new TestSummary(1, 1, 0, 0));
     formatter.finishWritingOutput();
 
-   // assertSubString("<strong>Test Pages:</strong> 12 right, 0 wrong, 0 ignored, 0 exceptions", summary);
-    assertSubString("<strong>Assertions:</strong> 50 right, 0 wrong, 2 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("<strong>Test Pages:</strong> 2 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong> 51 right, 1 wrong, 2 ignored, 0 exceptions", pageBuffer.toString());
   }
 
   public void testCountsHtml() throws Exception {
@@ -55,21 +55,21 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testResultsHtml() throws Exception {
-    formatter.announceTestSystem("Fit");
+    formatter.announceStartTestSystem("Fit", "laughing.fit");
     formatter.announceStartNewTest("RelativeName", "FullName");
     formatter.processTestOutput("starting");
     formatter.processTestOutput(" output");
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
-    formatter.announceTestSystem("Slim");
+    formatter.announceStartTestSystem("Slim", "very.slim");
     formatter.announceStartNewTest("NewRelativeName", "NewFullName");
     formatter.processTestOutput("second");
     formatter.processTestOutput(" test");
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
     formatter.finishWritingOutput();
 
-    String results = pageBuffer.toString();
+    String results = pageBuffer.toString();    
     assertSubString("<h2 class=\"centered\">Test Output</h2>", results);
-    assertSubString("<h2 class=\"centered\">Test System: Slim</h2>", results);
+    assertSubString("<h2 class=\"centered\">Test System: Slim:very.slim</h2>", results);
 
     assertSubString("<div class=\"test_output_name\">", results);
     assertSubString("<a href=\"FullName\" id=\"RelativeName1\">RelativeName</a>", results);

@@ -18,9 +18,6 @@ public abstract class BaseFormatter implements ResultsListener {
     return page;
   }
   
-  
-  
-  @Override
   public void errorOccured() {
     try {
       allTestingComplete();

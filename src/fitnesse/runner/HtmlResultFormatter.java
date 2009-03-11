@@ -86,7 +86,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   }
 
   public void acceptFinalCount(TestSummary testSummary) throws Exception {
-    suiteFormatter.testSummary(testSummary);
+    suiteFormatter.testSummary();
     suiteFormatter.finishWritingOutput();
   }
 

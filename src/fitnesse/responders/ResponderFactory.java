@@ -40,6 +40,7 @@ public class ResponderFactory {
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);
     addResponder("searchForm", SearchFormResponder.class);
+    addResponder("stoptest", StopTestResponder.class);
     addResponder("test", TestResponder.class);
     addResponder("suite", SuiteResponder.class);
     addResponder("proxy", SerializedPageResponder.class);

@@ -56,8 +56,8 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testExecutionStatusHtml() throws Exception {
-    formatter.setExecutionLog(new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.writeHead("test");
+    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceStartNewTest(page);
     formatter.processTestResults(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
@@ -71,5 +71,17 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     formatter.allTestingComplete();
 
     assertSubString("</html>", pageBuffer.toString());
+  }
+
+  public void testStop() throws Exception {
+    formatter.writeHead("test");
+    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceStartNewTest(page);
+    formatter.processTestResults(page, new TestSummary(4, 1, 0, 0));
+    formatter.allTestingComplete();
+    //assert stop button added
+    assertSubString("<a href=\"#\" onclick=\"doSilentRequest('?responder=stoptest&id=2')\">", pageBuffer.toString());
+    //assert stop button removed
+    assertSubString("document.getElementById(\"stop-test\").innerHTML = \"\"", pageBuffer.toString());
   }
 }

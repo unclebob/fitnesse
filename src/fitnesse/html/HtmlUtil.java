@@ -319,6 +319,11 @@ public class HtmlUtil {
       link.setShortcutKey("");
       addLinkToActions(actions, link);
     }
+    if (pageData.hasAttribute("StopAll")) {
+      ActionLink link = new ActionLink("?stoptest", "Stop All Tests");
+      link.setQuery(null);
+      addLinkToActions(actions, link);
+    }
     ActionLink userGuideLink = new ActionLink(".FitNesse.UserGuide", "User Guide");
     userGuideLink.setQuery(null);
     userGuideLink.setShortcutKey("");
@@ -430,4 +435,21 @@ public class HtmlUtil {
     
     return scriptTag;
   }
+  
+  public static HtmlTag makeReplaceElementScript(String idElement, String newHtmlForElement) {
+    HtmlTag scriptTag = new HtmlTag("script");
+    String escapedHtml = escapeHtmlForJavaScript(newHtmlForElement);
+    scriptTag.add("document.getElementById(\"stop-test\").innerHTML = \"" + escapedHtml + "\";");
+    return scriptTag;
+  }
+  
+  
+  public static HtmlTag makeSilentLink(String href, HtmlElement content) {
+    HtmlTag link = new HtmlTag("a");
+    link.addAttribute("href", "#");
+    link.addAttribute("onclick", "doSilentRequest('" + href + "')");
+    link.add(content);
+    return link;
+  }
+
 }

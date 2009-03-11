@@ -21,23 +21,19 @@ public abstract class XmlFormatter extends BaseFormatter {
     super(page);
   }
 
-  @Override
   public void announceStartNewTest(WikiPage test) throws Exception {
     appendHtmlToBuffer(HtmlUtil.getHtmlOfInheritedPage("PageHeader", getPage()));
   }
 
-  @Override
   public void announceStartTestSystem(String testSystemName, String testRunner)
       throws Exception {
     
   }
 
-  @Override
   public void processTestOutput(String output) throws Exception {
     appendHtmlToBuffer(output);
   }
 
-  @Override
   public void processTestResults(WikiPage test, TestSummary testSummary)
       throws Exception {
     processTestResults(test.getName(), testSummary);
@@ -56,10 +52,8 @@ public abstract class XmlFormatter extends BaseFormatter {
     XmlUtil.addTextNode(testResultsDocument, resultElement, "relativePageName", relativeTestName);
   }
 
-
-  
-  @Override
-  public void setExecutionLog(CompositeExecutionLog log) {
+  public void setExecutionLogAndTrackingId(String stopResponderId,
+      CompositeExecutionLog log) throws Exception {
   }
   
   @Override

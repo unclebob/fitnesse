@@ -167,4 +167,10 @@ public class SuiteContentsFinder {
     }
     return pages;
   }
+
+  public static boolean isSuiteSetupOrTearDown(WikiPage testPage) throws Exception {
+    String name = testPage.getName();
+    return (SUITE_SETUP_NAME.equals(name) || SUITE_TEARDOWN_NAME.equals(name));
+  }
+
 }

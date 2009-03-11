@@ -223,6 +223,10 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderTypeMatchesInput("packet", PacketResponder.class);
   }
 
+  public void testStopTestResponder() throws Exception {
+    assertResponderTypeMatchesInput("stoptest", StopTestResponder.class);
+  }
+  
   public void testWillDisplayVirtualPages() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));

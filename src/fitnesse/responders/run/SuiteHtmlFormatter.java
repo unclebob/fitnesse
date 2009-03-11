@@ -19,15 +19,11 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private String cssSuffix = cssSuffix1;
   private int pageNumber = 0;
   private boolean firstTest = true;
-  private String testSystemName = null;
+  private String testSystemFullName = null;
 
 
   public SuiteHtmlFormatter(WikiPage page, HtmlPageFactory pageFactory) throws Exception {
     super(page, pageFactory);
-  }
-  
-  public void announceTestSystem(String testSystemName) {
-    this.testSystemName = testSystemName;
   }
 
   public String getTestSystemHeader(String testSystemName) throws Exception {
@@ -46,12 +42,12 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
       firstTest = false;
     }
     
-    if (testSystemName != null) {
-      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
+    if (testSystemFullName != null) {
+      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
       systemTitle.addAttribute("class", "centered");
       writeData(systemTitle.html());
       // once we write it out we don't need it any more
-      testSystemName = null;
+      testSystemFullName = null;
     }
     
     HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
@@ -126,12 +122,18 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     String tag = String.format("<h3>%s</h3>\n", testSystemName  + ":" + testRunner);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
+    
+    testSystemFullName = testSystemName + ":" + testRunner;
+  }
+  
+  @Override
+  protected String makeSummaryContent() {
+    String testPagesSummary = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    return testPagesSummary + super.makeSummaryContent();
   }
 
   public void finishWritingOutput() throws Exception {
-    String pageCountsSummary = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    writeData(pageCountsSummary);
-    writeData(testSummary(getAssertionCounts()));
+    writeData(testSummary());
     writeData(getHtmlPage().postDivision);
   }
   
