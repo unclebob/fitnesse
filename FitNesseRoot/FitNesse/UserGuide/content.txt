@@ -32,7 +32,7 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |CreatingTestTables|''Creating and enabling test tables on FitNesse pages.''|
 |[[Graceful Names][GracefulName]]|''Managing the names of fixtures, packages, and variables''|
 |TestTableStyles|''The different styles and uses of test tables and corresponding fixtures.''|
-|TestSuites|''How to group many test pages into a suite.''|
+|TestSuites|''How to group many test pages into a suite; then tag, search, and execute them..''|
 |[[!-SetUp and TearDown-!][.FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteSetUpAndTearDown]]|''Where to put tables you want executed before and after every test page''|
 |AcceptanceTestPatterns|''Some patterns we have seen emerge while writing FitNesse AcceptanceTests.''|
 

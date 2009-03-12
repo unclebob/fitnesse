@@ -7,8 +7,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import static util.RegexTestCase.*;
-import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -18,6 +16,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import static util.RegexTestCase.*;
+import util.XmlUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -279,7 +279,7 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testSimpleMatchingSuiteFilter() throws Exception {
+  public void testSimpleMatchingSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=foo");
     String results = runSuite();
@@ -289,13 +289,35 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testSecondMatchingSuiteFilter() throws Exception {
+  public void testSecondMatchingSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=smoke");
     String results = runSuite();
     assertDoesntHaveRegexp(".*href=\"#TestOne.*", results);
     assertDoesntHaveRegexp(".*href=\"#TestTwo.*", results);
     assertHasRegexp(".*href=\"#TestThree1\".*", results);
+  }
+
+  @Test
+  public void multipleSuiteQuery() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=smoke,foo");
+    String results = runSuite();
+    assertDoesntHaveRegexp(".*href=\"#TestOne.*", results);
+    assertHasRegexp(".*href=\"#TestTwo.*", results);
+    assertHasRegexp(".*href=\"#TestThree.*", results);
+  }
+
+  @Test
+  public void testTagsShouldBeInheritedFromSuite() throws Exception {
+    PageData suiteData = suite.getData();
+    suiteData.setAttribute(PageData.PropertySUITES, "tag");
+    suite.commit(suiteData);
+    addTestToSuite("TestInheritsTag", fitPassFixture);
+
+    request.setQueryString("suiteFilter=tag");
+    String results = runSuite();
+    assertHasRegexp(".*href=\"#TestInheritsTag.*", results);
   }
 
   private void addTestPagesWithSuiteProperty() throws Exception {

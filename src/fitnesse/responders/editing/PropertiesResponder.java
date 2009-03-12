@@ -133,7 +133,7 @@ public class PropertiesResponder implements SecureResponder {
     HtmlTag virtualWikiSection = new HtmlTag("div");
     virtualWikiSection.addAttribute("class", "virtual-wiki-properties");
     virtualWikiSection.add(makeVirtualWikiHtml());
-    virtualWikiSection.add(makeSuitesHtml(pageData));
+    virtualWikiSection.add(makeTagsHtml(pageData));
     virtualWikiSection.add(makeHelpTextHtml(pageData));
     trisection.add(checkBoxesSection);
     trisection.add(virtualWikiSection);
@@ -352,8 +352,12 @@ public class PropertiesResponder implements SecureResponder {
     return makeAttributeCheckboxesHtml("Security:", WikiPage.SECURITY_ATTRIBUTES, pageData);
   }
 
-  public HtmlTag makeSuitesHtml(PageData pageData) throws Exception {
-    return makeInputField("Suites:", PageData.PropertySUITES, SUITES, 40, pageData);
+  public HtmlTag makeTagsHtml(PageData pageData) throws Exception {
+    HtmlTag div = new HtmlTag("div");
+    div.addAttribute("style", "float: left; padding-right: 5px");
+
+    div.add(makeInputField("Tags:", PageData.PropertySUITES, SUITES, 40, pageData));
+    return div;
   }
 
   public HtmlTag makeHelpTextHtml(PageData pageData) throws Exception {
@@ -383,7 +387,7 @@ public class PropertiesResponder implements SecureResponder {
   private HtmlTag makeAttributeCheckboxesHtml(String label, String[] attributes, PageData pageData)
     throws Exception {
     HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; width: 150px;");
+    div.addAttribute("style", "float: left; width: 180px;");
 
     div.add(label);
     for (String attribute : attributes) {

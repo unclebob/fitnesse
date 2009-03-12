@@ -10,11 +10,9 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.SecureResponder;
 import fitnesse.responders.editing.PropertiesResponder;
-import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
-import static fitnesse.responders.search.SearchFormResponder.SELECTED;
 import static fitnesse.responders.search.SearchFormResponder.*;
-import util.StringUtil;
 import fitnesse.wiki.*;
+import util.StringUtil;
 
 import java.util.*;
 
@@ -81,11 +79,10 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
         HtmlTag row = addTableToResults(form);
         addCellToTable(row, new HtmlTag("label",
           "Number of pages matching specified search properties: " + matchingPages));
-//                addCellToTable(row, HtmlUtil.makeSubmitButton("Save", "Save Modified Properties", "s"));
         form.add(makeResultsTable(pages, page, attributes));
         resultsPage.main.add(form);
 
-        resultsPage.main.add(makeQueryLink(page, request));
+        resultsPage.main.add(makeQueryLinks(page, request));
       }
     }
 
@@ -187,15 +184,30 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     return table.getTable();
   }
 
-  private HtmlTag makeQueryLink(WikiPage page, Request request) throws Exception {
+  private HtmlTag makeQueryLinks(WikiPage page, Request request) throws Exception {
     TagGroup group = new TagGroup();
     group.add(HtmlUtil.HR);
-    group.add(new HtmlTag("label", "To save this search as a link, paste the text below into a page."));
-    group.add(HtmlUtil.BR);
-    group.add(HtmlUtil.BR);
-    group.add(new HtmlTag("label",
-      "[[Search Properties]" +
-        "[" + getFullPagePath(page) + "?" + request.getBody() + "]]"));
+    group.add(new HtmlTag("h4", "To save this search as a link, paste the text below into a page."));
+    String pagePath = getFullPagePath(page);
+    group.add(new HtmlTag("pre", String.format("[[Search below !-%s-! for &lt;description&gt;][%s?%s]]",
+      pagePath, pagePath, request.getBody())));
+
+    String[] suiteQuery = getSuitesFromInput(request);
+    if (suiteQuery != null && suiteQuery.length > 0) {
+      group.add(HtmlUtil.HR);
+      group.add(new HtmlTag("h4", "To test these pages, paste the text below into a page."));
+      String queryString = (String) request.getInput(PropertiesResponder.SUITES);
+      String testUrl = String.format("%s?suite&suiteFilter=%s", pagePath, queryString);
+      group.add(new HtmlTag("pre", String.format("[[Test !-%s-! under !-%s-!][%s]]",
+        queryString,
+        pagePath,
+        testUrl
+      )));
+      group.add(HtmlUtil.BR);
+      group.add("Or, just: ");
+      group.add(HtmlUtil.makeLink(testUrl, "Test Now"));
+    }
+
     return group;
   }
 
@@ -214,7 +226,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
       tags.add(new HtmlTag("strong", attributeName));
     }
 
-    tags.add(new HtmlTag("strong", PropertiesResponder.SUITES));
+    tags.add(new HtmlTag("strong", "Tags"));
 
     addTagsToTableRow(table, tags);
   }

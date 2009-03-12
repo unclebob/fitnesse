@@ -2,13 +2,13 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<Help/>
-	<LastModified>20090204143013</LastModified>
+	<Help></Help>
+	<LastModified>20090312173014</LastModified>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
-	<Suites/>
+	<Suites>slim</Suites>
 	<Test/>
 	<Versions/>
 	<WhereUsed/>

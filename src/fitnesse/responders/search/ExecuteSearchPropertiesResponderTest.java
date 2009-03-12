@@ -59,7 +59,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     content = invokeResponder(request);
 
     assertHasRegexp("Number of pages.*: 1", content);
-    assertOutputHasHeaderRowWithTitles(content, "Page", "Test", "Suites");
+    assertOutputHasHeaderRowWithTitles(content, "Page", "Test", "Tags");
     assertOutputHasRowWithLabels(content, "PageOne", "filter1,filter2");
   }
 

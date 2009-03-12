@@ -289,7 +289,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     String html = new PropertiesResponder().makeTestActionCheckboxesHtml(data).html();
-    assertSubString("<div style=\"float: left; width: 150px;\">Actions:", html);
+    assertSubString("<div style=\"float: left; width: 180px;\">Actions:", html);
     assertSubString("Actions:", html);
     assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
     assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/> - Versions", html);
@@ -302,7 +302,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     String html = new PropertiesResponder().makeNavigationCheckboxesHtml(data).html();
-    assertSubString("<div style=\"float: left; width: 150px;\">Navigation:", html);
+    assertSubString("<div style=\"float: left; width: 180px;\">Navigation:", html);
     assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
     assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
     assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
@@ -313,7 +313,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     String html = new PropertiesResponder().makeSecurityCheckboxesHtml(data).html();
-    assertSubString("<div style=\"float: left; width: 150px;\">Security:", html);
+    assertSubString("<div style=\"float: left; width: 180px;\">Security:", html);
     assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
     assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);
     assertSubString("<input type=\"checkbox\" name=\"secure-test\"/> - secure-test", html);

@@ -5,9 +5,9 @@ package fitnesse.responders.run;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
-import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Element;
+import util.XmlUtil;
 
 import java.util.*;
 
@@ -54,7 +54,8 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
 
   private void executeTestPages() throws Exception {
     Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem;
-    pagesByTestSystem = makeMapOfPagesByTestSystem(page, root, getSuiteFilter());
+    String suiteQuery = getSuiteQuery();
+    pagesByTestSystem = makeMapOfPagesByTestSystem(page, root, suiteQuery);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet())
       executePagesInTestSystem(descriptor, pagesByTestSystem);
   }
@@ -62,7 +63,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
                                         Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem) throws Exception {
     List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
-    announceTestSystem(String.format("%s:%s",descriptor.testSystemName, descriptor.testRunner));
+    announceTestSystem(String.format("%s:%s", descriptor.testSystemName, descriptor.testRunner));
     startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
   }
 
@@ -96,12 +97,6 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   private void waitForTestSystemToSendResults() throws InterruptedException {
     while (processingQueue.size() > 0)
       Thread.sleep(50);
-  }
-
-  private String extractRunnerFromTestSystemName(String testSystemName) {
-    String testSystemComponents[] = testSystemName.split(":");
-    String testRunner = testSystemComponents[testSystemComponents.length - 1];
-    return testRunner;
   }
 
   protected void close() throws Exception {
@@ -180,15 +175,20 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   }
 
   public List<WikiPage> makePageList() throws Exception {
-    return makePageList(page, root, getSuiteFilter());
+    return makePageList(page, root, getSuiteQuery());
   }
 
-  private String getSuiteFilter() {
-    return request != null ? (String) request.getInput("suiteFilter") : null;
+  private String getSuiteQuery() {
+    if (request != null) {
+      String queryString = (String) request.getInput("suiteFilter");
+      return "".equals(queryString) ? null : queryString;
+    }
+    return null;
   }
 
-  public static List<WikiPage> makePageList(WikiPage suitePage, WikiPage root, String suite) throws Exception {
-    LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suite);
+  public static List<WikiPage> makePageList(WikiPage suitePage, WikiPage root, String suiteQueryString) throws Exception {
+    LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suiteQueryString);
+
     if (suitePage.getData().hasAttribute("Test"))
       pages.add(suitePage);
 
@@ -197,7 +197,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     if (pages.isEmpty()) {
       String name = new WikiPagePath(suitePage).toString();
       WikiPageDummy dummy = new WikiPageDummy("",
-        "|Comment|\n|No test found with suite filter '" + suite + "' in subwiki !-" + name + "-!!|\n"
+        "|Comment|\n|No test found with suite query '" + suiteQueryString + "' in subwiki !-" + name + "-!!|\n"
       );
       dummy.setParent(root);
       pages.add(dummy);
@@ -205,9 +205,12 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     return pages;
   }
 
-  private static LinkedList<WikiPage> getAllPagesToRunForThisSuite(WikiPage suitePage, WikiPage root, String suite)
+  private static LinkedList<WikiPage> getAllPagesToRunForThisSuite(WikiPage suitePage, WikiPage root, String suiteQueryString)
     throws Exception {
-    LinkedList<WikiPage> pages = getAllTestPagesUnder(suitePage, suite);
+    Set<String> suiteQuery = new HashSet<String>();
+    if (suiteQueryString != null)
+      suiteQuery.addAll(Arrays.asList(suiteQueryString.split("\\s*,\\s*")));
+    LinkedList<WikiPage> pages = getAllTestPagesUnder(suitePage, suiteQuery);
     List<WikiPage> referencedPages = gatherCrossReferencedTestPages(suitePage, root);
     pages.addAll(referencedPages);
     return pages;
@@ -232,9 +235,9 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     return getAllTestPagesUnder(suiteRoot, null);
   }
 
-  public static LinkedList<WikiPage> getAllTestPagesUnder(WikiPage suiteRoot, String suite) throws Exception {
+  public static LinkedList<WikiPage> getAllTestPagesUnder(WikiPage suiteRoot, Set<String> suiteQuery) throws Exception {
     LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
-    addTestPagesToList(testPages, suiteRoot, suite);
+    addTestPagesToSuite(testPages, suiteRoot, suiteQuery);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
@@ -256,46 +259,78 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
     return testPages;
   }
 
-  private static void addTestPagesToList(List<WikiPage> testPages, WikiPage context, String suite) throws Exception {
-    PageData data = context.getData();
-    if (!data.hasAttribute(PageData.PropertyPRUNE)) {
-      if (data.hasAttribute("Test")) {
-        if (belongsToSuite(context, suite)) {
-          testPages.add(context);
-        }
-      }
+  private static void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, Set<String> suiteQuery) throws Exception {
+    if (shouldBePartOfSuite(page, suiteQuery))
+      suite.add(page);
 
-      ArrayList<WikiPage> children = new ArrayList<WikiPage>();
-      children.addAll(context.getChildren());
-      if (context.hasExtension(VirtualCouplingExtension.NAME)) {
-        VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
-          VirtualCouplingExtension.NAME
-        );
-        children.addAll(extension.getVirtualCoupling().getChildren());
-      }
-      for (WikiPage page : children) {
-        addTestPagesToList(testPages, page, suite);
-      }
+    PageData pageData = page.getData();
+    if (pageData.hasAttribute("Suite") && belongsToSuite(page, suiteQuery))
+      suiteQuery = new HashSet<String>();
+
+    List<WikiPage> children = getChildren(page);
+    for (WikiPage child : children) {
+      addTestPagesToSuite(suite, child, suiteQuery);
     }
   }
 
-  private static boolean belongsToSuite(WikiPage context, String suite) {
-    if ((suite == null) || (suite.trim().length() == 0)) {
-      return true;
+  private static List<WikiPage> getChildren(WikiPage page) throws Exception {
+    List<WikiPage> children = new ArrayList<WikiPage>();
+    children.addAll(page.getChildren());
+    addVirtualChildrenIfAny(page, children);
+    return children;
+  }
+
+  private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws Exception {
+    if (context.hasExtension(VirtualCouplingExtension.NAME)) {
+      VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
+        VirtualCouplingExtension.NAME
+      );
+      children.addAll(extension.getVirtualCoupling().getChildren());
     }
+  }
+
+  private static boolean shouldBePartOfSuite(WikiPage context, Set<String> suiteQuery) throws Exception {
+    PageData data = context.getData();
+    boolean pruned = data.hasAttribute(PageData.PropertyPRUNE);
+    boolean test = data.hasAttribute("Test");
+    return !pruned && test && (belongsToSuite(context, suiteQuery));
+  }
+
+  private static boolean belongsToSuite(WikiPage context, Set<String> suiteQuery) {
+    return !exists(suiteQuery) || testMatchesQuery(context, suiteQuery);
+  }
+
+  private static boolean testMatchesQuery(WikiPage context, Set<String> suiteQuery) {
+    String testTagString = getTestTags(context);
+    return (testTagString != null && testTagsMatchQueryTags(testTagString, suiteQuery));
+  }
+
+  private static boolean exists(Set<String> suiteQuery) {
+    return (suiteQuery != null) && (suiteQuery.size() != 0);
+  }
+
+  private static String getTestTags(WikiPage context) {
     try {
-      String suitesStr = context.getData().getAttribute(PageData.PropertySUITES);
-      if (suitesStr != null) {
-        StringTokenizer t = new StringTokenizer(suitesStr, ",");
-        while (t.hasMoreTokens()) {
-          if (t.nextToken().trim().equalsIgnoreCase(suite)) {
-            return true;
-          }
-        }
-      }
-    }
-    catch (Exception e) {
+      return context.getData().getAttribute(PageData.PropertySUITES);
+    } catch (Exception e) {
       e.printStackTrace();
+      return null;
+    }
+  }
+
+  private static boolean testTagsMatchQueryTags(String testTagString, Set<String> suiteQuery) {
+    String testTags[] = testTagString.trim().split("\\s*,\\s*");
+    for (String testTag : testTags) {
+      if (testTagMatchesQueryTags(testTag.trim(), suiteQuery)) return true;
+    }
+    return false;
+  }
+
+  private static boolean testTagMatchesQueryTags(String testTag, Set<String> queryTags) {
+    for (String queryTag : queryTags) {
+      if (testTag.equalsIgnoreCase(queryTag)) {
+        return true;
+      }
     }
     return false;
   }
@@ -317,9 +352,9 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   }
 
   public static Map<TestSystem.Descriptor, LinkedList<WikiPage>>
-  makeMapOfPagesByTestSystem(WikiPage suitePage, WikiPage root, String suiteFilter) throws Exception {
+  makeMapOfPagesByTestSystem(WikiPage suitePage, WikiPage root, String suiteQuery) throws Exception {
     Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = new HashMap<TestSystem.Descriptor, LinkedList<WikiPage>>();
-    List<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suiteFilter);
+    List<WikiPage> pages = getAllPagesToRunForThisSuite(suitePage, root, suiteQuery);
     for (WikiPage page : pages) {
       TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData());
       List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, descriptor);

@@ -144,7 +144,7 @@ public class SearchFormResponder implements Responder {
   private HtmlTag makeSuitesSelectionHtml() {
     HtmlTag div = new HtmlTag("div");
     div.addAttribute("style", "float: left;");
-    div.add(PropertiesResponder.SUITES + ":");
+    div.add("Tags:");
     div.add(HtmlUtil.BR);
     div.add(HtmlUtil.makeInputTag("checkbox", PropertiesResponder.SUITES + SELECTED));
     div.add(HtmlUtil.makeInputTag("text", PropertiesResponder.SUITES, ""));

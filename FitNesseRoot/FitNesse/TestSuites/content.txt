@@ -11,7 +11,7 @@ To perform operations at the beginning or end of an entire suite, rather than fo
 
 !3 SubWiki: the Best Way to Organize TestSuites
 
-[[SubWikis][SubWiki]] are convenient for creating a hierarchical structure for your suite of tests.  You can put test pages below subsystems and/or features.  You can organize ClassPath and variable definitions in the parent pages.
+[[!-SubWikis-!][SubWiki]] are convenient for creating a hierarchical structure for your suite of tests.  You can put test pages below subsystems and/or features.  You can organize ClassPath and variable definitions in the parent pages.
 
 !3 Suite Cross References
 
@@ -19,10 +19,22 @@ Sometimes you want to compose a test suite from test pages that are in many diff
 
 To do this you can use the [['''!-!see-!'''][MarkupCrossReference]] command in a test suite.  Any test pages referenced by '''!-!see-!''' on a suite page will be executed as part of that suite.
 
-!3 Suite Filters
+!3 Suite Tags
 
-There is an alternative to the !-!see-! command to aggregate some tests into a suite: the so-called suite filter.
+There is an alternative to the !-!see-! command to aggregate some tests into a suite: the so-called suite tags.
 
-The properties page offers a field labeled ''Suites'' where you can enter a comma-separated list of keywords. You can execute only those tests in a subwiki (i.e. filter the tests) which have been marked with a certain keyword. For this purpose, the desired keyword has to be passed as an additional request parameter named '''suiteFilter''' to FitNesse like this:
-{{{http://<host>:<port>/<suite path and test name>?responder=suite&suiteFilter=smoke}}}
+The properties page offers a field labeled ''Tags'' where you can enter a comma-separated list of keywords. These keywords can then be used as targets for searching and executing those tests.  
+
+!4 Searching for tags
+If you hit the !style_code(Search) button, You will see a form that allows you to search for pages that certain attributes or tags.  For example, you can search for all subpages that have the !style_code(Suite) property set, or all pages that are read-only, or that have the !style_code(Edit) button displayed.  Most importantly, you can search for pages marked with tags.
+
+If you put a comma separated list of tags into the !style_code(Tags) input box, and then search, you will be shows a list of pages that are marked with any of those tags.  Notice that if the pages are tests or suites, they have a link next to them that allows you to execute them.   Also, look at the bottom and see the useful text that can be copied and pasted onto other pages in order to repeat the search or test the resulting pages.
+
+Using these tools, you can easily tag some tests as "smoke" tests, or "critical", or "fast".  You can find all the "smoke" tests and run them, etc.
+
+!4 Executing Tagged tests
+The easiest way to execute tagged tests is to search for the tags as described in the previous section.  Sometimes, though, you'd like to execute the tests via a RESTful service, or from the command line (using TestRunner).   
+You can execute the tests that match a tag by using the !style_code(suiteFilter) query parameter with a suite url like this:
+!style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&suiteFilter=smoke,critical-!)  If you want the results in xml, simply put !style_code(&formamt=xml) in the url too.  
+
 Typically, you will need only a few of such filtered suites, so it is suggested to build a link on the front page or so which contains the respective suite filter parameters. (If you simply click on the ''Suites'' button to run a suite, the !-suiteFilter-! is not set, so all tests in the respective subwiki are run.)
