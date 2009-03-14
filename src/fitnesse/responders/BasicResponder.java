@@ -23,4 +23,5 @@ public abstract class BasicResponder implements Responder {
   protected String getContentType() {
     return Response.DEFAULT_CONTENT_TYPE;
   }
+ 
 }

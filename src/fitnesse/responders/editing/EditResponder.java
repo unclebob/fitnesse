@@ -5,6 +5,7 @@ package fitnesse.responders.editing;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SaveRecorder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
@@ -13,12 +14,8 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";

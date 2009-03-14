@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureWriteOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;

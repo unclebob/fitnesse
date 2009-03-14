@@ -5,6 +5,7 @@ package fitnesse.responders.versions;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -12,7 +13,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
 
 public class VersionResponder implements SecureResponder {

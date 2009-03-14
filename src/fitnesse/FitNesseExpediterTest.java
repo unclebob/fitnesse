@@ -8,7 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.UnauthorizedResponder;
+import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.testutil.MockSocket;
 import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;

@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.components.PageReferenceRenamer;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -13,7 +14,6 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 

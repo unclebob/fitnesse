@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;

@@ -5,11 +5,11 @@ package fitnesse.responders.files;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.SecureResponder;
 import util.FileUtil;
 
 import java.io.File;

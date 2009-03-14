@@ -11,7 +11,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.SecureResponder;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
 import util.XmlUtil;
 import fitnesse.wiki.*;

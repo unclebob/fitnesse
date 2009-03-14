@@ -4,13 +4,13 @@ package fitnesse.responders.search;
 
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SearchObserver;
 import fitnesse.html.ChunkedResultsListingUtil;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;

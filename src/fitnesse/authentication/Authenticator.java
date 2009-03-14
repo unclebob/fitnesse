@@ -5,8 +5,6 @@ package fitnesse.authentication;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
-import fitnesse.responders.SecureResponder;
-import fitnesse.responders.UnauthorizedResponder;
 
 public abstract class Authenticator {
   public Authenticator() {

@@ -5,6 +5,7 @@ package fitnesse.responders.editing;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureWriteOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.components.RecentChanges;
 import fitnesse.components.SaveRecorder;
 import fitnesse.html.HtmlPage;
@@ -13,7 +14,6 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.SecureResponder;
 import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {

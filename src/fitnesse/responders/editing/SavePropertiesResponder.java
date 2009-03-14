@@ -11,7 +11,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.SecureResponder;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.wiki.*;
 
 import java.util.Arrays;

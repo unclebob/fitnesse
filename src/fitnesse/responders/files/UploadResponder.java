@@ -9,7 +9,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import fitnesse.responders.SecureResponder;
+import fitnesse.authentication.SecureResponder;
 import util.FileUtil;
 
 import java.io.*;

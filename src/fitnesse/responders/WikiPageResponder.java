@@ -5,6 +5,7 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
