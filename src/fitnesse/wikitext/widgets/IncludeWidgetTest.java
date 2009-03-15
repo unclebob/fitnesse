@@ -91,7 +91,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
     IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -setup SomePage");
     assertSubString("Set Up: ", widget.render());
     assertSubString("class=\"setup\"", widget.render());
-    assertSubString("class=\"collapsable\"", widget.render());
+    assertSubString("class=\"hidden\"", widget.render());
   }
 
   public void testSetUpCollapsed() throws Exception {
@@ -103,11 +103,20 @@ public class IncludeWidgetTest extends WidgetTestCase {
     assertSubString("class=\"hidden\"", widget.render());
   }
 
+  public void testSetUpUncollapsed() throws Exception {
+    ParentWidget widgetRoot = new WidgetRoot(root);
+    widgetRoot.addVariable(IncludeWidget.COLLAPSE_SETUP, "false");
+    IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -setup SomePage");
+    assertSubString("Set Up: ", widget.render());
+    assertSubString("class=\"setup\"", widget.render());
+    assertSubString("class=\"collapsable\"", widget.render());
+  }
+
   public void testTearDownParts() throws Exception {
     IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -teardown SomePage");
     assertSubString("Tear Down: ", widget.render());
     assertSubString("class=\"teardown\"", widget.render());
-    assertSubString("class=\"collapsable\"", widget.render());
+    assertSubString("class=\"hidden\"", widget.render());
   }
 
   public void testTearDownCollapsed() throws Exception {
@@ -119,6 +128,15 @@ public class IncludeWidgetTest extends WidgetTestCase {
     assertSubString("class=\"hidden\"", widget.render());
   }
 
+  public void testTearDownUncollapsed() throws Exception {
+    ParentWidget widgetRoot = new WidgetRoot(root);
+    widgetRoot.addVariable(IncludeWidget.COLLAPSE_TEARDOWN, "false");
+    IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -teardown SomePage");
+    assertSubString("Tear Down: ", widget.render());
+    assertSubString("class=\"teardown\"", widget.render());
+    assertSubString("class=\"collapsable\"", widget.render());
+  }
+
   public void testLiteralsGetRendered() throws Exception {
     verifyLiteralsGetRendered("", "LiteralPage");
   }
@@ -128,7 +146,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   private void verifyLiteralsGetRendered(String option, String pageName)
-    throws Exception {
+  throws Exception {
     crawler.addPage(root, PathParser.parse(pageName), "!-one-!, !-two-!, !-three-!");
     ParentWidget widgetRoot = new WidgetRoot(page1);
     IncludeWidget widget = createIncludeWidget(widgetRoot, option + pageName);
@@ -148,7 +166,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   private void verifyRenderWhenMissing(String optionAndPageName)
-    throws Exception {
+  throws Exception {
     IncludeWidget widget = createIncludeWidget(page1, optionAndPageName);
     assertHasRegexp("MissingPage.*does not exist", widget.render());
   }
@@ -162,7 +180,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   private void verifyNoNullPointerWhenIncludingFromRootPage(String optionAndPageName)
-    throws Exception {
+  throws Exception {
     IncludeWidget widget = createIncludeWidget(root, optionAndPageName);
     assertHasRegexp("page one", widget.render());
   }
@@ -176,11 +194,11 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   private void verifyIncludingVariables(String option)
-    throws Exception {
+  throws Exception {
     crawler.addPage(root, PathParser.parse("VariablePage"), "This is VariablePage\n!define X {blah!}\n");
     crawler.addPage(root, PathParser.parse("IncludingPage"));
     ParentWidget widgetRoot = new WidgetRoot("This is IncludingPage\n" + "!include " + option + ".VariablePage\nX=${X}",
-      root.getChildPage("IncludingPage"), WidgetBuilder.htmlWidgetBuilder);
+        root.getChildPage("IncludingPage"), WidgetBuilder.htmlWidgetBuilder);
     String content = widgetRoot.render();
     assertHasRegexp("X=blah!", content);
   }
@@ -194,7 +212,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   private void verifyVirtualIncludeNotFound(String optionAndPageName)
-    throws Exception {
+  throws Exception {
     ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "localhost", 9999, PathParser.parse("RealPage.VirtualPage"));
     IncludeWidget widget = createIncludeWidget(virtualPage, optionAndPageName);
     String output = widget.render();

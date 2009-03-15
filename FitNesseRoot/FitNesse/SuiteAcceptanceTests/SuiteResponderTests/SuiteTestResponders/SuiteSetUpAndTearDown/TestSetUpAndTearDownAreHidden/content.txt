@@ -1,4 +1,4 @@
-!3 [[!-SetUp and TearDown-!][.FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteSetUpAndTearDown]] are rendered as [[Collapsable Sections][.FitNesse.MarkupCollapsableSection]].
+!3 [[!-SetUp and TearDown-!][.FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteSetUpAndTearDown]] are rendered as [[Collapsable Sections][.FitNesse.MarkupCollapsableSection]] that are collapsed by default.
 
  * First create a normal page, plus header and footer pages.
 |Page creator.|
@@ -19,5 +19,5 @@
 
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<div.*class="collapsable".*>set up</div>|true|
-|contents|<div.*class="collapsable".*>tear down</div>|true|
+|contents|<div.*class="hidden".*>set up</div>|true|
+|contents|<div.*class="hidden".*>tear down</div>|true|
