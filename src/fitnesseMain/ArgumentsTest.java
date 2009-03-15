@@ -1,8 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse;
+package fitnesseMain;
 
 import junit.framework.TestCase;
+import fitnesseMain.FitNesseMain;
+import fitnesse.Arguments;
 
 public class ArgumentsTest extends TestCase {
   private Arguments args;
@@ -15,7 +17,7 @@ public class ArgumentsTest extends TestCase {
   }
 
   private Arguments makeArgs(String[] argArray) {
-    return args = FitNesse.parseCommandLine(argArray);
+    return args = FitNesseMain.parseCommandLine(argArray);
   }
 
   public void testArgumentsDefaults() throws Exception {

@@ -1,7 +1,7 @@
 !2 Starting FitNesse
 
-In the standard distribution there is a file named ''run.bat'' for windows and ''run.sh'' for Unix, Linux, and OS X.  Double-clicking this file should get things going in most cases.  The main class that gets executed is '''!-fitnesse.FitNesse-!'''.  Here is how to invoke this class:
-{{{Usage: java fitnesse.FitNesse [-pdrleoa]
+In the standard distribution there is a file named ''run.bat'' for windows and ''run.sh'' for Unix, Linux, and OS X.  Double-clicking this file should get things going in most cases.  The main class that gets executed is '''!-fitnesseMain.FitNesseMain-!'''.  Here is how to invoke this class:
+{{{Usage: java -jar fitnesse.jar [-pdrleoa]
         -p <port number> {80}
         -d <working directory> {.}
         -r <page root directory> {FitNesseRoot}

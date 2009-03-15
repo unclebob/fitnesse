@@ -1,8 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.ant;
+package fitnesseMain.ant;
 
-import fitnesse.FitNesse;
+import fitnesseMain.FitNesseMain;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -25,7 +25,7 @@ public class StartFitnesseTask extends Task {
   @Override
   public void execute() throws BuildException {
     try {
-      FitNesse.main(new String[]
+      FitNesseMain.main(new String[]
         {"-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o"});
       log("Sucessfully Started Fitnesse on port " + fitnessePort);
     }

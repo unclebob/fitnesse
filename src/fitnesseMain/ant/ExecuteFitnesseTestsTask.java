@@ -1,9 +1,7 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.ant;
+package fitnesseMain.ant;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -15,25 +13,39 @@ import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+
+import util.StringUtil;
 
 /**
- * Task to run fit tests. This task starts the fit server, runs fitnesse tests and publishes the results. <p/>
+ * Task to run fit tests. This task runs fitnesse tests and publishes the results.
  * <p/>
  * <pre>
  * Usage:
- * &lt;taskdef name=&quot;run-fitnesse-tests&quot; classname=&quot;fitnesse.ant.TestRunnerTask&quot; classpathref=&quot;classpath&quot; /&gt;
+ * &lt;taskdef name=&quot;execute-fitnesse-tests&quot;
+ *     classname=&quot;fitnesse.ant.ExecuteFitnesseTestsTask&quot;
+ *     classpathref=&quot;classpath&quot; /&gt;
  * OR
- * &lt;taskdef classpathref=&quot;classpath&quot; resource=&quot;tasks.properties&quot; /&gt;
- * &lt;p/&gt;
- * &lt;run-fitnesse-tests wikidirectoryrootpath=&quot;.&quot; suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot; fitnesseport=&quot;8082&quot; resultsdir=&quot;${results.dir}&quot; resultshtmlpage=&quot;fit-results.html&quot; resultsxmlpage=&quot;fit-results.xml&quot; classpathref=&quot;classpath&quot; /&gt;
+ * &lt;taskdef classpathref=&quot;classpath&quot;
+ *             resource=&quot;tasks.properties&quot; /&gt;
+ * <p/>
+ * &lt;execute-fitnesse-tests
+ *     suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot;
+ *     fitnesseport=&quot;8082&quot;
+ *     resultsdir=&quot;${results.dir}&quot;
+ *     resultshtmlpage=&quot;fit-results.html&quot;
+ *     classpathref=&quot;classpath&quot; /&gt;
  * </pre>
  */
-public class TestRunnerTask extends Task {
-  private String wikiDirectoryRootPath;
-  private int fitnessePort = 8082;
+public class ExecuteFitnesseTestsTask extends Task {
+  private String fitnesseHost = "localhost";
+  private int fitnessePort;
   private String suitePage;
+  private String suiteFilter;
   private String resultsDir = ".";
+  private String resultsHTMLPage;
   private String resultsXMLPage;
+  private boolean debug = true;
   private boolean verbose = true;
   private boolean failOnError = true;
   private String testRunnerClass = "fitnesse.runner.TestRunner";
@@ -42,55 +54,36 @@ public class TestRunnerTask extends Task {
 
   @Override
   public void execute() throws BuildException {
-    startFitNesse();
     try {
-      executeTests();
-    } catch (Exception e) {
-      if (failOnError)
-        throw new BuildException("Got an unexpected error trying to run the fitnesse tests : " + e.getMessage(), e);
-      else
+      int exitCode = executeRunnerClassAsForked();
+      if (exitCode != 0) {
+        log("Finished executing FitNesse tests: " + exitCode + " failures/exceptions");
+        if (failOnError) {
+          throw new BuildException(exitCode + " FitNesse test failures/exceptions");
+        } else {
+          getProject().setNewProperty(resultProperty, String.valueOf(exitCode));
+        }
+      } else {
+        log("Fitnesse Tests executed successfully");
+      }
+    }
+    catch (Exception e) {
+      if (failOnError) {
+        throw new BuildException(
+          "Got an unexpected error trying to run the fitnesse tests : " + e.getMessage(), e);
+      } else {
         e.printStackTrace();
-    } finally {
-      stopFitNesse();
+      }
     }
-  }
-
-  private void executeTests() {
-    int exitCode = executeRunnerClassAsForked();
-    if (exitCode != 0) {
-      log("Finished executing FitNesse tests: " + exitCode + " failures/exceptions");
-      if (failOnError)
-        throw new BuildException(exitCode + " FitNesse test failures/exceptions");
-      else
-        getProject().setNewProperty(resultProperty, String.valueOf(exitCode));
-    } else
-      log("Fitnesse Tests executed successfully");
-  }
-
-  private void stopFitNesse() {
-    FitNesseContext context = new FitNesseContext();
-    context.port = fitnessePort;
-    try {
-      new FitNesse(context).stop();
-    } catch (Exception e) {
-      throw new BuildException("Failed to stop FitNesse. Error Msg: " + e.getMessage(), e);
-    }
-  }
-
-  private void startFitNesse() {
-    try {
-      FitNesse.main(new String[]{"-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o"});
-    } catch (Exception e) {
-      throw new BuildException("Failed to start FitNesse. Error Msg: " + e.getMessage(), e);
-    }
-    log("Sucessfully Started Fitnesse on port " + fitnessePort);
   }
 
   private int executeRunnerClassAsForked() throws BuildException {
     CommandlineJava cmd = initializeJavaCommand();
 
     Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
-    execute.setCommandline(cmd.getCommandline());
+    String[] commandLine = cmd.getCommandline();
+    System.out.printf("Executing: %s\n", StringUtil.join(Arrays.asList(commandLine), " "));
+    execute.setCommandline(commandLine);
     execute.setNewenvironment(false);
     execute.setAntRun(getProject());
 
@@ -98,7 +91,8 @@ public class TestRunnerTask extends Task {
     int retVal;
     try {
       retVal = execute.execute();
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       throw new BuildException("Process fork failed.", e, getLocation());
     }
 
@@ -108,18 +102,38 @@ public class TestRunnerTask extends Task {
   private CommandlineJava initializeJavaCommand() {
     CommandlineJava cmd = new CommandlineJava();
     cmd.setClassname(testRunnerClass);
+    if (debug)
+      cmd.createArgument().setValue("-debug");
     if (verbose)
       cmd.createArgument().setValue("-v");
+    if (resultsHTMLPage != null) {
+      String resultsHTMLPagePath = new File(resultsDir, resultsHTMLPage).getAbsolutePath();
+      cmd.createArgument().setValue("-html");
+      cmd.createArgument().setValue(resultsHTMLPagePath);
+    }
     if (resultsXMLPage != null) {
       String resultsHTMLPagePath = new File(resultsDir, resultsXMLPage).getAbsolutePath();
       cmd.createArgument().setValue("-xml");
       cmd.createArgument().setValue(resultsHTMLPagePath);
     }
-    cmd.createArgument().setValue("localhost");
+    if (suiteFilter != null) {
+      cmd.createArgument().setValue("-suiteFilter");
+      cmd.createArgument().setValue(suiteFilter);
+    }
+    cmd.createArgument().setValue(fitnesseHost);
     cmd.createArgument().setValue(String.valueOf(fitnessePort));
     cmd.createArgument().setValue(suitePage);
     cmd.createClasspath(getProject()).createPath().append(classpath);
     return cmd;
+  }
+
+  /**
+   * Host address on which Fitnesse is running. Defaults to 'localhost'.
+   *
+   * @param fitnesseHost
+   */
+  public void setFitnesseHost(String fitnesseHost) {
+    this.fitnesseHost = fitnesseHost;
   }
 
   /**
@@ -131,6 +145,23 @@ public class TestRunnerTask extends Task {
     this.classpath = classpath;
   }
 
+  /**
+   * Name of the filter to be passed to TestRunner to specify a subset of tests to run.
+   *
+   * @param suiteFilter
+   */
+  public void setSuiteFilter(String suiteFilter) {
+    this.suiteFilter = suiteFilter;
+  }
+
+  /**
+   * Debug mode. Defaults to 'true'.
+   *
+   * @param debug
+   */
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+  }
 
   /**
    * Will fail the build if any Fitnesse tests fail. Defaults to 'true'.
@@ -142,7 +173,7 @@ public class TestRunnerTask extends Task {
   }
 
   /**
-   * Port on which fitnesse would run. Defaults to <b>8082</b>.
+   * Port on which fitnesse would run. <b>MUST SET.</b>.
    *
    * @param fitnessePort
    */
@@ -167,6 +198,16 @@ public class TestRunnerTask extends Task {
    */
   public void setResultsDir(String resultsDir) {
     this.resultsDir = resultsDir;
+  }
+
+  /**
+   * If set, stores the fitnesse results in HTML format under the resultsdir folder with the given name. The file name
+   * must have a '.html' extension.
+   *
+   * @param resultsHTMLPage
+   */
+  public void setResultsHTMLPage(String resultsHTMLPage) {
+    this.resultsHTMLPage = resultsHTMLPage;
   }
 
   /**
@@ -207,18 +248,10 @@ public class TestRunnerTask extends Task {
     this.verbose = verbose;
   }
 
-  /**
-   * Path to the FitnesseRoot filder which contains all the wiki pages. <b>MUST SET</b>.
-   *
-   * @param wikiDirectoryRootPath
-   */
-  public void setWikiDirectoryRootPath(String wikiDirectoryRootPath) {
-    this.wikiDirectoryRootPath = wikiDirectoryRootPath;
-  }
-
   public Path createClasspath() {
-    if (classpath == null)
+    if (classpath == null) {
       classpath = new Path(getProject());
+    }
     return classpath.createPath();
   }
 

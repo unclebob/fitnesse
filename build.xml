@@ -91,7 +91,7 @@
       <include name="tasks.properties"/>
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
-        <attribute name="Main-Class" value="fitnesse.FitNesse"/>
+        <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
         <attribute name="Class-Path" value="lib/htmlparser.jar lib/json.jar"/>
       </manifest>
     </jar>

@@ -2,7 +2,7 @@
 FitNesse requires version 1.5 or later of the Java Runtime Environment (JRE).
 If you see the messages:
 
-''!-C:\fitnesse>java -cp fitnesse.jar fitnesse.FitNesse-!
+''!-C:\fitnesse>java -jar fitnesse.jar-!
 !-Exception in thread "main" java.lang.NoClassDefFoundError:-!
 !-java/lang/CharSequence-!
 !-       at fitnesse.FitNesse.parseCommandLine(Unknown Source)-!

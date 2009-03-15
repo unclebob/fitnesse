@@ -1,16 +1,21 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse;
+package fitnesseMain;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesse;
+import fitnesse.ComponentFactory;
 import util.FileUtil;
 import junit.framework.TestCase;
 
 import java.io.File;
+
+import fitnesseMain.FitNesseMain;
 
 public class FitNesseMainTest extends TestCase {
   private FitNesseContext context;
@@ -33,12 +38,12 @@ public class FitNesseMainTest extends TestCase {
   }
 
   public void testMakeNullAuthenticator() throws Exception {
-    Authenticator a = FitNesse.makeAuthenticator(null, new ComponentFactory("blah"));
+    Authenticator a = FitNesseMain.makeAuthenticator(null, new ComponentFactory("blah"));
     assertTrue(a instanceof PromiscuousAuthenticator);
   }
 
   public void testMakeOneUserAuthenticator() throws Exception {
-    Authenticator a = FitNesse.makeAuthenticator("bob:uncle", new ComponentFactory("blah"));
+    Authenticator a = FitNesseMain.makeAuthenticator("bob:uncle", new ComponentFactory("blah"));
     assertTrue(a instanceof OneUserAuthenticator);
     OneUserAuthenticator oua = (OneUserAuthenticator) a;
     assertEquals("bob", oua.getUser());
@@ -49,7 +54,7 @@ public class FitNesseMainTest extends TestCase {
     final String passwordFilename = "testpasswd";
     File passwd = new File(passwordFilename);
     passwd.createNewFile();
-    Authenticator a = FitNesse.makeAuthenticator(passwordFilename, new ComponentFactory("blah"));
+    Authenticator a = FitNesseMain.makeAuthenticator(passwordFilename, new ComponentFactory("blah"));
     assertTrue(a instanceof MultiUserAuthenticator);
     passwd.delete();
   }
