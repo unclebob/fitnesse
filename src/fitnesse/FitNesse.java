@@ -13,12 +13,13 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.socketservice.SocketService;
-import fitnesse.updates.Updater;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageVersionPruner;
 
 import java.io.File;
 import java.net.BindException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class FitNesse {
   public static final FitNesseVersion VERSION = new FitNesseVersion();
@@ -182,8 +183,15 @@ public class FitNesse {
   }
 
   public void applyUpdates() throws Exception {
-    Updater updater = new Updater(context);
+    Updater updater = makeUpdater();
     updater.update();
+  }
+
+  private Updater makeUpdater() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    Class updaterClass = Class.forName("fitnesse.updates.UpdaterImplementation");
+    Constructor updaterConstructor = updaterClass.getConstructor(new Class[]{FitNesseContext.class});
+    Updater updater = (Updater) updaterConstructor.newInstance(new Object[]{context});
+    return updater;
   }
 
   public boolean isRunning() {

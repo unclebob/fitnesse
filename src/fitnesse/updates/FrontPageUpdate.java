@@ -7,9 +7,9 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 public class FrontPageUpdate implements Update {
-  private Updater updater;
+  private UpdaterImplementation updater;
 
-  public FrontPageUpdate(Updater updater) {
+  public FrontPageUpdate(UpdaterImplementation updater) {
     this.updater = updater;
   }
 

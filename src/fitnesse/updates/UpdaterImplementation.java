@@ -3,12 +3,13 @@
 package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
+import fitnesse.Updater;
 import fitnesse.wiki.WikiPage;
 
 import java.io.*;
 import java.util.Properties;
 
-public class Updater {
+public class UpdaterImplementation implements Updater {
   public static boolean testing = false;
 
   public FitNesseContext context;
@@ -16,7 +17,7 @@ public class Updater {
 
   public Update[] updates;
 
-  public Updater(FitNesseContext context) throws Exception {
+  public UpdaterImplementation(FitNesseContext context) throws Exception {
     this.context = context;
     rootProperties = loadProperties();
 

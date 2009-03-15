@@ -20,5 +20,5 @@ public class CenterWidget extends ParentWidget {
     StringBuffer html = new StringBuffer("<div class=\"centered\">");
     html.append(childHtml()).append("</div>");
     return html.toString();
-  }
+  }  
 }

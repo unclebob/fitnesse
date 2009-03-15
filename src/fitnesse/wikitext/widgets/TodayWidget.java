@@ -76,7 +76,7 @@ public class TodayWidget extends ParentWidget {
       withTime = (match.group(2) != null);
       xml = (match.group(3) != null);
       String formatString = match.group(4);
-      if (formatString != null) {
+      if (formatString != null)  {
         explicitDateFormat = new SimpleDateFormat(formatString);
       }
 

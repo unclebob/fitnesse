@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class SymLinkPropertyFormatUpdate extends PageTraversingUpdate {
-  public SymLinkPropertyFormatUpdate(Updater updater) {
+  public SymLinkPropertyFormatUpdate(UpdaterImplementation updater) {
     super(updater);
   }
 

@@ -12,7 +12,7 @@ public abstract class PageTraversingUpdate implements FitNesseTraversalListener,
   private Properties properties;
   private WikiPage root;
 
-  public PageTraversingUpdate(Updater updater) {
+  public PageTraversingUpdate(UpdaterImplementation updater) {
     properties = updater.getProperties();
     root = updater.getRoot();
   }

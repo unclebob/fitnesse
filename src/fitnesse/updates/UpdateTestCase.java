@@ -16,7 +16,7 @@ public abstract class UpdateTestCase extends TestCase {
 
   protected WikiPage root;
   protected Update update;
-  protected Updater updater;
+  protected UpdaterImplementation updater;
   protected WikiPage pageOne;
   protected WikiPage pageTwo;
   protected FitNesseContext context;
@@ -36,7 +36,7 @@ public abstract class UpdateTestCase extends TestCase {
     pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
     pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
-    updater = new Updater(context);
+    updater = new UpdaterImplementation(context);
     update = makeUpdate();
   }
 
