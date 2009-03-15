@@ -28,3 +28,4 @@ The FitNesse markup language is straightforward to learn, and powerful enough to
 |[[Page Inlining][MarkupPageInclude]]|''Pulling the content from one page into another.''|
 |[[Last Modification Time][LastModificationTime]]|''Showing the time that a page was last modified.''|
 |[[Collapsable Sections][MarkupCollapsableSection]]|''Making a section of content collapsable and expandable''|
+|[[Today's Date][TodaysDate]]|''Showing todays date in various formats and styles.''|
