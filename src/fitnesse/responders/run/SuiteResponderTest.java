@@ -247,9 +247,9 @@ public class SuiteResponderTest {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=smoke,foo");
     String results = runSuite();
-    assertDoesntHaveRegexp(".*href=\"#TestOne.*", results);
-    assertHasRegexp(".*href=\"#TestTwo.*", results);
-    assertHasRegexp(".*href=\"#TestThree.*", results);
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertHasRegexp("#TestThree", results);
   }
 
   @Test
@@ -261,7 +261,7 @@ public class SuiteResponderTest {
 
     request.setQueryString("suiteFilter=tag");
     String results = runSuite();
-    assertHasRegexp(".*href=\"#TestInheritsTag.*", results);
+    assertHasRegexp("#TestInheritsTag", results);
   }
 
   private void addTestPagesWithSuiteProperty() throws Exception {
