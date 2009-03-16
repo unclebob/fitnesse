@@ -6,7 +6,7 @@
 
 package fit;
 
-import fitnesse.util.ListUtility;
+import util.ListUtility;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

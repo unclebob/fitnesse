@@ -3,7 +3,7 @@
 package fitnesse.slimTables;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;

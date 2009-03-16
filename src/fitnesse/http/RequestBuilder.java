@@ -3,7 +3,7 @@
 package fitnesse.http;
 
 import fitnesse.components.Base64;
-import fitnesse.util.StreamReader;
+import util.StreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

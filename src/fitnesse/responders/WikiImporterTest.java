@@ -3,8 +3,8 @@
 package fitnesse.responders;
 
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.XmlUtil;
+import util.RegexTestCase;
+import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 

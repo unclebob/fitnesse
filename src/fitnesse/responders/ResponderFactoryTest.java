@@ -12,15 +12,13 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.revisioncontrol.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.SearchFormResponder;
-import fitnesse.responders.search.SearchResponder;
-import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.search.*;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import static fitnesse.revisioncontrol.RevisionControlOperation.*;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
@@ -177,6 +175,10 @@ public class ResponderFactoryTest extends TestCase {
 
   public void testCreateSavePropertiesResponder() throws Exception {
     assertResponderTypeMatchesInput("saveProperties", SavePropertiesResponder.class);
+  }
+
+  public void testCreateExecuteSearchPropertiesResponder() throws Exception {
+    assertResponderTypeMatchesInput("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
   }
 
   public void testCreateWhereUsedResponder() throws Exception {

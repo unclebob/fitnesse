@@ -6,8 +6,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.FileUtil;
+import util.RegexTestCase;
+import util.FileUtil;
 import fitnesse.wiki.*;
 
 import java.io.ByteArrayInputStream;

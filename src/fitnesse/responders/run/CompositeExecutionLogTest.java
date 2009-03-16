@@ -3,7 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.testutil.MockCommandRunner;
-import static fitnesse.testutil.RegexTestCase.assertSubString;
+import static util.RegexTestCase.assertSubString;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import static org.junit.Assert.assertNotNull;

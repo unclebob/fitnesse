@@ -9,7 +9,7 @@ import fitnesse.wiki.WikiPage;
 public class AttributeAdderUpdate extends PageTraversingUpdate {
   private String attributeName;
 
-  public AttributeAdderUpdate(Updater updater, String attributeName) {
+  public AttributeAdderUpdate(UpdaterImplementation updater, String attributeName) {
     super(updater);
     this.attributeName = attributeName;
   }

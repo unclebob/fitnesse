@@ -2,12 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static fitnesse.testutil.RegexTestCase.assertDoesntHaveRegexp;
-import static fitnesse.testutil.RegexTestCase.assertHasRegexp;
-import static fitnesse.testutil.RegexTestCase.assertNotSubString;
-import static fitnesse.testutil.RegexTestCase.assertSubString;
-import static fitnesse.testutil.RegexTestCase.divWithIdAndContent;
 import static junit.framework.Assert.fail;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
@@ -16,19 +12,15 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import static util.RegexTestCase.*;
+import util.XmlUtil;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.util.XmlUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 public class SuiteResponderTest {
   private MockRequest request;
@@ -231,7 +223,7 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testSimpleMatchingSuiteFilter() throws Exception {
+  public void testSimpleMatchingSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=foo");
     String results = runSuite();
@@ -241,13 +233,35 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void testSecondMatchingSuiteFilter() throws Exception {
+  public void testSecondMatchingSuiteQuery() throws Exception {
     addTestPagesWithSuiteProperty();
     request.setQueryString("suiteFilter=smoke");
     String results = runSuite();
     assertDoesntHaveRegexp(".*href=\\\"#TestOne.*", results);
     assertDoesntHaveRegexp(".*href=\\\"#TestTwo.*", results);
     assertSubString("href=\\\"#TestThree1\\\"", results);
+  }
+
+  @Test
+  public void multipleSuiteQuery() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("suiteFilter=smoke,foo");
+    String results = runSuite();
+    assertDoesntHaveRegexp(".*href=\"#TestOne.*", results);
+    assertHasRegexp(".*href=\"#TestTwo.*", results);
+    assertHasRegexp(".*href=\"#TestThree.*", results);
+  }
+
+  @Test
+  public void testTagsShouldBeInheritedFromSuite() throws Exception {
+    PageData suiteData = suite.getData();
+    suiteData.setAttribute(PageData.PropertySUITES, "tag");
+    suite.commit(suiteData);
+    addTestToSuite("TestInheritsTag", fitPassFixture);
+
+    request.setQueryString("suiteFilter=tag");
+    String results = runSuite();
+    assertHasRegexp(".*href=\"#TestInheritsTag.*", results);
   }
 
   private void addTestPagesWithSuiteProperty() throws Exception {

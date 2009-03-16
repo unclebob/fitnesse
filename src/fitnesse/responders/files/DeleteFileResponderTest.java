@@ -5,8 +5,8 @@ package fitnesse.responders.files;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.FileUtil;
+import util.RegexTestCase;
+import util.FileUtil;
 
 import java.io.File;
 

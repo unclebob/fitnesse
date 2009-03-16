@@ -2,16 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.SecureResponder;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.wiki.*;
 
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();

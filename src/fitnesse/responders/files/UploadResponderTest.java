@@ -6,7 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import junit.framework.TestCase;
 
 import java.io.File;

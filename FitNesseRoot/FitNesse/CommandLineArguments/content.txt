@@ -1,4 +1,4 @@
-|{{{-p <port> {80} }}}|The port number that FitNesse listens to.  The default is 80 because this is the port that internet browsers use by default.  If your machine already has a web server running, it will be using port 80, so FitNesse should be set up to use a different port, like 8080.  {{{java fitnesse.FitNesse -p 8080}}} |
+|{{{-p <port> {80} }}}|The port number that FitNesse listens to.  The default is 80 because this is the port that internet browsers use by default.  If your machine already has a web server running, it will be using port 80, so FitNesse should be set up to use a different port, like 8080.  {{{java -jar fitnesse.jar -p 8080}}} |
 |{{{-d <path> {.} }}}|The directory in which FitNesse expects to find its page root.  It defaults to the current directory ('.'). |
 |{{{-r <path> {FitNesseRoot} }}}|The directory in which FitNesse looks for top level pages.|
 |{{{-l <path> {no logging} }}}|If this argument is not present, then FitNesse will not create log files.  Otherwise it will create log files in the specified directory.  See LogFiles.|

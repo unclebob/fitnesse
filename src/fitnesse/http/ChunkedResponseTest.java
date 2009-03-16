@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import static fitnesse.testutil.RegexTestCase.*;
+import static util.RegexTestCase.*;
 import org.junit.After;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;

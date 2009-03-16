@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import fitnesse.Responder;
-import fitnesse.util.StringUtil;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
@@ -13,13 +12,12 @@ import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
 import fitnesse.responders.revisioncontrol.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.SearchFormResponder;
-import fitnesse.responders.search.SearchResponder;
-import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.search.*;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import static fitnesse.revisioncontrol.RevisionControlOperation.*;
+import util.StringUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
@@ -50,6 +48,7 @@ public class ResponderFactory {
     addResponder("names", NameWikiPageResponder.class);
     addResponder("properties", PropertiesResponder.class);
     addResponder("saveProperties", SavePropertiesResponder.class);
+    addResponder("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
     addResponder("whereUsed", WhereUsedResponder.class);
     addResponder("refactor", RefactorPageResponder.class);
     addResponder("deletePage", DeletePageResponder.class);
@@ -98,7 +97,10 @@ public class ResponderFactory {
     else
       fullQuery = request.getQueryString();
 
-    int argStart = fullQuery == null ? -1 : fullQuery.indexOf('&');
+    if (fullQuery == null)
+      return null;
+
+    int argStart = fullQuery.indexOf('&');
     return (argStart <= 0) ? fullQuery : fullQuery.substring(0, argStart);
   }
 
@@ -128,11 +130,11 @@ public class ResponderFactory {
     Class<?> responderClass = getResponderClass(responderKey);
     if (responderClass != null) {
       try {
-        Constructor<?> constructor = responderClass.getConstructor(new Class<?>[]{String.class});
-        responder = (Responder) constructor.newInstance(new Object[]{rootPath});
+        Constructor<?> constructor = responderClass.getConstructor(String.class);
+        responder = (Responder) constructor.newInstance(rootPath);
       } catch (NoSuchMethodException e) {
-        Constructor<?> constructor = responderClass.getConstructor(new Class<?>[0]);
-        responder = (Responder) constructor.newInstance(new Object[0]);
+        Constructor<?> constructor = responderClass.getConstructor();
+        responder = (Responder) constructor.newInstance();
       }
     }
     return responder;

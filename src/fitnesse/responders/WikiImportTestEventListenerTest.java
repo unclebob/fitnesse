@@ -5,7 +5,7 @@ package fitnesse.responders;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.util.StandardOutAndErrorRecorder;
+import util.StandardOutAndErrorRecorder;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;

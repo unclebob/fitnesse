@@ -1,5 +1,9 @@
 #FitNesse properties
+<<<<<<< HEAD:FitNesseRoot/properties
 #Thu Mar 12 00:23:05 NZDT 2009
+=======
+#Sun Mar 15 14:47:49 CDT 2009
+>>>>>>> 10588a05f84595b8b7df71179c475e5857f495d5:FitNesseRoot/properties
 WikiImportFormatUpdate=applied
 PropertiesToXmlUpdate=applied
 FilesAttributeUpdate=applied

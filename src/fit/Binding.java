@@ -12,6 +12,8 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import util.GracefulNamer;
+
 public abstract class Binding {
   private static Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");
   private static Pattern methodPattern = Pattern.compile("(.+)(?:\\(\\)|\\?|!)");

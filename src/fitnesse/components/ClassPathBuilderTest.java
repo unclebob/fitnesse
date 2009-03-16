@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.FileUtil;
+import util.RegexTestCase;
+import util.FileUtil;
 import fitnesse.wiki.*;
 
 public class ClassPathBuilderTest extends RegexTestCase {

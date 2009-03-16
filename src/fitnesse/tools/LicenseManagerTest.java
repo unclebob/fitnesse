@@ -2,11 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.tools;
 
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
-import org.junit.Ignore;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;

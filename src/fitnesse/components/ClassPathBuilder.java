@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.util.Wildcard;
+import util.Wildcard;
 import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.WikiPage;
 import fitnesse.responders.run.TestSystem;

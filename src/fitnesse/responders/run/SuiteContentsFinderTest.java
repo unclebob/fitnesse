@@ -123,7 +123,4 @@ public class SuiteContentsFinderTest {
     assertSame(setUp, testPages.get(0));
     assertSame(tearDown, testPages.get(2));
   }
-  
-
-
 }

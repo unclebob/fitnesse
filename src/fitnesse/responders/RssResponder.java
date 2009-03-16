@@ -4,11 +4,11 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.XmlWriter;
+import util.XmlWriter;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

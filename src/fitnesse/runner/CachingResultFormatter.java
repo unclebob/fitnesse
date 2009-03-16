@@ -3,8 +3,8 @@
 package fitnesse.runner;
 
 import fit.Counts;
+import fit.FitProtocol;
 import fitnesse.components.ContentBuffer;
-import fitnesse.components.FitProtocol;
 import fitnesse.responders.run.TestSummary;
 
 import java.io.ByteArrayOutputStream;

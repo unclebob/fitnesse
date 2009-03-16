@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.SymbolicPage;

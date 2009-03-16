@@ -52,6 +52,13 @@
       <version>20080812</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/json.jar</systemPath>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>

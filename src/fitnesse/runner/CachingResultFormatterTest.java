@@ -3,8 +3,8 @@
 package fitnesse.runner;
 
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.StreamReader;
+import util.RegexTestCase;
+import util.StreamReader;
 
 public class CachingResultFormatterTest extends RegexTestCase {
   public void testAddResult() throws Exception {

@@ -8,7 +8,7 @@ import fitnesse.components.Searcher;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;

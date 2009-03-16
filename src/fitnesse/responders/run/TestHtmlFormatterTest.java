@@ -3,9 +3,9 @@
 package fitnesse.responders.run;
 
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.testutil.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import util.RegexTestCase;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
   private BaseFormatter formatter;

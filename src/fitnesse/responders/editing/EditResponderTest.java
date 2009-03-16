@@ -7,7 +7,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.*;
 
 public class EditResponderTest extends RegexTestCase {

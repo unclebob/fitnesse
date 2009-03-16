@@ -5,9 +5,9 @@ package fitnesse.slimTables;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPageUtil;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import fitnesse.slim.SlimClient;
-import static fitnesse.testutil.RegexTestCase.assertSubString;
+import static util.RegexTestCase.assertSubString;
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 
 import java.util.List;

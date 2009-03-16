@@ -53,7 +53,7 @@ public class HtmlPage extends HtmlTag {
 
   protected void makeArtNiche() {
     artNiche = HtmlUtil.makeDivTag("art_niche");
-    artNiche.addAttribute("onclick", "document.location='/'");
+    artNiche.addAttribute("onclick", "document.location='FrontPage'");
   }
 
   protected HtmlTag makeHead() {

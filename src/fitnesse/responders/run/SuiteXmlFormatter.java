@@ -2,7 +2,7 @@ package fitnesse.responders.run;
 
 import org.w3c.dom.Element;
 
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 

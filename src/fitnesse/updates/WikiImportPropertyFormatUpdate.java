@@ -8,7 +8,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
 public class WikiImportPropertyFormatUpdate extends PageTraversingUpdate {
-  public WikiImportPropertyFormatUpdate(Updater updater) {
+  public WikiImportPropertyFormatUpdate(UpdaterImplementation updater) {
     super(updater);
   }
 

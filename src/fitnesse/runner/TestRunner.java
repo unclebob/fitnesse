@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.components.CommandLine;
+import util.CommandLine;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.util.StreamReader;
-import fitnesse.util.StringUtil;
-import fitnesse.util.XmlUtil;
+import util.StreamReader;
+import util.StringUtil;
+import util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

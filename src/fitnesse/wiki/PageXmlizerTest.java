@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.XmlUtil;
+import util.RegexTestCase;
+import util.XmlUtil;
 import org.w3c.dom.Document;
 
 import java.io.ByteArrayOutputStream;

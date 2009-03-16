@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import static fitnesse.revisioncontrol.zip.ZipFileRevisionController.dateFormat;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import junit.framework.TestCase;
 
 import java.io.File;

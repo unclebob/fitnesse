@@ -6,7 +6,7 @@ import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlim;
 import fitnesse.slim.test.Zork;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -1,11 +1,13 @@
 package fitnesse.responders.run;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Set;
 
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageCrawlerImpl;
@@ -28,14 +30,14 @@ public class SuiteContentsFinder {
   
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
-  private final String suiteFilter;
+  private final Set<String> suiteTags;
 
-  public SuiteContentsFinder(final WikiPage pageToRun, final WikiPage root,
-      final String suite) {
+  public SuiteContentsFinder(final WikiPage pageToRun, final WikiPage root, final String suiteQueryString) {
     this.pageToRun = pageToRun;
     this.wikiRootPage = root;
-    this.suiteFilter = suite;
-
+    suiteTags = new HashSet<String>();
+    if (suiteQueryString != null)
+    	suiteTags.addAll(Arrays.asList(suiteQueryString.split("\\s*,\\s*")));
   }
   
   public List<WikiPage> makePageListForSingleTest() throws Exception {
@@ -52,7 +54,7 @@ public class SuiteContentsFinder {
     if (pages.isEmpty()) {
       String name = new WikiPagePath(pageToRun).toString();
       WikiPageDummy dummy = new WikiPageDummy("",
-        "|Comment|\n|No test found with suite filter '" + suiteFilter + "' in subwiki !-" + name + "-!!|\n"
+        "|Comment|\n|No test found with suite filter '" + suiteTags + "' in subwiki !-" + name + "-!!|\n"
       );
       dummy.setParent(wikiRootPage);
       pages.add(dummy);
@@ -86,7 +88,7 @@ public class SuiteContentsFinder {
   
   private LinkedList<WikiPage> getAllTestPagesUnder() throws Exception {
     LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
-    addTestPagesToList(testPages, pageToRun);
+    addTestPagesToSuite(testPages, pageToRun, suiteTags);
 
     Collections.sort(testPages, new Comparator<WikiPage>() {
       public int compare(WikiPage p1, WikiPage p2) {
@@ -108,49 +110,82 @@ public class SuiteContentsFinder {
     return testPages;
   }
   
-  private void addTestPagesToList(List<WikiPage> testPages, WikiPage context) throws Exception {
-    PageData data = context.getData();
-    if (!data.hasAttribute(PageData.PropertyPRUNE)) {
-      if (data.hasAttribute("Test")) {
-        if (belongsToSuite(context)) {
-          testPages.add(context);
-        }
-      }
+  private static void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, Set<String> suiteQuery) throws Exception {
+	    if (shouldBePartOfSuite(page, suiteQuery))
+	      suite.add(page);
 
-      ArrayList<WikiPage> children = new ArrayList<WikiPage>();
-      children.addAll(context.getChildren());
-      if (context.hasExtension(VirtualCouplingExtension.NAME)) {
-        VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
-          VirtualCouplingExtension.NAME
-        );
-        children.addAll(extension.getVirtualCoupling().getChildren());
-      }
-      for (WikiPage page : children) {
-        addTestPagesToList(testPages, page);
-      }
-    }
-  }
-  
-  private boolean belongsToSuite(WikiPage context) {
-    if ((suiteFilter == null) || (suiteFilter.trim().length() == 0)) {
-      return true;
-    }
-    try {
-      String suitesStr = context.getData().getAttribute(PageData.PropertySUITES);
-      if (suitesStr != null) {
-        StringTokenizer t = new StringTokenizer(suitesStr, ",");
-        while (t.hasMoreTokens()) {
-          if (t.nextToken().trim().equalsIgnoreCase(suiteFilter)) {
-            return true;
-          }
-        }
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return false;
-  }
+	    PageData pageData = page.getData();
+	    if (pageData.hasAttribute("Suite") && belongsToSuite(page, suiteQuery))
+	      suiteQuery = null;
+
+	    List<WikiPage> children = getChildren(page);
+	    for (WikiPage child : children) {
+	      addTestPagesToSuite(suite, child, suiteQuery);
+	    }
+	  }
+
+	  private static List<WikiPage> getChildren(WikiPage page) throws Exception {
+	    List<WikiPage> children = new ArrayList<WikiPage>();
+	    children.addAll(page.getChildren());
+	    addVirtualChildrenIfAny(page, children);
+	    return children;
+	  }
+
+	  private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws Exception {
+	    if (context.hasExtension(VirtualCouplingExtension.NAME)) {
+	      VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
+	        VirtualCouplingExtension.NAME
+	      );
+	      children.addAll(extension.getVirtualCoupling().getChildren());
+	    }
+	  }
+
+	  private static boolean shouldBePartOfSuite(WikiPage context, Set<String> suiteQuery) throws Exception {
+	    PageData data = context.getData();
+	    boolean pruned = data.hasAttribute(PageData.PropertyPRUNE);
+	    boolean test = data.hasAttribute("Test");
+	    return !pruned && test && (belongsToSuite(context, suiteQuery));
+	  }
+
+	  private static boolean belongsToSuite(WikiPage context, Set<String> suiteQuery) {
+	    return !exists(suiteQuery) || testMatchesQuery(context, suiteQuery);
+	  }
+
+	  private static boolean testMatchesQuery(WikiPage context, Set<String> suiteQuery) {
+	    String testTagString = getTestTags(context);
+	    return (testTagString != null && testTagsMatchQueryTags(testTagString, suiteQuery));
+	  }
+
+	  private static boolean exists(Set<String> suiteQuery) {
+	    return (suiteQuery != null) && (suiteQuery.size() != 0);
+	  }
+
+	  private static String getTestTags(WikiPage context) {
+	    try {
+	      return context.getData().getAttribute(PageData.PropertySUITES);
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      return null;
+	    }
+	  }
+
+	  private static boolean testTagsMatchQueryTags(String testTagString, Set<String> suiteQuery) {
+	    String testTags[] = testTagString.trim().split("\\s*,\\s*");
+	    for (String testTag : testTags) {
+	      if (testTagMatchesQueryTags(testTag.trim(), suiteQuery)) return true;
+	    }
+	    return false;
+	  }
+
+	  private static boolean testTagMatchesQueryTags(String testTag, Set<String> queryTags) {
+	    for (String queryTag : queryTags) {
+	      if (testTag.equalsIgnoreCase(queryTag)) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  }
+
 
   protected List<WikiPage> gatherCrossReferencedTestPages() throws Exception {
     LinkedList<WikiPage> pages = new LinkedList<WikiPage>();

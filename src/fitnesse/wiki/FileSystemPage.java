@@ -7,7 +7,7 @@ import fitnesse.revisioncontrol.RevisionControllable;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
 import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
 import java.io.*;
@@ -16,7 +16,7 @@ import java.util.Date;
 
 public class FileSystemPage extends CachingPage implements RevisionControllable {
   private static final long serialVersionUID = 1L;
-
+  
   public static final String contentFilename = "/content.txt";
   public static final String propertiesFilename = "/properties.xml";
 

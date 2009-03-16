@@ -6,6 +6,7 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;

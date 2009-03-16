@@ -6,7 +6,7 @@ import static fitnesse.revisioncontrol.NullState.VERSIONED;
 import fitnesse.revisioncontrol.RevisionControlException;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
-import fitnesse.util.StreamReader;
+import util.StreamReader;
 import fitnesse.wiki.*;
 
 import java.io.*;

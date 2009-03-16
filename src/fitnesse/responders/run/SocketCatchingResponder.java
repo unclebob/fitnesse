@@ -4,7 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.components.FitProtocol;
+import fit.FitProtocol;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;

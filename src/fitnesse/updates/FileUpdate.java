@@ -17,7 +17,7 @@ public class FileUpdate implements Update {
   protected String rootDir;
   protected String filename;
 
-  public FileUpdate(Updater updater, String source, String destination) throws Exception {
+  public FileUpdate(UpdaterImplementation updater, String source, String destination) throws Exception {
     this.destination = destination;
     this.source = source;
     rootDir = updater.context.rootPagePath;

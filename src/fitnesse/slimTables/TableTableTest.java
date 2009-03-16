@@ -4,7 +4,7 @@ package fitnesse.slimTables;
 
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.slim.SlimClient;
-import static fitnesse.util.ListUtility.list;
+import static util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;

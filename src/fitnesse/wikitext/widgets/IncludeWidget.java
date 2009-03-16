@@ -48,7 +48,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
     includedPage = crawler.getSiblingPage(includingPage, pagePath); //Retain this
 
     if (includedPage != null) {
-      includedPage.setParentForVariables(this.getWikiPage().getParentForVariables());
+      includedPage.setParentForVariables(getWikiPage().getParentForVariables());
       return includedPage.getData().getContent();
     } else if (includingPage instanceof ProxyPage) {
       ProxyPage proxy = (ProxyPage) includingPage;
@@ -95,22 +95,22 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
       incRoot.addChildWidgets(widgetText + "\n");
     } else {  //Use new constructor with dual scope.
       new CollapsableWidget(incRoot, this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(
-        option
+          option
       )
       );
     }
   }
 
   private String getCssClass(String option) {
-    return (String) optionCssMap.get(option);
+    return optionCssMap.get(option);
   }
 
   private String getPrefix(String option) {
-    return (String) optionPrefixMap.get(option);
+    return optionPrefixMap.get(option);
   }
 
   private boolean isCollapsed(String option)
-    throws Exception {
+  throws Exception {
     if (isSetup(option) && isSetupCollapsed())
       return true;
     else if (isTeardown(option) && isTeardownCollapsed())
@@ -139,8 +139,9 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
   }
 
   private boolean isTeardownCollapsed()
-    throws Exception {
-    return "true".equals(parent.getVariable(COLLAPSE_TEARDOWN));
+  throws Exception {
+    final String teardownCollapseVariable = parent.getVariable(COLLAPSE_TEARDOWN);
+    return teardownCollapseVariable == null || "true".equals(teardownCollapseVariable);
   }
 
   private boolean isTeardown(String option) {
@@ -148,8 +149,9 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
   }
 
   private boolean isSetupCollapsed()
-    throws Exception {
-    return "true".equals(parent.getVariable(COLLAPSE_SETUP));
+  throws Exception {
+    final String setupCollapseVariable = parent.getVariable(COLLAPSE_SETUP);
+    return setupCollapseVariable == null || "true".equals(setupCollapseVariable);
   }
 
   private boolean isSetup(String option) {

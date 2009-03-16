@@ -9,8 +9,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
-import fitnesse.responders.SecureResponder;
-import fitnesse.util.FileUtil;
+import fitnesse.authentication.SecureResponder;
+import util.FileUtil;
 
 import java.io.*;
 import java.util.regex.Matcher;

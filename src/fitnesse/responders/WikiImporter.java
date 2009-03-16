@@ -5,7 +5,7 @@ package fitnesse.responders;
 import fitnesse.components.FitNesseTraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 

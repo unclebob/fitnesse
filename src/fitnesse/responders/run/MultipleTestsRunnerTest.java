@@ -1,6 +1,6 @@
 package fitnesse.responders.run;
 
-import static fitnesse.testutil.RegexTestCase.assertSubString;
+import static util.RegexTestCase.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedList;

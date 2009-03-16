@@ -5,8 +5,8 @@ package fitnesse.authentication;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.responders.UnauthorizedResponder;
-import fitnesse.responders.WikiPageResponder;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
@@ -19,15 +19,27 @@ public class AuthenticatorTest extends TestCase {
   private MockRequest request;
   private Responder responder;
   private Class<? extends Responder> responderType;
-  private WikiPageResponder privilegedResponder;
+  private DummySecureResponder privilegedResponder;
   private FitNesseContext context;
+
+  class DummySecureResponder implements SecureResponder {
+
+    public SecureOperation getSecureOperation() {
+      return null;
+    }
+
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+      return null;
+    }
+  }
+  
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     WikiPage frontpage = root.addChildPage("FrontPage");
     makeReadSecure(frontpage);
     authenticator = new SimpleAuthenticator();
-    privilegedResponder = new WikiPageResponder();
+    privilegedResponder = new DummySecureResponder();
 
     request = new MockRequest();
     request.setResource("FrontPage");
@@ -51,7 +63,7 @@ public class AuthenticatorTest extends TestCase {
   public void testAuthenticated() throws Exception {
     authenticator.authenticated = true;
     makeResponder();
-    assertEquals(WikiPageResponder.class, responderType);
+    assertEquals(DummySecureResponder.class, responderType);
   }
 
   private void makeResponder() throws Exception {

@@ -3,9 +3,9 @@
 package fitnesse.runner;
 
 import fitnesse.components.ContentBuffer;
-import fitnesse.components.XmlWriter;
+import util.XmlWriter;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

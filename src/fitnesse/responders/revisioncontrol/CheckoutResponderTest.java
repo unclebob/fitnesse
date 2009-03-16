@@ -3,7 +3,7 @@
 package fitnesse.responders.revisioncontrol;
 
 import fitnesse.revisioncontrol.RevisionControlException;
-import static fitnesse.testutil.RegexTestCase.assertSubString;
+import static util.RegexTestCase.assertSubString;
 import static org.easymock.EasyMock.*;
 
 public class CheckoutResponderTest extends RevisionControlTestCase {

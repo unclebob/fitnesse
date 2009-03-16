@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 
 import java.io.File;
 

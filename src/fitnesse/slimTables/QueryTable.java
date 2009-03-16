@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.util.ListUtility;
+import util.ListUtility;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 import java.util.*;
 
 public class QueryTable extends SlimTable {
-  private List<String> fieldNames = new ArrayList<String>();
+  protected List<String> fieldNames = new ArrayList<String>();
   private String queryId;
-  private QueryResults queryResults;
+  protected QueryResults queryResults;
   private String tableInstruction;
 
   public QueryTable(Table table, String id, SlimTestContext testContext) {
@@ -84,7 +84,7 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  private void scanRowForMatch(int tableRow) throws Exception {
+  protected void scanRowForMatch(int tableRow) throws Exception {
     int matchedRow = queryResults.findBestMatch(tableRow);
     if (matchedRow == -1) {
       replaceAllvariablesInRow(tableRow);
@@ -94,7 +94,7 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  private void replaceAllvariablesInRow(int tableRow) {
+  protected void replaceAllvariablesInRow(int tableRow) {
     int columns = table.getColumnCountInRow(tableRow);
     for (int col = 0; col < columns; col++) {
       String contents = table.getCellContents(col, tableRow);
@@ -102,14 +102,14 @@ public class QueryTable extends SlimTable {
     }
   }
 
-  private void markFieldsInMatchedRow(int tableRow, int matchedRow) {
+  protected void markFieldsInMatchedRow(int tableRow, int matchedRow) {
     int columns = table.getColumnCountInRow(tableRow);
     for (int col = 0; col < columns; col++) {
       markField(tableRow, matchedRow, col);
     }
   }
 
-  private void markField(int tableRow, int matchedRow, int col) {
+  protected void markField(int tableRow, int matchedRow, int col) {
     String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
     table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));

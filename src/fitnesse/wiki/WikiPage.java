@@ -3,7 +3,7 @@
 
 package fitnesse.wiki;
 
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,9 @@ public interface WikiPage extends Serializable, Comparable<Object> {
   public static final String SECURE_WRITE = "secure-write";
   public static final String SECURE_TEST = "secure-test";
   public static final String LAST_MODIFYING_USER = "LastModifyingUser";
-  public String[] ACTION_ATTRIBUTES = {"Test", "Suite", "Edit", "Versions", "Properties", "Refactor", "WhereUsed"};
+  public static final String PAGE_TYPE_ATTRIBUTE = "PageType"; 
+  public String[] PAGE_TYPE_ATTRIBUTES = {"Normal", "Test", "Suite"};
+  public String[] ACTION_ATTRIBUTES = {"Edit", "Versions", "Properties", "Refactor", "WhereUsed"};
   public String[] NAVIGATION_ATTRIBUTES = {"RecentChanges", "Files", "Search", "Prune"};
   public String[] NON_SECURITY_ATTRIBUTES = StringUtil.combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
   public String[] SECURITY_ATTRIBUTES = {SECURE_READ, SECURE_WRITE, SECURE_TEST};

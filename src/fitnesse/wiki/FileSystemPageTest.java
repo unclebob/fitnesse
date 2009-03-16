@@ -4,7 +4,7 @@
 package fitnesse.wiki;
 
 import fitnesse.revisioncontrol.NullRevisionController;
-import fitnesse.util.FileUtil;
+import util.FileUtil;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;

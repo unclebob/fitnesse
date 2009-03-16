@@ -3,9 +3,9 @@
 package fitnesse.runner;
 
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.RegexTestCase;
-import fitnesse.util.StreamReader;
-import fitnesse.util.XmlUtil;
+import util.RegexTestCase;
+import util.StreamReader;
+import util.XmlUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

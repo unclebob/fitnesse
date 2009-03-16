@@ -5,21 +5,21 @@ package fitnesse.responders.editing;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import org.json.JSONObject;
 
-import java.util.Iterator;
 import java.util.Set;
 
 public class PropertiesResponder implements SecureResponder {
+  public static final String SUITES = "Suites";
   private WikiPage page;
   public PageData pageData;
   private String resource;
@@ -39,10 +39,9 @@ public class PropertiesResponder implements SecureResponder {
     pageData = page.getData();
     makeContent(context, request);
     response.setMaxAge(0);
-
     return response;
   }
-
+       
   private void makeContent(FitNesseContext context, Request request) throws Exception {
     if ("json".equals(request.getInput("format"))) {
       JSONObject jsonObject = makeJson();
@@ -127,13 +126,14 @@ public class PropertiesResponder implements SecureResponder {
     trisection.addAttribute("style", "width:100%");
     HtmlTag checkBoxesSection = new HtmlTag("div");
     checkBoxesSection.addAttribute("class", "properties");
+    checkBoxesSection.add(makePageTypeRadiosHtml(pageData));
     checkBoxesSection.add(makeTestActionCheckboxesHtml(pageData));
     checkBoxesSection.add(makeNavigationCheckboxesHtml(pageData));
     checkBoxesSection.add(makeSecurityCheckboxesHtml(pageData));
     HtmlTag virtualWikiSection = new HtmlTag("div");
     virtualWikiSection.addAttribute("class", "virtual-wiki-properties");
     virtualWikiSection.add(makeVirtualWikiHtml());
-    virtualWikiSection.add(makeSuitesHtml(pageData));
+    virtualWikiSection.add(makeTagsHtml(pageData));
     virtualWikiSection.add(makeHelpTextHtml(pageData));
     trisection.add(checkBoxesSection);
     trisection.add(virtualWikiSection);
@@ -146,6 +146,48 @@ public class PropertiesResponder implements SecureResponder {
     buttonSection.add(saveButton);
     form.add(buttonSection);
     return form;
+  }
+
+  public HtmlTag makePageTypeRadiosHtml(PageData pageData) throws Exception {
+    return makeAttributeRadiosHtml("Page type: ", WikiPage.PAGE_TYPE_ATTRIBUTES, WikiPage.PAGE_TYPE_ATTRIBUTE, pageData);
+  }
+
+  private HtmlTag makeAttributeRadiosHtml(String label, String[] attributes, String radioGroup, PageData pageData)
+  throws Exception {
+    HtmlTag div = new HtmlTag("div");
+    div.addAttribute("style", "float: left; width: 150px;");
+
+    div.add(label);
+    String checkedAttribute = getCheckedAttribute(pageData, attributes);
+    for (String attribute : attributes) {
+      div.add(HtmlUtil.BR);
+      div.add(makeAttributeRadio(radioGroup, attribute, attribute.equals(checkedAttribute)));
+    }
+    div.add(HtmlUtil.BR);
+    div.add(HtmlUtil.BR);
+    return div;
+  }
+
+  private String getCheckedAttribute(PageData pageData, String[] attributes) throws Exception {
+    for (int i = attributes.length - 1; i > 0; i--) {
+      if (pageData.hasAttribute(attributes[i]))
+        return attributes[i];
+    }
+    return attributes[0];
+  }
+
+  private HtmlTag makeAttributeRadio(String group, String attribute, boolean checked) throws Exception {
+      HtmlTag radioButton = makeRadioButton(group, attribute);
+      if (checked)
+        radioButton.addAttribute("checked", "checked");
+      return radioButton;
+  }
+
+  private HtmlTag makeRadioButton(String group, String attribute) {
+    HtmlTag checkbox = HtmlUtil.makeInputTag("radio", group);
+    checkbox.addAttribute("value", attribute);
+    checkbox.tail = " - " + attribute;
+    return checkbox;
   }
 
   private HtmlTag makeVirtualWikiHtml() throws Exception {
@@ -190,7 +232,7 @@ public class PropertiesResponder implements SecureResponder {
     form.add(HtmlUtil.HR);
     form.add(new HtmlTag("b", "Wiki Import Update"));
     form.add(HtmlUtil.BR);
-    String buttonMessage = "";
+    String buttonMessage;
     form.add(HtmlUtil.makeLink(page.getName(), page.getName()));
     if (importProps.isRoot()) {
       form.add(" imports its subpages from ");
@@ -251,9 +293,8 @@ public class PropertiesResponder implements SecureResponder {
     WikiPageProperty symLinksProperty = pageData.getProperties().getProperty(SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty == null)
       return;
-    Set<?> symbolicLinkNames = symLinksProperty.keySet();
-    for (Iterator<?> iterator = symbolicLinkNames.iterator(); iterator.hasNext();) {
-      String linkName = (String) iterator.next();
+    Set<String> symbolicLinkNames = symLinksProperty.keySet();
+    for (String linkName : symbolicLinkNames) {
       HtmlElement nameItem = new RawHtml(linkName);
       HtmlElement pathItem = makeHtmlForSymbolicPath(symLinksProperty, linkName);
       //---Unlink---
@@ -311,8 +352,12 @@ public class PropertiesResponder implements SecureResponder {
     return makeAttributeCheckboxesHtml("Security:", WikiPage.SECURITY_ATTRIBUTES, pageData);
   }
 
-  public HtmlTag makeSuitesHtml(PageData pageData) throws Exception {
-    return makeInputField("Suites:", PageData.PropertySUITES, "Suites", 40, pageData);
+  public HtmlTag makeTagsHtml(PageData pageData) throws Exception {
+    HtmlTag div = new HtmlTag("div");
+    div.addAttribute("style", "float: left; padding-right: 5px");
+
+    div.add(makeInputField("Tags:", PageData.PropertySUITES, SUITES, 40, pageData));
+    return div;
   }
 
   public HtmlTag makeHelpTextHtml(PageData pageData) throws Exception {
@@ -342,11 +387,10 @@ public class PropertiesResponder implements SecureResponder {
   private HtmlTag makeAttributeCheckboxesHtml(String label, String[] attributes, PageData pageData)
     throws Exception {
     HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; width: 150px;");
+    div.addAttribute("style", "float: left; width: 180px;");
 
     div.add(label);
-    for (int i = 0; i < attributes.length; i++) {
-      String attribute = attributes[i];
+    for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
       div.add(makeAttributeCheckbox(attribute, pageData));
     }

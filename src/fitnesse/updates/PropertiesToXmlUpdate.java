@@ -16,7 +16,7 @@ import java.util.Properties;
 public class PropertiesToXmlUpdate extends PageTraversingUpdate {
   public static final String old_propertiesFilename = "/properties";
 
-  public PropertiesToXmlUpdate(Updater updater) {
+  public PropertiesToXmlUpdate(UpdaterImplementation updater) {
     super(updater);
   }
 

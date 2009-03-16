@@ -9,7 +9,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.widgets.WikiWordWidget;

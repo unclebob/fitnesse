@@ -9,7 +9,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.RegexTestCase;
+import util.RegexTestCase;
 import fitnesse.wiki.*;
 
 public class WikiImportingResponderTest extends RegexTestCase {

@@ -14,7 +14,7 @@ import fitnesse.wikitext.widgets.WidgetRoot;
 public class VirtualWikiDeprecationUpdate extends PageTraversingUpdate {
   public static WidgetBuilder virtualWidgetBuilder = new WidgetBuilder(new Class[]{VirtualWikiWidget.class});
 
-  public VirtualWikiDeprecationUpdate(Updater updater) {
+  public VirtualWikiDeprecationUpdate(UpdaterImplementation updater) {
     super(updater);
   }
 

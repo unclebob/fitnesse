@@ -8,7 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.util.StringUtil;
+import util.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +17,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
+
+//import fitnesseMain.FitNesseMain;
 
 public class FitNesseExpediter implements ResponseSender {
   private Socket socket;

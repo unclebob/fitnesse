@@ -7,8 +7,8 @@ import fit.exception.ClassIsNotFixtureException;
 import fit.exception.FixtureException;
 import fit.exception.NoDefaultConstructorFixtureException;
 import fit.exception.NoSuchFixtureException;
-import fitnesse.fixtures.NoDefaultConstructorFixture;
-import fitnesse.fixtures.WouldBeFixture;
+import fit.testFxtr.NoDefaultConstructorFixture;
+import fit.testFxtr.WouldBeFixture;
 import junit.framework.TestCase;
 
 public class CannotLoadFixtureTest extends TestCase {
@@ -24,8 +24,7 @@ public class CannotLoadFixtureTest extends TestCase {
       WouldBeFixture.class.getName(), ClassIsNotFixtureException.class);
   }
 
-  public void testFixtureClassNotEndingInFixtureDoesNotExtendFixture()
-    throws Throwable {
+  public void testFixtureClassNotEndingInFixtureDoesNotExtendFixture() throws Throwable {
     assertCannotLoadFixtureAfterChoppingOffFixture(
       "Successfully loaded a fixture that does not extend Fixture!",
       WouldBeFixture.class, ClassIsNotFixtureException.class);

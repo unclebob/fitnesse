@@ -6,9 +6,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import fitnesse.FitNesseVersion;
-import fitnesse.components.XmlWriter;
+import util.XmlWriter;
 import fitnesse.html.HtmlUtil;
-import fitnesse.util.XmlUtil;
+import util.XmlUtil;
 import fitnesse.wiki.WikiPage;
 
 public abstract class XmlFormatter extends BaseFormatter {

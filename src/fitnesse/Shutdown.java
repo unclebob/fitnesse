@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.components.CommandLine;
+import util.CommandLine;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;

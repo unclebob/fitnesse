@@ -106,6 +106,12 @@ public class MergeResponder implements Responder {
 
   private String addHiddenAttributes() {
     StringBuffer buffer = new StringBuffer();
+    if (request.hasInput(WikiPage.PAGE_TYPE_ATTRIBUTE)) {
+      String pageType = (String) request.getInput(WikiPage.PAGE_TYPE_ATTRIBUTE);
+      buffer.append("<input type=\"hidden\" name=\""
+          + WikiPage.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
+          + "\" checked=\"checked\">");
+    }
     for (int i = 0; i < WikiPage.NON_SECURITY_ATTRIBUTES.length; i++) {
       String attribute = WikiPage.NON_SECURITY_ATTRIBUTES[i];
       if (request.hasInput(attribute))
