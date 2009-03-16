@@ -1,3 +1,5 @@
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
 import java.util.ArrayList;
@@ -13,13 +15,6 @@ import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-
-/**
- * This test runs the list of tests that it is given, on slim or fit or multiple types of 
- * servers.  
- * 
- * @author Clare McLennan
- */
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable{
   

@@ -1,3 +1,5 @@
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
 import java.util.ArrayList;
@@ -18,11 +20,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 
-/**
- * Give this class a test page or a suite page and it will build a list of tests to run.
- * 
- * @author Clare McLennan
- */
 public class SuiteContentsFinder {
 
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";

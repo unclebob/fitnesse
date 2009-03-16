@@ -1,6 +1,5 @@
-/**
- * Copyright AdScale GmbH, Germany, 2008
- */
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
 import java.util.HashMap;
@@ -10,7 +9,10 @@ public class RunningTestingTracker {
   private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();
   private int nextTicketNumber = 1;
 
-  // returns the id used to identify this process for use with the stop responder.
+  /**
+   * @param process
+   * @returnid used to identify this process for use with the stop responder
+   */
   public synchronized String addStartedProcess(Stoppable process) {
     int ticketNumber = 0;
     synchronized (this) {
