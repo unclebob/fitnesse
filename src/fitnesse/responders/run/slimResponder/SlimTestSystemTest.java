@@ -3,6 +3,8 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestSystemListener;
+import fitnesse.responders.run.TestSummary;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
@@ -24,6 +26,7 @@ public class SlimTestSystemTest {
   private WikiPage testPage;
   public String testResults;
   protected SimpleResponse response;
+  private TestSystemListener dummyListener = new DummyListener();
 
   private void assertTestResultsContain(String fragment) {
     String unescapedResults = unescape(testResults);
@@ -48,10 +51,34 @@ public class SlimTestSystemTest {
     responder = getSlimResponder();
     responder.setFastTest(true);
     testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
+    SlimTestSystem.clearSlimPortOffset();
   }
 
   protected SlimResponder getSlimResponder() {
     return new HtmlSlimResponder();
+  }
+
+  @Test
+  public void portRotates() throws Exception {
+    SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
+    for (int i=1; i<15; i++)
+      assertEquals(8085 + (i%10), sys.getNextSlimSocket());
+  }
+
+  @Test
+  public void portStartsAtSlimPortVariable() throws Exception {
+    WikiPage pageWithSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
+    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimPortDefined, dummyListener);
+    for (int i=1; i<15; i++)
+      assertEquals(9000 + (i%10), sys.getNextSlimSocket());
+  }
+
+  @Test
+  public void badSlimPortVariableDefaults() throws Exception {
+    WikiPage pageWithBadSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
+    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithBadSlimPortDefined, dummyListener);
+    for (int i=1; i<15; i++)
+      assertEquals(8085 + (i%10), sys.getNextSlimSocket());
   }
 
   @Test
@@ -336,4 +363,14 @@ public class SlimTestSystemTest {
   }
 
 
+  private static class DummyListener implements TestSystemListener {
+    public void acceptOutputFirst(String output) throws Exception {
+    }
+
+    public void acceptResultsLast(TestSummary testSummary) throws Exception {
+    }
+
+    public void exceptionOccurred(Throwable e) {
+    }
+  }
 }

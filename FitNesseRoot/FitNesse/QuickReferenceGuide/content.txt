@@ -213,6 +213,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 !anchor IncludesINFORMATIONAL
 |${HDR} Includes & Informational ${HDRend}|
 | Timestamp |${CODE} ${BANG}'''lastmodified'''     ${CODEend}|
+| Timestamp |${CODE} ${BANG}'''today'''            ${CODEend}|
 | Contents List |${CODE} ${BANG}'''contents'''     ${CODEend}|
 | Contents Tree |${CODE} ${BANG}'''contents -R'''  ${CODEend}|
 | Contents Sub-tree |${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend}|
@@ -237,7 +238,9 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${CODE} TEST_RUNNER       ${CODEend}| !-fit.FitServer-! | !-fitlibrary.suite.FitLibraryServer-! | !-dotnet\FitServer.exe-! |
 
 |''' NAME '''                        |''' Default '''|''' Values ''' |''' Notes '''|
-|${CODE} TEST_SYSTEM       ${CODEend}| !c fit           | !c fit&bar;slim   |'' Selects the test system to use for this, and descendant pages.|
+|${CODE} TEST_SYSTEM       ${CODEend}| !c fit           | !c fit&bar;slim   |'' Selects the test system to use for this, and descendant pages.''|
+|${CODE} SLIM_PORT         ${CODEend}| !c 8085          | !c integer   |'' Selects the starting port number in a range of 10 for slim.''|
+|${CODE} CM_SYSTEM         ${CODEend}| !c nil           | !c java class|'' Selects the class that will handle CM system events.''|
 |${CODE} COLLAPSE_SETUP    ${CODEend}| !c false         | !c true${BAR}false|'' Collapses all !-SetUps-! ''|
 |${CODE} COLLAPSE_TEARDOWN ${CODEend}| !c false         | !c true${BAR}false|'' Collapses all !-TearDowns-! ''|
 |${CODE} FILTER_TOC        ${CODEend}| !c false         | !c true${BAR}false|'' Append suite fiters to TOC ''|

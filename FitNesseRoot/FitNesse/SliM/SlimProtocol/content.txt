@@ -8,14 +8,14 @@
                response list
 }}}
 
-FitNesse communicates with Slim over a socket.  When you hit the ''Test'' button, FitNesse starts up a SlimServer process by issuing the appropriate command line.  FitNesse then sends a list of instructions to the SlimServer, and expects a list of responses back.  The instructions are things like ''call function f(a,b,c)'' or ''make instance of class X with arguments p,q,r''.  The responses are simply the values that are returned by the instructions.
+!-FitNesse-! communicates with Slim over a socket (see >PortManagement).  When you hit the ''Test'' button, !-FitNesse-! starts up a !-SlimServer-! process by issuing the appropriate command line.  !-FitNesse-! then sends a list of instructions to the !-SlimServer-!, and expects a list of responses back.  The instructions are things like ''call function f(a,b,c)'' or ''make instance of class X with arguments p,q,r''.  The responses are simply the values that are returned by the instructions.
 
 Each instruction in the list is itself a list of strings.  Here is a typical instruction list: {{{
       [
         [id_0, make, instance, fixture, argument],
         [id_1, call, instance, f, 3],
       ]}}}
-The first instruction in this list tells the SlimServer to create an instance of a class named ''fixture'' using the constructor argument ''argument'', and register the newly created instance under the name ''instance''.  The next instruction causes the function ''f'' to be called on the instance ''instance'', passing the value ''3''.  The first column in each instruction is simply an instruction id.
+The first instruction in this list tells the !-SlimServer-! to create an instance of a class named ''fixture'' using the constructor argument ''argument'', and register the newly created instance under the name ''instance''.  The next instruction causes the function ''f'' to be called on the instance ''instance'', passing the value ''3''.  The first column in each instruction is simply an instruction id.
 
 The response to this instruction list might look like this: {{{
       [

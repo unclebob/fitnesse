@@ -101,14 +101,26 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public int getNextSlimSocket() {
+    int base = getSlimPortBase();
     synchronized (slimSocketOffset) {
-      int base = slimSocketOffset.get();
-      base++;
-      if (base >= 10)
-        base = 0;
-      slimSocketOffset.set(base);
-      return base + 8085;
+      int offset = slimSocketOffset.get();
+      offset = (offset+1)%10;
+      slimSocketOffset.set(offset);
+      return offset + base;
     }
+  }
+
+  private int getSlimPortBase() {
+    int base = 8085;
+    try {
+      String slimPort = page.getData().getVariable("SLIM_PORT");
+      if (slimPort != null) {
+        int slimPortInt = Integer.parseInt(slimPort);
+        base = slimPortInt;
+      }
+    } catch (Exception e) {
+    }
+    return base;
   }
 
   public void start() throws Exception {
@@ -336,6 +348,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public Map<String, ScenarioTable> getScenarios() {
     return scenarios;
+  }
+
+  public static void clearSlimPortOffset() {
+    slimSocketOffset.set(0);
   }
 
   static class ExceptionList {
