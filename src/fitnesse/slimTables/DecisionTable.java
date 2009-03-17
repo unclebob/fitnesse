@@ -42,6 +42,8 @@ public class DecisionTable extends SlimTable {
   private class DecisionTableCaller {
     protected Map<String, Integer> vars = new HashMap<String, Integer>();
     protected Map<String, Integer> funcs = new HashMap<String, Integer>();
+    protected List<String> varsLeftToRight = new ArrayList<String>();
+    protected List<String> funcsLeftToRight = new ArrayList<String>();
     protected int columnHeaders;
 
     protected void gatherFunctionsAndVariablesFromColumnHeader() {
@@ -52,10 +54,14 @@ public class DecisionTable extends SlimTable {
 
     private void putColumnHeaderInFunctionOrVariableList(int col) {
       String cell = table.getCellContents(col, 1);
-      if (cell.endsWith("?"))
-        funcs.put(cell.substring(0, cell.length() - 1), col);
-      else
+      if (cell.endsWith("?")) {
+        String funcName = cell.substring(0, cell.length() - 1);
+        funcsLeftToRight.add(funcName);
+        funcs.put(funcName, col);
+      } else {
+        varsLeftToRight.add(cell);
         vars.put(cell, col);
+      }
     }
 
     protected void checkRow(int row) {
@@ -120,8 +126,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private void callFunctions(int row) {
-      Set<String> funcKeys = funcs.keySet();
-      for (String functionName : funcKeys) {
+      for (String functionName : funcsLeftToRight) {
         callFunctionInRow(functionName, row);
       }
     }
@@ -144,8 +149,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private void setVariables(int row) {
-      Set<String> varKeys = vars.keySet();
-      for (String var : varKeys) {
+      for (String var : varsLeftToRight) {
         int col = vars.get(var);
         String valueToSet = table.getUnescapedCellContents(col, row);
         setVariableExpectation(col, row);

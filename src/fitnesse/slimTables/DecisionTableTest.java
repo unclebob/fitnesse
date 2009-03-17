@@ -5,7 +5,6 @@ package fitnesse.slimTables;
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
-import static util.ListUtility.list;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -13,8 +12,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+import static util.ListUtility.list;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class DecisionTableTest {
     makeDecisionTableAndBuildInstructions("|fixture|argument|\n");
     List<Object> expectedInstructions = list(
       list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument"),
-      list("decisionTable_id_1", "call", "decisionTable_id", "table", list())     
+      list("decisionTable_id_1", "call", "decisionTable_id", "table", list())
     );
     assertEquals(expectedInstructions, instructions);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
@@ -94,7 +95,7 @@ public class DecisionTableTest {
     makeDecisionTableAndBuildInstructions(simpleDecisionTable);
     List<Object> expectedInstructions = list(
       list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument"),
-      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3","5"), list("7","9"))),
+      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "5"), list("7", "9"))),
       list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
       list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
       list("decisionTable_id_4", "call", "decisionTable_id", "execute"),
@@ -107,6 +108,31 @@ public class DecisionTableTest {
     assertEquals(expectedInstructions.toString(), instructions.toString());
   }
 
+
+  @Test
+  public void settersAreFirstFunnctionsAreLastLeftToRight() throws Exception {
+    int counter = 0;
+    Map<String, Integer> counters = new HashMap<String, Integer>();
+    String functionsInOrder[] = {"setA", "setB", "setC", "setD", "setE", "setF", "fa", "fb", "fc", "fd", "fe", "ff"};
+
+    makeDecisionTableAndBuildInstructions("|DT:fixture|\n" +
+      "|a|fa?|b|fb?|c|fc?|d|e|f|fd?|fe?|ff?|\n" +
+      "|a|a|b|b|c|c|d|e|f|d|e|f|\n");
+
+    for (Object instructionObject : instructions) {
+      List<Object> instruction = (List<Object>) instructionObject;
+      for (String function : functionsInOrder) {
+        if (function.equals(instruction.get(3)))
+          counters.put(function, counter++);
+      }
+    }
+    assertEquals(functionsInOrder.length, counters.size());
+    for (int i=0; i<functionsInOrder.length; i++)
+      assertEquals(functionsInOrder[i], i, counters.get(functionsInOrder[i]));
+  }
+
+
+
   @Test
   public void canBuildInstructionsForTableWithVariables() throws Exception {
     makeDecisionTableAndBuildInstructions(
@@ -117,7 +143,7 @@ public class DecisionTableTest {
     );
     List<Object> expectedInstructions = list(
       list("decisionTable_id_0", "make", "decisionTable_id", "fixture"),
-      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3","$V="), list("$V","9"))),
+      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "$V="), list("$V", "9"))),
       list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
       list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
       list("decisionTable_id_4", "call", "decisionTable_id", "execute"),

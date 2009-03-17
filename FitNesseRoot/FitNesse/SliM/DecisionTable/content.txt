@@ -61,9 +61,9 @@ The flow is very simple.
  1 Next the !style_code(table) method is called if it exists. (see below).
  1 Then for each row in the table:
   1 First the !style_code(reset) function is called (if present), just in case you want to prepare or clean up.
-  1 Then all the inputs are loaded by calling the appropriate !style_code(set) functions.
+  1 Then all the inputs are loaded by calling the appropriate !style_code(set) functions.  Inputs are loaded in the left to right order of their appearance in the header.
   2 Then the !style_code(execute) function of the fixture is called (if present).
-  3 Finally all the output functions are called and the return values compared to their table cells.
+  3 Finally all the output functions are called, again in left to right order, and the return values compared to their table cells.
 
 !4 Optional Functions
  * !style_code(reset) - is called once for each row before any !style_code(set) or output functions are called.
