@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain.ant;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesseMain.FitNesseMain;
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -14,8 +14,9 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
-import java.io.File;
-import java.io.IOException;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
+import fitnesseMain.FitNesseMain;
 
 /**
  * Task to run fit tests. This task starts the fit server, runs fitnesse tests and publishes the results. <p/>

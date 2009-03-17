@@ -2,7 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class HtmlUtil {
   public static final String BRtag = "<br/>";

@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.html.HtmlUtil;
-import fitnesse.wikitext.WidgetBuilder;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.WidgetBuilder;
 
 public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgument {
   public static final String REGEXP = "^!path [^\r\n]*";

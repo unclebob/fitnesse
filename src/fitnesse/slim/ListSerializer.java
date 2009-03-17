@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import util.ListUtility;
-
 import java.util.List;
+
+import util.ListUtility;
 
 /**
  * Packs up a list into a serialized string using a special format.  The list items must be strings, or lists.

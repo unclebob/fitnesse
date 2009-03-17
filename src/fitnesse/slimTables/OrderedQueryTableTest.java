@@ -1,11 +1,12 @@
 package fitnesse.slimTables;
 
 import static util.ListUtility.list;
+
 import org.junit.Test;
 
 public class OrderedQueryTableTest extends QueryTableBaseTest {
   @Override
-  protected Class queryTableClass() {
+  protected Class<? extends QueryTable> queryTableClass() {
     return OrderedQueryTable.class;
   }
 

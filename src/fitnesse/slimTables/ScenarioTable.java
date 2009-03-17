@@ -2,12 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import util.StringUtil;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimError;
-import util.StringUtil;
-
-import java.util.*;
 
 public class ScenarioTable extends SlimTable {
   private static final String instancePrefix = "scenarioTable";

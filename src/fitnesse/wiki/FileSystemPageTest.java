@@ -3,19 +3,26 @@
 
 package fitnesse.wiki;
 
-import fitnesse.revisioncontrol.NullRevisionController;
-import util.FileUtil;
-import org.junit.After;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.BeforeClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import util.FileUtil;
+import fitnesse.revisioncontrol.NullRevisionController;
 
 public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";

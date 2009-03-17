@@ -2,21 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import util.CommandLine;
-import fitnesse.responders.run.TestSummary;
-import util.StreamReader;
-import util.StringUtil;
-import util.XmlUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import util.CommandLine;
+import util.StreamReader;
+import util.StringUtil;
+import util.XmlUtil;
+import fitnesse.responders.run.TestSummary;
 
 public class TestRunner {
   private String outputFileName;

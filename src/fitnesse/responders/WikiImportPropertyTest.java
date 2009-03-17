@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
@@ -9,11 +13,14 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import util.RegexTestCase;
-import fitnesse.wiki.*;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import fitnesse.wiki.BaseWikiPage;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualCouplingExtensionTest;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 
 public class WikiImportPropertyTest extends RegexTestCase {
   private WikiImportProperty property;

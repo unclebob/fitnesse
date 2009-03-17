@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.net.SocketException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.ChunkedResponse;
@@ -11,8 +13,6 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-
-import java.net.SocketException;
 
 public abstract class ChunkingResponder implements Responder {
   protected WikiPage root;

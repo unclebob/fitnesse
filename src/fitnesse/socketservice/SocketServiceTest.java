@@ -4,12 +4,13 @@ package fitnesse.socketservice;
 
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetBufferedReader;
 import static fitnesse.socketservice.SocketServer.StreamUtility.GetPrintStream;
-import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+
+import junit.framework.TestCase;
 
 public class SocketServiceTest extends TestCase {
   private int connections = 0;

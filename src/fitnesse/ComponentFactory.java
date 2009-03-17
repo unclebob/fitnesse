@@ -2,6 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
@@ -12,14 +20,6 @@ import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetInterceptor;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");

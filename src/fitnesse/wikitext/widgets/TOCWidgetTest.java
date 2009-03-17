@@ -3,7 +3,12 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class TOCWidgetTest extends WidgetTestCase {
   private WikiPage root;

@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import util.StringUtil;
-import fitnesse.wiki.WikiPage;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
+
+import util.StringUtil;
+import fitnesse.wiki.WikiPage;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
   protected String contentFrom(WikiPage requestedPage)

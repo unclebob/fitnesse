@@ -2,17 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
+import java.util.Date;
+
+import util.FileUtil;
 import fitnesse.revisioncontrol.RevisionControlOperation;
 import fitnesse.revisioncontrol.RevisionControllable;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
 import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
-import util.FileUtil;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-
-import java.io.*;
-import java.lang.reflect.Method;
-import java.util.Date;
 
 public class FileSystemPage extends CachingPage implements RevisionControllable {
   private static final long serialVersionUID = 1L;
@@ -288,7 +295,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     private void invokeCmMethod(String method, String newPagePath) throws Exception {
       if (getCmSystemClassName() != null) {
         try {
-          Class cmSystem = Class.forName(getCmSystemClassName());
+          Class<?> cmSystem = Class.forName(getCmSystemClassName());
           Method updateMethod = cmSystem.getMethod(method, String.class, String.class);
           updateMethod.invoke(null, newPagePath, getCmSystemVariable());
         } catch (Exception e) {

@@ -2,14 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.RegexTestCase;
-import util.XmlUtil;
-import org.w3c.dom.Document;
-
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import org.w3c.dom.Document;
+
+import util.RegexTestCase;
+import util.XmlUtil;
 
 public class PageXmlizerTest extends RegexTestCase {
   private PageXmlizer xmlizer;

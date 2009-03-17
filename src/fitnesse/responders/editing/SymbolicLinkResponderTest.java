@@ -2,14 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import util.FileUtil;
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import util.RegexTestCase;
-import util.FileUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperty;
 
 public class SymbolicLinkResponderTest extends RegexTestCase {
   private WikiPage root;

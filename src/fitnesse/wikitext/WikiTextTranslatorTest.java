@@ -2,11 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
+import junit.framework.TestCase;
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
-import junit.framework.TestCase;
 
 public class WikiTextTranslatorTest extends TestCase {
   private WikiPage page;

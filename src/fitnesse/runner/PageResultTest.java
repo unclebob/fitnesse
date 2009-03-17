@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSummary;
 import junit.framework.TestCase;
+import fitnesse.responders.run.TestSummary;
 
 public class PageResultTest extends TestCase {
   public void testToString() throws Exception {

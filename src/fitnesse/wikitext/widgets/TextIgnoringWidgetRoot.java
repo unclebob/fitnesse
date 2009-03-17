@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.util.List;
+import java.util.regex.Matcher;
+
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
-
-import java.util.List;
-import java.util.regex.Matcher;  //Parent Literals
 
 public class TextIgnoringWidgetRoot extends WidgetRoot {
   //Refactored for isGathering parameter.

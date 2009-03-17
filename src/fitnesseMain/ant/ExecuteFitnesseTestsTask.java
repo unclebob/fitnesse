@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain.ant;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -10,10 +14,6 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 
 import util.StringUtil;
 

@@ -2,12 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit;
 
-import fit.Counts;
-import util.StreamReader;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
+
+import util.StreamReader;
 
 public class FitProtocol {
   public static final DecimalFormat format = new DecimalFormat("0000000000");

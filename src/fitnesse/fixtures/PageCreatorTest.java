@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import junit.framework.TestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
 
 public class PageCreatorTest extends TestCase {
   protected void setUp() throws Exception {

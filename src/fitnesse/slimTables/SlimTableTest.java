@@ -2,10 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import static fitnesse.slimTables.SlimTable.approximatelyEqual;
 import static fitnesse.slimTables.SlimTable.Disgracer.disgraceClassName;
 import static fitnesse.slimTables.SlimTable.Disgracer.disgraceMethodName;
-import static fitnesse.slimTables.SlimTable.approximatelyEqual;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class SlimTableTest {

@@ -1,20 +1,38 @@
 package fitnesse.responders.search;
 
+import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
+import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SET_UP_TEAR_DOWN;
+import static fitnesse.responders.search.SearchFormResponder.SELECTED;
+import static fitnesse.responders.search.SearchFormResponder.VALUE;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.*;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlTableListingBuilder;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.editing.PropertiesResponder;
-import static fitnesse.responders.search.SearchFormResponder.*;
-import fitnesse.wiki.*;
-import util.StringUtil;
-
-import java.util.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class ExecuteSearchPropertiesResponder implements SecureResponder {
   private String rootPagePath;
@@ -309,7 +327,6 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     return suitesInput.split("\\s*,\\s*");
   }
 
-  @SuppressWarnings("unchecked")
   protected Map<String, Boolean> getAttributesFromInput(Request request) {
     Map<String, Boolean> attributes = new LinkedHashMap<String, Boolean>();
 

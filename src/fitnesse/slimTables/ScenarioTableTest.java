@@ -2,19 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static util.ListUtility.list;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 
 public class ScenarioTableTest {
   private WikiPage root;

@@ -3,13 +3,16 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fit.FitProtocol;
-import util.RegexTestCase;
-import util.StreamReader;
-
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import util.RegexTestCase;
+import util.StreamReader;
 
 public class FitServerTest extends RegexTestCase {
   private Process process;

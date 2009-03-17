@@ -2,9 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";

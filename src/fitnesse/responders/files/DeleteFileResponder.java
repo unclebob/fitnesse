@@ -2,16 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import java.io.File;
+
+import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.authentication.SecureResponder;
-import util.FileUtil;
-
-import java.io.File;
 
 public class DeleteFileResponder implements SecureResponder {
   public String resource;

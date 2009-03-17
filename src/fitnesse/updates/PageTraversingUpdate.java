@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import java.util.Properties;
+
 import fitnesse.components.FitNesseTraversalListener;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
-
-import java.util.Properties;
 
 public abstract class PageTraversingUpdate implements FitNesseTraversalListener, Update {
   private Properties properties;

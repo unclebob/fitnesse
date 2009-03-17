@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import util.StreamReader;
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.InputStream;
+
+import junit.framework.TestCase;
+import util.StreamReader;
 
 public class ContentBufferTest extends TestCase {
   protected void tearDown() throws Exception {

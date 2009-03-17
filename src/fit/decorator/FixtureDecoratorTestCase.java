@@ -1,14 +1,14 @@
 package fit.decorator;
 
+import java.text.ParseException;
+
+import junit.framework.TestCase;
 import fit.Counts;
 import fit.Fixture;
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
 import fit.decorator.util.Timer;
-import junit.framework.TestCase;
-
-import java.text.ParseException;
 
 public abstract class FixtureDecoratorTestCase extends TestCase {
   protected static final long ELAPSED = 20;

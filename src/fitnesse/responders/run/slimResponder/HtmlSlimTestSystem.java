@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.PageData;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.TableScanner;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
   public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {

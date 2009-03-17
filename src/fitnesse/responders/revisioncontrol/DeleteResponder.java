@@ -2,12 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.revisioncontrol;
 
-import fitnesse.html.HtmlUtil;
 import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.WikiPage;
 
 import java.util.List;
+
+import fitnesse.html.HtmlUtil;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.WikiPage;
 
 public class DeleteResponder extends RevisionControlResponder {
   public DeleteResponder() {

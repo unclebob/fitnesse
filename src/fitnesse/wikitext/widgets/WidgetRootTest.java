@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import util.RegexTestCase;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

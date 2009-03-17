@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import java.io.File;
+
+import util.FileUtil;
 import fit.Fixture;
 import fit.Parse;
-import util.FileUtil;
-
-import java.io.File;
 
 public class FileSection extends Fixture {
   private static File fileSection;

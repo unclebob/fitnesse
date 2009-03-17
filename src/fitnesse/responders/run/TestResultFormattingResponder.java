@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
@@ -9,11 +13,11 @@ import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
-import fitnesse.runner.*;
-import util.StreamReader;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import fitnesse.runner.HtmlResultFormatter;
+import fitnesse.runner.MockResultFormatter;
+import fitnesse.runner.PageResult;
+import fitnesse.runner.ResultFormatter;
+import fitnesse.runner.XmlResultFormatter;
 
 public class TestResultFormattingResponder implements Responder {
   public ResultFormatter formatter = new MockResultFormatter();

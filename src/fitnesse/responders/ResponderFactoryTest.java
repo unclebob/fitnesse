@@ -2,27 +2,61 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKOUT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
+import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.SYNC;
+import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
+
+import java.io.File;
+
+import junit.framework.TestCase;
+import util.FileUtil;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.responders.editing.*;
-import fitnesse.responders.files.*;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.editing.PropertiesResponder;
+import fitnesse.responders.editing.SavePropertiesResponder;
+import fitnesse.responders.editing.SaveResponder;
+import fitnesse.responders.editing.SymbolicLinkResponder;
+import fitnesse.responders.files.CreateDirectoryResponder;
+import fitnesse.responders.files.DeleteConfirmationResponder;
+import fitnesse.responders.files.DeleteFileResponder;
+import fitnesse.responders.files.FileResponder;
+import fitnesse.responders.files.RenameFileConfirmationResponder;
+import fitnesse.responders.files.RenameFileResponder;
+import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.DeletePageResponder;
 import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
-import fitnesse.responders.revisioncontrol.*;
-import fitnesse.responders.run.*;
-import fitnesse.responders.search.*;
+import fitnesse.responders.revisioncontrol.AddResponder;
+import fitnesse.responders.revisioncontrol.CheckinResponder;
+import fitnesse.responders.revisioncontrol.CheckoutResponder;
+import fitnesse.responders.revisioncontrol.DeleteResponder;
+import fitnesse.responders.revisioncontrol.RevertResponder;
+import fitnesse.responders.revisioncontrol.SyncResponder;
+import fitnesse.responders.revisioncontrol.UpdateResponder;
+import fitnesse.responders.run.FitClientResponder;
+import fitnesse.responders.run.SocketCatchingResponder;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.TestResultFormattingResponder;
+import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
+import fitnesse.responders.search.SearchFormResponder;
+import fitnesse.responders.search.SearchResponder;
+import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import static fitnesse.revisioncontrol.RevisionControlOperation.*;
 import fitnesse.testutil.FitNesseUtil;
-import util.FileUtil;
-import fitnesse.wiki.*;
-import junit.framework.TestCase;
-
-import java.io.File;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
 
 public class ResponderFactoryTest extends TestCase {
   private ResponderFactory factory;

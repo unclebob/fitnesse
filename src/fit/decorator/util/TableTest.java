@@ -1,8 +1,8 @@
 package fit.decorator.util;
 
+import junit.framework.TestCase;
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
-import junit.framework.TestCase;
 
 public class TableTest extends TestCase {
   private String fitPage = "<table><tr><td>eg.Division</td></tr>"

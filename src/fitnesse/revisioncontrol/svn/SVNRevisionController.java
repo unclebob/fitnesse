@@ -2,19 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol.svn;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNCommitClient;
+import org.tmatesoft.svn.core.wc.SVNRevision;
+import org.tmatesoft.svn.core.wc.SVNStatus;
+import org.tmatesoft.svn.core.wc.SVNStatusType;
+import org.tmatesoft.svn.core.wc.SVNUpdateClient;
+import org.tmatesoft.svn.core.wc.SVNWCClient;
+
 import fitnesse.revisioncontrol.RevisionControlException;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.State;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
-import org.tmatesoft.svn.core.wc.*;
-
-import java.io.File;
-import java.util.*;
 
 public class SVNRevisionController implements RevisionController {
   private final SVNClientManager manager;

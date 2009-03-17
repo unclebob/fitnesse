@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit.testFxtr;
 
-import fit.Fixture;
-import fit.Parse;
-import util.StringUtil;
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.List;
+
+import junit.framework.TestCase;
+import util.StringUtil;
+import fit.Fixture;
+import fit.Parse;
 
 public class HandleFixtureDoesNotExtendFixtureTest extends TestCase {
   public void testLearnHowBadFixtureClassIsHandled() throws Exception {

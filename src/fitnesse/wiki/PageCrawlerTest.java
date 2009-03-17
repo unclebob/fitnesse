@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.components.FitNesseTraversalListener;
-import junit.framework.TestCase;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import junit.framework.TestCase;
+import fitnesse.components.FitNesseTraversalListener;
 
 public class PageCrawlerTest extends TestCase implements FitNesseTraversalListener {
   private WikiPage root;

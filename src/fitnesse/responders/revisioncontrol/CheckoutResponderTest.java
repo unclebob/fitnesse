@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.revisioncontrol;
 
-import fitnesse.revisioncontrol.RevisionControlException;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static util.RegexTestCase.assertSubString;
-import static org.easymock.EasyMock.*;
+import fitnesse.revisioncontrol.RevisionControlException;
 
 public class CheckoutResponderTest extends RevisionControlTestCase {
   @Override

@@ -3,7 +3,15 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.VirtualCouplingExtensionTest;
+import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WidgetBuilder;
 
 public class IncludeWidgetTest extends WidgetTestCase {

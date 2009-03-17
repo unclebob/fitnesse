@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
-import junit.framework.TestCase;
-
 import java.util.regex.Pattern;
+
+import junit.framework.TestCase;
+import fitnesse.wikitext.WikiWidget;
 
 public class BoldWidgetTest extends TestCase {
   public void setUp() throws Exception {

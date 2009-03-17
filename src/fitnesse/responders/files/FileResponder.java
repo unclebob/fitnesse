@@ -2,6 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import java.io.File;
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.text.ParseException;
+import java.util.Date;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
@@ -9,13 +16,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-
-import java.io.File;
-import java.net.FileNameMap;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.text.ParseException;
-import java.util.Date;
 
 public class FileResponder implements Responder {
   private static FileNameMap fileNameMap = URLConnection.getFileNameMap();

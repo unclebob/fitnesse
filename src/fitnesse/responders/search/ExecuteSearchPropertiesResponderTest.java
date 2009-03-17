@@ -1,14 +1,22 @@
 package fitnesse.responders.search;
 
-import fitnesse.FitNesseContext;
-import static fitnesse.responders.search.SearchFormResponder.*;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import util.RegexTestCase;
-import fitnesse.wiki.*;
+import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
+import static fitnesse.responders.search.SearchFormResponder.SELECTED;
+import static fitnesse.responders.search.SearchFormResponder.VALUE;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import util.RegexTestCase;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private WikiPage root;

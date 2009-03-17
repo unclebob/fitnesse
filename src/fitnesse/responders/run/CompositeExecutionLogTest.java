@@ -2,13 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.testutil.MockCommandRunner;
-import static util.RegexTestCase.assertSubString;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import static org.junit.Assert.assertNotNull;
+import static util.RegexTestCase.assertSubString;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import fitnesse.testutil.MockCommandRunner;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 
 public class CompositeExecutionLogTest {
   private static String ErrorLogName = ExecutionLog.ErrorLogName;

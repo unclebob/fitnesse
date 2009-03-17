@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.revisioncontrol;
 
-import fitnesse.responders.refactoring.DeletePageResponder;
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import fitnesse.responders.refactoring.DeletePageResponder;
 
 public class RefactoringResponderRelatedTest extends RevisionControlTestCase {
   public void testShouldDeleteVersionedPageFromRevisionControll() throws Exception {

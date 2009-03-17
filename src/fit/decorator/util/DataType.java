@@ -1,10 +1,14 @@
 package fit.decorator.util;
 
-import fit.decorator.exceptions.InvalidInputException;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import fit.decorator.exceptions.InvalidInputException;
 
 public abstract class DataType {
   private static final String STRING_TYPE = "string";

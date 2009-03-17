@@ -2,21 +2,36 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.util.Set;
+
+import org.json.JSONObject;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.*;
+import fitnesse.html.HtmlElement;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlTableListingBuilder;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.RawHtml;
+import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.WikiImportProperty;
-import fitnesse.wiki.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.Utils;
-import org.json.JSONObject;
-
-import java.util.Set;
 
 public class PropertiesResponder implements SecureResponder {
   public static final String SUITES = "Suites";

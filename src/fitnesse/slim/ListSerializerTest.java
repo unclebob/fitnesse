@@ -2,13 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import static util.ListUtility.list;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class ListSerializerTest {
   private List<Object> list;

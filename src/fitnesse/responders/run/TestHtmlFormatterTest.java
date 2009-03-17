@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import util.RegexTestCase;
 import fitnesse.components.CommandRunner;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import util.RegexTestCase;
 import fitnesse.wiki.WikiPageDummy;
 
 public class TestHtmlFormatterTest extends RegexTestCase {

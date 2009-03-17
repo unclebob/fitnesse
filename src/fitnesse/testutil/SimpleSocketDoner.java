@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import fitnesse.responders.run.SocketDoner;
-
 import java.net.Socket;
+
+import fitnesse.responders.run.SocketDoner;
 
 public class SimpleSocketDoner implements SocketDoner {
   public Socket socket;

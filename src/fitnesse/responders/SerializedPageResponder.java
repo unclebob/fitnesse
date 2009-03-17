@@ -2,20 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+import org.w3c.dom.Document;
+
+import util.XmlWriter;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import util.XmlWriter;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.*;
-import org.w3c.dom.Document;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageXmlizer;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.XmlizePageCondition;
 
 public class SerializedPageResponder implements SecureResponder {
   private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition() {

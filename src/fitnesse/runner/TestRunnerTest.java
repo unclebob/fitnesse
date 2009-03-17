@@ -2,17 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.FitClientResponderTest;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
-import static util.RegexTestCase.*;
-import util.FileUtil;
-import util.XmlUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertMatches;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -20,11 +24,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
+import util.FileUtil;
+import util.XmlUtil;
+import fitnesse.responders.run.FitClientResponderTest;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 
 public class TestRunnerTest {
   static String endl = System.getProperty("line.separator");

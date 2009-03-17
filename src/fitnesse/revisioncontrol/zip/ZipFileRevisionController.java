@@ -3,19 +3,35 @@
 package fitnesse.revisioncontrol.zip;
 
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import fitnesse.revisioncontrol.RevisionControlException;
-import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.revisioncontrol.State;
-import util.StreamReader;
-import fitnesse.wiki.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import util.StreamReader;
+import fitnesse.revisioncontrol.RevisionControlException;
+import fitnesse.revisioncontrol.RevisionController;
+import fitnesse.revisioncontrol.State;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.NoSuchVersionException;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 
 public class ZipFileRevisionController implements RevisionController {
   public static SimpleDateFormat dateFormat() {

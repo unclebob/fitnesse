@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.html.HtmlElement;
-import junit.framework.TestCase;
-
 import java.util.regex.Pattern;
+
+import junit.framework.TestCase;
+import fitnesse.html.HtmlElement;
 
 public class HruleWidgetTest extends TestCase {
   private static String endl = HtmlElement.endl;

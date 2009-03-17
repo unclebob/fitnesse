@@ -3,10 +3,11 @@
 package fitnesse.slimTables;
 
 import static util.ListUtility.list;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 import java.util.List;
 import java.util.Map;
+
+import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 public class ImportTable extends SlimTable {
   public ImportTable(Table table, String id, SlimTestContext testContext) {

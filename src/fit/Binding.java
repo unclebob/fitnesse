@@ -3,16 +3,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fit.exception.FitFailureException;
-import fit.exception.NoSuchFieldFitFailureException;
-import fit.exception.NoSuchMethodFitFailureException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import util.GracefulNamer;
+import fit.exception.FitFailureException;
+import fit.exception.NoSuchFieldFitFailureException;
+import fit.exception.NoSuchMethodFitFailureException;
 
 public abstract class Binding {
   private static Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");

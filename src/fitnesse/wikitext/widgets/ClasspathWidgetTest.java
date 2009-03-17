@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.WikiPageDummy;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.wiki.WikiPageDummy;
 
 public class ClasspathWidgetTest extends WidgetTestCase {
   public void testRegexp() throws Exception {

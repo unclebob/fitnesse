@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import junit.framework.TestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWidget;
-import junit.framework.TestCase;
 
 public class ParentWidgetTest extends TestCase {
   private ParentWidget parent;

@@ -1,8 +1,6 @@
 package fit.decorator.util;
 
-import fit.decorator.util.ClassDelegatePointParser;
-
-import java.awt.*;
+import java.awt.Point;
 
 public class PointDataType extends DataType {
   protected String addTo(String originalValue, Object value, int numberofTime) {

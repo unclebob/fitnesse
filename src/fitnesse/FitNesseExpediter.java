@@ -2,14 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.components.LogData;
-import fitnesse.http.HttpException;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.ResponseSender;
-import fitnesse.responders.ErrorResponder;
-import util.StringUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +9,14 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
+
+import util.StringUtil;
+import fitnesse.components.LogData;
+import fitnesse.http.HttpException;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.ResponseSender;
+import fitnesse.responders.ErrorResponder;
 
 //import fitnesseMain.FitNesseMain;
 

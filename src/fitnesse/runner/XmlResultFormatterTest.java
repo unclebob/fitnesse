@@ -2,15 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSummary;
-import util.RegexTestCase;
-import util.StreamReader;
-import util.XmlUtil;
+import java.io.InputStream;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.io.InputStream;
+import util.RegexTestCase;
+import util.StreamReader;
+import util.XmlUtil;
+import fitnesse.responders.run.TestSummary;
 
 public class XmlResultFormatterTest extends RegexTestCase {
   private XmlResultFormatter formatter;

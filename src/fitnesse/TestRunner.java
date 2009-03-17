@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.http.RequestBuilder;
-import fitnesse.http.ResponseParser;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
+
+import fitnesse.http.RequestBuilder;
+import fitnesse.http.ResponseParser;
 
 //TODO-MdM DELETE ME SOON
 public class TestRunner {

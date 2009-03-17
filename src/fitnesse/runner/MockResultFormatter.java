@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSummary;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+
+import fitnesse.responders.run.TestSummary;
 
 public class MockResultFormatter implements ResultFormatter {
   public List<PageResult> results = new LinkedList<PageResult>();

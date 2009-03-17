@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.wikitext.WikiWidget;
 
 public class ImageWidget extends WikiWidget {
   public static final String REGEXP = "(?:!img(?:-[lr])? \\S+)|(?:" + LinkWidget.REGEXP + ".(?:gif|jpg|GIF|JPG))";

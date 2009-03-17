@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.testutil.FitNesseUtil;
-import junit.framework.TestCase;
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import junit.framework.TestCase;
+import fitnesse.testutil.FitNesseUtil;
 
 public class ProxyPageTest extends TestCase {
   private WikiPage root;

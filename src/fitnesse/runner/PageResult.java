@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSummary;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.responders.run.TestSummary;
 
 public class PageResult {
   private static final Pattern countsPattern = Pattern.compile("(\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*, (\\d+)[^,]*");

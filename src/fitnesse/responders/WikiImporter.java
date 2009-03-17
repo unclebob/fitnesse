@@ -2,19 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.components.FitNesseTraversalListener;
-import fitnesse.http.RequestBuilder;
-import fitnesse.http.ResponseParser;
-import util.XmlUtil;
-import fitnesse.wiki.*;
-import org.w3c.dom.Document;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.w3c.dom.Document;
+
+import util.XmlUtil;
+import fitnesse.components.FitNesseTraversalListener;
+import fitnesse.http.RequestBuilder;
+import fitnesse.http.ResponseParser;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageXmlizer;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.XmlizerPageHandler;
 
 public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListener {
   public static String remoteUsername;

@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.test.TestSlim;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import fitnesse.slim.test.TestSlim;
 
 public class SlimInstanceCreationTest {
   private StatementExecutor caller;

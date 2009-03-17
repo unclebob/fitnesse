@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.ColumnFixture;
-import fit.Parse;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import fit.ColumnFixture;
+import fit.Parse;
 
 public abstract class RowEntryFixture extends ColumnFixture {
   public abstract void enterRow() throws Exception;

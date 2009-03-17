@@ -2,13 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol.svn;
 
-import fitnesse.revisioncontrol.RevisionControlOperation;
-import static fitnesse.revisioncontrol.RevisionControlOperation.*;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
+import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
+import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Test;
+
+import fitnesse.revisioncontrol.RevisionControlOperation;
 
 public class SVNStateTest {
 

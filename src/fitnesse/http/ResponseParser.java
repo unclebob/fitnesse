@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.StreamReader;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -11,6 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import util.StreamReader;
 
 public class ResponseParser {
   private int status;

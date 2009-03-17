@@ -2,6 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -13,7 +21,6 @@ import fitnesse.responders.editing.SaveResponder;
 import fitnesse.revisioncontrol.NullRevisionController;
 import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
-import util.RegexTestCase;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
@@ -24,13 +31,6 @@ import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.BoldWidget;
 import fitnesse.wikitext.widgets.ItalicWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;

@@ -2,18 +2,35 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.converters.*;
-
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
+
+import fitnesse.slim.converters.BooleanArrayConverter;
+import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.CharConverter;
+import fitnesse.slim.converters.DateConverter;
+import fitnesse.slim.converters.DoubleArrayConverter;
+import fitnesse.slim.converters.DoubleConverter;
+import fitnesse.slim.converters.IntConverter;
+import fitnesse.slim.converters.IntegerArrayConverter;
+import fitnesse.slim.converters.ListConverter;
+import fitnesse.slim.converters.PropertyEditorConverter;
+import fitnesse.slim.converters.StringArrayConverter;
+import fitnesse.slim.converters.StringConverter;
+import fitnesse.slim.converters.VoidConverter;
 
 /**
  * This is the API for executing a SLIM statement.  This class should not know about
@@ -161,7 +178,8 @@ public class StatementExecutor {
     return result;
   }
 
-  private Object replaceVariable(Object object) {
+  @SuppressWarnings("unchecked")
+private Object replaceVariable(Object object) {
     if (object instanceof List)
       return (replaceArgsInList((List<Object>) object));
     else

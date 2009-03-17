@@ -2,17 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.http.Request;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
-import util.RegexTestCase;
-import util.FileUtil;
-import fitnesse.wiki.InMemoryPage;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+
+import util.FileUtil;
+import util.RegexTestCase;
+import fitnesse.http.Request;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
 
 public class FormattingOptionTest extends RegexTestCase {
   private ByteArrayOutputStream output;

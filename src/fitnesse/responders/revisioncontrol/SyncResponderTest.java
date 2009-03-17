@@ -3,9 +3,11 @@
 package fitnesse.responders.revisioncontrol;
 
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import fitnesse.revisioncontrol.RevisionControlException;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static util.RegexTestCase.assertSubString;
-import static org.easymock.EasyMock.*;
+import fitnesse.revisioncontrol.RevisionControlException;
 
 public class SyncResponderTest extends RevisionControlTestCase {
   public void testShouldAskRevisionControllerToSyncronizePage() throws Exception {

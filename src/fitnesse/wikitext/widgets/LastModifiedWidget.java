@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWidget;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 //created by Jason Sypher
 

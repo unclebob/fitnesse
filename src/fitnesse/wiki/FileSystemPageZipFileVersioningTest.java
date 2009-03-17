@@ -3,11 +3,17 @@
 package fitnesse.wiki;
 
 import static fitnesse.revisioncontrol.zip.ZipFileRevisionController.dateFormat;
-import util.FileUtil;
-import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import junit.framework.TestCase;
+import util.FileUtil;
 
 public class FileSystemPageZipFileVersioningTest extends TestCase {
   public FileSystemPage page;

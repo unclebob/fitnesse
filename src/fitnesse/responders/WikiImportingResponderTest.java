@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
@@ -9,8 +10,11 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import util.RegexTestCase;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
 
 public class WikiImportingResponderTest extends RegexTestCase {
   private WikiImportingResponder responder;

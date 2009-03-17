@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import java.io.OutputStream;
+import java.net.Socket;
+
+import util.StreamReader;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
-import util.StreamReader;
-
-import java.io.OutputStream;
-import java.net.Socket;
 
 public class FitClient {
 

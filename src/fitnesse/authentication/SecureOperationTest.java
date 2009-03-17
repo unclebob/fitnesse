@@ -2,10 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class SecureOperationTest extends TestCase {
   private SecureReadOperation sro;

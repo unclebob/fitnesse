@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import java.util.Date;
+
 import fitnesse.wiki.CachingPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-
-import java.util.Date;
 
 public class SimpleCachinePage extends CachingPage {
   private static final long serialVersionUID = 1L;

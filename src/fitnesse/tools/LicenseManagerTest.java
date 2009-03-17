@@ -2,13 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.tools;
 
-import util.FileUtil;
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import util.FileUtil;
 
 public class LicenseManagerTest {
   private final String dir = "toolsTempTestDirectory";
@@ -18,7 +20,7 @@ public class LicenseManagerTest {
   @Before
   public void setup() {
     cleanup();
-    File testDir = FileUtil.createDir(dir);
+    FileUtil.createDir(dir);
     FileUtil.createFile(dir+"/license", licenseText);
   }
   

@@ -2,16 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import util.Wildcard;
-import fitnesse.wiki.InheritedItemBuilder;
-import fitnesse.wiki.WikiPage;
-import fitnesse.responders.run.TestSystem;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import util.Wildcard;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.wiki.InheritedItemBuilder;
+import fitnesse.wiki.WikiPage;
 
 public class ClassPathBuilder extends InheritedItemBuilder {
   private List<String> allPaths;

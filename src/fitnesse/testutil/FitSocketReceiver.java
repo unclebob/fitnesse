@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import fitnesse.http.Request;
-import fitnesse.responders.run.SocketDealer;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+
+import fitnesse.http.Request;
+import fitnesse.responders.run.SocketDealer;
 
 public class FitSocketReceiver {
   public static int DEFAULT_SOCKET = 9123;

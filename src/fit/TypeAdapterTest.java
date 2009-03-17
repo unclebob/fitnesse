@@ -3,13 +3,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import junit.framework.TestCase;
 
 public class TypeAdapterTest extends TestCase {
   private TestFixture f = new TestFixture();

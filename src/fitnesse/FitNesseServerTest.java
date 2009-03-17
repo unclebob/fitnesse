@@ -2,16 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.util.regex.Pattern;
+
+import util.RegexTestCase;
 import fitnesse.components.LogData;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
-import util.RegexTestCase;
-import fitnesse.wiki.*;
-
-import java.util.regex.Pattern;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPagePath;
 
 public class FitNesseServerTest extends RegexTestCase {
   private PageCrawler crawler;

@@ -4,11 +4,11 @@
 
 package fit;
 
+import java.lang.reflect.Method;
+
 import fit.exception.CouldNotParseFitFailureException;
 import fit.exception.FitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
-
-import java.lang.reflect.Method;
 
 public class ActionFixture extends Fixture {
   protected Parse cells;

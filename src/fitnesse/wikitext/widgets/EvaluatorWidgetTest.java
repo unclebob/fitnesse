@@ -3,12 +3,12 @@
 //EvaluatorWidget: Test module
 package fitnesse.wikitext.widgets;
 
+import java.util.Locale;
+
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-
-import java.util.Locale;
 
 public class EvaluatorWidgetTest extends WidgetTestCase {
   private WikiPage root;

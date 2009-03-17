@@ -3,13 +3,13 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import junit.framework.TestCase;
 import fit.exception.ClassIsNotFixtureException;
 import fit.exception.FixtureException;
 import fit.exception.NoDefaultConstructorFixtureException;
 import fit.exception.NoSuchFixtureException;
 import fit.testFxtr.NoDefaultConstructorFixture;
 import fit.testFxtr.WouldBeFixture;
-import junit.framework.TestCase;
 
 public class CannotLoadFixtureTest extends TestCase {
   private FixtureLoader fixtureLoader;

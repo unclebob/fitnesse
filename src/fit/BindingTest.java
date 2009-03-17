@@ -3,9 +3,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import util.RegexTestCase;
 import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
-import util.RegexTestCase;
 
 public class BindingTest extends RegexTestCase {
   private TestFixture fixture;

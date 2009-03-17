@@ -5,12 +5,12 @@
 //EvaluatorWidget: Created using VariableWidget & Expression
 package fitnesse.wikitext.widgets;
 
-import fitnesse.html.HtmlUtil;
-import util.Expression;
-
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import util.Expression;
+import fitnesse.html.HtmlUtil;
 
 public class EvaluatorWidget extends ParentWidget {
   public static final String REGEXP = "\\$\\{=[ \\t]*(?:%[-#+ 0,(]*(?:[0-9]*\\.?[0-9]*)?[a-zA-Z]+[ \\t]*:)?[^:=]*=\\}";

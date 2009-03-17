@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+
+import junit.framework.TestCase;
 
 public class MultiUserAuthenticatorTest extends TestCase {
   private File passwd;

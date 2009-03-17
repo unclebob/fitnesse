@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PathParser;
@@ -9,9 +12,6 @@ import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WidgetVisitor;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AliasLinkWidget extends ParentWidget {
   public static final String REGEXP = "\\[\\[[^\n\r\\]]+\\]\\[[^\n\r\\]]+\\]\\]";

@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit.decorator.util;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class ClassDelegatePointParser {
   public static Point parse(String s) {

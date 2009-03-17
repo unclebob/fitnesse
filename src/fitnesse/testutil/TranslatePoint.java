@@ -3,9 +3,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fitnesse.testutil;
 
-import fit.ColumnFixture;
+import java.awt.Point;
 
-import java.awt.*;
+import fit.ColumnFixture;
 
 public class TranslatePoint extends ColumnFixture {
   public Point p1;

@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fit.Fixture;
-import fit.Parse;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
+import fit.Fixture;
+import fit.Parse;
 
 public class FitFilter {
 

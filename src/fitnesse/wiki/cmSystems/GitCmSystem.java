@@ -4,8 +4,6 @@ package fitnesse.wiki.cmSystems;
 
 import fitnesse.components.CommandRunner;
 
-import java.io.IOException;
-
 /**
  * The three functions: cmUpdate, cmEdit, and cmDelete are called if:
  *   1. The name of this class is in the CM_SYSTEM variable accessible from the page and

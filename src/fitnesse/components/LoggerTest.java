@@ -3,9 +3,6 @@
 
 package fitnesse.components;
 
-import util.FileUtil;
-import junit.framework.TestCase;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,6 +12,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import junit.framework.TestCase;
+import util.FileUtil;
 
 public class LoggerTest extends TestCase {
   private final String dirPath = "testLogs";

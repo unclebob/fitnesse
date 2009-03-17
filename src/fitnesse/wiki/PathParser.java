@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wikitext.widgets.WikiWordWidget;
-
 import java.util.Iterator;
 import java.util.regex.Pattern;
+
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class PathParser {
   public static final String PATH_SEPARATOR = ".";

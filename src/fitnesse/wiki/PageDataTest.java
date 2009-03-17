@@ -4,8 +4,8 @@ package fitnesse.wiki;
 
 import java.util.List;
 
-import fitnesse.responders.run.SuiteResponder;
 import util.RegexTestCase;
+import fitnesse.responders.run.SuiteResponder;
 
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;

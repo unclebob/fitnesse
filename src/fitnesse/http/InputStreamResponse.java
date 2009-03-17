@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.StreamReader;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+
+import util.StreamReader;
 
 public class InputStreamResponse extends Response {
   private StreamReader reader;

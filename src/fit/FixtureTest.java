@@ -3,11 +3,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import util.RegexTestCase;
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
+
+import util.RegexTestCase;
 
 public class FixtureTest extends RegexTestCase {
   private Locale saveLocale;

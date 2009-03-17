@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-
 import java.util.Map;
+
+import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 public class SlimErrorTable extends SlimTable {
   public SlimErrorTable(Table table, String id, SlimTestContext testContext) {

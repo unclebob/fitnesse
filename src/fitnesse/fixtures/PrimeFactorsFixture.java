@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.RowFixture;
-
 import java.util.ArrayList;
+
+import fit.RowFixture;
 
 public class PrimeFactorsFixture extends RowFixture {
   public static class Factor {

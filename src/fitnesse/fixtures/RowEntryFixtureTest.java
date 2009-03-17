@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.Parse;
-import junit.framework.TestCase;
-
 import java.text.ParseException;
+
+import junit.framework.TestCase;
+import fit.Parse;
 
 public class RowEntryFixtureTest extends TestCase {
   private RowEntryFixture fixture;

@@ -2,16 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fit.Counts;
-import fit.FitProtocol;
-import fitnesse.components.ContentBuffer;
-import fitnesse.responders.run.TestSummary;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import fit.Counts;
+import fit.FitProtocol;
+import fitnesse.components.ContentBuffer;
+import fitnesse.responders.run.TestSummary;
 
 public class CachingResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;

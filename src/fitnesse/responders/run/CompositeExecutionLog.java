@@ -2,10 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.wiki.*;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class CompositeExecutionLog {
   private String errorLogPageName;

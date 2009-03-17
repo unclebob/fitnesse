@@ -2,13 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.socketservice.SocketService;
-
 import java.io.File;
-import java.net.BindException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.BindException;
+
+import fitnesse.socketservice.SocketService;
 
 public class FitNesse {
   private FitNesseContext context;
@@ -18,7 +16,7 @@ public class FitNesse {
 
   public static void main(String[] args) throws Exception {
     System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
-    Class mainClass = Class.forName("fitnesseMain.FitNesseMain");
+    Class<?> mainClass = Class.forName("fitnesseMain.FitNesseMain");
     Method mainMethod = mainClass.getMethod("main", String[].class);
     mainMethod.invoke(null, new Object[]{args});
   }

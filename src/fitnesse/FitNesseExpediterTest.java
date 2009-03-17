@@ -2,20 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+
+import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.testutil.MockSocket;
-import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
-
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 public class FitNesseExpediterTest extends RegexTestCase {
   private FitNesseExpediter expediter;

@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import fitnesse.wikitext.widgets.*;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -11,6 +9,41 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.AnchorDeclarationWidget;
+import fitnesse.wikitext.widgets.AnchorMarkerWidget;
+import fitnesse.wikitext.widgets.BoldWidget;
+import fitnesse.wikitext.widgets.CenterWidget;
+import fitnesse.wikitext.widgets.ClasspathWidget;
+import fitnesse.wikitext.widgets.CollapsableWidget;
+import fitnesse.wikitext.widgets.CommentWidget;
+import fitnesse.wikitext.widgets.EmailWidget;
+import fitnesse.wikitext.widgets.EvaluatorWidget;
+import fitnesse.wikitext.widgets.HeaderWidget;
+import fitnesse.wikitext.widgets.HruleWidget;
+import fitnesse.wikitext.widgets.ImageWidget;
+import fitnesse.wikitext.widgets.IncludeWidget;
+import fitnesse.wikitext.widgets.ItalicWidget;
+import fitnesse.wikitext.widgets.LastModifiedWidget;
+import fitnesse.wikitext.widgets.LinkWidget;
+import fitnesse.wikitext.widgets.ListWidget;
+import fitnesse.wikitext.widgets.LiteralWidget;
+import fitnesse.wikitext.widgets.MetaWidget;
+import fitnesse.wikitext.widgets.NoteWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.PreformattedWidget;
+import fitnesse.wikitext.widgets.StrikeWidget;
+import fitnesse.wikitext.widgets.StyleWidget;
+import fitnesse.wikitext.widgets.TOCWidget;
+import fitnesse.wikitext.widgets.TableWidget;
+import fitnesse.wikitext.widgets.TextWidget;
+import fitnesse.wikitext.widgets.TodayWidget;
+import fitnesse.wikitext.widgets.VariableDefinitionWidget;
+import fitnesse.wikitext.widgets.VariableWidget;
+import fitnesse.wikitext.widgets.VirtualWikiWidget;
+import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.widgets.XRefWidget;
 
 public class WidgetBuilder {
   public static final Class<?>[] htmlWidgetClasses = new Class<?>[]{

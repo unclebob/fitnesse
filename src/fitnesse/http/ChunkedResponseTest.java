@@ -2,13 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import static util.RegexTestCase.*;
-import org.junit.After;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
 import java.net.Socket;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ChunkedResponseTest implements ResponseSender {
   private ChunkedResponse response;

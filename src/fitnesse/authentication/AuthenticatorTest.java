@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -11,7 +12,6 @@ import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
 
 public class AuthenticatorTest extends TestCase {
   SimpleAuthenticator authenticator;

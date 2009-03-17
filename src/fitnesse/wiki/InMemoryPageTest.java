@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
-
 import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 public class InMemoryPageTest extends TestCase {
   private WikiPage root;

@@ -2,29 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.slim.SlimClient;
-import static util.RegexTestCase.assertSubString;
-import static util.ListUtility.list;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
+import static util.RegexTestCase.assertSubString;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimClient;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 
 public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
   private WikiPage root;
   private List<Object> instructions;
   private ScenarioTable st;
   private DecisionTable dt;
-  private Map<String, String> symbols = new HashMap<String, String>();
-  private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
 
   @Before
   public void setUp() throws Exception {

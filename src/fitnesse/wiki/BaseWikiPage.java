@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.FileUtil;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+
+import util.FileUtil;
 
 public abstract class BaseWikiPage implements WikiPage {
   private static final long serialVersionUID = 1L;

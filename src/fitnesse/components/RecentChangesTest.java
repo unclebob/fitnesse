@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import java.util.List;
+
 import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-
-import java.util.List;
 
 public class RecentChangesTest extends RegexTestCase {
   private WikiPage rootPage;

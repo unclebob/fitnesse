@@ -2,18 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import static util.RegexTestCase.*;
-import fitnesse.wiki.*;
+import static junit.framework.Assert.assertEquals;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Set;
-import java.util.HashSet;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class NameWikiPageResponderTest {
   private WikiPage root;

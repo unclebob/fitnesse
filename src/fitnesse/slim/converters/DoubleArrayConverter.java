@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
+import java.util.Arrays;
+
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
-
-import java.util.Arrays;
 
 public class DoubleArrayConverter implements Converter {
   public String toString(Object o) {

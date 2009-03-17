@@ -2,9 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import util.FileUtil;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import java.io.*;
+import util.FileUtil;
 
 public class ContentBuffer {
   private File tempFile;

@@ -2,10 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import util.ListUtility;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
-
-import java.util.*;
 
 public class QueryTable extends SlimTable {
   protected List<String> fieldNames = new ArrayList<String>();
@@ -134,7 +140,8 @@ public class QueryTable extends SlimTable {
       }
     }
 
-    private Map<String, String> makeRowMap(Object row) {
+    @SuppressWarnings("unchecked")
+	private Map<String, String> makeRowMap(Object row) {
       Map<String, String> rowMap = new HashMap<String, String>();
       for (List<Object> columnPair : (List<List<Object>>) row) {
         String fieldName = (String) columnPair.get(0);

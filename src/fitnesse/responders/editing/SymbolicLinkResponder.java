@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.File;
+
+import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
@@ -9,12 +12,16 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import util.StringUtil;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-
-import java.io.File;
 
 public class SymbolicLinkResponder implements Responder {
   private Response response;

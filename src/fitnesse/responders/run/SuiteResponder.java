@@ -2,14 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.w3c.dom.Element;
+
+import util.XmlUtil;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.SetupTeardownIncluder;
-import fitnesse.wiki.*;
-import org.w3c.dom.Element;
-import util.XmlUtil;
-
-import java.util.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualCouplingExtension;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPagePath;
 
 public class SuiteResponder extends TestResponder implements TestSystemListener {
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";

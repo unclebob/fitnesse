@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import junit.framework.TestCase;
 import fitnesse.testutil.MockExtendableWikiPage;
 import fitnesse.testutil.SimpleExtension;
-import junit.framework.TestCase;
 
 public class ExtendableWikiPageTest extends TestCase {
   public void testAddExtention() throws Exception {

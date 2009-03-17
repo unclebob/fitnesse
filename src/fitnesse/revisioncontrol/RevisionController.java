@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol;
 
+import java.io.File;
+import java.util.Collection;
+
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
-
-import java.io.File;
-import java.util.Collection;
 
 public interface RevisionController {
 

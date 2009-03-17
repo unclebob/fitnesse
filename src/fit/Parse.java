@@ -6,9 +6,9 @@ package fit;
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
 
-import fit.exception.FitParseException;
-
 import java.io.PrintWriter;
+
+import fit.exception.FitParseException;
 
 public class Parse {
 

@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperties;
-import junit.framework.TestCase;
 
 public class ImportAndViewResponderTest extends TestCase {
   private WikiImporterTest testData;

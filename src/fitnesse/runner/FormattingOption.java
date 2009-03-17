@@ -2,12 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import util.CommandLine;
+import util.FileUtil;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
-import util.FileUtil;
-
-import java.io.*;
 
 public class FormattingOption {
   public String format;

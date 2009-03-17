@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import junit.framework.TestCase;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -9,7 +10,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
-import junit.framework.TestCase;
 
 public class ShutdownResponderTest extends TestCase {
   private FitNesseContext context;

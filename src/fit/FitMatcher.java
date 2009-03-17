@@ -3,10 +3,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fit.exception.FitMatcherException;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fit.exception.FitMatcherException;
 
 class FitMatcher {
   private String expression;

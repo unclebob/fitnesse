@@ -1,5 +1,11 @@
 package fitnesse.responders;
 
+import static org.junit.Assert.assertEquals;
+
+import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -8,10 +14,6 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.json.JSONObject;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
 
 public class PacketResponderTest {
   protected WikiPage root;

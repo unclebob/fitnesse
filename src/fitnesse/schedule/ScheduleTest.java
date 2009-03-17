@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.schedule;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import junit.framework.TestCase;
 
 public class ScheduleTest extends TestCase {
   private boolean shouldAddCounters;

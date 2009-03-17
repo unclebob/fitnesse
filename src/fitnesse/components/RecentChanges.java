@@ -2,13 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.*;
-
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import fitnesse.FitNesseContext;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class RecentChanges {
   private static final String RECENT_CHANGES = "RecentChanges";

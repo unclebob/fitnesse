@@ -2,25 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol;
 
+import static fitnesse.revisioncontrol.NullState.UNKNOWN;
+import static fitnesse.revisioncontrol.NullState.VERSIONED;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+
+import java.io.File;
+import java.util.HashSet;
+
+import junit.framework.TestCase;
+import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.WikiPageResponder;
-import static fitnesse.revisioncontrol.NullState.UNKNOWN;
-import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-import util.FileUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
-
-import java.io.File;
-import java.util.HashSet;
 
 public class HtmlActionMenuBuilderTest extends TestCase
 

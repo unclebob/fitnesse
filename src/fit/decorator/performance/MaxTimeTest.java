@@ -1,5 +1,7 @@
 package fit.decorator.performance;
 
+import java.text.ParseException;
+
 import fit.ColumnFixture;
 import fit.Counts;
 import fit.Parse;
@@ -7,8 +9,6 @@ import fit.decorator.FixtureDecoratorTestCase;
 import fit.decorator.Loop;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
-
-import java.text.ParseException;
 
 public class MaxTimeTest extends FixtureDecoratorTestCase {
   private static final String FIRST_HTML_ROW = "<tr><td>" + MaxTime.class.getName()

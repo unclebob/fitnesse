@@ -2,11 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import org.htmlparser.util.ParserException;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 import java.util.Arrays;
+
+import org.htmlparser.util.ParserException;
+import org.junit.Test;
 
 public class HtmlTableScannerTest {
   private HtmlTableScanner ts;

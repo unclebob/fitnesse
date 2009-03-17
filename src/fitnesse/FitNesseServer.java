@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.socketservice.SocketServer;
-
 import java.net.Socket;
+
+import fitnesse.socketservice.SocketServer;
 
 public class FitNesseServer implements SocketServer {
   private FitNesseContext context;

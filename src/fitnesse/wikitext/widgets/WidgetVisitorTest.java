@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.TestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetVisitor;
 import fitnesse.wikitext.WikiWidget;
-import junit.framework.TestCase;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WidgetVisitorTest extends TestCase implements WidgetVisitor {
   List<WikiWidget> visits = new ArrayList<WikiWidget>();

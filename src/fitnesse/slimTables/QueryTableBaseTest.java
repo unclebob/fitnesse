@@ -1,20 +1,21 @@
 package fitnesse.slimTables;
 
-import org.junit.Before;
-import org.junit.Test;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPageUtil;
-import fitnesse.wiki.WikiPage;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.slim.SlimClient;
-import fitnesse.wikitext.Utils;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Constructor;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.slim.SlimClient;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
+import fitnesse.wikitext.Utils;
 
 public abstract class QueryTableBaseTest {
   private WikiPage root;
@@ -36,7 +37,7 @@ public abstract class QueryTableBaseTest {
 
   protected abstract String tableType();
 
-  protected abstract Class queryTableClass();
+  protected abstract Class<? extends QueryTable> queryTableClass();
 
   private QueryTable makeQueryTableAndBuildInstructions(String pageContents) throws Exception {
     qt = makeQueryTable(pageContents);
@@ -53,9 +54,9 @@ public abstract class QueryTableBaseTest {
   }
 
   private QueryTable constructQueryTable(Table t) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-    Class queryTableClass = queryTableClass();
-    Constructor constructor = queryTableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
-    return (QueryTable) constructor.newInstance(t, "id", testContext);
+    Class<? extends QueryTable> queryTableClass = queryTableClass();
+    Constructor<? extends QueryTable> constructor = queryTableClass.getConstructor(Table.class, String.class, SlimTestContext.class);
+    return constructor.newInstance(t, "id", testContext);
   }
 
   protected void assertQueryResults(String queryRows, List<Object> queryResults, String table) throws Exception {

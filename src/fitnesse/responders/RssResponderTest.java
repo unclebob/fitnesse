@@ -2,20 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.http.SimpleResponse;
-import util.XmlUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import util.XmlUtil;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
 
 public class RssResponderTest extends ResponderTestCase {
   protected Element channelElement;

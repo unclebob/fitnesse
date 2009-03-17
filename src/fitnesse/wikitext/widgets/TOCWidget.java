@@ -2,19 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
-import fitnesse.wiki.*;
-import fitnesse.wikitext.WikiWidget;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.html.HtmlElement;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.RawHtml;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.VirtualCouplingExtension;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wikitext.WikiWidget;
 
 public class TOCWidget extends WikiWidget {
   // [-R[0-9]] [-g]

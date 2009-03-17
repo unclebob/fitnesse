@@ -1,11 +1,11 @@
 package fit.decorator.performance;
 
+import java.text.ParseException;
+
 import fit.Counts;
 import fit.decorator.FixtureDecoratorTestCase;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.TestCaseHelper;
-
-import java.text.ParseException;
 
 public class TimeRangeTest extends FixtureDecoratorTestCase {
   private static final String FIRST_HTML_ROW = "<tr><td>" + TimeRange.class.getName()

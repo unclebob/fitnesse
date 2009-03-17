@@ -3,10 +3,10 @@
 
 package fitnesse.wiki;
 
-import util.StringUtil;
-
 import java.io.Serializable;
 import java.util.List;
+
+import util.StringUtil;
 
 public interface WikiPage extends Serializable, Comparable<Object> {
   public static final String SECURE_READ = "secure-read";

@@ -9,19 +9,20 @@ import java.util.List;
 public class Bowling {
   private Game g;
 
-  public List<?> doTable(List<List<String>> table) {
+  @SuppressWarnings("unchecked")
+  public List<?> doTable(List<Object> table) {
     g = new Game();
     List<?> rollResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
     List<String> scoreResults = list("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
     rollBalls(table);
-    evaluateScores(g, table.get(1), scoreResults);
+    evaluateScores(g, (List<String>)table.get(1), scoreResults);
     return list(rollResults, scoreResults);
   }
 
-  private void evaluateScores(Game g, List<String> scoreRow, List<String> scoreResults) {
+  private void evaluateScores(Game g, List<String> object, List<String> scoreResults) {
     for (int frame = 0; frame < 10; frame++) {
       int actualScore = g.score(frame + 1);
-      int expectedScore = Integer.parseInt(scoreRow.get(frameCoordinate(frame)));
+      int expectedScore = Integer.parseInt((String)object.get(frameCoordinate(frame)));
       if (expectedScore == actualScore)
         scoreResults.set(frameCoordinate(frame), "pass");
       else
@@ -33,8 +34,9 @@ public class Bowling {
     return frame < 9 ? frame * 2 + 1 : frame * 2 + 2;
   }
 
-  private void rollBalls(List<List<String>> table) {
-    List<String> rollRow = table.get(0);
+  @SuppressWarnings("unchecked")
+  private void rollBalls(List<Object> table) {
+    List<String> rollRow = (List<String>)table.get(0);
     for (int frame = 0; frame < 10; frame++) {
       String firstRoll = rollRow.get(frame * 2);
       String secondRoll = rollRow.get(frame * 2 + 1);

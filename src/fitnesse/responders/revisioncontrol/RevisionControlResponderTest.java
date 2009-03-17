@@ -2,16 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.revisioncontrol;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+import java.util.HashSet;
+
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.revisioncontrol.NullState;
 import fitnesse.revisioncontrol.RevisionControlException;
 import fitnesse.revisioncontrol.RevisionControlOperation;
 import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.wiki.*;
-import static org.easymock.EasyMock.*;
-
-import java.util.HashSet;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 
 public class RevisionControlResponderTest extends RevisionControlTestCase {
   private final String revisionControlOperation = "Test Revision Control Operation";

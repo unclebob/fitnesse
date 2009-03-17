@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.net.Socket;
+
+import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fit.FitProtocol;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
-
-import java.net.Socket;
 
 public class SocketCatchingResponder implements Responder, SocketDoner, ResponsePuppeteer {
   private int ticketNumber;

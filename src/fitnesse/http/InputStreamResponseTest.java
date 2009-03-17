@@ -2,11 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.RegexTestCase;
-import util.FileUtil;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.Socket;
+
+import util.FileUtil;
+import util.RegexTestCase;
 
 public class InputStreamResponseTest extends RegexTestCase implements ResponseSender {
   private InputStreamResponse response;

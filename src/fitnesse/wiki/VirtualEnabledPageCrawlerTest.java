@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.testutil.FitNesseUtil;
 import junit.framework.TestCase;
+import fitnesse.testutil.FitNesseUtil;
 
 public class VirtualEnabledPageCrawlerTest extends TestCase {
   private WikiPage root;

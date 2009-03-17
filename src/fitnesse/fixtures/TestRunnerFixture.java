@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.ColumnFixture;
-import fitnesse.runner.TestRunner;
-import fitnesse.wikitext.Utils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
+
+import fit.ColumnFixture;
+import fitnesse.runner.TestRunner;
+import fitnesse.wikitext.Utils;
 
 public class TestRunnerFixture extends ColumnFixture {
   public String pageName;

@@ -2,15 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol;
 
-import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlTag;
 import static fitnesse.revisioncontrol.NullState.VERSIONED;
-import static fitnesse.revisioncontrol.RevisionControlOperation.*;
-import static org.easymock.EasyMock.*;
-import org.junit.After;
+import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKOUT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
+import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.SYNC;
+import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import fitnesse.html.HtmlElement;
+import fitnesse.html.HtmlTag;
 
 public class RevisionControlOperationTest {
   private final String filePath = "SomeFilePath";

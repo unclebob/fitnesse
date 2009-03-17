@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import fitnesse.authentication.Authenticator;
-
 import java.util.Properties;
+
+import fitnesse.authentication.Authenticator;
 
 public class SimpleAuthenticator extends Authenticator {
   public boolean authenticated = false;

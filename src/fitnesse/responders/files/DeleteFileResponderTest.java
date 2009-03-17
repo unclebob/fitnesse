@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import java.io.File;
+
+import util.FileUtil;
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
-import util.RegexTestCase;
-import util.FileUtil;
-
-import java.io.File;
 
 public class DeleteFileResponderTest extends RegexTestCase {
   public MockRequest request;

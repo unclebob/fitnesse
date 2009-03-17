@@ -2,15 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.FitNesseContext;
-import static fitnesse.responders.search.SearchFormResponder.*;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
+import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
+import static fitnesse.responders.search.SearchFormResponder.SELECTED;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
-import fitnesse.wiki.WikiPage;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiPage;
 
 public class SearchFormResponderTest {
   private SimpleResponse response;

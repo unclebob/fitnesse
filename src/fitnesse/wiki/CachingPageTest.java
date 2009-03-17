@@ -3,8 +3,8 @@
 
 package fitnesse.wiki;
 
-import fitnesse.testutil.SimpleCachinePage;
 import junit.framework.TestCase;
+import fitnesse.testutil.SimpleCachinePage;
 
 public class CachingPageTest extends TestCase {
   private CachingPage root;

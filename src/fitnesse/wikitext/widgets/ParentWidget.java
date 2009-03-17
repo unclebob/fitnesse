@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.WikiWidget;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWidget;
 
 public abstract class ParentWidget extends WikiWidget {
   protected LinkedList<WikiWidget> children = new LinkedList<WikiWidget>();

@@ -2,11 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import util.FileUtil;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import util.FileUtil;
 
 public class PasswordFile {
   private File passwordFile;

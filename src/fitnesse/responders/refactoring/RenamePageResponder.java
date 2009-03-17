@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import java.util.Iterator;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -14,11 +17,12 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class RenamePageResponder implements SecureResponder {
   private String qualifiedName;

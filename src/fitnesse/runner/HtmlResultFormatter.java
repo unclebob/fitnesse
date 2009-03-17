@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import java.io.InputStream;
+
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -9,8 +11,6 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
-
-import java.io.InputStream;
 
 public class HtmlResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;

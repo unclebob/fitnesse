@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.TestCase;
-
 import java.util.regex.Pattern;
+
+import junit.framework.TestCase;
 
 public class CenterWidgetTest extends TestCase {
   public void setUp() throws Exception {

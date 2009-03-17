@@ -10,7 +10,7 @@ public class QueryTableTest extends QueryTableBaseTest {
     return "query";
   }
 
-  protected Class queryTableClass() {
+  protected Class<QueryTable> queryTableClass() {
     return QueryTable.class;
   }
 

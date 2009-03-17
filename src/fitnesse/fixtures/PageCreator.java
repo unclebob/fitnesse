@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import java.util.StringTokenizer;
+
 import fit.ColumnFixture;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-
-import java.util.StringTokenizer;
 
 public class PageCreator extends ColumnFixture {
   public String pageName;

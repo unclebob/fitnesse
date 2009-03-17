@@ -1,11 +1,11 @@
 package fit.decorator;
 
+import java.text.ParseException;
+
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.Delta;
 import fit.decorator.util.TestCaseHelper;
-
-import java.text.ParseException;
 
 public class IncrementColumnsValueTest extends FixtureDecoratorTestCase {
   private static final String FIRST_HTML_ROW = "<tr><td>" + IncrementColumnsValue.class.getName()

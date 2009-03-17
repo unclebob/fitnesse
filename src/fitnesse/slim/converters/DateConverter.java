@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
-import fitnesse.slim.SlimError;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import fitnesse.slim.Converter;
+import fitnesse.slim.SlimError;
 
 public class DateConverter implements Converter {
   public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");

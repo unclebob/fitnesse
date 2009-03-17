@@ -3,7 +3,12 @@
 package fitnesse.html;
 
 import fitnesse.responders.run.SuiteResponder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class SetupTeardownIncluder {
   private PageData pageData;

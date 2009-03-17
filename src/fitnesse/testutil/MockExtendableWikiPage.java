@@ -2,9 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import fitnesse.wiki.*;
-
 import java.util.List;
+
+import fitnesse.wiki.ExtendableWikiPage;
+import fitnesse.wiki.Extension;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 
 public class MockExtendableWikiPage extends ExtendableWikiPage {
   private static final long serialVersionUID = 1L;

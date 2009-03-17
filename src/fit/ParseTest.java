@@ -3,8 +3,8 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fit.exception.FitParseException;
 import junit.framework.TestCase;
+import fit.exception.FitParseException;
 
 public class ParseTest extends TestCase {
   public void testParsing() throws Exception {

@@ -2,9 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import util.RegexTestCase;
 import util.FileUtil;
-import fitnesse.wiki.*;
+import util.RegexTestCase;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class ClassPathBuilderTest extends RegexTestCase {
   private WikiPage root;

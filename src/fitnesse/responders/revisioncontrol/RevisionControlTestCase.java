@@ -2,21 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.revisioncontrol;
 
+import static fitnesse.revisioncontrol.NullState.VERSIONED;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
+import static util.RegexTestCase.assertSubString;
+
+import java.io.File;
+import java.util.HashSet;
+
+import junit.framework.TestCase;
+import util.FileUtil;
+import util.StandardOutAndErrorRecorder;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import static fitnesse.revisioncontrol.NullState.VERSIONED;
 import fitnesse.revisioncontrol.RevisionController;
-import static util.RegexTestCase.assertSubString;
-import util.FileUtil;
-import util.StandardOutAndErrorRecorder;
-import fitnesse.wiki.*;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
-
-import java.io.File;
-import java.util.HashSet;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 
 public abstract class RevisionControlTestCase extends TestCase {
   protected static final String FS_PARENT_PAGE = "ExternalParent";

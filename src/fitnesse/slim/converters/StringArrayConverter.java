@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.converters;
 
-import fitnesse.slim.Converter;
-
 import java.util.Arrays;
+
+import fitnesse.slim.Converter;
 
 public class StringArrayConverter implements Converter {
   public String toString(Object o) {

@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WidgetBuilder;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.wikitext.WidgetBuilder;
 
 public class LinkWidget extends ParentWidget {
   public static final String REGEXP = "https?://[^\\s]+[^\\s.)]+";

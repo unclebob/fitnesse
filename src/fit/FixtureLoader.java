@@ -6,12 +6,12 @@
 // later.
 package fit;
 
-import fit.exception.CouldNotLoadComponentFitFailureException;
-import fit.exception.NoSuchFixtureException;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import fit.exception.CouldNotLoadComponentFitFailureException;
+import fit.exception.NoSuchFixtureException;
 
 // REFACTOR The fixture path is really the only part of this
 

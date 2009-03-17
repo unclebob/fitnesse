@@ -2,7 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol;
 
-import static fitnesse.revisioncontrol.RevisionControlOperation.*;
+import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKOUT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
+import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
 
 public abstract class NullState implements State {
   protected String state;

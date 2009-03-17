@@ -2,22 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
-import fitnesse.http.ChunkedResponse;
-import fitnesse.wiki.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.List;
+
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureWriteOperation;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.TagGroup;
+import fitnesse.http.ChunkedResponse;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient {
   private int alternation = 0;

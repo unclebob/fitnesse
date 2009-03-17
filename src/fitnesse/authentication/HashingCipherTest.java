@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import junit.framework.TestCase;
-
 import java.util.Random;
+
+import junit.framework.TestCase;
 
 public class HashingCipherTest extends TestCase {
   private String[] inputs = new String[]{"123", "abc", "12345678901234567890", "this is a test", "!@#$%^&*()"};

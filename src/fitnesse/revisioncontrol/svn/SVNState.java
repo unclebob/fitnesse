@@ -2,12 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.revisioncontrol.svn;
 
-import fitnesse.revisioncontrol.RevisionControlOperation;
-import static fitnesse.revisioncontrol.RevisionControlOperation.*;
-import fitnesse.revisioncontrol.State;
+import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
+import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
+import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
+import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
+import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fitnesse.revisioncontrol.RevisionControlOperation;
+import fitnesse.revisioncontrol.State;
 
 public abstract class SVNState implements State {
   String state;

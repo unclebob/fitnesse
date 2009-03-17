@@ -2,12 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.Fixture;
-import fitnesse.wiki.*;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.StringTokenizer;
+
+import fit.Fixture;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class PageBuilder extends Fixture {
   private PrintWriter writer;

@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+
 import util.FileUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.SymbolicPage;
 import fitnesse.wiki.WikiPageProperties;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
 
 public class SymLinkPropertyFormatUpdateTest extends UpdateTestCase {
   private static String badPropertiesFormat =

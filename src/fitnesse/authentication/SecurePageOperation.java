@@ -2,12 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.Request;
-import fitnesse.wiki.*;
-
 import java.util.Iterator;
 import java.util.List;
+
+import fitnesse.FitNesseContext;
+import fitnesse.http.Request;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualMockingPageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageUtil;
 
 public abstract class SecurePageOperation implements SecureOperation {
   protected abstract String getSecurityMode();

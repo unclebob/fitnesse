@@ -2,12 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import fitnesse.wiki.WikiPage;
-
-import java.io.*;
-import java.util.Properties;
 
 public class UpdaterImplementation implements Updater {
   public static boolean testing = false;

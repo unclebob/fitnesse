@@ -1,12 +1,12 @@
 package fit.decorator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fit.Fixture;
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
 import fit.decorator.util.Table;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class FixtureDecorator extends Fixture {
   static final String ENCAPSULATED_FIXTURE_NAME = "EncapsulatedFixtureName";

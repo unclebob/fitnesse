@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import util.ListUtility;
-import util.StreamReader;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -12,6 +9,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import util.ListUtility;
+import util.StreamReader;
 
 public class SlimClient {
   private Socket client;

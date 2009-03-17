@@ -3,10 +3,11 @@
 package fitnesse.responders.revisioncontrol;
 
 import static fitnesse.revisioncontrol.RevisionControlOperation.SYNC;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.WikiPage;
 
 import java.util.List;
+
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.WikiPage;
 
 public class SyncResponder extends RevisionControlResponder {
   public SyncResponder() {

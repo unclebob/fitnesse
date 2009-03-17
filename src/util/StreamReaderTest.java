@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import util.RegexTestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;

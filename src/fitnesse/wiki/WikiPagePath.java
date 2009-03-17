@@ -2,13 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.StringUtil;
-import static fitnesse.wiki.WikiPagePath.Mode.*;
+import static fitnesse.wiki.WikiPagePath.Mode.ABSOLUTE;
+import static fitnesse.wiki.WikiPagePath.Mode.BACKWARD_SEARCH;
+import static fitnesse.wiki.WikiPagePath.Mode.RELATIVE;
+import static fitnesse.wiki.WikiPagePath.Mode.SUB_PAGE;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import util.StringUtil;
 
 public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable {
   private static final long serialVersionUID = 1L;

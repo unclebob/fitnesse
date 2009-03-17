@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
 import junit.framework.TestCase;
+import fitnesse.wikitext.WikiWidget;
 
 public class TableRowWidgetTest extends TestCase {
   public void testSimpleRow() throws Exception {

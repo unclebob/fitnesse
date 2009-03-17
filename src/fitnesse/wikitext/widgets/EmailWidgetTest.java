@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wikitext.WikiWidget;
-
 import java.util.regex.Pattern;
+
+import fitnesse.wikitext.WikiWidget;
 
 public class EmailWidgetTest extends WidgetTestCase {
   protected String getRegexp() {

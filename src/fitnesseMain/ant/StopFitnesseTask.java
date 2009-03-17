@@ -2,10 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain.ant;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
 
 /**
  * Task to stop fitnesse.

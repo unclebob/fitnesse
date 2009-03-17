@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.ActionFixture;
-import fit.Parse;
-
 import java.lang.reflect.Method;
 import java.util.Stack;
+
+import fit.ActionFixture;
+import fit.Parse;
 
 public class LoopingActionFixture extends ActionFixture {
 

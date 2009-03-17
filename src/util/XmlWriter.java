@@ -2,11 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import org.w3c.dom.*;
-
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 public class XmlWriter {
   private static String endl = System.getProperty("line.separator");

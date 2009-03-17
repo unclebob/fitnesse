@@ -3,7 +3,6 @@
 package fitnesseMain;
 
 import junit.framework.TestCase;
-import fitnesseMain.FitNesseMain;
 import fitnesse.Arguments;
 
 public class ArgumentsTest extends TestCase {

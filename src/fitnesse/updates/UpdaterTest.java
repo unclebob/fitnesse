@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.wiki.PathParser;
-
 import java.io.File;
+
+import fitnesse.wiki.PathParser;
 
 public class UpdaterTest extends UpdateTestCase {
 

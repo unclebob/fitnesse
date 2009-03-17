@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.FileUtil;
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.util.List;
+
+import junit.framework.TestCase;
+import util.FileUtil;
 
 public class BaseWikiPageTest extends TestCase {
   private BaseWikiPage root;
@@ -28,7 +28,7 @@ public class BaseWikiPageTest extends TestCase {
 
     List<WikiPage> children = linkingPage.getChildren();
     assertEquals(2, children.size());
-    assertEquals("ChildPage", ((WikiPage) children.get(0)).getName());
+    assertEquals("ChildPage", children.get(0).getName());
 
     checkSymbolicPage(children.get(1));
   }

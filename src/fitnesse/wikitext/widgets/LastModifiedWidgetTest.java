@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 //created by Jason Sypher
 

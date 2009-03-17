@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.util.Iterator;
+
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-
-import java.util.Iterator;
 
 public class MockWikiImporter extends WikiImporter {
   public static String mockContent = "mock importer content";

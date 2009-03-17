@@ -2,10 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import java.util.Iterator;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.components.MovedPageReferenceRenamer;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -13,11 +17,11 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.wiki.*;
-
-import java.util.Iterator;
-import java.util.List;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class MovePageResponder implements SecureResponder {
   private String nameOfPageToBeMoved;

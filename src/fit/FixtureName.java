@@ -3,12 +3,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import util.GracefulNamer;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import util.GracefulNamer;
 
 public class FixtureName {
   private final String nameAsString;

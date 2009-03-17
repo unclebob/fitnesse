@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import junit.framework.TestCase;
-
 import java.io.File;
+
+import junit.framework.TestCase;
 
 public class FileUtilTest extends TestCase {
   public void testCreateDir() throws Exception {

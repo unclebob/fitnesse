@@ -5,6 +5,7 @@ package fitnesse.responders.refactoring;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -12,7 +13,6 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.authentication.SecureResponder;
 
 public class RefactorPageResponder implements SecureResponder {
   private String resource;

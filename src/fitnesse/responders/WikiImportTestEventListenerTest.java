@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import junit.framework.TestCase;
+import util.StandardOutAndErrorRecorder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
-import util.StandardOutAndErrorRecorder;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
 
 public class WikiImportTestEventListenerTest extends TestCase {
   private WikiImportTestEventListener eventListener;

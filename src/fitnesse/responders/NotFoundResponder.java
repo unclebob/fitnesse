@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.util.regex.Pattern;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
@@ -11,8 +13,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-
-import java.util.regex.Pattern;
 
 // TODO: Some of this code may now be obsolete, because this responder is no longer used for some
 

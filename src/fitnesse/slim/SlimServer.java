@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.socketservice.SocketServer;
-import util.StreamReader;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.List;
+
+import util.StreamReader;
+import fitnesse.socketservice.SocketServer;
 
 public class SlimServer implements SocketServer {
   private StreamReader reader;

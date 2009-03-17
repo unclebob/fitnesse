@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestSystemGroup {
   private Map<TestSystem.Descriptor, TestSystem> testSystems = new HashMap<TestSystem.Descriptor, TestSystem>();

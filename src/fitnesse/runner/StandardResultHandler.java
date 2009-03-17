@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSummary;
-
 import java.io.InputStream;
 import java.io.PrintStream;
+
+import fitnesse.responders.run.TestSummary;
 
 //TODO MDM Rename to VerboseResultHandler
 public class StandardResultHandler implements ResultHandler {

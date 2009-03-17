@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import util.RegexTestCase;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import util.RegexTestCase;
 
 public abstract class WidgetTestCase extends RegexTestCase {
   protected void assertMatchEquals(String value, String expected) {

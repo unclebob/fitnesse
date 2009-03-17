@@ -14,7 +14,13 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.revisioncontrol.HtmlActionMenuBuilder;
-import fitnesse.wiki.*;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class WikiPageResponder implements SecureResponder {
   protected WikiPage page;

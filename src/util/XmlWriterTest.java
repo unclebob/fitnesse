@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import util.RegexTestCase;
-import org.w3c.dom.Document;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
 
 public class XmlWriterTest extends RegexTestCase {
   private ByteArrayOutputStream output;

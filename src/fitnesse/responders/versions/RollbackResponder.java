@@ -4,8 +4,8 @@ package fitnesse.responders.versions;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.components.RecentChanges;
 import fitnesse.http.Request;
 import fitnesse.http.Response;

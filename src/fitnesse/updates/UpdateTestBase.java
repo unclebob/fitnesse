@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import junit.framework.TestCase;
+import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
-import util.FileUtil;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
 
 public abstract class UpdateTestBase extends TestCase {
   public static final String testDir = "testDir";

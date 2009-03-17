@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.responders.run.TestSummary;
-import util.RegexTestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import util.RegexTestCase;
+import fitnesse.responders.run.TestSummary;
 
 public class StandardResultHandlerTest extends RegexTestCase {
   private StandardResultHandler handler;

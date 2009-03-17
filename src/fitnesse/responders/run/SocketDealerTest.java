@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.testutil.MockSocket;
-import fitnesse.testutil.SimpleSocketSeeker;
-import junit.framework.TestCase;
-
 import java.net.Socket;
 import java.util.Collection;
+
+import junit.framework.TestCase;
+import fitnesse.testutil.MockSocket;
+import fitnesse.testutil.SimpleSocketSeeker;
 
 public class SocketDealerTest extends TestCase {
   private SocketDealer dealer;

@@ -2,14 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetVisitor;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.PreProcessorLiteralWidget;
+import fitnesse.wikitext.widgets.PreformattedWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class WhereUsed implements FitNesseTraversalListener, SearchObserver, WidgetVisitor {
   private WikiPage root;

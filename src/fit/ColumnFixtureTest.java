@@ -3,10 +3,10 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import junit.framework.TestCase;
 
 public class ColumnFixtureTest extends TestCase {
   private TestFixture fixture;

@@ -1,21 +1,25 @@
 package fitnesseMain;
 
-import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.WikiImportTestEventListener;
-import fitnesse.html.HtmlPageFactory;
-import fitnesse.components.Logger;
+import java.io.File;
+
+import util.CommandLine;
+import fitnesse.Arguments;
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
+import fitnesse.Updater;
 import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.*;
+import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.components.Logger;
+import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.WikiImportTestEventListener;
+import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.updates.UpdaterImplementation;
-import util.CommandLine;
-
-import java.io.File;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageVersionPruner;
 
 public class FitNesseMain {
   private static String extraOutput;

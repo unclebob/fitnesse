@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import util.ListUtility;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import util.ListUtility;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.

@@ -2,15 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.components.Base64;
-import util.StreamReader;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+import util.StreamReader;
+import fitnesse.components.Base64;
 
 public class RequestBuilder {
   private static final byte[] ENDL = "\r\n".getBytes();

@@ -2,14 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import org.json.JSONObject;
+
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.WikiImportProperty;
-import util.RegexTestCase;
-import fitnesse.wiki.*;
-import org.json.JSONObject;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 
 public class PropertiesResponderTest extends RegexTestCase {
   private WikiPage root;

@@ -4,8 +4,8 @@ package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.components.RecentChanges;
 import fitnesse.components.SaveRecorder;
 import fitnesse.html.HtmlPage;
@@ -14,7 +14,12 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class SaveResponder implements SecureResponder {
   public static ContentFilter contentFilter;

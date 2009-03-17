@@ -2,16 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+
+import util.FileUtil;
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import util.RegexTestCase;
-import util.FileUtil;
-import fitnesse.wiki.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.WikiPageProperty;
 
 public class SerializedPageResponderTest extends RegexTestCase {
   private final String RootPath = "TestRooT";

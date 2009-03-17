@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import util.FileUtil;
-
 import java.io.File;
 import java.io.FileOutputStream;
+
+import util.FileUtil;
 
 public class ReplacingFileUpdateTest extends UpdateTestCase {
   public final String sourceFilename = "classes/testFile";

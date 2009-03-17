@@ -3,14 +3,15 @@
 package fitnesse.revisioncontrol;
 
 import static fitnesse.revisioncontrol.NullState.UNKNOWN;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.VersionInfo;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
+
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.VersionInfo;
 
 public class NullRevisionController implements RevisionController {
 

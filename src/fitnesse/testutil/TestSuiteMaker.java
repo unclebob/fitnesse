@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import java.lang.reflect.Method;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import java.lang.reflect.Method;
 
 public class TestSuiteMaker {
   public static Test makeSuite(String name, Class<?>[] tests) {

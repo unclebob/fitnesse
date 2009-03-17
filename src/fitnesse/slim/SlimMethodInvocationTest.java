@@ -2,16 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.ListUtility.list;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlim;
 import fitnesse.slim.test.Zork;
-import static util.ListUtility.list;
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
 
 
 public class SlimMethodInvocationTest {

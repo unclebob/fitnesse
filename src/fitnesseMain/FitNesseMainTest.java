@@ -2,20 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import java.io.File;
+
+import junit.framework.TestCase;
+import util.FileUtil;
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesse;
-import fitnesse.ComponentFactory;
-import util.FileUtil;
-import junit.framework.TestCase;
-
-import java.io.File;
-
-import fitnesseMain.FitNesseMain;
 
 public class FitNesseMainTest extends TestCase {
   private FitNesseContext context;

@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import fit.TypeAdapter;
+import java.awt.Point;
 
-import java.awt.*;
+import fit.TypeAdapter;
 
 public class ObjectTranslatePoint extends TranslatePoint {
   static {

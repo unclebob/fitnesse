@@ -2,28 +2,32 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import util.XmlUtil;
+import util.XmlWriter;
+import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
-import util.XmlWriter;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.responders.WikiImportProperty;
-import util.XmlUtil;
-import fitnesse.wiki.*;
-import fitnesse.FitNesseVersion;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPagePath;
 
 public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
-  private static final String PATH_SEPARATOR = System.getProperty("path.separator");
   protected static final int htmlDepth = 2;
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected HtmlPage html;

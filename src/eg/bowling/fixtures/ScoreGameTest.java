@@ -1,7 +1,8 @@
 package eg.bowling.fixtures;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
+
 import fit.Parse;
 
 public class ScoreGameTest {

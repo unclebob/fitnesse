@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit.decorator.util;
 
-import junit.framework.TestCase;
+import java.awt.Point;
 
-import java.awt.*;
+import junit.framework.TestCase;
 
 public class ClassDelegatePointParserTest extends TestCase {
   public void testParseMethodReturnsPointClassFromGivenString() throws Exception {

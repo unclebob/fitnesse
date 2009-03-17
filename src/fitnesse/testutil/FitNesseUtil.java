@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import util.FileUtil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.ResponderFactory;
-import util.FileUtil;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;

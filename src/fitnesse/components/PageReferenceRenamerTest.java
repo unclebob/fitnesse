@@ -3,7 +3,11 @@
 package fitnesse.components;
 
 import util.RegexTestCase;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 public class PageReferenceRenamerTest extends RegexTestCase {
   WikiPage root;

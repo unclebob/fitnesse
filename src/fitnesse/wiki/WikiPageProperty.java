@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.StringUtil;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import util.StringUtil;
 
 public class WikiPageProperty implements Serializable {
   private static final long serialVersionUID = 1L;

@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import fitnesse.wiki.FileSystemPage;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
+
+import fitnesse.wiki.FileSystemPage;
 
 public class PropertiesToXmlUpdateTest extends UpdateTestCase {
   private String pageOneOldFilename = "testDir/RooT/PageOne" + PropertiesToXmlUpdate.old_propertiesFilename;

@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fitlibrary.DoFixture;
-
 import java.util.regex.Pattern;
+
+import fitlibrary.DoFixture;
 
 public class JavaProperties extends DoFixture {
   public boolean propertyShouldMatch(String property, String pattern) {

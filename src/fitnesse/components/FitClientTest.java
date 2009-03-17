@@ -2,17 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import util.RegexTestCase;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.testutil.MockSocket;
-import util.RegexTestCase;
 import fitnesse.testutil.SimpleSocketDoner;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class FitClientTest extends RegexTestCase implements TestSystemListener {
   private List<String> outputs = new ArrayList<String>();

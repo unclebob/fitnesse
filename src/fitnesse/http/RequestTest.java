@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.components.Base64;
-import util.FileUtil;
-import junit.framework.TestCase;
-
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+
+import junit.framework.TestCase;
+import util.FileUtil;
+import fitnesse.components.Base64;
 
 public class RequestTest extends TestCase {
   PipedOutputStream output;

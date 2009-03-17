@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.RegexTestCase;
-
 import java.net.Socket;
+
+import util.RegexTestCase;
 
 public class SimpleResponseTest extends RegexTestCase implements ResponseSender {
   private String text;

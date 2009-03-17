@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.components.FitNesseTraversalListener;
-
 import java.util.Iterator;
 import java.util.List;
+
+import fitnesse.components.FitNesseTraversalListener;
 
 public class PageCrawlerImpl implements PageCrawler {
   private PageCrawlerDeadEndStrategy deadEndStrategy;

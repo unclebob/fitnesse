@@ -11,7 +11,12 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.BasicResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.revisioncontrol.RevisionControlOperation;
-import fitnesse.wiki.*;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public abstract class RevisionControlResponder extends BasicResponder {
   private final RevisionControlOperation operation;

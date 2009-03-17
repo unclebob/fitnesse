@@ -1,9 +1,9 @@
 package fit.decorator.util;
 
+import java.text.ParseException;
+
 import fit.Parse;
 import fit.decorator.exceptions.InvalidInputException;
-
-import java.text.ParseException;
 
 public class Table {
   private final Parse table;

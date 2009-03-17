@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.util.List;
+
+import junit.framework.TestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
-import junit.framework.TestCase;
-
-import java.util.List;
 
 public class TextIgnoringWidgetRootTest extends TestCase {
   public void setUp() throws Exception {

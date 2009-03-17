@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import util.RegexTestCase;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import util.RegexTestCase;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
   private HtmlPage page;

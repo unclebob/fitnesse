@@ -2,14 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import util.RegexTestCase;
-import fitnesse.wiki.*;
-
-import java.util.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VersionInfo;
+import fitnesse.wiki.WikiPage;
 
 public class VersionSelectionResponderTest extends RegexTestCase {
   private WikiPage page;

@@ -6,7 +6,16 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.widgets.*;
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.ClasspathWidget;
+import fitnesse.wikitext.widgets.CommentWidget;
+import fitnesse.wikitext.widgets.ImageWidget;
+import fitnesse.wikitext.widgets.LinkWidget;
+import fitnesse.wikitext.widgets.LiteralWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.PreformattedWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public abstract class ReferenceRenamer implements FitNesseTraversalListener {
   protected WikiPage root;

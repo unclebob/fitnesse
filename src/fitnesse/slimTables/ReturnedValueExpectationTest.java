@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.wikitext.Utils;
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
+
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.wikitext.Utils;
 
 public class ReturnedValueExpectationTest {
   private MockSlimTestContext testContext;

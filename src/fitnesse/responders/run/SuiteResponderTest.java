@@ -2,26 +2,39 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.*;
-import org.junit.After;
+import static junit.framework.Assert.assertSame;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.divWithIdAndContent;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import static util.RegexTestCase.*;
-import util.XmlUtil;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import util.XmlUtil;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class SuiteResponderTest {
   private MockRequest request;

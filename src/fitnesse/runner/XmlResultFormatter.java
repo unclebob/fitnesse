@@ -2,15 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.components.ContentBuffer;
-import util.XmlWriter;
-import fitnesse.responders.run.TestSummary;
-import util.XmlUtil;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import util.XmlUtil;
+import util.XmlWriter;
+import fitnesse.components.ContentBuffer;
+import fitnesse.responders.run.TestSummary;
 
 public class XmlResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;

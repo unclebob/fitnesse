@@ -2,15 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.testutil.FitNesseUtil;
+import java.util.ArrayList;
+import java.util.List;
+
 import util.RegexTestCase;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WhereUsedTest extends RegexTestCase implements SearchObserver {
   private WikiPage root;

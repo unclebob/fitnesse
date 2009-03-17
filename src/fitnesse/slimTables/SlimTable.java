@@ -2,18 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import static util.ListUtility.list;
-import fitnesse.wikitext.Utils;
-
 import static java.lang.Character.isLetterOrDigit;
 import static java.lang.Character.toUpperCase;
+import static util.ListUtility.list;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {
   protected Table table;

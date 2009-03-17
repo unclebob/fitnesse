@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.http.ResponseParser;
-import util.RegexTestCase;
-
 import java.net.UnknownHostException;
+
+import util.RegexTestCase;
+import fitnesse.http.ResponseParser;
 
 public class ShutdownTest extends RegexTestCase {
   private Shutdown shutdown;

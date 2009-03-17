@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import java.io.File;
+
+import junit.framework.TestCase;
+import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
-import util.FileUtil;
-import junit.framework.TestCase;
-
-import java.io.File;
 
 public class CreateDirectoryResponderTest extends TestCase {
   public void setUp() throws Exception {

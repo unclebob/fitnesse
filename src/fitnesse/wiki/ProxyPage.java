@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.http.ResponseParser;
-
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -11,6 +9,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import fitnesse.http.ResponseParser;
 
 public class ProxyPage extends CachingPage implements Serializable {
   private static final long serialVersionUID = 1L;

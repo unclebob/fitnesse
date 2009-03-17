@@ -4,17 +4,22 @@
 
 package fit;
 
-import fit.exception.CouldNotParseFitFailureException;
-import fit.exception.FitFailureException;
-import fit.exception.FitMatcherException;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import fit.exception.CouldNotParseFitFailureException;
+import fit.exception.FitFailureException;
+import fit.exception.FitMatcherException;
 
 // TODO-RcM Figure out how to make me smaller.
 public class Fixture {

@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.tools;
 
-import util.FileUtil;
-
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+
+import util.FileUtil;
 
 public abstract class LicenseManager {
   public static void main(String[] args) throws Exception {

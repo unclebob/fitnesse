@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
-
 import java.io.Serializable;
+
+import junit.framework.TestCase;
 
 public class WikiPagePropertyTest extends TestCase {
   private WikiPageProperty property;
