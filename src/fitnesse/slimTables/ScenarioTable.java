@@ -123,7 +123,7 @@ public class ScenarioTable extends SlimTable {
     private ScriptTable scriptTable;
 
     private ScenarioExpectation(ScriptTable scriptTable, int row) {
-      super(null, "", -1, row);  // We don't care about anything but the row.
+      super("", -1, row);  // We don't care about anything but the row.
       this.scriptTable = scriptTable;
     }
 
@@ -135,7 +135,7 @@ public class ScenarioTable extends SlimTable {
       parent.getTestSummary().add(scriptTable.getTestSummary());
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
+    protected String createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }

@@ -111,14 +111,14 @@ public class ScriptTable extends SlimTable {
   private void checkAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     String expected = table.getCellContents(lastColInAction, row);
-    addExpectation(new ReturnedValueExpectation(expected, getInstructionTag(), lastColInAction, row));
+    addExpectation(new ReturnedValueExpectation(getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
 
   private void checkNotAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
     String expected = table.getCellContents(lastColInAction, row);
-    addExpectation(new RejectedValueExpectation(expected, getInstructionTag(), lastColInAction, row));
+    addExpectation(new RejectedValueExpectation(getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
 
@@ -157,65 +157,65 @@ public class ScriptTable extends SlimTable {
 
   private class ScriptActionExpectation extends Expectation {
     private ScriptActionExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
-      if (value == null)
-        return failMessage(originalValue, "Returned null value.");
-      else if (value.equals(VoidConverter.VOID_TAG) || value.equals("null"))
-        return originalValue;
-      else if (value.equals(BooleanConverter.FALSE))
-        return fail(originalValue);
-      else if (value.equals(BooleanConverter.TRUE))
-        return pass(originalValue);
+    protected String createEvaluationMessage(String actual, String expected) {
+      if (actual == null)
+        return failMessage(expected, "Returned null value.");
+      else if (actual.equals(VoidConverter.VOID_TAG) || actual.equals("null"))
+        return expected;
+      else if (actual.equals(BooleanConverter.FALSE))
+        return fail(expected);
+      else if (actual.equals(BooleanConverter.TRUE))
+        return pass(expected);
       else
-        return originalValue;
+        return expected;
     }
   }
 
   private class EnsureActionExpectation extends Expectation {
     public EnsureActionExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
-      return (value != null && value.equals(BooleanConverter.TRUE)) ?
-        pass(originalValue) : fail(originalValue);
+    protected String createEvaluationMessage(String actual, String expected) {
+      return (actual != null && actual.equals(BooleanConverter.TRUE)) ?
+        pass(expected) : fail(expected);
     }
   }
 
   private class RejectActionExpectation extends Expectation {
     public RejectActionExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
-      if (value == null)
-        return pass(originalValue);
+    protected String createEvaluationMessage(String actual, String expected) {
+      if (actual == null)
+        return pass(expected);
       else
-        return value.equals(BooleanConverter.FALSE) ? pass(originalValue) : fail(originalValue);
+        return actual.equals(BooleanConverter.FALSE) ? pass(expected) : fail(expected);
     }
   }
 
   private class ShowActionExpectation extends Expectation {
     public ShowActionExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
+    protected String createEvaluationMessage(String actual, String expected) {
       try {
-        table.appendCellToRow(row, value);
+        table.appendCellToRow(row, actual);
       } catch (Throwable e) {
-        return failMessage(value, SlimTestSystem.exceptionToString(e));
+        return failMessage(actual, SlimTestSystem.exceptionToString(e));
       }
-      return originalValue;
+      return expected;
     }
   }
 
   private class ArgumentExpectation extends Expectation {
     private ArgumentExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
     public void evaluateExpectation(Map<String, Object> returnValues) {
@@ -223,7 +223,7 @@ public class ScriptTable extends SlimTable {
         table.setCell(col, row, replaceSymbolsWithFullExpansion(originalContent));
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
+    protected String createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }

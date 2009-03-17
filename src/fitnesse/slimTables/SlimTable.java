@@ -244,7 +244,7 @@ public abstract class SlimTable {
 
   protected ReturnedValueExpectation makeReturnedValueExpectation(
     String expected, String instructionTag, int col, int row) {
-    return new ReturnedValueExpectation(expected, instructionTag, col, row);
+    return new ReturnedValueExpectation(instructionTag, col, row);
   }
 
   public static boolean approximatelyEqual(String standard, String candidate) {
@@ -402,13 +402,11 @@ public abstract class SlimTable {
   }
 
   public abstract class Expectation {
-    protected String expectedValue;
     protected int col;
     protected int row;
     protected String instructionTag;
 
-    public Expectation(String expected, String instructionTag, int col, int row) {
-      expectedValue = expected;
+    public Expectation(String instructionTag, int col, int row) {
       this.row = row;
       this.instructionTag = instructionTag;
       this.col = col;
@@ -428,16 +426,16 @@ public abstract class SlimTable {
         table.setCell(col, row, evaluationMessage);
     }
 
-    private String evaluationMessage(String value, String originalContent) {
+    private String evaluationMessage(String actual, String expected) {
       String evaluationMessage;
-      if (isExceptionMessage(value))
-        evaluationMessage = originalContent + " " + error(extractExeptionMessage(value));
+      if (isExceptionMessage(actual))
+        evaluationMessage = expected + " " + error(extractExeptionMessage(actual));
       else
-        evaluationMessage = createEvaluationMessage(value, originalContent);
+        evaluationMessage = createEvaluationMessage(actual, expected);
       return evaluationMessage;
     }
 
-    protected abstract String createEvaluationMessage(String value, String originalValue);
+    protected abstract String createEvaluationMessage(String actual, String expected);
   }
 
   class SymbolReplacer {
@@ -493,34 +491,34 @@ public abstract class SlimTable {
 
   class VoidReturnExpectation extends Expectation {
     public VoidReturnExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
-      return replaceSymbolsWithFullExpansion(originalValue);
+    protected String createEvaluationMessage(String actual, String expected) {
+      return replaceSymbolsWithFullExpansion(expected);
     }
   }
 
   class SilentReturnExpectation extends Expectation {
     public SilentReturnExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
+    protected String createEvaluationMessage(String actual, String expected) {
       return null;
     }
   }
 
   class ConstructionExpectation extends Expectation {
     public ConstructionExpectation(String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
-      if ("OK".equalsIgnoreCase(value))
-        return pass(originalValue);
+    protected String createEvaluationMessage(String actual, String expected) {
+      if ("OK".equalsIgnoreCase(actual))
+        return pass(expected);
       else
-        return "!style_error(Unknown construction message:) " + value;
+        return "!style_error(Unknown construction message:) " + actual;
     }
   }
 
@@ -528,40 +526,40 @@ public abstract class SlimTable {
     private String symbolName;
 
     SymbolAssignmentExpectation(String symbolName, String instructionTag, int col, int row) {
-      super(null, instructionTag, col, row);
+      super(instructionTag, col, row);
       this.symbolName = symbolName;
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
-      setSymbol(symbolName, value);
-      return String.format("$%s<-[%s]", symbolName, value);
+    protected String createEvaluationMessage(String actual, String expected) {
+      setSymbol(symbolName, actual);
+      return String.format("$%s<-[%s]", symbolName, actual);
     }
   }
 
 
   class ReturnedValueExpectation extends Expectation {
-    public ReturnedValueExpectation(String expected, String instructionTag, int col, int row) {
-      super(expected, instructionTag, col, row);
+    public ReturnedValueExpectation(String instructionTag, int col, int row) {
+      super(instructionTag, col, row);
     }
 
-    protected String createEvaluationMessage(String value, String originalValue) {
+    protected String createEvaluationMessage(String actual, String expected) {
       String evaluationMessage;
-      String replacedValue = Utils.unescapeHTML(replaceSymbols(expectedValue));
-      if (value == null)
+      String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
+      if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.
-      else if (value.equals(replacedValue))
-        evaluationMessage = pass(announceBlank(replaceSymbolsWithFullExpansion(originalValue)));
-      else if (replacedValue.length() == 0)
-        evaluationMessage = ignore(value);
+      else if (actual.equals(replacedExpected))
+        evaluationMessage = pass(announceBlank(replaceSymbolsWithFullExpansion(expected)));
+      else if (replacedExpected.length() == 0)
+        evaluationMessage = ignore(actual);
       else {
-        String expressionMessage = new Comparator(this, replacedValue, value, expectedValue).evaluate();
+        String expressionMessage = new Comparator(this, replacedExpected, actual, expected).evaluate();
         if (expressionMessage != null)
           evaluationMessage = expressionMessage;
-        else if (value.indexOf("Exception:") != -1) {
-          evaluationMessage = error(value);
+        else if (actual.indexOf("Exception:") != -1) {
+          evaluationMessage = error(actual);
         } else
-          evaluationMessage = failMessage(value,
-            String.format("expected [%s]", replaceSymbolsWithFullExpansion(originalValue))
+          evaluationMessage = failMessage(actual,
+            String.format("expected [%s]", replaceSymbolsWithFullExpansion(expected))
           );
       }
 
@@ -586,8 +584,8 @@ public abstract class SlimTable {
   }
 
   class RejectedValueExpectation extends ReturnedValueExpectation {
-    public RejectedValueExpectation(String expected, String instructionTag, int col, int row) {
-      super(expected, instructionTag, col, row);
+    public RejectedValueExpectation(String instructionTag, int col, int row) {
+      super(instructionTag, col, row);
     }
 
     protected String pass(String message) {
@@ -601,8 +599,8 @@ public abstract class SlimTable {
 
   class Comparator {
     private String expression;
-    private String value;
-    private String originalExpression;
+    private String actual;
+    private String expected;
     private Pattern simpleComparison = Pattern.compile(
       "\\A\\s*_?\\s*(!?(?:(?:[<>]=?)|(?:[~]?=)))\\s*(\\d*\\.?\\d+)\\s*\\Z"
     );
@@ -616,11 +614,11 @@ public abstract class SlimTable {
     private String arg1Text;
     private ReturnedValueExpectation returnedValueExpectation;
 
-    private Comparator(ReturnedValueExpectation returnedValueExpectation, String expression, String value, String originalExpression) {
+    private Comparator(ReturnedValueExpectation returnedValueExpectation, String expression, String actual, String expected) {
       this.returnedValueExpectation = returnedValueExpectation;
       this.expression = expression;
-      this.value = value;
-      this.originalExpression = originalExpression;
+      this.actual = actual;
+      this.expected = expected;
     }
 
     private String evaluate() {
@@ -643,8 +641,8 @@ public abstract class SlimTable {
     }
 
     private String rangeMessage(boolean pass) {
-      String[] fragments = originalExpression.replaceAll(" ", "").split("_");
-      String message = String.format("%s%s%s", fragments[0], value, fragments[1]);
+      String[] fragments = expected.replaceAll(" ", "").split("_");
+      String message = String.format("%s%s%s", fragments[0], actual, fragments[1]);
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? returnedValueExpectation.pass(message) : returnedValueExpectation.fail(message);
 
@@ -654,7 +652,7 @@ public abstract class SlimTable {
       try {
         arg1 = Double.parseDouble(matcher.group(1));
         arg2 = Double.parseDouble(matcher.group(4));
-        v = Double.parseDouble(value);
+        v = Double.parseDouble(actual);
       } catch (NumberFormatException e) {
         return false;
       }
@@ -675,15 +673,15 @@ public abstract class SlimTable {
       else if (operation.equals("="))
         return simpleComparisonMessage(v == arg1);
       else if (operation.equals("~="))
-        return simpleComparisonMessage(approximatelyEqual(arg1Text, value));
+        return simpleComparisonMessage(approximatelyEqual(arg1Text, actual));
       else if (operation.equals("!~="))
-        return simpleComparisonMessage(!approximatelyEqual(arg1Text, value));
+        return simpleComparisonMessage(!approximatelyEqual(arg1Text, actual));
       else
         return null;
     }
 
     private String simpleComparisonMessage(boolean pass) {
-      String message = String.format("%s%s", value, originalExpression.replaceAll(" ", ""));
+      String message = String.format("%s%s", actual, expected.replaceAll(" ", ""));
       message = replaceSymbolsWithFullExpansion(message);
       return pass ? returnedValueExpectation.pass(message) : returnedValueExpectation.fail(message);
 
@@ -693,7 +691,7 @@ public abstract class SlimTable {
       Matcher matcher = simpleComparison.matcher(expression);
       if (matcher.matches()) {
         try {
-          v = Double.parseDouble(value);
+          v = Double.parseDouble(actual);
           arg1Text = matcher.group(2);
           arg1 = Double.parseDouble(arg1Text);
           return matcher.group(1);
