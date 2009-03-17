@@ -25,7 +25,7 @@ public class AuthenticatorTest extends TestCase {
   class DummySecureResponder implements SecureResponder {
 
     public SecureOperation getSecureOperation() {
-      return null;
+      return new AlwaysSecureOperation();
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
