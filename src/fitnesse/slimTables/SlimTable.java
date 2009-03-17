@@ -402,9 +402,12 @@ public abstract class SlimTable {
   }
 
   public abstract class Expectation {
-    protected int col;
-    protected int row;
-    protected String instructionTag;
+    private int col;
+    private int row;
+    private String instructionTag;
+    private String actual;
+    private String expected;
+    private String evaluationMessage;
 
     public Expectation(String instructionTag, int col, int row) {
       this.row = row;
@@ -426,16 +429,43 @@ public abstract class SlimTable {
         table.setCell(col, row, evaluationMessage);
     }
 
-    private String evaluationMessage(String actual, String expected) {
+    String evaluationMessage(String actual, String expected) {
+      this.actual = actual;
+      this.expected = expected;
       String evaluationMessage;
       if (isExceptionMessage(actual))
         evaluationMessage = expected + " " + error(extractExeptionMessage(actual));
       else
         evaluationMessage = createEvaluationMessage(actual, expected);
+      this.evaluationMessage = HtmlTable.colorize(evaluationMessage);
       return evaluationMessage;
     }
 
     protected abstract String createEvaluationMessage(String actual, String expected);
+
+    public int getCol() {
+      return col;
+    }
+
+    public int getRow() {
+      return row;
+    }
+
+    public String getInstructionTag() {
+      return instructionTag;
+    }
+
+    public String getActual() {
+      return actual;
+    }
+
+    public String getExpected() {
+      return expected;
+    }
+
+    public String getEvaluationMessage() {
+      return evaluationMessage;
+    }
   }
 
   class SymbolReplacer {

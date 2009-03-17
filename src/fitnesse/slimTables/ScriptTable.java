@@ -205,7 +205,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       try {
-        table.appendCellToRow(row, actual);
+        table.appendCellToRow(getRow(), actual);
       } catch (Throwable e) {
         return failMessage(actual, SlimTestSystem.exceptionToString(e));
       }
@@ -219,8 +219,8 @@ public class ScriptTable extends SlimTable {
     }
 
     public void evaluateExpectation(Map<String, Object> returnValues) {
-      String originalContent = table.getCellContents(col, row);
-        table.setCell(col, row, replaceSymbolsWithFullExpansion(originalContent));
+      String originalContent = table.getCellContents(getCol(), getRow());
+        table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(originalContent));
     }
 
     protected String createEvaluationMessage(String actual, String expected) {

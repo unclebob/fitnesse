@@ -131,7 +131,7 @@ public class ScenarioTable extends SlimTable {
       TestSummary counts = scriptTable.getTestSummary();
       boolean testStatus = (counts.wrong + counts.exceptions) == 0;
       SlimTable parent = scriptTable.getParent();
-      parent.getTable().setTestStatusOnRow(row, testStatus);
+      parent.getTable().setTestStatusOnRow(getRow(), testStatus);
       parent.getTestSummary().add(scriptTable.getTestSummary());
     }
 
