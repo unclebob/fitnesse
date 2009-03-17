@@ -1,8 +1,0 @@
-!define TEST_SYSTEM {slim}
-!define TEST_RUNNER {/Users/unclebob/projects/RubySlim/lib/run_ruby_slim.rb}
-!define COMMAND_PATTERN {ruby -I /Users/unclebob/projects/RubySlim/lib %m}
-!path /Users/unclebob/projects/RubySlim/lib
-
-!contents
-
-

@@ -1,4 +1,0 @@
-!contents -R2 -g -p -f -h
-
-!|fitnesse.testutil.PassFixture|
-
