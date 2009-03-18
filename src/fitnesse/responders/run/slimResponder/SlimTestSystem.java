@@ -42,7 +42,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
-  private List<Object> instructions;
+  protected List<Object> instructions;
   private boolean started;
   protected TableScanner tableScanner;
   protected PageData testResults;
@@ -55,7 +55,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private int slimSocket;
   protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-  private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
+  protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
@@ -367,6 +367,22 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public static void clearSlimPortOffset() {
     slimSocketOffset.set(0);
+  }
+
+  public List<SlimTable> getTestTables() {
+    return testTables;
+  }
+
+  public List<Object> getInstructions() {
+    return instructions;
+  }
+
+  public Map<String, Object> getInstructionResults() {
+    return instructionResults;
+  }
+
+  public List<SlimTable.Expectation> getExpectations() {
+    return expectations;
   }
 
   static class ExceptionList {

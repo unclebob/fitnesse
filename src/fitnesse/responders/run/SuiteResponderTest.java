@@ -414,6 +414,8 @@ public class SuiteResponderTest {
       if ("SlimTest".equals(pageName)) {
         TestResponderTest.assertCounts(testResult, "2", "0", "0", "0");
         assertSubString("DT:fitnesse.slim.test.TestSlim", XmlUtil.getTextValue(testResult, "content"));
+        Element instructions = XmlUtil.getElementByTagName(testResult, "instructions");
+        assertTrue(instructions != null);
       } else if ("TestOne".equals(pageName)) {
         TestResponderTest.assertCounts(testResult, "1", "0", "0", "0");
         assertSubString("PassFixture", XmlUtil.getTextValue(testResult, "content"));

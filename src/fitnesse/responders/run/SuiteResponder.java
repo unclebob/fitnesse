@@ -92,7 +92,7 @@ public class SuiteResponder extends TestResponder implements TestSystemListener 
   }
 
   private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<WikiPage> testSystemPages) throws Exception {
-    TestSystem testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
+    testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
     if (testSystem.isSuccessfullyStarted()) {
       executeTestSystemPages(testSystemPages, testSystem);
       waitForTestSystemToSendResults();

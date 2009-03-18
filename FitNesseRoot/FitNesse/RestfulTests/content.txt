@@ -15,7 +15,24 @@ The results come back in the following form:
 		<content>
                         <![CDATA[HTML OF TEST PAGE
                 </content>
+               <instructions>
+                       <instructionResult>
+                               <instruction>[decisionTable_1_0, make, decisionTable_1, SetUp]</instruction>
+                               <slimResult>OK</result>
+                               <expectation>
+                                       <instructionId>decisionTable_1_0</instructionId>
+                                       <col>0</col>
+                                       <row>0</row>
+                                       <type>ConstructionExpectation</type>
+                                       <actual>OK</actual>
+                                       <expected>SetUp</expected>
+                                       <evaluationMessage>pass(SetUp)</evaluationMessage>
+                               </expectation>
+                       </instructionResult>
+                       ...
+               </instructions>
 	</result>
+
 	<result>
 	     ...
 
@@ -27,3 +44,16 @@ The results come back in the following form:
 	</finalCounts>
 </testResults>
 }}}
+
+The 'instructions' elements are only for Slim tests.  The instruction data documents the slim execution process.  Each instruction represents a single slim command.  You see the command as it was sent to slim, the result as it returned from slim, and the evaluation of the slim table expectation.  This is pretty detailed information, so here are a few things you should know.
+ * !style_code(instructionId) is the id of a single slim instruction.  It is constructed from the table type, the table number, and the instruction number within that table.  So an id of decisionTable_1_0 means that the instruction is for a decision table, 1 is the index of the table.  0 is the index of the instruction within that table.  The index of the next table will likely be 2, although this is complicated by scenarios tables.  
+  * Scenario tables add dots to the table index.  So decisionTable_1.2.3_4 is the 4th instruction of the 3rd scenario within the 2nd scenario within the 1st table, which is a decision table.  
+  * Don't depend too much on these numbers, they are likely to change.
+ * !style_code(col,row) are the column and row of the expectation.  If scenario tables are involved it's the col,row of the ultimate scenario.
+ * !style_code(type) is the class name of the expectation.  You can pretty much work out the intent.  Here are a few of the more common ones
+  * !style_code(!-ReturnedValueExpectation-!) - This is the one that does almost all the comparisons that you are used to.  Decision tables and script tables use them a lot.  
+  * !style_code(!-VoidReturnExpectation-!) - We use this when we call a function (like 'setX') and expect a void return.
+  * !style_code(!-ConstructionExpectation-!) - used when we create a fixture class.  
+ * !style_code(expected) - This is the value that the expectation expects to be returned from slim.  Often this is ignored.  Only some expectations actually use it.  !style_code(!-ReturnedValueExpectation-!) uses it of course.
+ * !style_code(actual) - This is what was actually returned by slim.  You also saw this in the !style_code(slimResult) tag, but we present it here because it may have been massaged by internal processing.
+ * !style_code(evaluationMessage) - This is the result of the expectation.  It is a message littered with pass() and fail() markers that let you see the red/green results in symbolic form.

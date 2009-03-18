@@ -2,14 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import util.XmlUtil;
-import util.XmlWriter;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -21,11 +13,18 @@ import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.html.TagGroup;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.WikiImportProperty;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.slimTables.SlimTable;
+import fitnesse.wiki.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import util.XmlUtil;
+import util.XmlWriter;
+
+import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class TestResponder extends ChunkingResponder implements TestSystemListener, SecureResponder {
   protected static final int htmlDepth = 2;
@@ -42,6 +41,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
   protected Element testResultsElement;
   private StringBuffer outputBuffer;
   private boolean fastTest = false;
+  protected TestSystem testSystem;
 
   protected void doSending() throws Exception {
     fastTest |= request.hasInput("debug");
@@ -71,7 +71,7 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   protected void performExecution() throws Exception {
     TestSystem.Descriptor descriptor = TestSystem.getDescriptor(data);
-    TestSystem testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
+    testSystem = testSystemGroup.startTestSystem(descriptor, classPath);
     if (testSystemGroup.isSuccessfullyStarted()) {
       addToResponse(HtmlUtil.getHtmlOfInheritedPage("PageHeader", page));
       SetupTeardownIncluder.includeInto(data, true);
@@ -176,6 +176,11 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
     outputBuffer = null;
 
     XmlUtil.addTextNode(testResultsDocument, resultElement, "relativePageName", pageName);
+    if (testSystem instanceof SlimTestSystem) {
+      SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
+      new InstructionXmlFormatter(resultElement, slimSystem).invoke();
+    }
+
   }
 
   private void addCountsToResult(TestSummary testSummary, Element resultElement) {
@@ -253,5 +258,75 @@ public class TestResponder extends ChunkingResponder implements TestSystemListen
 
   public boolean isFastTest() {
     return fastTest;
+  }
+
+  private class InstructionXmlFormatter {
+    private Element resultElement;
+    private SlimTestSystem slimSystem;
+    private List<Object> instructions;
+    private Map<String, Object> results;
+    private List<SlimTable.Expectation> expectations;
+
+    public InstructionXmlFormatter(Element resultElement, SlimTestSystem slimSystem) {
+      this.resultElement = resultElement;
+      this.slimSystem = slimSystem;
+      instructions = slimSystem.getInstructions();
+      results = slimSystem.getInstructionResults();
+      expectations = slimSystem.getExpectations();
+    }
+
+    public void invoke() {
+      Element instructionsElement = testResultsDocument.createElement("instructions");
+      resultElement.appendChild(instructionsElement);
+      addInstructionResultss(instructionsElement);
+    }
+
+    private void addInstructionResultss(Element instructionsElement) {
+      for (Object instruction : instructions) {
+        addInstructionResult(instructionsElement, instruction);
+      }
+    }
+
+    private void addInstructionResult(Element instructionsElement, Object instruction) {
+      List<Object> instructionList = (List<Object>) instruction;
+      String id = (String) (instructionList.get(0));
+
+      Element instructionElement = testResultsDocument.createElement("instructionResult");
+      instructionsElement.appendChild(instructionElement);
+
+      addInstruction(instruction, instructionElement);
+      addResult(id, instructionElement);
+      addExpectationIfPresent(id, instructionElement);
+    }
+
+    private void addExpectationIfPresent(String id, Element instructionElement) {
+      for (SlimTable.Expectation expectation : expectations) {
+        if (expectation.getInstructionTag().equals(id)) {
+          addExpectation(instructionElement, expectation);
+          break;
+        }
+      }
+    }
+
+    private void addExpectation(Element instructionElement, SlimTable.Expectation expectation) {
+      Element expectationElement = testResultsDocument.createElement("expectation");
+      instructionElement.appendChild(expectationElement);
+      XmlUtil.addTextNode(testResultsDocument, expectationElement, "instructionId", expectation.getInstructionTag());
+      XmlUtil.addTextNode(testResultsDocument, expectationElement, "col", Integer.toString(expectation.getCol()));
+      XmlUtil.addTextNode(testResultsDocument, expectationElement, "row", Integer.toString(expectation.getRow()));
+      XmlUtil.addTextNode(testResultsDocument, expectationElement, "type", expectation.getClass().getSimpleName());
+      XmlUtil.addCdataNode(testResultsDocument, expectationElement, "actual", expectation.getActual());
+      XmlUtil.addCdataNode(testResultsDocument, expectationElement, "expected", expectation.getExpected());
+      XmlUtil.addCdataNode(testResultsDocument, expectationElement, "evaluationMessage", expectation.getEvaluationMessage());
+    }
+
+    private void addResult(String id, Element instructionElement) {
+      Object result = results.get(id);
+      XmlUtil.addCdataNode(testResultsDocument, instructionElement, "slimResult", result.toString());
+    }
+
+    private void addInstruction(Object instruction, Element instructionElement) {
+      XmlUtil.addCdataNode(testResultsDocument, instructionElement, "instruction", instruction.toString());
+    }
   }
 }

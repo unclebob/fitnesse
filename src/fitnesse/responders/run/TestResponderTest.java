@@ -2,23 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-import static util.RegexTestCase.divWithIdAndContent;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
@@ -28,13 +11,21 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import static junit.framework.Assert.assertTrue;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import static util.RegexTestCase.*;
+import util.XmlUtil;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TestResponderTest {
   private WikiPage root;
@@ -49,6 +40,8 @@ public class TestResponderTest {
   private WikiPage errorLogsParentPage;
   private PageCrawler crawler;
   private String simpleRunPageName;
+  private Document testResultsDocument;
+  private Element testResultsElement;
 
   @Before
   public void setUp() throws Exception {
@@ -210,24 +203,85 @@ public class TestResponderTest {
   }
 
   @Test
-  public void xmlFormat() throws Exception {
+  public void simpleXmlFormat() throws Exception {
     request.addInput("format", "xml");
     doSimpleRun(passFixtureTable());
-    assertEquals("text/xml", response.getContentType());
 
-    Document testResultsDocument = getXmlDocumentFromResults(results);
-    Element testResultsElement = testResultsDocument.getDocumentElement();
-    assertEquals("testResults", testResultsElement.getNodeName());
-    String version = XmlUtil.getTextValue(testResultsElement, "FitNesseVersion");
-    assertEquals(new FitNesseVersion().toString(), version);
+    assertXmlDocumentHeaderIsCorrect();
 
     Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
     Element counts = XmlUtil.getElementByTagName(result, "counts");
     assertCounts(counts, "1", "0", "0", "0");
+
     String content = XmlUtil.getTextValue(result, "content");
     assertSubString("PassFixture", content);
     String relativePageName = XmlUtil.getTextValue(result, "relativePageName");
     assertEquals("TestPage", relativePageName);
+  }
+
+  @Test
+  public void slimXmlFormat() throws Exception {
+    String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
+    String instructionResults[] = {"OK","EXCEPTION","EXCEPTION","VOID","VOID","right","EXCEPTION","VOID","VOID","wow"};
+
+    request.addInput("format", "xml");
+    doSimpleRun(slimDecisionTable());
+    assertXmlDocumentHeaderIsCorrect();
+
+    Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
+    Element counts = XmlUtil.getElementByTagName(result, "counts");
+    assertCounts(counts, "2", "1", "0", "0");
+
+    Element instructions = XmlUtil.getElementByTagName(result, "instructions");
+    NodeList instructionList = instructions.getElementsByTagName("instructionResult");
+    assertEquals(instructionContents.length, instructionList.getLength());
+
+    for (int i = 0; i < instructionContents.length; i++) {
+      Element instructionElement = (Element) instructionList.item(i);
+      assertInstructionHas(instructionElement, instructionContents[i]);
+    }
+
+    for (int i = 0; i < instructionResults.length; i++) {
+      Element instructionElement = (Element) instructionList.item(i);
+      assertResultHas(instructionElement, instructionResults[i]);
+    }
+
+    checkExpectation(instructionList, 0, "decisionTable_0_0", "ConstructionExpectation", "0", "0", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
+    checkExpectation(instructionList, 3, "decisionTable_0_3", "VoidReturnExpectation", "0", "2", "/__VOID__/", "right", "right");
+    checkExpectation(instructionList, 5, "decisionTable_0_5", "ReturnedValueExpectation", "1", "2", "right", "wrong", "[right] fail(expected [wrong])");
+    checkExpectation(instructionList, 7, "decisionTable_0_7", "VoidReturnExpectation", "0", "3", "/__VOID__/", "wow", "wow");
+    checkExpectation(instructionList, 9, "decisionTable_0_9", "ReturnedValueExpectation", "1", "3", "wow", "wow", "pass(wow)");
+  }
+
+  private void checkExpectation(NodeList instructionList, int index, String id, String type, String col, String row, String actual, String expected, String message) throws Exception {
+    Element instructionElement = (Element)instructionList.item(index);
+    Element expectation = XmlUtil.getElementByTagName(instructionElement, "expectation");
+    assertEquals(id, XmlUtil.getTextValue(expectation, "instructionId"));
+    assertEquals(type, XmlUtil.getTextValue(expectation, "type"));
+    assertEquals(col, XmlUtil.getTextValue(expectation, "col"));
+    assertEquals(row, XmlUtil.getTextValue(expectation, "row"));
+    assertEquals(actual, XmlUtil.getTextValue(expectation, "actual"));
+    assertEquals(expected, XmlUtil.getTextValue(expectation, "expected"));
+    assertEquals(message, XmlUtil.getTextValue(expectation, "evaluationMessage"));
+  }
+
+  private void assertInstructionHas(Element instructionElement, String content) throws Exception {
+    String instruction = XmlUtil.getTextValue(instructionElement, "instruction");
+    assertTrue(String.format("instruction %s should contain: %s", instruction, content), instruction.indexOf(content) != -1);
+  }
+
+  private void assertResultHas(Element instructionElement, String content) throws Exception {
+    String result = XmlUtil.getTextValue(instructionElement, "slimResult");
+    assertTrue(String.format("result %s should contain: %s", result, content), result.indexOf(content) != -1);
+  }
+
+  private void assertXmlDocumentHeaderIsCorrect() throws Exception {
+    assertEquals("text/xml", response.getContentType());
+    testResultsDocument = getXmlDocumentFromResults(results);
+    testResultsElement = testResultsDocument.getDocumentElement();
+    assertEquals("testResults", testResultsElement.getNodeName());
+    String version = XmlUtil.getTextValue(testResultsElement, "FitNesseVersion");
+    assertEquals(new FitNesseVersion().toString(), version);
   }
 
   static Document getXmlDocumentFromResults(String results) throws Exception {
@@ -402,6 +456,14 @@ public class TestResponderTest {
     return "!define TEST_SYSTEM {slim}\n" +
       "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
       "|string|get string arg?|\n" +
+      "|wow|wow|\n";
+  }
+
+  private String slimDecisionTable() {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
+      "|string|get string arg?|\n" +
+      "|right|wrong|\n" +
       "|wow|wow|\n";
   }
 
