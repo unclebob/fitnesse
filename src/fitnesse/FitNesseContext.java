@@ -7,6 +7,7 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 
@@ -21,6 +22,7 @@ public class FitNesseContext {
   public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
   public Logger logger;
   public SocketDealer socketDealer = new SocketDealer();
+  public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
   public Authenticator authenticator = new PromiscuousAuthenticator();
   public HtmlPageFactory htmlPageFactory = new HtmlPageFactory();
   public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";

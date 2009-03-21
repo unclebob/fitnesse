@@ -36,6 +36,7 @@ public class UpdaterImplementation implements Updater {
       new ReplacingFileUpdate(this, "files/images/executionStatus/ok.gif", "files/images/executionStatus"),
       new ReplacingFileUpdate(this, "files/images/executionStatus/output.gif", "files/images/executionStatus"),
       new ReplacingFileUpdate(this, "files/images/executionStatus/error.gif", "files/images/executionStatus"),
+      new ReplacingFileUpdate(this, "files/images/stop.gif", "files/images/"),
       new ReplacingFileUpdate(this, "files/css/fitnesse_base.css", "files/css"),
       new FileUpdate(this, "files/css/fitnesse.css", "files/css"),
       new FileUpdate(this, "files/css/fitnesse_print.css", "files/css"),

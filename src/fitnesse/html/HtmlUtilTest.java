@@ -130,4 +130,29 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);
     assertSubString("<a href=\".FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
   }
+
+  public void testMakeReplaceElementScript() throws Exception {
+    String newText = "<p>My string has \"quotes\" and \r \n</p>";
+    HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element-name", newText);
+    String expected = "<script>document.getElementById(\"element-name\").innerHTML = " +
+    		"\"<p>My string has \\\"quotes\\\" and \\r \\n</p>\";</script>";
+    assertSubString(expected, scriptTag.html());
+  }
+  
+  public void testMakeAppendElementScript() throws Exception {
+    String appendText = "<p>My string has \"quotes\" and \r \n</p>";
+    HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);
+    String expected1 = "<script>var existingContent = document.getElementById(\"element-name\").innerHTML;"; 
+    String expected2 = "document.getElementById(\"element-name\").innerHTML = " + 
+      "existingContent + \"<p>My string has \\\"quotes\\\" and \\r \\n</p>\";";
+    String expected3 =  "</script>";
+    assertSubString(expected1, scriptTag.html());
+    assertSubString(expected2, scriptTag.html());
+    assertSubString(expected3, scriptTag.html());
+  }
+  
+  public void testMakeSilentLink() throws Exception {
+    HtmlTag tag = HtmlUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
+    assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());
+  }
 }

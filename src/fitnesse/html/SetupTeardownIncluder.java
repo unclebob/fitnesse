@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
@@ -58,7 +58,7 @@ public class SetupTeardownIncluder {
   }
 
   private void includeSuiteSetupPage() throws Exception {
-    include(SuiteResponder.SUITE_SETUP_NAME, "-setup");
+    include(SuiteContentsFinder.SUITE_SETUP_NAME, "-setup");
   }
 
   private void includeSetupPage() throws Exception {
@@ -80,7 +80,7 @@ public class SetupTeardownIncluder {
   }
 
   private void includeSuiteTeardownPage() throws Exception {
-    include(SuiteResponder.SUITE_TEARDOWN_NAME, "-teardown");
+    include(SuiteContentsFinder.SUITE_TEARDOWN_NAME, "-teardown");
   }
 
   private void updatePageContent() throws Exception {

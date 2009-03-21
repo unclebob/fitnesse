@@ -224,7 +224,8 @@ div.virtual-wiki-properties {
   border: solid 1px #C6CCB7;
 }
 
-#execution-status {
+#execution-status,
+#stop-test {
   position: absolute;
   top: 0px;
   right: 0px;

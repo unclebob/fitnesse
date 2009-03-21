@@ -2,51 +2,98 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import util.RegexTestCase;
-import fitnesse.components.CommandRunner;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import util.RegexTestCase;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
-  private HtmlPage page;
-  private TestHtmlFormatter formatter;
+  private BaseFormatter formatter;
+  private StringBuffer pageBuffer = new StringBuffer();
+  private WikiPage page;
+  private WikiPage root;
 
   public void setUp() throws Exception {
-    page = new HtmlPageFactory().newPage();
-    formatter = new TestHtmlFormatter(page);
+    root = InMemoryPage.makeRoot("RooT");
+    page = root.addChildPage("NewPage");
+    page.getData().setContent("page content here");
+
+    formatter = new TestHtmlFormatter(page, new HtmlPageFactory()) {
+      @Override
+      protected void writeData(String output) throws Exception {
+        pageBuffer.append(output);
+      }
+    };
   }
 
   public void tearDown() throws Exception {
   }
 
   public void testHead() throws Exception {
-    String head = formatter.head();
+    formatter.writeHead("test");
 
-    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", head);
+    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", pageBuffer.toString());
   }
 
-  public void testTestSummary() throws Exception {
-    String summary = formatter.testSummary(new TestSummary(4, 0, 0, 0));
-    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", summary);
-    assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", summary);
-    assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", summary);
+  public void testTestSummaryTestPass() throws Exception {
 
-    summary = formatter.testSummary(new TestSummary(4, 1, 0, 0));
-    assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", summary);
-    assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", summary);
+    formatter.writeHead("test");
+    formatter.announceStartNewTest(page);
+    formatter.processTestResults(page, new TestSummary(4, 0, 0, 0));
+    formatter.allTestingComplete();
+    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", pageBuffer.toString());
+  }
+
+  public void testTestSummaryTestFail() throws Exception {
+    formatter.writeHead("test");
+    formatter.announceStartNewTest(page);
+    formatter.processTestResults(page, new TestSummary(4, 1, 0, 0));
+    formatter.allTestingComplete();
+    assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
   }
 
   public void testExecutionStatusHtml() throws Exception {
-    ExecutionLog log = new ExecutionLog(new WikiPageDummy(), new CommandRunner());
-    String status = formatter.executionStatus(log);
-
-    assertSubString("<div id=\"execution-status\">", status);
+    formatter.writeHead("test");
+    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceStartNewTest(page);
+    formatter.processTestResults(page, new TestSummary(4, 1, 0, 0));
+    formatter.allTestingComplete();
+    assertSubString("<div id=\"execution-status\">", pageBuffer.toString());
   }
 
   public void testTail() throws Exception {
-    String tail = formatter.tail();
+    formatter.writeHead("test");
+    formatter.announceStartNewTest(page);
+    formatter.processTestResults(page, new TestSummary(4, 1, 0, 0));
+    formatter.allTestingComplete();
 
-    assertSubString("</html>", tail);
+    assertSubString("</html>", pageBuffer.toString());
+  }
+
+  public void testStop() throws Exception {
+    formatter.writeHead("test");
+    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceStartNewTest(page);
+    formatter.processTestResults(page, new TestSummary(4, 1, 0, 0));
+    formatter.allTestingComplete();
+    //assert stop button added
+    assertSubString("<a href=\"#\" onclick=\"doSilentRequest('?responder=stoptest&id=2')\">", pageBuffer.toString());
+    //assert stop button removed
+    assertSubString("document.getElementById(\"stop-test\").innerHTML = \"\"", pageBuffer.toString());
+  }
+
+  public void testIncompleteMessageAfterException() throws Exception {
+    formatter.writeHead("test");
+    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceStartNewTest(page);
+    pageBuffer.setLength(0);
+    formatter.errorOccured();
+    //assert stop button added
+    assertSubString("Testing was interupted", pageBuffer.toString());
+    //assert stop button removed
+    assertSubString("className = \"fail\"", pageBuffer.toString());
   }
 }

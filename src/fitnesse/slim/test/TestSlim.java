@@ -24,6 +24,10 @@ public class TestSlim {
 
   }
 
+  public void runForever() {
+    while (true) {}
+  }
+
   public TestSlim(int constructorArg) {
     this.constructorArg = constructorArg;
   }

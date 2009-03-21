@@ -39,11 +39,7 @@ import fitnesse.responders.revisioncontrol.DeleteResponder;
 import fitnesse.responders.revisioncontrol.RevertResponder;
 import fitnesse.responders.revisioncontrol.SyncResponder;
 import fitnesse.responders.revisioncontrol.UpdateResponder;
-import fitnesse.responders.run.FitClientResponder;
-import fitnesse.responders.run.SocketCatchingResponder;
-import fitnesse.responders.run.SuiteResponder;
-import fitnesse.responders.run.TestResponder;
-import fitnesse.responders.run.TestResultFormattingResponder;
+import fitnesse.responders.run.*;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
@@ -259,6 +255,10 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderTypeMatchesInput("packet", PacketResponder.class);
   }
 
+  public void testStopTestResponder() throws Exception {
+    assertResponderTypeMatchesInput("stoptest", StopTestResponder.class);
+  }
+  
   public void testWillDisplayVirtualPages() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));

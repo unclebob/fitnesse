@@ -12,6 +12,7 @@ import java.util.Set;
 
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wikitext.WidgetBuilder;
@@ -101,8 +102,8 @@ public class PageData implements Serializable {
       return;
 
     if ((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
-        !pageName.equals(SuiteResponder.SUITE_SETUP_NAME) &&
-        !pageName.equals(SuiteResponder.SUITE_TEARDOWN_NAME))
+      !pageName.equals(SuiteContentsFinder.SUITE_SETUP_NAME) &&
+      !pageName.equals(SuiteContentsFinder.SUITE_TEARDOWN_NAME))
       properties.set("Suite", "true");
     else if (pageName.startsWith("Test") || pageName.endsWith("Test"))
       properties.set("Test", "true");

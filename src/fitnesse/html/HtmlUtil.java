@@ -321,6 +321,11 @@ public class HtmlUtil {
       link.setShortcutKey("");
       addLinkToActions(actions, link);
     }
+    if (pageData.hasAttribute("StopAll")) {
+      ActionLink link = new ActionLink("?stoptest", "Stop All Tests");
+      link.setQuery(null);
+      addLinkToActions(actions, link);
+    }
     ActionLink userGuideLink = new ActionLink(".FitNesse.UserGuide", "User Guide");
     userGuideLink.setQuery(null);
     userGuideLink.setShortcutKey("");
@@ -408,4 +413,45 @@ public class HtmlUtil {
     scriptTag.use("");
     return scriptTag;
   }
+  
+  public static String escapeHtmlForJavaScript(String html) {
+    html = html.replaceAll("\"", "\\\\\"");
+    html = html.replaceAll("\t", "\\\\t");
+    html = html.replaceAll("\n", "\\\\n");
+    html = html.replaceAll("\r", "\\\\r");
+    html = html.replaceAll(HtmlElement.endl, "\\\\n");
+    return html;
+  }
+  
+  public static HtmlTag makeAppendElementScript(String idElementToAppend, String htmlToAppend) {
+    HtmlTag scriptTag = new HtmlTag("script");
+    String getElement = "document.getElementById(\"" + idElementToAppend + "\")";
+    String escapedHtml = escapeHtmlForJavaScript(htmlToAppend);
+    
+    StringBuffer script = new StringBuffer();
+    script.append("var existingContent = ").append(getElement).append(".innerHTML;");
+    script.append(HtmlTag.endl);
+    script.append(getElement).append(".innerHTML = existingContent + \"").append(escapedHtml).append("\";");
+    script.append(HtmlTag.endl);
+    scriptTag.add(script.toString());
+    
+    return scriptTag;
+  }
+  
+  public static HtmlTag makeReplaceElementScript(String idElement, String newHtmlForElement) {
+    HtmlTag scriptTag = new HtmlTag("script");
+    String escapedHtml = escapeHtmlForJavaScript(newHtmlForElement);
+    scriptTag.add("document.getElementById(\"" + idElement + "\").innerHTML = \"" + escapedHtml + "\";");
+    return scriptTag;
+  }
+  
+  
+  public static HtmlTag makeSilentLink(String href, HtmlElement content) {
+    HtmlTag link = new HtmlTag("a");
+    link.addAttribute("href", "#");
+    link.addAttribute("onclick", "doSilentRequest('" + href + "')");
+    link.add(content);
+    return link;
+  }
+
 }

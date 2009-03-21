@@ -2,70 +2,113 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
-public class SuiteHtmlFormatter extends TestHtmlFormatter {
+public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
+
   private static final String cssSuffix1 = "1";
   private static final String cssSuffix2 = "2";
 
   private TestSummary pageCounts = new TestSummary();
+  private static final String TEST_SUMMARIES_ID = "test_summaries";
 
   private String cssSuffix = cssSuffix1;
-  private TagGroup testResultsGroup = new TagGroup();
-  private HtmlTag currentOutputDiv;
   private int pageNumber = 0;
+  private boolean firstTest = true;
+  private String testSystemFullName = null;
 
-  public SuiteHtmlFormatter(HtmlPage page) throws Exception {
-    super(page);
 
-    HtmlTag outputTitle = new HtmlTag("h2", "Test Output");
-    outputTitle.addAttribute("class", "centered");
-    testResultsGroup.add(outputTitle);
+  public SuiteHtmlFormatter(WikiPage page, HtmlPageFactory pageFactory) throws Exception {
+    super(page, pageFactory);
   }
 
-  protected String testPageSummary() {
-    return "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  public String getTestSystemHeader(String testSystemName) throws Exception {
+    String tag = String.format("<h3>%s</h3>\n", testSystemName);
+    HtmlTag insertScript = HtmlUtil.makeAppendElementScript("test_summaries", tag);
+    return insertScript.html();
   }
-
-  public void setPageAssertions(TestSummary pageSummary) {
-    this.pageCounts = pageSummary;
+  
+  public void announceStartNewTest(String relativeName, String fullPathName) throws Exception {
+    pageNumber++;
+    
+    if (firstTest) {
+      HtmlTag outputTitle = new HtmlTag("h2", "Test Output");
+      outputTitle.addAttribute("class", "centered");
+      writeData(outputTitle.html());
+      firstTest = false;
+    }
+    
+    if (testSystemFullName != null) {
+      HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
+      systemTitle.addAttribute("class", "centered");
+      writeData(systemTitle.html());
+      // once we write it out we don't need it any more
+      testSystemFullName = null;
+    }
+    
+    HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
+    HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
+    anchor.addAttribute("id", relativeName + pageNumber);
+    pageNameBar.add(anchor);
+    writeData(pageNameBar.html());
+    
+    writeData("<div class=\"alternating_block_" + cssSuffix + "\">");
   }
-
-  public String acceptResults(String relativePageName, TestSummary testSummary) throws Exception {
+  
+  @Override
+  public void announceStartNewTest(WikiPage newTest) throws Exception {
+    PageCrawler pageCrawler = getPage().getPageCrawler();
+    String relativeName = pageCrawler.getRelativeName(getPage(), newTest);
+    WikiPagePath fullPath = pageCrawler.getFullPath(newTest);
+    String fullPathName = PathParser.render(fullPath);
+    
+    announceStartNewTest(relativeName, fullPathName);
+  }
+  
+  @Override
+  public void processTestOutput(String output) throws Exception {
+    writeData(output);
+  }
+  
+  public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
+    finishOutputForTest();
+    
+    getAssertionCounts().tally(testSummary);
+    
     switchCssSuffix();
     HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);
 
     mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(testSummary), testSummary.toString()));
 
-    HtmlTag link = HtmlUtil.makeLink("#" + relativePageName + pageNumber, relativePageName);
+    HtmlTag link = HtmlUtil.makeLink("#" + relativeName + pageNumber, relativeName);
     link.addAttribute("class", "test_summary_link");
     mainDiv.add(link);
 
     pageCounts.tallyPageCounts(testSummary);
-
-    return mainDiv.html(2);
+    HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, mainDiv.html(2));
+    writeData(insertScript.html());
   }
-
-  public void startOutputForNewTest(String relativePageName, String qualifiedPageName) throws Exception {
-    pageNumber++;
-    HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
-    HtmlTag anchor = HtmlUtil.makeLink(qualifiedPageName, relativePageName);
-    anchor.addAttribute("id", relativePageName + pageNumber);
-    pageNameBar.add(anchor);
-    testResultsGroup.add(pageNameBar);
-    currentOutputDiv = HtmlUtil.makeDivTag("alternating_block_" + cssSuffix);
-    testResultsGroup.add(currentOutputDiv);
+  
+  private void finishOutputForTest() throws Exception {
+    writeData("</div>" + HtmlTag.endl);
   }
-
-  public void acceptOutput(String output) {
-    currentOutputDiv.add(output);
-  }
-
-  public String testOutput() throws Exception {
-    return testResultsGroup.html();
+  
+  @Override
+  public void processTestResults(WikiPage testPage, TestSummary testSummary)
+      throws Exception {
+    PageCrawler pageCrawler = getPage().getPageCrawler();
+    String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
+    if ("".equals(relativeName)) {
+      relativeName = String.format("(%s)", testPage.getName());
+    }
+    
+    processTestResults(relativeName, testSummary);
   }
 
   private void switchCssSuffix() {
@@ -74,14 +117,40 @@ public class SuiteHtmlFormatter extends TestHtmlFormatter {
     else
       cssSuffix = cssSuffix1;
   }
-
-  public void announceTestSystem(String testSystemName) {
-    HtmlTag outputTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemName));
-    outputTitle.addAttribute("class", "centered");
-    testResultsGroup.add(outputTitle);
+  
+  @Override
+  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner)
+      throws Exception {
+    String tag = String.format("<h3>%s</h3>\n", testSystemName  + ":" + testRunner);
+    HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
+    writeData(insertScript.html());
+    
+    testSystemFullName = testSystemName + ":" + testRunner;
+  }
+  
+  @Override
+  protected String makeSummaryContent() {
+    String testPagesSummary = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    return testPagesSummary + super.makeSummaryContent();
   }
 
-  public String getTestSystemHeader(String testSystemName) {
-    return String.format("<h3>%s</h3>\n", testSystemName);
+  public void finishWritingOutput() throws Exception {
+    writeData(testSummary());
+    writeData(getHtmlPage().postDivision);
+  }
+  
+  @Override
+  public void writeHead(String pageType) throws Exception {
+    super.writeHead(pageType);
+    
+    HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");
+    outputTitle.addAttribute("class", "centered");
+    writeData(outputTitle.html());
+    HtmlTag summariesDiv = HtmlUtil.makeDivTag(TEST_SUMMARIES_ID);
+    summariesDiv.addAttribute("id", TEST_SUMMARIES_ID);
+    writeData(summariesDiv.html());
   }
 }
+
+
+
