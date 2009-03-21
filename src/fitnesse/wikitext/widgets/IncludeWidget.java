@@ -91,12 +91,12 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
 
   //TODO MDM I know this is bad...  But it seems better then creating two new widgets.
   private void buildWidget(String option) throws Exception {
-    String widgetText = processLiterals(getIncludedPageContent());
+    String widgetText = processLiterals(getIncludedPageContent(option));
 
     //Create imposter root with alias = this if included page found.
     ParentWidget incRoot = (includedPage == null) ? this : new WidgetRoot(includedPage, this);
 
-    if ("-seamless".equals(option) || getRoot().isGatheringInfo()) {  //Use the imposter if found.
+    if (isSeamLess(option) || getRoot().isGatheringInfo()) {  //Use the imposter if found.
       incRoot.addChildWidgets(widgetText + "\n");
     } else {  //Use new constructor with dual scope.
       new CollapsableWidget(incRoot, this, getPrefix(option) + pageName, widgetText, getCssClass(option), isCollapsed(
@@ -104,6 +104,26 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
       )
       );
     }
+  }
+
+  //TODO MG There was no better way to nest in this behaviour. As future evolution point we can
+  //        expand the if clause to also accept regular includes and replace PAGE_NAME all the time.
+  private String getIncludedPageContent(String option) throws Exception {
+
+    if (isSetup(option) || isTeardown(option)) {
+      return replaceSpecialVariables(getIncludedPageContent());
+    }
+
+    return getIncludedPageContent();
+  }
+
+  //TODO MG What about PAGE_PATH?
+  private String replaceSpecialVariables(String includedPageContent) throws Exception {
+    return includedPageContent.replaceAll("\\$\\{PAGE_NAME\\}", includingPage.getName());
+  }
+
+  private boolean isSeamLess(String option) {
+    return "-seamless".equals(option);
   }
 
   private String getCssClass(String option) {
@@ -173,5 +193,11 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
 
   public String asWikiText() throws Exception {
     return "";
+  }
+
+  @Override
+  public String processLiterals(String value) throws Exception {
+    // TODO Auto-generated method stub
+    return super.processLiterals(value);
   }
 }

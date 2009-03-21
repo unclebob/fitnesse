@@ -165,6 +165,28 @@ public class IncludeWidgetTest extends WidgetTestCase {
     assertEquals("three", widgetRoot.getLiteral(2));
   }
 
+  public void testPageNameOnSetUpPage() throws Exception {
+    verifyPageNameResolving("-setup ", "IncludingPage");
+  }
+
+  public void testPageNameOnTearDownPage() throws Exception {
+    verifyPageNameResolving("-teardown ", "IncludingPage");
+  }
+
+  public void testPageNameOnRegularPage() throws Exception {
+    verifyPageNameResolving("", "IncludedPage");
+  }
+
+  private void verifyPageNameResolving(String option, String expectedPageName) throws Exception {
+    crawler.addPage(root, PathParser.parse("IncludedPage"), "This is IncludedPage\nincluded page name is ${PAGE_NAME}\n");
+    crawler.addPage(root, PathParser.parse("IncludingPage"));
+    ParentWidget widgetRoot = new WidgetRoot("This is IncludingPage\n" + "!include " + option + "IncludedPage",
+        root.getChildPage("IncludingPage"), WidgetBuilder.htmlWidgetBuilder);
+    String content = widgetRoot.render();
+    assertHasRegexp("included page name is <a href=\"" + expectedPageName + "\">" + expectedPageName , content);
+  }
+
+
   public void testRenderWhenMissing() throws Exception {
     verifyRenderWhenMissing("MissingPage");
   }
