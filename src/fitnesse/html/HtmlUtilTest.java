@@ -134,7 +134,7 @@ public class HtmlUtilTest extends RegexTestCase {
   public void testMakeReplaceElementScript() throws Exception {
     String newText = "<p>My string has \"quotes\" and \r \n</p>";
     HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element-name", newText);
-    String expected = "<script>document.getElementById(\"stop-test\").innerHTML = " +
+    String expected = "<script>document.getElementById(\"element-name\").innerHTML = " +
     		"\"<p>My string has \\\"quotes\\\" and \\r \\n</p>\";</script>";
     assertSubString(expected, scriptTag.html());
   }

@@ -19,6 +19,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   private final TestSummary assertionCounts = new TestSummary();
   private CompositeExecutionLog log = null;
   private HtmlPage htmlPage = null;
+  private boolean wasInterupted = false;
+  
+  private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
   public TestHtmlFormatter(final WikiPage page,
       final HtmlPageFactory pageFactory) throws Exception {
@@ -129,7 +132,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected String cssClassFor(TestSummary testSummary) {
-    if (testSummary.wrong > 0)
+    if (testSummary.wrong > 0 || wasInterupted)
       return "fail";
     else if (testSummary.exceptions > 0
         || testSummary.right + testSummary.ignores == 0)
@@ -151,10 +154,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
   
   public String testSummary() throws Exception {
-    String summaryContent = makeSummaryContent();
-    HtmlTag script = new HtmlTag("script");
-    script.add("document.getElementById(\"test-summary\").innerHTML = \""
-        + summaryContent + "\";");
+    String summaryContent  = (wasInterupted) ? TESTING_INTERUPTED : ""; 
+    summaryContent += makeSummaryContent();
+    HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""
         + cssClassFor(assertionCounts) + "\";");
     return script.html();
@@ -185,4 +187,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return buildHtml("");
   }
 
+  @Override
+  public void errorOccured() {
+    wasInterupted = true;
+    super.errorOccured();
+  }
 }

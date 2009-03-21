@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import util.RegexTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import util.RegexTestCase;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
   private BaseFormatter formatter;
@@ -83,5 +83,17 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('?responder=stoptest&id=2')\">", pageBuffer.toString());
     //assert stop button removed
     assertSubString("document.getElementById(\"stop-test\").innerHTML = \"\"", pageBuffer.toString());
+  }
+  
+  public void testIncompleteMessageAfterException() throws Exception {
+    formatter.writeHead("test");
+    formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceStartNewTest(page);
+    pageBuffer.setLength(0);
+    formatter.errorOccured();
+    //assert stop button added
+    assertSubString("Testing was interupted", pageBuffer.toString());
+    //assert stop button removed
+    assertSubString("className = \"fail\"", pageBuffer.toString());
   }
 }

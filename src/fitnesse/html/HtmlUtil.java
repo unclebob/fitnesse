@@ -436,7 +436,7 @@ public class HtmlUtil {
   public static HtmlTag makeReplaceElementScript(String idElement, String newHtmlForElement) {
     HtmlTag scriptTag = new HtmlTag("script");
     String escapedHtml = escapeHtmlForJavaScript(newHtmlForElement);
-    scriptTag.add("document.getElementById(\"stop-test\").innerHTML = \"" + escapedHtml + "\";");
+    scriptTag.add("document.getElementById(\"" + idElement + "\").innerHTML = \"" + escapedHtml + "\";");
     return scriptTag;
   }
   

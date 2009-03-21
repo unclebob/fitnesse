@@ -50,7 +50,16 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
     this.isFastTest = isFastTest;
   }
   
-  public void executeTestPages() throws Exception {
+  public void executeTestPages() {
+    try {
+      internalExecuteTestPages();
+    }
+    catch (Exception exception) {
+      exceptionOccurred(exception);
+    }  
+  }
+  
+  private void internalExecuteTestPages() throws Exception {
     synchronized (this) {
       testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
       stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
