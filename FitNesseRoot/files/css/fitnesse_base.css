@@ -105,7 +105,7 @@ textarea {
 }
 
 textarea.pageContent {
-  font-family: monaco, 'Lucida Sans Typewriter';
+  font-family: monaco, 'Lucida Sans Typewriter',monospace;
   font-size: 12px;
   height: 100%;
   rows: 40;
@@ -285,7 +285,7 @@ span.page_title {
 }
 
 .page_type {
-  font-size: 1.2px;
+  font-size: 1.2em;
   font-variant: small-caps;
 }
 
@@ -320,7 +320,7 @@ span.page_title {
 }
 
 .code {
-  font-family: courier, 'Lucida Sans Typewriter';
+  font-family: courier, 'Lucida Sans Typewriter',monospace;
   font-size: 16px;
   color: #004000;
   font-weight: bold;
