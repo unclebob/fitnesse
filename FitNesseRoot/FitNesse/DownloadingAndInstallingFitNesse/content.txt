@@ -22,3 +22,9 @@ It really takes very little time and effort to get FitNesse running on your mach
 !2 Learning More
 If you have not yet done so, check out the TwoMinuteExample. To learn more about what FitNesse acceptance testing is all about, see AcceptanceTests.  If you are ready to start creating FitNesse pages and test tables, check out EditingFitNessePages and CreatingTestTables.
 
+!2 Memory Issues.  
+With the 20090320 release, some operations in !-FitNesse-! take more than the default memory allocated to the JVM.  This can cause tests to fail for ''out of heap space'' reasons.  You can fix this by adding the !style_code(!--Xmx100M-!) JVM argument to the java command line when you start !-FitNesse-!.  !style_code(!-java -Xmx100M -jar fitnesse.jar-!).
+
+!3 Memory issues and the build.
+If you build !-FitNesse-! from source, the ant script may fail for ''out of heap space'' reasons.  You can fix this by setting the !style_code(ANT_OPTS) environment variable to !style_code(!--Xmx100M-!).  
+
