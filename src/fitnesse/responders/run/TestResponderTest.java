@@ -304,12 +304,23 @@ public class TestResponderTest {
     assertHasRegexp("<script>.*?document\\.getElementById\\(\"test-summary\"\\)\\.className = \".*?\";.*?</script>", results);
   }
 
+  
   @Test
   public void testTestSummaryHasRightClass() throws Exception {
     doSimpleRun(passFixtureTable());
     assertHasRegexp("<script>.*?document\\.getElementById\\(\"test-summary\"\\)\\.className = \"pass\";.*?</script>", results);
   }
 
+  @Test
+  public void testTestHasStopped() throws Exception {
+    
+    new Thread(makeStopTestsRunnable()).start();
+    
+    doSimpleRun(waitFixtureTable());
+    assertHasRegexp("Testing was interupted", results);
+  }
+
+  
   @Test
   public void testAuthentication_RequiresTestPermission() throws Exception {
     assertTrue(responder instanceof SecureResponder);
@@ -387,6 +398,23 @@ public class TestResponderTest {
     return "|!-fitnesse.testutil.PassFixture-!|\n";
   }
 
+  private String waitFixtureTable() {
+    return "|!-fitnesse.testutil.WaitFixture-!|\n";
+  }
+  
+  private Runnable makeStopTestsRunnable() {
+    return new Runnable() {
+      public void run() {
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        context.runningTestingTracker.stopAllProcesses();
+      }
+    };
+  }
+  
   private String simpleSlimDecisionTable() {
     return "!define TEST_SYSTEM {slim}\n" +
       "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
