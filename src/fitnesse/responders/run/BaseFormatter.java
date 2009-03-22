@@ -27,5 +27,7 @@ public abstract class BaseFormatter implements ResultsListener {
       e.printStackTrace();
     }
   }
-
+  
+  public void announceNumberTestsToRun(int testsToRun) {
+  }
 }

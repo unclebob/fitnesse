@@ -183,7 +183,4 @@ public abstract class XmlFormatter extends BaseFormatter {
       XmlUtil.addCdataNode(testResultsDocument, instructionElement, "instruction", instruction.toString());
     }
   }
-
-
-
 }

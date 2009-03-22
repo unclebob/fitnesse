@@ -1,3 +1,5 @@
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
 import fitnesse.html.HtmlPage;
@@ -44,6 +46,10 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     testSummaryDiv.addAttribute("id", "test-summary");
 
     return testSummaryDiv;
+  }
+  
+  protected void updateSummaryDiv(String html) throws Exception {
+    writeData(HtmlUtil.makeReplaceElementScript("test-summary", html).html());
   }
 
   protected String testPageSummary() {

@@ -58,6 +58,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
 
   public void testResultsHtml() throws Exception {
     formatter.announceStartTestSystem(null, "Fit", "laughing.fit");
+    formatter.announceNumberTestsToRun(2);
     formatter.announceStartNewTest("RelativeName", "FullName");
     formatter.processTestOutput("starting");
     formatter.processTestOutput(" output");
@@ -79,5 +80,32 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
 
     assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\">NewRelativeName</a>", results);
     assertSubString("<div class=\"alternating_block_2\">second test</div>", results);
+  }
+  
+  public void testTestingProgressIndicator() throws Exception {
+    formatter.announceStartTestSystem(null, "Fit", "laughing.fit");
+    formatter.announceNumberTestsToRun(20);
+    formatter.announceStartNewTest("RelativeName", "FullName");
+
+    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
+    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
+    assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
+    pageBuffer.setLength(0);
+    
+    formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
+    formatter.announceStartNewTest("RelativeName", "FullName");
+
+    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
+    assertSubString("(2/20)", pageBuffer.toString());
+    pageBuffer.setLength(0);
+
+
+    formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
+    formatter.announceStartNewTest("RelativeName", "FullName");
+
+    assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:15.0%\\\">", pageBuffer.toString());
+    assertSubString("(3/20)", pageBuffer.toString());
   }
 }
