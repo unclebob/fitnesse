@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<testResults>
+  <FitNesseVersion>$response.Version</FitNesseVersion>
+  <rootPath>$response.RootPath</rootPath>
+  #foreach ($result in $response.Results)
+  <result>
+    <counts>
+      <right>$result.Right</right>
+      <wrong>$result.Wrong</wrong>
+      <ignores>$result.Ignores</ignores>
+      <exceptions>$result.Exceptions</exceptions>
+    </counts>
+    <content><![CDATA[$result.Content]]></content>
+    <relativePageName>$result.RelativePageName</relativePageName>
+    #if($result.Instructions)
+    <instructions>
+      #foreach($instructionResult in $result.Instructions)
+      <instructionResult>
+        <instruction><![CDATA[$instructionResult.Instruction]]></instruction>
+        <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
+        <expectation>
+          <instructionId>$instructionResult.InstructionId</instructionId>
+          <col>$instructionResult.Col</col>
+          <row>$instructionResult.Row</row>
+          <type>$instructionResult.ExpectationType</type>
+          <actual><![CDATA[$instructionResult.Actual]]></actual>
+          <expected><![CDATA[$instructionResult.Expected]]></expected>
+          <evaluationMessage><![CDATA[$instructionResult.EvaluationMessage]]></evaluationMessage>
+        </expectation>
+      </instructionResult>
+      #end
+    </instructions>
+    #end
+  </result>
+  #end
+</testResults>
+

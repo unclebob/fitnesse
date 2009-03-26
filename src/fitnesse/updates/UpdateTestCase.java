@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import junit.framework.TestCase;
-import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import junit.framework.TestCase;
+import util.FileUtil;
 
 public abstract class UpdateTestCase extends TestCase {
   public static final String testDir = "testDir";
@@ -47,6 +47,4 @@ public abstract class UpdateTestCase extends TestCase {
   protected Update makeUpdate() throws Exception {
     return null;
   }
-
-  ;
 }

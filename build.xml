@@ -90,6 +90,8 @@
         <include name="images/**/*.jpg"/>
         <include name="css/*.css"/>
         <include name="javascript/*.js"/>
+        <include name="html/**"/>
+        <include name="templates/**"/>
         <exclude name="juUnitTestLink.js"/>
         <exclude name="**/unused/**"/>
       </fileset>
