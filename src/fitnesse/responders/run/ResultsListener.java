@@ -1,18 +1,16 @@
+// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
+// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
 import fitnesse.wiki.WikiPage;
 
-
-/**
- * This is the listener used to format the out of the MultipleTestsRunner
- * 
- * @author Clare McLennan
- */
 public interface ResultsListener {
   
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception;
-  
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception;
+
+  public void announceNumberTestsToRun(int testsToRun);
+
+  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception;
 
   public void announceStartNewTest(WikiPage test) throws Exception;
 

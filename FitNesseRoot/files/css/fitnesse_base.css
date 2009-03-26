@@ -244,6 +244,11 @@ div.virtual-wiki-properties {
   border: solid black 1px;
 }
 
+#progressBar {
+  margin: -2px -2px -2px -5px;
+  padding: 2px 2px 2px 5px;
+}
+
 .actions a:link, .actions a:visited {
   display: block;
   margin: 0px;
@@ -570,7 +575,7 @@ table.dirListing {
 
 /**********
 
- Used in FIT
+ Used in FIT and the summary bar
 
 **********/
 

@@ -13,6 +13,7 @@ import java.util.Set;
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -67,7 +68,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
     testSystemGroup.setFastTest(isFastTest);
     
     resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem = makeMapOfPagesByTestSystem(); 
+    Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem = makeMapOfPagesByTestSystem();
+    announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
       executePagesInTestSystem(descriptor, pagesByTestSystem);
     }
@@ -149,6 +151,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
     return map;
   }
   
+  private void announceTotalTestsToRun(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem) {
+    int tests = 0;
+    for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
+      tests += listOfPagesToRun.size();
+    }
+    resultsListener.announceNumberTestsToRun(tests);
+  }
+
   private List<WikiPage> getPagesForTestSystem(Map<TestSystem.Descriptor, LinkedList<WikiPage>> map, TestSystem.Descriptor descriptor) {
     LinkedList<WikiPage> listInMap;
     if (map.containsKey(descriptor))

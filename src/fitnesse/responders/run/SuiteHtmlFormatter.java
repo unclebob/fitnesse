@@ -19,9 +19,10 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private static final String TEST_SUMMARIES_ID = "test_summaries";
 
   private String cssSuffix = cssSuffix1;
-  private int pageNumber = 0;
-  private boolean firstTest = true;
+  private int currentTest = 0;
   private String testSystemFullName = null;
+  private boolean printedTestOutput = false;
+  private int totalTests = 1;
 
 
   public SuiteHtmlFormatter(WikiPage page, HtmlPageFactory pageFactory) throws Exception {
@@ -34,16 +35,41 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     return insertScript.html();
   }
   
+  @Override
+  public void announceNumberTestsToRun(int testsToRun) {
+    super.announceNumberTestsToRun(testsToRun);
+    totalTests = (testsToRun != 0) ? testsToRun : 1;
+  }
+  
   public void announceStartNewTest(String relativeName, String fullPathName) throws Exception {
-    pageNumber++;
+    currentTest++;
+    maybeWriteTestOutputDiv();
+    maybeWriteTestSystem();
+    updateSummaryDiv(getProgressHtml());
+    writeTestOuputDiv(relativeName, fullPathName);
+  }
+
+  private void writeTestOuputDiv(String relativeName, String fullPathName)
+      throws Exception {
+    HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
+    HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
+    anchor.addAttribute("id", relativeName + currentTest);
+    pageNameBar.add(anchor);
+    writeData(pageNameBar.html());
     
-    if (firstTest) {
+    writeData("<div class=\"alternating_block_" + cssSuffix + "\">");
+  }
+
+  private void maybeWriteTestOutputDiv() throws Exception {
+    if (!printedTestOutput) {
       HtmlTag outputTitle = new HtmlTag("h2", "Test Output");
       outputTitle.addAttribute("class", "centered");
       writeData(outputTitle.html());
-      firstTest = false;
+      printedTestOutput = true;
     }
-    
+  }
+
+  private void maybeWriteTestSystem() throws Exception {
     if (testSystemFullName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
       systemTitle.addAttribute("class", "centered");
@@ -51,14 +77,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
       // once we write it out we don't need it any more
       testSystemFullName = null;
     }
-    
-    HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
-    HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
-    anchor.addAttribute("id", relativeName + pageNumber);
-    pageNameBar.add(anchor);
-    writeData(pageNameBar.html());
-    
-    writeData("<div class=\"alternating_block_" + cssSuffix + "\">");
   }
   
   @Override
@@ -71,6 +89,23 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     announceStartNewTest(relativeName, fullPathName);
   }
   
+  private String getProgressHtml() throws Exception {
+    float percentFinished = currentTest * 1000 / totalTests;
+    percentFinished = percentFinished / 10;
+    
+    String text = "Running tests ... (" + currentTest + "/" + totalTests + ")";
+    text = text.replaceAll(" ", "&nbsp;");
+    HtmlTag progressDiv = new HtmlTag("div", text);
+    
+    // need some results before we can check pageCounts for results
+    String cssClass = (currentTest == 1) ? "pass" : cssClassFor(this.pageCounts);
+    progressDiv.addAttribute("id", "progressBar");
+    progressDiv.addAttribute("class", cssClass);
+    progressDiv.addAttribute("style", "width:" + percentFinished + "%");
+
+    return progressDiv.html();
+  }
+
   @Override
   public void processTestOutput(String output) throws Exception {
     writeData(output);
@@ -86,7 +121,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
     mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(testSummary), testSummary.toString()));
 
-    HtmlTag link = HtmlUtil.makeLink("#" + relativeName + pageNumber, relativeName);
+    HtmlTag link = HtmlUtil.makeLink("#" + relativeName + currentTest, relativeName);
     link.addAttribute("class", "test_summary_link");
     mainDiv.add(link);
 
