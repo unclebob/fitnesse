@@ -1,0 +1,55 @@
+!3 Calling a method from an action
+The keywords of an action are concatentated together, with spaces between and converted into a valid Java identifier. This is done using [[''extended camel casing''][.FitLibraryUserGuide.ExtendedCamelCase]].
+!3 Rules for coloring
+ * If an action returns a boolean value, the 'keywords' of that action are colored green if the returns true. If it returns false or throws an exception, it colors it red.
+ * A 'check'' special action colors the last cell, containing the expected value, just like ''!-ActionFixture-!''
+ * A 'reject' or 'not' special action color the action green if the action returns false or throws an exception. Otherwise it colors it red.
+ * An 'ensure' special action colors the action red if the action returns false or throws an exception. Otherwise it colors it green.
+!3 Auto-Wrapping
+The value returned by the method corresponding to an action may be auto-wrapped with a fixture, as follows:
+ * A ''Set'' object is auto-wrapped with a ''!-SetFixture-!''.
+ * An ''Object[]'', ''Collection'' or ''Iterator'' is wrapped with an ''!-ArrayFixture-!''.
+ * An 'Object' is wrapped with a ''!-DoFixture-!''. But only if it's not one of the above, nor a ''Fixture'', and doesn't have a ''static Object parse(String)'' method.
+This fixture object, or the one returned explicitly, is used to interpret the rest of the table.
+!3 Fixture as Adapter
+An object may be associated with a ''!-DoFixture-!'' (by calling the method ''setSystemUnderTest(Object)'' or through the ''super()'' constructor). If there is no method in the ''!-DoFixture-!'' corresponding to an action, ''!-DoFixture-!'' tries to call that method on the ''!-SystemUnderTest-!'' object instead (if it's been defined). (This approach is also used in [[''!-CalculateFixture-!''][.FitLibraryUserGuide.CalculateFixture]] and [[''!-SetUpFixture-!''][.FitLibraryUserGuide.SetUpFixture]].)
+
+This means that a subclass of ''!-DoFixture-!'' is only needed as an adapter, when actions don't map directly onto methods of the ''!-SystemUnderTest-!'' object.
+!3 Domain Objects
+If an action corresponds to a property, the value of that property is returned. The value may be an ''Object''.
+
+Because some ''Object''s are auto-wrapped with ''!-DoFixture-!'', it's possible to access and test domain objects directly, without the need to write fixtures.
+!3 Tests without Fixture
+Because of auto-wrapping and Domain objects, it's possible to use Fit for testing without the need to write any fixtures at all (inspired by [[''Naked Objects''][http://www.nakedobjects.org]]).My original aim in introducing these facilities was to enable the use of Fit in teaching beginner programmers, but I found them generally useful.
+
+This approach depends on two experimental special actions in ''!-DoFixture-!'':
+ * A ''start'' special action creates an object of the specified class as the ''!-SystemUnderTest-!'' object. This can be an object of any class that has a public nullary constructor.
+ * A ''calculate'' special action in ''!-DoFixture-!'' returns a ''!-CalculateFixture-!'' that refers to the ''!-SystemUnderTest-!'' object of the ''!-DoFixture-!''. This means that the rest of the table is interpreted by that ''!-CalculateFixture-!'', without needing a subclass of that fixture.
+
+This may need more work to make it general enough...
+
+Here's a trivial example:
+
+|!-fitlibrary.DoFixture-!|
+|start|java.awt.Rectangle|
+
+|check|''x''|0|
+|check|''y''|0|
+
+|set location|100||200|
+|check|''x''|100|
+|check|''y''|200|
+ * ''location'' gives a copy of the ''Point'' of the (x,y) position of the Rectangle:
+|location|
+|''move''|12||14|
+|check|''x''|12|
+|check|''y''|14|
+ * The original location is unchanged
+|check|''x''|100|
+|check|''y''|200|
+
+|''set size''|20||30|
+|check|''width''|20|
+|check|''height''|30|
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

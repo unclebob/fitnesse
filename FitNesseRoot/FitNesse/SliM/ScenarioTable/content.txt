@@ -23,7 +23,7 @@ The basic format looks like this:
 
 The first word in the table is ''Scenario''.  Following that is the signature of the scenario.  This signature is a lot like a function declaration.  The name of the scenario in the table above is ''WidgetRenders'', and it takes two arguments: ''wikiText'' and ''htmlText''.  Notice how this looks a lot like a function call in a ScriptTable.  The name is composed of every other table cell appropriately camel-cased.  The arguments are the intervening cells, also appropriately camel-cased.  Scenario names will be camel-cased with a leading upper-case letter.  Arguments will be camel-cased with a leading ''lower-case'' letter.
 
-The body of the scenario uses the arguments by prefixing them with an '@' sign. The token that follows the '@' ''must be the camel-cased name of the argument.'' 
+The body of the scenario uses the arguments by prefixing them with an '@' sign. The token that follows the '@' ''must be the camel-cased name of the argument.''
 
 Here is the way this scenario is called from a DecisionTable
 
@@ -34,7 +34,7 @@ Here is the way this scenario is called from a DecisionTable
 
 Notice that the name of the decision table, once camel-cased, will be ''WidgetRenders''.  Since this is the name of the above scenario, the scenario will be called rather than a fixture.  This is important!  Remember that if a scenario is on your page, or included into your page, then its name will override any fixture that has the same name.  Scenarios come first!
 
-The column headers of the DecisionTable are named for the arguments of the scenario (again, once properly camel-cased).  The scenario processor simply replaces the arguments in the scenario with the contents of the table cells below the corresponding header.  
+The column headers of the DecisionTable are named for the arguments of the scenario (again, once properly camel-cased).  The scenario processor simply replaces the arguments in the scenario with the contents of the table cells below the corresponding header.
 
 Notice that there is no concept of an ''output'' header; i.e. there is no '?' in any of the column headers.  A DecisionTable that calls a ScenarioTable does not make any assertions of its own.  Rather it relies on the Scenario table to do the asserting.  If you look at the ScenarioTable above, it uses the ''check'' keyword to make the assertion.  Again, this is important.  When you call a Scenario, you only pass data ''into'' it.  You don't get data back out of it.  Scenarios have no return value.
 

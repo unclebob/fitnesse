@@ -1,0 +1,3 @@
+!1 What is FitNesse?
+
+To find out, start with the [[One Minute Description][<FitNesse.UserGuide.OneMinuteDescription]] and the [[Two Minute Example][<FitNesse.UserGuide.TwoMinuteExample]].

@@ -1,3 +1,1 @@
-!1 What is FitNesse?
-
-To find out, start with the OneMinuteDescription and the TwoMinuteExample.
+!include UserGuide.FitNesse

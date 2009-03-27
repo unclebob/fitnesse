@@ -1,0 +1,6 @@
+Here's an explanation for a Customer or other storytest writer:
+ * The first table of a storytest can contain a list of keywords, which determine whether or not that storytest will be run, depending on the type of testing being carried out
+ * For example, we only want to run completed storytests on the build machine
+ *  The second table is a name for the sort of storytest. For example, this may name a sub-system of the application, such as the part concerned with customer support.
+Many Customers probably won't have a lot of interest in what's in the ''!-SuiteSetUp-!'' page, as that's concerned with testing, rather than expressing things about the business domain.
+

@@ -1,0 +1,42 @@
+!2 Editing and Creating Pages in FitNesse
+
+FitNesse is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Before you can begin CreatingTestTables, you need to know a bit about how a wiki works.
+
+A wiki allows any authorized user to make changes to any edit-enabled page, or to create new pages, simply by using their Web browser. If you are working with a copy of FitNesse on your own machine, you are probably authorized to make such changes. (If you have not yet installed FitNesse on your own machine, it's easy do to. You can read about it on DownloadingAndInstallingFitNesse.)
+
+!3 Editing a Page
+Once you are on a page your want to change, hit the '''Edit''' button in the upper left. (If the button does not appear, then the page is not edit-enabled.)
+
+A new window will pop up with an edit frame containing the markup language of the current page. You specify formatting using a simple markup language. Simply make your changes to the page and hit the '''Save''' button.  ''Voila!'' Your changes appear on the page.
+
+!3 Creating New Pages
+Every FitNesse page has a name in so-called camel-case format, in which the first letter is upper-case, and at least one other letter in the word is upper-case. The name of this page, EditingFitNessePages, is an example. This convention makes it truly easy to create new pages and links to those pages.
+
+When you edit an existing page and insert a new camel-case word, such as !-ThisHereNewPage-!, and then click the Save button, FitNesse interprets that to be a link to a new, as-yet-uncreated page. It indicates this to you by putting a question mark at the end of the name.
+
+If you then click on that question mark, FitNesse displays an edit frame, enabling you to put something on that new page. If you type anything at all in there and click Save, your new page is created, and the link to it is enabled on the originating page.
+
+!3 Try Creating a New Page with a Link Back to This One
+Try it yourself. Click on the question mark at the end of this word: ThisHereNewPageExample  Put something on the page, click the Save button, and then return here. A good thing to put on the new page is the word EditingFitNessePages, so that you can return to this page easily!
+
+!2 A Few Formatting Examples
+The wiki markup language is fairly powerful. Two see how we accomplished each of the formatting examples below, you can simply click the Edit button and check it out for yourself.
+
+You can '''make text bold''' by putting three single quotes (ticks) on each side of it (e.g., !-'''make text bold'''-!).
+
+You can ''make text itallic'' by putting two ticks on each side of it (e.g., !-''make text itallic''-!).
+
+You can center a line by prefixing it with !-!c-!
+
+!c This line is centered.
+
+You can make a horizontal rule by using four or more dashes.
+So !- ---- -! becomes
+----
+For more examples of wiki markup language formatting widgets (as they are called), see MarkupLanguageReference.
+!3 Page Properties
+Each FitNesse page has several properties (Test, Suite, Edit, etc). You can read about setting them on PageProperties.
+
+!2 Learning More
+Now that you know a bit about creadting and editing FitNesse pages, the next thing to learn might be CreatingTestTables.
+

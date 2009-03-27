@@ -23,7 +23,7 @@ To do this you can use the [['''!-!see-!'''][MarkupCrossReference]] command in a
 
 There is an alternative to the !-!see-! command to aggregate some tests into a suite: the so-called suite tags.
 
-The properties page offers a field labeled ''Tags'' where you can enter a comma-separated list of keywords. These keywords can then be used as targets for searching and executing those tests.  
+The properties page offers a field labeled ''Tags'' where you can enter a comma-separated list of keywords. These keywords can then be used as targets for searching and executing those tests.
 
 !4 Searching for tags
 If you hit the !style_code(Search) button, You will see a form that allows you to search for pages that certain attributes or tags.  For example, you can search for all subpages that have the !style_code(Suite) property set, or all pages that are read-only, or that have the !style_code(Edit) button displayed.  Most importantly, you can search for pages marked with tags.
@@ -33,8 +33,8 @@ If you put a comma separated list of tags into the !style_code(Tags) input box, 
 Using these tools, you can easily tag some tests as "smoke" tests, or "critical", or "fast".  You can find all the "smoke" tests and run them, etc.
 
 !4 Executing Tagged tests
-The easiest way to execute tagged tests is to search for the tags as described in the previous section.  Sometimes, though, you'd like to execute the tests via a RESTful service, or from the command line (using TestRunner).   
+The easiest way to execute tagged tests is to search for the tags as described in the previous section.  Sometimes, though, you'd like to execute the tests via a RESTful service, or from the command line (using TestRunner).
 You can execute the tests that match a tag by using the !style_code(suiteFilter) query parameter with a suite url like this:
-!style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&suiteFilter=smoke,critical-!)  If you want the results in xml, simply put !style_code(&formamt=xml) in the url too.  
+!style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&suiteFilter=smoke,critical-!)  If you want the results in xml, simply put !style_code(&formamt=xml) in the url too.
 
 Typically, you will need only a few of such filtered suites, so it is suggested to build a link on the front page or so which contains the respective suite filter parameters. (If you simply click on the ''Suites'' button to run a suite, the !-suiteFilter-! is not set, so all tests in the respective subwiki are run.)

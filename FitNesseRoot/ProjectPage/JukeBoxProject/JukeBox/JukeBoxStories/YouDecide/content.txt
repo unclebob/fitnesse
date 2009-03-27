@@ -1,0 +1,19 @@
+When the user presses "You Decide", the juke box will randomly choose a song based on its ranking.
+
+!include <JukeBox.SongInventory
+
+!define TIMES {10000}
+!define ERROR {120}
+
+|script|
+|repeat you decide|${TIMES}|times and count results|
+|check|average you decide credits|~=1.3|
+
+|you decide results|
+|id|times played?|
+|$STAIRWAY|${=.1*${TIMES}-${ERROR} =}<_<${=.1*${TIMES}+${ERROR}=}|
+|$INAGADDADAVIDA|${=.2*${TIMES}-${ERROR} =}<_<${=.2*${TIMES}+${ERROR}=}|
+|$VIVALAVIDA|${=.3*${TIMES}-${ERROR} =}<_<${=.3*${TIMES}+${ERROR}=}|
+|$STRAWBERRY|${=.1*${TIMES}-${ERROR} =}<_<${=.1*${TIMES}+${ERROR}=}|
+|$NUMB|${=.3*${TIMES}-${ERROR} =}<_<${=.3*${TIMES}+${ERROR}=}|
+

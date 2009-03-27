@@ -1,0 +1,21 @@
+An HTML cell can contain a table, and such tables can be treated as values. For example:
+
+!|fitlibrary.specify.DoTable|
+
+|check|first cell string value|!-<table border><tr><td>embedded1</td><td><table border><tr><td>embedded2</td></tr></table></td></tr></table>-!|embedded1|
+
+In the table above, we check that the action ''first cell string value'' extracts a string from the nested table.
+
+The fixture code is as follows:
+----{{{public class DoTable extends DoFixture {
+	public String firstCellStringValue(Table table) {
+		return table.stringAt(0,0,0);
+	}
+}
+}}}----
+
+The type ''Table'' provides access to the cells of the embedded table.
+
+A ''!-TableTypeAdapter-!'' is used whenever an argument or return type is of type ''Table''. ''!-TableTypeAdapter-!'' is a MetaTypeAdapter.
+---- * ''Copyright (c) 2004, 2005, 2006 Rick Mugridge, http://www.rimuresearch.com''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

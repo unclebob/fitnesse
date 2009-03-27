@@ -1,0 +1,13 @@
+ * This also has no keywords and so is run
+ * It has a different name in the first table, which happens to return the same type of fixture object
+|''another chat''|
+
+|''connect user''|sarah|
+
+|''user''|sarah|''creates''|fit|''room''|
+|''user''|sarah|''enters''|fit|''room''|
+
+|''users in room''|fit|
+|''name''|
+|sarah|
+

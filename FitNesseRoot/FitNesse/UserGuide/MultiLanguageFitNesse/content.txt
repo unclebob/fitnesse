@@ -1,0 +1,12 @@
+It is possible to set up a FitNesse page the will run all tests in a different language.
+
+The languages currently supported are:
+ * Java - ''of course''
+ * DotNet
+
+There are few componenets needed to support other languages:
+ 1 An implementation of FIT for the desired language.
+ 2 An implementation of FitServer - a program that couples FIT to FitNesse.
+ 3 The variables listed in CustomizingTestExecution should be set accordingly.
+
+When ever you run a test where the [[special variables][CustomizingTestExecution]] are [[in scope][VariableScope]], the execution will be performed in the designated language.

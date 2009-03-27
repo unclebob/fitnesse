@@ -1,0 +1,30 @@
+!3 You can assert that a returned value contains a given substring, or specifically starts or ends with that substring.
+
+Coincidentally, this will work for the string representation of any type (excluding arrays).
+
+- use ..abc.. to assert that the returned value contains "abc"
+- use abc.. to assert that the returned value starts with "abc"
+- use ..abc to assert that the returned value ends with "abc"
+----
+!|cell handler loader|
+|load|SubstringHandler|
+|load|StartsWithHandler|
+|load|EndsWithHandler|
+
+|string fixture|
+|field|field?|property|property?|set|get?|
+|abcdef|..bcd..|ghijk|..hi..|lmnop|..no..|
+|abcdef|abc..|ghijk|gh..|lmnop|lm..|
+|abcdef|..def|ghijk|..jk|lmnop|..op|
+
+|int fixture|
+|field|field?|property|property?|set|get?|
+|12345|..234..|12345|..234..|12345|..234..|
+|12345|123..|12345|123..|12345|123..|
+|12345|..345|12345|..345|12345|..345|
+
+|person fixture|
+|field|field?|property|property?|set|get?|
+|john doe|..john..|dr suess|..sue..|sam iam|..m i..|
+|john doe|john..|dr suess|dr s..|sam iam|sam..|
+|john doe|..doe|dr suess|..ess|sam iam|..am|

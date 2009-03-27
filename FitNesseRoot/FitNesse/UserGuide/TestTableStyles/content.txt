@@ -1,0 +1,9 @@
+!2 Different Table Styles for Different Purposes
+
+Each Test System has it's own particular kinds of Test Page Styles.
+
+|'''Test System'''|'''Link to Table Styles'''|
+|slim|[[Slim table Styles][SliM]]|
+|fit|[[Fit Table Styles][FitTableStyles]]|
+
+

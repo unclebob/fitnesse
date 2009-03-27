@@ -1,0 +1,14 @@
+We built !-FitNesse-! to help us write and execute acceptance tests.  One of its uses was in the [[!-FitNesse-!][http://www.objectmentor.com/courses/xpImmersion]] classes that we teach.
+
+The first version of !-FitNesse-! was a great success in these classes.  ''Customers'' were able to create acceptance tests that the ''Developers'' would use.  However, there was a problem.  !-FitNesse-! runs on a server, and so all of the acceptance tests had to be executed on that server too.  On the other hand the ''Developers'' were writing and testing code on their local machines.  In order to run acceptance tests on their local code they had to copy the executables to the !-FitNesse-! server.
+
+Two ad-hoc solutions to this problem were tried.  The first was to create a simple tool for moving the java .class files of the application to the !-FitNesse-! server.  The other was to copy the pages from the !-FitNesse-! server to each development machine, and to run a local copy of !-FitNesse-!.  Neither of these approaches seemed ideal for two reasons:
+ 1 They were clunky and inconvenient.
+ 2 The !-ClassPath-! pages needed to be identical, or at least very carefully managed.
+#
+!3 Enter virtual wiki.
+We wanted developers to be able run the tests on their local machines.  We also wanted customers to write the tests on the global server.  The solution to this dilemma was ''Virtual Wiki''.
+
+Virtual wiki (See the [[Virtual Wiki Instructions][MarkupVirtualWiki]]) allows a developer to start up a !-FitNesse-! server on his local machine, and then to point one of his local pages to a sub-wiki on the global !-FitNesse-! server.  The entire sub-wiki from the global server then appears on the developer's local machine -- just as if the developer had written the pages there.  But the pages are really still on the server.  Pressing the '''Test''' button on such a page, causes the test to be executed ''locally''.  The developer can create !-ClassPath-! pages on ''his'' machine that allow the acceptance tests to be run in his local environment.
+
+Thus, each developer can set up his own local environment and create a set of !-ClassPath-! pages that bind that environment to his wiki.  Then he can use Virtual Wiki to merge the remote acceptance tests to his local !-ClassPath-! environment.

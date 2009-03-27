@@ -1,0 +1,30 @@
+ArrayFixture tables look almost the same as !-RowFixture-! tables. However, the order of the elements in the list has to be the same as the order of the rows in an ArrayFixture table.
+ * This passes:
+|!-StartListing-!|
+|list is|1,2,3,4|
+
+|''ordered list''|
+|''item''|
+|1|
+|2|
+|3|
+|4|
+ * But this fails:
+|''ordered list''|
+|''item''|
+|3|
+|4|
+|1|
+|2|
+ * Compare this to using a !-RowFixture-!, where the order doesn't matter:
+|''row list''|
+|''item''|
+|3|
+|4|
+|1|
+|2|
+Let's look at WritingListFixtures for ''!-ArrayFixture-!''s (and others).
+
+The header labels of ArrayFixture tables can contain any characters, such as "$".
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

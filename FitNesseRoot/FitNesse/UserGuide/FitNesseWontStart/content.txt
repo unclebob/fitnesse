@@ -1,0 +1,26 @@
+!2 What to Do If You Have the Wrong Java Runtime Environment
+FitNesse requires version 1.5 or later of the Java Runtime Environment (JRE).
+If you see the messages:
+
+''!-C:\fitnesse>java -jar fitnesse.jar-!
+!-Exception in thread "main" java.lang.NoClassDefFoundError:-!
+!-java/lang/CharSequence-!
+!-       at fitnesse.FitNesse.parseCommandLine(Unknown Source)-!
+!-        at fitnesse.FitNesse.main(Unknown Source)-!
+
+!-C:\fitnesse>pause-!
+!-Press any key to continue . . .-!''
+
+Then you need to download and install version 1.5 or later of the JRE. Follow these steps:
+ * Press a key to close the command window
+ * Go to [[this download link][https://jsecom15a.sun.com:443/ECom/EComActionServlet;jsessionid=jsecom15a.sun.com-9752%3A415dafbe%3A147685f2fbcc1de1]].
+ * Accept the terms of agreement (if you are permitted), and click Continue.
+ * Download the right JRE installer for your machine and operating system.
+ * Launch the installer, and follow its instructions to install JRE 1.5 or later.
+ * Change the PATH environment variable so that it points to the new JRE.
+   * Go to the /bin folder that contains java.exe, and copy the pathname (for example, ''C:\Program Files\Java\j2re1.5.0_13'')
+   * Go to Settings>Control Panel>System>Advanced>Environment Variables>PATH>Edit
+   * Paste in that same complete pathname
+   * Save the PATH environment variable, and close the System control panel
+ * Double-click run.bat again.
+ * Return to DownloadingAndInstallingFitNesse.

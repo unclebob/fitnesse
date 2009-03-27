@@ -1,0 +1,28 @@
+!2 Defining and Expressing Variables.
+You can define a variable to represent any amount of text.  The text in a variable is never interpreted as wiki markup.  It is always raw literal text.
+ * Variable names may contain letters, numbers, and periods; e.g., MYTEST.someVar or user.name
+ * You can define a variable like this: !-!define var {text}-!
+ * Or you can define a variable like this !-!define var (text)-!
+  * The reason there are two forms is so that you can include braces or parenthesis in your variables.
+ * The variable text can span many lines as shown below:
+{{{
+!define myVariable {
+This is the
+text of my
+variable
+}  }}}
+!define myVariable {
+this is the
+text of my
+variable
+}
+You express the value of a variable like this: !-${myVariable}-!.  This expression is replaced with the value of the variable.
+
+''The value of the variable is: ${myVariable}.''
+
+If a variable is expressed on a page, but is not found, then its parent pages are searched in order.
+If the variable is not found in any ancestor pages, FitNesse will inspect System.properties.
+
+There are several [[pre-defined variables][<UserGuide.PreDefinedVariables]] that you can use on your pages.
+
+See [[Variable fitnesse test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestVariables]], [[Parent Variable fitnesse test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestParentVariables]] and [[Define Variables in System Properties test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestVariablesFromSystemProperties]]

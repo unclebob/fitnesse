@@ -1,0 +1,49 @@
+!3 Contents
+ * Introduction
+ * ^WhenActionsFail
+ * ^DoFixtureSummary
+ * ^WritingFixtures
+ * ^FixtureDetails
+ * ^SetUpTearDown
+!3 Introduction
+DoFixture tables are used to define/test workflow, a sequence of actions. The aim is to make the tests easily readable.
+
+Let's look at a simple example test (which you can run).
+
+| !-ChatStart-! |
+
+|''connect user''|sarah|
+
+|''user''|sarah|''creates''|fit|''room''|
+|''user''|sarah|''enters''|fit|''room''|
+
+|''users in room''|fit|
+|''name''|
+|sarah|
+
+The tables define/test the following sequence:
+ * Start the System Under Test, a chat server
+ * Anna connects to the chat server
+ * Anna creates a new room and enters it
+ * Check that Sara is the only occupant of that room
+Unlike with the core fixtures, the first row of each table (other than the first) doesn't usually name a fixture.
+
+Each row of the second and third tables define actions. Eg consider the following table:
+
+|''user''|sarah|''enters''|fit|''room''|
+
+The first, third and fifth cells contain ''keywords'', which give information about the role of the data that's in the second and fourth cells ("anna" and "lotr"). The ''keywords'' are shown in ''italics'' and are often colored when the tst is run (try it now). The keywords all joined together give the name of the action, ''user enters room''.
+
+The fourth table is a little different, as it's checking the list of users in the given room:
+
+|''users in room''|fit|
+|''name''|
+|sarah|
+
+The first row is an action, as before, with ''keywords'' and data alternating. This serves a similar purpose to a fixture name, but is an action which provides an appropriate fixture.
+
+The rest of the table is like a !-RowFixture-! table. The second row gives the ''header labels'' and there is a single element expected in the list.
+
+Let's look at what happens ''^WhenActionsFail''.
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

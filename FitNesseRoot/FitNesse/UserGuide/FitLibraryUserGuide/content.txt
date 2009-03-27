@@ -1,0 +1,32 @@
+!3 Announcements
+ * The ''!-FitLibrary-!'' jar for ''!-FitNesse-!'' is now called ''fitlibrary.jar''.
+ * Version ''20070225'' of ''fitlibrary.jar'' is included with this release of !-FitNesse-!.
+ * The ''!-FitLibrary-!'' jar for batch processing with ^FolderRunner is now called ''fitlibraryRunner.jar''.
+!3 Introduction to ''!-FitLibrary-!''
+ * This user guide assumes familiarity with ''Fit'' and ''!-FitNesse-!''.
+ * ''!-FitLibrary-!'' consists of several fixtures that work well together and build on ''Fit''.  There are alternatives in ''!-FitLibrary-!'' for each of the core Fit fixtures.
+ * Many examples of the development of Fit tables using the core and the ''!-FitLibrary-!'' fixtures, etc are covered in:
+ * ''Fit for Developing Software'', Rick Mugridge and Ward Cunningham, Prentice-Hall, 2005.
+!3 The ''!-FitLibrary-!'' Fixtures, by example
+ * ^FitLibraryFixtures
+!3 ''!-FitLibrary-!'' supports more than text in table cells
+ * ^SupportForGraphics
+!3 ''!-FolderRunner-!''
+ * ''^FolderRunner'' runs Fit tests in batch, as an alternative to ''!-FitNesse-!''.
+!3 How to achieve various tasks with ''!-FitLibrary-!''
+This is just a beginning...
+ * ^HowTo for storytest writers
+ * ^FaQ4Programmers
+!3 Changes in latest version
+ * ^LatestChanges
+!3 Some parts of ''!-FitLibrary-!'' are experimental
+ * ^ExperimentalExtensions
+!3 ''!-FitLibrary-!'' in other programming languages
+ * ^OtherLanguages
+!3 Further Information
+ * Join the fitlibrary-user email group at https://sourceforge.net/projects/fitlibrary/
+
+!path fitlibrary.jar
+!path bookExamples.jar
+---- * ''Copyright (c) 2004, 2005, 2006 Rick Mugridge, http://www.rimuresearch.com''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''

@@ -1,8 +1,8 @@
 !*< hidden
 !define TEST_SYSTEM {slim}
 *!
-[[A One-Minute Description][OneMinuteDescription]]
-[[A Two-Minute Example][TwoMinuteExample]]
+[[A One-Minute Description][<FitNesse.UserGuide.OneMinuteDescription]]
+[[A Two-Minute Example][<FitNesse.UserGuide.TwoMinuteExample]]
 !1 Under The Covers : Fixture Code
 Let's look at our division test table again:
 

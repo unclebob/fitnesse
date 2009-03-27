@@ -1,0 +1,13 @@
+!3 You can assert that a numeric value is within a given range using the optional !-IntegralRangeHandler-!.
+----
+First, make sure to load the handler as it is not loaded by default.
+
+!|cell handler loader|
+|load|IntegralRangeHandler|
+
+Type the low end of the range, ".." and the high end and the cell will turn green if the actual value is within that range.
+
+|int fixture|
+|field|field?|property|property?|set|get?|
+|256  |0..256|5       |4..7     |9  |3..9|
+|0    |-12..37|-19    |-256..0  |-1 |-12..12|

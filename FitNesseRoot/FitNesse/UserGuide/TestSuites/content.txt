@@ -1,0 +1,40 @@
+!1 Suites of Tests
+A suite is a collection of test pages that can all be run together, and whose results are then collected for you on a single results page. For an example of a Suite of tests, see TriviaGameUserStories.
+
+!3 Setting up a '''Suite''' page.
+You can run all the test pages in a sub-wiki by setting the "Suite" property of a page (see [[Page Properties][PageProperties]]).  That page will then include a "Suite" button that will execute all the test pages in that hierarchy.
+
+!3 !-SetUp-! and !-TearDown-!
+Sometimes you will need to delete a test database at the end of each test in a suite, or create an empty database at the beginning of each test.  Operations like this can be performed by writing special fixtures that perform these functions in their constructors.  These fixtures can then be invoked in the '''!-SetUp-!''' and '''!-TearDown-!''' pages of the suite.  See <UserGuide.SpecialPages.
+
+To perform operations at the beginning or end of an entire suite, rather than for each test, define the operations on pages named '''!-SuiteSetUp-!''' and '''!-SuiteTearDown-!'''.
+
+!3 SubWiki: the Best Way to Organize TestSuites
+
+[[!-SubWikis-!][SubWiki]] are convenient for creating a hierarchical structure for your suite of tests.  You can put test pages below subsystems and/or features.  You can organize ClassPath and variable definitions in the parent pages.
+
+!3 Suite Cross References
+
+Sometimes you want to compose a test suite from test pages that are in many different modules, subsystems, or features.  For example you might want a test suite that lists all the test pages for the current iteration, or you might want a test suite that lists all the currently passing tests, or you may want to create a test suite for all the quickly executing tests, and another for all the slow tests.
+
+To do this you can use the [['''!-!see-!'''][MarkupCrossReference]] command in a test suite.  Any test pages referenced by '''!-!see-!''' on a suite page will be executed as part of that suite.
+
+!3 Suite Tags
+
+There is an alternative to the !-!see-! command to aggregate some tests into a suite: the so-called suite tags.
+
+The properties page offers a field labeled ''Tags'' where you can enter a comma-separated list of keywords. These keywords can then be used as targets for searching and executing those tests.
+
+!4 Searching for tags
+If you hit the !style_code(Search) button, You will see a form that allows you to search for pages that certain attributes or tags.  For example, you can search for all subpages that have the !style_code(Suite) property set, or all pages that are read-only, or that have the !style_code(Edit) button displayed.  Most importantly, you can search for pages marked with tags.
+
+If you put a comma separated list of tags into the !style_code(Tags) input box, and then search, you will be shows a list of pages that are marked with any of those tags.  Notice that if the pages are tests or suites, they have a link next to them that allows you to execute them.   Also, look at the bottom and see the useful text that can be copied and pasted onto other pages in order to repeat the search or test the resulting pages.
+
+Using these tools, you can easily tag some tests as "smoke" tests, or "critical", or "fast".  You can find all the "smoke" tests and run them, etc.
+
+!4 Executing Tagged tests
+The easiest way to execute tagged tests is to search for the tags as described in the previous section.  Sometimes, though, you'd like to execute the tests via a RESTful service, or from the command line (using TestRunner).
+You can execute the tests that match a tag by using the !style_code(suiteFilter) query parameter with a suite url like this:
+!style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&suiteFilter=smoke,critical-!)  If you want the results in xml, simply put !style_code(&formamt=xml) in the url too.
+
+Typically, you will need only a few of such filtered suites, so it is suggested to build a link on the front page or so which contains the respective suite filter parameters. (If you simply click on the ''Suites'' button to run a suite, the !-suiteFilter-! is not set, so all tests in the respective subwiki are run.)

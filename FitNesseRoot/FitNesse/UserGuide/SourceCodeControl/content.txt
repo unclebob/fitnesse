@@ -1,8 +1,8 @@
-It is relatively simple to marry !-FitNesse-! to your source code control system.  It's all handled through a !-FitNesse-! variable named CM_SYSTEM.  As with all variables, if this variable is !-!define-!ed on a page, then it will apply to that page and all pages below it.  Otherwise if either the CM_SYSTEM environment variable or java system property is set, it will apply to all pages. 
+It is relatively simple to marry !-FitNesse-! to your source code control system.  It's all handled through a !-FitNesse-! variable named CM_SYSTEM.  As with all variables, if this variable is !-!define-!ed on a page, then it will apply to that page and all pages below it.  Otherwise if either the CM_SYSTEM environment variable or java system property is set, it will apply to all pages.
 
 Let's say you want to marry !-FitNesse-! with git.  You could start !-FitNesse-! this way: {{{java -DCM_SYSTEM=fitnesse.wiki.cmSystems.GitCmSystem -jar fitnesse.jar}}}  Or, if you just wanted to put a sub-hierarchy of pages under git, then put {{{!define CM_SYSTEM {fitnesse.wiki.cmSystems.GitCmSystem} }}} in the top page of that hierarchy.  If you want turn the CM marriage off below some point in the hierarhcy, just put a !style_code(!-!-!define CM_SYSTEM {}) just above that level.
 
-The value of this variable is the fully qualified name of a class that looks like !-GitCmSystem-! (see below).  Make sure that class in in your classpath when you start fitnesse. 
+The value of this variable is the fully qualified name of a class that looks like !-GitCmSystem-! (see below).  Make sure that class in in your classpath when you start fitnesse.
 
 Here's the plugin I use for git.  This ships with !-FitNesse-! so you can use it if it works for you.
 
@@ -35,7 +35,7 @@ path of the file.  The !style_code(cmDelete) function is called with the relativ
 the deleted page.  These paths are relative to the -d argument of !-FitNesse-!
 
 The 'payload' is there just in case you need it.  It contains the complete definition of the !style_code(CM_SYSTEM) variable.  You can
-put whatever you like in this variable, so long as the fully qualified name of your plugin comes first.  Use a space to separate the classname from whatever else you want.  
+put whatever you like in this variable, so long as the fully qualified name of your plugin comes first.  Use a space to separate the classname from whatever else you want.
 
 What would you put in this payload?  You might put your username and password for the CM system...  Or you might put the path
 of the CM root.  Anything you need to make the CM system work...

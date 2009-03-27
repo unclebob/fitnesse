@@ -1,0 +1,8 @@
+!3 Use the "error" keyword when you expect an error. In this case, an error turns the cell a nice shade of green!
+----
+This example uses a fixture that has string property and two string methods that throw errors - one that throws it directly and one that throws it by delegating to another method that throws an error.
+
+When you use the error keyword and errors are received the cells turn green.
+|error throwing fixture|
+|error throwing method()|error throwing property()|redirect to error throwing method()|
+|error|error|error|

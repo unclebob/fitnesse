@@ -1,0 +1,25 @@
+When starting FitNesse you may specify a PasswordFile by using the ''-a'' command line argument.  A PasswordFile consists of one username and password per line in the form of '''username:password'''.
+
+!3 Human Readable Passwords
+This simple way to create a password file is to list each username:password pair as plain text in the PasswordFile.  However this is not very secure in that anyone who is able to read the PasswordFile will have access to everyones password.  Here's an example:
+{{{Leonardo:katana
+Donatello:bo
+Rafael:sai
+Michaelangelo:nunchaku}}}
+4 users are defined here.  Leonardo who's password is Katana, Donatello who's password is bo, Rafael who's password is sai, and Michaelangelo who's password is nunchaka.
+
+!3 Hashed Passwords
+A password hashing program, similar to unix's '''passwd''' command, is provided with FitNesse. The Password program has the follwoing usage:
+{{{Usage: java fitnesse.authentication.Password [-f <password file>] [-c <password cipher>] <user>
+        -f <password file> {passwords.txt}
+        -c <password cipher> {fitnesse.authentication.HashingCipher} }}}
+By using the Password program with default setting and using the same usernames and passwords as above, the file ''passwords.txt'' will be generated with the following content:
+{{{!fitnesse.authentication.HashingCipher
+Leonardo:VEN4CfBvGCSafZDZNIKh
+Donatello:VvkqQdgBBfCCZHzBUo6J
+Michaelangelo:VBZ1TiB7HMptQsz3d3do
+Rafael:YHVFNHr1fHaIGkLHMTSP}}}
+You can see that the passwords have been hashed and are not humanly readable.  You may also notice a new line.
+!-!fitnesse.authentication.HashingCipher-!
+This should be left as is in the file.  It tells the program with PasswordCipher to use when hashing the passwords.  You may create your own PasswordCipher by implementing the ''!-fitnesse.authentication.PasswordCipher-!'' interface and use it for creating password files using the -c command line argument.
+  

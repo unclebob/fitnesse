@@ -23,6 +23,6 @@ You express the value of a variable like this: !-${myVariable}-!.  This expressi
 If a variable is expressed on a page, but is not found, then its parent pages are searched in order.
 If the variable is not found in any ancestor pages, FitNesse will inspect System.properties.
 
-There are several [[pre-defined variables][.FitNesse.PreDefinedVariables]] that you can use on your pages.  
+There are several [[pre-defined variables][.FitNesse.PreDefinedVariables]] that you can use on your pages.
 
 See [[Variable fitnesse test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestVariables]], [[Parent Variable fitnesse test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestParentVariables]] and [[Define Variables in System Properties test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestVariablesFromSystemProperties]]

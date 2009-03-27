@@ -1,0 +1,65 @@
+Here's the fixture code for all of the examples given for the various list-based fixtures. You'll need to understand about fixture code for ''DoFixture'' in ''flow'' first.
+
+Notice that ''ParamRowFixture'' avoids the need to write a subclass for ''!-RowFixture-!'' when it's used with ''DoFixture''.
+
+''ArrayFixture'', ''SetFixture'' and ''SubsetFixture'' can all take the following collections as arguments to their constructors:
+ * ''Object[]''
+ * ''java.util.Collection''
+ * ''java.util.Iterator''
+ * ''java.util.Map[]'', in which case each element of the collection is a ''Map'' instead of an ''Object''. This is handy with dynamic collections, such as provided by ''!-javax.swing.TableModel-!''.
+These three fixtures also treat a header label as referring to either an instance variable or a property (through a getter method) when an element is an ''Object'' (ie, not a ''Map''). All header labels are converted to a Java identifier using [[''extended camel casing''][.FitLibraryUserGuide.ExtendedCamelCase]].
+
+These fixtures can also be used "stand-alone" (ie, not in ''flow'', where the first table is interpreted by a ''!-DoFixture-!''). In that case it's necessary to subclass them, as with ''!-RowFixture-!''.
+----{{{public class StartListing extends fitlibrary.DoFixture {
+    private int[] ints;
+
+    public void listIs(int[] ints) {
+        this.ints = ints;
+    }
+    public Fixture orderedList() {
+        return new ArrayFixture(itemList());
+    }
+    public Fixture rowList() {
+        return new ItemRowFixture();
+    }
+    public Fixture set() {
+        return new SetFixture(itemList());
+    }
+    public Fixture subset() {
+        return new SubsetFixture(itemList());
+    }
+    public Fixture paramRowList() {
+        return new ParamRowFixture(itemArray(),Item.class);
+    }
+    private List itemList() {
+        return Arrays.asList(itemArray());
+    }
+    private Object[] itemArray() {
+        Object[] result = new Object[ints.length];
+        for (int i = 0; i < ints.length; i++)
+            result[i] = new Item(ints[i]);
+        return result;
+    }
+    public static class Item {
+        public int item;
+        public Item(int item) {
+            this.item = item;
+        }
+    }
+    public class ItemRowFixture extends fit.RowFixture {
+        public Object[] query() throws Exception {
+            return itemArray();
+        }
+        public Class getTargetClass() {
+            return Item.class;
+        }
+    }
+}
+}}}----
+With [[''auto-wrapping''][.FitLibraryUserGuide.DoFixture.FixtureDetails]] in DoFixture, the method ''orderedList()'' could be written as:
+----{{{    public List orderedList() {
+        return itemList();
+    }
+}}}----
+---- * ''Copyright (c) 2004, 2005 Rick Mugridge, Rimu Research.''
+ * ''Released under the terms of the GNU General Public License version 2 or later.''
