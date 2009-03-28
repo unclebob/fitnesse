@@ -1,6 +1,0 @@
- * For numerics, the Java format is used. e.g. Integer.parseInt() or Double,parseDouble() calls.
- * Boolean maps to the strings "true" and "false".
- * Dates convert in and out of a date format of the form dd-MMM-yyyy. (e.g. 10-Oct-1970)
- * Lists of strings are mapped to simple strings of the form ''[a, b, c]''.  Note the brackets and spaces.  This is the standard ''toString'' format for Java Lists.
- * Arrays of Booleans, Integers, Strings, and Doubles map to the form ''[x, y, z]''.
- * !see CustomTypes

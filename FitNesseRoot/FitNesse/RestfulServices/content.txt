@@ -1,3 +1,0 @@
-
-|[[RESTful Tests][RestfulTests]]|''Running tests and getting XML back''|
-|[[RESTful Packets][RestfulPackets]]|''Getting packets of data from tables on pages.''|

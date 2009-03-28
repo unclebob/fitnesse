@@ -1,5 +1,0 @@
-WardCunningham has come up with a scheme for wiki sites to cross reference each other.  He calls this scheme '''Sister Sites'''.  You can read his advice on this topic [[here][http://c2.com/doc/TipsForSisterSites/sisters.pdf]].
-
-There are two parts to setting up a sister site.
- 1 [[Being a Sister][BeingAsister]]. How one site requests references from another.
- 2 [[Having a Sister][HavingAsister]]. How one site displays references to another.

@@ -1,5 +1,0 @@
-!*> setup
-|import|
-|fitnesse.slim.test|
-
-*!

@@ -1,9 +1,0 @@
-!2 Comments.
-#
-# This is a comment
-#
-You can add a comment to the wiki markup text by simply putting the '#' sign as the first character of a line.  The entire line, including the line end, will be ignored.
-{{{#
-# This is a comment
-#}}}
-See the [[Comment Acceptance Test][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment]]
