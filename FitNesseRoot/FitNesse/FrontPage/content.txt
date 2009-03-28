@@ -1,2 +1,0 @@
-This is the FrontPage for FitNesse
-This is the .FrontPage for the whole wiki

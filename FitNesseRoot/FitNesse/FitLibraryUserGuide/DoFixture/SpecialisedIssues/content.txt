@@ -1,8 +1,0 @@
-!3 Core fixtures in flow
-A fixture may be named in later tables in a sequence of tables, and is handled in the usual way for core fixtures.
-!3 Flow fixtures not in flow
-If the fixture named in the first table is not a !-DoFixture-!, the tables are handled in the usual way for core tables. ''!-DoFixture-!''s can still be used in this case.
-!3 Stopping !-DoFixture-!
-There are two ways of stopping a !-DoFixture-! from continuing to run a storytest when there is an error (or whatever):
- * Call ''setStopOnError(true)'' -- on the next unexpected exception, !-DoFixture-! will stop running
- * Use the !-DoFixture-! action ''abandon storytest'' or call ''abandonStorytest(null)'' -- and !-DoFixture-! will stop running the rest of the storytest

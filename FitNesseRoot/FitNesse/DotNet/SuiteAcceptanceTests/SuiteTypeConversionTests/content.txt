@@ -1,2 +1,0 @@
-The [[.NET][.FitNesse.DotNet]] Fit server can handle all primitive types as well as arrays and custom types.
-!contents

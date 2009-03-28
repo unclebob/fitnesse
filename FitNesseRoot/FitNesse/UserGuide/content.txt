@@ -62,4 +62,4 @@ Answers to all your other FitNesse questions.
 |[[Design Notes][>DesignNotes]]|''Various articles and discussions on the design of FitNesse.''|
 |[[!-FitNesse-! Tests][<FitNesse.SuiteAcceptanceTests]]|''The suite of acceptance tests for !-FitNesse-! itself.''|
 ----
-!contents -R
+

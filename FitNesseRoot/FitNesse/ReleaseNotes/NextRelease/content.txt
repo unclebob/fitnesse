@@ -1,1 +1,0 @@
- * [[COLLAPSE_SETUP and COLLAPSE_TEARDOWN variables][.FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteSetUpAndTearDown.TestSetUpAndTearDownAreCollapsableWithVariable]] to collapse the !-SetUp-! and !-TearDown-! pages included in tests and suites.

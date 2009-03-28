@@ -1,8 +1,0 @@
-The names of fixtures, methods, inputs, and outputs can be expressed in two forms.  They can match their corresponding names in the fixture classes, or they can be ''graceful''.
-
-A ''graceful name'' looks like it is written in human language rather than computer language.  It has spaces that separate the words and may have a period at the end.  Slim will convert ''graceful names'' into the names of the classes and methods they refer to.  So for example:
-
-!|Graceful Name|Fixture Name|Method Name|
-|slim test|SlimTest|slimTest|
-|login user.|LoginUser|loginUser|
-|Open connection and add user.|OpenConnectionAndAddUser|openConnectionAndAddUser|

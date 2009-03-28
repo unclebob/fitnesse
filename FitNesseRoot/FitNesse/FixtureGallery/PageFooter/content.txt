@@ -1,1 +1,0 @@
-[[Table of contents][.FitNesse.FixtureGallery]]| Fixture Gallery on [[!-SourceForge-!][http://sourceforge.net/projects/fixturegallery]] | Fixture Gallery live wiki on  [[!-FitNesse.Info-!][http://fitnesse.info/fixturegallery]] | [[Comments and Feedback][http://gojko.net/fitnesse/fixturegallery]] | [[Front Page][.FrontPage]]

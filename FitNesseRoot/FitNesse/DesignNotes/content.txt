@@ -1,3 +1,0 @@
-Articles and discussions on the design of FitNesse
-
-|[[Fit Server][^FitServerProtocol]]|''The protocol between FitNesse and Fit.''|
