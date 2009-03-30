@@ -75,7 +75,7 @@
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
         <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
-        <attribute name="Class-Path" value="lib/htmlparser.jar lib/json.jar"/>
+        <attribute name="Class-Path" value="lib/htmlparser.jar lib/json.jar lib/velocity-1.6.2-dep.jar"/>
       </manifest>
     </jar>
     <delete dir="classes/files"/>    

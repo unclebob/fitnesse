@@ -190,7 +190,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
     testTables.clear();
+    expectations.clear();
     symbols.clear();
+    scenarios.clear();
     exceptions.clear();
     testSummary.clear();
     runTestsOnPage(pageData);

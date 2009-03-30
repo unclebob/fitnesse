@@ -1,13 +1,6 @@
 package fitnesseMain;
 
-import java.io.File;
-
-import util.CommandLine;
-import fitnesse.Arguments;
-import fitnesse.ComponentFactory;
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.Updater;
+import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -20,6 +13,9 @@ import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageVersionPruner;
+import util.CommandLine;
+
+import java.io.File;
 
 public class FitNesseMain {
   private static String extraOutput;

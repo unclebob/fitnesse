@@ -35,9 +35,6 @@ public class TestResultFormattingResponder implements Responder {
 
     InputStreamResponse response = new InputStreamResponse();
     response.setBody(formatter.getResultStream(), formatter.getByteCount());
-//		InputStream resultsStream = formatter.getResultStream();
-//		StreamReader reader = new StreamReader(resultsStream);
-//		response.setContent(reader.read(formatter.getByteCount()));
 
     return response;
   }
@@ -71,7 +68,7 @@ public class TestResultFormattingResponder implements Responder {
     String format = (String) request.getInput("format");
     if (format != null) {
       if ("html".equals(format))
-        return new HtmlResultFormatter(context.htmlPageFactory, baseUrl, rootPath);
+        return new HtmlResultFormatter(context, baseUrl, rootPath);
       if ("xml".equals(format))
         return new XmlResultFormatter(baseUrl, rootPath);
     }

@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.FitNesseContext;
 import util.RegexTestCase;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
@@ -12,13 +13,15 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   private StringBuffer pageBuffer = new StringBuffer();
   private WikiPage page;
   private WikiPage root;
+  private FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     page = root.addChildPage("NewPage");
     page.getData().setContent("page content here");
+    context = new FitNesseContext();
 
-    formatter = new TestHtmlFormatter(page, new HtmlPageFactory()) {
+    formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
       @Override
       protected void writeData(String output) throws Exception {
         pageBuffer.append(output);

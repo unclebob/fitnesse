@@ -9,6 +9,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.FitNesseContext;
 
 public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
@@ -25,8 +26,8 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private int totalTests = 1;
 
 
-  public SuiteHtmlFormatter(WikiPage page, HtmlPageFactory pageFactory) throws Exception {
-    super(page, pageFactory);
+  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, HtmlPageFactory pageFactory) throws Exception {
+    super(context, page, pageFactory);
   }
 
   public String getTestSystemHeader(String testSystemName) throws Exception {

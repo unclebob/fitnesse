@@ -28,6 +28,9 @@ The results come back in the following form:
                                        <expected>SetUp</expected>
                                        <evaluationMessage>pass(SetUp)</evaluationMessage>
                                </expectation>
+                               <expectation>
+                                 ...
+                               </expectation>
                        </instructionResult>
                        ...
                </instructions>
@@ -56,4 +59,4 @@ The 'instructions' elements are only for Slim tests.  The instruction data docum
   * !style_code(!-ConstructionExpectation-!) - used when we create a fixture class.
  * !style_code(expected) - This is the value that the expectation expects to be returned from slim.  Often this is ignored.  Only some expectations actually use it.  !style_code(!-ReturnedValueExpectation-!) uses it of course.
  * !style_code(actual) - This is what was actually returned by slim.  You also saw this in the !style_code(slimResult) tag, but we present it here because it may have been massaged by internal processing.
- * !style_code(evaluationMessage) - This is the result of the expectation.  It is a message littered with pass() and fail() markers that let you see the red/green results in symbolic form.
+ * !style_code(evaluationMessage) - This is the result of the expectation.  It is a message littered with !style_code[pass()] and !style_code[fail()] markers that let you see the red/green results in symbolic form.

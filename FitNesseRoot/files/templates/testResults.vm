@@ -3,6 +3,7 @@
   <FitNesseVersion>$response.Version</FitNesseVersion>
   <rootPath>$response.RootPath</rootPath>
   #foreach ($result in $response.Results)
+
   <result>
     <counts>
       <right>$result.Right</right>
@@ -12,26 +13,44 @@
     </counts>
     <content><![CDATA[$result.Content]]></content>
     <relativePageName>$result.RelativePageName</relativePageName>
-    #if($result.Instructions)
+    #if($result.Instructions.size() > 0)
+    
     <instructions>
       #foreach($instructionResult in $result.Instructions)
+
       <instructionResult>
         <instruction><![CDATA[$instructionResult.Instruction]]></instruction>
         <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
+        #foreach($expectation in $instructionResult.Expectations)
         <expectation>
-          <instructionId>$instructionResult.InstructionId</instructionId>
-          <col>$instructionResult.Col</col>
-          <row>$instructionResult.Row</row>
-          <type>$instructionResult.ExpectationType</type>
-          <actual><![CDATA[$instructionResult.Actual]]></actual>
-          <expected><![CDATA[$instructionResult.Expected]]></expected>
-          <evaluationMessage><![CDATA[$instructionResult.EvaluationMessage]]></evaluationMessage>
+          <instructionId>$expectation.InstructionId</instructionId>
+          <col>$expectation.Col</col>
+          <row>$expectation.Row</row>
+          <type>$expectation.Type</type>
+          #if($expectation.Actual)<actual><![CDATA[$expectation.Actual]]></actual>#end
+          #if($expectation.Expected)<expected><![CDATA[$expectation.Expected]]></expected>#end
+          #if($expectation.EvaluationMessage)<evaluationMessage><![CDATA[$expectation.EvaluationMessage]]></evaluationMessage>#end
         </expectation>
+        #end
+        
       </instructionResult>
       #end
+      
     </instructions>
     #end
+
   </result>
   #end
+
+  #if($response.FinalCounts)
+
+  <finalCounts>
+    <right>$response.FinalCounts.Right</right>
+    <wrong>$response.FinalCounts.Wrong</wrong>
+    <ignores>$response.FinalCounts.Ignores</ignores>
+    <exceptions>$response.FinalCounts.Exceptions</exceptions>
+  </finalCounts>
+  #end
+
 </testResults>
 

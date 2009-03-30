@@ -14,6 +14,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.FitNesseContext;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {
 
@@ -25,9 +26,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
-  public TestHtmlFormatter(final WikiPage page,
-      final HtmlPageFactory pageFactory) throws Exception {
-    super(page);
+  public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
+                           final HtmlPageFactory pageFactory) throws Exception {
+    super(context, page);
     this.pageFactory = pageFactory;
   }
 

@@ -77,6 +77,7 @@ public class TestResponderTest {
     testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     request.setResource(testPage.getName());
 
+    responder.turnOffChunkingForTests();
     response = responder.makeResponse(context, request);
     sender = new MockResponseSender();
     sender.doSending(response);
@@ -389,7 +390,7 @@ public class TestResponderTest {
   @Test
   public void testAuthentication_RequiresTestPermission() throws Exception {
     assertTrue(responder instanceof SecureResponder);
-    SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
+    SecureOperation operation = responder.getSecureOperation();
     assertEquals(SecureTestOperation.class, operation.getClass());
   }
 

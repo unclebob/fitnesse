@@ -5,8 +5,7 @@ package fitnesse.responders.run;
 import util.RegexTestCase;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
+import fitnesse.FitNesseContext;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
   private HtmlPage page;
@@ -14,8 +13,9 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   private StringBuffer pageBuffer = new StringBuffer();
 
   public void setUp() throws Exception {
+    FitNesseContext context = new FitNesseContext();
     page = new HtmlPageFactory().newPage();
-    formatter = new SuiteHtmlFormatter(null, null) {
+    formatter = new SuiteHtmlFormatter(context, null, null) {
       @Override
       protected HtmlPage buildHtml(String pageType) throws Exception {
         return page;

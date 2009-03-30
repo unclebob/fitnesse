@@ -12,7 +12,7 @@ public class SuiteResponder extends TestResponder {
 
   @Override
   BaseFormatter createXmlFormatter() throws Exception {
-    BaseFormatter formatter =  new SuiteXmlFormatter(page) {
+    BaseFormatter formatter =  new SuiteXmlFormatter(page, context) {
       @Override
       protected void close() throws Exception {
         closeHtmlResponse();
@@ -28,7 +28,7 @@ public class SuiteResponder extends TestResponder {
 
   @Override
   BaseFormatter createHtmlFormatter() throws Exception {
-     BaseFormatter formatter =  new SuiteHtmlFormatter(page, context.htmlPageFactory) {
+     BaseFormatter formatter =  new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
       @Override
       protected void writeData(String output) throws Exception {
         addToResponse(output);

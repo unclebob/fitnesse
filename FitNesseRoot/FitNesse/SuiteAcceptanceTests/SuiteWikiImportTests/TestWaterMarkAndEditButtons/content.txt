@@ -1,6 +1,6 @@
 !define TEST_SYSTEM {slim}
 !*> Scenarios
-!include -c <SuiteAcceptanceTest.ScenarioLibrary
+!include -c <SuiteAcceptanceTests.ScenarioLibrary
 
 !|scenario|import|importedPage|into|importingPage|
 |check|request page|@importingPage?responder=import&remoteUrl=http://localhost:${INTERNAL_PORT}/@importedPage|200|

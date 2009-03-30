@@ -2,30 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.ByteArrayOutputStream;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
+import fitnesse.html.HtmlUtil;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.slimTables.SlimTable;
+import fitnesse.wiki.WikiPage;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import fitnesse.FitNesseVersion;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import util.XmlWriter;
-import fitnesse.html.HtmlUtil;
-import util.XmlUtil;
-import fitnesse.wiki.WikiPage;
-
 public abstract class XmlFormatter extends BaseFormatter {
-
-  final private Document testResultsDocument = XmlUtil.newDocument();
-  private Element testResultsElement;
+  protected TestResponse testResponse = new TestResponse();
+  private TestResponse.TestResult currentResult;
   private StringBuffer outputBuffer;
   private TestSystem testSystem;
 
-  public XmlFormatter(final WikiPage page) throws Exception {
-    super(page);
+  public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
+    super(context, page);
   }
 
   public void announceStartNewTest(WikiPage test) throws Exception {
@@ -41,63 +40,85 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   public void processTestResults(WikiPage test, TestSummary testSummary)
-      throws Exception {
+    throws Exception {
     processTestResults(test.getName(), testSummary);
   }
-  
+
   public void processTestResults(final String relativeTestName, TestSummary testSummary)
     throws Exception {
-  
-    Element resultElement = testResultsDocument.createElement("result");
-    testResultsElement.appendChild(resultElement);
-    addCountsToResult(testSummary, resultElement);
-  
-    XmlUtil.addCdataNode(testResultsDocument, resultElement, "content", outputBuffer.toString());
+    currentResult = new TestResponse.TestResult();
+    testResponse.results.add(currentResult);
+    currentResult.content = outputBuffer.toString();
     outputBuffer = null;
-  
-    XmlUtil.addTextNode(testResultsDocument, resultElement, "relativePageName", relativeTestName);
+    addCountsToResult(testSummary);
+    currentResult.relativePageName = relativeTestName;
+
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
-      new InstructionXmlFormatter(resultElement, slimSystem).invoke();
+      new InstructionXmlFormatter(currentResult, slimSystem).invoke();
     }
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId,
-      CompositeExecutionLog log) throws Exception {
+                                           CompositeExecutionLog log) throws Exception {
   }
-  
-  @Override
+
   public void writeHead(String pageType) throws Exception {
-    testResultsElement = testResultsDocument.createElement("testResults");
-    testResultsDocument.appendChild(testResultsElement);
-    XmlUtil.addTextNode(testResultsDocument, testResultsElement, "FitNesseVersion", new FitNesseVersion().toString());
-    XmlUtil.addTextNode(testResultsDocument, testResultsElement, "rootPath", getPage().getName());
+    testResponse.version = new FitNesseVersion().toString();
+    testResponse.rootPath = getPage().getName();
   }
-  
+
   public void allTestingComplete() throws Exception {
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    XmlWriter writer = new XmlWriter(os);
-    writer.write(testResultsDocument);
-    writer.close();
-    writeData(os.toByteArray());
-    close();
+    try {
+      writeResults();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      close();
+    }
   }
-  
+
+  private void writeResults() throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("response", testResponse);
+    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
+    template.merge(velocityContext, getWriter());
+  }
+
+  private Writer getWriter() {
+    Writer writer = new Writer() {
+      public void write(char[] cbuf, int off, int len) {
+        String fragment = new String(cbuf, off, len);
+        try {
+          writeData(fragment.getBytes());
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+
+      public void flush() throws IOException {
+      }
+
+      public void close() throws IOException {
+      }
+    };
+    return writer;
+  }
+
   protected abstract void writeData(byte[] byteArray) throws Exception;
-  
+
   protected void close() throws Exception {
-    
+
   }
-  
-  private void addCountsToResult(TestSummary testSummary, Element resultElement) {
-    Element counts = testResultsDocument.createElement("counts");
-    resultElement.appendChild(counts);
-    XmlUtil.addTextNode(testResultsDocument, counts, "right", Integer.toString(testSummary.right));
-    XmlUtil.addTextNode(testResultsDocument, counts, "wrong", Integer.toString(testSummary.wrong));
-    XmlUtil.addTextNode(testResultsDocument, counts, "ignores", Integer.toString(testSummary.ignores));
-    XmlUtil.addTextNode(testResultsDocument, counts, "exceptions", Integer.toString(testSummary.exceptions));
+
+  private void addCountsToResult(TestSummary testSummary) {
+    currentResult.right = Integer.toString(testSummary.right);
+    currentResult.wrong = Integer.toString(testSummary.wrong);
+    currentResult.ignores = Integer.toString(testSummary.ignores);
+    currentResult.exceptions = Integer.toString(testSummary.exceptions);
+
   }
-  
+
   private void appendHtmlToBuffer(String output) {
     if (outputBuffer == null) {
       outputBuffer = new StringBuffer();
@@ -105,82 +126,196 @@ public abstract class XmlFormatter extends BaseFormatter {
     outputBuffer.append(output);
   }
 
-  public Document getDocument() {
-    return testResultsDocument;
-  }
-
-  public Element getTestResultsElement() {
-    return testResultsElement;
-  }
-
-
-  private class InstructionXmlFormatter {
-    private Element resultElement;
-    private SlimTestSystem slimSystem;
+  private static class InstructionXmlFormatter {
+    private TestResponse.TestResult testResult;
     private List<Object> instructions;
     private Map<String, Object> results;
     private List<SlimTable.Expectation> expectations;
 
-    public InstructionXmlFormatter(Element resultElement, SlimTestSystem slimSystem) {
-      this.resultElement = resultElement;
-      this.slimSystem = slimSystem;
+    public InstructionXmlFormatter(TestResponse.TestResult testResult, SlimTestSystem slimSystem) {
+      this.testResult = testResult;
       instructions = slimSystem.getInstructions();
       results = slimSystem.getInstructionResults();
       expectations = slimSystem.getExpectations();
     }
 
     public void invoke() {
-      Element instructionsElement = testResultsDocument.createElement("instructions");
-      resultElement.appendChild(instructionsElement);
-      addInstructionResultss(instructionsElement);
+      addInstructionResults();
     }
 
-    private void addInstructionResultss(Element instructionsElement) {
+    private void addInstructionResults() {
       for (Object instruction : instructions) {
-        addInstructionResult(instructionsElement, instruction);
+        addInstructionResult(instruction);
       }
     }
 
-    private void addInstructionResult(Element instructionsElement, Object instruction) {
+    private void addInstructionResult(Object instruction) {
+      TestResponse.InstructionResult instructionResult = new TestResponse.InstructionResult();
+      testResult.instructions.add(instructionResult);
+
       List<Object> instructionList = (List<Object>) instruction;
       String id = (String) (instructionList.get(0));
+      Object result = results.get(id);
 
-      Element instructionElement = testResultsDocument.createElement("instructionResult");
-      instructionsElement.appendChild(instructionElement);
-
-      addInstruction(instruction, instructionElement);
-      addResult(id, instructionElement);
-      addExpectationIfPresent(id, instructionElement);
-    }
-
-    private void addExpectationIfPresent(String id, Element instructionElement) {
+      instructionResult.instruction = instruction.toString();
+      instructionResult.slimResult = result.toString();
       for (SlimTable.Expectation expectation : expectations) {
         if (expectation.getInstructionTag().equals(id)) {
-          addExpectation(instructionElement, expectation);
-          break;
+          TestResponse.Expectation expectationResult = new TestResponse.Expectation();
+          instructionResult.addExpectation(expectationResult);
+          expectationResult.instructionId = expectation.getInstructionTag();
+          expectationResult.col = Integer.toString(expectation.getCol());
+          expectationResult.row = Integer.toString(expectation.getRow());
+          expectationResult.type = expectation.getClass().getSimpleName();
+          expectationResult.actual = expectation.getActual();
+          expectationResult.expected = expectation.getExpected();
+          expectationResult.evaluationMessage = expectation.getEvaluationMessage();
         }
       }
     }
+  }
 
-    private void addExpectation(Element instructionElement, SlimTable.Expectation expectation) {
-      Element expectationElement = testResultsDocument.createElement("expectation");
-      instructionElement.appendChild(expectationElement);
-      XmlUtil.addTextNode(testResultsDocument, expectationElement, "instructionId", expectation.getInstructionTag());
-      XmlUtil.addTextNode(testResultsDocument, expectationElement, "col", Integer.toString(expectation.getCol()));
-      XmlUtil.addTextNode(testResultsDocument, expectationElement, "row", Integer.toString(expectation.getRow()));
-      XmlUtil.addTextNode(testResultsDocument, expectationElement, "type", expectation.getClass().getSimpleName());
-      XmlUtil.addCdataNode(testResultsDocument, expectationElement, "actual", expectation.getActual());
-      XmlUtil.addCdataNode(testResultsDocument, expectationElement, "expected", expectation.getExpected());
-      XmlUtil.addCdataNode(testResultsDocument, expectationElement, "evaluationMessage", expectation.getEvaluationMessage());
+  public static class TestResponse {
+    private String version;
+    private String rootPath;
+    private List<TestResult> results = new ArrayList<TestResult>();
+    protected Counts finalCounts;
+
+    public String getVersion() {
+      return version;
     }
 
-    private void addResult(String id, Element instructionElement) {
-      Object result = results.get(id);
-      XmlUtil.addCdataNode(testResultsDocument, instructionElement, "slimResult", result.toString());
+    public String getRootPath() {
+      return rootPath;
     }
 
-    private void addInstruction(Object instruction, Element instructionElement) {
-      XmlUtil.addCdataNode(testResultsDocument, instructionElement, "instruction", instruction.toString());
+    public List<TestResult> getResults() {
+      return results;
+    }
+
+    public Counts getFinalCounts() {
+      return finalCounts;
+    }
+
+    public static class TestResult {
+      private String right;
+      private String wrong;
+      private String ignores;
+      private String exceptions;
+      private String content;
+      private String relativePageName;
+      private List<InstructionResult> instructions = new ArrayList<InstructionResult>();
+
+      public String getRight() {
+        return right;
+      }
+
+      public String getWrong() {
+        return wrong;
+      }
+
+      public String getIgnores() {
+        return ignores;
+      }
+
+      public String getExceptions() {
+        return exceptions;
+      }
+
+      public String getContent() {
+        return content;
+      }
+
+      public String getRelativePageName() {
+        return relativePageName;
+      }
+
+      public List<InstructionResult> getInstructions() {
+        return instructions;
+      }
+    }
+
+    public static class InstructionResult {
+      private String instruction;
+      private String slimResult;
+      private List<Expectation> expectations = new ArrayList<Expectation>();
+
+      public void addExpectation(Expectation expectation) {
+        expectations.add(expectation);
+      }
+
+      public String getInstruction() {
+        return instruction;
+      }
+
+      public String getSlimResult() {
+        return slimResult;
+      }
+
+      public List<Expectation> getExpectations() {
+        return expectations;
+      }
+    }
+
+    public static class Expectation {
+      private String instructionId;
+      private String col;
+      private String row;
+      private String type;
+      private String actual;
+      private String expected;
+      private String evaluationMessage;
+
+      public String getInstructionId() {
+        return instructionId;
+      }
+
+      public String getCol() {
+        return col;
+      }
+
+      public String getRow() {
+        return row;
+      }
+
+      public String getType() {
+        return type;
+      }
+
+      public String getActual() {
+        return actual;
+      }
+
+      public String getExpected() {
+        return expected;
+      }
+
+      public String getEvaluationMessage() {
+        return evaluationMessage;
+      }
+    }
+
+    public static class Counts {
+      protected int right;
+      protected int wrong;
+      protected int ignores;
+      protected int exceptions;
+
+      public int getRight() {
+        return right;
+      }
+
+      public int getWrong() {
+        return wrong;
+      }
+
+      public int getIgnores() {
+        return ignores;
+      }
+
+      public int getExceptions() {
+        return exceptions;
+      }
     }
   }
 }

@@ -8,6 +8,7 @@ public class ChunkedResponse extends Response {
   private ResponseSender sender;
   private int bytesSent = 0;
   private boolean isReadyToSend = false;
+  private boolean dontChunk = false;
 
   public ChunkedResponse(String format) {
     super(format);
@@ -44,10 +45,14 @@ public class ChunkedResponse extends Response {
   public void add(byte[] bytes) throws Exception {
     if (bytes == null || bytes.length == 0)
       return;
-    String sizeLine = asHex(bytes.length) + CRLF;
-    ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
-    chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
-    sender.send(chunk.array());
+    if (dontChunk) {
+      sender.send(bytes);
+    } else {
+      String sizeLine = asHex(bytes.length) + CRLF;
+      ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
+      chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
+      sender.send(chunk.array());
+    }
     bytesSent += bytes.length;
   }
 
@@ -82,4 +87,7 @@ public class ChunkedResponse extends Response {
     this.isReadyToSend = isReadyToSend;
   }
 
+  public void turnOffChunkingForTest() {
+    dontChunk = true;
+  }
 }

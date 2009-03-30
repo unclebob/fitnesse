@@ -21,6 +21,7 @@ public abstract class ChunkingResponder implements Responder {
   protected Request request;
   protected ChunkedResponse response;
   protected FitNesseContext context;
+  private boolean dontChunk = false;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
@@ -28,7 +29,8 @@ public abstract class ChunkingResponder implements Responder {
     this.root = context.root;
     String format = (String) request.getInput("format");
     response = new ChunkedResponse(format);
-
+    if (dontChunk)
+      response.turnOffChunkingForTest();
     getRequestedPage(request);
     if (page == null && shouldRespondWith404())
       return pageNotFoundResponse(context, request);
@@ -37,6 +39,10 @@ public abstract class ChunkingResponder implements Responder {
     respondingThread.start();
 
     return response;
+  }
+
+  public void turnOffChunkingForTests() {
+    dontChunk = true;
   }
 
   private void getRequestedPage(Request request) throws Exception {

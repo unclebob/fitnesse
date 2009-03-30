@@ -49,7 +49,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter createXmlFormatter() throws Exception {
-    BaseFormatter formatter = new XmlFormatter(page) {
+    BaseFormatter formatter = new XmlFormatter(context, page) {
       @Override
       protected void close() throws Exception {
         closeHtmlResponse();
@@ -65,7 +65,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
 
   BaseFormatter createHtmlFormatter() throws Exception {
-    BaseFormatter formatter = new TestHtmlFormatter(page, context.htmlPageFactory) {
+    BaseFormatter formatter = new TestHtmlFormatter(context, page, context.htmlPageFactory) {
       @Override
       protected void writeData(String output) throws Exception {
         addToResponse(output);
