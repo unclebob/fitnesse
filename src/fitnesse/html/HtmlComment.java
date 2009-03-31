@@ -10,7 +10,7 @@ public class HtmlComment extends HtmlTag {
     this.comment = comment;
   }
 
-  public String html(int depth) throws Exception {
+  public String html(int depth) {
     StringBuffer buffer = new StringBuffer();
     addTabs(depth, buffer);
     buffer.append("<!--").append(comment).append("-->").append(endl);

@@ -2,12 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageAction;
+
+import java.util.List;
 
 public class HtmlUtil {
   public static final String BRtag = "<br/>";
@@ -70,62 +68,6 @@ public class HtmlUtil {
     HtmlTag anchorTag = new HtmlTag("a", " ");
     anchorTag.addAttribute("name", name);
     return anchorTag;
-  }
-
-
-  public static class ActionLink {
-    public ActionLink(String pageName, String linkName) {
-      this.pageName = pageName;
-      this.linkName = linkName;
-      this.query = linkName.toLowerCase();
-      this.shortcutKey = query.substring(0, 1);
-      this.newWindow = false;
-    }
-
-    private String pageName;
-    private String linkName;
-    private String query;
-    private String shortcutKey;
-    private boolean newWindow;
-
-    public void setPageName(String pageName) {
-      this.pageName = pageName;
-    }
-
-    public void setLinkName(String linkName) {
-      this.linkName = linkName;
-    }
-
-    public void setQuery(String inputName) {
-      this.query = inputName;
-    }
-
-    public void setShortcutKey(String shortcutKey) {
-      this.shortcutKey = shortcutKey;
-    }
-
-    public void setNewWindow(boolean newWindow) {
-      this.newWindow = newWindow;
-    }
-
-    public HtmlTag getHtml() {
-      String name = linkName;
-      String inputName = query;
-      String href = pageName;
-      if (inputName != null)
-        href = href + "?" + inputName;
-
-      HtmlTag linkTag = new HtmlTag("a");
-      linkTag.addAttribute("href", href);
-      if (newWindow)
-        linkTag.addAttribute("target", "newWindow");
-      linkTag.addAttribute("accesskey", shortcutKey);
-      linkTag.add(name);
-      TagGroup group = new TagGroup();
-      group.add(new HtmlComment(name + " button"));
-      group.add(linkTag);
-      return group;
-    }
   }
 
   public static HtmlTag makeInputTag(String type, String name, String value) {
@@ -216,25 +158,18 @@ public class HtmlUtil {
     return thisPage;
   }
 
-  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type)
-    throws Exception {
+  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) throws Exception {
     return makeBreadCrumbsWithPageType(trail, ".", type);
   }
 
-  public static HtmlTag makeBreadCrumbsWithPageType(
-    String trail,
-    String separator, String type
-  ) throws Exception {
+  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {
     TagGroup group = makeBreadCrumbsWithCurrentPageLinked(trail, separator);
     group.add(HtmlUtil.BR);
     group.add(HtmlUtil.makeSpanTag("page_type", type));
     return group;
   }
 
-  private static String makeAllButLastCrumb(
-    String[] crumbs,
-    String separator, TagGroup group
-  ) {
+  private static String makeAllButLastCrumb(String[] crumbs, String separator, TagGroup group) {
     String trail = "";
     for (int i = 0; i < crumbs.length - 1; i++) {
       String crumb = crumbs[i];
@@ -246,100 +181,46 @@ public class HtmlUtil {
     return trail;
   }
 
-  public static HtmlTag makeActions(PageData pageData) throws Exception {
-    WikiPage page = pageData.getWikiPage();
+  public static HtmlTag makeActions(List<WikiPageAction> actions) throws Exception {
+    TagGroup actionsGroup = new TagGroup();
 
-    WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
-    String localPageName = PathParser.render(localPagePath);
-    String localOrRemotePageName = localPageName;
-    boolean newWindowIfRemote = NO_NEW_WINDOW;
-    if (page instanceof ProxyPage) {
-      ProxyPage proxyPage = (ProxyPage) page;
-      localOrRemotePageName = proxyPage.getThisPageUrl();
-      newWindowIfRemote = true;
+    for (WikiPageAction action : actions) {
+      if (action.getPageName() == null)
+        addBreakToActions(actionsGroup, action);
+      else
+        addLinkToActions(actionsGroup, action);
     }
-    return makeActions(pageData, localPageName, localOrRemotePageName,
-      newWindowIfRemote
-    );
+    return actionsGroup;
   }
+  
+  private static void addBreakToActions(TagGroup actions, WikiPageAction action) {
+    final HtmlTag tag = new HtmlTag("div");
+    tag.addAttribute("class", "main");
+    tag.add(action.getLinkName());
+    actions.add(tag);
+    }
 
-  public static HtmlTag makeActions(
-    PageData pageData, String localPageName,
-    String localOrRemotePageName, boolean newWindowIfRemote
-  )
-    throws Exception {
-    TagGroup actions = new TagGroup();
-    if (isTestPage(pageData)) {
-      ActionLink link = new ActionLink(localPageName, "Test");
-      link.setQuery("test");
-      addLinkToActions(actions, link);
-    }
-    if (isSuitePage(pageData)) {
-      ActionLink link = new ActionLink(localPageName, "Suite");
-      link.setShortcutKey("");
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("Edit")) {
-      ActionLink link = new ActionLink(localOrRemotePageName, "Edit");
-      link.setNewWindow(newWindowIfRemote);
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("Properties")) {
-      ActionLink link = new ActionLink(localOrRemotePageName, "Properties");
-      link.setNewWindow(newWindowIfRemote);
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("Refactor")) {
-      ActionLink link = new ActionLink(localOrRemotePageName, "Refactor");
-      link.setNewWindow(newWindowIfRemote);
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("WhereUsed")) {
-      ActionLink link = new ActionLink(localOrRemotePageName, "Where Used");
-      link.setNewWindow(newWindowIfRemote);
-      link.setQuery("whereUsed");
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("Search")) {
-      ActionLink link = new ActionLink("", "Search");
-      link.setQuery("searchForm");
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("Files")) {
-      ActionLink link = new ActionLink("/files", "Files");
-      link.setQuery(null);
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("Versions")) {
-      ActionLink link = new ActionLink(localOrRemotePageName, "Versions");
-      link.setNewWindow(newWindowIfRemote);
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("RecentChanges")) {
-      ActionLink link = new ActionLink("/RecentChanges", "Recent Changes");
-      link.setQuery(null);
-      link.setShortcutKey("");
-      addLinkToActions(actions, link);
-    }
-    if (pageData.hasAttribute("StopAll")) {
-      ActionLink link = new ActionLink("?stoptest", "Stop All Tests");
-      link.setQuery(null);
-      addLinkToActions(actions, link);
-    }
-    ActionLink userGuideLink = new ActionLink(".FitNesse.UserGuide", "User Guide");
-    userGuideLink.setQuery(null);
-    userGuideLink.setShortcutKey("");
-    actions.add(userGuideLink.getHtml());
-    return actions;
-  }
-
-  private static void addLinkToActions(TagGroup actions, ActionLink link) {
-    actions.add(link.getHtml());
+  private static void addLinkToActions(TagGroup actions, WikiPageAction action) {
+    actions.add(makeAction(action));
     actions.add(makeNavBreak());
   }
 
-  private static boolean isSuitePage(PageData pageData) throws Exception {
-    return pageData.hasAttribute("Suite");
+  public static HtmlTag makeAction(WikiPageAction action) {
+    String href = action.getPageName();
+    if (action.getQuery() != null && action.getQuery().length() > 0)
+      href = href + "?" + action.getQuery();
+
+    HtmlTag linkTag = new HtmlTag("a");
+    linkTag.addAttribute("href", href);
+    if (action.isNewWindow())
+      linkTag.addAttribute("target", "newWindow");
+    linkTag.addAttribute("accesskey", action.getShortcutKey());
+    linkTag.add(action.getLinkName());
+
+    TagGroup group = new TagGroup();
+    group.add(new HtmlComment(action.getLinkName() + " button"));
+    group.add(linkTag);
+    return group;
   }
 
   public static HtmlTag makeNavBreak() {
@@ -349,57 +230,19 @@ public class HtmlUtil {
     return navBreak;
   }
 
-  public static String makeNormalWikiPageContent(PageData pageData)
-    throws Exception {
+  public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
     SetupTeardownIncluder.includeInto(pageData);
-    String content = pageData.getHtml();
-    return addHeaderAndFooter(pageData.getWikiPage(), content);
+    return makePageHtmlWithHeaderAndFooter(pageData);
   }
 
-  public static String addHeaderAndFooter(WikiPage page, String content)
-    throws Exception {
+  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) throws Exception {
     StringBuffer buffer = new StringBuffer();
-    buffer.append(getHtmlOfInheritedPage("PageHeader", page));
-    buffer.append(content);
+    buffer.append(pageData.getHeaderPageHtml());
+    buffer.append(pageData.getHtml());
     buffer.append("<br/><div class=\"footer\">\n");
-    buffer.append(getHtmlOfInheritedPage("PageFooter", page));
+    buffer.append(pageData.getFooterPageHtml());
     buffer.append("</div>\n");
     return buffer.toString();
-  }
-
-  private static boolean isTestPage(PageData pageData) throws Exception {
-    return pageData.hasAttribute("Test");
-  }
-
-  public static String getHtmlOfInheritedPage(
-    String pageName,
-    WikiPage context
-  ) throws Exception {
-    return getLabeledHtmlOfInheritedPage(pageName, context, "");
-  }
-
-  public static String getLabeledHtmlOfInheritedPage(
-    String pageName,
-    WikiPage context, String label
-  ) throws Exception {
-    WikiPage inheritedPage = PageCrawlerImpl.getInheritedPage(pageName,
-      context
-    );
-    if (inheritedPage != null) {
-      PageData data = inheritedPage.getData();
-      if (label != null && label.length() > 1) {
-        WikiPagePath inheritedPagePath = context.getPageCrawler()
-          .getFullPath(inheritedPage);
-        String inheritedPagePathName = PathParser
-          .render(inheritedPagePath);
-        String fullLabel = "!meta " + label + ": ."
-          + inheritedPagePathName + "\n";
-        String newContent = fullLabel + data.getContent();
-        data.setContent(newContent);
-      }
-      return data.getHtml(context);
-    } else
-      return "";
   }
 
   public static String metaText(String text) {

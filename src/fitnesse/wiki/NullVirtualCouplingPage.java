@@ -8,11 +8,11 @@ import java.util.List;
 public class NullVirtualCouplingPage extends VirtualCouplingPage {
   private static final long serialVersionUID = 1L;
 
-  public NullVirtualCouplingPage(WikiPage hostPage) throws Exception {
+  public NullVirtualCouplingPage(WikiPage hostPage) {
     super(hostPage);
   }
 
-  public List<WikiPage> getChildren() throws Exception {
+  public List<WikiPage> getChildren() {
     return new ArrayList<WikiPage>();
   }
 }

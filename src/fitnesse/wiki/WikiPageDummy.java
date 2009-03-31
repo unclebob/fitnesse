@@ -81,6 +81,14 @@ public class WikiPageDummy implements WikiPage {
     return new PageCrawlerImpl();
   }
 
+  public WikiPage getHeaderPage() throws Exception {
+    return null;
+  }
+
+  public WikiPage getFooterPage() throws Exception {
+    return null;
+  }
+
   public WikiPage addChildPage(String name) throws Exception {
     return null;
   }
@@ -103,5 +111,9 @@ public class WikiPageDummy implements WikiPage {
 
   public String getHelpText() throws Exception {
     return "Dummy help text";
+  }
+
+  public List<WikiPageAction> getActions() throws Exception {
+    return null;
   }
 }

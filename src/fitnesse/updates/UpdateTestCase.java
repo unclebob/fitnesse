@@ -29,7 +29,7 @@ public abstract class UpdateTestCase extends TestCase {
     context.rootPagePath = testDir + "/" + rootName;
 
     FileUtil.makeDir(testDir);
-    root = FileSystemPage.makeRoot(context.rootPath, context.rootPageName);
+    root = new FileSystemPage(context.rootPath, context.rootPageName);
     crawler = root.getPageCrawler();
     context.root = root;
 

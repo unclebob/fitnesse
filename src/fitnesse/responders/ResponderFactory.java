@@ -2,20 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
-import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
-import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKOUT;
-import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
-import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
-import static fitnesse.revisioncontrol.RevisionControlOperation.SYNC;
-import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-
-import util.StringUtil;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.EditResponder;
@@ -34,13 +20,6 @@ import fitnesse.responders.refactoring.DeletePageResponder;
 import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
-import fitnesse.responders.revisioncontrol.AddResponder;
-import fitnesse.responders.revisioncontrol.CheckinResponder;
-import fitnesse.responders.revisioncontrol.CheckoutResponder;
-import fitnesse.responders.revisioncontrol.DeleteResponder;
-import fitnesse.responders.revisioncontrol.RevertResponder;
-import fitnesse.responders.revisioncontrol.SyncResponder;
-import fitnesse.responders.revisioncontrol.UpdateResponder;
 import fitnesse.responders.run.*;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
@@ -51,6 +30,13 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
+
+import util.StringUtil;
 
 public class ResponderFactory {
   private final String rootPath;
@@ -99,17 +85,10 @@ public class ResponderFactory {
     addResponder("importAndView", ImportAndViewResponder.class);
     addResponder("getPage", WikiPageResponder.class);
     addResponder("packet", PacketResponder.class);
-    addRespondersForRevisionControlOperations();
   }
 
-  private void addRespondersForRevisionControlOperations() {
-    addResponder(ADD.getQuery(), AddResponder.class);
-    addResponder(SYNC.getQuery(), SyncResponder.class);
-    addResponder(CHECKOUT.getQuery(), CheckoutResponder.class);
-    addResponder(CHECKIN.getQuery(), CheckinResponder.class);
-    addResponder(DELETE.getQuery(), DeleteResponder.class);
-    addResponder(REVERT.getQuery(), RevertResponder.class);
-    addResponder(UPDATE.getQuery(), UpdateResponder.class);
+  public void addResponder(String key, String responderClassName) throws ClassNotFoundException {
+    responderMap.put(key, Class.forName(responderClassName));
   }
 
   public void addResponder(String key, Class<?> responderClass) {

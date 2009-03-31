@@ -14,7 +14,6 @@ import fitnesse.components.SaveRecorder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.responders.run.ExecutionLog;
-import fitnesse.responders.run.SuiteResponder;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.ClasspathWidget;
@@ -30,15 +29,10 @@ import fitnesse.wikitext.widgets.XRefWidget;
 public class PageData implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(new Class[]{IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class});
-  public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(new Class[]{XRefWidget.class});
+  public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class);
+  public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(XRefWidget.class);
 
-  public static WidgetBuilder
-  variableDefinitionWidgetBuilder = new WidgetBuilder(new Class[]
-                                                                {IncludeWidget.class,
-      PreformattedWidget.class,
-      VariableDefinitionWidget.class
-                                                                });
+  public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(IncludeWidget.class, PreformattedWidget.class, VariableDefinitionWidget.class);
 
   public static final String PropertyHELP = "Help";
   public static final String PropertyPRUNE = "Prune";
@@ -146,7 +140,7 @@ public class PageData implements Serializable {
     properties.set(key);
   }
 
-  public boolean hasAttribute(String attribute) throws Exception {
+  public boolean hasAttribute(String attribute) {
     return properties.has(attribute);
   }
 
@@ -168,6 +162,16 @@ public class PageData implements Serializable {
 
   public String getHtml(WikiPage context) throws Exception {
     return processHTMLWidgets(getContent(), context);
+  }
+
+  public String getHeaderPageHtml() throws Exception {
+    WikiPage header = wikiPage.getHeaderPage();
+    return header == null ? "" : header.getData().getHtml();
+  }
+
+  public String getFooterPageHtml() throws Exception {
+    WikiPage footer = wikiPage.getFooterPage();
+    return footer == null ? "" : footer.getData().getHtml();
   }
 
   public String getVariable(String name) throws Exception {
@@ -216,11 +220,12 @@ public class PageData implements Serializable {
     ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage, builder);
     List<WikiWidget> widgets = root.getChildren();
     List<String> values = new ArrayList<String>();
-    for (WikiWidget widget : widgets)
+    for (WikiWidget widget : widgets) {
       if (widget instanceof WidgetWithTextArgument)
         values.add(((WidgetWithTextArgument) widget).getText());
       else
         widget.render();
+    }
     return values;
   }
 
@@ -230,5 +235,9 @@ public class PageData implements Serializable {
 
   public void addVersions(Collection<VersionInfo> newVersions) {
     versions.addAll(newVersions);
+  }
+
+  public boolean isEmpty() throws Exception {
+    return getContent() == null || getContent().length() == 0;
   }
 }

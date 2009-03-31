@@ -4,7 +4,6 @@ package fitnesse;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -18,9 +17,9 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.revisioncontrol.NullRevisionController;
-import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
+import fitnesse.wiki.VersionsController;
+import fitnesse.wiki.NullVersionsController;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
@@ -39,14 +38,7 @@ public class ComponentFactoryTest extends RegexTestCase {
   @Override
   public void setUp() throws Exception {
     testProperties = new Properties();
-    factory = new ComponentFactory(".");
-  }
-
-  private void saveTestProperties() throws IOException {
-    String propertiesFile = ComponentFactory.PROPERTIES_FILE;
-    FileOutputStream fileOutputStream = new FileOutputStream(propertiesFile);
-    testProperties.store(fileOutputStream, "Test ComponentFactory Properties File");
-    fileOutputStream.close();
+    factory = new ComponentFactory(testProperties);
   }
 
   @Override
@@ -60,24 +52,28 @@ public class ComponentFactoryTest extends RegexTestCase {
 
   public void testRootPageCreation() throws Exception {
     testProperties.setProperty(ComponentFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
-    saveTestProperties();
 
-    factory.loadProperties();
-    WikiPage page = factory.getRootPage(null);
+    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    factory.loadWikiPage(wikiPageFactory);
+    assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
+
+    WikiPage page = wikiPageFactory.makeRootPage(null, null, factory);
     assertNotNull(page);
     assertEquals(InMemoryPage.class, page.getClass());
   }
 
   public void testDefaultRootPage() throws Exception {
-    factory.loadProperties();
-    WikiPage page = factory.getRootPage(FileSystemPage.makeRoot("testPath", "TestRoot"));
+    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    factory.loadWikiPage(wikiPageFactory);
+    assertEquals(FileSystemPage.class, wikiPageFactory.getWikiPageClass());
+
+    WikiPage page = wikiPageFactory.makeRootPage("testPath", "TestRoot", factory);
     assertNotNull(page);
     assertEquals(FileSystemPage.class, page.getClass());
     assertEquals("TestRoot", page.getName());
   }
 
   public void testDefaultHtmlPageFactory() throws Exception {
-    factory.loadProperties();
     HtmlPageFactory pageFactory = factory.getHtmlPageFactory(new HtmlPageFactory());
     assertNotNull(pageFactory);
     assertEquals(HtmlPageFactory.class, pageFactory.getClass());
@@ -85,22 +81,42 @@ public class ComponentFactoryTest extends RegexTestCase {
 
   public void testHtmlPageFactoryCreation() throws Exception {
     testProperties.setProperty(ComponentFactory.HTML_PAGE_FACTORY, TestPageFactory.class.getName());
-    saveTestProperties();
 
-    factory.loadProperties();
     HtmlPageFactory pageFactory = factory.getHtmlPageFactory(null);
     assertNotNull(pageFactory);
     assertEquals(TestPageFactory.class, pageFactory.getClass());
   }
 
+  public void testAddPlugins() throws Exception {
+    testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
+
+    WikiPageFactory wikiPageFactory = new WikiPageFactory();
+    ResponderFactory responderFactory = new ResponderFactory(".");
+
+    WidgetBuilder htmlWidgetBuilder = WidgetBuilder.htmlWidgetBuilder;
+    WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder();
+    assertNull(WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("'''text'''"));
+    assertNull(WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("''text''"));
+    
+    String output = factory.loadPlugins(responderFactory, wikiPageFactory);
+
+    assertSubString(DummyPlugin.class.getName(), output);
+
+    assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
+    assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
+    assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
+    assertEquals(BoldWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("'''text'''"));
+    assertEquals(ItalicWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("''text''"));
+
+    WidgetBuilder.htmlWidgetBuilder = htmlWidgetBuilder;
+  }
+
   public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
-    saveTestProperties();
 
-    factory.loadProperties();
     ResponderFactory responderFactory = new ResponderFactory(".");
-    String output = factory.loadResponderPlugins(responderFactory);
+    String output = factory.loadResponders(responderFactory);
 
     assertSubString("custom1:" + WikiPageResponder.class.getName(), output);
     assertSubString("custom2:" + EditResponder.class.getName(), output);
@@ -112,24 +128,19 @@ public class ComponentFactoryTest extends RegexTestCase {
   public void testWikiWidgetPlugins() throws Exception {
     String widgetsValue = BoldWidget.class.getName() + ", " + ItalicWidget.class.getName();
     testProperties.setProperty(ComponentFactory.WIKI_WIDGETS, widgetsValue);
-    saveTestProperties();
 
-    factory.loadProperties();
-    String output = factory.loadWikiWidgetPlugins();
+    String output = factory.loadWikiWidgets();
 
     assertSubString(BoldWidget.class.getName(), output);
     assertSubString(ItalicWidget.class.getName(), output);
 
-    String builderPattern = WidgetBuilder.htmlWidgetBuilder.getWidgetPattern().pattern();
-    assertSubString(BoldWidget.REGEXP, builderPattern);
-    assertSubString(ItalicWidget.REGEXP, builderPattern);
+    assertEquals(BoldWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("'''text'''"));
+    assertEquals(ItalicWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("''text''"));
   }
 
   public void testWikiWidgetInterceptors() throws Exception {
     testProperties.setProperty(ComponentFactory.WIKI_WIDGET_INTERCEPTORS, TestWidgetInterceptor.class.getName());
-    saveTestProperties();
 
-    factory.loadProperties();
     String output = factory.loadWikiWidgetInterceptors();
 
     assertSubString(TestWidgetInterceptor.class.getName(), output);
@@ -147,7 +158,6 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   public void testAuthenticatorDefaultCreation() throws Exception {
-    factory.loadProperties();
     Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());
     assertNotNull(authenticator);
     assertEquals(PromiscuousAuthenticator.class, authenticator.getClass());
@@ -155,9 +165,7 @@ public class ComponentFactoryTest extends RegexTestCase {
 
   public void testAuthenticatorCustomCreation() throws Exception {
     testProperties.setProperty(ComponentFactory.AUTHENTICATOR, SimpleAuthenticator.class.getName());
-    saveTestProperties();
 
-    factory.loadProperties();
     Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());
     assertNotNull(authenticator);
     assertEquals(SimpleAuthenticator.class, authenticator.getClass());
@@ -168,9 +176,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertEquals(null, SaveResponder.contentFilter);
 
     testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
-    saveTestProperties();
 
-    factory.loadProperties();
     String content = factory.loadContentFilter();
     assertEquals("\tContent filter installed: " + SaveResponder.contentFilter.getClass().getName() + "\n", content);
     assertNotNull(SaveResponder.contentFilter);
@@ -178,18 +184,15 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   public void testShouldUseZipFileRevisionControllerAsDefault() throws Exception {
-    factory.loadProperties();
-    RevisionController defaultRevisionController = factory.loadRevisionController();
-    assertEquals(ZipFileRevisionController.class, defaultRevisionController.getClass());
+    VersionsController defaultRevisionController = factory.loadVersionsController();
+    assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
   }
 
   public void testShouldUseSpecifiedRevisionController() throws Exception {
-    testProperties.setProperty(ComponentFactory.REVISION_CONTROLLER, NullRevisionController.class.getName());
-    saveTestProperties();
+    testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
 
-    factory.loadProperties();
-    RevisionController defaultRevisionController = factory.loadRevisionController();
-    assertEquals(NullRevisionController.class, defaultRevisionController.getClass());
+    VersionsController defaultRevisionController = factory.loadVersionsController();
+    assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
   }
 
   public static class TestPageFactory extends HtmlPageFactory {
@@ -205,6 +208,22 @@ public class ComponentFactoryTest extends RegexTestCase {
 
     public boolean isContentAcceptable(String content, String page) {
       return false;
+    }
+  }
+
+  static class DummyPlugin {
+    public static void registerWikiPage(WikiPageFactory factory) {
+      factory.setWikiPageClass(InMemoryPage.class);
+    }
+
+    public static void registerResponders(ResponderFactory factory) {
+      factory.addResponder("custom1", WikiPageResponder.class);
+      factory.addResponder("custom2", EditResponder.class);
+    }
+
+    public static void registerWikiWidgets(WidgetBuilder builder) {
+      builder.addWidgetClass(BoldWidget.class);
+      builder.addWidgetClass(ItalicWidget.class);
     }
   }
 }

@@ -13,7 +13,6 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.After;
@@ -22,7 +21,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import util.FileUtil;
-import fitnesse.revisioncontrol.NullRevisionController;
 
 public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";
@@ -43,7 +41,7 @@ public class FileSystemPageTest {
     cmMethodCalls.clear();
     FileUtil.deleteFileSystemDirectory(base);
     createFileSystemDirectory(base);
-    root = (FileSystemPage) FileSystemPage.makeRoot(defaultPath, "RooT", new NullRevisionController());
+    root = new FileSystemPage(defaultPath, "RooT");
     crawler = root.getPageCrawler();
   }
 
@@ -104,10 +102,9 @@ public class FileSystemPageTest {
     crawler.addPage(root, PathParser.parse("BbBb"), "B content");
     crawler.addPage(root, PathParser.parse("CcCc"), "C content");
     new File(defaultPath + "/root/someOtherDir").mkdir();
-    List<?> children = root.getChildren();
+    List<WikiPage> children = root.getChildren();
     assertEquals(3, children.size());
-    for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage child = (WikiPage) iterator.next();
+    for (WikiPage child : children) {
       String name = child.getName();
       boolean isOk = "AaAa".equals(name) || "BbBb".equals(name) || "CcCc".equals(name);
       assertTrue("WikiPAge is not a valid one: " + name, isOk);
@@ -172,7 +169,7 @@ public class FileSystemPageTest {
   @Test
   public void testCanFindExistingPages() throws Exception {
     crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
-    WikiPage newRoot = FileSystemPage.makeRoot(defaultPath, "RooT");
+    WikiPage newRoot = new FileSystemPage(defaultPath, "RooT");
     assertNotNull(newRoot.getChildPage("FrontPage"));
   }
 

@@ -15,9 +15,6 @@ import fitnesse.html.RawHtml;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.revisioncontrol.RevisionControlOperation;
-import fitnesse.revisioncontrol.State;
-import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -33,18 +30,10 @@ public class DeletePageResponder implements SecureResponder {
     } else {
       String confirmedString = (String) request.getInput("confirmed");
       if ("yes".equals(confirmedString)) {
-        WikiPage pageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
         String nameOfPageToBeDeleted = path.last();
         path.removeNameFromEnd();
         WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
         if (parentOfPageToBeDeleted != null) {
-          if (pageToBeDeleted instanceof FileSystemPage) {
-            final FileSystemPage fileSystemPageToBeDeleted = (FileSystemPage) pageToBeDeleted;
-            final State state = fileSystemPageToBeDeleted.checkState();
-            if (!state.isNotUnderRevisionControl()) {
-              fileSystemPageToBeDeleted.execute(RevisionControlOperation.DELETE);
-            }
-          }
           parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
         }
         redirect(path, response);

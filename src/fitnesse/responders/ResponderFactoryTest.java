@@ -2,13 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static fitnesse.revisioncontrol.RevisionControlOperation.ADD;
-import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKIN;
-import static fitnesse.revisioncontrol.RevisionControlOperation.CHECKOUT;
-import static fitnesse.revisioncontrol.RevisionControlOperation.DELETE;
-import static fitnesse.revisioncontrol.RevisionControlOperation.REVERT;
-import static fitnesse.revisioncontrol.RevisionControlOperation.SYNC;
-import static fitnesse.revisioncontrol.RevisionControlOperation.UPDATE;
 
 import java.io.File;
 
@@ -32,13 +25,6 @@ import fitnesse.responders.refactoring.DeletePageResponder;
 import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
-import fitnesse.responders.revisioncontrol.AddResponder;
-import fitnesse.responders.revisioncontrol.CheckinResponder;
-import fitnesse.responders.revisioncontrol.CheckoutResponder;
-import fitnesse.responders.revisioncontrol.DeleteResponder;
-import fitnesse.responders.revisioncontrol.RevertResponder;
-import fitnesse.responders.revisioncontrol.SyncResponder;
-import fitnesse.responders.revisioncontrol.UpdateResponder;
 import fitnesse.responders.run.*;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
@@ -277,34 +263,6 @@ public class ResponderFactoryTest extends TestCase {
   public void testAddingResponders() throws Exception {
     factory.addResponder("custom", WikiPageResponder.class);
     assertResponderTypeMatchesInput("custom", WikiPageResponder.class);
-  }
-
-  public void testAddToRevisionControlResponder() throws Exception {
-    assertResponderTypeMatchesInput(ADD.getQuery(), AddResponder.class);
-  }
-
-  public void testSyncronizeRevisionControlResponder() throws Exception {
-    assertResponderTypeMatchesInput(SYNC.getQuery(), SyncResponder.class);
-  }
-
-  public void testCheckoutResponder() throws Exception {
-    assertResponderTypeMatchesInput(CHECKOUT.getQuery(), CheckoutResponder.class);
-  }
-
-  public void testCheckinResponder() throws Exception {
-    assertResponderTypeMatchesInput(CHECKIN.getQuery(), CheckinResponder.class);
-  }
-
-  public void testDeleteFromSourceResponder() throws Exception {
-    assertResponderTypeMatchesInput(DELETE.getQuery(), DeleteResponder.class);
-  }
-
-  public void testRevertSourceControlChangesResponder() throws Exception {
-    assertResponderTypeMatchesInput(REVERT.getQuery(), RevertResponder.class);
-  }
-
-  public void testUpdateSourceFromRevisionControlResponder() throws Exception {
-    assertResponderTypeMatchesInput(UPDATE.getQuery(), UpdateResponder.class);
   }
 
   private void assertResponderType(Class<?> expectedClass, WikiPage page) throws Exception {

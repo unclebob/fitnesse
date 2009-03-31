@@ -57,7 +57,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   public void announceStartNewTest(WikiPage test) throws Exception {
-    writeData(HtmlUtil.getHtmlOfInheritedPage("PageHeader", getPage()));
+    writeData(getPage().getData().getHeaderPageHtml());
   }
 
   public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner)
@@ -107,7 +107,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     html.header.use(HtmlUtil
         .makeBreadCrumbsWithPageType(fullPathName, pageType));
     PageData data = getPage().getData();
-    html.actions.use(HtmlUtil.makeActions(data));
+    html.actions.use(HtmlUtil.makeActions(getPage().getActions()));
     WikiImportProperty.handleImportProperties(html, getPage(), data);
     return html;
   }
@@ -124,7 +124,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected void finishWritingOutput() throws Exception {
-    writeData(HtmlUtil.getHtmlOfInheritedPage("PageFooter", getPage()));
+    writeData(getPage().getData().getFooterPageHtml());
     writeData(htmlPage.postDivision);
   }
 

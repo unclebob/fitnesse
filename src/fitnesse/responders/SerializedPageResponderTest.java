@@ -46,7 +46,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
   }
 
   public void testWithFileSystem() throws Exception {
-    root = FileSystemPage.makeRoot(".", RootPath);
+    root = new FileSystemPage(".", RootPath);
     Object obj = doSetUpWith(root, "bones");
     FileUtil.deleteFileSystemDirectory(RootPath);
     doTestWith(obj);
@@ -77,8 +77,7 @@ public class SerializedPageResponderTest extends RegexTestCase {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
     ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
-    Object obj = ois.readObject();
-    return obj;
+    return ois.readObject();
   }
 
   public void testGetContentAndAttributes() throws Exception {
