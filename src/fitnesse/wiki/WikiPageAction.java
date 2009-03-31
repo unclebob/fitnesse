@@ -63,21 +63,34 @@ public class WikiPageAction {
     WikiPageAction that = (WikiPageAction) o;
 
     if (newWindow != that.newWindow) return false;
-    if (linkName != null ? !linkName.equals(that.linkName) : that.linkName != null) return false;
-    if (pageName != null ? !pageName.equals(that.pageName) : that.pageName != null) return false;
-    if (query != null ? !query.equals(that.query) : that.query != null) return false;
-    if (shortcutKey != null ? !shortcutKey.equals(that.shortcutKey) : that.shortcutKey != null) return false;
 
-    return true;
+    return eq(linkName, that.linkName) &&
+      eq(pageName, that.pageName) &&
+      eq(query, that.query) &&
+      eq(shortcutKey, that.shortcutKey);
+  }
+
+  private boolean eq(String thisString, String thatString) {
+    return
+      (thisString != null && thatString != null && thisString.equals(thatString)) || 
+      (thisString == null && thatString == null);
   }
 
   @Override
   public int hashCode() {
-    int result = pageName != null ? pageName.hashCode() : 0;
-    result = 31 * result + (linkName != null ? linkName.hashCode() : 0);
-    result = 31 * result + (query != null ? query.hashCode() : 0);
-    result = 31 * result + (shortcutKey != null ? shortcutKey.hashCode() : 0);
-    result = 31 * result + (newWindow ? 1 : 0);
-    return result;
+    int hashSum = hashString(pageName);
+    hashSum = addToHash(hashSum, hashString(linkName));
+    hashSum = addToHash(hashSum, hashString(query));
+    hashSum = addToHash(hashSum, hashString(shortcutKey));
+    hashSum = addToHash(hashSum, newWindow ? 1 : 0);
+    return hashSum;
+  }
+
+  private int addToHash(int hashSum, int hashCode) {
+    return 31 * hashSum + hashCode;
+  }
+
+  private int hashString(String string) {
+    return string != null ? string.hashCode() : 0;
   }
 }
