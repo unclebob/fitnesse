@@ -1,3 +1,5 @@
+|PageFooter||04:12:13 Tue, Mar 31, 2009|
+|FrontPage||04:10:51 Tue, Mar 31, 2009|
 |FitNesse.UserGuide||17:16:15 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteTiming||12:46:31 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject||12:45:56 Fri, Mar 27, 2009|
@@ -31,7 +33,6 @@
 |FitNesse.UserGuide.SpecialPages||11:35:23 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupVirtualWiki||10:27:25 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupVariables||10:25:51 Fri, Mar 27, 2009|
-|FrontPage||10:24:20 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupNote||10:22:59 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupInternalLink||10:21:40 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupExpressions||10:19:41 Fri, Mar 27, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||17:55:13 Sun, Mar 08, 2009|
 |JunkPage.JunkTest||17:18:00 Fri, Mar 06, 2009|
 |ProjectPage.JukeBoxProject.SetUp||08:31:08 Thu, Mar 05, 2009|
-|ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PlayThreeSongs||08:30:18 Thu, Mar 05, 2009|

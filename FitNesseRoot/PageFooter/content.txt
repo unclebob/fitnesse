@@ -1,2 +1,2 @@
 [[Front Page][.FrontPage]] | [[User Guide][.FitNesse.UserGuide]]
-[[!-SetUp-!][>SetUp]], [[!-TearDown-!][>TearDown]] for this page | [[root][root]] (for global !-!path's-!, ''etc.'')
+[[root][root]] (for global !-!path's-!, ''etc.'')
