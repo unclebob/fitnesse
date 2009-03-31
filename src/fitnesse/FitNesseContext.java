@@ -51,4 +51,8 @@ public class FitNesseContext {
   public static int getPort() {
     return globalContext != null ? globalContext.port : -1;
   }
+
+  public void setVelocityEngine(VelocityEngine velocityEngine) {
+    this.velocityEngine = velocityEngine;
+  }
 }
