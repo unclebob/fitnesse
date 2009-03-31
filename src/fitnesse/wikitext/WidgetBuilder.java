@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +47,7 @@ import fitnesse.wikitext.widgets.WikiWordWidget;
 import fitnesse.wikitext.widgets.XRefWidget;
 
 public class WidgetBuilder {
-  public static final Class<?>[] htmlWidgetClasses = new Class<?>[]{
+  public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(
     CommentWidget.class,
     LiteralWidget.class,
     WikiWordWidget.class,
@@ -81,119 +82,69 @@ public class WidgetBuilder {
     VariableDefinitionWidget.class,
     EvaluatorWidget.class,
     VariableWidget.class
-  };
-
-  public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(htmlWidgetClasses);
+  );
 
   public static WidgetBuilder literalVariableEvaluatorWidgetBuilder = new WidgetBuilder(
-    new Class[]{
-      LiteralWidget.class,
-      EvaluatorWidget.class,
-      VariableWidget.class
-    });
+    LiteralWidget.class,
+    EvaluatorWidget.class,
+    VariableWidget.class
+  );
 
   public static WidgetBuilder variableEvaluatorWidgetBuilder = new WidgetBuilder(
-    new Class[]{
-      EvaluatorWidget.class,
-      VariableWidget.class
-    });
+    EvaluatorWidget.class,
+    VariableWidget.class
+  );
 
-  private Class<?>[] widgetClasses;
-  private Pattern widgetPattern;
-  private WidgetData[] widgetDataArray;
+  private List<WidgetData> widgetData = new ArrayList<WidgetData>();
 
   private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
   private final ReentrantLock widgetDataArraylock = new ReentrantLock();
 
-  public WidgetBuilder(Class<?>[] widgetClasses) {
-    this.widgetClasses = widgetClasses;
-    widgetPattern = buildCompositeWidgetPattern();
-
-    widgetDataArray = buildWidgetDataArray();
-  }
-
-  private Pattern buildCompositeWidgetPattern() {
-    StringBuffer pattern = new StringBuffer();
-    for (int i = 0; i < widgetClasses.length; i++) {
-      Class<?> widgetClass = widgetClasses[i];
-      String regexp = getRegexpFromWidgetClass(widgetClass);
-      pattern.append("(").append(regexp).append(")");
-      if (i != (widgetClasses.length - 1))
-        pattern.append("|");
+  public WidgetBuilder(Class<? extends WikiWidget>... widgetClasses) {
+    for (Class<? extends WikiWidget> widgetClass : widgetClasses) {
+      addWidgetClass(widgetClass);
     }
-    return Pattern.compile(pattern.toString(), Pattern.DOTALL | Pattern.MULTILINE);
   }
 
-  private static String getRegexpFromWidgetClass(Class<?> widgetClass) {
-    String regexp = null;
+  public final void addWidgetClass(Class<?> widgetClass) {
+    widgetData.add(new WidgetData(widgetClass));
+  }
+
+  private WikiWidget constructWidget(Class<?> widgetClass, ParentWidget parent, String text) {
     try {
-      Field f = widgetClass.getField("REGEXP");
-      regexp = (String) f.get(widgetClass);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return regexp;
-  }
-
-  public WikiWidget makeWidget(ParentWidget parent, Matcher matcher) throws Exception {
-    int group = getGroupMatched(matcher);
-    Class<?> widgetClass = widgetClasses[group - 1];
-    return constructWidget(widgetClass, parent, matcher.group());
-  }
-
-  private WikiWidget constructWidget(Class<?> widgetClass, ParentWidget parent, String text) throws Exception {
-    try {
-      Constructor<?> widgetConstructor = widgetClass.getConstructor(new Class<?>[]{ParentWidget.class, String.class});
-      WikiWidget widget = (WikiWidget) widgetConstructor.newInstance(new Object[]{parent, text});
+      Constructor<?> widgetConstructor = widgetClass.getConstructor(ParentWidget.class, String.class);
+      WikiWidget widget = (WikiWidget) widgetConstructor.newInstance(parent, text);
       for (WidgetInterceptor i : interceptors) {
         i.intercept(widget);
       }
       return widget;
     }
     catch (Exception e) {
-      e.printStackTrace();
-      Exception exception = new Exception("Widget Construction failed for " + widgetClass.getName() + "\n" + e.getMessage());
+      RuntimeException exception = new RuntimeException("Widget Construction failed for " + 
+        widgetClass.getName() + "\n" + e.getMessage());
       exception.setStackTrace(e.getStackTrace());
       throw exception;
     }
   }
 
-  public int getGroupMatched(Matcher matcher) {
-    for (int i = 1; i <= matcher.groupCount(); i++) {
-      if (matcher.group(i) != null)
-        return i;
-    }
-    return -1;
+  public void addChildWidgets(String value, ParentWidget parent) {
+    addChildWidgets(value, parent, true);
   }
 
-  public Pattern getWidgetPattern() {
-    return widgetPattern;
-  }
-
-  private WidgetData[] buildWidgetDataArray() {
-    WidgetData[] widgetDataArray = new WidgetData[widgetClasses.length];
-    for (int i = 0; i < widgetClasses.length; i++) {
-      Class<?> widgetClass = widgetClasses[i];
-      widgetDataArray[i] = new WidgetData(widgetClass);
-    }
-    return widgetDataArray;
-  }
-
-  public void addChildWidgets(String value, ParentWidget parent) throws Exception {
+  public void addChildWidgets(String value, ParentWidget parent, boolean includeTextWidgets) {
     widgetDataArraylock.lock();
     WidgetData firstMatch = findFirstMatch(value);
     try {
       if (firstMatch != null) {
         Matcher match = firstMatch.match;
         String preString = value.substring(0, match.start());
-        if (!"".equals(preString))
+        if (!"".equals(preString) && includeTextWidgets)
           new TextWidget(parent, preString);
         constructWidget(firstMatch.widgetClass, parent, match.group());
         String postString = value.substring(match.end());
         if (!postString.equals(""))
-          addChildWidgets(postString, parent);
-      } else
+          addChildWidgets(postString, parent, includeTextWidgets);
+      } else if (includeTextWidgets)
         new TextWidget(parent, value);
     }
     finally {
@@ -201,12 +152,16 @@ public class WidgetBuilder {
     }
   }
 
+  public Class<?> findWidgetClassMatching(String value) {
+    WidgetData firstMatch = findFirstMatch(value);
+    return firstMatch == null ? null : firstMatch.widgetClass;
+  }
+
   private WidgetData findFirstMatch(String value) {
     resetWidgetDataList();
 
     WidgetData firstMatch = null;
-    for (int i = 0; i < widgetDataArray.length; i++) {
-      WidgetData widgetData = widgetDataArray[i];
+    for (WidgetData widgetData : this.widgetData) {
       Matcher match = widgetData.pattern.matcher(value);
       if (match.find()) {
         widgetData.match = match;
@@ -220,8 +175,8 @@ public class WidgetBuilder {
   }
 
   private void resetWidgetDataList() {
-    for (int i = 0; i < widgetDataArray.length; i++)
-      widgetDataArray[i].match = null;
+    for (WidgetData widgetData : this.widgetData)
+      widgetData.match = null;
   }
 
   public void addInterceptor(WidgetInterceptor interceptor) {
@@ -236,6 +191,18 @@ public class WidgetBuilder {
     public WidgetData(Class<?> widgetClass) {
       this.widgetClass = widgetClass;
       pattern = Pattern.compile(getRegexpFromWidgetClass(widgetClass), Pattern.DOTALL | Pattern.MULTILINE);
+    }
+
+    private static String getRegexpFromWidgetClass(Class<?> widgetClass) {
+      String regexp = null;
+      try {
+        Field f = widgetClass.getField("REGEXP");
+        regexp = (String) f.get(widgetClass);
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+      return regexp;
     }
   }
 }

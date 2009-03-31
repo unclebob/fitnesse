@@ -9,11 +9,10 @@ import junit.framework.TestCase;
 import util.FileUtil;
 
 public class BaseWikiPageTest extends TestCase {
-  private BaseWikiPage root;
   private WikiPage linkingPage;
 
   public void setUp() throws Exception {
-    root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
+    BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
     root.addChildPage("LinkedPage");
     linkingPage = root.addChildPage("LinkingPage");
     linkingPage.addChildPage("ChildPage");

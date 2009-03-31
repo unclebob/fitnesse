@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,37 +13,47 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import util.FileUtil;
-import fitnesse.revisioncontrol.RevisionControlOperation;
-import fitnesse.revisioncontrol.RevisionControllable;
-import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.revisioncontrol.State;
-import fitnesse.revisioncontrol.zip.ZipFileRevisionController;
+import fitnesse.ComponentFactory;
 import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 
-public class FileSystemPage extends CachingPage implements RevisionControllable {
+public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
   
   public static final String contentFilename = "/content.txt";
   public static final String propertiesFilename = "/properties.xml";
 
   private final String path;
-  private final RevisionController revisioner;
+  private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
 
-  protected FileSystemPage(final String path, final String name, final WikiPage parent, final RevisionController revisioner) throws Exception {
+  public FileSystemPage(final String path, final String name, final ComponentFactory componentFactory) throws Exception {
+    super(name, null);
+    this.path = path;
+
+    versionsController = createVersionsController(componentFactory);
+    createDirectoryIfNewPage();
+  }
+
+  protected FileSystemPage(final String path, final String name, final WikiPage parent,
+                           final VersionsController versionsController) throws Exception {
     super(name, parent);
     this.path = path;
-    this.revisioner = revisioner;
+
+    this.versionsController = versionsController;
+    createDirectoryIfNewPage();
   }
 
-  public static WikiPage makeRoot(final String path, final String name) throws Exception {
-    return makeRoot(path, name, new ZipFileRevisionController());
+  public FileSystemPage(final String path, final String name) throws Exception {
+    this(path, name, new ComponentFactory());
   }
 
-  public static WikiPage makeRoot(final String path, final String name, final RevisionController revisioner) throws Exception {
-    return new FileSystemPage(path, name, null, revisioner);
+  private VersionsController createVersionsController(ComponentFactory factory) throws Exception {
+    return (VersionsController) factory.createComponent(ComponentFactory.VERSIONS_CONTROLLER,
+      ZipFileVersionsController.class);
   }
 
+  @Override
   public void removeChildPage(final String name) throws Exception {
     super.removeChildPage(name);
     String pathToDelete = getFileSystemPath() + "/" + name;
@@ -53,6 +62,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     cmSystem.delete(pathToDelete);
   }
 
+  @Override
   public boolean hasChildPage(final String pageName) throws Exception {
     final File f = new File(getFileSystemPath() + "/" + pageName);
     if (f.exists()) {
@@ -115,14 +125,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
 
   @Override
   protected WikiPage createChildPage(final String name) throws Exception {
-    final FileSystemPage newPage = new FileSystemPage(getFileSystemPath(), name, this, this.revisioner);
-    String newPagePath = newPage.getFileSystemPath();
-    final File baseDir = new File(newPagePath);
-    if (baseDir.exists() == false) {
-      baseDir.mkdirs();
-      cmSystem.update(newPagePath);
-    }
-    return newPage;
+    return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
   }
 
   private void loadContent(final PageData data) throws Exception {
@@ -149,7 +152,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     }
   }
 
-  private byte[] readContentBytes(final File input) throws FileNotFoundException, IOException {
+  private byte[] readContentBytes(final File input) throws IOException {
     FileInputStream inputStream = null;
     try {
       final byte[] bytes = new byte[(int) input.length()];
@@ -173,12 +176,16 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     return false;
   }
 
-  private String getParentFileSystemPath() throws Exception {
+  private String getParentFileSystemPath() {
     return this.parent != null ? ((FileSystemPage) this.parent).getFileSystemPath() : this.path;
   }
 
-  public String getFileSystemPath() throws Exception {
+  public String getFileSystemPath() {
     return getParentFileSystemPath() + "/" + getName();
+  }
+
+  public String getAbsoluteFileSystemPath() {
+    return new File(getFileSystemPath()).getAbsolutePath();
   }
 
   private void loadAttributes(final PageData data) throws Exception {
@@ -212,7 +219,7 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     data.getProperties().setLastModificationTime(new Date());
     saveContent(data.getContent());
     saveAttributes(data.getProperties());
-    this.revisioner.prune(this);
+    this.versionsController.prune(this);
   }
 
   @Override
@@ -220,12 +227,21 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     final PageData pagedata = new PageData(this);
     loadContent(pagedata);
     loadAttributes(pagedata);
-    pagedata.addVersions(this.revisioner.history(this));
+    pagedata.addVersions(this.versionsController.history(this));
     return pagedata;
   }
 
   public PageData getDataVersion(final String versionName) throws Exception {
-    return this.revisioner.getRevisionData(this, versionName);
+    return this.versionsController.getRevisionData(this, versionName);
+  }
+
+  private void createDirectoryIfNewPage() throws Exception {
+    String pagePath = getFileSystemPath();
+    File baseDir = new File(pagePath);
+    if (!baseDir.exists()) {
+      baseDir.mkdirs();
+      cmSystem.update(pagePath);
+    }
   }
 
   @Override
@@ -235,11 +251,11 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
   }
 
   protected VersionInfo makeVersion(final PageData data) throws Exception {
-    return this.revisioner.makeVersion(this, data);
+    return this.versionsController.makeVersion(this, data);
   }
 
   protected void removeVersion(final String versionName) throws Exception {
-    this.revisioner.removeVersion(this, versionName);
+    this.versionsController.removeVersion(this, versionName);
   }
 
   @Override
@@ -249,33 +265,6 @@ public class FileSystemPage extends CachingPage implements RevisionControllable 
     } catch (final Exception e) {
       return super.toString();
     }
-  }
-
-  /**
-   * @see fitnesse.wiki.RevisionControllable#execute(fitnesse.revisioncontrol.RevisionControlOperation)
-   */
-  public void execute(final RevisionControlOperation operation) throws Exception {
-    operation.execute(this.revisioner, contentFilePath(), propertiesFilePath());
-  }
-
-  private String propertiesFilePath() throws Exception {
-    return absolutePath(propertiesFilename);
-  }
-
-  private String absolutePath(final String fileName) throws Exception {
-    return new File(getFileSystemPath() + fileName).getAbsolutePath();
-  }
-
-  private String contentFilePath() throws Exception {
-    return absolutePath(contentFilename);
-  }
-
-  public boolean isExternallyRevisionControlled() {
-    return this.revisioner.isExternalReversionControlEnabled();
-  }
-
-  public State checkState() throws Exception {
-    return this.revisioner.checkState(contentFilePath(), propertiesFilePath());
   }
 
   class CmSystem {

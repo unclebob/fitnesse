@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class VirtualCouplingPage implements WikiPage {
@@ -19,9 +18,9 @@ public class VirtualCouplingPage implements WikiPage {
 
   public VirtualCouplingPage(WikiPage hostPage, WikiPage proxy) throws Exception {
     this.hostPage = hostPage;
-    List<?> proxyChildren = proxy.getChildren();
-    for (Iterator<?> iterator = proxyChildren.iterator(); iterator.hasNext();) {
-      CommitingPage wikiPage = (CommitingPage) iterator.next();
+    List<WikiPage> proxyChildren = proxy.getChildren();
+    for (WikiPage child : proxyChildren) {
+      CommitingPage wikiPage = (CommitingPage) child;
       wikiPage.parent = this;
       children.put(wikiPage.getName(), wikiPage);
     }
@@ -92,7 +91,19 @@ public class VirtualCouplingPage implements WikiPage {
     return hostPage.getPageCrawler();
   }
 
+  public WikiPage getHeaderPage() throws Exception {
+    return null;
+  }
+
+  public WikiPage getFooterPage() throws Exception {
+    return null;
+  }
+
   public String getHelpText() throws Exception {
     return "Virtual coupling help text";
+  }
+
+  public List<WikiPageAction> getActions() throws Exception {
+    return null;
   }
 }

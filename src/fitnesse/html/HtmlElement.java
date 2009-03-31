@@ -5,5 +5,5 @@ package fitnesse.html;
 public abstract class HtmlElement {
   public static final String endl = System.getProperty("line.separator");
 
-  public abstract String html() throws Exception;
+  public abstract String html();
 }

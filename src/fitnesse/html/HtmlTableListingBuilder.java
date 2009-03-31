@@ -22,13 +22,12 @@ public class HtmlTableListingBuilder {
     return table;
   }
 
-  public void addRow(HtmlElement[] rowItems) throws Exception {
+  public void addRow(HtmlElement[] rowItems) {
     HtmlTag row = new HtmlTag("tr");
     addShade(row);
 
     HtmlTag cell = null;
-    for (int i = 0; i < rowItems.length; i++) {
-      HtmlElement rowItem = rowItems[i];
+    for (HtmlElement rowItem : rowItems) {
       cell = new HtmlTag("td", rowItem);
       row.add(cell);
     }

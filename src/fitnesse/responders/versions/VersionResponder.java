@@ -18,9 +18,9 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiPageAction;
 
 public class VersionResponder implements SecureResponder {
-  private WikiPage page;
   private String version;
   private String resource;
 
@@ -30,7 +30,7 @@ public class VersionResponder implements SecureResponder {
 
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);
-    page = pageCrawler.getPage(context.root, path);
+    WikiPage page = pageCrawler.getPage(context.root, path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
     PageData pageData = page.getDataVersion(version);
@@ -54,10 +54,10 @@ public class VersionResponder implements SecureResponder {
   }
 
   private HtmlTag makeRollbackLink(String name) {
-    HtmlUtil.ActionLink link = new HtmlUtil.ActionLink(name, "Rollback");
-    link.setQuery("responder=rollback&version=" + version);
-    link.setShortcutKey("");
-    return link.getHtml();
+    WikiPageAction action = new WikiPageAction(name, "Rollback");
+    action.setQuery("responder=rollback&version=" + version);
+    action.setShortcutKey("");
+    return HtmlUtil.makeAction(action);
   }
 
   public SecureOperation getSecureOperation() {

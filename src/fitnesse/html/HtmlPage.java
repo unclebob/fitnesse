@@ -25,9 +25,8 @@ public class HtmlPage extends HtmlTag {
     add(makeBody());
   }
 
-  public String html() throws Exception {
-    String html = DTD + endl + super.html();
-    return html;
+  public String html() {
+    return DTD + endl + super.html();
   }
 
   protected HtmlTag makeBody() {

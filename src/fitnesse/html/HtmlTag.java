@@ -31,16 +31,16 @@ public class HtmlTag extends HtmlElement {
     return tagName;
   }
 
-  public String html() throws Exception {
+  public String html() {
     return html(0);
   }
 
-  public String htmlInline() throws Exception {
+  public String htmlInline() {
     isInline = true;
     return html(0);
   }
 
-  public String html(int depth) throws Exception {
+  public String html(int depth) {
     StringBuffer buffer = new StringBuffer();
     addTabs(depth, buffer);
 
@@ -74,7 +74,7 @@ public class HtmlTag extends HtmlElement {
       buffer.append('\t');
   }
 
-  private boolean addChildHtml(StringBuffer buffer, int depth) throws Exception {
+  private boolean addChildHtml(StringBuffer buffer, int depth) {
     boolean addedTag = false;
     boolean lastAddedWasNonTag = false;
     int i = 0;

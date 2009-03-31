@@ -46,12 +46,17 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   public PageCrawler getPageCrawler();
 
+  public WikiPage getHeaderPage() throws Exception;
+
+  public WikiPage getFooterPage() throws Exception;
   //TODO Delete these method alone with ProxyPage when the time is right.
   public boolean hasExtension(String extensionName);
 
   public Extension getExtension(String extensionName);
 
   public String getHelpText() throws Exception;
+
+  public List<WikiPageAction> getActions() throws Exception;
 }
 
 

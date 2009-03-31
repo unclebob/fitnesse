@@ -7,6 +7,10 @@ import fitnesse.FitNesseVersion;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.SlimTable;
+import fitnesse.slimTables.SlimTable;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import util.XmlWriter;
+import util.XmlUtil;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -28,7 +32,7 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   public void announceStartNewTest(WikiPage test) throws Exception {
-    appendHtmlToBuffer(HtmlUtil.getHtmlOfInheritedPage("PageHeader", getPage()));
+    appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
 
   public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {

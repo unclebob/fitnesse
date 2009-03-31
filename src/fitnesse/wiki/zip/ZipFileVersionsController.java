@@ -1,67 +1,27 @@
-// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.revisioncontrol.zip;
+package fitnesse.wiki.zip;
 
-import static fitnesse.revisioncontrol.NullState.VERSIONED;
+import fitnesse.wiki.NullVersionsController;
+import util.StreamReader;
+import fitnesse.wiki.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import util.StreamReader;
-import fitnesse.revisioncontrol.RevisionControlException;
-import fitnesse.revisioncontrol.RevisionController;
-import fitnesse.revisioncontrol.State;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.NoSuchVersionException;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-
-public class ZipFileRevisionController implements RevisionController {
+public class ZipFileVersionsController extends NullVersionsController {
   public static SimpleDateFormat dateFormat() {
     return new SimpleDateFormat("yyyyMMddHHmmss");
   }
 
-  public ZipFileRevisionController() {
+  public ZipFileVersionsController() {
     this(new Properties());
   }
 
-  public ZipFileRevisionController(final Properties properties) {
-  }
-
-  public void add(final String... filePaths) throws RevisionControlException {
-  }
-
-  public void checkin(final String... filePaths) throws RevisionControlException {
-  }
-
-  public void checkout(final String... filePaths) throws RevisionControlException {
-  }
-
-  public State checkState(final String... filePaths) throws RevisionControlException {
-    return VERSIONED;
-  }
-
-  public void delete(final String... filePaths) throws RevisionControlException {
-  }
-
-  public void move(final File src, final File dest) throws RevisionControlException {
+  public ZipFileVersionsController(final Properties properties) {
   }
 
   public PageData getRevisionData(final FileSystemPage page, final String label) {
@@ -83,7 +43,9 @@ public class ZipFileRevisionController implements RevisionController {
       throw new RuntimeException(th);
     } finally {
       try {
-        zipFile.close();
+        if (zipFile != null) {
+          zipFile.close();
+        }
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -112,11 +74,11 @@ public class ZipFileRevisionController implements RevisionController {
     return versions;
   }
 
-  public boolean isReversionControlEnabled() {
+  public boolean isRevisionControlEnabled() {
     return true;
   }
 
-  public boolean isExternalReversionControlEnabled() {
+  public boolean isExternalRevisionControlEnabled() {
     return false;
   }
 
@@ -133,16 +95,18 @@ public class ZipFileRevisionController implements RevisionController {
     try {
       final String filename = makeVersionFileName(page, version.getName());
       zos = new ZipOutputStream(new FileOutputStream(filename));
-      for (final Iterator<File> iterator = filesToZip.iterator(); iterator.hasNext();) {
-        addToZip(iterator.next(), zos);
+      for (File aFilesToZip : filesToZip) {
+        addToZip(aFilesToZip, zos);
       }
       return new VersionInfo(version.getName());
     } catch (Throwable th) {
       throw new RuntimeException(th);
     } finally {
       try {
-        zos.finish();
-        zos.close();
+        if (zos != null) {
+          zos.finish();
+          zos.close();
+        }
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -161,12 +125,6 @@ public class ZipFileRevisionController implements RevisionController {
     final String versionFileName = makeVersionFileName(page, versionName);
     final File versionFile = new File(versionFileName);
     versionFile.delete();
-  }
-
-  public void revert(final String... filePaths) throws RevisionControlException {
-  }
-
-  public void update(final String... filePaths) throws RevisionControlException {
   }
 
   private void addToZip(final File file, final ZipOutputStream zos) throws IOException {
@@ -211,7 +169,9 @@ public class ZipFileRevisionController implements RevisionController {
         throw new RuntimeException(th);
       } finally {
         try {
-          attributeIS.close();
+          if (attributeIS != null) {
+            attributeIS.close();
+          }
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -232,7 +192,9 @@ public class ZipFileRevisionController implements RevisionController {
         throw new RuntimeException(th);
       } finally {
         try {
-          reader.close();
+          if (reader != null) {
+            reader.close();
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -288,5 +250,4 @@ public class ZipFileRevisionController implements RevisionController {
   public String getControllerName() {
     return "Zipped Version History";
   }
-
 }
