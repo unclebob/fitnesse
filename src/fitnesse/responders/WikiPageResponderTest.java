@@ -2,19 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import static fitnesse.revisioncontrol.NullState.UNKNOWN;
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-
-import java.io.File;
-import java.util.HashSet;
-
-import util.FileUtil;
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -22,16 +9,14 @@ import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.VirtualCouplingExtensionTest;
 import fitnesse.wiki.WikiPage;
+import util.RegexTestCase;
 
 public class WikiPageResponderTest extends RegexTestCase {
   private WikiPage root;
@@ -176,44 +161,5 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertTrue(responder instanceof SecureResponder);
     final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
     assertEquals(SecureReadOperation.class, operation.getClass());
-  }
-
-  public void testShouldDisplayRevisionControlMenuIfPageIsEditableOrImportedAndUnderRevisionControl() throws Exception {
-    final RevisionController revisionController = createMock(RevisionController.class);
-    final String rootDir = "testDir";
-    final String pageName = "RevisionControlledPage";
-
-    expect(revisionController.history((FileSystemPage) anyObject())).andStubReturn(new HashSet<VersionInfo>());
-    revisionController.add((String) anyObject());
-    expectLastCall().anyTimes();
-    expect(revisionController.isExternalReversionControlEnabled()).andReturn(true);
-    expect(revisionController.checkState(contentAndPropertiesFilePath(rootDir + "/ExternalRoot/" + pageName))).andReturn(UNKNOWN);
-    replay(revisionController);
-    try {
-      FileUtil.createDir(rootDir);
-      root = FileSystemPage.makeRoot(rootDir, "ExternalRoot", revisionController);
-      root.addChildPage(pageName);
-      final SimpleResponse response = requestPage(pageName);
-      assertSubString("<div class=\"main\">Revision Control</div>", response.getContent());
-      assertSubString("<a href=\"" + pageName + "?addToRevisionControl\" accesskey=\"a\">Add</a>", response.getContent());
-    } finally {
-      FileUtil.deleteFileSystemDirectory(rootDir);
-      verify(revisionController);
-    }
-  }
-
-  public void testShouldOnlyShowRevisionControlMenuForFileSystemPage() throws Exception {
-    crawler.addPage(root, PathParser.parse("NormalPage"), "normal");
-
-    final SimpleResponse response = requestPage("NormalPage");
-    final String content = response.getContent();
-    assertHasRegexp("header", content);
-    assertHasRegexp("normal", content);
-    assertDoesntHaveRegexp("Revision Control", content);
-  }
-
-  private String[] contentAndPropertiesFilePath(String basePath) {
-    return new String[]{new File(basePath + FileSystemPage.contentFilename).getAbsolutePath(),
-      new File(basePath + FileSystemPage.propertiesFilename).getAbsolutePath()};
   }
 }

@@ -13,8 +13,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.revisioncontrol.HtmlActionMenuBuilder;
-import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -82,29 +80,20 @@ public class WikiPageResponder implements SecureResponder {
     String fullPathName = PathParser.render(fullPath);
     html.title.use(fullPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
-    html.actions.use(HtmlUtil.makeActions(pageData));
+    html.actions.use(HtmlUtil.makeActions(page.getActions()));
     SetupTeardownIncluder.includeInto(pageData);
-    String contentHtml = generateHtml(pageData);
-    html.main.use(HtmlUtil.addHeaderAndFooter(page, contentHtml));
-    handleSpecialProperties(html, page, fullPathName);
+    html.main.use(generateHtml(pageData));
+    handleSpecialProperties(html, page);
     return html.html();
   }
 
   /* hook for subclasses */
   protected String generateHtml(PageData pageData) throws Exception {
-    return pageData.getHtml();
+    return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
   }
 
-  private void handleSpecialProperties(HtmlPage html, WikiPage page, String pageName) throws Exception {
+  private void handleSpecialProperties(HtmlPage html, WikiPage page) throws Exception {
     WikiImportProperty.handleImportProperties(html, page, pageData);
-    updateReversionControlMenu(html, page, pageData, pageName);
-  }
-
-  private static void updateReversionControlMenu(HtmlPage html, WikiPage page, PageData pageData, String pageName)
-    throws Exception {
-    if ((page instanceof FileSystemPage)) {
-      HtmlActionMenuBuilder.addRevisionControlActions(html.actions, pageName, pageData);
-    }
   }
 
   public SecureOperation getSecureOperation() {

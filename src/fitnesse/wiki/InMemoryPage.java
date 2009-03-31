@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.ComponentFactory;
+
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,10 +20,14 @@ public class InMemoryPage extends CommitingPage {
   protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
   protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
-  protected InMemoryPage(String name, String content, WikiPage parent) throws Exception {
+  public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) throws Exception {
+    this(rootPageName, null);
+  }
+
+  protected InMemoryPage(String name, WikiPage parent) throws Exception {
     super(name, parent);
     addExtention(new VirtualCouplingExtension(this));
-    versions.put(currentVersionName, new PageData(this, content));
+    versions.put(currentVersionName, new PageData(this, ""));
   }
 
   public WikiPage addChildPage(String name) throws Exception {
@@ -33,16 +37,11 @@ public class InMemoryPage extends CommitingPage {
   }
 
   public static WikiPage makeRoot(String name) throws Exception {
-    InMemoryPage root = new InMemoryPage(name, "", null);
-    return root;
-  }
-
-  public static WikiPage makeRoot(Properties props) throws Exception {
-    return makeRoot(props.getProperty("FitNesseRoot", "FitNesseRoot"));
+    return new InMemoryPage(name, null);
   }
 
   protected WikiPage createChildPage(String name) throws Exception {
-    BaseWikiPage newPage = new InMemoryPage(name, "", this);
+    BaseWikiPage newPage = new InMemoryPage(name, this);
     children.put(newPage.getName(), newPage);
     return newPage;
   }
@@ -68,7 +67,7 @@ public class InMemoryPage extends CommitingPage {
     return children.get(name);
   }
 
-  public List<WikiPage> getNormalChildren() throws Exception {
+  public List<WikiPage> getNormalChildren() {
     return new LinkedList<WikiPage>(children.values());
   }
 
@@ -90,8 +89,7 @@ public class InMemoryPage extends CommitingPage {
     Set<String> names = new HashSet<String>(versions.keySet());
     names.remove(currentVersionName);
     List<VersionInfo> pageVersions = new LinkedList<VersionInfo>();
-    for (Iterator<String> iterator = names.iterator(); iterator.hasNext();) {
-      String name = iterator.next();
+    for (String name : names) {
       PageData data = versions.get(name);
       pageVersions.add(makeVersionInfo(data, name));
     }
@@ -108,7 +106,6 @@ public class InMemoryPage extends CommitingPage {
     if (author == null)
       author = "";
     Date date = current.getProperties().getLastModificationTime();
-    VersionInfo version = new VersionInfo(name, author, date);
-    return version;
+    return new VersionInfo(name, author, date);
   }
 }

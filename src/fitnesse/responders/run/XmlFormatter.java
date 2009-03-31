@@ -13,7 +13,6 @@ import fitnesse.FitNesseVersion;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import util.XmlWriter;
-import fitnesse.html.HtmlUtil;
 import util.XmlUtil;
 import fitnesse.wiki.WikiPage;
 
@@ -29,7 +28,7 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   public void announceStartNewTest(WikiPage test) throws Exception {
-    appendHtmlToBuffer(HtmlUtil.getHtmlOfInheritedPage("PageHeader", getPage()));
+    appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
 
   public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {

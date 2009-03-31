@@ -8,6 +8,7 @@ import java.util.Date;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPageAction;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -61,9 +62,9 @@ public class DirectoryResponder implements SecureResponder {
   }
 
   private HtmlTag makeFrontPageLink() {
-    HtmlUtil.ActionLink link = new HtmlUtil.ActionLink("/FrontPage", "FrontPage");
-    link.setQuery(null);
-    return link.getHtml();
+    WikiPageAction action = new WikiPageAction("/FrontPage", "FrontPage");
+    action.setQuery(null);
+    return HtmlUtil.makeAction(action);
   }
 
   private String makeRightColumn() throws Exception {
@@ -84,8 +85,7 @@ public class DirectoryResponder implements SecureResponder {
   }
 
   private void addFileRows(File[] files, HtmlTableListingBuilder table) throws Exception {
-    for (int i = 0; i < files.length; i++) {
-      File file = files[i];
+    for (File file : files) {
       HtmlTag nameItem = makeLinkToFile(file);
       HtmlElement sizeItem = new RawHtml(getSizeString(file));
       HtmlElement dateItem = new RawHtml(dateFormat.format(new Date(file.lastModified())));

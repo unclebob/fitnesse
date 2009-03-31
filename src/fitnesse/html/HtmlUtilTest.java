@@ -4,7 +4,6 @@ package fitnesse.html;
 
 import util.RegexTestCase;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public class HtmlUtilTest extends RegexTestCase {
@@ -112,12 +111,7 @@ public class HtmlUtilTest extends RegexTestCase {
   @SuppressWarnings("serial")
   private String getActionsHtml(String pageName) throws Exception {
     root.addChildPage(pageName);
-    PageData pageData = new PageData(root.getChildPage(pageName)) {
-      public String getVariable(String name) throws Exception {
-        return null;
-      }
-    };
-    return HtmlUtil.makeActions(pageData, pageName, pageName, false).html();
+    return HtmlUtil.makeActions(root.getChildPage(pageName).getActions()).html();
   }
 
   private void verifyDefaultLinks(String html, String pageName) {

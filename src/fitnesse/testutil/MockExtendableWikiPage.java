@@ -18,7 +18,7 @@ public class MockExtendableWikiPage extends ExtendableWikiPage {
     addExtention(e);
   }
 
-  public WikiPage getParent() throws Exception {
+  public WikiPage getParent() {
     return null;
   }
 
@@ -41,7 +41,7 @@ public class MockExtendableWikiPage extends ExtendableWikiPage {
     return null;
   }
 
-  public String getName() throws Exception {
+  public String getName() {
     return null;
   }
 
