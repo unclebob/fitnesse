@@ -2,12 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static fitnesse.revisioncontrol.zip.ZipFileRevisionController.dateFormat;
+import static fitnesse.wiki.zip.ZipFileVersionsController.dateFormat;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +22,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   @Override
   public void setUp() throws Exception {
-    root = FileSystemPage.makeRoot("testDir", "RooT");
+    root = new FileSystemPage("testDir", "RooT");
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
 
@@ -83,8 +82,8 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     PageVersionPruner.daysTillVersionsExpire = 3;
     PageData data = page.makePageData();
     Set<VersionInfo> versions = data.getVersions();
-    for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext();)
-      page.removeVersion(iterator.next().toString());
+    for (VersionInfo version : versions)
+      page.removeVersion(version.toString());
 
     data.getProperties().setLastModificationTime(dateFormat().parse("20031213000000"));
     page.makeVersion(data);
@@ -159,11 +158,11 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
     PageData data = testPage.getData();
     data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Aladdin");
-    VersionInfo record = testPage.commit(data);
+    testPage.commit(data);
 
     data = testPage.getData();
     data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Joe");
-    record = testPage.commit(data);
+    VersionInfo record = testPage.commit(data);
 
     assertTrue(record.getName().startsWith("Aladdin"));
   }

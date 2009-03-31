@@ -3,7 +3,6 @@
 package fitnesse.wikitext.widgets;
 
 import java.util.List;
-import java.util.regex.Matcher;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
@@ -23,13 +22,7 @@ public class TextIgnoringWidgetRoot extends WidgetRoot {
 
 
   public void addChildWidgets(String value) throws Exception {
-    Matcher m = getBuilder().getWidgetPattern().matcher(value);
-    if (m.find()) {
-      getBuilder().makeWidget(this, m);
-      String postString = value.substring(m.end(), value.length());
-      if (!postString.equals(""))
-        addChildWidgets(postString);
-    }
+    getBuilder().addChildWidgets(value, this, false);
   }
 }
 

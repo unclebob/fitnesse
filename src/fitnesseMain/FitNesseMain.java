@@ -8,6 +8,7 @@ import fitnesse.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
+import fitnesse.WikiPageFactory;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -16,9 +17,7 @@ import fitnesse.components.Logger;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
-import fitnesse.revisioncontrol.RevisionController;
 import fitnesse.updates.UpdaterImplementation;
-import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageVersionPruner;
 
 public class FitNesseMain {
@@ -53,17 +52,20 @@ public class FitNesseMain {
     String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     if (defaultNewPageContent != null)
       context.defaultNewPageContent = defaultNewPageContent;
-    RevisionController revisioner = componentFactory.loadRevisionController();
-    context.root = componentFactory.getRootPage(FileSystemPage.makeRoot(context.rootPath, context.rootPageName, revisioner));
+    WikiPageFactory wikiPageFactory = new WikiPageFactory();
     context.responderFactory = new ResponderFactory(context.rootPagePath);
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(), componentFactory);
     context.htmlPageFactory = componentFactory.getHtmlPageFactory(new HtmlPageFactory());
 
-    extraOutput = componentFactory.loadResponderPlugins(context.responderFactory);
-    extraOutput += componentFactory.loadWikiWidgetPlugins();
+    extraOutput = componentFactory.loadPlugins(context.responderFactory, wikiPageFactory);
+    extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
+    extraOutput += componentFactory.loadResponders(context.responderFactory);
+    extraOutput += componentFactory.loadWikiWidgets();
     extraOutput += componentFactory.loadWikiWidgetInterceptors();
     extraOutput += componentFactory.loadContentFilter();
+
+    context.root = wikiPageFactory.makeRootPage(context.rootPath, context.rootPageName, componentFactory);
 
     WikiImportTestEventListener.register();
 

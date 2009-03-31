@@ -13,6 +13,7 @@ import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.WikiPageAction;
 
 public class WikiImportProperty extends WikiPageProperty {
   private static final long serialVersionUID = 1L;
@@ -57,8 +58,8 @@ public class WikiImportProperty extends WikiPageProperty {
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
       return importProperty != null && !importProperty.isRoot();
     } catch (Exception e) {
+      throw new RuntimeException(e);
     }
-    return false;
   }
 
   public static WikiImportProperty createFrom(WikiPageProperty property) {
@@ -110,15 +111,15 @@ public class WikiImportProperty extends WikiPageProperty {
   }
 
   private static HtmlTag makeEditRemotelyLink(String remoteInput, String pageName) {
-    HtmlUtil.ActionLink link = new HtmlUtil.ActionLink(pageName, "Edit Remotely");
-    link.setQuery(remoteInput);
-    return link.getHtml();
+    WikiPageAction action = new WikiPageAction(pageName, "Edit Remotely");
+    action.setQuery(remoteInput);
+    return HtmlUtil.makeAction(action);
   }
 
   private static HtmlTag makeEditLocallyLink(String localPageName) {
-    HtmlUtil.ActionLink link = new HtmlUtil.ActionLink(localPageName, "Edit Locally");
-    link.setQuery("edit");
-    return link.getHtml();
+    WikiPageAction action = new WikiPageAction(localPageName, "Edit Locally");
+    action.setQuery("edit");
+    return HtmlUtil.makeAction(action);
   }
 
   public static String makeRemoteEditQueryParameters() {
