@@ -9,6 +9,7 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
+import org.apache.velocity.app.VelocityEngine;
 
 public class FitNesseUtil {
   private static FitNesse instance = null;
@@ -24,6 +25,9 @@ public class FitNesseUtil {
     context.rootPageName = root.getName();
     context.rootPagePath = context.rootPath + "/" + context.rootPageName;
     context.responderFactory = new ResponderFactory(context.rootPagePath);
+    VelocityEngine engine = new VelocityEngine();
+    engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
+    context.setVelocityEngine(engine);
     instance = new FitNesse(context);
     instance.start();
   }
