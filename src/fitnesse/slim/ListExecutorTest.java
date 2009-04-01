@@ -85,6 +85,12 @@ public class ListExecutorTest {
   }
 
   @Test
+  public void oneFunctionCallWithBlankArgument() throws Exception {
+    statements.add(list("id", "call", "testSlim", "echoString", ""));
+    respondsWith(list(list("id", "")));
+  }
+
+  @Test
   public void oneFunctionCallToShowThatLaterImportsTakePrecedence() throws Exception {
     statements.add(0,list("i2", "import", "fitnesse.slim.test.testSlimInThisPackageShouldNotBeTheOneUsed"));
     statements.add(list("id", "call", "testSlim", "returnString"));
@@ -129,6 +135,13 @@ public class ListExecutorTest {
     respondsWith(list(list("id1", "Bob"), list("id2", "Martin"), list("id3", "name: Bob Martin")));
   }
 
+  @Test
+  public void canReplaceSymbolWhenValueIsNull() throws Exception {
+    statements.add(list("id1", "make", "nf", "NullFixture"));
+    statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
+    statements.add(list("id3", "call", "testSlim", "echoString", "$v"));
+    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "null")));
+  }
 
   @Test
   public void passAndReturnList() throws Exception {

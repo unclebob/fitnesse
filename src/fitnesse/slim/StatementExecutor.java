@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.converters.*;
+
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
@@ -9,28 +11,9 @@ import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import fitnesse.slim.converters.BooleanArrayConverter;
-import fitnesse.slim.converters.BooleanConverter;
-import fitnesse.slim.converters.CharConverter;
-import fitnesse.slim.converters.DateConverter;
-import fitnesse.slim.converters.DoubleArrayConverter;
-import fitnesse.slim.converters.DoubleConverter;
-import fitnesse.slim.converters.IntConverter;
-import fitnesse.slim.converters.IntegerArrayConverter;
-import fitnesse.slim.converters.ListConverter;
-import fitnesse.slim.converters.PropertyEditorConverter;
-import fitnesse.slim.converters.StringArrayConverter;
-import fitnesse.slim.converters.StringConverter;
-import fitnesse.slim.converters.VoidConverter;
 
 /**
  * This is the API for executing a SLIM statement.  This class should not know about
@@ -81,9 +64,9 @@ public class StatementExecutor {
   }
 
   public Converter getConverter(Class<?> k) {
-    Converter c =  Slim.converters.get(k);
+    Converter c = Slim.converters.get(k);
     if (c != null)
-       return c;
+      return c;
     PropertyEditor pe = PropertyEditorManager.findEditor(k);
     if (pe != null) {
       return new PropertyEditorConverter(pe);
@@ -179,7 +162,7 @@ public class StatementExecutor {
   }
 
   @SuppressWarnings("unchecked")
-private Object replaceVariable(Object object) {
+  private Object replaceVariable(Object object) {
     if (object instanceof List)
       return (replaceArgsInList((List<Object>) object));
     else
@@ -190,14 +173,25 @@ private Object replaceVariable(Object object) {
     Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     int startingPosition = 0;
     while (true) {
+      if ("".equals(arg))
+        break;
       Matcher symbolMatcher = symbolPattern.matcher(arg.substring(startingPosition));
       if (symbolMatcher.find()) {
         String symbolName = symbolMatcher.group(1);
-        if (variables.containsKey(symbolName))
-          arg = arg.replace("$" + symbolName, (String) variables.get(symbolName));
+        arg = replaceSymbolInArg(arg, symbolName);
         startingPosition += symbolMatcher.start(1);
       } else
         break;
+    }
+    return arg;
+  }
+
+  private String replaceSymbolInArg(String arg, String symbolName) {
+    if (variables.containsKey(symbolName)) {
+      String replacement = (String) variables.get(symbolName);
+      if (replacement == null)
+        replacement = "null";
+      arg = arg.replace("$" + symbolName, replacement);
     }
     return arg;
   }

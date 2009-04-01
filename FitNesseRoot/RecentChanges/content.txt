@@ -1,3 +1,6 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolsCanBeBlankOrNull||19:50:40 Tue, Mar 31, 2009|
+|JunkParent.SymbolTest||19:43:55 Tue, Mar 31, 2009|
+|JunkParent.SuiteTearDown||18:46:44 Tue, Mar 31, 2009|
 |FitNesse.UserGuide.RestfulTests||21:54:33 Sun, Mar 29, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||12:50:03 Sun, Mar 29, 2009|
 |JunkParent.InfiniteTest||11:54:19 Sun, Mar 29, 2009|
@@ -95,13 +98,3 @@
 |JunkParent.SlimTest||12:49:06 Thu, Mar 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContents||12:13:59 Thu, Mar 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestTackOnFixtureNotFixture||03:06:47 Wed, Mar 11, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestNotFixture||03:06:13 Wed, Mar 11, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec||03:05:40 Wed, Mar 11, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestNoDefaultConstructor||03:05:26 Wed, Mar 11, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteFixtureTests.SuiteGeneralFixtureSpec.TestCannotResolveGracefullyNamedFixture||03:04:50 Wed, Mar 11, 2009|
-<<<<<<< HEAD:FitNesseRoot/RecentChanges/content.txt
-=======
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||17:55:13 Sun, Mar 08, 2009|
-|JunkPage.JunkTest||17:18:00 Fri, Mar 06, 2009|
-|ProjectPage.JukeBoxProject.SetUp||08:31:08 Thu, Mar 05, 2009|
->>>>>>> master:FitNesseRoot/RecentChanges/content.txt
