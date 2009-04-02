@@ -50,7 +50,7 @@ public class NullRevisionController implements RevisionController {
   }
 
   public boolean isExternalReversionControlEnabled() {
-    return true;
+    return false;
   }
 
   public VersionInfo makeVersion(final FileSystemPage page, final PageData data) throws Exception {
