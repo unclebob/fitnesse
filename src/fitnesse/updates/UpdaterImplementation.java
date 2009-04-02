@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -136,6 +137,8 @@ public class UpdaterImplementation implements Updater {
     awriter = new BufferedWriter(new OutputStreamWriter(OutputStream, "8859_1"));
     awriter.write("#FitNesse properties");
     awriter.newLine();
+    Object[] keys = (Object[]) rootProperties.keySet().toArray(new Object[0]);  
+    Arrays.sort(keys);
     for (Enumeration<Object> enumeration = rootProperties.keys(); enumeration
         .hasMoreElements();) {
       String key = (String) enumeration.nextElement();
