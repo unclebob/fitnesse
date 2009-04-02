@@ -7,7 +7,7 @@ import fitnesse.FitNesseContext;
 
 public abstract class BaseFormatter implements ResultsListener {
 
-  private final WikiPage page;
+  protected final WikiPage page;
   protected FitNesseContext context;
 
   public abstract void writeHead(String pageType) throws Exception;

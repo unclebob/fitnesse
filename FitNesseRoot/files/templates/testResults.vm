@@ -13,6 +13,7 @@
     </counts>
     <content><![CDATA[$result.Content]]></content>
     <relativePageName>$result.RelativePageName</relativePageName>
+    #if($result.Tags)<tags>$result.Tags</tags>#end
     #if($result.Instructions.size() > 0)
     
     <instructions>
@@ -23,6 +24,7 @@
         <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
         #foreach($expectation in $instructionResult.Expectations)
         <expectation>
+          <status>$expectation.Status</status>
           <instructionId>$expectation.InstructionId</instructionId>
           <col>$expectation.Col</col>
           <row>$expectation.Row</row>

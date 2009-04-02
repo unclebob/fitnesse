@@ -12,6 +12,7 @@ import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import util.XmlWriter;
 import util.XmlUtil;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.PageData;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -56,6 +57,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     outputBuffer = null;
     addCountsToResult(testSummary);
     currentResult.relativePageName = relativeTestName;
+    currentResult.tags = page.getData().getAttribute(PageData.PropertySUITES);
 
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
@@ -173,9 +175,24 @@ public abstract class XmlFormatter extends BaseFormatter {
           expectationResult.type = expectation.getClass().getSimpleName();
           expectationResult.actual = expectation.getActual();
           expectationResult.expected = expectation.getExpected();
-          expectationResult.evaluationMessage = expectation.getEvaluationMessage();
+          String message = expectation.getEvaluationMessage();
+          expectationResult.evaluationMessage = message;
+          expectationResult.status = expectationStatus(message);
         }
       }
+    }
+
+    private String expectationStatus(String message) {
+      String status = "TILT";
+      if (message.matches(".*pass(.*)"))
+        status = "right";
+      else if (message.matches(".*fail(.*)"))
+         status = "wrong";
+      else if (message.matches(".*__EXCEPTION__:<"))
+        status = "exception";
+      else
+        status = "ignored";
+      return status;
     }
   }
 
@@ -209,6 +226,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       private String content;
       private String relativePageName;
       private List<InstructionResult> instructions = new ArrayList<InstructionResult>();
+      private String tags;
 
       public String getRight() {
         return right;
@@ -236,6 +254,14 @@ public abstract class XmlFormatter extends BaseFormatter {
 
       public List<InstructionResult> getInstructions() {
         return instructions;
+      }
+
+      public String getTags() {
+        return tags;
+      }
+
+      public void setTags(String tags) {
+        this.tags = tags;
       }
     }
 
@@ -269,6 +295,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       private String actual;
       private String expected;
       private String evaluationMessage;
+      private String status;
 
       public String getInstructionId() {
         return instructionId;
@@ -296,6 +323,10 @@ public abstract class XmlFormatter extends BaseFormatter {
 
       public String getEvaluationMessage() {
         return evaluationMessage;
+      }
+
+      public String getStatus() {
+        return status;
       }
     }
 

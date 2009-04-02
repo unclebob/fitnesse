@@ -73,8 +73,17 @@ public class TestResponderTest {
   }
 
   private void doSimpleRun(String fixtureTable) throws Exception {
+    doSimpleRunWithTags(fixtureTable, null);
+  }
+
+  private void doSimpleRunWithTags(String fixtureTable, String tags) throws Exception {
     simpleRunPageName = "TestPage";
     testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
+    if (tags != null) {
+      PageData pageData = testPage.getData();
+      pageData.setAttribute(PageData.PropertySUITES, tags);
+      testPage.commit(pageData);
+    }
     request.setResource(testPage.getName());
 
     responder.turnOffChunkingForTests();
@@ -214,6 +223,9 @@ public class TestResponderTest {
     Element counts = XmlUtil.getElementByTagName(result, "counts");
     assertCounts(counts, "1", "0", "0", "0");
 
+    Element tags = XmlUtil.getElementByTagName(result, "tags");
+    assertNull(tags);
+
     String content = XmlUtil.getTextValue(result, "content");
     assertSubString("PassFixture", content);
     String relativePageName = XmlUtil.getTextValue(result, "relativePageName");
@@ -222,16 +234,20 @@ public class TestResponderTest {
 
   @Test
   public void slimXmlFormat() throws Exception {
+    request.addInput("format", "xml");
     String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
-    String instructionResults[] = {"OK","EXCEPTION","EXCEPTION","VOID","VOID","right","EXCEPTION","VOID","VOID","wow"};
+    String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
 
     request.addInput("format", "xml");
-    doSimpleRun(slimDecisionTable());
+    doSimpleRunWithTags(slimDecisionTable(), "zoo");
     assertXmlDocumentHeaderIsCorrect();
 
     Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
     Element counts = XmlUtil.getElementByTagName(result, "counts");
     assertCounts(counts, "2", "1", "0", "0");
+
+    String tags = XmlUtil.getTextValue(result, "tags");
+    assertEquals("zoo", tags);
 
     Element instructions = XmlUtil.getElementByTagName(result, "instructions");
     NodeList instructionList = instructions.getElementsByTagName("instructionResult");
@@ -247,17 +263,18 @@ public class TestResponderTest {
       assertResultHas(instructionElement, instructionResults[i]);
     }
 
-    checkExpectation(instructionList, 0, "decisionTable_0_0", "ConstructionExpectation", "0", "0", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
-    checkExpectation(instructionList, 3, "decisionTable_0_3", "VoidReturnExpectation", "0", "2", "/__VOID__/", "right", "right");
-    checkExpectation(instructionList, 5, "decisionTable_0_5", "ReturnedValueExpectation", "1", "2", "right", "wrong", "[right] fail(expected [wrong])");
-    checkExpectation(instructionList, 7, "decisionTable_0_7", "VoidReturnExpectation", "0", "3", "/__VOID__/", "wow", "wow");
-    checkExpectation(instructionList, 9, "decisionTable_0_9", "ReturnedValueExpectation", "1", "3", "wow", "wow", "pass(wow)");
+    checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "right", "ConstructionExpectation", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
+    checkExpectation(instructionList, 3, "decisionTable_0_3", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
+    checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
+    checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
+    checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
   }
 
-  private void checkExpectation(NodeList instructionList, int index, String id, String type, String col, String row, String actual, String expected, String message) throws Exception {
-    Element instructionElement = (Element)instructionList.item(index);
+  private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {
+    Element instructionElement = (Element) instructionList.item(index);
     Element expectation = XmlUtil.getElementByTagName(instructionElement, "expectation");
     assertEquals(id, XmlUtil.getTextValue(expectation, "instructionId"));
+    assertEquals(status, XmlUtil.getTextValue(expectation, "status"));
     assertEquals(type, XmlUtil.getTextValue(expectation, "type"));
     assertEquals(col, XmlUtil.getTextValue(expectation, "col"));
     assertEquals(row, XmlUtil.getTextValue(expectation, "row"));
@@ -370,7 +387,7 @@ public class TestResponderTest {
     assertHasRegexp("<script>.*?document\\.getElementById\\(\"test-summary\"\\)\\.className = \".*?\";.*?</script>", results);
   }
 
-  
+
   @Test
   public void testTestSummaryHasRightClass() throws Exception {
     doSimpleRun(passFixtureTable());
@@ -379,14 +396,14 @@ public class TestResponderTest {
 
   @Test
   public void testTestHasStopped() throws Exception {
-    
+
     new Thread(makeStopTestsRunnable()).start();
-    
+
     doSimpleRun(waitFixtureTable());
     assertHasRegexp("Testing was interupted", results);
   }
 
-  
+
   @Test
   public void testAuthentication_RequiresTestPermission() throws Exception {
     assertTrue(responder instanceof SecureResponder);
@@ -467,7 +484,7 @@ public class TestResponderTest {
   private String waitFixtureTable() {
     return "|!-fitnesse.testutil.WaitFixture-!|\n";
   }
-  
+
   private Runnable makeStopTestsRunnable() {
     return new Runnable() {
       public void run() {
@@ -480,7 +497,7 @@ public class TestResponderTest {
       }
     };
   }
-  
+
   private String simpleSlimDecisionTable() {
     return "!define TEST_SYSTEM {slim}\n" +
       "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +

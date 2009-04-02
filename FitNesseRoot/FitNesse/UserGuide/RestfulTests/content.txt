@@ -6,6 +6,7 @@ The results come back in the following form:
 	<rootPath>SuiteAcceptanceTests</rootPath>
 	<result>
 		<relativePageName>SuiteWidgetTests.TestBrokenWikiWordLink</relativePageName>
+                <tags>critical,slow</tags>
 		<counts>
 			<right>24</right>
 			<wrong>0</wrong>
@@ -21,6 +22,7 @@ The results come back in the following form:
                                <slimResult>OK</result>
                                <expectation>
                                        <instructionId>decisionTable_1_0</instructionId>
+                                       <status>right</status>
                                        <col>0</col>
                                        <row>0</row>
                                        <type>ConstructionExpectation</type>

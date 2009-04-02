@@ -8,17 +8,17 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.FitNesseContext;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
-  private HtmlPage page;
+  private HtmlPage htmlPage;
   private SuiteHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
 
   public void setUp() throws Exception {
     FitNesseContext context = new FitNesseContext();
-    page = new HtmlPageFactory().newPage();
+    htmlPage = new HtmlPageFactory().newPage();
     formatter = new SuiteHtmlFormatter(context, null, null) {
       @Override
       protected HtmlPage buildHtml(String pageType) throws Exception {
-        return page;
+        return htmlPage;
       }
       
       @Override

@@ -20,7 +20,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   private FitNesseContext context;
   private String host;
   private String rootPath;
-  private HtmlPage page;
+  private HtmlPage htmlPage;
 
   public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws Exception {
     this.context = context;
@@ -43,26 +43,26 @@ public class HtmlResultFormatter implements ResultFormatter {
       
       @Override
       protected HtmlPage buildHtml(String pageType) throws Exception {
-        return page;
+        return htmlPage;
       }
     };
     return formatter;
   }
   
   private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
-    page = pageFactory.newPage();
-    page.head.use(makeBaseTag());
-    page.head.add(makeContentTypeMetaTag());
-    page.title.use(rootPath);
-    page.head.add(page.title);
-    page.head.add(page.makeCssLink("/files/css/fitnesse_print.css", "screen"));
+    htmlPage = pageFactory.newPage();
+    htmlPage.head.use(makeBaseTag());
+    htmlPage.head.add(makeContentTypeMetaTag());
+    htmlPage.title.use(rootPath);
+    htmlPage.head.add(htmlPage.title);
+    htmlPage.head.add(htmlPage.makeCssLink("/files/css/fitnesse_print.css", "screen"));
 
     HtmlTag script = new HtmlTag("script", scriptContent);
     script.addAttribute("language", "javascript");
-    page.head.add(script);
-    page.body.addAttribute("onload", "localizeInPageLinks()");
+    htmlPage.head.add(script);
+    htmlPage.body.addAttribute("onload", "localizeInPageLinks()");
 
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(rootPath, "Command Line Test Results"));
+    htmlPage.header.use(HtmlUtil.makeBreadCrumbsWithPageType(rootPath, "Command Line Test Results"));
   }
 
   private HtmlTag makeContentTypeMetaTag() {
