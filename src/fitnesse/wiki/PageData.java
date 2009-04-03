@@ -113,10 +113,11 @@ public class PageData implements Serializable {
   // really intended for general logging.
   private void handleInvalidPageName(WikiPage wikiPage) {
     try {
-      System.err.println("WikiPage " + wikiPage + " does not have a valid name!" + wikiPage.getName());
+      String msg = "WikiPage " + wikiPage + " does not have a valid name!" + wikiPage.getName();
+      System.err.println(msg);
+      throw new RuntimeException(msg);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 

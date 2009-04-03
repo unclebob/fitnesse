@@ -57,7 +57,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     factory.loadWikiPage(wikiPageFactory);
     assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
 
-    WikiPage page = wikiPageFactory.makeRootPage(null, null, factory);
+    WikiPage page = wikiPageFactory.makeRootPage(null, "", factory);
     assertNotNull(page);
     assertEquals(InMemoryPage.class, page.getClass());
   }
