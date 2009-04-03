@@ -39,7 +39,7 @@ public class SlimClient {
       Thread.sleep(50);
     }
     reader = new StreamReader(client.getInputStream());
-    writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+    writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
     slimServerVersion = reader.readLine();
   }
 
@@ -72,8 +72,8 @@ public class SlimClient {
   }
 
   private void writeString(String string) throws IOException {
-    writer.write(String.format("%06d:", string.length()));
-    writer.write(string);
+    String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
+    writer.write(packet);
     writer.flush();
   }
 

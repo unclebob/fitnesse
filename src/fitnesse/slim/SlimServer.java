@@ -58,7 +58,7 @@ public class SlimServer implements SocketServer {
   private void initialize(Socket s) throws IOException {
     executor = new ListExecutor(verbose);
     reader = new StreamReader(s.getInputStream());
-    writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+    writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
     writer.write(String.format("Slim -- %s\n", SlimVersion.VERSION));
     writer.flush();
   }
@@ -96,7 +96,7 @@ public class SlimServer implements SocketServer {
 
   private void sendResultsToClient(List<Object> results) throws IOException {
     String resultString = ListSerializer.serialize(results);
-    writer.write(String.format("%06d:%s", resultString.length(), resultString));
+    writer.write(String.format("%06d:%s", resultString.getBytes("UTF-8").length, resultString));
     writer.flush();
   }
 

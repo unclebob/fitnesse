@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 public class TableTable extends SlimTable {
   private String doTableId;
@@ -34,7 +34,7 @@ public class TableTable extends SlimTable {
   }
 
   @SuppressWarnings("unchecked")
-private void resizeTableAndEvaluateRows(Map<String, Object> returnValues) throws Exception {
+  private void resizeTableAndEvaluateRows(Map<String, Object> returnValues) throws Exception {
     List<List<Object>> tableResults = (List<List<Object>>) returnValues.get(doTableId);
     extendTable(table, tableResults);
     for (int row = 0; row < tableResults.size(); row++)

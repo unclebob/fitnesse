@@ -95,6 +95,14 @@ public class SlimServiceTest {
   }
 
   @Test
+  public void callWithMultiByteChar() throws Exception {
+    addImportAndMake();
+    statements.add(list("id", "call", "testSlim", "echoString", "Kšln"));
+    Map<String, Object> result = slimClient.invokeAndGetResponse(statements);
+    assertEquals("Kšln", result.get("id"));
+  }
+
+  @Test
   public void makeManyIndividualCalls() throws Exception {
     addImportAndMake();
     slimClient.invokeAndGetResponse(statements);
