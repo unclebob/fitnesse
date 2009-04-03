@@ -14,6 +14,7 @@ import java.util.Date;
 
 import util.FileUtil;
 import fitnesse.ComponentFactory;
+import fitnesse.responders.editing.EditResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 
@@ -22,7 +23,8 @@ public class FileSystemPage extends CachingPage {
   
   public static final String contentFilename = "/content.txt";
   public static final String propertiesFilename = "/properties.xml";
-
+  private static final String LAST_MODIFIED = "LastModified";
+      
   private final String path;
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
@@ -101,7 +103,8 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
-  protected synchronized void saveAttributes(final WikiPageProperties attributes) throws Exception {
+  protected synchronized void saveAttributes(final WikiPageProperties attributes)
+      throws Exception {
     OutputStream output = null;
     String propertiesFilePath = "<unknown>";
     try {
@@ -110,9 +113,12 @@ public class FileSystemPage extends CachingPage {
       if (propertiesFile.exists())
         cmSystem.edit(propertiesFilePath);
       output = new FileOutputStream(propertiesFile);
-      attributes.save(output);
+      WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
+      removeAlwaysChangingProperties(propertiesToSave);
+      propertiesToSave.save(output);
     } catch (final Exception e) {
-      System.err.println("Failed to save properties file: \"" + propertiesFilePath + "\" (exception: " + e + ").");
+      System.err.println("Failed to save properties file: \""
+          + propertiesFilePath + "\" (exception: " + e + ").");
       e.printStackTrace();
       throw e;
     } finally {
@@ -121,6 +127,12 @@ public class FileSystemPage extends CachingPage {
         cmSystem.update(propertiesFilePath);
       }
     }
+  }
+
+  private void removeAlwaysChangingProperties(WikiPageProperties properties) {
+    properties.remove(LAST_MODIFIED);
+    properties.remove(EditResponder.TICKET_ID);
+    properties.remove(EditResponder.SAVE_ID);
   }
 
   @Override
@@ -192,7 +204,8 @@ public class FileSystemPage extends CachingPage {
     final File file = new File(getFileSystemPath() + propertiesFilename);
     if (file.exists()) {
       try {
-        attemptToReadPropertiesFile(file, data);
+        long lastModifiedTime = getLastModifiedTime();
+        attemptToReadPropertiesFile(file, data, lastModifiedTime);
       } catch (final Exception e) {
         System.err.println("Could not read properties file:" + file.getPath());
         e.printStackTrace();
@@ -200,23 +213,36 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
-  private void attemptToReadPropertiesFile(final File file, final PageData data) throws Exception {
+  private long getLastModifiedTime() throws Exception {
+    long lastModifiedTime = 0;
+
+    final File file = new File(getFileSystemPath() + contentFilename);
+    if (file.exists()) {
+      lastModifiedTime = file.lastModified();
+    } else {
+      lastModifiedTime = new Date().getTime();
+    }
+    return lastModifiedTime;
+  }
+
+  private void attemptToReadPropertiesFile(File file, PageData data,
+      long lastModifiedTime) throws Exception {
     InputStream input = null;
     try {
       final WikiPageProperties props = new WikiPageProperties();
       input = new FileInputStream(file);
       props.loadFromXmlStream(input);
+      props.setLastModificationTime(new Date(lastModifiedTime));
+      props.set(EditResponder.SAVE_ID, Long.toString(lastModifiedTime));
       data.setProperties(props);
     } finally {
-      if (input != null) {
+      if (input != null)
         input.close();
-      }
     }
   }
 
   @Override
   public void doCommit(final PageData data) throws Exception {
-    data.getProperties().setLastModificationTime(new Date());
     saveContent(data.getContent());
     saveAttributes(data.getProperties());
     this.versionsController.prune(this);
