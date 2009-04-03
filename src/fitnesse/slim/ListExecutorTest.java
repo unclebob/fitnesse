@@ -79,6 +79,14 @@ public class ListExecutorTest {
   }
 
   @Test
+  public void exceptionInConstructorIsPassedThrough() throws Exception {
+    statements.clear();
+    expectedResults.clear();
+    statements.add(list("m1", "make", "x", "fitnesse.slim.test.ConstructorThrows", "thrown message"));
+    assertExceptionReturned("thrown message", "m1");
+  }
+
+  @Test
   public void oneFunctionCall() throws Exception {
     statements.add(list("id", "call", "testSlim", "returnString"));
     respondsWith(list(list("id", "string")));

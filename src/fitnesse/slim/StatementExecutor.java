@@ -79,13 +79,22 @@ public class StatementExecutor {
       Object instance = createInstanceOfConstructor(className, replaceVariables(args));
       instances.put(instanceName, instance);
       return "OK";
-    } catch (Throwable e) {
-      return exceptionToString(
-        new SlimError(
-          String.format("message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className, args.length)
-        )
-      );
+    } catch (SlimError e) {
+      return couldNotInvokeConstructorException(className, args);
+    }  catch (IllegalArgumentException e) {
+      return couldNotInvokeConstructorException(className, args);
     }
+    catch (Throwable e) {
+      return exceptionToString(e);
+    }
+  }
+
+  private String couldNotInvokeConstructorException(String className, Object[] args) {
+    return exceptionToString(
+        new SlimError(
+        String.format("message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className, args.length)
+      )
+    );
   }
 
 
