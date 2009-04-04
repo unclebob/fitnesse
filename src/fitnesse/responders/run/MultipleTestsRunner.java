@@ -2,14 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownIncluder;
@@ -17,8 +9,10 @@ import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class MultipleTestsRunner implements TestSystemListener, Stoppable{
-  
+import java.util.*;
+
+public class MultipleTestsRunner implements TestSystemListener, Stoppable {
+
   private final ResultsListener resultsListener;
   private final FitNesseContext fitNesseContext;
   private final WikiPage page;
@@ -27,13 +21,16 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
 
   private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
   private WikiPage currentTest = null;
-  
+
   private TestSystemGroup testSystemGroup = null;
   private TestSystem currentTestSystem = null;
   private boolean isStopped = false;
   private String stopId = null;
 
-  public MultipleTestsRunner(final List<WikiPage> testPagesToRun, 
+  private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
+  }
+
+  public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
                              final WikiPage page,
                              final ResultsListener resultsListener) {
@@ -42,33 +39,29 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
     this.page = page;
     this.fitNesseContext = fitNesseContext;
   }
-  
-  /**
-   * Fast test must be called before you run execute test pages
-   * @param isFastTest
-   */
+
   public void setFastTest(boolean isFastTest) {
     this.isFastTest = isFastTest;
   }
-  
+
   public void executeTestPages() {
     try {
       internalExecuteTestPages();
     }
     catch (Exception exception) {
       exceptionOccurred(exception);
-    }  
+    }
   }
-  
+
   private void internalExecuteTestPages() throws Exception {
     synchronized (this) {
       testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
       stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
     }
     testSystemGroup.setFastTest(isFastTest);
-    
+
     resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem = makeMapOfPagesByTestSystem();
+    PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
       executePagesInTestSystem(descriptor, pagesByTestSystem);
@@ -77,10 +70,10 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
   }
 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
-      Map<TestSystem.Descriptor, LinkedList<WikiPage>> pagesByTestSystem) throws Exception {
-      List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
+                                        PagesByTestSystem pagesByTestSystem) throws Exception {
+    List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
 
-      startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
+    startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
   }
 
   private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<WikiPage> testSystemPages) throws Exception {
@@ -99,7 +92,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
       } else {
         throw new Exception("Test system not started");
       }
-      
+
       synchronized (this) {
         if (!isStopped) {
           testSystem.bye();
@@ -117,41 +110,72 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
       testSystem.runTestsAndGenerateHtml(pageData);
     }
   }
-  
+
   private void waitForTestSystemToSendResults() throws InterruptedException {
     while ((processingQueue.size() > 0) && isNotStopped())
       Thread.sleep(50);
   }
-  
-  Map<TestSystem.Descriptor, LinkedList<WikiPage>> makeMapOfPagesByTestSystem() throws Exception {
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = new HashMap<TestSystem.Descriptor, LinkedList<WikiPage>>();
-    
-    Map<WikiPage, TestSystem.Descriptor> pageToSystemMap = new HashMap<WikiPage, TestSystem.Descriptor>(testPagesToRun.size());
-   
-    for (WikiPage testPage : testPagesToRun) {
-      TestSystem.Descriptor descriptor = TestSystem.getDescriptor(testPage.getData());
-      pageToSystemMap.put(testPage, descriptor);
-      getPagesForTestSystem(map, descriptor);
-    }
+
+  PagesByTestSystem makeMapOfPagesByTestSystem() throws Exception {
+    return addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
+  }
+
+  private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() throws Exception {
+    PagesByTestSystem pagesByTestSystem = new PagesByTestSystem();
 
     for (WikiPage testPage : testPagesToRun) {
-      if (SuiteContentsFinder.isSuiteSetupOrTearDown(testPage)) {
-        // add to all test systems
-        for (TestSystem.Descriptor descriptor : map.keySet()) {
-          List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, descriptor);
-          pagesForTestSystem.add(testPage);
-        }
-      }
-      else {
-        // add only to the system for running the page
-        List<WikiPage> pagesForTestSystem = getPagesForTestSystem(map, pageToSystemMap.get(testPage));
-        pagesForTestSystem.add(testPage);
+      if (!SuiteContentsFinder.isSuiteSetupOrTearDown(testPage)) {
+        addPageToListWithinMap(pagesByTestSystem, testPage);
       }
     }
-    return map;
+    return pagesByTestSystem;
   }
-  
-  private void announceTotalTestsToRun(Map<Descriptor, LinkedList<WikiPage>> pagesByTestSystem) {
+
+  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage testPage) throws Exception {
+    Descriptor descriptor = TestSystem.getDescriptor(testPage.getData());
+    getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
+  }
+
+  private LinkedList<WikiPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, Descriptor descriptor) {
+    LinkedList<WikiPage> pagesForTestSystem;
+    if (!pagesByTestSystem.containsKey(descriptor)) {
+      pagesForTestSystem = new LinkedList<WikiPage>();
+      pagesByTestSystem.put(descriptor, pagesForTestSystem);
+    } else {
+      pagesForTestSystem = pagesByTestSystem.get(descriptor);
+    }
+    return pagesForTestSystem;
+  }
+
+  private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws Exception {
+    WikiPage firstPage = testPagesToRun.get(0);
+    WikiPage lastPage = testPagesToRun.get(testPagesToRun.size() - 1);
+
+    prependSuiteSetupToAllPageLists(pagesByTestSystem, firstPage);
+    appendSuiteTearDownToAllPageLists(pagesByTestSystem, lastPage);
+
+    return pagesByTestSystem;
+  }
+
+  private void appendSuiteTearDownToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
+    if (SuiteContentsFinder.SUITE_TEARDOWN_NAME.equals(page.getName())) {
+      for (Descriptor descriptor : pagesByTestSystem.keySet()) {
+        List<WikiPage> pagesForTestSystem = pagesByTestSystem.get(descriptor);
+        pagesForTestSystem.add(page);
+      }
+    }
+  }
+
+  private void prependSuiteSetupToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
+    if ((SuiteContentsFinder.SUITE_SETUP_NAME.equals(page.getName()))) {
+      for (Descriptor descriptor : pagesByTestSystem.keySet()) {
+        List<WikiPage> pagesForTestSystem = pagesByTestSystem.get(descriptor);
+        pagesForTestSystem.add(0, page);
+      }
+    }
+  }
+
+  private void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
     int tests = 0;
     for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
@@ -159,19 +183,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
     resultsListener.announceNumberTestsToRun(tests);
   }
 
-  private List<WikiPage> getPagesForTestSystem(Map<TestSystem.Descriptor, LinkedList<WikiPage>> map, TestSystem.Descriptor descriptor) {
-    LinkedList<WikiPage> listInMap;
-    if (map.containsKey(descriptor))
-      listInMap = map.get(descriptor);
-    else {
-      listInMap = new LinkedList<WikiPage>();
-      map.put(descriptor, listInMap);
-    }
-    return listInMap;
-  }
-  
   public String buildClassPath() throws Exception {
-    
+
     final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = classPathBuilder.getPathSeparator(page);
     List<String> classPathElements = new ArrayList<String>();
@@ -180,12 +193,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
     for (WikiPage testPage : testPagesToRun) {
       addClassPathElements(testPage, classPathElements, visitedPages);
     }
-    
+
     return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
   }
 
   private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
-  throws Exception {
+    throws Exception {
     List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
     classPathElements.addAll(pathElements);
   }
@@ -202,7 +215,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
 
   public void acceptResultsLast(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
-    
+
     resultsListener.processTestResults(testPage, testSummary);
   }
 
@@ -217,11 +230,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
       }
     }
   }
-  
+
   private synchronized boolean isNotStopped() {
     return !isStopped;
   }
-  
+
   public void stop() throws Exception {
     boolean wasNotStopped = isNotStopped();
     synchronized (this) {
@@ -230,7 +243,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable{
         fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
       }
     }
-    
+
     if (wasNotStopped) {
       testSystemGroup.kill();
     }
