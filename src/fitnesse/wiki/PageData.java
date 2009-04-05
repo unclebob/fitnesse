@@ -34,6 +34,7 @@ public class PageData implements Serializable {
 
   public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(IncludeWidget.class, PreformattedWidget.class, VariableDefinitionWidget.class);
 
+  public static final String PropertyLAST_MODIFIED = "LastModified";
   public static final String PropertyHELP = "Help";
   public static final String PropertyPRUNE = "Prune";
   //TODO -AcD: refactor add other properties such as "Edit", "Suite", "Test", ...
@@ -79,7 +80,6 @@ public class PageData implements Serializable {
     properties.set("Files", "true");
     properties.set("RecentChanges", "true");
     properties.set("Search", "true");
-    properties.set(EditResponder.TICKET_ID, SaveRecorder.newTicket() + "");
     properties.setLastModificationTime(new Date());
 
     initTestOrSuiteProperty();

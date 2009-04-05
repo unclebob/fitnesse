@@ -114,7 +114,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
     assertEquals(format.format(new Date()), format.format(props.getLastModificationTime()));
     Date date = format.parse("20040101000001");
     props.setLastModificationTime(date);
-    assertEquals("20040101000001", props.get("LastModified"));
+    assertEquals("20040101000001", props.get(PageData.PropertyLAST_MODIFIED));
     assertEquals(date, props.getLastModificationTime());
   }
 

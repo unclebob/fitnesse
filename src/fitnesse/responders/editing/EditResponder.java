@@ -24,7 +24,7 @@ import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
-  public static final String SAVE_ID = "saveId";
+  public static final String TIME_STAMP = "saveTime";
   public static final String TICKET_ID = "ticketId";
 
   protected String content;
@@ -107,7 +107,7 @@ public class EditResponder implements SecureResponder {
     form.addAttribute("action", resource);
     form.addAttribute("method", "post");
     form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-    form.add(HtmlUtil.makeInputTag("hidden", SAVE_ID, String.valueOf(SaveRecorder.newIdNumber())));
+    form.add(HtmlUtil.makeInputTag("hidden", TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
     form.add(HtmlUtil.makeInputTag("hidden", TICKET_ID, String.valueOf((SaveRecorder.newTicket()))));
     if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
       String redirectUrl = request.getHeader("Referer").toString();

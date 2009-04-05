@@ -5,6 +5,7 @@ package fitnesse.fixtures;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.components.SaveRecorder;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
@@ -21,7 +22,7 @@ public class SetUp extends Fixture {
     FitnesseFixtureContext.context.port = 9123;
     FitnesseFixtureContext.context.rootPagePath = FitnesseFixtureContext.baseDir;
     FitnesseFixtureContext.fitnesse = new FitNesse(FitnesseFixtureContext.context, false);
-
+    SaveRecorder.clear();
     FitnesseFixtureContext.fitnesse.start();
   }
 }

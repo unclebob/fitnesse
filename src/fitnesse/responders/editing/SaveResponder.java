@@ -65,7 +65,7 @@ public class SaveResponder implements SecureResponder {
     RecentChanges.updateRecentChanges(data);
 
     if (request.hasInput("redirect"))
-      response.redirect(request.getInput("redirect").toString());
+      response.redirect(request.getInput("redirect").toString());                                
     else
       response.redirect(request.getResource());
 
@@ -73,13 +73,13 @@ public class SaveResponder implements SecureResponder {
   }
 
   private boolean editsNeedMerge(Request request) throws Exception {
-    String saveIdString = (String) request.getInput(EditResponder.SAVE_ID);
-    long saveId = Long.parseLong(saveIdString);
+    String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
+    long editTimeStamp = Long.parseLong(editTimeStampString);
 
     String ticketIdString = (String) request.getInput(EditResponder.TICKET_ID);
     ticketId = Long.parseLong(ticketIdString);
 
-    return SaveRecorder.changesShouldBeMerged(saveId, ticketId, data);
+    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
   }
 
   private WikiPage getPage(String resource, FitNesseContext context) throws Exception {
@@ -93,8 +93,7 @@ public class SaveResponder implements SecureResponder {
 
   private void setData() throws Exception {
     data.setContent(savedContent);
-    data.setAttribute(EditResponder.TICKET_ID, ticketId + "");
-    SaveRecorder.pageSaved(data);
+    SaveRecorder.pageSaved(data, ticketId);
     if (user != null)
       data.setAttribute(WikiPage.LAST_MODIFYING_USER, user);
     else

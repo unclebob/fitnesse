@@ -10,6 +10,7 @@ import java.io.PipedOutputStream;
 import junit.framework.TestCase;
 import util.FileUtil;
 import fitnesse.components.Base64;
+import fitnesse.responders.editing.EditResponder;
 
 public class RequestTest extends TestCase {
   PipedOutputStream output;
@@ -183,11 +184,11 @@ public class RequestTest extends TestCase {
     appendToMessage("Content-type: application/x-www-form-urlencoded\r\n");
     appendToMessage("Content-length: 67\r\n");
     appendToMessage("\r\n");
-    appendToMessage("saveId=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
+    appendToMessage(EditResponder.TIME_STAMP+"=1046584670887&Edit=on&Search=on&Test=on&Suite=on&content=abc");
 
     parseMessage();
 
-    assertTrue(request.hasInput("saveId"));
+    assertTrue(request.hasInput(EditResponder.TIME_STAMP));
     assertTrue(request.hasInput("Edit"));
     assertTrue(request.hasInput("Search"));
     assertTrue(request.hasInput("Test"));
@@ -201,16 +202,19 @@ public class RequestTest extends TestCase {
       for (int j = 0; j < 1000; j++)
         buffer.append(i);
     }
-
+    String prefix = EditResponder.TIME_STAMP + "=12345&content=";
     appendToMessage("POST /HelloThere HTTP/1.1\r\n");
-    appendToMessage("Content-length: 10021\r\n");
+    appendToMessage(String.format("Content-length: %d\r\n", prefix.length()+buffer.length()));
     appendToMessage("\r\n");
-    appendToMessage("saveId=12345&content=");
+    appendToMessage(prefix);
     appendToMessage(buffer);
 
     parseMessage();
 
-    assertEquals(buffer.toString(), request.getInput("content"));
+    String expected = buffer.toString();
+    String actual = (String)request.getInput("content");
+    assertEquals(expected.length(), actual.length());
+    assertEquals(expected, actual);
   }
 
   public void testMultiPartForms() throws Exception {

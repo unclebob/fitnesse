@@ -39,7 +39,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("method=\"post\"", body);
     assertSubString("child content with &lt;html&gt;", body);
     assertSubString("name=\"responder\"", body);
-    assertSubString("name=\"" + EditResponder.SAVE_ID + "\"", body);
+    assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("type=\"submit\"", body);
   }
@@ -58,7 +58,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("method=\"post\"", body);
     assertSubString(context.defaultNewPageContent, body);
     assertSubString("name=\"responder\"", body);
-    assertSubString("name=\"" + EditResponder.SAVE_ID + "\"", body);
+    assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("type=\"submit\"", body);
   }

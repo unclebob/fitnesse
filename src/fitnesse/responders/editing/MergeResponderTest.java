@@ -20,7 +20,7 @@ public class MergeResponderTest extends RegexTestCase {
     source.getPageCrawler().addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
     request = new MockRequest();
     request.setResource("SimplePage");
-    request.addInput(EditResponder.SAVE_ID, "");
+    request.addInput(EditResponder.TIME_STAMP, "");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
   }
 

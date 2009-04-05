@@ -50,7 +50,7 @@ public class MergeResponder implements Responder {
   private String makeRightColumn() throws Exception {
     HtmlTag form = HtmlUtil.makeFormTag("post", resource);
     form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-    form.add(HtmlUtil.makeInputTag("hidden", EditResponder.SAVE_ID, String.valueOf(SaveRecorder.newIdNumber())));
+    form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
     form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TICKET_ID, String.valueOf(SaveRecorder.newTicket())));
     HtmlTag title = HtmlUtil.makeDivTag("centered");
     title.use("This page has been recently modified.  You may want to merge existing page content into your changes.");

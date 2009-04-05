@@ -2,38 +2,52 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import junit.framework.TestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.responders.editing.EditResponder;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class SaveRecorderTest extends TestCase {
+public class SaveRecorderTest {
   public WikiPage somePage;
   public WikiPage root;
   private PageCrawler crawler;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     somePage = crawler.addPage(root, PathParser.parse("SomePage"), "some page");
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testTiming() throws Exception {
     PageData data = somePage.getData();
-    long time = SaveRecorder.pageSaved(data);
+    long savedTicket = 0;
+    long editTicket = 1;
+    long time = SaveRecorder.pageSaved(data, savedTicket);
     somePage.commit(data);
-    assertEquals(true, SaveRecorder.changesShouldBeMerged(time - 1, 0, somePage.getData()));
-    assertEquals(false, SaveRecorder.changesShouldBeMerged(time + 1, 0, somePage.getData()));
+    assertTrue(SaveRecorder.changesShouldBeMerged(time - 1, editTicket, somePage.getData()));
+    assertFalse(SaveRecorder.changesShouldBeMerged(time + 1, editTicket, somePage.getData()));
   }
 
+  @Test
   public void testDefaultValues() throws Exception {
     WikiPage neverSaved = crawler.addPage(root, PathParser.parse("NeverSaved"), "never saved");
-    assertEquals(false, SaveRecorder.changesShouldBeMerged(12345, 0, neverSaved.getData()));
+    assertFalse(SaveRecorder.changesShouldBeMerged(12345, 0, neverSaved.getData()));
+  }
+
+  @Test
+  public void testCanSaveOutOfOrderIfFromSameEditSession() throws Exception {
+    PageData data = somePage.getData();
+    long ticket = 99;
+    long time = SaveRecorder.pageSaved(data, ticket);
+    somePage.commit(data);
+    assertFalse(SaveRecorder.changesShouldBeMerged(time-1, ticket, data));
   }
 
 }

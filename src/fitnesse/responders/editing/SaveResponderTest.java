@@ -29,6 +29,7 @@ public class SaveResponderTest extends RegexTestCase {
     request = new MockRequest();
     responder = new SaveResponder();
     SaveResponder.contentFilter = null;
+    SaveRecorder.clear();
   }
 
   protected void tearDown() throws Exception {
@@ -51,7 +52,7 @@ public class SaveResponderTest extends RegexTestCase {
 
   private void prepareRequest(String pageName) {
     request.setResource(pageName);
-    request.addInput(EditResponder.SAVE_ID, "12345");
+    request.addInput(EditResponder.TIME_STAMP, "12345");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
   }
@@ -90,7 +91,7 @@ public class SaveResponderTest extends RegexTestCase {
 
     request.setResource(simplePageName);
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-    request.addInput(EditResponder.SAVE_ID, "" + (SaveRecorder.newIdNumber() - 10000));
+    request.addInput(EditResponder.TIME_STAMP, "" + (SaveRecorder.timeStamp() - 10000));
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
@@ -104,14 +105,14 @@ public class SaveResponderTest extends RegexTestCase {
     String newContent = "some new Content work damn you!";
     request.setResource(pageName);
     request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent);
-    request.addInput(EditResponder.SAVE_ID, "" + SaveRecorder.newIdNumber());
+    request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
     Response response = responder.makeResponse(new FitNesseContext(root), request);
     assertEquals(303, response.getStatus());
 
     request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
-    request.addInput(EditResponder.SAVE_ID, "" + SaveRecorder.newIdNumber());
+    request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
     response = responder.makeResponse(new FitNesseContext(root), request);
     assertEquals(303, response.getStatus());
   }
@@ -145,7 +146,7 @@ public class SaveResponderTest extends RegexTestCase {
     WikiPage simplePage = crawler.addPage(root, PathParser.parse(pageName));
 
     PageData data = simplePage.getData();
-    SaveRecorder.pageSaved(data);
+    SaveRecorder.pageSaved(data, 0);
     simplePage.commit(data);
   }
 
