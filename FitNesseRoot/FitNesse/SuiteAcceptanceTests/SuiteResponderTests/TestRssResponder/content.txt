@@ -8,9 +8,9 @@ For FitNesse to generate the links properly, the RSS_PREFIX variable must be def
 Now lets set the RSS_PREFIX variable in the root page so that it is valid for the entire site.  We'll also edit a couple pages.
 |Response Requester.|
 |uri   |status?|
-|!-root?responder=saveData&saveId=1&ticketId=2&pageContent=!define+RSS_PREFIX+{http://www.myserver.com/}-!|303|
-|!-PageOne?responder=saveData&saveId=1&ticketId=2&pageContent=blah-!|303|
-|!-PageTwo?responder=saveData&saveId=1&ticketId=2&pageContent=blah-!|303|
+|!-root?responder=saveData&saveTime=1&ticketId=2&pageContent=!define+RSS_PREFIX+{http://www.myserver.com/}-!|303|
+|!-PageOne?responder=saveData&saveTime=1&ticketId=2&pageContent=blah-!|303|
+|!-PageTwo?responder=saveData&saveTime=1&ticketId=2&pageContent=blah-!|303|
 
 Get the RSS!
 |Response Requester.|

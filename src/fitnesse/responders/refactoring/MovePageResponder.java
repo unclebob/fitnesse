@@ -110,7 +110,6 @@ public class MovePageResponder implements SecureResponder {
     PageData movedData = movedPage.getData();
     PageData oldData = movee.getData();
     movedData.setProperties(oldData.getProperties());
-    movedData.getProperties().setLastModificationTime(oldData.getProperties().getLastModificationTime());
     List<?> children = movee.getChildren();
     if (children.size() > 0)
       moveChildren(children, root, movedPagePath);

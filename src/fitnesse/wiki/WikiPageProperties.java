@@ -145,7 +145,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   }
 
   public Date getLastModificationTime() throws Exception {
-    String dateStr = get("LastModified");
+    String dateStr = get(PageData.PropertyLAST_MODIFIED);
     if (dateStr == null)
       return new Date();
     else
@@ -153,6 +153,6 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   }
 
   public void setLastModificationTime(Date date) {
-    set("LastModified", getTimeFormat().format(date));
+    set(PageData.PropertyLAST_MODIFIED, getTimeFormat().format(date));
   }
 }

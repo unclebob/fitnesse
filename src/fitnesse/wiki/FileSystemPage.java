@@ -2,29 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import fitnesse.ComponentFactory;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wikitext.widgets.WikiWordWidget;
+import util.FileUtil;
+
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import util.FileUtil;
-import fitnesse.ComponentFactory;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.wikitext.widgets.WikiWordWidget;
-import fitnesse.wiki.zip.ZipFileVersionsController;
-
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;
-  
+
   public static final String contentFilename = "/content.txt";
   public static final String propertiesFilename = "/properties.xml";
-  private static final String LAST_MODIFIED = "LastModified";
-      
+
   private final String path;
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
@@ -104,7 +97,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   protected synchronized void saveAttributes(final WikiPageProperties attributes)
-      throws Exception {
+    throws Exception {
     OutputStream output = null;
     String propertiesFilePath = "<unknown>";
     try {
@@ -118,7 +111,7 @@ public class FileSystemPage extends CachingPage {
       propertiesToSave.save(output);
     } catch (final Exception e) {
       System.err.println("Failed to save properties file: \""
-          + propertiesFilePath + "\" (exception: " + e + ").");
+        + propertiesFilePath + "\" (exception: " + e + ").");
       e.printStackTrace();
       throw e;
     } finally {
@@ -130,9 +123,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   private void removeAlwaysChangingProperties(WikiPageProperties properties) {
-    properties.remove(LAST_MODIFIED);
-    properties.remove(EditResponder.TICKET_ID);
-    properties.remove(EditResponder.SAVE_ID);
+    properties.remove(PageData.PropertyLAST_MODIFIED);
   }
 
   @Override
@@ -226,14 +217,13 @@ public class FileSystemPage extends CachingPage {
   }
 
   private void attemptToReadPropertiesFile(File file, PageData data,
-      long lastModifiedTime) throws Exception {
+                                           long lastModifiedTime) throws Exception {
     InputStream input = null;
     try {
       final WikiPageProperties props = new WikiPageProperties();
       input = new FileInputStream(file);
       props.loadFromXmlStream(input);
       props.setLastModificationTime(new Date(lastModifiedTime));
-      props.set(EditResponder.SAVE_ID, Long.toString(lastModifiedTime));
       data.setProperties(props);
     } finally {
       if (input != null)
