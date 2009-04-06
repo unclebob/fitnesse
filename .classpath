@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/svnkit.jar"/>
 	<classpathentry kind="lib" path="lib/htmlparser.jar"/>
 	<classpathentry kind="lib" path="lib/json.jar"/>
+	<classpathentry kind="lib" path="lib/velocity-1.6.2-dep.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

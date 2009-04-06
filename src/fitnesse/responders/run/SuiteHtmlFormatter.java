@@ -91,7 +91,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
   
   private String getProgressHtml() throws Exception {
-    float percentFinished = currentTest * 1000 / totalTests;
+    float percentFinished = (currentTest - 1) * 1000 / totalTests;
     percentFinished = percentFinished / 10;
     
     String text = "Running tests ... (" + currentTest + "/" + totalTests + ")";

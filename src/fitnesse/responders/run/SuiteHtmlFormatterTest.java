@@ -88,7 +88,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.announceStartNewTest("RelativeName", "FullName");
 
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
+    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">", pageBuffer.toString());
     assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
     pageBuffer.setLength(0);
     
@@ -96,7 +96,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.announceStartNewTest("RelativeName", "FullName");
 
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
     assertSubString("(2/20)", pageBuffer.toString());
     pageBuffer.setLength(0);
 
@@ -105,7 +105,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.announceStartNewTest("RelativeName", "FullName");
 
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:15.0%\\\">", pageBuffer.toString());
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
     assertSubString("(3/20)", pageBuffer.toString());
   }
 }
