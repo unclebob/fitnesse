@@ -17,4 +17,4 @@ target/
 *.ipr
 *.iws
 .idea
-
+desktop.ini
