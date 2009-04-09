@@ -232,6 +232,14 @@ public class TestResponderTest {
     assertEquals("TestPage", relativePageName);
   }
 
+  private String slimDecisionTable() {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
+      "|string|get string arg?|\n" +
+      "|right|wrong|\n" +
+      "|wow|wow|\n";
+  }
+
   @Test
   public void slimXmlFormat() throws Exception {
     request.addInput("format", "xml");
@@ -268,6 +276,52 @@ public class TestResponderTest {
     checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
     checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
     checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+  }
+
+  private String slimScenarioTable() {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "\n" +
+      "!|scenario|f|a|\n" +
+      "|check|echo int|@a|@a|\n" +
+      "\n" +
+      "!|script|fitnesse.slim.test.TestSlim|\n" +
+      "\n" +
+      "!|f|\n" +
+      "|a|\n" +
+      "|1|\n" +
+      "|2|\n";
+  }
+
+  @Test
+  public void slimScenarioXmlFormat() throws Exception {
+    request.addInput("format", "xml");
+    String instructionContents[] = {"make", "call", "call"};
+    String instructionResults[] = {"OK", "1", "2"};
+
+    request.addInput("format", "xml");
+    doSimpleRun(slimScenarioTable());
+    assertXmlDocumentHeaderIsCorrect();
+
+    Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
+    Element counts = XmlUtil.getElementByTagName(result, "counts");
+    assertCounts(counts, "3", "0", "0", "0");
+    Element instructions = XmlUtil.getElementByTagName(result, "instructions");
+    NodeList instructionList = instructions.getElementsByTagName("instructionResult");
+    assertEquals(instructionContents.length, instructionList.getLength());
+
+    for (int i = 0; i < instructionContents.length; i++) {
+      Element instructionElement = (Element) instructionList.item(i);
+      assertInstructionHas(instructionElement, instructionContents[i]);
+    }
+
+    for (int i = 0; i < instructionResults.length; i++) {
+      Element instructionElement = (Element) instructionList.item(i);
+      assertResultHas(instructionElement, instructionResults[i]);
+    }
+
+    checkExpectation(instructionList, 0, "scriptTable_1_0", "1", "0", "right", "ConstructionExpectation", "OK", "fitnesse.slim.test.TestSlim", "pass(fitnesse.slim.test.TestSlim)");
+    checkExpectation(instructionList, 1, "decisionTable_2_0/scriptTable_0_0", "3", "1", "right", "ReturnedValueExpectation", "1", "1", "pass(1)");
+    checkExpectation(instructionList, 2, "decisionTable_2_1/scriptTable_0_0", "3", "1", "right", "ReturnedValueExpectation", "2", "2", "pass(2)");
   }
 
   private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {
@@ -452,6 +506,14 @@ public class TestResponderTest {
     assertHasRegexp("Output of SuiteTearDown", errorLogContent);
   }
 
+
+  private String simpleSlimDecisionTable() {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
+      "|string|get string arg?|\n" +
+      "|wow|wow|\n";
+  }
+
   @Test
   public void testDoSimpleSlimTable() throws Exception {
     doSimpleRun(simpleSlimDecisionTable());
@@ -497,20 +559,4 @@ public class TestResponderTest {
       }
     };
   }
-
-  private String simpleSlimDecisionTable() {
-    return "!define TEST_SYSTEM {slim}\n" +
-      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
-      "|string|get string arg?|\n" +
-      "|wow|wow|\n";
-  }
-
-  private String slimDecisionTable() {
-    return "!define TEST_SYSTEM {slim}\n" +
-      "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
-      "|string|get string arg?|\n" +
-      "|right|wrong|\n" +
-      "|wow|wow|\n";
-  }
-
 }

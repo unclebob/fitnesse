@@ -97,7 +97,7 @@ public class ScenarioTable extends SlimTable {
   private void insertAndProcessScript(String script, SlimTable parentTable, int row) {
     try {
       TableScanner ts = new HtmlTableScanner(script);
-      ScriptTable t = new ScriptTable(ts.getTable(0), parentTable.id, parentTable.getTestContext());
+      ScriptTable t = new ScriptTable(ts.getTable(0), id, parentTable.getTestContext());
       parentTable.addChildTable(t, row);
       t.appendInstructions(parentTable.instructions);
       parentTable.addExpectation(new ScenarioExpectation(t, row));

@@ -167,17 +167,21 @@ public abstract class XmlFormatter extends BaseFormatter {
       instructionResult.slimResult = result.toString();
       for (SlimTable.Expectation expectation : expectations) {
         if (expectation.getInstructionTag().equals(id)) {
-          TestResponse.Expectation expectationResult = new TestResponse.Expectation();
-          instructionResult.addExpectation(expectationResult);
-          expectationResult.instructionId = expectation.getInstructionTag();
-          expectationResult.col = Integer.toString(expectation.getCol());
-          expectationResult.row = Integer.toString(expectation.getRow());
-          expectationResult.type = expectation.getClass().getSimpleName();
-          expectationResult.actual = expectation.getActual();
-          expectationResult.expected = expectation.getExpected();
-          String message = expectation.getEvaluationMessage();
-          expectationResult.evaluationMessage = message;
-          expectationResult.status = expectationStatus(message);
+          try {
+            TestResponse.Expectation expectationResult = new TestResponse.Expectation();
+            instructionResult.addExpectation(expectationResult);
+            expectationResult.instructionId = expectation.getInstructionTag();
+            expectationResult.col = Integer.toString(expectation.getCol());
+            expectationResult.row = Integer.toString(expectation.getRow());
+            expectationResult.type = expectation.getClass().getSimpleName();
+            expectationResult.actual = expectation.getActual();
+            expectationResult.expected = expectation.getExpected();
+            String message = expectation.getEvaluationMessage();
+            expectationResult.evaluationMessage = message;
+            expectationResult.status = expectationStatus(message);
+          } catch (Throwable e) {
+            e.printStackTrace();
+          }
         }
       }
     }
