@@ -24,10 +24,12 @@ import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TestResponderTest {
+public class
+  TestResponderTest {
   private WikiPage root;
   private MockRequest request;
   private TestResponder responder;
@@ -451,10 +453,50 @@ public class TestResponderTest {
   @Test
   public void testTestHasStopped() throws Exception {
 
-    new Thread(makeStopTestsRunnable()).start();
+    String semaphoreName = "testTestHasStopped.semaphore";
+    File semaphore = new File(semaphoreName);
+    if (semaphore.exists())
+      semaphore.delete();
 
-    doSimpleRun(waitFixtureTable());
+    new Thread(makeStopTestsRunnable(semaphore)).start();
+
+    doSimpleRun(createAndWaitFixture(semaphoreName));
     assertHasRegexp("Testing was interupted", results);
+    semaphore.delete();
+  }
+
+  private String createAndWaitFixture(String semaphoreName) {
+    return "!define TEST_SYSTEM {slim}\n" +
+      "!|fitnesse.testutil.CreateFileAndWaitFixture|" + semaphoreName + "|\n";
+  }
+
+  private Runnable makeStopTestsRunnable(File semaphore) {
+    return new WaitForSemaphoreThenStopProcesses(semaphore);
+  }
+
+  private class WaitForSemaphoreThenStopProcesses implements Runnable {
+    private File semaphore;
+
+    public WaitForSemaphoreThenStopProcesses(File semaphore) {
+      this.semaphore = semaphore;
+    }
+
+    public void run() {
+      waitForSemaphore();
+      context.runningTestingTracker.stopAllProcesses();
+    }
+
+    private void waitForSemaphore() {
+      try {
+        int i=1000;
+        while (!semaphore.exists())  {
+          if (--i <= 0)
+            break;
+          Thread.sleep(5);
+        }
+      } catch (InterruptedException e) {
+      }
+    }
   }
 
 
@@ -541,22 +583,5 @@ public class TestResponderTest {
 
   private String passFixtureTable() {
     return "|!-fitnesse.testutil.PassFixture-!|\n";
-  }
-
-  private String waitFixtureTable() {
-    return "|!-fitnesse.testutil.WaitFixture-!|\n";
-  }
-
-  private Runnable makeStopTestsRunnable() {
-    return new Runnable() {
-      public void run() {
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        context.runningTestingTracker.stopAllProcesses();
-      }
-    };
   }
 }
