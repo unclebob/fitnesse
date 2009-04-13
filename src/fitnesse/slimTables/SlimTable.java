@@ -20,7 +20,7 @@ public abstract class SlimTable {
   protected Table table;
   private SlimTestContext testContext;
   protected String id;
-  protected String tableName;
+  private String tableName;
   private int instructionNumber = 0;
   protected List<Object> instructions;
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
@@ -97,7 +97,7 @@ public abstract class SlimTable {
     return makeInstructionTag(instructionNumber);
   }
 
-  protected String getTableName() {
+  public String getTableName() {
     return tableName;
   }
 
