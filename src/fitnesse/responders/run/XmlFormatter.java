@@ -4,15 +4,12 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.SlimTable;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import util.XmlWriter;
-import util.XmlUtil;
-import fitnesse.wiki.WikiPage;
+import fitnesse.slimTables.Table;
+import fitnesse.slimTables.HtmlTable;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -137,16 +134,48 @@ public abstract class XmlFormatter extends BaseFormatter {
     private List<Object> instructions;
     private Map<String, Object> results;
     private List<SlimTable.Expectation> expectations;
+    private List<SlimTable> slimTables;
 
     public InstructionXmlFormatter(TestResponse.TestResult testResult, SlimTestSystem slimSystem) {
       this.testResult = testResult;
       instructions = slimSystem.getInstructions();
       results = slimSystem.getInstructionResults();
       expectations = slimSystem.getExpectations();
+      slimTables = slimSystem.getTestTables();
     }
 
     public void invoke() {
+      addTables();
       addInstructionResults();
+    }
+
+    private void addTables() {
+      if (slimTables.size() > 0) {
+        testResult.tables = new ArrayList<TestResponse.Table>();
+        for (SlimTable slimTable : slimTables) {
+          addTable(slimTable);
+        }
+      }
+    }
+
+    private void addTable(SlimTable slimTable) {
+      TestResponse.Table resultTable = new TestResponse.Table(slimTable.getTableName());
+      testResult.tables.add(resultTable);
+      Table table = slimTable.getTable();
+      int rows = table.getRowCount();
+      for (int row=0; row<rows; row++) {
+        addRowsToTable(resultTable, table, row);
+      }
+    }
+
+    private void addRowsToTable(TestResponse.Table resultTable, Table table, int row) {
+      TestResponse.Row resultRow = new TestResponse.Row();
+      resultTable.add(resultRow);
+      int cols = table.getColumnCountInRow(row);
+      for (int col=0; col<cols; col++) {
+        String cell = HtmlTable.colorize(table.getCellContents(col, row));
+        resultRow.add(cell);
+      }
     }
 
     private void addInstructionResults() {
@@ -191,7 +220,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       if (message.matches(".*pass(.*)"))
         status = "right";
       else if (message.matches(".*fail(.*)"))
-         status = "wrong";
+        status = "wrong";
       else if (message.matches(".*__EXCEPTION__:<"))
         status = "exception";
       else
@@ -231,6 +260,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       private String relativePageName;
       private List<InstructionResult> instructions = new ArrayList<InstructionResult>();
       private String tags;
+      private ArrayList<Table> tables;
 
       public String getRight() {
         return right;
@@ -266,6 +296,10 @@ public abstract class XmlFormatter extends BaseFormatter {
 
       public void setTags(String tags) {
         this.tags = tags;
+      }
+
+      public ArrayList<Table> getTables() {
+        return tables;
       }
     }
 
@@ -355,6 +389,21 @@ public abstract class XmlFormatter extends BaseFormatter {
       public int getExceptions() {
         return exceptions;
       }
+    }
+
+    public static class Table extends ArrayList<Row>{
+      private String name;
+
+      public Table(String tableName) {
+        this.name = tableName;
+      }
+
+      public String getName() {
+        return name;
+      }
+    }
+
+    public static class Row extends ArrayList<String> {
     }
   }
 }
