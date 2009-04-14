@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
 
@@ -259,6 +260,17 @@ public class
     String tags = XmlUtil.getTextValue(result, "tags");
     assertEquals("zoo", tags);
 
+    Element tables = XmlUtil.getElementByTagName(result, "tables");
+    assertNotNull(tables);
+    NodeList tableList = tables.getElementsByTagName("table");
+    assertNotNull(tableList);
+    assertEquals(1, tableList.getLength());
+    Element tableElement = (Element) tableList.item(0);
+    String tableName = XmlUtil.getTextValue(tableElement, "name");
+    assertNotNull(tableName);
+    assertEquals("decisionTable_0", tableName);
+    assertEquals("[[pass(DT:fitnesse.slim.test.TestSlim)],[string,get string arg?],[right,[right] fail(expected [wrong])],[wow,pass(wow)]]", tableElementToString(tableElement));
+
     Element instructions = XmlUtil.getElementByTagName(result, "instructions");
     NodeList instructionList = instructions.getElementsByTagName("instructionResult");
     assertEquals(instructionContents.length, instructionList.getLength());
@@ -278,6 +290,35 @@ public class
     checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
     checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
     checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+  }
+
+  private String tableElementToString(Element tableElement) {
+    StringBuilder result = new StringBuilder();
+    result.append("[");
+    rowsToString(tableElement, result);
+    result.append("]");
+    return result.toString();
+  }
+
+  private void rowsToString(Element tableElement, StringBuilder result) {
+    NodeList rows = tableElement.getElementsByTagName("row");
+    for (int row = 0; row < rows.getLength(); row++) {
+      result.append("[");
+      Element rowElement = (Element)rows.item(row);
+      colsToString(result, rowElement);
+      result.append("],");
+    }
+    result.deleteCharAt(result.length()-1);
+  }
+
+  private void colsToString(StringBuilder result, Element rowElement) {
+    NodeList cols = rowElement.getElementsByTagName("col");
+    for (int col = 0; col < cols.getLength(); col++) {
+      Element colElement = (Element)cols.item(col);
+      result.append(colElement.getFirstChild().getNodeValue());
+      result.append(",");
+    }
+    result.deleteCharAt(result.length()-1);
   }
 
   private String slimScenarioTable() {
