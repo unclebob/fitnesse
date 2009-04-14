@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.ATTRIBUTE;
-import static fitnesse.responders.search.SearchFormResponder.SELECTED;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
@@ -13,7 +11,6 @@ import org.junit.Test;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.WikiPage;
 
 public class SearchFormResponderTest {
   private SimpleResponse response;
@@ -52,14 +49,12 @@ public class SearchFormResponderTest {
     assertHasRegexp("<input.*value=\"Search Properties\".*>", content);
     assertHasRegexp("<input.*name=\"responder\".*value=\"executeSearchProperties\"", content);
 
-    for (String attributeName : WikiPage.ACTION_ATTRIBUTES) {
-      assertAttributeCheckboxCreated(content, attributeName);
+    for (String attributeName : SearchFormResponder.ACTION_ATTRIBUTES) {
+      assertAttributeOptionCreated(content, attributeName);
     }
   }
 
-  private void assertAttributeCheckboxCreated(String content, String attributeName) {
-    assertSubString("<input type=\"checkbox\" name=\"" + attributeName + "" +
-      ATTRIBUTE + SELECTED + "\"/>", content);
-    assertSubString("<input type=\"checkbox\" name=\"" + attributeName + "Value\"/>", content);
+  private void assertAttributeOptionCreated(String content, String attributeName) {
+    assertSubString("<option>" + attributeName, content);
   }
 }
