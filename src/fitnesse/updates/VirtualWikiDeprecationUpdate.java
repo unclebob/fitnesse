@@ -12,6 +12,7 @@ import fitnesse.wikitext.widgets.VirtualWikiWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 
 public class VirtualWikiDeprecationUpdate extends PageTraversingUpdate {
+  @SuppressWarnings("unchecked")
   public static WidgetBuilder virtualWidgetBuilder = new WidgetBuilder(new Class[]{VirtualWikiWidget.class});
 
   public VirtualWikiDeprecationUpdate(UpdaterImplementation updater) {

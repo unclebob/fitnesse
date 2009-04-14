@@ -10,10 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fitnesse.components.SaveRecorder;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.responders.run.ExecutionLog;
+import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.ClasspathWidget;
@@ -26,6 +24,7 @@ import fitnesse.wikitext.widgets.WidgetRoot;
 import fitnesse.wikitext.widgets.WidgetWithTextArgument;
 import fitnesse.wikitext.widgets.XRefWidget;
 
+@SuppressWarnings("unchecked")
 public class PageData implements Serializable {
   private static final long serialVersionUID = 1L;
 

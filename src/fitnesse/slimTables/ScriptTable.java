@@ -110,14 +110,14 @@ public class ScriptTable extends SlimTable {
 
   private void checkAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
-    String expected = table.getCellContents(lastColInAction, row);
+    table.getCellContents(lastColInAction, row);
     addExpectation(new ReturnedValueExpectation(getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
 
   private void checkNotAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
-    String expected = table.getCellContents(lastColInAction, row);
+    table.getCellContents(lastColInAction, row);
     addExpectation(new RejectedValueExpectation(getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }

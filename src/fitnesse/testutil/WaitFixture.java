@@ -1,7 +1,5 @@
 package fitnesse.testutil;
 
-import fit.Fixture;
-import fit.Parse;
 
 public class WaitFixture  {
 

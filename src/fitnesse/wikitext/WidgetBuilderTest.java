@@ -226,6 +226,7 @@ public class WidgetBuilderTest extends TestCase {
       assertEquals(expectedText, ((TextWidget) widget).getText());
   }
 
+  @SuppressWarnings("unchecked")
   public void testConcurrentAddWidgets() throws Exception {
     WidgetBuilder widgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
     String text = "'''bold text'''";

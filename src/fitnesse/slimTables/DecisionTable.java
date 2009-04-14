@@ -149,7 +149,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private void setFunctionCallExpectation(int col, int row) {
-      String expectedValue = table.getCellContents(col, row);
+      table.getCellContents(col, row);
       addExpectation(new ReturnedValueExpectation(getInstructionTag(), col, row));
     }
 

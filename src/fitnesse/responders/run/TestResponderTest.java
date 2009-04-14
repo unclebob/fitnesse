@@ -2,6 +2,27 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.divWithIdAndContent;
+
+import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
@@ -11,23 +32,13 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.*;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
-import static junit.framework.Assert.assertTrue;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import static util.RegexTestCase.*;
-import util.XmlUtil;
-
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class
   TestResponderTest {
