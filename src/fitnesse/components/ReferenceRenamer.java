@@ -44,6 +44,7 @@ public abstract class ReferenceRenamer implements FitNesseTraversalListener {
 
   protected abstract WidgetVisitor getVisitor();
 
+  @SuppressWarnings("unchecked")
   public static WidgetBuilder referenceModifyingWidgetBuilder = new WidgetBuilder(new Class[]{
     WikiWordWidget.class,
     LiteralWidget.class,

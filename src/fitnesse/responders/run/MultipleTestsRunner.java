@@ -28,6 +28,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private String stopId = null;
 
   private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
+    private static final long serialVersionUID = 1L;
   }
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,

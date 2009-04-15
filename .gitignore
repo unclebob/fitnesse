@@ -18,3 +18,5 @@ target/
 *.iws
 .idea
 desktop.ini
+inst.log
+com_ibm_contest/
