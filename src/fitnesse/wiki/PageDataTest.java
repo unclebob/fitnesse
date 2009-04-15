@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.responders.run.SuiteContentsFinder;
-import util.RegexTestCase;
-
 import java.util.List;
+
+import util.RegexTestCase;
+import fitnesse.responders.run.SuiteContentsFinder;
 
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;
@@ -98,12 +98,55 @@ public class PageDataTest extends RegexTestCase {
     assertEquals("XrefPage", xrefs.get(0));
   }
 
+  public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("PageExamples"));
+    PageData data = new PageData(page);
+    assertTrue(data.hasAttribute("Suite"));
+  }
+  
+  public void testThatExampleAtBeginningOfNameSetsTestProperty() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("ExamplePageExample"));
+    PageData data = new PageData(page);
+    assertTrue(data.hasAttribute("Test"));
+  }
+  
+  public void testThatExampleAtEndOfNameSetsTestProperty() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("PageExample"));
+    PageData data = new PageData(page);
+    assertTrue(data.hasAttribute("Test"));
+  }
+  
+  public void testThatSuiteAtBeginningOfNameSetsSuiteProperty() throws Exception {
+    WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
+    PageData data = new PageData(suitePage1);
+    assertFalse(data.hasAttribute("Test"));
+    assertTrue(data.hasAttribute("Suite"));
+  }
+  
+  public void testThatSuiteAtEndOfNameSetsSuiteProperty() throws Exception {
+    WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
+    PageData data = new PageData(suitePage2);
+    assertFalse(data.hasAttribute("Test"));
+    assertTrue(data.hasAttribute("Suite"));
+  }
+  
+  public void testThatTestAtBeginningOfNameSetsTestProperty() throws Exception {
+    WikiPage testPage1 = crawler.addPage(root, PathParser.parse("TestPage"));
+    PageData data = new PageData(testPage1);
+    assertTrue(data.hasAttribute("Test"));
+    assertFalse(data.hasAttribute("Suite"));
+  }
+  
+  public void testThatTestAtEndOfNameSetsTestProperty() throws Exception {
+    WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
+    PageData data = new PageData(testPage2);
+    assertTrue(data.hasAttribute("Test"));
+    assertFalse(data.hasAttribute("Suite"));
+  }
+  
+  
   public void testDefaultAttributes() throws Exception {
     WikiPage normalPage = crawler.addPage(root, PathParser.parse("NormalPage"));
-    WikiPage testPage1 = crawler.addPage(root, PathParser.parse("TestPage"));
-    WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
-    WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
-    WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
     WikiPage suitePage3 = crawler.addPage(root, PathParser.parse("TestPageSuite"));
     WikiPage errorLogsPage = crawler.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
     WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SuiteContentsFinder.SUITE_SETUP_NAME));
@@ -116,22 +159,6 @@ public class PageDataTest extends RegexTestCase {
     assertTrue(data.hasAttribute("Files"));
     assertFalse(data.hasAttribute("Test"));
     assertFalse(data.hasAttribute("Suite"));
-
-    data = new PageData(testPage1);
-    assertTrue(data.hasAttribute("Test"));
-    assertFalse(data.hasAttribute("Suite"));
-
-    data = new PageData(testPage2);
-    assertTrue(data.hasAttribute("Test"));
-    assertFalse(data.hasAttribute("Suite"));
-
-    data = new PageData(suitePage1);
-    assertFalse(data.hasAttribute("Test"));
-    assertTrue(data.hasAttribute("Suite"));
-
-    data = new PageData(suitePage2);
-    assertFalse(data.hasAttribute("Test"));
-    assertTrue(data.hasAttribute("Suite"));
 
     data = new PageData(suitePage3);
     assertFalse(data.hasAttribute("Test"));

@@ -94,11 +94,12 @@ public class PageData implements Serializable {
     if (isErrorLogsPage())
       return;
 
-    if ((pageName.startsWith("Suite") || pageName.endsWith("Suite")) &&
+    if ((pageName.startsWith("Suite") || pageName.endsWith("Suite") || pageName.endsWith("Examples")) &&
       !pageName.equals(SuiteContentsFinder.SUITE_SETUP_NAME) &&
       !pageName.equals(SuiteContentsFinder.SUITE_TEARDOWN_NAME))
       properties.set("Suite", "true");
-    else if (pageName.startsWith("Test") || pageName.endsWith("Test"))
+    else if (pageName.startsWith("Test") || pageName.endsWith("Test") || pageName.startsWith("Example") || 
+      pageName.endsWith("Example"))
       properties.set("Test", "true");
   }
 
