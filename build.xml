@@ -3,6 +3,8 @@
     Fitnesse is a wiki wrapper for fit, an acceptance test framework.
   </description>
 
+  <property environment="env"/>
+  <property name="env.FITNESSE_TEST_PORT" value ="8080" />
   <property name="src" location="src"/>
   <property name="src2" location="srcFitServerTests"/>
   <property name="classes" location="classes"/>
@@ -164,7 +166,7 @@
 
   <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef"
           description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="8080"
+    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="${env.FITNESSE_TEST_PORT}"
                         resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath"/>
   </target>
 
