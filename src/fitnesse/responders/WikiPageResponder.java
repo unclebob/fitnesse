@@ -13,12 +13,14 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.threadlocal.ThreadLocalUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.widgets.Constants;
 
 public class WikiPageResponder implements SecureResponder {
   protected WikiPage page;
@@ -64,13 +66,18 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context) throws Exception {
-    pageTitle = PathParser.render(crawler.getFullPath(page));
-    String html = makeHtml(context);
+    try {
+      pageTitle = PathParser.render(crawler.getFullPath(page));
+      ThreadLocalUtil.setValue(Constants.ENTRY_PAGE, pageTitle);
+      String html = makeHtml(context);
 
-    SimpleResponse response = new SimpleResponse();
-    response.setMaxAge(0);
-    response.setContent(html);
-    return response;
+      SimpleResponse response = new SimpleResponse();
+      response.setMaxAge(0);
+      response.setContent(html);
+      return response;
+    } finally {
+      ThreadLocalUtil.clear();
+    }
   }
 
   public String makeHtml(FitNesseContext context) throws Exception {
