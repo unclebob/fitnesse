@@ -5,25 +5,31 @@ package fitnesse.responders.run;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
-import fitnesse.slimTables.HtmlTable;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public abstract class XmlFormatter extends BaseFormatter {
   protected TestResponse testResponse = new TestResponse();
   private TestResponse.TestResult currentResult;
-  private StringBuffer outputBuffer;
+  private StringBuilder outputBuffer;
   private TestSystem testSystem;
+  private FileWriter fileWriter;
+  private static long testTime;
 
   public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
     super(context, page);
@@ -82,10 +88,30 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   private void writeResults() throws Exception {
+    makeFileWriter();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = null;
+    template = context.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, getWriter());
+    fileWriter.close();
+  }
+
+  private void makeFileWriter() throws Exception {
+    File resultPath = new File(String.format("%s/%s/files/testResults/%s/%s",
+      context.rootPath,
+      context.rootDirectoryName,
+      page.getPageCrawler().getFullPath(page).toString(),
+      makeResultFileName()));
+    File resultDirectory = new File(resultPath.getParent());
+    resultDirectory.mkdirs();
+    File resultFile = new File(resultDirectory, resultPath.getName());
+    fileWriter = new FileWriter(resultFile);
+  }
+
+  public static String makeResultFileName() {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy_MM/dd_HH_mm_ss");
+    return format.format(new Date(getTime())) + ".xml";
   }
 
   private Writer getWriter() {
@@ -94,6 +120,7 @@ public abstract class XmlFormatter extends BaseFormatter {
         String fragment = new String(cbuf, off, len);
         try {
           writeData(fragment.getBytes());
+          fileWriter.append(fragment);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
@@ -123,10 +150,26 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   private void appendHtmlToBuffer(String output) {
-    if (outputBuffer == null) {
-      outputBuffer = new StringBuffer();
-    }
+    if (outputBuffer == null)
+      outputBuffer = new StringBuilder();
     outputBuffer.append(output);
+  }
+
+  public static void setTestTime(String time) {
+    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    try {
+      Date date = format.parse(time);
+      testTime = date.getTime();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static long getTime() {
+    if (testTime != 0)
+      return testTime;
+    else
+      return System.currentTimeMillis();
   }
 
   private static class InstructionXmlFormatter {
@@ -163,7 +206,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       testResult.tables.add(resultTable);
       Table table = slimTable.getTable();
       int rows = table.getRowCount();
-      for (int row=0; row<rows; row++) {
+      for (int row = 0; row < rows; row++) {
         addRowsToTable(resultTable, table, row);
       }
     }
@@ -172,7 +215,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       TestResponse.Row resultRow = new TestResponse.Row();
       resultTable.add(resultRow);
       int cols = table.getColumnCountInRow(row);
-      for (int col=0; col<cols; col++) {
+      for (int col = 0; col < cols; col++) {
         String cell = HtmlTable.colorize(table.getCellContents(col, row));
         resultRow.add(cell);
       }
@@ -391,7 +434,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       }
     }
 
-    public static class Table extends ArrayList<Row>{
+    public static class Table extends ArrayList<Row> {
       private String name;
 
       public Table(String tableName) {

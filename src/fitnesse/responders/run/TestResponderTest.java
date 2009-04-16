@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
 
@@ -29,8 +28,7 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class
-  TestResponderTest {
+public class TestResponderTest {
   private WikiPage root;
   private MockRequest request;
   private TestResponder responder;
@@ -42,9 +40,8 @@ public class
   private FitSocketReceiver receiver;
   private WikiPage errorLogsParentPage;
   private PageCrawler crawler;
-  private String simpleRunPageName;
-  private Document testResultsDocument;
   private Element testResultsElement;
+  private File xmlResultsFile;
 
   @Before
   public void setUp() throws Exception {
@@ -80,7 +77,7 @@ public class
   }
 
   private void doSimpleRunWithTags(String fixtureTable, String tags) throws Exception {
-    simpleRunPageName = "TestPage";
+    String simpleRunPageName = "TestPage";
     testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     if (tags != null) {
       PageData pageData = testPage.getData();
@@ -244,13 +241,15 @@ public class
   }
 
   @Test
-  public void slimXmlFormat() throws Exception {
+  public void slimXmlFormat() throws Exception {   //todo 
     request.addInput("format", "xml");
     String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
     String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
 
-    request.addInput("format", "xml");
+    ensureXmlResultFileDoesNotExist();
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
+    assertXmlResultFileWasCreatedAndDeleteIt();
+
     assertXmlDocumentHeaderIsCorrect();
 
     Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
@@ -292,6 +291,20 @@ public class
     checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
   }
 
+  private void ensureXmlResultFileDoesNotExist() {
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/%s/files/testResults/TestPage/2008_12/05_01_19_00.xml", context.rootPath, context.rootDirectoryName);
+    xmlResultsFile = new File(resultsFileName);
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+  }
+
+  private void assertXmlResultFileWasCreatedAndDeleteIt() {
+    assertTrue(xmlResultsFile.exists());
+    xmlResultsFile.delete();
+  }
+
   private String tableElementToString(Element tableElement) {
     StringBuilder result = new StringBuilder();
     result.append("[");
@@ -304,21 +317,21 @@ public class
     NodeList rows = tableElement.getElementsByTagName("row");
     for (int row = 0; row < rows.getLength(); row++) {
       result.append("[");
-      Element rowElement = (Element)rows.item(row);
+      Element rowElement = (Element) rows.item(row);
       colsToString(result, rowElement);
       result.append("],");
     }
-    result.deleteCharAt(result.length()-1);
+    result.deleteCharAt(result.length() - 1);
   }
 
   private void colsToString(StringBuilder result, Element rowElement) {
     NodeList cols = rowElement.getElementsByTagName("col");
     for (int col = 0; col < cols.getLength(); col++) {
-      Element colElement = (Element)cols.item(col);
+      Element colElement = (Element) cols.item(col);
       result.append(colElement.getFirstChild().getNodeValue());
       result.append(",");
     }
-    result.deleteCharAt(result.length()-1);
+    result.deleteCharAt(result.length() - 1);
   }
 
   private String slimScenarioTable() {
@@ -392,7 +405,7 @@ public class
 
   private void assertXmlDocumentHeaderIsCorrect() throws Exception {
     assertEquals("text/xml", response.getContentType());
-    testResultsDocument = getXmlDocumentFromResults(results);
+    Document testResultsDocument = getXmlDocumentFromResults(results);
     testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
     String version = XmlUtil.getTextValue(testResultsElement, "FitNesseVersion");
@@ -405,8 +418,7 @@ public class
     int xmlStartIndex = results.indexOf(startOfXml);
     int xmlEndIndex = results.indexOf(endOfXml) + endOfXml.length();
     String xmlString = results.substring(xmlStartIndex, xmlEndIndex);
-    Document testResultsDocument = XmlUtil.newDocument(xmlString);
-    return testResultsDocument;
+    return XmlUtil.newDocument(xmlString);
   }
 
   static void assertCounts(Element counts, String right, String wrong, String ignores, String exceptions)
@@ -529,8 +541,8 @@ public class
 
     private void waitForSemaphore() {
       try {
-        int i=1000;
-        while (!semaphore.exists())  {
+        int i = 1000;
+        while (!semaphore.exists()) {
           if (--i <= 0)
             break;
           Thread.sleep(5);
@@ -598,8 +610,10 @@ public class
   }
 
   @Test
-  public void testDoSimpleSlimTable() throws Exception {
+  public void testDoSimpleSlimTable() throws Exception {   //todo here
+    ensureXmlResultFileDoesNotExist();
     doSimpleRun(simpleSlimDecisionTable());
+//    assertXmlResultFileWasCreatedAndDeleteIt();
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
   }
 
