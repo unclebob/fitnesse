@@ -108,7 +108,6 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
   }
 
-  @SuppressWarnings("serial")
   private String getActionsHtml(String pageName) throws Exception {
     root.addChildPage(pageName);
     return HtmlUtil.makeActions(root.getChildPage(pageName).getActions()).html();

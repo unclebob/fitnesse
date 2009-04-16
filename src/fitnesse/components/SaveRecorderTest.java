@@ -2,15 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.responders.editing.EditResponder;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class SaveRecorderTest {
   public WikiPage somePage;

@@ -15,6 +15,8 @@ import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlD
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -654,16 +656,16 @@ public class TestResponderTest {
         {
           {"f"},
           {"a"},
-          {"1","pass(scenario:decisionTable_2_0/scriptTable_0)"},
-          {"2","pass(scenario:decisionTable_2_1/scriptTable_0)"}
+          {"1", "pass(scenario:decisionTable_2_0/scriptTable_0)"},
+          {"2", "pass(scenario:decisionTable_2_1/scriptTable_0)"}
         },
         {
-          {"scenario","f","a"},
-          {"check","echo int","1","pass(1)"}
+          {"scenario", "f", "a"},
+          {"check", "echo int", "1", "pass(1)"}
         },
         {
-          {"scenario","f","a"},
-          {"check","echo int","2","pass(2)"}
+          {"scenario", "f", "a"},
+          {"check", "echo int", "2", "pass(2)"}
         }
       };
 

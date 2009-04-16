@@ -129,6 +129,7 @@ public abstract class ParentWidget extends WikiWidget {
     return new LiteralProcessingWidgetRoot(this, value).childHtml();
   }
 
+  @SuppressWarnings("unchecked")
   public static WidgetBuilder preprocessingLiteralWidgetBuilder = new WidgetBuilder(
     new Class[]{PreProcessorLiteralWidget.class}
   );

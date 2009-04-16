@@ -2,15 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.ComponentFactory;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.FileUtil;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.Date;
+
+import util.FileUtil;
+import fitnesse.ComponentFactory;
+import fitnesse.wiki.zip.ZipFileVersionsController;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class FileSystemPage extends CachingPage {
   private static final long serialVersionUID = 1L;

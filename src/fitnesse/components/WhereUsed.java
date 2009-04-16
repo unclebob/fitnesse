@@ -59,6 +59,7 @@ public class WhereUsed implements FitNesseTraversalListener, SearchObserver, Wid
     return hits;
   }
 
+  @SuppressWarnings("unchecked")
   public void processPage(WikiPage currentPage) throws Exception {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();

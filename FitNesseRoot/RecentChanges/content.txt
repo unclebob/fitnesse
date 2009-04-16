@@ -98,3 +98,4 @@
 |FitNesse.UserGuide.ActionFixtureCode||16:00:25 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.AcceptanceTestPatterns.BuildOperateCheck||15:58:52 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.MarkupContents||15:50:26 Thu, Mar 26, 2009|
+|FitNesse.UserGuide.TwoMinuteExample||13:40:49 Thu, Mar 26, 2009|

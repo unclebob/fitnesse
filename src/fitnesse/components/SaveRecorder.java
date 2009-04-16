@@ -2,13 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
 
 public class SaveRecorder {
   public static Random ticketNumGen = new Random();

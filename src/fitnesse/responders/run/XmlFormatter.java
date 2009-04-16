@@ -8,6 +8,7 @@ import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
+import fitnesse.slimTables.HtmlTable;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
@@ -266,6 +267,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       }
     }
 
+    @SuppressWarnings("unchecked")
     private void addInstructionResult(Object instruction) {
       TestResponse.InstructionResult instructionResult = new TestResponse.InstructionResult();
       testResult.instructions.add(instructionResult);
@@ -473,7 +475,9 @@ public abstract class XmlFormatter extends BaseFormatter {
       }
     }
 
-    public static class Table extends ArrayList<Row> {
+
+    public static class Table extends ArrayList<Row>{
+      private static final long serialVersionUID = 1L;
       private String name;
 
       public Table(String tableName) {
@@ -486,6 +490,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     }
 
     public static class Row extends ArrayList<String> {
+      private static final long serialVersionUID = 1L;
     }
   }
 }
