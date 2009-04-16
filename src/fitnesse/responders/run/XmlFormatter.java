@@ -64,7 +64,7 @@ public abstract class XmlFormatter extends BaseFormatter {
 
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
-      new InstructionXmlFormatter(currentResult, slimSystem).invoke();
+      new SlimTestXmlFormatter(currentResult, slimSystem).invoke();
     }
   }
 
@@ -91,8 +91,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     makeFileWriter();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = null;
-    template = context.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, getWriter());
     fileWriter.close();
   }
@@ -172,14 +171,14 @@ public abstract class XmlFormatter extends BaseFormatter {
       return System.currentTimeMillis();
   }
 
-  private static class InstructionXmlFormatter {
+  private static class SlimTestXmlFormatter {
     private TestResponse.TestResult testResult;
     private List<Object> instructions;
     private Map<String, Object> results;
     private List<SlimTable.Expectation> expectations;
     private List<SlimTable> slimTables;
 
-    public InstructionXmlFormatter(TestResponse.TestResult testResult, SlimTestSystem slimSystem) {
+    public SlimTestXmlFormatter(TestResponse.TestResult testResult, SlimTestSystem slimSystem) {
       this.testResult = testResult;
       instructions = slimSystem.getInstructions();
       results = slimSystem.getInstructionResults();
@@ -204,21 +203,61 @@ public abstract class XmlFormatter extends BaseFormatter {
     private void addTable(SlimTable slimTable) {
       TestResponse.Table resultTable = new TestResponse.Table(slimTable.getTableName());
       testResult.tables.add(resultTable);
-      Table table = slimTable.getTable();
-      int rows = table.getRowCount();
-      for (int row = 0; row < rows; row++) {
-        addRowsToTable(resultTable, table, row);
+      addRowsToTable(slimTable, resultTable);
+      addChildTables(slimTable);
+    }
+
+    private void addChildTables(SlimTable slimTable) {
+      for (SlimTable child : slimTable.getChildren()) {
+        addTable(child);
       }
     }
 
-    private void addRowsToTable(TestResponse.Table resultTable, Table table, int row) {
+    private void addRowsToTable(SlimTable slimTable, TestResponse.Table resultTable) {
+      Table table = slimTable.getTable();
+      int rows = table.getRowCount();
+      for (int row = 0; row < rows; row++) {
+        addRowToTable(resultTable, table, row);
+      }
+    }
+
+    private void addRowToTable(TestResponse.Table resultTable, Table table, int row) {
       TestResponse.Row resultRow = new TestResponse.Row();
       resultTable.add(resultRow);
       int cols = table.getColumnCountInRow(row);
       for (int col = 0; col < cols; col++) {
-        String cell = HtmlTable.colorize(table.getCellContents(col, row));
-        resultRow.add(cell);
+        String contents = table.getCellContents(col, row);
+        if (isScenarioHtml(contents)) {
+          addColorizedScenarioReference(resultRow, contents);
+        } else {
+          String colorizedContents = HtmlTable.colorize(contents);
+          resultRow.add(colorizedContents);
+        }
       }
+    }
+
+    private void addColorizedScenarioReference(TestResponse.Row resultRow, String contents) {
+      String status = getTestStatus(contents);
+      String tableName = getTableName(contents);
+      resultRow.add(String.format("%s(scenario:%s)", status, tableName));
+    }
+
+    private String getTableName(String contents) {
+      return getStringBetween(contents, "table_name=\"", "\"");
+    }
+
+    private static String getTestStatus(String contents) {
+      return getStringBetween(contents, "<span id=\"test_status\" class=", ">Scenario</span>");
+    }
+
+    private static String getStringBetween(String contents, String prefix, String suffix) {
+      int start = contents.indexOf(prefix) + prefix.length();
+      int end = contents.indexOf(suffix, start);
+      return contents.substring(start, end);
+    }
+
+    private boolean isScenarioHtml(String contents) {
+      return contents.startsWith("<div class=\"collapse_rim\">");
     }
 
     private void addInstructionResults() {

@@ -36,5 +36,6 @@ public interface Table {
   void appendCellToRow(int row, Table table);
 
   void setTestStatusOnRow(int row, boolean testStatus);
-  
+
+  void setName(String tableName);
 }

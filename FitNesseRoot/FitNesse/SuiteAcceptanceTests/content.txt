@@ -14,7 +14,7 @@
 
 !2 ''Classpaths''
 !path classes
-!path lib/fitlibrary.jar
+!path lib/*.jar
 ----
 !2 ''Port''
 FitNesse is running on port: ${FITNESSE_PORT}
