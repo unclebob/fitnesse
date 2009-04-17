@@ -30,6 +30,10 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     super(context, page, pageFactory);
   }
 
+  public SuiteHtmlFormatter(FitNesseContext context) {
+    super(context);
+  }
+
   public String getTestSystemHeader(String testSystemName) throws Exception {
     String tag = String.format("<h3>%s</h3>\n", testSystemName);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript("test_summaries", tag);

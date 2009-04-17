@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests||10:33:17 Thu, Apr 16, 2009|
+|FitNesse.UserGuide.RestfulTests||14:23:54 Mon, Apr 13, 2009|
 |JunkParent.RubyTests.ConstructorSymbols||10:45:34 Sat, Apr 11, 2009|
 |JunkParent.CreateAndWait||10:38:22 Sat, Apr 11, 2009|
 |JunkPage||13:11:07 Thu, Apr 09, 2009|
@@ -24,7 +26,6 @@
 |FrontPage||06:44:20 Fri, Apr 03, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim||06:34:54 Fri, Apr 03, 2009|
 |JunkParent.MultiByteCharsInSlim||05:57:47 Fri, Apr 03, 2009|
-|FitNesse.UserGuide.RestfulTests||12:39:22 Thu, Apr 02, 2009|
 |JunkParent.DotNetTests||19:56:34 Tue, Mar 31, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolsCanBeBlankOrNull||19:50:40 Tue, Mar 31, 2009|
 |JunkParent.SymbolTest||19:43:55 Tue, Mar 31, 2009|

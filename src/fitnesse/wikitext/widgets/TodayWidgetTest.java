@@ -14,7 +14,7 @@ import org.junit.Test;
 public class TodayWidgetTest {
   @Before
   public void setup() {
-    TodayWidget.todayForTest = new GregorianCalendar(1952, 11, 5, 1, 13, 23);  //GDTH unit date!!!  Eleven == Dec
+    TodayWidget.todayForTest = new GregorianCalendar(1952, 11, 5, 1, 13, 23);  //GDTH unix date!!!  Eleven == Dec
   }
 
   @After

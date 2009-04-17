@@ -25,11 +25,11 @@ public abstract class UpdateTestCase extends TestCase {
   public void setUp() throws Exception {
     context = new FitNesseContext();
     context.rootPath = testDir;
-    context.rootPageName = rootName;
+    context.rootDirectoryName = rootName;
     context.rootPagePath = testDir + "/" + rootName;
 
     FileUtil.makeDir(testDir);
-    root = new FileSystemPage(context.rootPath, context.rootPageName);
+    root = new FileSystemPage(context.rootPath, context.rootDirectoryName);
     crawler = root.getPageCrawler();
     context.root = root;
 

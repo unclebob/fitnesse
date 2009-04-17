@@ -2,27 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-import static util.RegexTestCase.divWithIdAndContent;
-
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.authentication.SecureOperation;
@@ -31,17 +10,31 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import static util.RegexTestCase.*;
+import util.XmlUtil;
+import static util.XmlUtil.getElementByTagName;
 
-public class
-  TestResponderTest {
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class TestResponderTest {
   private WikiPage root;
   private MockRequest request;
   private TestResponder responder;
@@ -53,9 +46,8 @@ public class
   private FitSocketReceiver receiver;
   private WikiPage errorLogsParentPage;
   private PageCrawler crawler;
-  private String simpleRunPageName;
-  private Document testResultsDocument;
-  private Element testResultsElement;
+  private File xmlResultsFile;
+  private XmlChecker xmlChecker = new XmlChecker();
 
   @Before
   public void setUp() throws Exception {
@@ -91,7 +83,7 @@ public class
   }
 
   private void doSimpleRunWithTags(String fixtureTable, String tags) throws Exception {
-    simpleRunPageName = "TestPage";
+    String simpleRunPageName = "TestPage";
     testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
     if (tags != null) {
       PageData pageData = testPage.getData();
@@ -230,20 +222,7 @@ public class
   public void simpleXmlFormat() throws Exception {
     request.addInput("format", "xml");
     doSimpleRun(passFixtureTable());
-
-    assertXmlDocumentHeaderIsCorrect();
-
-    Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
-    Element counts = XmlUtil.getElementByTagName(result, "counts");
-    assertCounts(counts, "1", "0", "0", "0");
-
-    Element tags = XmlUtil.getElementByTagName(result, "tags");
-    assertNull(tags);
-
-    String content = XmlUtil.getTextValue(result, "content");
-    assertSubString("PassFixture", content);
-    String relativePageName = XmlUtil.getTextValue(result, "relativePageName");
-    assertEquals("TestPage", relativePageName);
+    xmlChecker.assertFitPassFixtureXmlReportIsCorrect();
   }
 
   private String slimDecisionTable() {
@@ -257,175 +236,38 @@ public class
   @Test
   public void slimXmlFormat() throws Exception {
     request.addInput("format", "xml");
-    String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
-    String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
-
-    request.addInput("format", "xml");
+    ensureXmlResultFileDoesNotExist();
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
-    assertXmlDocumentHeaderIsCorrect();
-
-    Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
-    Element counts = XmlUtil.getElementByTagName(result, "counts");
-    assertCounts(counts, "2", "1", "0", "0");
-
-    String tags = XmlUtil.getTextValue(result, "tags");
-    assertEquals("zoo", tags);
-
-    Element tables = XmlUtil.getElementByTagName(result, "tables");
-    assertNotNull(tables);
-    NodeList tableList = tables.getElementsByTagName("table");
-    assertNotNull(tableList);
-    assertEquals(1, tableList.getLength());
-    Element tableElement = (Element) tableList.item(0);
-    String tableName = XmlUtil.getTextValue(tableElement, "name");
-    assertNotNull(tableName);
-    assertEquals("decisionTable_0", tableName);
-    assertEquals("[[pass(DT:fitnesse.slim.test.TestSlim)],[string,get string arg?],[right,[right] fail(expected [wrong])],[wow,pass(wow)]]", tableElementToString(tableElement));
-
-    Element instructions = XmlUtil.getElementByTagName(result, "instructions");
-    NodeList instructionList = instructions.getElementsByTagName("instructionResult");
-    assertEquals(instructionContents.length, instructionList.getLength());
-
-    for (int i = 0; i < instructionContents.length; i++) {
-      Element instructionElement = (Element) instructionList.item(i);
-      assertInstructionHas(instructionElement, instructionContents[i]);
-    }
-
-    for (int i = 0; i < instructionResults.length; i++) {
-      Element instructionElement = (Element) instructionList.item(i);
-      assertResultHas(instructionElement, instructionResults[i]);
-    }
-
-    checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "right", "ConstructionExpectation", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
-    checkExpectation(instructionList, 3, "decisionTable_0_3", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
-    checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
-    checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
-    checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+    Document xmlFromFile = getXmlFromFileAndDeleteFile();
+    xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
+    xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
+    xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
   }
 
-  private String tableElementToString(Element tableElement) {
-    StringBuilder result = new StringBuilder();
-    result.append("[");
-    rowsToString(tableElement, result);
-    result.append("]");
-    return result.toString();
+
+  private void ensureXmlResultFileDoesNotExist() {
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/%s/files/testResults/TestPage/2008_12/05_01_19_00.xml", context.rootPath, context.rootDirectoryName);
+    xmlResultsFile = new File(resultsFileName);
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
   }
 
-  private void rowsToString(Element tableElement, StringBuilder result) {
-    NodeList rows = tableElement.getElementsByTagName("row");
-    for (int row = 0; row < rows.getLength(); row++) {
-      result.append("[");
-      Element rowElement = (Element)rows.item(row);
-      colsToString(result, rowElement);
-      result.append("],");
-    }
-    result.deleteCharAt(result.length()-1);
-  }
-
-  private void colsToString(StringBuilder result, Element rowElement) {
-    NodeList cols = rowElement.getElementsByTagName("col");
-    for (int col = 0; col < cols.getLength(); col++) {
-      Element colElement = (Element)cols.item(col);
-      result.append(colElement.getFirstChild().getNodeValue());
-      result.append(",");
-    }
-    result.deleteCharAt(result.length()-1);
-  }
-
-  private String slimScenarioTable() {
-    return "!define TEST_SYSTEM {slim}\n" +
-      "\n" +
-      "!|scenario|f|a|\n" +
-      "|check|echo int|@a|@a|\n" +
-      "\n" +
-      "!|script|fitnesse.slim.test.TestSlim|\n" +
-      "\n" +
-      "!|f|\n" +
-      "|a|\n" +
-      "|1|\n" +
-      "|2|\n";
+  private Document getXmlFromFileAndDeleteFile() throws Exception {
+    assertTrue(xmlResultsFile.exists());
+    FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
+    Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
+    xmlResultsStream.close();
+    xmlResultsFile.delete();
+    return xmlDoc;
   }
 
   @Test
   public void slimScenarioXmlFormat() throws Exception {
     request.addInput("format", "xml");
-    String instructionContents[] = {"make", "call", "call"};
-    String instructionResults[] = {"OK", "1", "2"};
-
-    request.addInput("format", "xml");
-    doSimpleRun(slimScenarioTable());
-    assertXmlDocumentHeaderIsCorrect();
-
-    Element result = XmlUtil.getElementByTagName(testResultsElement, "result");
-    Element counts = XmlUtil.getElementByTagName(result, "counts");
-    assertCounts(counts, "3", "0", "0", "0");
-    Element instructions = XmlUtil.getElementByTagName(result, "instructions");
-    NodeList instructionList = instructions.getElementsByTagName("instructionResult");
-    assertEquals(instructionContents.length, instructionList.getLength());
-
-    for (int i = 0; i < instructionContents.length; i++) {
-      Element instructionElement = (Element) instructionList.item(i);
-      assertInstructionHas(instructionElement, instructionContents[i]);
-    }
-
-    for (int i = 0; i < instructionResults.length; i++) {
-      Element instructionElement = (Element) instructionList.item(i);
-      assertResultHas(instructionElement, instructionResults[i]);
-    }
-
-    checkExpectation(instructionList, 0, "scriptTable_1_0", "1", "0", "right", "ConstructionExpectation", "OK", "fitnesse.slim.test.TestSlim", "pass(fitnesse.slim.test.TestSlim)");
-    checkExpectation(instructionList, 1, "decisionTable_2_0/scriptTable_0_0", "3", "1", "right", "ReturnedValueExpectation", "1", "1", "pass(1)");
-    checkExpectation(instructionList, 2, "decisionTable_2_1/scriptTable_0_0", "3", "1", "right", "ReturnedValueExpectation", "2", "2", "pass(2)");
-  }
-
-  private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {
-    Element instructionElement = (Element) instructionList.item(index);
-    Element expectation = XmlUtil.getElementByTagName(instructionElement, "expectation");
-    assertEquals(id, XmlUtil.getTextValue(expectation, "instructionId"));
-    assertEquals(status, XmlUtil.getTextValue(expectation, "status"));
-    assertEquals(type, XmlUtil.getTextValue(expectation, "type"));
-    assertEquals(col, XmlUtil.getTextValue(expectation, "col"));
-    assertEquals(row, XmlUtil.getTextValue(expectation, "row"));
-    assertEquals(actual, XmlUtil.getTextValue(expectation, "actual"));
-    assertEquals(expected, XmlUtil.getTextValue(expectation, "expected"));
-    assertEquals(message, XmlUtil.getTextValue(expectation, "evaluationMessage"));
-  }
-
-  private void assertInstructionHas(Element instructionElement, String content) throws Exception {
-    String instruction = XmlUtil.getTextValue(instructionElement, "instruction");
-    assertTrue(String.format("instruction %s should contain: %s", instruction, content), instruction.indexOf(content) != -1);
-  }
-
-  private void assertResultHas(Element instructionElement, String content) throws Exception {
-    String result = XmlUtil.getTextValue(instructionElement, "slimResult");
-    assertTrue(String.format("result %s should contain: %s", result, content), result.indexOf(content) != -1);
-  }
-
-  private void assertXmlDocumentHeaderIsCorrect() throws Exception {
-    assertEquals("text/xml", response.getContentType());
-    testResultsDocument = getXmlDocumentFromResults(results);
-    testResultsElement = testResultsDocument.getDocumentElement();
-    assertEquals("testResults", testResultsElement.getNodeName());
-    String version = XmlUtil.getTextValue(testResultsElement, "FitNesseVersion");
-    assertEquals(new FitNesseVersion().toString(), version);
-  }
-
-  static Document getXmlDocumentFromResults(String results) throws Exception {
-    String endOfXml = "</testResults>";
-    String startOfXml = "<?xml";
-    int xmlStartIndex = results.indexOf(startOfXml);
-    int xmlEndIndex = results.indexOf(endOfXml) + endOfXml.length();
-    String xmlString = results.substring(xmlStartIndex, xmlEndIndex);
-    Document testResultsDocument = XmlUtil.newDocument(xmlString);
-    return testResultsDocument;
-  }
-
-  static void assertCounts(Element counts, String right, String wrong, String ignores, String exceptions)
-    throws Exception {
-    assertEquals(right, XmlUtil.getTextValue(counts, "right"));
-    assertEquals(wrong, XmlUtil.getTextValue(counts, "wrong"));
-    assertEquals(ignores, XmlUtil.getTextValue(counts, "ignores"));
-    assertEquals(exceptions, XmlUtil.getTextValue(counts, "exceptions"));
+    doSimpleRun(XmlChecker.slimScenarioTable);
+    xmlChecker.assertXmlReportOfSlimScenarioTableIsCorrect();
   }
 
   private String getExecutionStatusMessage() throws Exception {
@@ -540,8 +382,8 @@ public class
 
     private void waitForSemaphore() {
       try {
-        int i=1000;
-        while (!semaphore.exists())  {
+        int i = 1000;
+        while (!semaphore.exists()) {
           if (--i <= 0)
             break;
           Thread.sleep(5);
@@ -610,7 +452,10 @@ public class
 
   @Test
   public void testDoSimpleSlimTable() throws Exception {
+    ensureXmlResultFileDoesNotExist();
     doSimpleRun(simpleSlimDecisionTable());
+    Document xmlFromFile = getXmlFromFileAndDeleteFile();
+    xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
   }
 
@@ -635,5 +480,255 @@ public class
 
   private String passFixtureTable() {
     return "|!-fitnesse.testutil.PassFixture-!|\n";
+  }
+
+  class XmlChecker {
+    private Element testResultsElement;
+
+    public void assertXmlHeaderIsCorrect(Document testResultsDocument) throws Exception {
+      testResultsElement = testResultsDocument.getDocumentElement();
+      assertEquals("testResults", testResultsElement.getNodeName());
+      String version = XmlUtil.getTextValue(testResultsElement, "FitNesseVersion");
+      assertEquals(new FitNesseVersion().toString(), version);
+    }
+
+    public void assertFitPassFixtureXmlReportIsCorrect() throws Exception {
+      assertHeaderOfXmlDocumentsInResponseIsCorrect();
+
+      Element result = getElementByTagName(testResultsElement, "result");
+      Element counts = getElementByTagName(result, "counts");
+      assertCounts(counts, "1", "0", "0", "0");
+
+      Element tags = getElementByTagName(result, "tags");
+      assertNull(tags);
+
+      String content = XmlUtil.getTextValue(result, "content");
+      assertSubString("PassFixture", content);
+      String relativePageName = XmlUtil.getTextValue(result, "relativePageName");
+      assertEquals("TestPage", relativePageName);
+    }
+
+    public void assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect() throws Exception {
+      String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
+      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
+      assertHeaderOfXmlDocumentsInResponseIsCorrect();
+
+      Element result = getElementByTagName(testResultsElement, "result");
+      Element counts = getElementByTagName(result, "counts");
+      assertCounts(counts, "2", "1", "0", "0");
+
+      String tags = XmlUtil.getTextValue(result, "tags");
+      assertEquals("zoo", tags);
+
+      Element tables = getElementByTagName(result, "tables");
+      assertNotNull(tables);
+      NodeList tableList = tables.getElementsByTagName("table");
+      assertNotNull(tableList);
+      assertEquals(1, tableList.getLength());
+      Element tableElement = (Element) tableList.item(0);
+      String tableName = XmlUtil.getTextValue(tableElement, "name");
+      assertNotNull(tableName);
+      assertEquals("decisionTable_0", tableName);
+      assertEquals("[[pass(DT:fitnesse.slim.test.TestSlim)],[string,get string arg?],[right,[right] fail(expected [wrong])],[wow,pass(wow)]]", tableElementToString(tableElement));
+
+      Element instructions = getElementByTagName(result, "instructions");
+      NodeList instructionList = instructions.getElementsByTagName("instructionResult");
+      assertEquals(instructionContents.length, instructionList.getLength());
+
+      for (int i = 0; i < instructionContents.length; i++) {
+        Element instructionElement = (Element) instructionList.item(i);
+        assertInstructionHas(instructionElement, instructionContents[i]);
+      }
+
+      for (int i = 0; i < instructionResults.length; i++) {
+        Element instructionElement = (Element) instructionList.item(i);
+        assertResultHas(instructionElement, instructionResults[i]);
+      }
+
+      checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "right", "ConstructionExpectation", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
+      checkExpectation(instructionList, 3, "decisionTable_0_3", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
+      checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
+      checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
+      checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+    }
+
+    private String tableElementToString(Element tableElement) {
+      StringBuilder result = new StringBuilder();
+      result.append("[");
+      rowsToString(tableElement, result);
+      result.append("]");
+      return result.toString();
+    }
+
+    private void rowsToString(Element tableElement, StringBuilder result) {
+      NodeList rows = tableElement.getElementsByTagName("row");
+      for (int row = 0; row < rows.getLength(); row++) {
+        result.append("[");
+        Element rowElement = (Element) rows.item(row);
+        colsToString(result, rowElement);
+        result.append("],");
+      }
+      result.deleteCharAt(result.length() - 1);
+    }
+
+    private void colsToString(StringBuilder result, Element rowElement) {
+      NodeList cols = rowElement.getElementsByTagName("col");
+      for (int col = 0; col < cols.getLength(); col++) {
+        Element colElement = (Element) cols.item(col);
+        result.append(colElement.getFirstChild().getNodeValue());
+        result.append(",");
+      }
+      result.deleteCharAt(result.length() - 1);
+    }
+
+    public final static String slimScenarioTable =
+      "!define TEST_SYSTEM {slim}\n" +
+        "\n" +
+        "!|scenario|f|a|\n" +
+        "|check|echo int|@a|@a|\n" +
+        "\n" +
+        "!|script|fitnesse.slim.test.TestSlim|\n" +
+        "\n" +
+        "!|f|\n" +
+        "|a|\n" +
+        "|1|\n" +
+        "|2|\n";
+
+    public void assertXmlReportOfSlimScenarioTableIsCorrect() throws Exception {
+      assertHeaderOfXmlDocumentsInResponseIsCorrect();
+
+      Element result = getElementByTagName(testResultsElement, "result");
+      Element counts = getElementByTagName(result, "counts");
+      assertCounts(counts, "3", "0", "0", "0");
+
+      assertTablesInSlimScenarioAreCorrect(result);
+      assertInstructionsOfSlimScenarioTableAreCorrect(result);
+    }
+
+    private void assertInstructionsOfSlimScenarioTableAreCorrect(Element result) throws Exception {
+
+      Element instructions = getElementByTagName(result, "instructions");
+      NodeList instructionList = instructions.getElementsByTagName("instructionResult");
+      assertInstructionContentsOfSlimScenarioAreCorrect(instructionList);
+      assertInstructionResultsOfSlimScenarioAreCorrect(instructionList);
+      assertExpectationsOfSlimScenarioAreCorrect(instructionList);
+    }
+
+    private void assertExpectationsOfSlimScenarioAreCorrect(NodeList instructionList) throws Exception {
+      checkExpectation(instructionList, 0, "scriptTable_1_0", "1", "0", "right", "ConstructionExpectation", "OK", "fitnesse.slim.test.TestSlim", "pass(fitnesse.slim.test.TestSlim)");
+      checkExpectation(instructionList, 1, "decisionTable_2_0/scriptTable_0_0", "3", "1", "right", "ReturnedValueExpectation", "1", "1", "pass(1)");
+      checkExpectation(instructionList, 2, "decisionTable_2_1/scriptTable_0_0", "3", "1", "right", "ReturnedValueExpectation", "2", "2", "pass(2)");
+    }
+
+    private void assertInstructionResultsOfSlimScenarioAreCorrect(NodeList instructionList) throws Exception {
+      String instructionResults[] = {"OK", "1", "2"};
+
+      for (int i = 0; i < instructionResults.length; i++) {
+        Element instructionElement = (Element) instructionList.item(i);
+        assertResultHas(instructionElement, instructionResults[i]);
+      }
+    }
+
+    private void assertInstructionContentsOfSlimScenarioAreCorrect(NodeList instructionList) throws Exception {
+      String instructionContents[] = {"make", "call", "call"};
+      assertEquals(instructionContents.length, instructionList.getLength());
+
+      for (int i = 0; i < instructionContents.length; i++) {
+        Element instructionElement = (Element) instructionList.item(i);
+        assertInstructionHas(instructionElement, instructionContents[i]);
+      }
+    }
+
+    private void assertTablesInSlimScenarioAreCorrect(Element result) throws Exception {
+      Element tables = getElementByTagName(result, "tables");
+      NodeList tableList = tables.getElementsByTagName("table");
+      assertEquals(5, tableList.getLength());
+
+      String tableNames[] = {"scenarioTable_0", "scriptTable_1", "decisionTable_2", "decisionTable_2_0/scriptTable_0", "decisionTable_2_1/scriptTable_0"};
+      String tableValues[][][] = {
+        {
+          {"scenario", "f", "a"},
+          {"check", "echo int", "@a", "@a"}
+        },
+        {
+          {"script", "pass(fitnesse.slim.test.TestSlim)"}
+        },
+        {
+          {"f"},
+          {"a"},
+          {"1", "pass(scenario:decisionTable_2_0/scriptTable_0)"},
+          {"2", "pass(scenario:decisionTable_2_1/scriptTable_0)"}
+        },
+        {
+          {"scenario", "f", "a"},
+          {"check", "echo int", "1", "pass(1)"}
+        },
+        {
+          {"scenario", "f", "a"},
+          {"check", "echo int", "2", "pass(2)"}
+        }
+      };
+
+      for (int tableIndex = 0; tableIndex < tableList.getLength(); tableIndex++) {
+        assertEquals(tableNames[tableIndex], XmlUtil.getTextValue((Element) tableList.item(tableIndex), "name"));
+
+        Element tableElement = (Element) tableList.item(tableIndex);
+        NodeList rowList = tableElement.getElementsByTagName("row");
+        for (int rowIndex = 0; rowIndex < rowList.getLength(); rowIndex++) {
+          NodeList colList = ((Element) rowList.item(rowIndex)).getElementsByTagName("col");
+          for (int colIndex = 0; colIndex < colList.getLength(); colIndex++)
+            assertEquals(tableValues[tableIndex][rowIndex][colIndex], XmlUtil.getElementText((Element) colList.item(colIndex)));
+        }
+      }
+    }
+
+
+    private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {
+      Element instructionElement = (Element) instructionList.item(index);
+      Element expectation = getElementByTagName(instructionElement, "expectation");
+      assertEquals(id, XmlUtil.getTextValue(expectation, "instructionId"));
+      assertEquals(status, XmlUtil.getTextValue(expectation, "status"));
+      assertEquals(type, XmlUtil.getTextValue(expectation, "type"));
+      assertEquals(col, XmlUtil.getTextValue(expectation, "col"));
+      assertEquals(row, XmlUtil.getTextValue(expectation, "row"));
+      assertEquals(actual, XmlUtil.getTextValue(expectation, "actual"));
+      assertEquals(expected, XmlUtil.getTextValue(expectation, "expected"));
+      assertEquals(message, XmlUtil.getTextValue(expectation, "evaluationMessage"));
+    }
+
+    private void assertInstructionHas(Element instructionElement, String content) throws Exception {
+      String instruction = XmlUtil.getTextValue(instructionElement, "instruction");
+      assertTrue(String.format("instruction %s should contain: %s", instruction, content), instruction.indexOf(content) != -1);
+    }
+
+    private void assertResultHas(Element instructionElement, String content) throws Exception {
+      String result = XmlUtil.getTextValue(instructionElement, "slimResult");
+      assertTrue(String.format("result %s should contain: %s", result, content), result.indexOf(content) != -1);
+    }
+
+    private void assertHeaderOfXmlDocumentsInResponseIsCorrect() throws Exception {
+      assertEquals("text/xml", response.getContentType());
+      Document testResultsDocument = getXmlDocumentFromResults(results);
+      xmlChecker.assertXmlHeaderIsCorrect(testResultsDocument);
+    }
+  }
+
+  public static class XmlTestUtilities {
+    public static Document getXmlDocumentFromResults(String results) throws Exception {
+      String endOfXml = "</testResults>";
+      String startOfXml = "<?xml";
+      int xmlStartIndex = results.indexOf(startOfXml);
+      int xmlEndIndex = results.indexOf(endOfXml) + endOfXml.length();
+      String xmlString = results.substring(xmlStartIndex, xmlEndIndex);
+      return XmlUtil.newDocument(xmlString);
+    }
+
+    public static void assertCounts(Element counts, String right, String wrong, String ignores, String exceptions)
+      throws Exception {
+      assertEquals(right, XmlUtil.getTextValue(counts, "right"));
+      assertEquals(wrong, XmlUtil.getTextValue(counts, "wrong"));
+      assertEquals(ignores, XmlUtil.getTextValue(counts, "ignores"));
+      assertEquals(exceptions, XmlUtil.getTextValue(counts, "exceptions"));
+    }
   }
 }
