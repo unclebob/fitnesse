@@ -35,7 +35,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   }
 
   private SuiteHtmlFormatter createCustomFormatter() throws Exception {
-    SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context, null, null) {
+    SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context) {
       @Override
       protected void writeData(String output) throws Exception {
         buffer.append(output);

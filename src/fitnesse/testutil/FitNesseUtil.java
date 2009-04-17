@@ -22,8 +22,8 @@ public class FitNesseUtil {
     context.root = root;
     context.port = port;
     context.rootPath = "TestDir";
-    context.rootPageName = root.getName();
-    context.rootPagePath = context.rootPath + "/" + context.rootPageName;
+    context.rootDirectoryName = root.getName();
+    context.rootPagePath = context.rootPath + "/" + context.rootDirectoryName;
     context.responderFactory = new ResponderFactory(context.rootPagePath);
     VelocityEngine engine = new VelocityEngine();
     engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");

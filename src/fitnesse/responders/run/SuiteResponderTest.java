@@ -3,6 +3,8 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -283,7 +285,7 @@ public class SuiteResponderTest {
     request.addInput("format", "xml");
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
-    Document testResultsDocument = TestResponderTest.getXmlDocumentFromResults(results);
+    Document testResultsDocument = getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
     NodeList resultList = testResultsElement.getElementsByTagName("result");
@@ -294,19 +296,19 @@ public class SuiteResponderTest {
       testResult = (Element) resultList.item(elementIndex);
       String pageName = XmlUtil.getTextValue(testResult, "relativePageName");
       if ("SlimTest".equals(pageName)) {
-        TestResponderTest.assertCounts(testResult, "2", "0", "0", "0");
+        assertCounts(testResult, "2", "0", "0", "0");
         assertSubString("DT:fitnesse.slim.test.TestSlim", XmlUtil.getTextValue(testResult, "content"));
         Element instructions = XmlUtil.getElementByTagName(testResult, "instructions");
         assertTrue(instructions != null);
       } else if ("TestOne".equals(pageName)) {
-        TestResponderTest.assertCounts(testResult, "1", "0", "0", "0");
+        assertCounts(testResult, "1", "0", "0", "0");
         assertSubString("PassFixture", XmlUtil.getTextValue(testResult, "content"));
       } else {
         fail(pageName);
       }
     }
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
-    TestResponderTest.assertCounts(finalCounts, "2", "0", "0", "0");
+    assertCounts(finalCounts, "2", "0", "0", "0");
   }
 
   @Test
@@ -314,7 +316,7 @@ public class SuiteResponderTest {
     request.setResource("SuitePage.TestOne");
     request.addInput("format", "xml");
     String results = runSuite();
-    Document testResultsDocument = TestResponderTest.getXmlDocumentFromResults(results);
+    Document testResultsDocument = getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
     NodeList resultList = testResultsElement.getElementsByTagName("result");

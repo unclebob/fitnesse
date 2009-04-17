@@ -56,22 +56,22 @@ public class XmlUtil {
 
   public static String getTextValue(Element element, String name) throws Exception {
     Element namedElement = getElementByTagName(element, name);
-    return getElementText(namedElement, name);
+    return getElementText(namedElement);
   }
 
   public static String getLocalTextValue(Element element, String name) throws Exception {
     Element namedElement = getLocalElementByTagName(element, name);
-    return getElementText(namedElement, name);
+    return getElementText(namedElement);
   }
 
-  private static String getElementText(Element namedElement, String name) throws Exception {
+  public static String getElementText(Element namedElement) throws Exception {
     if (namedElement == null)
       return null;
     Node candidateTextNode = namedElement.getFirstChild();
     if (candidateTextNode instanceof Text)
       return candidateTextNode.getNodeValue();
     else
-      throw new Exception("The first child of " + name + " is not a Text node");
+      throw new Exception("The first child of " + namedElement.getNodeName() + " is not a Text node");
   }
 
   public static void addTextNode(Document document, Element element, String tagName, String value) {

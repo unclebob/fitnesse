@@ -16,7 +16,7 @@ public class FitNesseContext {
   public FitNesse fitnesse;
   public int port = 80;
   public String rootPath = ".";
-  public String rootPageName = "FitNesseRoot";
+  public String rootDirectoryName = "FitNesseRoot";
   public String rootPagePath = "";
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public WikiPage root;
@@ -42,7 +42,7 @@ public class FitNesseContext {
   public VelocityEngine getVelocityEngine() {
     if (velocityEngine == null) {
       velocityEngine = new VelocityEngine();
-      String templatePath = String.format("%s/%s/files/templates", rootPath, rootPageName);
+      String templatePath = String.format("%s/%s/files/templates", rootPath, rootDirectoryName);
       velocityEngine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, templatePath);
       try {
         velocityEngine.init();

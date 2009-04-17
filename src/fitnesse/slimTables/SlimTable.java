@@ -40,15 +40,17 @@ public abstract class SlimTable {
     return parent;
   }
 
-  public void addChildTable(SlimTable table, int row) throws Exception {
-    table.id = id + "." + children.size();
-    table.tableName = makeInstructionTag(instructionNumber)+"/"+table.tableName;
+  public void addChildTable(SlimTable slimtable, int row) throws Exception {
+    slimtable.id = id + "." + children.size();
+    slimtable.tableName = makeInstructionTag(instructionNumber)+"/"+slimtable.tableName;
     instructionNumber++;
-    table.parent = this;
-    children.add(table);
+    slimtable.parent = this;
+    children.add(slimtable);
 
-    Table t = getTable();
-    t.appendCellToRow(row, table.getTable());
+    Table parentTable = getTable();
+    Table childTable = slimtable.getTable();
+    childTable.setName(slimtable.tableName);
+    parentTable.appendCellToRow(row, childTable);
   }
 
   public SlimTable getChild(int i) {
@@ -315,6 +317,10 @@ public abstract class SlimTable {
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));
     return rowList;
+  }
+
+  public List<SlimTable> getChildren() {
+    return children;
   }
 
   static class Disgracer {

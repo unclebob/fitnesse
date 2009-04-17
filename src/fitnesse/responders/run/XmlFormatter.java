@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.HtmlTable;
@@ -13,17 +14,23 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public abstract class XmlFormatter extends BaseFormatter {
   protected TestResponse testResponse = new TestResponse();
   private TestResponse.TestResult currentResult;
-  private StringBuffer outputBuffer;
+  private StringBuilder outputBuffer;
   private TestSystem testSystem;
+  private FileWriter fileWriter;
+  private static long testTime;
 
   public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
     super(context, page);
@@ -58,7 +65,7 @@ public abstract class XmlFormatter extends BaseFormatter {
 
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
-      new InstructionXmlFormatter(currentResult, slimSystem).invoke();
+      new SlimTestXmlFormatter(currentResult, slimSystem).invoke();
     }
   }
 
@@ -82,10 +89,29 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   private void writeResults() throws Exception {
+    makeFileWriter();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
     Template template = context.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, getWriter());
+    fileWriter.close();
+  }
+
+  private void makeFileWriter() throws Exception {
+    File resultPath = new File(String.format("%s/%s/files/testResults/%s/%s",
+      context.rootPath,
+      context.rootDirectoryName,
+      page.getPageCrawler().getFullPath(page).toString(),
+      makeResultFileName()));
+    File resultDirectory = new File(resultPath.getParent());
+    resultDirectory.mkdirs();
+    File resultFile = new File(resultDirectory, resultPath.getName());
+    fileWriter = new FileWriter(resultFile);
+  }
+
+  public static String makeResultFileName() {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy_MM/dd_HH_mm_ss");
+    return format.format(new Date(getTime())) + ".xml";
   }
 
   private Writer getWriter() {
@@ -94,6 +120,7 @@ public abstract class XmlFormatter extends BaseFormatter {
         String fragment = new String(cbuf, off, len);
         try {
           writeData(fragment.getBytes());
+          fileWriter.append(fragment);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
@@ -123,20 +150,36 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   private void appendHtmlToBuffer(String output) {
-    if (outputBuffer == null) {
-      outputBuffer = new StringBuffer();
-    }
+    if (outputBuffer == null)
+      outputBuffer = new StringBuilder();
     outputBuffer.append(output);
   }
 
-  private static class InstructionXmlFormatter {
+  public static void setTestTime(String time) {
+    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    try {
+      Date date = format.parse(time);
+      testTime = date.getTime();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static long getTime() {
+    if (testTime != 0)
+      return testTime;
+    else
+      return System.currentTimeMillis();
+  }
+
+  private static class SlimTestXmlFormatter {
     private TestResponse.TestResult testResult;
     private List<Object> instructions;
     private Map<String, Object> results;
     private List<SlimTable.Expectation> expectations;
     private List<SlimTable> slimTables;
 
-    public InstructionXmlFormatter(TestResponse.TestResult testResult, SlimTestSystem slimSystem) {
+    public SlimTestXmlFormatter(TestResponse.TestResult testResult, SlimTestSystem slimSystem) {
       this.testResult = testResult;
       instructions = slimSystem.getInstructions();
       results = slimSystem.getInstructionResults();
@@ -161,21 +204,61 @@ public abstract class XmlFormatter extends BaseFormatter {
     private void addTable(SlimTable slimTable) {
       TestResponse.Table resultTable = new TestResponse.Table(slimTable.getTableName());
       testResult.tables.add(resultTable);
-      Table table = slimTable.getTable();
-      int rows = table.getRowCount();
-      for (int row=0; row<rows; row++) {
-        addRowsToTable(resultTable, table, row);
+      addRowsToTable(slimTable, resultTable);
+      addChildTables(slimTable);
+    }
+
+    private void addChildTables(SlimTable slimTable) {
+      for (SlimTable child : slimTable.getChildren()) {
+        addTable(child);
       }
     }
 
-    private void addRowsToTable(TestResponse.Table resultTable, Table table, int row) {
+    private void addRowsToTable(SlimTable slimTable, TestResponse.Table resultTable) {
+      Table table = slimTable.getTable();
+      int rows = table.getRowCount();
+      for (int row = 0; row < rows; row++) {
+        addRowToTable(resultTable, table, row);
+      }
+    }
+
+    private void addRowToTable(TestResponse.Table resultTable, Table table, int row) {
       TestResponse.Row resultRow = new TestResponse.Row();
       resultTable.add(resultRow);
       int cols = table.getColumnCountInRow(row);
-      for (int col=0; col<cols; col++) {
-        String cell = HtmlTable.colorize(table.getCellContents(col, row));
-        resultRow.add(cell);
+      for (int col = 0; col < cols; col++) {
+        String contents = table.getCellContents(col, row);
+        if (isScenarioHtml(contents)) {
+          addColorizedScenarioReference(resultRow, contents);
+        } else {
+          String colorizedContents = HtmlTable.colorize(contents);
+          resultRow.add(colorizedContents);
+        }
       }
+    }
+
+    private void addColorizedScenarioReference(TestResponse.Row resultRow, String contents) {
+      String status = getTestStatus(contents);
+      String tableName = getTableName(contents);
+      resultRow.add(String.format("%s(scenario:%s)", status, tableName));
+    }
+
+    private String getTableName(String contents) {
+      return getStringBetween(contents, "table_name=\"", "\"");
+    }
+
+    private static String getTestStatus(String contents) {
+      return getStringBetween(contents, "<span id=\"test_status\" class=", ">Scenario</span>");
+    }
+
+    private static String getStringBetween(String contents, String prefix, String suffix) {
+      int start = contents.indexOf(prefix) + prefix.length();
+      int end = contents.indexOf(suffix, start);
+      return contents.substring(start, end);
+    }
+
+    private boolean isScenarioHtml(String contents) {
+      return contents.startsWith("<div class=\"collapse_rim\">");
     }
 
     private void addInstructionResults() {
@@ -391,6 +474,7 @@ public abstract class XmlFormatter extends BaseFormatter {
         return exceptions;
       }
     }
+
 
     public static class Table extends ArrayList<Row>{
       private static final long serialVersionUID = 1L;
