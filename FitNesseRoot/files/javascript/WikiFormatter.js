@@ -6,6 +6,8 @@ function WikiFormatter()
    * a chunk of text with those tables it collected formatted.
    */
   this.format = function(wikiText) {
+    this.wikificationPrevention = false;
+    
     var formatted = "";
     var currentTable = [];
     var lines = wikiText.split("\n");
@@ -51,6 +53,11 @@ function WikiFormatter()
       formatted += "\n";
     }
 
+    if(this.wikificationPrevention) {
+      formatted = '!|' + formatted.substr(2);
+      this.wikificationPrevention = false;
+    }
+
     return formatted;
   }
 
@@ -82,7 +89,7 @@ function WikiFormatter()
   }
 
   this.isTableRow = function(line) {
-    return line.indexOf('|') == 0;
+    return line.match(/^\||!\|.*/);
   }
 
   this.splitRows = function(rows) {
@@ -97,6 +104,12 @@ function WikiFormatter()
 
   this.splitRow = function(row) {
     var columns = this.trim(row).split('|');
+
+    if(!this.wikificationPrevention && columns[0] == '!') {
+      this.wikificationPrevention = true;
+      columns[1] = '!' + columns[1]; //leave a placeholder
+    }
+
     columns = columns.slice(1, columns.length - 1);
 
     this.each(columns, function(column, i) {
