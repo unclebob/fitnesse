@@ -29,6 +29,28 @@ function testFormat()
   assertEquals(expected, formatter.format(original));
 }
 
+function testFormatOnWikificationPreventedTable()
+{
+  var original = "!|cell1|cell2|cell3|\n"
+               + "|value11|value22|value33|\n";
+               
+  var expected = "!|cell1 |cell2  |cell3  |\n"
+               + "|value11|value22|value33|\n";
+               
+  assertEquals(expected, formatter.format(original));
+}
+
+function testFormatOnWikificationPreventedTableWhenFirstColumnInFirstRowIsLongerThanTheOthers()
+{
+  var original = "!|cell1|cell2|cell3|\n"
+               + "|v1|v2|v3|\n";
+               
+  var expected = "!|cell1|cell2|cell3|\n"
+               + "|v1    |v2   |v3   |\n";
+               
+  assertEquals(expected, formatter.format(original));
+}
+
 function testFormatTwoTables()
 {
   var original = "|cell1|cell2|cell3|\n"
