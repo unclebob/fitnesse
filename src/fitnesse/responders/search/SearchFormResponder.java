@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.IGNORED;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,14 +19,17 @@ import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.wiki.WikiPage;
 
 public class SearchFormResponder implements Responder {
+  public static final String EXCLUDE_TEARDOWN = "ExcludeTearDown";
+  public static final String EXCLUDE_SETUP = "ExcludeSetUp";
+  public static final String EXCLUDE_OBSOLETE = "ExcludeObsolete";
   private static final String DON_T_CARE = "Don't care";
-  public static final String EXCLUDE_SET_UP_TEAR_DOWN = "ExcludeSetUpTearDown";
   public static String[] PAGE_TYPE_ATTRIBUTES = { "Normal", "Test", "Suite" };
   public static String[] ACTION_ATTRIBUTES = { "Edit", "Versions",
     "Properties", "Refactor", "WhereUsed", "RecentChanges", "Files", "Search" };
   public static String[] SECURITY_ATTRIBUTES = { WikiPage.SECURE_READ,
     WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST };
   private String resource;
+  public static String IGNORED = "Any";
   public static final String SECURITY = "Security";
   public static final String ACTION = "Action";
   public static final String PAGE_TYPE = "PageType";
@@ -84,14 +86,12 @@ public class SearchFormResponder implements Responder {
   }
 
   private HtmlTag makePropertiesForm() throws Exception {
-    // todo: uncomment
     HtmlTag form = HtmlUtil.makeFormTag("post", resource);
-    //    HtmlTag form = HtmlUtil.makeFormTag("get", resource);
     form.add(HtmlUtil.makeInputTag("hidden", "responder",
     "executeSearchProperties"));
 
     HtmlTag twosection = new HtmlTag("div");
-    twosection.addAttribute("style", "height: 210px;");
+    twosection.addAttribute("style", "height: 150px;");
 
     twosection.add(makeSuitesSelectionHtml());
     twosection.add(makeExclusionsAndSubmitSection());
@@ -117,11 +117,11 @@ public class SearchFormResponder implements Responder {
     HtmlTag exclusionsTable = generateTable("Exclusions");
     HtmlTag row = new HtmlTag("tr");
     HtmlTag cell = new HtmlTag("td");
-    cell.add(makeCheckboxWithDescription("ExcludeObsolete", "Obsolete tests"));
+    cell.add(makeCheckboxWithDescription(EXCLUDE_OBSOLETE, "Obsolete tests"));
     cell.add(HtmlUtil.BR);
-    cell.add(makeCheckboxWithDescription("ExcludeSetUp", "SetUp pages"));
+    cell.add(makeCheckboxWithDescription(EXCLUDE_SETUP, "SetUp pages"));
     cell.add(HtmlUtil.BR);
-    cell.add(makeCheckboxWithDescription("ExcludeTearDown", "TearDown pages"));
+    cell.add(makeCheckboxWithDescription(EXCLUDE_TEARDOWN, "TearDown pages"));
     cell.add(HtmlUtil.BR);
     row.add(cell);
     exclusionsTable.add(row);
@@ -190,7 +190,7 @@ public class SearchFormResponder implements Responder {
     for (String attributeName : attributes) {
       HtmlTag option = new HtmlTag("option");
       if (DON_T_CARE.equals(attributeName)) {
-        option.addAttribute("value", IGNORED);
+        option.addAttribute("value", SearchFormResponder.IGNORED);
       }
       if (selected.contains(attributeName)) {
         option.addAttribute("selected", "selected");
@@ -215,8 +215,8 @@ public class SearchFormResponder implements Responder {
 
     HtmlTag textArea = new HtmlTag("textarea");
     textArea.addAttribute("name", PropertiesResponder.SUITES);
-    textArea.addAttribute("cols", "35");
-    textArea.addAttribute("rows", "10");
+    textArea.addAttribute("cols", "20");
+    textArea.addAttribute("rows", "3");
     textArea.add(""); // this makes the textarea render correctly w/o filling in
     // the remaining text into it
     HtmlTag column = new HtmlTag("tr");
