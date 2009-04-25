@@ -8,7 +8,6 @@ import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
-import fitnesse.slimTables.HtmlTable;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
@@ -31,6 +30,8 @@ public abstract class XmlFormatter extends BaseFormatter {
   private TestSystem testSystem;
   private FileWriter fileWriter;
   private static long testTime;
+  private TestSummary finalSummary = new TestSummary();
+  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
 
   public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
     super(context, page);
@@ -55,6 +56,7 @@ public abstract class XmlFormatter extends BaseFormatter {
 
   public void processTestResults(final String relativeTestName, TestSummary testSummary)
     throws Exception {
+    finalSummary = new TestSummary(testSummary);
     currentResult = new TestResponse.TestResult();
     testResponse.results.add(currentResult);
     currentResult.content = outputBuffer.toString();
@@ -102,16 +104,21 @@ public abstract class XmlFormatter extends BaseFormatter {
       context.rootPath,
       context.rootDirectoryName,
       page.getPageCrawler().getFullPath(page).toString(),
-      makeResultFileName()));
+      makeResultFileName(getFinalSummary())));
     File resultDirectory = new File(resultPath.getParent());
     resultDirectory.mkdirs();
     File resultFile = new File(resultDirectory, resultPath.getName());
     fileWriter = new FileWriter(resultFile);
   }
 
-  public static String makeResultFileName() {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy_MM/dd_HH_mm_ss");
-    return format.format(new Date(getTime())) + ".xml";
+  protected TestSummary getFinalSummary() {
+    return finalSummary;
+  }
+
+  public static String makeResultFileName(TestSummary summary) {
+    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    String datePart = format.format(new Date(getTime()));
+    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.right, summary.wrong, summary.ignores, summary.exceptions);
   }
 
   private Writer getWriter() {

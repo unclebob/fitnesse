@@ -33,6 +33,7 @@ import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
+import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -273,5 +274,9 @@ public class ResponderFactoryTest extends TestCase {
   private void assertResponderTypeMatchesInput(String responderType, Class<?> responderClass) throws Exception {
     request.addInput("responder", responderType);
     assertResponderType(responderClass, root);
+  }
+
+  public void testTestHistoryResponder() throws Exception {
+     assertResponderTypeMatchesInput("testHistory", TestHistoryResponder.class);
   }
 }

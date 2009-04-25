@@ -119,7 +119,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
     finishOutputForTest();
     
-    getAssertionCounts().tally(testSummary);
+    getAssertionCounts().add(testSummary);
     
     switchCssSuffix();
     HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);
@@ -133,6 +133,10 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     pageCounts.tallyPageCounts(testSummary);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, mainDiv.html(2));
     writeData(insertScript.html());
+  }
+
+  protected TestSummary getFinalSummary() {
+    return pageCounts;
   }
   
   private void finishOutputForTest() throws Exception {

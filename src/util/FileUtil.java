@@ -158,6 +158,8 @@ public class FileUtil {
     SortedSet<File> dirSet = new TreeSet<File>();
     SortedSet<File> fileSet = new TreeSet<File>();
     File[] files = dir.listFiles();
+    if (files == null)
+      return new File[0];
     for (int i = 0; i < files.length; i++) {
       if (files[i].isDirectory())
         dirSet.add(files[i]);
