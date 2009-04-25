@@ -15,6 +15,13 @@ public class TestSummary {
     this.exceptions = exceptions;
   }
 
+  public TestSummary(TestSummary testSummary) {
+    this.right = testSummary.right;
+    this.wrong = testSummary.wrong;
+    this.ignores = testSummary.ignores;
+    this.exceptions = testSummary.exceptions;
+  }
+
   public TestSummary() {
   }
 
@@ -24,13 +31,6 @@ public class TestSummary {
         wrong + " wrong, " +
         ignores + " ignored, " +
         exceptions + " exceptions";
-  }
-
-  public void tally(TestSummary source) {
-    right += source.right;
-    wrong += source.wrong;
-    ignores += source.ignores;
-    exceptions += source.exceptions;
   }
 
   public boolean equals(Object o) {

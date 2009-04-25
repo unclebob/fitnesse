@@ -236,7 +236,7 @@ public class TestResponderTest {
   @Test
   public void slimXmlFormat() throws Exception {
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist();
+    ensureXmlResultFileDoesNotExist(new TestSummary(2,1,0,0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
@@ -245,9 +245,10 @@ public class TestResponderTest {
   }
 
 
-  private void ensureXmlResultFileDoesNotExist() {
+  private void ensureXmlResultFileDoesNotExist(TestSummary counts) {
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
-    String resultsFileName = String.format("%s/%s/files/testResults/TestPage/2008_12/05_01_19_00.xml", context.rootPath, context.rootDirectoryName);
+    String resultsFileName = String.format("%s/%s/files/testResults/TestPage/20081205011900_%d_%d_%d_%d.xml",
+      context.rootPath, context.rootDirectoryName, counts.right, counts.wrong, counts.ignores, counts.exceptions);
     xmlResultsFile = new File(resultsFileName);
 
     if (xmlResultsFile.exists())
@@ -452,7 +453,7 @@ public class TestResponderTest {
 
   @Test
   public void testDoSimpleSlimTable() throws Exception {
-    ensureXmlResultFileDoesNotExist();
+    ensureXmlResultFileDoesNotExist(new TestSummary(2,0,0,0));
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);

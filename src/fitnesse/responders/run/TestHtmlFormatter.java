@@ -80,7 +80,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   public void processTestResults(WikiPage test, TestSummary testSummary)
     throws Exception {
-    getAssertionCounts().tally(testSummary);
+    getAssertionCounts().add(testSummary);
     xmlFormatter.processTestResults(test, testSummary);
   }
 
