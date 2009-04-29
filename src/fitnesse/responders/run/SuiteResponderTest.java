@@ -4,11 +4,11 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static junit.framework.Assert.fail;
 import org.junit.After;
@@ -21,6 +21,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 public class SuiteResponderTest {
   private MockRequest request;
@@ -54,7 +57,7 @@ public class SuiteResponderTest {
     responder.turnOffChunkingForTests();
     responder.setFastTest(true);
     responder.page = suite;
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
 
     receiver = new FitSocketReceiver(0, context.socketDealer);
   }
@@ -74,6 +77,7 @@ public class SuiteResponderTest {
   @After
   public void tearDown() throws Exception {
     receiver.close();
+    FitNesseUtil.destroyTestContext();
   }
 
   private String runSuite() throws Exception {
@@ -309,6 +313,28 @@ public class SuiteResponderTest {
     }
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
     assertCounts(finalCounts, "2", "0", "0", "0");
+  }
+
+  @Test
+  public void normalSuiteRunProducesTestResultFile() throws Exception {
+    context.shouldCollectHistory = true;
+    TestSummary counts = new TestSummary(2,0,0,0);
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/%s/files/testResults/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+      context.rootPath, context.rootDirectoryName, counts.right, counts.wrong, counts.ignores, counts.exceptions);
+    File xmlResultsFile = new File(resultsFileName);
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+
+    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+    String results = runSuite();
+
+    assertTrue(xmlResultsFile.exists());
+    FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
+    Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
+    xmlResultsStream.close();
+    xmlResultsFile.delete();
   }
 
   @Test
