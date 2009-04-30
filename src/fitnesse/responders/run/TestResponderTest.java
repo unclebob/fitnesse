@@ -13,6 +13,7 @@ import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
 import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import static junit.framework.Assert.assertNotNull;
@@ -27,6 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
+import util.FileUtil;
 import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
@@ -51,14 +53,15 @@ public class TestResponderTest {
 
   @Before
   public void setUp() throws Exception {
+    File testDir = new File("TestDir");
+    testDir.mkdir();
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
     request = new MockRequest();
     responder = new TestResponder();
     responder.setFastTest(true);
-    context = new FitNesseContext(root);
-
+    context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
     context.port = receiver.receiveSocket();
   }
@@ -66,6 +69,7 @@ public class TestResponderTest {
   @After
   public void tearDown() throws Exception {
     receiver.close();
+    FitNesseUtil.destroyTestContext();
   }
 
   @Test
@@ -235,6 +239,7 @@ public class TestResponderTest {
 
   @Test
   public void slimXmlFormat() throws Exception {
+    context.shouldCollectHistory = true;
     request.addInput("format", "xml");
     ensureXmlResultFileDoesNotExist(new TestSummary(2,1,0,0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
@@ -252,7 +257,7 @@ public class TestResponderTest {
     xmlResultsFile = new File(resultsFileName);
 
     if (xmlResultsFile.exists())
-      xmlResultsFile.delete();
+      FileUtil.deleteFile(xmlResultsFile);
   }
 
   private Document getXmlFromFileAndDeleteFile() throws Exception {
@@ -260,7 +265,7 @@ public class TestResponderTest {
     FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
     Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
     xmlResultsStream.close();
-    xmlResultsFile.delete();
+    FileUtil.deleteFile(xmlResultsFile);
     return xmlDoc;
   }
 
@@ -452,7 +457,8 @@ public class TestResponderTest {
   }
 
   @Test
-  public void testDoSimpleSlimTable() throws Exception {
+  public void checkHistoryForSimpleSlimTable() throws Exception {
+    context.shouldCollectHistory = true;
     ensureXmlResultFileDoesNotExist(new TestSummary(2,0,0,0));
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();

@@ -13,7 +13,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   private CompositeExecutionLog log = null;
   private HtmlPage htmlPage = null;
   private boolean wasInterupted = false;
-  XmlFormatter xmlFormatter;
+  BaseFormatter xmlFormatter = BaseFormatter.NULL;
 
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
@@ -21,7 +21,13 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
                            final HtmlPageFactory pageFactory) throws Exception {
     super(context, page);
     this.pageFactory = pageFactory;
-    xmlFormatter = new XmlFormatter(context, page) {
+    if (context.shouldCollectHistory) {
+      xmlFormatter = makeXmlFormatter(context, page);
+    }
+  }
+
+  protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
+    return new XmlFormatter(context, page) {
       protected void close() throws Exception {
       }
 
@@ -44,8 +50,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     htmlPage.main.use(HtmlPage.BreakPoint);
     htmlPage.divide();
     writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
-    if (xmlFormatter != null)
-      xmlFormatter.writeHead(pageType);
+    xmlFormatter.writeHead(pageType);
   }
 
   private HtmlTag makeSummaryPlaceHolder() {

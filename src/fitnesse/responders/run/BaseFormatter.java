@@ -9,7 +9,7 @@ public abstract class BaseFormatter implements ResultsListener {
 
   protected final WikiPage page;
   protected FitNesseContext context;
-
+  public static final BaseFormatter NULL = new NullFormatter();
   public abstract void writeHead(String pageType) throws Exception;
 
   public abstract void allTestingComplete() throws Exception;
@@ -32,5 +32,43 @@ public abstract class BaseFormatter implements ResultsListener {
   }
   
   public void announceNumberTestsToRun(int testsToRun) {
+  }
+}
+
+class NullFormatter extends BaseFormatter {
+  NullFormatter() {
+    super(null, null);
+  }
+
+  public void allTestingComplete() throws Exception {
+  }
+
+  protected WikiPage getPage() {
+    return null;
+  }
+
+  public void errorOccured() {
+
+  }
+
+  public void announceNumberTestsToRun(int testsToRun) {
+  }
+
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+  }
+
+  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  }
+
+  public void announceStartNewTest(WikiPage test) throws Exception {
+  }
+
+  public void processTestOutput(String output) throws Exception {
+  }
+
+  public void processTestResults(WikiPage test, TestSummary testSummary) throws Exception {
+  }
+
+  public void writeHead(String pageType) throws Exception {
   }
 }

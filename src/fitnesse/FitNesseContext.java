@@ -30,6 +30,7 @@ public class FitNesseContext {
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
   private VelocityEngine velocityEngine;
+  public boolean shouldCollectHistory = false;
 
   public FitNesseContext() {
     this(null);

@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import junit.framework.TestCase;
 import fitnesse.Arguments;
+import junit.framework.TestCase;
 
 public class ArgumentsTest extends TestCase {
   private Arguments args;
@@ -28,6 +28,7 @@ public class ArgumentsTest extends TestCase {
     assertEquals(false, args.isOmittingUpdates());
     assertEquals(14, args.getDaysTillVersionsExpire());
     assertEquals(null, args.getUserpass());
+    assertFalse(args.isOmittingHistory());
   }
 
   public void testArgumentsAlternates() throws Exception {
@@ -61,8 +62,13 @@ public class ArgumentsTest extends TestCase {
     assertEquals("directory", args.getRootPath());
     assertEquals("root", args.getRootDirectory());
     assertEquals("myLogDirectory", args.getLogDirectory());
-    assertTrue(!args.isOmittingUpdates());
+    assertFalse(args.isOmittingUpdates());
+  }
 
+  public void testOmitHistory() throws Exception {
+    args = makeArgs(new String[]{"-h"});
+    assertNotNull(args);
+    assertTrue(args.isOmittingHistory());
   }
 
   public void testBadArgument() throws Exception {
