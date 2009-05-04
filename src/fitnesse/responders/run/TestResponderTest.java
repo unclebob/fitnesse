@@ -252,8 +252,8 @@ public class TestResponderTest {
 
   private void ensureXmlResultFileDoesNotExist(TestSummary counts) {
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
-    String resultsFileName = String.format("%s/%s/files/testResults/TestPage/20081205011900_%d_%d_%d_%d.xml",
-      context.rootPath, context.rootDirectoryName, counts.right, counts.wrong, counts.ignores, counts.exceptions);
+    String resultsFileName = String.format("%s/TestPage/20081205011900_%d_%d_%d_%d.xml",
+      context.getTestHistoryDirectory(), counts.right, counts.wrong, counts.ignores, counts.exceptions);
     xmlResultsFile = new File(resultsFileName);
 
     if (xmlResultsFile.exists())

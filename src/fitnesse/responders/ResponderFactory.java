@@ -29,6 +29,7 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.responders.testHistory.TestHistoryResponder;
+import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
@@ -87,6 +88,7 @@ public class ResponderFactory {
     addResponder("getPage", WikiPageResponder.class);
     addResponder("packet", PacketResponder.class);
     addResponder("testHistory", TestHistoryResponder.class);
+    addResponder("pageHistory", PageHistoryResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {

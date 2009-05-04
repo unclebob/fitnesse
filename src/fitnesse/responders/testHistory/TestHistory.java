@@ -3,13 +3,15 @@ package fitnesse.responders.testHistory;
 import util.FileUtil;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class TestHistory {
   Map<String, File> pageDirectoryMap = new HashMap<String, File>();
 
   public void readHistoryDirectory(File historyDirectory) {
-    File [] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
+    File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
     for (File file : pageDirectories)
       if (file.isDirectory())
         pageDirectoryMap.put(file.getName(), file);
@@ -20,8 +22,15 @@ public class TestHistory {
   }
 
   public PageHistory getPageHistory(String pageName) {
-    PageHistory pageHistory = new PageHistory(pageDirectoryMap.get(pageName));
-
-    return pageHistory;
+    File pageHistoryDirectory = pageDirectoryMap.get(pageName);
+    if (pageHistoryDirectory == null)
+      return null;
+    else {
+      PageHistory pageHistory = new PageHistory(pageHistoryDirectory);
+      if (pageHistory.size() == 0)
+        return null;
+      else
+        return pageHistory;
+    }
   }
 }

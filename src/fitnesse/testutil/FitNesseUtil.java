@@ -45,6 +45,7 @@ public class FitNesseUtil {
   public static FitNesseContext makeTestContext(WikiPage root) {
     FitNesseContext context = new FitNesseContext(root);
     context.rootDirectoryName = "TestDir";
+    context.setRootPagePath();
     VelocityEngine engine = new VelocityEngine();
     engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
     context.setVelocityEngine(engine);

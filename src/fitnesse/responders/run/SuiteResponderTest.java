@@ -320,8 +320,8 @@ public class SuiteResponderTest {
     context.shouldCollectHistory = true;
     TestSummary counts = new TestSummary(2,0,0,0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
-    String resultsFileName = String.format("%s/%s/files/testResults/SuitePage/20081205011900_%d_%d_%d_%d.xml",
-      context.rootPath, context.rootDirectoryName, counts.right, counts.wrong, counts.ignores, counts.exceptions);
+    String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+      context.getTestHistoryDirectory(), counts.right, counts.wrong, counts.ignores, counts.exceptions);
     File xmlResultsFile = new File(resultsFileName);
 
     if (xmlResultsFile.exists())
@@ -330,7 +330,7 @@ public class SuiteResponderTest {
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
 
-    assertTrue(xmlResultsFile.exists());
+    assertTrue(resultsFileName, xmlResultsFile.exists());
     FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
     Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
     xmlResultsStream.close();

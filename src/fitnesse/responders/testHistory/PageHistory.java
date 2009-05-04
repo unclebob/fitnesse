@@ -15,6 +15,7 @@ public class PageHistory {
   private int passes = 0;
   private Date minDate = null;
   private Date maxDate = null;
+  private int maxAssertions = 0;
   private BarGraph barGraph;
   private final HashMap<Date, PageTestSummary> summaryMap = new HashMap<Date, PageTestSummary>();
 
@@ -37,7 +38,7 @@ public class PageHistory {
     List<Date> dates = new ArrayList<Date>(summaryMap.keySet());
     Collections.sort(dates, reverseChronologicalDateComparator());
     barGraph = new BarGraph();
-    for (int i=0; i<dates.size() && i < 20; i++) {
+    for (int i = 0; i < dates.size() && i < 20; i++) {
       barGraph.addSummary(get(dates.get(i)));
     }
   }
@@ -61,6 +62,12 @@ public class PageHistory {
     summaryMap.put(summary.getDate(), summary);
     countResult(summary);
     setMinMaxDate(summary.getDate());
+    setMaxAssertions(summary);
+  }
+
+  private void setMaxAssertions(PageTestSummary summary) {
+    int assertions = summary.right + summary.wrong + summary.exceptions;
+    maxAssertions = Math.max(maxAssertions, assertions);
   }
 
   private PageTestSummary summaryFromFilename(String fileName) throws ParseException {
@@ -119,6 +126,30 @@ public class PageHistory {
     return summaryMap.get(key);
   }
 
+  public int maxAssertions() {
+    return maxAssertions;
+  }
+
+  public SortedSet<Date> datesInChronologicalOrder() {
+    Set<Date> dates = summaryMap.keySet();
+    SortedSet<Date> sortedDates = new TreeSet<Date>(dates);
+    return sortedDates;
+  }
+
+  public PassFailBar getPassFailBar(Date date, int maxUnits) {
+    PageTestSummary summary = summaryMap.get(date);
+    int fail = summary.wrong + summary.exceptions;
+    double unitsPerAssertion = (double)maxUnits/(double)maxAssertions;
+    int unitsForThisTest = (int)Math.round((fail + summary.right) * unitsPerAssertion);
+    double doubleFailUnits = fail * unitsPerAssertion;
+    int failUnits = (int) doubleFailUnits;
+    
+    if (Math.abs(doubleFailUnits - failUnits) > .001)
+      failUnits++;
+    int passUnits = unitsForThisTest - failUnits;
+    return new PassFailBar(summary.right, fail, passUnits, failUnits);
+  }
+
   public static class PageTestSummary extends TestSummary {
     private Date date;
 
@@ -130,6 +161,11 @@ public class PageHistory {
     public Date getDate() {
       return date;
     }
+  }
+
+  public static String formatDate(String format, Date date) {
+    SimpleDateFormat fmt = new SimpleDateFormat(format);
+    return fmt.format(date);
   }
 
 
@@ -148,11 +184,6 @@ public class PageHistory {
 
     public String formatEndingDate(String format) {
       return formatDate(format, endingDate);
-    }
-
-    private String formatDate(String format, Date date) {
-      SimpleDateFormat fmt = new SimpleDateFormat(format);
-      return fmt.format(date);
     }
 
     public Date getEndingDate() {
@@ -184,6 +215,36 @@ public class PageHistory {
 
     public Boolean[] passFailArray() {
       return passFailList.toArray(new Boolean[passFailList.size()]);
+    }
+  }
+
+  public class PassFailBar {
+    private int passUnits;
+    private int failUnits;
+    private int pass;
+    private int fail;
+
+    public PassFailBar(int pass, int fail, int passUnits, int failUnits) {
+      this.pass = pass;
+      this.fail = fail;
+      this.passUnits = passUnits;
+      this.failUnits = failUnits;
+    }
+
+    public int getPassUnits() {
+      return passUnits;
+    }
+
+    public int getFailUnits() {
+      return failUnits;
+    }
+
+    public int getPass() {
+      return pass;
+    }
+
+    public int getFail() {
+      return fail;
     }
   }
 }
