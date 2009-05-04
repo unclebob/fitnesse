@@ -27,6 +27,7 @@ public class TestHistoryResponderTest {
   private SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
   private TestHistoryResponder responder;
   private SimpleResponse response;
+  private FitNesseContext context;
 
   @Before
   public void setup() throws Exception {
@@ -36,10 +37,11 @@ public class TestHistoryResponderTest {
     history = new TestHistory();
     responder = new TestHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
+    context = new FitNesseContext();
   }
 
   private void makeResponse() throws Exception {
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+    response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
   }
 
   private void removeResultsDirectory() {
@@ -87,7 +89,7 @@ public class TestHistoryResponderTest {
     addPageDirectory("SomePage");
     history.readHistoryDirectory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
-    assertEquals(0, pageHistory.size());
+    assertNull(pageHistory);
   }
 
   @Test
@@ -131,15 +133,6 @@ public class TestHistoryResponderTest {
     assertEquals(new TestSummary(1, 0, 0, 0), pageHistory.get(dateFormat.parse("20090418000000")));
     assertEquals(new TestSummary(1, 1, 0, 0), pageHistory.get(dateFormat.parse("20090419000000")));
     assertEquals(new TestSummary(1, 0, 0, 1), pageHistory.get(dateFormat.parse("20090417000000")));
-  }
-
-  @Test
-  public void barGraphForPageDirectoryWithNoResultsShouldBeEmpty() throws Exception {
-    addPageDirectory("SomePage");
-    history.readHistoryDirectory(resultsDirectory);
-    PageHistory pageHistory = history.getPageHistory("SomePage");
-    BarGraph barGraph = pageHistory.getBarGraph();
-    assertEquals(0, barGraph.size());
   }
 
   @Test
@@ -231,7 +224,7 @@ public class TestHistoryResponderTest {
     responder.setResultsDirectory(null);
     responder.generateNullResponseForTest();
     makeResponse();
-    assertEquals("/files/testResults", responder.getResultsDirectory().getPath());
+    assertEquals(context.getTestHistoryDirectory().getPath(), responder.getResultsDirectory().getPath());
   }
 
   @Test

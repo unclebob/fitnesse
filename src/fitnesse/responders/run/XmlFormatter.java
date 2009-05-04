@@ -99,9 +99,8 @@ public abstract class XmlFormatter extends BaseFormatter {
 
   private void makeFileWriter() throws Exception {
     if (context.shouldCollectHistory) {
-      File resultPath = new File(String.format("%s/%s/files/testResults/%s/%s",
-        context.rootPath,
-        context.rootDirectoryName,
+      File resultPath = new File(String.format("%s/%s/%s",
+        context.getTestHistoryDirectory(),
         page.getPageCrawler().getFullPath(page).toString(),
         makeResultFileName(getFinalSummary())));
       File resultDirectory = new File(resultPath.getParent());

@@ -1,5 +1,7 @@
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||13:17:48 Thu, Apr 23, 2009|
-|FitNesse.SuiteAcceptanceTests||10:33:17 Thu, Apr 16, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.TestPageHistory||19:10:20 Sun, May 03, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests||19:02:36 Sun, May 03, 2009|
+|FitNesse.SuiteAcceptanceTests||18:49:26 Sun, May 03, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||13:27:13 Sun, May 03, 2009|
 |FitNesse.UserGuide.RestfulTests||14:23:54 Mon, Apr 13, 2009|
 |JunkParent.RubyTests.ConstructorSymbols||10:45:34 Sat, Apr 11, 2009|
 |JunkParent.CreateAndWait||10:38:22 Sat, Apr 11, 2009|
@@ -96,5 +98,3 @@
 |FitNesse.UserGuide.DebuggingFitNesseTables||16:15:00 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.ComparisonExpressionsInFixtures||16:07:03 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.BuildOperateCheck||16:04:36 Thu, Mar 26, 2009|
-|FitNesse.UserGuide.ActionFixtureCode||16:00:25 Thu, Mar 26, 2009|
-|FitNesse.UserGuide.AcceptanceTestPatterns.BuildOperateCheck||15:58:52 Thu, Mar 26, 2009|

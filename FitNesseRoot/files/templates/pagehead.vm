@@ -1,0 +1,19 @@
+<html>
+<head>
+  <title>Test History</title>
+  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
+  <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="art_niche" onclick="document.location='FrontPage'"></div>
+  <div class="actions"></div>
+</div>
+<div class="mainbar">
+  <div class="header">
+    <span class="page_title">$page_title</span>
+  </div>
+
+  <div class="main">

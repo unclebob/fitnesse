@@ -12,6 +12,8 @@ import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.app.VelocityEngine;
 
+import java.io.File;
+
 public class FitNesseContext {
   public FitNesse fitnesse;
   public int port = 80;
@@ -72,5 +74,13 @@ public class FitNesseContext {
 
   public void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
+  }
+
+  public  File getTestHistoryDirectory() {
+    return new File(String.format("%s/files/testResults", rootPagePath));
+  }
+
+  public  void setRootPagePath() {
+    rootPagePath =  rootPath + "/" + rootDirectoryName;
   }
 }

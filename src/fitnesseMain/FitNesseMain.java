@@ -43,7 +43,7 @@ public class FitNesseMain {
     context.rootPath = arguments.getRootPath();
     ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
     context.rootDirectoryName = arguments.getRootDirectory();
-    context.rootPagePath = context.rootPath + "/" + context.rootDirectoryName;
+    context.setRootPagePath();
     String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     if (defaultNewPageContent != null)
       context.defaultNewPageContent = defaultNewPageContent;

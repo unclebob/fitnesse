@@ -17,7 +17,7 @@ public class TestHistoryResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     if (resultsDirectory == null)
-      resultsDirectory = new File(String.format("%s/files/testResults", context.rootPagePath));
+      resultsDirectory = context.getTestHistoryDirectory();
     SimpleResponse response = new SimpleResponse();
     if (!generateNullResponseForTest) {
       TestHistory history = new TestHistory();
