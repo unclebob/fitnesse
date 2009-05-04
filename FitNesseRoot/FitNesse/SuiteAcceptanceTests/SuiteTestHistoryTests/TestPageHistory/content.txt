@@ -1,8 +1,0 @@
-!|page history|
-|name|date|right|wrong|ignores|exceptions|
-|TestPage|5 May 09 13:00|20|30|0|0|
-
-!|get history for page|TestPage|
-|check|number of results is|1|
-|check|bar for|5 May 09 13:00|right|20|
-|check bar for|5 May 09 13:00|wrong|30|

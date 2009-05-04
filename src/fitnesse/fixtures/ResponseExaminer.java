@@ -23,6 +23,12 @@ public class ResponseExaminer extends ColumnFixture {
     return Utils.escapeHTML(sentData);
   }
 
+  public String html() throws Exception {
+    String sentData = FitnesseFixtureContext.sender.sentData();
+    int headerEnd = sentData.indexOf("\r\n\r\n");
+    return sentData.substring(headerEnd+4); 
+  }
+
   public String fullContents() throws Exception {
     return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
   }

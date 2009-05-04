@@ -1,0 +1,10 @@
+!|scenario|get history for page|page|
+|check|request page|@page?pageHistory|200|
+|show|content|
+
+!|scenario|the number of page histories should be|number|
+|check|count of tag|TR|with id prefix|pageHistoryRow|@number|
+
+!|scenario|the page history bar for|date|should have|number|elements that|class|
+|$date=|page history date signature of|@date|
+|check|count of tag|TD|with id|element|and with class|@class|below tag|TR|with id prefix|pageHistoryRow_$date|@number|

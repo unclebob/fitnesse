@@ -5,24 +5,33 @@ package fitnesse.fixtures;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import static fitnesse.fixtures.FitnesseFixtureContext.*;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
+
+import java.io.File;
+
+import util.FileUtil;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {
     //TODO - MdM - There's got to be a better way.
     WikiImportTestEventListener.register();
 
-    FitnesseFixtureContext.root = InMemoryPage.makeRoot("RooT");
-    FitnesseFixtureContext.responderFactory = new ResponderFactory(FitnesseFixtureContext.baseDir + "/RooT/");
-    FitnesseFixtureContext.context = new FitNesseContext(FitnesseFixtureContext.root);
-    FitnesseFixtureContext.context.responderFactory = FitnesseFixtureContext.responderFactory;
-    FitnesseFixtureContext.context.port = 9123;
-    FitnesseFixtureContext.context.rootPagePath = FitnesseFixtureContext.baseDir;
-    FitnesseFixtureContext.fitnesse = new FitNesse(FitnesseFixtureContext.context, false);
+    root = InMemoryPage.makeRoot("RooT");
+    responderFactory = new ResponderFactory(baseDir + "/RooT/");
+    context = new FitNesseContext(root);
+    context.responderFactory = responderFactory;
+    context.port = 9123;
+    context.rootPagePath = baseDir;
+    fitnesse = new FitNesse(context, false);
+    File historyDirectory = context.getTestHistoryDirectory();
+    if (historyDirectory.exists())
+      FileUtil.deleteFileSystemDirectory(historyDirectory);
+    historyDirectory.mkdirs();
     SaveRecorder.clear();
-    FitnesseFixtureContext.fitnesse.start();
+    fitnesse.start();
   }
 }
