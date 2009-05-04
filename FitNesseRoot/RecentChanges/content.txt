@@ -1,3 +1,11 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.StopTestException||21:15:11 Mon, May 04, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||21:35:28 Mon, Apr 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||24:03:22 Mon, Apr 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ClareTest||23:37:00 Sun, Apr 26, 2009|
+|FitNesse.SuiteAcceptanceTests.ClareTest||20:30:49 Wed, Apr 22, 2009|
+|FrontPage.ClareTest3||22:11:37 Mon, Apr 20, 2009|
+|FrontPage.ClareTest||21:28:40 Mon, Apr 20, 2009|
+|FrontPage.ClareTest2||21:28:24 Mon, Apr 20, 2009|
 |JunkPage||13:15:56 Sun, Apr 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.TestRssResponder||12:44:36 Sun, Apr 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteVersionResponder.TestUsenameInVersionList||12:42:47 Sun, Apr 05, 2009|
@@ -45,7 +53,6 @@
 |FitNesse.UserGuide.SubWiki||12:28:03 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.SliM.SymbolsInTables||12:20:05 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.SliM.ScenarioTable||12:16:49 Fri, Mar 27, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||12:12:37 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.RowFixtureCode||11:51:49 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PreDefinedVariables||11:48:56 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PluginUsage||11:45:08 Fri, Mar 27, 2009|
@@ -91,10 +98,3 @@
 |FitNesse.FitNesse||12:38:36 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.OneMinuteDescription||10:31:15 Thu, Mar 26, 2009|
 |FitNesse.DeliveringTheRightSystem||09:56:01 Thu, Mar 26, 2009|
-|FitNesse.FiveMinuteIntroduction||09:53:39 Thu, Mar 26, 2009|
-|FitNesse.FixtureCode||09:52:53 Thu, Mar 26, 2009|
-|FitNesse.UserGuide.FitNesse||09:52:05 Thu, Mar 26, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests||09:51:27 Sat, Mar 21, 2009|
-|ErrorLogs||07:47:09 Sat, Mar 21, 2009|
-|FitNesse.DownloadingAndInstallingFitNesse||09:38:27 Thu, Mar 19, 2009|
-|FitNesse.RestfulTests||12:35:59 Wed, Mar 18, 2009|

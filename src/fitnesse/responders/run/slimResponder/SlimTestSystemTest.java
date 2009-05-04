@@ -249,6 +249,21 @@ public class SlimTestSystemTest {
   }
 
   @Test
+  public void tableWithStopTestExceptionThrown() throws Exception {
+    getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+      "|throwNormal?| throwStopping? |\n" +
+      "| true       | true           |\n" +
+      "| should fail1| true           |\n" + 
+      "\n\n" +
+      "!|DT:fitnesse.slim.test.ThrowException|\n" +
+      "|throwNormal?|\n" +
+      "| should fail2|\n"
+    );
+    assertTestResultsContain("<td>should fail1 <span class=\"fail\">Test not executed</span></td>");
+    assertTestResultsContain("<td>should fail2 <span class=\"fail\">Test not executed</span></td>");
+  }
+  
+  @Test
   public void tableWithSymbolSubstitution() throws Exception {
     getResultsForPageContents(
       "!|DT:fitnesse.slim.test.TestSlim|\n" +
