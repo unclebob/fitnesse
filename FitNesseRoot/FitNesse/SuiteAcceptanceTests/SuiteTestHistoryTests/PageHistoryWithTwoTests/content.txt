@@ -7,7 +7,7 @@
 |get history for page|TestPage|
 |the number of page histories should be|2|
 
-|the page history bar for should have elements that|
+|the page history bar for|date|should have|n|elements of class|class|
 |date|number|class|
 |5-May-2009|10|pass|
 |5-May-2009|15|fail|
