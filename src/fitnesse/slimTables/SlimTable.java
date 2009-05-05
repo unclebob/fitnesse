@@ -137,7 +137,7 @@ public abstract class SlimTable {
     return disgracedFixtureName;
   }
 
-  private String getFixtureName(String tableHeader) {
+  protected String getFixtureName(String tableHeader) {
     if (tableHeader.indexOf(":") == -1)
       return tableHeader;
     return tableHeader.split(":")[1];
