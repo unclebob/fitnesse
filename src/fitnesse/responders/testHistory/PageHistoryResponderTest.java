@@ -192,7 +192,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td class=\"pass\">03 May, 09 11:04</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"pass\">03 May, 09 11:04</td>", response.getContent());
   }
 
   @Test
@@ -202,7 +202,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_0");
 
     makeResponse();
-    assertHasRegexp("<td class=\"fail\">03 May, 09 11:04</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"fail\">03 May, 09 11:04</td>", response.getContent());
   }
 
   @Test
@@ -212,8 +212,8 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_1");
 
     makeResponse();
-    assertHasRegexp("<td class=\"fail\">2</td>", response.getContent());
-    assertHasRegexp("<td class=\"pass\">6</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"fail\">2</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"pass\">6</td>", response.getContent());
   }
 
   @Test
@@ -223,8 +223,8 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_0_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td class=\"ignore\">0</td>", response.getContent());
-    assertHasRegexp("<td class=\"ignore\">0</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"ignore\">0</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"ignore\">0</td>", response.getContent());
   }
 
   @Test

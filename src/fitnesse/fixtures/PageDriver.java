@@ -110,6 +110,32 @@ public class PageDriver {
     return matches.size();
   }
 
+  public String valueOfTagWithIdIs(String id) throws Exception {
+    return getValueOfTagWithAttributeValue("id", id);
+  }
+
+  private String getValueOfTagWithAttributeValue(String attribute, String value) throws Exception {
+    NodeList matches = getMatchingTags(new HasAttributeFilter(attribute, value));
+    if (matches.size() != 1)
+      return String.format("There are %d matches, there should be 1.", matches.size());
+    else
+      return matches.elementAt(0).toHtml();
+  }
+
+  public String valueOfTagWithClassIs(String classValue) throws Exception {
+    return getValueOfTagWithAttributeValue("class", classValue);  
+  }
+
+  public boolean contentOfTagWithIdContains(String id, String contents) throws Exception {
+    String html = getValueOfTagWithAttributeValue("id", id);
+    return (html.indexOf(contents) != -1);
+  }
+
+  public String contentOfTagWithId(String id) throws Exception {
+    return getValueOfTagWithAttributeValue("id", id);
+  }
+
+
   private static class HasAttributePrefixFilter extends HasAttributeFilter {
     public HasAttributePrefixFilter(String attribute, String prefix) {
       super(attribute, prefix);

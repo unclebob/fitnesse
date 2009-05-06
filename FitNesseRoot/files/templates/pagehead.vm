@@ -12,8 +12,5 @@
   <div class="actions"></div>
 </div>
 <div class="mainbar">
-  <div class="header">
-    <span class="page_title">$page_title</span>
-  </div>
-
+  #if($pageTitle)#parse("pageTitle.vm")#end
   <div class="main">

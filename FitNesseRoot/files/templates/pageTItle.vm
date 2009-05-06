@@ -1,0 +1,9 @@
+<div class="header">
+  #foreach($breadCrumb in $pageTitle.BreadCrumbs)
+  <a class="bread_crumb" href="/$breadCrumb.Link">$breadCrumb.Name</a>.
+  #end
+  #if($pageTitle.Link)<br/><span class="page_title"><a href="/$pageTitle.Link">$pageTitle.Title</a></span>
+  #else<span class="page_title">$pageTitle.Title</span>#end
+  <br/>
+  #if($pageTitle.PageType)<span class="page_type">$pageTitle.PageType</span>#end
+</div>
