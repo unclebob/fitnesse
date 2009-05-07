@@ -2,6 +2,8 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.wiki.PathParser;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -23,7 +25,7 @@ public class PageHistoryResponder implements Responder {
     String pageName = request.getResource();
     PageHistory pageHistory= history.getPageHistory(pageName);
     VelocityContext velocityContext = new VelocityContext();
-    velocityContext.put("pageName", pageName);
+    velocityContext.put("pageTitle", makePageTitle(request.getResource()));
     velocityContext.put("pageHistory", pageHistory);
     Template template = context.getVelocityEngine().getTemplate("pageHistory.vm");
     StringWriter writer = new StringWriter();
@@ -34,7 +36,12 @@ public class PageHistoryResponder implements Responder {
 
   }
 
+  private PageTitle makePageTitle(String resource) {
+    return new PageTitle("Test History", PathParser.parse(resource));
+  }
+
   public void setResultsDirectory(File resultsDirectory) {
     this.resultsDirectory = resultsDirectory;
   }
+
 }

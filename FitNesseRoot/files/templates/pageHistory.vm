@@ -10,11 +10,11 @@
   </tr>
   #set($dates = $pageHistory.datesInChronologicalOrder())
   #foreach($date in $dates)
-    <tr id="pageHistoryRow_$pageHistory.formatDate("yyyyMMddHHmmss",$date)>
+    <tr id="pageHistoryRow_$pageHistory.formatDate("yyyyMMddHHmmss",$date)">
       #set($bar = $pageHistory.getPassFailBar($date, 50))
-      <td class=#if($bar.Fail==0)"pass"#else"fail"#end>$pageHistory.formatDate("dd MMM, yy HH:mm", $date)</td>
-      <td class=#if($bar.Pass==0)"ignore"#else"pass"#end>$bar.Pass</td>
-      <td class=#if($bar.Fail==0)"ignore"#else"fail"#end>$bar.Fail</td>
+      <td id="date_field" class=#if($bar.Fail>0)"fail"#elseif($bar.Pass>0)"pass"#else"ignore"#end>$pageHistory.formatDate("dd MMM, yy HH:mm", $date)</td>
+      <td id="pass_count" class=#if($bar.Pass==0)"ignore"#else"pass"#end>$bar.Pass</td>
+      <td id="fail_count" class=#if($bar.Fail==0)"ignore"#else"fail"#end>$bar.Fail</td>
       #if($bar.PassUnits > 0)#foreach($barsegment in [1..$bar.PassUnits])<td id="element" class="pass">&nbsp</td>#end#end
       #if($bar.FailUnits > 0)#foreach($barsegment in [1..$bar.FailUnits])<td id="element" class="fail">&nbsp</td>#end#end
       #set($ignores=50-($bar.PassUnits+$bar.FailUnits))
@@ -24,6 +24,6 @@
   #end
 </table>
 #else
-<h2>No history for page: $pageName</h2>
+<h2>No history for page: $pageTitle.Title</h2>
 #end
   #parse("pagefooter.vm")
