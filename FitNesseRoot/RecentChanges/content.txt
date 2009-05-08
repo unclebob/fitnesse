@@ -1,6 +1,10 @@
+|FitNesse.UserGuide.SliM.ExceptionHandling||16:53:03 Fri, May 08, 2009|
+|FitNesse.UserGuide.SliM.SlimProtocol||16:46:23 Fri, May 08, 2009|
+|FitNesse.UserGuide.SliM||16:19:11 Fri, May 08, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TempTest||22:25:19 Thu, May 07, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||22:21:53 Thu, May 07, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.StopTestException||21:15:11 Mon, May 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||21:35:28 Mon, Apr 27, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||24:03:22 Mon, Apr 27, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ClareTest||23:37:00 Sun, Apr 26, 2009|
 |FitNesse.SuiteAcceptanceTests.ClareTest||20:30:49 Wed, Apr 22, 2009|
 |FrontPage.ClareTest3||22:11:37 Mon, Apr 20, 2009|
@@ -14,7 +18,6 @@
 |JunkParent||09:38:28 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.JunkTests||09:30:35 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.DummyPage||09:14:25 Sat, Apr 04, 2009|
-|FitNesse.UserGuide.SliM.SlimProtocol||09:11:29 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.DummyPage.MultiByteCharsRubySlim||08:55:36 Sat, Apr 04, 2009|
 |FitNesse||04:53:40 Sat, Apr 04, 2009|
 |||04:53:02 Sat, Apr 04, 2009|
@@ -95,6 +98,3 @@
 |FitNesse.UserGuide.AcceptanceTestPatterns.BuildOperateCheck||15:58:52 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.MarkupContents||15:50:26 Thu, Mar 26, 2009|
 |FitNesse.UserGuide.TwoMinuteExample||13:40:49 Thu, Mar 26, 2009|
-|FitNesse.FitNesse||12:38:36 Thu, Mar 26, 2009|
-|FitNesse.UserGuide.OneMinuteDescription||10:31:15 Thu, Mar 26, 2009|
-|FitNesse.DeliveringTheRightSystem||09:56:01 Thu, Mar 26, 2009|
