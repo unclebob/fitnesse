@@ -75,10 +75,10 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<h2 class=\"centered\">Test System: Slim:very.slim</h2>", results);
 
     assertSubString("<div class=\"test_output_name\">", results);
-    assertSubString("<a href=\"FullName\" id=\"RelativeName1\">RelativeName</a>", results);
+    assertSubString("<a href=\"FullName\" id=\"RelativeName1\" class=\"test_name\">RelativeName</a>", results);
     assertSubString("<div class=\"alternating_block_1\">starting output</div>", results);
 
-    assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\">NewRelativeName</a>", results);
+    assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\" class=\"test_name\">NewRelativeName</a>", results);
     assertSubString("<div class=\"alternating_block_2\">second test</div>", results);
   }
   
