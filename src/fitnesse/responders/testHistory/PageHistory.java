@@ -30,7 +30,8 @@ public class PageHistory {
   private void compileHistoryFromPageDirectory(File pageDirectory) throws ParseException {
     File[] resultFiles = FileUtil.getDirectoryListing(pageDirectory);
     for (File file : resultFiles)
-      compileResultFileIntoHistory(file);
+      if (!file.isDirectory())
+        compileResultFileIntoHistory(file);
     compileBarGraph();
   }
 
@@ -74,11 +75,11 @@ public class PageHistory {
     String parts[] = fileName.split("_|\\.");
     Date date = dateFormat.parse(parts[0]);
     PageTestSummary summary = new PageTestSummary(
-      date,
-      Integer.parseInt(parts[1]),
-      Integer.parseInt(parts[2]),
-      Integer.parseInt(parts[3]),
-      Integer.parseInt(parts[4]));
+        date,
+        Integer.parseInt(parts[1]),
+        Integer.parseInt(parts[2]),
+        Integer.parseInt(parts[3]),
+        Integer.parseInt(parts[4]));
     return summary;
   }
 
@@ -143,7 +144,7 @@ public class PageHistory {
     int unitsForThisTest = (int)Math.round((fail + summary.right) * unitsPerAssertion);
     double doubleFailUnits = fail * unitsPerAssertion;
     int failUnits = (int) doubleFailUnits;
-    
+
     if (Math.abs(doubleFailUnits - failUnits) > .001)
       failUnits++;
     int passUnits = unitsForThisTest - failUnits;
