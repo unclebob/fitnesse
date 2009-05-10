@@ -3,6 +3,7 @@ package fitnesse.wikitext.widgets;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
@@ -14,7 +15,7 @@ import org.junit.Test;
 public class TodayWidgetTest {
   @Before
   public void setup() {
-    TodayWidget.todayForTest = new GregorianCalendar(1952, 11, 5, 1, 13, 23);  //GDTH unix date!!!  Eleven == Dec
+    TodayWidget.todayForTest = new GregorianCalendar(1952, Calendar.DECEMBER, 5, 1, 13, 23);  //GDTH unix date!!!  Eleven == Dec
   }
 
   @After
@@ -71,7 +72,7 @@ public class TodayWidgetTest {
 
   @Test
   public void subtractOneDay() throws Exception {
-    assertRenders("!today -1", "04 Dec, 1952");    
+    assertRenders("!today -1", "04 Dec, 1952");
   }
 
   @Test
@@ -91,7 +92,7 @@ public class TodayWidgetTest {
 
   @Test
   public void formatPlusOneDay() throws Exception {
-    assertRenders("!today (ddMMM) +1", "06Dec");    
+    assertRenders("!today (ddMMM) +1", "06Dec");
   }
 
 }
