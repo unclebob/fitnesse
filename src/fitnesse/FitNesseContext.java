@@ -12,11 +12,13 @@ import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.app.VelocityEngine;
 
+import java.io.File;
+
 public class FitNesseContext {
   public FitNesse fitnesse;
   public int port = 80;
   public String rootPath = ".";
-  public String rootPageName = "FitNesseRoot";
+  public String rootDirectoryName = "FitNesseRoot";
   public String rootPagePath = "";
   public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
   public WikiPage root;
@@ -30,6 +32,7 @@ public class FitNesseContext {
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
   private VelocityEngine velocityEngine;
+  public boolean shouldCollectHistory = false;
 
   public FitNesseContext() {
     this(null);
@@ -42,7 +45,7 @@ public class FitNesseContext {
   public VelocityEngine getVelocityEngine() {
     if (velocityEngine == null) {
       velocityEngine = new VelocityEngine();
-      String templatePath = String.format("%s/%s/files/templates", rootPath, rootPageName);
+      String templatePath = String.format("%s/%s/files/templates", rootPath, rootDirectoryName);
       velocityEngine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, templatePath);
       try {
         velocityEngine.init();
@@ -71,5 +74,13 @@ public class FitNesseContext {
 
   public void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
+  }
+
+  public  File getTestHistoryDirectory() {
+    return new File(String.format("%s/files/testResults", rootPagePath));
+  }
+
+  public  void setRootPagePath() {
+    rootPagePath =  rootPath + "/" + rootDirectoryName;
   }
 }

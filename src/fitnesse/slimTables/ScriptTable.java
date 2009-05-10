@@ -2,15 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
+import fitnesse.wikitext.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 public class ScriptTable extends SlimTable {
   private Matcher symbolAssignmentMatcher;
@@ -33,7 +34,7 @@ public class ScriptTable extends SlimTable {
   }
 
   private boolean isScript() {
-    return "script".equalsIgnoreCase(table.getCellContents(0,0));
+    return "script".equalsIgnoreCase(table.getCellContents(0, 0));
   }
 
   private void appendInstructionForRow(int row) {
@@ -110,14 +111,14 @@ public class ScriptTable extends SlimTable {
 
   private void checkAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
-    String expected = table.getCellContents(lastColInAction, row);
+    table.getCellContents(lastColInAction, row);
     addExpectation(new ReturnedValueExpectation(getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
 
   private void checkNotAction(int row) {
     int lastColInAction = table.getColumnCountInRow(row) - 1;
-    String expected = table.getCellContents(lastColInAction, row);
+    table.getCellContents(lastColInAction, row);
     addExpectation(new RejectedValueExpectation(getInstructionTag(), lastColInAction, row));
     invokeAction(1, lastColInAction - 1, row);
   }
@@ -205,7 +206,7 @@ public class ScriptTable extends SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       try {
-        table.appendCellToRow(getRow(), actual);
+        table.appendCellToRow(getRow(), Utils.escapeHTML(actual));
       } catch (Throwable e) {
         return failMessage(actual, SlimTestSystem.exceptionToString(e));
       }
@@ -220,7 +221,7 @@ public class ScriptTable extends SlimTable {
 
     public void evaluateExpectation(Map<String, Object> returnValues) {
       String originalContent = table.getCellContents(getCol(), getRow());
-        table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(originalContent));
+      table.setCell(getCol(), getRow(), replaceSymbolsWithFullExpansion(originalContent));
     }
 
     protected String createEvaluationMessage(String actual, String expected) {

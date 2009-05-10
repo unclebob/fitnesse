@@ -46,6 +46,7 @@ public class SuiteResponder extends TestResponder {
   protected void performExecution() throws Exception {
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, getSuiteFilter());
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatter);
+    runner.setDebug(isRemoteDebug());
     runner.executeTestPages();
   }
 

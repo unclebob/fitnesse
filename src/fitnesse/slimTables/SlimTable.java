@@ -21,7 +21,7 @@ public abstract class SlimTable {
   protected Table table;
   private SlimTestContext testContext;
   protected String id;
-  protected String tableName;
+  private String tableName;
   private int instructionNumber = 0;
   protected List<Object> instructions;
   protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
@@ -41,14 +41,17 @@ public abstract class SlimTable {
     return parent;
   }
 
-  public void addChildTable(SlimTable table, int row) throws Exception {
-    table.id = id + "." + children.size();
-    table.tableName = table.tableName + "." + children.size();
-    table.parent = this;
-    children.add(table);
+  public void addChildTable(SlimTable slimtable, int row) throws Exception {
+    slimtable.id = id + "." + children.size();
+    slimtable.tableName = makeInstructionTag(instructionNumber)+"/"+slimtable.tableName;
+    instructionNumber++;
+    slimtable.parent = this;
+    children.add(slimtable);
 
-    Table t = getTable();
-    t.appendCellToRow(row, table.getTable());
+    Table parentTable = getTable();
+    Table childTable = slimtable.getTable();
+    childTable.setName(slimtable.tableName);
+    parentTable.appendCellToRow(row, childTable);
   }
 
   public SlimTable getChild(int i) {
@@ -97,7 +100,7 @@ public abstract class SlimTable {
     return makeInstructionTag(instructionNumber);
   }
 
-  protected String getTableName() {
+  public String getTableName() {
     return tableName;
   }
 
@@ -135,7 +138,7 @@ public abstract class SlimTable {
     return disgracedFixtureName;
   }
 
-  private String getFixtureName(String tableHeader) {
+  protected String getFixtureName(String tableHeader) {
     if (tableHeader.indexOf(":") == -1)
       return tableHeader;
     return tableHeader.split(":")[1];
@@ -245,7 +248,7 @@ public abstract class SlimTable {
   }
 
   protected ReturnedValueExpectation makeReturnedValueExpectation(
-    String expected, String instructionTag, int col, int row) {
+    String instructionTag, int col, int row) {
     return new ReturnedValueExpectation(instructionTag, col, row);
   }
 
@@ -319,6 +322,10 @@ public abstract class SlimTable {
     for (int col = 0; col < cols; col++)
       rowList.add(table.getCellContents(col, row));
     return rowList;
+  }
+
+  public List<SlimTable> getChildren() {
+    return children;
   }
 
   static class Disgracer {
@@ -472,7 +479,7 @@ public abstract class SlimTable {
     }
 
     public String getEvaluationMessage() {
-      return evaluationMessage;
+      return evaluationMessage == null ? "" : evaluationMessage;
     }
   }
 

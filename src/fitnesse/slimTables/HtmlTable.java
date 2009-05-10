@@ -45,6 +45,10 @@ public class HtmlTable implements Table {
     return tableNode;
   }
 
+  public void setName(String tableName) {
+    tableNode.setAttribute("table_name", tableName);
+  }
+
   public String getCellContents(int columnIndex, int rowIndex) {
     return rows.get(rowIndex).getColumn(columnIndex).getContent();
   }
@@ -286,6 +290,13 @@ public class HtmlTable implements Table {
       Node lastCell = cells.elementAt(cells.size() - 1);
       Tag statusNode = findById(lastCell, "test_status");
       statusNode.setAttribute("class", testStatus ? "pass" : "fail");
+      for (int i=0; i<cells.size(); i++) {
+        Node cell = cells.elementAt(i);
+        if (cell instanceof Tag) {
+          Tag tag = (Tag) cell;
+          tag.setAttribute("class", testStatus ? "pass" : "fail");
+        }
+      }
     }
 
     private Tag findById(Node node, String id) {

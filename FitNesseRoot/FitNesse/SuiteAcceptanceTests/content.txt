@@ -11,10 +11,11 @@
 |>SuiteSymbolicLinkTests|''Demonstrate usage and behavior of symbolic links''|
 |>SuiteFitDecoratorTests|''Demonstrate usage and behavior of Fit Decorators''|
 |>SuiteSlimTests|''Slim Specific Tests''|
+|>SuiteTestHistoryTests|''Test History tests''|
 
 !2 ''Classpaths''
 !path classes
-!path lib/fitlibrary.jar
+!path lib/*.jar
 ----
 !2 ''Port''
 FitNesse is running on port: ${FITNESSE_PORT}

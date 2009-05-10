@@ -53,7 +53,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     List<Object> expectedInstructions =
       list(
-        list("scriptTable_id.0_0", "call", "scriptTableActor", "function", "7")
+        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "function", "7")
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -70,8 +70,8 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     List<Object> expectedInstructions =
       list(
-        list("scriptTable_id.0_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
-        list("scriptTable_id.1_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
+        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bob", "xyzzy", "7734"),
+        list("scriptTable_id_1/scriptTable_s_id_0", "call", "scriptTableActor", "loginWithPasswordAndPin", "bill", "yabba", "8892")
       );
     assertEquals(expectedInstructions, instructions);
   }
@@ -88,7 +88,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_id.0_0", "7")
+        list("scriptTable_id_0/scriptTable_s_id_0", "7")
       )
     );
 
@@ -117,7 +117,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_id.0_0", "7")
+        list("scriptTable_id_0/scriptTable_s_id_0", "7")
       )
     );
     evaluateExpectations(pseudoResults);
@@ -147,7 +147,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
         list("scriptTable_id_0", "7"),
-        list("scriptTable_id.0_0", "7")
+        list("scriptTable_id_1/scriptTable_s_id_0", "7")
       )
     );
 
@@ -170,7 +170,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_id.0_0", "7")
+        list("scriptTable_id_0/scriptTable_s_id_0", "7")
       )
     );
 
@@ -193,7 +193,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     );
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("scriptTable_id.0_0", "7")
+        list("scriptTable_id_0/scriptTable_s_id_0", "7")
       )
     );
 

@@ -22,8 +22,8 @@ public class FitNesseUtil {
     context.root = root;
     context.port = port;
     context.rootPath = "TestDir";
-    context.rootPageName = root.getName();
-    context.rootPagePath = context.rootPath + "/" + context.rootPageName;
+    context.rootDirectoryName = root.getName();
+    context.rootPagePath = context.rootPath + "/" + context.rootDirectoryName;
     context.responderFactory = new ResponderFactory(context.rootPagePath);
     VelocityEngine engine = new VelocityEngine();
     engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
@@ -40,5 +40,19 @@ public class FitNesseUtil {
   public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
     VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
     ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
+  }
+
+  public static FitNesseContext makeTestContext(WikiPage root) {
+    FitNesseContext context = new FitNesseContext(root);
+    context.rootDirectoryName = "TestDir";
+    context.setRootPagePath();
+    VelocityEngine engine = new VelocityEngine();
+    engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
+    context.setVelocityEngine(engine);
+    return context;
+  }
+
+  public static void destroyTestContext() {
+    FileUtil.deleteFileSystemDirectory("TestDir");
   }
 }

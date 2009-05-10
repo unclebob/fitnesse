@@ -49,6 +49,7 @@ public class UpdaterImplementation implements Updater {
       new ReplacingFileUpdate(this, "files/javascript/clientSideSort.js", "files/javascript"),
       new ReplacingFileUpdate(this, "files/javascript/SpreadsheetTranslator.js", "files/javascript"),
       new ReplacingFileUpdate(this, "files/javascript/spreadsheetSupport.js", "files/javascript"),
+      new ReplacingFileUpdate(this, "files/templates/testResults.vm", "files/templates"),
       new PropertiesToXmlUpdate(this),
       new AttributeAdderUpdate(this, "RecentChanges"),
       new AttributeAdderUpdate(this, "WhereUsed"),

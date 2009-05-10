@@ -18,6 +18,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private final WikiPage page;
   private final List<WikiPage> testPagesToRun;
   private boolean isFastTest = false;
+  private boolean isRemoteDebug = false;
 
   private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
   private WikiPage currentTest = null;
@@ -28,6 +29,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private String stopId = null;
 
   private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
+    private static final long serialVersionUID = 1L;
   }
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
@@ -38,6 +40,10 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     this.resultsListener = resultsListener;
     this.page = page;
     this.fitNesseContext = fitNesseContext;
+  }
+  
+  public void setDebug(boolean isDebug) {
+    this.isRemoteDebug = isDebug;
   }
 
   public void setFastTest(boolean isFastTest) {
@@ -132,7 +138,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage testPage) throws Exception {
-    Descriptor descriptor = TestSystem.getDescriptor(testPage.getData());
+    Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), isRemoteDebug);
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 

@@ -2,6 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.IGNORED;
+import java.util.Arrays;
+import java.util.List;
+
+import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
@@ -15,13 +20,20 @@ import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.wiki.WikiPage;
 
 public class SearchFormResponder implements Responder {
-  public static final String ATTRIBUTE = "Attribute";
-  public static final String SELECTED = "Selected";
-  public static final String VALUE = "Value";
+  private static final String DON_T_CARE = "Don't care";
   public static final String EXCLUDE_SET_UP_TEAR_DOWN = "ExcludeSetUpTearDown";
+  public static String[] PAGE_TYPE_ATTRIBUTES = { "Normal", "Test", "Suite" };
+  public static String[] ACTION_ATTRIBUTES = { "Edit", "Versions",
+    "Properties", "Refactor", "WhereUsed", "RecentChanges", "Files", "Search" };
+  public static String[] SECURITY_ATTRIBUTES = { WikiPage.SECURE_READ,
+    WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST };
   private String resource;
+  public static final String SECURITY = "Security";
+  public static final String ACTION = "Action";
+  public static final String PAGE_TYPE = "PageType";
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request)
+  throws Exception {
     resource = request.getResource();
     SimpleResponse response = new SimpleResponse();
     response.setContent(makeSearchForm(context));
@@ -72,36 +84,87 @@ public class SearchFormResponder implements Responder {
   }
 
   private HtmlTag makePropertiesForm() throws Exception {
+    // todo: uncomment
     HtmlTag form = HtmlUtil.makeFormTag("post", resource);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "executeSearchProperties"));
+    //    HtmlTag form = HtmlUtil.makeFormTag("get", resource);
+    form.add(HtmlUtil.makeInputTag("hidden", "responder",
+    "executeSearchProperties"));
+
+    HtmlTag twosection = new HtmlTag("div");
+    twosection.addAttribute("style", "height: 210px;");
+
+    twosection.add(makeSuitesSelectionHtml());
+    twosection.add(makeExclusionsAndSubmitSection());
+    form.add(twosection);
 
     HtmlTag trisection = new HtmlTag("div");
-    trisection.addAttribute("style", "height: 300px");
 
-    trisection.add(makeAttributeSelectionHtml("Page Type", WikiPage.PAGE_TYPE_ATTRIBUTES));
-    trisection.add(makeAttributeSelectionHtml("Action", WikiPage.ACTION_ATTRIBUTES));
-    trisection.add(makeAttributeSelectionHtml("Navigation", WikiPage.NAVIGATION_ATTRIBUTES));
-    trisection.add(makeAttributeSelectionHtml("Security", WikiPage.SECURITY_ATTRIBUTES));
-    trisection.add(makeSuitesSelectionHtml());
+    trisection.add(makeAttributeSelectionHtml(PAGE_TYPE, PAGE_TYPE_ATTRIBUTES,
+        PAGE_TYPE_ATTRIBUTES));
+    trisection
+    .add(makeDontCareAttributeSelectionHtml(ACTION, ACTION_ATTRIBUTES));
+    trisection.add(makeDontCareAttributeSelectionHtml(SECURITY,
+        SECURITY_ATTRIBUTES));
     form.add(trisection);
 
-    form.add(HtmlUtil.BR);
-    form.add(makeSetUpTearDownSelectionHtml());
-
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.makeInputTag("submit", "Search", "Search Properties"));
     return form;
   }
 
-  public HtmlTag makeAttributeSelectionHtml(String propertyType, String[] attributes) throws Exception {
+  private HtmlTag makeExclusionsAndSubmitSection() throws Exception {
     HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; width: 300px;");
+    div.addAttribute("style", "float: left; width: 180px;");
 
-    HtmlTag table = new HtmlTag("table");
-    table.addAttribute("cellspacing", "1");
-    table.addAttribute("border", "0");
-    table.add(makeHeaderRow("Search?", propertyType, "Value"));
-    makeAttributeSelectionHtml(table, attributes);
+    HtmlTag exclusionsTable = generateTable("Exclusions");
+    HtmlTag row = new HtmlTag("tr");
+    HtmlTag cell = new HtmlTag("td");
+    cell.add(makeCheckboxWithDescription("ExcludeObsolete", "Obsolete tests"));
+    cell.add(HtmlUtil.BR);
+    cell.add(makeCheckboxWithDescription("ExcludeSetUp", "SetUp pages"));
+    cell.add(HtmlUtil.BR);
+    cell.add(makeCheckboxWithDescription("ExcludeTearDown", "TearDown pages"));
+    cell.add(HtmlUtil.BR);
+    row.add(cell);
+    exclusionsTable.add(row);
+
+    div.add(exclusionsTable);
+
+    div.add(HtmlUtil.BR);
+    div.add(HtmlUtil.makeInputTag("submit", "Search", "Search Properties"));
+
+    return div;
+  }
+
+  private HtmlTag makeCheckboxWithDescription(String attributeName,
+      String description) {
+    HtmlTag item;
+    item = HtmlUtil.makeInputTag("checkbox", attributeName);
+    item.add(description);
+    return item;
+  }
+
+  private HtmlTag generateTable(String headerText) {
+    HtmlTag pageTypeTable = new HtmlTag("table");
+    pageTypeTable.addAttribute("cellspacing", "1");
+    pageTypeTable.addAttribute("border", "0");
+    pageTypeTable.add(makeHeaderRow(headerText));
+    return pageTypeTable;
+  }
+
+  private HtmlTag makeDontCareAttributeSelectionHtml(String propertyType,
+      String[] attributes) throws Exception {
+    String[] dontCare = { DON_T_CARE };
+    return makeAttributeSelectionHtml(propertyType, StringUtil.combineArrays(
+        dontCare, attributes), dontCare);
+  }
+
+  public HtmlTag makeAttributeSelectionHtml(String propertyType,
+      String[] attributes, String[] selection) throws Exception {
+    HtmlTag div = new HtmlTag("div");
+    div.addAttribute("style", "float: left; width: 150px;");
+
+    HtmlTag table = generateTable(propertyType);
+    makeAttributeSelectionHtml(table, propertyType, attributes, Arrays
+        .asList(selection));
     div.add(table);
 
     return div;
@@ -115,14 +178,28 @@ public class SearchFormResponder implements Responder {
     return row;
   }
 
-  private void makeAttributeSelectionHtml(HtmlTag table, String[] attributes) throws Exception {
+  private void makeAttributeSelectionHtml(HtmlTag table, String propertyType,
+      String[] attributes, List<String> selected) throws Exception {
+    HtmlTag row = new HtmlTag("tr");
+    HtmlTag selection = new HtmlTag("select");
+    selection.addAttribute("name", propertyType);
+    selection.addAttribute("id", propertyType);
+    selection.addAttribute("multiple", "multiple");
+    selection.addAttribute("size", Integer.toString(attributes.length));
+
     for (String attributeName : attributes) {
-      HtmlTag row = new HtmlTag("tr");
-      row.add(makeRowCell(makeSelectionCheckbox(attributeName, ATTRIBUTE + SELECTED)));
-      row.add(makeRowCell(" " + attributeName + " "));
-      row.add(makeRowCell(makeSelectionCheckbox(attributeName, VALUE)));
-      table.add(row);
+      HtmlTag option = new HtmlTag("option");
+      if (DON_T_CARE.equals(attributeName)) {
+        option.addAttribute("value", IGNORED);
+      }
+      if (selected.contains(attributeName)) {
+        option.addAttribute("selected", "selected");
+      }
+      option.add(attributeName);
+      selection.add(option);
     }
+    row.add(makeRowCell(selection));
+    table.add(row);
   }
 
   private HtmlTag makeRowCell(HtmlTag content) throws Exception {
@@ -131,29 +208,25 @@ public class SearchFormResponder implements Responder {
     return cell;
   }
 
-  private HtmlTag makeRowCell(String content) throws Exception {
-    HtmlTag cell = new HtmlTag("td");
-    cell.add(content);
-    return cell;
-  }
-
-  private HtmlTag makeSelectionCheckbox(String attributeName, String selection) throws Exception {
-    return HtmlUtil.makeInputTag("checkbox", attributeName + selection);
-  }
-
-  private HtmlTag makeSuitesSelectionHtml() {
+  private HtmlTag makeSuitesSelectionHtml() throws Exception {
     HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left;");
-    div.add("Tags:");
-    div.add(HtmlUtil.BR);
-    div.add(HtmlUtil.makeInputTag("checkbox", PropertiesResponder.SUITES + SELECTED));
-    div.add(HtmlUtil.makeInputTag("text", PropertiesResponder.SUITES, ""));
+    div.addAttribute("style", "float: left; margin-right: 20px");
+    HtmlTag suitesTable = generateTable("Tags");
+
+    HtmlTag textArea = new HtmlTag("textarea");
+    textArea.addAttribute("name", PropertiesResponder.SUITES);
+    textArea.addAttribute("cols", "35");
+    textArea.addAttribute("rows", "10");
+    textArea.add(""); // this makes the textarea render correctly w/o filling in
+    // the remaining text into it
+    HtmlTag column = new HtmlTag("tr");
+    HtmlTag cell = makeRowCell(textArea);
+    cell.addAttribute("style", "padding-right: 15px;");
+    column.add(cell);
+    suitesTable.add(column);
+
+    div.add(suitesTable);
     return div;
   }
 
-  private HtmlTag makeSetUpTearDownSelectionHtml() {
-    HtmlTag checkbox = HtmlUtil.makeInputTag("checkbox", EXCLUDE_SET_UP_TEAR_DOWN);
-    checkbox.tail = "Exclude SetUp and TearDown pages from the search.";
-    return checkbox;
-  }
 }

@@ -2,34 +2,44 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
-import fitnesse.html.TagGroup;
-import fitnesse.responders.WikiImportProperty;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 import fitnesse.FitNesseContext;
+import fitnesse.html.*;
+import fitnesse.responders.WikiImportProperty;
+import fitnesse.wiki.*;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {
-
-  private final HtmlPageFactory pageFactory;
-  private final TestSummary assertionCounts = new TestSummary();
+  private HtmlPageFactory pageFactory;
+  private TestSummary assertionCounts = new TestSummary();
   private CompositeExecutionLog log = null;
   private HtmlPage htmlPage = null;
   private boolean wasInterupted = false;
-  
+  BaseFormatter xmlFormatter = BaseFormatter.NULL;
+
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
   public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
                            final HtmlPageFactory pageFactory) throws Exception {
     super(context, page);
     this.pageFactory = pageFactory;
+    if (context.shouldCollectHistory) {
+      xmlFormatter = makeXmlFormatter(context, page);
+    }
+  }
+
+  protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
+    return new XmlFormatter(context, page) {
+      protected void close() throws Exception {
+      }
+
+      protected void writeData(byte[] byteArray) throws Exception {
+      }
+    };
+  }
+
+  //special constructor for TestRunner.  Used only for formatting.
+  //todo this is nasty coupling. 
+  public TestHtmlFormatter(FitNesseContext context) {
+    super(context, null);
   }
 
   protected abstract void writeData(String output) throws Exception;
@@ -40,6 +50,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     htmlPage.main.use(HtmlPage.BreakPoint);
     htmlPage.divide();
     writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
+    xmlFormatter.writeHead(pageType);
   }
 
   private HtmlTag makeSummaryPlaceHolder() {
@@ -48,7 +59,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
     return testSummaryDiv;
   }
-  
+
   protected void updateSummaryDiv(String html) throws Exception {
     writeData(HtmlUtil.makeReplaceElementScript("test-summary", html).html());
   }
@@ -59,19 +70,23 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   public void announceStartNewTest(WikiPage test) throws Exception {
     writeData(getPage().getData().getHeaderPageHtml());
+    xmlFormatter.announceStartNewTest(test);
   }
 
   public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner)
-      throws Exception {
+    throws Exception {
+    xmlFormatter.announceStartTestSystem(testSystem, testSystemName, testRunner);
   }
 
   public void processTestOutput(String output) throws Exception {
     writeData(output);
+    xmlFormatter.processTestOutput(output);
   }
 
   public void processTestResults(WikiPage test, TestSummary testSummary)
-      throws Exception {
-    getAssertionCounts().tally(testSummary);
+    throws Exception {
+    getAssertionCounts().add(testSummary);
+    xmlFormatter.processTestResults(test, testSummary);
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
@@ -106,7 +121,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     HtmlPage html = pageFactory.newPage();
     html.title.use(pageType + ": " + fullPathName);
     html.header.use(HtmlUtil
-        .makeBreadCrumbsWithPageType(fullPathName, pageType));
+      .makeBreadCrumbsWithPageType(fullPathName, pageType));
     PageData data = getPage().getData();
     html.actions.use(HtmlUtil.makeActions(getPage().getActions()));
     WikiImportProperty.handleImportProperties(html, getPage(), data);
@@ -115,6 +130,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   @Override
   public void allTestingComplete() throws Exception {
+    xmlFormatter.allTestingComplete();
     removeStopTestLink();
     publishAndAddLog();
     finishWritingOutput();
@@ -141,7 +157,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     if (testSummary.wrong > 0 || wasInterupted)
       return "fail";
     else if (testSummary.exceptions > 0
-        || testSummary.right + testSummary.ignores == 0)
+      || testSummary.right + testSummary.ignores == 0)
       return "error";
     else if (testSummary.ignores > 0 && testSummary.right == 0)
       return "ignore";
@@ -158,13 +174,13 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     summaryContent += "<strong>Assertions:</strong> " + assertionCounts.toString();
     return summaryContent;
   }
-  
+
   public String testSummary() throws Exception {
-    String summaryContent  = (wasInterupted) ? TESTING_INTERUPTED : ""; 
+    String summaryContent = (wasInterupted) ? TESTING_INTERUPTED : "";
     summaryContent += makeSummaryContent();
     HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
     script.add("document.getElementById(\"test-summary\").className = \""
-        + cssClassFor(assertionCounts) + "\";");
+      + cssClassFor(assertionCounts) + "\";");
     return script.html();
   }
 

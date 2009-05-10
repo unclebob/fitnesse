@@ -2,14 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import fitnesse.responders.run.slimResponder.SlimTestContext;
+
+import java.util.*;
 
 public class DecisionTable extends SlimTable {
   private static final String instancePrefix = "decisionTable";
@@ -26,13 +21,25 @@ public class DecisionTable extends SlimTable {
   public void appendInstructions() {
     if (table.getRowCount() == 2)
       throw new SyntaxError("DecisionTables should have at least three rows.");
-    String fixtureName = getFixtureName();
-    ScenarioTable scenario = getTestContext().getScenario(fixtureName);
+    String scenarioName = getScenarioName();
+    ScenarioTable scenario = getTestContext().getScenario(scenarioName);
     if (scenario != null) {
       new ScenarioCaller().call(scenario);
     } else {
-      new FixtureCaller().call(fixtureName);
+      new FixtureCaller().call(getFixtureName());
     }
+  }
+
+  private String getScenarioName() {
+    StringBuffer nameBuffer = new StringBuffer();
+    for (int nameCol = 0; nameCol < table.getColumnCountInRow(0); nameCol += 2) {
+      if (nameCol == 0)
+        nameBuffer.append(getFixtureName(table.getCellContents(nameCol, 0)));
+      else
+        nameBuffer.append(table.getCellContents(nameCol, 0));
+      nameBuffer.append(" ");
+    }
+    return Disgracer.disgraceClassName(nameBuffer.toString().trim());
   }
 
   public void evaluateReturnValues(Map<String, Object> returnValues) {
@@ -149,7 +156,7 @@ public class DecisionTable extends SlimTable {
     }
 
     private void setFunctionCallExpectation(int col, int row) {
-      String expectedValue = table.getCellContents(col, row);
+      table.getCellContents(col, row);
       addExpectation(new ReturnedValueExpectation(getInstructionTag(), col, row));
     }
 

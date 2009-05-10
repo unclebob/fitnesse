@@ -1,0 +1,42 @@
+#set ($page_title="Test History")
+#parse("pagehead.vm")
+#set($noHistory = true)
+<table>
+  <tr>
+    <th>Page</th>
+    <th>Pass</th>
+    <th>Fail</th>
+    <th>Latest</th>
+    <th colspan="20">Last 20 Results</th>
+  </tr>
+  #foreach ($page in $testHistory.pageNames)
+  #set ($pageHistory = $testHistory.getPageHistory($page))
+  #if($pageHistory)
+  #set($noHistory = false)
+
+  <tr>
+    #set ($barGraph = $pageHistory.getBarGraph())
+
+    <td>$page</td>
+    <td class=#if($pageHistory.passes == 0)"ignore"
+    #else"pass"#end>$pageHistory.passes</td>
+    <td class=#if($pageHistory.failures==0)"ignore"
+    #else"fail"#end>$pageHistory.failures</td>
+    <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
+    #foreach($passFail in $barGraph.passFailArray())
+    #if($passFail)
+
+    <td class="pass">+</td>
+    #else
+
+    <td class="fail">-</td>
+    #end
+    #end
+
+  </tr>
+  #end
+  #end
+
+</table>
+#if ($noHistory)No History#end
+#parse("pagefooter.vm")

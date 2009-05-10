@@ -3,24 +3,10 @@
 package fitnesse.responders;
 
 
-import java.io.File;
-
-import junit.framework.TestCase;
-import util.FileUtil;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.editing.PropertiesResponder;
-import fitnesse.responders.editing.SavePropertiesResponder;
-import fitnesse.responders.editing.SaveResponder;
-import fitnesse.responders.editing.SymbolicLinkResponder;
-import fitnesse.responders.files.CreateDirectoryResponder;
-import fitnesse.responders.files.DeleteConfirmationResponder;
-import fitnesse.responders.files.DeleteFileResponder;
-import fitnesse.responders.files.FileResponder;
-import fitnesse.responders.files.RenameFileConfirmationResponder;
-import fitnesse.responders.files.RenameFileResponder;
-import fitnesse.responders.files.UploadResponder;
+import fitnesse.responders.editing.*;
+import fitnesse.responders.files.*;
 import fitnesse.responders.refactoring.DeletePageResponder;
 import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
@@ -30,24 +16,28 @@ import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.testHistory.PageHistoryResponder;
+import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
 
-public class ResponderFactoryTest extends TestCase {
+import java.io.File;
+
+public class ResponderFactoryTest {
   private ResponderFactory factory;
   private MockRequest request;
   private WikiPageDummy nonExistantPage;
   private WikiPage root;
   private PageCrawler crawler;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
     factory = new ResponderFactory("testDir");
     request = new MockRequest();
@@ -56,6 +46,7 @@ public class ResponderFactoryTest extends TestCase {
     nonExistantPage = new WikiPageDummy();
   }
 
+  @Test
   public void testGetResponderKey() throws Exception {
     checkResponderKey("railroad", "railroad");
     checkResponderKey("responder=railroad", "railroad");
@@ -68,6 +59,7 @@ public class ResponderFactoryTest extends TestCase {
     assertEquals(key, factory.getResponderKey(request));
   }
 
+  @Test
   public void testWikiPageResponder() throws Exception {
     request.setResource("SomePage");
     assertResponderType(WikiPageResponder.class, root);
@@ -77,18 +69,22 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderType(WikiPageResponder.class, root);
   }
 
+  @Test
   public void testRefactorPageResponder() throws Exception {
     assertResponderTypeMatchesInput("refactor", RefactorPageResponder.class);
   }
 
+  @Test
   public void testDeletePageResponder() throws Exception {
     assertResponderTypeMatchesInput("deletePage", DeletePageResponder.class);
   }
 
+  @Test
   public void testRenamePageResponder() throws Exception {
     assertResponderTypeMatchesInput("renamePage", RenamePageResponder.class);
   }
 
+  @Test
   public void testEditResponder() throws Exception {
     request.addInput("responder", "edit");
     request.setResource("SomePage");
@@ -96,6 +92,7 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderType(EditResponder.class, nonExistantPage);
   }
 
+  @Test
   public void testDontCreatePageResponder() throws Exception {
     request.addInput("responder", "dontCreatePage");
     request.setResource("SomePage");
@@ -103,24 +100,29 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderType(NotFoundResponder.class, nonExistantPage);
   }
 
+  @Test
   public void testPageDataResponder() throws Exception {
     request.addInput("responder", "pageData");
     request.setResource("SomePage");
     assertResponderType(PageDataWikiPageResponder.class, root);
   }
 
+  @Test
   public void testSaveResponder() throws Exception {
     assertResponderTypeMatchesInput("saveData", SaveResponder.class);
   }
 
+  @Test
   public void testTestResponder() throws Exception {
     assertResponderTypeMatchesInput("test", TestResponder.class);
   }
 
+  @Test
   public void testSuiteResponder() throws Exception {
     assertResponderTypeMatchesInput("suite", SuiteResponder.class);
   }
 
+  @Test
   public void testFileResponder() throws Exception {
     try {
       new File("testDir").mkdir();
@@ -133,118 +135,147 @@ public class ResponderFactoryTest extends TestCase {
     }
   }
 
+  @Test
   public void testSearchFormResponder() throws Exception {
     assertResponderTypeMatchesInput("searchForm", SearchFormResponder.class);
   }
 
+  @Test
   public void testSearchResponder() throws Exception {
     assertResponderTypeMatchesInput("search", SearchResponder.class);
   }
 
+  @Test
   public void testSerializedPageResponder() throws Exception {
     assertResponderTypeMatchesInput("proxy", SerializedPageResponder.class);
   }
 
+  @Test
   public void testVersionSelectionResponder() throws Exception {
     assertResponderTypeMatchesInput("versions", VersionSelectionResponder.class);
   }
 
+  @Test
   public void testVersionResponder() throws Exception {
     assertResponderTypeMatchesInput("viewVersion", VersionResponder.class);
   }
 
+  @Test
   public void testRollbackResponder() throws Exception {
     assertResponderTypeMatchesInput("rollback", RollbackResponder.class);
   }
 
+  @Test
   public void testNameReponder() throws Exception {
     assertResponderTypeMatchesInput("names", NameWikiPageResponder.class);
   }
 
+  @Test
   public void testUploadResponder() throws Exception {
     assertResponderTypeMatchesInput("upload", UploadResponder.class);
   }
 
+  @Test
   public void testCreateDirectoryResponder() throws Exception {
     assertResponderTypeMatchesInput("createDir", CreateDirectoryResponder.class);
   }
 
+  @Test
   public void testDeleteFileResponder() throws Exception {
     assertResponderTypeMatchesInput("deleteFile", DeleteFileResponder.class);
   }
 
+  @Test
   public void testRenameFileResponder() throws Exception {
     assertResponderTypeMatchesInput("renameFile", RenameFileResponder.class);
   }
 
+  @Test
   public void testDeleteConfirmationFileResponder() throws Exception {
     assertResponderTypeMatchesInput("deleteConfirmation", DeleteConfirmationResponder.class);
   }
 
+  @Test
   public void testRenameFileConfirmationResponder() throws Exception {
     assertResponderTypeMatchesInput("renameConfirmation", RenameFileConfirmationResponder.class);
   }
 
+  @Test
   public void testCreatePropertiesResponder() throws Exception {
     assertResponderTypeMatchesInput("properties", PropertiesResponder.class);
   }
 
+  @Test
   public void testCreateSavePropertiesResponder() throws Exception {
     assertResponderTypeMatchesInput("saveProperties", SavePropertiesResponder.class);
   }
 
+  @Test
   public void testCreateExecuteSearchPropertiesResponder() throws Exception {
     assertResponderTypeMatchesInput("executeSearchProperties", ExecuteSearchPropertiesResponder.class);
   }
 
+  @Test
   public void testCreateWhereUsedResponder() throws Exception {
     assertResponderTypeMatchesInput("whereUsed", WhereUsedResponder.class);
   }
 
+  @Test
   public void testCreateMovePageResponer() throws Exception {
     assertResponderTypeMatchesInput("movePage", MovePageResponder.class);
   }
 
+  @Test
   public void testSocketCatcher() throws Exception {
     assertResponderTypeMatchesInput("socketCatcher", SocketCatchingResponder.class);
   }
 
+  @Test
   public void testFitClient() throws Exception {
     assertResponderTypeMatchesInput("fitClient", FitClientResponder.class);
   }
 
+  @Test
   public void testRawContent() throws Exception {
     assertResponderTypeMatchesInput("raw", RawContentResponder.class);
   }
 
+  @Test
   public void testRssResponder() throws Exception {
     assertResponderTypeMatchesInput("rss", RssResponder.class);
   }
 
+  @Test
   public void testPageImporterResponder() throws Exception {
     assertResponderTypeMatchesInput("import", WikiImportingResponder.class);
   }
 
+  @Test
   public void testShutdownResponder() throws Exception {
     assertResponderTypeMatchesInput("shutdown", ShutdownResponder.class);
   }
 
+  @Test
   public void testTestResultFormattingResponder() throws Exception {
     assertResponderTypeMatchesInput("format", TestResultFormattingResponder.class);
   }
 
+  @Test
   public void testSymbolicLinkResponder() throws Exception {
     assertResponderTypeMatchesInput("symlink", SymbolicLinkResponder.class);
   }
 
+  @Test
   public void testPacketResponder() throws Exception {
     assertResponderTypeMatchesInput("packet", PacketResponder.class);
   }
 
+  @Test
   public void testStopTestResponder() throws Exception {
     assertResponderTypeMatchesInput("stoptest", StopTestResponder.class);
   }
-  
+
+  @Test
   public void testWillDisplayVirtualPages() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));
@@ -255,11 +286,13 @@ public class ResponderFactoryTest extends TestCase {
     assertResponderType(WikiPageResponder.class, root);
   }
 
+  @Test
   public void testNotFoundResponder() throws Exception {
     request.setResource("somepage");
     assertResponderType(NotFoundResponder.class, root);
   }
 
+  @Test
   public void testAddingResponders() throws Exception {
     factory.addResponder("custom", WikiPageResponder.class);
     assertResponderTypeMatchesInput("custom", WikiPageResponder.class);
@@ -273,5 +306,15 @@ public class ResponderFactoryTest extends TestCase {
   private void assertResponderTypeMatchesInput(String responderType, Class<?> responderClass) throws Exception {
     request.addInput("responder", responderType);
     assertResponderType(responderClass, root);
+  }
+
+  @Test
+  public void testTestHistoryResponder() throws Exception {
+    assertResponderTypeMatchesInput("testHistory", TestHistoryResponder.class);
+  }
+
+  @Test
+  public void testPageHistoryResponder() throws Exception {
+    assertResponderTypeMatchesInput("pageHistory", PageHistoryResponder.class);
   }
 }

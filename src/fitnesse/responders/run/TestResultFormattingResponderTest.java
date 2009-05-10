@@ -91,18 +91,18 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
   }
 
   public void testMockFormatter() throws Exception {
-    checkFormtterCreated(null, MockResultFormatter.class);
+    checkFormatterCreated(null, MockResultFormatter.class);
   }
 
   public void testHtmlFormatter() throws Exception {
-    checkFormtterCreated("html", HtmlResultFormatter.class);
+    checkFormatterCreated("html", HtmlResultFormatter.class);
   }
 
   public void testXmlFormatter() throws Exception {
-    checkFormtterCreated("xml", XmlResultFormatter.class);
+    checkFormatterCreated("xml", XmlResultFormatter.class);
   }
 
-  private void checkFormtterCreated(String format, Class<?> formatterClass) throws Exception {
+  private void checkFormatterCreated(String format, Class<?> formatterClass) throws Exception {
     MockRequest request = new MockRequest();
     request.addHeader("Host", "locahost:8080");
     request.setResource("/");

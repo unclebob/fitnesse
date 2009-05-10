@@ -22,12 +22,17 @@ import util.StreamReader;
 import fitnesse.components.Base64;
 
 public class Request {
-  private static final Pattern requestLinePattern = Pattern.compile("(\\p{Upper}+?) ([^\\s]+)");
-  private static final Pattern requestUriPattern = Pattern.compile("([^?]+)\\??(.*)");
-  private static final Pattern queryStringPattern = Pattern.compile("([^=&]*)=?([^&]*)&?");
+  private static final Pattern requestLinePattern = Pattern
+  .compile("(\\p{Upper}+?) ([^\\s]+)");
+  private static final Pattern requestUriPattern = Pattern
+  .compile("([^?]+)\\??(.*)");
+  private static final Pattern queryStringPattern = Pattern
+  .compile("([^=&]*)=?([^&]*)&?");
   private static final Pattern headerPattern = Pattern.compile("([^:]*): (.*)");
-  private static final Pattern boundaryPattern = Pattern.compile("boundary=(.*)");
-  private static final Pattern multipartHeaderPattern = Pattern.compile("([^ =]+)=\\\"([^\"]*)\\\"");
+  private static final Pattern boundaryPattern = Pattern
+  .compile("boundary=(.*)");
+  private static final Pattern multipartHeaderPattern = Pattern
+  .compile("([^ =]+)=\\\"([^\"]*)\\\"");
 
   private static Collection<String> allowedMethods = buildAllowedMethodList();
 
@@ -73,7 +78,8 @@ public class Request {
     parseRequestUri(requestURI);
   }
 
-  private HashMap<String, Object> parseHeaders(StreamReader reader) throws Exception {
+  private HashMap<String, Object> parseHeaders(StreamReader reader)
+  throws Exception {
     HashMap<String, Object> headers = new HashMap<String, Object>();
     String line = reader.readLine();
     while (!"".equals(line)) {
@@ -136,7 +142,8 @@ public class Request {
     input.resetNumberOfBytesConsumed();
   }
 
-  private Object createUploadedFile(HashMap<String, Object> headers, StreamReader reader, String boundary) throws Exception {
+  private Object createUploadedFile(HashMap<String, Object> headers,
+      StreamReader reader, String boundary) throws Exception {
     String filename = (String) headers.get("filename");
     String contentType = (String) headers.get("content-type");
     File tempFile = File.createTempFile("FitNesse", ".uploadedFile");
@@ -153,9 +160,11 @@ public class Request {
 
   private void checkRequestLine(Matcher match) throws HttpException {
     if (!match.find())
-      throw new HttpException("The request string is malformed and can not be parsed");
+      throw new HttpException(
+      "The request string is malformed and can not be parsed");
     if (!allowedMethods.contains(match.group(1)))
-      throw new HttpException("The " + match.group(1) + " method is not currently supported");
+      throw new HttpException("The " + match.group(1)
+          + " method is not currently supported");
   }
 
   public void parseRequestUri(String requestUri) {
@@ -171,8 +180,27 @@ public class Request {
     while (match.find()) {
       String key = match.group(1);
       String value = decodeContent(match.group(2));
-      inputs.put(key, value);
+      addUniqueInputString(key, value);
     }
+  }
+
+  private void addUniqueInputString(String key, String value) {
+    Object existingItem = inputs.put(key, value);
+    if (itemExistAndMismatches(existingItem, value)) {
+      inputs.put(key, concatenateItems((String)existingItem, value));
+    }
+  }
+
+  private String concatenateItems(String existingItem, String value) {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append(existingItem);
+    buffer.append(",");
+    buffer.append(value);
+    return buffer.toString();
+  }
+
+  private boolean itemExistAndMismatches(Object existingItem, String value) {
+    return existingItem != null && existingItem instanceof String && !value.equals(existingItem);
   }
 
   public String getRequestLine() {
@@ -240,9 +268,11 @@ public class Request {
     if (map.size() == 0) {
       buffer.append("\tempty");
     }
-    for (Iterator<String> iterator = map.keySet().iterator(); iterator.hasNext();) {
-      String key = (String) iterator.next();
-      String value = map.get(key) != null ? escape(map.get(key).toString()) : null;
+    for (Iterator<String> iterator = map.keySet().iterator(); iterator
+    .hasNext();) {
+      String key = iterator.next();
+      String value = map.get(key) != null ? escape(map.get(key).toString())
+          : null;
       buffer.append("\t" + escape(key) + " \t-->\t " + value + "\n");
     }
   }
@@ -255,8 +285,7 @@ public class Request {
     String escapedContent = null;
     try {
       escapedContent = URLDecoder.decode(content, "UTF-8");
-    }
-    catch (UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException e) {
       escapedContent = "URLDecoder Error";
     }
     return escapedContent;

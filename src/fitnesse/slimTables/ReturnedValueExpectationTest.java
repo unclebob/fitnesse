@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.wikitext.Utils;
 
 public class ReturnedValueExpectationTest {
   private MockSlimTestContext testContext;
@@ -17,7 +16,7 @@ public class ReturnedValueExpectationTest {
     Table t = ts.getTable(0);
     testContext = new MockSlimTestContext();
     SlimTable slimTable = new DecisionTable(t, "id", testContext);
-    SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation(expected, "instructionId", 1, 2);
+    SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation("instructionId", 1, 2);
     assertEquals(message, HtmlTable.colorize(expectation.evaluationMessage(value, expected)));
     assertEquals(message, expectation.getEvaluationMessage());
     assertEquals(2, expectation.getRow());

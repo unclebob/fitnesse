@@ -1,0 +1,9 @@
+The amount you pay determines how many credits get added to your balance.
+
+!|credits for payment|
+|payment|credits?|
+|.25    |1       |
+|1.0    |5       |
+|5.0    |25      |
+|10     |60      |
+

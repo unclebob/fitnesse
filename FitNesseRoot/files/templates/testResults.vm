@@ -13,12 +13,34 @@
     </counts>
     <content><![CDATA[$result.Content]]></content>
     <relativePageName>$result.RelativePageName</relativePageName>
-    #if($result.Tags)<tags>$result.Tags</tags>#end
+    #if($result.Tags)
+    <tags>$result.Tags</tags>
+    #end
+
+    #if($result.Tables)
+    <tables>
+      #foreach($table in $result.Tables)
+      <table>
+        <name>$table.Name</name>
+        #foreach($row in $table)
+        <row>
+          #foreach($col in $row)
+          <col><![CDATA[$col]]></col>
+          #end
+
+        </row>
+        #end
+
+      </table>
+      #end
+
+    </tables>
+    #end
+
     #if($result.Instructions.size() > 0)
-    
+
     <instructions>
       #foreach($instructionResult in $result.Instructions)
-
       <instructionResult>
         <instruction><![CDATA[$instructionResult.Instruction]]></instruction>
         <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
@@ -29,15 +51,21 @@
           <col>$expectation.Col</col>
           <row>$expectation.Row</row>
           <type>$expectation.Type</type>
-          #if($expectation.Actual)<actual><![CDATA[$expectation.Actual]]></actual>#end
-          #if($expectation.Expected)<expected><![CDATA[$expectation.Expected]]></expected>#end
-          #if($expectation.EvaluationMessage)<evaluationMessage><![CDATA[$expectation.EvaluationMessage]]></evaluationMessage>#end
+          #if($expectation.Actual)
+          <actual><![CDATA[$expectation.Actual]]></actual>
+          #end
+          #if($expectation.Expected)
+          <expected><![CDATA[$expectation.Expected]]></expected>
+          #end
+          #if($expectation.EvaluationMessage)
+          <evaluationMessage><![CDATA[$expectation.EvaluationMessage]]></evaluationMessage>
+          #end
         </expectation>
         #end
-        
+
       </instructionResult>
       #end
-      
+
     </instructions>
     #end
 

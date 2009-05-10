@@ -46,6 +46,7 @@ import fitnesse.wikitext.widgets.VirtualWikiWidget;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import fitnesse.wikitext.widgets.XRefWidget;
 
+@SuppressWarnings("unchecked")
 public class WidgetBuilder {
   public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(
     CommentWidget.class,
@@ -100,6 +101,9 @@ public class WidgetBuilder {
   private List<WidgetInterceptor> interceptors = new LinkedList<WidgetInterceptor>();
   private final ReentrantLock widgetDataArraylock = new ReentrantLock();
 
+  public WidgetBuilder() {
+  }
+  
   public WidgetBuilder(Class<? extends WikiWidget>... widgetClasses) {
     for (Class<? extends WikiWidget> widgetClass : widgetClasses) {
       addWidgetClass(widgetClass);

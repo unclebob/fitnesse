@@ -6,9 +6,8 @@ import java.io.InputStream;
 
 import util.RegexTestCase;
 import util.StreamReader;
-import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.run.TestSummary;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestSummary;
 
 public class HtmlResultFormatterTest extends RegexTestCase {
   private HtmlResultFormatter formatter;

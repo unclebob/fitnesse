@@ -3,10 +3,12 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static junit.framework.Assert.fail;
 import org.junit.After;
@@ -19,6 +21,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 public class SuiteResponderTest {
   private MockRequest request;
@@ -52,7 +57,7 @@ public class SuiteResponderTest {
     responder.turnOffChunkingForTests();
     responder.setFastTest(true);
     responder.page = suite;
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
 
     receiver = new FitSocketReceiver(0, context.socketDealer);
   }
@@ -72,6 +77,7 @@ public class SuiteResponderTest {
   @After
   public void tearDown() throws Exception {
     receiver.close();
+    FitNesseUtil.destroyTestContext();
   }
 
   private String runSuite() throws Exception {
@@ -283,7 +289,7 @@ public class SuiteResponderTest {
     request.addInput("format", "xml");
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
-    Document testResultsDocument = TestResponderTest.getXmlDocumentFromResults(results);
+    Document testResultsDocument = getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
     NodeList resultList = testResultsElement.getElementsByTagName("result");
@@ -294,19 +300,41 @@ public class SuiteResponderTest {
       testResult = (Element) resultList.item(elementIndex);
       String pageName = XmlUtil.getTextValue(testResult, "relativePageName");
       if ("SlimTest".equals(pageName)) {
-        TestResponderTest.assertCounts(testResult, "2", "0", "0", "0");
+        assertCounts(testResult, "2", "0", "0", "0");
         assertSubString("DT:fitnesse.slim.test.TestSlim", XmlUtil.getTextValue(testResult, "content"));
         Element instructions = XmlUtil.getElementByTagName(testResult, "instructions");
         assertTrue(instructions != null);
       } else if ("TestOne".equals(pageName)) {
-        TestResponderTest.assertCounts(testResult, "1", "0", "0", "0");
+        assertCounts(testResult, "1", "0", "0", "0");
         assertSubString("PassFixture", XmlUtil.getTextValue(testResult, "content"));
       } else {
         fail(pageName);
       }
     }
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
-    TestResponderTest.assertCounts(finalCounts, "2", "0", "0", "0");
+    assertCounts(finalCounts, "2", "0", "0", "0");
+  }
+
+  @Test
+  public void normalSuiteRunProducesTestResultFile() throws Exception {
+    context.shouldCollectHistory = true;
+    TestSummary counts = new TestSummary(2,0,0,0);
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+      context.getTestHistoryDirectory(), counts.right, counts.wrong, counts.ignores, counts.exceptions);
+    File xmlResultsFile = new File(resultsFileName);
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+
+    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+    String results = runSuite();
+
+    assertTrue(resultsFileName, xmlResultsFile.exists());
+    FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
+    Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
+    xmlResultsStream.close();
+    xmlResultsFile.delete();
   }
 
   @Test
@@ -314,7 +342,7 @@ public class SuiteResponderTest {
     request.setResource("SuitePage.TestOne");
     request.addInput("format", "xml");
     String results = runSuite();
-    Document testResultsDocument = TestResponderTest.getXmlDocumentFromResults(results);
+    Document testResultsDocument = getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
     NodeList resultList = testResultsElement.getElementsByTagName("result");

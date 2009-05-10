@@ -2,6 +2,7 @@ FitNesseRoot/JunkParent/*
 FitNesseRoot/JunkPage/*
 FitNesseRoot/ProjectPage/*
 FitNesseRoot/ErrorLogs/*
+FitNesseRoot/files/testResults/*
 test-results/
 jsunit/
 agitar/
@@ -17,4 +18,6 @@ target/
 *.ipr
 *.iws
 .idea
-
+desktop.ini
+inst.log
+com_ibm_contest/

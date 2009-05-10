@@ -403,7 +403,6 @@ public class SlimTestSystemTest {
     assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
   }
 
-
   private static class DummyListener implements TestSystemListener {
     public void acceptOutputFirst(String output) throws Exception {
     }
