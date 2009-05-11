@@ -34,11 +34,12 @@ import fitnesse.http.SimpleResponse;
  * com.sun.security.jgss.accept  {
  *       com.sun.security.auth.module.Krb5LoginModule required
  *       storeKey=true
+ *       isInitiator=false
  *       principal=&quot;HTTP/your.web.server@YOUR.REALM&quot;
  *       useKeyTab=true 
  *       keyTab=&quot;/path/to/your/http.keytab&quot;
  *       ;
- *    }
+ *    };
  * </pre>
  * <p>
  * Next, define these system properties when running the FitNesse server:
