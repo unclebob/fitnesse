@@ -57,30 +57,23 @@ import fitnesse.http.SimpleResponse;
  */
 public class NegotiateAuthenticator extends Authenticator {
 
-  public static final String AUTH_TYPE = "Negotiate";
-  public static final String CLIENT_HEADER = "Authorization";
-  public static final String SERVER_HEADER = "WWW-Authenticate";
+  public static final String NEGOTIATE = "Negotiate";
 
-  private String serviceName;         /* Server's GSSAPI name, or null for default */
-  private Oid serviceNameType;        /* Name type of serviceName */
-  private Oid mechanism;              /* Restricted authentication mechanism, unless null */
-  private boolean stripRealm = true;  /* Strip the realm off the authenticated user's name */
+  protected String serviceName;         /* Server's GSSAPI name, or null for default */
+  protected Oid serviceNameType;        /* Name type of serviceName */
+  protected Oid mechanism;              /* Restricted authentication mechanism, unless null */
+  protected boolean stripRealm = true;  /* Strip the realm off the authenticated user's name */
 
-  private final GSSManager manager;
-  private final GSSCredential serverCreds;
+  protected GSSManager manager;
+  protected GSSCredential serverCreds;
 
   public NegotiateAuthenticator(Properties properties) throws Exception {
     super();
-    serviceName = properties.getProperty("NegotiateAuthenticator.serviceName",
-        null);
-    serviceNameType = new Oid(properties.getProperty(
-        "NegotiateAuthenticator.serviceNameType", GSSName.NT_HOSTBASED_SERVICE.toString()));
-    String mechanismProperty = properties.getProperty(
-        "NegotiateAuthenticator.mechanism", null);
-    mechanism = mechanismProperty == null ? null : new Oid(mechanismProperty);
-    stripRealm = Boolean.parseBoolean(properties.getProperty(
-        "NegotiateAuthenticator.stripRealm", "true"));
-
+    configure(properties);
+    initServiceCredentials();
+  }
+  
+  protected void initServiceCredentials() throws Exception {
     manager = GSSManager.getInstance();
     if (serviceName == null)
       serverCreds = null;
@@ -91,86 +84,91 @@ public class NegotiateAuthenticator extends Authenticator {
           GSSCredential.ACCEPT_ONLY);
     }
   }
+  
+  protected void configure(Properties properties) throws Exception {
+    serviceName = properties.getProperty("NegotiateAuthenticator.serviceName", null);
+    serviceNameType = new Oid(properties.getProperty("NegotiateAuthenticator.serviceNameType",
+        GSSName.NT_HOSTBASED_SERVICE.toString()));
+    String mechanismProperty = properties.getProperty("NegotiateAuthenticator.mechanism", null);
+    mechanism = mechanismProperty == null ? null : new Oid(mechanismProperty);
+    stripRealm = Boolean.parseBoolean(properties.getProperty("NegotiateAuthenticator.stripRealm", "true"));
+  }
 
-  static class NegotiateResponder implements Responder {
-    private String tokenHeader;
+  // Responder used when negotiation has not started or completed
+  static protected class UnauthenticatedNegotiateResponder implements Responder {
+    private String token;
 
-    public NegotiateResponder(String token) {
-      if (token == null)
-        tokenHeader = AUTH_TYPE;
-      else
-        tokenHeader = AUTH_TYPE + " " + token;
+    public UnauthenticatedNegotiateResponder(final String token) {
+      this.token = token;
     }
 
     public Response makeResponse(FitNesseContext context, Request request)
         throws Exception {
       SimpleResponse response = new SimpleResponse(401);
-      response.addHeader(SERVER_HEADER, tokenHeader);
+      response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
       HtmlPage html = context.htmlPageFactory.newPage();
-      HtmlUtil.addTitles(html, "SPNEGO authentication failed");
-      html.main.add("Your client failed to complete required authentication");
+      HtmlUtil.addTitles(html, "Negotiated authentication required");
+      if (request == null)
+        html.main.add("This request requires authentication");
+      else
+        html.main.add("Your client failed to complete required authentication");
       response.setContent(html.html());
       return response;
     }
   }
 
   @Override
-  public Responder authenticate(FitNesseContext context, Request request,
-      Responder privilegedResponder) throws Exception {
-
-    String authHeader = (String) request.getHeader(CLIENT_HEADER);
-    if (authHeader == null
-        || !authHeader.toLowerCase().startsWith(AUTH_TYPE.toLowerCase()))
-      return new NegotiateResponder(null);
-    byte[] inputTokenEncoded = authHeader.substring(AUTH_TYPE.length()).trim().getBytes("UTF-8");
-    byte[] inputToken = Base64.decode(inputTokenEncoded);
-
-    String replyToken;
-    GSSContext gssContext;
-    String authenticatedUser;
-
-    gssContext = manager.createContext(serverCreds);
-
-    /*
-     * XXX Nowhere to attach a partial context, so we are limited to
-     * single-round auth mechanisms.
-     */
-    byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0,
-        inputToken.length);
-    replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
-    if (!gssContext.isEstablished())
-      return new NegotiateResponder(replyToken);
-
-    authenticatedUser = gssContext.getSrcName().toString();
-
-    if (stripRealm) {
-      int at = authenticatedUser.indexOf('@');
-      if (at != -1)
-        authenticatedUser = authenticatedUser.substring(0, at);
-    }
-
-    /* TODO expose delegated credentials to the responder? */
-    request.setCredentials(authenticatedUser, null);
-
-    final Responder responder = super.authenticate(context, request,
-        privilegedResponder);
-    if (replyToken == null)
-      return responder;
-
-    final String replyAuthHeader = AUTH_TYPE + " " + replyToken;
-    return new Responder() {
-      public Response makeResponse(FitNesseContext context, Request request)
-          throws Exception {
-        Response response = responder.makeResponse(context, request);
-        response.addHeader(SERVER_HEADER, replyAuthHeader);
-        return response;
+  protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
+    return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword());
+  }
+  
+  /* 
+   * If negotiation succeeds, sets the username field in the request.
+   * Otherwise, stores the next token to send in the password field and sets request username to null.
+   * XXX It would be better to allow associating generic authenticator data to each request.
+   */
+  protected void negotiateCredentials(FitNesseContext context, Request request)
+      throws Exception {
+    String authHeader = (String) request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.toLowerCase().startsWith(NEGOTIATE.toLowerCase()))
+      request.setCredentials(null, null);
+    else {
+      byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
+      byte[] inputToken = Base64.decode(inputTokenEncoded);
+  
+      /*
+       * XXX Nowhere to attach a partial context to a TCP connection, so we are limited to
+       * single-round auth mechanisms.
+       */
+      GSSContext gssContext = manager.createContext(serverCreds);
+      byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0, inputToken.length);
+      String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
+      if (!gssContext.isEstablished())
+        request.setCredentials(null, replyToken);
+      else {
+        String authenticatedUser = gssContext.getSrcName().toString();
+    
+        if (stripRealm) {
+          int at = authenticatedUser.indexOf('@');
+          if (at != -1)
+            authenticatedUser = authenticatedUser.substring(0, at);
+        }
+    
+        request.setCredentials(authenticatedUser, replyToken);
       }
-    };
+    }
+  }
+  
+  @Override
+  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) 
+      throws Exception {
+    negotiateCredentials(context, request);
+    return super.authenticate(context, request, privilegedResponder);
   }
 
   public boolean isAuthenticated(String username, String password)
       throws Exception {
-    return true;
+    return username != null;
   }
 
 }

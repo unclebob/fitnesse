@@ -27,14 +27,18 @@ public abstract class Authenticator {
     SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
     try {
       if (so.shouldAuthenticate(context, request))
-        return new UnauthorizedResponder();
+        return unauthorizedResponder(context, request);
       else
         return privilegedResponder;
     }
     catch (Exception e) {
       e.printStackTrace();
-      return new UnauthorizedResponder();
+      return unauthorizedResponder(context, request);
     }
+  }
+
+  protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
+    return new UnauthorizedResponder();
   }
 
   private boolean isSecureResponder(Responder privilegedResponder) {
