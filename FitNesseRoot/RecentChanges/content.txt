@@ -1,3 +1,7 @@
+|JunkPage.UseVarPage||12:32:49 Tue, May 12, 2009|
+|JunkPage||12:30:23 Tue, May 12, 2009|
+|JunkPage.SetUp||12:29:51 Tue, May 12, 2009|
+|JunkPage.VarPage||12:28:25 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||07:20:00 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
@@ -31,7 +35,6 @@
 |FitNesse.UserGuide.RestfulTests||14:23:54 Mon, Apr 13, 2009|
 |JunkParent.RubyTests.ConstructorSymbols||10:45:34 Sat, Apr 11, 2009|
 |JunkParent.CreateAndWait||10:38:22 Sat, Apr 11, 2009|
-|JunkPage||13:11:07 Thu, Apr 09, 2009|
 |JunkPage.SlimScenarioTest||21:01:45 Wed, Apr 08, 2009|
 |ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PaymentDeterminesCredits||15:01:02 Mon, Apr 06, 2009|
 |ProjectPage||14:32:36 Mon, Apr 06, 2009|
@@ -95,6 +98,3 @@
 |FitNesse.UserGuide.PageProperties||11:36:45 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.SpecialPages||11:35:23 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupVirtualWiki||10:27:25 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.MarkupVariables||10:25:51 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.MarkupNote||10:22:59 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.MarkupInternalLink||10:21:40 Fri, Mar 27, 2009|
