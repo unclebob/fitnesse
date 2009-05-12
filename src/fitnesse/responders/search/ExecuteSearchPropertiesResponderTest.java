@@ -177,20 +177,20 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
     setupRequestInputAndPageProperty("Test", attributes, true, page, null);
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
 
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
 
     pageTypes = Arrays.asList("Normal", "Suite");
     setupRequestInputAndPageProperty("Test", attributes, false, page, null);
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
 
     setupRequestInputAndPageProperty("Test", attributes, false, page, "true");
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
   }
 
   public void testPageMatchesQueryWithMultipleAttributes() throws Exception {
@@ -201,22 +201,22 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     setupRequestInputAndPageProperty("Test", attributes, true, page, null);
     setupRequestInputAndPageProperty("Suite", attributes, true, page, null);
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
 
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     setupRequestInputAndPageProperty("Suite", attributes, false, page, null);
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
 
     setupRequestInputAndPageProperty("Test", attributes, false, page, "true");
     setupRequestInputAndPageProperty("Suite", attributes, false, page, null);
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
 
     setupRequestInputAndPageProperty("Test", attributes, false, page, null);
     setupRequestInputAndPageProperty("Suite", attributes, false, page, "true");
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
   }
 
   public void testPageMatchesQueryWithExcludedPages() throws Exception {
@@ -226,72 +226,76 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     List<String> pageTypes = Arrays.asList("Test");
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        true));
+        true, true));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, true));
+    assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
+        false, false));
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        true));
+        true, false));
 
     page = crawler.addPage(root, PathParser.parse("TearDown"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
+    assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
+        true, false));
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        true));
+        false, true));
 
     page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        true));
+        true, false));
 
     page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        false));
+        false, false));
     assertFalse(responder.pageMatchesQuery(page, pageTypes, attributes, suites,
-        true));
+        false, true));
   }
 
   public void testPageMatchQueryWithSuites() throws Exception {
     List<String> pageTypes = Arrays.asList("Test");
     Map<String, Boolean> requestInputs = new HashMap<String, Boolean>();
     assertTrue(responder.pageMatchesQuery(page, pageTypes, requestInputs, null,
-        false));
+        false, false));
     assertTrue(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        new String[0], false));
+        new String[0], false, false));
 
     String[] suites = new String[] { "SuiteTest" };
     assertFalse(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        suites, false));
+        suites, false, false));
 
     setUpSuitesProperty(page, "SuiteTest");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, requestInputs, null,
-        false));
+        false, false));
     assertFalse(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        new String[0], false));
+        new String[0], false, false));
     assertTrue(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        suites, false));
+        suites, false, false));
 
     setUpSuitesProperty(page, "SuiteTest, SuiteTest2");
     assertTrue(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        suites, false));
+        suites, false, false));
 
     setUpSuitesProperty(page, "SuiteTest2 , SuiteTest3");
     assertFalse(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        suites, false));
+        suites, false, false));
 
     suites = new String[] { "SuiteTest2", "SuiteTest3" };
     assertTrue(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        suites, false));
+        suites, false, false));
 
     setUpSuitesProperty(page, "SuiteTest, SuiteTest2");
     assertFalse(responder.pageMatchesQuery(page, pageTypes, requestInputs,
-        suites, false));
+        suites, false, false));
   }
 
   private void setUpSuitesProperty(WikiPage page, String value)
@@ -338,4 +342,38 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertOutputHasHeaderRowWithTitles(content, "Page", "Test", "Tags");
     assertOutputHasRowWithLabels(content, "PageOne", "filter1,filter2");
   }
+
+  public void testPageMatchesWithObsoletePages() throws Exception {
+    MockRequest request = setupRequestForObsoletePage();
+    request.addInput(PAGE_TYPE, "Test,Suite");
+
+    String content = invokeResponder(request);
+
+    assertOutputHasHeaderRowWithTitles(content, "Page", "Test");
+    assertOutputHasRowWithLabels(content, "ObsoletePage");
+
+    request.addInput("ExcludeObsolete", "on");
+
+    content = invokeResponder(request);
+
+    assertSubString("No pages", content);
+  }
+
+  private MockRequest setupRequestForObsoletePage() throws Exception {
+    WikiPage page = crawler.addPage(root, PathParser.parse("ObsoletePage"));
+    PageData data = page.getData();
+    data.setContent("some content");
+    WikiPageProperties properties = data.getProperties();
+    properties.set("Test", "true");
+    properties.set("Suites", "filter1,filter2");
+    properties.set("Pruned", "true");
+    page.commit(data);
+
+    MockRequest request = new MockRequest();
+    request.setResource("ObsoletePage");
+    request.addInput("Action", "Any");
+    request.addInput("Security", "Any");
+    return request;
+  }
+
 }

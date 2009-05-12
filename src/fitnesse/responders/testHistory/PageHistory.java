@@ -32,7 +32,8 @@ public class PageHistory {
   private void compileHistoryFromPageDirectory(File pageDirectory) throws ParseException {
     File[] resultFiles = FileUtil.getDirectoryListing(pageDirectory);
     for (File file : resultFiles)
-      compileResultFileIntoHistory(file);
+      if (!file.isDirectory())
+        compileResultFileIntoHistory(file);
     compileBarGraph();
   }
 
@@ -146,7 +147,7 @@ public class PageHistory {
     int unitsForThisTest = (int)Math.round((fail + summary.getRight()) * unitsPerAssertion);
     double doubleFailUnits = fail * unitsPerAssertion;
     int failUnits = (int) doubleFailUnits;
-    
+
     if (Math.abs(doubleFailUnits - failUnits) > .001)
       failUnits++;
     int passUnits = unitsForThisTest - failUnits;
