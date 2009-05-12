@@ -6,6 +6,15 @@ public class Base64 {
   private static final byte[] base64Alphabet =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
   private static final byte pad = '=';
+  private static final int[] base64Value;
+  static {{
+	base64Value = new int[0xff+1];
+	for (int i = 0; i <= 0xff; i++)
+	  base64Value[i] = -1;
+	for (int v = 0; v <= 0x3f; v++)
+	  base64Value[base64Alphabet[v]] = v;
+	base64Value[pad] = 0;
+  }}
 
   public static String decode(String value) throws Exception {
     return new String(decode(value.getBytes("UTF-8")));
@@ -17,20 +26,20 @@ public class Base64 {
     int decodingIndex = 0;
 
     for (int index = 0; index < bytes.length; index += 4) {
-      byte v1 = getValueFor(bytes[index]);
-      byte v2 = getValueFor(bytes[index + 1]);
-      byte v3 = getValueFor(bytes[index + 2]);
-      byte v4 = getValueFor(bytes[index + 3]);
+      int v1 = getValueFor(bytes[index]);
+      int v2 = getValueFor(bytes[index + 1]);
+      int v3 = getValueFor(bytes[index + 2]);
+      int v4 = getValueFor(bytes[index + 3]);
 
-      byte c1 = (byte) ((v1 << 2) + (v2 >> 4));
-      byte c2 = (byte) ((v2 << 4) + (v3 >> 2));
-      byte c3 = (byte) ((v3 << 6) + v4);
+      int c1 = (v1 << 2 | v2 >> 4) & 0xff;
+      int c2 = (v2 << 4 | v3 >> 2) & 0xff;
+      int c3 = (v3 << 6 | v4) & 0xff;
 
-      decoding[decodingIndex++] = c1;
-      if (c2 != 0)
-        decoding[decodingIndex++] = c2;
-      if (c3 != 0)
-        decoding[decodingIndex++] = c3;
+      decoding[decodingIndex++] = (byte)c1;
+      if (bytes[index + 2] != pad)
+    	  decoding[decodingIndex++] = (byte)c2;
+      if (bytes[index + 3] != pad)
+        decoding[decodingIndex++] = (byte)c3;
     }
     return decoding;
   }
@@ -48,62 +57,48 @@ public class Base64 {
 
     int index = 0;
     while (index < inputLength) {
-      byte c1 = bytes[index++];
-      byte c2 = index >= inputLength ? 0 : bytes[index++];
-      byte c3 = index >= inputLength ? 0 : bytes[index++];
+      byte c1 = bytes[index];
+      byte c2 = index + 1 >= inputLength ? 0 : bytes[index + 1];
+      byte c3 = index + 2 >= inputLength ? 0 : bytes[index + 2];
 
-      byte v1 = abs((byte) (c1 >> 2));
-      byte v2 = abs((byte) (((c1 << 4) & 63) + (c2 >> 4)));
-      byte v3 = abs((byte) (((c2 << 2) & 63) + (c3 >> 6)));
-      byte v4 = abs((byte) (c3 & 63));
+      int v1 = ((c1 & 0xfc) >> 2) & 0x3f;
+      int v2 = (c1 << 4 | (c2 & 0xf0) >> 4) & 0x3f;
+      int v3 = (c2 << 2 | (c3 & 0xc0) >> 6) & 0x3f;
+      int v4 = c3 & 0x3f;
 
       encoding[encodingIndex++] = base64Alphabet[v1];
       encoding[encodingIndex++] = base64Alphabet[v2];
-      if (v3 != 0)
-        encoding[encodingIndex++] = base64Alphabet[v3];
-      else
-        encoding[encodingIndex++] = '=';
-      if (v4 != 0)
-        encoding[encodingIndex++] = base64Alphabet[v4];
-      else
-        encoding[encodingIndex++] = '=';
+      encoding[encodingIndex++] = (index + 1 >= inputLength) ? pad : base64Alphabet[v3];
+      encoding[encodingIndex++] = (index + 2 >= inputLength) ? pad : base64Alphabet[v4];
+      index += 3;
     }
     return encoding;
   }
 
   private static int getLengthOfDecoding(byte[] bytes) {
-    if (bytes.length == 0)
-      return 0;
+    if ((bytes.length & 3) != 0)
+      throw new IllegalArgumentException("Truncated BASE64 data? length=" + bytes.length);
 
-    int lengthOfOutput = (int) (bytes.length * .75);
-
-    for (int i = bytes.length - 1; bytes[i] == pad; i--)
-      lengthOfOutput--;
-
+    int lengthOfOutput = (bytes.length >> 2) * 3;
+    if (bytes.length > 0) {
+      if (bytes[bytes.length - 1] == pad)
+    	lengthOfOutput--;
+      if (bytes[bytes.length - 2] == pad)
+    	lengthOfOutput--;
+    }
+    	
     return lengthOfOutput;
   }
 
   private static int getLengthOfEncoding(byte[] bytes) {
-    boolean needsPadding = (bytes.length % 3 != 0);
-
-    int length = ((int) (bytes.length / 3)) * 4;
-    if (needsPadding)
-      length += 4;
-
-    return length;
+	return ((bytes.length + 2) / 3) << 2;
   }
 
-  public static byte getValueFor(byte b) {
-    if (b == pad)
-      return (byte) 0;
-    for (int i = 0; i < base64Alphabet.length; i++) {
-      if (base64Alphabet[i] == b)
-        return (byte) i;
-    }
-    return -1;
+  public static int getValueFor(byte b) {
+	int value = base64Value[b & 0xff];
+	if (value == -1)
+	  throw new IllegalArgumentException("Invalid BASE64 symbol: " + (char)(b & 0xff));
+	return value;
   }
 
-  private static byte abs(byte b) {
-    return (byte) Math.abs(b);
-  }
 }

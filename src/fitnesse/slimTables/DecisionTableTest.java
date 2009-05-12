@@ -132,7 +132,7 @@ public class DecisionTableTest {
     }
     assertEquals(functionsInOrder.length, counters.size());
     for (int i=0; i<functionsInOrder.length; i++)
-      assertEquals(functionsInOrder[i], i, counters.get(functionsInOrder[i]));
+      assertEquals(functionsInOrder[i], i, (int)counters.get(functionsInOrder[i]));
   }
 
 
