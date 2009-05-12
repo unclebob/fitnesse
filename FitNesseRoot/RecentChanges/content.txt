@@ -1,7 +1,3 @@
-|JunkPage.UseVarPage||14:25:12 Tue, May 12, 2009|
-|JunkPage||12:30:23 Tue, May 12, 2009|
-|JunkPage.SetUp||12:29:51 Tue, May 12, 2009|
-|JunkPage.VarPage||12:28:25 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||07:20:00 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
