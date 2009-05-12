@@ -1,4 +1,4 @@
-|JunkPage.UseVarPage||12:32:49 Tue, May 12, 2009|
+|JunkPage.UseVarPage||14:25:12 Tue, May 12, 2009|
 |JunkPage||12:30:23 Tue, May 12, 2009|
 |JunkPage.SetUp||12:29:51 Tue, May 12, 2009|
 |JunkPage.VarPage||12:28:25 Tue, May 12, 2009|
@@ -98,7 +98,3 @@
 |FitNesse.UserGuide.PayrollTests.FicaTest||11:41:31 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PayrollTests.AddAndPayTest||11:40:27 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PageProperties||11:36:45 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.SpecialPages||11:35:23 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.MarkupVirtualWiki||10:27:25 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.MarkupVariables||10:25:51 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.MarkupNote||10:22:59 Fri, Mar 27, 2009|
