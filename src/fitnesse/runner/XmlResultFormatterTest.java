@@ -79,10 +79,10 @@ public class XmlResultFormatterTest extends RegexTestCase {
   }
 
   private void checkCounts(TestSummary testSummary, Element countsElement) throws Exception {
-    assertEquals(testSummary.right + "", XmlUtil.getTextValue(countsElement, "right"));
-    assertEquals(testSummary.wrong + "", XmlUtil.getTextValue(countsElement, "wrong"));
-    assertEquals(testSummary.ignores + "", XmlUtil.getTextValue(countsElement, "ignores"));
-    assertEquals(testSummary.exceptions + "", XmlUtil.getTextValue(countsElement, "exceptions"));
+    assertEquals(testSummary.getRight() + "", XmlUtil.getTextValue(countsElement, "right"));
+    assertEquals(testSummary.getWrong() + "", XmlUtil.getTextValue(countsElement, "wrong"));
+    assertEquals(testSummary.getIgnores() + "", XmlUtil.getTextValue(countsElement, "ignores"));
+    assertEquals(testSummary.getExceptions() + "", XmlUtil.getTextValue(countsElement, "exceptions"));
   }
 
   private String getXml() throws Exception {

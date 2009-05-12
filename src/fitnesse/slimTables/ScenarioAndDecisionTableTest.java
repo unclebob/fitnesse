@@ -101,10 +101,10 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
     assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
-    assertEquals(1, dt.getTestSummary().right);
-    assertEquals(0, dt.getTestSummary().wrong);
-    assertEquals(0, dt.getTestSummary().ignores);
-    assertEquals(0, dt.getTestSummary().exceptions);
+    assertEquals(1, dt.getTestSummary().getRight());
+    assertEquals(0, dt.getTestSummary().getWrong());
+    assertEquals(0, dt.getTestSummary().getIgnores());
+    assertEquals(0, dt.getTestSummary().getExceptions());
   }
 
   @Test
@@ -130,10 +130,10 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
     assertSubString("<span id=\"test_status\" class=fail>Scenario</span>", dtHtml);
-    assertEquals(0, dt.getTestSummary().right);
-    assertEquals(1, dt.getTestSummary().wrong);
-    assertEquals(0, dt.getTestSummary().ignores);
-    assertEquals(0, dt.getTestSummary().exceptions);
+    assertEquals(0, dt.getTestSummary().getRight());
+    assertEquals(1, dt.getTestSummary().getWrong());
+    assertEquals(0, dt.getTestSummary().getIgnores());
+    assertEquals(0, dt.getTestSummary().getExceptions());
   }
 
   @Test

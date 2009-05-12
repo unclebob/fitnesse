@@ -136,6 +136,7 @@ public abstract class BaseWikiPage implements WikiPage {
     addActionForAttribute("Versions", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
     addActionForAttribute("Recent Changes", pageData, "/RecentChanges", newWindowIfRemote, "", "", actions);
     addAction("User Guide", ".FitNesse.UserGuide", newWindowIfRemote, "", "", actions);
+    addAction("Test History", "?testHistory", newWindowIfRemote, "", "", actions);
     return actions;
   }
 

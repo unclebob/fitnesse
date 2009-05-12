@@ -1,0 +1,6 @@
+|fail|
+
+Pass Results > 0 should be green.
+Pass Results == 0 should be grey.
+Fail Results > 0 should be red.
+Fail Results == 0 should be grey.

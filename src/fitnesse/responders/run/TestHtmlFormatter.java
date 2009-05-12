@@ -154,12 +154,12 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected String cssClassFor(TestSummary testSummary) {
-    if (testSummary.wrong > 0 || wasInterupted)
+    if (testSummary.getWrong() > 0 || wasInterupted)
       return "fail";
-    else if (testSummary.exceptions > 0
-      || testSummary.right + testSummary.ignores == 0)
+    else if (testSummary.getExceptions() > 0
+      || testSummary.getRight() + testSummary.getIgnores() == 0)
       return "error";
-    else if (testSummary.ignores > 0 && testSummary.right == 0)
+    else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0)
       return "ignore";
     else
       return "pass";
@@ -185,7 +185,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected int exitCode() {
-    return getAssertionCounts().wrong + getAssertionCounts().exceptions;
+    return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
   }
 
   public void addMessageForBlankHtml() throws Exception {

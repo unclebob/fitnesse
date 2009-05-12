@@ -59,7 +59,7 @@ public class PageDriver {
   }
 
   public String content() throws Exception {
-    return requester.contents();
+    return requester.html();
   }
 
   public String lineIs(int lineNumber) throws Exception {

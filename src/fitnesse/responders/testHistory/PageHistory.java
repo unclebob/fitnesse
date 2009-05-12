@@ -17,9 +17,11 @@ public class PageHistory {
   private Date maxDate = null;
   private int maxAssertions = 0;
   private BarGraph barGraph;
-  private final HashMap<Date, PageTestSummary> summaryMap = new HashMap<Date, PageTestSummary>();
+  private String fullPageName;
+  private final HashMap<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
 
   public PageHistory(File pageDirectory) {
+    fullPageName = pageDirectory.getName();
     try {
       compileHistoryFromPageDirectory(pageDirectory);
     } catch (Exception e) {
@@ -35,11 +37,12 @@ public class PageHistory {
   }
 
   private void compileBarGraph() {
-    List<Date> dates = new ArrayList<Date>(summaryMap.keySet());
+    List<Date> dates = new ArrayList<Date>(testResultMap.keySet());
     Collections.sort(dates, reverseChronologicalDateComparator());
     barGraph = new BarGraph();
     for (int i = 0; i < dates.size() && i < 20; i++) {
-      barGraph.addSummary(get(dates.get(i)));
+      Date date = dates.get(i);
+      barGraph.addSummary(date, get(date));
     }
   }
 
@@ -57,29 +60,29 @@ public class PageHistory {
   }
 
   private void compileResultFileIntoHistory(File file) throws ParseException {
-    String fileName = file.getName();
-    PageTestSummary summary = summaryFromFilename(fileName);
-    summaryMap.put(summary.getDate(), summary);
-    countResult(summary);
-    setMinMaxDate(summary.getDate());
-    setMaxAssertions(summary);
+    TestResultRecord record = buildTestResultRecord(file);
+    testResultMap.put(record.getDate(), record);
+    countResult(record);
+    setMinMaxDate(record.getDate());
+    setMaxAssertions(record);
   }
 
-  private void setMaxAssertions(PageTestSummary summary) {
-    int assertions = summary.right + summary.wrong + summary.exceptions;
+  private void setMaxAssertions(TestResultRecord summary) {
+    int assertions = summary.getRight() + summary.getWrong() + summary.getExceptions();
     maxAssertions = Math.max(maxAssertions, assertions);
   }
 
-  private PageTestSummary summaryFromFilename(String fileName) throws ParseException {
-    String parts[] = fileName.split("_|\\.");
+  private TestResultRecord buildTestResultRecord(File file) throws ParseException {
+    String parts[] = file.getName().split("_|\\.");
     Date date = dateFormat.parse(parts[0]);
-    PageTestSummary summary = new PageTestSummary(
+    TestResultRecord testResultRecord = new TestResultRecord(
+      file,
       date,
       Integer.parseInt(parts[1]),
       Integer.parseInt(parts[2]),
       Integer.parseInt(parts[3]),
       Integer.parseInt(parts[4]));
-    return summary;
+    return testResultRecord;
   }
 
   private void setMinMaxDate(Date date) {
@@ -91,8 +94,8 @@ public class PageHistory {
       minDate = date;
   }
 
-  private void countResult(PageTestSummary summary) {
-    if (summary.wrong > 0 || summary.exceptions > 0 || summary.right == 0)
+  private void countResult(TestResultRecord summary) {
+    if (summary.getWrong() > 0 || summary.getExceptions() > 0 || summary.getRight() == 0)
       failures++;
     else
       passes++;
@@ -119,11 +122,11 @@ public class PageHistory {
   }
 
   public int size() {
-    return summaryMap.size();
+    return testResultMap.size();
   }
 
-  public PageTestSummary get(Object key) {
-    return summaryMap.get(key);
+  public TestResultRecord get(Date key) {
+    return testResultMap.get(key);
   }
 
   public int maxAssertions() {
@@ -131,35 +134,45 @@ public class PageHistory {
   }
 
   public SortedSet<Date> datesInChronologicalOrder() {
-    Set<Date> dates = summaryMap.keySet();
+    Set<Date> dates = testResultMap.keySet();
     SortedSet<Date> sortedDates = new TreeSet<Date>(dates);
     return sortedDates;
   }
 
   public PassFailBar getPassFailBar(Date date, int maxUnits) {
-    PageTestSummary summary = summaryMap.get(date);
-    int fail = summary.wrong + summary.exceptions;
+    TestResultRecord summary = testResultMap.get(date);
+    int fail = summary.getWrong() + summary.getExceptions();
     double unitsPerAssertion = (double)maxUnits/(double)maxAssertions;
-    int unitsForThisTest = (int)Math.round((fail + summary.right) * unitsPerAssertion);
+    int unitsForThisTest = (int)Math.round((fail + summary.getRight()) * unitsPerAssertion);
     double doubleFailUnits = fail * unitsPerAssertion;
     int failUnits = (int) doubleFailUnits;
     
     if (Math.abs(doubleFailUnits - failUnits) > .001)
       failUnits++;
     int passUnits = unitsForThisTest - failUnits;
-    return new PassFailBar(summary.right, fail, passUnits, failUnits);
+    return new PassFailBar(summary.getRight(), fail, passUnits, failUnits);
   }
 
-  public static class PageTestSummary extends TestSummary {
+  public String getFullPageName() {
+    return fullPageName;
+  }
+
+  public static class TestResultRecord extends TestSummary {
+    private File file;
     private Date date;
 
-    PageTestSummary(Date date, int right, int wrong, int ignores, int exceptions) {
+    TestResultRecord(File file, Date date, int right, int wrong, int ignores, int exceptions) {
       super(right, wrong, ignores, exceptions);
+      this.file = file;
       this.date = date;
     }
 
     public Date getDate() {
       return date;
+    }
+
+    public File getFile() {
+      return file;
     }
   }
 
@@ -168,11 +181,29 @@ public class PageHistory {
     return fmt.format(date);
   }
 
+  public static class PassFailReport {
+    private String date;
+    private boolean pass;
+
+    public PassFailReport(Date date, boolean pass) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+      this.date = dateFormat.format(date);
+      this.pass = pass;
+    }
+
+    public String getDate() {
+      return date;
+    }
+
+    public boolean isPass() {
+      return pass;
+    }
+  }
 
   public static class BarGraph {
     private Date startingDate;
     private Date endingDate;
-    private List<Boolean> passFailList = new ArrayList<Boolean>();
+    private List<PassFailReport> passFailList = new ArrayList<PassFailReport>();
 
     public Date getStartingDate() {
       return startingDate;
@@ -190,12 +221,13 @@ public class PageHistory {
       return endingDate;
     }
 
-    public void addSummary(PageTestSummary summary) {
+    public void addSummary(Date date, TestResultRecord summary) {
       minMaxDate(summary);
-      passFailList.add(summary.wrong == 0 && summary.exceptions == 0 && summary.right > 0);
+      boolean pass = summary.getWrong() == 0 && summary.getExceptions() == 0 && summary.getRight() > 0;
+      passFailList.add(new PassFailReport(date, pass));
     }
 
-    private void minMaxDate(PageTestSummary summary) {
+    private void minMaxDate(TestResultRecord summary) {
       Date date = summary.getDate();
       if (startingDate == null)
         startingDate = endingDate = date;
@@ -209,12 +241,20 @@ public class PageHistory {
       return passFailList.size();
     }
 
-    public boolean getPassFail(int i) {
+    public PassFailReport getPassFail(int i) {
       return passFailList.get(i);
     }
 
-    public Boolean[] passFailArray() {
-      return passFailList.toArray(new Boolean[passFailList.size()]);
+    public PassFailReport[] passFailArray() {
+      return passFailList.toArray(new PassFailReport[passFailList.size()]);
+    }
+
+    public String testString() {
+      StringBuilder builder = new StringBuilder();
+      for (PassFailReport report : passFailList) {
+        builder.append(report.pass ? "+" : "-");
+      }
+      return builder.toString();
     }
   }
 

@@ -48,6 +48,10 @@ public class ResponseRequester extends ColumnFixture {
     return "<pre>" + Utils.escapeHTML(FitnesseFixtureContext.sender.sentData()) + "</pre>";
   }
 
+  public String html() throws Exception {
+    return FitnesseFixtureContext.sender.sentData();
+  }
+
   protected void details() {
   }
 

@@ -168,9 +168,9 @@ public class TestRunner {
 
   public int exitCode() {
     int exitStatus = 0;
-    if (counts.wrong > 0)
+    if (counts.getWrong() > 0)
       exitStatus++;
-    if (counts.exceptions > 0)
+    if (counts.getExceptions() > 0)
       exitStatus++;
 
     return exitStatus;

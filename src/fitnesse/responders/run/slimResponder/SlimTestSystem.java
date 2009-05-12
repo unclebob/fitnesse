@@ -348,7 +348,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private void replaceException(String resultKey, String resultString) {
-    testSummary.exceptions++;
+    testSummary.exceptions = testSummary.getExceptions() + 1;
     Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
     if (exceptionMessageMatcher.find()) {
       String exceptionMessage = exceptionMessageMatcher.group(1);

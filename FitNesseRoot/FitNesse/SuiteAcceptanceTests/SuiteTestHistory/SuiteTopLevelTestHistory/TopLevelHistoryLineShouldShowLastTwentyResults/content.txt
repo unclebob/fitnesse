@@ -1,0 +1,5 @@
+|fail|
+
+Passing results are green.
+Failing results are red.
+Neither is grey.

@@ -2,6 +2,7 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -23,6 +24,7 @@ public class TestHistoryResponder implements Responder {
       TestHistory history = new TestHistory();
       history.readHistoryDirectory(resultsDirectory);
       VelocityContext velocityContext = new VelocityContext();
+      velocityContext.put("pageTitle", new PageTitle("Test History"));
       velocityContext.put("testHistory", history);
       Template template = context.getVelocityEngine().getTemplate("testHistory.vm");
       StringWriter writer = new StringWriter();

@@ -16,11 +16,11 @@ public class PageTitleTest {
   }
 
   @Test
-  public void pageTitleWithTypeButNoResourceHasTypeButNoLinkTitleOrBreadCrumbs() throws Exception {
-    PageTitle pt = new PageTitle("type");
-    assertNull(pt.getTitle());
+  public void pageTitleWithTypeButNoResourceHasTypeAndTitleButNoLinkOrBreadCrumbs() throws Exception {
+    PageTitle pt = new PageTitle("Title");
+    assertEquals("Title", pt.getTitle());
     assertNull(pt.getLink());
-    assertEquals("type", pt.getPageType());
+    assertEquals("Title", pt.getPageType());
     assertEquals(0, pt.getBreadCrumbs().size());
   }
 
