@@ -24,6 +24,8 @@ public class StatementExecutor {
   private Map<String, Object> instances = new HashMap<String, Object>();
   private Map<String, Object> variables = new HashMap<String, Object>();
   private List<String> paths = new ArrayList<String>();
+  
+  private boolean stopRequested = false;
 
   public StatementExecutor() {
     Slim.addConverter(void.class, new VoidConverter());
@@ -147,11 +149,17 @@ public class StatementExecutor {
     }
   }
 
-  private String exceptionToString(Throwable e) {
+  private String exceptionToString(Throwable exception) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(stringWriter);
-    e.printStackTrace(pw);
-    return SlimServer.EXCEPTION_TAG + stringWriter.toString();
+    exception.printStackTrace(pw);
+    if (exception.getClass().toString().contains("StopTest")) {
+      stopRequested = true;
+      return SlimServer.EXCEPTION_STOP_TEST_TAG + stringWriter.toString();
+    }
+    else {
+      return SlimServer.EXCEPTION_TAG + stringWriter.toString();    
+    }
   }
 
   private Object[] replaceVariables(Object[] args) {
@@ -271,5 +279,13 @@ public class StatementExecutor {
       return "null";
     else
       return retval.toString();
+  }
+
+  public boolean stopHasBeenRequested() {
+    return stopRequested;
+  }
+
+  public void reset() {
+    stopRequested = false;
   }
 }

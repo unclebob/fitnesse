@@ -70,7 +70,13 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
     HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
     anchor.addAttribute("id", relativeName + currentTest);
+    anchor.addAttribute("class", "test_name");
+
+    HtmlTag topLink = HtmlUtil.makeLink("#" + TEST_SUMMARIES_ID, "Top");
+    topLink.addAttribute("class", "top_of_page");
+
     pageNameBar.add(anchor);
+    pageNameBar.add(topLink);
     writeData(pageNameBar.html());
 
     writeData("<div class=\"alternating_block_" + cssSuffix + "\">");
@@ -107,7 +113,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   private String getProgressHtml() throws Exception {
-    float percentFinished = currentTest * 1000 / totalTests;
+    float percentFinished = (currentTest - 1) * 1000 / totalTests;
     percentFinished = percentFinished / 10;
 
     String text = "Running tests ... (" + currentTest + "/" + totalTests + ")";
@@ -198,9 +204,10 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
     HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");
     outputTitle.addAttribute("class", "centered");
-    writeData(outputTitle.html());
+
     HtmlTag summariesDiv = HtmlUtil.makeDivTag(TEST_SUMMARIES_ID);
     summariesDiv.addAttribute("id", TEST_SUMMARIES_ID);
+    summariesDiv.add(outputTitle);
     writeData(summariesDiv.html());
   }
 }

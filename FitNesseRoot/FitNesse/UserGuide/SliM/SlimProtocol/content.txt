@@ -67,6 +67,8 @@ So when you send a list of instructions, what you are really sending is a string
 
 !4 Exceptions
 Sometimes a function or a constructor will throw an exception in response to a ''make'', ''call'', or ''callAndAssign'' instruction. When this happens, the response value for that instruction will be: "__EXCEPTION__:''<exception string>''".  The ''<exception string>'' ought to be a stack trace or some other relevant debugging information.  If you want a nice yellow message to appear in one of the SLIM tables, then somewhere in the ''<<exception string>>'' put ''message:<<'' in front of the message and ''>>'' after it.  {{{message:<<can't find constructor>>}}}
+If the user throws an exception with a class name that contains "!-StopTest-!", then Slim should stop executing instructions, and return immediately.   This response for this type of exception should be "__EXCEPTION__:ABORT_SLIM_TEST:''<exception string>''".
+
 
 There are some standard exception messages that every Slim implementation should create.
 

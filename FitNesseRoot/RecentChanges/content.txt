@@ -16,6 +16,11 @@
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SetUp||18:11:23 Wed, May 06, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory||18:08:38 Wed, May 06, 2009|
 |FitNesse.SuiteAcceptanceTests||18:08:00 Wed, May 06, 2009|
+|FitNesse.UserGuide.DebugingFixtureCode||18:12:00 Sun, May 10, 2009|
+|FitNesse.UserGuide.CustomizingTestExecution||09:08:34 Sun, May 10, 2009|
+|FitNesse.UserGuide||09:08:19 Sun, May 10, 2009|
+|FitNesse.UserGuide.QuickReferenceGuide||08:37:47 Sun, May 10, 2009|
+|FitNesse.SuiteAcceptanceTests.ClareTest||17:18:07 Sat, May 09, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.PageHistoryHasGreyDateIfNeitherPassNorFail||13:14:25 Wed, May 06, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.PageHistoryHasGreenDateFieldIfNoErrors||13:13:44 Wed, May 06, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.ScenarioLibrary||13:12:43 Wed, May 06, 2009|
@@ -50,7 +55,6 @@
 |JunkParent||09:38:28 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.JunkTests||09:30:35 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.DummyPage||09:14:25 Sat, Apr 04, 2009|
-|FitNesse.UserGuide.SliM.SlimProtocol||09:11:29 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.DummyPage.MultiByteCharsRubySlim||08:55:36 Sat, Apr 04, 2009|
 |FitNesse||04:53:40 Sat, Apr 04, 2009|
 |||04:53:02 Sat, Apr 04, 2009|
@@ -67,7 +71,6 @@
 |JunkParent.FitTest2||11:51:20 Sun, Mar 29, 2009|
 |JunkParent.FitTest||11:50:52 Sun, Mar 29, 2009|
 |PageFooter||04:12:13 Tue, Mar 31, 2009|
-|FitNesse.UserGuide||17:16:15 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteTiming||12:46:31 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject||12:45:56 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteTiming.PerfectGameTiming||12:45:14 Fri, Mar 27, 2009|
@@ -88,7 +91,6 @@
 |FitNesse.UserGuide.SubWiki||12:28:03 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.SliM.SymbolsInTables||12:20:05 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.SliM.ScenarioTable||12:16:49 Fri, Mar 27, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||12:12:37 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.RowFixtureCode||11:51:49 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PreDefinedVariables||11:48:56 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PluginUsage||11:45:08 Fri, Mar 27, 2009|
@@ -98,3 +100,5 @@
 |FitNesse.UserGuide.PageProperties||11:36:45 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.SpecialPages||11:35:23 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.MarkupVirtualWiki||10:27:25 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.MarkupVariables||10:25:51 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.MarkupNote||10:22:59 Fri, Mar 27, 2009|

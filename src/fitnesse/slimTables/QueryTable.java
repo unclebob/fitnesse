@@ -56,7 +56,7 @@ public class QueryTable extends SlimTable {
     } else if (queryReturn instanceof String) {
       String message = (String) queryReturn;
       if (isExceptionMessage(message))
-        table.appendToCell(0, 0, error(extractExeptionMessage(message)));
+        table.appendToCell(0, 0, makeExeptionMessage(message));
       else
         table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
     } else {

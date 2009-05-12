@@ -247,7 +247,42 @@ public class SlimTestSystemTest {
     );
     assertTestResultsContain("<span class=\"error\">Method setNoSuchVar[1] not found in fitnesse.slim.test.TestSlim");
   }
+  
+  @Test
+  public void tableWithStopTestMessageException() throws Exception {
+    getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+        "|throwStopTestExceptionWithMessage?|\n" +
+        "| once |\n" +
+        "| twice |\n");
+    assertTestResultsContain("<td>once <span class=\"fail\">Stop Test</span></td>");
+    assertTestResultsContain("<td>twice <span class=\"ignore\">Test not run</span>");
+  }
 
+  @Test
+  public void tableWithMessageException() throws Exception {
+    getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+        "|throwExceptionWithMessage?|\n" +
+        "| once |\n");
+    assertTestResultsContain("<td>once <span class=\"error\">Test message</span></td>");
+  }
+
+  @Test
+  public void tableWithStopTestExceptionThrown() throws Exception {
+    getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+      "|throwNormal?| throwStopping? |\n" +
+      "| first | second  |\n" +
+      "| should fail1| true           |\n" + 
+      "\n\n" +
+      "!|DT:fitnesse.slim.test.ThrowException|\n" +
+      "|throwNormal?|\n" +
+      "| should fail2|\n"
+    );
+    assertTestResultsContain("<td><span class=\"error\">Exception: <a href");
+    assertTestResultsContain("<td><span class=\"error\">Exception: <a href");
+    assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
+    assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
+  }
+  
   @Test
   public void tableWithSymbolSubstitution() throws Exception {
     getResultsForPageContents(

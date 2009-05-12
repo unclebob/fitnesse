@@ -441,6 +441,7 @@ span.page_title {
   display: block;
   height: 1.5em;
   width: 100%;
+  clear: both;
 }
 
 .alternating_row_1, .alternating_block_1 {
@@ -552,11 +553,24 @@ div.merge_old {
   text-align: center;
 }
 
+.test_name {
+  font-size: 1.5em;
+  float: left;
+}
+
+.top_of_page {
+  margin-top: .5em;
+  margin-right: 3px;
+  float: right;
+  color: #BF8660;
+  font-style: italic;
+}
+
 .test_output_name {
   margin-top: 10px;
   background-color: #DFD4A7;
-  font-size: 1.5em;
   text-indent: 1em;
+  height: 2em;
 }
 
 table.dirListing {

@@ -16,6 +16,7 @@ public class SlimServer implements SocketServer {
   private BufferedWriter writer;
   private ListExecutor executor;
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
+  public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   private boolean verbose;
 
   public SlimServer() {

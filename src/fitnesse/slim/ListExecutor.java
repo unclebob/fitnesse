@@ -35,6 +35,11 @@ public class ListExecutor {
       verboseMessage(retVal);
       verboseMessage("------");
       result.add(retVal);
+      
+      if (executor.stopHasBeenRequested()) {
+        executor.reset();
+        return result;
+      }
     }
     return result;
   }

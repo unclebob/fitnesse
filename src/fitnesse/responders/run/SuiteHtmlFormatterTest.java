@@ -75,10 +75,10 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<h2 class=\"centered\">Test System: Slim:very.slim</h2>", results);
 
     assertSubString("<div class=\"test_output_name\">", results);
-    assertSubString("<a href=\"FullName\" id=\"RelativeName1\">RelativeName</a>", results);
+    assertSubString("<a href=\"FullName\" id=\"RelativeName1\" class=\"test_name\">RelativeName</a>", results);
     assertSubString("<div class=\"alternating_block_1\">starting output</div>", results);
 
-    assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\">NewRelativeName</a>", results);
+    assertSubString("<a href=\"NewFullName\" id=\"NewRelativeName2\" class=\"test_name\">NewRelativeName</a>", results);
     assertSubString("<div class=\"alternating_block_2\">second test</div>", results);
   }
   
@@ -88,7 +88,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.announceStartNewTest("RelativeName", "FullName");
 
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
+    		" \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:0.0%\\\">", pageBuffer.toString());
     assertSubString("Running&nbsp;tests&nbsp;...&nbsp;(1/20)", pageBuffer.toString());
     pageBuffer.setLength(0);
     
@@ -96,7 +96,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.announceStartNewTest("RelativeName", "FullName");
 
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:5.0%\\\">", pageBuffer.toString());
     assertSubString("(2/20)", pageBuffer.toString());
     pageBuffer.setLength(0);
 
@@ -105,7 +105,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.announceStartNewTest("RelativeName", "FullName");
 
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
-        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:15.0%\\\">", pageBuffer.toString());
+        " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
     assertSubString("(3/20)", pageBuffer.toString());
   }
 }
