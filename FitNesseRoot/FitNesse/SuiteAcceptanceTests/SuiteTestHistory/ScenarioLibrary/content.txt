@@ -1,5 +1,6 @@
 !|scenario|get history for page|page|
 |check|request page|@page?pageHistory|200|
+|$TESTPAGE=|echo|@page|
 |show|content|
 
 !|scenario|get top level history|
@@ -33,3 +34,12 @@
 
 !|scenario|the top level history line for|page|is a link to the page history|
 |ensure|content contains|<a href="/@page?pageHistory">@page</a>|
+
+!|scenario|The page history line for|date|should be a link to result|resultDate|
+|ensure|content contains|<a href="$TESTPAGE?pageHistory&resultDate=@resultDate">@date</a>|
+
+!|scenario|the top level history line for|page|should have a|class|link with|sign|to result|resultDate|
+|ensure|content contains|<td class="@class"><a style="text-decoration:none" href="@page?pageHistory&resultDate=@resultDate">@sign</a></td>|
+
+!|scenario|the top level history line for|page|should not have a link to|resultDate|
+|reject|content contains|<a style="text-decoration:none" href="@page?pageHistory&resultDate=@resultDate">|

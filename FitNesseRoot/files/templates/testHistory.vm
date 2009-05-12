@@ -18,10 +18,8 @@
     #set ($barGraph = $pageHistory.getBarGraph())
 
     <td><a href="/$page?pageHistory">$page</a></td>
-    <td class=#if($pageHistory.passes == 0)"ignore"
-    #else"pass"#end>$pageHistory.passes</td>
-    <td class=#if($pageHistory.failures==0)"ignore"
-    #else"fail"#end>$pageHistory.failures</td>
+    <td class=#if($pageHistory.passes == 0)"ignore"#else"pass"#end>$pageHistory.passes</td>
+    <td class=#if($pageHistory.failures==0)"ignore"#else"fail"#end>$pageHistory.failures</td>
     <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
     #foreach($passFail in $barGraph.passFailArray())
     #if($passFail.Pass)
