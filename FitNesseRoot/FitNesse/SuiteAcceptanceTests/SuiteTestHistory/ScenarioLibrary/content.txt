@@ -43,3 +43,6 @@
 
 !|scenario|the top level history line for|page|should not have a link to|resultDate|
 |reject|content contains|<a style="text-decoration:none" href="@page?pageHistory&resultDate=@resultDate">|
+
+!|scenario|class for pass fail in top level history line|page||pass class||pass count||fail class||fail count|
+|ensure|html contains|<a href="/@page?pageHistory">@page</a></td> <td class="@passClass">@passCount</td> <td class="@failClass">@failCount</td>|

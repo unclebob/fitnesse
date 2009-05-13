@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||16:36:07 Wed, May 13, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||16:35:48 Wed, May 13, 2009|
 |FitNesse.UserGuide.PageProperties||14:10:29 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription.SpnegoAuthentication||14:04:04 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription||13:58:07 Wed, May 13, 2009|
@@ -8,8 +10,6 @@
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:31 Wed, May 13, 2009|
 |JunkParent.StopTestTest||09:49:09 Wed, May 13, 2009|
 |JunkPage.UseVarPage||15:20:57 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||07:20:00 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineResultElementsAreLinksToTestResults||06:57:08 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryLineIsLinkToTestResult||06:41:18 Tue, May 12, 2009|

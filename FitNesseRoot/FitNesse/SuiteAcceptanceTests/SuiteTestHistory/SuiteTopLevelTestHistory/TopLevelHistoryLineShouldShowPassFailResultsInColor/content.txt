@@ -9,9 +9,6 @@
 !|script|
 |get top level history|
 
-!|scenario|class for pass fail in top level history line|page||pass class||pass count||fail class||fail count|
-|ensure|html contains|<a href="/@page?pageHistory">@page</a></td> <td class="@passClass">@passCount</td> <td class="@failClass">@failCount</td>|
-
 !|class for pass fail in top level history line|
 |page          |pass class|pass count|fail class|fail count|
 |OneFailPage   |ignore    |0         |fail      |1         |
@@ -19,9 +16,3 @@
 |OnePassOneFail|pass      |1         |fail      |1         |
 |OneError      |ignore    |0         |fail      |1         |
 
-
-
-Pass Results > 0 should be green.
-Pass Results == 0 should be grey.
-Fail Results > 0 should be red.
-Fail Results == 0 should be grey.

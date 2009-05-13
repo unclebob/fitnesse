@@ -47,6 +47,7 @@
         <exclude name="**/*.zip"/>
         <exclude name="**/.DS_Store"/>
         <exclude name="**/Thumbs.db"/>
+        <exclude name="**/testResults/**"/>
       </fileset>
       <fileset dir="lib" includes="fitlibrary.jar"/>
     </copy>
