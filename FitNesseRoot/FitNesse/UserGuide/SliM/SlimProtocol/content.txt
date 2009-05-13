@@ -25,7 +25,7 @@ The response to this instruction list might look like this: {{{
 }}}
 Again, each element of the response list is itself a list of strings.  The first string in each response is the id of the instruction being responded to.  The second is the response value.  In this case the construction in instruction ''id_0'' was successful, and the call to function ''f'' with value ''3'' in instruction ''id_1'' returned a ''9''.
 
-That's pretty much it.  Lists of instructions go out.  Lists of responses come back.  Typically the instructions for an entire test page will be sent in one large list, yielding one large response list.
+That's pretty much it.  Lists of instructions go out.  Lists of responses come back.  Typically the instructions for an entire test page will be sent in one large list, yielding one large response list.  
 
 There is no type information in the instructions.  Each instruction is a list of strings.  Each response is a list of strings.  Strings and lists are the only two types in the entire protocol.  It is up to the !-SlimExecutor-! to find the functions and constructors that match the instructions, and to do the necessary type conversion.
 
@@ -66,10 +66,8 @@ So when you send a list of instructions, what you are really sending is a string
  6 Slim Server shuts down.
 
 !4 Exceptions
-Sometimes a function or a constructor will throw an exception in response to a ''make'', ''call'', or ''callAndAssign'' instruction. When this happens, the response value for that instruction will be: "__EXCEPTION__:''<exception string>''".  The ''<exception string>'' ought to be a stack trace or some other relevant debugging information.  If you want a nice yellow message to appear in one of the SLIM tables, then somewhere in the ''<<exception string>>'' put ''message:<<'' in front of the message and ''>>'' after it.  {{{message:<<can't find constructor>>}}}
-If the user throws an exception with a class name that contains "!-StopTest-!", then Slim should stop executing instructions, and return immediately.   This response for this type of exception should be "__EXCEPTION__:ABORT_SLIM_TEST:''<exception string>''".
-
-
+Sometimes a function or a constructor will throw an exception in response to a ''make'', ''call'', or ''callAndAssign'' instruction. When this happens, the response value for that instruction will be: "__EXCEPTION__:''<exception string>''".  The ''<exception string>'' ought to be a stack trace or some other relevant debugging information.  If you want a nice yellow message to appear in one of the SLIM tables, then somewhere in the ''<<exception string>>'' put ''message:<<'' in front of the message and ''>>'' after it.  e.g.   !style_code(message:<<can't find constructor>>)
+!5 Standard exception messages
 There are some standard exception messages that every Slim implementation should create.
 
 |COULD_NOT_INVOKE_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class whose instructor cannot be invoked.|
@@ -79,6 +77,10 @@ There are some standard exception messages that every Slim implementation should
 |NO_INSTANCE ''<instance name>''|Where ''<instance name>'' is the name of the missing instance.|
 |NO_CLASS ''<some class>''|Where ''<some class>'' is the class that could not be found.|
 |MALFORMED_INSTRUCTION [''instruction list'']|Where ''instruction list'' is a comma separated list of the instruction strings.|
+
+!4 Aborting a Test
+If a fixture throws an exception with a ''class'' name that contains "!style_code(!-StopTest-!)", then Slim should stop executing the instructions in the current batch, and return immediately.   The response for this type of exception should be "!style_code(__EXCEPTION__:ABORT_SLIM_TEST:)" which may have an optional suffix of: "!style_code(message:<<''reason''>>)".
+
 
 !4 Type Conversions
 The only types in the instructions and responses are lists and strings, and since the leaves of the lists must eventually be strings, all we really have to worry about are strings.  But we don't want to restrict our fixtures to use only Strings.  So Slim comes with some standard type converters that allow fixtures to take more convenient data types.

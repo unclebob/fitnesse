@@ -9,6 +9,7 @@ In the standard distribution there is a file named ''run.bat'' for windows and '
         -e <days> {14} Number of days before page versions expire
         -o omit updates
         -a {user:pwd | user-file-name} enable authentication.
+        -h do not record test history.
 }}}
 The values shown between braces are the default values.
 

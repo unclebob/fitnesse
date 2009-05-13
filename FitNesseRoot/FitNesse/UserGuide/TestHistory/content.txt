@@ -1,0 +1,13 @@
+Every time you run a test or a suite, the results are recorded in the ''test history database''.  You can view the history by clicking on the !style_code(Test History) button.  The reports are pretty self-explanatory.  
+
+When you click on !style_code(Test History) you will be shown the directory of all tests and suites that are in thie ''test history database''.  This directory also shows you the status of the last 20 results from each test or suite.  You can click on the name of the test or suite to get a detailed ''page history'', or you can click on any of the individual status elements to see the particular test result.
+
+The detailed ''page history'' shows you a directory of all the test results for that test or suite.  The bar chart shows how how the number of tests (for suites) or assertions (for tests) has grown over time, and the pass/fail ratio.  Clicking on an entry takes you to that specific test result.
+
+!4 Details.
+The ''test history database'' is kept in !style_code(!-FitNesseRoot/files/testResults-!).  Beneath this directory there is a subdirectory for each test or suite.  These directories contain the ''page history'' and are named for the page that contains the test or suite.  Beneath the page history directory is a file for each test result.  
+
+The test result files are named using the following scheme !style_code(YYYYMMDDHHMMSS_R_W_I_E.xml)  where YYYYMMDDHHMMSS is the date and time of the test run, and R, W, I, and E are integers representing the number of Right, Wrong, Ignored, and Exception counts for the test or suite.  For tests they are assertion counts.  For suites they are test counts.  (Example: !style_code(20090513134259_12_20_4_2.xml))
+
+The test files contain the XML that describes the test run.  The format of this XML is identical to the XML packet returned by the format=xml flag when you run a test.  (See <UserGuide.RestfulTests).
+  

@@ -35,6 +35,7 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |[[Test Table Styles][>TestTableStyles]]|''The different styles and uses of test tables and corresponding fixtures.''|
 |[[Test Suites][>TestSuites]]|''How to group many test pages into a suite; then tag, search, and execute them..''|
 |[[Acceptance Test Patterns][>AcceptanceTestPatterns]]|''Some patterns we have seen emerge while writing FitNesse [[Acceptance Tests][>AcceptanceTests]].''|
+|[[Test History][>TestHistory]]|''The results of all test runs are recorded.  You can access and display those results at any time.''|
 
 !2 Tutorial: FitNesse Fixtures
 |[[Fixture Code][>FixtureCode]]|''An intro to the fixture code that lets you run FitNesse tables.''|

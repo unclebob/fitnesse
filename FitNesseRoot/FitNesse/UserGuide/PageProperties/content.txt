@@ -15,7 +15,7 @@ The properties are:
  * '''Versions''': Enables the '''Versions''' button.  Hitting this button brings up a list of old versions of the page.  If this property is not set, then the button will not be displayed, but versions will still be tracked.
  * '''Properties''': Enables the '''Properties''' button.  Hitting this button brings up a pages that allows you to edit all page properties mentioned here.  If you disable this property users will not have a convenient way to change the properties of a page.  (Of course they can always use the ''page?properties'' URL.)
 !3 Implicit Page Attributes
- * Pages that begin or end with '''"Test"''' will automatically have the '''Test''' property set.
- * Pages that begin or end with '''"Suite"''' will automatically have the '''Suite''' property set.
+ * Pages that begin or end with '''"Test"''' or '''"Example"''' will automatically have the '''Test''' property set.
+ * Pages that begin or end with '''"Suite"''' or end with "'''Examples'''" will automatically have the '''Suite''' property set.
  * Once these pages are created, you can set or clear these properties as usual.
 
