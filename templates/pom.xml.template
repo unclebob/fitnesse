@@ -47,6 +47,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.6.2</version>
+    </dependency>
+    <dependency>
       <groupId>org.fitnesse</groupId>
       <artifactId>fitlibrary</artifactId>
       <version>20080812</version>
@@ -79,6 +84,17 @@
           <includes>
             <include>**/*Test.java</include>
           </includes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+                <mainClass>fitnesseMain.FitNesseMain</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>

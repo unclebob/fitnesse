@@ -110,7 +110,7 @@ public class TestRunnerTask extends Task {
   private CommandlineJava initializeJavaCommand() {
     CommandlineJava cmd = new CommandlineJava();
     cmd.setClassname(testRunnerClass);
-    cmd.createVmArgument().setValue("-Xmx100M");
+    cmd.createVmArgument().setValue("-Xmx200M");
     if (verbose)
       cmd.createArgument().setValue("-v");
     if (resultsXMLPage != null) {
