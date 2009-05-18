@@ -6,16 +6,15 @@ import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
 
 public class SuiteContentsFinderTest {
 
@@ -25,7 +24,6 @@ public class SuiteContentsFinderTest {
   private PageCrawler crawler;
   private WikiPage testPage2;
   private WikiPage testChildPage;
-  private String suitePageName;
   private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
   "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
   "|string|get string arg?|\n" +
@@ -33,12 +31,11 @@ public class SuiteContentsFinderTest {
 
   @Before
   public void setUp() throws Exception {
-    suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     PageData data = root.getData();
     root.commit(data);
-    suite = crawler.addPage(root, PathParser.parse(suitePageName), "This is the test suite\n");
+    suite = crawler.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
     testPage = addTestPage(suite, "TestOne", "My test");
   }
   

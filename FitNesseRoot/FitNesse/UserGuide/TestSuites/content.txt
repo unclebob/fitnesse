@@ -38,3 +38,9 @@ You can execute the tests that match a tag by using the !style_code(suiteFilter)
 !style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&suiteFilter=smoke,critical-!)  If you want the results in xml, simply put !style_code(&formamt=xml) in the url too.
 
 Typically, you will need only a few of such filtered suites, so it is suggested to build a link on the front page or so which contains the respective suite filter parameters. (If you simply click on the ''Suites'' button to run a suite, the !-suiteFilter-! is not set, so all tests in the respective subwiki are run.)
+
+!4 Executing test starting with a certain test. 
+Sometimes half the suite will run okay, but after a point all tests will start failing.   In that case you can save time re-running the tests by stating which test you would like to start with.   For instance:
+!style_code(!-http://&lt;host>:&lt;port>/&lt;suite path and test name>?responder=suite&startTest=TestTwo-!) will run all tests coming after !-TestTwo-!
+
+Remember, that the order tests run is alphabetical.  So in the above example, !-TestThree-! will not run because !-TestTwo-! actually comes after !-TestThree-!

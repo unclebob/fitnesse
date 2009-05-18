@@ -2,24 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertNotSubString;
+import static util.RegexTestCase.assertSubString;
+import static util.RegexTestCase.divWithIdAndContent;
+
 import fitnesse.FitNesseContext;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.*;
-import static junit.framework.Assert.fail;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import static util.RegexTestCase.*;
 import util.XmlUtil;
 
 public class SuiteResponderTest {
@@ -246,7 +256,28 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestTwo", results);
     assertHasRegexp("#TestThree", results);
   }
+  
+  @Test
+  public void testFirstTest() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("firstTest=TestThree");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertHasRegexp("#TestThree", results);
+  }
 
+  @Test
+  public void testFirstTestWholePath() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("firstTest=SuitePage.TestThree");
+    String results = runSuite();
+    assertDoesntHaveRegexp("#TestOne", results);
+    assertHasRegexp("#TestTwo", results);
+    assertHasRegexp("#TestThree", results);
+  }
+
+  
   @Test
   public void testTagsShouldBeInheritedFromSuite() throws Exception {
     PageData suiteData = suite.getData();
