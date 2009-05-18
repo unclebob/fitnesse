@@ -9,33 +9,33 @@
 !define TopOfPAGE (${TopFONT}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}[[${LPAREN}to top${RPAREN}][#TopOfPAGE]]${FONTend})
 
 !define FitNESSE {!-FitNesse-!}
-| !define OPT {''[''}        | !define OPTend {'']''}   | !define OR {''!-|-!''}   |
-| !define DOT {'''.'''}      | !define LT {'''<'''}     | !define GT {'''>'''}     |
-| !define BAR {'''!-|-!'''}  | !define LBRACE ('''{''') | !define RBRACE ('''}''') |
-| !define DIVend {!-</div>-!}| !define LPAREN {'''('''} | !define RPAREN {''')'''} |
-| !define BANG {'''!-!-!'''} | !define SPC {!-&nbsp;-!} | !define NL {!-<br/>-!}    |
-| !define TEXT {''text''}   | | !define SLASH {'''/'''} | !define NUL {}          |
-| !define PageNAME {''!-PageName-!''} | !define PagePATH {''!-PagePath-!''}       |
-| !define LabelNAME {''label-name''}  | !define AnyPagePATH {''!-AnyPagePath-!''} |
-| !define CODE {!-<font style="font-family:Courier New">-!} | !define CODEend (${FONTend}) |
-| !define HDR {!-<div style="margin-top:.5em;font-family:Tahoma;font-size:14pt;font-weight:bold;color:#602060">-!}       | !define HDRend (${TopOfPAGE}${DIVend})   |
+|!define OPT {''[''}                                                                                             |!define OPTend {'']''}  |!define OR {''!-        |-!''}                   |
+|!define DOT {'''.'''}                                                                                           |!define LT {'''<'''}    |!define GT {'''>'''}                             |
+|!define BAR {'''!-                                                                                              |-!'''}                  |!define LBRACE ('''{''')|!define RBRACE ('''}''')|
+|!define DIVend {!-</div>-!}                                                                                     |!define LPAREN {'''('''}|!define RPAREN {''')'''}                         |
+|!define BANG {'''!-!-!'''}                                                                                      |!define SPC {!-&nbsp;-!}|!define NL {!-<br/>-!}                           |
+|!define TEXT {''text''}                                                                                         |                        |!define SLASH {'''/'''} |!define NUL {}          |
+|!define PageNAME {''!-PageName-!''}                                                                             |!define PagePATH {''!-PagePath-!''}                                       |
+|!define LabelNAME {''label-name''}                                                                              |!define AnyPagePATH {''!-AnyPagePath-!''}                                 |
+|!define CODE {!-<font style="font-family:Courier New">-!}                                                       |!define CODEend (${FONTend})                                              |
+|!define HDR {!-<div style="margin-top:.5em;font-family:Tahoma;font-size:14pt;font-weight:bold;color:#602060">-!}|!define HDRend (${TopOfPAGE}${DIVend})                                    |
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define TOC (|${HDR} Sections ${DIVend}|
-| !c '''[[ ${FitNESSE} Command Line ][#FitNesseCommandLINE]] '''|
-| !c '''[[ Character Formatting     ][#CharacterFORMATTING]] '''|
-| !c '''[[ Line & Block Formatting  ][#LineBlockFORMATTING]] '''|
-| !c '''[[ Links & References       ][#LinksAndREFERENCES]] '''|
-| !c '''[[ Includes & Informational ][#IncludesINFORMATIONAL]] '''|
-| !c '''[[ Variable Usage           ][#VARIABLES]] '''|
-| !c '''[[ Global Variables         ][#GlobalVARIABLES]] '''|
-| !c '''[[ Global Properties        ][#GlobalPROPERTIES]] '''|
-| !c '''[[ Testable Tables          ][#TestTABLES]] '''|
-| !c '''[[ Wiki Page Actions        ][#FitNesseACTIONS]] '''|
+|!c '''[[ ${FitNESSE} Command Line ][#FitNesseCommandLINE]] '''  |
+|!c '''[[ Character Formatting     ][#CharacterFORMATTING]] '''  |
+|!c '''[[ Line & Block Formatting  ][#LineBlockFORMATTING]] '''  |
+|!c '''[[ Links & References       ][#LinksAndREFERENCES]] '''   |
+|!c '''[[ Includes & Informational ][#IncludesINFORMATIONAL]] '''|
+|!c '''[[ Variable Usage           ][#VARIABLES]] '''            |
+|!c '''[[ Global Variables         ][#GlobalVARIABLES]] '''      |
+|!c '''[[ Global Properties        ][#GlobalPROPERTIES]] '''     |
+|!c '''[[ Testable Tables          ][#TestTABLES]] '''           |
+|!c '''[[ Wiki Page Actions        ][#FitNesseACTIONS]] '''      |
 )
 !define GLOSSARY (|${HDR} Glossary ${DIVend}|
-| ${PagePATH}      |${CODE} ${PageNAME}${DOT}${OPT}${PageNAME}${OPTend} ${CODEend}|
-| ${AnyPagePATH}   |${CODE} ${OPT}${LT}${OR}${DOT}${OR}${GT}${OPTend}${PagePATH} ${CODEend}|
-| Symbolic Link    | A locally-defined alias to any accessible page.${NL}Symbolic links are created by clicking ${BUTTON}Properties${BUTTONend}${NL}and entering information in the bottom section${NL}titled "Symbolic Links". |
+|${PagePATH}   |${CODE} ${PageNAME}${DOT}${OPT}${PageNAME}${OPTend} ${CODEend}                                                                                                                                            |
+|${AnyPagePATH}|${CODE} ${OPT}${LT}${OR}${DOT}${OR}${GT}${OPTend}${PagePATH} ${CODEend}                                                                                                                                   |
+|Symbolic Link |A locally-defined alias to any accessible page.${NL}Symbolic links are created by clicking ${BUTTON}Properties${BUTTONend}${NL}and entering information in the bottom section${NL}titled "Symbolic Links".|
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define BUTTON {!-<font style="color:white;background-color:darkblue">&nbsp;-!}
@@ -52,8 +52,8 @@
 !define FitNesseOptFileAUTH (''/auth/file/path/and/name'')
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HorizontalLINES (|${CODE}''over-text''${NUL}'''!------!'''${NUL}''under-text''${CODEend}|thinnest|
-|${CODE}''over-text''${NUL}'''!-------!'''${NUL}''under-text''${CODEend}|safest - no conflict with workflow phase separators|
-|${CODE}''over-text''${NUL}'''!-----------!'''${NUL}''under-text''${CODEend}|thicker|
+|${CODE}''over-text''${NUL}'''!-------!'''${NUL}''under-text''${CODEend}    |safest - no conflict with workflow phase separators|
+|${CODE}''over-text''${NUL}'''!-----------!'''${NUL}''under-text''${CODEend}|thicker                                            |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HEADINGS (${BANG}'''1''' ''largest heading text''
@@ -79,13 +79,13 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define PageLINKS (|${CODE} ${DOT}R${NUL}ootPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}| from root         |
-|${CODE} S${NUL}ameLevelPage${OPT}${DOT}C${NUL}hildPage${OPTend}   ${CODEend}| sibling           |
-|${CODE} ${GT}C${NUL}hildPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}| child or symbolic |
+|${CODE} S${NUL}ameLevelPage${OPT}${DOT}C${NUL}hildPage${OPTend}   ${CODEend}|sibling          |
+|${CODE} ${GT}C${NUL}hildPage${OPT}${DOT}C${NUL}hildPage${OPTend}  ${CODEend}|child or symbolic|
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define CollapSIBLE (|${CODE} ${CollapsibleEXPANDED}  ${CODEend}| expanded  | |
-|${CODE} ${CollapsibleCOLLAPSED} ${CODEend}| collapsed | |
-|${CODE} ${CollapsibleINVISIBLE} ${CODEend}| invisible | ''useful for hidding define's, etc.'' |
+|${CODE} ${CollapsibleCOLLAPSED} ${CODEend}|collapsed|                                     |
+|${CODE} ${CollapsibleINVISIBLE} ${CODEend}|invisible|''useful for hidding define's, etc.''|
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define HASH {'''!-#-!'''}
@@ -93,30 +93,30 @@ ${SPC}${SPC}'' N.B.: Multiple asterisks are allowed, e.g.,'' ${BANG}'''****'''${
 !define RSQUARE {''']'''}
 
 !define JumpTO (
-|${CODE} ${TEXT} ${HASH}${LabelNAME} ${TEXT} ${CODEend}      | in-line |
-|${CODE} ${DOT}${HASH}${LabelNAME} ${CODEend}                | left-justified |
-|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend}| in an alias    |
+|${CODE} ${TEXT} ${HASH}${LabelNAME} ${TEXT} ${CODEend}                                                   |in-line       |
+|${CODE} ${DOT}${HASH}${LabelNAME} ${CODEend}                                                             |left-justified|
+|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend}|in an alias   |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define ExternalLINKS (|${CODE} '''http:'''${SLASH}${SLASH}''url-path'' ${NL} ${CODEend}| Web    |
-|${CODE} '''http:'''${SLASH}${SLASH}'''files'''${SLASH}''localPath'' ${CODEend}  | Local  |
-|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}/files'''${SLASH}''localPath''${NUL}${RSQUARE}${RSQUARE} ${CODEend}| Alias  |
-|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${AnyPagePATH}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend}| Alias  |
-|${CODE} ${TEXT}'''@'''${TEXT}${DOT}${TEXT} ${CODEend}                               | mailto |
+|${CODE} '''http:'''${SLASH}${SLASH}'''files'''${SLASH}''localPath'' ${CODEend}                                            |Local |
+|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}/files'''${SLASH}''localPath''${NUL}${RSQUARE}${RSQUARE} ${CODEend}|Alias |
+|${CODE} ${LSQUARE}${LSQUARE}${TEXT}${RSQUARE}${LSQUARE}${AnyPagePATH}${HASH}${LabelNAME}${RSQUARE}${RSQUARE} ${CODEend}   |Alias |
+|${CODE} ${TEXT}'''@'''${TEXT}${DOT}${TEXT} ${CODEend}                                                                     |mailto|
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define IncludePAGE (|${CODE} ${BANG}'''include''' ${AnyPagePATH}    ${CODEend}| expanded border  |
-|${CODE} ${BANG}'''include -c''' ${AnyPagePATH} ${CODEend}| collapsed border |
-|${CODE} ${BANG}'''include -seamless''' ${AnyPagePATH} ${CODEend}| no border |
-|${CODE} ${BANG}'''include -setup''' ${AnyPagePATH} ${CODEend}| appears like S${NUL}etUp |
-|${CODE} ${BANG}'''include -teardown''' ${AnyPagePATH} ${CODEend}| appears like T${NUL}earDown |
-|${CODE} ${BAR}${SPC}${BANG}'''include ''' ${AnyPagePATH}${SPC}${BAR} ${CODEend}| in a table cell |
+|${CODE} ${BANG}'''include -c''' ${AnyPagePATH} ${CODEend}                      |collapsed border           |
+|${CODE} ${BANG}'''include -seamless''' ${AnyPagePATH} ${CODEend}               |no border                  |
+|${CODE} ${BANG}'''include -setup''' ${AnyPagePATH} ${CODEend}                  |appears like S${NUL}etUp   |
+|${CODE} ${BANG}'''include -teardown''' ${AnyPagePATH} ${CODEend}               |appears like T${NUL}earDown|
+|${CODE} ${BAR}${SPC}${BANG}'''include ''' ${AnyPagePATH}${SPC}${BAR} ${CODEend}|in a table cell            |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define PictureINSERT (|${CODE} ${BANG}'''img''' ''url-to-image-file'' ${CODEend}| in-line |
-|${CODE} ${BANG}'''img-l''' ''url-to-image-file'' ${CODEend}| image left-justified, text wraps on right |
-|${CODE} ${BANG}'''img-r''' ''url-to-image-file'' ${CODEend}| image right-justified, text wraps on the left |
-|${CODE} '''[['''${BANG}'''img'''${OPT}'''-l'''${OR}'''-r'''${OPTend} ''url-to-image-file''${NUL}''']['''${NUL}''some-link''${NUL}''']]''' ${CODEend}| as a clickable link |
+|${CODE} ${BANG}'''img-l''' ''url-to-image-file'' ${CODEend}                                                                                         |image left-justified, text wraps on right    |
+|${CODE} ${BANG}'''img-r''' ''url-to-image-file'' ${CODEend}                                                                                         |image right-justified, text wraps on the left|
+|${CODE} '''[['''${BANG}'''img'''${OPT}'''-l'''${OR}'''-r'''${OPTend} ''url-to-image-file''${NUL}''']['''${NUL}''some-link''${NUL}''']]''' ${CODEend}|as a clickable link                          |
 )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define FixtureTABLE (${BANG}${BAR} ''fixture specification'' ${BAR}
@@ -138,13 +138,13 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 !define SearchForARG2TOO (methodNameToo${LPAREN}''p1'',''p2''${RPAREN}${NL}'''get'''M${NUL}ethodNameToo${LPAREN}''p1'',''p2''${RPAREN}${NL}'''set'''M${NUL}ethodNameToo${LPAREN}''p1'',''p2''${RPAREN})
 
 !define FixtureNAMING (|!note The cells below are on one line regardless of word-wrapping |
-|'''table spec'''|'''Searches for:'''|
-|${CODE} ${BANG}${BAR} Grace Full Name ${BAR} ${CODEend}| ${SearchForFIXTURE} |
-|${CODE} ${BANG}${BAR} grace full method ${BAR} ${CODEend}| ${SearchForMETHOD} |
-|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR} ${CODEend}| ${SearchForARG1} |
-|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR} too ${BAR} ${CODEend}| ${SearchForARG1TOO} |
-|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR} also ${BAR}''p2''${BAR} ${CODEend}| ${SearchForARG2} |
-|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR}''' also ${BAR}''p2''${BAR} too ${BAR} ${CODEend}| ${SearchForARG2TOO} |
+|'''table spec'''                                                                                     |'''Searches for:'''|
+|${CODE} ${BANG}${BAR} Grace Full Name ${BAR} ${CODEend}                                              |${SearchForFIXTURE}|
+|${CODE} ${BANG}${BAR} grace full method ${BAR} ${CODEend}                                            |${SearchForMETHOD} |
+|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR} ${CODEend}                                      |${SearchForARG1}   |
+|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR} too ${BAR} ${CODEend}                           |${SearchForARG1TOO}|
+|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR} also ${BAR}''p2''${BAR} ${CODEend}              |${SearchForARG2}   |
+|${CODE} ${BANG}${BAR} method name ${BAR}''p1''${BAR}''' also ${BAR}''p2''${BAR} too ${BAR} ${CODEend}|${SearchForARG2TOO}|
 )
 *!
 #*******************************************************************************************
@@ -156,116 +156,118 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 #-------------------------------------------------------------------------------------------
 !anchor FitNesseCommandLINE
 -----!note See ''run.sh'' and ''run.bat'' for examples of default start-up scripts.
-|${HDR} !-FitNesse-! Command Line and Options ${DIVend}|
+|${HDR} !-FitNesse-! Command Line and Options ${DIVend}                                                                                                                                                                                                                                                                                                                                                                                              |
 |${CODE} ${OPT}''path/to/java/''${OPTend}'''java''' ${FitNesseOptCLASSPATH} '''fitnesse.${FitNESSE}''' ${OPT}${FitNesseOptOMIT}${OPTend} ${OPT}${FitNesseOptPORT}${OPTend} ${OPT}${FitNesseOptDIR}${OPTend} ${OPT}${FitNesseOptROOT}${OPTend} ${OPT}${FitNesseOptEXPIRE}${OPTend} ${OPT}${FitNesseOptLOG}${OPTend} ${OPT}'''-a''' ''{''${FitNesseOptOneAUTH} ${OR} ${FitNesseOptFileAUTH}''}''${OPTend} ${OPT}''other arguments''${OPTend} ${CODEend}|
-|''' ''option'' '''|''' ''default'' '''|''' ''description'' '''|
-|${CODE}'''-a''' ${FitNesseOptOneAUTH}${CODEend}|${CODE} ''no auth''     ${CODEend}| Enforces access for one user|
-|${CODE}'''-a''' ${FitNesseOptFileAUTH}${CODEend}|${CODE} ''no auth''     ${CODEend}| Enforces access for a file of users with encrypted passwords|
-|${CODE}${FitNesseOptDIR}${CODEend}|${CODE} ${DOT}          ${CODEend}| Path to the fitnesse ''wiki'' home where ${FitNESSE}Root or ''-r name'' resides |
-|${CODE}${FitNesseOptEXPIRE}${CODEend}|${CODE} '''14'''        ${CODEend}| Number of days to retain older versions (.zip files) |
-|${CODE}${FitNesseOptLOG}${CODEend}|${CODE} ''off''         ${CODEend}| Where to put and what to call the run log   |
-|${CODE}${FitNesseOptOMIT}${CODEend}|${CODE} ''update''      ${CODEend}| Prevents (omits) updating from fitnesse.org |
-|${CODE}${FitNesseOptPORT}${CODEend}|${CODE} '''80'''        ${CODEend}| Port for ${FitNESSE} to listen on |
-|${CODE}${FitNesseOptROOT}${CODEend}|${CODE} '''${FitNESSE}Root''' ${CODEend}| Name of root folder in the fitnesse ''wiki'' home or ''-d'' path |
+|''' ''option'' '''                                                                                                                       |''' ''default'' '''                                                                                                              |''' ''description'' '''                                                                                                                                                 |
+|${CODE}'''-a''' ${FitNesseOptOneAUTH}${CODEend}                                                                                          |${CODE} ''no auth''     ${CODEend}                                                                                               |Enforces access for one user                                                                                                                                            |
+|${CODE}'''-a''' ${FitNesseOptFileAUTH}${CODEend}                                                                                         |${CODE} ''no auth''     ${CODEend}                                                                                               |Enforces access for a file of users with encrypted passwords                                                                                                            |
+|${CODE}${FitNesseOptDIR}${CODEend}                                                                                                       |${CODE} ${DOT}          ${CODEend}                                                                                               |Path to the fitnesse ''wiki'' home where ${FitNESSE}Root or ''-r name'' resides                                                                                         |
+|${CODE}${FitNesseOptEXPIRE}${CODEend}                                                                                                    |${CODE} '''14'''        ${CODEend}                                                                                               |Number of days to retain older versions (.zip files)                                                                                                                    |
+|${CODE}${FitNesseOptLOG}${CODEend}                                                                                                       |${CODE} ''off''         ${CODEend}                                                                                               |Where to put and what to call the run log                                                                                                                               |
+|${CODE}${FitNesseOptOMIT}${CODEend}                                                                                                      |${CODE} ''update''      ${CODEend}                                                                                               |Prevents (omits) updating from fitnesse.org                                                                                                                             |
+|${CODE}${FitNesseOptPORT}${CODEend}                                                                                                      |${CODE} '''80'''        ${CODEend}                                                                                               |Port for ${FitNESSE} to listen on                                                                                                                                       |
+|${CODE}${FitNesseOptROOT}${CODEend}                                                                                                      |${CODE} '''${FitNESSE}Root''' ${CODEend}                                                                                         |Name of root folder in the fitnesse ''wiki'' home or ''-d'' path                                                                                                        |
 #-------------------------------------------------------------------------------------------
 !anchor FitNesseACTIONS
-|${HDR} !-FitNesse-! Actions ${HDRend}|
-| '''Edit''' this page                 | ${CODE} ''url''${NUL}'''?edit'''        ${CODEend} |
-| '''Create''' a new page directly | ${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}${CODEend}${NL}'''or''' ${NL} ${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}'''?edit'''${CODEend} |
-| '''Test''' this page                 | ${CODE} ''url''${NUL}'''?test'''        ${CODEend} |
-| '''Suite''' test this spage          | ${CODE} ''url''${NUL}'''?suite'''       ${CODEend} |
-| Set '''properties''' of this page    | ${CODE} ''url''${NUL}'''?properties'''  ${CODEend} |
-| See '''versions''' of this page      | ${CODE} ''url''${NUL}'''?versions'''    ${CODEend} |
-| '''Refactor''' this page             | ${CODE} ''url''${NUL}'''?refactor'''    ${CODEend} |
-| '''Search''' pages from here         | ${CODE} ''url''${NUL}'''?searchForm'''  ${CODEend} |
-| '''Where''' is this page referenced? | ${CODE} ''url''${NUL}'''?whereUsed'''   ${CODEend} |
------
+|${HDR} !-FitNesse-! Actions ${HDRend}                                                                                                                                                                   |
+|'''Edit''' this page                |${CODE} ''url''${NUL}'''?edit'''        ${CODEend}                                                                                                                 |
+|'''Create''' a new page directly    |${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}${CODEend}${NL}'''or''' ${NL} ${CODE}''current-url''${NUL}'''.'''!-NewPageName-!${NUL}'''?edit'''${CODEend}|
+|'''Test''' this page                |${CODE} ''url''${NUL}'''?test'''        ${CODEend}                                                                                                                 |
+|'''Suite''' test this page         |${CODE} ''url''${NUL}'''?suite'''        ${CODEend}                                                                                                                 |
+|Set '''properties''' of this page   |${CODE} ''url''${NUL}'''?properties'''  ${CODEend}                                                                                                                 |
+|See '''versions''' of this page     |${CODE} ''url''${NUL}'''?versions'''    ${CODEend}                                                                                                                 |
+|'''Refactor''' this page            |${CODE} ''url''${NUL}'''?refactor'''    ${CODEend}                                                                                                                 |
+|'''Search''' pages from here        |${CODE} ''url''${NUL}'''?searchForm'''  ${CODEend}                                                                                                                 |
+|'''Where''' is this page referenced?|${CODE} ''url''${NUL}'''?whereUsed'''   ${CODEend}                                                                                                                 |
+|'''Debug''' this test page          |${CODE} ''url''${NUL}'''?debug'''       ${CODEend}                                                                                                                 |
+|'''Suite''' test this page with a suite filter "passing"         |${CODE} ''url''${NUL}'''?responder=suite&suiteFilter=passing'''       ${CODEend}  |
 #-------------------------------------------------------------------------------------------
 !anchor CharacterFORMATTING
-|${HDR} Character Formatting ${HDRend}|
-| Comment          |${CODE} '''!-#-!'''${TEXT}    ${CODEend}| ''Can also be used to comment-out markup'' |
-| Italics          |${CODE} '''!-''-!'''${TEXT}'''!-''-!'''   ${CODEend}||
-| Bold             |${CODE} '''!-'''-!'''${TEXT}'''!-'''-!''' ${CODEend}||
-| Style            |${CODE} '''!-!style_<someStyle>(text)-!''' ${CODEend}|The style of ''text'' will be the CSS class ''<someStyle>''|
-| Strike-through   |${CODE} '''!----!'''${TEXT}'''!----!'''   ${CODEend}||
-| "As-is"/escaping |${CODE} '''!-!-!-'''${TEXT}'''-!-!-!''' ${CODEend}| ''Can also be used to insert HTML tags directly''|
-| "As-is"          |${CODE} '''!-!-!<'''${TEXT}'''>!-!-!''' ${CODEend}| ''Will escape HTML tags so they display in plain text.''|
-| Alias Link       |${CODE} '''[['''${TEXT}''']['''${AnyPagePATH}''']]''' ${CODEend}||
+|${HDR} Character Formatting ${HDRend}                                                                                                        |
+|Comment         |${CODE} '''!-#-!'''${TEXT}    ${CODEend}                        |''Can also be used to comment-out markup''                 |
+|Italics         |${CODE} '''!-''-!'''${TEXT}'''!-''-!'''   ${CODEend}            |                                                           |
+|Bold            |${CODE} '''!-'''-!'''${TEXT}'''!-'''-!''' ${CODEend}            |                                                           |
+|Style           |${CODE} '''!-!style_<someStyle>(text)-!''' ${CODEend}           |The style of ''text'' will be the CSS class ''<someStyle>''|
+|Strike-through  |${CODE} '''!----!'''${TEXT}'''!----!'''   ${CODEend}            |                                                           |
+|"As-is"/escaping|${CODE} '''!-!-!-'''${TEXT}'''-!-!-!''' ${CODEend}              |''Can also be used to insert HTML tags directly''          |
+|"As-is"         |${CODE} '''!-!-!<'''${TEXT}'''>!-!-!''' ${CODEend}              |''Will escape HTML tags so they display in plain text.''   |
+|Alias Link      |${CODE} '''[['''${TEXT}''']['''${AnyPagePATH}''']]''' ${CODEend}|                                                           |
 #-------------------------------------------------------------------------------------------
 !anchor LineBlockFORMATTING
-|${HDR} Line & Block Formatting ${HDRend}|
-| workflow break    |${CODE} '''!------!''' ${CODEend}...separates each "phase" |
-| Horizontal Line   |${HorizontalLINES}|
-| Note              |${CODE} ${BANG}'''note''' ${TEXT} ${CODEend}|
-| Headings          |${CODE} ${HEADINGS} ${CODEend}|
-| Centered          |${CODE} ${BANG}'''c''' ${TEXT} ${CODEend}|
-| Formatted "as is" |${CODE} '''!-{{{-!'''${TEXT}'''!-}}}-!''' ${CODEend}| note: causes extra line afterward |
-| Collapsible       |${CollapSIBLE}|
+|${HDR} Line & Block Formatting ${HDRend}                                                                |
+|workflow break   |${CODE} '''!------!''' ${CODEend}...separates each "phase"                            |
+|Horizontal Line  |${HorizontalLINES}                                                                    |
+|Note             |${CODE} ${BANG}'''note''' ${TEXT} ${CODEend}                                          |
+|Headings         |${CODE} ${HEADINGS} ${CODEend}                                                        |
+|Centered         |${CODE} ${BANG}'''c''' ${TEXT} ${CODEend}                                             |
+|Formatted "as is"|${CODE} '''!-{{{-!'''${TEXT}'''!-}}}-!''' ${CODEend}|note: causes extra line afterward|
+|Collapsible      |${CollapSIBLE}                                                                        |
 #-------------------------------------------------------------------------------------------
 !anchor LinksAndREFERENCES
-|${HDR} Links & References ${HDRend}|
-| Page links |${PageLINKS}|
-| Cross-reference &${NL}Suite Include |${CODE} ${BANG}'''see''' ${AnyPagePATH} ${CODEend}|
-| Define "in-page" label  |${CODE} ${BANG}'''anchor''' ${LabelNAME} ${CODEend}| a.k.a. anchor |
-| Jump to "in-page" label |${JumpTO}|
-| External Links          |${ExternalLINKS}|
+|${HDR} Links & References ${HDRend}                                                                  |
+|Page links                         |${PageLINKS}                                                     |
+|Cross-reference &${NL}Suite Include|${CODE} ${BANG}'''see''' ${AnyPagePATH} ${CODEend}               |
+|Define "in-page" label             |${CODE} ${BANG}'''anchor''' ${LabelNAME} ${CODEend}|a.k.a. anchor|
+|Jump to "in-page" label            |${JumpTO}                                                        |
+|External Links                     |${ExternalLINKS}                                                 |
 #-------------------------------------------------------------------------------------------
 !anchor IncludesINFORMATIONAL
-|${HDR} Includes & Informational ${HDRend}|
-| Timestamp |${CODE} ${BANG}'''lastmodified'''     ${CODEend}|
-| Timestamp |${CODE} ${BANG}'''today'''            ${CODEend}|
-| Contents List |${CODE} ${BANG}'''contents'''     ${CODEend}|
-| Contents Tree |${CODE} ${BANG}'''contents -R'''  ${CODEend}|
-| Contents Sub-tree |${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend}|
-| Contents List - Graceful |${CODE} ${BANG}'''contents -g'''     ${CODEend}|
-| Contents List - Properties |${CODE} ${BANG}'''contents -p'''     ${CODEend}|
-| Contents List - Suite Filters |${CODE} ${BANG}'''contents -f'''     ${CODEend}|
-| Contents List - Help Text |${CODE} ${BANG}'''contents -h'''     ${CODEend}|
-| Include Page  |${IncludePAGE}|
-| Picture Insert |${PictureINSERT}|
+|${HDR} Includes & Informational ${HDRend}                                                    |
+|Timestamp                    |${CODE} ${BANG}'''lastmodified'''     ${CODEend}               |
+|Timestamp                    |${CODE} ${BANG}'''today'''            ${CODEend}               |
+|Contents List                |${CODE} ${BANG}'''contents'''     ${CODEend}                   |
+|Contents Tree                |${CODE} ${BANG}'''contents -R'''  ${CODEend}                   |
+|Contents Sub-tree            |${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend}|
+|Contents List - Graceful     |${CODE} ${BANG}'''contents -g'''     ${CODEend}                |
+|Contents List - Properties   |${CODE} ${BANG}'''contents -p'''     ${CODEend}                |
+|Contents List - Suite Filters|${CODE} ${BANG}'''contents -f'''     ${CODEend}                |
+|Contents List - Help Text    |${CODE} ${BANG}'''contents -h'''     ${CODEend}                |
+|Include Page                 |${IncludePAGE}                                                 |
+|Picture Insert               |${PictureINSERT}                                               |
 #-------------------------------------------------------------------------------------------
 !anchor VARIABLES
-|${HDR} Variables ${HDRend}|
-| Variable Definition   |${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')''' ${CODEend}${NL}|
-| Variable Usage        |${CODE} '''$'''${LBRACE}''name''${RBRACE} ${CODEend}|
-| Expression Evaluation |${CODE} '''!-${=-!'''${NUL}''expression''${NUL}'''!-=}-!''' ${CODEend}| ''expression'' may contain variables |
+|${HDR} Variables ${HDRend}                                                                                                                                                  |
+|Variable Definition  |${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')''' ${CODEend}${NL}|
+|Variable Usage       |${CODE} '''$'''${LBRACE}''name''${RBRACE} ${CODEend}                                                                                                  |
+|Expression Evaluation|${CODE} '''!-${=-!'''${NUL}''expression''${NUL}'''!-=}-!''' ${CODEend}                      |''expression'' may contain variables                     |
 #-------------------------------------------------------------------------------------------
 !anchor GlobalVARIABLES
-|${HDR} Global Variables ${HDRend} |
-|''' NAME '''                      |''' Java Default '''|'''!-FitLibrary (Unix) Default-!'''|''' .NET Default       '''|
-|${CODE} COMMAND_PATTERN   ${CODEend}| !- java -cp %p %m -! | !- java -cp %p %m -! | !- %m %p  -! |
-|${CODE} PATH_SEPARATOR    ${CODEend}| ${SPC} : ${SPC} ''!-(system-dependent)-!'' | ${SPC} : ${SPC} ''!-(system-dependent)-!''|  ${SPC} !-;-! ${SPC} |
-|${CODE} TEST_RUNNER       ${CODEend}| !-fit.FitServer-! | !-fitlibrary.suite.FitLibraryServer-! | !-dotnet\FitServer.exe-! |
+|${HDR} Global Variables ${HDRend}                                                                                                                      |
+|''' NAME '''                          |''' Java Default '''                      |'''!-FitLibrary (Unix) Default-!'''       |''' .NET Default       '''|
+|${CODE} COMMAND_PATTERN   ${CODEend}  |!- java -cp %p %m -!                      |!- java -cp %p %m -!                      |!- %m %p  -!              |
+|${CODE} REMOTE_DEBUG_COMMAND${CODEend}|!- java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!                         |!-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!     |!-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!  |
+|${CODE} PATH_SEPARATOR    ${CODEend}  |${SPC} : ${SPC} ''!-(system-dependent)-!''|${SPC} : ${SPC} ''!-(system-dependent)-!''|${SPC} !-;-! ${SPC}       |
+|${CODE} TEST_RUNNER       ${CODEend}  |!-fit.FitServer-!                         |!-fitlibrary.suite.FitLibraryServer-!     |!-dotnet\FitServer.exe-!  |
 
-|''' NAME '''                        |''' Default '''|''' Values ''' |''' Notes '''|
-|${CODE} TEST_SYSTEM       ${CODEend}| !c fit           | !c fit&bar;slim   |'' Selects the test system to use for this, and descendant pages.''|
-|${CODE} SLIM_PORT         ${CODEend}| !c 8085          | !c integer   |'' Selects the starting port number in a range of 10 for slim.''|
-|${CODE} CM_SYSTEM         ${CODEend}| !c nil           | !c java class|'' Selects the class that will handle CM system events.''|
-|${CODE} COLLAPSE_SETUP    ${CODEend}| !c false         | !c true${BAR}false|'' Collapses all !-SetUps-! ''|
-|${CODE} COLLAPSE_TEARDOWN ${CODEend}| !c false         | !c true${BAR}false|'' Collapses all !-TearDowns-! ''|
-|${CODE} FILTER_TOC        ${CODEend}| !c false         | !c true${BAR}false|'' Append suite fiters to TOC ''|
-|${CODE} HELP_PREFIX_TOC   ${CODEend}| !c :<''space''>  | !c ''any string'' |'' Define prefix for help text suffix ''|
-|${CODE} HELP_TOC          ${CODEend}| !c false         | !c true${BAR}false|'' Append help text to TOC ''|
-|${CODE} MORE_SUFFIX_TOC   ${CODEend}| !c <''space''>...| !c ''any string'' |'' Define sequence to show more TOC levels ''|
-|${CODE} PROPERTY_CHARACTERS${CODEend}| !c !- *+@>- -!  | !c ''any characters''|'' Define property icons for TOC ''|
-|${CODE} PROPERTY_TOC      ${CODEend}| !c false         | !c true${BAR}false|'' Append property icons to TOC ''|
-|${CODE} REGRACE_LINK      ${CODEend}| !c false         | !c true${BAR}false|'' Makes links graceful ''|
-|${CODE} REGRACE_TOC       ${CODEend}| !c false         | !c true${BAR}false|'' Makes !contents list graceful ''|
-|${CODE} RSS_PREFIX        ${CODEend}| !c               | !c |'' Link prefix for [[RSS Feeds][RssFeed]] ''|
+|''' NAME '''                         |''' Default '''  |''' Values '''       |''' Notes '''                                                      |
+|${CODE} TEST_SYSTEM       ${CODEend} |!c fit           |!c fit&bar;slim      |'' Selects the test system to use for this, and descendant pages.''|
+|${CODE} SLIM_PORT         ${CODEend} |!c 8085          |!c integer           |'' Selects the starting port number in a range of 10 for slim.''   |
+|${CODE} CM_SYSTEM         ${CODEend} |!c nil           |!c java class        |'' Selects the class that will handle CM system events.''          |
+|${CODE} COLLAPSE_SETUP    ${CODEend} |!c false         |!c true${BAR}false   |'' Collapses all !-SetUps-! ''                                     |
+|${CODE} COLLAPSE_TEARDOWN ${CODEend} |!c false         |!c true${BAR}false   |'' Collapses all !-TearDowns-! ''                                  |
+|${CODE} FILTER_TOC        ${CODEend} |!c false         |!c true${BAR}false   |'' Append suite fiters to TOC ''                                   |
+|${CODE} HELP_PREFIX_TOC   ${CODEend} |!c :<''space''>  |!c ''any string''    |'' Define prefix for help text suffix ''                           |
+|${CODE} HELP_TOC          ${CODEend} |!c false         |!c true${BAR}false   |'' Append help text to TOC ''                                      |
+|${CODE} MORE_SUFFIX_TOC   ${CODEend} |!c <''space''>...|!c ''any string''    |'' Define sequence to show more TOC levels ''                      |
+|${CODE} PROPERTY_CHARACTERS${CODEend}|!c !- *+@>- -!   |!c ''any characters''|'' Define property icons for TOC ''                                |
+|${CODE} PROPERTY_TOC      ${CODEend} |!c false         |!c true${BAR}false   |'' Append property icons to TOC ''                                 |
+|${CODE} REGRACE_LINK      ${CODEend} |!c false         |!c true${BAR}false   |'' Makes links graceful ''                                         |
+|${CODE} REGRACE_TOC       ${CODEend} |!c false         |!c true${BAR}false   |'' Makes !contents list graceful ''                                |
+|${CODE} RSS_PREFIX        ${CODEend} |!c               |!c                   |'' Link prefix for [[RSS Feeds][RssFeed]] ''                       |
 !note (See the ''root'' page for overrides)
 
 #-------------------------------------------------------------------------------------------
 !anchor GlobalPROPERTIES
-|${HDR} Global Properties   ${HDRend}   |
-| ${CODE} path.separator         ${CODEend} | ''!-(system-dependent)-!'' |
+|${HDR} Global Properties   ${HDRend}                                |
+|${CODE} path.separator         ${CODEend}|''!-(system-dependent)-!''|
 !note (See the ''root'' page for overrides)
 #-------------------------------------------------------------------------------------------
 !anchor TestTABLES
-|${HDR} Testable Tables ${HDRend}   |
-| Classpath include |${CODE} ${BANG}'''path''' ''java.path.spec'' ${CODEend}|
-| "Insert Fixture Table"${NL}Edit List Include |${CODE} ${BANG}'''fixture''' ''path.fixture'' ${CODEend} |
-| Prevent Wikification | ${CODE} ${BANG}${BAR} ''"as is" or escaped content'' ${BAR} ${CODEend} |
-| Smallest Table | ${CODE} ${BAR} ${TEXT} ${BAR} ${CODEend} |
-| Fixture Table | ${CODE} ${FixtureTABLE} ${CODEend} |
-| Graceful Naming | ${FixtureNAMING} |
+|${HDR} Testable Tables ${HDRend}                                                                                   |
+|Classpath include                           |${CODE} ${BANG}'''path''' ''java.path.spec'' ${CODEend}               |
+|"Insert Fixture Table"${NL}Edit List Include|${CODE} ${BANG}'''fixture''' ''path.fixture'' ${CODEend}              |
+|Prevent Wikification                        |${CODE} ${BANG}${BAR} ''"as is" or escaped content'' ${BAR} ${CODEend}|
+|Smallest Table                              |${CODE} ${BAR} ${TEXT} ${BAR} ${CODEend}                              |
+|Fixture Table                               |${CODE} ${FixtureTABLE} ${CODEend}                                    |
+|Graceful Naming                             |${FixtureNAMING}                                                      |
 

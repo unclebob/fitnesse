@@ -41,4 +41,18 @@ public class FitNesseUtil {
     VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
     ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
   }
+
+  public static FitNesseContext makeTestContext(WikiPage root) {
+    FitNesseContext context = new FitNesseContext(root);
+    context.rootDirectoryName = "TestDir";
+    context.setRootPagePath();
+    VelocityEngine engine = new VelocityEngine();
+    engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
+    context.setVelocityEngine(engine);
+    return context;
+  }
+
+  public static void destroyTestContext() {
+    FileUtil.deleteFileSystemDirectory("TestDir");
+  }
 }

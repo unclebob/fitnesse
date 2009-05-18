@@ -13,10 +13,7 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +27,7 @@ public abstract class XmlFormatter extends BaseFormatter {
   private TestSystem testSystem;
   private FileWriter fileWriter;
   private static long testTime;
-  private TestSummary finalSummary = new TestSummary();
+  protected TestSummary finalSummary = new TestSummary();
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
 
   public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
@@ -96,19 +93,23 @@ public abstract class XmlFormatter extends BaseFormatter {
     velocityContext.put("response", testResponse);
     Template template = context.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, getWriter());
-    fileWriter.close();
+    if (fileWriter != null)
+      fileWriter.close();
   }
 
   private void makeFileWriter() throws Exception {
-    File resultPath = new File(String.format("%s/%s/files/testResults/%s/%s",
-      context.rootPath,
-      context.rootDirectoryName,
-      page.getPageCrawler().getFullPath(page).toString(),
-      makeResultFileName(getFinalSummary())));
-    File resultDirectory = new File(resultPath.getParent());
-    resultDirectory.mkdirs();
-    File resultFile = new File(resultDirectory, resultPath.getName());
-    fileWriter = new FileWriter(resultFile);
+    if (context.shouldCollectHistory) {
+      File resultPath = new File(String.format("%s/%s/%s",
+        context.getTestHistoryDirectory(),
+        page.getPageCrawler().getFullPath(page).toString(),
+        makeResultFileName(getFinalSummary())));
+      File resultDirectory = new File(resultPath.getParent());
+      resultDirectory.mkdirs();
+      File resultFile = new File(resultDirectory, resultPath.getName());
+      fileWriter = new FileWriter(resultFile);
+    } else {
+      fileWriter = null;
+    }
   }
 
   protected TestSummary getFinalSummary() {
@@ -127,7 +128,8 @@ public abstract class XmlFormatter extends BaseFormatter {
         String fragment = new String(cbuf, off, len);
         try {
           writeData(fragment.getBytes());
-          fileWriter.append(fragment);
+          if (fileWriter != null)
+            fileWriter.append(fragment);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
@@ -483,7 +485,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     }
 
 
-    public static class Table extends ArrayList<Row>{
+    public static class Table extends ArrayList<Row> {
       private static final long serialVersionUID = 1L;
       private String name;
 

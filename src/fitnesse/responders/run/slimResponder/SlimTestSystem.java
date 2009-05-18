@@ -39,6 +39,8 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
+  public static final String MESSAGE_ERROR = "!error:";
+  public static final String MESSAGE_FAIL = "!fail:";
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
@@ -349,10 +351,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private void replaceException(String resultKey, String resultString) {
     testSummary.exceptions++;
+    boolean isStopTestException = resultString.contains(SlimServer.EXCEPTION_STOP_TEST_TAG);
     Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
     if (exceptionMessageMatcher.find()) {
+      String prefix = (isStopTestException) ? MESSAGE_FAIL : MESSAGE_ERROR;
       String exceptionMessage = exceptionMessageMatcher.group(1);
-      instructionResults.put(resultKey, "!:" + translateExceptionMessage(exceptionMessage));
+      instructionResults.put(resultKey, prefix + translateExceptionMessage(exceptionMessage));
     } else {
       exceptions.put(resultKey, resultString);
       instructionResults.put(resultKey, exceptionResult(resultKey));

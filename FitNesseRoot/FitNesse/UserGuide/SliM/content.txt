@@ -29,6 +29,7 @@ You can also create your own custom type converters if you like.
 !see >CustomTypes.
 
 !4 Extra Goodies that are consistent throughout all Slim tables and ports.
+|[[''Exception Handling''][>ExceptionHandling]]|
 |[[''Symbols in tables''][>SymbolsInTables]]|
 |[[''Constructor arguments''][>ConstructorArguments]]|
 |[[''Value comparisons''][>ValueComparisons]]|

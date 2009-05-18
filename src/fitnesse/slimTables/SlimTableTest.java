@@ -70,6 +70,4 @@ public class SlimTableTest {
   public void classicRoundUp() throws Exception {
     assertTrue(approximatelyEqual("3.05", "3.049"));
   }
-
-
 }

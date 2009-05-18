@@ -2,7 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import fitnesse.responders.run.XmlFormatter;
+import org.htmlparser.*;
+import org.htmlparser.filters.AndFilter;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.lexer.Lexer;
+import org.htmlparser.lexer.Page;
+import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PageDriver {
   private PageCreator creator = new PageCreator();
@@ -59,5 +70,92 @@ public class PageDriver {
 
   public String echo(String it) {
     return it;
+  }
+
+  public int countOfTagWithIdPrefix(String tag, String idPrefix) throws Exception {
+    NodeFilter filter =
+      new AndFilter(
+        new TagNameFilter(tag),
+        new HasAttributePrefixFilter("id", idPrefix));
+    return getMatchingTags(filter).size();
+  }
+
+  private NodeList getMatchingTags(NodeFilter filter) throws Exception {
+    String html = examiner.html();
+    Parser parser = new Parser(new Lexer(new Page(html)));
+    NodeList list = parser.parse(null);
+    NodeList matches = list.extractAllNodesThatMatch(filter, true);
+    return matches;
+  }
+
+  public String pageHistoryDateSignatureOf(Date date) {
+    SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+    return dateFormat.format(date);
+  }
+
+  public int countOfTagWithIdAndWithClassBelowTagWithIdPrefix(String childTag, String childId, String tagClass, String parentTag, String parentIdPrefix) throws Exception {
+    NodeList parents = getMatchingTags(
+      new AndFilter(
+        new TagNameFilter(parentTag),
+        new HasAttributePrefixFilter("id", parentIdPrefix))
+    );
+
+    NodeFilter predicates[] = {
+      new TagNameFilter(childTag),
+      new HasAttributeFilter("class", tagClass),
+      new HasAttributeFilter("id", childId)
+    };
+    NodeFilter filter = new AndFilter(predicates);
+    NodeList matches = parents.extractAllNodesThatMatch(filter, true);
+    return matches.size();
+  }
+
+  public String valueOfTagWithIdIs(String id) throws Exception {
+    return getValueOfTagWithAttributeValue("id", id);
+  }
+
+  private String getValueOfTagWithAttributeValue(String attribute, String value) throws Exception {
+    NodeList matches = getMatchingTags(new HasAttributeFilter(attribute, value));
+    if (matches.size() != 1)
+      return String.format("There are %d matches, there should be 1.", matches.size());
+    else
+      return matches.elementAt(0).toHtml();
+  }
+
+  public String valueOfTagWithClassIs(String classValue) throws Exception {
+    return getValueOfTagWithAttributeValue("class", classValue);  
+  }
+
+  public boolean contentOfTagWithIdContains(String id, String contents) throws Exception {
+    String html = getValueOfTagWithAttributeValue("id", id);
+    return (html.indexOf(contents) != -1);
+  }
+
+  public String contentOfTagWithId(String id) throws Exception {
+    return getValueOfTagWithAttributeValue("id", id);
+  }
+
+
+  private static class HasAttributePrefixFilter extends HasAttributeFilter {
+    public HasAttributePrefixFilter(String attribute, String prefix) {
+      super(attribute, prefix);
+    }
+
+    public boolean accept(Node node) {
+      Tag tag;
+      Attribute attribute;
+      boolean ret;
+
+      ret = false;
+      if (node instanceof Tag) {
+        tag = (Tag) node;
+        attribute = tag.getAttributeEx(mAttribute);
+        ret = null != attribute;
+        if (ret && (null != mValue))
+          ret = attribute.getValue().startsWith(mValue);
+      }
+
+      return (ret);
+    }
   }
 }

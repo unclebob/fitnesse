@@ -160,5 +160,4 @@ public class SlimMethodInvocationTest {
     Object result = caller.call("testSlim", "nullString");
     Assert.assertNull(result);
   }
-
 }

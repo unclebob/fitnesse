@@ -4,9 +4,17 @@ package fitnesse.fixtures;
 
 import fit.Fixture;
 
+import java.io.File;
+
+import static fitnesse.fixtures.FitnesseFixtureContext.*;
+import util.FileUtil;
+
 public class TearDown extends Fixture {
   public TearDown() throws Exception {
-    FitnesseFixtureContext.fitnesse.stop();
-    FitnesseFixtureContext.root = null;
+    fitnesse.stop();
+    root = null;
+    File historyDirectory = context.getTestHistoryDirectory();
+    if (historyDirectory.exists())
+      FileUtil.deleteFileSystemDirectory(historyDirectory);
   }
 }

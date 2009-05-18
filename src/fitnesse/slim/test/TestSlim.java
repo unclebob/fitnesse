@@ -197,4 +197,27 @@ public class TestSlim {
 
   class NoSuchConverter {
   }
+  
+  public boolean throwNormal() throws Exception {
+    throw  new Exception("This is my exception");
+  }
+  
+  public boolean throwStopping() throws Exception {
+    throw new StopTestException("This is a stop test exception");
+  }
+  
+  public boolean throwExceptionWithMessage() throws Exception {
+    throw new Exception("message:<<Test message>>");
+  }
+  
+  public boolean throwStopTestExceptionWithMessage() throws Exception {
+    throw new StopTestException("message:<<Stop Test>>");
+  }  
+
+  @SuppressWarnings("serial")
+  class StopTestException extends Exception {
+    public StopTestException(String description) {
+      super(description);
+    }
+  }
 }

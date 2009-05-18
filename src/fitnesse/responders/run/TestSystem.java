@@ -7,6 +7,7 @@ import fitnesse.wiki.WikiPage;
 
 public abstract class TestSystem implements TestSystemListener {
   public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
+  public static final String DEFAULT_DEBUG_PATTERN = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   protected WikiPage page;
   protected boolean fastTest;
   protected static final String emptyPageContent = "OH NO! This page is empty!";
@@ -32,11 +33,25 @@ public abstract class TestSystem implements TestSystemListener {
     return command;
   }
 
-  private static String getCommandPattern(PageData pageData) throws Exception {
+  private static String getRemoteDebugCommandPattern(PageData pageData) throws Exception {
+    String testRunner = pageData.getVariable("REMOTE_DEBUG_COMMAND");
+    if (testRunner == null)
+      testRunner = DEFAULT_DEBUG_PATTERN;
+    return testRunner;
+  }
+
+  private static String getNormalCommandPattern(PageData pageData) throws Exception {
     String testRunner = pageData.getVariable("COMMAND_PATTERN");
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;
+  }
+  
+  private static String getCommandPattern(PageData pageData, boolean isRemoteDebug) throws Exception {
+    if (isRemoteDebug) 
+      return getRemoteDebugCommandPattern(pageData);
+    else  
+      return getNormalCommandPattern(pageData);
   }
 
   // String.replaceAll(...) is not trustworthy because it seems to remove all '\' characters.
@@ -116,10 +131,10 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract String runTestsAndGenerateHtml(PageData pageData) throws Exception;
 
-  public static Descriptor getDescriptor(PageData data) throws Exception {
+  public static Descriptor getDescriptor(PageData data, boolean isRemoteDebug) throws Exception {
     String testSystemName = getTestSystem(data);
     String testRunner = getTestRunner(data);
-    String commandPattern = getCommandPattern(data);
+    String commandPattern = getCommandPattern(data, isRemoteDebug);
     String pathSeparator = getPathSeparator(data);
     return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator);
   }

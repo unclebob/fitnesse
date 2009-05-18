@@ -12,6 +12,7 @@ import org.junit.Test;
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.converters.VoidConverter;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -229,6 +230,7 @@ public abstract class QueryTableBaseTest {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       util.ListUtility.list(
         util.ListUtility.list("queryTable_id_0", "OK"),
+        util.ListUtility.list("queryTable_id_1", VoidConverter.VOID_TAG),
         util.ListUtility.list("queryTable_id_2",
           util.ListUtility.list(
             util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4"))
@@ -255,6 +257,7 @@ public abstract class QueryTableBaseTest {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       util.ListUtility.list(
         util.ListUtility.list("queryTable_id_0", "OK"),
+        util.ListUtility.list("queryTable_id_1", VoidConverter.VOID_TAG),
         util.ListUtility.list("queryTable_id_2",
           util.ListUtility.list(
             util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4"))
@@ -281,6 +284,7 @@ public abstract class QueryTableBaseTest {
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       util.ListUtility.list(
         util.ListUtility.list("queryTable_id_0", "OK"),
+        util.ListUtility.list("queryTable_id_1", VoidConverter.VOID_TAG),
         util.ListUtility.list("queryTable_id_2",
           util.ListUtility.list(
           )

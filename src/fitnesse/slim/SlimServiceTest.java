@@ -3,6 +3,7 @@
 package fitnesse.slim;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static util.ListUtility.list;
 
@@ -150,6 +151,24 @@ public class SlimServiceTest {
     assertTrue(SlimService.verbose);
   }
 
+  @Test
+  public void notStopTestExceptionThrown() throws Exception {
+    addImportAndMake();
+    statements.add(list("id", "call", "testSlim", "throwNormal"));
+    statements.add(list("id2", "call", "testSlim", "throwNormal"));
+    Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
+    assertContainsException("__EXCEPTION__:java.lang.Exception: This is my exception", "id", results);
+    assertContainsException("__EXCEPTION__:java.lang.Exception: This is my exception", "id2", results);
+  }
 
+  @Test
+  public void stopTestExceptionThrown() throws Exception {
+    addImportAndMake();
+    statements.add(list("id", "call", "testSlim", "throwStopping"));
+    statements.add(list("id2", "call", "testSlim", "throwNormal"));
+    Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
+    assertContainsException("__EXCEPTION__:ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception", "id", results);
+    assertNull(results.get("id2"));
+  }
 }
 

@@ -47,6 +47,7 @@ public class SuiteResponder extends TestResponder {
     SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getSuiteFirstTest());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatter);
+    runner.setDebug(isRemoteDebug());
     runner.executeTestPages();
   }
 

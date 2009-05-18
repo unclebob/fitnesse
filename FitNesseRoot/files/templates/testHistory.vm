@@ -1,53 +1,42 @@
-<html>
-<head>
-  <title>Test History</title>
-  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
-  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
-  <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
-</head>
-<body>
+#set ($page_title="Test History")
+#parse("pagehead.vm")
+#set($noHistory = true)
+<table>
+  <tr>
+    <th>Page</th>
+    <th>Pass</th>
+    <th>Fail</th>
+    <th>Latest</th>
+    <th colspan="20">Last 20 Results</th>
+  </tr>
+  #foreach ($page in $testHistory.pageNames)
+  #set ($pageHistory = $testHistory.getPageHistory($page))
+  #if($pageHistory)
+  #set($noHistory = false)
 
-<div class="sidebar">
-  <div class="art_niche" onclick="document.location='FrontPage'"></div>
-  <div class="actions"></div>
-</div>
-<div class="mainbar">
-  <div class="header">
-    <span class="page_title">Test History</span>
-  </div>
+  <tr>
+    #set ($barGraph = $pageHistory.getBarGraph())
 
-  <div class="main">
-    #set($noHistory = true)
-    <table>
-      <tr><th>Page</th><th>Pass</th><th>Fail</th><th>Latest</th><th colspan="20">Last 20 Results</th></tr>
-      #foreach ($page in $testHistory.pageNames)
-      #set ($pageHistory = $testHistory.getPageHistory($page))
-      #if($pageHistory.size() > 0)
-      #set($noHistory = false)
+    <td>$page</td>
+    <td class=#if($pageHistory.passes == 0)"ignore"
+    #else"pass"#end>$pageHistory.passes</td>
+    <td class=#if($pageHistory.failures==0)"ignore"
+    #else"fail"#end>$pageHistory.failures</td>
+    <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
+    #foreach($passFail in $barGraph.passFailArray())
+    #if($passFail)
 
-      <tr>
-        #set ($barGraph = $pageHistory.getBarGraph())
+    <td class="pass">+</td>
+    #else
 
-        <td>$page</td>
-        <td class="pass">$pageHistory.passes</td>
-        <td class="fail">$pageHistory.failures</td>
-        <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
-        #foreach($passFail in $barGraph.passFailArray())
-        #if($passFail)
+    <td class="fail">-</td>
+    #end
+    #end
 
-        <td class="pass">+</td>
-        #else
+  </tr>
+  #end
+  #end
 
-        <td class="fail">-</td>
-        #end
-        #end
-
-      </tr>
-      #end
-      #end
-
-    </table>
-    #if ($noHistory)No History#end
-  </div>
-</body>
-</html>
+</table>
+#if ($noHistory)No History#end
+#parse("pagefooter.vm")

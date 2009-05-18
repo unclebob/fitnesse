@@ -1,0 +1,11 @@
+Fixture code can be debugged using the remote debugger to connect to the slim executor or fit client. 
+
+To set up debugging for your fixture code:
+ 1 Set up the '''REMOTE_DEBUG_COMMAND''' in your wiki.  This command should start the server in debug mode and wait for the debugger to connect before the code is run.  As this command is only used when you start a test in debug mode it is a good idea to specify this define on root page of your wiki.   
+ 2 When you want to debug a test, start by adding '''?responder=test&remote_debug=true''' to the url for the test.
+ 3 After starting the test in FitNesse, start a remote debugging process in your debugging tool which should connect to slim/fit server.  Remember to make sure you are using the right port.  (Port 8000 if you are using the default settings for REMOTE_DEBUG_COMMAND)
+
+
+
+
+ 

@@ -41,6 +41,7 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |[[Class Path][>ClassPath]]|''Telling FitNesse where your Fixture Code is.''|
 |[[Test Table Styles][>TestTableStyles]]|''The styles of FitNesse test tables, and corresponding Fixture Code they use.''|
 |[[Fixture Gallery][>FixtureGallery]]|''A walk through of the various Fit Fixtures''|
+|[[Debuging Fixture Code][>DebugingFixtureCode]]|''How to debug the testing code''|
 
 !2 FitNesse Plugins
 There are several plugins for FitNesse that are avaiable at the following URL: http://www.fitnesse.org/PluginsPage
