@@ -32,7 +32,7 @@ public class CachingResultFormatter implements ResultFormatter {
 
   public void acceptFinalCount(TestSummary testSummary) throws Exception {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
-    Counts counts = new Counts(testSummary.right, testSummary.wrong, testSummary.ignores, testSummary.exceptions);
+    Counts counts = new Counts(testSummary.getRight(), testSummary.getWrong(), testSummary.getIgnores(), testSummary.getExceptions());
     FitProtocol.writeCounts(counts, output);
     buffer.append(output.toByteArray());
 

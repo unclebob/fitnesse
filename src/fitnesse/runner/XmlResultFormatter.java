@@ -86,10 +86,10 @@ public class XmlResultFormatter implements ResultFormatter {
 
   private Element makeCountsElement(String name, TestSummary testSummary) {
     Element countsElement = document.createElement(name);
-    XmlUtil.addTextNode(document, countsElement, "right", testSummary.right + "");
-    XmlUtil.addTextNode(document, countsElement, "wrong", testSummary.wrong + "");
-    XmlUtil.addTextNode(document, countsElement, "ignores", testSummary.ignores + "");
-    XmlUtil.addTextNode(document, countsElement, "exceptions", testSummary.exceptions + "");
+    XmlUtil.addTextNode(document, countsElement, "right", testSummary.getRight() + "");
+    XmlUtil.addTextNode(document, countsElement, "wrong", testSummary.getWrong() + "");
+    XmlUtil.addTextNode(document, countsElement, "ignores", testSummary.getIgnores() + "");
+    XmlUtil.addTextNode(document, countsElement, "exceptions", testSummary.getExceptions() + "");
     return countsElement;
   }
 }

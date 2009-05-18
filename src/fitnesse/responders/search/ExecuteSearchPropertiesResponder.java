@@ -1,6 +1,9 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SET_UP_TEAR_DOWN;
+import static fitnesse.responders.search.SearchFormResponder.IGNORED;
+import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_OBSOLETE;
+import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SETUP;
+import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_TEARDOWN;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,14 +35,14 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class ExecuteSearchPropertiesResponder implements SecureResponder {
-  public static String IGNORED = "Any";
   private String rootPagePath;
   private String resource;
-  private List<String> setUpTearDownPageNames;
+  private List<String> setUpPageNames;
+  private List<String> tearDownPageNames;
 
   public ExecuteSearchPropertiesResponder() {
-    setUpTearDownPageNames = Arrays.asList("SetUp", "TearDown", "SuiteSetUp",
-    "SuiteTearDown");
+    setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
+    tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
   }
 
   public SecureOperation getSecureOperation() {
@@ -67,48 +70,54 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
       String resource) throws Exception {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
-    WikiPage page;
     if (!crawler.pageExists(context.root, path)) {
       crawler.setDeadEndStrategy(new MockingPageCrawler());
-      page = crawler.getPage(context.root, path);
-    } else {
-      page = crawler.getPage(context.root, path);
     }
+
+    WikiPage page = crawler.getPage(context.root, path);
     return page;
   }
 
   private String makeHtml(FitNesseContext context, Request request,
       WikiPage page) throws Exception {
-    HtmlPage resultsPage = createResultsPage(context, request);
 
     List<String> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String[] suites = getSuitesFromInput(request);
-    boolean excludeSetUpTearDown = getExcludeSetUpTearDownFromInput(request);
+    boolean excludeSetUp = getExcludeSetUpFromInput(request);
+    boolean excludeTearDown = getExcludeTearDownFromInput(request);
 
     if (pageTypes == null && attributes.isEmpty() && suites == null) {
-      addTextToResults(resultsPage, "No search properties were specified.");
-    } else {
-      List<WikiPage> pages = new ArrayList<WikiPage>();
-      queryPageTree(pages, page, pageTypes, attributes, suites,
-          excludeSetUpTearDown);
-      int matchingPages = pages.size();
-
-      if (matchingPages == 0) {
-        addTextToResults(resultsPage,
-        "No pages matched specified search properties.");
-      } else {
-        HtmlTag form = makeForm();
-        HtmlTag row = addTableToResults(form);
-        addCellToTable(row, new HtmlTag("label",
-            "Number of pages matching specified search properties: "
-            + matchingPages));
-        form.add(makeResultsTable(pages, page, attributes));
-        resultsPage.main.add(form);
-
-        resultsPage.main.add(makeQueryLinks(page, request));
-      }
+      return createResultsPageWithContent(context, request,
+      "No search properties were specified.");
     }
+
+    List<WikiPage> pages = new ArrayList<WikiPage>();
+    queryPageTree(pages, page, pageTypes, attributes, suites, excludeSetUp,
+        excludeTearDown);
+    int matchingPages = pages.size();
+    if (matchingPages == 0) {
+      return createResultsPageWithContent(context, request,
+      "No pages matched specified search properties.");
+    }
+
+    HtmlPage resultsPage = createResultsPage(context, request);
+    HtmlTag form = makeForm();
+    HtmlTag row = addTableToResults(form);
+    addCellToTable(row, new HtmlTag("label",
+        "Number of pages matching specified search properties: "
+        + matchingPages));
+    form.add(makeResultsTable(pages, page, attributes));
+    resultsPage.main.add(form);
+
+    resultsPage.main.add(makeQueryLinks(page, request));
+    return resultsPage.html();
+  }
+
+  private String createResultsPageWithContent(FitNesseContext context,
+      Request request, String text) throws Exception {
+    HtmlPage resultsPage = createResultsPage(context, request);
+    resultsPage.main.add(text);
     return resultsPage.html();
   }
 
@@ -132,24 +141,29 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
   private void queryPageTree(List<WikiPage> matchingPages,
       WikiPage searchRootPage, List<String> requestedPageTypes,
-      Map<String, Boolean> attributes, String[] suites,
-      boolean excludeSetUpTearDown) throws Exception {
+      Map<String, Boolean> attributes, String[] suites, boolean excludeSetUp,
+      boolean excludeTearDown) throws Exception {
     if (pageMatchesQuery(searchRootPage, requestedPageTypes, attributes,
-        suites, excludeSetUpTearDown)) {
+        suites, excludeSetUp, excludeTearDown)) {
       matchingPages.add(searchRootPage);
     }
 
     List<WikiPage> children = searchRootPage.getChildren();
     for (WikiPage child : children) {
       queryPageTree(matchingPages, child, requestedPageTypes, attributes,
-          suites, excludeSetUpTearDown);
+          suites, excludeSetUp, excludeTearDown);
     }
   }
 
   protected boolean pageMatchesQuery(WikiPage page,
       List<String> requestedPageTypes, Map<String, Boolean> inputs,
-      String[] suites, boolean excludeSetUpTearDown) throws Exception {
-    if (excludeSetUpTearDown && isSetUpOrTearDownPage(page)) {
+      String[] suites, boolean excludeSetUp, boolean excludeTearDown)
+  throws Exception {
+    if (excludeSetUp && isSetUpPage(page)) {
+      return false;
+    }
+
+    if (excludeTearDown && isTearDownPage(page)) {
       return false;
     }
 
@@ -168,6 +182,14 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     return suitesMatchInput(pageData, suites);
   }
 
+  private boolean isTearDownPage(WikiPage page) throws Exception {
+    return tearDownPageNames.contains(page.getName());
+  }
+
+  private boolean isSetUpPage(WikiPage page) throws Exception {
+    return setUpPageNames.contains(page.getName());
+  }
+
   private boolean pageIsOfRequestedPageType(WikiPage page,
       List<String> requestedPageTypes) throws Exception {
     PageData data = page.getData();
@@ -180,10 +202,6 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     }
 
     return requestedPageTypes.contains("Normal");
-  }
-
-  private boolean isSetUpOrTearDownPage(WikiPage page) throws Exception {
-    return setUpTearDownPageNames.contains(page.getName());
   }
 
   protected boolean attributeMatchesInput(boolean attributeSet,
@@ -274,10 +292,6 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     return group;
   }
 
-  private void addTextToResults(HtmlPage resultsPage, String text) {
-    resultsPage.main.add(text);
-  }
-
   private void makeHeadingRow(HtmlTableListingBuilder table,
       Set<String> attributesNames) throws Exception {
     List<HtmlTag> tags = new ArrayList<HtmlTag>();
@@ -299,8 +313,8 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     for (WikiPage page : pages) {
       PageData pageData = page.getData();
       makeRow(table, getFullPagePath(page), values,
-          getSuitesProperty(pageData), pageData.hasAttribute("Test"),
-          pageData.hasAttribute("Suite"));
+          getSuitesProperty(pageData), pageData.hasAttribute("Test"), pageData
+          .hasAttribute("Suite"));
     }
   }
 
@@ -317,14 +331,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
       boolean isSuite) throws Exception {
     List<HtmlTag> tags = new ArrayList<HtmlTag>();
 
-    if (isSuite)
-      tags.add(HtmlUtil.makeLink(pageName + "?suite", new HtmlTag("label",
-      "Suite")));
-    else if (isTest)
-      tags.add(HtmlUtil.makeLink(pageName + "?test", new HtmlTag("label",
-      "Test")));
-    else
-      tags.add(new HtmlTag("label", ""));
+    tags.add(generatePageTypeLinkTag(pageName, isTest, isSuite));
 
     tags.add(HtmlUtil.makeLink(pageName, new HtmlTag("label",
         getPageNameUnderRoot(pageName))));
@@ -337,6 +344,16 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     tags.add(makeSuitesTextField(suites));
 
     addTagsToTableRow(table, tags);
+  }
+
+  private HtmlTag generatePageTypeLinkTag(String pageName, boolean isTest, boolean isSuite) {
+    if (isSuite) {
+      return HtmlUtil.makeLink(pageName + "?suite", new HtmlTag("label", "Suite"));
+    }
+    if (isTest) {
+      return HtmlUtil.makeLink(pageName + "?test", new HtmlTag("label", "Test"));
+    }
+    return new HtmlTag("label", "");
   }
 
   private String getPageNameUnderRoot(String pageName) {
@@ -386,22 +403,47 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
   protected Map<String, Boolean> getAttributesFromInput(Request request) {
     Map<String, Boolean> attributes = new LinkedHashMap<String, Boolean>();
 
-    for (String searchCriteria : new String[] { SearchFormResponder.ACTION,
-        SearchFormResponder.SECURITY }) {
-      if (request.hasInput(searchCriteria)
-          && !"Any".equals(request.getInput(searchCriteria))) {
-        for (String attribute : ((String) request.getInput(searchCriteria))
-            .split(",")) {
-          attributes.put(attribute, true);
-        }
-      }
-    }
+    getListboxAttributesFromRequest(request, SearchFormResponder.ACTION,
+        SearchFormResponder.ACTION_ATTRIBUTES, attributes);
+    getListboxAttributesFromRequest(request, SearchFormResponder.SECURITY,
+        SearchFormResponder.SECURITY_ATTRIBUTES, attributes);
+
+    getObsoletePageAttributeFromInput(request, attributes);
 
     return attributes;
   }
 
-  private boolean getExcludeSetUpTearDownFromInput(Request request) {
-    return request.hasInput(EXCLUDE_SET_UP_TEAR_DOWN);
+  private void getListboxAttributesFromRequest(Request request,
+      String inputAttributeName, String[] attributeList,
+      Map<String, Boolean> attributes) {
+    String requested = (String) request.getInput(inputAttributeName);
+    if (requested == null) {
+      requested = "";
+    }
+    if (!IGNORED.equals(requested)) {
+      for (String searchAttribute : attributeList) {
+        attributes.put(searchAttribute, requested.contains(searchAttribute));
+      }
+    }
+  }
+
+  private void getObsoletePageAttributeFromInput(Request request,
+      Map<String, Boolean> attributes) {
+    if (requestHasInputChecked(request, EXCLUDE_OBSOLETE)) {
+      attributes.put("Pruned", false);
+    }
+  }
+
+  private boolean getExcludeTearDownFromInput(Request request) {
+    return requestHasInputChecked(request, EXCLUDE_TEARDOWN);
+  }
+
+  private boolean getExcludeSetUpFromInput(Request request) {
+    return requestHasInputChecked(request, EXCLUDE_SETUP);
+  }
+
+  private boolean requestHasInputChecked(Request request, String checkBox) {
+    return "on".equals(request.getInput(checkBox));
   }
 
   private String getFullPagePath(WikiPage page) throws Exception {

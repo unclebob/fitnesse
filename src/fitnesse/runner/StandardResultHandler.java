@@ -19,13 +19,13 @@ public class StandardResultHandler implements ResultHandler {
   public void acceptResult(PageResult result) throws Exception {
     TestSummary testSummary = result.testSummary();
     pageCounts.tallyPageCounts(testSummary);
-    for (int i = 0; i < testSummary.right; i++)
+    for (int i = 0; i < testSummary.getRight(); i++)
       output.print(".");
-    if (testSummary.wrong > 0 || testSummary.exceptions > 0) {
+    if (testSummary.getWrong() > 0 || testSummary.getExceptions() > 0) {
       output.println();
-      if (testSummary.wrong > 0)
+      if (testSummary.getWrong() > 0)
         output.println(pageDescription(result) + " has failures");
-      if (testSummary.exceptions > 0)
+      if (testSummary.getExceptions() > 0)
         output.println(pageDescription(result) + " has errors");
     }
   }

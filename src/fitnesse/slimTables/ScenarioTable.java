@@ -129,7 +129,7 @@ public class ScenarioTable extends SlimTable {
 
     public void evaluateExpectation(Map<String, Object> returnValues) {
       TestSummary counts = scriptTable.getTestSummary();
-      boolean testStatus = (counts.wrong + counts.exceptions) == 0;
+      boolean testStatus = (counts.getWrong() + counts.getExceptions()) == 0;
       SlimTable parent = scriptTable.getParent();
       parent.getTable().setTestStatusOnRow(getRow(), testStatus);
       parent.getTestSummary().add(scriptTable.getTestSummary());

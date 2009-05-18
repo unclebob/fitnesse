@@ -67,4 +67,27 @@ public class Base64Test extends TestCase {
   public void testEncodeLongSample() throws Exception {
     assertEquals("QWxhZGRpbjpvcGVuIHNlc2FtZQ==", Base64.encode("Aladdin:open sesame"));
   }
+  
+  public void testEncodeNuls() throws Exception {
+    assertEquals("AAAA", Base64.encode("\0\0\0"));
+    assertEquals("AAA=", Base64.encode("\0\0"));
+    assertEquals("AA==", Base64.encode("\0"));
+  }
+  
+  public void testEncodeBinary() throws Exception {
+	assertEquals("////", new String(Base64.encode(new byte [] { -1,-1,-1 })));
+	assertEquals("WqVapVql", new String(Base64.encode(new byte [] { 90,-91,90,-91,90,-91 })));
+  }
+  
+  public void testDecodeNuls() throws Exception {
+    assertEquals(Base64.decode("AAAA"), "\0\0\0");
+    assertEquals(Base64.decode("AAA="), "\0\0");
+    assertEquals(Base64.decode("AA=="), "\0");
+  }
+	  
+  public void testDecodeBinary() throws Exception {
+	assertEquals(Base64.decode("////"), new String(new byte [] { -1,-1,-1 }));
+	assertEquals(Base64.decode("WqVapVql"), new String(new byte [] { 90,-91,90,-91,90,-91 }));
+  }
+
 }

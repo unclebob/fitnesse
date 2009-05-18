@@ -33,6 +33,7 @@ public class FitNesseContext {
   public static FitNesseContext globalContext;
   private VelocityEngine velocityEngine;
   public boolean shouldCollectHistory = false;
+//  public Ruby rubyRuntime;
 
   public FitNesseContext() {
     this(null);
@@ -41,6 +42,13 @@ public class FitNesseContext {
   public FitNesseContext(WikiPage root) {
     this.root = root;
   }
+//
+//  public Ruby getRubyRuntime() {
+//    if (rubyRuntime == null) {
+//      rubyRuntime = JavaEmbedUtils.initialize(Collections.EMPTY_LIST);
+//    }
+//    return rubyRuntime;
+//  }
 
   public VelocityEngine getVelocityEngine() {
     if (velocityEngine == null) {
@@ -76,11 +84,11 @@ public class FitNesseContext {
     this.velocityEngine = velocityEngine;
   }
 
-  public  File getTestHistoryDirectory() {
+  public File getTestHistoryDirectory() {
     return new File(String.format("%s/files/testResults", rootPagePath));
   }
 
-  public  void setRootPagePath() {
-    rootPagePath =  rootPath + "/" + rootDirectoryName;
+  public void setRootPagePath() {
+    rootPagePath = rootPath + "/" + rootDirectoryName;
   }
 }

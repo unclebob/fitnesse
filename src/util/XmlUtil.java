@@ -2,9 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,6 +13,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.InputSource;
 
 public class XmlUtil {
   private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -28,7 +28,19 @@ public class XmlUtil {
   }
 
   public static Document newDocument(InputStream input) throws Exception {
-    return getDocumentBuilder().parse(input);
+    try {
+      return getDocumentBuilder().parse(input);
+    } catch (SAXParseException e) {
+      throw new Exception(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));  
+    }
+  }
+
+  public static Document newDocument(File input) throws Exception {
+    try {
+      return getDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(input), "UTF-8")));
+    } catch (SAXParseException e) {
+      throw new Exception(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
+    }
   }
 
   public static Document newDocument(String input) throws Exception {

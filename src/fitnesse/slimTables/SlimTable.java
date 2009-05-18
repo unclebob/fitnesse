@@ -224,7 +224,7 @@ public abstract class SlimTable {
   }
 
   protected String fail(String value) {
-    testSummary.wrong++;
+    testSummary.wrong = testSummary.getWrong() + 1;
     return table.fail(value);
   }
 
@@ -233,12 +233,12 @@ public abstract class SlimTable {
   }
 
   protected String pass(String value) {
-    testSummary.right++;
+    testSummary.right = testSummary.getRight() + 1;
     return table.pass(value);
   }
 
   protected String error(String value) {
-    testSummary.exceptions++;
+    testSummary.exceptions = testSummary.getExceptions() + 1;
     return table.error(value);
   }
 

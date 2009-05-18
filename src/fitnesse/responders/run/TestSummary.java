@@ -16,10 +16,10 @@ public class TestSummary {
   }
 
   public TestSummary(TestSummary testSummary) {
-    this.right = testSummary.right;
-    this.wrong = testSummary.wrong;
-    this.ignores = testSummary.ignores;
-    this.exceptions = testSummary.exceptions;
+    this.right = testSummary.getRight();
+    this.wrong = testSummary.getWrong();
+    this.ignores = testSummary.getIgnores();
+    this.exceptions = testSummary.getExceptions();
   }
 
   public TestSummary() {
@@ -27,38 +27,38 @@ public class TestSummary {
 
   public String toString() {
     return
-      right + " right, " +
-        wrong + " wrong, " +
-        ignores + " ignored, " +
-        exceptions + " exceptions";
+      getRight() + " right, " +
+        getWrong() + " wrong, " +
+        getIgnores() + " ignored, " +
+        getExceptions() + " exceptions";
   }
 
   public boolean equals(Object o) {
     if (o == null || !(o instanceof TestSummary))
       return false;
     TestSummary other = (TestSummary) o;
-    return right == other.right &&
-      wrong == other.wrong &&
-      ignores == other.ignores &&
-      exceptions == other.exceptions;
+    return getRight() == other.getRight() &&
+      getWrong() == other.getWrong() &&
+      getIgnores() == other.getIgnores() &&
+      getExceptions() == other.getExceptions();
   }
 
   public void tallyPageCounts(TestSummary counts) {
-    if (counts.wrong > 0)
-      wrong += 1;
-    else if (counts.exceptions > 0)
-      exceptions += 1;
-    else if (counts.right == 0)
-      ignores += 1;
+    if (counts.getWrong() > 0)
+      wrong = getWrong() + 1;
+    else if (counts.getExceptions() > 0)
+      exceptions = getExceptions() + 1;
+    else if (counts.getRight() == 0)
+      ignores = getIgnores() + 1;
     else
-      right += 1;
+      right = getRight() + 1;
   }
 
   public void add(TestSummary testSummary) {
-    right += testSummary.right;
-    wrong += testSummary.wrong;
-    ignores += testSummary.ignores;
-    exceptions += testSummary.exceptions;
+    right = getRight() + testSummary.getRight();
+    wrong = getWrong() + testSummary.getWrong();
+    ignores = getIgnores() + testSummary.getIgnores();
+    exceptions = getExceptions() + testSummary.getExceptions();
   }
 
   public void clear() {
@@ -66,5 +66,21 @@ public class TestSummary {
     wrong = 0;
     ignores = 0;
     exceptions = 0;
+  }
+
+  public int getRight() {
+    return right;
+  }
+
+  public int getWrong() {
+    return wrong;
+  }
+
+  public int getIgnores() {
+    return ignores;
+  }
+
+  public int getExceptions() {
+    return exceptions;
   }
 }

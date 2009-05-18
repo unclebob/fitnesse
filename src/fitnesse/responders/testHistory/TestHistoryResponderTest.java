@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
-import util.RegexTestCase;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 
@@ -106,7 +105,7 @@ public class TestHistoryResponderTest {
     assertEquals(date, pageHistory.getMinDate());
     assertEquals(date, pageHistory.getMaxDate());
     assertEquals(1, pageHistory.size());
-    PageHistory.PageTestSummary testSummary = pageHistory.get(date);
+    PageHistory.TestResultRecord testSummary = pageHistory.get(date);
     assertEquals(date, testSummary.getDate());
     assertEquals(new TestSummary(1, 2, 3, 4), testSummary);
   }
@@ -139,7 +138,7 @@ public class TestHistoryResponderTest {
   public void barGraphWithOnePassingResultShouldBeSingleTrueBoolean() throws Exception {
     BarGraph barGraph = makeBarGraph(new String[]{"20090418123103_1_0_0_0"});
     assertEquals(1, barGraph.size());
-    assertTrue(barGraph.getPassFail(0));
+    assertTrue(barGraph.getPassFail(0).isPass());
   }
 
   private BarGraph makeBarGraph(String[] testResultFilenames) throws IOException {
@@ -157,7 +156,7 @@ public class TestHistoryResponderTest {
   public void barGraphWithOneFailingResultShouldBeSingleFalseBoolean() throws Exception {
     BarGraph barGraph = makeBarGraph(new String[]{"20090418123103_0_1_0_0"});
     assertEquals(1, barGraph.size());
-    assertFalse(barGraph.getPassFail(0));
+    assertFalse(barGraph.getPassFail(0).isPass());
   }
 
   private BarGraph makeBarGraphWithManyResults() throws IOException {
@@ -177,7 +176,7 @@ public class TestHistoryResponderTest {
   @Test
   public void barGraphWithManyResultsShouldHaveCorrespondingBooleans() throws Exception {
     BarGraph barGraph = makeBarGraphWithManyResults();
-    assertArrayEquals(new Boolean[]{false, true, false, false, false, false, true, false}, barGraph.passFailArray());
+    assertEquals("-+----+-",barGraph.testString());
   }
 
   @Test
@@ -199,7 +198,7 @@ public class TestHistoryResponderTest {
     String apr17Fail = "20090417123103_0_1_0_0";
     String apr18Pass = "20090418123103_1_0_0_0";
     BarGraph barGraph = makeBarGraph(new String[]{apr17Fail, apr18Pass});
-    assertArrayEquals(new Boolean[]{true, false}, barGraph.passFailArray());
+    assertEquals("+-", barGraph.testString());
   }
 
   @Test
@@ -213,9 +212,7 @@ public class TestHistoryResponderTest {
     assertEquals(20, barGraph.size());
     assertEquals(dateFormat.parse("20090512010203"), barGraph.getStartingDate());
     assertEquals(dateFormat.parse("20090531010203"), barGraph.getEndingDate());
-    boolean t = true;
-    boolean f = false;
-    assertArrayEquals(new Boolean[]{t, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f}, barGraph.passFailArray());
+    assertEquals("+-------------------", barGraph.testString());
 
   }
 
@@ -257,8 +254,8 @@ public class TestHistoryResponderTest {
     assertHasRegexp("<td class=\"pass\">1</td>", response.getContent());
     assertHasRegexp("<td class=\"fail\">1</td>", response.getContent());
     assertHasRegexp("<td>19 Apr, 09 12:31</td>", response.getContent());
-    assertHasRegexp("<td class=\"pass\">\\+</td>", response.getContent());
-    assertHasRegexp("<td class=\"fail\">-</td>", response.getContent());
+    assertHasRegexp("<td class=\"pass\">.*\\+.*</td>", response.getContent());
+    assertHasRegexp("<td class=\"fail\">.*-.*</td>", response.getContent());
     assertDoesntHaveRegexp("No History", response.getContent());
 
   }

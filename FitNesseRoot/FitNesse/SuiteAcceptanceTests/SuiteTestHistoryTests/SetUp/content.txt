@@ -1,5 +1,0 @@
-!include -c <SuiteAcceptanceTests.SetUp
-!include -c <SuiteAcceptanceTests.ScenarioLibrary
-!include -c <SuiteTestHistoryTests.ScenarioLibrary
-
-!|script|page driver|

@@ -100,10 +100,10 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     assertEquals(expectedScript, scriptTable);
     String dtHtml = script.getTable().toString();
     assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
-    assertEquals(1, script.getTestSummary().right);
-    assertEquals(0, script.getTestSummary().wrong);
-    assertEquals(0, script.getTestSummary().ignores);
-    assertEquals(0, script.getTestSummary().exceptions);
+    assertEquals(1, script.getTestSummary().getRight());
+    assertEquals(0, script.getTestSummary().getWrong());
+    assertEquals(0, script.getTestSummary().getIgnores());
+    assertEquals(0, script.getTestSummary().getExceptions());
   }
 
   @Test
@@ -128,10 +128,10 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     assertEquals(expectedScript, scriptTable);
     String dtHtml = script.getTable().toString();
     assertSubString("<span id=\"test_status\" class=fail>Scenario</span>", dtHtml);
-    assertEquals(0, script.getTestSummary().right);
-    assertEquals(1, script.getTestSummary().wrong);
-    assertEquals(0, script.getTestSummary().ignores);
-    assertEquals(0, script.getTestSummary().exceptions);
+    assertEquals(0, script.getTestSummary().getRight());
+    assertEquals(1, script.getTestSummary().getWrong());
+    assertEquals(0, script.getTestSummary().getIgnores());
+    assertEquals(0, script.getTestSummary().getExceptions());
   }
 
   @Test
@@ -205,10 +205,10 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     assertEquals(expectedScript, scriptTable);
     String dtHtml = script.getTable().toString();
     assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
-    assertEquals(1, script.getTestSummary().right);
-    assertEquals(0, script.getTestSummary().wrong);
-    assertEquals(0, script.getTestSummary().ignores);
-    assertEquals(0, script.getTestSummary().exceptions);
+    assertEquals(1, script.getTestSummary().getRight());
+    assertEquals(0, script.getTestSummary().getWrong());
+    assertEquals(0, script.getTestSummary().getIgnores());
+    assertEquals(0, script.getTestSummary().getExceptions());
   }
 
 

@@ -33,6 +33,7 @@ public class PageTitle {
 
   public PageTitle(String pageType) {
     this.pageType = pageType;
+    this.title = pageType;
   }
 
   public PageTitle(String pageType, WikiPagePath wikiPagePath) {

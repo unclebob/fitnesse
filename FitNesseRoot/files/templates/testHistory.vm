@@ -17,19 +17,17 @@
   <tr>
     #set ($barGraph = $pageHistory.getBarGraph())
 
-    <td>$page</td>
-    <td class=#if($pageHistory.passes == 0)"ignore"
-    #else"pass"#end>$pageHistory.passes</td>
-    <td class=#if($pageHistory.failures==0)"ignore"
-    #else"fail"#end>$pageHistory.failures</td>
+    <td><a href="/$page?pageHistory">$page</a></td>
+    <td class=#if($pageHistory.passes == 0)"ignore"#else"pass"#end>$pageHistory.passes</td>
+    <td class=#if($pageHistory.failures==0)"ignore"#else"fail"#end>$pageHistory.failures</td>
     <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
     #foreach($passFail in $barGraph.passFailArray())
-    #if($passFail)
+    #if($passFail.Pass)
 
-    <td class="pass">+</td>
+    <td class="pass"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">+</a></td>
     #else
 
-    <td class="fail">-</td>
+    <td class="fail"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">-</a></td></td>
     #end
     #end
 

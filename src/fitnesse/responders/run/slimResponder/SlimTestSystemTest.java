@@ -182,7 +182,7 @@ public class SlimTestSystemTest {
         "|x?|\n" +
         "|1|\n"
     );
-    assertEquals(0, responder.getTestSummary().exceptions);
+    assertEquals(0, responder.getTestSummary().getExceptions());
   }
 
   @Test
@@ -192,7 +192,7 @@ public class SlimTestSystemTest {
         "|x?|\n" +
         "|1|\n"
     );
-    assertEquals(0, responder.getTestSummary().exceptions);
+    assertEquals(0, responder.getTestSummary().getExceptions());
   }
 
   @Test
@@ -202,7 +202,7 @@ public class SlimTestSystemTest {
         "|x|\n" +
         "|1|\n"
     );
-    assertEquals(0, responder.getTestSummary().exceptions);
+    assertEquals(0, responder.getTestSummary().getExceptions());
   }
 
   @Test
@@ -212,7 +212,7 @@ public class SlimTestSystemTest {
         "|x?|\n" +
         "|1|\n"
     );
-    assertEquals(1, responder.getTestSummary().exceptions);
+    assertEquals(1, responder.getTestSummary().getExceptions());
     assertTestResultsContain("EXECUTE_THROWS");
   }
 

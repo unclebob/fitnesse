@@ -68,7 +68,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     assertEquals(1, outputs.size());
     assertEquals(1, counts.size());
     assertSubString("class", (String) outputs.get(0));
-    assertEquals(1, counts.get(0).right);
+    assertEquals(1, counts.get(0).getRight());
   }
 
   private void doSimpleRun() throws Exception {
@@ -113,9 +113,9 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     assertEquals(3, outputs.size());
     assertEquals(1, counts.size());
     TestSummary count = counts.get(0);
-    assertEquals(1, count.right);
-    assertEquals(1, count.wrong);
-    assertEquals(1, count.exceptions);
+    assertEquals(1, count.getRight());
+    assertEquals(1, count.getWrong());
+    assertEquals(1, count.getExceptions());
   }
 
   public void testManyRuns() throws Exception {
@@ -130,9 +130,9 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     assertFalse(exceptionOccurred);
     assertEquals(3, outputs.size());
     assertEquals(3, counts.size());
-    assertEquals(1, (counts.get(0)).right);
-    assertEquals(1, (counts.get(1)).wrong);
-    assertEquals(1, (counts.get(2)).exceptions);
+    assertEquals(1, (counts.get(0)).getRight());
+    assertEquals(1, (counts.get(1)).getWrong());
+    assertEquals(1, (counts.get(2)).getExceptions());
   }
 
   public void testDonerIsNotifiedWhenFinished_success() throws Exception {

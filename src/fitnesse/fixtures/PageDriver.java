@@ -44,6 +44,14 @@ public class PageDriver {
     return examiner.getValue().indexOf(subString) != -1;
   }
 
+  public boolean htmlContains(String subString) throws Exception {
+    String html = requester.html();
+    html = html.replaceAll("\n", " ");
+    html = html.replaceAll("\r", " ");
+    html = html.replaceAll("\\s+", " ");
+    return (html.indexOf(subString) != -1);
+  }
+
   public boolean containsJsonPacket(String packet) throws Exception {
     packet = ResponseExaminer.convertBreaksToLineSeparators(packet);
     System.out.println("packet = " + packet);
@@ -59,7 +67,7 @@ public class PageDriver {
   }
 
   public String content() throws Exception {
-    return requester.contents();
+    return requester.html();
   }
 
   public String lineIs(int lineNumber) throws Exception {

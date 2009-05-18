@@ -4,6 +4,10 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.XmlFormatter;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestSummary;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -14,8 +18,9 @@ import static util.RegexTestCase.assertHasRegexp;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.FileWriter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SortedSet;
 
@@ -192,7 +197,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_0_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"pass\">03 May, 09 11:04</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"pass\">.*03 May, 09 11:04.*</td>", response.getContent());
   }
 
   @Test
@@ -202,7 +207,7 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_6_1_3_0");
 
     makeResponse();
-    assertHasRegexp("<td .* class=\"fail\">03 May, 09 11:04</td>", response.getContent());
+    assertHasRegexp("<td .* class=\"fail\">.*03 May, 09 11:04.*</td>", response.getContent());
   }
 
   @Test
@@ -234,11 +239,11 @@ public class PageHistoryResponderTest {
     addTestResult(pageDirectory, "20090503110451_30_20_3_0");
     makeResponse();
     StringBuilder expected = new StringBuilder();
-    for (int i=0; i<30; i++) {
+    for (int i = 0; i < 30; i++) {
       expected.append("<td id=\"element\" class=\"pass\">&nbsp</td>");
     }
     expected.append(".*");
-    for (int i=0; i<20; i++) {
+    for (int i = 0; i < 20; i++) {
       expected.append("<td id=\"element\" class=\"fail\">&nbsp</td>");
     }
     assertHasRegexp(expected.toString(), response.getContent());
@@ -246,25 +251,81 @@ public class PageHistoryResponderTest {
 
   @Test
   public void shortResultShouldShowPassFailBarWithPadding() throws Exception {
-    addPageDirectory("TestPage");
     File pageDirectory = addPageDirectory("TestPage");
     addTestResult(pageDirectory, "20090503110451_30_20_3_0");
     addTestResult(pageDirectory, "20090503143157_10_5_3_0");
 
     makeResponse();
     StringBuilder expected = new StringBuilder();
-    for (int i=0; i<10; i++) {
+    for (int i = 0; i < 10; i++) {
       expected.append("<td id=\"element\" class=\"pass\">&nbsp</td>");
     }
     expected.append(".*");
-    for (int i=0; i<5; i++) {
+    for (int i = 0; i < 5; i++) {
       expected.append("<td id=\"element\" class=\"fail\">&nbsp</td>");
     }
     expected.append(".*");
-    for (int i=0; i<35; i++) {
+    for (int i = 0; i < 35; i++) {
       expected.append("<td id=\"element\" class=\"ignore\">&nbsp</td>");
     }
     assertHasRegexp(expected.toString(), response.getContent());
+  }
+
+  @Test
+  public void canGetHistoricalTestResult() throws Exception {
+    File pageDirectory = addPageDirectory("TestPage");
+    File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0");
+    addDummyTestResult(resultFile);
+    makeResultForDate("TestPage", "20090503110451");
+    assertHasRegexp("v1", response.getContent());
+    assertHasRegexp("1 right", response.getContent());
+    assertHasRegexp("2 wrong", response.getContent());
+    assertHasRegexp("3 ignored", response.getContent());
+    assertHasRegexp("4 exceptions", response.getContent());
+    assertHasRegexp("relativePageName", response.getContent());
+    assertHasRegexp("11 Right", response.getContent());
+    assertHasRegexp("22 Wrong", response.getContent());
+    assertHasRegexp("33 Ignores", response.getContent());
+    assertHasRegexp("44 Exceptions", response.getContent());
+    assertHasRegexp("wad of HTML content", response.getContent());
+  }
+
+  private void makeResultForDate(String page, String resultDate) throws Exception {
+    request = new MockRequest();
+    request.setResource(page);
+    request.addInput("resultDate", resultDate);
+    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+  }
+
+  private void addDummyTestResult(File resultFile) throws Exception {
+    TestExecutionReport testResponse = makeDummyTestResponse();
+    generateTestResultFile(testResponse, resultFile);
+  }
+
+  private void generateTestResultFile(TestExecutionReport testResponse, File resultFile) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("response", testResponse);
+    FitNesseContext context = new FitNesseContext();
+    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
+    FileWriter fileWriter = new FileWriter(resultFile);
+    template.merge(velocityContext, fileWriter);
+    fileWriter.close();
+  }
+
+  private TestExecutionReport makeDummyTestResponse() {
+    TestExecutionReport testResponse = new TestExecutionReport();
+    testResponse.version = "v1";
+    testResponse.rootPath = "rootPath";
+    testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
+    TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
+    testResponse.results.add(result);
+    result.right = "11";
+    result.wrong = "22";
+    result.ignores = "33";
+    result.exceptions = "44";
+    result.relativePageName = "relativePageName";
+    result.content = "wad of HTML content";
+    return testResponse;
   }
 
 

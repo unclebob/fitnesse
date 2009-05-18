@@ -68,10 +68,10 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     responder.processResults(input);
 
     TestSummary summary = formatter.finalSummary;
-    assertEquals(counts.right, summary.right);
-    assertEquals(counts.wrong, summary.wrong);
-    assertEquals(counts.ignores, summary.ignores);
-    assertEquals(counts.exceptions, summary.exceptions);
+    assertEquals(counts.right, summary.getRight());
+    assertEquals(counts.wrong, summary.getWrong());
+    assertEquals(counts.ignores, summary.getIgnores());
+    assertEquals(counts.exceptions, summary.getExceptions());
   }
 
   public void testMakeResponse() throws Exception {
