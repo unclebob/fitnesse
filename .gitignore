@@ -21,3 +21,5 @@ target/
 desktop.ini
 inst.log
 com_ibm_contest/
+velocity.log*
+crap_build.xml
