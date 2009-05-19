@@ -52,7 +52,7 @@ public class ResponseExaminer extends ColumnFixture {
     Pattern p = Pattern.compile(pattern, Pattern.MULTILINE + Pattern.DOTALL);
     extractValueFromResponse();
 
-    matcher = p.matcher(value);
+    matcher = p.matcher(getValue());
     int matches = 0;
     for (matches = 0; matcher.find(); matches++) ;
     return matches;
@@ -111,7 +111,7 @@ public class ResponseExaminer extends ColumnFixture {
   }
 
   public String source() {
-    return value;
+    return getValue();
   }
 
   public String wrappedHtml() throws Exception {
