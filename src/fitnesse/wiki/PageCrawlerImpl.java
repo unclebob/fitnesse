@@ -6,6 +6,7 @@ import fitnesse.components.FitNesseTraversalListener;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 
 public class PageCrawlerImpl implements PageCrawler {
   private PageCrawlerDeadEndStrategy deadEndStrategy;
@@ -113,7 +114,7 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   //TODO this doesn't belong here
-  public static WikiPage getInheritedPage(String pageName, WikiPage context) throws Exception {
+  public static WikiPage getClosestInheritedPage(String pageName, WikiPage context) throws Exception {
     List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(context);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);
@@ -172,5 +173,16 @@ public class PageCrawlerImpl implements PageCrawler {
       WikiPage parent = page.getParent();
       return getPage(parent, pathRelativeToSibling);
     }
+  }
+
+  public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) throws Exception {
+    List<WikiPage> uncles = new ArrayList<WikiPage>();
+    List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(nephew);
+    for (WikiPage ancestor : ancestors) {
+      WikiPage namedPage = ancestor.getChildPage(uncleName);
+      if (namedPage != null)
+        uncles.add(namedPage);
+    }
+    return uncles;
   }
 }

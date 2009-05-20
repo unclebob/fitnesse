@@ -10,6 +10,9 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.util.List;
+import java.util.Collections;
+
 public class SetupTeardownIncluder {
   private PageData pageData;
   private boolean isSuite;
@@ -46,9 +49,15 @@ public class SetupTeardownIncluder {
 
   private void includeSetupAndTeardownPages() throws Exception {
     includeSetupPages();
+    includeScenarioLibrary();
     includePageContent();
     includeTeardownPages();
     updatePageContent();
+  }
+
+  private void includeScenarioLibrary() throws Exception {
+    includeScenarioLibrariesIfAppropriate();
+
   }
 
   private void includeSetupPages() throws Exception {
@@ -91,12 +100,43 @@ public class SetupTeardownIncluder {
     WikiPage inheritedPage = findInheritedPage(pageName);
     if (inheritedPage != null) {
       String pagePathName = getPathNameForPage(inheritedPage);
-      buildIncludeDirective(pagePathName, arg);
+      includePage(pagePathName, arg);
     }
   }
 
+  private void includeScenarioLibrariesIfAppropriate() throws Exception {
+    if (isSlim(testPage))
+      includeScenaiorLibrariesIfAny();
+  }
+
+  private void includeScenaiorLibrariesIfAny() throws Exception {
+    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", testPage);
+    if (uncles.size() > 0)
+      includeScenarioLibraries(uncles);
+  }
+
+  private boolean isSlim(WikiPage page) throws Exception {
+    String testSystem = page.getData().getVariable("TEST_SYSTEM");
+    boolean isSlim = "slim".equalsIgnoreCase(testSystem);
+    return isSlim;
+  }
+
+  private void includeScenarioLibraries(List<WikiPage> uncles) throws Exception {
+    Collections.reverse(uncles);
+    newPageContent.append("!*> Scenario Libraries\n");
+    for (WikiPage uncle : uncles)
+      includeScenarioLibrary(uncle);
+    newPageContent.append("*!\n");
+  }
+
+  private void includeScenarioLibrary(WikiPage uncle) throws Exception {
+    newPageContent.append("!include -c .");
+    newPageContent.append(PathParser.render(pageCrawler.getFullPath(uncle)));
+    newPageContent.append("\n");
+  }
+
   private WikiPage findInheritedPage(String pageName) throws Exception {
-    return PageCrawlerImpl.getInheritedPage(pageName, testPage);
+    return PageCrawlerImpl.getClosestInheritedPage(pageName, testPage);
   }
 
   private String getPathNameForPage(WikiPage page) throws Exception {
@@ -104,7 +144,7 @@ public class SetupTeardownIncluder {
     return PathParser.render(pagePath);
   }
 
-  private void buildIncludeDirective(String pagePathName, String arg) {
+  private void includePage(String pagePathName, String arg) {
     newPageContent
       .append("\n!include ")
       .append(arg)

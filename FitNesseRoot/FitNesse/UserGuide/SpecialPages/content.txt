@@ -22,7 +22,7 @@ Included at the top of a page.  Often used for common titles, or links.
 Included at the bottom of a page.  Used for copyrights, footers, and common links.
 
 !3 !-SetUp-!
-Included at the top of test pages only.  Used to initialize the test.  Often used to load scenario tables, or Import tables.
+Included at the top of test pages only.  Used to initialize the test and supply Import tables.
 
 !3 !-TearDown-!
 Included at the bottom of test pages only.  Used to decommission resources used in a test.
@@ -32,6 +32,10 @@ Included at the top of a test page and before !-SetUp-!.  When a suite is run, t
 
 !3 !-SuiteTearDown-!
 Included at the bottom of a test page only, and after !-TearDown-!.  When a suite is run this page will be included only once at the end of the suite.
+
+!3 !-ScenarioLibrary-!
+These pages are intended for scenario tables.  They are included just after the !-SetUp-! in any ''SLIM'' test.  Unlike the other special pages, ''all'' brother and uncle !-ScenarioLibrary-! pages are included.  The oldest (grandest uncle) is included first.  The brother, if it exists, is included last.  This allows younger !-ScenarioLibrary-! pages to override older ones.
+
 
 !3 Suites.
 A special word about suites.  The !-SuiteSetUp-! and !-SuiteTearDown-! that are included in a suite run are the pages that are the nearest brothers or uncles of the ''Suite'' page.  If the suite has a deep hierarchy, and there are !-SuiteSetUp-! and/or !-SuiteTearDown-! pages below the suite page, they will not be included.  

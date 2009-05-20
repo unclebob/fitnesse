@@ -3,6 +3,10 @@
 package fitnesse.fixtures;
 
 import fitnesse.responders.run.XmlFormatter;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.PageData;
 import org.htmlparser.*;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -30,6 +34,15 @@ public class PageDriver {
     requester.uri = uri;
     requester.execute();
     return requester.status();
+  }
+
+  public void makeATestPage(String pageName) throws Exception {
+    WikiPage root = FitnesseFixtureContext.root;
+    WikiPagePath pagePath = PathParser.parse(pageName);
+    WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
+    PageData data = thePage.getData();
+    data.setAttribute("Test", "true");
+    thePage.commit(data);
   }
 
   public boolean contentMatches(String pattern) throws Exception {
@@ -74,6 +87,16 @@ public class PageDriver {
     examiner.type = "line";
     examiner.number = lineNumber;
     return examiner.string();
+  }
+
+  public int lineNumberContaining(String text) throws Exception {
+    String content = requester.html();
+    int textPosition = content.indexOf(text);
+    if (textPosition == -1)
+      return -1;
+    String priorToContent = content.substring(0, textPosition);
+    String lines[] = priorToContent.split("\n");
+    return lines.length;
   }
 
   public String echo(String it) {
@@ -131,7 +154,7 @@ public class PageDriver {
   }
 
   public String valueOfTagWithClassIs(String classValue) throws Exception {
-    return getValueOfTagWithAttributeValue("class", classValue);  
+    return getValueOfTagWithAttributeValue("class", classValue);
   }
 
   public boolean contentOfTagWithIdContains(String id, String contents) throws Exception {
@@ -165,5 +188,9 @@ public class PageDriver {
 
       return (ret);
     }
+  }
+
+  public int echoInt(int i) {
+    return i;
   }
 }
