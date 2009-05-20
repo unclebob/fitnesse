@@ -1,8 +1,3 @@
 !include <SuiteAcceptanceTests.SetUp
 
-!*> Scenarios
-!include -c <SuiteAcceptanceTests.ScenarioLibrary
-
 |script|page driver|
-
-*!

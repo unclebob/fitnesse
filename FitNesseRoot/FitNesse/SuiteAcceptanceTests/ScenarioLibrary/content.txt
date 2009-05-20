@@ -5,6 +5,14 @@
 !|scenario|given page|page|
 |given page|@page|with content|nothing|
 
+!|scenario|given test page|page|
+|given page|@page|
+|make|@page|a test page|
+
+!|scenario|given slim test page|page|
+|given page|@page|with content|!define TEST_SYSTEM {slim}|
+|make|@page|a test page|
+
 |scenario|page|source|should have link to|target|
 |check|request page|@source|200|
 |ensure|content contains|<a href="@target">|
@@ -28,6 +36,11 @@
 |ensure|content contains|@text|
 |show|content|
 
+!|scenario|page|source|should not contain|text|
+|check|request page|@source|200|
+|reject|content contains|@text|
+|show|content|
+
 !|scenario|page|source|should match|text|
 |check|request page|@source|200|
 |ensure|content matches|@text|
@@ -35,6 +48,13 @@
 
 !|scenario|it should contain|text|
 |page|$IT|should contain|@text|
+
+!|scenario|it should not contain|text|
+|page|$IT|should not contain|@text|
+
+!|scenario|it should contain|text|in line|symbol|
+|check|request page|$IT|200|
+|$@symbol=|line number containing|@text|
 
 !|scenario|it should match|text|
 |page|$IT|should match|@text|
@@ -70,3 +90,5 @@
 |ensure|content matches|@htmlText|
 |show|content|
 
+!|scenario|the line|after|should come after|before|
+|check|echo int|$@before|< $@after|
