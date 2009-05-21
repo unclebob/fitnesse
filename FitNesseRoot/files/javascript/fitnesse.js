@@ -19,6 +19,16 @@ function toggleCollapsable(id)
   }
 }
 
+function popup(window_id) {
+  var window = document.getElementById(window_id);
+  window.style.visibility = "visible";
+}
+
+function popdown(window_id) {
+  var window = document.getElementById(window_id);
+  window.style.visibility = "hidden";
+}
+
 function expandOrCollapseAll(cssClass)
 {
   divs = document.getElementsByTagName("div");

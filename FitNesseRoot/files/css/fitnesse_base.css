@@ -130,6 +130,37 @@ img {
 
 **********/
 
+div.popup_window {
+  visibility: hidden;
+  position: absolute;
+  top: 50px;
+  width: 600px;
+  height: 300px;
+  border: 3px outset gray;
+  z-index: 10;
+}
+
+div.popup_title {
+  position: absolute;
+  top: 0px;
+  height: 18px;
+  width:590px;
+  background-color: #aaa;
+  border-bottom: groove gray 2px;
+  padding: 3px 5px 2px 5px;
+  font: bold 11pt sans-serif;
+}
+
+div.popup_content {
+  position: absolute;
+  top: 25px;
+  height:265px;
+  width: 590px;
+  padding: 5px;
+  overflow:auto;
+  background-color: white;
+}
+
 div.sidebar {
   background: #D9DFC9;
   margin: 0px;

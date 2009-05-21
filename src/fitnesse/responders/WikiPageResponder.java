@@ -9,6 +9,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.html.HtmlTag;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -21,6 +22,8 @@ import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.widgets.Constants;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.VelocityContext;
 
 public class WikiPageResponder implements SecureResponder {
   protected WikiPage page;
@@ -87,9 +90,15 @@ public class WikiPageResponder implements SecureResponder {
     String fullPathName = PathParser.render(fullPath);
     html.title.use(fullPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
+    html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
     html.actions.use(HtmlUtil.makeActions(page.getActions()));
     SetupTeardownIncluder.includeInto(pageData);
     html.main.use(generateHtml(pageData));
+    VelocityContext velocityContext = new VelocityContext();
+
+    velocityContext.put("page_name", page.getName());
+    velocityContext.put("full_path", fullPathName);
+    html.main.add(context.translateTemplate(velocityContext, "addChildPagePopup.vm"));
     handleSpecialProperties(html, page);
     return html.html();
   }
