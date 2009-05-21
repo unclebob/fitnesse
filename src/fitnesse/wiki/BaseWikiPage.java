@@ -102,11 +102,11 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   public WikiPage getHeaderPage() throws Exception {
-    return PageCrawlerImpl.getInheritedPage("PageHeader", this);
+    return PageCrawlerImpl.getClosestInheritedPage("PageHeader", this);
   }
 
   public WikiPage getFooterPage() throws Exception {
-    return PageCrawlerImpl.getInheritedPage("PageFooter", this);
+    return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
   }
 
   public List<WikiPageAction> getActions() throws Exception {

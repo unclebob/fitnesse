@@ -72,3 +72,6 @@ Scenarios can also be nested! If you hit the test button, you'll see scenarios e
 
 I'll leave you with one last thought.  There are no ''if'' or ''while'' statements within scenarios.  They are macros, not programs.  They are constructed via text substitution.  Their purpose is to help you eliminate redundancy in your tests.
 
+!2 Scenario Libraries
+See <UserGuide.SpecialPages.  You can place libraries of scenarios into pages named !-ScenarioLibrary-!. These pages will be automatically included into any Slim test page using the familiar ''uncle hierarchy'' used for !-SetUp-!, !-TearDown-!, etc.  !-ScenarioLibrary-! pages are special because all uncles and brothers are loaded.
+

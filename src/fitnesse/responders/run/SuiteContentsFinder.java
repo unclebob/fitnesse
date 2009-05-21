@@ -60,13 +60,13 @@ public class SuiteContentsFinder {
   }
 
   private void addSetupAndTeardown(LinkedList<WikiPage> pages) throws Exception {
-    WikiPage suiteSetUp = PageCrawlerImpl.getInheritedPage(SUITE_SETUP_NAME, pageToRun);
+    WikiPage suiteSetUp = PageCrawlerImpl.getClosestInheritedPage(SUITE_SETUP_NAME, pageToRun);
     if (suiteSetUp != null) {
       if (pages.contains(suiteSetUp))
         pages.remove(suiteSetUp);
       pages.addFirst(suiteSetUp);
     }
-    WikiPage suiteTearDown = PageCrawlerImpl.getInheritedPage(SUITE_TEARDOWN_NAME, pageToRun);
+    WikiPage suiteTearDown = PageCrawlerImpl.getClosestInheritedPage(SUITE_TEARDOWN_NAME, pageToRun);
     if (suiteTearDown != null) {
       if (pages.contains(suiteTearDown))
         pages.remove(suiteTearDown);

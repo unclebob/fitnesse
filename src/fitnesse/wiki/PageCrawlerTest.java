@@ -4,23 +4,29 @@ package fitnesse.wiki;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import junit.framework.TestCase;
 import fitnesse.components.FitNesseTraversalListener;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.Assert;
+import static org.junit.Assert.*;
 
-public class PageCrawlerTest extends TestCase implements FitNesseTraversalListener {
+public class PageCrawlerTest implements FitNesseTraversalListener {
   private WikiPage root;
   private WikiPage page1;
   private WikiPage page2;
   private WikiPage child1;
   private WikiPage child2;
   private WikiPage grandChild1;
-  private PageCrawler crawler;
+  private PageCrawlerImpl crawler;
   private WikiPagePath page1Path;
   private WikiPagePath child1FullPath;
   private WikiPagePath page2Path;
   private WikiPagePath grandChild1FullPath;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = new PageCrawlerImpl();
@@ -36,11 +42,13 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     grandChild1 = crawler.addPage(child1, PathParser.parse("GrandChildOne"));
   }
 
+  @Test
   public void testPageExists() throws Exception {
     assertTrue(crawler.pageExists(page1, PathParser.parse("ChildOne")));
     assertFalse(crawler.pageExists(page1, PathParser.parse("BlahBlah")));
   }
 
+  @Test
   public void testPageExistsUsingPath() throws Exception {
     assertTrue(crawler.pageExists(page1, PathParser.parse("ChildOne")));
     assertTrue(crawler.pageExists(root, child1FullPath));
@@ -52,6 +60,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertFalse(crawler.pageExists(page1, PathParser.parse("PageOne.BlahBlah")));
   }
 
+  @Test
   public void testGetPage() throws Exception {
     assertEquals(null, crawler.getPage(page1, page1Path));
     assertEquals(page1, crawler.getPage(root, page1Path));
@@ -64,12 +73,14 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals(root, crawler.getPage(root, PathParser.parse("")));
   }
 
+  @Test
   public void testGetSiblingPage() throws Exception {
     assertEquals(page2, crawler.getSiblingPage(page1, page2Path));
     assertEquals(child1, crawler.getSiblingPage(page1, PathParser.parse(">ChildOne")));
     assertEquals(child2, crawler.getSiblingPage(grandChild1, PathParser.parse("<PageOne.ChildTwo")));
   }
 
+  @Test
   public void testGetFullPath() throws Exception {
     assertEquals(page1Path, crawler.getFullPath(page1));
     assertEquals(page2Path, crawler.getFullPath(page2));
@@ -78,6 +89,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals(PathParser.parse(""), crawler.getFullPath(root));
   }
 
+  @Test
   public void testGetAbsolutePathForChild() throws Exception {
     WikiPagePath somePagePath = PathParser.parse("SomePage");
     WikiPagePath somePageFullPath = crawler.getFullPathOfChild(root, somePagePath);
@@ -99,12 +111,14 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals("SomePage", PathParser.render(somePageAbsoluteFullPath));
   }
 
+  @Test
   public void testAddPage() throws Exception {
     WikiPage page = crawler.addPage(page1, PathParser.parse("SomePage"));
     assertEquals(PathParser.parse("PageOne.SomePage"), crawler.getFullPath(page));
     assertEquals(page1, page.getParent());
   }
 
+  @Test
   public void testRecursiveAddbyName() throws Exception {
     crawler.addPage(root, PathParser.parse("AaAa"), "its content");
     assertTrue(root.hasChildPage("AaAa"));
@@ -114,6 +128,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals("floop", crawler.getPage(root, PathParser.parse("AaAa.BbBb")).getData().getContent());
   }
 
+  @Test
   public void testAddChildPageWithMissingParent() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("WikiMail.BadSubject0123"), "");
     assertNotNull(page);
@@ -121,6 +136,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals(PathParser.parse("WikiMail.BadSubject0123"), crawler.getFullPath(page));
   }
 
+  @Test
   public void testGetRelativePageName() throws Exception {
     assertEquals("PageOne", crawler.getRelativeName(root, page1));
     assertEquals("PageOne.ChildOne", crawler.getRelativeName(root, child1));
@@ -129,6 +145,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals("ChildOne.GrandChildOne", crawler.getRelativeName(page1, grandChild1));
   }
 
+  @Test
   public void testIsRoot() throws Exception {
     assertTrue(crawler.isRoot(root));
     WikiPage page = crawler.addPage(root, page1Path);
@@ -137,6 +154,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
 
   Set<String> traversedPages = new HashSet<String>();
 
+  @Test
   public void testTraversal() throws Exception {
     crawler.traverse(root, this);
     assertEquals(6, traversedPages.size());
@@ -152,6 +170,7 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     return "blah";
   }
 
+  @Test
   public void testdoesntTraverseSymbolicPages() throws Exception {
     PageData data = page1.getData();
     data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymLink", "PageTwo");
@@ -161,5 +180,17 @@ public class PageCrawlerTest extends TestCase implements FitNesseTraversalListen
     assertEquals(6, traversedPages.size());
 
     assertFalse(traversedPages.contains("SymLink"));
+  }
+
+  @Test
+  public void canFindAllUncles() throws Exception {
+    WikiPage grandUnclePage = crawler.addPage(root, PathParser.parse("UnclePage"));
+    WikiPage unclePage = crawler.addPage(root, PathParser.parse("PageOne.UnclePage"));
+    WikiPage brotherPage = crawler.addPage(root, PathParser.parse("PageOne.ChildOne.UnclePage"));
+    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("UnclePage",grandChild1);
+    assertTrue(uncles.contains(grandUnclePage));
+    assertTrue(uncles.contains(unclePage));
+    assertTrue(uncles.contains(brotherPage));
+
   }
 }
