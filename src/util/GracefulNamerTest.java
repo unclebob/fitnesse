@@ -1,10 +1,9 @@
 // Modified or written by Object Mentor, Inc. for inclusion with FitNesse.
 // Copyright (c) 2002 Cunningham & Cunningham, Inc.
 // Released under the terms of the GNU General Public License version 2 or later.
-package fit;
+package util;
 
 import junit.framework.TestCase;
-import util.GracefulNamer;
 
 public class GracefulNamerTest extends TestCase {
   public void testIsGracefulName() throws Exception {

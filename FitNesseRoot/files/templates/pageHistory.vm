@@ -1,5 +1,5 @@
 #set ($page_title="Page History")
-#parse("pagehead.vm")
+#parse("pageHead.vm")
 #if($pageHistory)
 <table>
   <tr>
@@ -28,4 +28,4 @@
 #else
 <h2>No history for page: $pageTitle.Title</h2>
 #end
-  #parse("pagefooter.vm")
+  #parse("pageFooter.vm")
