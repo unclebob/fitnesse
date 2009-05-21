@@ -32,7 +32,12 @@ public class AddChildPageResponder implements Responder {
   private void createChildPage(Request request) throws Exception {
     WikiPage childPage = crawler.addPage(page, PathParser.parse((String) request.getInput("name")), (String) request.getInput("content"));
     PageData childPageData = childPage.getData();
-    childPageData.setAttribute((String) request.getInput("pagetype"));
+    String pagetype = (String) request.getInput("pagetype");
+    if (pagetype.equals("Normal")){
+      childPageData.getProperties().remove("Test");
+      childPageData.getProperties().remove("Suite");
+    }
+    childPageData.setAttribute(pagetype);
     childPage.commit(childPageData);
   }
 
