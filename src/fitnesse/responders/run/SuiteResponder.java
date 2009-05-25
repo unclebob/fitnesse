@@ -44,7 +44,7 @@ public class SuiteResponder extends TestResponder {
   
   @Override
   protected void performExecution() throws Exception {
-    SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getSuiteFirstTest());
+    SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatter);
     runner.setDebug(isRemoteDebug());
@@ -54,6 +54,11 @@ public class SuiteResponder extends TestResponder {
   private String getSuiteTagFilter() {
     return request != null ? (String) request.getInput("suiteFilter") : null;
   }
+  
+  private String getNotSuiteFilter() {
+    return request != null ? (String) request.getInput("notSuiteFilter") : null;
+  }
+  
   
   private String getSuiteFirstTest() throws Exception {
     String startTest = null;

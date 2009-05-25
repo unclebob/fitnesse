@@ -3,39 +3,47 @@
  */
 package fitnesse.responders.run;
 
+import util.StringUtil;
+
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SuiteFilter {
-  final private List<String> suiteTags = new LinkedList<String>();
+  final private SuiteTagMatcher notMatchTags;
+  final private SuiteTagMatcher matchTags;
   final private String startWithTest;
   
-  private static SuiteFilter NO_MATCHING = new SuiteFilter(null, null) {
+  public static SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null) {
     public boolean isMatchingTest(WikiPage testPage) throws Exception {
       return false;
     }
   };
   
-  SuiteFilter(String matchingTags, String startWithTest) {
+  public static SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null);
+
+  
+  SuiteFilter(String matchingTags, String mustNotMatchTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
     
-    if (matchingTags != null) {
-      suiteTags.addAll(Arrays.asList(matchingTags.split("\\s*,\\s*")));
-    }
+    matchTags = new SuiteTagMatcher(matchingTags, true);
+    notMatchTags = new SuiteTagMatcher(mustNotMatchTags, false);
   }
   
   public boolean isMatchingTest(WikiPage testPage) throws Exception {
     PageData data = testPage.getData();
     boolean pruned = data.hasAttribute(PageData.PropertyPRUNE);
-    boolean test = data.hasAttribute("Test");
-    return !pruned && test && belongsToSuite(testPage) && afterStartingTest(testPage);
+    boolean isTest = data.hasAttribute("Test");
+    return !pruned && 
+           isTest && 
+           matchTags.matches(testPage) &&
+           !notMatchTags.matches(testPage) && 
+           afterStartingTest(testPage);
   }
   
   private boolean afterStartingTest(WikiPage testPage) throws Exception {
@@ -57,58 +65,86 @@ public class SuiteFilter {
     }
     
     PageData pageData = suitePage.getData();
-    if ((suiteTags.size() > 0) && pageData.hasAttribute("Suite") && belongsToSuite(suitePage)) {
-      return new SuiteFilter(null, startWithTest).getFilterForTestsInSuite(suitePage);
+    if (pageData.hasAttribute("Suite") && matchTags.isFiltering() && matchTags.matches(suitePage)) {
+      return new SuiteFilter(null, notMatchTags.tagString, startWithTest).getFilterForTestsInSuite(suitePage);
+    }
+    
+    if (notMatchTags.matches(suitePage)) {
+      return NO_MATCHING;
     }
 
     return this;
   }
   
-  private boolean belongsToSuite(WikiPage wikiPage) {
-    return (suiteTags.size() == 0) || testMatchesQuery(wikiPage);
-  }
-
-  private boolean testMatchesQuery(WikiPage wikiPage) {
-    String testTagString = getTestTags(wikiPage);
-    return (testTagString != null && testTagsMatchQueryTags(testTagString));
-  }
-  
-  private String getTestTags(WikiPage context) {
-    try {
-      return context.getData().getAttribute(PageData.PropertySUITES);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private boolean testTagsMatchQueryTags(String testTagString) {
-    String testTags[] = testTagString.trim().split("\\s*,\\s*");
-    for (String testTag : testTags) {
-      for (String queryTag : suiteTags) {
-        if (testTag.equalsIgnoreCase(queryTag)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
   
   @Override
   public String toString() {
-    StringBuffer description = new StringBuffer();
+    List<String> criterias = new LinkedList<String>();
     
-    if (suiteTags.size() > 0) {
-      description.append("has suite filter '").append(StringUtil.join(suiteTags, ", ")).append("'");
+    if (matchTags.isFiltering()) {
+      criterias.add("matches '" + matchTags.tagString + "'");
+    }
+
+    if (notMatchTags.isFiltering()) {
+      criterias.add("doesn't match '" + notMatchTags.tagString + "'");
     }
 
     if (startWithTest != null) {
-      if (description.length() > 0) {
-        description.append(" & ");
-      }
-      description.append("starts with test '").append(startWithTest).append("'");
+      criterias.add("starts with test '" + startWithTest + "'");
     }
     
-    return description.toString();
+    return StringUtil.join(criterias, " & ");
+  }
+  
+  private class SuiteTagMatcher {
+    private static final String LIST_SEPARATOR = "\\s*,\\s*";
+    final private List<String> tags;
+    final String tagString;
+    final private boolean matchIfNoTags;
+    
+    public SuiteTagMatcher(String suiteTags, boolean matchIfNoTags) {
+      tagString = suiteTags;
+      if (suiteTags != null) {
+        tags = new LinkedList<String>(Arrays.asList(suiteTags.split(LIST_SEPARATOR)));
+      }
+      else {
+        tags = null;
+      }
+      this.matchIfNoTags = matchIfNoTags;
+    }
+    
+    boolean isFiltering() {
+      return (tags != null);
+    }
+    
+    boolean matches(WikiPage wikiPage) {
+      return (tags == null) ? matchIfNoTags : testMatchesQuery(wikiPage);
+    }
+
+    private boolean testMatchesQuery(WikiPage wikiPage) {
+      String testTagString = getTestTags(wikiPage);
+      return (testTagString != null && testTagsMatchQueryTags(testTagString));
+    }
+    
+    private String getTestTags(WikiPage context) {
+      try {
+        return context.getData().getAttribute(PageData.PropertySUITES);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+
+    private boolean testTagsMatchQueryTags(String testTagString) {
+      String testTags[] = testTagString.trim().split(LIST_SEPARATOR);
+      for (String testTag : testTags) {
+        for (String queryTag : tags) {
+          if (testTag.equalsIgnoreCase(queryTag)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
   }
 }

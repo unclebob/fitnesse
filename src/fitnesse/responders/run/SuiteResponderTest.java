@@ -262,6 +262,18 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestThree", results);
   }
   
+
+  @Test
+  public void notSuiteQuery() throws Exception {
+    addTestPagesWithSuiteProperty();
+    request.setQueryString("notSuiteFilter=foo");
+    String results = runSuite();
+    assertHasRegexp("#TestOne", results);
+    assertDoesntHaveRegexp("#TestTwo", results);
+    assertHasRegexp("#TestThree", results);
+  }
+
+  
   @Test
   public void testFirstTest() throws Exception {
     addTestPagesWithSuiteProperty();

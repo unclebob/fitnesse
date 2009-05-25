@@ -3,6 +3,7 @@
  */
 package fitnesse.responders.run;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -46,7 +47,7 @@ public class SuiteFilterTestCase {
 
   @Test
   public void testPrunesTests() throws Exception {
-    SuiteFilter filter = new SuiteFilter(null, null);
+    SuiteFilter filter = new SuiteFilter(null, null, null);
     
     WikiPage prunedTest = addTestPage(root, "PrunedTest", "Pruned Test");
     PageData data = prunedTest.getData();
@@ -60,14 +61,14 @@ public class SuiteFilterTestCase {
 
   @Test
   public void testPrunesNonTests() throws Exception {
-    SuiteFilter filter = new SuiteFilter(null, null);
+    SuiteFilter filter = new SuiteFilter(null, null, null);
 
     assertFalse(filter.isMatchingTest(root));
   }
   
   @Test
   public void testPrunesSuites() throws Exception {
-    SuiteFilter filter = new SuiteFilter(null, null);
+    SuiteFilter filter = new SuiteFilter(null, null, null);
     
     WikiPage prunedSuite = crawler.addPage(root, PathParser.parse("MySuite"), "the suite");
     PageData data = prunedSuite.getData();
@@ -82,7 +83,7 @@ public class SuiteFilterTestCase {
 
   @Test
   public void testTestRequiresTag() throws Exception {
-    SuiteFilter filter = new SuiteFilter("good", "");
+    SuiteFilter filter = new SuiteFilter("good", null,  "");
     
     WikiPage goodTest = addTestPage(root, "GoodTest", "Good Test");
     PageData data = goodTest.getData();
@@ -96,7 +97,7 @@ public class SuiteFilterTestCase {
 
   @Test
   public void testSuiteWithTag() throws Exception {
-    SuiteFilter filter = new SuiteFilter("good", null);
+    SuiteFilter filter = new SuiteFilter("good", null,  null);
 
     WikiPage goodSuite = crawler.addPage(root, PathParser.parse("MySuite"), "the suite");
     PageData data = goodSuite.getData();
@@ -114,31 +115,61 @@ public class SuiteFilterTestCase {
     WikiPage bobSuite = addSuitePage(root, "BobsTests", "B tests");
     WikiPage testPage = addTestPage(bobSuite, "MyTest", "my test");
     
-    SuiteFilter andyFilter = new SuiteFilter(null, "AndyTest");
+    SuiteFilter andyFilter = new SuiteFilter(null, null, "AndyTest");
     assertTrue(andyFilter.isMatchingTest(testPage));
 
-    SuiteFilter andyFilter2 = new SuiteFilter(null, "AndyTest.TestsA.FirstTest");
+    SuiteFilter andyFilter2 = new SuiteFilter(null, null, "AndyTest.TestsA.FirstTest");
     assertTrue(andyFilter2.isMatchingTest(testPage));
 
-    SuiteFilter bobsFilter = new SuiteFilter(null, "BobsTests");
+    SuiteFilter bobsFilter = new SuiteFilter(null, null, "BobsTests");
     assertTrue(bobsFilter.isMatchingTest(testPage));
 
-    SuiteFilter sisterMatchFilter = new SuiteFilter(null, "BobsTests.CharlesTest");
+    SuiteFilter sisterMatchFilter = new SuiteFilter(null, null, "BobsTests.CharlesTest");
     assertTrue(sisterMatchFilter.isMatchingTest(testPage));
     
-    SuiteFilter exactMatchFilter = new SuiteFilter(null, "BobsTests.MyTest");
+    SuiteFilter exactMatchFilter = new SuiteFilter(null, null, "BobsTests.MyTest");
     assertTrue(exactMatchFilter.isMatchingTest(testPage));
 
-    SuiteFilter tooMuchFilter = new SuiteFilter(null, "BobsTests.MyTest.AnotherTest");
+    SuiteFilter tooMuchFilter = new SuiteFilter(null, null, "BobsTests.MyTest.AnotherTest");
     assertFalse(tooMuchFilter.isMatchingTest(testPage));
 
-    SuiteFilter sisterNotMatchFilter = new SuiteFilter(null, "BobsTests.PaulTest.TestingFirst");
+    SuiteFilter sisterNotMatchFilter = new SuiteFilter(null, null, "BobsTests.PaulTest.TestingFirst");
     assertFalse(sisterNotMatchFilter.isMatchingTest(testPage));
 
-    SuiteFilter carlyFilter = new SuiteFilter(null, "ZzzsTests.CarlyFirstTest");
+    SuiteFilter carlyFilter = new SuiteFilter(null, null, "ZzzsTests.CarlyFirstTest");
     assertFalse(carlyFilter.isMatchingTest(testPage));
+  }
+  
+  @Test
+  public void testChecksNotMatchFilterTest() throws Exception {
+    SuiteFilter filter = new SuiteFilter(null, "bad",  null);
+
+    WikiPage failTest = addTestPage(root, "BadTest", "Bad Test");
+    PageData data = failTest.getData();
+    data.setAttribute(PageData.PropertySUITES, "bad");
+    failTest.commit(data);
+    assertFalse(filter.isMatchingTest(failTest));
     
-    SuiteFilter filter = new SuiteFilter("mytage, tag2", "IntegrationTests.BlahTest");
-    System.out.println(filter.toString());
+    WikiPage passTest = addTestPage(root, "PassTest", "Pass Test");
+    assertTrue(filter.isMatchingTest(passTest));
+  }
+  
+  @Test
+  public void testChecksNotMatchFilterSuite() throws Exception {
+    SuiteFilter filter = new SuiteFilter(null, "bad",  null);
+
+    WikiPage failSuite = addTestPage(root, "FailSuite", "Bad Test");
+    PageData data = failSuite.getData();
+    data.setAttribute(PageData.PropertySUITES, "bad");
+    data.setAttribute("Suite");
+    failSuite.commit(data);
+
+    assertFalse(filter.getFilterForTestsInSuite(failSuite).hasMatchingTests());
+  }
+
+  @Test
+  public void testFilterDescription() throws Exception {
+    SuiteFilter filter = new SuiteFilter("good", "bad", "FirstTest");
+    assertEquals("matches 'good' & doesn't match 'bad' & starts with test 'FirstTest'", filter.toString());
   }
 }
