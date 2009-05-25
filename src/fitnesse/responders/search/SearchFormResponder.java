@@ -12,6 +12,7 @@ import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.WikiPage;
 
 public class SearchFormResponder implements Responder {
@@ -39,6 +40,7 @@ public class SearchFormResponder implements Responder {
     Template template = context.getVelocityEngine()
     .getTemplate("searchForm.vm");
 
+    velocityContext.put("pageTitle", new PageTitle("Search Form"));
     velocityContext.put("pageTypeAttributes", PAGE_TYPE_ATTRIBUTES);
     velocityContext.put("actionAttributes", ACTION_ATTRIBUTES);
     velocityContext.put("securityAttributes", SECURITY_ATTRIBUTES);

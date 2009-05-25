@@ -1,25 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-	<head>
-		<title>Search Form</title>
-		<link rel="stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
-		<link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
-		<script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
-	</head>
-	<body onload="document.forms[0].searchString.focus()">
-		<div class="sidebar">
-			<div class="art_niche" onclick="document.location='$searchedRootPage'"></div>
-			<div class="actions"></div>
-		</div>
-		<div class="mainbar">
-			<div class="header">
-				<span class="page_title">Search Form</span>
-			</div>
-			<div class="main">
+#set ($page_title="Search Form")
+#set ($load_actions="document.forms[0].searchString.focus()")
+#parse("pageHead.vm")
 				<form action="search" method="post">
 					<input type="hidden" name="responder" value="search"/>
 Search String:
-					<input type="text" name="searchString" value="$request.getInput("searchString")"/>
+					<input type="text" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
 <br/>
 					<input type="submit" name="searchType" value="Search Titles!"/>
 					<input type="submit" name="searchType" value="Search Content!"/>
@@ -40,7 +25,7 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 								</tr>
 								<tr>
 									<td style="padding-right: 15px;">
-										<textarea name="Suites" cols="20" rows="3">$request.getInput("Suite")</textarea>
+										<textarea name="Suites" cols="20" rows="3">#if ($request.hasInput("Suite"))$request.getInput("Suite")#end</textarea>
 									</td>
 								</tr>
 							</table>
@@ -119,7 +104,4 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 						</div>
 					</div>
 				</form>
-			</div>
-		</div>
-	</body>
-</html>
+#parse("pageFooter.vm")
