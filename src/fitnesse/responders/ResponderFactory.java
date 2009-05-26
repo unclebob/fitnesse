@@ -89,6 +89,7 @@ public class ResponderFactory {
     addResponder("packet", PacketResponder.class);
     addResponder("testHistory", TestHistoryResponder.class);
     addResponder("pageHistory", PageHistoryResponder.class);
+    addResponder("addChild", AddChildPageResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {

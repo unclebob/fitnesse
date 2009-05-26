@@ -1,0 +1,37 @@
+<div id="addChildPopup" class="popup_window">
+  <div class="popup_title">Add Child Page to $page_name</div>
+  <div class="popup_content">
+    <form action="$full_path" method="get">
+      <input type="hidden" name="responder" value="addChild"/>
+      <table border="0" cellspacing="0" width="100%" height="100%">
+        <tr>
+          <td>
+            <input type="radio" name="pagetype" value="Normal"/> Normal<br/>
+            <input type="radio" name="pagetype" value="Test"/> Test<br/>
+            <input type="radio" name="pagetype" value="Suite"/> Suite<br/>
+            <input type="radio" name="pagetype" value="Default" checked="checked"/> Default<br/>
+          </td>
+          <td>
+            <table border="0" cellspacing="0" width="100%">
+              <tr>
+                <td><label for="childName">Name</label></td?
+                <td><input size="50" id="childName" type="text" name="name"/></td>
+              </tr>
+              <tr>
+                <td><label for="childContent">Content</label></td>
+                <td><input size="50" id="childContent" type="text" name="content" value="!contents"/></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input TYPE="button" VALUE="Cancel" onClick="popdown('addChildPopup')"/>
+            <input value="Add" type="submit"/>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>

@@ -11,8 +11,11 @@ import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.Template;
 
 import java.io.File;
+import java.io.StringWriter;
 
 public class FitNesseContext {
   public FitNesse fitnesse;
@@ -90,5 +93,12 @@ public class FitNesseContext {
 
   public void setRootPagePath() {
     rootPagePath = rootPath + "/" + rootDirectoryName;
+  }
+
+  public String translateTemplate(VelocityContext velocityContext, String templateFileName) throws Exception {
+    Template template = getVelocityEngine().getTemplate(templateFileName);
+    StringWriter writer = new StringWriter();
+    template.merge(velocityContext, writer);
+    return writer.toString();
   }
 }

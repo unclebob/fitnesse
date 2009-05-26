@@ -6,11 +6,9 @@ import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
-import java.io.StringWriter;
 
 public class TestHistoryResponder implements Responder {
   private File resultsDirectory;
@@ -26,11 +24,7 @@ public class TestHistoryResponder implements Responder {
       VelocityContext velocityContext = new VelocityContext();
       velocityContext.put("pageTitle", new PageTitle("Test History"));
       velocityContext.put("testHistory", history);
-      Template template = context.getVelocityEngine().getTemplate("testHistory.vm");
-      StringWriter writer = new StringWriter();
-
-      template.merge(velocityContext, writer);
-      response.setContent(writer.toString());
+      response.setContent(context.translateTemplate(velocityContext, "testHistory.vm"));
     }
     return response;
   }

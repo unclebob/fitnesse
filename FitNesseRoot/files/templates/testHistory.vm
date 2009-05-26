@@ -1,5 +1,5 @@
 #set ($page_title="Test History")
-#parse("pagehead.vm")
+#parse("pageHead.vm")
 #set($noHistory = true)
 <table>
   <tr>
@@ -37,4 +37,4 @@
 
 </table>
 #if ($noHistory)No History#end
-#parse("pagefooter.vm")
+#parse("pageFooter.vm")

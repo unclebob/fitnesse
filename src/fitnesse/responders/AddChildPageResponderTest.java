@@ -96,6 +96,19 @@ public class AddChildPageResponderTest {
   }
 
   @Test
+  public void correctAttributeWhenNameHasTestButAttributeIsNormal() throws Exception {
+    MockRequest request3 = new MockRequest();
+    request3.setResource("TestPage");
+    request3.addInput("name","TestChildPage");
+    path = PathParser.parse("TestPage.TestChildPage");
+    request3.addInput("content",childContent);
+    request3.addInput("pagetype", "Normal");
+    responder.makeResponse(context,request3);
+    getChildPage();
+    assertFalse(childPageData.hasAttribute("Test"));
+    assertFalse(childPageData.hasAttribute("Suite"));
+  }
+  @Test
   public void childPageHasCorrectType() throws Exception {
     responder.makeResponse(context,request);
     getChildPage();

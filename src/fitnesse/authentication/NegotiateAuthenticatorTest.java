@@ -18,6 +18,7 @@ import org.junit.Assert;
 import static org.mockito.Mockito.*;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class NegotiateAuthenticatorTest {
@@ -157,18 +158,14 @@ public class NegotiateAuthenticatorTest {
     assertEquals(encodedPassword, request.getAuthorizationPassword());
   }
 
-  private String base64Encode(String s) {
-    return new String(Base64.encode(s.getBytes()));
-  }
-
-  private String base64Decode(String s) {
-    return new String(Base64.decode(s.getBytes()));
+  private String base64Encode(String s) throws UnsupportedEncodingException {
+    return new String(Base64.encode(s.getBytes("UTF-8")));
   }
 
   @Test
   public void getTokenShouldReturnDecodedToken() throws Exception {
     byte[] actual = NegotiateAuthenticator.getToken(NegotiateAuthenticator.NEGOTIATE + " " + TOKEN);
-    byte[] expected = base64Decode(TOKEN).getBytes();
+    byte[] expected = Base64.decode(TOKEN.getBytes("UTF-8"));
     Assert.assertArrayEquals(expected, actual);
   }
 
