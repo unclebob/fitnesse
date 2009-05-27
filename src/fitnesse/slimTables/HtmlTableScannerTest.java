@@ -188,4 +188,26 @@ public class HtmlTableScannerTest {
     scan(html);
     assertEquals("[[zot(x) X zork(z)]]", ts.getTable(0).toString());
   }
+  
+  @Test
+  public void canTableAtATimeOfResults() throws Exception {
+    String MULTI_TABLE_HTML =       "" +
+    "<body>Gunk" +
+    "Header gunk" +
+    "<table>gunk" +
+    "</table>gunk" +
+    " middle directions" +
+    "<table>gunk 2" +
+    "</table>gunk" +
+    " middle directions2" +
+    "<table>gunk 3" +
+    "</table>gunk" +
+    "end gunk" +
+    "</body>"; 
+    scan(MULTI_TABLE_HTML);
+    assertEquals(MULTI_TABLE_HTML, ts.toHtml(null, null));
+    assertEquals("<body>GunkHeader gunk<table>gunk</table>gunk middle directions", ts.toHtml(null, ts.getTable(1)));
+    assertEquals("<table>gunk 2</table>gunk middle directions2", ts.toHtml(ts.getTable(1), ts.getTable(2)));
+    assertEquals("<table>gunk 3</table>gunkend gunk</body>", ts.toHtml(ts.getTable(2), null));
+  }
 }

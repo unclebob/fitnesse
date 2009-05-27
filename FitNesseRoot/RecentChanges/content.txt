@@ -1,3 +1,11 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||12:47:54 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TempTest||12:41:35 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim||10:39:01 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SlimTests.StopTestException||10:37:57 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim2||10:30:11 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SlimTests||10:11:28 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.TearDown||16:52:04 Thu, May 21, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||16:13:10 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||07:20:00 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
@@ -56,7 +64,6 @@
 |||04:53:02 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.MultiByteCharsRubySlim||07:34:50 Fri, Apr 03, 2009|
 |FrontPage||06:44:20 Fri, Apr 03, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim||06:34:54 Fri, Apr 03, 2009|
 |JunkParent.MultiByteCharsInSlim||05:57:47 Fri, Apr 03, 2009|
 |JunkParent.DotNetTests||19:56:34 Tue, Mar 31, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolsCanBeBlankOrNull||19:50:40 Tue, Mar 31, 2009|
@@ -91,5 +98,3 @@
 |FitNesse.UserGuide.PluginUsage||11:45:08 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PayrollTests.TearDown||11:42:15 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.PayrollTests.FicaTest||11:41:31 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.PayrollTests.AddAndPayTest||11:40:27 Fri, Mar 27, 2009|
-|FitNesse.UserGuide.PageProperties||11:36:45 Fri, Mar 27, 2009|

@@ -390,6 +390,15 @@ public class SlimTestSystemTest {
         "|1|\n");
     assertTestResultsContain("A Reportable Exception");
   }
+  
+  @Test
+  public void checkTestClassPrecededByDefine() throws Exception {
+    getResultsForPageContents("!define PI {3.141592}\n" +
+    "!path classes\n" +
+    "!path fitnesse.jar\n" +
+    "|fitnesse.testutil.PassFixture|\n");
+    assertTestResultsContain("PassFixture");
+  }
 
   @Test
   public void emptyScenarioTable() throws Exception {
