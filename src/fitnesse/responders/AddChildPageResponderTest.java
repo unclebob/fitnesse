@@ -71,6 +71,31 @@ public class AddChildPageResponderTest {
   }
 
   @Test
+  public void givesAInvalidNameErrorForAInvalidName() throws Exception {
+    MockRequest request = makeInvalidRequest("");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context,request);
+    assertEquals(400, response.getStatus());
+    assertSubString("Invalid Child Name",response.getContent());
+
+    MockRequest request2 = makeInvalidRequest("hello goodbye");
+    SimpleResponse response2 = (SimpleResponse) responder.makeResponse(context,request2);
+    assertSubString("Invalid Child Name",response2.getContent());
+
+    MockRequest request3 = makeInvalidRequest("1man1mission");
+    SimpleResponse response3 = (SimpleResponse) responder.makeResponse(context,request3);
+    assertSubString("Invalid Child Name",response3.getContent());
+  }
+
+  private MockRequest makeInvalidRequest(String name) {
+    MockRequest request = new MockRequest();
+    request.setResource("TestPage");
+    request.addInput("name",name);
+    request.addInput("content","hello");
+    request.addInput("pagetype","");
+    return request;
+  }
+
+  @Test
   public void correctAttributeSetWhenPageTypeIsNull() throws Exception {
     MockRequest request2 = new MockRequest();
     request2.setResource("TestPage");
