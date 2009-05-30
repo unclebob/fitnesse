@@ -1,0 +1,52 @@
+#set ($page_title="Search Results")
+#parse("pageHead.vm")
+#if ($searchResults.isEmpty())No pages matched specified search properties.
+#else
+				<form method="post" action="$searchedRootPage">
+					<input type="hidden" name="responder" value="saveSearchProperties"/>
+					<table border="0" cellspacing="0" class="dirListing">
+						<tr>
+							<td>
+								<label>Number of pages matching specified search properties: $searchResults.size()</label>
+							</td>
+						</tr>
+					</table>
+					<table border="0" cellspacing="0" class="dirListing">
+						<tr style="background-color: #EFEFEF;">
+							<th>
+								<strong>Test</strong>
+							</th>
+							<th>
+								<strong>Page</strong>
+							</th>
+							<th style="text-align: right;">
+								<strong>Tags</strong>
+							</th>
+						</tr>
+#foreach ($result in $searchResults)
+						<tr style="background-color: #FFFFFF;">
+							<td>
+								#if($result.getData().hasAttribute("Suite"))<a href="$result.getPageCrawler().getRelativeName($page, $result)?suite">
+									<label>Suite</label>
+								</a>#end
+								#if($result.getData().hasAttribute("Test"))<a href="$result.getPageCrawler().getRelativeName($page, $result)?test">
+									<label>Test</label>
+								</a>#end
+							</td>
+							<td>
+								<a href="$result.getPageCrawler().getFullPath($result).toString()">
+									<label>${searchedRootPage.getPageCrawler().getRelativeName($searchedRootPage.getParent(), $result)}</label>
+								</a>
+							</td>
+							<td style="text-align: right;">
+								#set ( $tags = $result.getData().getAttribute("Suites") )
+								<label>#if ($tags && !$tags.equals("null"))$tags#end</label>
+							</td>
+						</tr>
+#end
+					</table>
+				</form>
+<hr/>				<h4>To save this search as a link, paste the text below into a page.</h4>
+				<pre>[[Search below !-$searchedRootPage-! for &lt;description&gt;][$searchedRootPage.getName()?$request.getBody()]]</pre>
+#end
+#parse("pageFooter.vm")
