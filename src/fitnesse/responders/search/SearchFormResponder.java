@@ -19,12 +19,12 @@ public class SearchFormResponder implements Responder {
   public static final String EXCLUDE_TEARDOWN = "ExcludeTearDown";
   public static final String EXCLUDE_SETUP = "ExcludeSetUp";
   public static final String EXCLUDE_OBSOLETE = "ExcludeObsolete";
-  public static String[] PAGE_TYPE_ATTRIBUTES = { "Normal", "Test", "Suite" };
-  public static String[] ACTION_ATTRIBUTES = { "Edit", "Versions",
+  public static final String[] PAGE_TYPE_ATTRIBUTES = { "Normal", "Test", "Suite" };
+  public static final String[] ACTION_ATTRIBUTES = { "Edit", "Versions",
     "Properties", "Refactor", "WhereUsed", "RecentChanges", "Files", "Search" };
-  public static String[] SECURITY_ATTRIBUTES = { WikiPage.SECURE_READ,
+  public static final String[] SECURITY_ATTRIBUTES = { WikiPage.SECURE_READ,
     WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST };
-  public static String IGNORED = "Any";
+  public static final String IGNORED = "Any";
   public static final String SECURITY = "Security";
   public static final String ACTION = "Action";
   public static final String PAGE_TYPE = "PageType";
