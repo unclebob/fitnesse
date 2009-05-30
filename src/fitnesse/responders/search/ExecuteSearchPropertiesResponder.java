@@ -18,6 +18,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -87,8 +88,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
       return resultsPage.html();
     }
 
-    List<WikiPage> pages = new PageSearcher().search(page, pageTypes, attributes, suites, excludeSetUp,
-        excludeTearDown);
+    List<WikiPage> pages = new AttributeWikiPageFinder(pageTypes, attributes, suites, excludeSetUp, excludeTearDown).search(page);
 
     VelocityContext velocityContext = new VelocityContext();
 

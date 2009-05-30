@@ -1,6 +1,5 @@
-package fitnesse.responders.search;
+package fitnesse.components;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -9,37 +8,29 @@ import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class PageSearcher {
+public class AttributeWikiPageFinder extends WikiPageFinder {
 
   private List<String> setUpPageNames;
   private List<String> tearDownPageNames;
 
-  public PageSearcher() {
+  private List<String> requestedPageTypes;
+  private Map<String, Boolean> attributes;
+  private List<String> suites;
+  private boolean excludeSetUp;
+  private boolean excludeTearDown;
+
+  public AttributeWikiPageFinder(List<String> requestedPageTypes, Map<String, Boolean> attributes, String[] suites, boolean excludeSetUp, boolean excludeTearDown) {
     setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
     tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
+    this.requestedPageTypes = requestedPageTypes;
+    this.attributes = attributes;
+    if (suites != null)
+      this.suites = Arrays.asList(suites);
+    this.excludeSetUp = excludeSetUp;
+    this.excludeTearDown = excludeTearDown;
   }
 
-  public List<WikiPage> search(WikiPage searchRootPage,
-      List<String> requestedPageTypes, Map<String, Boolean> attributes,
-      String[] suites, boolean excludeSetUp, boolean excludeTearDown)
-      throws Exception {
-    List<WikiPage> matchingPages = new ArrayList<WikiPage>();
-    if (pageMatchesQuery(searchRootPage, requestedPageTypes, attributes, suites, excludeSetUp, excludeTearDown)) {
-      matchingPages.add(searchRootPage);
-    }
-
-    List<WikiPage> children = searchRootPage.getChildren();
-    for (WikiPage child : children) {
-      matchingPages.addAll(search(child, requestedPageTypes, attributes,
-          suites, excludeSetUp, excludeTearDown));
-    }
-    return matchingPages;
-  }
-
-  protected boolean pageMatchesQuery(WikiPage page,
-      List<String> requestedPageTypes, Map<String, Boolean> inputs,
-      String[] suites, boolean excludeSetUp, boolean excludeTearDown)
-  throws Exception {
+  protected boolean pageMatches(WikiPage page) throws Exception {
     if (excludeSetUp && isSetUpPage(page)) {
       return false;
     }
@@ -54,7 +45,7 @@ public class PageSearcher {
       return false;
     }
 
-    for (Map.Entry<String, Boolean> input : inputs.entrySet()) {
+    for (Map.Entry<String, Boolean> input : attributes.entrySet()) {
       if (!attributeMatchesInput(pageData.hasAttribute(input.getKey()), input
           .getValue()))
         return false;
@@ -90,7 +81,7 @@ public class PageSearcher {
     return attributeSet == inputValueOn;
   }
 
-  private boolean suitesMatchInput(PageData pageData, String[] suites)
+  private boolean suitesMatchInput(PageData pageData, List<String> suites)
   throws Exception {
     if (suites == null)
       return true;
@@ -99,7 +90,7 @@ public class PageSearcher {
     List<String> suitesProperty = Arrays
     .asList(splitSuitesIntoArray(suitesAttribute));
 
-    if (suites.length == 0 && suitesProperty.size() > 0)
+    if (suites.isEmpty() && !suitesProperty.isEmpty())
       return false;
 
     for (String suite : suites) {

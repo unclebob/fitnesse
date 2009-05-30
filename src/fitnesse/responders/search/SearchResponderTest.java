@@ -4,8 +4,6 @@ package fitnesse.responders.search;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.components.SearchObserver;
-import fitnesse.components.Searcher;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -90,42 +88,8 @@ public class SearchResponderTest extends RegexTestCase {
     assertSubString("Content Search Results", title);
   }
 
-  public void testActivatingProperSearch() throws Exception {
-    TestableSearcher searcher = new TestableSearcher();
-    responder.setSearcher(searcher);
-    responder.setRequest(request);
-
-    request.addInput("searchType", "something with the word title in it");
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    assertTrue(searcher.titleSearchCalled);
-
-    request.addInput("searchType", "something with the word content in it");
-    response = responder.makeResponse(new FitNesseContext(root), request);
-    sender = new MockResponseSender();
-    sender.doSending(response);
-    assertTrue(searcher.contentSearchCalled);
-  }
-
   public void testJavascriptDateFormatRegex() {
     assertEquals("/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/", SearchResponder.getDateFormatJavascriptRegex());
   }
 
-  private static class TestableSearcher extends Searcher {
-    boolean contentSearchCalled = false;
-    boolean titleSearchCalled = false;
-
-    public TestableSearcher() throws Exception {
-      super("", null);
-    }
-
-    public void searchContent(SearchObserver observer) throws Exception {
-      contentSearchCalled = true;
-    }
-
-    public void searchTitles(SearchObserver observer) {
-      titleSearchCalled = true;
-    }
-  }
 }

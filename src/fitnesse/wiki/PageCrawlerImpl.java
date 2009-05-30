@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.components.FitNesseTraversalListener;
+import fitnesse.components.TraversalListener;
 
 import java.util.Iterator;
 import java.util.List;
@@ -136,7 +136,7 @@ public class PageCrawlerImpl implements PageCrawler {
       return getRoot(page.getParent());
   }
 
-  public void traverse(WikiPage context, FitNesseTraversalListener listener) throws Exception {
+  public void traverse(WikiPage context, TraversalListener listener) throws Exception {
     if (context.getClass() == SymbolicPage.class)
       return;
     //TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.

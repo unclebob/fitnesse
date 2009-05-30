@@ -4,11 +4,11 @@ package fitnesse.updates;
 
 import java.util.Properties;
 
-import fitnesse.components.FitNesseTraversalListener;
+import fitnesse.components.TraversalListener;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
 
-public abstract class PageTraversingUpdate implements FitNesseTraversalListener, Update {
+public abstract class PageTraversingUpdate implements TraversalListener, Update {
   private Properties properties;
   private WikiPage root;
 
