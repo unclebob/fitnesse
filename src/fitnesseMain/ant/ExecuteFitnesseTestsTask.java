@@ -70,7 +70,7 @@ public class ExecuteFitnesseTestsTask extends Task {
     catch (Exception e) {
       if (failOnError) {
         throw new BuildException(
-          "Got an unexpected error trying to run the fitnesse tests : " + e.getMessage(), e);
+            "Got an unexpected error trying to run the fitnesse tests : " + e.getMessage(), e);
       } else {
         e.printStackTrace();
       }
@@ -102,29 +102,49 @@ public class ExecuteFitnesseTestsTask extends Task {
   private CommandlineJava initializeJavaCommand() {
     CommandlineJava cmd = new CommandlineJava();
     cmd.setClassname(testRunnerClass);
-    if (debug)
-      cmd.createArgument().setValue("-debug");
-    if (verbose)
-      cmd.createArgument().setValue("-v");
-    if (resultsHTMLPage != null) {
-      String resultsHTMLPagePath = new File(resultsDir, resultsHTMLPage).getAbsolutePath();
-      cmd.createArgument().setValue("-html");
-      cmd.createArgument().setValue(resultsHTMLPagePath);
-    }
-    if (resultsXMLPage != null) {
-      String resultsHTMLPagePath = new File(resultsDir, resultsXMLPage).getAbsolutePath();
-      cmd.createArgument().setValue("-xml");
-      cmd.createArgument().setValue(resultsHTMLPagePath);
-    }
-    if (suiteFilter != null) {
-      cmd.createArgument().setValue("-suiteFilter");
-      cmd.createArgument().setValue(suiteFilter);
-    }
+    appendDebugArgument(cmd);
+    appendVerboseArgument(cmd);
+    appendHtmlResultPage(cmd);
+    appendXmlResultPage(cmd);
+    appendSuiteFilter(cmd);
     cmd.createArgument().setValue(fitnesseHost);
     cmd.createArgument().setValue(String.valueOf(fitnessePort));
     cmd.createArgument().setValue(suitePage);
     cmd.createClasspath(getProject()).createPath().append(classpath);
     return cmd;
+  }
+
+  private void appendDebugArgument(CommandlineJava cmd) {
+    if (debug)
+      cmd.createArgument().setValue("-debug");
+  }
+
+  private void appendVerboseArgument(CommandlineJava cmd) {
+    if (verbose)
+      cmd.createArgument().setValue("-v");
+  }
+
+  private void appendHtmlResultPage(CommandlineJava cmd) {
+    if (resultsHTMLPage != null) {
+      String resultsHTMLPagePath = new File(resultsDir, resultsHTMLPage).getAbsolutePath();
+      cmd.createArgument().setValue("-html");
+      cmd.createArgument().setValue(resultsHTMLPagePath);
+    }
+  }
+
+  private void appendXmlResultPage(CommandlineJava cmd) {
+    if (resultsXMLPage != null) {
+      String resultsHTMLPagePath = new File(resultsDir, resultsXMLPage).getAbsolutePath();
+      cmd.createArgument().setValue("-xml");
+      cmd.createArgument().setValue(resultsHTMLPagePath);
+    }
+  }
+
+  private void appendSuiteFilter(CommandlineJava cmd) {
+    if (suiteFilter != null) {
+      cmd.createArgument().setValue("-suiteFilter");
+      cmd.createArgument().setValue(suiteFilter);
+    }
   }
 
   /**
@@ -226,7 +246,7 @@ public class ExecuteFitnesseTestsTask extends Task {
    * @param runnerClass
    */
   public void setTestRunnerClass(String runnerClass) {
-    this.testRunnerClass = runnerClass;
+    testRunnerClass = runnerClass;
   }
 
   /**
