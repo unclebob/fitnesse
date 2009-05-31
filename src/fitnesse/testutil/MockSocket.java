@@ -25,8 +25,8 @@ public class MockSocket extends Socket {
     PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
     PipedInputStream clientInput = new PipedInputStream();
     PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
-    this.input = serverInput;
-    this.output = serverOutput;
+    input = serverInput;
+    output = serverOutput;
   }
 
   public MockSocket(String input) {

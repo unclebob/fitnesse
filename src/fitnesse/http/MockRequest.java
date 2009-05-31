@@ -17,10 +17,6 @@ public class MockRequest extends Request {
     requestLine = value;
   }
 
-  public void setResource(String value) {
-    super.setResource(value);
-  }
-
   public void setBody(String value) {
     entityBody = value;
   }
@@ -43,7 +39,6 @@ public class MockRequest extends Request {
   }
 
   public void getCredentials() {
-    return;
   }
 
   public void setCredentials(String username, String password) {

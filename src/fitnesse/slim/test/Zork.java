@@ -19,4 +19,10 @@ public class Zork extends Object {
     }
     return false;
   }
+
+  public int hashCode() {
+    assert false : "hashCode not designed";
+  return 42;
+  }
+
 }

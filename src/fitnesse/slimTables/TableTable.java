@@ -25,7 +25,7 @@ public class TableTable extends SlimTable {
   }
 
   public void evaluateReturnValues(Map<String, Object> returnValues)
-    throws Exception {
+  throws Exception {
     if (doTableMethodIsInvalid(returnValues)) {
       table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
       return;
@@ -70,10 +70,10 @@ public class TableTable extends SlimTable {
   }
 
   private void extendRow(Table table, int row, List<Object> cellList)
-    throws Exception {
+  throws Exception {
     while (table.getColumnCountInRow(row) < cellList.size())
       table.appendCellToRow(row,
-        (String) cellList.get(table.getColumnCountInRow(row)));
+          (String) cellList.get(table.getColumnCountInRow(row)));
   }
 
   private void evaluateRow(List<List<Object>> tableResults, int resultRow) {
@@ -86,7 +86,7 @@ public class TableTable extends SlimTable {
 
   private void colorCell(int col, int row, String contents) {
     if (contents.equalsIgnoreCase("no change") || contents.length() == 0)
-      ; // do nothing
+      return; // do nothing
     else if (contents.equalsIgnoreCase("pass"))
       pass(col, row);
     else if (contents.equalsIgnoreCase("fail"))

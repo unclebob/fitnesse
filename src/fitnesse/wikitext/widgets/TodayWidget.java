@@ -15,10 +15,10 @@ public class TodayWidget extends ParentWidget {
   private boolean xml = false;
   private SimpleDateFormat explicitDateFormat = null;
   private int dayDiff;
+  private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
+  private SimpleDateFormat dateFormatWithTime = new SimpleDateFormat("dd MMM, yyyy HH:mm");
+  private SimpleDateFormat xmlDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-  private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
-  private static SimpleDateFormat dateFormatWithTime = new SimpleDateFormat("dd MMM, yyyy HH:mm");
-  private static SimpleDateFormat xmlDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
   public static Calendar todayForTest = null;
 
   public TodayWidget(ParentWidget parent, String text) throws Exception {
