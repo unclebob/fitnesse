@@ -1,1 +1,1 @@
-
+!path fitnesse.jar
