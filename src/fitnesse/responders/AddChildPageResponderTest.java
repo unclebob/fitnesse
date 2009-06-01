@@ -26,14 +26,14 @@ public class AddChildPageResponderTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
-    crawler.addPage(root,PathParser.parse("TestPage"));
+    crawler.addPage(root, PathParser.parse("TestPage"));
     childName = "ChildPage";
     childContent = "child content";
-    pagetype = "Test";
+    pagetype = "";
     request = new MockRequest();
     request.setResource("TestPage");
-    request.addInput("name",childName);
-    request.addInput("content",childContent);
+    request.addInput("name", childName);
+    request.addInput("content", childContent);
     request.addInput("pagetype", pagetype);
     context = new FitNesseContext(root);
     responder = new AddChildPageResponder();
@@ -44,105 +44,121 @@ public class AddChildPageResponderTest {
   public void canGetRedirectResponse() throws Exception {
     final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     final String body = response.getContent();
-    assertEquals("",body);
-    assertEquals(response.getStatus(),303);
+    assertEquals("", body);
+    assertEquals(response.getStatus(), 303);
 
   }
 
   @Test
   public void childPageIsMade() throws Exception {
-    assertTrue(crawler.getPage(root,path) == null);
+    assertTrue(crawler.getPage(root, path) == null);
     responder.makeResponse(context, request);
-    assertTrue(crawler.getPage(root,path) != null);
+    assertTrue(crawler.getPage(root, path) != null);
   }
 
   @Test
   public void noPageIsMadeIfNameIsNull() throws Exception {
-    MockRequest request2 = new MockRequest();
-    request2.setResource("TestPage");
-    request2.addInput("name","");
-    request2.addInput("content",childContent);
-    request2.addInput("pagetype", pagetype);
-
-
-    assertTrue(crawler.getPage(root,path) == null);
-    responder.makeResponse(context, request2);
-    assertTrue(crawler.getPage(root,path) == null);
+    request.addInput("name", "");
+    assertTrue(crawler.getPage(root, path) == null);
+    responder.makeResponse(context, request);
+    assertTrue(crawler.getPage(root, path) == null);
   }
 
   @Test
   public void givesAInvalidNameErrorForAInvalidName() throws Exception {
-    MockRequest request = makeInvalidRequest("");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context,request);
+    request = makeInvalidRequest("");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
-    assertSubString("Invalid Child Name",response.getContent());
+    assertSubString("Invalid Child Name", response.getContent());
 
-    MockRequest request2 = makeInvalidRequest("hello goodbye");
-    SimpleResponse response2 = (SimpleResponse) responder.makeResponse(context,request2);
-    assertSubString("Invalid Child Name",response2.getContent());
+    request = makeInvalidRequest("hello goodbye");
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    assertSubString("Invalid Child Name", response.getContent());
 
-    MockRequest request3 = makeInvalidRequest("1man1mission");
-    SimpleResponse response3 = (SimpleResponse) responder.makeResponse(context,request3);
-    assertSubString("Invalid Child Name",response3.getContent());
+    request = makeInvalidRequest("1man1mission");
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    assertSubString("Invalid Child Name", response.getContent());
+
+    request = makeInvalidRequest("PageOne.PageTwo");
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    assertSubString("Invalid Child Name", response.getContent());
   }
 
   private MockRequest makeInvalidRequest(String name) {
     MockRequest request = new MockRequest();
     request.setResource("TestPage");
-    request.addInput("name",name);
-    request.addInput("content","hello");
-    request.addInput("pagetype","");
+    request.addInput("name", name);
+    request.addInput("content", "hello");
+    request.addInput("pagetype", "");
     return request;
   }
 
   @Test
-  public void correctAttributeSetWhenPageTypeIsNull() throws Exception {
-    MockRequest request2 = new MockRequest();
-    request2.setResource("TestPage");
-    request2.addInput("name",childName);
-    request2.addInput("content",childContent);
-    request2.addInput("pagetype", "");
-    responder.makeResponse(context,request2);
-    getChildPage();
-    assertFalse(childPageData.hasAttribute("Test"));
-    assertFalse(childPageData.hasAttribute("Suite"));
+  public void withDefaultPageTypeAndPageNameForNormalThenNoAttributeShouldBeSet() throws Exception {
+    request.addInput("name", "NormalPage");
+    responder.makeResponse(context, request);
+    getChildPage("NormalPage");
+    assertFalse(isSuite());
+    assertFalse(isTest());
+  }
 
-    MockRequest request3 = new MockRequest();
-    request3.setResource("TestPage");
-    request3.addInput("name","TestChildPage");
-    path = PathParser.parse("TestPage.TestChildPage");
-    request3.addInput("content",childContent);
-    request3.addInput("pagetype", "");
-    responder.makeResponse(context,request3);
-    getChildPage();
-    assertTrue(childPageData.hasAttribute("Test"));
-    assertFalse(childPageData.hasAttribute("Suite"));
+  @Test
+  public void withDefaultPageTypeAndPageNameForTestTheTestAttributeShouldBeSet() throws Exception {
+    request.addInput("name", "TestPage");
+    responder.makeResponse(context, request);
+    getChildPage("TestPage");
+    assertFalse(isSuite());
+    assertTrue(isTest());
+  }
 
+  @Test
+  public void withDefaultPageTypeAndPageNameForSuiteTheSuiteAttributeShouldBeSet() throws Exception {
+    request.addInput("name", "SuitePage");
+    responder.makeResponse(context, request);
+    getChildPage("SuitePage");
+    assertTrue(isSuite());
+    assertFalse(isTest());
+  }
+
+  private boolean isSuite() {
+    return childPageData.hasAttribute("Suite");
   }
 
   @Test
   public void correctAttributeWhenNameHasTestButAttributeIsNormal() throws Exception {
-    MockRequest request3 = new MockRequest();
-    request3.setResource("TestPage");
-    request3.addInput("name","TestChildPage");
-    path = PathParser.parse("TestPage.TestChildPage");
-    request3.addInput("content",childContent);
-    request3.addInput("pagetype", "Normal");
-    responder.makeResponse(context,request3);
-    getChildPage();
-    assertFalse(childPageData.hasAttribute("Test"));
-    assertFalse(childPageData.hasAttribute("Suite"));
-  }
-  @Test
-  public void childPageHasCorrectType() throws Exception {
-    responder.makeResponse(context,request);
-    getChildPage();
-    assertTrue(childPageData.hasAttribute("Test"));
-    assertFalse(childPageData.hasAttribute("Suite"));
+    request.addInput("name", "TestChildPage");
+    request.addInput("pagetype", "Normal");
+    responder.makeResponse(context, request);
+    getChildPage("TestChildPage");
+    assertFalse(isTest());
+    assertFalse(isSuite());
   }
 
-  private void getChildPage() throws Exception {
-    childPage = crawler.getPage(root,path);
+  @Test
+  public void pageTypeShouldBeTestWhenAttributeIsTest() throws Exception {
+    request.addInput("pagetype", "Test");
+    responder.makeResponse(context, request);
+    getChildPage(childName);
+    assertTrue(isTest());
+    assertFalse(isSuite());
+  }
+
+  @Test
+  public void pageTypeShouldBeSuiteWhenAttributeIsSuite() throws Exception {
+    request.addInput("pagetype", "Suite");
+    responder.makeResponse(context, request);
+    getChildPage(childName);
+    assertFalse(isTest());
+    assertTrue(isSuite());
+  }
+
+  private boolean isTest() {
+    return childPageData.hasAttribute("Test");
+  }
+
+
+  private void getChildPage(String childName) throws Exception {
+    childPage = crawler.getPage(root, PathParser.parse("TestPage."+ childName));
     childPageData = childPage.getData();
   }
 }
