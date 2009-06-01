@@ -34,7 +34,7 @@ public class AddChildPageResponderTest {
     request.setResource("TestPage");
     request.addInput("name", childName);
     request.addInput("content", childContent);
-    request.addInput("pagetype", pagetype);
+    request.addInput("pageType", pagetype);
     context = new FitNesseContext(root);
     responder = new AddChildPageResponder();
     path = PathParser.parse("TestPage.ChildPage");
@@ -89,7 +89,7 @@ public class AddChildPageResponderTest {
     request.setResource("TestPage");
     request.addInput("name", name);
     request.addInput("content", "hello");
-    request.addInput("pagetype", "");
+    request.addInput("pageType", "");
     return request;
   }
 
@@ -127,7 +127,7 @@ public class AddChildPageResponderTest {
   @Test
   public void correctAttributeWhenNameHasTestButAttributeIsNormal() throws Exception {
     request.addInput("name", "TestChildPage");
-    request.addInput("pagetype", "Normal");
+    request.addInput("pageType", "Normal");
     responder.makeResponse(context, request);
     getChildPage("TestChildPage");
     assertFalse(isTest());
@@ -136,7 +136,7 @@ public class AddChildPageResponderTest {
 
   @Test
   public void pageTypeShouldBeTestWhenAttributeIsTest() throws Exception {
-    request.addInput("pagetype", "Test");
+    request.addInput("pageType", "Test");
     responder.makeResponse(context, request);
     getChildPage(childName);
     assertTrue(isTest());
@@ -145,7 +145,7 @@ public class AddChildPageResponderTest {
 
   @Test
   public void pageTypeShouldBeSuiteWhenAttributeIsSuite() throws Exception {
-    request.addInput("pagetype", "Suite");
+    request.addInput("pageType", "Suite");
     responder.makeResponse(context, request);
     getChildPage(childName);
     assertFalse(isTest());
