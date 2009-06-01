@@ -317,4 +317,9 @@ public class ResponderFactoryTest {
   public void testPageHistoryResponder() throws Exception {
     assertResponderTypeMatchesInput("pageHistory", PageHistoryResponder.class);
   }
+
+  @Test
+  public void testAddChildPageResponder() throws Exception {
+    assertResponderTypeMatchesInput("addChild", AddChildPageResponder.class);
+  }
 }

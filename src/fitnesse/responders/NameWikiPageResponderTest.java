@@ -2,26 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.*;
 import static junit.framework.Assert.assertEquals;
+import org.json.JSONArray;
+import org.junit.Before;
+import org.junit.Test;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
 import static util.RegexTestCase.assertHasRegexp;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import org.json.JSONArray;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 public class NameWikiPageResponderTest {
   private WikiPage root;
@@ -102,5 +96,17 @@ public class NameWikiPageResponderTest {
     expectedSet.add(pageOneName);
     expectedSet.add(pageTwoName);
     assertEquals(expectedSet, actualSet); 
+  }
+
+  @Test
+  public void canShowChildCount() throws Exception {
+    WikiPage frontPage = crawler.addPage(root, frontPagePath);
+    crawler.addPage(frontPage, pageOnePath);
+    crawler.addPage(frontPage, pageTwoPath);
+    request.setResource("");
+    request.addInput("ShowChildCount","");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    assertHasRegexp("FrontPage 2", response.getContent());
+
   }
 }
