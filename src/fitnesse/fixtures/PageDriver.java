@@ -3,10 +3,7 @@
 package fitnesse.fixtures;
 
 import fitnesse.responders.run.XmlFormatter;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.PageData;
+import fitnesse.wiki.*;
 import org.htmlparser.*;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -188,6 +185,13 @@ public class PageDriver {
 
       return (ret);
     }
+  }
+
+  public boolean pageHasAttribute(String fullPathOfPage, String attribute) throws Exception {
+    PageCrawler crawler = FitnesseFixtureContext.root.getPageCrawler();
+    WikiPage page = crawler.getPage(FitnesseFixtureContext.root, PathParser.parse(fullPathOfPage));
+    PageData data = page.getData();
+    return data.hasAttribute(attribute);
   }
 
   public int echoInt(int i) {
