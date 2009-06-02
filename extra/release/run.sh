@@ -5,7 +5,7 @@
 function help
 {
 	echo "Usage: run.sh [-p port] [-d dir] [-r root] [-l logDir] [-e days] [-o] [-a userpass] [-J jvm_option ...]
-	-p <port number>                   Liston on the specified port (default: 80)
+	-p <port number>                   Listen on the specified port (default: 80)
 	-d <working directory>             Working directory (default: ".")
 	-r <page root directory>           "Root" (default: FitNesseRoot)
 	-l <log directory>                 Log to the specified directory (no logging is done, if omitted).
