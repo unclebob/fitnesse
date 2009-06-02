@@ -1,5 +1,5 @@
 !define TEST_SYSTEM {slim}
-!include -c <SuiteAcceptanceTests.ScenarioLibrary
+
 !path lib/*.jar
 !define PACKET {|Bob|
 ||Angela|
