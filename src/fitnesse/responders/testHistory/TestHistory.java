@@ -1,5 +1,6 @@
 package fitnesse.responders.testHistory;
 
+import fitnesse.wikitext.widgets.WikiWordWidget;
 import util.FileUtil;
 
 import java.io.File;
@@ -13,8 +14,16 @@ public class TestHistory {
   public void readHistoryDirectory(File historyDirectory) {
     File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
     for (File file : pageDirectories)
-      if (file.isDirectory())
+      if (isValidFile(file))
         pageDirectoryMap.put(file.getName(), file);
+  }
+
+  private boolean isValidFile(File file) {
+    if(!file.isDirectory())
+      return false;
+    if(!WikiWordWidget.isWikiWord(file.getName()))
+      return false;
+    return true;
   }
 
   public Set<String> getPageNames() {

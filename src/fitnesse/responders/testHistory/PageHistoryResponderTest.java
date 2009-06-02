@@ -328,5 +328,44 @@ public class PageHistoryResponderTest {
     return testResponse;
   }
 
+  @Test
+  public void shouldStillGenerateReponseAndBarWhenThereIsAnInvalidFileNameInList() throws Exception {
+    File pageDirectory = addPageDirectory("TestPage");
+    addTestResult(pageDirectory, "bad_File_name");
+    addTestResult(pageDirectory, "20090418123103_1_2_3_4");
+
+    history.readHistoryDirectory(resultsDirectory);
+    PageHistory pageHistory = history.getPageHistory("TestPage");
+    assertEquals(1, pageHistory.size());
+  }
+
+  @Test
+  public void shouldStillMakeResponseWithCorruptTestResultFile() throws Exception {
+    File pageDirectory = addPageDirectory("TestPage");
+    File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0");
+    addBadDummyTestResult(resultFile);
+    makeResultForDate("TestPage", "20090503110451");
+    assertHasRegexp("Corrupt Test Result File", response.getContent());
+  }
+
+  private void addBadDummyTestResult(File resultFile) throws Exception {
+    FileUtil.createFile(resultFile, "JUNK");
+  }
+
+  private TestExecutionReport makeBadDummyTestResponse() {
+    TestExecutionReport testResponse = new TestExecutionReport();
+    testResponse.version = "v1";
+    testResponse.rootPath = "rootPath";
+    testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
+    TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();
+    testResponse.results.add(result);
+    result.right = "xx";
+    result.wrong = "22";
+    result.ignores = "33";
+    result.exceptions = "44";
+    result.relativePageName = "relativePageName";
+    result.content = "wad of HTML content";
+    return testResponse;
+  }
 
 }

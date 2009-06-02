@@ -11,6 +11,7 @@ import java.util.*;
 
 public class PageHistory {
   private SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+  public static final String TEST_FILE_FORMAT = "\\A\\d{14}_\\d+_\\d+_\\d+_\\d+(.xml)*\\Z";
   private int failures = 0;
   private int passes = 0;
   private Date minDate = null;
@@ -32,9 +33,18 @@ public class PageHistory {
   private void compileHistoryFromPageDirectory(File pageDirectory) throws ParseException {
     File[] resultFiles = FileUtil.getDirectoryListing(pageDirectory);
     for (File file : resultFiles)
-      if (!file.isDirectory())
+      if (fileIsNotADirectoryAndIsValid(file))
         compileResultFileIntoHistory(file);
     compileBarGraph();
+  }
+
+  private boolean fileIsNotADirectoryAndIsValid(File file) {
+    if(file.isDirectory())
+      return false;
+    if(!matchesPageHistoryFileFormat(file.getName()))
+      return false;
+    return true;
+
   }
 
   private void compileBarGraph() {
@@ -156,6 +166,10 @@ public class PageHistory {
 
   public String getFullPageName() {
     return fullPageName;
+  }
+
+  public static boolean matchesPageHistoryFileFormat(String pageHistoryFileName) {
+    return pageHistoryFileName.matches(TEST_FILE_FORMAT);
   }
 
   public static class TestResultRecord extends TestSummary {
