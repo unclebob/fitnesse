@@ -8,6 +8,7 @@ import fitnesse.responders.run.XmlFormatter;
 import static fitnesse.responders.testHistory.PageHistory.BarGraph;
 import org.junit.After;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -111,7 +112,7 @@ public class TestHistoryResponderTest {
   }
 
   private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
-    File testResultFile = new File(pageDirectory, testResultFileName+".xml");
+    File testResultFile = new File(pageDirectory, testResultFileName + ".xml");
     testResultFile.createNewFile();
     return testResultFile;
   }
@@ -176,7 +177,7 @@ public class TestHistoryResponderTest {
   @Test
   public void barGraphWithManyResultsShouldHaveCorrespondingBooleans() throws Exception {
     BarGraph barGraph = makeBarGraphWithManyResults();
-    assertEquals("-+----+-",barGraph.testString());
+    assertEquals("-+----+-", barGraph.testString());
   }
 
   @Test
@@ -245,10 +246,15 @@ public class TestHistoryResponderTest {
   }
 
   @Test
+  public void testHistoryFormatMatchesRegularExpression() throws Exception {
+    assertTrue(PageHistory.matchesPageHistoryFileFormat("20090513134559_01_02_03_04.xml"));
+  }
+
+  @Test
   public void whenPageDirectoryHasResultsRepsonseShouldShowSummary() throws Exception {
     File pageDirectory = addPageDirectory("SomePage");
     addTestResult(pageDirectory, "20090418123103_1_2_3_4");
-    addTestResult(pageDirectory, "20090419123103_1_0_0_0");    
+    addTestResult(pageDirectory, "20090419123103_1_0_0_0");
     makeResponse();
     assertHasRegexp("SomePage", response.getContent());
     assertHasRegexp("<td class=\"pass\">1</td>", response.getContent());
@@ -258,5 +264,31 @@ public class TestHistoryResponderTest {
     assertHasRegexp("<td class=\"fail\">.*-.*</td>", response.getContent());
     assertDoesntHaveRegexp("No History", response.getContent());
 
+  }
+
+  @Test
+  public void shouldNotCountABadDirectoryNameAsAHistoryDirectory() throws Exception {
+    addPageDirectory("SomePage");
+    addPageDirectory("bad-directory-name");
+    history.readHistoryDirectory(resultsDirectory);
+    assertEquals(1, history.getPageNames().size());
+    assertTrue(history.getPageNames().contains("SomePage"));
+  }
+
+  @Test
+  public void shouldGenerateHistoryEvenWithBadFileNames() throws Exception {
+    File pageDirectory = addPageDirectory("SomePage");
+    addTestResult(pageDirectory, "20090602000000_1_0_0_0");     //good
+    addTestResult(pageDirectory, "20090603000000_12_1_0_0");    //good
+    addTestResult(pageDirectory, "20090604000000_1_0_125_0");   //good
+
+    addTestResult(pageDirectory, "2009060200000012_1_0_0_0");   //bad
+    addTestResult(pageDirectory, "20090602000000_1_0_0_0_0_0"); //bad
+    addTestResult(pageDirectory, "bad_file_page_thing");        //bad
+
+    makeResponse();
+    history.readHistoryDirectory(resultsDirectory);
+    PageHistory pageHistory = history.getPageHistory("SomePage");
+    assertEquals(3, pageHistory.size());
   }
 }
