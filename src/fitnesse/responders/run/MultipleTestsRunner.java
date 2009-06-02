@@ -9,7 +9,12 @@ import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -27,7 +32,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private TestSystem currentTestSystem = null;
   private boolean isStopped = false;
   private String stopId = null;
-
+  
   private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
     private static final long serialVersionUID = 1L;
   }
@@ -55,10 +60,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       internalExecuteTestPages();
     }
     catch (Exception exception) {
+      //hoped to write exceptions to log file but will take some work.
+      exception.printStackTrace(System.out);
       exceptionOccurred(exception);
     }
   }
-
+  
   private void internalExecuteTestPages() throws Exception {
     synchronized (this) {
       testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);

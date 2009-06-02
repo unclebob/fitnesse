@@ -43,6 +43,20 @@
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:31 Wed, May 13, 2009|
 |JunkParent.StopTestTest||09:49:09 Wed, May 13, 2009|
 |JunkPage.UseVarPage||15:20:57 Tue, May 12, 2009|
+|FitNesse.UserGuide.TestSuites||13:34:29 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestNotSuiteFilter||13:32:59 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestClasspathPrecededByDefine||12:47:54 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TempTest||12:41:35 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim||10:39:01 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SlimTests.StopTestException||10:37:57 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim2||10:30:11 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SlimTests||10:11:28 Wed, May 27, 2009|
+|FitNesse.SuiteAcceptanceTests.TearDown||16:52:04 Thu, May 21, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||16:13:10 Wed, May 20, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder||12:19:30 Mon, May 25, 2009|
+RecentChanges/content.txt
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||07:20:00 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineResultElementsAreLinksToTestResults||06:57:08 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryLineIsLinkToTestResult||06:41:18 Tue, May 12, 2009|
@@ -96,11 +110,9 @@
 |FitNesse||04:53:40 Sat, Apr 04, 2009|
 |JunkParent.RubyTests.MultiByteCharsRubySlim||07:34:50 Fri, Apr 03, 2009|
 |FrontPage||06:44:20 Fri, Apr 03, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim||06:34:54 Fri, Apr 03, 2009|
 |JunkParent.MultiByteCharsInSlim||05:57:47 Fri, Apr 03, 2009|
 |JunkParent.DotNetTests||19:56:34 Tue, Mar 31, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolsCanBeBlankOrNull||19:50:40 Tue, Mar 31, 2009|
-<<<<<<< HEAD:FitNesseRoot/RecentChanges/content.txt
 |JunkParent.SymbolTest||19:43:55 Tue, Mar 31, 2009|
 |JunkParent.SuiteTearDown||18:46:44 Tue, Mar 31, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||12:50:03 Sun, Mar 29, 2009|
@@ -114,5 +126,17 @@
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteTiming.TestSpareAndStrikeTiming||12:45:02 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteTiming.TestNoMarksTiming||12:44:49 Fri, Mar 27, 2009|
 |FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteTiming.TestGutterGameTiming||12:44:37 Fri, Mar 27, 2009|
-=======
->>>>>>> 66fe0b2c139e226cf270cc32530a0bcb224c4d08:FitNesseRoot/RecentChanges/content.txt
+|FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteGames||12:44:18 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteGames.TestGamesWithFancyFixture||12:44:05 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteGames.TestGames||12:43:55 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WritingFitTables.BowlingGameProject.SuiteGames.TestFinalScores||12:43:32 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WritingFitTables||12:42:09 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WritingAcceptanceTests||12:39:49 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WikiWord||12:39:19 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.WikiWithinWiki||12:36:57 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.TestTableStyles||12:30:33 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.TestSystems||12:30:09 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.SubWiki||12:28:03 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.SliM.SymbolsInTables||12:20:05 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.SliM.ScenarioTable||12:16:49 Fri, Mar 27, 2009|
+|FitNesse.UserGuide.RowFixtureCode||11:51:49 Fri, Mar 27, 2009|

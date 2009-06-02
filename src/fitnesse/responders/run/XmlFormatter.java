@@ -61,7 +61,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     addCountsToResult(testSummary);
     currentResult.relativePageName = relativeTestName;
     currentResult.tags = page.getData().getAttribute(PageData.PropertySUITES);
-
+    
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
       new SlimTestXmlFormatter(currentResult, slimSystem).invoke();
@@ -286,7 +286,7 @@ public abstract class XmlFormatter extends BaseFormatter {
       Object result = results.get(id);
 
       instructionResult.instruction = instruction.toString();
-      instructionResult.slimResult = result.toString();
+      instructionResult.slimResult = (result != null) ? result.toString() : "";
       for (SlimTable.Expectation expectation : expectations) {
         if (expectation.getInstructionTag().equals(id)) {
           try {

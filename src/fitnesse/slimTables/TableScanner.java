@@ -13,5 +13,7 @@ public interface TableScanner extends Iterable<Table> {
 
   public String toWikiText();
 
+  public String toHtml(Table startAfterTable, Table endWithTable);
+  
   public String toHtml();
 }

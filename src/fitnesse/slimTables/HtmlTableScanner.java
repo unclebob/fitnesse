@@ -70,6 +70,29 @@ public class HtmlTableScanner implements TableScanner {
     return b.toString();
   }
 
+  public String toHtml(Table startTable, Table endBeforeTable) {
+    String allHtml = htmlTree.toHtml();
+    
+    int startIndex = 0;
+    int endIndex = allHtml.length();
+    if (startTable != null) {
+      String startText = startTable.toHtml();
+      int nodeIndex = allHtml.indexOf(startText);
+      if (nodeIndex > 0) {
+        startIndex = nodeIndex;
+      }
+    }
+    
+    if (endBeforeTable != null) {
+      String stopText = endBeforeTable.toHtml();
+      int nodeIndex = allHtml.indexOf(stopText);
+      if (nodeIndex > 0) {
+        endIndex = nodeIndex;
+      }
+    }
+    return htmlTree.toHtml().substring(startIndex, endIndex);
+  }
+  
   public String toHtml() {
     return htmlTree.toHtml();
   }

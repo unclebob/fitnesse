@@ -7,9 +7,9 @@ import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -42,16 +42,26 @@ import fitnesse.wiki.WikiPage;
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
   public static final String MESSAGE_ERROR = "!error:";
   public static final String MESSAGE_FAIL = "!fail:";
+  public static final SlimTable START_OF_TEST = null;
+  public static final SlimTable END_OF_TEST = null;
+  
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
+  
+  protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
+  protected List<SlimTable> allTables = new ArrayList<SlimTable>();
+  protected List<Object> allInstructions = new ArrayList<Object>();
+  protected List<SlimTable.Expectation> allExpectations = new ArrayList<SlimTable.Expectation>();
+
+  
   protected List<Object> instructions;
   private boolean started;
-  protected TableScanner tableScanner;
   protected PageData testResults;
+  protected TableScanner tableScanner;
   protected Map<String, Object> instructionResults;
   protected List<SlimTable> testTables = new ArrayList<SlimTable>();
-  protected Map<String, String> exceptions = new HashMap<String, String>();
+  protected ExceptionList exceptions = new ExceptionList();
   private Map<String, String> symbols = new HashMap<String, String>();
   protected TestSummary testSummary;
   private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
@@ -192,41 +202,86 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
-    testTables.clear();
-    expectations.clear();
     symbols.clear();
     scenarios.clear();
-    exceptions.clear();
     testSummary.clear();
-    runTestsOnPage(pageData);
-    testResults = pageData;
-    String html = createHtmlResults();
-    acceptOutputFirst(html);
+    allExpectations.clear();
+    allInstructionResults.clear();
+    allInstructions.clear();
+    allTables.clear();
+    String html = processAllTablesOnPage(pageData);
     acceptResultsLast(testSummary);
     return html;
   }
 
-  protected abstract String createHtmlResults() throws Exception;
+  protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable) throws Exception;
 
-  void runTestsOnPage(PageData pageData) throws Exception {
+  String processAllTablesOnPage(PageData pageData) throws Exception {
+    
+    exceptions.resetForNewTest();
     tableScanner = scanTheTables(pageData);
-    instructions = createInstructions(this);
-    instructionResults = slimClient.invokeAndGetResponse(instructions);
+    allTables = createSlimTables(tableScanner);
+    testResults = pageData;
+    
+    boolean runAllTablesAtOnce = false;
+    String htmlResults = "";
+    if (runAllTablesAtOnce || (allTables.size() == 0) ) {
+      htmlResults = processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST);
+    }
+    else {
+      List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
+      for (int index = 0; index < allTables.size(); index++) {
+        SlimTable theTable = allTables.get(index);
+        SlimTable startWithTable = (index == 0) ? START_OF_TEST : theTable;
+        SlimTable nextTable = (index + 1 < allTables.size()) ? allTables.get(index + 1) : END_OF_TEST;
+
+        oneTableList.add(theTable);
+        htmlResults += processTablesAndGetHtml(oneTableList, startWithTable, nextTable);
+        oneTableList.clear();
+      }
+    }
+    return htmlResults;
   }
 
   protected abstract TableScanner scanTheTables(PageData pageData) throws Exception;
 
-  private List<Object> createInstructions(SlimTestContext slimTestContext) {
+  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable,  SlimTable nextTable) throws Exception {
+    expectations.clear();
+    
+    testTables = tables;
+    instructions = createInstructions(tables);
+    if (!exceptions.stopTestCalled()) {
+      instructionResults = slimClient.invokeAndGetResponse(instructions);
+    }
+    String html = createHtmlResults(startWithTable, nextTable);
+    acceptOutputFirst(html);
+    
+    // update all lists
+    allExpectations.addAll(expectations);
+    allInstructions.addAll(instructions);
+    allInstructionResults.putAll(instructionResults);
+    
+    return html;
+  }
+  
+  private List<Object> createInstructions(List<SlimTable> tables) {
     List<Object> instructions = new ArrayList<Object>();
-    for (Table table : tableScanner) {
-      String tableId = "" + testTables.size();
-      SlimTable slimTable = makeSlimTable(table, tableId, slimTestContext);
-      if (slimTable != null) {
-        slimTable.appendInstructions(instructions);
-        testTables.add(slimTable);
-      }
+    for (SlimTable table : tables) {
+      table.appendInstructions(instructions);
     }
     return instructions;
+  }
+  
+  private List<SlimTable> createSlimTables(TableScanner tableScanner) {
+    List<SlimTable> allTables = new LinkedList<SlimTable>();
+    for (Table table : tableScanner) {
+      String tableId = "" + allTables.size();
+      SlimTable slimTable = makeSlimTable(table, tableId, this);
+      if (slimTable != null) {
+        allTables.add(slimTable);
+      }
+    }
+    return allTables;
   }
 
   private SlimTable makeSlimTable(Table table, String tableId, SlimTestContext slimTestContext) {
@@ -301,7 +356,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       try {
         e.evaluateExpectation(instructionResults);
       } catch (Throwable ex) {
-        exceptions.put("ABORT", exceptionToString(ex));
+        exceptions.addException("ABORT", exceptionToString(ex));
         exceptionOccurred(ex);
       }
     }
@@ -318,7 +373,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       table.evaluateReturnValues(instructionResults);
       testSummary.add(table.getTestSummary());
     } catch (Throwable e) {
-      exceptions.put("ABORT", exceptionToString(e));
+      exceptions.addException("ABORT", exceptionToString(e));
       exceptionOccurred(e);
     }
   }
@@ -336,12 +391,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private void replaceIfUnignoredException(String resultKey, String resultString) {
-    if (resultString.indexOf(SlimServer.EXCEPTION_TAG) == -1) {
-      return;
+    if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
+      if (shouldReportException(resultKey, resultString))
+        processException(resultKey, resultString);
     }
-
-    if (shouldReportException(resultKey, resultString))
-      replaceException(resultKey, resultString);
   }
 
   private boolean shouldReportException(String resultKey, String resultString) {
@@ -352,16 +405,20 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return true;
   }
 
-  private void replaceException(String resultKey, String resultString) {
+  private void processException(String resultKey, String resultString) {
     testSummary.exceptions++;
     boolean isStopTestException = resultString.contains(SlimServer.EXCEPTION_STOP_TEST_TAG);
+    if (isStopTestException) {
+      exceptions.setStopTestCalled();
+    }
+    
     Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
     if (exceptionMessageMatcher.find()) {
       String prefix = (isStopTestException) ? MESSAGE_FAIL : MESSAGE_ERROR;
       String exceptionMessage = exceptionMessageMatcher.group(1);
       instructionResults.put(resultKey, prefix + translateExceptionMessage(exceptionMessage));
     } else {
-      exceptions.put(resultKey, resultString);
+      exceptions.addException(resultKey, resultString);
       instructionResults.put(resultKey, exceptionResult(resultKey));
     }
   }
@@ -379,70 +436,18 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public List<SlimTable> getTestTables() {
-    return testTables;
+    return allTables;
   }
 
   public List<Object> getInstructions() {
-    return instructions;
+    return allInstructions;
   }
 
   public Map<String, Object> getInstructionResults() {
-    return instructionResults;
+    return allInstructionResults;
   }
 
   public List<SlimTable.Expectation> getExpectations() {
-    return expectations;
-  }
-
-  static class ExceptionList {
-    private Map<String, String> exceptions;
-    public StringBuffer buffer;
-    public Set<String> keys;
-    private static final Random RANDOM_GENERATOR = new SecureRandom();
-
-    private ExceptionList(Map<String, String> exceptions) {
-      this.exceptions = exceptions;
-      buffer = new StringBuffer();
-      keys = exceptions.keySet();
-    }
-
-    private String toHtml() {
-      header();
-      exceptions();
-      footer();
-      return buffer.toString();
-    }
-
-    private void footer() {
-      if (keys.size() > 0)
-        buffer.append("<hr/>");
-    }
-
-    private void exceptions() {
-      for (String key : keys) {
-        buffer.append(String.format("<a name=\"%s\"/><b></b>", key));
-        String collapsibleSectionFormat = "<div class=\"collapse_rim\">" +
-        "<div style=\"float: right;\" class=\"meta\"><a href=\"javascript:expandAll();\">Expand All</a> | <a href=\"javascript:collapseAll();\">Collapse All</a></div>" +
-        "<a href=\"javascript:toggleCollapsable('%d');\">" +
-        "<img src=\"/files/images/collapsableClosed.gif\" class=\"left\" id=\"img%d\"/>" +
-        "</a>" +
-        "&nbsp;<span class=\"meta\">%s </span>\n" +
-        "\n" +
-        "\t<div class=\"hidden\" id=\"%d\"><pre>%s</pre></div>\n" +
-        "</div>";
-        long id = RANDOM_GENERATOR.nextLong();
-        buffer.append(String.format(collapsibleSectionFormat, id, id, key, id, exceptions.get(key)));
-      }
-    }
-
-    private void header() {
-      if (keys.size() > 0) {
-        buffer.append("<H3> <span class=\"fail\">Exceptions</span></H3><br/>");
-      }
-    }
-
-    protected static String toHtml(Map<String, String> exceptions) {
-      return new ExceptionList(exceptions).toHtml();
-    }
+    return allExpectations;
   }
 }

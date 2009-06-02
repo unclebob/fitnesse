@@ -44,13 +44,35 @@ public class SuiteResponder extends TestResponder {
   
   @Override
   protected void performExecution() throws Exception {
-    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, getSuiteFilter());
+    SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
+    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatter);
     runner.setDebug(isRemoteDebug());
     runner.executeTestPages();
   }
 
-  private String getSuiteFilter() {
+  private String getSuiteTagFilter() {
     return request != null ? (String) request.getInput("suiteFilter") : null;
+  }
+  
+  private String getNotSuiteFilter() {
+    return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
+  }
+  
+  
+  private String getSuiteFirstTest() throws Exception {
+    String startTest = null;
+    if (request != null) {
+      startTest = (String)request.getInput("firstTest");
+    }
+    
+    if (startTest != null) {
+      String suiteName = page.getPageCrawler().getFullPath(page).toString();
+      if (startTest.indexOf(suiteName) != 0) {
+        startTest = suiteName + "." + startTest;
+      }
+    }
+    
+    return startTest;
   }
 }
