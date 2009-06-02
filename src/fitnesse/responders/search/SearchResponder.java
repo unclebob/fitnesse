@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.components.Searcher;
+import fitnesse.components.ContentWikiPageFinder;
+import fitnesse.components.TitleWikiPageFinder;
 
 public class SearchResponder extends ResultResponder {
-  private Searcher searcher;
 
   private String getSearchString() {
     return (String) request.getInput("searchString");
@@ -32,12 +32,11 @@ public class SearchResponder extends ResultResponder {
   protected void startSearching() throws Exception {
     String searchString = getSearchString();
     if (!searchString.equals("")) {
-      loadSearcher(searchString);
       String searchType = getSearchType();
       if ("Title".equals(searchType))
-        searcher.searchTitles(this);
+        new TitleWikiPageFinder(searchString, this).search(root);
       else
-        searcher.searchContent(this);
+        new ContentWikiPageFinder(searchString, this).search(root);
     }
   }
 
@@ -45,12 +44,4 @@ public class SearchResponder extends ResultResponder {
     return false;
   }
 
-  public void setSearcher(Searcher searcher) {
-    this.searcher = searcher;
-  }
-
-  private void loadSearcher(String searchString) throws Exception {
-    if (searcher == null)
-      searcher = new Searcher(searchString, root);
-  }
 }

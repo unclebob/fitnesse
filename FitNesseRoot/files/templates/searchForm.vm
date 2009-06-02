@@ -1,0 +1,107 @@
+#set ($page_title="Search Form")
+#set ($load_actions="document.forms[0].searchString.focus()")
+#parse("pageHead.vm")
+				<form action="search" method="post">
+					<input type="hidden" name="responder" value="search"/>
+Search String:
+					<input type="text" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+<br/>
+					<input type="submit" name="searchType" value="Search Titles!"/>
+					<input type="submit" name="searchType" value="Search Content!"/>
+<br/><br/>
+					<b>Search Titles!: </b>
+Searches in page titles only.  Will run fairly quickly.<br/>
+					<b>Search Content!: </b>
+Searches in the content of every page.  Don't hold your breath.				</form>
+				<hr/>
+				<h2>Search Properties</h2>
+				<form method="post" action="$searchedRootPage">
+					<input type="hidden" name="responder" value="executeSearchProperties"/>
+					<div style="height: 150px;">
+						<div style="float: left; margin-right: 20px">
+							<table cellspacing="1" border="0">
+								<tr>
+									<th>Tags</th>
+								</tr>
+								<tr>
+									<td style="padding-right: 15px;">
+										<textarea name="Suites" cols="20" rows="3">#if ($request.hasInput("Suite"))$request.getInput("Suite")#end</textarea>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="float: left; width: 180px;">
+							<table cellspacing="1" border="0">
+								<tr>
+									<th>Exclusions</th>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox"#if ($request.getInput("ExcludeObsolete") == "on"))checked="checked" #end name="ExcludeObsolete">Obsolete tests</input>
+<br/>
+										<input type="checkbox"#if ($request.getInput("ExcludeSetUp") == "on"))checked="checked" #end name="ExcludeSetUp">SetUp pages</input>
+<br/>
+										<input type="checkbox"#if ($request.getInput("ExcludeTearDown") == "on"))checked="checked" #end name="ExcludeTearDown">TearDown pages</input>
+<br/>									</td>
+								</tr>
+							</table>
+<br/>
+							<input type="submit" name="Search" value="Search Properties"/>
+						</div>
+					</div>
+					<div>
+						<div style="float: left; width: 150px;">
+							<table cellspacing="1" border="0">
+								<tr>
+									<th>PageType</th>
+								</tr>
+								<tr>
+									<td>
+										<select name="PageType" id="PageType" multiple="multiple" size="$pageTypeAttributes.size()">
+											#foreach ($pageType in $pageTypeAttributes)
+											<option#if (!$request.hasInput("PageType") || $request.getInput("PageType").contains($pageType)) selected="selected"#end>$pageType</option>
+											#end
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="float: left; width: 150px;">
+							<table cellspacing="1" border="0">
+								<tr>
+									<th>Action</th>
+								</tr>
+								<tr>
+									<td>
+										#set( $numberActionAttributes = $actionAttributes.size() + 1 )
+										<select name="Action" id="Action" multiple="multiple" size="$numberActionAttributes">
+											<option value="Any"#if (!$request.hasInput("Action") || $request.getInput("Action").contains("Any")) selected="selected"#end>Don't care</option>
+											#foreach ($actionAttribute in $actionAttributes)
+											<option#if ($request.getInput("Action").contains($actionAttribute)) selected="selected"#end>$actionAttribute</option>
+											#end
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="float: left; width: 150px;">
+							<table cellspacing="1" border="0">
+								<tr>
+									<th>Security</th>
+								</tr>
+								<tr>
+									<td>
+										#set( $numberSecurityAttributes = $securityAttributes.size() + 1 )
+										<select name="Security" id="Security" multiple="multiple" size="$numberSecurityAttributes">
+											<option value="Any"#if (!$request.hasInput("Security") || $request.getInput("Security").contains("Any")) selected="selected"#end>Don't care</option>
+											#foreach ($securityAttribute in $securityAttributes)
+											<option#if ($request.getInput("Security").contains($securityAttribute)) selected="selected"#end>$securityAttribute</option>
+											#end
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+#parse("pageFooter.vm")

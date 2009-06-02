@@ -38,10 +38,10 @@ public class RequestBuilderTest extends RegexTestCase {
   public void testAddInput() throws Exception {
     builder.addInput("responder", "saveData");
     String content = "!fixture fit.ColumnFixture\n" +
-      "\n" +
-      "!path classes\n" +
-      "\n" +
-      "!2 ";
+    "\n" +
+    "!path classes\n" +
+    "\n" +
+    "!2 ";
     builder.addInput("pageContent", content);
 
     String inputString = builder.inputString();
@@ -73,7 +73,6 @@ public class RequestBuilderTest extends RegexTestCase {
     String boundary = builder.getBoundary();
 
     assertEquals(boundary, builder.getBoundary());
-    Thread.sleep(10);
     assertFalse(boundary.equals(new RequestBuilder("blah").getBoundary()));
   }
 

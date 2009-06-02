@@ -4,7 +4,9 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
-public class Searcher implements FitNesseTraversalListener {
+// TODO: Check if this can be safely replaced with TitleWikiPageFinder and ContentWikiPageFinder
+@Deprecated
+public class Searcher implements TraversalListener {
   WikiPage root;
   SearchObserver observer;
   boolean isTitleSearch = false;

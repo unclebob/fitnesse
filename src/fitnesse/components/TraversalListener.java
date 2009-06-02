@@ -4,8 +4,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
-//TODO rename me to TraversalListener
-public interface FitNesseTraversalListener {
+public interface TraversalListener {
   public void processPage(WikiPage page) throws Exception;
 
   public String getSearchPattern() throws Exception;

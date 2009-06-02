@@ -37,6 +37,11 @@ public class CartesianVector {
     return false;
   }
 
+  public int hashCode() {
+    assert false : "hashCode not designed";
+  return 42;
+  }
+
   public double getX() {
     return x;
   }

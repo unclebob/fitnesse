@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -18,6 +19,7 @@ import fitnesse.components.Base64;
 
 public class RequestBuilder {
   private static final byte[] ENDL = "\r\n".getBytes();
+  private static final Random RANDOM_GENERATOR = new SecureRandom();
 
   private String resource;
   private String method = "GET";
@@ -172,8 +174,9 @@ public class RequestBuilder {
   }
 
   public String getBoundary() {
-    if (boundary == null)
-      boundary = "----------" + new Random().nextInt() + "BoUnDaRy";
+    if (boundary == null) {
+      boundary = "----------" + RANDOM_GENERATOR.nextInt() + "BoUnDaRy";
+    }
     return boundary;
   }
 

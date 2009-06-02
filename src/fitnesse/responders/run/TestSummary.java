@@ -16,31 +16,32 @@ public class TestSummary {
   }
 
   public TestSummary(TestSummary testSummary) {
-    this.right = testSummary.getRight();
-    this.wrong = testSummary.getWrong();
-    this.ignores = testSummary.getIgnores();
-    this.exceptions = testSummary.getExceptions();
+    right = testSummary.getRight();
+    wrong = testSummary.getWrong();
+    ignores = testSummary.getIgnores();
+    exceptions = testSummary.getExceptions();
   }
 
   public TestSummary() {
   }
 
   public String toString() {
-    return
-      getRight() + " right, " +
-        getWrong() + " wrong, " +
-        getIgnores() + " ignored, " +
-        getExceptions() + " exceptions";
+    return getRight() + " right, " + getWrong() + " wrong, " + getIgnores()
+    + " ignored, " + getExceptions() + " exceptions";
   }
 
   public boolean equals(Object o) {
     if (o == null || !(o instanceof TestSummary))
       return false;
     TestSummary other = (TestSummary) o;
-    return getRight() == other.getRight() &&
-      getWrong() == other.getWrong() &&
-      getIgnores() == other.getIgnores() &&
-      getExceptions() == other.getExceptions();
+    return getRight() == other.getRight() && getWrong() == other.getWrong()
+    && getIgnores() == other.getIgnores()
+    && getExceptions() == other.getExceptions();
+  }
+
+  public int hashCode() {
+    assert false : "hashCode not designed";
+  return 42;
   }
 
   public void tallyPageCounts(TestSummary counts) {

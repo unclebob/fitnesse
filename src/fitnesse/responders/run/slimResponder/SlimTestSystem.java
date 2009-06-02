@@ -4,6 +4,7 @@ package fitnesse.responders.run.slimResponder;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -335,10 +336,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private void replaceIfUnignoredException(String resultKey, String resultString) {
-    if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
-      if (shouldReportException(resultKey, resultString))
-        replaceException(resultKey, resultString);
+    if (resultString.indexOf(SlimServer.EXCEPTION_TAG) == -1) {
+      return;
     }
+
+    if (shouldReportException(resultKey, resultString))
+      replaceException(resultKey, resultString);
   }
 
   private boolean shouldReportException(String resultKey, String resultString) {
@@ -395,6 +398,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     private Map<String, String> exceptions;
     public StringBuffer buffer;
     public Set<String> keys;
+    private static final Random RANDOM_GENERATOR = new SecureRandom();
 
     private ExceptionList(Map<String, String> exceptions) {
       this.exceptions = exceptions;
@@ -418,15 +422,15 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       for (String key : keys) {
         buffer.append(String.format("<a name=\"%s\"/><b></b>", key));
         String collapsibleSectionFormat = "<div class=\"collapse_rim\">" +
-          "<div style=\"float: right;\" class=\"meta\"><a href=\"javascript:expandAll();\">Expand All</a> | <a href=\"javascript:collapseAll();\">Collapse All</a></div>" +
-          "<a href=\"javascript:toggleCollapsable('%d');\">" +
-          "<img src=\"/files/images/collapsableClosed.gif\" class=\"left\" id=\"img%d\"/>" +
-          "</a>" +
-          "&nbsp;<span class=\"meta\">%s </span>\n" +
-          "\n" +
-          "\t<div class=\"hidden\" id=\"%d\"><pre>%s</pre></div>\n" +
-          "</div>";
-        long id = new Random().nextLong();
+        "<div style=\"float: right;\" class=\"meta\"><a href=\"javascript:expandAll();\">Expand All</a> | <a href=\"javascript:collapseAll();\">Collapse All</a></div>" +
+        "<a href=\"javascript:toggleCollapsable('%d');\">" +
+        "<img src=\"/files/images/collapsableClosed.gif\" class=\"left\" id=\"img%d\"/>" +
+        "</a>" +
+        "&nbsp;<span class=\"meta\">%s </span>\n" +
+        "\n" +
+        "\t<div class=\"hidden\" id=\"%d\"><pre>%s</pre></div>\n" +
+        "</div>";
+        long id = RANDOM_GENERATOR.nextLong();
         buffer.append(String.format(collapsibleSectionFormat, id, id, key, id, exceptions.get(key)));
       }
     }

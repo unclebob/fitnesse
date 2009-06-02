@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,7 @@ import fitnesse.slim.SlimError;
 import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
+  private static final Random RANDOM_GENERATOR = new SecureRandom();
   private static Pattern coloredCellPattern = Pattern.compile("<span class=\"(\\w*)\">(.*)(</span>)");
   private List<Row> rows = new ArrayList<Row>();
   private TableTag tableNode;
@@ -133,8 +135,8 @@ public class HtmlTable implements Table {
   private Tag newTag(Class<? extends Tag> klass) {
     Tag tag = null;
     try {
-      tag = (Tag) klass.newInstance();
-      Tag endTag = (Tag) klass.newInstance();
+      tag = klass.newInstance();
+      Tag endTag = klass.newInstance();
       endTag.setTagName("/" + tag.getTagName());
       endTag.setParent(tag);
       tag.setEndTag(endTag);
@@ -165,7 +167,6 @@ public class HtmlTable implements Table {
     }
     return content;
   }
-
   class Row {
     private List<Cell> cells = new ArrayList<Cell>();
     private CompositeTag rowNode;
@@ -248,7 +249,7 @@ public class HtmlTable implements Table {
     }
 
     public String makeCollapsableSection() throws Exception {
-      String id = new Random().nextLong() + "";
+      String id = RANDOM_GENERATOR.nextLong() + "";
       HtmlTag outerDiv;
 
       outerDiv = HtmlUtil.makeDivTag("collapse_rim");

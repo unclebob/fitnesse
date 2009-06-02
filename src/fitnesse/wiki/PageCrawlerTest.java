@@ -7,13 +7,13 @@ import java.util.Set;
 import java.util.List;
 
 import junit.framework.TestCase;
-import fitnesse.components.FitNesseTraversalListener;
+import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 import static org.junit.Assert.*;
 
-public class PageCrawlerTest implements FitNesseTraversalListener {
+public class PageCrawlerTest implements TraversalListener {
   private WikiPage root;
   private WikiPage page1;
   private WikiPage page2;

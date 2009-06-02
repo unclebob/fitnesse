@@ -12,7 +12,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 
 import util.XmlUtil;
-import fitnesse.components.FitNesseTraversalListener;
+import fitnesse.components.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.wiki.PageCrawler;
@@ -24,7 +24,7 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.XmlizerPageHandler;
 
-public class WikiImporter implements XmlizerPageHandler, FitNesseTraversalListener {
+public class WikiImporter implements XmlizerPageHandler, TraversalListener {
   public static String remoteUsername;
   public static String remotePassword;
 

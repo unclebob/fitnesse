@@ -103,8 +103,8 @@ public class PageDriver {
   public int countOfTagWithIdPrefix(String tag, String idPrefix) throws Exception {
     NodeFilter filter =
       new AndFilter(
-        new TagNameFilter(tag),
-        new HasAttributePrefixFilter("id", idPrefix));
+          new TagNameFilter(tag),
+          new HasAttributePrefixFilter("id", idPrefix));
     return getMatchingTags(filter).size();
   }
 
@@ -123,15 +123,15 @@ public class PageDriver {
 
   public int countOfTagWithIdAndWithClassBelowTagWithIdPrefix(String childTag, String childId, String tagClass, String parentTag, String parentIdPrefix) throws Exception {
     NodeList parents = getMatchingTags(
-      new AndFilter(
-        new TagNameFilter(parentTag),
-        new HasAttributePrefixFilter("id", parentIdPrefix))
+        new AndFilter(
+            new TagNameFilter(parentTag),
+            new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
     NodeFilter predicates[] = {
-      new TagNameFilter(childTag),
-      new HasAttributeFilter("class", tagClass),
-      new HasAttributeFilter("id", childId)
+        new TagNameFilter(childTag),
+        new HasAttributeFilter("class", tagClass),
+        new HasAttributeFilter("id", childId)
     };
     NodeFilter filter = new AndFilter(predicates);
     NodeList matches = parents.extractAllNodesThatMatch(filter, true);
@@ -165,25 +165,27 @@ public class PageDriver {
 
 
   private static class HasAttributePrefixFilter extends HasAttributeFilter {
+    private static final long serialVersionUID = 1L;
+
     public HasAttributePrefixFilter(String attribute, String prefix) {
       super(attribute, prefix);
     }
 
     public boolean accept(Node node) {
-      Tag tag;
-      Attribute attribute;
-      boolean ret;
-
-      ret = false;
-      if (node instanceof Tag) {
-        tag = (Tag) node;
-        attribute = tag.getAttributeEx(mAttribute);
-        ret = null != attribute;
-        if (ret && (null != mValue))
-          ret = attribute.getValue().startsWith(mValue);
+      if (!(node instanceof Tag)) {
+        return false;
       }
 
-      return (ret);
+      if (mValue == null) {
+        return false;
+      }
+
+      Tag tag = (Tag) node;
+      if (tag.getAttributeEx(mAttribute) == null) {
+        return false;
+      }
+
+      return tag.getAttributeEx(mAttribute).getValue().startsWith(mValue);
     }
   }
 

@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.components.FitNesseTraversalListener;
+import fitnesse.components.TraversalListener;
 
 //TODO after extracting the WikiPageModel... rethink this class.  Lots of these methods might be able to go back into WikiPAge.
 public interface PageCrawler {
@@ -26,7 +26,7 @@ public interface PageCrawler {
 
   WikiPage getRoot(WikiPage page) throws Exception;
 
-  void traverse(WikiPage root, FitNesseTraversalListener pageCrawlerTest) throws Exception;
+  void traverse(WikiPage root, TraversalListener pageCrawlerTest) throws Exception;
 
   WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
 }
