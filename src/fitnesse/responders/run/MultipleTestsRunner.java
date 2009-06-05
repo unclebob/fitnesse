@@ -161,6 +161,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws Exception {
+    if (testPagesToRun.size() == 0)
+      return pagesByTestSystem;
     WikiPage firstPage = testPagesToRun.get(0);
     WikiPage lastPage = testPagesToRun.get(testPagesToRun.size() - 1);
 
