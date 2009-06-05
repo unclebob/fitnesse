@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import org.htmlparser.util.ParserException;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import static util.RegexTestCase.assertHasRegexp;
 
 import java.util.Arrays;
-
-import org.htmlparser.util.ParserException;
-import org.junit.Test;
 
 public class HtmlTableScannerTest {
   private HtmlTableScanner ts;
@@ -140,15 +140,17 @@ public class HtmlTableScannerTest {
     scan("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
     t.addRow(Arrays.asList("y", "z"));
-    assertEquals(ts.toHtml().toLowerCase(), "<table><tr><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>");
+    assertHasRegexp("<table _tablenumber=\\d+><tr><td>x</td></tr><tr><td>y</td><td>z</td></tr></table>",ts.toHtml().toLowerCase());
   }
 
 
   @Test
   public void canConvertGunkBackToHtml() throws Exception {
-    String html = "gunk<body>gunk<table>gunk<tr>gunk<td>x</td>gunk<br>gunk</tr>gunk</table>gunk</body>";
+    String html_format = "gunk<body>gunk<table%s>gunk<tr>gunk<td>x</td>gunk<br>gunk</tr>gunk</table>gunk</body>";
+    String html = String.format(html_format, "");
     scan(html);
-    assertEquals(ts.toHtml(), html);
+    String expectedPattern = String.format(html_format, " _TABLENUMBER=\\d+");
+    assertHasRegexp(expectedPattern,ts.toHtml());
   }
 
   @Test
@@ -190,24 +192,20 @@ public class HtmlTableScannerTest {
   }
   
   @Test
-  public void canTableAtATimeOfResults() throws Exception {
-    String MULTI_TABLE_HTML =       "" +
-    "<body>Gunk" +
-    "Header gunk" +
-    "<table>gunk" +
-    "</table>gunk" +
-    " middle directions" +
-    "<table>gunk 2" +
-    "</table>gunk" +
-    " middle directions2" +
-    "<table>gunk 3" +
-    "</table>gunk" +
-    "end gunk" +
-    "</body>"; 
+  public void canExtractTablesFromHtml() throws Exception {
+    String table1_fmt = "<body>GunkHeader gunk<table%s>gunk</table>gunk middle directions";
+    String table2_fmt = "<table%s>gunk 2</table>gunk middle directions2";
+    String table3_fmt = "<table%s>gunk 3</table>gunkend gunk</body>";
+
+
+    String MULTI_TABLE_HTML = String.format(table1_fmt + table2_fmt + table3_fmt, "", "", "");
+    String expected_pattern1 = String.format(table1_fmt, " _TABLENUMBER=\\d+");
+    String expected_pattern2 = String.format(table2_fmt, " _TABLENUMBER=\\d+");
+    String expected_pattern3 = String.format(table3_fmt, " _TABLENUMBER=\\d+");
     scan(MULTI_TABLE_HTML);
-    assertEquals(MULTI_TABLE_HTML, ts.toHtml(null, null));
-    assertEquals("<body>GunkHeader gunk<table>gunk</table>gunk middle directions", ts.toHtml(null, ts.getTable(1)));
-    assertEquals("<table>gunk 2</table>gunk middle directions2", ts.toHtml(ts.getTable(1), ts.getTable(2)));
-    assertEquals("<table>gunk 3</table>gunkend gunk</body>", ts.toHtml(ts.getTable(2), null));
+    assertHasRegexp(expected_pattern1 + expected_pattern2 + expected_pattern3, ts.toHtml(null, null));
+    assertHasRegexp(expected_pattern1, ts.toHtml(null, ts.getTable(1)));
+    assertHasRegexp(expected_pattern2, ts.toHtml(ts.getTable(1), ts.getTable(2)));
+    assertHasRegexp(expected_pattern3, ts.toHtml(ts.getTable(2), null));
   }
 }

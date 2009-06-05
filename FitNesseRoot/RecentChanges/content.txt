@@ -3,6 +3,9 @@
 |JunkParent.CslimTest||15:50:25 Thu, Jun 04, 2009|
 |JunkParent||15:29:05 Thu, Jun 04, 2009|
 |||14:52:46 Wed, Jun 03, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict||12:54:25 Fri, Jun 05, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||12:52:27 Fri, Jun 05, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenarioLibrary||12:48:51 Fri, Jun 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.TestPacketResponder||13:25:04 Tue, Jun 02, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.ScenarioLibrary||13:19:52 Tue, Jun 02, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||13:19:31 Tue, Jun 02, 2009|
@@ -59,7 +62,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim2||10:30:11 Wed, May 27, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SlimTests||10:11:28 Wed, May 27, 2009|
 |FitNesse.SuiteAcceptanceTests.TearDown||16:52:04 Thu, May 21, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests||16:13:10 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder||12:19:30 Mon, May 25, 2009|
 RecentChanges/content.txt
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
@@ -98,3 +100,5 @@ RecentChanges/content.txt
 |FitNesse.UserGuide.RestfulTests||14:23:54 Mon, Apr 13, 2009|
 |JunkParent.RubyTests.ConstructorSymbols||10:45:34 Sat, Apr 11, 2009|
 |JunkParent.CreateAndWait||10:38:22 Sat, Apr 11, 2009|
+|JunkPage.SlimScenarioTest||21:01:45 Wed, Apr 08, 2009|
+|ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PaymentDeterminesCredits||15:01:02 Mon, Apr 06, 2009|

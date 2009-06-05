@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.lexer.Lexer;
@@ -13,6 +9,11 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 public class HtmlTableScanner implements TableScanner {
   private List<Table> tables = new ArrayList<Table>();
@@ -31,13 +32,19 @@ public class HtmlTableScanner implements TableScanner {
     for (int i = 0; i < nodes.size(); i++) {
       Node node = nodes.elementAt(i);
       if (node instanceof TableTag) {
-        tables.add(new HtmlTable((TableTag) node));
+        TableTag tableTag = (TableTag) node;
+        guaranteeThatAllTablesAreUnique(tableTag);
+        tables.add(new HtmlTable(tableTag));
       } else {
         NodeList children = node.getChildren();
         if (children != null)
           scanForTables(children);
       }
     }
+  }
+
+  private void guaranteeThatAllTablesAreUnique(TableTag tagTable) {
+    tagTable.setAttribute("_TABLENUMBER", ""+ Math.abs((new Random()).nextLong()));
   }
 
   public int getTableCount() {
