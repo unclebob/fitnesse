@@ -52,8 +52,8 @@ public class FitServerTest extends RegexTestCase {
     String stdoutString = new String(stdoutBytes.toByteArray());
 
     assertTrue(exitValue != 0);
-//TODO		This started to fail with Java 5.0... why does -1 turn into 255?
-//		assertEquals("stdout: " + stdoutString, -1, exitValue);
+    //TODO		This started to fail with Java 5.0... why does -1 turn into 255?
+    //		assertEquals("stdout: " + stdoutString, -1, exitValue);
     assertTrue(stdoutString.indexOf(errorMessage) != -1);
   }
 
@@ -292,7 +292,6 @@ public class FitServerTest extends RegexTestCase {
   private String readWholeResponse() throws Exception {
     StringBuffer buffer = new StringBuffer();
     String block = readFromFitServer();
-    ;
     while (block.length() > 0) {
       buffer.append(block);
       block = readFromFitServer();
@@ -307,7 +306,7 @@ public class FitServerTest extends RegexTestCase {
 
   protected String simpleTable(String fixtureName) {
     return "<table>" +
-      "<tr><td>fitnesse.testutil." + fixtureName + "</td></tr>" +
-      "</table>";
+    "<tr><td>fitnesse.testutil." + fixtureName + "</td></tr>" +
+    "</table>";
   }
 }
