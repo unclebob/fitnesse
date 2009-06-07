@@ -1,0 +1,6 @@
+<tr class="resultsRow$resultsRow">
+	<td>
+		<a href="$result.getPageCrawler().getFullPath($result).toString()">$result.getPageCrawler().getFullPath($result).toString()</a>
+	</td>
+	<td>$result.getData().getProperties().getLastModificationTime()</td>
+</tr>

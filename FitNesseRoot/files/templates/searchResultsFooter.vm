@@ -1,0 +1,7 @@
+</tbody></table><script language="javascript">tableSorter = new TableSorter('searchResultsTable', new DateParser(/^(\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\d+) (\d+).(\d+).(\d+) (\w+) (\d+)$/,8,2,3,4,5,6));</script>
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search.'</script>
+</div>
+		</div>
+	</body>
+#parse("pageFooter.vm")
+	

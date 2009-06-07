@@ -10,7 +10,8 @@ import util.RegexTestCase;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -66,9 +67,11 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private String invokeResponder(MockRequest request) throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(
-        new FitNesseContext(root), request);
-    return response.getContent();
+    Response response = responder.makeResponse(new FitNesseContext(root),
+        request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    return sender.sentData();
   }
 
   private MockRequest setupRequest() throws Exception {
@@ -115,7 +118,8 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private void assertPageTypesMatch(String... pageTypes) {
     MockRequest request = new MockRequest();
     List<String> types = Arrays.asList(pageTypes);
-    request.addInput(SearchFormResponder.PAGE_TYPE, StringUtil.join(types, ","));
+    request
+    .addInput(SearchFormResponder.PAGE_TYPE, StringUtil.join(types, ","));
     assertEquals(types, responder.getPageTypesFromInput(request));
   }
 

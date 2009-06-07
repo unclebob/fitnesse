@@ -14,26 +14,18 @@ import java.util.Map;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
-public class ExecuteSearchPropertiesResponder implements SecureResponder {
+public class ExecuteSearchPropertiesResponder extends ChunkingResponder {
 
   public ExecuteSearchPropertiesResponder() {
   }
@@ -42,36 +34,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
     return new SecureReadOperation();
   }
 
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    WikiPage page = getWikiPageFromContext(context, request.getResource());
-
-    if (page == null)
-      return new NotFoundResponder().makeResponse(context, request);
-
-    String html = makeHtml(context, request, page);
-
-    response.setContent(html);
-    response.setMaxAge(0);
-
-    return response;
-  }
-
-  private WikiPage getWikiPageFromContext(FitNesseContext context,
-      String resource) throws Exception {
-    WikiPagePath path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(context.root, path)) {
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-    }
-
-    WikiPage page = crawler.getPage(context.root, path);
-    return page;
-  }
-
-  private String makeHtml(FitNesseContext context, Request request,
-      WikiPage page) throws Exception {
+  private String makeHtml() throws Exception {
 
     List<String> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
@@ -88,14 +51,15 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
       return resultsPage.html();
     }
 
-    List<WikiPage> pages = new AttributeWikiPageFinder(pageTypes, attributes, suites, excludeSetUp, excludeTearDown).search(page);
+    List<WikiPage> pages = new AttributeWikiPageFinder(pageTypes, attributes,
+        suites, excludeSetUp, excludeTearDown).search(page);
 
     VelocityContext velocityContext = new VelocityContext();
 
     StringWriter writer = new StringWriter();
 
     Template template = context.getVelocityEngine().getTemplate(
-    "searchResults.vm");
+    "searchPropertiesResults.vm");
 
     velocityContext.put("pageTitle", new PageTitle(
     "Search Page Properties Results"));
@@ -180,6 +144,18 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
   private boolean requestHasInputChecked(Request request, String checkBox) {
     return "on".equals(request.getInput(checkBox));
+  }
+
+  @Override
+  protected void doSending() throws Exception {
+    response.add(makeHtml());
+    response.setMaxAge(0);
+    response.closeAll();
+  }
+
+  @Override
+  protected boolean shouldRespondWith404() {
+    return false;
   }
 
 }
