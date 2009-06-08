@@ -18,7 +18,7 @@ import fitnesse.wiki.WikiPage;
 
 public abstract class ResultResponder extends ChunkingResponder implements
 SearchObserver, SecureResponder {
-  private int hits = 0;
+  private int hits;
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
@@ -42,6 +42,8 @@ SearchObserver, SecureResponder {
     "searchResultsFooter.vm");
 
     velocityContext.put("hits", hits);
+    velocityContext.put("request", request);
+    velocityContext.put("searchedRootPage", page);
 
     template.merge(velocityContext, writer);
 
@@ -107,7 +109,9 @@ SearchObserver, SecureResponder {
 
   protected abstract String getPageFooterInfo(int hits) throws Exception;
 
-  protected abstract void startSearching() throws Exception;
+  protected void startSearching() throws Exception {
+    hits = 0;
+  }
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();

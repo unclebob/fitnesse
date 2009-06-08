@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestTitleSearch||22:57:31 Mon, Jun 08, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestContentSearch||22:53:19 Mon, Jun 08, 2009|
 |JunkParent.CslimTest.TestList||15:52:20 Thu, Jun 04, 2009|
 |JunkParent.CslimTest.SetUp||15:51:40 Thu, Jun 04, 2009|
 |JunkParent.CslimTest||15:50:25 Thu, Jun 04, 2009|
@@ -96,9 +98,3 @@ RecentChanges/content.txt
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.PageHistoryWithTwoTests||15:48:53 Mon, May 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.SetUp||14:45:59 Mon, May 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.TestPageHistory||14:42:30 Mon, May 04, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||13:27:13 Sun, May 03, 2009|
-|FitNesse.UserGuide.RestfulTests||14:23:54 Mon, Apr 13, 2009|
-|JunkParent.RubyTests.ConstructorSymbols||10:45:34 Sat, Apr 11, 2009|
-|JunkParent.CreateAndWait||10:38:22 Sat, Apr 11, 2009|
-|JunkPage.SlimScenarioTest||21:01:45 Wed, Apr 08, 2009|
-|ProjectPage.JukeBoxProject.JukeBox.JukeBoxStories.PaymentDeterminesCredits||15:01:02 Mon, Apr 06, 2009|

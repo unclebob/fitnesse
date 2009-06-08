@@ -16,6 +16,7 @@ public class WhereUsedResponder extends ResultResponder {
   }
 
   protected void startSearching() throws Exception {
+    super.startSearching();
     new WhereUsedPageFinder(page, this).search(root);
   }
 

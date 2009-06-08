@@ -4,10 +4,16 @@
 <table id="searchResultsTable" cellspacing="0" cellpadding="0" border="0" class="dirListing"><thead>
 	<tr>
 		<td class="resultsHeader">
-			<a href="javascript:void(tableSorter.sort(0));">Page</a>
+			<a href="javascript:void(tableSorter.sort(0));">Test</a>
 		</td>
 		<td class="resultsHeader">
-			<a href="javascript:void(tableSorter.sort(1, 'date'));">LastModified</a>
+			<a href="javascript:void(tableSorter.sort(1));">Page</a>
+		</td>
+		<td class="resultsHeader">
+			<a href="javascript:void(tableSorter.sort(2));">Tags</a>
+		</td>
+		<td class="resultsHeader">
+			<a href="javascript:void(tableSorter.sort(3, 'date'));">LastModified</a>
 		</td>
 	</tr>
 </thead>

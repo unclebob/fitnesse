@@ -5,71 +5,22 @@ import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SETUP;
 import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_TEARDOWN;
 import static fitnesse.responders.search.SearchFormResponder.IGNORED;
 
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlUtil;
+import fitnesse.components.PageFinder;
 import fitnesse.http.Request;
-import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.editing.PropertiesResponder;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.WikiPage;
 
-public class ExecuteSearchPropertiesResponder extends ChunkingResponder {
-
-  public ExecuteSearchPropertiesResponder() {
-  }
+public class ExecuteSearchPropertiesResponder extends ResultResponder {
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
-  }
-
-  private String makeHtml() throws Exception {
-
-    List<String> pageTypes = getPageTypesFromInput(request);
-    Map<String, Boolean> attributes = getAttributesFromInput(request);
-    String[] suites = getSuitesFromInput(request);
-    boolean excludeSetUp = getExcludeSetUpFromInput(request);
-    boolean excludeTearDown = getExcludeTearDownFromInput(request);
-
-    if (pageTypes == null && attributes.isEmpty() && suites == null) {
-      HtmlPage resultsPage = context.htmlPageFactory.newPage();
-      resultsPage.title.use("Search Page Properties: " + request);
-      resultsPage.header.use(HtmlUtil.makeBreadCrumbsWithPageType(request
-          .getResource(), "Search Page Properties Results"));
-      resultsPage.main.add("No search properties were specified.");
-      return resultsPage.html();
-    }
-
-    List<WikiPage> pages = new AttributeWikiPageFinder(pageTypes, attributes,
-        suites, excludeSetUp, excludeTearDown).search(page);
-
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = context.getVelocityEngine().getTemplate(
-    "searchPropertiesResults.vm");
-
-    velocityContext.put("pageTitle", new PageTitle(
-    "Search Page Properties Results"));
-    velocityContext.put("searchResults", pages);
-    velocityContext.put("searchedRootPage", page);
-    velocityContext.put("request", request);
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
   }
 
   protected List<String> getPageTypesFromInput(Request request) {
@@ -147,15 +98,32 @@ public class ExecuteSearchPropertiesResponder extends ChunkingResponder {
   }
 
   @Override
-  protected void doSending() throws Exception {
-    response.add(makeHtml());
-    response.setMaxAge(0);
-    response.closeAll();
+  protected String getPageFooterInfo(int hits) throws Exception {
+    return "Found " + hits + " results for your search.";
   }
 
   @Override
-  protected boolean shouldRespondWith404() {
-    return false;
+  protected String getTitle() throws Exception {
+    return "Search Page Properties Results";
+  }
+
+  @Override
+  protected void startSearching() throws Exception {
+    super.startSearching();
+    List<String> pageTypes = getPageTypesFromInput(request);
+    Map<String, Boolean> attributes = getAttributesFromInput(request);
+    String[] suites = getSuitesFromInput(request);
+    boolean excludeSetUp = getExcludeSetUpFromInput(request);
+    boolean excludeTearDown = getExcludeTearDownFromInput(request);
+
+    if (pageTypes == null && attributes.isEmpty() && suites == null) {
+      response.add("No search properties were specified.");
+      return;
+    }
+
+    PageFinder finder = new AttributeWikiPageFinder(this, pageTypes,
+        attributes, suites, excludeSetUp, excludeTearDown);
+    finder.search(page);
   }
 
 }

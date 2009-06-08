@@ -57,7 +57,6 @@ public class UpdaterImplementation implements Updater {
         new ReplacingFileUpdate(this, "files/templates/testHistory.vm", "files/templates"),
         new ReplacingFileUpdate(this, "files/templates/testResults.vm", "files/templates"),
         new ReplacingFileUpdate(this, "files/templates/searchForm.vm", "files/templates"),
-        new ReplacingFileUpdate(this, "files/templates/searchPropertiesResults.vm", "files/templates"),
         new ReplacingFileUpdate(this, "files/templates/searchResultsHeader.vm", "files/templates"),
         new ReplacingFileUpdate(this, "files/templates/searchResultsFooter.vm", "files/templates"),
         new ReplacingFileUpdate(this, "files/templates/searchResultsEntry.vm", "files/templates"),

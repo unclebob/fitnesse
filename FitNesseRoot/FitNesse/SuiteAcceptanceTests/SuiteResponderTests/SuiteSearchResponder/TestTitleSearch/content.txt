@@ -20,7 +20,7 @@ Let's make sure the titles in and information is correct.
 Make sure we get !-PageAbc-! in the result list.
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|Found 0 results for your search|true|
+|contents|No pages matched your search criteria.|true|
 
 Now search for ABC.
 |Response Requester.|

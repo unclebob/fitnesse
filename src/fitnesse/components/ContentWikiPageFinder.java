@@ -7,8 +7,8 @@ public class ContentWikiPageFinder extends WikiPageFinder {
   private String searchString;
 
   public ContentWikiPageFinder(String searchString, SearchObserver observer) {
+    super(observer);
     this.searchString = searchString.toLowerCase();
-    this.observer = observer;
   }
 
   @Override

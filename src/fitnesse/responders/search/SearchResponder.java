@@ -30,6 +30,7 @@ public class SearchResponder extends ResultResponder {
   }
 
   protected void startSearching() throws Exception {
+    super.startSearching();
     String searchString = getSearchString();
     if (!searchString.equals("")) {
       String searchType = getSearchType();
