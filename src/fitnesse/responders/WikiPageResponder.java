@@ -9,7 +9,6 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
-import fitnesse.html.HtmlTag;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -22,7 +21,6 @@ import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.widgets.Constants;
-import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.VelocityContext;
 
 public class WikiPageResponder implements SecureResponder {
