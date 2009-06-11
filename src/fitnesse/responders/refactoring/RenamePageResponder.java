@@ -36,31 +36,27 @@ public class RenamePageResponder implements SecureResponder {
     newName = (String) request.getInput("newName");
     refactorReferences = request.hasInput("refactorReferences");
 
-    Response response;
-
-    if (newName != null && !qualifiedName.equals("FrontPage") && WikiWordWidget.isSingleWikiWord(newName)) {
-      PageCrawler pageCrawler = context.root.getPageCrawler();
-
-      pathToRename = PathParser.parse(qualifiedName);
-      pageToRename = pageCrawler.getPage(context.root, pathToRename);
-      if (pageToRename == null)
-        response = new NotFoundResponder().makeResponse(context, request);
-      else {
-        WikiPagePath parentPath = pathToRename.parentPath();
-        parentOfPageToRename = pageCrawler.getPage(context.root, parentPath);
-        final boolean pageExists = pageCrawler.pageExists(parentOfPageToRename, PathParser.parse(newName));
-        if (!pageExists) {
-          qualifiedName = renamePageAndMaybeAllReferences();
-          response = new SimpleResponse();
-          response.redirect(qualifiedName);
-        } else // already exists
-        {
-          response = makeErrorMessageResponder(makeLink(newName) + " already exists").makeResponse(context, request);
-        }
-      }
-    } else {
-      response = makeErrorMessageResponder(newName + " is not a valid simple page name.").makeResponse(context, request);
+    if (newName == null || !WikiWordWidget.isSingleWikiWord(newName) || "FrontPage".equals(qualifiedName)) {
+      return makeErrorMessageResponder(newName + " is not a valid simple page name.").makeResponse(context, request);
     }
+
+    PageCrawler pageCrawler = context.root.getPageCrawler();
+
+    pathToRename = PathParser.parse(qualifiedName);
+    pageToRename = pageCrawler.getPage(context.root, pathToRename);
+    if (pageToRename == null)
+      return new NotFoundResponder().makeResponse(context, request);
+
+    WikiPagePath parentPath = pathToRename.parentPath();
+    parentOfPageToRename = pageCrawler.getPage(context.root, parentPath);
+    final boolean pageExists = pageCrawler.pageExists(parentOfPageToRename, PathParser.parse(newName));
+    if (pageExists) {
+      return makeErrorMessageResponder(makeLink(newName) + " already exists").makeResponse(context, request);
+    }
+
+    qualifiedName = renamePageAndMaybeAllReferences();
+    Response response = new SimpleResponse();
+    response.redirect(qualifiedName);
 
     return response;
   }
@@ -90,22 +86,23 @@ public class RenamePageResponder implements SecureResponder {
 
   private boolean renamePage() throws Exception {
     String oldName = pageToRename.getName();
-    if (parentOfPageToRename.hasChildPage(oldName) && !parentOfPageToRename.hasChildPage(newName)) {
-      WikiPage originalPage = parentOfPageToRename.getChildPage(oldName);
-      PageCrawler crawler = originalPage.getPageCrawler();
-      PageData data = originalPage.getData();
-
-      WikiPage renamedPage = parentOfPageToRename.addChildPage(newName);
-      renamedPage.commit(data);
-
-      for (WikiPage child: originalPage.getChildren()) {
-        MovePageResponder.movePage(root, crawler.getFullPath(child), crawler.getFullPath(renamedPage));
-      }
-
-      parentOfPageToRename.removeChildPage(oldName);
-      return true;
+    if (!parentOfPageToRename.hasChildPage(oldName) || parentOfPageToRename.hasChildPage(newName)) {
+      return false;
     }
-    return false;
+
+    WikiPage originalPage = parentOfPageToRename.getChildPage(oldName);
+    PageCrawler crawler = originalPage.getPageCrawler();
+    PageData data = originalPage.getData();
+
+    WikiPage renamedPage = parentOfPageToRename.addChildPage(newName);
+    renamedPage.commit(data);
+
+    for (WikiPage child: originalPage.getChildren()) {
+      MovePageResponder.movePage(root, crawler.getFullPath(child), crawler.getFullPath(renamedPage));
+    }
+
+    parentOfPageToRename.removeChildPage(oldName);
+    return true;
   }
 
   public SecureOperation getSecureOperation() {
