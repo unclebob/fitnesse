@@ -3,10 +3,12 @@
 package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.MovedPageReferenceRenamingVisitor;
 import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
-public class MovedPageReferenceRenamer extends ReferenceRenamer {
+public class MovedPageReferenceRenamer extends ReferenceRenamer implements WidgetVisitor {
   private WikiPage pageToBeMoved;
   private String newParentName;
 
@@ -20,8 +22,13 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
     renameReferences();
   }
 
-  protected WidgetVisitor getVisitor() {
-    return new MovedPageReferenceRenamingVisitor(pageToBeMoved, newParentName);
+  public void visit(AliasLinkWidget widget) throws Exception {
   }
 
+  public void visit(WikiWidget widget) throws Exception {
+  }
+
+  public void visit(WikiWordWidget widget) throws Exception {
+    widget.renameMovedPageIfReferenced(pageToBeMoved, newParentName);
+  }
 }

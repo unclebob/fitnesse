@@ -17,7 +17,7 @@ import fitnesse.wikitext.widgets.PreformattedWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
-public abstract class ReferenceRenamer implements TraversalListener {
+public abstract class ReferenceRenamer implements TraversalListener, WidgetVisitor {
   protected WikiPage root;
 
   public ReferenceRenamer(WikiPage root) {
@@ -42,17 +42,19 @@ public abstract class ReferenceRenamer implements TraversalListener {
     }
   }
 
-  protected abstract WidgetVisitor getVisitor();
+  protected WidgetVisitor getVisitor() {
+    return this;
+  }
 
   @SuppressWarnings("unchecked")
   public static WidgetBuilder referenceModifyingWidgetBuilder = new WidgetBuilder(new Class[]{
-    WikiWordWidget.class,
-    LiteralWidget.class,
-    CommentWidget.class,
-    PreformattedWidget.class,
-    LinkWidget.class,
-    ImageWidget.class,
-    AliasLinkWidget.class,
-    ClasspathWidget.class
+      WikiWordWidget.class,
+      LiteralWidget.class,
+      CommentWidget.class,
+      PreformattedWidget.class,
+      LinkWidget.class,
+      ImageWidget.class,
+      AliasLinkWidget.class,
+      ClasspathWidget.class
   });
 }

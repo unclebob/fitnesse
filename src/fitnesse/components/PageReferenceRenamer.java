@@ -3,8 +3,9 @@
 package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.PageReferenceRenamingVisitor;
-import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class PageReferenceRenamer extends ReferenceRenamer {
   private WikiPage subjectPage;
@@ -20,8 +21,14 @@ public class PageReferenceRenamer extends ReferenceRenamer {
     renameReferences();
   }
 
-  protected WidgetVisitor getVisitor() {
-    return new PageReferenceRenamingVisitor(subjectPage, newName);
+  public void visit(WikiWidget widget) throws Exception {
   }
 
+  public void visit(WikiWordWidget widget) throws Exception {
+    widget.renamePageIfReferenced(subjectPage, newName);
+  }
+
+  public void visit(AliasLinkWidget widget) throws Exception {
+    widget.renamePageIfReferenced(subjectPage, newName);
+  }
 }
