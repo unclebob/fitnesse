@@ -43,17 +43,18 @@ public class MovePageResponder implements SecureResponder {
     if (newParent == null)
       return makeErrorMessageResponder(newParentName + " does not exist.").makeResponse(context, request);
 
-    if (pageCanBeMoved(pageToBeMoved, newParent, path, newParentPath)) {
-      if (refactorReferences)
-        refactorReferences(context, pageToBeMoved);
-      movePage(context.root, crawler.getFullPath(pageToBeMoved), crawler.getFullPath(newParent));
-
-      SimpleResponse response = new SimpleResponse();
-      response.redirect(createRedirectionUrl(newParent, pageToBeMoved));
-      return response;
-    } else {
+    if (!pageCanBeMoved(pageToBeMoved, newParent, path, newParentPath)) {
       return makeErrorMessageResponder("").makeResponse(context, request);
     }
+
+    if (refactorReferences) {
+      refactorReferences(context, pageToBeMoved);
+    }
+    movePage(context.root, crawler.getFullPath(pageToBeMoved), crawler.getFullPath(newParent));
+
+    SimpleResponse response = new SimpleResponse();
+    response.redirect(createRedirectionUrl(newParent, pageToBeMoved));
+    return response;
   }
 
   private void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved)
@@ -64,8 +65,9 @@ public class MovePageResponder implements SecureResponder {
 
   private static String getNameofNewParent(Request request) {
     String newParentName = (String) request.getInput("newLocation");
-    if (".".equals(newParentName))
-      newParentName = "";
+    if (".".equals(newParentName)) {
+      return "";
+    }
     return newParentName;
   }
 
