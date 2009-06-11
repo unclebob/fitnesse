@@ -27,20 +27,22 @@ public class DeletePageResponder implements SecureResponder {
 
     if (qualifiedPageName.equals("FrontPage")) {
       response.redirect("FrontPage");
-    } else {
-      String confirmedString = (String) request.getInput("confirmed");
-      if ("yes".equals(confirmedString)) {
-        String nameOfPageToBeDeleted = path.last();
-        path.removeNameFromEnd();
-        WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
-        if (parentOfPageToBeDeleted != null) {
-          parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
-        }
-        redirect(path, response);
-      } else {
-        response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
-      }
+      return response;
     }
+
+    String confirmedString = (String) request.getInput("confirmed");
+    if (!"yes".equals(confirmedString)) {
+      response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
+      return response;
+    }
+
+    String nameOfPageToBeDeleted = path.last();
+    path.removeNameFromEnd();
+    WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
+    if (parentOfPageToBeDeleted != null) {
+      parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
+    }
+    redirect(path, response);
 
     return response;
   }
@@ -65,7 +67,7 @@ public class DeletePageResponder implements SecureResponder {
   private String makeMainContent(final WikiPage root, final String qualifiedPageName) throws Exception {
     WikiPagePath path = PathParser.parse(qualifiedPageName);
     WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
-    List<?> children = pageToDelete.getChildren();
+    List<WikiPage> children = pageToDelete.getChildren();
     boolean addSubPageWarning = true;
     if (children == null || children.size() == 0) {
       addSubPageWarning = false;
