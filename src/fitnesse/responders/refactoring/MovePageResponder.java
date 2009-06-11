@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.Iterator;
 import java.util.List;
 
 import fitnesse.FitNesseContext;
@@ -58,7 +57,7 @@ public class MovePageResponder implements SecureResponder {
   }
 
   private void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved)
-    throws Exception {
+  throws Exception {
     MovedPageReferenceRenamer renamer = new MovedPageReferenceRenamer(context.root);
     renamer.renameReferences(pageToBeMoved, newParentName);
   }
@@ -72,9 +71,9 @@ public class MovePageResponder implements SecureResponder {
 
   private boolean pageCanBeMoved(WikiPage pageToBeMoved, WikiPage newParent, WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception {
     return !pageToBeMovedPath.equals(newParentPath) &&
-      !selfPage(pageToBeMovedPath, newParentPath) &&
-      targetPageDoesntExist(pageToBeMoved.getName(), newParent) &&
-      !pageIsAncestorOfNewParent(pageToBeMovedPath, newParentPath);
+    !selfPage(pageToBeMovedPath, newParentPath) &&
+    targetPageDoesntExist(pageToBeMoved.getName(), newParent) &&
+    !pageIsAncestorOfNewParent(pageToBeMovedPath, newParentPath);
   }
 
   public boolean pageIsAncestorOfNewParent(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception {
@@ -110,7 +109,7 @@ public class MovePageResponder implements SecureResponder {
     PageData movedData = movedPage.getData();
     PageData oldData = movee.getData();
     movedData.setProperties(oldData.getProperties());
-    List<?> children = movee.getChildren();
+    List<WikiPage> children = movee.getChildren();
     if (children.size() > 0)
       moveChildren(children, root, movedPagePath);
     movedPage.commit(movedData);
@@ -123,9 +122,8 @@ public class MovePageResponder implements SecureResponder {
     return !newParent.hasChildPage(oldWikiPageName);
   }
 
-  public static void moveChildren(List<?> children, WikiPage root, WikiPagePath newParentPath) throws Exception {
-    for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
-      WikiPage page = (WikiPage) iterator.next();
+  public static void moveChildren(List<WikiPage> children, WikiPage root, WikiPagePath newParentPath) throws Exception {
+    for (WikiPage page: children) {
       movePage(root, page.getPageCrawler().getFullPath(page), newParentPath);
     }
   }
