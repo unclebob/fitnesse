@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.Iterator;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -101,9 +98,7 @@ public class RenamePageResponder implements SecureResponder {
       WikiPage renamedPage = parentOfPageToRename.addChildPage(newName);
       renamedPage.commit(data);
 
-      List<?> children = originalPage.getChildren();
-      for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
-        WikiPage child = (WikiPage) iterator.next();
+      for (WikiPage child: originalPage.getChildren()) {
         MovePageResponder.movePage(root, crawler.getFullPath(child), crawler.getFullPath(renamedPage));
       }
 
