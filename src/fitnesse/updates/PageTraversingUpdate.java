@@ -31,7 +31,4 @@ public abstract class PageTraversingUpdate implements TraversalListener, Update 
     return usesFileSystem && !hasBeenApplied;
   }
 
-  public String getSearchPattern() throws Exception {
-    return ".*";
-  }
 }

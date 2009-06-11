@@ -25,11 +25,9 @@ import fitnesse.wiki.WikiPagePath;
 public class MovePageResponder implements SecureResponder {
   private String nameOfPageToBeMoved;
   private String newParentName;
-  private boolean refactorReferences;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     newParentName = getNameofNewParent(request);
-    refactorReferences = request.hasInput("refactorReferences");
 
     nameOfPageToBeMoved = request.getResource();
     WikiPagePath path = PathParser.parse(nameOfPageToBeMoved);
@@ -47,7 +45,7 @@ public class MovePageResponder implements SecureResponder {
       return makeErrorMessageResponder("").makeResponse(context, request);
     }
 
-    if (refactorReferences) {
+    if (request.hasInput("refactorReferences")) {
       refactorReferences(context, pageToBeMoved);
     }
     movePage(context.root, crawler.getFullPath(pageToBeMoved), crawler.getFullPath(newParent));

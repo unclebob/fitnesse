@@ -35,8 +35,5 @@ public class AttributeAdderUpdate extends PageTraversingUpdate {
     }
   }
 
-  public String getSearchPattern() {
-    return ".*";
-  }
 }
 

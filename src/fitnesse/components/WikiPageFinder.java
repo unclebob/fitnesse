@@ -14,10 +14,6 @@ public abstract class WikiPageFinder implements TraversalListener, PageFinder {
     this.observer = observer;
   }
 
-  public String getSearchPattern() throws Exception {
-    return "";
-  }
-
   protected abstract boolean pageMatches(WikiPage page) throws Exception;
 
   public void processPage(WikiPage page) throws Exception {

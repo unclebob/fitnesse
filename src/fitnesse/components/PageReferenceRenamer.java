@@ -24,7 +24,4 @@ public class PageReferenceRenamer extends ReferenceRenamer {
     return new PageReferenceRenamingVisitor(subjectPage, newName);
   }
 
-  public String getSearchPattern() throws Exception {
-    return subjectPage.getName();
-  }
 }

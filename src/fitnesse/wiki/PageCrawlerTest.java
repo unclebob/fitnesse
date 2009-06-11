@@ -164,10 +164,6 @@ public class PageCrawlerTest implements TraversalListener {
     traversedPages.add(page.getName());
   }
 
-  public String getSearchPattern() throws Exception {
-    return "blah";
-  }
-
   @Test
   public void testdoesntTraverseSymbolicPages() throws Exception {
     PageData data = page1.getData();

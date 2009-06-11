@@ -24,7 +24,4 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
     return new MovedPageReferenceRenamingVisitor(pageToBeMoved, newParentName);
   }
 
-  public String getSearchPattern() throws Exception {
-    return pageToBeMoved.getName();
-  }
 }
