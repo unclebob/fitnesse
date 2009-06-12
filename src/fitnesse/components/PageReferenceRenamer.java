@@ -11,14 +11,10 @@ public class PageReferenceRenamer extends ReferenceRenamer {
   private WikiPage subjectPage;
   private String newName;
 
-  public PageReferenceRenamer(WikiPage root) {
+  public PageReferenceRenamer(WikiPage root, WikiPage subjectPage, String newName) {
     super(root);
-  }
-
-  public void renameReferences(WikiPage subjectPage, String newName) throws Exception {
     this.subjectPage = subjectPage;
     this.newName = newName;
-    renameReferences();
   }
 
   public void visit(WikiWidget widget) throws Exception {

@@ -12,14 +12,10 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer implements Widge
   private WikiPage pageToBeMoved;
   private String newParentName;
 
-  public MovedPageReferenceRenamer(WikiPage root) {
+  public MovedPageReferenceRenamer(WikiPage root, WikiPage pageToBeMoved, String newParentName) {
     super(root);
-  }
-
-  public void renameReferences(WikiPage pageToBeMoved, String newParentName) throws Exception {
     this.pageToBeMoved = pageToBeMoved;
     this.newParentName = newParentName;
-    renameReferences();
   }
 
   public void visit(AliasLinkWidget widget) throws Exception {

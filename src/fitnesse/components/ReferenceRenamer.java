@@ -24,7 +24,7 @@ public abstract class ReferenceRenamer implements TraversalListener, WidgetVisit
     this.root = root;
   }
 
-  protected void renameReferences() throws Exception {
+  public void renameReferences() throws Exception {
     root.getPageCrawler().traverse(root, this);
   }
 
@@ -32,7 +32,7 @@ public abstract class ReferenceRenamer implements TraversalListener, WidgetVisit
     PageData data = currentPage.getData();
     String content = data.getContent();
     ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceModifyingWidgetBuilder);
-    widgetRoot.acceptVisitor(getVisitor());
+    widgetRoot.acceptVisitor(this);
 
     String newContent = widgetRoot.asWikiText();
     boolean pageHasChanged = !newContent.equals(content);
@@ -40,10 +40,6 @@ public abstract class ReferenceRenamer implements TraversalListener, WidgetVisit
       data.setContent(newContent);
       currentPage.commit(data);
     }
-  }
-
-  protected WidgetVisitor getVisitor() {
-    return this;
   }
 
   @SuppressWarnings("unchecked")
