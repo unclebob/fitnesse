@@ -25,7 +25,7 @@ public class DeletePageResponder implements SecureResponder {
     String qualifiedPageName = request.getResource();
     WikiPagePath path = PathParser.parse(qualifiedPageName);
 
-    if (qualifiedPageName.equals("FrontPage")) {
+    if ("FrontPage".equals(qualifiedPageName)) {
       response.redirect("FrontPage");
       return response;
     }
@@ -69,7 +69,7 @@ public class DeletePageResponder implements SecureResponder {
     WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
     List<WikiPage> children = pageToDelete.getChildren();
     boolean addSubPageWarning = true;
-    if (children == null || children.size() == 0) {
+    if (children == null || children.isEmpty()) {
       addSubPageWarning = false;
     }
 

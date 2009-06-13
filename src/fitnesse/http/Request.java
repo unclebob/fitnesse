@@ -13,8 +13,9 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +41,8 @@ public class Request {
   protected String requestURI;
   private String resource;
   protected String queryString;
-  protected HashMap<String, Object> inputs = new HashMap<String, Object>();
-  protected HashMap<String, Object> headers = new HashMap<String, Object>();
+  protected Map<String, Object> inputs = new HashMap<String, Object>();
+  protected Map<String, Object> headers = new HashMap<String, Object>();
   protected String entityBody = "";
   protected String requestLine;
   protected String authorizationUsername;
@@ -78,7 +79,7 @@ public class Request {
     parseRequestUri(requestURI);
   }
 
-  private HashMap<String, Object> parseHeaders(StreamReader reader)
+  private Map<String, Object> parseHeaders(StreamReader reader)
   throws Exception {
     HashMap<String, Object> headers = new HashMap<String, Object>();
     String line = reader.readLine();
@@ -120,7 +121,7 @@ public class Request {
     input.readUpTo(boundary);
     while (numberOfBytesToRead - input.numberOfBytesConsumed() > 10) {
       input.readLine();
-      HashMap<String, Object> headers = parseHeaders(input);
+      Map<String, Object> headers = parseHeaders(input);
       String contentDisposition = (String) headers.get("content-disposition");
       Matcher matcher = multipartHeaderPattern.matcher(contentDisposition);
       while (matcher.find())
@@ -142,7 +143,7 @@ public class Request {
     input.resetNumberOfBytesConsumed();
   }
 
-  private Object createUploadedFile(HashMap<String, Object> headers,
+  private Object createUploadedFile(Map<String, Object> headers,
       StreamReader reader, String boundary) throws Exception {
     String filename = (String) headers.get("filename");
     String contentType = (String) headers.get("content-type");
@@ -194,13 +195,13 @@ public class Request {
   private String concatenateItems(String existingItem, String value) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(existingItem);
-    buffer.append(",");
+    buffer.append(',');
     buffer.append(value);
     return buffer.toString();
   }
 
   private boolean itemExistAndMismatches(Object existingItem, String value) {
-    return existingItem != null && existingItem instanceof String && !value.equals(existingItem);
+    return existingItem instanceof String && !value.equals(existingItem);
   }
 
   public String getRequestLine() {
@@ -249,31 +250,28 @@ public class Request {
 
   public String toString() {
     StringBuffer buffer = new StringBuffer();
-    buffer.append("--- Request Start ---").append("\n");
-    buffer.append("Request URI:  ").append(requestURI).append("\n");
-    buffer.append("Resource:     ").append(resource).append("\n");
-    buffer.append("Query String: ").append(queryString).append("\n");
+    buffer.append("--- Request Start ---\n");
+    buffer.append("Request URI:  ").append(requestURI).append('\n');
+    buffer.append("Resource:     ").append(resource).append('\n');
+    buffer.append("Query String: ").append(queryString).append('\n');
     buffer.append("Hearders: (" + headers.size() + ")\n");
     addMap(headers, buffer);
     buffer.append("Form Inputs: (" + inputs.size() + ")\n");
     addMap(inputs, buffer);
-    buffer.append("Entity Body: ").append("\n");
-    buffer.append(entityBody).append("\n");
+    buffer.append("Entity Body: \n");
+    buffer.append(entityBody).append('\n');
     buffer.append("--- End Request ---\n");
 
     return buffer.toString();
   }
 
-  private void addMap(HashMap<String, Object> map, StringBuffer buffer) {
-    if (map.size() == 0) {
+  private void addMap(Map<String, Object> map, StringBuffer buffer) {
+    if (map.isEmpty()) {
       buffer.append("\tempty");
     }
-    for (Iterator<String> iterator = map.keySet().iterator(); iterator
-    .hasNext();) {
-      String key = iterator.next();
-      String value = map.get(key) != null ? escape(map.get(key).toString())
-          : null;
-      buffer.append("\t" + escape(key) + " \t-->\t " + value + "\n");
+    for (Entry<String, Object> entry: map.entrySet()) {
+      String value = entry.getValue() == null ? null : escape(entry.getValue().toString());
+      buffer.append("\t" + escape(entry.getKey()) + " \t-->\t " + value + "\n");
     }
   }
 
@@ -282,13 +280,11 @@ public class Request {
   }
 
   public static String decodeContent(String content) {
-    String escapedContent = null;
     try {
-      escapedContent = URLDecoder.decode(content, "UTF-8");
+      return URLDecoder.decode(content, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      escapedContent = "URLDecoder Error";
+      return "URLDecoder Error";
     }
-    return escapedContent;
   }
 
   public boolean hasBeenParsed() {
