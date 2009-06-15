@@ -35,8 +35,7 @@ public class FitNesseContext {
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
   private VelocityEngine velocityEngine;
-  public boolean shouldCollectHistory = false;
-//  public Ruby rubyRuntime;
+  public String testResultsDirectoryName = "testResults";
 
   public FitNesseContext() {
     this(null);
@@ -45,13 +44,6 @@ public class FitNesseContext {
   public FitNesseContext(WikiPage root) {
     this.root = root;
   }
-//
-//  public Ruby getRubyRuntime() {
-//    if (rubyRuntime == null) {
-//      rubyRuntime = JavaEmbedUtils.initialize(Collections.EMPTY_LIST);
-//    }
-//    return rubyRuntime;
-//  }
 
   public VelocityEngine getVelocityEngine() {
     if (velocityEngine == null) {
@@ -88,7 +80,7 @@ public class FitNesseContext {
   }
 
   public File getTestHistoryDirectory() {
-    return new File(String.format("%s/files/testResults", rootPagePath));
+    return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
   }
 
   public void setRootPagePath() {

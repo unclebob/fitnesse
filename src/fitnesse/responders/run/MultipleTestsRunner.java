@@ -32,7 +32,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private TestSystem currentTestSystem = null;
   private boolean isStopped = false;
   private String stopId = null;
-  
+
   private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
     private static final long serialVersionUID = 1L;
   }
@@ -228,7 +228,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.processTestOutput(output);
   }
 
-  public void acceptResultsLast(TestSummary testSummary) throws Exception {
+  public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
 
     resultsListener.processTestResults(testPage, testSummary);

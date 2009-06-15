@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 public interface TestSystemListener {
   public void acceptOutputFirst(String output) throws Exception;
 
-  public void acceptResultsLast(TestSummary testSummary) throws Exception;
+  public void testComplete(TestSummary testSummary) throws Exception;
 
   public void exceptionOccurred(Throwable e);
 }

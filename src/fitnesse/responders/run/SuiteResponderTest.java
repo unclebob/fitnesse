@@ -360,8 +360,7 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void normalSuiteRunProducesTestResultFile() throws Exception {
-    context.shouldCollectHistory = true;
+  public void normalSuiteRunProducesSuiteResultFile() throws Exception {
     TestSummary counts = new TestSummary(2,0,0,0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",

@@ -48,7 +48,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     outputs.add(output);
   }
 
-  public void acceptResultsLast(TestSummary testSummary) {
+  public void testComplete(TestSummary testSummary) {
     this.counts.add(testSummary);
   }
 

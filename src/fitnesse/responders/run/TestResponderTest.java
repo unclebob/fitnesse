@@ -239,7 +239,6 @@ public class TestResponderTest {
 
   @Test
   public void slimXmlFormat() throws Exception {
-    context.shouldCollectHistory = true;
     request.addInput("format", "xml");
     ensureXmlResultFileDoesNotExist(new TestSummary(2,1,0,0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
@@ -458,7 +457,6 @@ public class TestResponderTest {
 
   @Test
   public void checkHistoryForSimpleSlimTable() throws Exception {
-    context.shouldCollectHistory = true;
     ensureXmlResultFileDoesNotExist(new TestSummary(2,0,0,0));
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();

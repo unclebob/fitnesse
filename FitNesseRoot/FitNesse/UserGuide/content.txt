@@ -45,7 +45,7 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |[[Debuging Fixture Code][>DebugingFixtureCode]]|''How to debug the testing code''|
 
 !2 FitNesse Plugins
-There are several plugins for FitNesse that are avaiable at the following URL: http://www.fitnesse.org/PluginsPage
+There are several plugins for FitNesse that are avaiable at the following URL: http://www.fitnesse.org/FrontPage.PluginsPage
 |[[Source Code Control][>SourceCodeControl]]|''How to create a plugin for marrying !-FitNesse-! to your SCM system.''|
 |[[git plugin][>SourceCodeControl.GitPlugin]]|''This plugin ships with FitNesse.''|
 

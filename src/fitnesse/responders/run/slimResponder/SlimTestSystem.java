@@ -4,7 +4,6 @@ package fitnesse.responders.run.slimResponder;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -202,6 +201,13 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
+    initializeTest();
+    String html = processAllTablesOnPage(pageData);
+    testComplete(testSummary);
+    return html;
+  }
+
+  private void initializeTest() {
     symbols.clear();
     scenarios.clear();
     testSummary.clear();
@@ -209,16 +215,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     allInstructionResults.clear();
     allInstructions.clear();
     allTables.clear();
-    String html = processAllTablesOnPage(pageData);
-    acceptResultsLast(testSummary);
-    return html;
+    exceptions.resetForNewTest();
   }
 
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable) throws Exception;
 
   String processAllTablesOnPage(PageData pageData) throws Exception {
-    
-    exceptions.resetForNewTest();
     tableScanner = scanTheTables(pageData);
     allTables = createSlimTables(tableScanner);
     testResults = pageData;

@@ -21,9 +21,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
                            final HtmlPageFactory pageFactory) throws Exception {
     super(context, page);
     this.pageFactory = pageFactory;
-    if (context.shouldCollectHistory) {
-      xmlFormatter = makeXmlFormatter(context, page);
-    }
+    xmlFormatter = makeXmlFormatter(context, page);
   }
 
   protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {

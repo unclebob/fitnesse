@@ -13,7 +13,10 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +64,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     addCountsToResult(testSummary);
     currentResult.relativePageName = relativeTestName;
     currentResult.tags = page.getData().getAttribute(PageData.PropertySUITES);
-    
+
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
       new SlimTestXmlFormatter(currentResult, slimSystem).invoke();
@@ -98,18 +101,14 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   private void makeFileWriter() throws Exception {
-    if (context.shouldCollectHistory) {
-      File resultPath = new File(String.format("%s/%s/%s",
-        context.getTestHistoryDirectory(),
-        page.getPageCrawler().getFullPath(page).toString(),
-        makeResultFileName(getFinalSummary())));
-      File resultDirectory = new File(resultPath.getParent());
-      resultDirectory.mkdirs();
-      File resultFile = new File(resultDirectory, resultPath.getName());
-      fileWriter = new FileWriter(resultFile);
-    } else {
-      fileWriter = null;
-    }
+    File resultPath = new File(String.format("%s/%s/%s",
+      context.getTestHistoryDirectory(),
+      page.getPageCrawler().getFullPath(page).toString(),
+      makeResultFileName(getFinalSummary())));
+    File resultDirectory = new File(resultPath.getParent());
+    resultDirectory.mkdirs();
+    File resultFile = new File(resultDirectory, resultPath.getName());
+    fileWriter = new FileWriter(resultFile);
   }
 
   protected TestSummary getFinalSummary() {
