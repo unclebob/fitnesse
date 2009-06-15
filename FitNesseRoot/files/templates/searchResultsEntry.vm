@@ -1,0 +1,18 @@
+<tr class="resultsRow$resultsRow">
+	<td>
+		#if($result.getData().hasAttribute("Suite"))<a href="$result.getPageCrawler().getRelativeName($page, $result)?suite">
+			<label>Suite</label>
+		</a>#end
+		#if($result.getData().hasAttribute("Test"))<a href="$result.getPageCrawler().getRelativeName($page, $result)?test">
+			<label>Test</label>
+		</a>#end
+	</td>
+	<td>
+		<a href="$result.getPageCrawler().getFullPath($result).toString()">$result.getPageCrawler().getFullPath($result).toString()</a>
+	</td>
+	<td style="text-align: right;">
+		#set ( $tags = $result.getData().getAttribute("Suites") )
+		<label>#if ($tags && !$tags.equals("null"))$tags#end</label>
+	</td>
+	<td>$result.getData().getProperties().getLastModificationTime()</td>
+</tr>

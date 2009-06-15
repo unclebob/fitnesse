@@ -38,17 +38,17 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                             final FitNesseContext fitNesseContext,
-                             final WikiPage page,
-                             final ResultsListener resultsListener) {
+      final FitNesseContext fitNesseContext,
+      final WikiPage page,
+      final ResultsListener resultsListener) {
     this.testPagesToRun = testPagesToRun;
     this.resultsListener = resultsListener;
     this.page = page;
     this.fitNesseContext = fitNesseContext;
   }
-  
+
   public void setDebug(boolean isDebug) {
-    this.isRemoteDebug = isDebug;
+    isRemoteDebug = isDebug;
   }
 
   public void setFastTest(boolean isFastTest) {
@@ -65,7 +65,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       exceptionOccurred(exception);
     }
   }
-  
+
   private void internalExecuteTestPages() throws Exception {
     synchronized (this) {
       testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
@@ -83,7 +83,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
-                                        PagesByTestSystem pagesByTestSystem) throws Exception {
+      PagesByTestSystem pagesByTestSystem) throws Exception {
     List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
 
     startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
@@ -174,8 +174,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void appendSuiteTearDownToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
     if (SuiteContentsFinder.SUITE_TEARDOWN_NAME.equals(page.getName())) {
-      for (Descriptor descriptor : pagesByTestSystem.keySet()) {
-        List<WikiPage> pagesForTestSystem = pagesByTestSystem.get(descriptor);
+      for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values()) {
         pagesForTestSystem.add(page);
       }
     }
@@ -183,8 +182,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void prependSuiteSetupToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
     if ((SuiteContentsFinder.SUITE_SETUP_NAME.equals(page.getName()))) {
-      for (Descriptor descriptor : pagesByTestSystem.keySet()) {
-        List<WikiPage> pagesForTestSystem = pagesByTestSystem.get(descriptor);
+      for (List<WikiPage> pagesForTestSystem : pagesByTestSystem.values()) {
         pagesForTestSystem.add(0, page);
       }
     }
@@ -213,7 +211,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
-    throws Exception {
+  throws Exception {
     List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
     classPathElements.addAll(pathElements);
   }

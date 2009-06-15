@@ -7,8 +7,8 @@ public class TitleWikiPageFinder extends WikiPageFinder {
   private String searchString;
 
   public TitleWikiPageFinder(String searchString, SearchObserver observer) {
+    super(observer);
     this.searchString = searchString.toLowerCase();
-    this.observer = observer;
   }
 
   @Override

@@ -21,7 +21,7 @@ Since no page, not even !-PageAbc-! contains that content, no results will be re
 |Response Examiner.|
 |type  |pattern|matches?|
 |contents|!->PageAbc<-!|false|
-|contents|Found 0 results for your search|true|
+|contents|No pages matched your search criteria.|true|
 
 Now search for ABC.
 |Response Requester.|

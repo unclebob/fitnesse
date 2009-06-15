@@ -10,7 +10,8 @@ import util.RegexTestCase;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -52,23 +53,26 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     request.addInput(PAGE_TYPE, "Test");
 
     String content = invokeResponder(request);
+    String[] titles = { "Page", "Test", "PageOne"};
 
-    assertOutputHasHeaderRowWithTitles(content, "Page", "Test");
-    assertOutputHasRowWithLabels(content, "PageOne");
+    assertOutputHasRowWithLink(content, titles);
 
     request.addInput("Suites", "filter1");
 
     content = invokeResponder(request);
 
-    assertHasRegexp("Number of pages.*: 1", content);
-    assertOutputHasHeaderRowWithTitles(content, "Page", "Test", "Tags");
-    assertOutputHasRowWithLabels(content, "PageOne", "filter1,filter2");
+    assertHasRegexp("Found 1 result for your search", content);
+    String[] titles1 = { "Page", "Test", "Tags", "PageOne" };
+    assertOutputHasRowWithLink(content, titles1);
+    assertOutputHasRowWithLabels("filter1,filter2");
   }
 
   private String invokeResponder(MockRequest request) throws Exception {
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(
-        new FitNesseContext(root), request);
-    return response.getContent();
+    Response response = responder.makeResponse(new FitNesseContext(root),
+        request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    return sender.sentData();
   }
 
   private MockRequest setupRequest() throws Exception {
@@ -87,10 +91,9 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     return request;
   }
 
-  private void assertOutputHasHeaderRowWithTitles(String content,
-      String... titles) {
+  private void assertOutputHasRowWithLink(String content, String... titles) {
     for (String title : titles) {
-      assertOutputHasRow(content, title, "strong");
+      assertOutputHasRow(content, title, "a href.*");
     }
   }
 
@@ -102,7 +105,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   private void assertOutputHasRow(String content, String title, String tagName) {
     assertHasRegexp("<table.*<tr.*<td.*<" + tagName + ">" + title + "</"
-        + tagName + ">", content);
+        + tagName.split(" ")[0] + ">", content);
   }
 
   public void testGetPageTypesFromInput() {
@@ -115,7 +118,8 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private void assertPageTypesMatch(String... pageTypes) {
     MockRequest request = new MockRequest();
     List<String> types = Arrays.asList(pageTypes);
-    request.addInput(SearchFormResponder.PAGE_TYPE, StringUtil.join(types, ","));
+    request
+    .addInput(SearchFormResponder.PAGE_TYPE, StringUtil.join(types, ","));
     assertEquals(types, responder.getPageTypesFromInput(request));
   }
 
@@ -172,17 +176,18 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     request.addInput(PAGE_TYPE, "Test,Suite");
 
     String content = invokeResponder(request);
+    String[] titles = { "Page", "Test", "PageOne" };
 
-    assertOutputHasHeaderRowWithTitles(content, "Page", "Test");
-    assertOutputHasRowWithLabels(content, "PageOne");
+    assertOutputHasRowWithLink(content, titles);
 
     request.addInput("Suites", "filter1");
 
     content = invokeResponder(request);
 
-    assertHasRegexp("Number of pages.*: 1", content);
-    assertOutputHasHeaderRowWithTitles(content, "Page", "Test", "Tags");
-    assertOutputHasRowWithLabels(content, "PageOne", "filter1,filter2");
+    assertHasRegexp("Found 1 result for your search", content);
+    String[] titles1 = { "Page", "Test", "Tags", "PageOne" };
+    assertOutputHasRowWithLink(content, titles1);
+    assertOutputHasRowWithLabels(content, "filter1,filter2");
   }
 
   public void testPageMatchesWithObsoletePages() throws Exception {
@@ -190,9 +195,9 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     request.addInput(PAGE_TYPE, "Test,Suite");
 
     String content = invokeResponder(request);
+    String[] titles = { "Page", "Test", "ObsoletePage" };
 
-    assertOutputHasHeaderRowWithTitles(content, "Page", "Test");
-    assertOutputHasRowWithLabels(content, "ObsoletePage");
+    assertOutputHasRowWithLink(content, titles);
 
     request.addInput("ExcludeObsolete", "on");
 

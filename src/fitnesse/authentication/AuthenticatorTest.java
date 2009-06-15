@@ -31,6 +31,10 @@ public class AuthenticatorTest extends TestCase {
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
       return null;
     }
+
+    protected void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved, String newParentName)
+        throws Exception {
+    }
   }
   
 

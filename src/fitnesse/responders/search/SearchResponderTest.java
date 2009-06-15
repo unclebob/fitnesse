@@ -50,17 +50,17 @@ public class SearchResponderTest extends RegexTestCase {
 
   public void testPageSortLink() throws Exception {
     String content = getResponseContentUsingSearchString("something");
-    assertSubString("<a href=\"javascript:void(tableSorter.sort(0));\">Page</a>", content);
+    assertSubString("<a href=\"javascript:void(tableSorter.sort(1));\">Page</a>", content);
   }
 
   public void testLastModifiedSortLink() throws Exception {
     String content = getResponseContentUsingSearchString("something");
-    assertSubString("<a href=\"javascript:void(tableSorter.sort(1, 'date'));\">LastModified</a>", content);
+    assertSubString("<a href=\"javascript:void(tableSorter.sort(3, 'date'));\">LastModified</a>", content);
   }
 
   public void testNoSearchStringBringsUpNoResults() throws Exception {
     String content = getResponseContentUsingSearchString("");
-    assertSubString("Found 0 results for your search.", content);
+    assertSubString("No pages matched your search criteria.", content);
   }
 
   public void testEscapesSearchString() throws Exception {

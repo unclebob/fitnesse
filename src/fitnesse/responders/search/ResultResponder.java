@@ -2,137 +2,101 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import java.io.StringWriter;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SearchObserver;
-import fitnesse.html.ChunkedResultsListingUtil;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-public abstract class ResultResponder extends ChunkingResponder implements SearchObserver, SecureResponder {
-  private int hits = 0;
+public abstract class ResultResponder extends ChunkingResponder implements
+SearchObserver, SecureResponder {
+  private int hits;
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
   }
 
   protected void doSending() throws Exception {
-    HtmlPage html = context.htmlPageFactory.newPage();
-    String renderedPath = getRenderedPath();
-    html.title.use(getTitle() + ": " + renderedPath);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(renderedPath, getTitle()));
-    html.main.use(HtmlPage.BreakPoint);
-    html.divide();
+    response.add(createSearchResultsHeader());
 
-    response.add(html.preDivision);
-    response.add(buildClientSideSortScriptTag().html());
-    response.add(buildFeedbackDiv().html());
-    response.add(getTableOpen());
-    response.add(buildHeaderRow().html());
-    response.add(getTbodyOpen());
     startSearching();
-    response.add(getTbodyClose());
-    response.add(getTableClose());
-    response.add(buildTableSorterScript().html());
-    response.add(buildFeedbackModificationScript().html());
-    response.add(html.postDivision);
+
+    response.add(createSearchResultsFooter());
     response.closeAll();
   }
 
-  private String getTbodyClose() {
-    return "</tbody>";
+  private String createSearchResultsFooter() throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+
+    StringWriter writer = new StringWriter();
+
+    Template template = context.getVelocityEngine().getTemplate(
+    "searchResultsFooter.vm");
+
+    velocityContext.put("hits", hits);
+    velocityContext.put("request", request);
+    velocityContext.put("searchedRootPage", page);
+
+    template.merge(velocityContext, writer);
+
+    return writer.toString();
   }
 
-  private String getTbodyOpen() {
-    return "<tbody>";
-  }
+  private String createSearchResultsHeader() throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
 
-  private HtmlTag buildClientSideSortScriptTag() {
-    HtmlTag tag = new HtmlTag("script");
-    tag.addAttribute("src", "/files/javascript/clientSideSort.js");
-    tag.add(" ");
-    return tag;
-  }
+    StringWriter writer = new StringWriter();
 
-  private String getTableClose() {
-    return ChunkedResultsListingUtil.getTableCloseHtml();
-  }
+    Template template = context.getVelocityEngine().getTemplate(
+    "searchResultsHeader.vm");
 
-  private String getTableOpen() {
-    return ChunkedResultsListingUtil.getTableOpenHtml("searchResultsTable");
-  }
+    velocityContext.put("page_title", getTitle());
+    velocityContext.put("pageTitle", new PageTitle(getTitle()) {
+      public String getTitle() {
+        return "search";
+      }
 
-  private HtmlTag buildFeedbackModificationScript() throws Exception {
-    HtmlTag script = new HtmlTag("script");
-    script.addAttribute("language", "javascript");
-    script.add("document.getElementById(\"feedback\").innerHTML = '" + getPageFooterInfo(hits) + "'");
-    return script;
-  }
+      public String getLink() {
+        return "search";
+      }
+    });
 
-  private HtmlTag buildTableSorterScript() throws Exception {
-    HtmlTag script = new HtmlTag("script");
-    script.addAttribute("language", "javascript");
-    script.add("tableSorter = new TableSorter('searchResultsTable', new DateParser(" + getDateFormatJavascriptRegex() + ",8,2,3,4,5,6));");
-    return script;
+    template.merge(velocityContext, writer);
+
+    return writer.toString();
   }
 
   public static String getDateFormatJavascriptRegex() {
     return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
   }
 
-  private HtmlTag buildHeaderRow() {
-    HtmlTag thead = new HtmlTag("thead");
-    HtmlTag headerRow = new HtmlTag("tr");
-    headerRow.add(buildPageColumnHeader());
-    headerRow.add(buildLastModifiedColumnHeader());
-    thead.add(headerRow);
-    return thead;
-  }
-
-  private HtmlTag buildLastModifiedColumnHeader() {
-    HtmlTag lastModifiedColumnHeader = new HtmlTag("td", buildSortLink("LastModified", "1, 'date'"));
-    lastModifiedColumnHeader.addAttribute("class", "resultsHeader");
-    return lastModifiedColumnHeader;
-  }
-
-  private HtmlTag buildPageColumnHeader() {
-    HtmlTag pageColumnHeader = new HtmlTag("td", buildSortLink("Page", "0"));
-    pageColumnHeader.addAttribute("class", "resultsHeader");
-    return pageColumnHeader;
-  }
-
-  private HtmlTag buildSortLink(String text, String args) {
-    HtmlTag link = new HtmlTag("a");
-    link.addAttribute("href", "javascript:void(tableSorter.sort(" + args + "));");
-    link.add(text);
-    return link;
-  }
-
-  private HtmlTag buildFeedbackDiv() {
-    HtmlTag feedback = new HtmlTag("div", "Searching...");
-    feedback.addAttribute("id", "feedback");
-    return feedback;
-  }
-
   public void hit(WikiPage page) throws Exception {
     hits++;
-    String fullPathName = PathParser.render(getPageCrawler().getFullPath(page));
+    response.add(createSearchResultsEntry(page));
+  }
 
-    HtmlTag row = new HtmlTag("tr");
-    row.addAttribute("class", "resultsRow" + getRow());
+  private String createSearchResultsEntry(WikiPage result) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
 
-    HtmlTag link = new HtmlTag("a", fullPathName);
-    link.addAttribute("href", fullPathName);
+    StringWriter writer = new StringWriter();
 
-    row.add(new HtmlTag("td", link));
-    row.add(new HtmlTag("td", "" + page.getData().getProperties().getLastModificationTime()));
-    response.add(row.html());
+    Template template = context.getVelocityEngine().getTemplate(
+    "searchResultsEntry.vm");
+
+    velocityContext.put("resultsRow", getRow());
+    velocityContext.put("result", result);
+
+    template.merge(velocityContext, writer);
+
+    return writer.toString();
   }
 
   private int nextRow = 0;
@@ -145,10 +109,11 @@ public abstract class ResultResponder extends ChunkingResponder implements Searc
 
   protected abstract String getPageFooterInfo(int hits) throws Exception;
 
-  protected abstract void startSearching() throws Exception;
+  protected void startSearching() throws Exception {
+    hits = 0;
+  }
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
 }
-

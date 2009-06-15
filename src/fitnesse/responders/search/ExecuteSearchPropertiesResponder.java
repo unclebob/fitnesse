@@ -5,107 +5,22 @@ import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SETUP;
 import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_TEARDOWN;
 import static fitnesse.responders.search.SearchFormResponder.IGNORED;
 
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.components.AttributeWikiPageFinder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlUtil;
+import fitnesse.components.PageFinder;
 import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.editing.PropertiesResponder;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
-public class ExecuteSearchPropertiesResponder implements SecureResponder {
-
-  public ExecuteSearchPropertiesResponder() {
-  }
+public class ExecuteSearchPropertiesResponder extends ResultResponder {
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
-  }
-
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    WikiPage page = getWikiPageFromContext(context, request.getResource());
-
-    if (page == null)
-      return new NotFoundResponder().makeResponse(context, request);
-
-    String html = makeHtml(context, request, page);
-
-    response.setContent(html);
-    response.setMaxAge(0);
-
-    return response;
-  }
-
-  private WikiPage getWikiPageFromContext(FitNesseContext context,
-      String resource) throws Exception {
-    WikiPagePath path = PathParser.parse(resource);
-    PageCrawler crawler = context.root.getPageCrawler();
-    if (!crawler.pageExists(context.root, path)) {
-      crawler.setDeadEndStrategy(new MockingPageCrawler());
-    }
-
-    WikiPage page = crawler.getPage(context.root, path);
-    return page;
-  }
-
-  private String makeHtml(FitNesseContext context, Request request,
-      WikiPage page) throws Exception {
-
-    List<String> pageTypes = getPageTypesFromInput(request);
-    Map<String, Boolean> attributes = getAttributesFromInput(request);
-    String[] suites = getSuitesFromInput(request);
-    boolean excludeSetUp = getExcludeSetUpFromInput(request);
-    boolean excludeTearDown = getExcludeTearDownFromInput(request);
-
-    if (pageTypes == null && attributes.isEmpty() && suites == null) {
-      HtmlPage resultsPage = context.htmlPageFactory.newPage();
-      resultsPage.title.use("Search Page Properties: " + request);
-      resultsPage.header.use(HtmlUtil.makeBreadCrumbsWithPageType(request
-          .getResource(), "Search Page Properties Results"));
-      resultsPage.main.add("No search properties were specified.");
-      return resultsPage.html();
-    }
-
-    List<WikiPage> pages = new AttributeWikiPageFinder(pageTypes, attributes, suites, excludeSetUp, excludeTearDown).search(page);
-
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = context.getVelocityEngine().getTemplate(
-    "searchResults.vm");
-
-    velocityContext.put("pageTitle", new PageTitle(
-    "Search Page Properties Results"));
-    velocityContext.put("searchResults", pages);
-    velocityContext.put("searchedRootPage", page);
-    velocityContext.put("request", request);
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
   }
 
   protected List<String> getPageTypesFromInput(Request request) {
@@ -180,6 +95,35 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
   private boolean requestHasInputChecked(Request request, String checkBox) {
     return "on".equals(request.getInput(checkBox));
+  }
+
+  @Override
+  protected String getPageFooterInfo(int hits) throws Exception {
+    return "Found " + hits + " results for your search.";
+  }
+
+  @Override
+  protected String getTitle() throws Exception {
+    return "Search Page Properties Results";
+  }
+
+  @Override
+  protected void startSearching() throws Exception {
+    super.startSearching();
+    List<String> pageTypes = getPageTypesFromInput(request);
+    Map<String, Boolean> attributes = getAttributesFromInput(request);
+    String[] suites = getSuitesFromInput(request);
+    boolean excludeSetUp = getExcludeSetUpFromInput(request);
+    boolean excludeTearDown = getExcludeTearDownFromInput(request);
+
+    if (pageTypes == null && attributes.isEmpty() && suites == null) {
+      response.add("No search properties were specified.");
+      return;
+    }
+
+    PageFinder finder = new AttributeWikiPageFinder(this, pageTypes,
+        attributes, suites, excludeSetUp, excludeTearDown);
+    finder.search(page);
   }
 
 }

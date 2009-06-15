@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
@@ -42,11 +42,12 @@ public class PropertiesToXmlUpdate extends PageTraversingUpdate {
     File newPropsFile = new File(path + FileSystemPage.propertiesFilename);
     WikiPageProperties newProps = new WikiPageProperties();
 
-    for (Iterator<?> iterator = oldProps.keySet().iterator(); iterator.hasNext();) {
-      String key = (String) iterator.next();
-      String value = (String) oldProps.get(key);
-      if (!"false".equals(value))
+    for (Entry<Object, Object> entry: oldProps.entrySet()) {
+      String key = (String) entry.getKey();
+      String value = (String) entry.getValue();
+      if (!"false".equals(value)) {
         newProps.set(key, value);
+      }
     }
 
     FileOutputStream os = null;
