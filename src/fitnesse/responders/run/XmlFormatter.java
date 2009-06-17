@@ -12,6 +12,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -37,19 +38,19 @@ public abstract class XmlFormatter extends BaseFormatter {
     super(context, page);
   }
 
-  public void announceStartNewTest(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test) throws Exception {
     appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
 
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
     this.testSystem = testSystem;
   }
 
-  public void processTestOutput(String output) throws Exception {
+  public void testOutputChunk(String output) throws Exception {
     appendHtmlToBuffer(output);
   }
 
-  public void processTestResults(WikiPage test, TestSummary testSummary)
+  public void testComplete(WikiPage test, TestSummary testSummary)
     throws Exception {
     processTestResults(test.getName(), testSummary);
   }
@@ -94,8 +95,11 @@ public abstract class XmlFormatter extends BaseFormatter {
     makeFileWriter();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
+
+    VelocityEngine engine = context.getVelocityEngine();
+    Template template = engine.getTemplate("testResults.vm");
     template.merge(velocityContext, getWriter());
+
     if (fileWriter != null)
       fileWriter.close();
   }

@@ -95,7 +95,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       if (!isStopped) {
         currentTestSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
         testSystem = currentTestSystem;
-        resultsListener.announceStartTestSystem(testSystem, descriptor.testSystemName, descriptor.testRunner);
+        resultsListener.testSystemStarted(testSystem, descriptor.testSystemName, descriptor.testRunner);
       }
     }
     if (testSystem != null) {
@@ -221,15 +221,15 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
       currentTest = firstInQueue;
-      resultsListener.announceStartNewTest(currentTest);
+      resultsListener.newTestStarted(currentTest);
     }
-    resultsListener.processTestOutput(output);
+    resultsListener.testOutputChunk(output);
   }
 
   public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
 
-    resultsListener.processTestResults(testPage, testSummary);
+    resultsListener.testComplete(testPage, testSummary);
   }
 
   public synchronized void exceptionOccurred(Throwable e) {

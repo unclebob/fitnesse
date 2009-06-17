@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.StartingAndStoppingFitNesse||04:42:05 Mon, Jun 15, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestTitleSearch||22:57:31 Mon, Jun 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestContentSearch||22:53:19 Mon, Jun 08, 2009|
 |JunkParent.CslimTest.TestList||15:52:20 Thu, Jun 04, 2009|
@@ -50,7 +51,6 @@
 |FitNesse.UserGuide.SecurityDescription.SpnegoAuthentication||14:04:04 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription||13:58:07 Wed, May 13, 2009|
 |FitNesse.UserGuide.TestHistory||13:46:17 Wed, May 13, 2009|
-|FitNesse.UserGuide.StartingAndStoppingFitNesse||13:31:14 Wed, May 13, 2009|
 |FitNesse.UserGuide||13:30:14 Wed, May 13, 2009|
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:31 Wed, May 13, 2009|
 |JunkParent.StopTestTest||09:49:09 Wed, May 13, 2009|

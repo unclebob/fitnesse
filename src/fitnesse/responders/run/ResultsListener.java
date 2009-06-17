@@ -10,13 +10,13 @@ public interface ResultsListener {
 
   public void announceNumberTestsToRun(int testsToRun);
 
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception;
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception;
 
-  public void announceStartNewTest(WikiPage test) throws Exception;
+  public void newTestStarted(WikiPage test) throws Exception;
 
-  public void processTestOutput(String output) throws Exception;
+  public void testOutputChunk(String output) throws Exception;
 
-  public void processTestResults(WikiPage test, TestSummary testSummary) throws Exception;
+  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception;
   
   public void errorOccured();
 }

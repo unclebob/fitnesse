@@ -15,12 +15,17 @@ import java.util.List;
 public class TestResponder extends ChunkingResponder implements SecureResponder {
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected PageData data;
-  protected BaseFormatter formatter;
+  protected CompositeFormatter formatter;
   private boolean isClosed = false;
 
   private boolean fastTest = false;
   private boolean remoteDebug = false;
   protected TestSystem testSystem;
+
+  public TestResponder() {
+    super();
+    formatter = new CompositeFormatter();
+  }
 
   protected void doSending() throws Exception {
     fastTest |= request.hasInput("debug");
@@ -38,9 +43,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected void createFormatterAndWriteHead() throws Exception {
     if (response.isXmlFormat()) {
-      formatter = createXmlFormatter();
+      formatter.add(createXmlFormatter());
     } else {
-      formatter = createHtmlFormatter();
+      formatter.add(createHtmlFormatter());
+      formatter.add(createTestHistoryFormatter());
     }
 
     formatter.writeHead(getTitle());
@@ -81,6 +87,21 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return formatter;
   }
 
+    protected XmlFormatter createTestHistoryFormatter() throws Exception {
+    return new XmlFormatter(context, page) {
+      //-------
+      @Override
+      public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+      }
+
+      protected void close() throws Exception {
+      }
+
+      protected void writeData(byte[] byteArray) throws Exception {
+      }
+    };
+  }
+
   protected void sendPreTestNotification() throws Exception {
     for (TestEventListener eventListener : eventListeners) {
       eventListener.notifyPreTest(this, data);
@@ -94,11 +115,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     runner.setFastTest(fastTest);
     runner.setDebug(isRemoteDebug());
 
-    if (page.getData().getContent().length() == 0 && formatter instanceof TestHtmlFormatter) {
-      ((TestHtmlFormatter) formatter).addMessageForBlankHtml();
-    }
+    if (isEmpty(page))
+      formatter.addMessageForBlankHtml();
 
     runner.executeTestPages();
+  }
+
+  private boolean isEmpty(WikiPage page) throws Exception {
+    return page.getData().getContent().length() == 0;
   }
 
   public SecureOperation getSecureOperation() {

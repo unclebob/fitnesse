@@ -28,6 +28,7 @@ import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -364,6 +365,40 @@ public class SuiteResponderTest {
     TestSummary counts = new TestSummary(2,0,0,0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+      context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
+    File xmlResultsFile = new File(resultsFileName);
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+
+    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+    runSuite();
+
+    waitForFileToBeCreated(xmlResultsFile);
+    FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
+    XmlUtil.newDocument(xmlResultsStream);
+    xmlResultsStream.close();
+    xmlResultsFile.delete();
+  }
+
+  private void waitForFileToBeCreated(File xmlResultsFile) throws InterruptedException {
+    for (int i = 0; i < 10; i++) {
+      if (xmlResultsFile.exists()) {
+        Thread.sleep(100);
+        return;
+      }
+      else
+        Thread.sleep(100);
+    }
+    fail("xml results file was never created.");
+  }
+
+  @Ignore
+  @Test
+  public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
+    TestSummary counts = new TestSummary(2,0,0,0);
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/SlimTest/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
 

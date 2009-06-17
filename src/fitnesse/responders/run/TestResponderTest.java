@@ -12,8 +12,8 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import static junit.framework.Assert.assertNotNull;
@@ -26,9 +26,9 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import util.FileUtil;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
-import util.FileUtil;
 import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
@@ -240,7 +240,7 @@ public class TestResponderTest {
   @Test
   public void slimXmlFormat() throws Exception {
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(2,1,0,0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(2, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
@@ -457,11 +457,24 @@ public class TestResponderTest {
 
   @Test
   public void checkHistoryForSimpleSlimTable() throws Exception {
-    ensureXmlResultFileDoesNotExist(new TestSummary(2,0,0,0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(2, 0, 0, 0));
     doSimpleRun(simpleSlimDecisionTable());
+    waitForXmlResultsFileToBeCreated();
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
+  }
+
+  private void waitForXmlResultsFileToBeCreated() throws InterruptedException {
+    for (int i = 0; i < 10; i++) {
+      if (xmlResultsFile.exists()){
+        Thread.sleep(100); // let the write finish.
+        return;
+      }
+      else
+        Thread.sleep(100);
+    }
+    fail("xml results file was never created.");
   }
 
   private String errorWritingTable(String message) {

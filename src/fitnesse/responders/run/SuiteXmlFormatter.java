@@ -27,7 +27,7 @@ public abstract class SuiteXmlFormatter extends XmlFormatter {
   }
   
   @Override
-  public void processTestResults(WikiPage testPage, TestSummary testSummary)
+  public void testComplete(WikiPage testPage, TestSummary testSummary)
       throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
@@ -37,7 +37,6 @@ public abstract class SuiteXmlFormatter extends XmlFormatter {
 
     xmlPageCounts.tallyPageCounts(testSummary);
   }
-  
 
 
 }
