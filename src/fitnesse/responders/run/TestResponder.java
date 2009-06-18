@@ -9,6 +9,10 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,11 +46,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void createFormatterAndWriteHead() throws Exception {
-    if (response.isXmlFormat()) {
+    if (response.isXmlFormat()) {    //todo temporal coupling.  HistoryFormatter must be first.   Yuk..
+      formatter.add(createTestHistoryFormatter());
       formatter.add(createXmlFormatter());
     } else {
-      formatter.add(createHtmlFormatter());
       formatter.add(createTestHistoryFormatter());
+      formatter.add(createHtmlFormatter());
     }
 
     formatter.writeHead(getTitle());
@@ -87,9 +92,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return formatter;
   }
 
-    protected XmlFormatter createTestHistoryFormatter() throws Exception {
+  protected XmlFormatter createTestHistoryFormatter() throws Exception {
     return new XmlFormatter(context, page) {
-      //-------
       @Override
       public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
       }
@@ -99,6 +103,39 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
       protected void writeData(byte[] byteArray) throws Exception {
       }
+
+      protected void writeResults() throws Exception {
+        File resultPath = new File(String.format("%s/%s/%s",
+          context.getTestHistoryDirectory(),
+          page.getPageCrawler().getFullPath(page).toString(),
+          makeResultFileName(getFinalSummary())));
+        File resultDirectory = new File(resultPath.getParent());
+        resultDirectory.mkdirs();
+        File resultFile = new File(resultDirectory, resultPath.getName());
+        final FileWriter fileWriter = new FileWriter(resultFile);
+        Writer writer = new Writer() {
+          public void write(char[] cbuf, int off, int len) {
+            String fragment = new String(cbuf, off, len);
+            try {
+              if (fileWriter != null)
+                fileWriter.append(fragment);
+            } catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          }
+
+          public void flush() throws IOException {
+          }
+
+          public void close() throws IOException {
+          }
+        };
+        writeResults(writer);
+
+        if (fileWriter != null)
+          fileWriter.close();
+      }
+
     };
   }
 
@@ -179,7 +216,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       response.close();
     }
   }
-  
+
   boolean isRemoteDebug() {
     return remoteDebug;
   }

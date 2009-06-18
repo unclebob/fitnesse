@@ -29,7 +29,6 @@ public abstract class XmlFormatter extends BaseFormatter {
   private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
   private TestSystem testSystem;
-  private FileWriter fileWriter;
   private static long testTime;
   protected TestSummary finalSummary = new TestSummary();
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
@@ -91,48 +90,16 @@ public abstract class XmlFormatter extends BaseFormatter {
     }
   }
 
-  private void writeResults() throws Exception {
-    makeFileWriter();
-    VelocityContext velocityContext = new VelocityContext();
-    velocityContext.put("response", testResponse);
-
-    VelocityEngine engine = context.getVelocityEngine();
-    Template template = engine.getTemplate("testResults.vm");
-    template.merge(velocityContext, getWriter());
-
-    if (fileWriter != null)
-      fileWriter.close();
+  protected void writeResults() throws Exception {
+    writeResults(makeResponseWriter());
   }
 
-  private void makeFileWriter() throws Exception {
-    File resultPath = new File(String.format("%s/%s/%s",
-      context.getTestHistoryDirectory(),
-      page.getPageCrawler().getFullPath(page).toString(),
-      makeResultFileName(getFinalSummary())));
-    File resultDirectory = new File(resultPath.getParent());
-    resultDirectory.mkdirs();
-    File resultFile = new File(resultDirectory, resultPath.getName());
-    fileWriter = new FileWriter(resultFile);
-  }
-
-  protected TestSummary getFinalSummary() {
-    return finalSummary;
-  }
-
-  public static String makeResultFileName(TestSummary summary) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-    String datePart = format.format(new Date(getTime()));
-    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
-  }
-
-  private Writer getWriter() {
-    Writer writer = new Writer() {
+  private Writer makeResponseWriter() {
+    return new Writer() {
       public void write(char[] cbuf, int off, int len) {
         String fragment = new String(cbuf, off, len);
         try {
           writeData(fragment.getBytes());
-          if (fileWriter != null)
-            fileWriter.append(fragment);
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
@@ -144,7 +111,25 @@ public abstract class XmlFormatter extends BaseFormatter {
       public void close() throws IOException {
       }
     };
-    return writer;
+  }
+
+  protected void writeResults(Writer writer) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("response", testResponse);
+
+    VelocityEngine engine = context.getVelocityEngine();
+    Template template = engine.getTemplate("testResults.vm");
+    template.merge(velocityContext, writer);
+  }
+
+  protected TestSummary getFinalSummary() {
+    return finalSummary;
+  }
+
+  public static String makeResultFileName(TestSummary summary) {
+    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
+    String datePart = format.format(new Date(getTime()));
+    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
 
   protected abstract void writeData(byte[] byteArray) throws Exception;
