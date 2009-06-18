@@ -17,6 +17,7 @@ import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
+import fitnesse.responders.testHistory.PurgeHistoryResponder;
 import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
@@ -321,5 +322,10 @@ public class ResponderFactoryTest {
   @Test
   public void testAddChildPageResponder() throws Exception {
     assertResponderTypeMatchesInput("addChild", AddChildPageResponder.class);
+  }
+
+  @Test
+  public void testPurgeHistoryResponder() throws Exception {
+    assertResponderTypeMatchesInput("purgeHistory", PurgeHistoryResponder.class);
   }
 }

@@ -5,18 +5,18 @@ import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.XmlFormatter;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PageHistoryResponder implements Responder {
@@ -100,5 +100,6 @@ public class PageHistoryResponder implements Responder {
   public void setResultsDirectory(File resultsDirectory) {
     this.resultsDirectory = resultsDirectory;
   }
+
 
 }

@@ -2,10 +2,10 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
