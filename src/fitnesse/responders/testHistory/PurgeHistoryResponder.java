@@ -6,10 +6,9 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.XmlFormatter;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.responders.ErrorResponder;
+import org.apache.velocity.VelocityContext;
 import util.FileUtil;
 
 import java.io.File;
@@ -19,9 +18,6 @@ import java.util.Date;
 
 public class PurgeHistoryResponder implements Responder {
   private File resultsDirectory;
-  private WikiPagePath currentPagePath;
-  private PageCrawler crawler;
-  private WikiPage currentPage;
   private Date todaysDate;
 
 
@@ -29,19 +25,50 @@ public class PurgeHistoryResponder implements Responder {
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
     todaysDate = new Date();
-    
-    if (request.getInput("days") != null) {
-      String daysInput = request.getInput("days").toString();
-      Integer days = new Integer(daysInput);
-      deleteTestHistoryOlderThan(days);
+    if (hasValidInputs(request)) {
+      purgeHistory(request);
+      SimpleResponse response = makeValidResponse(context);
+      return response;
+    } else {
+      Response response = makeErrorResponse(context, request);
+      return response;
     }
-    currentPagePath = PathParser.parse(request.getResource());
-    crawler = context.root.getPageCrawler();
-    currentPage = crawler.getPage(context.root, currentPagePath);
+  }
+
+  private SimpleResponse makeValidResponse(FitNesseContext context) throws Exception {
     SimpleResponse response = new SimpleResponse();
-    WikiPagePath fullPathOfCurrentPage = crawler.getFullPath(currentPage);
-    response.redirect(fullPathOfCurrentPage.toString());
+    TestHistory history = new TestHistory();
+    history.readHistoryDirectory(resultsDirectory);
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("pageTitle", new PageTitle("Test History"));
+    velocityContext.put("testHistory", history);
+    response.setContent(context.translateTemplate(velocityContext, "testHistory.vm"));
     return response;
+  }
+
+  private void purgeHistory(Request request) throws ParseException {
+    Integer days = getDaysInput(request);
+    deleteTestHistoryOlderThan(days);
+  }
+
+  private Integer getDaysInput(Request request) {
+    String daysInput = request.getInput("days").toString();
+    Integer days = new Integer(daysInput);
+    return days;
+  }
+
+  private boolean hasValidInputs(Request request) {
+    if (request.getInput("days") == null)
+      return false;
+    Integer days = getDaysInput(request);
+    if (days < 0)
+      return false;
+    return true;
+
+  }
+
+  private Response makeErrorResponse(FitNesseContext context, Request request) throws Exception {
+    return new ErrorResponder("Invalid Amount Of Days").makeResponse(context, request);
   }
 
   public void setResultsDirectory(File directory) {

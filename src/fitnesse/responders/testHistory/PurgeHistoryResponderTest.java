@@ -2,12 +2,8 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
+import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import junit.framework.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,23 +19,18 @@ public class PurgeHistoryResponderTest {
   private FitNesseContext context;
   private SimpleResponse response;
   private PurgeHistoryResponder responder;
-  private WikiPage root;
   private MockRequest request;
-  private PageCrawler crawler;
 
 
   @Before
   public void setup() throws Exception {
-    root = InMemoryPage.makeRoot("root");
     resultsDirectory = new File("testHistoryDirectory");
     removeResultsDirectory();
     resultsDirectory.mkdir();
-    crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("TestPage"));
     history = new TestHistory();
     responder = new PurgeHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
-    context = new FitNesseContext(root);
+    context = new FitNesseContext();
     request = new MockRequest();
     request.setResource("TestPage");
   }
@@ -64,14 +55,6 @@ public class PurgeHistoryResponderTest {
   private void makeResponse() throws Exception {
      response = (SimpleResponse) responder.makeResponse(context, request);
    }
-
-   @Test
-  public void canGetRedirectResponse() throws Exception {
-    makeResponse();
-    final String body = response.getContent();
-    Assert.assertEquals("", body);
-    Assert.assertEquals(response.getStatus(), 303);
-  }
 
   @Test
   public void shouldBeAbleToGetTheCorrectMinimumDate() throws Exception {
@@ -123,5 +106,14 @@ public class PurgeHistoryResponderTest {
     history.readHistoryDirectory(resultsDirectory);
     pageHistory = history.getPageHistory("SomePage");
     assertEquals(1, pageHistory.size());
+  }
+
+  @Test
+  public void shouldMakeErrorRequestWhenGetsInvalidNumberOfDays() throws Exception {
+    request.addInput("purgeHistory","");
+    request.addInput("days","-42");
+    history.readHistoryDirectory(resultsDirectory);
+    Response response = responder.makeResponse(context,request);
+    assertEquals(response.getStatus(),400);
   }
 }
