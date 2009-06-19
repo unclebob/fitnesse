@@ -12,7 +12,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
-
   private static final String cssSuffix1 = "1";
   private static final String cssSuffix2 = "2";
 
@@ -32,14 +31,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
   public SuiteHtmlFormatter(FitNesseContext context) {
     super(context);
-  }
-
-
-  protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
-    return new SuiteXmlFormatter(page, context) {
-     protected void writeData(byte[] byteArray) throws Exception {
-      }
-    };
   }
 
   public String getTestSystemHeader(String testSystemName) throws Exception {

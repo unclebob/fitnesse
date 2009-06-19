@@ -14,8 +14,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
@@ -24,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public abstract class XmlFormatter extends BaseFormatter {
+public class XmlFormatter extends BaseFormatter {
   protected TestExecutionReport testResponse = new TestExecutionReport();
   private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
@@ -32,9 +30,11 @@ public abstract class XmlFormatter extends BaseFormatter {
   private static long testTime;
   protected TestSummary finalSummary = new TestSummary();
   public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
+  protected Writer writer;
 
-  public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
+  public XmlFormatter(FitNesseContext context, final WikiPage page, Writer writer) throws Exception {
     super(context, page);
+    this.writer = writer;
   }
 
   public void newTestStarted(WikiPage test) throws Exception {
@@ -90,26 +90,7 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   protected void writeResults() throws Exception {
-    writeResults(makeResponseWriter());
-  }
-
-  private Writer makeResponseWriter() {
-    return new Writer() {
-      public void write(char[] cbuf, int off, int len) {
-        String fragment = new String(cbuf, off, len);
-        try {
-          writeData(fragment.getBytes());
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-      }
-
-      public void flush() throws IOException {
-      }
-
-      public void close() throws IOException {
-      }
-    };
+    writeResults(writer);
   }
 
   protected void writeResults(Writer writer) throws Exception {
@@ -119,6 +100,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     VelocityEngine engine = context.getVelocityEngine();
     Template template = engine.getTemplate("testResults.vm");
     template.merge(velocityContext, writer);
+    writer.close();
   }
 
   protected TestSummary getFinalSummary() {
@@ -130,8 +112,6 @@ public abstract class XmlFormatter extends BaseFormatter {
     String datePart = format.format(new Date(getTime()));
     return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
   }
-
-  protected abstract void writeData(byte[] byteArray) throws Exception;
 
   private void addCountsToResult(TestSummary testSummary) {
     currentResult.right = Integer.toString(testSummary.getRight());

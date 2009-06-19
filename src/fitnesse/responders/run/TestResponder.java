@@ -8,6 +8,7 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.FitNesseContext;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -47,7 +48,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void createFormatterAndWriteHead() throws Exception {
-    if (response.isXmlFormat()) {    //todo temporal coupling.  HistoryFormatter must be first.   Yuk..
+    if (response.isXmlFormat()) {
       formatter.add(createXmlFormatter());
       formatter.add(createTestHistoryFormatter());
     } else {
@@ -63,13 +64,26 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter createXmlFormatter() throws Exception {
-    BaseFormatter formatter = new XmlFormatter(context, page) {
-      @Override
-      protected void writeData(byte[] byteArray) throws Exception {
-        response.add(byteArray);
+    return new XmlFormatter(context, page, makeResponseWriter());
+  }
+
+  protected Writer makeResponseWriter() {
+    return new Writer() {
+      public void write(char[] cbuf, int off, int len) {
+        String fragment = new String(cbuf, off, len);
+        try {
+          response.add(fragment.getBytes());
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+
+      public void flush() throws IOException {
+      }
+
+      public void close() throws IOException {
       }
     };
-    return formatter;
   }
 
 
@@ -84,47 +98,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected XmlFormatter createTestHistoryFormatter() throws Exception {
-    return new XmlFormatter(context, page) {
-      @Override
-      public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
-      }
-
-      protected void writeData(byte[] byteArray) throws Exception {
-      }
-
-      protected void writeResults() throws Exception {
-        File resultPath = new File(String.format("%s/%s/%s",
-          context.getTestHistoryDirectory(),
-          page.getPageCrawler().getFullPath(page).toString(),
-          makeResultFileName(getFinalSummary())));
-        File resultDirectory = new File(resultPath.getParent());
-        resultDirectory.mkdirs();
-        File resultFile = new File(resultDirectory, resultPath.getName());
-        final FileWriter fileWriter = new FileWriter(resultFile);
-        Writer writer = new Writer() {
-          public void write(char[] cbuf, int off, int len) {
-            String fragment = new String(cbuf, off, len);
-            try {
-              if (fileWriter != null)
-                fileWriter.append(fragment);
-            } catch (Exception e) {
-              throw new RuntimeException(e);
-            }
-          }
-
-          public void flush() throws IOException {
-          }
-
-          public void close() throws IOException {
-          }
-        };
-        writeResults(writer);
-
-        if (fileWriter != null)
-          fileWriter.close();
-      }
-
-    };
+    return new HistoryXmlFormatter(context, page);
   }
 
   protected void sendPreTestNotification() throws Exception {
@@ -207,5 +181,41 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   boolean isRemoteDebug() {
     return remoteDebug;
+  }
+
+  private class HistoryXmlFormatter extends XmlFormatter {
+    public HistoryXmlFormatter(FitNesseContext context, WikiPage page) throws Exception {
+      super(context, page, null);
+    }
+
+    protected void writeResults() throws Exception {
+      File resultPath = new File(String.format("%s/%s/%s",
+        context.getTestHistoryDirectory(),
+        page.getPageCrawler().getFullPath(page).toString(),
+        makeResultFileName(getFinalSummary())));
+      File resultDirectory = new File(resultPath.getParent());
+      resultDirectory.mkdirs();
+      File resultFile = new File(resultDirectory, resultPath.getName());
+      final FileWriter fileWriter = new FileWriter(resultFile);
+      Writer writer = new Writer() {
+        public void write(char[] cbuf, int off, int len) {
+          String fragment = new String(cbuf, off, len);
+          try {
+            fileWriter.append(fragment);
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        }
+
+        public void flush() throws IOException {
+        }
+
+        public void close() throws IOException {
+        }
+      };
+      writeResults(writer);
+
+      fileWriter.close();
+    }
   }
 }

@@ -4,12 +4,14 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 
-public abstract class SuiteXmlFormatter extends XmlFormatter {
+import java.io.Writer;
+
+public class SuiteXmlFormatter extends XmlFormatter {
 
   private TestSummary xmlPageCounts = new TestSummary();
 
-  public SuiteXmlFormatter(WikiPage page, FitNesseContext context) throws Exception {
-    super(context, page);
+  public SuiteXmlFormatter(WikiPage page, FitNesseContext context, Writer writer) throws Exception {
+    super(context, page, writer);
   }
 
   private void addFinalCounts() throws Exception {

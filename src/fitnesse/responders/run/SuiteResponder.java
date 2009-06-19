@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-
 public class SuiteResponder extends TestResponder {
 
   @Override
@@ -12,18 +11,13 @@ public class SuiteResponder extends TestResponder {
 
   @Override
   BaseFormatter createXmlFormatter() throws Exception {
-    BaseFormatter formatter =  new SuiteXmlFormatter(page, context) {
-      @Override
-      protected void writeData(byte[] byteArray) throws Exception {
-        response.add(byteArray);
-      }
-    };
+    BaseFormatter formatter = new SuiteXmlFormatter(page, context, makeResponseWriter());
     return formatter;
   }
 
   @Override
   BaseFormatter createHtmlFormatter() throws Exception {
-     BaseFormatter formatter =  new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
+    BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
       @Override
       protected void writeData(String output) throws Exception {
         addToResponse(output);
@@ -31,7 +25,7 @@ public class SuiteResponder extends TestResponder {
     };
     return formatter;
   }
-  
+
   @Override
   protected void performExecution() throws Exception {
     SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
@@ -44,25 +38,25 @@ public class SuiteResponder extends TestResponder {
   private String getSuiteTagFilter() {
     return request != null ? (String) request.getInput("suiteFilter") : null;
   }
-  
+
   private String getNotSuiteFilter() {
     return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
   }
-  
-  
+
+
   private String getSuiteFirstTest() throws Exception {
     String startTest = null;
     if (request != null) {
-      startTest = (String)request.getInput("firstTest");
+      startTest = (String) request.getInput("firstTest");
     }
-    
+
     if (startTest != null) {
       String suiteName = page.getPageCrawler().getFullPath(page).toString();
       if (startTest.indexOf(suiteName) != 0) {
         startTest = suiteName + "." + startTest;
       }
     }
-    
+
     return startTest;
   }
 }

@@ -22,13 +22,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     this.pageFactory = pageFactory;
   }
 
-  protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
-    return new XmlFormatter(context, page) {
-      protected void writeData(byte[] byteArray) throws Exception {
-      }
-    };
-  }
-
   //special constructor for TestRunner.  Used only for formatting.
   //todo this is nasty coupling. 
   public TestHtmlFormatter(FitNesseContext context) {
