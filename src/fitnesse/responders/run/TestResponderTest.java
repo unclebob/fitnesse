@@ -242,7 +242,6 @@ public class TestResponderTest {
     request.addInput("format", "xml");
     ensureXmlResultFileDoesNotExist(new TestSummary(2, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
-    waitForXmlResultsFileToBeCreated();
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
@@ -460,23 +459,11 @@ public class TestResponderTest {
   public void checkHistoryForSimpleSlimTable() throws Exception {
     ensureXmlResultFileDoesNotExist(new TestSummary(2, 0, 0, 0));
     doSimpleRun(simpleSlimDecisionTable());
-    waitForXmlResultsFileToBeCreated();
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
     assertHasRegexp("<td><span class=\"pass\">wow</span></td>", Utils.unescapeHTML(results));
   }
 
-  private void waitForXmlResultsFileToBeCreated() throws InterruptedException {
-    for (int i = 0; i < 10; i++) {
-      if (xmlResultsFile.exists()){
-        Thread.sleep(100); // let the write finish.
-        return;
-      }
-      else
-        Thread.sleep(100);
-    }
-    fail("xml results file was never created.");
-  }
 
   private String errorWritingTable(String message) {
     return "\n|!-fitnesse.testutil.ErrorWritingFixture-!|\n" +

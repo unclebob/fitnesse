@@ -66,8 +66,10 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.writeHead(pageType);
   }
 
-  public void allTestingComplete() throws Exception {
+  public int allTestingComplete() throws Exception {
+    int exitCode = 0;
     for (BaseFormatter formatter : formatters)
-      formatter.allTestingComplete();
+      exitCode = Math.max(exitCode, formatter.allTestingComplete());
+    return exitCode;
   }
 }

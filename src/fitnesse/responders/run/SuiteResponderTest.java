@@ -374,23 +374,10 @@ public class SuiteResponderTest {
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     runSuite();
 
-    waitForFileToBeCreated(xmlResultsFile);
     FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
     XmlUtil.newDocument(xmlResultsStream);
     xmlResultsStream.close();
     xmlResultsFile.delete();
-  }
-
-  private void waitForFileToBeCreated(File xmlResultsFile) throws InterruptedException {
-    for (int i = 0; i < 10; i++) {
-      if (xmlResultsFile.exists()) {
-        Thread.sleep(100);
-        return;
-      }
-      else
-        Thread.sleep(100);
-    }
-    fail("xml results file was never created.");
   }
 
   @Ignore

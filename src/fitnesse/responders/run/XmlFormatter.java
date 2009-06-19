@@ -80,14 +80,13 @@ public abstract class XmlFormatter extends BaseFormatter {
     testResponse.rootPath = getPage().getName();
   }
 
-  public void allTestingComplete() throws Exception {
+  public int allTestingComplete() throws Exception {
     try {
       writeResults();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      close();
-    }
+    } 
+    return 0;
   }
 
   protected void writeResults() throws Exception {
@@ -133,10 +132,6 @@ public abstract class XmlFormatter extends BaseFormatter {
   }
 
   protected abstract void writeData(byte[] byteArray) throws Exception;
-
-  protected void close() throws Exception {
-
-  }
 
   private void addCountsToResult(TestSummary testSummary) {
     currentResult.right = Integer.toString(testSummary.getRight());

@@ -12,7 +12,7 @@ public abstract class BaseFormatter implements ResultsListener {
   public static final BaseFormatter NULL = new NullFormatter();
   public abstract void writeHead(String pageType) throws Exception;
 
-  public abstract void allTestingComplete() throws Exception;
+  public abstract int allTestingComplete() throws Exception;
 
   protected BaseFormatter() {
   }
@@ -46,7 +46,8 @@ class NullFormatter extends BaseFormatter {
     super(null, null);
   }
 
-  public void allTestingComplete() throws Exception {
+  public int allTestingComplete() throws Exception {
+    return 0;
   }
 
   protected WikiPage getPage() {

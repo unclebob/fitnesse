@@ -37,10 +37,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
   protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
     return new SuiteXmlFormatter(page, context) {
-      protected void close() throws Exception {
-      }
-
-      protected void writeData(byte[] byteArray) throws Exception {
+     protected void writeData(byte[] byteArray) throws Exception {
       }
     };
   }

@@ -14,11 +14,6 @@ public class SuiteResponder extends TestResponder {
   BaseFormatter createXmlFormatter() throws Exception {
     BaseFormatter formatter =  new SuiteXmlFormatter(page, context) {
       @Override
-      protected void close() throws Exception {
-        closeHtmlResponse();
-      }
-
-      @Override
       protected void writeData(byte[] byteArray) throws Exception {
         response.add(byteArray);
       }
@@ -33,11 +28,6 @@ public class SuiteResponder extends TestResponder {
       protected void writeData(String output) throws Exception {
         addToResponse(output);
       }
-      
-      @Override
-      protected void close() throws Exception {
-        closeHtmlResponse(exitCode());
-      }      
     };
     return formatter;
   }

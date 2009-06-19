@@ -24,9 +24,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
     return new XmlFormatter(context, page) {
-      protected void close() throws Exception {
-      }
-
       protected void writeData(byte[] byteArray) throws Exception {
       }
     };
@@ -120,11 +117,12 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
+  public int allTestingComplete() throws Exception {
     removeStopTestLink();
     publishAndAddLog();
     finishWritingOutput();
     close();
+    return exitCode();
   }
 
   protected void close() throws Exception {

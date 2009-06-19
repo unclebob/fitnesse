@@ -9,12 +9,7 @@ import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -38,9 +33,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-      final FitNesseContext fitNesseContext,
-      final WikiPage page,
-      final ResultsListener resultsListener) {
+                             final FitNesseContext fitNesseContext,
+                             final WikiPage page,
+                             final ResultsListener resultsListener) {
     this.testPagesToRun = testPagesToRun;
     this.resultsListener = resultsListener;
     this.page = page;
@@ -83,7 +78,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
-      PagesByTestSystem pagesByTestSystem) throws Exception {
+                                        PagesByTestSystem pagesByTestSystem) throws Exception {
     List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
 
     startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
@@ -211,7 +206,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
-  throws Exception {
+    throws Exception {
     List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
     classPathElements.addAll(pathElements);
   }

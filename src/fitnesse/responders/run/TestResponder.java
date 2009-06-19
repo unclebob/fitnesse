@@ -42,7 +42,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     performExecution();
 
-    formatter.allTestingComplete();
+    int exitCode = formatter.allTestingComplete();
+    closeHtmlResponse(exitCode);
   }
 
   protected void createFormatterAndWriteHead() throws Exception {
@@ -64,11 +65,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   BaseFormatter createXmlFormatter() throws Exception {
     BaseFormatter formatter = new XmlFormatter(context, page) {
       @Override
-      protected void close() throws Exception {
-        closeHtmlResponse();
-      }
-
-      @Override
       protected void writeData(byte[] byteArray) throws Exception {
         response.add(byteArray);
       }
@@ -83,11 +79,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       protected void writeData(String output) throws Exception {
         addToResponse(output);
       }
-
-      @Override
-      protected void close() throws Exception {
-        closeHtmlResponse(exitCode());
-      }
     };
     return formatter;
   }
@@ -96,9 +87,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return new XmlFormatter(context, page) {
       @Override
       public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
-      }
-
-      protected void close() throws Exception {
       }
 
       protected void writeData(byte[] byteArray) throws Exception {

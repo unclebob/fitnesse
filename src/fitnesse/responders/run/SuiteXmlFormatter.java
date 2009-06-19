@@ -19,13 +19,7 @@ public abstract class SuiteXmlFormatter extends XmlFormatter {
     finalSummary.ignores = testResponse.finalCounts.ignores = xmlPageCounts.getIgnores();
     finalSummary.exceptions = testResponse.finalCounts.exceptions = xmlPageCounts.getExceptions();
   }
-  
-  @Override
-  public void allTestingComplete() throws Exception {
-    addFinalCounts();
-    super.allTestingComplete();
-  }
-  
+
   @Override
   public void testComplete(WikiPage testPage, TestSummary testSummary)
       throws Exception {
@@ -36,6 +30,12 @@ public abstract class SuiteXmlFormatter extends XmlFormatter {
     processTestResults(relativeName, testSummary);
 
     xmlPageCounts.tallyPageCounts(testSummary);
+  }
+
+  @Override
+  public int allTestingComplete() throws Exception {
+    addFinalCounts();
+    return super.allTestingComplete();
   }
 
 
