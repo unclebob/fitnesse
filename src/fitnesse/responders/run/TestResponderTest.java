@@ -242,6 +242,7 @@ public class TestResponderTest {
     request.addInput("format", "xml");
     ensureXmlResultFileDoesNotExist(new TestSummary(2, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
+    waitForXmlResultsFileToBeCreated();
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);

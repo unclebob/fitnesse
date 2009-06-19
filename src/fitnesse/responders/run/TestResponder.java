@@ -47,11 +47,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected void createFormatterAndWriteHead() throws Exception {
     if (response.isXmlFormat()) {    //todo temporal coupling.  HistoryFormatter must be first.   Yuk..
-      formatter.add(createTestHistoryFormatter());
       formatter.add(createXmlFormatter());
-    } else {
       formatter.add(createTestHistoryFormatter());
+    } else {
       formatter.add(createHtmlFormatter());
+      formatter.add(createTestHistoryFormatter());
     }
 
     formatter.writeHead(getTitle());
