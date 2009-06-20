@@ -2,13 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.FitNesseContext;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -64,7 +65,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   BaseFormatter createXmlFormatter() throws Exception {
-    return new XmlFormatter(context, page, makeResponseWriter());
+    XmlFormatter.WriterSource writerSource = new XmlFormatter.WriterSource() {
+      public Writer getWriter(TestSummary counts, long time) {
+        return makeResponseWriter();
+      }
+    };
+    return new XmlFormatter(context, page, writerSource);
   }
 
   protected Writer makeResponseWriter() {
@@ -98,7 +104,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected XmlFormatter createTestHistoryFormatter() throws Exception {
-    return new HistoryXmlFormatter(context, page);
+    HistoryWriterSource source = new HistoryWriterSource(context, page);
+    return new XmlFormatter(context, page, source);
   }
 
   protected void sendPreTestNotification() throws Exception {
@@ -183,39 +190,24 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return remoteDebug;
   }
 
-  private class HistoryXmlFormatter extends XmlFormatter {
-    public HistoryXmlFormatter(FitNesseContext context, WikiPage page) throws Exception {
-      super(context, page, null);
+  public static class HistoryWriterSource implements XmlFormatter.WriterSource {
+    private FitNesseContext context;
+    private WikiPage page;
+
+    public HistoryWriterSource(FitNesseContext context, WikiPage page) {
+      this.context = context;
+      this.page = page;
     }
 
-    protected void writeResults() throws Exception {
+    public Writer getWriter(TestSummary counts, long time) throws Exception {
       File resultPath = new File(String.format("%s/%s/%s",
         context.getTestHistoryDirectory(),
         page.getPageCrawler().getFullPath(page).toString(),
-        makeResultFileName(getFinalSummary())));
+        TestHistory.makeResultFileName(counts, time)));
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();
       File resultFile = new File(resultDirectory, resultPath.getName());
-      final FileWriter fileWriter = new FileWriter(resultFile);
-      Writer writer = new Writer() {
-        public void write(char[] cbuf, int off, int len) {
-          String fragment = new String(cbuf, off, len);
-          try {
-            fileWriter.append(fragment);
-          } catch (Exception e) {
-            throw new RuntimeException(e);
-          }
-        }
-
-        public void flush() throws IOException {
-        }
-
-        public void close() throws IOException {
-        }
-      };
-      writeResults(writer);
-
-      fileWriter.close();
+      return new FileWriter(resultFile);
     }
   }
 }

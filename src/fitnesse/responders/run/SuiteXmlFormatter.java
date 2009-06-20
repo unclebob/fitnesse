@@ -10,8 +10,8 @@ public class SuiteXmlFormatter extends XmlFormatter {
 
   private TestSummary xmlPageCounts = new TestSummary();
 
-  public SuiteXmlFormatter(WikiPage page, FitNesseContext context, Writer writer) throws Exception {
-    super(context, page, writer);
+  public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterSource writerSource) throws Exception {
+    super(context, page, writerSource);
   }
 
   private void addFinalCounts() throws Exception {

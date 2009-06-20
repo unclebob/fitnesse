@@ -2,23 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-public class SuiteResponder extends TestResponder {
+import java.io.Writer;
 
-  @Override
+public class SuiteResponder extends TestResponder {
   String getTitle() {
     return "Suite Results";
   }
 
-  @Override
   BaseFormatter createXmlFormatter() throws Exception {
-    BaseFormatter formatter = new SuiteXmlFormatter(page, context, makeResponseWriter());
+    XmlFormatter.WriterSource writerSource = new XmlFormatter.WriterSource() {
+      public Writer getWriter(TestSummary counts, long time) {
+        return makeResponseWriter();
+      }
+    };
+    BaseFormatter formatter = new SuiteXmlFormatter(context, page, writerSource);
     return formatter;
   }
 
-  @Override
   BaseFormatter createHtmlFormatter() throws Exception {
     BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
-      @Override
       protected void writeData(String output) throws Exception {
         addToResponse(output);
       }
@@ -26,7 +28,11 @@ public class SuiteResponder extends TestResponder {
     return formatter;
   }
 
-  @Override
+  protected XmlFormatter createTestHistoryFormatter() throws Exception {
+    HistoryWriterSource source = new HistoryWriterSource(context, page);
+    return new SuiteXmlFormatter(context, page, source);
+  }
+
   protected void performExecution() throws Exception {
     SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);

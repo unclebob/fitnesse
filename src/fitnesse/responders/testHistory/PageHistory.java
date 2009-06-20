@@ -1,7 +1,6 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.XmlFormatter;
 import util.FileUtil;
 
 import java.io.File;
@@ -10,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PageHistory {
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
   public static final String TEST_FILE_FORMAT = "\\A\\d{14}_\\d+_\\d+_\\d+_\\d+(.xml)*\\Z";
   private int failures = 0;
   private int passes = 0;
@@ -201,7 +200,7 @@ public class PageHistory {
     private boolean pass;
 
     public PassFailReport(Date date, boolean pass) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+      SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
       this.date = dateFormat.format(date);
       this.pass = pass;
     }

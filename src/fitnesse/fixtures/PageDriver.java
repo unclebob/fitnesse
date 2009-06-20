@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fitnesse.responders.run.XmlFormatter;
+import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.*;
 import org.htmlparser.*;
 import org.htmlparser.filters.AndFilter;
@@ -117,7 +117,7 @@ public class PageDriver {
   }
 
   public String pageHistoryDateSignatureOf(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     return dateFormat.format(date);
   }
 

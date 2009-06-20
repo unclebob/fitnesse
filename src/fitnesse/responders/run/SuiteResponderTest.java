@@ -361,8 +361,8 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void normalSuiteRunProducesSuiteResultFile() throws Exception {
-    TestSummary counts = new TestSummary(2,0,0,0);
+  public void normalSuiteRunWithThreePassingTestsProducesSuiteResultFile() throws Exception {
+    TestSummary counts = new TestSummary(3,0,0,0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
@@ -371,7 +371,8 @@ public class SuiteResponderTest {
     if (xmlResultsFile.exists())
       xmlResultsFile.delete();
 
-    addTestToSuite("SlimTest", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
     runSuite();
 
     FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);

@@ -4,7 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.XmlFormatter;
 import static fitnesse.responders.testHistory.PageHistory.BarGraph;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -24,7 +23,7 @@ import java.util.Date;
 public class TestHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private TestHistoryResponder responder;
   private SimpleResponse response;
   private FitNesseContext context;

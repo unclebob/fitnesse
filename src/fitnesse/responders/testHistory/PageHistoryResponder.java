@@ -6,7 +6,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.XmlFormatter;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.PathParser;
@@ -21,7 +20,7 @@ import java.util.Date;
 
 public class PageHistoryResponder implements Responder {
   private File resultsDirectory;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private SimpleResponse response;
   private TestHistory history;
   private String pageName;

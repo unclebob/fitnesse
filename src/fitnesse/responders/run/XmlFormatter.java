@@ -14,7 +14,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,18 +22,21 @@ import java.util.List;
 import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
+  private WriterSource writerSource;
+
+  public interface WriterSource {
+    Writer getWriter(TestSummary counts, long time) throws Exception;
+  }
   protected TestExecutionReport testResponse = new TestExecutionReport();
   private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
   private TestSystem testSystem;
   private static long testTime;
   protected TestSummary finalSummary = new TestSummary();
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
-  protected Writer writer;
 
-  public XmlFormatter(FitNesseContext context, final WikiPage page, Writer writer) throws Exception {
+  public XmlFormatter(FitNesseContext context, final WikiPage page, WriterSource writerSource) throws Exception {
     super(context, page);
-    this.writer = writer;
+    this.writerSource = writerSource;
   }
 
   public void newTestStarted(WikiPage test) throws Exception {
@@ -90,7 +92,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   protected void writeResults() throws Exception {
-    writeResults(writer);
+    writeResults(writerSource.getWriter(finalSummary, getTime()));
   }
 
   protected void writeResults(Writer writer) throws Exception {
@@ -107,11 +109,6 @@ public class XmlFormatter extends BaseFormatter {
     return finalSummary;
   }
 
-  public static String makeResultFileName(TestSummary summary) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-    String datePart = format.format(new Date(getTime()));
-    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
-  }
 
   private void addCountsToResult(TestSummary testSummary) {
     currentResult.right = Integer.toString(testSummary.getRight());
@@ -137,7 +134,7 @@ public class XmlFormatter extends BaseFormatter {
     }
   }
 
-  private static long getTime() {
+  public static long getTime() {
     if (testTime != 0)
       return testTime;
     else
