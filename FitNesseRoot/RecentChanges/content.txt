@@ -8,6 +8,9 @@
 |JunkParent.CslimTest||15:50:25 Thu, Jun 04, 2009|
 |JunkParent||15:29:05 Thu, Jun 04, 2009|
 |||14:52:46 Wed, Jun 03, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||10:51:07 Fri, Jun 19, 2009|
+|FitNesse.SuiteAcceptanceTests.ScenarioLibrary||10:45:37 Fri, Jun 19, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||10:45:19 Fri, Jun 19, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict||12:54:25 Fri, Jun 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests||12:52:27 Fri, Jun 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenarioLibrary||12:48:51 Fri, Jun 05, 2009|
@@ -41,7 +44,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.NoScenarioSectionIfThereAreNone||16:03:12 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ManyUnclesAreIncluded||16:03:00 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenariosOnlyInSlimTests||16:02:43 Wed, May 20, 2009|
-|FitNesse.SuiteAcceptanceTests.ScenarioLibrary||16:01:58 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BrotherScenarioLibraryIsIncluded||16:00:51 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenarioLibrariesOnlyIncludedInTestPages||15:58:02 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenarioLibraryIsCollapsed||15:02:17 Wed, May 20, 2009|

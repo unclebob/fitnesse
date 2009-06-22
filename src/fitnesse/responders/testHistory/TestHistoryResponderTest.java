@@ -290,4 +290,5 @@ public class TestHistoryResponderTest {
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertEquals(3, pageHistory.size());
   }
+
 }

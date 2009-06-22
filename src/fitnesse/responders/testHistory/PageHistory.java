@@ -171,6 +171,7 @@ public class PageHistory {
     return pageHistoryFileName.matches(TEST_FILE_FORMAT);
   }
 
+
   public static class TestResultRecord extends TestSummary {
     private File file;
     private Date date;

@@ -351,6 +351,7 @@ public class PageHistoryResponderTest {
     FileUtil.createFile(resultFile, "JUNK");
   }
 
+
   private TestExecutionReport makeBadDummyTestResponse() {
     TestExecutionReport testResponse = new TestExecutionReport();
     testResponse.version = "v1";

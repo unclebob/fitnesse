@@ -2,6 +2,25 @@
 #parse("pageHead.vm")
 #set($noHistory = true)
 <table>
+  <form action="$path" method="get">
+    <input type="hidden"  value="purgeHistory" name="responder"/>
+    <input type="hidden"  value="30" name="days"/>
+    <input type="submit"  VALUE="Purge >30days"/>
+
+  </form>
+  <form action="$path" method="get">
+    <input type="hidden"  value="purgeHistory" name="responder"/>
+    <input type="hidden"  value="7" name="days"/>
+    <input type="submit"  VALUE="Purge >7days"/>
+  </form>
+  <form action="$path" method="get">
+    <input type="hidden"  value="purgeHistory" name="responder"/>
+    <input type="hidden"  value="0" name="days"/>
+    <input type="submit"  VALUE="Purge All"/>
+  </form>
+</table>
+
+<table>
   <tr>
     <th>Page</th>
     <th>Pass</th>
@@ -18,7 +37,7 @@
     #set ($barGraph = $pageHistory.getBarGraph())
 
     <td><a href="/$page?pageHistory">$page</a></td>
-    <td class=#if($pageHistory.passes == 0)"ignore"#else"pass"#end>$pageHistory.passes</td>
+    <td class=#if($pageHistory.passes==0)"ignore"#else"pass"#end>$pageHistory.passes</td>
     <td class=#if($pageHistory.failures==0)"ignore"#else"fail"#end>$pageHistory.failures</td>
     <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
     #foreach($passFail in $barGraph.passFailArray())
@@ -27,7 +46,8 @@
     <td class="pass"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">+</a></td>
     #else
 
-    <td class="fail"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">-</a></td></td>
+    <td class="fail"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">-</a></td>
+    </td>
     #end
     #end
 
