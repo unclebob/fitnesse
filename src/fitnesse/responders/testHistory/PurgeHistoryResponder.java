@@ -53,7 +53,14 @@ public class PurgeHistoryResponder implements Responder {
 
   private Integer getDaysInput(Request request) {
     String daysInput = request.getInput("days").toString();
-    Integer days = new Integer(daysInput);
+    Integer days;
+    try{
+      days = Integer.parseInt(daysInput);
+     }
+    catch (Exception e){
+       days = -1;
+    }
+
     return days;
   }
 

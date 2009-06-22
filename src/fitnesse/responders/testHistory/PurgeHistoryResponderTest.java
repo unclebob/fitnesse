@@ -109,11 +109,21 @@ public class PurgeHistoryResponderTest {
   }
 
   @Test
-  public void shouldMakeErrorRequestWhenGetsInvalidNumberOfDays() throws Exception {
+  public void shouldMakeErrorResponseWhenGetsInvalidNumberOfDays() throws Exception {
     request.addInput("purgeHistory","");
     request.addInput("days","-42");
     history.readHistoryDirectory(resultsDirectory);
     Response response = responder.makeResponse(context,request);
-    assertEquals(response.getStatus(),400);
+    assertEquals(400,response.getStatus());
+  }
+
+  @Test
+  public void shouldMakeErrorResponseWhenItGetsInvalidTypeForNumberOfDays() throws Exception {
+    request.addInput("purgeHistory", "");
+    request.addInput("days","bob");
+    history.readHistoryDirectory(resultsDirectory);
+    Response response = responder.makeResponse(context,request);
+    assertEquals(400,response.getStatus());
+
   }
 }
