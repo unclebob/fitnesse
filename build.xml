@@ -75,6 +75,8 @@
       <exclude name="**/*TestSuite.class"/>
       <include name="files/**"/>
       <include name="tasks.properties"/>
+      <include name="updateList"/>
+      <include name="updateDoNotCopyOverList"/>
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
         <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
@@ -84,7 +86,18 @@
     <delete dir="classes/files"/>    
   </target>
 
-  <target name="copyResources" description="copy images, css, and other resources into the classes directory">
+  <target name="createUpdateLists" description="creates two lists of files to be udpated">
+      <java classpath="classes" classname="fitnesse.updates.UpdateFileList">
+        <arg value="files/images"></arg>
+        <arg value="files/css"></arg>
+        <arg value="files/javascript"></arg>
+        <arg value="files/html"></arg>
+        <arg value="files/templates"></arg>
+        <arg value="FitNesse"></arg>
+      </java>
+  </target>
+
+  <target name="copyResources" depends="createUpdateLists" description="copy images, css, and other resources into the classes directory">
     <delete dir="classes/files"/>
     <mkdir dir="classes/files"/>
     <copy todir="classes/files">
