@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryForSuiteCountsTestsNotAsserts||15:42:07 Mon, Jun 22, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||08:31:27 Mon, Jun 22, 2009|
 |FitNesse.UserGuide.StartingAndStoppingFitNesse||04:42:05 Mon, Jun 15, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestTitleSearch||22:57:31 Mon, Jun 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteSearchResponder.TestContentSearch||22:53:19 Mon, Jun 08, 2009|
@@ -45,7 +47,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenarioLibraryIsCollapsed||15:02:17 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SetUp||14:55:58 Wed, May 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite||11:10:46 Wed, May 20, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||16:36:07 Wed, May 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||16:35:48 Wed, May 13, 2009|
 |FitNesse.UserGuide.PageProperties||14:10:29 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription.SpnegoAuthentication||14:04:04 Wed, May 13, 2009|
@@ -67,7 +68,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder||12:19:30 Mon, May 25, 2009|
 RecentChanges/content.txt
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||07:20:00 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineResultElementsAreLinksToTestResults||06:57:08 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryLineIsLinkToTestResult||06:41:18 Tue, May 12, 2009|
@@ -97,4 +97,3 @@ RecentChanges/content.txt
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.PageHistoryWithOneTest||15:51:32 Mon, May 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.PageHistoryWithTwoTests||15:48:53 Mon, May 04, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.SetUp||14:45:59 Mon, May 04, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistoryTests.TestPageHistory||14:42:30 Mon, May 04, 2009|

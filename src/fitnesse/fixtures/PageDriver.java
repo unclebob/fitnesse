@@ -3,6 +3,7 @@
 package fitnesse.fixtures;
 
 import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.responders.run.XmlFormatter;
 import fitnesse.wiki.*;
 import org.htmlparser.*;
 import org.htmlparser.filters.AndFilter;
@@ -14,6 +15,7 @@ import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 public class PageDriver {
@@ -198,5 +200,9 @@ public class PageDriver {
 
   public int echoInt(int i) {
     return i;
+  }
+
+  public void setXmlFormatterTimeTo(String time) throws ParseException {
+    XmlFormatter.setTestTime(time);
   }
 }
