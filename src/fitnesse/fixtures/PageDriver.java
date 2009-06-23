@@ -61,6 +61,8 @@ public class PageDriver {
     html = html.replaceAll("\n", " ");
     html = html.replaceAll("\r", " ");
     html = html.replaceAll("\\s+", " ");
+    System.out.println("html = " + html);
+    System.out.println("subString = " + subString);
     return (html.indexOf(subString) != -1);
   }
 

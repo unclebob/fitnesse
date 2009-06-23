@@ -7,12 +7,11 @@ import fitnesse.responders.run.TestSummary;
 import static fitnesse.responders.testHistory.PageHistory.BarGraph;
 import org.junit.After;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
-import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertHasRegexp;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +47,17 @@ public class TestHistoryResponderTest {
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
 
+  private void addPageDirectoryWithOneResult(String pageName, String testResultFileName) throws IOException {
+    File pageDirectory = addPageDirectory(pageName);
+    addTestResult(pageDirectory, testResultFileName);
+  }
+
+  private File addPageDirectory(String pageName) {
+    File pageDirectory = new File(resultsDirectory, pageName);
+    pageDirectory.mkdir();
+    return pageDirectory;
+  }
+
   @After
   public void teardown() {
     removeResultsDirectory();
@@ -61,26 +71,38 @@ public class TestHistoryResponderTest {
 
   @Test
   public void historyDirectoryWithOnePageDirectoryShouldShowOnePage() throws Exception {
-    addPageDirectory("SomePage");
+    addPageDirectoryWithOneResult("SomePage", "20090418123103_1_2_3_4");
     history.readHistoryDirectory(resultsDirectory);
     assertEquals(1, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("SomePage"));
   }
 
-  private File addPageDirectory(String pageName) {
-    File pageDirectory = new File(resultsDirectory, pageName);
-    pageDirectory.mkdir();
-    return pageDirectory;
+  @Test
+  public void historyDirectoryWithOneEmptyPageDirectoryShouldShowNoPages() throws Exception {
+    addPageDirectory("SomePage");
+    history.readHistoryDirectory(resultsDirectory);
+    assertEquals(0, history.getPageNames().size());
+    assertFalse(history.getPageNames().contains("SomePage"));
   }
 
   @Test
   public void historyDirectoryWithTwoPageDirectoriesShouldShowTwoPages() throws Exception {
-    addPageDirectory("PageOne");
-    addPageDirectory("PageTwo");
+    addPageDirectoryWithOneResult("PageOne", "20090418123103_1_2_3_4");
+    addPageDirectoryWithOneResult("PageTwo", "20090418123103_1_2_3_4");
     history.readHistoryDirectory(resultsDirectory);
     assertEquals(2, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("PageOne"));
     assertTrue(history.getPageNames().contains("PageTwo"));
+  }
+
+  @Test
+  public void historyDirectoryWithTwoEmptyPageDirectoriesShouldShowNoPages() throws Exception {
+    addPageDirectory("SomePage");
+    addPageDirectory("SomeOtherPage");
+    history.readHistoryDirectory(resultsDirectory);
+    assertEquals(0, history.getPageNames().size());
+    assertFalse(history.getPageNames().contains("SomePage"));
+    assertFalse(history.getPageNames().contains("SomeOtherPage"));
   }
 
   @Test
@@ -93,8 +115,7 @@ public class TestHistoryResponderTest {
 
   @Test
   public void pageDirectoryWithOneResultShouldShowOneHistoryRecord() throws Exception {
-    File pageDirectory = addPageDirectory("SomePage");
-    addTestResult(pageDirectory, "20090418123103_1_2_3_4");
+    addPageDirectoryWithOneResult("SomePage", "20090418123103_1_2_3_4");
 
     history.readHistoryDirectory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
@@ -267,8 +288,8 @@ public class TestHistoryResponderTest {
 
   @Test
   public void shouldNotCountABadDirectoryNameAsAHistoryDirectory() throws Exception {
-    addPageDirectory("SomePage");
-    addPageDirectory("bad-directory-name");
+    addPageDirectoryWithOneResult("SomePage", "20090419123103_1_0_0_0");
+    addPageDirectoryWithOneResult("bad-directory-name", "20090419123103_1_0_0_0");
     history.readHistoryDirectory(resultsDirectory);
     assertEquals(1, history.getPageNames().size());
     assertTrue(history.getPageNames().contains("SomePage"));
