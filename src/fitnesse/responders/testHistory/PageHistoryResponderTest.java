@@ -1,6 +1,9 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestExecutionReport;
@@ -49,7 +52,8 @@ public class PageHistoryResponderTest {
   private void makeResponse() throws Exception {
     request = new MockRequest();
     request.setResource("TestPage");
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   private void removeResultsDirectory() {
