@@ -55,7 +55,11 @@ public class ScriptTable extends SlimTable {
       note(row);
     else if (isSymbolAssignment(firstCell))
       actionAndAssign(row);
-    else if (firstCell.length() > 0)
+    else if (firstCell.length() == 0)
+      note(row);
+    else if (firstCell.trim().startsWith("#") || firstCell.trim().startsWith("*"))
+      note(row);
+    else
       action(row);
   }
 

@@ -226,10 +226,30 @@ public class ScriptTableTest {
     assertEquals(expectedInstructions, instructions);
   }
 
-
   @Test
   public void noteDoesNothing() throws Exception {
     buildInstructionsFor("|note|blah|blah|\n");
+    List<Object> expectedInstructions = list();
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void initialBlankCellDoesNothing() throws Exception {
+    buildInstructionsFor("||blah|blah|\n");
+    List<Object> expectedInstructions = list();
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void initialHashDoesNothing() throws Exception {
+    buildInstructionsFor("|!-#comment-!|blah|blah|\n");
+    List<Object> expectedInstructions = list();
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void initialStarDoesNothing() throws Exception {
+    buildInstructionsFor("|*comment|blah|blah|\n");
     List<Object> expectedInstructions = list();
     assertEquals(expectedInstructions, instructions);
   }
