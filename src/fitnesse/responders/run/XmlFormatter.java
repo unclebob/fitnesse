@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.VelocityFactory;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
@@ -13,7 +14,10 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,7 +95,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     makeFileWriter();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, getWriter());
     if (fileWriter != null)
       fileWriter.close();

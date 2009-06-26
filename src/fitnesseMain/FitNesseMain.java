@@ -13,7 +13,7 @@ import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
 import util.CommandLine;
 
-import java.io.File;
+import java.io.File;                                     
 
 public class FitNesseMain {
   private static String extraOutput;
@@ -23,11 +23,14 @@ public class FitNesseMain {
     Arguments arguments = parseCommandLine(args);
     if (arguments != null) {
       FitNesseContext context = loadContext(arguments);
-      Updater updater = new UpdaterImplementation(context);
+      Updater updater = null;
+      if (!arguments.isOmittingUpdates())
+        updater = new UpdaterImplementation(context);
       PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
       fitnesse = new FitNesse(context, updater);
       if (!arguments.isOmittingUpdates())
         fitnesse.applyUpdates();
+      VelocityFactory.makeVelocityFactory(context);
       boolean started = fitnesse.start();
       if (started)
         printStartMessage(arguments, context);

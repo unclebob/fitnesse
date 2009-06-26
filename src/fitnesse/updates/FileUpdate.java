@@ -17,10 +17,10 @@ public class FileUpdate implements Update {
   protected String rootDir;
   protected String filename;
 
-  public FileUpdate(UpdaterImplementation updater, String source, String destination) throws Exception {
+  public FileUpdate(String rootDirectory, String source, String destination) throws Exception {
     this.destination = destination;
     this.source = source;
-    rootDir = updater.context.rootPagePath;
+    rootDir = rootDirectory;
     destinationDir = new File(new File(rootDir), destination);
 
     filename = new File(source).getName();
@@ -70,7 +70,7 @@ public class FileUpdate implements Update {
   }
 
   public String getMessage() {
-    return "Installing file: " + destinationFile();
+    return ".";
   }
 
   protected File destinationFile() {

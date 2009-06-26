@@ -2,12 +2,13 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.XmlFormatter;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.responders.ErrorResponder;
 import org.apache.velocity.VelocityContext;
 import util.FileUtil;
 
@@ -42,7 +43,7 @@ public class PurgeHistoryResponder implements Responder {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageTitle", new PageTitle("Test History"));
     velocityContext.put("testHistory", history);
-    response.setContent(context.translateTemplate(velocityContext, "testHistory.vm"));
+    response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistory.vm"));
     return response;
   }
 

@@ -1,20 +1,7 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_OBSOLETE;
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SETUP;
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_TEARDOWN;
-import static fitnesse.responders.search.SearchFormResponder.IGNORED;
-
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -26,12 +13,17 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.responders.editing.PropertiesResponder;
+import static fitnesse.responders.search.SearchFormResponder.*;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
@@ -94,7 +86,7 @@ public class ExecuteSearchPropertiesResponder implements SecureResponder {
 
     StringWriter writer = new StringWriter();
 
-    Template template = context.getVelocityEngine().getTemplate(
+    Template template = VelocityFactory.getVelocityEngine().getTemplate(
     "searchResults.vm");
 
     velocityContext.put("pageTitle", new PageTitle(

@@ -8,8 +8,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class ReplacingFileUpdate extends FileUpdate {
-  public ReplacingFileUpdate(UpdaterImplementation updater, String source, String destination) throws Exception {
-    super(updater, source, destination);
+  public ReplacingFileUpdate(String rootDirectory, String source, String destination) throws Exception {
+    super(rootDirectory, source, destination);
   }
 
   public void doUpdate() throws Exception {

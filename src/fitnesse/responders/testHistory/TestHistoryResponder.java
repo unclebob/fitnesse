@@ -2,6 +2,7 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -24,7 +25,7 @@ public class TestHistoryResponder implements Responder {
       VelocityContext velocityContext = new VelocityContext();
       velocityContext.put("pageTitle", new PageTitle("Test History"));
       velocityContext.put("testHistory", history);
-      response.setContent(context.translateTemplate(velocityContext, "testHistory.vm"));
+      response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistory.vm"));
     }
     return response;
   }
