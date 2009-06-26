@@ -2,18 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import java.io.StringWriter;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.WikiPage;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import java.io.StringWriter;
 
 public class SearchFormResponder implements Responder {
   public static final String EXCLUDE_TEARDOWN = "ExcludeTearDown";
@@ -37,7 +37,7 @@ public class SearchFormResponder implements Responder {
 
     StringWriter writer = new StringWriter();
 
-    Template template = context.getVelocityEngine()
+    Template template = VelocityFactory.getVelocityEngine()
     .getTemplate("searchForm.vm");
 
     velocityContext.put("pageTitle", new PageTitle("Search Form"));

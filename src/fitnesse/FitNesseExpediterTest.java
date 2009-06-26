@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-
-import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.MockRequest;
@@ -16,6 +11,11 @@ import fitnesse.http.ResponseParser;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
+import util.RegexTestCase;
+
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 public class FitNesseExpediterTest extends RegexTestCase {
   private FitNesseExpediter expediter;
@@ -31,6 +31,7 @@ public class FitNesseExpediterTest extends RegexTestCase {
     root.addChildPage("FrontPage");
     socket = new MockSocket();
     context = new FitNesseContext(root);
+    VelocityFactory.makeVelocityFactory(context);
     context.responderFactory = new ResponderFactory(".");
     expediter = new FitNesseExpediter(socket, context);
   }

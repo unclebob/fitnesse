@@ -2,21 +2,22 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.XmlFormatter;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PageHistoryResponder implements Responder {
@@ -41,7 +42,7 @@ public class PageHistoryResponder implements Responder {
 
   private Response makePageHistoryResponse(FitNesseContext context) throws Exception {
     velocityContext.put("pageHistory", pageHistory);
-    Template template = context.getVelocityEngine().getTemplate("pageHistory.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistory.vm");
     return makeResponseFromTemplate(template);
   }
 
@@ -70,7 +71,7 @@ public class PageHistoryResponder implements Responder {
     report = new TestExecutionReport(testResultRecord.getFile());
     report.setDate(resultDate);
     velocityContext.put("testExecutionReport", report);
-    Template template = context.getVelocityEngine().getTemplate("testExecutionReport.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("testExecutionReport.vm");
     return makeResponseFromTemplate(template);
   }
 

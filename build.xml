@@ -4,7 +4,7 @@
   </description>
 
   <property environment="env"/>
-  <property name="env.FITNESSE_TEST_PORT" value ="8080" />
+  <property name="env.FITNESSE_TEST_PORT" value="8080"/>
   <property name="src" location="src"/>
   <property name="src2" location="srcFitServerTests"/>
   <property name="classes" location="classes"/>
@@ -65,7 +65,7 @@
     <zip zipfile="fitnesse${DSTAMP}.zip" basedir="dist" includes="fitnesse/**" excludes="**/Thumbs.db"/>
   </target>
 
-  <target name="jar" depends="build, copyResources" description="generate the jar file">
+  <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
     <mkdir dir="dist"/>
     <delete file="dist/fitnesse.jar"/>
 
@@ -73,43 +73,66 @@
       <include name="**/*.class"/>
       <exclude name="**/*Test.class"/>
       <exclude name="**/*TestSuite.class"/>
-      <include name="files/**"/>
+      <include name="Resources/**"/>
       <include name="tasks.properties"/>
-      <include name="updateList"/>
-      <include name="updateDoNotCopyOverList"/>
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
         <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
         <attribute name="Class-Path" value="lib/htmlparser.jar lib/json.jar lib/velocity-1.6.2-dep.jar"/>
       </manifest>
     </jar>
-    <delete dir="classes/files"/>    
+    <delete dir="classes/Resources"/>
   </target>
 
-  <target name="createUpdateLists" description="creates two lists of files to be udpated">
-      <java classpath="classes" classname="fitnesse.updates.UpdateFileList">
-        <arg value="files/images"></arg>
-        <arg value="files/css"></arg>
-        <arg value="files/javascript"></arg>
-        <arg value="files/html"></arg>
-        <arg value="files/templates"></arg>
-        <arg value="FitNesse"></arg>
-      </java>
+  <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
+    <java classpath="classes" classname="fitnesse.updates.UpdateFileList" failonerror="true">
+      <arg value="-baseDirectory:classes/Resources"/>
+      <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
+      <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
+      <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
+      <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>      
+      <arg value="FitNesseRoot/files/images"/>
+      <arg value="FitNesseRoot/files/css"/>
+      <arg value="FitNesseRoot/files/javascript"/>
+      <arg value="FitNesseRoot/files/html"/>
+      <arg value="FitNesseRoot/files/templates"/>
+      <arg value="FitNesseRoot/FitNesse"/>
+      <arg value="FitNesseRoot/FrontPage"/>
+      <arg value="lib"/>
+    </java>
+    <copy todir="classes/Resources">
+      <fileset dir=".">
+        <include name="updateList"/>
+        <include name="updateDoNotCopyOverList"/>
+      </fileset>
+    </copy>
   </target>
 
-  <target name="copyResources" depends="createUpdateLists" description="copy images, css, and other resources into the classes directory">
-    <delete dir="classes/files"/>
-    <mkdir dir="classes/files"/>
-    <copy todir="classes/files">
+  <target name="copyResources"
+          description="copy images, css, and other resources into the classes directory">
+    <delete dir="classes/Resources"/>
+    <mkdir dir="classes/Resources"/>
+    <copy todir="classes/Resources/FitNesseRoot/files">
       <fileset dir="FitNesseRoot/files">
-        <include name="images/**/*.gif"/>
-        <include name="images/**/*.jpg"/>
+        <include name="images/**"/>
         <include name="css/*.css"/>
         <include name="javascript/*.js"/>
         <include name="html/**"/>
         <include name="templates/**"/>
         <exclude name="juUnitTestLink.js"/>
         <exclude name="**/unused/**"/>
+      </fileset>
+    </copy>
+    <copy todir="classes/Resources">
+      <fileset dir=".">
+        <include name="lib/**"/>
+      </fileset>
+    </copy>
+    <copy todir="classes/Resources/FitNesseRoot">
+      <fileset dir="FitNesseRoot">
+        <include name="FitNesse/**"/>
+        <include name="FrontPage/**"/>
+        <exclude name="**/*.zip"/>
       </fileset>
     </copy>
   </target>
@@ -180,7 +203,8 @@
 
   <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef"
           description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="${env.FITNESSE_TEST_PORT}"
+    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests"
+                        fitnesseport="${env.FITNESSE_TEST_PORT}"
                         resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath"/>
   </target>
 

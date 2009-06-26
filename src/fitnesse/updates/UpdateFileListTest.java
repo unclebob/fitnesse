@@ -28,6 +28,7 @@ public class UpdateFileListTest {
   @Test
   public void canParseTheCommandLine() throws Exception {
     updater.parseCommandLine(new String[]{"testDir"});
+    assertEquals(1, updater.getDirectories().size());
     assertEquals("testDir", updater.getDirectories().get(0));
   }
 
@@ -42,20 +43,16 @@ public class UpdateFileListTest {
     File testFolder = new File("TestFolder");
     testFolder.mkdir();
     updater.parseCommandLine(new String[]{"TestFolder"});
-    String dirName = updater.getDirectories().get(0);
-    assertEquals(dirName, "TestFolder");
-    boolean valid = updater.directoriesAreValid();
-    assertTrue(valid);
+    assertTrue(updater.directoriesAreValid());
     FileUtil.deleteFileSystemDirectory(testFolder);
-    valid = updater.directoriesAreValid();
-    assertFalse(valid);
+    assertFalse(updater.directoriesAreValid());
   }
 
   @Test
   public void shouldCreateAFileWithTheListOfFileNames() throws Exception {
     File testFolder = createTestFolderandFile();
     String content = runCreateFileAndGetContent(new String[]{"TestFolder"});
-    assertSubString("TestFolder/TestFile", content);
+    assertEquals("TestFolder/TestFile\n", content);
     FileUtil.deleteFileSystemDirectory(testFolder);
   }
 
@@ -64,8 +61,8 @@ public class UpdateFileListTest {
   public void shouldMakeUpdateListWithMultiLevelFolders() throws Exception {
     File masterFolder = createMultiLevelDirectory();
     String content = runCreateFileAndGetContent(new String[]{"MasterFolder"});
-    assertSubString("MasterFolder/MasterFile", content);
-    assertSubString("MasterFolder/TestFolder/TestFile", content);
+    assertSubString("MasterFolder/MasterFile\n", content);
+    assertSubString("MasterFolder/TestFolder/TestFile\n", content);
     FileUtil.deleteFileSystemDirectory(masterFolder);
 
   }
@@ -73,7 +70,9 @@ public class UpdateFileListTest {
   @Test
   public void shouldKnowWhichSpecialFilesNotToInclude() throws Exception {
     File testFolder = createSpecialFileFolder();
-    String content = runCreateFileAndGetContent(new String[]{"TestFolder"});
+    String arg1 = "-doNotReplace:TestFolder/fitnesse.css";
+    String arg2 = "-doNotReplace:TestFolder/fitnesse_print.css";
+    String content = runCreateFileAndGetContent(new String[]{arg1, arg2,"TestFolder"});
     assertSubString("TestFolder/TestFile", content);
     assertDoesntHaveRegexp("TestFolder/fitnesse.css", content);
     assertDoesntHaveRegexp("TestFolder/fitnesse_print.css", content);
@@ -84,14 +83,25 @@ public class UpdateFileListTest {
   @Test
   public void shouldPutSpecialFilesInDifferentList() throws Exception {
     File testFolder = createSpecialFileFolder();
-    updater.parseCommandLine(new String[] {"TestFolder"});
-    File resultFile = updater.createDoNotUpdateList();
-    String content = FileUtil.getFileContent(resultFile);
-    FileUtil.deleteFile(resultFile);
-    assertSubString("TestFolder/fitnesse.css", content);
-    assertSubString("TestFolder/fitnesse_print.css", content);
-    assertDoesntHaveRegexp("TestFolder/TestFile", content);
+    String arg1 = "-doNotReplace:TestFolder/fitnesse.css";
+    String arg2 = "-doNotReplace:TestFolder/fitnesse_print.css";
+    updater.parseCommandLine(new String[] {arg1, arg2,"TestFolder"});
+    File doNotUpdateFile = updater.createDoNotUpdateList();
+    String doNotUpdateContent = FileUtil.getFileContent(doNotUpdateFile);
+    FileUtil.deleteFile(doNotUpdateFile);
+    assertSubString("TestFolder/fitnesse.css", doNotUpdateContent);
+    assertSubString("TestFolder/fitnesse_print.css", doNotUpdateContent);
+    assertDoesntHaveRegexp("TestFolder/TestFile", doNotUpdateContent);
     FileUtil.deleteFileSystemDirectory(testFolder);
+  }
+
+  @Test
+  public void shouldPrunePrefixes() throws Exception {
+    File testFolder = createTestFolderandFile();
+    String content = runCreateFileAndGetContent(new String[] {"-baseDirectory:TestFolder",""});
+    assertEquals("TestFile\n", content);
+    FileUtil.deleteFileSystemDirectory(testFolder);
+    
   }
 
   private File createSpecialFileFolder() throws IOException {
@@ -124,7 +134,6 @@ public class UpdateFileListTest {
     File masterFolder = new File("MasterFolder");
     masterFolder.mkdir();
     File masterFile = new File(masterFolder, "MasterFile");
-
     masterFile.createNewFile();
     File testFolder = new File(masterFolder, "TestFolder");
     testFolder.mkdir();
