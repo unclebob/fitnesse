@@ -4,5 +4,10 @@ PropertiesToXmlUpdate=applied
 FilesAttributeUpdate=applied
 SymLinkPropertyFormatUpdate=applied
 VirtualWikiDeprecationUpdate=applied
+<<<<<<< HEAD:FitNesseRoot/properties
+=======
+Version=v20090625
+RecentChangesAttributeUpdate=applied
+>>>>>>> 5f03ac00f152987d9ec95ebdac25f7fad7de2995:FitNesseRoot/properties
 WhereUsedAttributeUpdate=applied
 RecentChangesAttributeUpdate=applied

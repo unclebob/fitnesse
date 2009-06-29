@@ -34,8 +34,8 @@ public class FitNesseContext {
   public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
-  private VelocityEngine velocityEngine;
   public String testResultsDirectoryName = "testResults";
+  public boolean shouldCollectHistory = false;
 
   public FitNesseContext() {
     this(null);
@@ -45,19 +45,6 @@ public class FitNesseContext {
     this.root = root;
   }
 
-  public VelocityEngine getVelocityEngine() {
-    if (velocityEngine == null) {
-      velocityEngine = new VelocityEngine();
-      String templatePath = String.format("%s/%s/files/templates", rootPath, rootDirectoryName);
-      velocityEngine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, templatePath);
-      try {
-        velocityEngine.init();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return velocityEngine;
-  }
 
   public String toString() {
     String endl = System.getProperty("line.separator");
@@ -75,9 +62,6 @@ public class FitNesseContext {
     return globalContext != null ? globalContext.port : -1;
   }
 
-  public void setVelocityEngine(VelocityEngine velocityEngine) {
-    this.velocityEngine = velocityEngine;
-  }
 
   public File getTestHistoryDirectory() {
     return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
@@ -87,10 +71,4 @@ public class FitNesseContext {
     rootPagePath = rootPath + "/" + rootDirectoryName;
   }
 
-  public String translateTemplate(VelocityContext velocityContext, String templateFileName) throws Exception {
-    Template template = getVelocityEngine().getTemplate(templateFileName);
-    StringWriter writer = new StringWriter();
-    template.merge(velocityContext, writer);
-    return writer.toString();
-  }
 }

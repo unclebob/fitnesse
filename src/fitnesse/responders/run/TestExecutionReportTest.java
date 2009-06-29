@@ -1,6 +1,8 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
+import static fitnesse.responders.run.TestExecutionReport.TestResult;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import static org.junit.Assert.assertEquals;
@@ -9,7 +11,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
-import static fitnesse.responders.run.TestExecutionReport.*;
 
 public class TestExecutionReportTest {
   private TestExecutionReport expected;
@@ -31,7 +32,7 @@ public class TestExecutionReportTest {
 
   private String reportToXml(TestExecutionReport report) throws Exception {
     StringWriter writer = new StringWriter();
-    report.toXml(writer, context.getVelocityEngine());
+    report.toXml(writer, VelocityFactory.getVelocityEngine());
     writer.close();
     return writer.toString();
   }

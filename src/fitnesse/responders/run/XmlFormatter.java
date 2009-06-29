@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.VelocityFactory;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
@@ -98,9 +99,7 @@ public class XmlFormatter extends BaseFormatter {
   protected void writeResults(Writer writer) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-
-    VelocityEngine engine = context.getVelocityEngine();
-    Template template = engine.getTemplate("testResults.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, writer);
     writer.close();
   }

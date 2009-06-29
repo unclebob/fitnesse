@@ -2,14 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import util.FileUtil;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.app.VelocityEngine;
+import util.FileUtil;
 
 public class FitNesseUtil {
   private static FitNesse instance = null;
@@ -25,9 +26,10 @@ public class FitNesseUtil {
     context.rootDirectoryName = root.getName();
     context.rootPagePath = context.rootPath + "/" + context.rootDirectoryName;
     context.responderFactory = new ResponderFactory(context.rootPagePath);
+    VelocityFactory.makeVelocityFactory(context);
     VelocityEngine engine = new VelocityEngine();
     engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
-    context.setVelocityEngine(engine);
+    VelocityFactory.setVelocityEngine(engine);
     instance = new FitNesse(context);
     instance.start();
   }
@@ -46,9 +48,10 @@ public class FitNesseUtil {
     FitNesseContext context = new FitNesseContext(root);
     context.rootDirectoryName = "TestDir";
     context.setRootPagePath();
+    VelocityFactory.makeVelocityFactory(context);
     VelocityEngine engine = new VelocityEngine();
     engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
-    context.setVelocityEngine(engine);
+    VelocityFactory.setVelocityEngine(engine);
     return context;
   }
 

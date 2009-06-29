@@ -2,6 +2,7 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -40,7 +41,7 @@ public class PageHistoryResponder implements Responder {
 
   private Response makePageHistoryResponse(FitNesseContext context) throws Exception {
     velocityContext.put("pageHistory", pageHistory);
-    Template template = context.getVelocityEngine().getTemplate("pageHistory.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistory.vm");
     return makeResponseFromTemplate(template);
   }
 
@@ -69,7 +70,7 @@ public class PageHistoryResponder implements Responder {
     report = new TestExecutionReport(testResultRecord.getFile());
     report.setDate(resultDate);
     velocityContext.put("testExecutionReport", report);
-    Template template = context.getVelocityEngine().getTemplate("testExecutionReport.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("testExecutionReport.vm");
     return makeResponseFromTemplate(template);
   }
 

@@ -1,13 +1,14 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.testutil.FitNesseUtil;
+import fitnesse.VelocityFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -19,8 +20,8 @@ import util.RegexTestCase;
 import static util.RegexTestCase.assertHasRegexp;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -309,7 +310,7 @@ public class PageHistoryResponderTest {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
     FitNesseContext context = new FitNesseContext();
-    Template template = context.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
     FileWriter fileWriter = new FileWriter(resultFile);
     template.merge(velocityContext, fileWriter);
     fileWriter.close();

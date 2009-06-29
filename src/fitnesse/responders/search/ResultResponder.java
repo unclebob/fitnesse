@@ -15,6 +15,7 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
+import fitnesse.VelocityFactory;
 
 public abstract class ResultResponder extends ChunkingResponder implements
 SearchObserver, SecureResponder {
@@ -38,7 +39,7 @@ SearchObserver, SecureResponder {
 
     StringWriter writer = new StringWriter();
 
-    Template template = context.getVelocityEngine().getTemplate(
+    Template template = VelocityFactory.getVelocityEngine().getTemplate(
     "searchResultsFooter.vm");
 
     velocityContext.put("hits", hits);
@@ -55,7 +56,7 @@ SearchObserver, SecureResponder {
 
     StringWriter writer = new StringWriter();
 
-    Template template = context.getVelocityEngine().getTemplate(
+    Template template = VelocityFactory.getVelocityEngine().getTemplate(
     "searchResultsHeader.vm");
 
     velocityContext.put("page_title", getTitle());
@@ -88,8 +89,7 @@ SearchObserver, SecureResponder {
 
     StringWriter writer = new StringWriter();
 
-    Template template = context.getVelocityEngine().getTemplate(
-    "searchResultsEntry.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("searchResultsEntry.vm");
 
     velocityContext.put("resultsRow", getRow());
     velocityContext.put("result", result);

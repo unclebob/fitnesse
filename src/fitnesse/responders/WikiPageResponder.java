@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -14,12 +15,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.threadlocal.ThreadLocalUtil;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.Constants;
 import org.apache.velocity.VelocityContext;
 
@@ -96,7 +92,7 @@ public class WikiPageResponder implements SecureResponder {
 
     velocityContext.put("page_name", page.getName());
     velocityContext.put("full_path", fullPathName);
-    html.main.add(context.translateTemplate(velocityContext, "addChildPagePopup.vm"));
+    html.main.add(VelocityFactory.translateTemplate(velocityContext, "addChildPagePopup.vm"));
     handleSpecialProperties(html, page);
     return html.html();
   }

@@ -9,6 +9,7 @@ import java.util.Map;
 import util.RegexTestCase;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -26,6 +27,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
+    FitNesseContext context = FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     responder = new ExecuteSearchPropertiesResponder();
   }
@@ -68,8 +70,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private String invokeResponder(MockRequest request) throws Exception {
-    Response response = responder.makeResponse(new FitNesseContext(root),
-        request);
+    Response response = responder.makeResponse(new FitNesseContext(root), request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     return sender.sentData();

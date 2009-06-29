@@ -2,17 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import java.util.Properties;
-
 import fitnesse.components.TraversalListener;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
+
+import java.util.Properties;
 
 public abstract class PageTraversingUpdate implements TraversalListener, Update {
   private Properties properties;
   private WikiPage root;
 
-  public PageTraversingUpdate(UpdaterImplementation updater) {
+  public PageTraversingUpdate(UpdaterBase updater) {
     properties = updater.getProperties();
     root = updater.getRoot();
   }
