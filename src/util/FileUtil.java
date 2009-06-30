@@ -174,4 +174,15 @@ public class FileUtil {
   public static String buildPath(String[] parts) {
     return StringUtil.join(Arrays.asList(parts), System.getProperty("file.separator"));
   }
+
+  public static List<String> breakFilenameIntoParts(String fileName) {
+    List<String> parts = new ArrayList<String>(Arrays.asList(fileName.split("/")));
+    return parts;
+  }
+
+  public static String getPathOfFile(String fileName) {
+    List<String> parts = breakFilenameIntoParts(fileName);
+    parts.remove(parts.size()-1);
+    return buildPath(parts.toArray(new String[parts.size()]));
+  }
 }

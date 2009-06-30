@@ -12,6 +12,7 @@ import util.FileUtil;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -32,38 +33,38 @@ public class UpdaterImplementationTest {
 
   @Before
   public void setUp() throws Exception {
-    context = new FitNesseContext();
-    context.rootPath = testDir;
-    context.rootDirectoryName = rootName;
-    context.rootPagePath = testDir + "/" + rootName;
+    setTheContext();
+    setTheRoot();
+    createFakeJarFileResources();
+    createFakeUpdateListFiles();
+    updater = new UpdaterImplementation(context);
+  }
 
+  private void setTheRoot() throws Exception {
     FileUtil.makeDir(testDir);
     root = new FileSystemPage(context.rootPath, context.rootDirectoryName);
     crawler = root.getPageCrawler();
     context.root = root;
+  }
 
+  private void setTheContext() {
+    context = new FitNesseContext();
+    context.rootPath = testDir;
+    context.rootDirectoryName = rootName;
+    context.rootPagePath = testDir + "/" + rootName;
+  }
 
-    File classes = new File("classes");
-    classes.mkdir();
-    File resources = new File(classes, "Resources");
-    resources.mkdir();
-    File root = new File(resources, "FitNesseRoot");
-    root.mkdir();
-    File files = new File(resources, "files");
-    files.mkdir();
-    File testFile = new File(files, "TestFile");
-    File bestFile = new File(files, "BestFile");
-    File testRootFile = new File(root, "TestrootFile");
-    File specialFile = new File(resources, "SpecialFile");
-    testFile.createNewFile();
-    bestFile.createNewFile();
-    testRootFile.createNewFile();
-    specialFile.createNewFile();
+  private void createFakeUpdateListFiles() {
     updateList = new File("classes/Resources/updateList");
     updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
     FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
     FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
-    updater = new UpdaterImplementation(context);
+  }
+
+  private void createFakeJarFileResources() throws IOException {
+    FileUtil.createFile("classes/Resources/files/TestFile","") ;
+    FileUtil.createFile("classes/Resources/files/BestFile","") ;
+    FileUtil.createFile("classes/Resources/SpecialFile","");
   }
 
   @Test
@@ -97,7 +98,7 @@ public class UpdaterImplementationTest {
     }
     File testFile = new File(context.rootPath, "files/TestFile");
     File bestFile = new File(context.rootPath, "files/BestFile");
-    File specialFile = new File(context.rootPath, "specialFile");
+    File specialFile = new File(context.rootPath, "SpecialFile");
     assertTrue(testFile.exists());
     assertTrue(bestFile.exists());
     assertTrue(specialFile.exists());

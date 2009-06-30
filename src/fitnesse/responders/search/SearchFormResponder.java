@@ -37,8 +37,7 @@ public class SearchFormResponder implements Responder {
 
     StringWriter writer = new StringWriter();
 
-    Template template = VelocityFactory.getVelocityEngine()
-    .getTemplate("searchForm.vm");
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("searchForm.vm");
 
     velocityContext.put("pageTitle", new PageTitle("Search Form"));
     velocityContext.put("pageTypeAttributes", PAGE_TYPE_ATTRIBUTES);
