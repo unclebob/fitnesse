@@ -179,7 +179,8 @@ public class EditResponder implements SecureResponder {
 
   private HtmlTag createTextarea(boolean firstTimeForNewPage, String defaultNewPageContent) {
     HtmlTag textarea = new HtmlTag("textarea");
-    textarea.addAttribute("class", CONTENT_INPUT_NAME);
+    textarea.addAttribute("class", CONTENT_INPUT_NAME + " no_wrap");
+    textarea.addAttribute("wrap", "off");
     textarea.addAttribute("name", CONTENT_INPUT_NAME);
     textarea.addAttribute("rows", "30");
     textarea.addAttribute("cols", "70");
