@@ -101,6 +101,9 @@ public class UpdaterImplementationTest {
     assertTrue(testFile.exists());
     assertTrue(bestFile.exists());
     assertTrue(specialFile.exists());
+    assertFalse(testFile.isDirectory());
+    assertFalse(bestFile.isDirectory());
+    assertFalse(specialFile.isDirectory());
   }
 
   @Test
@@ -146,6 +149,12 @@ public class UpdaterImplementationTest {
     };
     updater.update();
     assertFalse(updateDone);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void shouldThrowExceptionInNoUpdateFileExists() throws Exception {
+    FileUtil.deleteFile(updateList);
+    updater.tryToParseTheFileIntoTheList(updateList,new ArrayList<String>());
   }
 
   @After

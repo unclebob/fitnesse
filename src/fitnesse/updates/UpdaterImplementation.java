@@ -56,14 +56,14 @@ public class UpdaterImplementation extends UpdaterBase {
     if (lastIndexOfSlash >= 0)
       return updateableFile.substring(0, lastIndexOfSlash);
     else
-      return updateableFile;
+      return "";
   }
 
   private void createUpdateAndDoNotCopyOverLists() {
     try {
       getUpdateFilesFromJarFile();
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
     File updateFileList = new File(context.rootPagePath,"updateList");
     File updateDoNotCopyOverFileList = new File(context.rootPagePath,"updateDoNotCopyOverList");
@@ -80,12 +80,12 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public void tryToParseTheFileIntoTheList(File updateFileList, ArrayList<String> list) {
     if (updateFileList.exists() == false)
-      System.out.println("Could Not Find UpdateList");
+      throw new RuntimeException("Could Not Find UpdateList");
     else {
       try {
         parseTheFileContentToAList(updateFileList, list);
       } catch (Exception e) {
-        e.printStackTrace();
+        throw new RuntimeException(e);
       }
     }
   }

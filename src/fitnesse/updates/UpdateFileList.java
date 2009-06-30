@@ -12,18 +12,27 @@ public class UpdateFileList {
   private String updateDoNotCopyOverContent;
   private HashSet<String> doNotReplaceFiles = new HashSet<String>();
   private String baseDirectory = "";
+  static UpdateFileList testUpdater = null;
 
   public static void main(String[] args) {
-    UpdateFileList updater = new UpdateFileList();
+    UpdateFileList updater = testUpdater != null ? testUpdater : new UpdateFileList();
 
     updater.parseCommandLine(args);
     if (updater.directoriesAreValid()) {
       updater.createUpdateList();
       updater.createDoNotUpdateList();
     } else {
-      System.err.println("Some directories are invalid.");
-      System.exit(1);
+      updater.printMessage("Some directories are invalid.");
+      updater.exit();
     }
+  }
+
+  void printMessage(String message) {
+    System.err.println(message);
+  }
+
+  void exit() {
+    System.exit(1);
   }
 
   public UpdateFileList() {
@@ -45,7 +54,7 @@ public class UpdateFileList {
         if (!baseDirectory.endsWith("/"))
           baseDirectory += System.getProperty("file.separator");
       } else {
-        mainDirectories.add(baseDirectory +arg);
+        mainDirectories.add(baseDirectory + arg);
       }
     }
 
@@ -99,9 +108,7 @@ public class UpdateFileList {
 
   private boolean isDoNotReplaceFile(File file) {
     String name = file.getPath();
-    name =  name.replace(baseDirectory, "");
-    if(name.startsWith("/"))
-      name = name.substring(1);
+    name = name.replace(baseDirectory, "");
     return doNotReplaceFiles.contains(name);
   }
 

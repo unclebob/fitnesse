@@ -8,6 +8,7 @@ import org.junit.Test;
 import util.FileUtil;
 import static util.RegexTestCase.assertSubString;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,6 +103,29 @@ public class UpdateFileListTest {
     assertEquals("TestFile\n", content);
     FileUtil.deleteFileSystemDirectory(testFolder);
     
+  }
+
+  @Test
+  public void testMainHappyPath() throws Exception {
+    String args[] = {"foo", "bar"};
+    UpdateFileList updaterMock = mock(UpdateFileList.class);
+    UpdateFileList.testUpdater = updaterMock;
+    when(updaterMock.directoriesAreValid()).thenReturn(true);
+    UpdateFileList.main(args);
+    verify(updaterMock).parseCommandLine(args);
+    verify(updaterMock).createUpdateList();
+    verify(updaterMock).createDoNotUpdateList();
+  }
+
+  @Test
+  public void testMainUnhappyPath() throws Exception {
+    String args[] = {"foo", "bar"};
+    UpdateFileList updaterMock = mock(UpdateFileList.class);
+    UpdateFileList.testUpdater = updaterMock;
+    when(updaterMock.directoriesAreValid()).thenReturn(false);
+    UpdateFileList.main(args);
+    verify(updaterMock).printMessage("Some directories are invalid.");
+    verify(updaterMock).exit();
   }
 
   private File createSpecialFileFolder() throws IOException {
