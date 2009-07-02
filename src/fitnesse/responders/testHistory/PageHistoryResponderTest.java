@@ -352,6 +352,41 @@ public class PageHistoryResponderTest {
     assertHasRegexp("Corrupt Test Result File", response.getContent());
   }
 
+  @Test
+  public void shouldBeAbleToAcceptFormatIsXMLforARequest() throws Exception {
+    request = new MockRequest();
+    request.setResource("TestPage");
+    request.addInput("format","xml");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    assertEquals("text/xml",response.getContentType());
+  }
+
+  @Test
+  public void shouldntBeCaseSensitiveForXMLRequest() throws Exception {
+    request = new MockRequest();
+    request.setResource("TestPage");
+    request.addInput("format","XMl");
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+    assertEquals("text/xml",response.getContentType());
+  }
+
+  @Test
+  public void shouldSendTestExecutionReportInXMLUponRequest() throws Exception {
+    request = new MockRequest();
+    request.setResource("TestPage");
+    File pageDirectory = addPageDirectory("TestPage");
+    File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0");
+    addDummyTestResult(resultFile);
+    request.addInput("resultDate","20090503110451");
+    request.addInput("format","xml");
+    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    String content = response.getContent();
+    assertHasRegexp("<FitNesseVersion>", content);
+    assertEquals("text/xml",response.getContentType());
+  }
+
   private void addBadDummyTestResult(File resultFile) throws Exception {
     FileUtil.createFile(resultFile, "JUNK");
   }

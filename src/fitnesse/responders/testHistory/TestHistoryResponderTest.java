@@ -5,6 +5,9 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
 import static fitnesse.responders.testHistory.PageHistory.BarGraph;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -35,7 +38,8 @@ public class TestHistoryResponderTest {
     history = new TestHistory();
     responder = new TestHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
-    context = new FitNesseContext();
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   private void makeResponse() throws Exception {
@@ -312,4 +316,19 @@ public class TestHistoryResponderTest {
     assertEquals(3, pageHistory.size());
   }
 
+  @Test
+  public void shouldBeAbleToAcceptFormatIsXMLforARequest() throws Exception {
+    MockRequest request = new MockRequest();
+    request.addInput("format", "xml");
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    assertHasRegexp("text/xml", response.getContentType());
+  }
+
+  @Test
+  public void shouldntBeCaseSensitiveForXMLRequest() throws Exception {
+    MockRequest request = new MockRequest();
+    request.addInput("format", "xML");
+    response = (SimpleResponse) responder.makeResponse(context, request);
+    assertHasRegexp("text/xml", response.getContentType());
+  }
 }
