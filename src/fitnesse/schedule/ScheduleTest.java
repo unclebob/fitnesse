@@ -17,7 +17,7 @@ public class ScheduleTest extends TestCase {
     schedule.start();
     Thread.sleep(700);
     schedule.stop();
-    assertTrue(counter.count >= 3);
+    assertTrue(String.format("Counter: %d should have been >= 3", counter.count), counter.count >= 3);
   }
 
   public void testAddingWhileRunning() throws Exception {

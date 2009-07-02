@@ -67,7 +67,7 @@ public class UpdateFileList {
     String[] components = arg.split(":");
     baseDirectory = components[1];
     if (!baseDirectory.endsWith("/"))
-      baseDirectory += System.getProperty("file.separator");
+      baseDirectory += "/";
   }
 
   public ArrayList<String> getDirectories() {
@@ -101,7 +101,7 @@ public class UpdateFileList {
   }
 
   private void addFilePathToAppropriateList(String directoryPath, File childFile) {
-    String childPath = directoryPath + System.getProperty("file.separator") + childFile.getName();
+    String childPath = directoryPath + "/" + childFile.getName();
     if (childFile.isDirectory())
       addFilePathsToList(childPath);
     else if (isDoNotReplaceFile(childFile))
@@ -121,6 +121,7 @@ public class UpdateFileList {
   private boolean isDoNotReplaceFile(File file) {
     String name = file.getPath();
     name = name.replace(baseDirectory, "");
+    name = name.replace(File.separator, "/");
     return doNotReplaceFiles.contains(name);
   }
 

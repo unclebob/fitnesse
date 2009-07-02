@@ -33,6 +33,7 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     testSystem.setFastTest(fastTest);
     String html = testSystem.runTestsAndGenerateHtml(pageData);
     testSystem.bye();
+    Thread.sleep(20);
     return html;
   }
 

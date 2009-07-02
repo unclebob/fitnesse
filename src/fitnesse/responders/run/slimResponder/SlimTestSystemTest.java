@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
@@ -52,7 +53,7 @@ public class SlimTestSystemTest {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     crawler = root.getPageCrawler();
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
     request = new MockRequest();
     responder = getSlimResponder();
     responder.setFastTest(true);
