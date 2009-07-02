@@ -12,7 +12,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
-
   private static final String cssSuffix1 = "1";
   private static final String cssSuffix2 = "2";
 
@@ -32,17 +31,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
   public SuiteHtmlFormatter(FitNesseContext context) {
     super(context);
-  }
-
-
-  protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
-    return new SuiteXmlFormatter(page, context) {
-      protected void close() throws Exception {
-      }
-
-      protected void writeData(byte[] byteArray) throws Exception {
-      }
-    };
   }
 
   public String getTestSystemHeader(String testSystemName) throws Exception {
@@ -102,14 +90,13 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void announceStartNewTest(WikiPage newTest) throws Exception {
+  public void newTestStarted(WikiPage newTest) throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), newTest);
     WikiPagePath fullPath = pageCrawler.getFullPath(newTest);
     String fullPathName = PathParser.render(fullPath);
 
     announceStartNewTest(relativeName, fullPathName);
-    xmlFormatter.announceStartNewTest(newTest);
   }
 
   private String getProgressHtml() throws Exception {
@@ -157,7 +144,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void processTestResults(WikiPage testPage, TestSummary testSummary)
+  public void testComplete(WikiPage testPage, TestSummary testSummary)
     throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
@@ -166,7 +153,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     }
 
     processTestResults(relativeName, testSummary);
-    xmlFormatter.processTestResults(testPage, testSummary);
   }
 
   private void switchCssSuffix() {
@@ -177,14 +163,13 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner)
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
     throws Exception {
     String tag = String.format("<h3>%s</h3>\n", testSystemName + ":" + testRunner);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
 
     testSystemFullName = testSystemName + ":" + testRunner;
-    xmlFormatter.announceStartTestSystem(testSystem, testSystemName, testRunner);
   }
 
   @Override

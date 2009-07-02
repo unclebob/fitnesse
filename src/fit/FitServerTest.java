@@ -3,18 +3,20 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import util.RegexTestCase;
 import util.StreamReader;
+import util.FileUtil;
+import static util.RegexTestCase.assertSubString;
+import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
+import static org.junit.Assert.*;
 
-public class FitServerTest extends RegexTestCase {
+public class FitServerTest {
   private Process process;
   private Socket socket;
   private ServerSocket serverSocket;
@@ -24,6 +26,13 @@ public class FitServerTest extends RegexTestCase {
   private ByteArrayOutputStream stdoutBytes;
   private String connectionStatusSize = "0000000000";
 
+  @Before
+  public void setup() {
+    String sentinelName = FitServer.sentinelName(1234);
+    FileUtil.deleteFile(sentinelName);
+  }
+
+  @After
   public void tearDown() throws Exception {
     if (process != null)
       process.destroy();
@@ -33,6 +42,7 @@ public class FitServerTest extends RegexTestCase {
       serverSocket.close();
   }
 
+  @Test
   public void testSimpleStartUp() throws Exception {
     String junkMessage = "x";
     connectionStatusSize = "0000000001";
@@ -42,6 +52,7 @@ public class FitServerTest extends RegexTestCase {
     process.waitFor();
   }
 
+  @Test
   public void testBadConnection() throws Exception {
     String errorMessage = "FAILURE";
     connectionStatusSize = "0000000007";
@@ -52,11 +63,12 @@ public class FitServerTest extends RegexTestCase {
     String stdoutString = new String(stdoutBytes.toByteArray());
 
     assertTrue(exitValue != 0);
-//TODO		This started to fail with Java 5.0... why does -1 turn into 255?
-//		assertEquals("stdout: " + stdoutString, -1, exitValue);
+    //TODO		This started to fail with Java 5.0... why does -1 turn into 255?
+    //		assertEquals("stdout: " + stdoutString, -1, exitValue);
     assertTrue(stdoutString.indexOf(errorMessage) != -1);
   }
 
+  @Test
   public void testNonTestInput() throws Exception {
     prepareSessionProcess();
     socketOutput.write("0000000020".getBytes());
@@ -69,7 +81,8 @@ public class FitServerTest extends RegexTestCase {
     assertTrue(output.indexOf("Can't find tag: table") != -1);
   }
 
-  public void testOneSimpleRun_Fail() throws Exception {
+  @Test
+    public void testOneSimpleRun_Fail() throws Exception {
     String table = simpleTable("FailFixture");
     prepareSessionProcess();
     checkDocumentExecution(table);
@@ -79,7 +92,8 @@ public class FitServerTest extends RegexTestCase {
     assertEquals(1, process.exitValue());
   }
 
-  public void testOneSimpleRun_Pass() throws Exception {
+  @Test
+    public void testOneSimpleRun_Pass() throws Exception {
     String table = simpleTable("PassFixture");
     prepareSessionProcess();
     checkDocumentExecution(table);
@@ -89,7 +103,8 @@ public class FitServerTest extends RegexTestCase {
     assertEquals(0, process.exitValue());
   }
 
-  public void testTwoSimpleRuns() throws Exception {
+  @Test
+    public void testTwoSimpleRuns() throws Exception {
     String table = simpleTable("FailFixture");
     prepareSessionProcess();
     checkDocumentExecution(table);
@@ -101,7 +116,8 @@ public class FitServerTest extends RegexTestCase {
     assertEquals(2, process.exitValue());
   }
 
-  public void testOneMulitiTableRun() throws Exception {
+  @Test
+    public void testOneMulitiTableRun() throws Exception {
     String document = simpleTable("FailFixture") + simpleTable("FailFixture");
     prepareSessionProcess();
 
@@ -114,7 +130,8 @@ public class FitServerTest extends RegexTestCase {
     assertEquals(2, process.exitValue());
   }
 
-  public void testUnicodeCharacters() throws Exception {
+  @Test
+    public void testUnicodeCharacters() throws Exception {
     String table = "\uba80\uba81\uba82\uba83" + simpleTable("PassFixture");
     prepareSessionProcess();
     FitProtocol.writeData(table, socketOutput);
@@ -124,7 +141,8 @@ public class FitServerTest extends RegexTestCase {
     terminateSessionProcess();
   }
 
-  public void testExtraTextIdPrinted() throws Exception {
+  @Test
+    public void testExtraTextIdPrinted() throws Exception {
     String document = "<html>" + simpleTable("PassFixture") + "monkey" + simpleTable("PassFixture") + "</html>";
     prepareSessionProcess();
 
@@ -138,7 +156,8 @@ public class FitServerTest extends RegexTestCase {
     terminateSessionProcess();
   }
 
-  public void testFitParseExceptionDontCrashSuite() throws Exception {
+  @Test
+    public void testFitParseExceptionDontCrashSuite() throws Exception {
     String input = "no table";
     prepareSessionProcess();
     checkDocumentExecution(input);
@@ -155,8 +174,8 @@ public class FitServerTest extends RegexTestCase {
   }
 
   private void prepareSessionProcess() throws Exception {
-    checkForCompetingProcesses();
-    String commandWithArguments = command() + " -v localhost 1234 23";
+    checkSentinelToMakeSureThatFitServerIsNotRunning();
+    String commandWithArguments = command() + " -s -v localhost 1234 23";
     process = Runtime.getRuntime().exec(commandWithArguments);
 
     stdoutBytes = new ByteArrayOutputStream();
@@ -167,22 +186,10 @@ public class FitServerTest extends RegexTestCase {
     establishConnection();
   }
 
-  private void checkForCompetingProcesses() throws Exception {
-    String lookupCommand = "lsof -i:1234";
-    Process lookupProcess = null;
-    int result = 1;
-    try {
-      lookupProcess = Runtime.getRuntime().exec(lookupCommand);
-      result = lookupProcess.waitFor();
-    } catch (IOException ex) {
-      // Thrown in case where 'lsof' cannot be found. Not sure of behavior on windows.
-      System.err.println("Unable to determine if another process is using port 1234 (git instaweb is a known conflict).");
-      System.err.println("If any test from FitServerTest fails inexplicably make sure to eliminate competing processes.");
-    }
-
-    if (result == 0) {
-      throw new IOException("Another process currently using port 1234.");
-    }
+  private void checkSentinelToMakeSureThatFitServerIsNotRunning() throws Exception {
+    String sentinelName = FitServer.sentinelName(1234);
+    File sentinel = new File(sentinelName);
+    assertFalse(sentinel.exists());
   }
 
   private void establishConnection() throws Exception {
@@ -279,7 +286,7 @@ public class FitServerTest extends RegexTestCase {
   }
 
   private void checkSize(String sizeString) throws Exception {
-    assertEquals(sizeString, read(10));
+    RegexTestCase.assertEquals(sizeString, read(10));
   }
 
   private void checkForTwoClassAttributesInResponse() throws Exception {
@@ -292,7 +299,6 @@ public class FitServerTest extends RegexTestCase {
   private String readWholeResponse() throws Exception {
     StringBuffer buffer = new StringBuffer();
     String block = readFromFitServer();
-    ;
     while (block.length() > 0) {
       buffer.append(block);
       block = readFromFitServer();
@@ -307,7 +313,7 @@ public class FitServerTest extends RegexTestCase {
 
   protected String simpleTable(String fixtureName) {
     return "<table>" +
-      "<tr><td>fitnesse.testutil." + fixtureName + "</td></tr>" +
-      "</table>";
+    "<tr><td>fitnesse.testutil." + fixtureName + "</td></tr>" +
+    "</table>";
   }
 }

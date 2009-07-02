@@ -85,7 +85,7 @@ public class TestExecutionReportTest {
     assertEquals("fail", TestExecutionReport.summaryClass(new TestSummary(1, 1, 1, 1)));
     assertEquals("error",TestExecutionReport.summaryClass(new TestSummary(0, 0, 0, 1)));
     assertEquals("error",TestExecutionReport.summaryClass(new TestSummary(0, 0, 1, 1)));
-    assertEquals("ignore",TestExecutionReport.summaryClass(new TestSummary(0, 0, 0, 0))); 
+    assertEquals("ignore",TestExecutionReport.summaryClass(new TestSummary(0, 0, 0, 0)));
     assertEquals("ignore",TestExecutionReport.summaryClass(new TestSummary(0, 0, 1, 0)));
 
   }

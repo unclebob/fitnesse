@@ -2,12 +2,14 @@ package fitnesse.updates;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 import util.FileUtil;
-import static util.RegexTestCase.assertSubString;
 import static util.RegexTestCase.assertDoesntHaveRegexp;
+import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +18,9 @@ public class UpdateFileListTest {
   private UpdateFileList updater;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     updater = new UpdateFileList();
+    createMultiLevelDirectory();
   }
 
   @Test
@@ -50,67 +53,69 @@ public class UpdateFileListTest {
 
   @Test
   public void shouldCreateAFileWithTheListOfFileNames() throws Exception {
-    File testFolder = createTestFolderandFile();
-    String content = runCreateFileAndGetContent(new String[]{"TestFolder"});
-    assertEquals("TestFolder/TestFile\n", content);
-    FileUtil.deleteFileSystemDirectory(testFolder);
+    String content = runCreateFileAndGetContent(new String[]{"MasterFolder"});
+    assertSubString("MasterFolder/MasterFile\n", content);
   }
 
 
   @Test
   public void shouldMakeUpdateListWithMultiLevelFolders() throws Exception {
-    File masterFolder = createMultiLevelDirectory();
     String content = runCreateFileAndGetContent(new String[]{"MasterFolder"});
     assertSubString("MasterFolder/MasterFile\n", content);
     assertSubString("MasterFolder/TestFolder/TestFile\n", content);
-    FileUtil.deleteFileSystemDirectory(masterFolder);
-
   }
 
   @Test
   public void shouldKnowWhichSpecialFilesNotToInclude() throws Exception {
-    File testFolder = createSpecialFileFolder();
-    String arg1 = "-doNotReplace:TestFolder/fitnesse.css";
-    String arg2 = "-doNotReplace:TestFolder/fitnesse_print.css";
-    String content = runCreateFileAndGetContent(new String[]{arg1, arg2,"TestFolder"});
+    String arg1 = "-doNotReplace:MasterFolder/TestFolder/fitnesse.css";
+    String arg2 = "-doNotReplace:MasterFolder/TestFolder/fitnesse_print.css";
+    String content = runCreateFileAndGetContent(new String[]{arg1, arg2, "MasterFolder/TestFolder"});
     assertSubString("TestFolder/TestFile", content);
     assertDoesntHaveRegexp("TestFolder/fitnesse.css", content);
     assertDoesntHaveRegexp("TestFolder/fitnesse_print.css", content);
-
-    FileUtil.deleteFileSystemDirectory(testFolder);
   }
 
   @Test
   public void shouldPutSpecialFilesInDifferentList() throws Exception {
-    File testFolder = createSpecialFileFolder();
-    String arg1 = "-doNotReplace:TestFolder/fitnesse.css";
-    String arg2 = "-doNotReplace:TestFolder/fitnesse_print.css";
-    updater.parseCommandLine(new String[] {arg1, arg2,"TestFolder"});
+    String arg1 = "-doNotReplace:MasterFolder/TestFolder/fitnesse.css";
+    String arg2 = "-doNotReplace:MasterFolder/TestFolder/fitnesse_print.css";
+    updater.parseCommandLine(new String[]{arg1, arg2, "MasterFolder/TestFolder"});
     File doNotUpdateFile = updater.createDoNotUpdateList();
     String doNotUpdateContent = FileUtil.getFileContent(doNotUpdateFile);
     FileUtil.deleteFile(doNotUpdateFile);
     assertSubString("TestFolder/fitnesse.css", doNotUpdateContent);
     assertSubString("TestFolder/fitnesse_print.css", doNotUpdateContent);
     assertDoesntHaveRegexp("TestFolder/TestFile", doNotUpdateContent);
-    FileUtil.deleteFileSystemDirectory(testFolder);
   }
 
   @Test
   public void shouldPrunePrefixes() throws Exception {
-    File testFolder = createTestFolderandFile();
-    String content = runCreateFileAndGetContent(new String[] {"-baseDirectory:TestFolder",""});
-    assertEquals("TestFile\n", content);
-    FileUtil.deleteFileSystemDirectory(testFolder);
-    
+    String content = runCreateFileAndGetContent(new String[]{"-baseDirectory:MasterFolder/TestFolder", ""});
+    assertSubString("TestFile\n", content);
+    assertDoesntHaveRegexp("TestFolder/TestFile", content);
   }
 
-  private File createSpecialFileFolder() throws IOException {
-    File testFolder = createTestFolderandFile();
-    File specialFile = new File(testFolder, "fitnesse.css");
-    specialFile.createNewFile();
-    File specialFile2 = new File(testFolder, "fitnesse_print.css");
-    specialFile2.createNewFile();
-    return testFolder;
+  @Test
+  public void testMainHappyPath() throws Exception {
+    String args[] = {"foo", "bar"};
+    UpdateFileList updaterMock = mock(UpdateFileList.class);
+    UpdateFileList.testUpdater = updaterMock;
+    when(updaterMock.directoriesAreValid()).thenReturn(true);
+    UpdateFileList.main(args);
+    verify(updaterMock).parseCommandLine(args);
+    verify(updaterMock).createUpdateList();
+    verify(updaterMock).createDoNotUpdateList();
+  }
+
+  @Test
+  public void testMainUnhappyPath() throws Exception {
+    String args[] = {"foo", "bar"};
+    UpdateFileList updaterMock = mock(UpdateFileList.class);
+    UpdateFileList.testUpdater = updaterMock;
+    when(updaterMock.directoriesAreValid()).thenReturn(false);
+    UpdateFileList.main(args);
+    verify(updaterMock).printMessage("Some directories are invalid.");
+    verify(updaterMock).exit();
   }
 
 
@@ -122,23 +127,15 @@ public class UpdateFileListTest {
     return content;
   }
 
-  private File createTestFolderandFile() throws IOException {
-    File testFolder = new File("TestFolder");
-    testFolder.mkdir();
-    File testFile = new File(testFolder, "TestFile");
-    testFile.createNewFile();
-    return testFolder;
+  private void createMultiLevelDirectory() throws IOException {
+    FileUtil.createFile("MasterFolder/MasterFile", "");
+    FileUtil.createFile("MasterFolder/TestFolder/TestFile", "");
+    FileUtil.createFile("MasterFolder/TestFolder/fitnesse.css", "");
+    FileUtil.createFile("MasterFolder/TestFolder/fitnesse_print.css", "");
   }
 
-  private File createMultiLevelDirectory() throws IOException {
-    File masterFolder = new File("MasterFolder");
-    masterFolder.mkdir();
-    File masterFile = new File(masterFolder, "MasterFile");
-    masterFile.createNewFile();
-    File testFolder = new File(masterFolder, "TestFolder");
-    testFolder.mkdir();
-    File testFile = new File(testFolder, "TestFile");
-    testFile.createNewFile();
-    return masterFolder;
+  @After
+  public void tearDown() {
+    FileUtil.deleteFileSystemDirectory("MasterFolder");
   }
 }

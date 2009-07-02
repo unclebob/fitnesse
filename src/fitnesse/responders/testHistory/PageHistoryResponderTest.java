@@ -6,7 +6,9 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.XmlFormatter;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -28,7 +30,7 @@ import java.util.SortedSet;
 public class PageHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
@@ -51,7 +53,8 @@ public class PageHistoryResponderTest {
   private void makeResponse() throws Exception {
     request = new MockRequest();
     request.setResource("TestPage");
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
   }
 
   private void removeResultsDirectory() {

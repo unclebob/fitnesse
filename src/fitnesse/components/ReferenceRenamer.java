@@ -17,14 +17,14 @@ import fitnesse.wikitext.widgets.PreformattedWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
-public abstract class ReferenceRenamer implements TraversalListener {
+public abstract class ReferenceRenamer implements TraversalListener, WidgetVisitor {
   protected WikiPage root;
 
   public ReferenceRenamer(WikiPage root) {
     this.root = root;
   }
 
-  protected void renameReferences() throws Exception {
+  public void renameReferences() throws Exception {
     root.getPageCrawler().traverse(root, this);
   }
 
@@ -32,7 +32,7 @@ public abstract class ReferenceRenamer implements TraversalListener {
     PageData data = currentPage.getData();
     String content = data.getContent();
     ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceModifyingWidgetBuilder);
-    widgetRoot.acceptVisitor(getVisitor());
+    widgetRoot.acceptVisitor(this);
 
     String newContent = widgetRoot.asWikiText();
     boolean pageHasChanged = !newContent.equals(content);
@@ -42,17 +42,15 @@ public abstract class ReferenceRenamer implements TraversalListener {
     }
   }
 
-  protected abstract WidgetVisitor getVisitor();
-
   @SuppressWarnings("unchecked")
   public static WidgetBuilder referenceModifyingWidgetBuilder = new WidgetBuilder(new Class[]{
-    WikiWordWidget.class,
-    LiteralWidget.class,
-    CommentWidget.class,
-    PreformattedWidget.class,
-    LinkWidget.class,
-    ImageWidget.class,
-    AliasLinkWidget.class,
-    ClasspathWidget.class
+      WikiWordWidget.class,
+      LiteralWidget.class,
+      CommentWidget.class,
+      PreformattedWidget.class,
+      LinkWidget.class,
+      ImageWidget.class,
+      AliasLinkWidget.class,
+      ClasspathWidget.class
   });
 }

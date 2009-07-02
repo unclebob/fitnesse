@@ -1,0 +1,12 @@
+</tbody></table><script language="javascript">tableSorter = new TableSorter('searchResultsTable', new DateParser(/^(\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\d+) (\d+).(\d+).(\d+) (\w+) (\d+)$/,8,2,3,4,5,6));</script>
+#if ($hits > 1)
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search.'</script>
+#elseif ($hits == 1)
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits result for your search.'</script>
+#else
+<script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria.'</script>
+#end
+<hr/>				<h4>To save this search as a link, paste the text below into a page.</h4>
+				<pre>[[Search below !-$searchedRootPage-! for &lt;description&gt;][$searchedRootPage.getName()?$request.getBody()]]</pre>
+#parse("pageFooter.vm")
+	

@@ -44,13 +44,13 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
   private boolean autoUpdateSetting;
 
   public WikiImporter() {
-    this.importerClient = new NullWikiImporterClient();
-    this.localPath = new WikiPagePath();
+    importerClient = new NullWikiImporterClient();
+    localPath = new WikiPagePath();
   }
 
   public WikiImporter(WikiImporterClient client) {
-    this.importerClient = client;
-    this.localPath = new WikiPagePath();
+    importerClient = client;
+    localPath = new WikiPagePath();
   }
 
   public void importWiki(WikiPage page) throws Exception {
@@ -278,10 +278,6 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
   public void processPage(WikiPage page) throws Exception {
     WikiPagePath relativePath = relativePath(page);
     pageCatalog.add(relativePath);
-  }
-
-  public String getSearchPattern() throws Exception {
-    return null;
   }
 
   public void setDeleteOrphanOption(boolean shouldDeleteOrphans) {

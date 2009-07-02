@@ -88,7 +88,7 @@ public class FitClient {
           summary.wrong = counts.wrong;
           summary.ignores = counts.ignores;
           summary.exceptions = counts.exceptions;
-          listener.acceptResultsLast(summary);
+          listener.testComplete(summary);
           received++;
         }
       }

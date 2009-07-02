@@ -46,6 +46,7 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
     assertFalse(update.shouldBeApplied());
   }
 
+  @Test
   public void testFileDiffer() throws Exception {
     update.doUpdate();
 

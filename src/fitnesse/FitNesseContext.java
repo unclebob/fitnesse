@@ -34,6 +34,7 @@ public class FitNesseContext {
   public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
+  public String testResultsDirectoryName = "testResults";
   public boolean shouldCollectHistory = false;
 
   public FitNesseContext() {
@@ -63,7 +64,7 @@ public class FitNesseContext {
 
 
   public File getTestHistoryDirectory() {
-    return new File(String.format("%s/files/testResults", rootPagePath));
+    return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
   }
 
   public void setRootPagePath() {

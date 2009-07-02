@@ -84,7 +84,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   public void acceptResult(PageResult result) throws Exception {
     String relativePageName = result.title();
     suiteFormatter.announceStartNewTest(relativePageName, rootPath + "." + relativePageName);
-    suiteFormatter.processTestOutput(result.content());
+    suiteFormatter.testOutputChunk(result.content());
     suiteFormatter.processTestResults(relativePageName, result.testSummary());
   }
 

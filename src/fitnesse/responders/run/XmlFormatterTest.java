@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
+import fitnesse.responders.testHistory.TestHistory;
 
 public class XmlFormatterTest {
   @Before
@@ -13,7 +14,9 @@ public class XmlFormatterTest {
   @Test
   public void makeFileName() throws Exception {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
-    Assert.assertEquals("20090413152143_1_2_3_4.xml", XmlFormatter.makeResultFileName(summary));
+    Assert.assertEquals(
+      "20090413152143_1_2_3_4.xml", 
+      TestHistory.makeResultFileName(summary, XmlFormatter.getTime()));
   }
 
 }

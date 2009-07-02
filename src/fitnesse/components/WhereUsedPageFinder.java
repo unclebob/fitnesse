@@ -60,8 +60,4 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, W
     return hits;
   }
 
-  public String getSearchPattern() throws Exception {
-    return subjectPage.getName();
-  }
-
 }

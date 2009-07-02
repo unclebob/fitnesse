@@ -3,15 +3,12 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 import util.CommandLine;
 import util.StreamReader;
+import util.FileUtil;
 import fit.exception.FitParseException;
 
 public class FitServer {
@@ -28,6 +25,7 @@ public class FitServer {
 
   private Socket socket;
   private boolean noExit;
+  private boolean sentinel;
 
   public FitServer(String host, int port, boolean verbose) {
     this.host = host;
@@ -47,11 +45,23 @@ public class FitServer {
 
   public void run(String argv[]) throws Exception {
     args(argv);
+    File sentinelFile = null;
+    if (sentinel) {
+      String sentinelName = sentinelName(port);
+      sentinelFile = new File(sentinelName);
+      sentinelFile.createNewFile();
+    }
     establishConnection();
     validateConnection();
     process();
     closeConnection();
+    if (sentinel)
+      FileUtil.deleteFile(sentinelFile);
     exit();
+  }
+
+  public static String sentinelName(int thePort) {
+    return String.format("fitserverSentinel%d", thePort);
   }
 
   public void closeConnection() throws IOException {
@@ -95,13 +105,14 @@ public class FitServer {
   }
 
   public void args(String[] argv) {
-    CommandLine commandLine = new CommandLine("[-v][-x] host port socketToken");
+    CommandLine commandLine = new CommandLine("[-v][-x][-s] host port socketToken");
     if (commandLine.parse(argv)) {
       host = commandLine.getArgument("host");
       port = Integer.parseInt(commandLine.getArgument("port"));
       socketToken = Integer.parseInt(commandLine.getArgument("socketToken"));
       verbose = commandLine.hasOption("v");
       noExit = commandLine.hasOption("x");
+      sentinel = commandLine.hasOption("s");
     } else
       usage();
   }

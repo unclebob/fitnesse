@@ -2,27 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.io.*;
+import java.util.*;
 
 public class FileUtil {
   public static final String ENDL = System.getProperty("line.separator");
 
   public static File createFile(String path, String content) {
-    return createFile(new File(path), content);
+    String names[] = path.split("/");
+    if (names.length == 1)
+      return createFile(new File(path), content);
+    else {
+      File parent = null;
+      for (int i = 0; i < names.length - 1; i++) {
+        parent = parent == null ? new File(names[i]) : new File(parent, names[i]);
+        if (!parent.exists())
+          parent.mkdir();
+      }
+      File fileToCreate = new File(parent, names[names.length - 1]);
+      return createFile(fileToCreate, content);
+    }
   }
 
   public static File createFile(File file, String content) {
@@ -32,7 +31,7 @@ public class FileUtil {
       fileOutput.write(content.getBytes());
     }
     catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
     finally {
       if (fileOutput != null)
@@ -174,5 +173,16 @@ public class FileUtil {
 
   public static String buildPath(String[] parts) {
     return StringUtil.join(Arrays.asList(parts), System.getProperty("file.separator"));
+  }
+
+  public static List<String> breakFilenameIntoParts(String fileName) {
+    List<String> parts = new ArrayList<String>(Arrays.asList(fileName.split("/")));
+    return parts;
+  }
+
+  public static String getPathOfFile(String fileName) {
+    List<String> parts = breakFilenameIntoParts(fileName);
+    parts.remove(parts.size()-1);
+    return buildPath(parts.toArray(new String[parts.size()]));
   }
 }

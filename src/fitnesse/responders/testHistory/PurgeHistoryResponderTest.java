@@ -4,20 +4,22 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import static org.junit.Assert.assertEquals;
+import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PurgeHistoryResponderTest {
   private File resultsDirectory;
   private TestHistory history;
   private FitNesseContext context;
-  private SimpleResponse response;
   private PurgeHistoryResponder responder;
   private MockRequest request;
 
@@ -35,95 +37,102 @@ public class PurgeHistoryResponderTest {
     request.setResource("TestPage");
   }
 
-    private void removeResultsDirectory() {
+  @After
+  public void teardown() {
+    removeResultsDirectory();
+  }
+
+  private void removeResultsDirectory() {
     if (resultsDirectory.exists())
       FileUtil.deleteFileSystemDirectory(resultsDirectory);
   }
 
-   private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
+  private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
     File testResultFile = new File(pageDirectory, testResultFileName + ".xml");
     testResultFile.createNewFile();
     return testResultFile;
   }
 
-   private File addPageDirectory(String pageName) {
+  private File addPageDirectory(String pageName) {
     File pageDirectory = new File(resultsDirectory, pageName);
     pageDirectory.mkdir();
     return pageDirectory;
   }
 
-  private void makeResponse() throws Exception {
-     response = (SimpleResponse) responder.makeResponse(context, request);
-   }
-
   @Test
-  public void shouldBeAbleToGetTheCorrectMinimumDate() throws Exception {
-    long fakeDate = 1245190575759L;
-    Date date = new Date(fakeDate);
-    long dateStandard = 20090616171615L;
-    long formatDays = 1000000;
-    dateStandard = dateStandard - 10 * formatDays;
+  public void shouldBeAbleToSubtractDaysFromDates() throws Exception {
+    Date date = makeDate("20090616171615");
     responder.setTodaysDate(date);
-    long resultDate = responder.getTheMinimumDate(10);
-    assertEquals(dateStandard, resultDate);
+    Date resultDate = responder.getDateDaysEarlier(10);
+    Date tenDaysEarlier = makeDate("20090606171615");
+    assertEquals(tenDaysEarlier, resultDate);
+  }
+
+  private Date makeDate(String dateString) throws ParseException {
+    SimpleDateFormat format = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    Date date = format.parse(dateString);
+    return date;
   }
 
   @Test
   public void shouldBeAbleToDeleteSomeTestHistory() throws Exception {
-    responder.setTodaysDate(new Date());
+    responder.setTodaysDate(makeDate("20090616000000"));
     File pageDirectory = addPageDirectory("SomePage");
-    addTestResult(pageDirectory, "20090402000000_1_0_0_0");
-    addTestResult(pageDirectory, "20090602000000_1_0_0_0");
-    
+    addTestResult(pageDirectory, "20090614000000_1_0_0_0");
+    addTestResult(pageDirectory, "20090615000000_1_0_0_0");
+
     history.readHistoryDirectory(resultsDirectory);
     PageHistory pageHistory = history.getPageHistory("SomePage");
     assertEquals(2, pageHistory.size());
-    int days = 30;
-    responder.deleteTestHistoryOlderThan(days);
+    responder.deleteTestHistoryOlderThanDays(1);
     history.readHistoryDirectory(resultsDirectory);
     pageHistory = history.getPageHistory("SomePage");
     assertEquals(1, pageHistory.size());
-
-    deleteDirectory(pageDirectory);
-  }
-
-  private void deleteDirectory(File file) {
-    FileUtil.deleteFileSystemDirectory(file);
+    assertNotNull(pageHistory.get(makeDate("20090615000000")));
+    assertNull(pageHistory.get(makeDate("20090614000000")));
   }
 
   @Test
-  public void shouldDeleteHistoryFromRequest() throws Exception {
-    request.addInput("purgeHistory","");
-    request.addInput("days", "30");
+  public void shouldDeletePageHistoryDirectoryIfEmptiedByPurge() throws Exception {
+    responder.setTodaysDate(makeDate("20090616000000"));
     File pageDirectory = addPageDirectory("SomePage");
-    addTestResult(pageDirectory, "20090402000000_1_0_0_0");
-    addTestResult(pageDirectory, "20090602000000_1_0_0_0");
-    history.readHistoryDirectory(resultsDirectory);
-    PageHistory pageHistory = history.getPageHistory("SomePage");
-    assertEquals(2, pageHistory.size());
+    addTestResult(pageDirectory, "20090614000000_1_0_0_0");
+    responder.deleteTestHistoryOlderThanDays(1);
+    String[] files = resultsDirectory.list();
+    assertEquals(0, files.length);
+  }
 
-    responder.makeResponse(context,request);
-    history.readHistoryDirectory(resultsDirectory);
-    pageHistory = history.getPageHistory("SomePage");
-    assertEquals(1, pageHistory.size());
+  @Test
+  public void shouldDeleteHistoryFromRequestAndRedirect() throws Exception {
+    StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder();
+    request.addInput("days", "30");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+    assertEquals(30, responder.daysDeleted);
+    assertEquals(303, response.getStatus());
+    assertEquals("?testHistory", response.getHeader("Location"));
   }
 
   @Test
   public void shouldMakeErrorResponseWhenGetsInvalidNumberOfDays() throws Exception {
-    request.addInput("purgeHistory","");
-    request.addInput("days","-42");
-    history.readHistoryDirectory(resultsDirectory);
-    Response response = responder.makeResponse(context,request);
-    assertEquals(400,response.getStatus());
+    request.addInput("days", "-42");
+    Response response = responder.makeResponse(context, request);
+    assertEquals(400, response.getStatus());
   }
 
   @Test
   public void shouldMakeErrorResponseWhenItGetsInvalidTypeForNumberOfDays() throws Exception {
-    request.addInput("purgeHistory", "");
-    request.addInput("days","bob");
-    history.readHistoryDirectory(resultsDirectory);
-    Response response = responder.makeResponse(context,request);
-    assertEquals(400,response.getStatus());
+    request.addInput("days", "bob");
+    Response response = responder.makeResponse(context, request);
+    assertEquals(400, response.getStatus());
 
+  }
+
+  private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {
+    public int daysDeleted = -1;
+
+    @Override
+    public void deleteTestHistoryOlderThanDays(int days) throws ParseException {
+      daysDeleted = days;
+    }
   }
 }

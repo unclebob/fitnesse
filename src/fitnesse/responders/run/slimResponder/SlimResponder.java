@@ -61,7 +61,7 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
   public void acceptOutputFirst(String output) throws Exception {
   }
 
-  public void acceptResultsLast(TestSummary testSummary) throws Exception {
+  public void testComplete(TestSummary testSummary) throws Exception {
   }
 
   public void exceptionOccurred(Throwable e) {

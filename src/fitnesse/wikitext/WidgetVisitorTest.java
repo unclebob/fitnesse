@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.wikitext.widgets;
+package fitnesse.wikitext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,12 @@ import java.util.List;
 import junit.framework.TestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.widgets.AliasLinkWidget;
+import fitnesse.wikitext.widgets.ItalicWidget;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.TextWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class WidgetVisitorTest extends TestCase implements WidgetVisitor {
   List<WikiWidget> visits = new ArrayList<WikiWidget>();

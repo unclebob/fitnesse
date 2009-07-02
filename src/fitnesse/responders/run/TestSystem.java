@@ -96,8 +96,8 @@ public abstract class TestSystem implements TestSystemListener {
     testSystemListener.acceptOutputFirst(output);
   }
 
-  public void acceptResultsLast(TestSummary testSummary) throws Exception {
-    testSystemListener.acceptResultsLast(testSummary);
+  public void testComplete(TestSummary testSummary) throws Exception {
+    testSystemListener.testComplete(testSummary);
   }
 
   public void exceptionOccurred(Throwable e) {

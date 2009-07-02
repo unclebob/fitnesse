@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.run.XmlFormatter;
 import fitnesse.wiki.*;
 import org.htmlparser.*;
@@ -14,6 +15,7 @@ import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 public class PageDriver {
@@ -59,6 +61,8 @@ public class PageDriver {
     html = html.replaceAll("\n", " ");
     html = html.replaceAll("\r", " ");
     html = html.replaceAll("\\s+", " ");
+    System.out.println("html = " + html);
+    System.out.println("subString = " + subString);
     return (html.indexOf(subString) != -1);
   }
 
@@ -117,7 +121,7 @@ public class PageDriver {
   }
 
   public String pageHistoryDateSignatureOf(Date date) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     return dateFormat.format(date);
   }
 
@@ -198,5 +202,9 @@ public class PageDriver {
 
   public int echoInt(int i) {
     return i;
+  }
+
+  public void setXmlFormatterTimeTo(String time) throws ParseException {
+    XmlFormatter.setTestTime(time);
   }
 }

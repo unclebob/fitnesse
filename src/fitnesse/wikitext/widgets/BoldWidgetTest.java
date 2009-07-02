@@ -15,9 +15,9 @@ public class BoldWidgetTest extends TestCase {
   }
 
   public void testRegexp() throws Exception {
-    assertTrue("match1", Pattern.matches(BoldWidget.REGEXP, "'''bold'''"));
-    assertTrue("match2", Pattern.matches(BoldWidget.REGEXP, "''''bold''''"));
-    assertTrue("match3", !Pattern.matches(BoldWidget.REGEXP, "'' 'not bold' ''"));
+    assertTrue(Pattern.matches(BoldWidget.REGEXP, "'''bold'''"));
+    assertTrue(Pattern.matches(BoldWidget.REGEXP, "''''bold''''"));
+    assertFalse(Pattern.matches(BoldWidget.REGEXP, "'' 'not bold' ''"));
   }
 
   public void testBadConstruction() throws Exception {

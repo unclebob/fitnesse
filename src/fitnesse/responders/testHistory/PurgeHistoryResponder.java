@@ -7,7 +7,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.run.XmlFormatter;
 import fitnesse.responders.templateUtilities.PageTitle;
 import org.apache.velocity.VelocityContext;
 import util.FileUtil;
@@ -23,55 +22,48 @@ public class PurgeHistoryResponder implements Responder {
 
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    initializeResponder(context);
+    if (hasValidInputs(request)) {
+      purgeHistory(request);
+      return makeValidResponse(context);
+    } else {
+      return makeErrorResponse(context, request);
+    }
+  }
+
+  private void initializeResponder(FitNesseContext context) {
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
     todaysDate = new Date();
-    if (hasValidInputs(request)) {
-      purgeHistory(request);
-      SimpleResponse response = makeValidResponse(context);
-      return response;
-    } else {
-      Response response = makeErrorResponse(context, request);
-      return response;
-    }
   }
 
   private SimpleResponse makeValidResponse(FitNesseContext context) throws Exception {
     SimpleResponse response = new SimpleResponse();
-    TestHistory history = new TestHistory();
-    history.readHistoryDirectory(resultsDirectory);
-    VelocityContext velocityContext = new VelocityContext();
-    velocityContext.put("pageTitle", new PageTitle("Test History"));
-    velocityContext.put("testHistory", history);
-    response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistory.vm"));
+    response.redirect("?testHistory");
     return response;
   }
 
   private void purgeHistory(Request request) throws ParseException {
-    Integer days = getDaysInput(request);
-    deleteTestHistoryOlderThan(days);
+    int days = getDaysInput(request);
+    deleteTestHistoryOlderThanDays(days);
   }
 
   private Integer getDaysInput(Request request) {
     String daysInput = request.getInput("days").toString();
-    Integer days;
-    try{
-      days = Integer.parseInt(daysInput);
-     }
-    catch (Exception e){
-       days = -1;
-    }
+    return parseInt(daysInput);
+  }
 
-    return days;
+  private Integer parseInt(String daysInput) {
+    try {
+      return Integer.parseInt(daysInput);
+    }
+    catch (Exception e) {
+      return -1;
+    }
   }
 
   private boolean hasValidInputs(Request request) {
-    if (request.getInput("days") == null)
-      return false;
-    Integer days = getDaysInput(request);
-    if (days < 0)
-      return false;
-    return true;
+    return request.getInput("days") != null && getDaysInput(request) >= 0;
 
   }
 
@@ -87,38 +79,48 @@ public class PurgeHistoryResponder implements Responder {
     todaysDate = date;
   }
 
-  public void deleteTestHistoryOlderThan(int days) throws ParseException {
-    long minimumDate = getTheMinimumDate(days);
+  public void deleteTestHistoryOlderThanDays(int days) throws ParseException {
+    Date purgeOlder = getDateDaysEarlier(days);
     File[] files = FileUtil.getDirectoryListing(resultsDirectory);
     for (File file : files) {
-      deleteFileIfAppropriate(minimumDate, file);
+      deleteFileIfAppropriate(purgeOlder, file);
     }
   }
 
-  public long getTheMinimumDate(int days) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(XmlFormatter.TEST_RESULT_FILE_DATE_PATTERN);
-    String dateText = dateFormat.format(todaysDate);
-    long dateStandard = new Long(dateText);
-    long formatDays = 1000000;
-    dateStandard = dateStandard - days * formatDays;
-    return dateStandard;
+  public Date getDateDaysEarlier(int days) {
+    long now = todaysDate.getTime();
+    long millisecondsPerDay = 1000L * 60L * 60L * 24L;
+    Date daysEarlier = new Date(now - (millisecondsPerDay * days));
+    return daysEarlier;
   }
 
-  private void deleteFileIfAppropriate(long dateStandard, File file) {
+  private void deleteFileIfAppropriate(Date purgeOlder, File file) {
     if (file.isDirectory()) {
       File[] files = FileUtil.getDirectoryListing(file);
       for (File childFile : files)
-        deleteFileIfAppropriate(dateStandard, childFile);
+        deleteFileIfAppropriate(purgeOlder, childFile);
+      if (file.list().length == 0)
+        FileUtil.deleteFileSystemDirectory(file);
     } else
-      deleteFileIfItIsTooOld(dateStandard, file);
+      deleteFileIfItIsTooOld(purgeOlder, file);
   }
 
-  private void deleteFileIfItIsTooOld(long dateStandard, File file) {
+  private void deleteFileIfItIsTooOld(Date purgeOlder, File file) {
     String name = file.getName();
-    String dateFromName = name.split("_")[0];
-    long date = new Long(dateFromName);
-    if (date < dateStandard)
+    Date date = getDateFromPageHistoryFileName(name);
+    if (date.getTime() < purgeOlder.getTime())
       FileUtil.deleteFile(file);
+  }
+
+  private Date getDateFromPageHistoryFileName(String name) {
+    Date date;
+    try {
+      SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+      date = dateFormat.parse(name.split("_")[0]);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    return date;
   }
 
 

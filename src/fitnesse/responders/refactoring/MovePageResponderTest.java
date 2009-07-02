@@ -101,7 +101,7 @@ public class MovePageResponderTest extends ResponderTestCase {
   public void testCantMoveToSelf() throws Exception {
     pageA.getData().setAttribute("someAttribute", "someValue");
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
-    SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "PageOne", true);
+    SimpleResponse response = movePage("PageOne.PageA", "PageOne", true);
     assertSubString("Cannot move", response.getContent());
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
   }
@@ -112,7 +112,7 @@ public class MovePageResponderTest extends ResponderTestCase {
     assertTrue(crawler.pageExists(root, PathParser.parse("PageTwo.PageA")));
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
 
-    SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "PageTwo", true);
+    SimpleResponse response = movePage("PageOne.PageA", "PageTwo", true);
     assertSubString("Cannot move", response.getContent());
     assertEquals("someContent", pageTwo.getChildPage("PageA").getData().getContent());
     assertEquals("content", pageA.getData().getContent());
@@ -155,7 +155,7 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   public void testCantMovePageBelowChild() throws Exception {
-    SimpleResponse response = (SimpleResponse) movePage("PageOne", "PageOne.PageA", true);
+    SimpleResponse response = movePage("PageOne", "PageOne.PageA", true);
     assertSubString("Cannot move", response.getContent());
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
 
@@ -183,16 +183,16 @@ public class MovePageResponderTest extends ResponderTestCase {
   }
 
   public void testRedirection() throws Exception {
-    String url = moveResponder.createRedirectionUrl(pageOne, pageA);
+    String url = moveResponder.createRedirectionUrl(pageOne, pageA.getName());
     assertEquals("PageOne.PageA", url);
 
-    url = moveResponder.createRedirectionUrl(root, pageA);
+    url = moveResponder.createRedirectionUrl(root, pageA.getName());
     assertEquals("PageA", url);
   }
 
   public void testBadMoveLocationName() throws Exception {
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
-    SimpleResponse response = (SimpleResponse) movePage("PageOne.PageA", "NoSuchPage", true);
+    SimpleResponse response = movePage("PageOne.PageA", "NoSuchPage", true);
     assertSubString("Cannot move", response.getContent());
     assertTrue(crawler.pageExists(root, PathParser.parse("PageOne.PageA")));
   }

@@ -13,10 +13,8 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,33 +22,37 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public abstract class XmlFormatter extends BaseFormatter {
+public class XmlFormatter extends BaseFormatter {
+  private WriterSource writerSource;
+
+  public interface WriterSource {
+    Writer getWriter(TestSummary counts, long time) throws Exception;
+  }
   protected TestExecutionReport testResponse = new TestExecutionReport();
   private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
   private TestSystem testSystem;
-  private FileWriter fileWriter;
   private static long testTime;
   protected TestSummary finalSummary = new TestSummary();
-  public static final String TEST_RESULT_FILE_DATE_PATTERN = "yyyyMMddHHmmss";
 
-  public XmlFormatter(FitNesseContext context, final WikiPage page) throws Exception {
+  public XmlFormatter(FitNesseContext context, final WikiPage page, WriterSource writerSource) throws Exception {
     super(context, page);
+    this.writerSource = writerSource;
   }
 
-  public void announceStartNewTest(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test) throws Exception {
     appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
 
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
     this.testSystem = testSystem;
   }
 
-  public void processTestOutput(String output) throws Exception {
+  public void testOutputChunk(String output) throws Exception {
     appendHtmlToBuffer(output);
   }
 
-  public void processTestResults(WikiPage test, TestSummary testSummary)
+  public void testComplete(WikiPage test, TestSummary testSummary)
     throws Exception {
     processTestResults(test.getName(), testSummary);
   }
@@ -65,7 +67,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     addCountsToResult(testSummary);
     currentResult.relativePageName = relativeTestName;
     currentResult.tags = page.getData().getAttribute(PageData.PropertySUITES);
-    
+
     if (testSystem instanceof SlimTestSystem) {
       SlimTestSystem slimSystem = (SlimTestSystem) testSystem;
       new SlimTestXmlFormatter(currentResult, slimSystem).invoke();
@@ -81,78 +83,31 @@ public abstract class XmlFormatter extends BaseFormatter {
     testResponse.rootPath = getPage().getName();
   }
 
-  public void allTestingComplete() throws Exception {
+  public int allTestingComplete() throws Exception {
     try {
       writeResults();
     } catch (Exception e) {
       throw new RuntimeException(e);
-    } finally {
-      close();
-    }
+    } 
+    return 0;
   }
 
-  private void writeResults() throws Exception {
-    makeFileWriter();
+  protected void writeResults() throws Exception {
+    writeResults(writerSource.getWriter(finalSummary, getTime()));
+  }
+
+  protected void writeResults(Writer writer) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
     Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
-    template.merge(velocityContext, getWriter());
-    if (fileWriter != null)
-      fileWriter.close();
-  }
-
-  private void makeFileWriter() throws Exception {
-    if (context.shouldCollectHistory) {
-      File resultPath = new File(String.format("%s/%s/%s",
-        context.getTestHistoryDirectory(),
-        page.getPageCrawler().getFullPath(page).toString(),
-        makeResultFileName(getFinalSummary())));
-      File resultDirectory = new File(resultPath.getParent());
-      resultDirectory.mkdirs();
-      File resultFile = new File(resultDirectory, resultPath.getName());
-      fileWriter = new FileWriter(resultFile);
-    } else {
-      fileWriter = null;
-    }
+    template.merge(velocityContext, writer);
+    writer.close();
   }
 
   protected TestSummary getFinalSummary() {
     return finalSummary;
   }
 
-  public static String makeResultFileName(TestSummary summary) {
-    SimpleDateFormat format = new SimpleDateFormat(TEST_RESULT_FILE_DATE_PATTERN);
-    String datePart = format.format(new Date(getTime()));
-    return String.format("%s_%d_%d_%d_%d.xml", datePart, summary.getRight(), summary.getWrong(), summary.getIgnores(), summary.getExceptions());
-  }
-
-  private Writer getWriter() {
-    Writer writer = new Writer() {
-      public void write(char[] cbuf, int off, int len) {
-        String fragment = new String(cbuf, off, len);
-        try {
-          writeData(fragment.getBytes());
-          if (fileWriter != null)
-            fileWriter.append(fragment);
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-      }
-
-      public void flush() throws IOException {
-      }
-
-      public void close() throws IOException {
-      }
-    };
-    return writer;
-  }
-
-  protected abstract void writeData(byte[] byteArray) throws Exception;
-
-  protected void close() throws Exception {
-
-  }
 
   private void addCountsToResult(TestSummary testSummary) {
     currentResult.right = Integer.toString(testSummary.getRight());
@@ -178,7 +133,7 @@ public abstract class XmlFormatter extends BaseFormatter {
     }
   }
 
-  private static long getTime() {
+  public static long getTime() {
     if (testTime != 0)
       return testTime;
     else

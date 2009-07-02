@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import util.RegexTestCase;
 import static util.RegexTestCase.*;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -35,7 +34,7 @@ public class SetupTeardownIncluderTest {
 
   @Test
   public void testIncludeSetupTearDownOutsideOfSuite()
-    throws Exception {
+  throws Exception {
     SetupTeardownIncluder.includeInto(pageData);
     String html = pageData.getHtml();
     assertSubString(".SetUp", html);

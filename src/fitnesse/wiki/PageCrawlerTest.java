@@ -6,11 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 
-import junit.framework.TestCase;
 import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import static org.junit.Assert.*;
 
 public class PageCrawlerTest implements TraversalListener {
@@ -164,10 +162,6 @@ public class PageCrawlerTest implements TraversalListener {
 
   public void processPage(WikiPage page) throws Exception {
     traversedPages.add(page.getName());
-  }
-
-  public String getSearchPattern() throws Exception {
-    return "blah";
   }
 
   @Test

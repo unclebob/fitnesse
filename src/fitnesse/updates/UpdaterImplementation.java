@@ -8,7 +8,7 @@ import util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Properties;
+import java.util.List;
 
 public class UpdaterImplementation extends UpdaterBase {
   public static boolean testing = false;
@@ -24,54 +24,58 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
   private Update[] makeAllUpdates() throws Exception {
-    int listSize = updateList.size() + updateDoNotCopyOver.size();
-    updates = new Update[listSize];
-    int index = 0;
-    for (String updateableFile : updateList) {
-      String path = getCorrectPathForTheDestination(updateableFile);
-      String source = getCorrectPathFromJar(updateableFile);
-      updates[index] = new ReplacingFileUpdate(context.rootPath, source, path);
-      index++;
-    }
-    for (String nonCopyableFile : updateDoNotCopyOver) {
-      String path = getCorrectPathForTheDestination(nonCopyableFile);
-      String source = getCorrectPathFromJar(nonCopyableFile);
-      updates[index] = new FileUpdate(context.rootPath, source, path);
-      index++;
-    }
-    return updates;
+    List<Update> updates = new ArrayList<Update>();
+    addAllFilesToBeReplaced(updates);
+    addAllFilesThatShouldNotBeCopiedOver(updates);
+    return updates.toArray(new Update[updates.size()]);
 
   }
 
+  private void addAllFilesThatShouldNotBeCopiedOver(List<Update> updates) throws Exception {
+    for (String nonCopyableFile : updateDoNotCopyOver) {
+      String path = getCorrectPathForTheDestination(nonCopyableFile);
+      String source = getCorrectPathFromJar(nonCopyableFile);
+      updates.add(new FileUpdate(context.rootPath, source, path));
+    }
+  }
+
+  private void addAllFilesToBeReplaced(List<Update> updates) throws Exception {
+    for (String updateableFile : updateList) {
+      String path = getCorrectPathForTheDestination(updateableFile);
+      String source = getCorrectPathFromJar(updateableFile);
+      updates.add(new ReplacingFileUpdate(context.rootPath, source, path));
+    }
+  }
+
   public String getCorrectPathFromJar(String updateableFile) {
-    return "Resources/"+updateableFile;
+    return "Resources/" + updateableFile;
   }
 
 
   public String getCorrectPathForTheDestination(String updateableFile) {
     if (updateableFile.startsWith("FitNesseRoot"))
       updateableFile = updateableFile.replace("FitNesseRoot", context.rootDirectoryName);
-    int lastIndexOfSlash = updateableFile.lastIndexOf("/");
-    if (lastIndexOfSlash >= 0)
-      return updateableFile.substring(0, lastIndexOfSlash);
-    else
-      return updateableFile;
+    return FileUtil.getPathOfFile(updateableFile);
   }
 
   private void createUpdateAndDoNotCopyOverLists() {
-    try {
-      getUpdateFilesFromJarFile();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    File updateFileList = new File(context.rootPagePath,"updateList");
-    File updateDoNotCopyOverFileList = new File(context.rootPagePath,"updateDoNotCopyOverList");
+    tryToGetUpdateFilesFromJarFile();
+    File updateFileList = new File(context.rootPagePath, "updateList");
+    File updateDoNotCopyOverFileList = new File(context.rootPagePath, "updateDoNotCopyOverList");
     tryToParseTheFileIntoTheList(updateFileList, updateList);
     tryToParseTheFileIntoTheList(updateDoNotCopyOverFileList, updateDoNotCopyOver);
   }
 
+  private void tryToGetUpdateFilesFromJarFile() {
+    try {
+      getUpdateFilesFromJarFile();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public void getUpdateFilesFromJarFile() throws Exception {
-    Update update = new FileUpdate(context.rootPagePath,"Resources/updateList", ".");
+    Update update = new FileUpdate(context.rootPagePath, "Resources/updateList", ".");
     update.doUpdate();
     update = new FileUpdate(this.context.rootPagePath, "Resources/updateDoNotCopyOverList", ".");
     update.doUpdate();
@@ -79,14 +83,14 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public void tryToParseTheFileIntoTheList(File updateFileList, ArrayList<String> list) {
     if (updateFileList.exists() == false)
-      System.out.println("Could Not Find UpdateList");
-    else {
-      try {
-        parseTheFileContentToAList(updateFileList, list);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      throw new RuntimeException("Could Not Find UpdateList");
+
+    try {
+      parseTheFileContentToAList(updateFileList, list);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+
   }
 
   private void parseTheFileContentToAList(File updateFileList, ArrayList<String> list) throws Exception {
@@ -98,17 +102,24 @@ public class UpdaterImplementation extends UpdaterBase {
   }
 
   public void update() throws Exception {
-    Properties properties = getProperties();
-    String versionProperty = properties.getProperty("Version");
-    if (versionProperty == null || !versionProperty.equals(fitNesseVersion)) {
+    if (shouldUpdate()) {
       System.err.println("Unpacking new version of FitNesse resources.  Please be patient.");
       super.update();
-      properties.put("Version", fitNesseVersion);
+      getProperties().put("Version", fitNesseVersion);
       saveProperties();
       System.err.println("You must now reload FitNesse.  Thank you for your patience........");
-      if (!testing)
-        System.exit(0);
+      exit();
     }
+  }
+
+  private void exit() {
+    if (!testing)
+      System.exit(0);
+  }
+
+  private boolean shouldUpdate() {
+    String versionProperty = getProperties().getProperty("Version");
+    return versionProperty == null || !versionProperty.equals(fitNesseVersion);
   }
 
   public void setFitNesseVersion(String version) {

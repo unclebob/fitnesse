@@ -30,8 +30,9 @@ public class SearchResponder extends ResultResponder {
   }
 
   protected void startSearching() throws Exception {
+    super.startSearching();
     String searchString = getSearchString();
-    if (!searchString.equals("")) {
+    if (!"".equals(searchString)) {
       String searchType = getSearchType();
       if ("Title".equals(searchType))
         new TitleWikiPageFinder(searchString, this).search(root);

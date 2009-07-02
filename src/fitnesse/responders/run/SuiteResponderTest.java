@@ -28,6 +28,7 @@ import fitnesse.wiki.WikiPagePath;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -360,11 +361,32 @@ public class SuiteResponderTest {
   }
 
   @Test
-  public void normalSuiteRunProducesTestResultFile() throws Exception {
-    context.shouldCollectHistory = true;
-    TestSummary counts = new TestSummary(2,0,0,0);
+  public void normalSuiteRunWithThreePassingTestsProducesSuiteResultFile() throws Exception {
+    TestSummary counts = new TestSummary(3,0,0,0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+      context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
+    File xmlResultsFile = new File(resultsFileName);
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
+    runSuite();
+
+    FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
+    XmlUtil.newDocument(xmlResultsStream);
+    xmlResultsStream.close();
+    xmlResultsFile.delete();
+  }
+
+  @Ignore
+  @Test
+  public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
+    TestSummary counts = new TestSummary(2,0,0,0);
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/SlimTest/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
 

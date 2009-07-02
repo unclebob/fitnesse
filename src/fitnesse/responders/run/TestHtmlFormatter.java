@@ -13,7 +13,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   private CompositeExecutionLog log = null;
   private HtmlPage htmlPage = null;
   private boolean wasInterupted = false;
-  BaseFormatter xmlFormatter = BaseFormatter.NULL;
 
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
@@ -21,19 +20,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
                            final HtmlPageFactory pageFactory) throws Exception {
     super(context, page);
     this.pageFactory = pageFactory;
-    if (context.shouldCollectHistory) {
-      xmlFormatter = makeXmlFormatter(context, page);
-    }
-  }
-
-  protected XmlFormatter makeXmlFormatter(final FitNesseContext context, final WikiPage page) throws Exception {
-    return new XmlFormatter(context, page) {
-      protected void close() throws Exception {
-      }
-
-      protected void writeData(byte[] byteArray) throws Exception {
-      }
-    };
   }
 
   //special constructor for TestRunner.  Used only for formatting.
@@ -50,7 +36,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     htmlPage.main.use(HtmlPage.BreakPoint);
     htmlPage.divide();
     writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
-    xmlFormatter.writeHead(pageType);
   }
 
   private HtmlTag makeSummaryPlaceHolder() {
@@ -68,25 +53,21 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return "";
   }
 
-  public void announceStartNewTest(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test) throws Exception {
     writeData(getPage().getData().getHeaderPageHtml());
-    xmlFormatter.announceStartNewTest(test);
   }
 
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner)
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
     throws Exception {
-    xmlFormatter.announceStartTestSystem(testSystem, testSystemName, testRunner);
   }
 
-  public void processTestOutput(String output) throws Exception {
+  public void testOutputChunk(String output) throws Exception {
     writeData(output);
-    xmlFormatter.processTestOutput(output);
   }
 
-  public void processTestResults(WikiPage test, TestSummary testSummary)
+  public void testComplete(WikiPage test, TestSummary testSummary)
     throws Exception {
     getAssertionCounts().add(testSummary);
-    xmlFormatter.processTestResults(test, testSummary);
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
@@ -129,12 +110,12 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
-    xmlFormatter.allTestingComplete();
+  public int allTestingComplete() throws Exception {
     removeStopTestLink();
     publishAndAddLog();
     finishWritingOutput();
     close();
+    return exitCode();
   }
 
   protected void close() throws Exception {

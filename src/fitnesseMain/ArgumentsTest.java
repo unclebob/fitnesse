@@ -28,7 +28,6 @@ public class ArgumentsTest extends TestCase {
     assertEquals(false, args.isOmittingUpdates());
     assertEquals(14, args.getDaysTillVersionsExpire());
     assertEquals(null, args.getUserpass());
-    assertFalse(args.isOmittingHistory());
   }
 
   public void testArgumentsAlternates() throws Exception {
@@ -63,12 +62,6 @@ public class ArgumentsTest extends TestCase {
     assertEquals("root", args.getRootDirectory());
     assertEquals("myLogDirectory", args.getLogDirectory());
     assertFalse(args.isOmittingUpdates());
-  }
-
-  public void testOmitHistory() throws Exception {
-    args = makeArgs(new String[]{"-h"});
-    assertNotNull(args);
-    assertTrue(args.isOmittingHistory());
   }
 
   public void testBadArgument() throws Exception {

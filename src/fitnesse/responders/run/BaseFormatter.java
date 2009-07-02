@@ -7,12 +7,15 @@ import fitnesse.FitNesseContext;
 
 public abstract class BaseFormatter implements ResultsListener {
 
-  protected final WikiPage page;
+  protected WikiPage page = null;
   protected FitNesseContext context;
   public static final BaseFormatter NULL = new NullFormatter();
   public abstract void writeHead(String pageType) throws Exception;
 
-  public abstract void allTestingComplete() throws Exception;
+  public abstract int allTestingComplete() throws Exception;
+
+  protected BaseFormatter() {
+  }
 
   protected BaseFormatter(FitNesseContext context, final WikiPage page) {
     this.page = page;
@@ -33,6 +36,9 @@ public abstract class BaseFormatter implements ResultsListener {
   
   public void announceNumberTestsToRun(int testsToRun) {
   }
+
+  public void addMessageForBlankHtml() throws Exception
+  {}
 }
 
 class NullFormatter extends BaseFormatter {
@@ -40,7 +46,8 @@ class NullFormatter extends BaseFormatter {
     super(null, null);
   }
 
-  public void allTestingComplete() throws Exception {
+  public int allTestingComplete() throws Exception {
+    return 0;
   }
 
   protected WikiPage getPage() {
@@ -57,16 +64,16 @@ class NullFormatter extends BaseFormatter {
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
   }
 
-  public void announceStartTestSystem(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
   }
 
-  public void announceStartNewTest(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test) throws Exception {
   }
 
-  public void processTestOutput(String output) throws Exception {
+  public void testOutputChunk(String output) throws Exception {
   }
 
-  public void processTestResults(WikiPage test, TestSummary testSummary) throws Exception {
+  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
   }
 
   public void writeHead(String pageType) throws Exception {

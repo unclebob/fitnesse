@@ -57,16 +57,16 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testResultsHtml() throws Exception {
-    formatter.announceStartTestSystem(null, "Fit", "laughing.fit");
+    formatter.testSystemStarted(null, "Fit", "laughing.fit");
     formatter.announceNumberTestsToRun(2);
     formatter.announceStartNewTest("RelativeName", "FullName");
-    formatter.processTestOutput("starting");
-    formatter.processTestOutput(" output");
+    formatter.testOutputChunk("starting");
+    formatter.testOutputChunk(" output");
     formatter.processTestResults("RelativeName", new TestSummary(1, 0, 0, 0));
-    formatter.announceStartTestSystem(null, "Slim", "very.slim");
+    formatter.testSystemStarted(null, "Slim", "very.slim");
     formatter.announceStartNewTest("NewRelativeName", "NewFullName");
-    formatter.processTestOutput("second");
-    formatter.processTestOutput(" test");
+    formatter.testOutputChunk("second");
+    formatter.testOutputChunk(" test");
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
     formatter.finishWritingOutput();
 
@@ -83,7 +83,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   }
   
   public void testTestingProgressIndicator() throws Exception {
-    formatter.announceStartTestSystem(null, "Fit", "laughing.fit");
+    formatter.testSystemStarted(null, "Fit", "laughing.fit");
     formatter.announceNumberTestsToRun(20);
     formatter.announceStartNewTest("RelativeName", "FullName");
 

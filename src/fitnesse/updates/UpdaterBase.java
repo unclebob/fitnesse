@@ -19,10 +19,6 @@ public class UpdaterBase implements Updater {
     rootProperties = loadProperties();
   }
 
-  public WikiPage getRoot() {
-    return context.root;
-  }
-
   public Properties getProperties() {
     return rootProperties;
   }

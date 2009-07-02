@@ -4,12 +4,14 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 
-public abstract class SuiteXmlFormatter extends XmlFormatter {
+import java.io.Writer;
+
+public class SuiteXmlFormatter extends XmlFormatter {
 
   private TestSummary xmlPageCounts = new TestSummary();
 
-  public SuiteXmlFormatter(WikiPage page, FitNesseContext context) throws Exception {
-    super(context, page);
+  public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterSource writerSource) throws Exception {
+    super(context, page, writerSource);
   }
 
   private void addFinalCounts() throws Exception {
@@ -19,15 +21,9 @@ public abstract class SuiteXmlFormatter extends XmlFormatter {
     finalSummary.ignores = testResponse.finalCounts.ignores = xmlPageCounts.getIgnores();
     finalSummary.exceptions = testResponse.finalCounts.exceptions = xmlPageCounts.getExceptions();
   }
-  
+
   @Override
-  public void allTestingComplete() throws Exception {
-    addFinalCounts();
-    super.allTestingComplete();
-  }
-  
-  @Override
-  public void processTestResults(WikiPage testPage, TestSummary testSummary)
+  public void testComplete(WikiPage testPage, TestSummary testSummary)
       throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
@@ -37,7 +33,12 @@ public abstract class SuiteXmlFormatter extends XmlFormatter {
 
     xmlPageCounts.tallyPageCounts(testSummary);
   }
-  
+
+  @Override
+  public int allTestingComplete() throws Exception {
+    addFinalCounts();
+    return super.allTestingComplete();
+  }
 
 
 }

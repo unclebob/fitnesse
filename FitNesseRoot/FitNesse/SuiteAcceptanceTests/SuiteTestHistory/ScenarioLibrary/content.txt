@@ -46,3 +46,13 @@
 
 !|scenario|class for pass fail in top level history line|page||pass class||pass count||fail class||fail count|
 |ensure|html contains|<a href="/@page?pageHistory">@page</a></td> <td class="@passClass">@passCount</td> <td class="@failClass">@failCount</td>|
+
+!|scenario|assume time is|time|
+|set xml formatter time to|@time|
+
+!|scenario|with subpage|name|with content|content|
+|create page|$IT.@name|with content|@content|
+
+!|scenario|run suite|name|
+|check|request page|@name?suite|200|
+

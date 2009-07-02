@@ -2,11 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
 import java.io.File;
 
-import junit.framework.TestCase;
-
-public class FileUtilTest extends TestCase {
+public class FileUtilTest {
+  @Test
   public void testCreateDir() throws Exception {
     File dir = FileUtil.createDir("temp");
     assertTrue(dir.exists());
@@ -14,12 +17,21 @@ public class FileUtilTest extends TestCase {
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
+  @Test
+  public void createFileWithComplexPath() throws Exception {
+    File file = FileUtil.createFile("temp/sub1/sub2/sub3/file", "");
+    assertTrue(file.exists());
+    FileUtil.deleteFileSystemDirectory("temp");
+  }
+
+  @Test
   public void testGetDirectoryListingEmpty() throws Exception {
     File dir = FileUtil.createDir("temp");
     assertEquals(0, FileUtil.getDirectoryListing(dir).length);
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
+  @Test
   public void testOrganizeFilesOneFile() throws Exception {
     File dir = FileUtil.createDir("temp");
     File file = createFileInDir(dir, "file.txt");
@@ -28,7 +40,8 @@ public class FileUtilTest extends TestCase {
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
-  public void testOrganizeFilesFiveFiles() throws Exception {
+  @Test
+    public void testOrganizeFilesFiveFiles() throws Exception {
     File dir = FileUtil.createDir("temp");
     File file3 = createFileInDir(dir, "dFile.txt");
     File file1 = createFileInDir(dir, "bFile.txt");
@@ -44,7 +57,8 @@ public class FileUtilTest extends TestCase {
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
-  public void testOrganizeFilesOneSubDir() throws Exception {
+  @Test
+    public void testOrganizeFilesOneSubDir() throws Exception {
     File dir = FileUtil.createDir("temp");
     File subDir = createSubDir(dir, "subDir");
     assertEquals(1, FileUtil.getDirectoryListing(dir).length);
@@ -52,7 +66,8 @@ public class FileUtilTest extends TestCase {
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
-  public void testOrganizeFilesFiveSubDirs() throws Exception {
+  @Test
+    public void testOrganizeFilesFiveSubDirs() throws Exception {
     File dir = FileUtil.createDir("temp");
     File dir3 = createSubDir(dir, "dDir");
     File dir1 = createSubDir(dir, "bDir");
@@ -68,7 +83,8 @@ public class FileUtilTest extends TestCase {
     FileUtil.deleteFileSystemDirectory(dir);
   }
 
-  public void testOrganizeFilesMixOfFilesAndDirs() {
+  @Test
+    public void testOrganizeFilesMixOfFilesAndDirs() {
     File dir = FileUtil.createDir("temp");
     File dir3 = createSubDir(dir, "dDir");
     File file3 = createFileInDir(dir, "dFile.txt");
@@ -102,15 +118,18 @@ public class FileUtilTest extends TestCase {
     return FileUtil.createDir(FileUtil.buildPath(new String[]{dir.getPath(), subDirName}));
   }
 
-  public void testBuildPathEmpty() throws Exception {
+  @Test
+    public void testBuildPathEmpty() throws Exception {
     assertEquals("", FileUtil.buildPath(new String[]{}));
   }
 
-  public void testBuildPathOneElement() throws Exception {
+  @Test
+    public void testBuildPathOneElement() throws Exception {
     assertEquals("a", FileUtil.buildPath(new String[]{"a"}));
   }
 
-  public void testBuildPathThreeElements() throws Exception {
+  @Test
+    public void testBuildPathThreeElements() throws Exception {
     String separator = System.getProperty("file.separator");
     assertEquals("a" + separator + "b" + separator + "c", FileUtil.buildPath(new String[]{"a", "b", "c"}));
   }

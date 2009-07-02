@@ -137,7 +137,7 @@
     </copy>
   </target>
 
-  <target name="compile" depends="init, stamp-version" description="compile the source (make)">
+  <target name="compile" depends="init, stamp-version" description="compFitnesseile the source (make)">
     <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true"/>
     <copy file="extra/ant/tasks.properties" todir="classes"/>
   </target>

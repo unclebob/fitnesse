@@ -19,7 +19,8 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
   private boolean excludeSetUp;
   private boolean excludeTearDown;
 
-  public AttributeWikiPageFinder(List<String> requestedPageTypes, Map<String, Boolean> attributes, String[] suites, boolean excludeSetUp, boolean excludeTearDown) {
+  public AttributeWikiPageFinder(SearchObserver observer, List<String> requestedPageTypes, Map<String, Boolean> attributes, String[] suites, boolean excludeSetUp, boolean excludeTearDown) {
+    super(observer);
     setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
     tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
     this.requestedPageTypes = requestedPageTypes;
