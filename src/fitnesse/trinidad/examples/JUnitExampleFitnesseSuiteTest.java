@@ -2,6 +2,7 @@
 package fitnesse.trinidad.examples;
 
 import org.junit.runner.RunWith;
+import org.junit.Test;
 
 import fitnesse.trinidad.*;
 import fitnesse.trinidad.FitnesseSuite.*;
@@ -13,5 +14,9 @@ import fitnesse.trinidad.FitnesseSuite.*;
 // @OutputDir("/tmp/fitnesse") //Specify an absolute or relative path
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 public class JUnitExampleFitnesseSuiteTest {
+  @Test
+  public void dummy() throws Exception {
+
+  }
 
 }
