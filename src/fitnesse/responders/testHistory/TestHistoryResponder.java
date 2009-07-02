@@ -25,9 +25,18 @@ public class TestHistoryResponder implements Responder {
       VelocityContext velocityContext = new VelocityContext();
       velocityContext.put("pageTitle", new PageTitle("Test History"));
       velocityContext.put("testHistory", history);
-      response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistory.vm"));
+      String velocityTemplate = "testHistory.vm";
+      if(formatIsXML(request)){
+        response.setContentType("text/xml");
+        velocityTemplate = "testHistoryXML.vm";
+      }
+      response.setContent(VelocityFactory.translateTemplate(velocityContext, velocityTemplate));
     }
     return response;
+  }
+
+  private boolean formatIsXML(Request request) {
+    return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
   }
 
   public void setResultsDirectory(File resultsDirectory) {

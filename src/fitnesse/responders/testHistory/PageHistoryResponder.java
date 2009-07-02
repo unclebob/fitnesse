@@ -12,6 +12,7 @@ import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import util.FileUtil;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -34,22 +35,31 @@ public class PageHistoryResponder implements Responder {
     if (request.hasInput("resultDate")) {
       return tryToMakeTestExecutionReport(context, request);
     } else {
-      return makePageHistoryResponse(context);
+      return makePageHistoryResponse(request);
     }
 
   }
 
-  private Response makePageHistoryResponse(FitNesseContext context) throws Exception {
+  private Response makePageHistoryResponse(Request request) throws Exception {
     velocityContext.put("pageHistory", pageHistory);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistory.vm");
+    String velocityTemplate = "pageHistory.vm";
+    if(formatIsXML(request)){
+      response.setContentType("text/xml");
+      velocityTemplate = "pageHistoryXML.vm";
+    }
+    Template template = VelocityFactory.getVelocityEngine().getTemplate(velocityTemplate);
     return makeResponseFromTemplate(template);
+  }
+
+  private boolean formatIsXML(Request request) {
+    return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
   }
 
   private Response tryToMakeTestExecutionReport(FitNesseContext context, Request request) throws Exception {
     Date resultDate = getResultDate(request);
     PageHistory.TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {
-      return makeTestExecutionReportResponse(context, resultDate, testResultRecord);
+      return makeTestExecutionReportResponse(request, resultDate, testResultRecord);
     } catch (Exception e) {
       return makeCorruptFileResponse(context, request);
     }
@@ -65,13 +75,21 @@ public class PageHistoryResponder implements Responder {
     return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
   }
 
-  private Response makeTestExecutionReportResponse(FitNesseContext context, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
+  private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
     TestExecutionReport report;
     report = new TestExecutionReport(testResultRecord.getFile());
     report.setDate(resultDate);
+    if(formatIsXML(request))
+      return generateXMLResponse(testResultRecord.getFile());
     velocityContext.put("testExecutionReport", report);
     Template template = VelocityFactory.getVelocityEngine().getTemplate("testExecutionReport.vm");
     return makeResponseFromTemplate(template);
+  }
+
+  private Response generateXMLResponse(File file) throws Exception {
+    response.setContent(FileUtil.getFileContent(file));
+    response.setContentType("text/xml");
+    return response;
   }
 
   private Response makeResponseFromTemplate(Template template) throws Exception {
