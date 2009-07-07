@@ -24,7 +24,7 @@ import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
-  public static final String TIME_STAMP = "saveTime";
+  public static final String TIME_STAMP = "editTime";
   public static final String TICKET_ID = "ticketId";
 
   protected String content;

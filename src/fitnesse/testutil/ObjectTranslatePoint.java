@@ -7,7 +7,7 @@ import java.awt.Point;
 import fit.TypeAdapter;
 
 public class ObjectTranslatePoint extends TranslatePoint {
-  static {
+  public ObjectTranslatePoint() {
     TypeAdapter.registerParseDelegate(Point.class, new ObjectDelegatePointParser());
   }
 }

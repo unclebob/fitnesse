@@ -14,9 +14,9 @@ public class JUnitExampleFitTest {
 
   @Before
   public void initHelper() throws Exception {
+    String outputPath = new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath();
     helper = new JUnitHelper(new TestRunner(new FitNesseRepository("."),
-        new FitTestEngine(), new File(System.getProperty("java.io.tmpdir"),
-            "fitnesse").getAbsolutePath()));
+        new FitTestEngine(), outputPath));
   }
 
   @Test

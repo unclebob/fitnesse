@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import util.RegexTestCase;
+import static util.RegexTestCase.*;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
@@ -15,14 +15,18 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
 
-public class SaveResponderTest extends RegexTestCase {
+public class SaveResponderTest {
   private WikiPage root;
   private Response response;
   public MockRequest request;
   public Responder responder;
   private PageCrawler crawler;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
@@ -32,10 +36,12 @@ public class SaveResponderTest extends RegexTestCase {
     SaveRecorder.clear();
   }
 
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     SaveResponder.contentFilter = null;
   }
 
+  @Test
   public void testResponse() throws Exception {
     crawler.addPage(root, PathParser.parse("ChildPage"));
     prepareRequest("ChildPage");
@@ -57,6 +63,7 @@ public class SaveResponderTest extends RegexTestCase {
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
   }
 
+  @Test
   public void testResponseWithRedirect() throws Exception {
     crawler.addPage(root, PathParser.parse("ChildPage"));
     prepareRequest("ChildPage");
@@ -73,6 +80,7 @@ public class SaveResponderTest extends RegexTestCase {
     assertTrue("ChildPage should be in RecentChanges", recentChanges.indexOf(changedPage) != -1);
   }
 
+  @Test
   public void testCanCreatePage() throws Exception {
     prepareRequest("ChildPageTwo");
 
@@ -85,6 +93,21 @@ public class SaveResponderTest extends RegexTestCase {
     checkRecentChanges(root, "ChildPageTwo");
   }
 
+  @Test
+  public void testCanCreatePageWithoutTicketIdAndEditTime() throws Exception {
+    request.setResource("ChildPageTwo");
+    request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
+
+    responder.makeResponse(new FitNesseContext(root), request);
+
+    assertEquals(true, root.hasChildPage("ChildPageTwo"));
+    String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
+    assertEquals("some new content", newContent);
+    assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
+    checkRecentChanges(root, "ChildPageTwo");
+  }
+
+  @Test
   public void testKnowsWhenToMerge() throws Exception {
     String simplePageName = "SimplePageName";
     createAndSaveANewPage(simplePageName);
@@ -99,6 +122,7 @@ public class SaveResponderTest extends RegexTestCase {
     assertHasRegexp("Merge", response.getContent());
   }
 
+  @Test
   public void testKnowWhenNotToMerge() throws Exception {
     String pageName = "NewPage";
     createAndSaveANewPage(pageName);
@@ -117,6 +141,7 @@ public class SaveResponderTest extends RegexTestCase {
     assertEquals(303, response.getStatus());
   }
 
+  @Test
   public void testUsernameIsSavedInPageProperties() throws Exception {
     addRequestParameters();
     request.setCredentials("Aladdin", "open sesame");
@@ -126,6 +151,7 @@ public class SaveResponderTest extends RegexTestCase {
     assertEquals("Aladdin", user);
   }
 
+  @Test
   public void testContentFilter() throws Exception {
     SaveResponder.contentFilter = new ContentFilter() {
       public boolean isContentAcceptable(String content, String page) {
@@ -161,6 +187,7 @@ public class SaveResponderTest extends RegexTestCase {
     prepareRequest("EditPage");
   }
 
+  @Test
   public void testHasVersionHeader() throws Exception {
     doSimpleEdit();
     assertTrue("header missing", response.getHeader("Previous-Version") != null);

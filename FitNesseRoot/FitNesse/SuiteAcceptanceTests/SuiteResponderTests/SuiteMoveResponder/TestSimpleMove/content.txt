@@ -30,5 +30,5 @@ Make sure that there is no sub page beneath !-ParentPage-!.
 
 !|Response Requester.|
 |uri|valid?|contents?|
-|ParentPage.SubPage?dontCreatePage|false||
+|ParentPage.SubPage?getPage&dontCreatePage|false||
 

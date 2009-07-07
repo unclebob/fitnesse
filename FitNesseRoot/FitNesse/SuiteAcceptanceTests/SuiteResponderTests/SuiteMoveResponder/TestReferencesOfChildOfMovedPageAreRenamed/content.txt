@@ -31,7 +31,7 @@ Make sure we can't get the old A.B.C page.
 
 !|Response Requester.|
 |uri|valid?|status?|
-|ParentPageAy.ChildBee.ChildCee?dontCreatePage|false||
+|ParentPageAy.ChildBee.ChildCee?getPage&dontCreatePage|false||
 
 Make sure we ''can'' get the A.D.C.E page at it's new location.
 
