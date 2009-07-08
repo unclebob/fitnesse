@@ -3,6 +3,8 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.http.ChunkedResponse;
+import fitnesse.http.Response;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
@@ -188,6 +190,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   boolean isRemoteDebug() {
     return remoteDebug;
+  }
+
+  public Response getResponse() {
+    return response;
   }
 
   public static class HistoryWriterSource implements XmlFormatter.WriterSource {
