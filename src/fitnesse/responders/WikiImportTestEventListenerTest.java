@@ -10,12 +10,14 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
 import fitnesse.http.ChunkedResponse;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WikiImportTestEventListenerTest {
   private WikiImportTestEventListener eventListener;
@@ -60,15 +62,12 @@ public class WikiImportTestEventListenerTest {
   }
 
   @Test
-  public void testNoMessagesIfXmlFormat() throws Exception {
+  public void testNoImportAnnouncementIfXmlFormat() throws Exception {
     testResponder.setXmlFormat();
     addImportPropertyToPage(pageOne, false, true);
 
     PageData data = pageOne.getData();
     eventListener.notifyPreTest(testResponder, data);
-
-    assertEquals(MockWikiImporter.mockContent, pageOne.getData().getContent());
-    assertEquals(MockWikiImporter.mockContent, data.getContent());
     assertEquals("", sentMessages);
   }
 

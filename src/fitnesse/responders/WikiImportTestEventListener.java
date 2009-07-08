@@ -107,7 +107,7 @@ public class WikiImportTestEventListener implements TestEventListener {
     protected void doUpdating() throws Exception {
       if (!importProperty.isRoot())
         updatePagePassedIn();
-
+      wikiImporter.setAutoUpdateSetting(true);
       wikiImporter.importWiki(wikiPage);
     }
   }
