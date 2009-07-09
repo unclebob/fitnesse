@@ -8,6 +8,7 @@ import fitnesse.slimTables.Table;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
+import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -142,5 +143,9 @@ public class HistoryComparerTest {
     VelocityEngine engine = VelocityFactory.getVelocityEngine();
     report.toXml(writer, engine);
     return writer.toString();
+  }
+  @After
+  public void tearDown(){
+    FileUtil.deleteFileSystemDirectory("TestFolder");
   }
 }

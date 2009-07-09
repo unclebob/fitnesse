@@ -9,6 +9,7 @@ import fitnesse.http.SimpleResponse;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.After;
 import static org.mockito.Mockito.*;
 import util.FileUtil;
 import static util.RegexTestCase.assertHasRegexp;
@@ -89,5 +90,9 @@ public class HistoryComparerResponderTest {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     verify(mockedComparer).getResultContent();
     assertHasRegexp("This is the Content", response.getContent());
+  }
+  @After
+  public void tearDown(){
+    FileUtil.deleteFileSystemDirectory("testRoot");
   }
 }
