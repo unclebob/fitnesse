@@ -2,25 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import fitnesse.components.Base64;
+import util.StreamReader;
+
+import java.io.*;
 import java.net.URLDecoder;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import util.StreamReader;
-import fitnesse.components.Base64;
 
 public class Request {
   private static final Pattern requestLinePattern = Pattern
@@ -230,6 +220,10 @@ public class Request {
 
   public Object getInput(String key) {
     return inputs.get(key);
+  }
+
+  public Map<String,Object> getMap(){
+    return inputs;
   }
 
   public boolean hasHeader(String key) {

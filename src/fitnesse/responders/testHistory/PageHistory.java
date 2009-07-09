@@ -19,6 +19,7 @@ public class PageHistory {
   private BarGraph barGraph;
   private String fullPageName;
   private final HashMap<Date, TestResultRecord> testResultMap = new HashMap<Date, TestResultRecord>();
+  private HashMap<Date, File> pageFiles = new HashMap<Date,File>();
 
   public PageHistory(File pageDirectory) {
     fullPageName = pageDirectory.getName();
@@ -30,8 +31,9 @@ public class PageHistory {
   }
 
   private void compileHistoryFromPageDirectory(File pageDirectory) throws ParseException {
-    File[] resultFiles = FileUtil.getDirectoryListing(pageDirectory);
-    for (File file : resultFiles)
+    File[] resultDir = FileUtil.getDirectoryListing(pageDirectory);
+
+    for (File file : resultDir)
       if (fileIsNotADirectoryAndIsValid(file))
         compileResultFileIntoHistory(file);
     compileBarGraph();
@@ -71,11 +73,20 @@ public class PageHistory {
 
   private void compileResultFileIntoHistory(File file) throws ParseException {
     TestResultRecord record = buildTestResultRecord(file);
-    testResultMap.put(record.getDate(), record);
+    Date date = record.getDate();
+    testResultMap.put(date, record);
     countResult(record);
-    setMinMaxDate(record.getDate());
+    setMinMaxDate(date);
     setMaxAssertions(record);
+    pageFiles.put(date, file);
   }
+
+  public String getPageFileName(Date date){
+    if(pageFiles.get(date) != null)
+    return pageFiles.get(date).getName();
+    return null;
+  }
+
 
   private void setMaxAssertions(TestResultRecord summary) {
     int assertions = summary.getRight() + summary.getWrong() + summary.getExceptions();

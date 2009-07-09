@@ -1,0 +1,15 @@
+#set ($page_title="History Comparison")
+#parse("pageHead.vm")
+#if($resultContent)
+<table>
+  <tr>
+    <td class=$resultContent>"Pass/Fail"</td>
+    <td>$firstPage</td>
+    <td>$secondPage</td>
+
+  </tr>
+</table>
+#else
+<h2>Comparison Failed: $pageTitle.Title</h2>
+#end
+  #parse("pageFooter.vm")
