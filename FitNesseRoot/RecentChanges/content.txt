@@ -1,3 +1,5 @@
+|FitNesse.UserGuide.DownloadingAndInstallingFitNesse||14:50:07 Wed, Jul 08, 2009|
+|FitNesse.UserGuide||14:43:23 Wed, Jul 08, 2009|
 |JunkPage.ImportingPage||12:28:49 Wed, Jul 08, 2009|
 |JunkPage.PointOfSale.CanTotalOrder||11:17:59 Wed, Jul 08, 2009|
 |JunkPage||10:40:14 Wed, Jul 08, 2009|
@@ -76,7 +78,6 @@
 |FitNesse.UserGuide.SecurityDescription.SpnegoAuthentication||14:04:04 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription||13:58:07 Wed, May 13, 2009|
 |FitNesse.UserGuide.TestHistory||13:46:17 Wed, May 13, 2009|
-|FitNesse.UserGuide||13:30:14 Wed, May 13, 2009|
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:31 Wed, May 13, 2009|
 |JunkParent.StopTestTest||09:49:09 Wed, May 13, 2009|
 |JunkPage.UseVarPage||15:20:57 Tue, May 12, 2009|
@@ -97,4 +98,3 @@ RecentChanges/content.txt
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryLineIsLinkToTestResult||06:41:18 Tue, May 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineIsLinkToPageHistory||16:53:32 Thu, May 07, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory||16:35:03 Thu, May 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests||16:34:53 Thu, May 07, 2009|

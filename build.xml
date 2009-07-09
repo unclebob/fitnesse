@@ -30,41 +30,6 @@
   <target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests"
           description="builds code from scratch, runs all the unit tests and acceptance tests"/>
 
-  <target name="build_distribution" depends="zip_bin"
-          description="The thing you do when distributing a new release."/>
-
-  <target name="assemble_bin" depends="clean_dist, jar, copy_distribution"
-          description="create the binary distribution"/>
-
-  <target name="copy_distribution" description="just copy the files into dist">
-    <tstamp/>
-    <copy todir="dist/fitnesse">
-      <fileset dir="extra/release" includes="**"/>
-      <fileset dir="dist" includes="fitnesse.jar"/>
-      <fileset dir=".">
-        <include name="FitNesseRoot/**"/>
-        <include name="lib/**"/>
-        <exclude name="**/*.zip"/>
-        <exclude name="**/.DS_Store"/>
-        <exclude name="**/Thumbs.db"/>
-        <exclude name="**/testResults/**"/>
-      </fileset>
-      <fileset dir="lib" includes="fitlibrary.jar"/>
-    </copy>
-    <mkdir dir="dist/fitnesse/dotnet"/>
-    <mkdir dir="dotnet"/>
-    <copy todir="dist/fitnesse/dotnet">
-      <fileset dir="dotnet">
-        <include name="*.exe"/>
-        <include name="*.dll"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="zip_bin" depends="assemble_bin" description="zip up the binary distribution">
-    <zip zipfile="fitnesse${DSTAMP}.zip" basedir="dist" includes="fitnesse/**" excludes="**/Thumbs.db"/>
-  </target>
-
   <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
     <mkdir dir="dist"/>
     <delete file="dist/fitnesse.jar"/>
@@ -90,7 +55,7 @@
       <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
       <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
       <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
-      <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>      
+      <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>
       <arg value="FitNesseRoot/files/images"/>
       <arg value="FitNesseRoot/files/css"/>
       <arg value="FitNesseRoot/files/javascript"/>
@@ -126,6 +91,9 @@
     <copy todir="classes/Resources">
       <fileset dir=".">
         <include name="lib/**"/>
+        <exclude name="lib/ant.jar"/>
+        <exclude name="lib/easymock.jar"/>
+        <exclude name="lib/mockito*.jar"/>
       </fileset>
     </copy>
     <copy todir="classes/Resources/FitNesseRoot">
@@ -181,21 +149,9 @@
     </junit>
   </target>
 
-  <target name="clean_dist" description="clean out the distribution folder">
-    <mkdir dir="dist"/>
-    <delete>
-      <fileset dir="dist">
-        <include name="fitnesse*.zip"/>
-        <include name="fitnesse.jar"/>
-        <exclude name="FitNesseRoot"/>
-      </fileset>
-    </delete>
-    <delete dir="dist/fitnesse"/>
-  </target>
-
   <target name="init">
     <mkdir dir="classes"/>
-    <mkdir dir="test-results/cobertura"/>
+    <mkdir dir="test-results"/>
   </target>
 
   <target name="load_fitnesse_taskdef">
@@ -209,5 +165,5 @@
                         resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath"/>
   </target>
 
-  <target name="release" depends="testbuild, build_distribution"/>
+  <target name="release" depends="testbuild, jar"/>
 </project>
