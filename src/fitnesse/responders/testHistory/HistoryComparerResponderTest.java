@@ -55,7 +55,7 @@ public class HistoryComparerResponderTest {
     when(mockedComparer.compare("testRoot/TestFolder/firstFakeFile", "testRoot/TestFolder/secondFakeFile")).thenReturn(false);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
-    assertHasRegexp("Comparison Failed. Try different files.", response.getContent());
+    assertHasRegexp("These files could not be compared.  They might be suites, or something else might be wrong.", response.getContent());
   }
 
   @Test

@@ -38,7 +38,7 @@ public class HistoryComparerResponder implements Responder {
     initializeReponseComponents(request);
     if (!getFileNameFromRequest(request))
       return makeErrorResponse(context, request, "Compare Failed because the wrong number of Input Files were given. " +
-                                                  "Select two please.");
+        "Select two please.");
     firstFilePath = composeFileName(request, firstFileName);
     secondFilePath = composeFileName(request, secondFileName);
 
@@ -52,7 +52,7 @@ public class HistoryComparerResponder implements Responder {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse();
     else
-      return makeErrorResponse(context, request, "Comparison Failed. Try different files.");
+      return makeErrorResponse(context, request, "These files could not be compared.  They might be suites, or something else might be wrong.");
   }
 
   private boolean filesExist() {
