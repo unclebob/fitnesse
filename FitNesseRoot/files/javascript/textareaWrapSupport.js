@@ -32,5 +32,5 @@ function toggleWrap(checkbox) {
   }
 }
 
-document.write('<input type="checkbox" accesskey="w" checked="checked" onClick="toggleWrap(this)" title="Turns on/off wrapping">');
+document.write('<input type="checkbox" accesskey="w" onClick="toggleWrap(this)" title="Turns on/off wrapping">');
 document.write('<span>wrap</span>');

@@ -23,7 +23,6 @@ public class ScheduleImpl implements Schedule, Runnable {
   public void start() {
     running = true;
     thread = new Thread(this);
-    thread.setPriority(Thread.MIN_PRIORITY);
     thread.start();
   }
 

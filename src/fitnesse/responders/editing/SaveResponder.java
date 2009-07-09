@@ -28,14 +28,17 @@ public class SaveResponder implements SecureResponder {
   private long ticketId;
   private String savedContent;
   private PageData data;
+  private long editTimeStamp;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    editTimeStamp = getEditTime(request);
+    ticketId = getTicketId(request);
     String resource = request.getResource();
     WikiPage page = getPage(resource, context);
     data = page.getData();
     user = request.getAuthorizationUsername();
 
-    if (editsNeedMerge(request))
+    if (editsNeedMerge())
       return new MergeResponder(request).makeResponse(context, request);
     else {
       savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
@@ -72,14 +75,23 @@ public class SaveResponder implements SecureResponder {
     return response;
   }
 
-  private boolean editsNeedMerge(Request request) throws Exception {
+  private boolean editsNeedMerge() throws Exception {
+    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
+  }
+
+  private long getTicketId(Request request) {
+    if (!request.hasInput(EditResponder.TICKET_ID))
+      return 0;
+    String ticketIdString = (String) request.getInput(EditResponder.TICKET_ID);
+    return Long.parseLong(ticketIdString);
+  }
+
+  private long getEditTime(Request request) {
+    if (!request.hasInput(EditResponder.TIME_STAMP))
+      return 0;
     String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
     long editTimeStamp = Long.parseLong(editTimeStampString);
-
-    String ticketIdString = (String) request.getInput(EditResponder.TICKET_ID);
-    ticketId = Long.parseLong(ticketIdString);
-
-    return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
+    return editTimeStamp;
   }
 
   private WikiPage getPage(String resource, FitNesseContext context) throws Exception {

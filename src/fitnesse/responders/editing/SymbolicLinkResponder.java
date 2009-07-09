@@ -66,7 +66,7 @@ public class SymbolicLinkResponder implements Responder {
     setRedirect(resource);
   }
 
-  private void renameSymbolicLink(Request request, WikiPage page) throws Exception {
+  private void  renameSymbolicLink(Request request, WikiPage page) throws Exception {
     String linkToRename = (String) request.getInput("rename"),
       newName = (String) request.getInput("newname");
 

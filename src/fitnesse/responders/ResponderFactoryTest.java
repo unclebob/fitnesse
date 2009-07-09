@@ -95,14 +95,6 @@ public class ResponderFactoryTest {
   }
 
   @Test
-  public void testDontCreatePageResponder() throws Exception {
-    request.addInput("responder", "dontCreatePage");
-    request.setResource("SomePage");
-    assertResponderType(NotFoundResponder.class, root);
-    assertResponderType(NotFoundResponder.class, nonExistantPage);
-  }
-
-  @Test
   public void testPageDataResponder() throws Exception {
     request.addInput("responder", "pageData");
     request.setResource("SomePage");

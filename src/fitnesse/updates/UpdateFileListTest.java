@@ -57,7 +57,6 @@ public class UpdateFileListTest {
     assertSubString("MasterFolder/MasterFile\n", content);
   }
 
-
   @Test
   public void shouldMakeUpdateListWithMultiLevelFolders() throws Exception {
     String content = runCreateFileAndGetContent(new String[]{"MasterFolder"});

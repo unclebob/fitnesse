@@ -3,6 +3,8 @@
 package fitnesse.responders;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
 
 public class PageDataWikiPageResponder extends BasicWikiPageResponder {
   protected String contentFrom(WikiPage requestedPage)
@@ -10,4 +12,7 @@ public class PageDataWikiPageResponder extends BasicWikiPageResponder {
     return requestedPage.getData().getContent();
   }
 
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
+  }
 }

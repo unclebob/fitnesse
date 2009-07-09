@@ -24,7 +24,7 @@ The renamed page should not exist.
 
 !|Response Requester.|
 |uri|valid?|
-|TargetPage.SomePage?dontCreatePage|false|
+|TargetPage.SomePage?getPage&dontCreatePage|false|
 
 The old page should still exist.
 

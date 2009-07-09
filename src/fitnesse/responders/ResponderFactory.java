@@ -38,7 +38,6 @@ public class ResponderFactory {
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
     responderMap = new HashMap<String, Class<?>>();
-    addResponder("dontCreatePage", NotFoundResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);

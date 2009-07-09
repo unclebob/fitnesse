@@ -3,14 +3,18 @@
 package fitnesse.tools;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.io.File;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 
 import util.FileUtil;
+import util.RegexTestCase;
+import static util.RegexTestCase.*;
 
 public class LicenseManagerTest {
   private final String dir = "toolsTempTestDirectory";
@@ -35,7 +39,7 @@ public class LicenseManagerTest {
     File fileWithLicense = new File(testDir, "fileWithLicense.java");
     FileUtil.createFile(fileWithLicense, licenseText + "xxx\n");
     LicenseManager.main(new String[]{"-r", dir});
-    assertEquals("xxx\n", FileUtil.getFileContent(fileWithLicense));
+    assertMatches("xxx$", FileUtil.getFileContent(fileWithLicense));
   }
 
   @Test
@@ -47,7 +51,7 @@ public class LicenseManagerTest {
       FileUtil.createFile(dir+"/"+fileName, licenseText+"yyy\n");
     LicenseManager.main(new String[] {"-r", dir});
     for (String fileName : files)
-      assertEquals("yyy\n", FileUtil.getFileContent(dir+"/"+fileName));
+      assertMatches("yyy$", FileUtil.getFileContent(dir+"/"+fileName));
   }
 
   @Test
@@ -65,7 +69,8 @@ public class LicenseManagerTest {
     File fileWithLicense = new File(testDir, "fileWithLicense.java");
     FileUtil.createFile(fileWithLicense, "xxx\n");
     LicenseManager.main(new String[]{dir+"/license", dir});
-    assertEquals(licenseText + "xxx\n", FileUtil.getFileContent(fileWithLicense));
+    String actual = FileUtil.getFileContent(fileWithLicense).replaceAll("\r", "");
+    assertEquals(licenseText + "xxx\n", actual);
   }
 
   @Test
@@ -76,8 +81,10 @@ public class LicenseManagerTest {
     for (String fileName : files)
       FileUtil.createFile(dir+"/"+fileName, "yyy\n");
     LicenseManager.main(new String[] {dir+"/license", dir});
-    for (String fileName : files)
-      assertEquals(licenseText + "yyy\n", FileUtil.getFileContent(dir+"/"+fileName));
+    for (String fileName : files) {
+      String actual = FileUtil.getFileContent(dir + "/" + fileName).replaceAll("\r","");       
+      assertEquals(licenseText + "yyy\n", actual);
+    }
   }
 
 

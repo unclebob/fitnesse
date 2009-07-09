@@ -175,6 +175,7 @@
           <include name="**/*Test.java"/>
           <exclude name="**/ShutdownResponderTest.java"/>
           <exclude name="**/QueryTableBaseTest.java"/>
+          <exclude name="**/Test.java"/>
         </fileset>
       </batchtest>
     </junit>

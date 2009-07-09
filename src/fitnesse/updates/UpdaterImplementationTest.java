@@ -81,7 +81,11 @@ public class UpdaterImplementationTest {
   @Test
   public void shouldBeAbleToGetThePathOfJustTheParent() throws Exception {
     String filePath = updater.getCorrectPathForTheDestination("classes/files/moreFiles/TestFile");
-    assertSubString("classes/files/moreFiles", filePath);
+    assertSubString(portablePath("classes/files/moreFiles"), filePath);
+  }
+
+  private String portablePath(String path) {
+    return FileUtil.buildPath(path.split("/"));
   }
 
   @Test
@@ -112,8 +116,7 @@ public class UpdaterImplementationTest {
     String filePath = "FitNesseRoot/someFolder/someFile";
     context.rootDirectoryName = "MyNewRoot";
     String updatedPath = updater.getCorrectPathForTheDestination(filePath);
-    assertEquals("MyNewRoot/someFolder", updatedPath);
-
+    assertEquals(portablePath("MyNewRoot/someFolder"), updatedPath);
   }
 
   @Test

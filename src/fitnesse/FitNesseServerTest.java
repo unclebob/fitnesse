@@ -11,6 +11,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -23,6 +24,7 @@ public class FitNesseServerTest extends RegexTestCase {
   private WikiPage root;
   private WikiPagePath pageOnePath;
   private WikiPagePath pageOneTwoPath;
+  private FitNesseContext context;
 
   public FitNesseServerTest() {
   }
@@ -33,6 +35,7 @@ public class FitNesseServerTest extends RegexTestCase {
     crawler = root.getPageCrawler();
     pageOnePath = PathParser.parse("PageOne");
     pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   public void tearDown() throws Exception {
@@ -42,6 +45,7 @@ public class FitNesseServerTest extends RegexTestCase {
   public void testSimple() throws Exception {
     crawler.addPage(root, PathParser.parse("SomePage"), "some string");
     String output = getSocketOutput("GET /SomePage HTTP/1.1\r\n\r\n", root);
+    System.out.println("output = " + output);
     String statusLine = "HTTP/1.1 200 OK\r\n";
     assertTrue("Should have statusLine", Pattern.compile(statusLine, Pattern.MULTILINE).matcher(output).find());
     assertTrue("Should have canned Content", hasSubString("some string", output));
@@ -118,7 +122,6 @@ public class FitNesseServerTest extends RegexTestCase {
 
   private String getSocketOutput(String requestLine, WikiPage page) throws Exception {
     MockSocket s = new MockSocket(requestLine);
-    FitNesseContext context = new FitNesseContext();
     context.rootPagePath = SampleFileUtility.base;
     context.responderFactory = new ResponderFactory(SampleFileUtility.base);
     context.root = page;

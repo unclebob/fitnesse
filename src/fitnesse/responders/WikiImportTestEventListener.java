@@ -42,26 +42,43 @@ public class WikiImportTestEventListener implements TestEventListener {
       this.data = data;
       importProperty = WikiImportProperty.createFrom(data.getProperties());
       if (importProperty != null && importProperty.isAutoUpdate()) {
+        announceImportAttempt(testResponder);
+        doImport(testResponder, data);
+        closeAnnouncement(testResponder);
+      }
+    }
+
+    private void closeAnnouncement(TestResponder testResponder) throws Exception {
+      if (testResponder.getResponse().isHtmlFormat())
+        testResponder.addToResponse("</span>");
+    }
+
+    private void announceImportAttempt(TestResponder testResponder) throws Exception {
+      if (testResponder.getResponse().isHtmlFormat()) {
         testResponder.addToResponse("<span class=\"meta\">Updating imported content...</span>");
         testResponder.addToResponse("<span class=\"meta\">");
-
-        try {
-          wikiImporter = importerFactory.newImporter(this);
-          wikiImporter.parseUrl(importProperty.getSourceUrl());
-          wikiPage = data.getWikiPage();
-
-          doUpdating();
-
-          if (!errorOccured)
-            testResponder.addToResponse("done");
-
-        }
-        catch (Exception e) {
-          pageImportError(data.getWikiPage(), e);
-        }
-
-        testResponder.addToResponse("</span>");
       }
+    }
+
+    private void doImport(TestResponder testResponder, PageData data) throws Exception {
+      try {
+        wikiImporter = importerFactory.newImporter(this);
+        wikiImporter.parseUrl(importProperty.getSourceUrl());
+        wikiPage = data.getWikiPage();
+
+        doUpdating();
+
+        if (!errorOccured)
+          announceDone(testResponder);
+      }
+      catch (Exception e) {
+        pageImportError(data.getWikiPage(), e);
+      }
+    }
+
+    private void announceDone(TestResponder testResponder) throws Exception {
+      if (testResponder.getResponse().isHtmlFormat())
+        testResponder.addToResponse("done");
     }
 
     protected void doUpdating() throws Exception {
@@ -90,7 +107,7 @@ public class WikiImportTestEventListener implements TestEventListener {
     protected void doUpdating() throws Exception {
       if (!importProperty.isRoot())
         updatePagePassedIn();
-
+      wikiImporter.setAutoUpdateSetting(true);
       wikiImporter.importWiki(wikiPage);
     }
   }

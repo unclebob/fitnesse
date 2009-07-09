@@ -10,8 +10,16 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageProperties;
+import fitnesse.http.ChunkedResponse;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class WikiImportTestEventListenerTest extends TestCase {
+public class WikiImportTestEventListenerTest {
   private WikiImportTestEventListener eventListener;
   private MockTestResponder testResponder;
   private MockSuiteResponder suiteResponder;
@@ -21,6 +29,7 @@ public class WikiImportTestEventListenerTest extends TestCase {
   private WikiPage childTwo;
   private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
 
+  @Before
   public void setUp() throws Exception {
     standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
 
@@ -35,10 +44,12 @@ public class WikiImportTestEventListenerTest extends TestCase {
     suiteResponder = new MockSuiteResponder();
   }
 
+  @After
   public void tearDown() {
     standardOutAndErrorRecorder.stopRecording(false);
   }
 
+  @Test
   public void testRunWithTestingOnePage() throws Exception {
     addImportPropertyToPage(pageOne, false, true);
 
@@ -50,6 +61,17 @@ public class WikiImportTestEventListenerTest extends TestCase {
     assertEquals("Updating imported content...done", sentMessages);
   }
 
+  @Test
+  public void testNoImportAnnouncementIfXmlFormat() throws Exception {
+    testResponder.setXmlFormat();
+    addImportPropertyToPage(pageOne, false, true);
+
+    PageData data = pageOne.getData();
+    eventListener.notifyPreTest(testResponder, data);
+    assertEquals("", sentMessages);
+  }
+
+  @Test
   public void testRunWithTestingOnePageWithoutAutoUpdate() throws Exception {
     addImportPropertyToPage(pageOne, false, false);
 
@@ -61,6 +83,7 @@ public class WikiImportTestEventListenerTest extends TestCase {
     assertEquals("", sentMessages);
   }
 
+  @Test
   public void testErrorOccured() throws Exception {
     importerFactory.mockWikiImporter.fail = true;
     addImportPropertyToPage(pageOne, false, true);
@@ -73,6 +96,7 @@ public class WikiImportTestEventListenerTest extends TestCase {
     assertEquals("Updating imported content...java.lang.Exception: blah", sentMessages);
   }
 
+  @Test
   public void testRunWithSuiteFromRoot() throws Exception {
     addImportPropertyToPage(pageOne, true, true);
 
@@ -85,6 +109,7 @@ public class WikiImportTestEventListenerTest extends TestCase {
     assertEquals("Updating imported content...done", sentMessages);
   }
 
+  @Test
   public void testRunWithSuiteFromNonRoot() throws Exception {
     addImportPropertyToPage(pageOne, false, true);
 
@@ -114,12 +139,24 @@ public class WikiImportTestEventListenerTest extends TestCase {
   }
 
   private class MockTestResponder extends TestResponder {
+    private MockTestResponder() {
+      response = new ChunkedResponse("html");
+    }
+
     public void addToResponse(String output) throws Exception {
       AddMessage(output);
+    }
+
+    public void setXmlFormat() {
+      response = new ChunkedResponse("xml");  
     }
   }
 
   private class MockSuiteResponder extends SuiteResponder {
+    private MockSuiteResponder() {
+      response = new ChunkedResponse("html");
+    }
+
     public void addToResponse(String output) throws Exception {
       AddMessage(output);
     }

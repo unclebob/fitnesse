@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <properties>
-  <Files/>
-  <LastModified>20081020135127</LastModified>
-  <Properties/>
-  <RecentChanges/>
-  <Refactor/>
-  <Search/>
-  <Suite/>
-  <Versions/>
-  <WhereUsed/>
+	<Edit/>
+	<Files/>
+	<Help></Help>
+	<Properties/>
+	<RecentChanges/>
+	<Refactor/>
+	<Search/>
+	<Suite/>
+	<Suites></Suites>
+	<Versions/>
+	<WhereUsed/>
 </properties>
