@@ -11,3 +11,11 @@ The test result files are named using the following scheme !style_code(YYYYMMDDH
 
 The test files contain the XML that describes the test run.  The format of this XML is identical to the XML packet returned by the format=xml flag when you run a test.  (See <UserGuide.RestfulTests).
   
+!4 Purging.
+There are buttons at the top of the ''Test History'' page that allow you to purge old history files.  You have your choice of ''all'', ''>7 days'', or ''>30 days''.  If you want to purge a different number of days, you can use the RESTful URL form.  (See RestfulServices).
+
+!4 Comparing History
+When viewing the history for a page, you can select any two test results by clicking in their checkboxes.  Then, if you click the ''Compare'' button, you will be shown the two test results side-by-side along with an indicator that tells you if the results are identical or not. 
+
+Only tests can be compared this way.  Suites cannot. 
+!note !style_blue(This is an ''alpha'' level feature.  Lots more goodies coming soon.)
