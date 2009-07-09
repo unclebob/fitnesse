@@ -33,6 +33,8 @@ public interface Table {
 
   String getUnescapedCellContents(int col, int row);
 
+  String getCellResult(int col,int row);
+
   void appendCellToRow(int row, Table table);
 
   void setTestStatusOnRow(int row, boolean testStatus);

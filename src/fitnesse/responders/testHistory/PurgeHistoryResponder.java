@@ -2,13 +2,10 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import fitnesse.responders.templateUtilities.PageTitle;
-import org.apache.velocity.VelocityContext;
 import util.FileUtil;
 
 import java.io.File;
@@ -25,7 +22,7 @@ public class PurgeHistoryResponder implements Responder {
     initializeResponder(context);
     if (hasValidInputs(request)) {
       purgeHistory(request);
-      return makeValidResponse(context);
+      return makeValidResponse();
     } else {
       return makeErrorResponse(context, request);
     }
@@ -37,7 +34,7 @@ public class PurgeHistoryResponder implements Responder {
     todaysDate = new Date();
   }
 
-  private SimpleResponse makeValidResponse(FitNesseContext context) throws Exception {
+  private SimpleResponse makeValidResponse() throws Exception {
     SimpleResponse response = new SimpleResponse();
     response.redirect("?testHistory");
     return response;
