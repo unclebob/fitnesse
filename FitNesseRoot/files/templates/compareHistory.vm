@@ -7,9 +7,11 @@
 <table>
   <tr>
     <td class=$result>"Pass/Fail"</td>
-    <td>"$firstTables[$count]"</td>
-    <td>"$secondTables[$count]"</td>
-#set ($count = $count + 1)
+    #set ($firstTable = $firstTables.get($count))
+    #set ($secondTable = $secondTables.get($count))
+    <td>$firstTable</td>
+    <td>$secondTable</td>
+    #set ($count = $count + 1)
   </tr>
 </table>
 #end
