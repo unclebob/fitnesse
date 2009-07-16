@@ -40,6 +40,7 @@ public class HistoryComparerTest {
     root = InMemoryPage.makeRoot("RooT");
     firstContent = getContentWith("pass");
     secondContent = getContentWith("fail");
+    comparer.resultContent = new String[1];
   }
 
   @Test
@@ -72,7 +73,7 @@ public class HistoryComparerTest {
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     String table2text = "<table><tr><td>x</td></tr></table>";
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
-    assertTrue(HistoryComparer.compareTables(table1, table2));
+    assertTrue(HistoryComparer.compareTables(table1, table2, 0));
   }
 
   @Test
@@ -81,7 +82,7 @@ public class HistoryComparerTest {
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     String table2text = "<table><tr><td>y</td></tr></table>";
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
-    assertFalse(HistoryComparer.compareTables(table1, table2));
+    assertFalse(HistoryComparer.compareTables(table1, table2, 0));
   }
 
   @Test
@@ -90,7 +91,17 @@ public class HistoryComparerTest {
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     String table2text = "<table><tr><td>x</td><td>y</td></tr></table>";
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
-    assertFalse(HistoryComparer.compareTables(table1, table2));
+    assertFalse(HistoryComparer.compareTables(table1, table2, 0));
+  }
+
+  @Test
+  public void shouldCompareTwoSetsOfTables() throws Exception {
+    comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>x</td></tr></table>";
+    comparer.secondFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>x</td></tr></table>";
+    assertTrue(comparer.grabAndCompareTablesFromHtml());
+    assertEquals(2, comparer.resultContent.length);
+    assertEquals("pass", comparer.resultContent[0]);
+    assertEquals("pass", comparer.resultContent[1]);
   }
 
   @Test
@@ -101,7 +112,7 @@ public class HistoryComparerTest {
     boolean worked = comparer.compare("TestFolder/FirstFile", "TestFolder/SecondFile");
     assertTrue(worked);
     String expectedResult = "pass";
-    assertEquals(expectedResult, HistoryComparer.resultContent);
+    assertEquals(expectedResult, HistoryComparer.resultContent[0]);
   }
 
   @Test
@@ -111,8 +122,8 @@ public class HistoryComparerTest {
     FileUtil.createFile("TestFolder/SecondFile", secondContent);
     boolean worked = comparer.compare("TestFolder/FirstFile", "TestFolder/SecondFile");
     assertTrue(worked);
-    String expectedResult = "fail";
-    assertEquals(expectedResult, HistoryComparer.resultContent);
+    assertEquals("pass", HistoryComparer.resultContent[0]);
+    assertEquals("fail", HistoryComparer.resultContent[1]);
   }
 
   public String generateHtmlFromWiki(String passOrFail) throws Exception {
@@ -121,7 +132,7 @@ public class HistoryComparerTest {
       "|myTable|\n" +
         "La la\n" +
         "|NewTable|\n" +
-        "|!style_"+passOrFail+"(a)|b|c|\n" +
+        "|!style_" + passOrFail + "(a)|b|c|\n" +
         "La la la";
     WikiPage myPage = crawler.addPage(root, PathParser.parse("MyPage"), pageText);
     PageData myData = myPage.getData();
@@ -144,8 +155,9 @@ public class HistoryComparerTest {
     report.toXml(writer, engine);
     return writer.toString();
   }
+
   @After
-  public void tearDown(){
+  public void tearDown() {
     FileUtil.deleteFileSystemDirectory("TestFolder");
   }
 }

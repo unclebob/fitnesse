@@ -1,15 +1,16 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.slimTables.HtmlTableScanner;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
 import static org.mockito.Mockito.*;
 import util.FileUtil;
 import static util.RegexTestCase.assertHasRegexp;
@@ -25,12 +26,14 @@ public class HistoryComparerResponderTest {
   public void setup() throws Exception {
     request = new MockRequest();
     mockedComparer = mock(HistoryComparer.class);
+    mockedComparer.firstScanner = new HtmlTableScanner("");
+    mockedComparer.secondScanner = new HtmlTableScanner("");
     responder = new HistoryComparerResponder(mockedComparer);
     request.addInput("TestResult_firstFakeFile", "");
     request.addInput("TestResult_secondFakeFile", "");
     request.setResource("TestFolder");
     when(mockedComparer.compare("testRoot/TestFolder/firstFakeFile", "testRoot/TestFolder/secondFakeFile")).thenReturn(true);
-    when(mockedComparer.getResultContent()).thenReturn("This is the Content");
+    when(mockedComparer.getResultContent()).thenReturn(new String[] {"This is the Content"});
     FileUtil.createFile("testRoot/TestFolder/firstFakeFile","firstFile");
     FileUtil.createFile("testRoot/TestFolder/secondFakeFile","secondFile");
     responder.baseDir = "testRoot/";
