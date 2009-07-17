@@ -103,6 +103,7 @@ public class HistoryComparerTest {
     assertEquals("pass", comparer.resultContent[0]);
     assertEquals("pass", comparer.resultContent[1]);
   }
+  
 
   @Test
   public void compareShouldGetReportFileHtmlAndSetResultContentWithPassIfTheFilesWereTheSame() throws Exception {

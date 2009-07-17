@@ -2,9 +2,9 @@
 #parse("pageHead.vm")
 #if($resultContent)
 
-
-#foreach($result in $resultContent)
 <table>
+#foreach($result in $resultContent)
+
   <tr>
     <td class=$result>"Pass/Fail"</td>
     #set ($firstTable = $firstTables.get($count))
@@ -13,8 +13,9 @@
     <td>$secondTable</td>
     #set ($count = $count + 1)
   </tr>
-</table>
+
 #end
+ </table>
 #else
 <h2>Comparison Failed: $pageTitle.Title</h2>
 #end
