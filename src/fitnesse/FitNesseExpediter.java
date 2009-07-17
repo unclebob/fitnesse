@@ -30,7 +30,7 @@ public class FitNesseExpediter implements ResponseSender {
   protected long requestParsingTimeLimit;
   private long requestProgress;
   private long requestParsingDeadline;
-  private boolean hasError;
+  private volatile boolean hasError;
 
   public FitNesseExpediter(Socket s,
                            FitNesseContext context) throws Exception {

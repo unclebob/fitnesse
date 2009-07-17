@@ -37,7 +37,7 @@ public class Request {
   protected String requestLine;
   protected String authorizationUsername;
   protected String authorizationPassword;
-  private boolean hasBeenParsed;
+  private volatile boolean hasBeenParsed;
   private long bytesParsed = 0;
 
   public static Set<String> buildAllowedMethodList() {

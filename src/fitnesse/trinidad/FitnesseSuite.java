@@ -167,14 +167,23 @@ public class FitnesseSuite extends ParentRunner<Test> {
   @Override
   protected void runChild(Test test, RunNotifier notifier) {
     Description testDescription = describeChild(test);
-    notifier.fireTestStarted(testDescription);
-    TestResult tr = testEngine.runTest(test);
-    notifyTestResult(notifier, testDescription, tr);
-    suiteResult.append(tr);
     try {
+      notifier.fireTestStarted(testDescription);
+      TestResult tr = testEngine.runTest(test);
+      notifyTestResult(notifier, testDescription, tr);
+      suiteResult.append(tr);
       resultRepository.recordTestResult(tr);
     } catch (IOException e) {
       notifier.fireTestFailure(new Failure(testDescription, e));
+    } finally {
+      sleep();
+    }
+  }
+
+  private void sleep() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignore) {
     }
   }
 

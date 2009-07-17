@@ -27,6 +27,7 @@ public class TestRunner {
   public Counts runTest(String testUrl) throws IOException {
     TestResult tr = testRunner.runTest(repository.getTest(testUrl));
     resultRepository.recordTestResult(tr);
+    sleep();
     return tr.getCounts();
   }
 
@@ -36,8 +37,16 @@ public class TestRunner {
       TestResult tr = testRunner.runTest(t);
       suiteResult.append(tr);
       resultRepository.recordTestResult(tr);
+      sleep();
     }
     resultRepository.recordTestResult(suiteResult);
     return suiteResult.getCounts();
+  }
+
+  private void sleep() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignore) {
+    }
   }
 }
