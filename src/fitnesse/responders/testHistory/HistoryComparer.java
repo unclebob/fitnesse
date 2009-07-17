@@ -11,7 +11,9 @@ public class HistoryComparer {
   public String secondFileContent = "";
   public String firstFileContent = "";
   public File resultFile;
-  public static String resultContent;
+  public static String[] resultContent;
+  public HtmlTableScanner firstScanner;
+  public HtmlTableScanner secondScanner;
 
   public String getFileContent(String filePath) {
     TestExecutionReport report;
@@ -29,18 +31,20 @@ public class HistoryComparer {
     if (firstFilePath.equals(secondFilePath))
       return false;
     initializeFileContents(firstFilePath, secondFilePath);
-    resultContent = "pass";
     return grabAndCompareTablesFromHtml();
   }
 
-  private boolean grabAndCompareTablesFromHtml() throws ParserException {
-    HtmlTableScanner firstScanner = new HtmlTableScanner(firstFileContent);
-    HtmlTableScanner secondScanner = new HtmlTableScanner(secondFileContent);
+  public boolean grabAndCompareTablesFromHtml() throws ParserException {
+    firstScanner = new HtmlTableScanner(firstFileContent);
+    secondScanner = new HtmlTableScanner(secondFileContent);
     if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
       return false;
     int numTables = firstScanner.getTableCount() >= secondScanner.getTableCount() ? secondScanner.getTableCount() : firstScanner.getTableCount();
-    for (int i = 0; i < numTables; i++)
-      compareTables(firstScanner.getTable(i), secondScanner.getTable(i));
+    resultContent = new String[numTables];
+    for (int i = 0; i < numTables; i++){
+      resultContent[i] = "pass";
+      compareTables(firstScanner.getTable(i), secondScanner.getTable(i),i);
+    }
     return true;
   }
 
@@ -51,29 +55,28 @@ public class HistoryComparer {
     secondFileContent = content == null ? "" : content;
   }
 
-  public String getResultContent() {
+  public String[] getResultContent() {
     return resultContent;
   }
 
-  public static boolean compareTables(Table table1, Table table2) {
-    //int numRows = table1.getRowCount() >= table2.getRowCount() ? table2.getRowCount() : table1.getRowCount();
+  public static boolean compareTables(Table table1, Table table2, int tableNum) {
     if(table1.getRowCount() != table2.getRowCount())
-      return tablesDiffer();
+      return tablesDiffer(tableNum);
     for (int i = 0; i < table1.getRowCount(); i++) {
       if(table1.getColumnCountInRow(i) != table2.getColumnCountInRow(i))
-        return tablesDiffer();
+        return tablesDiffer(tableNum);
       for (int j = 0; j < table1.getColumnCountInRow(i); j++) {
         String content1 = table1.getCellResult(j, i);
         String content2 = table2.getCellResult(j, i);
         if (!content1.equals(content2))
-          tablesDiffer();
+          tablesDiffer(tableNum);
       }
     }
-    return resultContent != "fail";
+    return resultContent[tableNum] != "fail";
   }
 
-  private static boolean tablesDiffer() {
-    resultContent = "fail";
+  private static boolean tablesDiffer(int i) {
+    resultContent[i] = "fail";
     return false;
   }
 }

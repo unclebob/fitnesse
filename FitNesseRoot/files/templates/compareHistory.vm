@@ -1,14 +1,20 @@
 #set ($page_title="History Comparison")
 #parse("pageHead.vm")
 #if($resultContent)
+
+
+#foreach($result in $resultContent)
 <table>
   <tr>
-    <td class=$resultContent>"Pass/Fail"</td>
-    <td>$firstPage</td>
-    <td>$secondPage</td>
-
+    <td class=$result>"Pass/Fail"</td>
+    #set ($firstTable = $firstTables.get($count))
+    #set ($secondTable = $secondTables.get($count))
+    <td>$firstTable</td>
+    <td>$secondTable</td>
+    #set ($count = $count + 1)
   </tr>
 </table>
+#end
 #else
 <h2>Comparison Failed: $pageTitle.Title</h2>
 #end
