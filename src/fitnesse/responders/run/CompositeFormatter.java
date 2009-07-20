@@ -1,6 +1,5 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;
@@ -66,10 +65,17 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.writeHead(pageType);
   }
 
-  public int allTestingComplete() throws Exception {
+  @Override
+  public void allTestingComplete() throws Exception {
+    for (BaseFormatter formatter : formatters)
+      formatter.allTestingComplete();
+  }
+
+  public int getErrorCount() {
     int exitCode = 0;
     for (BaseFormatter formatter : formatters)
-      exitCode = Math.max(exitCode, formatter.allTestingComplete());
+      exitCode = Math.max(exitCode, formatter.getErrorCount());
     return exitCode;
   }
+
 }

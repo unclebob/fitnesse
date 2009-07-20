@@ -109,13 +109,11 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return html;
   }
 
-  @Override
-  public int allTestingComplete() throws Exception {
+  public void allTestingComplete() throws Exception {
     removeStopTestLink();
     publishAndAddLog();
     finishWritingOutput();
     close();
-    return exitCode();
   }
 
   protected void close() throws Exception {
@@ -165,7 +163,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return script.html();
   }
 
-  protected int exitCode() {
+  public int getErrorCount() {
     return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
   }
 

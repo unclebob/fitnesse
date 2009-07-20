@@ -188,6 +188,12 @@ public class TestResponderTest {
   }
 
   @Test
+  public void exitCodeIsCountOfErrors() throws Exception {
+    doSimpleRun(failFixtureTable());
+    assertSubString("Exit-Code: 1", results);
+  }
+
+  @Test
   public void testFixtureThatCrashes() throws Exception {
     responder.setFastTest(false);
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
@@ -246,6 +252,7 @@ public class TestResponderTest {
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
+    assertSubString("Exit-Code: 1", results);
   }
 
 
@@ -486,6 +493,10 @@ public class TestResponderTest {
 
   private String passFixtureTable() {
     return "|!-fitnesse.testutil.PassFixture-!|\n";
+  }
+
+  private String failFixtureTable() {
+    return "|!-fitnesse.testutil.FailFixture-!|\n";
   }
 
   class XmlChecker {

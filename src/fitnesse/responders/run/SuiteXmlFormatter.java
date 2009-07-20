@@ -4,13 +4,11 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 
-import java.io.Writer;
-
 public class SuiteXmlFormatter extends XmlFormatter {
 
   private TestSummary xmlPageCounts = new TestSummary();
 
-  public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterSource writerSource) throws Exception {
+  public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterFactory writerSource) throws Exception {
     super(context, page, writerSource);
   }
 
@@ -35,9 +33,9 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public int allTestingComplete() throws Exception {
+  public void allTestingComplete() throws Exception {
     addFinalCounts();
-    return super.allTestingComplete();
+    super.allTestingComplete();
   }
 
 
