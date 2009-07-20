@@ -4,7 +4,6 @@ package fitnesse.responders.search;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
