@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPage;
+
 import java.io.Writer;
 
 public class SuiteResponder extends TestResponder {
@@ -9,34 +12,34 @@ public class SuiteResponder extends TestResponder {
     return "Suite Results";
   }
 
-  BaseFormatter createXmlFormatter() throws Exception {
-    XmlFormatter.WriterSource writerSource = new XmlFormatter.WriterSource() {
-      public Writer getWriter(TestSummary counts, long time) {
+  void addXmlFormatter() throws Exception {
+    XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
+      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
         return makeResponseWriter();
       }
     };
-    BaseFormatter formatter = new SuiteXmlFormatter(context, page, writerSource);
-    return formatter;
+    formatters.add(new SuiteXmlFormatter(context, page, writerSource));
   }
 
-  BaseFormatter createHtmlFormatter() throws Exception {
+  void addHtmlFormatter() throws Exception {
     BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
       protected void writeData(String output) throws Exception {
         addToResponse(output);
       }
     };
-    return formatter;
+    formatters.add(formatter);
   }
 
-  protected XmlFormatter createTestHistoryFormatter() throws Exception {
-    HistoryWriterSource source = new HistoryWriterSource(context, page);
-    return new SuiteXmlFormatter(context, page, source);
+  protected void addTestHistoryFormatter() throws Exception {
+    HistoryWriterFactory source = new HistoryWriterFactory();
+    formatters.add(new SuiteXmlFormatter(context, page, source));
+    formatters.add(new PageHistoryFormatter(context, page, source));
   }
 
   protected void performExecution() throws Exception {
     SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);
-    MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatter);
+    MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
     runner.setDebug(isRemoteDebug());
     runner.executeTestPages();
   }

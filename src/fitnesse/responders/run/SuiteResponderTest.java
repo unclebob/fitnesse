@@ -47,6 +47,7 @@ public class SuiteResponderTest {
   private PageCrawler crawler;
   private String suitePageName;
   private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
+  private final String fitFailFixture = "|!-fitnesse.testutil.FailFixture-!|\n";
   private final String simpleSlimDecisionTable = "!define TEST_SYSTEM {slim}\n" +
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
@@ -191,6 +192,13 @@ public class SuiteResponderTest {
   public void testExitCodeHeader() throws Exception {
     String results = runSuite();
     assertSubString("Exit-Code: 0", results);
+  }
+
+  @Test
+  public void exitCodeHeaderIsErrorCount() throws Exception {
+    addTestToSuite("TestFailingTest", fitFailFixture);
+    String results = runSuite();
+    assertSubString("Exit-Code: 1", results);
   }
 
 
@@ -381,12 +389,11 @@ public class SuiteResponderTest {
     xmlResultsFile.delete();
   }
 
-  @Ignore
   @Test
   public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
     TestSummary counts = new TestSummary(2,0,0,0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
-    String resultsFileName = String.format("%s/SlimTest/20081205011900_%d_%d_%d_%d.xml",
+    String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
 
@@ -416,5 +423,14 @@ public class SuiteResponderTest {
     Element result = (Element) resultList.item(0);
     String pageName = XmlUtil.getTextValue(result, "relativePageName");
     assertEquals("(TestOne)", pageName);
+  }
+
+
+  @Test
+  public void exitCodeHeaderIsErrorCountForXml() throws Exception {
+    request.addInput("format", "xml");
+    addTestToSuite("TestFailingTest", fitFailFixture);
+    String results = runSuite();
+    assertSubString("Exit-Code: 1", results);
   }
 }

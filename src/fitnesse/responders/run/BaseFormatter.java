@@ -12,8 +12,6 @@ public abstract class BaseFormatter implements ResultsListener {
   public static final BaseFormatter NULL = new NullFormatter();
   public abstract void writeHead(String pageType) throws Exception;
 
-  public abstract int allTestingComplete() throws Exception;
-
   protected BaseFormatter() {
   }
 
@@ -33,21 +31,24 @@ public abstract class BaseFormatter implements ResultsListener {
       e.printStackTrace();
     }
   }
-  
+
+  public void allTestingComplete() throws Exception {
+  }
+
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
   public void addMessageForBlankHtml() throws Exception
   {}
+
+  public int getErrorCount() {
+    return 0;
+  }
 }
 
 class NullFormatter extends BaseFormatter {
   NullFormatter() {
     super(null, null);
-  }
-
-  public int allTestingComplete() throws Exception {
-    return 0;
   }
 
   protected WikiPage getPage() {

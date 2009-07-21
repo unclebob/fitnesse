@@ -3,11 +3,10 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.http.ChunkedResponse;
-import fitnesse.http.Response;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.PageData;
@@ -23,7 +22,7 @@ import java.util.List;
 public class TestResponder extends ChunkingResponder implements SecureResponder {
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected PageData data;
-  protected CompositeFormatter formatter;
+  protected CompositeFormatter formatters;
   private boolean isClosed = false;
 
   private boolean fastTest = false;
@@ -32,7 +31,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public TestResponder() {
     super();
-    formatter = new CompositeFormatter();
+    formatters = new CompositeFormatter();
   }
 
   protected void doSending() throws Exception {
@@ -46,33 +45,31 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     performExecution();
 
-    int exitCode = formatter.allTestingComplete();
+    int exitCode = formatters.getErrorCount();
     closeHtmlResponse(exitCode);
   }
 
   protected void createFormatterAndWriteHead() throws Exception {
-    if (response.isXmlFormat()) {
-      formatter.add(createXmlFormatter());
-      formatter.add(createTestHistoryFormatter());
-    } else {
-      formatter.add(createHtmlFormatter());
-      formatter.add(createTestHistoryFormatter());
-    }
+    if (response.isXmlFormat())
+      addXmlFormatter();
+    else
+      addHtmlFormatter();
 
-    formatter.writeHead(getTitle());
+    addTestHistoryFormatter();
+    formatters.writeHead(getTitle());
   }
 
   String getTitle() {
     return "Test Results";
   }
 
-  BaseFormatter createXmlFormatter() throws Exception {
-    XmlFormatter.WriterSource writerSource = new XmlFormatter.WriterSource() {
-      public Writer getWriter(TestSummary counts, long time) {
+  void addXmlFormatter() throws Exception {
+    XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
+      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
         return makeResponseWriter();
       }
     };
-    return new XmlFormatter(context, page, writerSource);
+    formatters.add(new XmlFormatter(context, page, writerSource));
   }
 
   protected Writer makeResponseWriter() {
@@ -95,19 +92,19 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
 
-  BaseFormatter createHtmlFormatter() throws Exception {
+  void addHtmlFormatter() throws Exception {
     BaseFormatter formatter = new TestHtmlFormatter(context, page, context.htmlPageFactory) {
       @Override
       protected void writeData(String output) throws Exception {
         addToResponse(output);
       }
     };
-    return formatter;
+    formatters.add(formatter);
   }
 
-  protected XmlFormatter createTestHistoryFormatter() throws Exception {
-    HistoryWriterSource source = new HistoryWriterSource(context, page);
-    return new XmlFormatter(context, page, source);
+  protected void addTestHistoryFormatter() throws Exception {
+    HistoryWriterFactory writerFactory = new HistoryWriterFactory();
+    formatters.add(new XmlFormatter(context, page, writerFactory));
   }
 
   protected void sendPreTestNotification() throws Exception {
@@ -119,12 +116,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected void performExecution() throws Exception {
     List<WikiPage> test2run = new SuiteContentsFinder(page, root, null).makePageListForSingleTest();
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatter);
+    MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
     runner.setFastTest(fastTest);
     runner.setDebug(isRemoteDebug());
 
     if (isEmpty(page))
-      formatter.addMessageForBlankHtml();
+      formatters.addMessageForBlankHtml();
 
     runner.executeTestPages();
   }
@@ -196,16 +193,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return response;
   }
 
-  public static class HistoryWriterSource implements XmlFormatter.WriterSource {
-    private FitNesseContext context;
-    private WikiPage page;
-
-    public HistoryWriterSource(FitNesseContext context, WikiPage page) {
-      this.context = context;
-      this.page = page;
-    }
-
-    public Writer getWriter(TestSummary counts, long time) throws Exception {
+  public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
+    public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
       File resultPath = new File(String.format("%s/%s/%s",
         context.getTestHistoryDirectory(),
         page.getPageCrawler().getFullPath(page).toString(),

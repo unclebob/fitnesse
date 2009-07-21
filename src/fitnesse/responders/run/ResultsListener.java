@@ -5,6 +5,8 @@ package fitnesse.responders.run;
 import fitnesse.wiki.WikiPage;
 
 public interface ResultsListener {
+
+  public void allTestingComplete() throws Exception;
   
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception;
 

@@ -13,7 +13,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 
 import java.io.Writer;
 import java.text.SimpleDateFormat;
@@ -23,11 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
-  private WriterSource writerSource;
+  private WriterFactory writerSource;
 
-  public interface WriterSource {
-    Writer getWriter(TestSummary counts, long time) throws Exception;
+  public interface WriterFactory {
+    Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception;
   }
+
   protected TestExecutionReport testResponse = new TestExecutionReport();
   private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
@@ -35,7 +35,7 @@ public class XmlFormatter extends BaseFormatter {
   private static long testTime;
   protected TestSummary finalSummary = new TestSummary();
 
-  public XmlFormatter(FitNesseContext context, final WikiPage page, WriterSource writerSource) throws Exception {
+  public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerSource) throws Exception {
     super(context, page);
     this.writerSource = writerSource;
   }
@@ -83,17 +83,21 @@ public class XmlFormatter extends BaseFormatter {
     testResponse.rootPath = getPage().getName();
   }
 
-  public int allTestingComplete() throws Exception {
-    try {
-      writeResults();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    } 
-    return 0;
+  public void allTestingComplete() throws Exception {
+    writeResults();
   }
 
   protected void writeResults() throws Exception {
-    writeResults(writerSource.getWriter(finalSummary, getTime()));
+    writeResults(writerSource.getWriter(context, getPageForHistory(), finalSummary, getTime()));
+  }
+
+  protected WikiPage getPageForHistory() {
+    return page;
+  }
+
+  @Override
+  public int getErrorCount() {
+    return finalSummary.wrong + finalSummary.exceptions;
   }
 
   protected void writeResults(Writer writer) throws Exception {
