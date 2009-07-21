@@ -8,7 +8,6 @@
   <property name="src" location="src"/>
   <property name="src2" location="srcFitServerTests"/>
   <property name="classes" location="classes"/>
-  <property name="lib" location="lib"/>
   <property name="fitnesseRoot" value="FitNesseRoot"/>
   <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
   <property name="zipDir" location="dist/fitnesse"/>
@@ -36,14 +35,18 @@
 
     <jar jarfile="dist/fitnesse.jar" basedir="classes">
       <include name="**/*.class"/>
-      <exclude name="**/*Test.class"/>
+      <exclude name="**/?*Test.class"/>
       <exclude name="**/*TestSuite.class"/>
       <include name="Resources/**"/>
       <include name="tasks.properties"/>
+    	
+      <zipfileset src="lib/htmlparser.jar" />
+      <zipfileset src="lib/json.jar" />
+      <zipfileset src="lib/velocity-1.6.2-dep.jar" />
+
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
         <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
-        <attribute name="Class-Path" value="lib/htmlparser.jar lib/json.jar lib/velocity-1.6.2-dep.jar"/>
       </manifest>
     </jar>
     <delete dir="classes/Resources"/>
@@ -63,7 +66,6 @@
       <arg value="FitNesseRoot/files/templates"/>
       <arg value="FitNesseRoot/FitNesse"/>
       <arg value="FitNesseRoot/FrontPage"/>
-      <arg value="lib"/>
     </java>
     <copy todir="classes/Resources">
       <fileset dir=".">
@@ -86,14 +88,6 @@
         <include name="templates/**"/>
         <exclude name="juUnitTestLink.js"/>
         <exclude name="**/unused/**"/>
-      </fileset>
-    </copy>
-    <copy todir="classes/Resources">
-      <fileset dir=".">
-        <include name="lib/**"/>
-        <exclude name="lib/ant.jar"/>
-        <exclude name="lib/easymock.jar"/>
-        <exclude name="lib/mockito*.jar"/>
       </fileset>
     </copy>
     <copy todir="classes/Resources/FitNesseRoot">
