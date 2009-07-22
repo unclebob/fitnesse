@@ -33,7 +33,7 @@ public class TestRunner {
 
   public Counts runSuite(String suite) throws IOException {
     SuiteResult suiteResult = new SuiteResult(suite);
-    for (Test t : repository.getSuite(suite)) {
+    for (TestDescriptor t : repository.getSuite(suite)) {
       TestResult tr = testRunner.runTest(t);
       suiteResult.append(tr);
       resultRepository.recordTestResult(tr);

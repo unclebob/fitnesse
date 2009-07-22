@@ -35,7 +35,7 @@ public class SlimTestEngine implements TestEngine {
     }
   }
 
-  public TestResult runTest(final Test test) {
+  public TestResult runTest(final TestDescriptor test) {
     if (!test.getContent().contains("<table")) {
       return new SingleTestResult(new Counts(), test.getName(),
           " contains no tables");

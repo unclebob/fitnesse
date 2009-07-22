@@ -12,7 +12,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.WikiPageFactory;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -60,9 +59,9 @@ public class FitNesseRepository implements TestRepository {
         "images/collapsableClosed.gif");
   }
 
-  public List<Test> getSuite(String name) throws IOException {
+  public List<TestDescriptor> getSuite(String name) throws IOException {
     try {
-      List<Test> tests = new ArrayList<Test>();
+      List<TestDescriptor> tests = new ArrayList<TestDescriptor>();
       WikiPagePath path = PathParser.parse(name);
       PageCrawler crawler = context.root.getPageCrawler();
       crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -114,7 +113,7 @@ public class FitNesseRepository implements TestRepository {
   // pages.addLast(suiteTearDown);
   // }
 
-  public Test getTest(String name) throws IOException {
+  public TestDescriptor getTest(String name) throws IOException {
     try {
       WikiPagePath path = PathParser.parse(name);
       PageCrawler crawler = context.root.getPageCrawler();

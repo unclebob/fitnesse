@@ -45,7 +45,6 @@ public class FitNesseServerTest extends RegexTestCase {
   public void testSimple() throws Exception {
     crawler.addPage(root, PathParser.parse("SomePage"), "some string");
     String output = getSocketOutput("GET /SomePage HTTP/1.1\r\n\r\n", root);
-    System.out.println("output = " + output);
     String statusLine = "HTTP/1.1 200 OK\r\n";
     assertTrue("Should have statusLine", Pattern.compile(statusLine, Pattern.MULTILINE).matcher(output).find());
     assertTrue("Should have canned Content", hasSubString("some string", output));
