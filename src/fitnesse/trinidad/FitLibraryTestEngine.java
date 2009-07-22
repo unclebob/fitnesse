@@ -11,7 +11,7 @@ import fitlibrary.suite.FitLibraryServer;
 
 public class FitLibraryTestEngine implements TestEngine {
 
-  public TestResult runTest(Test test) {
+  public TestResult runTest(TestDescriptor test) {
     if (!test.getContent().contains("<table")) {
       return new SingleTestResult(new Counts(), test.getName(),
           " contains no tables");

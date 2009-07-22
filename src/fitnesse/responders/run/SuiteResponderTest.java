@@ -2,36 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-import static junit.framework.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertDoesntHaveRegexp;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-import static util.RegexTestCase.divWithIdAndContent;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
+import static junit.framework.Assert.fail;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import static util.RegexTestCase.*;
 import util.XmlUtil;
 
 import java.io.File;
@@ -270,7 +259,7 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestTwo", results);
     assertHasRegexp("#TestThree", results);
   }
-  
+
 
   @Test
   public void exculdeSuiteQuery() throws Exception {
@@ -282,7 +271,7 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestThree", results);
   }
 
-  
+
   @Test
   public void testFirstTest() throws Exception {
     addTestPagesWithSuiteProperty();
@@ -303,7 +292,7 @@ public class SuiteResponderTest {
     assertHasRegexp("#TestThree", results);
   }
 
-  
+
   @Test
   public void testTagsShouldBeInheritedFromSuite() throws Exception {
     PageData suiteData = suite.getData();
@@ -370,7 +359,7 @@ public class SuiteResponderTest {
 
   @Test
   public void normalSuiteRunWithThreePassingTestsProducesSuiteResultFile() throws Exception {
-    TestSummary counts = new TestSummary(3,0,0,0);
+    TestSummary counts = new TestSummary(3, 0, 0, 0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
@@ -391,7 +380,7 @@ public class SuiteResponderTest {
 
   @Test
   public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
-    TestSummary counts = new TestSummary(2,0,0,0);
+    TestSummary counts = new TestSummary(2, 0, 0, 0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());

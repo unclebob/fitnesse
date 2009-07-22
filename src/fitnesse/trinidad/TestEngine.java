@@ -3,5 +3,5 @@
 package fitnesse.trinidad;
 
 public interface TestEngine {
-  public TestResult runTest(Test test);
+  public TestResult runTest(TestDescriptor test);
 }
