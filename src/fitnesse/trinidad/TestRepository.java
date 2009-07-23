@@ -8,9 +8,9 @@ import java.util.List;
 public interface TestRepository {
   public void setUri(String uri) throws IOException;
 
-  public Test getTest(String name) throws IOException;
+  public TestDescriptor getTest(String name) throws IOException;
 
-  public List<Test> getSuite(String name) throws IOException;
+  public List<TestDescriptor> getSuite(String name) throws IOException;
 
   public void prepareResultRepository(TestResultRepository resultRepository)
       throws IOException;

@@ -2,7 +2,7 @@
 
 package fitnesse.trinidad;
 
-public class InMemoryTestImpl implements Test {
+public class InMemoryTestImpl implements TestDescriptor {
   private String name;
   private String content;
 
