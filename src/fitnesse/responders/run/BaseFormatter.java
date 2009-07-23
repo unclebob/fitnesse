@@ -68,7 +68,7 @@ class NullFormatter extends BaseFormatter {
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
   }
 
-  public void newTestStarted(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test, long time) throws Exception {
   }
 
   public void testOutputChunk(String output) throws Exception {

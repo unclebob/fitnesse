@@ -217,7 +217,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
       currentTest = firstInQueue;
-      resultsListener.newTestStarted(currentTest);
+      resultsListener.newTestStarted(currentTest, System.currentTimeMillis());
     }
     resultsListener.testOutputChunk(output);
   }
