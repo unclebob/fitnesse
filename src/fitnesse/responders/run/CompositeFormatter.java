@@ -45,9 +45,9 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
-  public void newTestStarted(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test, long time) throws Exception {
     for (BaseFormatter formatter : formatters)
-      formatter.newTestStarted(test);
+      formatter.newTestStarted(test, time);
   }
 
   public void testOutputChunk(String output) throws Exception {

@@ -41,7 +41,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testTestSummaryTestPass() throws Exception {
 
     formatter.writeHead("test");
-    formatter.newTestStarted(page);
+    formatter.newTestStarted(page, 0);
     formatter.testComplete(page, new TestSummary(4, 0, 0, 0));
     formatter.allTestingComplete();
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
@@ -51,7 +51,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
 
   public void testTestSummaryTestFail() throws Exception {
     formatter.writeHead("test");
-    formatter.newTestStarted(page);
+    formatter.newTestStarted(page, 0);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
@@ -61,7 +61,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testExecutionStatusHtml() throws Exception {
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page);
+    formatter.newTestStarted(page, 0);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
     assertSubString("<div id=\"execution-status\">", pageBuffer.toString());
@@ -69,7 +69,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
 
   public void testTail() throws Exception {
     formatter.writeHead("test");
-    formatter.newTestStarted(page);
+    formatter.newTestStarted(page, 0);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
 
@@ -79,7 +79,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testStop() throws Exception {
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page);
+    formatter.newTestStarted(page, 0);
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
     formatter.allTestingComplete();
     //assert stop button added
@@ -91,7 +91,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testIncompleteMessageAfterException() throws Exception {
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page);
+    formatter.newTestStarted(page, 0);
     pageBuffer.setLength(0);
     formatter.errorOccured();
     //assert stop button added

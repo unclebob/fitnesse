@@ -90,7 +90,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiPage newTest) throws Exception {
+  public void newTestStarted(WikiPage newTest, long time) throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), newTest);
     WikiPagePath fullPath = pageCrawler.getFullPath(newTest);

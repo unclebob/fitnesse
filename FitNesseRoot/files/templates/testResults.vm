@@ -3,7 +3,7 @@
   <FitNesseVersion>$response.Version</FitNesseVersion>
   <rootPath>$response.RootPath</rootPath>
   #foreach ($result in $response.Results)
-
+  #set($result = $result.readPageHistory())
   <result>
     <counts>
       <right>$result.Right</right>

@@ -53,7 +53,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return "";
   }
 
-  public void newTestStarted(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test, long time) throws Exception {
     writeData(getPage().getData().getHeaderPageHtml());
   }
 

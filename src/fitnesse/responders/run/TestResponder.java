@@ -8,7 +8,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
-import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -40,9 +40,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     data = page.getData();
 
     createFormatterAndWriteHead();
-
     sendPreTestNotification();
-
     performExecution();
 
     int exitCode = formatters.getErrorCount();
@@ -104,7 +102,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected void addTestHistoryFormatter() throws Exception {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-    formatters.add(new XmlFormatter(context, page, writerFactory));
+//    formatters.add(new XmlFormatter(context, page, writerFactory));
+    formatters.add(new PageHistoryFormatter(context, page, writerFactory));
   }
 
   protected void sendPreTestNotification() throws Exception {
@@ -195,10 +194,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
     public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
-      File resultPath = new File(String.format("%s/%s/%s",
-        context.getTestHistoryDirectory(),
-        page.getPageCrawler().getFullPath(page).toString(),
-        TestHistory.makeResultFileName(counts, time)));
+      File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();
       File resultFile = new File(resultDirectory, resultPath.getName());

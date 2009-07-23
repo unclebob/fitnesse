@@ -13,10 +13,11 @@ public class XmlFormatterTest {
 
   @Test
   public void makeFileName() throws Exception {
+    XmlFormatter formatter = new XmlFormatter(null, null, null);
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     Assert.assertEquals(
       "20090413152143_1_2_3_4.xml", 
-      TestHistory.makeResultFileName(summary, XmlFormatter.getTime()));
+      TestHistory.makeResultFileName(summary, formatter.getTime()));
   }
 
 }

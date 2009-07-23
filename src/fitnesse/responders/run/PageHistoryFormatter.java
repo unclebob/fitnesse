@@ -6,15 +6,16 @@ import fitnesse.wiki.WikiPage;
 public class PageHistoryFormatter extends XmlFormatter {
   private WikiPage historyPage;
 
-  public PageHistoryFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerSource) throws Exception {
-    super(context, page, writerSource);
+  public PageHistoryFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) throws Exception {
+    super(context, page, writerFactory);
   }
 
   @Override
-  public void newTestStarted(WikiPage testedPage) throws Exception {
+  public void newTestStarted(WikiPage testedPage, long time) throws Exception {
     testResponse = new TestExecutionReport();
+    writeHead(testedPage);
     historyPage = testedPage;
-    super.newTestStarted(testedPage);
+    super.newTestStarted(testedPage, time);
   }
 
   @Override
