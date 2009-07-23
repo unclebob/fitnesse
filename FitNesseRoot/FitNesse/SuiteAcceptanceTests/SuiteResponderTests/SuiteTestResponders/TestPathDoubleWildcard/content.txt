@@ -1,7 +1,0 @@
-!path lib/**.jar
-
-The directory 'testDirectory' should be there, and it should have 'dummy.jar'
-
-!|Java Properties|
-|show|property|java.class.path|
-|property|java.class.path|should match|.*testDirectory[/\\]dummy\.jar.*|
