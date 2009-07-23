@@ -35,7 +35,7 @@
 
     <jar jarfile="dist/fitnesse.jar" basedir="classes">
       <include name="**/*.class"/>
-      <exclude name="**/?*Test.class"/>
+      <exclude name="**/*Test.class"/>
       <exclude name="**/*TestSuite.class"/>
       <include name="Resources/**"/>
       <include name="tasks.properties"/>
