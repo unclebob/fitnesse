@@ -9,21 +9,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.htmlparser.util.ParserException;
 
-public class TableComparerTest {
-  private TableComparer comparer;
+public class TableListComparerTest {
+  private TableListComparer comparer;
 
   @Before
   public void setUp() throws ParserException {
     HtmlTableScanner leftHandScanner = new HtmlTableScanner("<table>empty</table>");
     HtmlTableScanner rightHandScanner = new HtmlTableScanner("<table>empty</table>");
-    comparer = new TableComparer(leftHandScanner,rightHandScanner);
+    comparer = new TableListComparer(leftHandScanner,rightHandScanner);
   }
 
 
   @Test
   public void shouldOnlyUseTheBestMatchForTheFirstTable() throws Exception {
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
-    comparer.setMatchIfItIsTheTablesBestMatch(1,2,1.1);
+    comparer.saveMatchIfBest(1,2,1.1);
     assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .01);
   }
 
@@ -31,7 +31,7 @@ public class TableComparerTest {
   public void shouldOnlyReplaceAMatchIfThereIsNoBetterMatchForEitherTable() throws Exception {
      comparer.tableMatches.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(3, 2, 1.2));
-    comparer.setMatchIfItIsTheTablesBestMatch(1,2,1.1);
+    comparer.saveMatchIfBest(1,2,1.1);
     assertEquals(1.0, comparer.tableMatches.get(0).matchScore, .001);
     assertEquals(1.2, comparer.tableMatches.get(1).matchScore, .001);
     assertEquals(2, comparer.tableMatches.size());
@@ -41,7 +41,7 @@ public class TableComparerTest {
   public void shouldRemoveOldMatchesIfBetterOnesAreFound() throws Exception {
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(3, 2, 1.0));
-    comparer.setMatchIfItIsTheTablesBestMatch(1,2,1.1);
+    comparer.saveMatchIfBest(1,2,1.1);
     assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .001);
     assertEquals(1, comparer.tableMatches.size());
   }
@@ -49,7 +49,7 @@ public class TableComparerTest {
   @Test
   public void shouldReplaceOldMatchForSecondTableEvenIfThereIsNoMatchForFirstTable() throws Exception {
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(3, 2, 1.0));
-    comparer.setMatchIfItIsTheTablesBestMatch(1,2,1.1);
+    comparer.saveMatchIfBest(1,2,1.1);
     assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .001);
     assertEquals(1, comparer.tableMatches.size());
   }

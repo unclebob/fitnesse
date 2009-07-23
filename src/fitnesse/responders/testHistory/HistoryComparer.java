@@ -9,8 +9,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class HistoryComparer {
+  // min for match is .8 content score + .2 topology bonus.
   public static final double MIN_MATCH_SCORE = 1.0;
-  private TableComparer comparer;
+  private TableListComparer comparer;
 
   static class MatchedPair extends Pair<Integer, Integer> {
     public double matchScore;
@@ -55,7 +56,7 @@ public class HistoryComparer {
     initializeComparerHelpers();
     if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
       return false;
-    comparer = new TableComparer(firstScanner,secondScanner);
+    comparer = new TableListComparer(firstScanner,secondScanner);
     comparer.compareAllTables();
     matchedTables = comparer.tableMatches;
     getTableTextFromScanners();

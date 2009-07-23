@@ -352,7 +352,8 @@ public class HtmlTable implements Table {
     public String getResult() {
       String result = columnNode.getAttribute("class");
       if (result == null) {
-        Node child = columnNode.getChild(0);
+        Node child = columnNode.getFirstChild();
+        if (child != null)
         return child.getText();
       } else if (result.equals("pass") || result.equals("fail") || result.equals("error") || result.equals("ignore")) {
         return result;
