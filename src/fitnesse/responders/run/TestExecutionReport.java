@@ -125,7 +125,11 @@ public class TestExecutionReport {
     public List<InstructionResult> instructions = new ArrayList<InstructionResult>();
     public String tags;
     public ArrayList<Table> tables;
+    public long startTime;
 
+    public TestResult readPageHistory() {
+      return this; //todo should return test result obtained by reading page history file.
+    }
     public String getRight() {
       return right;
     }

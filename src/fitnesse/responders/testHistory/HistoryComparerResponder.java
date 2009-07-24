@@ -54,7 +54,7 @@ public class HistoryComparerResponder implements Responder {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse();
     else
-      return makeErrorResponse(context, request, "Comparison Failed. Try different files.");
+      return makeErrorResponse(context, request, "These files could not be compared.  They might be suites, or something else might be wrong.");
   }
 
   private boolean filesExist() {

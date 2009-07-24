@@ -13,14 +13,14 @@ import org.junit.runners.model.*;
 
 import fit.Counts;
 
-public class FitnesseSuite extends ParentRunner<Test> {
+public class FitnesseSuite extends ParentRunner<TestDescriptor> {
 
   private Class<?> suiteClass;
   private String suiteName;
   private FitNesseRepository repository;
   private FolderTestResultRepository resultRepository;
   private fitnesse.trinidad.TestEngine testEngine;
-  private List<Test> tests;
+  private List<TestDescriptor> tests;
   private SuiteResult suiteResult;
 
   /**
@@ -143,12 +143,12 @@ public class FitnesseSuite extends ParentRunner<Test> {
   }
 
   @Override
-  protected Description describeChild(Test child) {
+  protected Description describeChild(TestDescriptor child) {
     return Description.createTestDescription(suiteClass, child.getName());
   }
 
   @Override
-  protected List<Test> getChildren() {
+  protected List<TestDescriptor> getChildren() {
     return tests;
   }
 
@@ -165,16 +165,25 @@ public class FitnesseSuite extends ParentRunner<Test> {
   }
 
   @Override
-  protected void runChild(Test test, RunNotifier notifier) {
+  protected void runChild(TestDescriptor test, RunNotifier notifier) {
     Description testDescription = describeChild(test);
-    notifier.fireTestStarted(testDescription);
-    TestResult tr = testEngine.runTest(test);
-    notifyTestResult(notifier, testDescription, tr);
-    suiteResult.append(tr);
     try {
+      notifier.fireTestStarted(testDescription);
+      TestResult tr = testEngine.runTest(test);
+      notifyTestResult(notifier, testDescription, tr);
+      suiteResult.append(tr);
       resultRepository.recordTestResult(tr);
     } catch (IOException e) {
       notifier.fireTestFailure(new Failure(testDescription, e));
+    } finally {
+      sleep();
+    }
+  }
+
+  private void sleep() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignore) {
     }
   }
 

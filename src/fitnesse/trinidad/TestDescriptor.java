@@ -2,7 +2,7 @@
 
 package fitnesse.trinidad;
 
-public interface Test {
+public interface TestDescriptor {
   String getName();
 
   String getContent();

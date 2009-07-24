@@ -16,6 +16,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -41,7 +42,7 @@ public class ExposeThreadingIssueInMockResponseTest {
     crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new TestResponder();
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
     context.port = port;
 
     receiver = new FitSocketReceiver(port, context.socketDealer);

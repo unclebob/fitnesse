@@ -1,4 +1,11 @@
 |JunkPage||12:39:07 Fri, Jul 24, 2009|
+|JunkPage||10:57:14 Mon, Jul 20, 2009|
+|JunkPage.GregorsBug||14:34:20 Mon, Jul 13, 2009|
+|FitNesse.UserGuide.RestfulServices||17:44:22 Thu, Jul 09, 2009|
+|FitNesse.UserGuide.TestHistory||17:39:37 Thu, Jul 09, 2009|
+|FitNesse.UserGuide.DownloadingAndInstallingFitNesse||14:50:07 Wed, Jul 08, 2009|
+|FitNesse.UserGuide||14:43:23 Wed, Jul 08, 2009|
+|JunkPage.ImportingPage||12:28:49 Wed, Jul 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BrotherScenarioLibraryIsIncluded||15:41:42 Wed, Jul 22, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSymbolsDontGetTurnedToStringsInTheOutput||16:41:05 Tue, Jul 14, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||10:04:23 Tue, Jul 14, 2009|
@@ -75,8 +82,6 @@
 |FitNesse.UserGuide.PageProperties||14:10:29 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription.SpnegoAuthentication||14:04:04 Wed, May 13, 2009|
 |FitNesse.UserGuide.SecurityDescription||13:58:07 Wed, May 13, 2009|
-|FitNesse.UserGuide.TestHistory||13:46:17 Wed, May 13, 2009|
-|FitNesse.UserGuide||13:30:14 Wed, May 13, 2009|
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:31 Wed, May 13, 2009|
 |JunkParent.StopTestTest||09:49:09 Wed, May 13, 2009|
 |JunkPage.UseVarPage||15:20:57 Tue, May 12, 2009|

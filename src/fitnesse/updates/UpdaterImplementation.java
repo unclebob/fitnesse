@@ -107,8 +107,6 @@ public class UpdaterImplementation extends UpdaterBase {
       super.update();
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
-      System.err.println("You must now reload FitNesse.  Thank you for your patience........");
-      exit();
     }
   }
 

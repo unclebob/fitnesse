@@ -1,6 +1,8 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.responders.run.TestSummary;
+import fitnesse.FitNesseContext;
+import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 import java.io.File;
@@ -180,6 +182,13 @@ public class PageHistory {
 
   public static boolean matchesPageHistoryFileFormat(String pageHistoryFileName) {
     return pageHistoryFileName.matches(TEST_FILE_FORMAT);
+  }
+
+  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
+    return String.format("%s/%s/%s",
+      context.getTestHistoryDirectory(),
+      page.getPageCrawler().getFullPath(page).toString(),
+      TestHistory.makeResultFileName(counts, time));
   }
 
 

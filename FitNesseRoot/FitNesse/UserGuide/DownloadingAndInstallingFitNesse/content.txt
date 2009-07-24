@@ -1,10 +1,11 @@
 !2 Downloading and Installing FitNesse
 It really takes very little time and effort to get FitNesse running on your machine.
- 1 Go to !style_code(http://fitnesse.org/FitNesseDevelopment.DownLoad) and click on the most recent "''Full Distribution''". Save the !style_code(fitnesse.zip) to some directory.  Let's call that directory ''root''.
- 2 Unzip !style_code(fitnesse.zip).
-  * This should create a !style_code(''fitnesse'') directory below ''root'' with the following files and folders:
-  * !style_code(!-FitNesseRoot-!, README.txt, dotnet, license.txt, fitnesse.jar, run.bat, run.sh)
- 3 Now go to the !style_code(''root''/fitnesse) folder and type !style_code(java -jar fitnesse.jar)
+ 1 Go to !style_code(http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad) and click on the most recent !style_code(fitnesse.jar) file. 
+  * If this is a brand new installation, just put it in some convenient empty directory.
+  * If this is an update, then copy it on top of the old fitnesse.jar in your current installation.
+ 2 Type !style_code(java -jar fitnesse.jar)
+  * It will ask you to be patient as it installs or updates.  
+  * When it's done, it will ask you to reload fitnesse.  Type !style_code(java -jar fitnesse.jar) again.
   * If you have nothing running on port 80 on your machine, you should see a message similar to the following:
    * !style_code(Fitnesse (''date code'')) !style_code( Started...)
    * !style_code(on port      80)
@@ -18,7 +19,7 @@ It really takes very little time and effort to get FitNesse running on your mach
  4 Start up a browser and go to !style_code(http://localhost)
   * ''or if you had to edit run.bat in step 3 then go to !style_code(http://localhost:8080).''
  5 The main FitNesse screen should come up. That's it. You're ready to start using FitNesse.
- 6 By the way, the !style_code(run.sh) and !style_code(run.bat) commands, and their !style_code(stop) counterparts are helpful little scripts you can use to start and stop !-FitNesse-! should you so desire.  But typing !style_code(java -jar fitnesse.jar) really isn't that hard...
+
 !2 Learning More
 If you have not yet done so, check out the TwoMinuteExample. To learn more about what FitNesse acceptance testing is all about, see AcceptanceTests.  If you are ready to start creating FitNesse pages and test tables, check out EditingFitNessePages and CreatingTestTables.
 

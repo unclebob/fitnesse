@@ -1,6 +1,5 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 
 import java.util.ArrayList;
@@ -46,9 +45,9 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
-  public void newTestStarted(WikiPage test) throws Exception {
+  public void newTestStarted(WikiPage test, long time) throws Exception {
     for (BaseFormatter formatter : formatters)
-      formatter.newTestStarted(test);
+      formatter.newTestStarted(test, time);
   }
 
   public void testOutputChunk(String output) throws Exception {
@@ -66,10 +65,17 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.writeHead(pageType);
   }
 
-  public int allTestingComplete() throws Exception {
+  @Override
+  public void allTestingComplete() throws Exception {
+    for (BaseFormatter formatter : formatters)
+      formatter.allTestingComplete();
+  }
+
+  public int getErrorCount() {
     int exitCode = 0;
     for (BaseFormatter formatter : formatters)
-      exitCode = Math.max(exitCode, formatter.allTestingComplete());
+      exitCode = Math.max(exitCode, formatter.getErrorCount());
     return exitCode;
   }
+
 }

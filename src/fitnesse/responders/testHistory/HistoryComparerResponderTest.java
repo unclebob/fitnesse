@@ -64,7 +64,7 @@ public class HistoryComparerResponderTest {
     when(mockedComparer.compare("testRoot/TestFolder/firstFakeFile", "testRoot/TestFolder/secondFakeFile")).thenReturn(false);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
-    assertHasRegexp("Comparison Failed. Try different files.", response.getContent());
+    assertHasRegexp("These files could not be compared.  They might be suites, or something else might be wrong.", response.getContent());
   }
 
   @Test
@@ -73,25 +73,27 @@ public class HistoryComparerResponderTest {
     request.addInput("TestResult_firstFile", "");
     request.addInput("TestResult_secondFile", "");
     request.setResource("TestFolder");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context,request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
     assertHasRegexp("Compare Failed because the files were not found.", response.getContent());
   }
+
   @Test
   public void shouldReturnErrorPageIfThereAreTooFewInputFiles() throws Exception {
     request = new MockRequest();
     request.addInput("TestResult_firstFile", "");
     request.setResource("TestFolder");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context,request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
     assertHasRegexp("Compare Failed because the wrong number of Input Files were given. Select two please.", response.getContent());
   }
+
   @Test
   public void shouldReturnErrorPageIfThereAreTooManyInputFiles() throws Exception {
-    request.addInput("TestResult_thirdFakeFile","");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context,request);
+    request.addInput("TestResult_thirdFakeFile", "");
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
-    assertHasRegexp("Compare Failed because the wrong number of Input Files were given. Select two please.",response.getContent());
+    assertHasRegexp("Compare Failed because the wrong number of Input Files were given. Select two please.", response.getContent());
   }
 
   @Test
@@ -100,8 +102,9 @@ public class HistoryComparerResponderTest {
     verify(mockedComparer).getResultContent();
     assertHasRegexp("This is the content", response.getContent());
   }
+
   @After
-  public void tearDown(){
+  public void tearDown() {
     FileUtil.deleteFileSystemDirectory("testRoot");
   }
 }

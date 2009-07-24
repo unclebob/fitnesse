@@ -53,6 +53,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   public void executeTestPages() {
     try {
       internalExecuteTestPages();
+      resultsListener.allTestingComplete();
     }
     catch (Exception exception) {
       //hoped to write exceptions to log file but will take some work.
@@ -216,7 +217,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
       currentTest = firstInQueue;
-      resultsListener.newTestStarted(currentTest);
+      resultsListener.newTestStarted(currentTest, System.currentTimeMillis());
     }
     resultsListener.testOutputChunk(output);
   }

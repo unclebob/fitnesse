@@ -27,17 +27,26 @@ public class TestRunner {
   public Counts runTest(String testUrl) throws IOException {
     TestResult tr = testRunner.runTest(repository.getTest(testUrl));
     resultRepository.recordTestResult(tr);
+    sleep();
     return tr.getCounts();
   }
 
   public Counts runSuite(String suite) throws IOException {
     SuiteResult suiteResult = new SuiteResult(suite);
-    for (Test t : repository.getSuite(suite)) {
+    for (TestDescriptor t : repository.getSuite(suite)) {
       TestResult tr = testRunner.runTest(t);
       suiteResult.append(tr);
       resultRepository.recordTestResult(tr);
+      sleep();
     }
     resultRepository.recordTestResult(suiteResult);
     return suiteResult.getCounts();
+  }
+
+  private void sleep() {
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ignore) {
+    }
   }
 }

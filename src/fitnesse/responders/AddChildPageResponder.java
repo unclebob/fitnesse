@@ -2,13 +2,16 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
-public class AddChildPageResponder implements Responder {
+public class AddChildPageResponder implements SecureResponder {
   private WikiPage currentPage;
   private PageCrawler crawler;
   private String childName;
@@ -16,6 +19,10 @@ public class AddChildPageResponder implements Responder {
   private WikiPagePath childPath;
   private String childContent;
   private String pageType;
+    
+  public SecureOperation getSecureOperation() {
+    return new AlwaysSecureOperation();
+  }
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     parseRequest(context, request);

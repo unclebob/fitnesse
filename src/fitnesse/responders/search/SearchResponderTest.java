@@ -4,6 +4,7 @@ package fitnesse.responders.search;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -17,6 +18,7 @@ public class SearchResponderTest extends RegexTestCase {
   private PageCrawler crawler;
   private SearchResponder responder;
   private MockRequest request;
+  private FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
@@ -26,6 +28,7 @@ public class SearchResponderTest extends RegexTestCase {
     request = new MockRequest();
     request.addInput("searchString", "blah");
     request.addInput("searchType", "blah");
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   public void tearDown() throws Exception {
@@ -71,7 +74,7 @@ public class SearchResponderTest extends RegexTestCase {
   private String getResponseContentUsingSearchString(String searchString) throws Exception {
     request.addInput("searchString", searchString);
 
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
+    Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     return sender.sentData();
