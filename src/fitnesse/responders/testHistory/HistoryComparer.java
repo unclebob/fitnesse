@@ -1,6 +1,5 @@
 package fitnesse.responders.testHistory;
 
-import com.sun.tools.javac.util.Pair;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.slimTables.HtmlTableScanner;
 import org.htmlparser.util.ParserException;
@@ -10,20 +9,39 @@ import java.util.ArrayList;
 
 public class HistoryComparer {
   // min for match is .8 content score + .2 topology bonus.
-  public static final double MIN_MATCH_SCORE = 1.0;
+  public static final double MIN_MATCH_SCORE = .8;
+  public static final double MAX_MATCH_SCORE = 1.2;
   private TableListComparer comparer;
 
 
-  static class MatchedPair extends Pair<Integer, Integer> {
+  static class MatchedPair {
+    int first;
+    int second;
     public double matchScore;
 
     public MatchedPair(Integer first, Integer second, double matchScore) {
-      super(first, second);
+      this.first = first;
+      this.second = second;
       this.matchScore = matchScore;
     }
 
+    @Override
+    public String toString() {
+      return "[first: " + first + ", second: " + second + ", matchScore: " + matchScore +"]";
+    }
+
+    @Override
+    public int hashCode() {
+      return this.first + this.second;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return this.equals((MatchedPair)(obj));
+    }
+
     public boolean equals(MatchedPair match) {
-      return (this.fst == match.fst && this.snd == match.snd);
+      return (this.first == match.first && this.second == match.second);
     }
   }
 
@@ -52,7 +70,7 @@ public class HistoryComparer {
 
   public double findScoreByFirstTableIndex(int firstIndex) {
     for (MatchedPair match : matchedTables) {
-      if (match.fst == firstIndex)
+      if (match.first == firstIndex)
         return match.matchScore;
     }
     return 0.0;
@@ -60,7 +78,7 @@ public class HistoryComparer {
 
   public String findScoreByFirstTableIndexAsStringAsPercent(int firstIndex) {
     double score = findScoreByFirstTableIndex(firstIndex);
-    return String.format("%10.2f", (score / 1.2) * 100);
+    return String.format("%10.2f", (score / MAX_MATCH_SCORE) * 100);
   }
 
   public boolean allTablesMatch() {
@@ -68,7 +86,7 @@ public class HistoryComparer {
         return false;
      if(matchedTables.size()== firstTableResults.size()){
        for (MatchedPair match :matchedTables){
-         if(match.matchScore < 1.19)
+         if(match.matchScore < (MAX_MATCH_SCORE -.01))
            return false;
        }
        return true;
@@ -94,7 +112,6 @@ public class HistoryComparer {
     lineUpTheTables();
     addBlanksToUnmatchingRows();
     makePassFailResultsFromMatches();
-
     return true;
   }
 
@@ -142,16 +159,16 @@ public class HistoryComparer {
   private class FirstResultAdjustmentStrategy implements ResultAdjustmentStrategy {
     public boolean matchIsNotLinedUp(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
-      return matchedPair.fst < matchedPair.snd;
+      return matchedPair.first < matchedPair.second;
     }
 
     public void insertBlankTableBefore(int matchIndex) {
-      firstTableResults.add(matchedTables.get(matchIndex).fst, blankTable);
+      firstTableResults.add(matchedTables.get(matchIndex).first, blankTable);
     }
 
     public MatchedPair getAdjustedMatch(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
-      return new MatchedPair(matchedPair.fst + 1, matchedPair.snd, matchedPair.matchScore);
+      return new MatchedPair(matchedPair.first + 1, matchedPair.second, matchedPair.matchScore);
 
     }
   }
@@ -159,16 +176,16 @@ public class HistoryComparer {
   private class SecondResultAdjustmentStrategy implements ResultAdjustmentStrategy {
     public boolean matchIsNotLinedUp(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
-      return matchedPair.fst > matchedPair.snd;
+      return matchedPair.first > matchedPair.second;
     }
 
     public void insertBlankTableBefore(int matchIndex) {
-      secondTableResults.add(matchedTables.get(matchIndex).snd, blankTable);
+      secondTableResults.add(matchedTables.get(matchIndex).second, blankTable);
     }
 
     public MatchedPair getAdjustedMatch(int matchIndex) {
       MatchedPair matchedPair = matchedTables.get(matchIndex);
-      return new MatchedPair(matchedPair.fst, matchedPair.snd + 1, matchedPair.matchScore);
+      return new MatchedPair(matchedPair.first, matchedPair.second + 1, matchedPair.matchScore);
     }
   }
 
@@ -203,8 +220,8 @@ public class HistoryComparer {
   private void incrementMatchedPairsIfBelowTheInsertedBlank(int tableIndex) {
     for (int j = 0; j < matchedTables.size(); j++) {
       MatchedPair match = matchedTables.get(j);
-      if (match.fst > tableIndex)
-        matchedTables.set(j, new MatchedPair(match.fst + 1, match.snd + 1, match.matchScore));
+      if (match.first > tableIndex)
+        matchedTables.set(j, new MatchedPair(match.first + 1, match.second + 1, match.matchScore));
     }
   }
 
@@ -227,7 +244,7 @@ public class HistoryComparer {
     for (int i = 0; i < firstTableResults.size(); i++) {
       String result = "fail";
       for (MatchedPair match : matchedTables)
-        if (match.fst == i && match.matchScore >= 1.19)
+        if (match.first == i && match.matchScore >= 1.19)
           result = "pass";
       resultContent.add(result);
 

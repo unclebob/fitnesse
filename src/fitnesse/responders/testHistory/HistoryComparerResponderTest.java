@@ -27,7 +27,9 @@ public class HistoryComparerResponderTest {
   public void setup() throws Exception {
     request = new MockRequest();
     mockedComparer = mock(HistoryComparer.class);
+
     responder = new HistoryComparerResponder(mockedComparer);
+    responder.testing = true;
     mockedComparer.resultContent = new ArrayList<String>();
     mockedComparer.resultContent.add("pass");
     when(mockedComparer.getResultContent()).thenReturn(mockedComparer.resultContent);

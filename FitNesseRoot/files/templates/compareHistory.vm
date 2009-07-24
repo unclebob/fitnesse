@@ -20,6 +20,11 @@
 
 #set($score = "")
 <table>
+  <tr>
+    <td>"Scores"</td>
+    <td>$firstFileName</td>
+    <td>$secondFileName</td>
+  </tr>
   #set ($matched = "Match")
 #foreach($result in $resultContent)
    #set($score = $comparer.findScoreByFirstTableIndexAsStringAsPercent($count))
@@ -29,7 +34,7 @@
     #else
       #set($matched = "Not a match. Score: " + $score + "%")
     #end 
-    <td class=$result>$matched</td>
+    <td class=$result>$matched + $count</td>
     #set ($firstTable = $firstTables.get($count))
     #set ($secondTable = $secondTables.get($count))
     <td>$firstTable</td>

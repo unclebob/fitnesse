@@ -5,6 +5,8 @@ import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TableListComparer {
   private HtmlTableScanner leftHandScanner;
@@ -22,9 +24,12 @@ public class TableListComparer {
     for (int leftTableIndex = 0; leftTableIndex < leftHandScanner.getTableCount(); leftTableIndex++) {
       for (int rightTableIndex = 0; rightTableIndex < rightHandScanner.getTableCount(); rightTableIndex++) {
         double score = compareTables(leftTableIndex, rightTableIndex);
-        saveMatchIfBest(leftTableIndex, rightTableIndex, score);
+        saveMatch(leftTableIndex, rightTableIndex, score);
       }
     }
+    sortMatchesByScore();
+    saveOnlyTheBestMatches();
+    sortMatchesByTableIndex();
   }
 
   private double compareTables(int leftTableIndex, int rightTableIndex) {
@@ -37,102 +42,56 @@ public class TableListComparer {
     return new TableComparer(table1, table2).compareRowsOfTables();
   }
 
-  public void saveMatchIfBest(int leftTableIndex, int rightTableIndex, double score) {
-    new BestMatchSaver(leftTableIndex, rightTableIndex, score).saveOnlyBestMatch();
-  }
-
   public boolean theTablesMatch(double score) {
     return score >= HistoryComparer.MIN_MATCH_SCORE;
   }
 
-  private class BestMatchSaver {
-    private int leftHandTableIndex;
-    private int rightHandTableIndex;
-    private double score;
-    private int rhMatch;
-    private int lhMatch;
-    private boolean rhMatchIsWorse;
-    private boolean lhMatchIsWorse;
+  public void saveMatch(int leftTableIndex, int rightTableIndex, double score) {
+    if (!theTablesMatch(score))
+      return;
+    tableMatches.add(new MatchedPair(leftTableIndex, rightTableIndex, score));
+  }
 
-    public BestMatchSaver(int leftHandTableIndex, int rightHandTableIndex, double score) {
-      this.leftHandTableIndex = leftHandTableIndex;
-      this.rightHandTableIndex = rightHandTableIndex;
-      this.score = score;
-    }
-
-    public void saveOnlyBestMatch() {
-      if (!theTablesMatch(score))
-        return;
-
-      if (!findMatches())
-        addNewMatch();
-      else {
-        determineIfMatchesAreWorse();        
-        replaceAnyWorseMatchesWithBetterMatch();
+  public void saveOnlyTheBestMatches() {
+    for (int matchIndex = 0; matchIndex < tableMatches.size(); matchIndex++) {
+      for (int secondMatchIndex = matchIndex + 1; secondMatchIndex < tableMatches.size(); secondMatchIndex++) {
+        if (tableMatches.get(matchIndex).first == tableMatches.get(secondMatchIndex).first) {
+          tableMatches.remove(secondMatchIndex);
+          secondMatchIndex--;
+        } else if (tableMatches.get(matchIndex).second == tableMatches.get(secondMatchIndex).second) {
+          tableMatches.remove(secondMatchIndex);
+          secondMatchIndex--;
+        }
       }
     }
+  }
 
-    private void addNewMatch() {
-      tableMatches.add(new MatchedPair(leftHandTableIndex, rightHandTableIndex, score));
-    }
+  public void sortMatchesByScore() {
+    Collections.sort(tableMatches, new Comparator<MatchedPair>() {
 
-    private void determineIfMatchesAreWorse() {
-      if (rhMatch != -1 && tableMatches.get(rhMatch).matchScore < score) {
-        rhMatchIsWorse = true;
+      public int compare(MatchedPair match1, MatchedPair match2) {
+        if (match1.matchScore > match2.matchScore)
+          return -1;
+        else if (match1.matchScore < match2.matchScore)
+          return 1;
+        else
+          return 0;
       }
-      if (lhMatch != -1 && tableMatches.get(lhMatch).matchScore < score) {
-        lhMatchIsWorse = true;
+    });
+  }
+
+  public void sortMatchesByTableIndex() {
+    Collections.sort(tableMatches, new Comparator<MatchedPair>() {
+
+      public int compare(MatchedPair match1, MatchedPair match2) {
+        if (match1.first > match2.first)
+          return 1;
+        else if (match1.first < match2.first)
+          return -1;
+        else
+          return 0;
       }
-    }
-
-    private boolean findMatches() {
-      rhMatch = findRightHandMatch();
-      lhMatch = findLeftHandMatch();
-      return lhMatch != -1 || rhMatch != -1;
-    }
-
-    private int findRightHandMatch() {
-      for (int matchIndex = 0; matchIndex < tableMatches.size(); matchIndex++) {
-        if (tableMatches.get(matchIndex).snd == rightHandTableIndex)
-          return matchIndex;
-      }
-      return -1;
-    }
-
-
-    private int findLeftHandMatch() {
-      for (int matchIndex = 0; matchIndex < tableMatches.size(); matchIndex++) {
-        if (tableMatches.get(matchIndex).fst == leftHandTableIndex)
-          return matchIndex;
-      }
-      return -1;
-    }
-
-    private void replaceAnyWorseMatchesWithBetterMatch() {
-      if (thereIsAWorseLHMatchAndNoBetterRHMatch())
-        replaceLHMatchWithNewBestMatchAndRemoveAnyOldRHMatch();
-
-      if (thereIsAWorseRHMatchAndNoLHMatch())
-        replaceRHMatchWithNewBestMatch();
-    }
-
-    private boolean thereIsAWorseLHMatchAndNoBetterRHMatch() {
-      return lhMatchIsWorse && (rhMatch == -1 || rhMatchIsWorse);
-    }
-
-    private void replaceLHMatchWithNewBestMatchAndRemoveAnyOldRHMatch() {
-      tableMatches.set(lhMatch, new MatchedPair(leftHandTableIndex, rightHandTableIndex, score));
-      if (rhMatchIsWorse)
-        tableMatches.remove(rhMatch);
-    }
-
-    private boolean thereIsAWorseRHMatchAndNoLHMatch() {
-      return rhMatchIsWorse && lhMatch == -1;
-    }
-
-    private void replaceRHMatchWithNewBestMatch() {
-      tableMatches.set(rhMatch, new MatchedPair(leftHandTableIndex, rightHandTableIndex, score));
-    }
+    });
   }
 
   static class TableComparer {

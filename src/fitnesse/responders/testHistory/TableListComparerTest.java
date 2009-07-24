@@ -2,7 +2,7 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
@@ -22,18 +22,22 @@ public class TableListComparerTest {
 
   @Test
   public void shouldOnlyUseTheBestMatchForTheFirstTable() throws Exception {
-    comparer.tableMatches.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
-    comparer.saveMatchIfBest(1,2,1.1);
+    comparer.saveMatch(1, 1, 1.0);
+    comparer.saveMatch(1,2,1.1);
+    comparer.sortMatchesByScore();
+    comparer.saveOnlyTheBestMatches();
     assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .01);
   }
 
   @Test
   public void shouldOnlyReplaceAMatchIfThereIsNoBetterMatchForEitherTable() throws Exception {
-     comparer.tableMatches.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
-    comparer.tableMatches.add(new HistoryComparer.MatchedPair(3, 2, 1.2));
-    comparer.saveMatchIfBest(1,2,1.1);
-    assertEquals(1.0, comparer.tableMatches.get(0).matchScore, .001);
-    assertEquals(1.2, comparer.tableMatches.get(1).matchScore, .001);
+    comparer.saveMatch(1, 1, 1.0);
+    comparer.saveMatch(3, 2, 1.2);
+    comparer.saveMatch(1,2,1.1);
+    comparer.sortMatchesByScore();
+    comparer.saveOnlyTheBestMatches();
+    assertEquals(1.2, comparer.tableMatches.get(0).matchScore, .001);
+    assertEquals(1.0, comparer.tableMatches.get(1).matchScore, .001);
     assertEquals(2, comparer.tableMatches.size());
   }
 
@@ -41,7 +45,9 @@ public class TableListComparerTest {
   public void shouldRemoveOldMatchesIfBetterOnesAreFound() throws Exception {
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(3, 2, 1.0));
-    comparer.saveMatchIfBest(1,2,1.1);
+    comparer.saveMatch(1,2,1.1);
+    comparer.sortMatchesByScore();
+    comparer.saveOnlyTheBestMatches();
     assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .001);
     assertEquals(1, comparer.tableMatches.size());
   }
@@ -49,7 +55,9 @@ public class TableListComparerTest {
   @Test
   public void shouldReplaceOldMatchForSecondTableEvenIfThereIsNoMatchForFirstTable() throws Exception {
     comparer.tableMatches.add(new HistoryComparer.MatchedPair(3, 2, 1.0));
-    comparer.saveMatchIfBest(1,2,1.1);
+    comparer.saveMatch(1,2,1.1);
+    comparer.sortMatchesByScore();
+    comparer.saveOnlyTheBestMatches();
     assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .001);
     assertEquals(1, comparer.tableMatches.size());
   }
@@ -61,7 +69,7 @@ public class TableListComparerTest {
     String table2text = "<table><tr><td>x</td></tr></table>";
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
     double score = comparer.compareTables(table1,table2);
-    assertEquals(1.2,score, .01);
+    assertEquals(HistoryComparer.MAX_MATCH_SCORE,score, .01);
   }
 
   @Test
@@ -98,7 +106,7 @@ public class TableListComparerTest {
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
     double score = comparer.compareTables(table1, table2);
-    assertEquals(1.2,score,.01 );
+    assertEquals(HistoryComparer.MAX_MATCH_SCORE,score,.01 );
     assertTrue(comparer.theTablesMatch(score));
   }
 
@@ -106,10 +114,46 @@ public class TableListComparerTest {
    public void shouldCheckTheMatchScoreToSeeIfTablesMatch() throws Exception {
      double score = 1.0;
      assertTrue(comparer.theTablesMatch(score));
-     score = .99;
+     score = .79;
      assertFalse(comparer.theTablesMatch(score));
      score = 1.1;
      assertTrue(comparer.theTablesMatch(score));
    }
-  
+
+  @Test
+  public void shouldKeepTheBestScoreForATableEvenIfItIsHasABetterMatchItCantKeep() throws Exception {
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(6, 6, 1.0));
+    comparer.saveMatch(6,7,1.1);
+    comparer.saveMatch(7,7,1.2);
+    comparer.sortMatchesByScore();
+    comparer.saveOnlyTheBestMatches();
+    assertEquals(1.2, comparer.tableMatches.get(0).matchScore, .001);
+    assertEquals(1.0, comparer.tableMatches.get(1).matchScore, .001);
+    assertEquals(2, comparer.tableMatches.size());
+  }
+
+  @Test
+  public void shouldBeAbleToOrderTheMatchesHighestToLowest() throws Exception {
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(6, 6, 1.0));
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(5, 5, .9));
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(4, 4, 1.1));
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(7, 7, 1.05));
+    comparer.sortMatchesByScore();
+    assertEquals(1.1, comparer.tableMatches.get(0).matchScore, .001);
+    assertEquals(1.05, comparer.tableMatches.get(1).matchScore, .001);
+    assertEquals(1.0, comparer.tableMatches.get(2).matchScore, .001);
+    assertEquals(.9, comparer.tableMatches.get(3).matchScore, .001);
+  }
+
+  @Test
+  public void shouldBeAbleToOrderTheMatchesByTableIndex() throws Exception {
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(6, 6, 1.0));
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(5, 5, .9));
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(4, 4, 1.1));
+    comparer.tableMatches.add(new HistoryComparer.MatchedPair(7, 7, 1.05));
+    comparer.sortMatchesByTableIndex();
+    assertEquals(4, comparer.tableMatches.get(0).first);
+
+  }
+
 }
