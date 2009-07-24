@@ -105,6 +105,8 @@ public class HistoryComparerResponder implements Responder {
 
   private Response makeValidResponse() throws Exception {
     count = 0;
+    velocityContext.put("completeMatch",comparer.allTablesMatch());
+    velocityContext.put("comparer", comparer);
     velocityContext.put("resultContent", comparer.getResultContent());
     velocityContext.put("firstTables", comparer.firstTableResults);
     velocityContext.put("secondTables", comparer.secondTableResults);

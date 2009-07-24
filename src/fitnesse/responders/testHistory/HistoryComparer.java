@@ -13,13 +13,16 @@ public class HistoryComparer {
   public static final double MIN_MATCH_SCORE = 1.0;
   private TableListComparer comparer;
 
+
   static class MatchedPair extends Pair<Integer, Integer> {
     public double matchScore;
+
     public MatchedPair(Integer first, Integer second, double matchScore) {
       super(first, second);
       this.matchScore = matchScore;
     }
-    public boolean equals(MatchedPair match){
+
+    public boolean equals(MatchedPair match) {
       return (this.fst == match.fst && this.snd == match.snd);
     }
   }
@@ -33,7 +36,7 @@ public class HistoryComparer {
   public ArrayList<String> firstTableResults;
   public ArrayList<String> secondTableResults;
   public ArrayList<MatchedPair> matchedTables;
-  private static final String blankTable = "<table><tr><td>nothing</td></tr></table>";
+  private static final String blankTable = "<table><tr><td></td></tr></table>";
 
   public String getFileContent(String filePath) {
     TestExecutionReport report;
@@ -45,6 +48,32 @@ public class HistoryComparer {
     }
   }
 
+  public double findScoreByFirstTableIndex(int firstIndex) {
+    for (MatchedPair match : matchedTables) {
+      if (match.fst == firstIndex)
+        return match.matchScore;
+    }
+    return 0.0;
+  }
+
+  public String findScoreByFirstTableIndexAsStringAsPercent(int firstIndex) {
+    double score = findScoreByFirstTableIndex(firstIndex);
+    return String.format("%10.2f", (score / 1.2) * 100);
+  }
+
+  public boolean allTablesMatch() {
+      if(matchedTables == null||matchedTables.size() == 0 || firstTableResults == null || firstTableResults.size() == 0)
+        return false;
+     if(matchedTables.size()== firstTableResults.size()){
+       for (MatchedPair match :matchedTables){
+         if(match.matchScore < 1.19)
+           return false;
+       }
+       return true;
+     }
+     return false;
+   }
+  
   public boolean compare(String firstFilePath, String secondFilePath) throws Exception {
     if (firstFilePath.equals(secondFilePath))
       return false;
@@ -56,12 +85,14 @@ public class HistoryComparer {
     initializeComparerHelpers();
     if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
       return false;
-    comparer = new TableListComparer(firstScanner,secondScanner);
+    comparer = new TableListComparer(firstScanner, secondScanner);
     comparer.compareAllTables();
     matchedTables = comparer.tableMatches;
     getTableTextFromScanners();
     lineUpTheTables();
+    addBlanksToUnmatchingRows();
     makePassFailResultsFromMatches();
+
     return true;
   }
 
@@ -156,12 +187,11 @@ public class HistoryComparer {
   }
 
   private boolean tablesDontMatchAndArentBlank(int tableIndex) {
-    boolean tablesDontMatch = true;
-    for(MatchedPair match : matchedTables){
-        if(match.equals(new MatchedPair(tableIndex, tableIndex, 0)))
-          tablesDontMatch = false;
-    }
-     return tablesDontMatch && firstAndSecondTableAreNotBlank(tableIndex);
+    return  !thereIsAMatchForTableWithIndex(tableIndex)&& firstAndSecondTableAreNotBlank(tableIndex);
+  }
+
+  private boolean thereIsAMatchForTableWithIndex(int tableIndex) {
+    return findScoreByFirstTableIndex(tableIndex) > 0.1;
   }
 
   private boolean firstAndSecondTableAreNotBlank(int tableIndex) {
@@ -201,7 +231,6 @@ public class HistoryComparer {
 
     }
   }
-
 
   private void initializeFileContents(String firstFilePath, String secondFilePath) throws ParserException {
     String content = getFileContent(firstFilePath);

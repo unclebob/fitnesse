@@ -88,7 +88,34 @@ public class HistoryComparerTest {
     assertEquals(2, comparer.resultContent.size());
     assertEquals("pass", comparer.resultContent.get(0));
     assertEquals("fail", comparer.resultContent.get(1));
+  }
 
+  @Test
+  public void findMatchScoreByFirstIndex() throws Exception {
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 2, 1.1));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 4, 1.0));
+    assertEquals(1.1,comparer.findScoreByFirstTableIndex(1),.0001);
+    assertEquals(1.0,comparer.findScoreByFirstTableIndex(3),.0001);
+  }
+
+  @Test
+  public void shouldBeAbleToTellIfTableListsWereACompleteMatch() throws Exception {
+    assertFalse(comparer.allTablesMatch());    
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.secondTableResults.add("A");
+    comparer.secondTableResults.add("B");
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(0, 0, 1.2));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
+    assertFalse(comparer.allTablesMatch());
+    comparer.matchedTables.remove(new HistoryComparer.MatchedPair(1, 1, 1.0));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.2));
+    System.out.println("comparer.matchedTables.size() = " + comparer.matchedTables.size());
+    System.out.println("comparer.firstTableResults.size() = " + comparer.firstTableResults.size());
+    assertTrue(comparer.allTablesMatch());
+    comparer.firstTableResults.add("C");
+    assertFalse(comparer.allTablesMatch());
+    
   }
 
 
@@ -107,7 +134,7 @@ public class HistoryComparerTest {
     comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 4, 1.0));
     comparer.lineUpTheTables();
     assertEquals("A", comparer.firstTableResults.get(0));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.firstTableResults.get(1));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(1));
     assertEquals("B", comparer.firstTableResults.get(2));
     assertEquals("D", comparer.firstTableResults.get(4));
 
@@ -132,12 +159,12 @@ public class HistoryComparerTest {
     comparer.lineUpTheTables();
     assertEquals("A", comparer.firstTableResults.get(0));
     assertEquals("B", comparer.firstTableResults.get(1));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.firstTableResults.get(3));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.firstTableResults.get(4));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(3));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(4));
     assertEquals("D", comparer.firstTableResults.get(5));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.firstTableResults.get(6));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(6));
 
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.secondTableResults.get(0));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(0));
     assertEquals("B", comparer.secondTableResults.get(1));
     assertEquals("Y", comparer.secondTableResults.get(3));
     assertEquals("Z", comparer.secondTableResults.get(4));
@@ -155,8 +182,8 @@ public class HistoryComparerTest {
     comparer.secondTableResults.add("Y");
     comparer.lineUpTheTables();
     assertEquals(comparer.firstTableResults.size(), comparer.secondTableResults.size());
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.secondTableResults.get(2));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.secondTableResults.get(3));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(2));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(3));
   }
 
   @Test
@@ -173,18 +200,18 @@ public class HistoryComparerTest {
     comparer.addBlanksToUnmatchingRows();
     assertEquals(comparer.firstTableResults.size(), comparer.secondTableResults.size());
     assertEquals("A", comparer.firstTableResults.get(0));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.firstTableResults.get(1));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(1));
     assertEquals("B", comparer.firstTableResults.get(2));
     assertEquals("C", comparer.firstTableResults.get(3));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.firstTableResults.get(4));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(4));
     assertEquals("D", comparer.firstTableResults.get(5));
 
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.secondTableResults.get(0));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(0));
     assertEquals("X", comparer.secondTableResults.get(1));
     assertEquals("B", comparer.secondTableResults.get(2));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.secondTableResults.get(3));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(3));
     assertEquals("Y", comparer.secondTableResults.get(4));
-    assertEquals("<table><tr><td>nothing</td></tr></table>", comparer.secondTableResults.get(5));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(5));
   }
 
   @Test
