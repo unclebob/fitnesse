@@ -3,7 +3,6 @@ package fitnesse.responders.testHistory;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
-import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -26,8 +25,7 @@ public class HistoryComparerResponder implements Responder {
   private String secondFileName = "";
   private String firstFilePath;
   private String secondFilePath;
-  private String[] firstTables;
-  private String[] secondTables;
+
   private int count;
 
   public HistoryComparerResponder(HistoryComparer historyComparer) {
@@ -106,25 +104,17 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeValidResponse() throws Exception {
-    firstTables = getTableStringArray(comparer.firstScanner);
-    secondTables = getTableStringArray(comparer.secondScanner);
     count = 0;
+    velocityContext.put("completeMatch",comparer.allTablesMatch());
+    velocityContext.put("comparer", comparer);
     velocityContext.put("resultContent", comparer.getResultContent());
-    velocityContext.put("firstTables", firstTables);
-    velocityContext.put("secondTables", secondTables);
+    velocityContext.put("firstTables", comparer.firstTableResults);
+    velocityContext.put("secondTables", comparer.secondTableResults);
     velocityContext.put("count", count);
     String velocityTemplate = "compareHistory.vm";
     Template template = VelocityFactory.getVelocityEngine().getTemplate(velocityTemplate);
     return makeResponseFromTemplate(template);
 
-  }
-
-  private String[] getTableStringArray(HtmlTableScanner tableScanner) {
-    int tableCount = tableScanner.getTableCount();
-    String[] array = new String[tableCount];
-    for (int i = 0; i < tableCount; i++)
-      array[i] = tableScanner.getTable(i).toHtml();
-    return array;
   }
 
   private Response makeResponseFromTemplate(Template template) throws Exception {

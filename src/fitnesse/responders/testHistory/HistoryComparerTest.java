@@ -3,8 +3,6 @@ package fitnesse.responders.testHistory;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
@@ -16,6 +14,7 @@ import util.FileUtil;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 
 public class HistoryComparerTest {
   private HistoryComparer comparer;
@@ -40,7 +39,10 @@ public class HistoryComparerTest {
     root = InMemoryPage.makeRoot("RooT");
     firstContent = getContentWith("pass");
     secondContent = getContentWith("fail");
-    comparer.resultContent = new String[1];
+    comparer.resultContent = new ArrayList<String>();
+    comparer.firstTableResults = new ArrayList<String>();
+    comparer.secondTableResults = new ArrayList<String>();
+    comparer.matchedTables = new ArrayList<HistoryComparer.MatchedPair>();
   }
 
   @Test
@@ -67,52 +69,184 @@ public class HistoryComparerTest {
     FileUtil.deleteFileSystemDirectory("TestFolder");
   }
 
-  @Test
-  public void shouldCompareTwoSimpleEqualTables() throws Exception {
-    String table1text = "<table><tr><td>x</td></tr></table>";
-    Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
-    String table2text = "<table><tr><td>x</td></tr></table>";
-    Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
-    assertTrue(HistoryComparer.compareTables(table1, table2, 0));
-  }
-
-  @Test
-  public void shouldCompareTwoSimpleUnequalTables() throws Exception {
-    String table1text = "<table><tr><td>x</td></tr></table>";
-    Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
-    String table2text = "<table><tr><td>y</td></tr></table>";
-    Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
-    assertFalse(HistoryComparer.compareTables(table1, table2, 0));
-  }
-
-  @Test
-  public void shouldCompareTwoDifferentlySizedTables() throws Exception {
-    String table1text = "<table><tr><td>x</td></tr></table>";
-    Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
-    String table2text = "<table><tr><td>x</td><td>y</td></tr></table>";
-    Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
-    assertFalse(HistoryComparer.compareTables(table1, table2, 0));
-  }
 
   @Test
   public void shouldCompareTwoSetsOfTables() throws Exception {
-    comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>x</td></tr></table>";
-    comparer.secondFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>x</td></tr></table>";
+    comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
+    comparer.secondFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
     assertTrue(comparer.grabAndCompareTablesFromHtml());
-    assertEquals(2, comparer.resultContent.length);
-    assertEquals("pass", comparer.resultContent[0]);
-    assertEquals("pass", comparer.resultContent[1]);
+    assertEquals(2, comparer.resultContent.size());
+    assertEquals("pass", comparer.resultContent.get(0));
+    assertEquals("pass", comparer.resultContent.get(1));
   }
 
   @Test
-  public void compareShouldGetReportFileHtmlAndSetResultContentWithPassIfTheFilesWereTheSame() throws Exception {
+  public void shouldCompareUnevenAmountsOfTables() throws Exception {
+    comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
+    comparer.secondFileContent = "<table><tr><td>x</td></tr></table>";
+    assertTrue(comparer.grabAndCompareTablesFromHtml());
+    assertEquals(2, comparer.resultContent.size());
+    assertEquals("pass", comparer.resultContent.get(0));
+    assertEquals("fail", comparer.resultContent.get(1));
+  }
+
+  @Test
+  public void findMatchScoreByFirstIndex() throws Exception {
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 2, 1.1));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 4, 1.0));
+    assertEquals(1.1,comparer.findScoreByFirstTableIndex(1),.0001);
+    assertEquals(1.0,comparer.findScoreByFirstTableIndex(3),.0001);
+  }
+
+  @Test
+  public void shouldBeAbleToTellIfTableListsWereACompleteMatch() throws Exception {
+    assertFalse(comparer.allTablesMatch());    
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.secondTableResults.add("A");
+    comparer.secondTableResults.add("B");
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(0, 0, 1.2));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
+    assertFalse(comparer.allTablesMatch());
+    comparer.matchedTables.remove(new HistoryComparer.MatchedPair(1, 1, 1.0));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.2));
+    assertTrue(comparer.allTablesMatch());
+    comparer.firstTableResults.add("C");
+    assertFalse(comparer.allTablesMatch());
+    
+  }
+
+
+  @Test
+  public void shouldBeAbleToLineUpMisMatchedTables() throws Exception {
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.firstTableResults.add("C");
+    comparer.firstTableResults.add("D");
+    comparer.secondTableResults.add("X");
+    comparer.secondTableResults.add("Y");
+    comparer.secondTableResults.add("B");
+    comparer.secondTableResults.add("Z");
+    comparer.secondTableResults.add("D");
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 2, 1.0));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 4, 1.0));
+    comparer.lineUpTheTables();
+    assertEquals("A", comparer.firstTableResults.get(0));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(1));
+    assertEquals("B", comparer.firstTableResults.get(2));
+    assertEquals("D", comparer.firstTableResults.get(4));
+
+    assertEquals("X", comparer.secondTableResults.get(0));
+    assertEquals("D", comparer.secondTableResults.get(4));
+  }
+
+  @Test
+  public void shouldBeAbleToLineUpMoreMisMatchedTables() throws Exception {
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.firstTableResults.add("C");
+    comparer.firstTableResults.add("D");
+    comparer.secondTableResults.add("B");
+    comparer.secondTableResults.add("X");
+    comparer.secondTableResults.add("Y");
+    comparer.secondTableResults.add("Z");
+    comparer.secondTableResults.add("D");
+    comparer.secondTableResults.add("shouldMatchWithBlank");
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 0, 1.0));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 4, 1.0));
+    comparer.lineUpTheTables();
+    assertEquals("A", comparer.firstTableResults.get(0));
+    assertEquals("B", comparer.firstTableResults.get(1));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(3));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(4));
+    assertEquals("D", comparer.firstTableResults.get(5));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(6));
+
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(0));
+    assertEquals("B", comparer.secondTableResults.get(1));
+    assertEquals("Y", comparer.secondTableResults.get(3));
+    assertEquals("Z", comparer.secondTableResults.get(4));
+    assertEquals("D", comparer.secondTableResults.get(5));
+    assertEquals("shouldMatchWithBlank", comparer.secondTableResults.get(6));
+  }
+
+  @Test
+  public void shouldGuarenteeThatBothResultFilesAreTheSameLength() throws Exception {
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.firstTableResults.add("C");
+    comparer.firstTableResults.add("D");
+    comparer.secondTableResults.add("X");
+    comparer.secondTableResults.add("Y");
+    comparer.lineUpTheTables();
+    assertEquals(comparer.firstTableResults.size(), comparer.secondTableResults.size());
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(2));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(3));
+  }
+
+  @Test
+  public void shouldAddBlankRowsForUnmatchedTables() throws Exception {
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.firstTableResults.add("C");
+    comparer.firstTableResults.add("D");
+    comparer.secondTableResults.add("X");
+    comparer.secondTableResults.add("B");
+    comparer.secondTableResults.add("Y");
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
+    comparer.lineUpTheTables();
+    comparer.addBlanksToUnmatchingRows();
+    assertEquals(comparer.firstTableResults.size(), comparer.secondTableResults.size());
+    assertEquals("A", comparer.firstTableResults.get(0));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(1));
+    assertEquals("B", comparer.firstTableResults.get(2));
+    assertEquals("C", comparer.firstTableResults.get(3));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.firstTableResults.get(4));
+    assertEquals("D", comparer.firstTableResults.get(5));
+
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(0));
+    assertEquals("X", comparer.secondTableResults.get(1));
+    assertEquals("B", comparer.secondTableResults.get(2));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(3));
+    assertEquals("Y", comparer.secondTableResults.get(4));
+    assertEquals("<table><tr><td></td></tr></table>", comparer.secondTableResults.get(5));
+  }
+
+  @Test
+  public void shouldHaveCorrectPassFailResults() throws Exception {
+    comparer.firstTableResults.add("A");
+    comparer.firstTableResults.add("B");
+    comparer.firstTableResults.add("C");
+    comparer.firstTableResults.add("D");
+    comparer.secondTableResults.add("X");
+    comparer.secondTableResults.add("B");
+    comparer.secondTableResults.add("Y");
+    comparer.secondTableResults.add("D");
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.2));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 3, 1.2));
+    comparer.lineUpTheTables();
+    comparer.addBlanksToUnmatchingRows();
+    comparer.makePassFailResultsFromMatches();
+    assertEquals("fail", comparer.resultContent.get(0));
+    assertEquals("fail", comparer.resultContent.get(1));
+    assertEquals("pass", comparer.resultContent.get(2));
+    assertEquals("fail", comparer.resultContent.get(3));
+    assertEquals("fail", comparer.resultContent.get(4));
+    assertEquals("pass", comparer.resultContent.get(5));
+
+  }
+
+
+  @Test
+  public void compareShouldGetReportHtmlAndSetResultContentWithPassIfTheFilesWereTheSame() throws Exception {
     HistoryComparer comparer = new HistoryComparer();
     FileUtil.createFile("TestFolder/FirstFile", firstContent);
     FileUtil.createFile("TestFolder/SecondFile", firstContent);
     boolean worked = comparer.compare("TestFolder/FirstFile", "TestFolder/SecondFile");
     assertTrue(worked);
     String expectedResult = "pass";
-    assertEquals(expectedResult, HistoryComparer.resultContent[0]);
+    assertEquals(expectedResult, HistoryComparer.resultContent.get(0));
+    assertEquals(expectedResult, HistoryComparer.resultContent.get(1));
   }
 
   @Test
@@ -122,8 +256,8 @@ public class HistoryComparerTest {
     FileUtil.createFile("TestFolder/SecondFile", secondContent);
     boolean worked = comparer.compare("TestFolder/FirstFile", "TestFolder/SecondFile");
     assertTrue(worked);
-    assertEquals("pass", HistoryComparer.resultContent[0]);
-    assertEquals("fail", HistoryComparer.resultContent[1]);
+    assertEquals("pass", HistoryComparer.resultContent.get(0));
+    assertEquals("fail", HistoryComparer.resultContent.get(1));
   }
 
   public String generateHtmlFromWiki(String passOrFail) throws Exception {

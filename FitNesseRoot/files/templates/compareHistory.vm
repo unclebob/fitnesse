@@ -2,19 +2,43 @@
 #parse("pageHead.vm")
 #if($resultContent)
 
-
-#foreach($result in $resultContent)
+#set($Header ="" )
+#set($passfail = "fail")
+  #if($completeMatch)
+      #set($Header = "A Complete Match")
+      #set($passfail = "pass")
+  #else
+    #set($Header = "Something Didn't Match")
+  #end
 <table>
   <tr>
-    <td class=$result>"Pass/Fail"</td>
+    <td class=$passfail>
+        $Header
+    </td>
+  </tr>
+</table>
+
+#set($score = "")
+<table>
+  #set ($matched = "Match")
+#foreach($result in $resultContent)
+   #set($score = $comparer.findScoreByFirstTableIndexAsStringAsPercent($count))
+  <tr>
+    #if($result.equals("pass"))
+      #set($matched = "Match. Score: " + $score + "%")
+    #else
+      #set($matched = "Not a match. Score: " + $score + "%")
+    #end 
+    <td class=$result>$matched</td>
     #set ($firstTable = $firstTables.get($count))
     #set ($secondTable = $secondTables.get($count))
     <td>$firstTable</td>
     <td>$secondTable</td>
     #set ($count = $count + 1)
   </tr>
-</table>
+
 #end
+ </table>
 #else
 <h2>Comparison Failed: $pageTitle.Title</h2>
 #end
