@@ -110,8 +110,6 @@ public class HistoryComparerTest {
     assertFalse(comparer.allTablesMatch());
     comparer.matchedTables.remove(new HistoryComparer.MatchedPair(1, 1, 1.0));
     comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.2));
-    System.out.println("comparer.matchedTables.size() = " + comparer.matchedTables.size());
-    System.out.println("comparer.firstTableResults.size() = " + comparer.firstTableResults.size());
     assertTrue(comparer.allTablesMatch());
     comparer.firstTableResults.add("C");
     assertFalse(comparer.allTablesMatch());
