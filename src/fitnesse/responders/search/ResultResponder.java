@@ -2,11 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import java.io.StringWriter;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
+import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -14,11 +10,15 @@ import fitnesse.components.SearchObserver;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.VelocityFactory;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import java.io.StringWriter;
 
 public abstract class ResultResponder extends ChunkingResponder implements
-SearchObserver, SecureResponder {
+  SearchObserver, SecureResponder {
   private int hits;
 
   protected PageCrawler getPageCrawler() {
@@ -40,11 +40,15 @@ SearchObserver, SecureResponder {
     StringWriter writer = new StringWriter();
 
     Template template = VelocityFactory.getVelocityEngine().getTemplate(
-    "searchResultsFooter.vm");
-
+      "searchResultsFooter.vm");
+    if (page == null)
+      page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
     velocityContext.put("hits", hits);
-    velocityContext.put("request", request);
-    velocityContext.put("searchedRootPage", page);
+    if (request.getQueryString() == null || request.getQueryString().equals(""))
+      velocityContext.put("request", request.getBody());
+    else
+      velocityContext.put("request", request.getQueryString());
+    velocityContext.put("page", page);
 
     template.merge(velocityContext, writer);
 
@@ -57,7 +61,7 @@ SearchObserver, SecureResponder {
     StringWriter writer = new StringWriter();
 
     Template template = VelocityFactory.getVelocityEngine().getTemplate(
-    "searchResultsHeader.vm");
+      "searchResultsHeader.vm");
 
     velocityContext.put("page_title", getTitle());
     velocityContext.put("pageTitle", new PageTitle(getTitle()) {
