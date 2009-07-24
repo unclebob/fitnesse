@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
+import static util.RegexTestCase.assertSubString;
 
 import java.io.StringWriter;
 import java.io.Writer;
@@ -75,9 +76,9 @@ public class HistoryComparerTest {
     comparer.firstFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
     comparer.secondFileContent = "<table><tr><td>x</td></tr></table><table><tr><td>y</td></tr></table>";
     assertTrue(comparer.grabAndCompareTablesFromHtml());
-    assertEquals(2, comparer.resultContent.size());
-    assertEquals("pass", comparer.resultContent.get(0));
-    assertEquals("pass", comparer.resultContent.get(1));
+    assertEquals(2, comparer.getResultContent().size());
+    assertEquals("pass", comparer.getResultContent().get(0));
+    assertEquals("pass", comparer.getResultContent().get(1));
   }
 
   @Test
@@ -99,17 +100,25 @@ public class HistoryComparerTest {
   }
 
   @Test
+  public void shouldBeAbleToFindMatchScoreByFirstIndexAndReturnAPercentString() throws Exception {
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 2, 1.1));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 4, 1.0));
+    assertSubString("91.67",comparer.findScoreByFirstTableIndexAsStringAsPercent(1));
+    assertSubString("83.33",comparer.findScoreByFirstTableIndexAsStringAsPercent(3));
+  }
+
+  @Test
   public void shouldBeAbleToTellIfTableListsWereACompleteMatch() throws Exception {
     assertFalse(comparer.allTablesMatch());    
     comparer.firstTableResults.add("A");
     comparer.firstTableResults.add("B");
     comparer.secondTableResults.add("A");
     comparer.secondTableResults.add("B");
-    comparer.matchedTables.add(new HistoryComparer.MatchedPair(0, 0, 1.2));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(0, 0, HistoryComparer.MAX_MATCH_SCORE));
     comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.0));
     assertFalse(comparer.allTablesMatch());
     comparer.matchedTables.remove(new HistoryComparer.MatchedPair(1, 1, 1.0));
-    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.2));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, HistoryComparer.MAX_MATCH_SCORE));
     assertTrue(comparer.allTablesMatch());
     comparer.firstTableResults.add("C");
     assertFalse(comparer.allTablesMatch());
@@ -222,8 +231,8 @@ public class HistoryComparerTest {
     comparer.secondTableResults.add("B");
     comparer.secondTableResults.add("Y");
     comparer.secondTableResults.add("D");
-    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, 1.2));
-    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 3, 1.2));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(1, 1, HistoryComparer.MAX_MATCH_SCORE));
+    comparer.matchedTables.add(new HistoryComparer.MatchedPair(3, 3, HistoryComparer.MAX_MATCH_SCORE));
     comparer.lineUpTheTables();
     comparer.addBlanksToUnmatchingRows();
     comparer.makePassFailResultsFromMatches();

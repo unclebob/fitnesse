@@ -16,15 +16,18 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
+import java.text.SimpleDateFormat;
 
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
   public String baseDir = "";
   private VelocityContext velocityContext;
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;
   private String secondFilePath;
+  public boolean testing = false;
 
   private int count;
 
@@ -105,8 +108,12 @@ public class HistoryComparerResponder implements Responder {
 
   private Response makeValidResponse() throws Exception {
     count = 0;
+    if(!testing){
+    velocityContext.put("firstFileName",dateFormat.parse(firstFileName));
+    velocityContext.put("secondFileName",dateFormat.parse(secondFileName));
     velocityContext.put("completeMatch",comparer.allTablesMatch());
     velocityContext.put("comparer", comparer);
+    }
     velocityContext.put("resultContent", comparer.getResultContent());
     velocityContext.put("firstTables", comparer.firstTableResults);
     velocityContext.put("secondTables", comparer.secondTableResults);
