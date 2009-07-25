@@ -16,18 +16,12 @@ import org.apache.velocity.VelocityContext;
 import java.io.StringWriter;
 
 public class SearchFormResponder implements Responder {
-  public static final String EXCLUDE_TEARDOWN = "ExcludeTearDown";
-  public static final String EXCLUDE_SETUP = "ExcludeSetUp";
-  public static final String EXCLUDE_OBSOLETE = "ExcludeObsolete";
   public static final String[] PAGE_TYPE_ATTRIBUTES = { "Normal", "Test", "Suite" };
   public static final String[] ACTION_ATTRIBUTES = { "Edit", "Versions",
     "Properties", "Refactor", "WhereUsed", "RecentChanges", "Files", "Search" };
   public static final String[] SECURITY_ATTRIBUTES = { WikiPage.SECURE_READ,
     WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST };
-  public static final String IGNORED = "Any";
-  public static final String SECURITY = "Security";
-  public static final String ACTION = "Action";
-  public static final String PAGE_TYPE = "PageType";
+  public static final String[] SPECIAL_ATTRIBUTES = { "obsolete", "SetUp", "TearDown" };
 
   public Response makeResponse(FitNesseContext context, Request request)
   throws Exception {
@@ -43,6 +37,7 @@ public class SearchFormResponder implements Responder {
     velocityContext.put("pageTypeAttributes", PAGE_TYPE_ATTRIBUTES);
     velocityContext.put("actionAttributes", ACTION_ATTRIBUTES);
     velocityContext.put("securityAttributes", SECURITY_ATTRIBUTES);
+    velocityContext.put("specialAttributes", SPECIAL_ATTRIBUTES);
     velocityContext.put("searchedRootPage", request.getResource());
     velocityContext.put("request", request);
 

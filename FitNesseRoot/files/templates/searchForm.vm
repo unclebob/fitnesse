@@ -17,7 +17,7 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 				<h2>Search Properties</h2>
 				<form method="post" action="$searchedRootPage">
 					<input type="hidden" name="responder" value="executeSearchProperties"/>
-					<div style="height: 150px;">
+					<div style="height: 200px;">
 						<div style="float: left; margin-right: 20px">
 							<table cellspacing="1" border="0">
 								<tr>
@@ -33,26 +33,6 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 						<div style="float: left; width: 180px;">
 							<table cellspacing="1" border="0">
 								<tr>
-									<th>Exclusions</th>
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox"#if ($request.getInput("ExcludeObsolete") == "on"))checked="checked" #end name="ExcludeObsolete">Obsolete tests</input>
-<br/>
-										<input type="checkbox"#if ($request.getInput("ExcludeSetUp") == "on"))checked="checked" #end name="ExcludeSetUp">SetUp pages</input>
-<br/>
-										<input type="checkbox"#if ($request.getInput("ExcludeTearDown") == "on"))checked="checked" #end name="ExcludeTearDown">TearDown pages</input>
-<br/>									</td>
-								</tr>
-							</table>
-<br/>
-							<input type="submit" name="Search" value="Search Properties"/>
-						</div>
-					</div>
-					<div>
-						<div style="float: left; width: 150px;">
-							<table cellspacing="1" border="0">
-								<tr>
 									<th>PageType</th>
 								</tr>
 								<tr>
@@ -65,8 +45,12 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 									</td>
 								</tr>
 							</table>
+<br/>
+							<input type="submit" name="Search" value="Search Properties"/>
 						</div>
-						<div style="float: left; width: 150px;">
+					</div>
+					<div>
+						<div style="float: left; width: 175px;">
 							<table cellspacing="1" border="0">
 								<tr>
 									<th>Action</th>
@@ -96,6 +80,24 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 											<option value="Any"#if (!$request.hasInput("Security") || $request.getInput("Security").contains("Any")) selected="selected"#end>Don't care</option>
 											#foreach ($securityAttribute in $securityAttributes)
 											<option#if ($request.getInput("Security").contains($securityAttribute)) selected="selected"#end>$securityAttribute</option>
+											#end
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="float: left; width: 150px;">
+							<table cellspacing="1" border="0">
+								<tr>
+									<th>Special Pages</th>
+								</tr>
+								<tr>
+									<td>
+										#set( $numberSpecialAttributes = $specialAttributes.size() + 1 )
+										<select name="Special" id="Special" multiple="multiple" size="$numberSpecialAttributes">
+											<option value="Any"#if (!$request.hasInput("Special") || $request.getInput("Special").contains("Any")) selected="selected"#end>Don't care</option>
+											#foreach ($specialAttribute in $specialAttributes)
+											<option#if ($request.getInput("Special").contains($specialAttribute)) selected="selected"#end>$specialAttribute</option>
 											#end
 										</select>
 									</td>

@@ -1,6 +1,7 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.PAGE_TYPE;
+import static fitnesse.wiki.PageData.*;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+    FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     responder = new ExecuteSearchPropertiesResponder();
   }
@@ -89,6 +90,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     request.setResource("PageOne");
     request.addInput("Action", "Any");
     request.addInput("Security", "Any");
+    request.addInput("Special", "Any");
     return request;
   }
 
@@ -120,56 +122,22 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     MockRequest request = new MockRequest();
     List<String> types = Arrays.asList(pageTypes);
     request
-    .addInput(SearchFormResponder.PAGE_TYPE, StringUtil.join(types, ","));
+    .addInput(PAGE_TYPE, StringUtil.join(types, ","));
     assertEquals(types, responder.getPageTypesFromInput(request));
   }
 
   public void testGetAttributesFromInput() {
     MockRequest request = new MockRequest();
-    request.addInput(SearchFormResponder.ACTION, "Edit");
+    request.addInput(ACTION, "Edit");
 
-    Map<String, Boolean> foundAttributes = responder
-    .getAttributesFromInput(request);
+    Map<String, Boolean> foundAttributes = responder.getAttributesFromInput(request);
     assertFalse(foundAttributes.containsKey("Version"));
     assertTrue(foundAttributes.containsKey("Edit"));
     assertTrue(foundAttributes.get("Edit"));
 
-    request.addInput(SearchFormResponder.ACTION, "Edit,Properties");
+    request.addInput(ACTION, "Edit,Properties");
     foundAttributes = responder.getAttributesFromInput(request);
     assertTrue(foundAttributes.get("Properties"));
-  }
-
-  public void testGetSuitesFromInput() {
-    MockRequest request = new MockRequest();
-
-    String[] suites = responder.getSuitesFromInput(request);
-    // don't know about this one, yet
-    // assertNull(suites);
-
-    request.addInput("Suites", "");
-    suites = responder.getSuitesFromInput(request);
-    assertEquals(0, suites.length);
-
-    request.addInput("Suites", "    ");
-    suites = responder.getSuitesFromInput(request);
-    assertEquals(0, suites.length);
-
-    request.addInput("Suites", "SuiteOne");
-    suites = responder.getSuitesFromInput(request);
-    assertEquals(1, suites.length);
-    assertEquals("SuiteOne", suites[0]);
-
-    request.addInput("Suites", "SuiteOne,SuiteTwo");
-    suites = responder.getSuitesFromInput(request);
-    assertEquals(2, suites.length);
-    assertEquals("SuiteOne", suites[0]);
-    assertEquals("SuiteTwo", suites[1]);
-
-    request.addInput("Suites", "SuiteOne , SuiteTwo");
-    suites = responder.getSuitesFromInput(request);
-    assertEquals(2, suites.length);
-    assertEquals("SuiteOne", suites[0]);
-    assertEquals("SuiteTwo", suites[1]);
   }
 
   public void testPageTypesAreOrEd() throws Exception {
@@ -200,7 +168,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
     assertOutputHasRowWithLink(content, titles);
 
-    request.addInput("ExcludeObsolete", "on");
+    request.addInput(SPECIAL, "SetUp,TearDown");
 
     content = invokeResponder(request);
 
@@ -211,17 +179,28 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     WikiPage page = crawler.addPage(root, PathParser.parse("ObsoletePage"));
     PageData data = page.getData();
     data.setContent("some content");
-    WikiPageProperties properties = data.getProperties();
-    properties.set("Test", "true");
-    properties.set("Suites", "filter1,filter2");
-    properties.set("Pruned", "true");
+    WikiPageProperties properties1 = data.getProperties();
+    properties1.set("Test", "true");
+    properties1.set("Suites", "filter1,filter2");
+    WikiPageProperties properties = properties1;
+    properties.set(PropertyPRUNE, "true");
     page.commit(data);
 
-    MockRequest request = new MockRequest();
+    MockRequest request = setupRequest();
     request.setResource("ObsoletePage");
-    request.addInput("Action", "Any");
-    request.addInput("Security", "Any");
     return request;
   }
 
+  public void testFindJustObsoletePages() throws Exception {
+    MockRequest request = setupRequestForObsoletePage();
+    request.addInput(PAGE_TYPE, "Test,Suite,Normal");
+    request.addInput(SPECIAL, "obsolete");
+
+    String content = invokeResponder(request);
+    String[] titles = { "ObsoletePage" };
+
+    assertOutputHasRowWithLink(content, titles);
+
+
+  }
 }

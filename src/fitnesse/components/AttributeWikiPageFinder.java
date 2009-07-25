@@ -1,42 +1,38 @@
 package fitnesse.components;
 
+import static fitnesse.responders.editing.PropertiesResponder.SUITES;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 public class AttributeWikiPageFinder extends WikiPageFinder {
 
-  private List<String> setUpPageNames;
-  private List<String> tearDownPageNames;
+  private static List<String> setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
+  private static List<String> tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
 
   private List<String> requestedPageTypes;
   private Map<String, Boolean> attributes;
   private List<String> suites;
-  private boolean excludeSetUp;
-  private boolean excludeTearDown;
 
-  public AttributeWikiPageFinder(SearchObserver observer, List<String> requestedPageTypes, Map<String, Boolean> attributes, String[] suites, boolean excludeSetUp, boolean excludeTearDown) {
+  public AttributeWikiPageFinder(SearchObserver observer, List<String> requestedPageTypes, Map<String, Boolean> attributes, String suites) {
     super(observer);
-    setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
-    tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
     this.requestedPageTypes = requestedPageTypes;
     this.attributes = attributes;
+
     if (suites != null)
-      this.suites = Arrays.asList(suites);
-    this.excludeSetUp = excludeSetUp;
-    this.excludeTearDown = excludeTearDown;
+      this.suites = Arrays.asList(splitSuitesIntoArray(suites));
   }
 
   protected boolean pageMatches(WikiPage page) throws Exception {
-    if (excludeSetUp && isSetUpPage(page)) {
+    if (attributes.containsKey("SetUp") && attributes.get("SetUp") != isSetUpPage(page)) {
       return false;
     }
 
-    if (excludeTearDown && isTearDownPage(page)) {
+    if (attributes.containsKey("TearDown") && attributes.get("TearDown") != isTearDownPage(page)) {
       return false;
     }
 
@@ -47,6 +43,9 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     }
 
     for (Map.Entry<String, Boolean> input : attributes.entrySet()) {
+      if ("SetUp".equals(input.getKey()) || "TearDown".equals(input.getKey()))
+        continue;
+
       if (!attributeMatchesInput(pageData.hasAttribute(input.getKey()), input
           .getValue()))
         return false;
@@ -87,9 +86,8 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     if (suites == null)
       return true;
 
-    String suitesAttribute = pageData.getAttribute(PropertiesResponder.SUITES);
-    List<String> suitesProperty = Arrays
-    .asList(splitSuitesIntoArray(suitesAttribute));
+    String suitesAttribute = pageData.getAttribute(SUITES);
+    List<String> suitesProperty = Arrays.asList(splitSuitesIntoArray(suitesAttribute));
 
     if (suites.isEmpty() && !suitesProperty.isEmpty())
       return false;
@@ -102,10 +100,18 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
   }
 
   private String[] splitSuitesIntoArray(String suitesInput) {
-    if (suitesInput == null || suitesInput.trim().length() == 0)
+    if (suitesInput == null || isEmpty(suitesInput))
       return new String[0];
 
     return suitesInput.split("\\s*,\\s*");
+  }
+
+  private boolean isEmpty(String checkedString) {
+    for (char character: checkedString.toCharArray()) {
+      if (!Character.isWhitespace(character))
+        return false;
+    }
+    return true;
   }
 
 }

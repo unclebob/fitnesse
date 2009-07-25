@@ -36,18 +36,15 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     searcher = new AttributeWikiPageFinder(this, Arrays.asList("Test"),
-        new HashMap<String, Boolean>(), new String[0], false, false);
+        new HashMap<String, Boolean>(), "");
     page = crawler.addPage(root, PathParser.parse("TestPage"));
     hits.clear();
   }
 
   @Test
   public void testPageMatchesQueryWithSingleAttribute() throws Exception {
-    String[] suites = new String[0];
-
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
-    searcher = new AttributeWikiPageFinder(this, Arrays.asList("Test"), attributes, suites,
-        false, false);
+    searcher = new AttributeWikiPageFinder(this, Arrays.asList("Test"), attributes, "");
     setupRequestInputAndPageProperty("Test", attributes, true, page, null);
     assertFalse(searcher.pageMatches(page));
 
@@ -55,7 +52,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     assertTrue(searcher.pageMatches(page));
 
     searcher = new AttributeWikiPageFinder(this, Arrays.asList("Normal", "Suite"), attributes,
-        suites, false, false);
+    "");
     setupRequestInputAndPageProperty("Test", attributes, false, page, null);
     assertTrue(searcher.pageMatches(page));
 
@@ -63,13 +60,23 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     assertFalse(searcher.pageMatches(page));
   }
 
+  private void setupRequestInputAndPageProperty(String attributeName,
+      Map<String, Boolean> requestInputs, boolean requestValue, WikiPage page,
+      String pageDataValue) throws Exception {
+    requestInputs.put(attributeName, requestValue);
+
+    PageData pageData = page.getData();
+    if (pageDataValue == null)
+      pageData.getProperties().remove(attributeName);
+    else
+      pageData.getProperties().set(attributeName, pageDataValue);
+    page.commit(pageData);
+  }
+
   @Test
   public void testPageMatchesQueryWithMultipleAttributes() throws Exception {
-    String[] suites = new String[0];
-
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
-    searcher = new AttributeWikiPageFinder(this, Arrays.asList("Test"), attributes, suites,
-        false, false);
+    searcher = new AttributeWikiPageFinder(this, Arrays.asList("Test"), attributes, "");
     setupRequestInputAndPageProperty("Test", attributes, true, page, null);
     setupRequestInputAndPageProperty("Suite", attributes, true, page, null);
     assertFalse(searcher.pageMatches(page));
@@ -90,12 +97,11 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
   @Test
   public void testPageMatchesQueryWithExcludedSetUps() throws Exception {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
-    String[] suites = new String[0];
+    attributes.put("SetUp", false);
 
-    List<String> pageTypes = Arrays.asList("Test");
+    List<String> pageTypes = Arrays.asList("Test", "Normal", "Suite");
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
-    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, suites,
-        true, false);
+    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, "");
     assertTrue(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -118,13 +124,12 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
   @Test
   public void testPageMatchesQueryWithIncludedSetUps() throws Exception {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
-    String[] suites = new String[0];
+    attributes.put("SetUp", true);
 
-    List<String> pageTypes = Arrays.asList("Test");
+    List<String> pageTypes = Arrays.asList("Test", "Normal", "Suite");
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
-    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, suites,
-        false, false);
-    assertTrue(searcher.pageMatches(page));
+    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, "");
+    assertFalse(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
@@ -132,7 +137,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
 
     page = crawler.addPage(root, PathParser.parse("TearDown"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
-    assertTrue(searcher.pageMatches(page));
+    assertFalse(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
@@ -140,18 +145,17 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
 
     page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
-    assertTrue(searcher.pageMatches(page));
+    assertFalse(searcher.pageMatches(page));
   }
 
   @Test
   public void testPageMatchesQueryWithExcludedTearDowns() throws Exception {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
-    String[] suites = new String[0];
+    attributes.put("TearDown", false);
 
-    List<String> pageTypes = Arrays.asList("Test");
+    List<String> pageTypes = Arrays.asList("Suite", "Test", "Normal");
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
-    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, suites,
-        false, true);
+    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, "");
     assertTrue(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -169,13 +173,40 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
     setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
     assertFalse(searcher.pageMatches(page));
+  }
+
+  @Test
+  public void testPageMatchesQueryWithIncludedTearDowns() throws Exception {
+    Map<String, Boolean> attributes = new HashMap<String, Boolean>();
+    attributes.put("TearDown", true);
+
+    List<String> pageTypes = Arrays.asList("Test", "Normal", "Suite");
+    setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
+    searcher = new AttributeWikiPageFinder(this, pageTypes, attributes, "");
+    assertFalse(searcher.pageMatches(page));
+
+    page = crawler.addPage(root, PathParser.parse("SetUp"));
+    setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
+    assertFalse(searcher.pageMatches(page));
+
+    page = crawler.addPage(root, PathParser.parse("TearDown"));
+    setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
+    assertTrue(searcher.pageMatches(page));
+
+    page = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
+    setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
+    assertFalse(searcher.pageMatches(page));
+
+    page = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
+    setupRequestInputAndPageProperty("Test", attributes, true, page, "true");
+    assertTrue(searcher.pageMatches(page));
   }
 
   @Test
   public void testPageMatchWithNullSuites() throws Exception {
     List<String> pageTypes = Arrays.asList("Test");
     Map<String, Boolean> requestInputs = new HashMap<String, Boolean>();
-    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, null, false, false);
+    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, null);
     assertTrue(searcher.pageMatches(page));
 
     setUpSuitesProperty(page, "SuiteTest");
@@ -186,7 +217,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
   public void testPageMatchWithEmptySuites() throws Exception {
     List<String> pageTypes = Arrays.asList("Test");
     Map<String, Boolean> requestInputs = new HashMap<String, Boolean>();
-    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, new String[0], false, false);
+    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, "");
     assertTrue(searcher.pageMatches(page));
 
     setUpSuitesProperty(page, "SuiteTest");
@@ -197,9 +228,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
   public void testPageMatchQueryWithSingleSuite() throws Exception {
     List<String> pageTypes = Arrays.asList("Test");
     Map<String, Boolean> requestInputs = new HashMap<String, Boolean>();
-    String[] suites = new String[] { "SuiteTest" };
-
-    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, suites, false, false);
+    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, "SuiteTest");
 
     assertFalse(searcher.pageMatches(page));
 
@@ -217,9 +246,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
   public void testPageMatchQueryWithMultipleSuites() throws Exception {
     List<String> pageTypes = Arrays.asList("Test");
     Map<String, Boolean> requestInputs = new HashMap<String, Boolean>();
-    String[] suites = new String[] { "SuiteTest2", "SuiteTest3" };
-
-    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, suites, false, false);
+    searcher = new AttributeWikiPageFinder(this, pageTypes, requestInputs, "SuiteTest2,SuiteTest3");
 
     setUpSuitesProperty(page, "SuiteTest2 , SuiteTest3");
     assertTrue(searcher.pageMatches(page));
@@ -233,19 +260,6 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     PageData data = page.getData();
     data.getProperties().set("Suites", value);
     page.commit(data);
-  }
-
-  private void setupRequestInputAndPageProperty(String attributeName,
-      Map<String, Boolean> requestInputs, boolean requestValue, WikiPage page,
-      String pageDataValue) throws Exception {
-    requestInputs.put(attributeName, requestValue);
-
-    PageData pageData = page.getData();
-    if (pageDataValue == null)
-      pageData.getProperties().remove(attributeName);
-    else
-      pageData.getProperties().set(attributeName, pageDataValue);
-    page.commit(pageData);
   }
 
   @Test
