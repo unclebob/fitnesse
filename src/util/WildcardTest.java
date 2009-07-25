@@ -13,6 +13,7 @@ public class WildcardTest extends TestCase {
   private static final String TEST_DIR = "testDir";
 
   public void setUp() throws Exception {
+    deleteSampleFiles();
     makeSampleFiles();
     testDir = new File(TEST_DIR);
   }
