@@ -8,7 +8,7 @@ For example, project one and project two each have their own TestSuites. Some of
 A SubWiki is a whole new page hierarchy that lives beneath a single FitNesse page. In fact, such a SubWiki is an entirely separate wiki, with an entirely separate page namespace. Any FitNesse page can be the parent of such a SubWiki. For example the name of this page is <UserGuide.SubWiki.  Thus, this page is the SubWiki page whose parent is the <UserGuide page. ''(Put your mouse on each of these links and look at the bottom of the display to see where they will be directed.)'' For any such SubWiki, you could have a separate page named SubWiki, and FitNesse would keep them all straight (you might have some trouble, if you did not organize your page links carefully, but that's another story).
 
 !3 Creating a SubWiki
-To create a sub wiki, simply create the parent page, and then add pages below it using the ''!-ParentPage.SubPage-!'' syntax or the shortcut ''!->SubPage-!'' markup language syntax. 
+To create a sub wiki, simply create the parent page, and then add pages below it using the ''!-ParentPage.SubPage-!'' syntax or the shortcut ''!->SubPage-!'' markup language syntax.
 
 When a sub-page is displayed, any unqualified links are assumed to be at the current level.  If you want to access a global page, you need to precede the link with a dot.  For example, from where we are now on this page, the link !-RecentChanges-! is really a link to !-.FitNesse.RecentChanges-! (which does not exist), whereas the link .RecentChanges is a link to the global page that contains the list of most recently changed pages.
 

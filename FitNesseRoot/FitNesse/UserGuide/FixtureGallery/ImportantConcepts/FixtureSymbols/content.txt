@@ -26,7 +26,7 @@
 
 
 !anchor figconceptssymbols
-!3 Figure 2: !<UserGuide prints symbol values in test reports-!
+!3 Figure 2: !-UserGuide prints symbol values in test reports-!
 !img http://files/images/javasym.png
 !- You can access the symbol values programmatically from your code using static methods -!'''!- Fixture.getSymbol -!'''!- and -!'''!- Fixture.setSymbol -!'''!- in the Java implementation of FIT. Here is the source code for the middle table from the previous example: -!
 

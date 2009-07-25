@@ -1,5 +1,5 @@
 !2 How to enable for Kerberos/Active Directory
-!note Not tested as part of the normal build.  Use at your own risk. 
+!note Not tested as part of the normal build.  Use at your own risk.
 
 Enable this plugin by editing !style_code(plugins.properties) and adding the line:
 !style_code(!-Authenticator = fitnesse.authentication.NegotiateAuthenticator-!)
@@ -11,14 +11,14 @@ com.sun.security.jgss.accept  {
        storeKey=true
        isInitiator=false
        principal=&quot;HTTP/your.web.server@YOUR.REALM&quot;
-       useKeyTab=true 
+       useKeyTab=true
        keyTab=&quot;/path/to/your/http.keytab&quot;
        ;
     };
 }}}
 Next, define these system properties when running the FitNesse server:
 
-{{{ 
+{{{
 -Djavax.security.auth.useSubjectCredsOnly=false
 -Djava.security.auth.login.config=/path/to/jaas-krb5.conf
 -Dsun.security.krb5.debug=true

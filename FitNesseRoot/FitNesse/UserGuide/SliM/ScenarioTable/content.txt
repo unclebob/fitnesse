@@ -34,7 +34,7 @@ Here is the way this scenario is called from a DecisionTable
 
 Notice that the name of the decision table, once camel-cased, will be ''!-WidgetRenders-!''.  Since this is the name of the above scenario, the scenario will be called rather than a fixture.  This is important!  Remember that if a scenario is on your page, or included into your page, then its name will override any fixture that has the same name.  Scenarios come first!
 
-If you'd rather you can reference the scenario with parameters so long as you make sure the argument names in the reference exactly match the argument names in the declaration.  For example the above test could have been written as: 
+If you'd rather you can reference the scenario with parameters so long as you make sure the argument names in the reference exactly match the argument names in the declaration.  For example the above test could have been written as:
 
 !|widget|wiki text|renders|html text|
 |wiki text|html text|

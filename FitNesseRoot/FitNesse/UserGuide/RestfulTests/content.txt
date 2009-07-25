@@ -58,12 +58,12 @@ The results come back in the following form:
 }}}
 
 
-The 'tables' and 'instructions' elements are only for Slim tests.  
+The 'tables' and 'instructions' elements are only for Slim tests.
  * The 'tables' element encodes the results of all the test tables.  There is a !style_code(<table>) for each table on the test page.  Each has a set of !style_code(<row>) elements, which each have a set of !style_code(<col>) elements, which old the contents of the tested table.
   * The contents of the columns are encoded with !style_code[pass(xxx)], !style_code[fail(xxx)] etc. These show what parts of the cell contents would be colored red or green
   * The name of the table is encoded in the !style_code(<name>) element.  This is the name that slim gives to the table, and is used to prefix instruction tags in the expectations (see below).
  * The instruction data documents the slim execution process.  Each instruction represents a single slim command.  You see the command as it was sent to slim, the result as it returned from slim, and the evaluation of the slim table expectation.  This is pretty detailed information, so here are a few things you should know.
-  * !style_code(instructionId) is the id of a single slim instruction.  It is constructed from the table name (see above), and the instruction number within that table.  So an id of decisionTable_1_3 means that the instruction is for the third instruction in the table named decision table_1. 
+  * !style_code(instructionId) is the id of a single slim instruction.  It is constructed from the table name (see above), and the instruction number within that table.  So an id of decisionTable_1_3 means that the instruction is for the third instruction in the table named decision table_1.
    * Scenario tables, when executed, are turned into script tables with the same number.  So !style_code(scenarioTable_22) will become !style_code(scriptTable_22).  The third instruction in scenario table 18 called from the 4th instruction in decision table 8 will be !style_code(decisionTable_8_4_scriptTable_18_3).
   * !style_code(col,row) are the column and row of the expectation.  If scenario tables are involved it's the col,row of the ultimate scenario.
   * !style_code(type) is the class name of the expectation.  You can pretty much work out the intent.  Here are a few of the more common ones

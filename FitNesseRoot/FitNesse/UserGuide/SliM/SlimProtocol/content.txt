@@ -25,7 +25,7 @@ The response to this instruction list might look like this: {{{
 }}}
 Again, each element of the response list is itself a list of strings.  The first string in each response is the id of the instruction being responded to.  The second is the response value.  In this case the construction in instruction ''id_0'' was successful, and the call to function ''f'' with value ''3'' in instruction ''id_1'' returned a ''9''.
 
-That's pretty much it.  Lists of instructions go out.  Lists of responses come back.  Typically the instructions for an entire test page will be sent in one large list, yielding one large response list.  
+That's pretty much it.  Lists of instructions go out.  Lists of responses come back.  Typically the instructions for an entire test page will be sent in one large list, yielding one large response list.
 
 There is no type information in the instructions.  Each instruction is a list of strings.  Each response is a list of strings.  Strings and lists are the only two types in the entire protocol.  It is up to the !-SlimExecutor-! to find the functions and constructors that match the instructions, and to do the necessary type conversion.
 
@@ -59,7 +59,7 @@ As you can see, each item of a list is a string.  But since a string can encode 
 So when you send a list of instructions, what you are really sending is a string.  When you receive a list of responses, what you are really receiving is a string.  So the high level protocol of Slim is just strings.  It looks like this:
 
  1 !-FitNesse-! invokes the Slim Server via a command line.  One of the command line arguments is the port number of the socket to listen on.  !-FitNesse-! opens that socket.
- 2 Slim Server responds with the string "Slim -- ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-8 ''characters''.  This one length is in bytes.  
+ 2 Slim Server responds with the string "Slim -- ''V<version>''\n", where ''<version>'' is the version number of the slim ''protocol''.  If this protocol ever changes, ''that'' version number will change.  This is the only string that is ever sent without the ''<length>'' encoding.  It is terminated by the '''\n''' instead.  Every other message that slim sends will be prefixed by a ''<length>'' in ''!style_red(bytes)'', followed by a colon.  !style_red(NOTE:) Every other length in this document is in UTF-8 ''characters''.  This one length is in bytes.
  3 !-FitNesse-! sends a list of instructions encoded as a string of course.
  4 Slim Server sends a list of responses similarly encoded.
  5 3 and 4 repeat until !-FitNesse-! sends a ''bye'' directive.  This is simply the string ''bye'' properly encoded with ''<length>''.  e.g. "000003:bye".

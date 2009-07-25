@@ -5,7 +5,7 @@ Below are a list of customizations you can make via this plugin architecture.  E
 
 !3 Wiki Page
 ''required property:'' '''!-WikiPage-! = <class name>'''
-''motivation:'' By default, wiki pages are stored as files on a file system (using the !-FileSystemWikiPage-! class). Providing a custom wiki page plugin allows pages to be stored using other means such as a database. Alternatively, !-FileSystemWikiPage-! can be extended to provide custom behavior when pages are create, saved, deleted, etc. 
+''motivation:'' By default, wiki pages are stored as files on a file system (using the !-FileSystemWikiPage-! class). Providing a custom wiki page plugin allows pages to be stored using other means such as a database. Alternatively, !-FileSystemWikiPage-! can be extended to provide custom behavior when pages are create, saved, deleted, etc.
 
 The class specified must implement the ''fitnesse.wiki.!-WikiPage-!'' interface. It must provide a public constructor of the form:
 ''public !-MyWikiPage-!(String rootPath, String rootPageName, !-ComponentFactory-! componentFactory)''

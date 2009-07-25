@@ -4,7 +4,7 @@
   * ''resource'' is usually the name of the !-FitNesse-! wiki page being referenced.  Sometimes it refers to a path below the ''files'' section.  It is not used in all urls.
   * ''responder'' is the name of the operation to be performed.  This is typically something like !style_code(?edit) to edit a page, or !style_code(?properties) to bring up the properties dialog.  A responder corresponds roughly to a servlet.
   * ''inputs'' is the list of parameters to the operation.  As in all URL query strings these are name-value pairs and will be things like !style_code(&format=xml) or !style_code(&dontCreatePage).
- * A wiki page can be fetched by leaving the query string blank as in !style_code(http://myHost:myPort/MyWikiPage).  
+ * A wiki page can be fetched by leaving the query string blank as in !style_code(http://myHost:myPort/MyWikiPage).
  * A responder can be specified by using the ''responder'' input as in: !style_code(http://myHost:myPort/MyWikiPage?responder=edit) instead of !style_code(http://myHost:myPort/MyWikiPage?edit).  The former is ''proper'', but the latter has become so idiomatic that it will not be deprecated any time soon.
  * The files section of the wiki can be accessed by using the word ''files'' followed by a directory path as in !style_code(http://myHost:myPort/files/images/bob.gif)
  * The root page can be accessed by using the word ''root'' instead of the ''page'' as in !style_code(http://myHost:myPort/root)
