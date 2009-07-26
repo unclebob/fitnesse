@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static fitnesse.wiki.PageType.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +38,7 @@ public class PageData implements Serializable {
   public static final String PropertyLAST_MODIFIED = "LastModified";
   public static final String PropertyHELP = "Help";
   public static final String PropertyPRUNE = "Prune";
-  //TODO -AcD: refactor add other properties such as "Edit", "Suite", "Test", ...
+  //TODO -AcD: refactor add other properties such as "Edit", "Suite", TEST.toString(), ...
   public static final String PropertySUITES = "Suites";
 
   private transient WikiPage wikiPage;
@@ -95,12 +97,12 @@ public class PageData implements Serializable {
       return;
 
     if ((pageName.startsWith("Suite") || pageName.endsWith("Suite") || pageName.endsWith("Examples")) &&
-      !pageName.equals(SuiteContentsFinder.SUITE_SETUP_NAME) &&
-      !pageName.equals(SuiteContentsFinder.SUITE_TEARDOWN_NAME))
-      properties.set("Suite", "true");
-    else if (pageName.startsWith("Test") || pageName.endsWith("Test") || pageName.startsWith("Example") || 
-      pageName.endsWith("Example"))
-      properties.set("Test", "true");
+        !pageName.equals(SuiteContentsFinder.SUITE_SETUP_NAME) &&
+        !pageName.equals(SuiteContentsFinder.SUITE_TEARDOWN_NAME))
+      properties.set(SUITE.toString(), "true");
+    else if (pageName.startsWith(TEST.toString()) || pageName.endsWith(TEST.toString()) || pageName.startsWith("Example") ||
+        pageName.endsWith("Example"))
+      properties.set(TEST.toString(), "true");
   }
 
   private boolean isErrorLogsPage() throws Exception {

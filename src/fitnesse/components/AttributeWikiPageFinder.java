@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 
 public class AttributeWikiPageFinder extends WikiPageFinder {
@@ -14,12 +15,15 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
   private static List<String> setUpPageNames = Arrays.asList("SetUp", "SuiteSetUp");
   private static List<String> tearDownPageNames = Arrays.asList("TearDown", "SuiteTearDown");
 
-  private List<String> requestedPageTypes;
+  private List<PageType> requestedPageTypes;
   private Map<String, Boolean> attributes;
   private List<String> suites;
 
-  public AttributeWikiPageFinder(SearchObserver observer, List<String> requestedPageTypes, Map<String, Boolean> attributes, String suites) {
+  public AttributeWikiPageFinder(SearchObserver observer,
+      List<PageType> requestedPageTypes, Map<String, Boolean> attributes,
+      String suites) {
     super(observer);
+
     this.requestedPageTypes = requestedPageTypes;
     this.attributes = attributes;
 
@@ -28,11 +32,8 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
   }
 
   protected boolean pageMatches(WikiPage page) throws Exception {
-    if (attributes.containsKey("SetUp") && attributes.get("SetUp") != isSetUpPage(page)) {
-      return false;
-    }
 
-    if (attributes.containsKey("TearDown") && attributes.get("TearDown") != isTearDownPage(page)) {
+    if (!meetsSetUpTearDownConditions(page)) {
       return false;
     }
 
@@ -54,6 +55,31 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     return suitesMatchInput(pageData, suites);
   }
 
+  private boolean meetsSetUpTearDownConditions(WikiPage page) throws Exception {
+
+    if (attributes.containsKey("SetUp") && attributes.containsKey("TearDown")) {
+      Boolean setupWanted = attributes.get("SetUp");
+      Boolean teardownWanted = attributes.get("TearDown");
+
+      if (setupWanted && teardownWanted) {
+        return isSetUpPage(page) || isTearDownPage(page);
+      }
+
+      return isSetUpPage(page) == setupWanted && isTearDownPage(page) == teardownWanted;
+
+    }
+
+    if (attributes.containsKey("SetUp")) {
+      return isSetUpPage(page) == attributes.get("SetUp");
+    }
+
+    if (attributes.containsKey("TearDown")) {
+      return isTearDownPage(page) == attributes.get("TearDown");
+    }
+
+    return true;
+  }
+
   private boolean isTearDownPage(WikiPage page) throws Exception {
     return tearDownPageNames.contains(page.getName());
   }
@@ -63,17 +89,10 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
   }
 
   private boolean pageIsOfRequestedPageType(WikiPage page,
-      List<String> requestedPageTypes) throws Exception {
-    PageData data = page.getData();
-    if (data.hasAttribute("Suite")) {
-      return requestedPageTypes.contains("Suite");
-    }
+      List<PageType> requestedPageTypesEnum) throws Exception {
+    PageType pageType = PageType.fromWikiPage(page);
 
-    if (data.hasAttribute("Test")) {
-      return requestedPageTypes.contains("Test");
-    }
-
-    return requestedPageTypes.contains("Normal");
+    return (requestedPageTypesEnum.contains(pageType));
   }
 
   protected boolean attributeMatchesInput(boolean attributeSet,
@@ -87,7 +106,8 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
       return true;
 
     String suitesAttribute = pageData.getAttribute(SUITES);
-    List<String> suitesProperty = Arrays.asList(splitSuitesIntoArray(suitesAttribute));
+    List<String> suitesProperty = Arrays
+    .asList(splitSuitesIntoArray(suitesAttribute));
 
     if (suites.isEmpty() && !suitesProperty.isEmpty())
       return false;
@@ -107,7 +127,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
   }
 
   private boolean isEmpty(String checkedString) {
-    for (char character: checkedString.toCharArray()) {
+    for (char character : checkedString.toCharArray()) {
       if (!Character.isWhitespace(character))
         return false;
     }

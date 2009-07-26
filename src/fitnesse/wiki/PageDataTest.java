@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import static fitnesse.wiki.PageType.*;
+
 import java.util.List;
 
 import util.RegexTestCase;
@@ -101,50 +103,50 @@ public class PageDataTest extends RegexTestCase {
   public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("PageExamples"));
     PageData data = new PageData(page);
-    assertTrue(data.hasAttribute("Suite"));
+    assertTrue(data.hasAttribute(SUITE.toString()));
   }
-  
+
   public void testThatExampleAtBeginningOfNameSetsTestProperty() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("ExamplePageExample"));
     PageData data = new PageData(page);
-    assertTrue(data.hasAttribute("Test"));
+    assertTrue(data.hasAttribute(TEST.toString()));
   }
-  
+
   public void testThatExampleAtEndOfNameSetsTestProperty() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("PageExample"));
     PageData data = new PageData(page);
-    assertTrue(data.hasAttribute("Test"));
+    assertTrue(data.hasAttribute(TEST.toString()));
   }
-  
+
   public void testThatSuiteAtBeginningOfNameSetsSuiteProperty() throws Exception {
     WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
     PageData data = new PageData(suitePage1);
-    assertFalse(data.hasAttribute("Test"));
-    assertTrue(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertTrue(data.hasAttribute(SUITE.toString()));
   }
-  
+
   public void testThatSuiteAtEndOfNameSetsSuiteProperty() throws Exception {
     WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
     PageData data = new PageData(suitePage2);
-    assertFalse(data.hasAttribute("Test"));
-    assertTrue(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertTrue(data.hasAttribute(SUITE.toString()));
   }
-  
+
   public void testThatTestAtBeginningOfNameSetsTestProperty() throws Exception {
     WikiPage testPage1 = crawler.addPage(root, PathParser.parse("TestPage"));
     PageData data = new PageData(testPage1);
-    assertTrue(data.hasAttribute("Test"));
-    assertFalse(data.hasAttribute("Suite"));
+    assertTrue(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
   }
-  
+
   public void testThatTestAtEndOfNameSetsTestProperty() throws Exception {
     WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
     PageData data = new PageData(testPage2);
-    assertTrue(data.hasAttribute("Test"));
-    assertFalse(data.hasAttribute("Suite"));
+    assertTrue(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
   }
-  
-  
+
+
   public void testDefaultAttributes() throws Exception {
     WikiPage normalPage = crawler.addPage(root, PathParser.parse("NormalPage"));
     WikiPage suitePage3 = crawler.addPage(root, PathParser.parse("TestPageSuite"));
@@ -157,22 +159,22 @@ public class PageDataTest extends RegexTestCase {
     assertTrue(data.hasAttribute("Search"));
     assertTrue(data.hasAttribute("Versions"));
     assertTrue(data.hasAttribute("Files"));
-    assertFalse(data.hasAttribute("Test"));
-    assertFalse(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
 
     data = new PageData(suitePage3);
-    assertFalse(data.hasAttribute("Test"));
-    assertTrue(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertTrue(data.hasAttribute(SUITE.toString()));
 
     data = new PageData(errorLogsPage);
-    assertFalse(data.hasAttribute("Test"));
-    assertFalse(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(TEST.toString()));
+    assertFalse(data.hasAttribute(SUITE.toString()));
 
     data = new PageData(suiteSetupPage);
-    assertFalse(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(SUITE.toString()));
 
     data = new PageData(suiteTearDownPage);
-    assertFalse(data.hasAttribute("Suite"));
+    assertFalse(data.hasAttribute(SUITE.toString()));
   }
 
   public void testAttributesAreTruelyCopiedInCopyConstructor() throws Exception {

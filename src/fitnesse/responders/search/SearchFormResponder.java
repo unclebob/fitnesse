@@ -9,6 +9,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -16,7 +17,6 @@ import org.apache.velocity.VelocityContext;
 import java.io.StringWriter;
 
 public class SearchFormResponder implements Responder {
-  public static final String[] PAGE_TYPE_ATTRIBUTES = { "Normal", "Test", "Suite" };
   public static final String[] ACTION_ATTRIBUTES = { "Edit", "Versions",
     "Properties", "Refactor", "WhereUsed", "RecentChanges", "Files", "Search" };
   public static final String[] SECURITY_ATTRIBUTES = { WikiPage.SECURE_READ,
@@ -34,7 +34,7 @@ public class SearchFormResponder implements Responder {
     Template template = VelocityFactory.getVelocityEngine().getTemplate("searchForm.vm");
 
     velocityContext.put("pageTitle", new PageTitle("Search Form"));
-    velocityContext.put("pageTypeAttributes", PAGE_TYPE_ATTRIBUTES);
+    velocityContext.put("pageTypeAttributes", PageType.values());
     velocityContext.put("actionAttributes", ACTION_ATTRIBUTES);
     velocityContext.put("securityAttributes", SECURITY_ATTRIBUTES);
     velocityContext.put("specialAttributes", SPECIAL_ATTRIBUTES);

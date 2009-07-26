@@ -1,6 +1,7 @@
 package fitnesse.responders.search;
 
 import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageType.*;
 import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.*;
 
 import java.util.Arrays;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import util.RegexTestCase;
-import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
@@ -17,6 +17,7 @@ import fitnesse.http.Response;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
@@ -53,10 +54,10 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void testResponseWithMatchesWillReturnPageList() throws Exception {
     MockRequest request = setupRequest();
-    request.addInput(PAGE_TYPE, "Test");
+    request.addInput(PAGE_TYPE, TEST.toString());
 
     String content = invokeResponder(request);
-    String[] titles = { "Page", "Test", "PageOne"};
+    String[] titles = { "Page", TEST.toString(), "PageOne"};
 
     assertOutputHasRowWithLink(content, titles);
 
@@ -65,7 +66,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     content = invokeResponder(request);
 
     assertHasRegexp("Found 1 result for your search", content);
-    String[] titles1 = { "Page", "Test", "Tags", "PageOne" };
+    String[] titles1 = { "Page", TEST.toString(), "Tags", "PageOne" };
     assertOutputHasRowWithLink(content, titles1);
     assertOutputHasRowWithLabels("filter1,filter2");
   }
@@ -82,7 +83,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties = data.getProperties();
-    properties.set("Test", "true");
+    properties.set(TEST.toString(), "true");
     properties.set("Suites", "filter1,filter2");
     page.commit(data);
 
@@ -112,18 +113,30 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   public void testGetPageTypesFromInput() {
-    assertPageTypesMatch("Test");
-    assertPageTypesMatch("Test", "Normal");
-    assertPageTypesMatch("Test", "Suite", "Normal");
-    assertPageTypesMatch("");
+    assertPageTypesMatch(TEST);
+    assertPageTypesMatch(TEST, NORMAL);
+    assertPageTypesMatch(TEST, SUITE, NORMAL);
+    //    assertPageTypesMatch("");
   }
 
-  private void assertPageTypesMatch(String... pageTypes) {
+  private void assertPageTypesMatch(PageType... pageTypes) {
     MockRequest request = new MockRequest();
-    List<String> types = Arrays.asList(pageTypes);
-    request
-    .addInput(PAGE_TYPE, StringUtil.join(types, ","));
+    List<PageType> types = Arrays.asList(pageTypes);
+    final String commaSeparatedPageTypes = buildPageTypeListForRequest(pageTypes);
+    request.addInput(PAGE_TYPE, commaSeparatedPageTypes);
     assertEquals(types, responder.getPageTypesFromInput(request));
+  }
+
+  private String buildPageTypeListForRequest(PageType... pageTypes) {
+    StringBuffer buffer = new StringBuffer();
+    for (PageType type: pageTypes) {
+      buffer.append(type.toString());
+      buffer.append(',');
+    }
+    buffer.deleteCharAt(buffer.length()-1);
+
+    final String commaSeparatedPageTypes = buffer.toString();
+    return commaSeparatedPageTypes;
   }
 
   public void testGetAttributesFromInput() {
@@ -145,7 +158,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     request.addInput(PAGE_TYPE, "Test,Suite");
 
     String content = invokeResponder(request);
-    String[] titles = { "Page", "Test", "PageOne" };
+    String[] titles = { "Page", TEST.toString(), "PageOne" };
 
     assertOutputHasRowWithLink(content, titles);
 
@@ -154,7 +167,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     content = invokeResponder(request);
 
     assertHasRegexp("Found 1 result for your search", content);
-    String[] titles1 = { "Page", "Test", "Tags", "PageOne" };
+    String[] titles1 = { "Page", TEST.toString(), "Tags", "PageOne" };
     assertOutputHasRowWithLink(content, titles1);
     assertOutputHasRowWithLabels(content, "filter1,filter2");
   }
@@ -164,7 +177,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     request.addInput(PAGE_TYPE, "Test,Suite");
 
     String content = invokeResponder(request);
-    String[] titles = { "Page", "Test", "ObsoletePage" };
+    String[] titles = { "Page", TEST.toString(), "ObsoletePage" };
 
     assertOutputHasRowWithLink(content, titles);
 
@@ -180,7 +193,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     PageData data = page.getData();
     data.setContent("some content");
     WikiPageProperties properties1 = data.getProperties();
-    properties1.set("Test", "true");
+    properties1.set(TEST.toString(), "true");
     properties1.set("Suites", "filter1,filter2");
     WikiPageProperties properties = properties1;
     properties.set(PropertyPRUNE, "true");

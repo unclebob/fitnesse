@@ -4,7 +4,7 @@ import static fitnesse.responders.search.SearchFormResponder.*;
 import static fitnesse.wiki.PageData.*;
 import static fitnesse.responders.editing.PropertiesResponder.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.components.PageFinder;
 import fitnesse.http.Request;
+import fitnesse.wiki.PageType;
 
 public class ExecuteSearchPropertiesResponder extends ResultResponder {
 
@@ -27,12 +28,18 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     return new SecureReadOperation();
   }
 
-  protected List<String> getPageTypesFromInput(Request request) {
+  protected List<PageType> getPageTypesFromInput(Request request) {
     String requestedPageTypes = (String) request.getInput(PAGE_TYPE);
     if (requestedPageTypes == null) {
       return null;
     }
-    return Arrays.asList(requestedPageTypes.split(","));
+
+    List<PageType> types = new ArrayList<PageType>();
+
+    for (String type : requestedPageTypes.split(",")) {
+      types.add(PageType.fromString(type));
+    }
+    return types;
   }
 
   protected String getSuitesFromInput(Request request) {
@@ -89,7 +96,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   @Override
   protected void startSearching() throws Exception {
     super.startSearching();
-    List<String> pageTypes = getPageTypesFromInput(request);
+    List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String suites = getSuitesFromInput(request);
 
