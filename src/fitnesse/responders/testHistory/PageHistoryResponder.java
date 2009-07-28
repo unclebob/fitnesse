@@ -77,7 +77,7 @@ public class PageHistoryResponder implements Responder {
 
   private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
     TestExecutionReport report;
-    report = new TestExecutionReport(testResultRecord.getFile());
+    report = new TestExecutionReport().read(testResultRecord.getFile());
     report.setDate(resultDate);
     if(formatIsXML(request))
       return generateXMLResponse(testResultRecord.getFile());

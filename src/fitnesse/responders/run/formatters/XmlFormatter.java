@@ -1,11 +1,15 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
@@ -15,11 +19,11 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import util.DateTimeUtils;
 
 public class XmlFormatter extends BaseFormatter {
   private WriterFactory writerFactory;
@@ -134,14 +138,12 @@ public class XmlFormatter extends BaseFormatter {
     outputBuffer.append(output);
   }
 
-  public static void setTestTime(String time) {
-    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-    try {
-      Date date = format.parse(time);
-      testTime = date.getTime();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+  public static void setTestTime(String dateString) {
+    XmlFormatter.testTime = DateTimeUtils.getTimeFromString(dateString);
+  }
+
+  public static void clearTestTime() {
+    testTime = 0;
   }
 
   public long getTime() {
@@ -173,7 +175,6 @@ public class XmlFormatter extends BaseFormatter {
 
     private void addTables() {
       if (slimTables.size() > 0) {
-        testResult.tables = new ArrayList<TestExecutionReport.Table>();
         for (SlimTable slimTable : slimTables) {
           addTable(slimTable);
         }

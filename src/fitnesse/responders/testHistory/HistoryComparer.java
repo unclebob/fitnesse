@@ -59,7 +59,7 @@ public class HistoryComparer {
   public String getFileContent(String filePath) {
     TestExecutionReport report;
     try {
-      report = new TestExecutionReport(new File(filePath));
+      report = new TestExecutionReport().read(new File(filePath));
       if (report.getResults().size() != 1)
         return null;
       return report.getResults().get(0).getContent();

@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||13:29:25 Tue, Jul 28, 2009|
+|JunkPage.ExceptionTest||09:48:08 Sat, Jul 25, 2009|
 |JunkPage||12:39:07 Fri, Jul 24, 2009|
 |JunkPage||10:57:14 Mon, Jul 20, 2009|
 |JunkPage.GregorsBug||14:34:20 Mon, Jul 13, 2009|
@@ -96,10 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.TearDown||16:52:04 Thu, May 21, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder||12:19:30 Mon, May 25, 2009|
 RecentChanges/content.txt
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowPassFailResultsInColor||08:58:27 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineShouldShowLastTwentyResults||07:16:30 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineResultElementsAreLinksToTestResults||06:57:08 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryLineIsLinkToTestResult||06:41:18 Tue, May 12, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryLineIsLinkToPageHistory||16:53:32 Thu, May 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory||16:35:03 Thu, May 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests||16:34:53 Thu, May 07, 2009|

@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <testResults>
-  <FitNesseVersion>$response.Version</FitNesseVersion>
-  <rootPath>$response.RootPath</rootPath>
-  #foreach ($result in $response.Results)
+  <FitNesseVersion>$formatter.getFitNesseVersion()</FitNesseVersion>
+  <rootPath>$formatter.getRootPageName()</rootPath>
+  #foreach ($reference in $formatter.getPageHistoryReferences())
+  #set($executionReport = $formatter.getTestExecutionReport($reference))
+  #set($result = $executionReport.getResults().get(0))
   <result>
     <counts>
       <right>$result.Right</right>
@@ -71,15 +73,12 @@
   </result>
   #end
 
-  #if($response.FinalCounts)
-
   <finalCounts>
-    <right>$response.FinalCounts.Right</right>
-    <wrong>$response.FinalCounts.Wrong</wrong>
-    <ignores>$response.FinalCounts.Ignores</ignores>
-    <exceptions>$response.FinalCounts.Exceptions</exceptions>
+    <right>$formatter.getPageCounts().right</right>
+    <wrong>$formatter.getPageCounts().wrong</wrong>
+    <ignores>$formatter.getPageCounts().ignores</ignores>
+    <exceptions>$formatter.getPageCounts().exceptions</exceptions>
   </finalCounts>
-  #end
 
 </testResults>
 

@@ -1,10 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.html.*;
 import fitnesse.responders.WikiImportProperty;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.*;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {

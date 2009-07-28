@@ -1,6 +1,8 @@
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
 
 public class PageHistoryFormatter extends XmlFormatter {

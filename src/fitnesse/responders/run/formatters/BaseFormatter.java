@@ -1,7 +1,6 @@
-// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
+import fitnesse.responders.run.*;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 
@@ -19,11 +18,11 @@ public abstract class BaseFormatter implements ResultsListener {
     this.page = page;
     this.context = context;
   }
-  
+
   protected WikiPage getPage() {
     return page;
   }
-  
+
   public void errorOccured() {
     try {
       allTestingComplete();

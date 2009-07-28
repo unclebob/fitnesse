@@ -12,6 +12,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
@@ -29,6 +30,7 @@ import org.w3c.dom.NodeList;
 import util.FileUtil;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
+import util.DateTimeUtils;
 import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
@@ -70,6 +72,7 @@ public class TestResponderTest {
   public void tearDown() throws Exception {
     receiver.close();
     FitNesseUtil.destroyTestContext();
+    XmlFormatter.clearTestTime();
   }
 
   @Test

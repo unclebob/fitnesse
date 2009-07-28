@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.formatters.XmlFormatter;
 
 public class SuiteXmlFormatter extends XmlFormatter {
 
@@ -37,6 +38,4 @@ public class SuiteXmlFormatter extends XmlFormatter {
     addFinalCounts();
     super.allTestingComplete();
   }
-
-
 }
