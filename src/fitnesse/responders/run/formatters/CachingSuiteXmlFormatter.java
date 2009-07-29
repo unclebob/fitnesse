@@ -1,43 +1,30 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
 import fitnesse.VelocityFactory;
-import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import java.io.Writer;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import util.DateTimeUtils;
-
-public class CachingSuiteXmlFormatter extends BaseFormatter {
-  private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
-  private PageHistoryReference referenceToCurrentTest;
+public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   private TestHistory testHistory = new TestHistory();
   private VelocityContext velocityContext;
   private VelocityEngine velocityEngine;
   private Writer writer;
-  private TestSummary pageCount;
 
-  public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) {
+  public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) throws Exception {
     super(context, page);
     velocityContext = new VelocityContext();
     velocityEngine = VelocityFactory.getVelocityEngine();
     this.writer = writer;
-    pageCount = new TestSummary(0, 0, 0, 0);
   }
 
   void setTestHistoryForTests(TestHistory testHistory) {
@@ -50,9 +37,6 @@ public class CachingSuiteXmlFormatter extends BaseFormatter {
     this.writer = writer;
   }
 
-  public void writeHead(String pageType) throws Exception {
-  }
-
   @Override
   public void allTestingComplete() throws Exception {
     testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
@@ -62,30 +46,7 @@ public class CachingSuiteXmlFormatter extends BaseFormatter {
     writer.close();
   }
 
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
-  }
-
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
-  }
-
-  public void newTestStarted(WikiPage test, long time) throws Exception {
-    String pageName = PathParser.render(test.getPageCrawler().getFullPath(test));
-    referenceToCurrentTest = new PageHistoryReference(pageName, time);
-  }
-
-  public void testOutputChunk(String output) throws Exception {
-  }
-
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
-    getPageHistoryReferences().add(referenceToCurrentTest);
-    pageCount.tallyPageCounts(testSummary);
-  }
-
-  public List<PageHistoryReference> getPageHistoryReferences() {
-    return pageHistoryReferences;
-  }
-
-  public TestExecutionReport getTestExecutionReport(PageHistoryReference reference) throws Exception {
+  public TestExecutionReport getTestExecutionReport(SuiteExecutionReport.PageHistoryReference reference) throws Exception {
     PageHistory pageHistory = testHistory.getPageHistory(reference.getPageName());
     Date date;
     date = new Date(reference.getTime());
@@ -100,38 +61,4 @@ public class CachingSuiteXmlFormatter extends BaseFormatter {
     return new TestExecutionReport();
   }
 
-   @Override
-  public int getErrorCount() {
-    return pageCount.wrong + pageCount.exceptions;
-  }
-
-  public String getRootPageName() throws Exception {
-    return page.getName();
-  }
-
-  public String getFitNesseVersion() {
-    return new FitNesseVersion().toString();
-  }
-
-  public TestSummary getPageCounts() {
-    return pageCount;
-  }
-
-  public static class PageHistoryReference {
-    private String pageName;
-    private long time;
-
-    public PageHistoryReference(String pageName, long time) {
-      this.pageName = pageName;
-      this.time = time;
-    }
-
-    public String getPageName() {
-      return pageName;
-    }
-
-    public long getTime() {
-      return time;
-    }
-  }
 }

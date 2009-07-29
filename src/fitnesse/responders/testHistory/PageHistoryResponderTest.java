@@ -4,6 +4,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -15,9 +16,10 @@ import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import util.DateTimeUtil;
 import util.FileUtil;
 import util.RegexTestCase;
-import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,6 +36,7 @@ public class PageHistoryResponderTest {
   private PageHistoryResponder responder;
   private SimpleResponse response;
   private MockRequest request;
+  private FitNesseContext context;
 
   @Before
   public void setup() throws Exception {
@@ -43,6 +46,8 @@ public class PageHistoryResponderTest {
     history = new TestHistory();
     responder = new PageHistoryResponder();
     responder.setResultsDirectory(resultsDirectory);
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   @After
@@ -276,16 +281,12 @@ public class PageHistoryResponderTest {
   }
 
   @Test
-  public void canGetHistoricalTestResult() throws Exception {
+  public void canGetTestExecutionReport() throws Exception {
     File pageDirectory = addPageDirectory("TestPage");
-    File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0");
+    File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0.xml");
     addDummyTestResult(resultFile);
     makeResultForDate("TestPage", "20090503110451");
     assertHasRegexp("v1", response.getContent());
-    assertHasRegexp("1 right", response.getContent());
-    assertHasRegexp("2 wrong", response.getContent());
-    assertHasRegexp("3 ignored", response.getContent());
-    assertHasRegexp("4 exceptions", response.getContent());
     assertHasRegexp("relativePageName", response.getContent());
     assertHasRegexp("11 Right", response.getContent());
     assertHasRegexp("22 Wrong", response.getContent());
@@ -294,11 +295,51 @@ public class PageHistoryResponderTest {
     assertHasRegexp("wad of HTML content", response.getContent());
   }
 
+  @Test
+  public void canGetSuiteExecutionReport() throws Exception {
+    File pageDirectory = addPageDirectory("SuitePage");
+    File resultFile = new File(pageDirectory, "19801205012000_30_20_3_0.xml");
+    addDummySuiteResult(resultFile);
+    makeResultForDate("SuitePage", "19801205012000");
+    assertSubString("version", response.getContent());
+    assertSubString("SuitePage.TestPageOne?pageHistory&resultDate=19801205012000", response.getContent());
+  }
+
+  private void addDummySuiteResult(File resultFile) throws Exception {
+    SuiteExecutionReport report = makeDummySuiteResponse();
+    report.version = "version";
+    report.date = DateTimeUtil.getDateFromString("12/5/1980 01:19:00");
+    report.finalCounts = new TestSummary(4,5,6,7);
+    report.rootPath = "SuitePage";
+    long time = DateTimeUtil.getTimeFromString("12/5/1980 01:20:00");
+    SuiteExecutionReport.PageHistoryReference r1 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageOne", time);
+    SuiteExecutionReport.PageHistoryReference r2 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageTwo", time);
+
+    r1.getTestSummary().right=4;
+    r2.getTestSummary().right=4;
+    report.addPageHistoryReference(r1);
+    report.addPageHistoryReference(r2);
+
+    generateSuiteResultFile(report, resultFile);
+  }
+
+  private void generateSuiteResultFile(SuiteExecutionReport report, File resultFile) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("suiteExecutionReport", report);
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("suiteHistoryXML.vm");
+    FileWriter fileWriter = new FileWriter(resultFile);
+    template.merge(velocityContext, fileWriter);
+    fileWriter.close();  }
+
+  private SuiteExecutionReport makeDummySuiteResponse() {
+    return new SuiteExecutionReport();
+  }
+
   private void makeResultForDate(String page, String resultDate) throws Exception {
     request = new MockRequest();
     request.setResource(page);
     request.addInput("resultDate", resultDate);
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    response = (SimpleResponse) responder.makeResponse(context, request);
   }
 
   private void addDummyTestResult(File resultFile) throws Exception {
@@ -309,7 +350,6 @@ public class PageHistoryResponderTest {
   private void generateTestResultFile(TestExecutionReport testResponse, File resultFile) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    FitNesseContext context = new FitNesseContext();
     Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
     FileWriter fileWriter = new FileWriter(resultFile);
     template.merge(velocityContext, fileWriter);
@@ -356,20 +396,20 @@ public class PageHistoryResponderTest {
   public void shouldBeAbleToAcceptFormatIsXMLforARequest() throws Exception {
     request = new MockRequest();
     request.setResource("TestPage");
-    request.addInput("format","xml");
+    request.addInput("format", "xml");
     WikiPage root = InMemoryPage.makeRoot("RooT");
     response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-    assertEquals("text/xml",response.getContentType());
+    assertEquals("text/xml", response.getContentType());
   }
 
   @Test
   public void shouldntBeCaseSensitiveForXMLRequest() throws Exception {
     request = new MockRequest();
     request.setResource("TestPage");
-    request.addInput("format","XMl");
+    request.addInput("format", "XMl");
     WikiPage root = InMemoryPage.makeRoot("RooT");
     response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
-    assertEquals("text/xml",response.getContentType());
+    assertEquals("text/xml", response.getContentType());
   }
 
   @Test
@@ -379,12 +419,12 @@ public class PageHistoryResponderTest {
     File pageDirectory = addPageDirectory("TestPage");
     File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0");
     addDummyTestResult(resultFile);
-    request.addInput("resultDate","20090503110451");
-    request.addInput("format","xml");
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    request.addInput("resultDate", "20090503110451");
+    request.addInput("format", "xml");
+    response = (SimpleResponse) responder.makeResponse(context, request);
     String content = response.getContent();
     assertHasRegexp("<FitNesseVersion>", content);
-    assertEquals("text/xml",response.getContentType());
+    assertEquals("text/xml", response.getContentType());
   }
 
   private void addBadDummyTestResult(File resultFile) throws Exception {

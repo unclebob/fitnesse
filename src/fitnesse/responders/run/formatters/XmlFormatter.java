@@ -5,11 +5,11 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.VelocityFactory;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
@@ -19,11 +19,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import util.DateTimeUtils;
 
 public class XmlFormatter extends BaseFormatter {
   private WriterFactory writerFactory;
@@ -37,7 +34,6 @@ public class XmlFormatter extends BaseFormatter {
   private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
   private TestSystem testSystem;
-  private static long testTime;
   protected TestSummary finalSummary = new TestSummary();
 
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) throws Exception {
@@ -136,14 +132,6 @@ public class XmlFormatter extends BaseFormatter {
     if (outputBuffer == null)
       outputBuffer = new StringBuilder();
     outputBuffer.append(output);
-  }
-
-  public static void setTestTime(String dateString) {
-    XmlFormatter.testTime = DateTimeUtils.getTimeFromString(dateString);
-  }
-
-  public static void clearTestTime() {
-    testTime = 0;
   }
 
   public long getTime() {

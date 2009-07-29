@@ -3,7 +3,7 @@ package util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateTimeUtils {
+public class DateTimeUtil {
   private static String dateFormatString = "MM/dd/yyyy HH:mm:ss";
 
   public static long getTimeFromString(String time) {
@@ -29,5 +29,9 @@ public class DateTimeUtils {
   public static String formatDate(Date date) {
     SimpleDateFormat format = new SimpleDateFormat(dateFormatString);
     return format.format(date);
+  }
+
+  public static boolean datesNullOrEqual(Date d1, Date d2) {
+    return (d1 == null && d2 == null) || (d1 != null && d2 != null && d1.equals(d2));
   }
 }

@@ -14,10 +14,11 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.testutil.FitNesseUtil;
-import util.DateTimeUtils;
+import util.DateTimeUtil;
 
 import java.io.Writer;
 import java.io.File;
@@ -29,6 +30,7 @@ public class CachingSuiteXmlFormatterTest {
   private WikiPage root;
   private TestSummary testSummary;
   private WikiPage testPage;
+  private long testTime;
 
   @Before
   public void setUp() throws Exception {
@@ -37,6 +39,7 @@ public class CachingSuiteXmlFormatterTest {
     testSummary = new TestSummary(1,2,3,4);
     testPage = root.addChildPage("TestPage");
     formatter = new CachingSuiteXmlFormatter(context,root, null);
+    testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
   }
   @Test
   public void canCreateFormatter() throws Exception {
@@ -46,12 +49,11 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void shouldRememberThePageNameAndDate() throws Exception {
-    long time = DateTimeUtils.getTimeFromString("10/8/1988 10:52:12");
-    formatter.newTestStarted(testPage,time);
+    formatter.newTestStarted(testPage, testTime);
     formatter.testComplete(testPage, testSummary);
     assertEquals(1, formatter.getPageHistoryReferences().size());
     assertEquals("TestPage", formatter.getPageHistoryReferences().get(0).getPageName());
-    assertEquals(time, formatter.getPageHistoryReferences().get(0).getTime());
+    assertEquals(testTime, formatter.getPageHistoryReferences().get(0).getTime());
   }
 
   @Test
@@ -85,15 +87,15 @@ public class CachingSuiteXmlFormatterTest {
         return expectedReport;
       }
     };
-    Date referenceDate = DateTimeUtils.getDateFromString("12/5/1952 1:19:00");
+    Date referenceDate = DateTimeUtil.getDateFromString("12/5/1952 1:19:00");
     
     formatter.setTestHistoryForTests(testHistory);
     when(testHistory.getPageHistory("TestPage")).thenReturn(pageHistory);
     when(expectedRecord.getFile()).thenReturn(file);
     when(pageHistory.get(referenceDate)).thenReturn(expectedRecord);
     when(expectedReport.read(file)).thenReturn(expectedReport);
-    CachingSuiteXmlFormatter.PageHistoryReference reference;
-    reference = new CachingSuiteXmlFormatter.PageHistoryReference("TestPage", referenceDate.getTime());
+    SuiteExecutionReport.PageHistoryReference reference;
+    reference = new SuiteExecutionReport.PageHistoryReference("TestPage", referenceDate.getTime());
     TestExecutionReport actualReport = formatter.getTestExecutionReport(reference);
     verify(testHistory).getPageHistory("TestPage");
     verify(pageHistory).get(referenceDate);
@@ -102,8 +104,8 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldKnowVersionAndRootPage() throws Exception {
-    assertEquals("RooT", formatter.getRootPageName());
-    assertEquals(new FitNesseVersion().toString(), formatter.getFitNesseVersion());
+    assertEquals("RooT", formatter.page.getName());
+    assertEquals(new FitNesseVersion().toString(), new FitNesseVersion().toString());
   }
 
   @Test
@@ -113,6 +115,7 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldTallyPageCounts() throws Exception {
+    formatter.newTestStarted(testPage, testTime);
     formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0)); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
   }

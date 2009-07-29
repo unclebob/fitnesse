@@ -7,55 +7,7 @@
     <td class="meta">FitNesse Version: $testExecutionReport.Version</td>
   </tr>
 </table>
-<hr/>
-#set($finalCounts = $testExecutionReport.FinalCounts)
-#if($finalCounts)
-#set($assertionCounts = $testExecutionReport.AssertionCounts)
-<div id="test-summary">
-  <div id="progressBar" class="$testExecutionReport.summaryClass($finalCounts)">
-    <strong>Test Pages:</strong>
-    $finalCounts.Right right,
-    $finalCounts.Wrong wrong,
-    $finalCounts.Ignores ignored,
-    $finalCounts.Exceptions exceptions
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <strong>Assertions:</strong>
-    $assertionCounts.Right right,
-    $assertionCounts.Wrong wrong,
-    $assertionCounts.Ignores ignored,
-    $assertionCounts.Exceptions exceptions
-  </div>
-</div>
-#end
-<p/>
-<table border="1" cellspacing="0">
-  <tr>
-    <th>Right</th>
-    <th>Wrong</th>
-    <th>Ignored</th>
-    <th>Exceptions</th>
-    <th>Page</th>
-  </tr>
-  #foreach($testResult in $testExecutionReport.Results)
-  <tr class="$testExecutionReport.summaryClass($testResult.TestSummary)">
-    <td>
-      $testResult.Right
-    </td>
-    <td>
-      $testResult.Wrong
-    </td>
-    <td>
-      $testResult.Ignores
-    </td>
-    <td>
-      $testResult.Exceptions
-    </td>
-    <td>
-      <a href="#$testResult.RelativePageName">$testResult.RelativePageName</a>
-    </td>
-  </tr>
-  #end
-</table>
+
 #foreach($testResult in $testExecutionReport.Results)
 <p/>
 <hr/>

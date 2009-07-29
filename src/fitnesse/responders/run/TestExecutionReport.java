@@ -7,22 +7,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import util.XmlUtil;
-import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class TestExecutionReport {
-  public String version;
-  public String rootPath;
+public class TestExecutionReport extends ExecutionReport {
   public List<TestResult> results = new ArrayList<TestResult>();
-  public TestSummary finalCounts;
-  private Date date;
-  private Document xmlDoc;
 
   public TestExecutionReport() {
   }
@@ -32,33 +25,23 @@ public class TestExecutionReport {
     unpackXml();
   }
 
+  public TestExecutionReport(String string) throws Exception {
+    xmlDoc = XmlUtil.newDocument(string);
+    unpackXml();
+  }
+
+  public TestExecutionReport(Document xmlDocument) throws Exception {
+    super(xmlDocument);
+    unpackXml();
+  }
+
   public TestExecutionReport read(File file) throws Exception {
     xmlDoc = XmlUtil.newDocument(file);
     unpackXml();
     return this;
   }
 
-  private void unpackXml() throws Exception {
-    Element testResults = xmlDoc.getDocumentElement();
-    version = XmlUtil.getTextValue(testResults, "FitNesseVersion");
-    rootPath = XmlUtil.getTextValue(testResults, "rootPath");
-    unpackFinalCounts(testResults);
-    unpackResults(testResults);
-  }
-
-  private void unpackFinalCounts(Element testResults) throws Exception {
-    Element counts = getElementByTagName(testResults, "finalCounts");
-    if (counts != null) {
-      finalCounts = new TestSummary(
-        Integer.parseInt(XmlUtil.getTextValue(counts, "right")),
-        Integer.parseInt(XmlUtil.getTextValue(counts, "wrong")),
-        Integer.parseInt(XmlUtil.getTextValue(counts, "ignores")),
-        Integer.parseInt(XmlUtil.getTextValue(counts, "exceptions"))
-      );
-    }
-  }
-
-  private void unpackResults(Element testResults) throws Exception {
+  protected void unpackResults(Element testResults) throws Exception {
     NodeList xmlResults = testResults.getElementsByTagName("result");
     for (int resultIndex = 0; resultIndex < xmlResults.getLength(); resultIndex++) {
       unpackResult(xmlResults, resultIndex);
@@ -145,20 +128,8 @@ public class TestExecutionReport {
     }
   }
 
-  public String getVersion() {
-    return version;
-  }
-
-  public String getRootPath() {
-    return rootPath;
-  }
-
   public List<TestResult> getResults() {
     return results;
-  }
-
-  public TestSummary getFinalCounts() {
-    return finalCounts;
   }
 
   public void toXml(Writer writer, VelocityEngine velocityEngine) throws Exception {
@@ -168,31 +139,12 @@ public class TestExecutionReport {
     template.merge(velocityContext, writer);
   }
 
-  public Date getDate() {
-    return date;
-  }
-
-  public void setDate(Date date) {
-    this.date = date;
-  }
-
   public TestSummary getAssertionCounts() {
     TestSummary assertionCounts = new TestSummary();
     for (TestResult result : results) {
       assertionCounts.add(result.getTestSummary());
     }
     return assertionCounts;
-  }
-
-  public static String summaryClass(TestSummary testSummary) {
-    if (testSummary.right > 0 && testSummary.wrong == 0 && testSummary.exceptions == 0)
-      return "pass";
-    else if (testSummary.wrong > 0)
-      return "fail";
-    else if (testSummary.exceptions > 0)
-      return "error";
-    else
-      return "ignore";
   }
 
   public static class TestResult {

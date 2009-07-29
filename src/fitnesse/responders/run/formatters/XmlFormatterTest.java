@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.After;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.run.TestSummary;
-import util.DateTimeUtils;
 
 public class XmlFormatterTest {
   @Before

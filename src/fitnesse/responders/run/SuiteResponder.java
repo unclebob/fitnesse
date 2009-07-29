@@ -2,11 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.formatters.*;
-import fitnesse.wiki.WikiPage;
-
-import java.io.Writer;
 
 public class SuiteResponder extends TestResponder {
   String getTitle() {
@@ -29,6 +25,7 @@ public class SuiteResponder extends TestResponder {
   protected void addTestHistoryFormatter() throws Exception {
     HistoryWriterFactory source = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, source));
+    formatters.add(new SuiteHistoryFormatter(context, page, source));
   }
 
   protected void performExecution() throws Exception {

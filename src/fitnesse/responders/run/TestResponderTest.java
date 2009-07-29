@@ -30,7 +30,6 @@ import org.w3c.dom.NodeList;
 import util.FileUtil;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
-import util.DateTimeUtils;
 import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;

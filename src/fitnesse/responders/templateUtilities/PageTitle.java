@@ -32,13 +32,13 @@ public class PageTitle {
   }
 
   public PageTitle(String pageType) {
-    this.pageType = pageType;
+    this.setPageType(pageType);
     this.title = pageType;
   }
 
   public PageTitle(String pageType, WikiPagePath wikiPagePath) {
     this(wikiPagePath);
-    this.pageType = pageType;
+    this.setPageType(pageType);
   }
 
   public String getTitle() {
@@ -55,6 +55,10 @@ public class PageTitle {
 
   public String getPageType() {
     return pageType;
+  }
+
+  public void setPageType(String pageType) {
+    this.pageType = pageType;
   }
 
   public class BreadCrumb {

@@ -21,7 +21,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
-import util.DateTimeUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -332,7 +331,6 @@ public class SuiteResponderTest {
     request.addInput("format", "xml");
     addTestToSuite("SlimTest", simpleSlimDecisionTable);
     String results = runSuite();
-    System.out.println("results = " + results);
     Document testResultsDocument = getXmlDocumentFromResults(results);
     Element testResultsElement = testResultsDocument.getDocumentElement();
     assertEquals("testResults", testResultsElement.getNodeName());
@@ -359,7 +357,6 @@ public class SuiteResponderTest {
     assertCounts(finalCounts, "2", "0", "0", "0");
   }
 
-  @Ignore
   @Test
   public void normalSuiteRunWithThreePassingTestsProducesSuiteResultFile() throws Exception {
     TestSummary counts = new TestSummary(3, 0, 0, 0);

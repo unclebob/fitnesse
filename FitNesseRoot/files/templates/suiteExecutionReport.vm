@@ -1,0 +1,55 @@
+#set ($page_title = "Suite Execution Report")
+#parse("pageHead.vm")
+#if($suiteExecutionReport)
+<h1>$suiteExecutionReport.getRootPath()</h1>
+<table border="1" cellspacing="0">
+  <tr>
+    <td>$suiteExecutionReport.getDate()</td>
+    <td class="meta">FitNesse Version: $suiteExecutionReport.Version</td>
+  </tr>
+</table>
+<hr/>
+#set($finalCounts = $suiteExecutionReport.FinalCounts)
+#if($finalCounts)
+<div id="test-summary">
+  <div id="progressBar" class="$suiteExecutionReport.summaryClass($finalCounts)">
+    <strong>Test Pages:</strong>
+    $finalCounts.Right right,
+    $finalCounts.Wrong wrong,
+    $finalCounts.Ignores ignored,
+    $finalCounts.Exceptions exceptions
+  </div>
+</div>
+#end
+<p/>
+<table border="1" cellspacing="0">
+  <tr>
+    <th>Right</th>
+    <th>Wrong</th>
+    <th>Ignored</th>
+    <th>Exceptions</th>
+    <th>Page</th>
+  </tr>
+  #foreach($pageHistoryReference in $suiteExecutionReport.getPageHistoryReferences())
+  #set($counts = $pageHistoryReference.getTestSummary())
+  <tr class="$suiteExecutionReport.summaryClass($counts)">
+    <td>
+      $counts.Right
+    </td>
+    <td>
+      $counts.Wrong
+    </td>
+    <td>
+      $counts.Ignores
+    </td>
+    <td>
+      $counts.Exceptions
+    </td>
+    <td>
+      <a href="$pageHistoryReference.getPageName()?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getPageName()</a>
+    </td>
+  </tr>
+  #end
+</table>
+#end
+  #parse("pageFooter.vm")
