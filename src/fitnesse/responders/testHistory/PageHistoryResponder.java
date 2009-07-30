@@ -7,6 +7,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.run.ExecutionReport;
+import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
@@ -28,22 +30,24 @@ public class PageHistoryResponder implements Responder {
   private String pageName;
   private PageHistory pageHistory;
   private VelocityContext velocityContext;
+  private FitNesseContext context;
+  private PageTitle pageTitle;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    prepareResponse(context, request);
+    this.context = context;
+    prepareResponse(request);
 
     if (request.hasInput("resultDate")) {
-      return tryToMakeTestExecutionReport(context, request);
+      return tryToMakeTestExecutionReport(request);
     } else {
       return makePageHistoryResponse(request);
     }
-
   }
 
   private Response makePageHistoryResponse(Request request) throws Exception {
     velocityContext.put("pageHistory", pageHistory);
     String velocityTemplate = "pageHistory.vm";
-    if(formatIsXML(request)){
+    if (formatIsXML(request)) {
       response.setContentType("text/xml");
       velocityTemplate = "pageHistoryXML.vm";
     }
@@ -55,13 +59,13 @@ public class PageHistoryResponder implements Responder {
     return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
   }
 
-  private Response tryToMakeTestExecutionReport(FitNesseContext context, Request request) throws Exception {
+  private Response tryToMakeTestExecutionReport(Request request) throws Exception {
     Date resultDate = getResultDate(request);
     PageHistory.TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {
       return makeTestExecutionReportResponse(request, resultDate, testResultRecord);
     } catch (Exception e) {
-      return makeCorruptFileResponse(context, request);
+      return makeCorruptFileResponse(request);
     }
   }
 
@@ -71,16 +75,34 @@ public class PageHistoryResponder implements Responder {
     return resultDate;
   }
 
-  private Response makeCorruptFileResponse(FitNesseContext context, Request request) throws Exception {
+  private Response makeCorruptFileResponse(Request request) throws Exception {
     return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
   }
 
   private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
-    TestExecutionReport report;
-    report = new TestExecutionReport(testResultRecord.getFile());
-    report.setDate(resultDate);
-    if(formatIsXML(request))
+    if (formatIsXML(request))
       return generateXMLResponse(testResultRecord.getFile());
+    ExecutionReport report;
+
+    String content = FileUtil.getFileContent(testResultRecord.getFile());
+    report = ExecutionReport.makeReport(content);
+    if (report instanceof TestExecutionReport) {
+      report.setDate(resultDate);
+      return generateHtmlTestExecutionResponse((TestExecutionReport) report);
+    } else if (report instanceof SuiteExecutionReport) {
+      pageTitle.setPageType("Suite History");
+      return generateHtmlSuiteExecutionResponse((SuiteExecutionReport) report);
+    } else
+      return makeCorruptFileResponse(request);
+  }
+
+  private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {
+    velocityContext.put("suiteExecutionReport", report);
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("suiteExecutionReport.vm");
+    return makeResponseFromTemplate(template);
+  }
+
+  private Response generateHtmlTestExecutionResponse(TestExecutionReport report) throws Exception {
     velocityContext.put("testExecutionReport", report);
     Template template = VelocityFactory.getVelocityEngine().getTemplate("testExecutionReport.vm");
     return makeResponseFromTemplate(template);
@@ -99,7 +121,7 @@ public class PageHistoryResponder implements Responder {
     return response;
   }
 
-  private void prepareResponse(FitNesseContext context, Request request) {
+  private void prepareResponse(Request request) {
     response = new SimpleResponse();
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
@@ -108,7 +130,8 @@ public class PageHistoryResponder implements Responder {
     pageName = request.getResource();
     pageHistory = history.getPageHistory(pageName);
     velocityContext = new VelocityContext();
-    velocityContext.put("pageTitle", makePageTitle(request.getResource()));
+    pageTitle = makePageTitle(request.getResource());
+    velocityContext.put("pageTitle", pageTitle);
   }
 
   private PageTitle makePageTitle(String resource) {

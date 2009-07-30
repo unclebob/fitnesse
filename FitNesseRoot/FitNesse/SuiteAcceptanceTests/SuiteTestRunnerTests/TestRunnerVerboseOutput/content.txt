@@ -4,8 +4,8 @@ When no other options are supplied, the TestRunner will print simple messages to
 
 !|Test Runner Fixture|
 |args|page name|output?|
-|-v|SuiteFodder.TestPassing|Test Runner for Root Path: TestPassing\n  Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0\nTest Pages: 1 right, 0 wrong, 0 ignored, 0 exceptions\nAssertions: 1 right, 0 wrong, 0 ignored, 0 exceptions\n|
-|-v|SuiteFodder.TestFailing|Test Runner for Root Path: TestFailing\n* Page:(TestFailing) right:0, wrong:1, ignored:0, exceptions:0\nTest Pages: 0 right, 1 wrong, 0 ignored, 0 exceptions\nAssertions: 0 right, 1 wrong, 0 ignored, 0 exceptions\n|
-|-v|SuiteFodder.TestIgnoring|Test Runner for Root Path: TestIgnoring\n  Page:(TestIgnoring) right:0, wrong:0, ignored:1, exceptions:0\nTest Pages: 0 right, 0 wrong, 1 ignored, 0 exceptions\nAssertions: 0 right, 0 wrong, 1 ignored, 0 exceptions\n|
-|-v|SuiteFodder.TestCrashing|Test Runner for Root Path: TestCrashing\n* Page:(TestCrashing) right:0, wrong:0, ignored:0, exceptions:1\nTest Pages: 0 right, 0 wrong, 0 ignored, 1 exceptions\nAssertions: 0 right, 0 wrong, 0 ignored, 1 exceptions\n|
+|-v|SuiteFodder.TestPassing|Test Runner for Root Path: TestPassing\n  Page:TestPassing right:1, wrong:0, ignored:0, exceptions:0\nTest Pages: 1 right, 0 wrong, 0 ignored, 0 exceptions\nAssertions: 1 right, 0 wrong, 0 ignored, 0 exceptions\n|
+|-v|SuiteFodder.TestFailing|Test Runner for Root Path: TestFailing\n* Page:TestFailing right:0, wrong:1, ignored:0, exceptions:0\nTest Pages: 0 right, 1 wrong, 0 ignored, 0 exceptions\nAssertions: 0 right, 1 wrong, 0 ignored, 0 exceptions\n|
+|-v|SuiteFodder.TestIgnoring|Test Runner for Root Path: TestIgnoring\n  Page:TestIgnoring right:0, wrong:0, ignored:1, exceptions:0\nTest Pages: 0 right, 0 wrong, 1 ignored, 0 exceptions\nAssertions: 0 right, 0 wrong, 1 ignored, 0 exceptions\n|
+|-v|SuiteFodder.TestCrashing|Test Runner for Root Path: TestCrashing\n* Page:TestCrashing right:0, wrong:0, ignored:0, exceptions:1\nTest Pages: 0 right, 0 wrong, 0 ignored, 1 exceptions\nAssertions: 0 right, 0 wrong, 0 ignored, 1 exceptions\n|
 |-v|SuiteFodder|Test Runner for Root Path: SuiteFodder\n* Page:TestCrashing right:0, wrong:0, ignored:0, exceptions:1\n* Page:TestFailing right:0, wrong:1, ignored:0, exceptions:0\n  Page:TestIgnoring right:0, wrong:0, ignored:1, exceptions:0\n  Page:TestPassing right:1, wrong:0, ignored:0, exceptions:0\nTest Pages: 1 right, 1 wrong, 1 ignored, 1 exceptions\nAssertions: 1 right, 1 wrong, 1 ignored, 1 exceptions\n|

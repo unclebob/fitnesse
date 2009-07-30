@@ -2,10 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
-
-import java.io.Writer;
+import fitnesse.responders.run.formatters.*;
 
 public class SuiteResponder extends TestResponder {
   String getTitle() {
@@ -13,12 +10,7 @@ public class SuiteResponder extends TestResponder {
   }
 
   void addXmlFormatter() throws Exception {
-    XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
-      public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
-        return makeResponseWriter();
-      }
-    };
-    formatters.add(new SuiteXmlFormatter(context, page, writerSource));
+    formatters.add(new CachingSuiteXmlFormatter(context, page, makeResponseWriter()));
   }
 
   void addHtmlFormatter() throws Exception {
@@ -32,8 +24,8 @@ public class SuiteResponder extends TestResponder {
 
   protected void addTestHistoryFormatter() throws Exception {
     HistoryWriterFactory source = new HistoryWriterFactory();
-    formatters.add(new SuiteXmlFormatter(context, page, source));
     formatters.add(new PageHistoryFormatter(context, page, source));
+    formatters.add(new SuiteHistoryFormatter(context, page, source));
   }
 
   protected void performExecution() throws Exception {

@@ -1,14 +1,21 @@
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
+import org.junit.After;
 import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.responders.run.TestSummary;
 
 public class XmlFormatterTest {
   @Before
-  public void setup() {
+  public void setUp() {
     XmlFormatter.setTestTime("4/13/2009 15:21:43");
+  }
+
+  @After
+  public void tearDown() {
+    XmlFormatter.clearTestTime();
   }
 
   @Test

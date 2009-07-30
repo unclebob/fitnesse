@@ -1,11 +1,13 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.CompositeExecutionLog;
 import util.RegexTestCase;
 
 public class TestHtmlFormatterTest extends RegexTestCase {

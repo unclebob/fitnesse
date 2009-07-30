@@ -2,19 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.*;
+import org.w3c.dom.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.InputSource;
+import java.io.*;
 
 public class XmlUtil {
   private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -31,7 +25,7 @@ public class XmlUtil {
     try {
       return getDocumentBuilder().parse(input);
     } catch (SAXParseException e) {
-      throw new Exception(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));  
+      throw new Exception(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
     }
   }
 
@@ -79,11 +73,14 @@ public class XmlUtil {
   public static String getElementText(Element namedElement) throws Exception {
     if (namedElement == null)
       return null;
-    Node candidateTextNode = namedElement.getFirstChild();
-    if (candidateTextNode instanceof Text)
-      return candidateTextNode.getNodeValue();
-    else
-      throw new Exception("The first child of " + namedElement.getNodeName() + " is not a Text node");
+    NodeList nodes = namedElement.getChildNodes();
+    for (int i = 0; i < nodes.getLength(); i++) {
+      Node node = nodes.item(i);
+      if (node instanceof Text)
+        return node.getNodeValue();
+    }
+    //throw new Exception("No child of " + namedElement.getNodeName() + " is a Text node");
+    return null;
   }
 
   public static void addTextNode(Document document, Element element, String tagName, String value) {

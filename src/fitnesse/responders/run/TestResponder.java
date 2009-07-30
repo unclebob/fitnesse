@@ -8,6 +8,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.run.formatters.*;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;

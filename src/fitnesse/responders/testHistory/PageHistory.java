@@ -76,11 +76,22 @@ public class PageHistory {
   private void compileResultFileIntoHistory(File file) throws ParseException {
     TestResultRecord record = buildTestResultRecord(file);
     Date date = record.getDate();
-    testResultMap.put(date, record);
+    addTestResult(record, date);
     countResult(record);
     setMinMaxDate(date);
     setMaxAssertions(record);
     pageFiles.put(date, file);
+  }
+
+  private void addTestResult(TestResultRecord record, Date date) {
+    Date keyDate = trimMilliseconds(date);
+    testResultMap.put(date, record);
+  }
+
+  private Date trimMilliseconds(Date date) {
+    long milliseconds = date.getTime();
+    long seconds = milliseconds / 1000;
+    return new Date(seconds *1000);
   }
 
   public String getPageFileName(Date date){
@@ -149,7 +160,7 @@ public class PageHistory {
   }
 
   public TestResultRecord get(Date key) {
-    return testResultMap.get(key);
+    return testResultMap.get(trimMilliseconds(key));
   }
 
   public int maxAssertions() {
@@ -163,7 +174,7 @@ public class PageHistory {
   }
 
   public PassFailBar getPassFailBar(Date date, int maxUnits) {
-    TestResultRecord summary = testResultMap.get(date);
+    TestResultRecord summary = get(date);
     int fail = summary.getWrong() + summary.getExceptions();
     double unitsPerAssertion = (double)maxUnits/(double)maxAssertions;
     int unitsForThisTest = (int)Math.round((fail + summary.getRight()) * unitsPerAssertion);

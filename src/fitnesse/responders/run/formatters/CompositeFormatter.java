@@ -1,6 +1,9 @@
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.TestSummary;
 
 import java.util.ArrayList;
 import java.util.List;

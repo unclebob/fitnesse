@@ -8,15 +8,14 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import static junit.framework.Assert.fail;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -80,6 +79,7 @@ public class SuiteResponderTest {
   public void tearDown() throws Exception {
     receiver.close();
     FitNesseUtil.destroyTestContext();
+    XmlFormatter.clearTestTime();
   }
 
   private String runSuite() throws Exception {
@@ -398,22 +398,6 @@ public class SuiteResponderTest {
     xmlResultsStream.close();
     xmlResultsFile.delete();
   }
-
-  @Test
-  public void xmlForSingleTestPageNameIsParenthetic() throws Exception {
-    request.setResource("SuitePage.TestOne");
-    request.addInput("format", "xml");
-    String results = runSuite();
-    Document testResultsDocument = getXmlDocumentFromResults(results);
-    Element testResultsElement = testResultsDocument.getDocumentElement();
-    assertEquals("testResults", testResultsElement.getNodeName());
-    NodeList resultList = testResultsElement.getElementsByTagName("result");
-    assertEquals(1, resultList.getLength());
-    Element result = (Element) resultList.item(0);
-    String pageName = XmlUtil.getTextValue(result, "relativePageName");
-    assertEquals("(TestOne)", pageName);
-  }
-
 
   @Test
   public void exitCodeHeaderIsErrorCountForXml() throws Exception {

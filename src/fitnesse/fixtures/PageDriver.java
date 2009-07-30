@@ -3,7 +3,7 @@
 package fitnesse.fixtures;
 
 import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.responders.run.XmlFormatter;
+import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.wiki.*;
 import org.htmlparser.*;
 import org.htmlparser.filters.AndFilter;

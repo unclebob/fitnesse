@@ -1,15 +1,17 @@
-// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run;
+package fitnesse.responders.run.formatters;
 
+import fitnesse.responders.run.*;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
+import util.DateTimeUtil;
 
 public abstract class BaseFormatter implements ResultsListener {
 
   protected WikiPage page = null;
   protected FitNesseContext context;
   public static final BaseFormatter NULL = new NullFormatter();
+  protected static long testTime;
+
   public abstract void writeHead(String pageType) throws Exception;
 
   protected BaseFormatter() {
@@ -19,11 +21,11 @@ public abstract class BaseFormatter implements ResultsListener {
     this.page = page;
     this.context = context;
   }
-  
+
   protected WikiPage getPage() {
     return page;
   }
-  
+
   public void errorOccured() {
     try {
       allTestingComplete();
@@ -43,6 +45,14 @@ public abstract class BaseFormatter implements ResultsListener {
 
   public int getErrorCount() {
     return 0;
+  }
+
+  public static void setTestTime(String dateString) {
+    BaseFormatter.testTime = DateTimeUtil.getTimeFromString(dateString);
+  }
+
+  public static void clearTestTime() {
+    testTime = 0;
   }
 }
 

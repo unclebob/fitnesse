@@ -87,7 +87,7 @@ public class TestRunnerTest {
   public void verbosePassing() throws Exception {
     runPage("-v", "SuitePage.TestPassing");
     assertEquals("Test Runner for Root Path: TestPassing" + endl +
-      "  Page:(TestPassing) right:1, wrong:0, ignored:0, exceptions:0" + endl +
+      "  Page:TestPassing right:1, wrong:0, ignored:0, exceptions:0" + endl +
       "Test Pages: 1 right, 0 wrong, 0 ignored, 0 exceptions" + endl +
       "Assertions: 1 right, 0 wrong, 0 ignored, 0 exceptions" + endl,
       outputBytes.toString());
@@ -97,7 +97,7 @@ public class TestRunnerTest {
   public void verboseFailing() throws Exception {
     runPage("-v", "SuitePage.TestFailing");
     assertEquals("Test Runner for Root Path: TestFailing" + endl +
-      "* Page:(TestFailing) right:0, wrong:1, ignored:0, exceptions:0" + endl +
+      "* Page:TestFailing right:0, wrong:1, ignored:0, exceptions:0" + endl +
       "Test Pages: 0 right, 1 wrong, 0 ignored, 0 exceptions" + endl +
       "Assertions: 0 right, 1 wrong, 0 ignored, 0 exceptions" + endl,
       outputBytes.toString());
