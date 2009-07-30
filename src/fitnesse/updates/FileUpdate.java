@@ -7,9 +7,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 public class FileUpdate implements Update {
-  private static final String slash = "/";
 
   protected String destination;
   protected String source;
@@ -32,12 +32,12 @@ public class FileUpdate implements Update {
   }
 
   private void makeSureDirectoriesExist() {
-    String[] subDirectories = destination.split(slash);
+    String[] subDirectories = destination.split(Pattern.quote(File.separator));
     String currentDirPath = rootDir;
 
     for (int i = 0; i < subDirectories.length; i++) {
       String subDirectory = subDirectories[i];
-      currentDirPath = currentDirPath + slash + subDirectory;
+      currentDirPath = currentDirPath + File.separator + subDirectory;
       File directory = new File(currentDirPath);
       directory.mkdir();
     }
