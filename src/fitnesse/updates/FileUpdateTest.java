@@ -13,7 +13,7 @@ public class FileUpdateTest extends UpdateTestCase {
   public final File testFile = new File("classes/testFile");
 
   protected Update makeUpdate() throws Exception {
-    return new FileUpdate(context.rootPagePath, "testFile", "files/images");
+    return new FileUpdate(context.rootPagePath, "testFile", "files"+File.separator+"images");
   }
 
   public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class FileUpdateTest extends UpdateTestCase {
   public void testUpdateWithMissingDirectories() throws Exception {
     update.doUpdate();
 
-    File file = new File(context.rootPagePath + "/files/images/testFile");
+    File file = new File(context.rootPagePath + File.separator + "files" + File.separator + "images" + File.separator + "testFile");
     assertTrue(file.exists());
 
     assertFalse(update.shouldBeApplied());

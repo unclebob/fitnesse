@@ -9,6 +9,8 @@ import fitnesse.responders.run.SocketSeeker;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.MockCommandRunner;
 
+import java.util.Map;
+
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   public static int TIMEOUT = 60000;
   private static final String SPACE = " ";
@@ -25,6 +27,11 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
   public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer, boolean fastTest)
     throws Exception {
+    this(listener, command, port, null, dealer, fastTest);
+  }
+
+  public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest)
+    throws Exception {
     super(listener);
     this.fastTest = fastTest;
     ticketNumber = dealer.seekingSocket(this);
@@ -35,13 +42,16 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
       commandRunner = new MockCommandRunner();
       createFitServer("-x " + fitArguments);
     } else
-      commandRunner = new CommandRunner(commandLine, "");
+      commandRunner = new CommandRunner(commandLine, "", environmentVariables);
   }
 
   public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws Exception {
-    this(listener, command, port, dealer, false);
+    this(listener, command, port, null, dealer);
   }
 
+  public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer) throws Exception {
+    this(listener, command, port, environmentVariables, dealer, false);
+  }
 
   //For testing only.  Makes responder faster.
   void createFitServer(String args) throws Exception {

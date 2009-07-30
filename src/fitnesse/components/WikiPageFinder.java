@@ -1,9 +1,9 @@
 package fitnesse.components;
 
+import fitnesse.wiki.WikiPage;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import fitnesse.wiki.WikiPage;
 
 public abstract class WikiPageFinder implements TraversalListener, PageFinder {
 
@@ -27,5 +27,4 @@ public abstract class WikiPageFinder implements TraversalListener, PageFinder {
     page.getPageCrawler().traverse(page, this);
     return hits;
   }
-
 }
