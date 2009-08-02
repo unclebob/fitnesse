@@ -11,7 +11,6 @@
 	<classpathentry kind="lib" path="lib/htmlparser.jar"/>
 	<classpathentry kind="lib" path="lib/json.jar"/>
 	<classpathentry kind="lib" path="lib/velocity-1.6.2-dep.jar"/>
-	<classpathentry kind="lib" path="lib/dummy.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-all-1.7.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.6.jar"/>
 	<classpathentry kind="output" path="classes"/>
