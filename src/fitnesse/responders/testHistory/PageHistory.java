@@ -223,7 +223,7 @@ public class PageHistory {
   }
 
   public static String formatDate(String format, Date date) {
-    SimpleDateFormat fmt = new SimpleDateFormat(format);
+    SimpleDateFormat fmt = new SimpleDateFormat(format, Locale.US);
     return fmt.format(date);
   }
 
