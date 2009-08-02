@@ -5,12 +5,13 @@ package fitnesse.slim.converters;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import fitnesse.slim.Converter;
 import fitnesse.slim.SlimError;
 
 public class DateConverter implements Converter {
-  public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+  public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 
   public String toString(Object o) {
     return dateFormat.format((Date) o);
