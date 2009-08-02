@@ -52,7 +52,7 @@ public class AuthenticatorTest extends TestCase {
 
   private void makeReadSecure(WikiPage frontpage) throws Exception {
     PageData data = frontpage.getData();
-    data.setAttribute(WikiPage.SECURE_READ);
+    data.setAttribute(PageData.PropertySECURE_READ);
     frontpage.commit(data);
   }
 

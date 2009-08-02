@@ -1,11 +1,29 @@
 package fitnesse.wiki;
 
+import static fitnesse.wiki.PageData.*;
 
 public enum PageType {
 
-  SUITE("Suite"),
-  TEST("Test"),
-  NORMAL("Normal");
+  SUITE("Suite") {
+    public boolean validForPageName(String pageName) {
+      return (pageName.startsWith(toString())
+          && !pageName.equals(SUITE_SETUP_NAME) && !pageName.equals(SUITE_TEARDOWN_NAME))
+          || pageName.endsWith(toString()) || pageName.endsWith("Examples");
+    }
+  },
+  TEST("Test") {
+    public boolean validForPageName(String pageName) {
+      return pageName.startsWith(toString())
+          || pageName.endsWith(toString())
+          || (pageName.startsWith("Example") && !pageName
+              .startsWith("Examples")) || pageName.endsWith("Example");
+    }
+  },
+  NORMAL("Normal") {
+    public boolean validForPageName(String pageName) {
+      return true;
+    }
+  };
 
   public static PageType fromString(String typeDescriptor) {
     for (PageType type: PageType.values()) {
@@ -31,6 +49,14 @@ public enum PageType {
     return NORMAL;
   }
 
+  public static PageType getPageTypeForPageName(String pageName) {
+    for (PageType type: values()) {
+      if (type.validForPageName(pageName))
+        return type;
+    }
+    return NORMAL;
+  }
+
   private String description;
 
   PageType(String description) {
@@ -40,5 +66,7 @@ public enum PageType {
   public String toString() {
     return description;
   }
+
+  public abstract boolean validForPageName(String pageName);
 
 }

@@ -7,7 +7,6 @@ import java.util.Date;
 
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWidget;
 
 //created by Jason Sypher
@@ -32,7 +31,7 @@ public class LastModifiedWidget extends WikiWidget {
   public String render() throws Exception {
     PageData data = getWikiPage().getData();
     String formattedDate = formatDate(data.getProperties().getLastModificationTime());
-    String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
+    String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
     if (user == null || "".equals(user))
       return HtmlUtil.metaText("Last modified anonymously on " + formattedDate);
     else

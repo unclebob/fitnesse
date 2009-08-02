@@ -47,8 +47,8 @@ public class SavePropertiesResponder implements SecureResponder {
     setPageTypeAttribute(request, data);
 
     List<String> attrs = new LinkedList<String>();
-    attrs.addAll(Arrays.asList(WikiPage.NON_SECURITY_ATTRIBUTES));
-    attrs.addAll(Arrays.asList(WikiPage.SECURITY_ATTRIBUTES));
+    attrs.addAll(Arrays.asList(PageData.NON_SECURITY_ATTRIBUTES));
+    attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
 
     for (Iterator<String> i = attrs.iterator(); i.hasNext();) {
       String attribute = i.next();
@@ -86,7 +86,7 @@ public class SavePropertiesResponder implements SecureResponder {
       return;
 
     List<String> types = new LinkedList<String>();
-    types.addAll(Arrays.asList(WikiPage.PAGE_TYPE_ATTRIBUTES));
+    types.addAll(Arrays.asList(PageData.PAGE_TYPE_ATTRIBUTES));
     data.setAttribute(pageType);
 
     for (Iterator<String> i = types.iterator(); i.hasNext();) {
@@ -97,7 +97,7 @@ public class SavePropertiesResponder implements SecureResponder {
   }
 
   private String getPageType(Request request) {
-    return (String) request.getInput(WikiPage.PAGE_TYPE_ATTRIBUTE);
+    return (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
   }
 
   private boolean isChecked(Request request, String name) {

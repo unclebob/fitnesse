@@ -1,6 +1,7 @@
 package fitnesse.wiki.zip;
 
 import fitnesse.wiki.NullVersionsController;
+import fitnesse.wiki.PageData;
 import util.StreamReader;
 import fitnesse.wiki.*;
 
@@ -226,7 +227,7 @@ public class ZipFileVersionsController extends NullVersionsController {
       Date time;
       time = data.getProperties().getLastModificationTime();
       String versionName = VersionInfo.nextId() + "-" + dateFormat().format(time);
-      final String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
+      final String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
       if (user != null && !"".equals(user)) {
         versionName = user + "-" + versionName;
       }

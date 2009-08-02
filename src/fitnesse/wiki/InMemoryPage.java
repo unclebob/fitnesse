@@ -102,7 +102,7 @@ public class InMemoryPage extends CommitingPage {
   }
 
   protected VersionInfo makeVersionInfo(PageData current, String name) throws Exception {
-    String author = current.getAttribute(WikiPage.LAST_MODIFYING_USER);
+    String author = current.getAttribute(PageData.LAST_MODIFYING_USER);
     if (author == null)
       author = "";
     Date date = current.getProperties().getLastModificationTime();

@@ -222,7 +222,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
 
   private void makeSecurePage(WikiPage page) throws Exception {
     PageData data = page.getData();
-    data.setAttribute(WikiPage.SECURE_READ);
+    data.setAttribute(PageData.PropertySECURE_READ);
     page.commit(data);
     FitNesseUtil.context.authenticator = new OneUserAuthenticator("joe", "blow");
   }

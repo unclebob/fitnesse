@@ -48,7 +48,7 @@ public class LastModifiedWidgetTest extends WidgetTestCase {
 
   public void testUsername() throws Exception {
     PageData data = page.getData();
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Aladdin");
+    data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
     page.commit(data);
 
     assertSubString("Last modified by Aladdin", widget.render());

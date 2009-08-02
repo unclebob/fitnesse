@@ -157,11 +157,11 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
     WikiPage testPage = crawler.addPage(root, testPagePath, "version1");
 
     PageData data = testPage.getData();
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Aladdin");
+    data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
     testPage.commit(data);
 
     data = testPage.getData();
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Joe");
+    data.setAttribute(PageData.LAST_MODIFYING_USER, "Joe");
     VersionInfo record = testPage.commit(data);
 
     assertTrue(record.getName().startsWith("Aladdin"));

@@ -12,8 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import util.StringUtil;
+
 import fitnesse.responders.run.ExecutionLog;
-import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.ClasspathWidget;
@@ -28,18 +29,58 @@ import fitnesse.wikitext.widgets.XRefWidget;
 
 @SuppressWarnings("unchecked")
 public class PageData implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
-  public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(IncludeWidget.class, VariableDefinitionWidget.class, ClasspathWidget.class);
-  public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(XRefWidget.class);
+  public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(
+      IncludeWidget.class, VariableDefinitionWidget.class,
+      ClasspathWidget.class);
+  public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(
+      XRefWidget.class);
 
-  public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(IncludeWidget.class, PreformattedWidget.class, VariableDefinitionWidget.class);
+  public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(
+      IncludeWidget.class, PreformattedWidget.class,
+      VariableDefinitionWidget.class);
 
+  // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
   public static final String PropertyHELP = "Help";
   public static final String PropertyPRUNE = "Prune";
-  //TODO -AcD: refactor add other properties such as "Edit", "Suite", TEST.toString(), ...
+  public static final String PropertySEARCH = "Search";
+  public static final String PropertyRECENT_CHANGES = "RecentChanges";
+  public static final String PropertyFILES = "Files";
+  public static final String PropertyWHERE_USED = "WhereUsed";
+  public static final String PropertyREFACTOR = "Refactor";
+  public static final String PropertyPROPERTIES = "Properties";
+  public static final String PropertyVERSIONS = "Versions";
+  public static final String PropertyEDIT = "Edit";
   public static final String PropertySUITES = "Suites";
+
+  public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
+  public static final String[] PAGE_TYPE_ATTRIBUTES = { NORMAL.toString(),
+      TEST.toString(), SUITE.toString() };
+
+  public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
+      PropertyVERSIONS, PropertyPROPERTIES, PropertyREFACTOR,
+      PropertyWHERE_USED };
+
+  public static final String[] NAVIGATION_ATTRIBUTES = {
+      PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH, PropertyPRUNE };
+
+  public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil
+      .combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
+
+  public static final String PropertySECURE_READ = "secure-read";
+  public static final String PropertySECURE_WRITE = "secure-write";
+  public static final String PropertySECURE_TEST = "secure-test";
+  public static final String[] SECURITY_ATTRIBUTES = { PropertySECURE_READ,
+      PropertySECURE_WRITE, PropertySECURE_TEST };
+
+  public static final String LAST_MODIFYING_USER = "LastModifyingUser";
+
+  public static final String SUITE_SETUP_NAME = "SuiteSetUp";
+
+  public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
 
   private transient WikiPage wikiPage;
   private String content;
@@ -73,14 +114,14 @@ public class PageData implements Serializable {
   }
 
   public void initializeAttributes() throws Exception {
-    properties.set("Edit", "true");
-    properties.set("Versions", "true");
-    properties.set("Properties", "true");
-    properties.set("Refactor", "true");
-    properties.set("WhereUsed", "true");
-    properties.set("Files", "true");
-    properties.set("RecentChanges", "true");
-    properties.set("Search", "true");
+    properties.set(PropertyEDIT, Boolean.toString(true));
+    properties.set(PropertyVERSIONS, Boolean.toString(true));
+    properties.set(PropertyPROPERTIES, Boolean.toString(true));
+    properties.set(PropertyREFACTOR, Boolean.toString(true));
+    properties.set(PropertyWHERE_USED, Boolean.toString(true));
+    properties.set(PropertyFILES, Boolean.toString(true));
+    properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
+    properties.set(PropertySEARCH, Boolean.toString(true));
     properties.setLastModificationTime(new Date());
 
     initTestOrSuiteProperty();
@@ -96,26 +137,28 @@ public class PageData implements Serializable {
     if (isErrorLogsPage())
       return;
 
-    if ((pageName.startsWith("Suite") || pageName.endsWith("Suite") || pageName.endsWith("Examples")) &&
-        !pageName.equals(SuiteContentsFinder.SUITE_SETUP_NAME) &&
-        !pageName.equals(SuiteContentsFinder.SUITE_TEARDOWN_NAME))
-      properties.set(SUITE.toString(), "true");
-    else if (pageName.startsWith(TEST.toString()) || pageName.endsWith(TEST.toString()) || pageName.startsWith("Example") ||
-        pageName.endsWith("Example"))
-      properties.set(TEST.toString(), "true");
+    PageType pageType = PageType.getPageTypeForPageName(pageName);
+
+    if (NORMAL.equals(pageType))
+      return;
+
+    properties.set(pageType.toString(), Boolean.toString(true));
   }
 
   private boolean isErrorLogsPage() throws Exception {
     PageCrawler crawler = wikiPage.getPageCrawler();
-    String relativePagePath = crawler.getRelativeName(crawler.getRoot(wikiPage), wikiPage);
+    String relativePagePath = crawler.getRelativeName(
+        crawler.getRoot(wikiPage), wikiPage);
     return relativePagePath.startsWith(ExecutionLog.ErrorLogName);
   }
 
-  // TODO: Should be written to a real logger, but it doesn't like FitNesse's logger is
+  // TODO: Should be written to a real logger, but it doesn't like FitNesse's
+  // logger is
   // really intended for general logging.
   private void handleInvalidPageName(WikiPage wikiPage) {
     try {
-      String msg = "WikiPage " + wikiPage + " does not have a valid name!" + wikiPage.getName();
+      String msg = "WikiPage " + wikiPage + " does not have a valid name!"
+          + wikiPage.getName();
       System.err.println(msg);
       throw new RuntimeException(msg);
     } catch (Exception e) {
@@ -188,7 +231,8 @@ public class PageData implements Serializable {
 
   private void initializeVariableRoot() throws Exception {
     if (variableRoot == null) {
-      variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, literals, variableDefinitionWidgetBuilder);
+      variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage,
+          literals, variableDefinitionWidgetBuilder);
       variableRoot.render();
     }
   }
@@ -198,8 +242,10 @@ public class PageData implements Serializable {
     variableRoot.addVariable(name, value);
   }
 
-  private String processHTMLWidgets(String content, WikiPage context) throws Exception {
-    ParentWidget root = new WidgetRoot(content, context, WidgetBuilder.htmlWidgetBuilder);
+  private String processHTMLWidgets(String content, WikiPage context)
+      throws Exception {
+    ParentWidget root = new WidgetRoot(content, context,
+        WidgetBuilder.htmlWidgetBuilder);
     return root.render();
   }
 
@@ -220,7 +266,8 @@ public class PageData implements Serializable {
   }
 
   private List<String> getTextOfWidgets(WidgetBuilder builder) throws Exception {
-    ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage, builder);
+    ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage,
+        builder);
     List<WikiWidget> widgets = root.getChildren();
     List<String> values = new ArrayList<String>();
     for (WikiWidget widget : widgets) {

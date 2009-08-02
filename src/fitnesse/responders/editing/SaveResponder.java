@@ -107,9 +107,9 @@ public class SaveResponder implements SecureResponder {
     data.setContent(savedContent);
     SaveRecorder.pageSaved(data, ticketId);
     if (user != null)
-      data.setAttribute(WikiPage.LAST_MODIFYING_USER, user);
+      data.setAttribute(PageData.LAST_MODIFYING_USER, user);
     else
-      data.removeAttribute(WikiPage.LAST_MODIFYING_USER);
+      data.removeAttribute(PageData.LAST_MODIFYING_USER);
   }
 
   public SecureOperation getSecureOperation() {

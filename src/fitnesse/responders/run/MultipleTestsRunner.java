@@ -169,7 +169,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void appendSuiteTearDownToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
-    if (SuiteContentsFinder.SUITE_TEARDOWN_NAME.equals(page.getName())) {
+    if (PageData.SUITE_TEARDOWN_NAME.equals(page.getName())) {
       for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values()) {
         pagesForTestSystem.add(page);
       }
@@ -177,7 +177,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void prependSuiteSetupToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
-    if ((SuiteContentsFinder.SUITE_SETUP_NAME.equals(page.getName()))) {
+    if ((PageData.SUITE_SETUP_NAME.equals(page.getName()))) {
       for (List<WikiPage> pagesForTestSystem : pagesByTestSystem.values()) {
         pagesForTestSystem.add(0, page);
       }

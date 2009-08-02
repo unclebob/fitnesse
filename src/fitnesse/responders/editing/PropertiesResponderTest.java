@@ -61,7 +61,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     for (String attribute : new String[]{"Search", "Edit", "Properties", "Versions", "Refactor", "WhereUsed", "RecentChanges"})
       assertCheckboxChecked(attribute, content);
 
-    for (String attribute : new String[]{"Prune", WikiPage.SECURE_READ, WikiPage.SECURE_WRITE, WikiPage.SECURE_TEST})
+    for (String attribute : new String[]{"Prune", PageData.PropertySECURE_READ, PageData.PropertySECURE_WRITE, PageData.PropertySECURE_TEST})
       assertCheckboxNotChecked(content, attribute);
   }
 
@@ -101,9 +101,9 @@ public class PropertiesResponderTest extends RegexTestCase {
 
     assertFalse(jsonObject.getBoolean("Suite"));
     assertFalse(jsonObject.getBoolean("Prune"));
-    assertFalse(jsonObject.getBoolean(WikiPage.SECURE_READ));
-    assertFalse(jsonObject.getBoolean(WikiPage.SECURE_WRITE));
-    assertFalse(jsonObject.getBoolean(WikiPage.SECURE_TEST));
+    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_READ));
+    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_WRITE));
+    assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
   }
 
   public void testGetVirtualWikiValue() throws Exception {
@@ -122,7 +122,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertSubString("Last modified anonymously", content);
 
     PageData data = page.getData();
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Bill");
+    data.setAttribute(PageData.LAST_MODIFYING_USER, "Bill");
     page.commit(data);
 
     request.setResource("SomePage");

@@ -3,11 +3,11 @@
 package fitnesse.wiki;
 
 import static fitnesse.wiki.PageType.*;
+import static fitnesse.wiki.PageData.*;
 
 import java.util.List;
 
 import util.RegexTestCase;
-import fitnesse.responders.run.SuiteContentsFinder;
 
 public class PageDataTest extends RegexTestCase {
   public WikiPage page;
@@ -151,14 +151,14 @@ public class PageDataTest extends RegexTestCase {
     WikiPage normalPage = crawler.addPage(root, PathParser.parse("NormalPage"));
     WikiPage suitePage3 = crawler.addPage(root, PathParser.parse("TestPageSuite"));
     WikiPage errorLogsPage = crawler.addPage(root, PathParser.parse("ErrorLogs.TestPage"));
-    WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SuiteContentsFinder.SUITE_SETUP_NAME));
-    WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SuiteContentsFinder.SUITE_TEARDOWN_NAME));
+    WikiPage suiteSetupPage = crawler.addPage(root, PathParser.parse(SUITE_SETUP_NAME));
+    WikiPage suiteTearDownPage = crawler.addPage(root, PathParser.parse(SUITE_TEARDOWN_NAME));
 
     PageData data = new PageData(normalPage);
-    assertTrue(data.hasAttribute("Edit"));
-    assertTrue(data.hasAttribute("Search"));
-    assertTrue(data.hasAttribute("Versions"));
-    assertTrue(data.hasAttribute("Files"));
+    assertTrue(data.hasAttribute(PropertyEDIT));
+    assertTrue(data.hasAttribute(PropertySEARCH));
+    assertTrue(data.hasAttribute(PropertyVERSIONS));
+    assertTrue(data.hasAttribute(PropertyFILES));
     assertFalse(data.hasAttribute(TEST.toString()));
     assertFalse(data.hasAttribute(SUITE.toString()));
 
@@ -179,10 +179,10 @@ public class PageDataTest extends RegexTestCase {
 
   public void testAttributesAreTruelyCopiedInCopyConstructor() throws Exception {
     PageData data = root.getData();
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Joe");
+    data.setAttribute(LAST_MODIFYING_USER, "Joe");
     PageData newData = new PageData(data);
-    newData.setAttribute(WikiPage.LAST_MODIFYING_USER, "Jane");
+    newData.setAttribute(LAST_MODIFYING_USER, "Jane");
 
-    assertEquals("Joe", data.getAttribute(WikiPage.LAST_MODIFYING_USER));
+    assertEquals("Joe", data.getAttribute(LAST_MODIFYING_USER));
   }
 }

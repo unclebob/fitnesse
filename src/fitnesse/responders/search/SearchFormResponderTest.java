@@ -4,6 +4,7 @@ package fitnesse.responders.search;
 
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
+import static fitnesse.responders.search.SearchFormResponder.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class SearchFormResponderTest {
     assertHasRegexp("<input.*value=\"Search Properties\".*>", content);
     assertHasRegexp("<input.*name=\"responder\".*value=\"executeSearchProperties\"", content);
 
-    for (String attributeName : SearchFormResponder.ACTION_ATTRIBUTES) {
+    for (String attributeName : SEARCH_ACTION_ATTRIBUTES) {
       assertAttributeOptionCreated(content, attributeName);
     }
   }

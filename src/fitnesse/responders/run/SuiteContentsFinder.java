@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import static fitnesse.wiki.PageData.*;
+
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
@@ -19,19 +21,16 @@ import java.util.List;
 
 public class SuiteContentsFinder {
 
-  public static final String SUITE_SETUP_NAME = "SuiteSetUp";
-  public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
-  
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
 
   public SuiteContentsFinder(final WikiPage pageToRun, final WikiPage root, final SuiteFilter suiteFilter) {
     this.pageToRun = pageToRun;
-    this.wikiRootPage = root;
+    wikiRootPage = root;
     this.suiteFilter = (suiteFilter != null) ? suiteFilter : SuiteFilter.MATCH_ALL;
   }
-  
+
   public List<WikiPage> makePageListForSingleTest() throws Exception {
     LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
 
@@ -40,7 +39,7 @@ public class SuiteContentsFinder {
 
     return pages;
   }
-  
+
   public List<WikiPage> makePageList() throws Exception {
     LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite();
 
@@ -78,7 +77,7 @@ public class SuiteContentsFinder {
     addSetupAndTeardown(pages);
     return pages;
   }
-  
+
   private LinkedList<WikiPage> getAllTestPagesUnder() throws Exception {
     LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
     addTestPagesToSuite(testPages, pageToRun, suiteFilter);
@@ -102,12 +101,12 @@ public class SuiteContentsFinder {
 
     return testPages;
   }
-  
+
   private void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, SuiteFilter suiteFilter) throws Exception {
       if (suiteFilter.isMatchingTest(page)) {
         suite.add(page);
       }
-    
+
       SuiteFilter suiteFilterForChildren = suiteFilter.getFilterForTestsInSuite(page);
 
 	    List<WikiPage> children = getChildren(page);

@@ -54,7 +54,7 @@ public class WikiPageResponderTest extends RegexTestCase {
   public void testAttributeButtons() throws Exception {
     crawler.addPage(root, PathParser.parse("NormalPage"));
     final WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
-    for (final String attribute : WikiPage.NON_SECURITY_ATTRIBUTES) {
+    for (final String attribute : PageData.NON_SECURITY_ATTRIBUTES) {
       final PageData data = noButtonsPage.getData();
       data.removeAttribute(attribute);
       noButtonsPage.commit(data);

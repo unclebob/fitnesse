@@ -11,6 +11,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -106,14 +107,14 @@ public class MergeResponder implements Responder {
 
   private String addHiddenAttributes() {
     StringBuffer buffer = new StringBuffer();
-    if (request.hasInput(WikiPage.PAGE_TYPE_ATTRIBUTE)) {
-      String pageType = (String) request.getInput(WikiPage.PAGE_TYPE_ATTRIBUTE);
+    if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
+      String pageType = (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
       buffer.append("<input type=\"hidden\" name=\""
-          + WikiPage.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
+          + PageData.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
           + "\" checked=\"checked\">");
     }
-    for (int i = 0; i < WikiPage.NON_SECURITY_ATTRIBUTES.length; i++) {
-      String attribute = WikiPage.NON_SECURITY_ATTRIBUTES[i];
+    for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
+      String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
       if (request.hasInput(attribute))
         buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
     }

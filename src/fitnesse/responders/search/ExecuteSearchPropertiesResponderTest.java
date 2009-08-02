@@ -45,7 +45,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   public void testResponseWithNoMatchesWillReturnEmptyPageList()
   throws Exception {
     MockRequest request = setupRequest();
-    request.addInput(PAGE_TYPE, "Suite,Normal");
+    request.addInput(PAGE_TYPE_ATTRIBUTE, "Suite,Normal");
 
     String content = invokeResponder(request);
 
@@ -54,7 +54,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void testResponseWithMatchesWillReturnPageList() throws Exception {
     MockRequest request = setupRequest();
-    request.addInput(PAGE_TYPE, TEST.toString());
+    request.addInput(PAGE_TYPE_ATTRIBUTE, TEST.toString());
 
     String content = invokeResponder(request);
     String[] titles = { "Page", TEST.toString(), "PageOne"};
@@ -123,7 +123,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     MockRequest request = new MockRequest();
     List<PageType> types = Arrays.asList(pageTypes);
     final String commaSeparatedPageTypes = buildPageTypeListForRequest(pageTypes);
-    request.addInput(PAGE_TYPE, commaSeparatedPageTypes);
+    request.addInput(PAGE_TYPE_ATTRIBUTE, commaSeparatedPageTypes);
     assertEquals(types, responder.getPageTypesFromInput(request));
   }
 
@@ -155,7 +155,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void testPageTypesAreOrEd() throws Exception {
     MockRequest request = setupRequest();
-    request.addInput(PAGE_TYPE, "Test,Suite");
+    request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite");
 
     String content = invokeResponder(request);
     String[] titles = { "Page", TEST.toString(), "PageOne" };
@@ -174,7 +174,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void testPageMatchesWithObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
-    request.addInput(PAGE_TYPE, "Test,Suite");
+    request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite");
 
     String content = invokeResponder(request);
     String[] titles = { "Page", TEST.toString(), "ObsoletePage" };
@@ -206,14 +206,13 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void testFindJustObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
-    request.addInput(PAGE_TYPE, "Test,Suite,Normal");
+    request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite,Normal");
     request.addInput(SPECIAL, "obsolete");
 
     String content = invokeResponder(request);
     String[] titles = { "ObsoletePage" };
 
     assertOutputHasRowWithLink(content, titles);
-
 
   }
 }

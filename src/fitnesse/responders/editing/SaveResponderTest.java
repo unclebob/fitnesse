@@ -147,7 +147,7 @@ public class SaveResponderTest {
     request.setCredentials("Aladdin", "open sesame");
     response = responder.makeResponse(new FitNesseContext(root), request);
 
-    String user = root.getChildPage("EditPage").getData().getAttribute(WikiPage.LAST_MODIFYING_USER);
+    String user = root.getChildPage("EditPage").getData().getAttribute(PageData.LAST_MODIFYING_USER);
     assertEquals("Aladdin", user);
   }
 

@@ -52,7 +52,7 @@ public class InMemoryPageTest extends TestCase {
       assertEquals("", versionInfo.getAuthor());
     }
 
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Joe");
+    data.setAttribute(PageData.LAST_MODIFYING_USER, "Joe");
     page1.commit(data);
     page1.commit(data);
 

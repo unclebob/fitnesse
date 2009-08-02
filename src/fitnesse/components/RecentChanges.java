@@ -68,7 +68,7 @@ public class RecentChanges {
   }
 
   private static String makeRecentChangesLine(PageData data) throws Exception {
-    String user = data.getAttribute(WikiPage.LAST_MODIFYING_USER);
+    String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
     if (user == null)
       user = "";
     return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(new Date()) + "|";

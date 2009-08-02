@@ -78,7 +78,7 @@ public class RecentChangesTest extends RegexTestCase {
 
   public void testUsernameColumnWithUser() throws Exception {
     PageData data = page1.getData();
-    data.setAttribute(WikiPage.LAST_MODIFYING_USER, "Aladdin");
+    data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");
     page1.commit(data);
 
     RecentChanges.updateRecentChanges(page1.getData());

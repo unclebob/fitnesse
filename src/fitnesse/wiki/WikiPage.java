@@ -3,25 +3,11 @@
 
 package fitnesse.wiki;
 
-import static fitnesse.wiki.PageType.*;
-
 import java.io.Serializable;
 import java.util.List;
 
-import util.StringUtil;
 
 public interface WikiPage extends Serializable, Comparable<Object> {
-  public static final String SECURE_READ = "secure-read";
-  public static final String SECURE_WRITE = "secure-write";
-  public static final String SECURE_TEST = "secure-test";
-  public static final String LAST_MODIFYING_USER = "LastModifyingUser";
-  public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
-  public static final String[] PAGE_TYPE_ATTRIBUTES = { NORMAL.toString(), TEST.toString(), SUITE.toString() };
-  public static final String[] ACTION_ATTRIBUTES = {"Edit", "Versions", "Properties", "Refactor", "WhereUsed"};
-  public static final String[] NAVIGATION_ATTRIBUTES = {"RecentChanges", "Files", "Search", "Prune"};
-  public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil.combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
-  public static final String[] SECURITY_ATTRIBUTES = {SECURE_READ, SECURE_WRITE, SECURE_TEST};
-
   public WikiPage getParent() throws Exception;
 
   public WikiPage getParentForVariables() throws Exception;
