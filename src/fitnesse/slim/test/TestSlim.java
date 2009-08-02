@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
+import java.util.Date;
 import java.util.List;
 
 public class TestSlim {
@@ -9,6 +10,7 @@ public class TestSlim {
   private String stringArg;
   private int intArg;
   private double doubleArg;
+  private Date dateArg;
   private Integer integerObjectArg;
   private Double doubleObjectArg;
   private char charArg;
@@ -64,6 +66,10 @@ public class TestSlim {
     stringArg = arg;
   }
 
+  public void oneDate(Date arg) {
+    dateArg = arg;
+  }
+
   public void oneList(List<Object> l) {
     listArg = l;
   }
@@ -76,6 +82,10 @@ public class TestSlim {
     return stringArg;
   }
 
+  public Date getDateArg() {
+    return dateArg;
+  }
+  
   public void oneInt(int arg) {
     intArg = arg;
   }

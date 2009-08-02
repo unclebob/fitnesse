@@ -6,11 +6,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static util.ListUtility.list;
 
+import java.util.Date;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.DateConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlim;
 import fitnesse.slim.test.Zork;
@@ -88,6 +91,12 @@ public class SlimMethodInvocationTest {
   public void passOneDouble() throws Exception {
     caller.call("testSlim", "oneDouble", "3.14159");
     assertEquals(3.14159, testSlim.getDoubleArg(), .000001);
+  }
+
+  @Test
+  public void passOneDate() throws Exception {
+    caller.call("testSlim", "oneDate", "5-May-2009");
+    assertEquals((Date) new DateConverter().fromString("5-May-2009"), testSlim.getDateArg());
   }
 
   @Test
