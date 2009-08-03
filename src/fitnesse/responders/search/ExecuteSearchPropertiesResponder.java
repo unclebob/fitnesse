@@ -1,21 +1,17 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_OBSOLETE;
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_SETUP;
-import static fitnesse.responders.search.SearchFormResponder.EXCLUDE_TEARDOWN;
-import static fitnesse.responders.search.SearchFormResponder.IGNORED;
-
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.components.PageFinder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.PropertiesResponder;
+import static fitnesse.responders.search.SearchFormResponder.*;
+
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExecuteSearchPropertiesResponder extends ResultResponder {
 
@@ -24,8 +20,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   protected List<String> getPageTypesFromInput(Request request) {
-    String requestedPageTypes = (String) request
-    .getInput(SearchFormResponder.PAGE_TYPE);
+    String requestedPageTypes = (String) request.getInput(SearchFormResponder.PAGE_TYPE);
     if (requestedPageTypes == null) {
       return null;
     }
