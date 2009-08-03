@@ -2,18 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import fitnesse.components.CommandRunner;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
@@ -23,20 +11,17 @@ import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
-import fitnesse.slimTables.DecisionTable;
-import fitnesse.slimTables.ImportTable;
-import fitnesse.slimTables.OrderedQueryTable;
-import fitnesse.slimTables.QueryTable;
-import fitnesse.slimTables.ScenarioTable;
-import fitnesse.slimTables.ScriptTable;
-import fitnesse.slimTables.SlimErrorTable;
-import fitnesse.slimTables.SlimTable;
-import fitnesse.slimTables.Table;
-import fitnesse.slimTables.TableScanner;
-import fitnesse.slimTables.TableTable;
+import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
   public static final String MESSAGE_ERROR = "!error:";
@@ -122,7 +107,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       slimRunner = new MockCommandRunner();
       createSlimService(slimArguments);
     } else {
-      slimRunner = new CommandRunner(slimCommand, "");
+      slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
     }
     return new ExecutionLog(page, slimRunner);
   }
