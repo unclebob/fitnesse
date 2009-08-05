@@ -5,10 +5,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,13 +31,16 @@ public class SuiteSpecificationRunnerTest {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
     crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
-    crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
+    WikiPage child = crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");
+    PageData data = child.getData();
+    data.setAttribute("Test");
+    child.commit(data);
     crawler.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too");
     request = new MockRequest();
     request.setResource(suitePageName);
     context = FitNesseUtil.makeTestContext(root);
     context.root = root;
-    runner = new SuiteSpecificationRunner(root, context);
+    runner = new SuiteSpecificationRunner(root);
   }
 
 
@@ -63,9 +63,30 @@ public class SuiteSpecificationRunnerTest {
     runner.titleRegEx = "Test";
     runner.findPageMatches();
     assertEquals(2, runner.testPageList.size());
+    runner.titleRegEx = "";
     runner.contentRegEx = "child";
     runner.findPageMatches();
     assertEquals(3, runner.testPageList.size());
+  }
+
+  @Test
+  public void canSeeIfItIsASpecifcationsTable() throws Exception {
+     String page = "<table><tr><td>Suite</td></tr><tr><td>Page</td><td>TestPageOne</td></tr><tr><td></td></tr></table>";
+    HtmlTableScanner scanner = new HtmlTableScanner(page);
+    Table table = scanner.getTable(0);
+    assertTrue(SuiteSpecificationRunner.isASuiteSpecificationsTable(table));
+    page = "<table><tr><td>no suite</td></tr><tr><td>Page</td><td>TestPageOne</td></tr></table>";
+    scanner = new HtmlTableScanner(page);
+    table = scanner.getTable(0);
+    assertFalse(SuiteSpecificationRunner.isASuiteSpecificationsTable(table));
+  }
+
+  @Test
+  public void cannTellIfItIsASuiteSpecificationsPage() throws Exception {
+    String page = "<table><tr><td>Suite</td></tr><tr><td>Page</td><td>TestPageOne</td></tr><tr><td></td></tr></table>";
+    assertTrue(SuiteSpecificationRunner.isASuiteSpecificationsPage(page));
+    page = "<table><tr><td>Suite</td></tr><tr><td>Page</td><td>TestPageOne</td></tr></table>";
+    assertFalse(SuiteSpecificationRunner.isASuiteSpecificationsPage(page));
   }
 
   @Test
@@ -120,5 +141,16 @@ public class SuiteSpecificationRunnerTest {
     page += "<table><tr><td>Suite</td></tr><tr><td>Content</td><td>child</td></tr><tr><td></td><td></td></tr></table>";
     assertTrue(runner.getPageListFromPageContent(page));
     assertEquals(3, runner.testPageList.size());
+  }
+
+  @Test
+  public void shouldntIncludeSuitesInThePageList() throws Exception {
+    WikiPage testSuitePage = crawler.addPage(root,PathParser.parse("SuitePageOne"));
+    PageData data = testSuitePage.getData();
+    data.setAttribute("Suite");
+    testSuitePage.commit(data);
+    String page = "<table><tr><td>Suite</td></tr><tr><td>Title</td><td>One</td></tr><tr><td>Content</td><td></td></tr></table>";
+    assertTrue(runner.getPageListFromPageContent(page));
+    assertEquals(1,runner.testPageList.size());
   }
 }

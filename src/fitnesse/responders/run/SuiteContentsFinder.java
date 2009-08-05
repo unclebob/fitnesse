@@ -2,83 +2,140 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageCrawlerImpl;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtension;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SuiteContentsFinder {
 
   public static final String SUITE_SETUP_NAME = "SuiteSetUp";
   public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
-  
+
   private final WikiPage pageToRun;
   private final WikiPage wikiRootPage;
   private final SuiteFilter suiteFilter;
+  private LinkedList<WikiPage> testPageList;
 
-  public SuiteContentsFinder(final WikiPage pageToRun, final WikiPage root, final SuiteFilter suiteFilter) {
+  public SuiteContentsFinder(final WikiPage pageToRun, final SuiteFilter suiteFilter, WikiPage root) {
     this.pageToRun = pageToRun;
     this.wikiRootPage = root;
     this.suiteFilter = (suiteFilter != null) ? suiteFilter : SuiteFilter.MATCH_ALL;
+    testPageList = new LinkedList();
   }
-  
+
   public List<WikiPage> makePageListForSingleTest() throws Exception {
-    LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
+    testPageList = new LinkedList<WikiPage>();
 
-    pages.add(pageToRun);
-    addSetupAndTeardown(pages);
+    testPageList.add(pageToRun);
+    surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns();
 
-    return pages;
+    return testPageList;
   }
-  
-  public List<WikiPage> makePageList() throws Exception {
-    LinkedList<WikiPage> pages = getAllPagesToRunForThisSuite();
 
-    if (pages.isEmpty()) {
+  public List<WikiPage> makePageList() throws Exception {
+    getAllPagesToRunForThisSuite();
+
+    if (testPageList.isEmpty()) {
       String name = new WikiPagePath(pageToRun).toString();
       WikiPageDummy dummy = new WikiPageDummy("",
         "|Comment|\n|No test found with " + suiteFilter.toString() + " in subwiki !-" + name + "-!!|\n"
       );
       dummy.setParent(wikiRootPage);
-      pages.add(dummy);
+      testPageList.add(dummy);
     }
-    return pages;
+    return testPageList;
   }
 
-  private void addSetupAndTeardown(LinkedList<WikiPage> pages) throws Exception {
-    WikiPage suiteSetUp = PageCrawlerImpl.getClosestInheritedPage(SUITE_SETUP_NAME, pageToRun);
-    if (suiteSetUp != null) {
-      if (pages.contains(suiteSetUp))
-        pages.remove(suiteSetUp);
-      pages.addFirst(suiteSetUp);
-    }
-    WikiPage suiteTearDown = PageCrawlerImpl.getClosestInheritedPage(SUITE_TEARDOWN_NAME, pageToRun);
-    if (suiteTearDown != null) {
-      if (pages.contains(suiteTearDown))
-        pages.remove(suiteTearDown);
-      pages.addLast(suiteTearDown);
+  private void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns() throws Exception {
+    Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups = new HashMap<String, LinkedList<WikiPage>>();
+    createPageSetUpTearDownGroups(pageSetUpTearDownGroups);
+    testPageList.clear();
+    reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);
+  }
+
+  private void createPageSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
+    for (WikiPage page : testPageList) {
+      makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
     }
   }
+
+  private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
+    String group = getSetUpTearDownGroup(page);
+    LinkedList<WikiPage> pageGroup;
+    if (pageSetUpTearDownGroups.get(group) != null) {
+      pageGroup = pageSetUpTearDownGroups.get(group);
+      pageGroup.add(page);
+    } else {
+      pageGroup = new LinkedList<WikiPage>();
+      pageGroup.add(page);
+      pageSetUpTearDownGroups.put(group, pageGroup);
+    }
+  }
+
+  private String getSetUpTearDownGroup(WikiPage page) throws Exception {
+    String setUpPath = getPathForSetUpTearDown(page, SUITE_SETUP_NAME);
+    String tearDownPath = getPathForSetUpTearDown(page, SUITE_TEARDOWN_NAME);
+    return setUpPath + "," + tearDownPath;
+  }
+
+  private String getPathForSetUpTearDown(WikiPage page, String setUpTearDownName) throws Exception {
+    String path = null;
+    WikiPage suiteSetUpTearDown = PageCrawlerImpl.getClosestInheritedPage(setUpTearDownName, page);
+    if (suiteSetUpTearDown != null)
+      path = suiteSetUpTearDown.getPageCrawler().getFullPath(suiteSetUpTearDown).toString();
+    return path;
+  }
+
+   private void reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
+    Set groups = pageSetUpTearDownGroups.keySet();
+     for (Object group : groups) {
+      String setUpAndTearDownGroupKey = group.toString();
+      LinkedList<WikiPage> pageGroup = pageSetUpTearDownGroups.get(group);
+      insertSetUpTearDownPageGroup(setUpAndTearDownGroupKey, pageGroup);
+    }
+  }
+
+  private void insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, LinkedList<WikiPage> pageGroup) throws Exception {
+    insertSetUpForThisGroup(setUpAndTearDownGroupKey);
+    insertPagesOfThisGroup(pageGroup);
+    insertTearDownForThisGroup(setUpAndTearDownGroupKey);
+  }
+
+  private void insertSetUpForThisGroup(String setUpAndTearDown) throws Exception {
+    String setUpPath = setUpAndTearDown.split(",")[0];
+    WikiPage setUpPage = wikiRootPage.getPageCrawler().getPage(wikiRootPage, PathParser.parse(setUpPath));
+    if (setUpPage != null)
+      testPageList.add(setUpPage);
+  }
+  private void insertPagesOfThisGroup(LinkedList<WikiPage> pageGroup) {
+    for (WikiPage page : pageGroup)
+      testPageList.add(page);
+  }
+
+  private void insertTearDownForThisGroup(String setUpAndTearDownGroupKey) throws Exception {
+    String tearDownPath = setUpAndTearDownGroupKey.split(",")[1];
+    WikiPage tearDownPage = wikiRootPage.getPageCrawler().getPage(wikiRootPage, PathParser.parse(tearDownPath));
+    if (tearDownPage != null)
+    testPageList.add(tearDownPage);
+  }
+
 
 
   public LinkedList<WikiPage> getAllPagesToRunForThisSuite() throws Exception {
-    LinkedList<WikiPage> pages = getAllTestPagesUnder();
-    List<WikiPage> referencedPages = gatherCrossReferencedTestPages();
-    pages.addAll(referencedPages);
-    addSetupAndTeardown(pages);
-    return pages;
+    String content = pageToRun.getData().getHtml();
+    if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
+      SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
+      if (runner.getPageListFromPageContent(content))
+        testPageList = runner.testPageList;
+    } else {
+      testPageList = getAllTestPagesUnder();
+      List<WikiPage> referencedPages = gatherCrossReferencedTestPages();
+      testPageList.addAll(referencedPages);
+    }
+    surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns();
+    return testPageList;
   }
-  
+
   private LinkedList<WikiPage> getAllTestPagesUnder() throws Exception {
     LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
     addTestPagesToSuite(testPages, pageToRun, suiteFilter);
@@ -102,35 +159,35 @@ public class SuiteContentsFinder {
 
     return testPages;
   }
-  
+
   private void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, SuiteFilter suiteFilter) throws Exception {
-      if (suiteFilter.isMatchingTest(page)) {
-        suite.add(page);
-      }
-    
-      SuiteFilter suiteFilterForChildren = suiteFilter.getFilterForTestsInSuite(page);
+    if (suiteFilter.isMatchingTest(page)) {
+      suite.add(page);
+    }
 
-	    List<WikiPage> children = getChildren(page);
-	    for (WikiPage child : children) {
-	      addTestPagesToSuite(suite, child, suiteFilterForChildren);
-	    }
-	  }
+    SuiteFilter suiteFilterForChildren = suiteFilter.getFilterForTestsInSuite(page);
 
-	  private static List<WikiPage> getChildren(WikiPage page) throws Exception {
-	    List<WikiPage> children = new ArrayList<WikiPage>();
-	    children.addAll(page.getChildren());
-	    addVirtualChildrenIfAny(page, children);
-	    return children;
-	  }
+    List<WikiPage> children = getChildren(page);
+    for (WikiPage child : children) {
+      addTestPagesToSuite(suite, child, suiteFilterForChildren);
+    }
+  }
 
-	  private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws Exception {
-	    if (context.hasExtension(VirtualCouplingExtension.NAME)) {
-	      VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
-	        VirtualCouplingExtension.NAME
-	      );
-	      children.addAll(extension.getVirtualCoupling().getChildren());
-	    }
-	  }
+  private static List<WikiPage> getChildren(WikiPage page) throws Exception {
+    List<WikiPage> children = new ArrayList<WikiPage>();
+    children.addAll(page.getChildren());
+    addVirtualChildrenIfAny(page, children);
+    return children;
+  }
+
+  private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws Exception {
+    if (context.hasExtension(VirtualCouplingExtension.NAME)) {
+      VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
+        VirtualCouplingExtension.NAME
+      );
+      children.addAll(extension.getVirtualCoupling().getChildren());
+    }
+  }
 
   protected List<WikiPage> gatherCrossReferencedTestPages() throws Exception {
     LinkedList<WikiPage> pages = new LinkedList<WikiPage>();

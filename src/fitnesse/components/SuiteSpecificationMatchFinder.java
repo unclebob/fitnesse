@@ -16,11 +16,16 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
   }
 
   protected boolean pageMatches(WikiPage page) throws Exception {
+    if(!nullOrEmpty(titleRegEx)&&!nullOrEmpty(contentRegEx))
+       return patternMatches(titleRegEx, page.getName())&&patternMatches(contentRegEx,page.getData().getContent());
+    else{
     if (patternMatches(titleRegEx, page.getName()))
       return true;
     if (patternMatches(contentRegEx,page.getData().getContent()))
       return true;
+
     return false;
+    }
   }
 
   private boolean patternMatches(String regEx, String subject) throws Exception {

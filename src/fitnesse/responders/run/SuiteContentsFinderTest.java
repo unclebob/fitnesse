@@ -36,7 +36,7 @@ public class SuiteContentsFinderTest {
     PageData data = root.getData();
     root.commit(data);
     suite = crawler.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
-    testPage = addTestPage(suite, "TestOne", "My test");
+    testPage = addTestPage(suite, "TestOne", "My test and has some content");
   }
   
   private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
@@ -52,7 +52,7 @@ public class SuiteContentsFinderTest {
     WikiPage testPage = crawler.addPage(root, PathParser.parse("SomePage"), "!see PageA\n!see PageB");
     WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
     WikiPage pageB = crawler.addPage(root, PathParser.parse("PageB"));
-    SuiteContentsFinder finder = new SuiteContentsFinder(testPage, root, null);
+    SuiteContentsFinder finder = new SuiteContentsFinder(testPage, null, root);
     List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
     assertEquals(2, xrefTestPages.size());
     assertTrue(xrefTestPages.contains(pageA));
@@ -62,7 +62,7 @@ public class SuiteContentsFinderTest {
   
   private void setUpForGetAllTestPages() throws Exception {
     testPage2 = addTestPage(suite, "TestPageTwo", "test page two");
-    testChildPage = testPage2.addChildPage("TestChildPage");
+    testChildPage = testPage2.addChildPage("ChildPage");
     PageData data = testChildPage.getData();
     data.setAttribute("Test");
     testChildPage.commit(data);
@@ -72,7 +72,7 @@ public class SuiteContentsFinderTest {
   public void testGetAllTestPages() throws Exception {
     setUpForGetAllTestPages();
 
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, root, null);
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> testPages = finder.makePageList();
 
     assertEquals(3, testPages.size());
@@ -85,7 +85,7 @@ public class SuiteContentsFinderTest {
   public void testGetAllTestPagesSortsByQulifiedNames() throws Exception {
     setUpForGetAllTestPages();
     
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, root, null);
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> testPages = finder.makePageList();
 
     assertEquals(3, testPages.size());
@@ -95,19 +95,23 @@ public class SuiteContentsFinderTest {
   }
   
   @Test
-  public void testPagesForTestSystemAreSurroundedBySuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = addTestPage(suite, "AaSlimTest", simpleSlimDecisionTable);
+  public void testPagesForTestSystemAreSurroundedByRespectiveSuiteSetupAndTeardown() throws Exception {
+    WikiPage slimPage = addTestPage(testPage, "AaSlimTest", simpleSlimDecisionTable);
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+    WikiPage setUp2 = crawler.addPage(slimPage, PathParser.parse("SuiteSetUp"), "suite set up");
+    WikiPage tearDown2 = crawler.addPage(slimPage, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, root, null);
-    List<WikiPage> testPages = finder.makePageList();
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
 
-    assertEquals(4, testPages.size());
+    assertEquals(6, testPages.size());
     assertEquals(setUp, testPages.get(0));
-    assertEquals(slimPage, testPages.get(1));
-    assertEquals(testPage, testPages.get(2));
-    assertEquals(tearDown, testPages.get(3));
+    assertEquals(testPage, testPages.get(1));
+    assertEquals(tearDown, testPages.get(2));
+    assertEquals(setUp2, testPages.get(3));
+    assertEquals(slimPage, testPages.get(4));
+    assertEquals(tearDown2, testPages.get(5));
   }
 
   @Test
@@ -115,11 +119,28 @@ public class SuiteContentsFinderTest {
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, root, null);
-    List<WikiPage> testPages = finder.makePageList();
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
     
     assertEquals(3, testPages.size());
     assertSame(setUp, testPages.get(0));
     assertSame(tearDown, testPages.get(2));
+  }
+
+  @Test
+  public void shouldTellIfItIsASpecificationsSuite() throws Exception {
+    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
+    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
+    setUpForGetAllTestPages();
+    String content = "|Suite|\n|Title|Test|\n|Content|.|\n";
+    suite.commit(new PageData(suite,content));
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+    assertEquals(4, testPages.size());
+    assertSame(setUp, testPages.get(0));
+    assertSame(testPage, testPages.get(2));
+    assertSame(testPage2, testPages.get(1));
+    assertSame(tearDown, testPages.get(3));
+
   }
 }

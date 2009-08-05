@@ -1,41 +1,33 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.components.SearchObserver;
 import fitnesse.components.SuiteSpecificationMatchFinder;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.htmlparser.util.ParserException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 public class SuiteSpecificationRunner implements SearchObserver {
   public String titleRegEx;
   public String contentRegEx;
-  public List<WikiPage> testPageList = new ArrayList<WikiPage>();
+  public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
   public WikiPage searchRoot;
-  private FitNesseContext context;
   private WikiPage root;
-  private PageCrawler crawler;
+  public PageCrawler crawler;
 
-  public SuiteSpecificationRunner(WikiPage searchRoot, FitNesseContext context) {
-    this.searchRoot = searchRoot;
-    initializeSearchRequirements(context);
-  }
 
-  public SuiteSpecificationRunner(FitNesseContext context) {
-    initializeSearchRequirements(context);
-  }
-
-  private void initializeSearchRequirements(FitNesseContext context) {
-    this.context = context;
+  public SuiteSpecificationRunner(WikiPage root) {
+    this.root = root;
+    searchRoot = root;
     titleRegEx = "";
     contentRegEx = "";
-    root = context.root;
     crawler = root.getPageCrawler();
   }
+
 
   public void findPageMatches() throws Exception {
     SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, this);
@@ -63,8 +55,6 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
   public boolean getImportantTableInformation(Table table) throws Exception {
-    if (tableIsTooSmall(table))
-      return false;
     if (!isASuiteSpecificationsTable(table))
       return false;
     for (int rowIndex = 0; rowIndex < table.getRowCount(); rowIndex++)
@@ -88,14 +78,9 @@ public class SuiteSpecificationRunner implements SearchObserver {
 
   private void getSearchRoot(Table table, int rowIndex) throws Exception {
     if (table.getCellContents(1, rowIndex) != null) {
-      String title = titleRegEx;
-      titleRegEx = table.getCellContents(1, rowIndex);
-      findPageMatches();
-      searchRoot = testPageList.get(testPageList.size() - 1);
-      testPageList.remove(testPageList.size() - 1);
-      titleRegEx = title;
-    } else
-      searchRoot = null;
+      String searchRootPath = table.getCellContents(1, rowIndex);
+      searchRoot = crawler.getPage(root, PathParser.parse(searchRootPath));
+    }
   }
 
   private void setContentRegEx(Table table, int rowIndex) {
@@ -119,21 +104,32 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
 
-  private boolean tableIsTooSmall(Table table) {
+  private static boolean tableIsTooSmall(Table table) {
     if (table.getRowCount() < 3)
       return true;
     return false;
   }
 
-  private boolean isASuiteSpecificationsTable(Table table) {
-    return table.getCellContents(0, 0).equals("Suite");
+  public static boolean isASuiteSpecificationsTable(Table table) {
+    return !tableIsTooSmall(table) && table.getCellContents(0, 0).equals("Suite");
   }
+
 
   public void hit(WikiPage page) throws Exception {
     for (WikiPage hit : testPageList) {
       if (hit == page)
         return;
     }
-    testPageList.add(page);
+    if (page.getData().hasAttribute("Test"))
+      testPageList.add(page);
+  }
+
+  public static boolean isASuiteSpecificationsPage(String page) throws ParserException {
+    HtmlTableScanner scanner = new HtmlTableScanner(page);
+    if (scanner.getTableCount() > 0) {
+      Table table = scanner.getTable(0);
+      return isASuiteSpecificationsTable(table);
+    }
+    return false;
   }
 }
