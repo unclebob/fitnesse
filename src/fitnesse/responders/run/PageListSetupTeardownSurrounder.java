@@ -1,28 +1,29 @@
 package fitnesse.responders.run;
 
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
-public class PageListSetupTeardownSurrounder {
-  private final SuiteContentsFinder suiteContentsFinder;
+public class PageListSetUpTearDownSurrounder {
+  private WikiPage root;
+  private List<WikiPage> pageList;
 
-  public PageListSetupTeardownSurrounder(SuiteContentsFinder suiteContentsFinder) {
-    this.suiteContentsFinder = suiteContentsFinder;
+  public PageListSetUpTearDownSurrounder(WikiPage root) {
+    this.root = root;
   }
 
-  public void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns() throws Exception {
+  public void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<WikiPage> pageList) throws Exception {
+    this.pageList = pageList;
     Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups = new HashMap<String, LinkedList<WikiPage>>();
     createPageSetUpTearDownGroups(pageSetUpTearDownGroups);
-    suiteContentsFinder.getTestPageList().clear();
+    pageList.clear();
     reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);
   }
 
   private void createPageSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
-    for (WikiPage page : suiteContentsFinder.getTestPageList()) {
+    for (WikiPage page : pageList) {
       makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
     }
   }
@@ -71,20 +72,20 @@ public class PageListSetupTeardownSurrounder {
 
   private void insertSetUpForThisGroup(String setUpAndTearDown) throws Exception {
     String setUpPath = setUpAndTearDown.split(",")[0];
-    WikiPage setUpPage = suiteContentsFinder.getWikiRootPage().getPageCrawler().getPage(suiteContentsFinder.getWikiRootPage(), PathParser.parse(setUpPath));
+    WikiPage setUpPage = root.getPageCrawler().getPage(root, PathParser.parse(setUpPath));
     if (setUpPage != null)
-      suiteContentsFinder.getTestPageList().add(setUpPage);
+      pageList.add(setUpPage);
   }
 
   private void insertPagesOfThisGroup(LinkedList<WikiPage> pageGroup) {
     for (WikiPage page : pageGroup)
-      suiteContentsFinder.getTestPageList().add(page);
+      pageList.add(page);
   }
 
   private void insertTearDownForThisGroup(String setUpAndTearDownGroupKey) throws Exception {
     String tearDownPath = setUpAndTearDownGroupKey.split(",")[1];
-    WikiPage tearDownPage = suiteContentsFinder.getWikiRootPage().getPageCrawler().getPage(suiteContentsFinder.getWikiRootPage(), PathParser.parse(tearDownPath));
+    WikiPage tearDownPage = root.getPageCrawler().getPage(root, PathParser.parse(tearDownPath));
     if (tearDownPage != null)
-      suiteContentsFinder.getTestPageList().add(tearDownPage);
+      pageList.add(tearDownPage);
   }
 }
