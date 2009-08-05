@@ -94,38 +94,6 @@ public class SuiteContentsFinderTest {
     assertEquals(testChildPage, testPages.get(2));
   }
   
-  @Test
-  public void testPagesForTestSystemAreSurroundedByRespectiveSuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = addTestPage(testPage, "AaSlimTest", simpleSlimDecisionTable);
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
-    WikiPage setUp2 = crawler.addPage(slimPage, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown2 = crawler.addPage(slimPage, PathParser.parse("SuiteTearDown"), "suite tear down");
-
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
-
-    assertEquals(6, testPages.size());
-    assertEquals(setUp, testPages.get(0));
-    assertEquals(testPage, testPages.get(1));
-    assertEquals(tearDown, testPages.get(2));
-    assertEquals(setUp2, testPages.get(3));
-    assertEquals(slimPage, testPages.get(4));
-    assertEquals(tearDown2, testPages.get(5));
-  }
-
-  @Test
-  public void testSetUpAndTearDown() throws Exception {
-    WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
-    WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
-
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
-    
-    assertEquals(3, testPages.size());
-    assertSame(setUp, testPages.get(0));
-    assertSame(tearDown, testPages.get(2));
-  }
 
   @Test
   public void shouldTellIfItIsASpecificationsSuite() throws Exception {
@@ -136,11 +104,9 @@ public class SuiteContentsFinderTest {
     suite.commit(new PageData(suite,content));
     SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
     List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
-    assertEquals(4, testPages.size());
-    assertSame(setUp, testPages.get(0));
-    assertSame(testPage, testPages.get(2));
-    assertSame(testPage2, testPages.get(1));
-    assertSame(tearDown, testPages.get(3));
+    assertEquals(2, testPages.size());
+    assertSame(testPage, testPages.get(1));
+    assertSame(testPage2, testPages.get(0));
 
   }
 }
