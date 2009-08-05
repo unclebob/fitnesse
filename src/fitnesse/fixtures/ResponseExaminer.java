@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import fit.ColumnFixture;
+import fitnesse.wikitext.Utils;
+
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import fit.ColumnFixture;
-import fitnesse.wikitext.Utils;
 
 public class ResponseExaminer extends ColumnFixture {
   public String type;
@@ -138,5 +138,9 @@ public class ResponseExaminer extends ColumnFixture {
 
   public String getValue() {
     return value;
+  }
+
+  public void setLine(String line) {
+    this.line = line;
   }
 }

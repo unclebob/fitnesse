@@ -3,18 +3,15 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualEnabledPageCrawler;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
-public class ImportAndViewResponder implements Responder, WikiImporterClient {
+public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
   private WikiPage page;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -59,5 +56,9 @@ public class ImportAndViewResponder implements Responder, WikiImporterClient {
 
   public void pageImportError(WikiPage localPage, Exception e) throws Exception {
     e.printStackTrace();
+  }
+
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
   }
 }

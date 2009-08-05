@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.net.Socket;
-
 import fitnesse.testutil.MockSocket;
+
+import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;

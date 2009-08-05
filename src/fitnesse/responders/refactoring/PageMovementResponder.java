@@ -1,7 +1,5 @@
 package fitnesse.responders.refactoring;
 
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -14,11 +12,9 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
+
+import java.util.List;
 
 public abstract class PageMovementResponder implements SecureResponder {
 
@@ -45,7 +41,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     if (!getAndValidateNewParentPage(context, request)) {
-      return makeErrorMessageResponder(newParentPath.toString() + " does not exist.").makeResponse(context, request);
+      return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(context, request);
     }
 
     if (!getAndValidateRefactoringParameters(request)) {

@@ -143,7 +143,6 @@ public class NegotiateAuthenticatorTest {
     assertEquals(encodedPassword, request.getAuthorizationPassword());
   }
 
-
   @Test
   public void realmIsStrippedIfRequested() throws Exception {
     properties.setProperty("NegotiateAuthenticator.stripRealm", "true");

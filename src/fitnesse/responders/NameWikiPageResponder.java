@@ -3,6 +3,8 @@
 package fitnesse.responders;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
 import org.json.JSONArray;
 import util.StringUtil;
 
@@ -34,5 +36,10 @@ public class NameWikiPageResponder extends BasicWikiPageResponder {
 
   protected String getContentType() {
     return "text/plain";
+  }
+
+  @Override
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
   }
 }

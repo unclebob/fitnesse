@@ -3,11 +3,6 @@
 
 package fitnesse.responders.editing;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -17,13 +12,12 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.VirtualCouplingExtension;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SavePropertiesResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -59,6 +53,7 @@ public class SavePropertiesResponder implements SecureResponder {
     }
 
     String value = (String) request.getInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
+    value = value == null ? "" : value;
     if (!value.equals(data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE))) {
       WikiPage page = data.getWikiPage();
       if (page.hasExtension(VirtualCouplingExtension.NAME)) {

@@ -1,13 +1,9 @@
 package fitnesse.responders;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -18,8 +14,13 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class PacketResponder implements Responder {
+import java.util.ArrayList;
+import java.util.List;
+
+public class PacketResponder implements SecureResponder {
   private SimpleResponse response;
   private WikiPage page;
   private JSONObject packet;
@@ -59,7 +60,7 @@ public class PacketResponder implements Responder {
       Table t = scanner.getTable(i);
       addTableToPacket(t);
     }
-    packet.put("tables", tables);
+    packet.put("tables", tables);                                                             
   }
 
   private void addTableToPacket(Table t) throws JSONException {
@@ -97,5 +98,9 @@ public class PacketResponder implements Responder {
     for (int col = 0; col < t.getColumnCountInRow(row); col++)
       rowList.add(t.getCellContents(col, row));
     return rowList;
+  }
+
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
   }
 }

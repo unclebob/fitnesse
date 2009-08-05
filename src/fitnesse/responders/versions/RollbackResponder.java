@@ -10,6 +10,7 @@ import fitnesse.components.RecentChanges;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -22,6 +23,8 @@ public class RollbackResponder implements SecureResponder {
 
     String resource = request.getResource();
     String version = (String) request.getInput("version");
+    if (version == null)
+      return new ErrorResponder("missing version").makeResponse(context, request);
 
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = context.root.getPageCrawler().getPage(context.root, path);

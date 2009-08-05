@@ -5,6 +5,7 @@ package fitnesse.fixtures;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.wiki.*;
+import fitnesse.authentication.OneUserAuthenticator;
 import org.htmlparser.*;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -29,10 +30,22 @@ public class PageDriver {
     creator.valid();
   }
 
+  public void createPageWithAuthentication(String pageName, String attributes) throws Exception {
+    creator.pageAttributes = attributes;
+    creator.pageContents = "nothing";
+    createPageWithContent(pageName, "");
+  }
+
   public int requestPage(String uri) throws Exception {
     requester.uri = uri;
     requester.execute();
     return requester.status();
+  }
+
+  public int requestPageAuthenticatedByUserAndPassword(String uri, String user, String password) throws Exception {
+    requester.username = user;
+    requester.password = password;
+    return requestPage(uri);
   }
 
   public void makeATestPage(String pageName) throws Exception {
@@ -206,5 +219,9 @@ public class PageDriver {
 
   public void setXmlFormatterTimeTo(String time) throws ParseException {
     XmlFormatter.setTestTime(time);
+  }
+
+  public void givenUserWithPassword(String user, String password) {
+    FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(user, password);
   }
 }

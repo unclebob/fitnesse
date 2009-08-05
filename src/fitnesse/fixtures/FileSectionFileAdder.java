@@ -4,11 +4,9 @@ package fitnesse.fixtures;
 
 import java.io.File;
 
-import fit.ColumnFixture;
-
-public class FileSectionFileAdder extends ColumnFixture {
-  public String path;
-  public String type;
+public class FileSectionFileAdder {
+  private String path;
+  private String type;
 
   public boolean valid() throws Exception {
     File file = null;
@@ -20,5 +18,13 @@ public class FileSectionFileAdder extends ColumnFixture {
       file.createNewFile();
     }
     return file.exists();
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 }

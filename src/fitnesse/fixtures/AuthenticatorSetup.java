@@ -2,15 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fit.ColumnFixture;
 import fitnesse.authentication.OneUserAuthenticator;
 
-public class AuthenticatorSetup extends ColumnFixture {
-  public String username;
-  public String password;
+public class AuthenticatorSetup
+{
+  private String username;
+  private String password;
 
   public String status() {
     FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(username, password);
     return "ok";
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }
