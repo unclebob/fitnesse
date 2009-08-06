@@ -1,37 +1,36 @@
 package fitnesse.responders.search;
 
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
 import static fitnesse.responders.search.SearchFormResponder.PAGE_TYPE;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
+import org.junit.Before;
+import org.junit.Test;
+import static util.RegexTestCase.*;
+import util.StringUtil;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import util.RegexTestCase;
-import util.StringUtil;
-import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
-
-public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
+public class ExecuteSearchPropertiesResponderTest {
   private WikiPage root;
   private PageCrawler crawler;
   private ExecuteSearchPropertiesResponder responder;
+  private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     responder = new ExecuteSearchPropertiesResponder();
+    context = FitNesseUtil.makeTestContext(root);
   }
 
+  @Test
   public void testResponseWithNoParametersWillReturnEmptyPage()
   throws Exception {
     MockRequest request = setupRequest();
@@ -40,6 +39,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertSubString("No search properties", content);
   }
 
+  @Test
   public void testResponseWithNoMatchesWillReturnEmptyPageList()
   throws Exception {
     MockRequest request = setupRequest();
@@ -50,6 +50,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertSubString("No pages", content);
   }
 
+  @Test
   public void testResponseWithMatchesWillReturnPageList() throws Exception {
     MockRequest request = setupRequest();
     request.addInput(PAGE_TYPE, "Test");
@@ -70,7 +71,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private String invokeResponder(MockRequest request) throws Exception {
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
+    Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     return sender.sentData();
@@ -109,6 +110,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
         + tagName.split(" ")[0] + ">", content);
   }
 
+  @Test
   public void testGetPageTypesFromInput() {
     assertPageTypesMatch("Test");
     assertPageTypesMatch("Test", "Normal");
@@ -124,6 +126,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertEquals(types, responder.getPageTypesFromInput(request));
   }
 
+  @Test
   public void testGetAttributesFromInput() {
     MockRequest request = new MockRequest();
     request.addInput(SearchFormResponder.ACTION, "Edit");
@@ -139,6 +142,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertTrue(foundAttributes.get("Properties"));
   }
 
+  @Test
   public void testGetSuitesFromInput() {
     MockRequest request = new MockRequest();
 
@@ -172,6 +176,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertEquals("SuiteTwo", suites[1]);
   }
 
+  @Test
   public void testPageTypesAreOrEd() throws Exception {
     MockRequest request = setupRequest();
     request.addInput(PAGE_TYPE, "Test,Suite");
@@ -191,6 +196,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertOutputHasRowWithLabels(content, "filter1,filter2");
   }
 
+  @Test
   public void testPageMatchesWithObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
     request.addInput(PAGE_TYPE, "Test,Suite");

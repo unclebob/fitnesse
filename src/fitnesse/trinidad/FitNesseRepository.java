@@ -72,7 +72,7 @@ public class FitNesseRepository implements TestRepository {
       WikiPage root = crawler.getPage(context.root, PathParser.parse("."));
 
       SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(suiteRoot,
-          root, null);
+        null, root);
       List<WikiPage> pages = suiteTestFinder.getAllPagesToRunForThisSuite();
 
       // List<WikiPage> pages=SuiteResponder.makePageList(suiteRoot,root,null);
