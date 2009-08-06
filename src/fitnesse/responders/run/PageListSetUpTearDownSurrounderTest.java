@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import fitnesse.wiki.*;
 import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,13 +24,13 @@ public class PageListSetUpTearDownSurrounderTest {
     PageData data = root.getData();
     root.commit(data);
     suite = crawler.addPage(root, PathParser.parse("SuitePageName"), "The is the test suite\n");
-    testPage = crawler.addPage(suite, PathParser.parse("TestOne"), "My test and has some content");
+    testPage = crawler.addPage(suite, PathParser.parse("TestPage"), "My test and has some content");
     surrounder = new PageListSetUpTearDownSurrounder(root);
   }
 
   @Test
   public void testPagesForTestSystemAreSurroundedByRespectiveSuiteSetupAndTeardown() throws Exception {
-    WikiPage slimPage = crawler.addPage(testPage, PathParser.parse("TestPage"));
+    WikiPage slimPage = crawler.addPage(testPage, PathParser.parse("SlimPageTest"));
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"));
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"));
     WikiPage setUp2 = crawler.addPage(slimPage, PathParser.parse("SuiteSetUp"));
@@ -40,12 +41,16 @@ public class PageListSetUpTearDownSurrounderTest {
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
 
     assertEquals(6, testPages.size());
-    assertEquals(setUp, testPages.get(0));
-    assertEquals(testPage, testPages.get(1));
-    assertEquals(tearDown, testPages.get(2));
-    assertEquals(setUp2, testPages.get(3));
-    assertEquals(slimPage, testPages.get(4));
-    assertEquals(tearDown2, testPages.get(5));
+
+    int testPageIndex = testPages.indexOf(testPage);
+    assertTrue(testPageIndex != -1);
+    assertSame(setUp, testPages.get(testPageIndex-1));
+    assertSame(tearDown, testPages.get(testPageIndex+1));
+
+    int slimPageIndex = testPages.indexOf(slimPage);
+    assertTrue(slimPageIndex != -1);
+    assertSame(setUp2, testPages.get(slimPageIndex-1));
+    assertSame(tearDown2, testPages.get(slimPageIndex+1));
   }
 
   @Test
