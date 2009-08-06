@@ -2,29 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.FitNesseContext;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.http.Request;
+import fitnesse.http.Response;
+import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import util.XmlUtil;
+import util.XmlWriter;
+
 import java.io.ByteArrayOutputStream;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import util.XmlUtil;
-import util.XmlWriter;
-import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-
-public class RssResponder implements Responder {
+public class RssResponder implements SecureResponder {
   protected Element channelElement;
   private String resource;
   private WikiPage contextPage;
@@ -165,5 +162,9 @@ public class RssResponder implements Responder {
         FitNesseContext.recentChangesDateFormat)).parse(dateIn, new ParsePosition(0)));
     else
       return dateIn;
+  }
+
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
   }
 }

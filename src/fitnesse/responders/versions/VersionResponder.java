@@ -12,13 +12,9 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageAction;
+import fitnesse.wiki.*;
 
 public class VersionResponder implements SecureResponder {
   private String version;
@@ -27,6 +23,8 @@ public class VersionResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     resource = request.getResource();
     version = (String) request.getInput("version");
+    if (version == null)
+      return new ErrorResponder("No version specified.").makeResponse(context, request);
 
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath path = PathParser.parse(resource);

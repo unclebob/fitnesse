@@ -1,0 +1,19 @@
+!define PATHS {
+!path classes
+!path fitnesse.jar
+!define TEST_SYSTEM (slim)
+!define SLIM_PORT (9000)
+}
+
+!|script|
+|given user|Aladdin|with password|open sesame|
+|given page|ParentPage|with content|${PATHS}|
+|given test locked page|ParentPage.AwkwardTurtle|
+
+!|operation is authenticated|
+|operation|
+|suite|
+|test|
+
+
+

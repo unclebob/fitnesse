@@ -22,6 +22,9 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     PageCrawler crawler = context.root.getPageCrawler();
 
     newParentName = getNameofNewParent(request);
+    if (newParentName == null)
+      return false;
+
     newParentPath = PathParser.parse(newParentName);
     newParentPage = crawler.getPage(context.root, newParentPath);
 

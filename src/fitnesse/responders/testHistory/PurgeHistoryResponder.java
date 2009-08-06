@@ -1,7 +1,9 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -13,7 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PurgeHistoryResponder implements Responder {
+public class PurgeHistoryResponder implements SecureResponder {
   private File resultsDirectory;
   private Date todaysDate;
 
@@ -121,4 +123,7 @@ public class PurgeHistoryResponder implements Responder {
   }
 
 
+  public SecureOperation getSecureOperation() {
+    return new AlwaysSecureOperation();
+  }
 }

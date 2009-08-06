@@ -1,8 +1,10 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
 import fitnesse.VelocityFactory;
+import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -11,7 +13,7 @@ import org.apache.velocity.VelocityContext;
 
 import java.io.File;
 
-public class TestHistoryResponder implements Responder {
+public class TestHistoryResponder implements SecureResponder {
   private File resultsDirectory;
   private boolean generateNullResponseForTest;
 
@@ -49,5 +51,9 @@ public class TestHistoryResponder implements Responder {
 
   public void generateNullResponseForTest() {
     generateNullResponseForTest = true;
+  }
+
+  public SecureOperation getSecureOperation() {
+    return new AlwaysSecureOperation();
   }
 }

@@ -1,10 +1,9 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -21,7 +20,7 @@ public class AddChildPageResponder implements SecureResponder {
   private String pageType;
     
   public SecureOperation getSecureOperation() {
-    return new AlwaysSecureOperation();
+    return new SecureWriteOperation();
   }
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -37,10 +36,11 @@ public class AddChildPageResponder implements SecureResponder {
 
   private void parseRequest(FitNesseContext context, Request request) throws Exception {
     childName = (String) request.getInput("name");
+    childName = childName == null ? "null" : childName;
+    childPath = PathParser.parse(childName);
     currentPagePath = PathParser.parse(request.getResource());
     crawler = context.root.getPageCrawler();
     currentPage = crawler.getPage(context.root, currentPagePath);
-    childPath = PathParser.parse(childName);
     childContent = (String) request.getInput("content");
     pageType = (String) request.getInput("pageType");
     if (childContent == null)

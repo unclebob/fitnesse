@@ -3,34 +3,21 @@
 package fitnesse.fixtures;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import fit.RowFixture;
+public class FileSectionDirectoryListing {
 
-public class FileSectionDirectoryListing extends RowFixture {
-
-  public Object[] query() throws Exception {
+  public List<Object> query() throws Exception {
     File[] files = FileSection.getFileSection().listFiles();
-    Object[] fileWrappers = new Object[files.length];
-    for (int i = 0; i < files.length; i++) {
-      fileWrappers[i] = new FileWrapper(files[i]);
+    List<Object> rows = new ArrayList<Object>();
+    for (File file : files) {
+      List<Object> row = new ArrayList<Object>();
+      int substringLength = FileSection.getFileSection().getPath().length();
+      row.add(Arrays.asList("path", file.getPath().substring(substringLength +1)));
+      rows.add(row);
     }
-    return fileWrappers;
-  }
-
-  public Class<?> getTargetClass() {
-    return FileWrapper.class;
-  }
-
-  public class FileWrapper {
-    private File file;
-
-    public FileWrapper(File file) {
-      this.file = file;
-    }
-
-    public String path() {
-      int subStringLength = FileSection.getFileSection().getPath().length();
-      return file.getPath().substring(subStringLength + 1);
-    }
+    return rows;
   }
 }

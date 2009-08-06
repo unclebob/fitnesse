@@ -1,15 +1,5 @@
-^TestSecureReadPage
-^TestInsecureReadPage
-^TestReadChildOfSecurePage
-^TestSecureEditPage
-^TestSecureSavePage
-^TestSecureProperties
-^TestSecureSaveProperties
-^TestSecureTestPage
-^TestSecureSuitePage
-^TestSecureFilesAccess
-^TestSecureRefactoring
-^TestSearchingIsReadLevel
+!define TEST_SYSTEM {slim}
+!contents -g -h -p
 
 
 

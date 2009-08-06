@@ -2,32 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
-import fitnesse.html.TagGroup;
+import fitnesse.authentication.SecureOperation;
+import fitnesse.authentication.SecureReadOperation;
+import fitnesse.authentication.SecureResponder;
+import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
-public class VersionSelectionResponder implements Responder {
+import java.util.*;
+
+public class VersionSelectionResponder implements SecureResponder {
   private WikiPage page;
   private List<VersionInfo> versions;
   private List<String> ageStrings;
@@ -134,4 +122,7 @@ public class VersionSelectionResponder implements Responder {
     return age;
   }
 
+  public SecureOperation getSecureOperation() {
+    return new SecureReadOperation();
+  }
 }

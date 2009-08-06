@@ -1,5 +1,5 @@
 !c !3 Can't Import From Secure Wiki
-
+!define TEST_SYSTEM {slim}
 !include CreateSecureWiki
 
 Create an importing page.

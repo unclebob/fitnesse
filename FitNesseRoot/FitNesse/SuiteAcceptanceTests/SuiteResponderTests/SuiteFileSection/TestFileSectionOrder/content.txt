@@ -16,8 +16,8 @@ Add some files
 |aDir|dir|true|
 
 Verify that it's present through the file system
-|file section directory listing|
-|path?|
+|query:file section directory listing|
+|path|
 |aFile.txt|
 |bFile.txt|
 |cFile.txt|

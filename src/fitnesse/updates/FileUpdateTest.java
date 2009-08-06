@@ -48,3 +48,4 @@ public class FileUpdateTest extends UpdateTestCase {
       update.doUpdate();
   }
 }
+  
