@@ -114,7 +114,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void performExecution() throws Exception {
-    List<WikiPage> test2run = new SuiteContentsFinder(page, root, null).makePageListForSingleTest();
+    List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
     MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
     runner.setFastTest(fastTest);

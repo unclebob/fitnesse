@@ -73,7 +73,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws Exception {
     FitClient client = startClient(socket);
     SuiteFilter filter = new SuiteFilter(suiteFilter, null, null);
-    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);
+    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     List<WikiPage> testPages = suiteTestFinder.makePageList();
 
     if (shouldIncludePaths) {

@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.*;
+
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
@@ -26,14 +28,18 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   private WikiPage root;
   private PageCrawler crawler;
   private ExecuteSearchPropertiesResponder responder;
+  private FitNesseContext context;
 
+  @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     responder = new ExecuteSearchPropertiesResponder();
+    context = FitNesseUtil.makeTestContext(root);
   }
 
+  @Test
   public void testResponseWithNoParametersWillReturnEmptyPage()
   throws Exception {
     MockRequest request = setupRequest();
@@ -42,6 +48,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertSubString("No search properties", content);
   }
 
+  @Test
   public void testResponseWithNoMatchesWillReturnEmptyPageList()
   throws Exception {
     MockRequest request = setupRequest();
@@ -52,6 +59,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertSubString("No pages", content);
   }
 
+  @Test
   public void testResponseWithMatchesWillReturnPageList() throws Exception {
     MockRequest request = setupRequest();
     request.addInput(PAGE_TYPE_ATTRIBUTE, TEST.toString());
@@ -72,7 +80,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private String invokeResponder(MockRequest request) throws Exception {
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
+    Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     return sender.sentData();
@@ -112,6 +120,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
         + tagName.split(" ")[0] + ">", content);
   }
 
+  @Test
   public void testGetPageTypesFromInput() {
     assertPageTypesMatch(TEST);
     assertPageTypesMatch(TEST, NORMAL);
@@ -139,6 +148,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     return commaSeparatedPageTypes;
   }
 
+  @Test
   public void testGetAttributesFromInput() {
     MockRequest request = new MockRequest();
     request.addInput(ACTION, "Edit");
@@ -153,6 +163,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertTrue(foundAttributes.get("Properties"));
   }
 
+  @Test
   public void testPageTypesAreOrEd() throws Exception {
     MockRequest request = setupRequest();
     request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite");
@@ -172,6 +183,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
     assertOutputHasRowWithLabels(content, "filter1,filter2");
   }
 
+  @Test
   public void testPageMatchesWithObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
     request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite");

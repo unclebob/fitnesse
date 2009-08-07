@@ -27,6 +27,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private TestSystem currentTestSystem = null;
   private boolean isStopped = false;
   private String stopId = null;
+  private PageListSetUpTearDownSurrounder surrounder;
 
   private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
     private static final long serialVersionUID = 1L;
@@ -40,6 +41,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     this.resultsListener = resultsListener;
     this.page = page;
     this.fitNesseContext = fitNesseContext;
+    surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
   }
 
   public void setDebug(boolean isDebug) {
@@ -159,29 +161,10 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws Exception {
     if (testPagesToRun.size() == 0)
       return pagesByTestSystem;
-    WikiPage firstPage = testPagesToRun.get(0);
-    WikiPage lastPage = testPagesToRun.get(testPagesToRun.size() - 1);
-
-    prependSuiteSetupToAllPageLists(pagesByTestSystem, firstPage);
-    appendSuiteTearDownToAllPageLists(pagesByTestSystem, lastPage);
+    for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values())
+      surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
 
     return pagesByTestSystem;
-  }
-
-  private void appendSuiteTearDownToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
-    if (PageData.SUITE_TEARDOWN_NAME.equals(page.getName())) {
-      for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values()) {
-        pagesForTestSystem.add(page);
-      }
-    }
-  }
-
-  private void prependSuiteSetupToAllPageLists(PagesByTestSystem pagesByTestSystem, WikiPage page) throws Exception {
-    if ((PageData.SUITE_SETUP_NAME.equals(page.getName()))) {
-      for (List<WikiPage> pagesForTestSystem : pagesByTestSystem.values()) {
-        pagesForTestSystem.add(0, page);
-      }
-    }
   }
 
   private void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {

@@ -30,7 +30,7 @@ public class SuiteResponder extends TestResponder {
 
   protected void performExecution() throws Exception {
     SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
-    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, root, filter);
+    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
     runner.setDebug(isRemoteDebug());
     runner.executeTestPages();

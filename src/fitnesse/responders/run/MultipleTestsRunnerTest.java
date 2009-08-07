@@ -2,21 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static util.RegexTestCase.*;
+import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import static util.RegexTestCase.assertSubString;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class MultipleTestsRunnerTest {
   private WikiPage root;
@@ -29,11 +25,13 @@ public class MultipleTestsRunnerTest {
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
   private List<WikiPage> testPages;
-  
+  private FitNesseContext context;
+
   @Before
   public void setUp() throws Exception {
     suitePageName = "SuitePage";
     root = InMemoryPage.makeRoot("RooT");
+    context = FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     PageData data = root.getData();
     data.setContent(classpathWidgets());
@@ -45,7 +43,7 @@ public class MultipleTestsRunnerTest {
   
   @Test
   public void testBuildClassPath() throws Exception {
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, null, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     
     String classpath = runner.buildClassPath();
     assertSubString("classes", classpath);
@@ -56,7 +54,7 @@ public class MultipleTestsRunnerTest {
   public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, null, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = runner.makeMapOfPagesByTestSystem();
 
     TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData(), false);
@@ -82,7 +80,7 @@ public class MultipleTestsRunnerTest {
     testPages.add(testPage);
     testPages.add(tearDown);
 
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, null, suite, null);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
     Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = runner.makeMapOfPagesByTestSystem();
     TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData(), false);
     TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData(), false);
