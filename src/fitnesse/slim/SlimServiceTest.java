@@ -34,13 +34,17 @@ public class SlimServiceTest {
 
   private boolean tryCreateSlimService() throws Exception {
     try {
-      SlimService.main(new String[]{"8099"});
+      startSlimService();
       return true;
     } catch (Exception e) {
       return false;
     }
   }
 
+  protected void startSlimService() throws Exception {
+    SlimService.main(new String[]{"8099"});
+  }
+  
   @After
   public void after() throws Exception {
     teardown();
@@ -157,8 +161,8 @@ public class SlimServiceTest {
     statements.add(list("id", "call", "testSlim", "throwNormal"));
     statements.add(list("id2", "call", "testSlim", "throwNormal"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertContainsException("__EXCEPTION__:java.lang.Exception: This is my exception", "id", results);
-    assertContainsException("__EXCEPTION__:java.lang.Exception: This is my exception", "id2", results);
+    assertContainsException("__EXCEPTION__:" + expectedExceptionMessage(), "id", results);
+    assertContainsException("__EXCEPTION__:" + expectedExceptionMessage(), "id2", results);
   }
 
   @Test
@@ -167,8 +171,16 @@ public class SlimServiceTest {
     statements.add(list("id", "call", "testSlim", "throwStopping"));
     statements.add(list("id2", "call", "testSlim", "throwNormal"));
     Map<String, Object> results = slimClient.invokeAndGetResponse(statements);
-    assertContainsException("__EXCEPTION__:ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception", "id", results);
+    assertContainsException("__EXCEPTION__:" + expectedStopTestExceptionMessage(), "id", results);
     assertNull(results.get("id2"));
+  }
+
+  protected String expectedExceptionMessage() {
+    return "java.lang.Exception: This is my exception";
+  }
+  
+  protected String expectedStopTestExceptionMessage() {
+    return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
   }
 }
 

@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * the syntax of a SLIM statement.
  */
 
-public class StatementExecutor {
+public class StatementExecutor implements StatementExecutorInterface {
   private Map<String, Object> instances = new HashMap<String, Object>();
   private Map<String, Object> variables = new HashMap<String, Object>();
   private List<String> paths = new ArrayList<String>();

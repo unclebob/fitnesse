@@ -60,7 +60,7 @@ public class Statement {
     return result.toString();
   }
 
-  public Object execute(StatementExecutor executor) {
+  public Object execute(StatementExecutorInterface executor) {
     Object retval;
     if (operationIs("make"))
       retval = createInstance(executor);
@@ -75,22 +75,22 @@ public class Statement {
     return list(getWord(0), retval);
   }
 
-  private Object addPath(StatementExecutor caller) {
+  private Object addPath(StatementExecutorInterface caller) {
     return caller.addPath(getWord(2));
   }
 
-  private Object createInstance(StatementExecutor caller) {
+  private Object createInstance(StatementExecutorInterface caller) {
     String instanceName = getWord(2);
     String className = getWord(3);
     Object[] args = makeArgsArray(4);
     return caller.create(instanceName, className, args);
   }
 
-  private Object call(StatementExecutor caller) {
+  private Object call(StatementExecutorInterface caller) {
     return callMethodAtIndex(caller, 2);
   }
 
-  private Object callMethodAtIndex(StatementExecutor caller, int methodIndex) {
+  private Object callMethodAtIndex(StatementExecutorInterface caller, int methodIndex) {
     String instanceName = getWord(methodIndex + 0);
     String methodName = getWord(methodIndex + 1);
     Object[] args = makeArgsArray(methodIndex + 2);
@@ -103,7 +103,7 @@ public class Statement {
     return args;
   }
 
-  public Object callAndAssign(StatementExecutor caller) {
+  public Object callAndAssign(StatementExecutorInterface caller) {
     Object result = callMethodAtIndex(caller, 3);
     caller.setVariable(getWord(2), result);
     return result;

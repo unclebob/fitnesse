@@ -14,13 +14,21 @@ public class SlimService extends SocketService {
 
   public static void main(String[] args) throws Exception {
     if (parseCommandLine(args)) {
-      new SlimService(port, verbose);
+      startWithFactory(args, new JavaSlimFactory());
     } else {
-      System.err.println("Invalid command line arguments:" + Arrays.asList(args));
+      parseCommandLineFailed(args);
     }
   }
 
-  static boolean parseCommandLine(String[] args) {
+  protected static void parseCommandLineFailed(String[] args) {
+    System.err.println("Invalid command line arguments:" + Arrays.asList(args));
+  }
+
+  protected static void startWithFactory(String[] args, SlimFactory slimFactory) throws Exception {
+    new SlimService(port, slimFactory.getSlimServer(verbose));
+  }
+
+  protected static boolean parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine("[-v] port");
     if (commandLine.parse(args)) {
       verbose = commandLine.hasOption("v");
@@ -31,12 +39,8 @@ public class SlimService extends SocketService {
     return false;
   }
 
-  public SlimService(int port) throws Exception {
-    this(port, false);
-  }
-
-  public SlimService(int port, boolean verbose) throws Exception {
-    super(port, new SlimServer(verbose));
+  public SlimService(int port, SlimServer slimServer) throws Exception {
+    super(port, slimServer);
     instance = this;
   }
 }

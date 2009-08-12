@@ -11,7 +11,7 @@ import org.junit.Test;
 import fitnesse.slim.test.TestSlim;
 
 public class SlimInstanceCreationTest {
-  private StatementExecutor caller;
+  private StatementExecutorInterface caller;
 
   @Before
   public void setUp() throws Exception {
