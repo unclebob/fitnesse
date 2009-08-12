@@ -1,0 +1,9 @@
+!|Ordered Query:duplicate rows|
+|x|
+|SuiteChildOne.SuiteSetUp                         |
+|SuiteChildOne.TestOneOne                         |
+|SuiteChildOne.TestOneTwo                         |
+|SuiteChildOne.SuiteTearDown                      |blah|
+|SuiteChildOne.SuiteSetUp                         |
+|SuiteChildOne.TestOneThree                       |
+|SuiteChildOne.SuiteTearDown                      |

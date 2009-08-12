@@ -72,5 +72,4 @@ public class OrderedQueryTableTest extends QueryTableBaseTest {
         "[[2] fail(out of order: row 1), pass(4)]]"
     );
   }
-
 }

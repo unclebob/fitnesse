@@ -29,6 +29,8 @@ public class OrderedQueryTable extends QueryTable {
   }
 
   private void markColumn(int tableRow, int matchedRow, int col) {
+    if (col >= fieldNames.size())
+      return; // ignore strange table geometry.
     String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
     table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
