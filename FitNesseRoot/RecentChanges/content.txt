@@ -1,4 +1,6 @@
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestOrderedQueryWithDuplicateRows||14:27:54 Wed, Aug 12, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestOrderedQueryWithDuplicateRows||15:28:35 Wed, Aug 12, 2009|
+|JunkPage.PointOfSale.CanTotalOrder||14:43:12 Wed, Aug 12, 2009|
+|JunkPage.ImportingPage||14:42:42 Wed, Aug 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestImportFromSecureWikiWithCredentials||16:05:29 Wed, Aug 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests|docs|16:04:48 Wed, Aug 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestCantImportFromSecureWiki||16:04:21 Wed, Aug 05, 2009|
@@ -36,11 +38,9 @@
 |FitNesse.UserGuide.TestHistory||17:39:37 Thu, Jul 09, 2009|
 |FitNesse.UserGuide.DownloadingAndInstallingFitNesse||14:50:07 Wed, Jul 08, 2009|
 |FitNesse.UserGuide||14:43:23 Wed, Jul 08, 2009|
-|JunkPage.ImportingPage||12:28:49 Wed, Jul 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BrotherScenarioLibraryIsIncluded||15:41:42 Wed, Jul 22, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSymbolsDontGetTurnedToStringsInTheOutput||16:41:05 Tue, Jul 14, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors||10:04:23 Tue, Jul 14, 2009|
-|JunkPage.PointOfSale.CanTotalOrder||11:17:59 Wed, Jul 08, 2009|
 |FitNesse.UserGuide.RestfulServices||16:35:05 Tue, Jul 07, 2009|
 |FitNesse.UserGuide.RestfulServices.PageHistoryXml||16:27:31 Tue, Jul 07, 2009|
 |FitNesse.UserGuide.RestfulServices.TestHistoryXml||16:19:32 Tue, Jul 07, 2009|
