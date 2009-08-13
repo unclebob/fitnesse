@@ -2,16 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import util.ListUtility;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
+import util.ListUtility;
+
+import java.util.*;
 
 public class QueryTable extends SlimTable {
   protected List<String> fieldNames = new ArrayList<String>();
@@ -73,7 +67,7 @@ public class QueryTable extends SlimTable {
   }
 
   private void markSurplusRows() throws Exception {
-    Set<Integer> unmatchedRows = queryResults.getUnmatchedRows();
+    List<Integer> unmatchedRows = queryResults.getUnmatchedRows();
     for (int unmatchedRow : unmatchedRows) {
       List<String> surplusRow = queryResults.getList(fieldNames, unmatchedRow);
       int newTableRow = table.addRow(surplusRow);
@@ -130,7 +124,7 @@ public class QueryTable extends SlimTable {
 
   class QueryResults {
     private List<Map<String, String>> rows = new ArrayList<Map<String, String>>();
-    private Set<Integer> unmatchedRows = new HashSet<Integer>();
+    private List<Integer> unmatchedRows = new ArrayList<Integer>();
 
     public QueryResults(List<Object> queryResultTable) {
       int rowNumber = 0;
@@ -167,7 +161,7 @@ public class QueryTable extends SlimTable {
       return rows.get(row).get(name);
     }
 
-    public Set<Integer> getUnmatchedRows() {
+    public List<Integer> getUnmatchedRows() {
       return unmatchedRows;
     }
 
@@ -186,7 +180,8 @@ public class QueryTable extends SlimTable {
         for (int fieldIndex = 0; fieldIndex < fieldNames.size(); fieldIndex++)
           new FieldMatcher(fieldIndex, tableRow).eliminateRowsThatDontMatchField();
 
-        unmatchedRows.remove(deepestRow);
+        if (deepestRow >= 0)
+          unmatchedRows.remove(unmatchedRows.indexOf(deepestRow));
         return deepestRow;
       }
 

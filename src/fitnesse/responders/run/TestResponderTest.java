@@ -196,6 +196,13 @@ public class TestResponderTest {
   }
 
   @Test
+  public void pageHistoryLinkIsIncluded() throws Exception {
+    doSimpleRun(passFixtureTable());
+    assertSubString("href=\"TestPage?pageHistory\">", results);
+    assertSubString("[history]", results);
+  }
+
+  @Test
   public void testFixtureThatCrashes() throws Exception {
     responder.setFastTest(false);
     WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
