@@ -16,8 +16,10 @@ import java.util.List;
  */
 public class Statement {
   private ArrayList<Object> words = new ArrayList<Object>();
-
-  public Statement(List<Object> statement) {
+  private NameTranslator methodNameTranslator;
+  
+  public Statement(List<Object> statement, NameTranslator methodNameTranslator) {
+    this.methodNameTranslator = methodNameTranslator;
     for (Object word : statement)
       words.add(word);
   }
@@ -92,7 +94,7 @@ public class Statement {
 
   private Object callMethodAtIndex(StatementExecutorInterface caller, int methodIndex) {
     String instanceName = getWord(methodIndex + 0);
-    String methodName = getWord(methodIndex + 1);
+    String methodName = methodNameTranslator.translate(getWord(methodIndex + 1));
     Object[] args = makeArgsArray(methodIndex + 2);
     return caller.call(instanceName, methodName, args);
   }

@@ -12,15 +12,17 @@ import util.ListUtility;
  */
 public class ListExecutor {
   private StatementExecutorInterface executor;
+  private NameTranslator methodNameTranslator;
   private boolean verbose;
 
-  public ListExecutor(StatementExecutorInterface executor) {
-    this(false, executor);
+  public ListExecutor(SlimFactory slimFactory) throws Exception {
+    this(false, slimFactory);
   }
 
-  protected ListExecutor(boolean verbose, StatementExecutorInterface executor) {
+  protected ListExecutor(boolean verbose, SlimFactory slimFactory) throws Exception {
     this.verbose = verbose;
-    this.executor = executor;
+    this.executor = slimFactory.getStatementExecutor();
+    this.methodNameTranslator = slimFactory.getMethodNameTranslator();
   }
   
   public List<Object> execute(List<Object> statements) {
@@ -31,7 +33,7 @@ public class ListExecutor {
     for (Object statement : statements) {
       List<Object> statementList = ListUtility.uncheckedCast(Object.class, statement);
       verboseMessage(statementList + "\n");
-      Object retVal = new Statement(statementList).execute(executor);
+      Object retVal = new Statement(statementList, methodNameTranslator).execute(executor);
       verboseMessage(retVal);
       verboseMessage("------");
       result.add(retVal);
