@@ -13,4 +13,8 @@ public class SavePageRequester extends ResponseRequester {
     request.addInput(EditResponder.TICKET_ID, "321");
     request.addInput("pageContent", saveContents);
   }
+
+  public void setSaveContents(String saveContents) {
+    this.saveContents = saveContents;
+  }
 }

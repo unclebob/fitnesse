@@ -11,8 +11,8 @@ RecentChanges displays the username of the last user that modified each page.  I
 
 !|Response Examiner|
 |type  |pattern|matches!|contents?|
-|contents|Aladdin|yes||
+|contents|Aladdin|true||
 
 !|Response Examiner|
 |type  |pattern|matches!|
-|contents|Anonymous|no|
+|contents|Anonymous|false|

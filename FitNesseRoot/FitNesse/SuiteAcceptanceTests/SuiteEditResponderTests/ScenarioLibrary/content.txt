@@ -1,0 +1,7 @@
+!|scenario|the edit response should contain|contents|
+|check|request page|$IT?edit|200|
+|ensure|content contains|@contents|
+|show|content|
+
+!|scenario|attempt to edit|page          |
+|check    |request page   |@page?edit|200|

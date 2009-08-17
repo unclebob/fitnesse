@@ -1,3 +1,4 @@
+
 !|Save Page Requester|
 |uri   |save contents|
 |NewPage|þðæö|
@@ -8,4 +9,4 @@
 
 !|Response Examiner|
 |type  |pattern|matches!|contents?|
-|contents|þðæö|yes||
+|contents|þðæö|true||

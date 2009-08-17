@@ -12,9 +12,9 @@ When viewing versions, the user who created each version is listed along with ea
 
 !|Response Examiner|
 |type  |pattern|matches!|contents?|
-|contents|>\d+<|yes||
+|contents|>\d+<|true||
 
 !|Response Examiner|
 |type  |pattern|matches!|
-|contents|tom|yes|
-|contents|jerry|no|
+|contents|tom|true|
+|contents|jerry|false|

@@ -1,3 +1,13 @@
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUnicodeCharacters||20:32:46 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.ScenarioLibrary||20:22:18 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestEditNewPage||20:22:00 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestEditExistingPage||08:55:31 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.SetUp||08:23:09 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameSaved||08:11:21 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameInVersions||08:10:13 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameInRecentChanges||08:09:34 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameInProperties||08:09:02 Fri, Aug 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests||07:58:55 Fri, Aug 14, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestOrderedQueryWithDuplicateRows||15:28:35 Wed, Aug 12, 2009|
 |JunkPage.PointOfSale.CanTotalOrder||14:43:12 Wed, Aug 12, 2009|
 |JunkPage.ImportingPage||14:42:42 Wed, Aug 12, 2009|
@@ -88,13 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.AddNormalWithNameOfSuiteTest||17:11:12 Mon, Jun 01, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.ScenarioLibrary||17:10:21 Mon, Jun 01, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.AddInvalidChildNameTest||17:01:08 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.AddDefaultWithNameOfSuiteTest||16:58:09 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.AddDefaultWithNameOfTestTest||16:57:06 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.AddSimpleChildPageTest||16:40:55 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.AddChildToNonExistentPageTest||16:38:43 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.SetUp||15:59:43 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite||15:55:41 Mon, Jun 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests||15:50:39 Mon, Jun 01, 2009|
-|FitNesse.UserGuide.SliM.ScenarioTable||16:28:45 Wed, May 20, 2009|
-|FitNesse.UserGuide.SpecialPages||16:25:57 Wed, May 20, 2009|
-|ProjectPage.LoginExample.ScenarioLibrary||16:19:13 Wed, May 20, 2009|

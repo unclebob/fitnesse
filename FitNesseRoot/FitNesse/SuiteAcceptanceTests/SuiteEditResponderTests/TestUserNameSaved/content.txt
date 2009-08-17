@@ -2,7 +2,7 @@ The username is saved when a page is edited.  It is visible through use of the !
 
 !|Page Creator|
 |page name|page contents|valid!|
-|TestPage|!lastmodified|yes|
+|TestPage|!lastmodified|true|
 
 !|Response Requester|
 |uri   |status!|contents?|
@@ -11,7 +11,7 @@ The username is saved when a page is edited.  It is visible through use of the !
 The default user is Anonymous.  Anonymous is used when no one is logged in.
 !|Response Examiner|
 |type  |pattern|matches!|contents?|
-|contents|Last modified anonymously.*|yes||
+|contents|Last modified anonymously.*|true||
 
 When a page is saved with a user spcified....
 !|Save Page Requester|
@@ -26,4 +26,4 @@ and then viewed...
 Aladdin will be displayed as the user who last modified this page.
 !|Response Examiner|
 |type  |pattern|matches!|contents?|
-|contents|Last modified by Aladdin.*|yes||
+|contents|Last modified by Aladdin.*|true||
