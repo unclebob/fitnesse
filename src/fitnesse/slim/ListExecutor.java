@@ -11,18 +11,18 @@ import util.ListUtility;
  * executes a list of SLIM statements, and returns a list of return values.
  */
 public class ListExecutor {
-  private StatementExecutor executor;
+  private StatementExecutorInterface executor;
   private boolean verbose;
 
-  public ListExecutor() {
-    this(false);
+  public ListExecutor(StatementExecutorInterface executor) {
+    this(false, executor);
   }
 
-  public ListExecutor(boolean verbose) {
+  protected ListExecutor(boolean verbose, StatementExecutorInterface executor) {
     this.verbose = verbose;
-    this.executor = new StatementExecutor();
+    this.executor = executor;
   }
-
+  
   public List<Object> execute(List<Object> statements) {
     String message = "!1 Instructions";
     verboseMessage(message);

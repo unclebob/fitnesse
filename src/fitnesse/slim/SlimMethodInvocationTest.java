@@ -20,7 +20,7 @@ import fitnesse.slim.test.Zork;
 
 
 public class SlimMethodInvocationTest {
-  private StatementExecutor caller;
+  private StatementExecutorInterface caller;
   private TestSlim testSlim;
 
   @Before

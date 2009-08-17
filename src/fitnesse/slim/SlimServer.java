@@ -18,13 +18,11 @@ public class SlimServer implements SocketServer {
   public static final String EXCEPTION_TAG = "__EXCEPTION__:";
   public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   private boolean verbose;
+  private SlimFactory slimFactory;
 
-  public SlimServer() {
-    this(false);
-  }
-
-  public SlimServer(boolean verbose) {
+  public SlimServer(boolean verbose, SlimFactory slimFactory) {
     this.verbose = verbose;
+    this.slimFactory = slimFactory;
   }
 
   public void serve(Socket s) {
@@ -32,6 +30,7 @@ public class SlimServer implements SocketServer {
       tryProcessInstructions(s);
     } catch (Throwable e) {
     } finally {
+      slimFactory.stop();
       close();
       closeEnclosingServiceInSeperateThread();
     }
@@ -56,8 +55,8 @@ public class SlimServer implements SocketServer {
       more = processOneSetOfInstructions();
   }
 
-  private void initialize(Socket s) throws IOException {
-    executor = new ListExecutor(verbose);
+  private void initialize(Socket s) throws Exception {
+    executor = slimFactory.getListExecutor(verbose);
     reader = new StreamReader(s.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
     writer.write(String.format("Slim -- %s\n", SlimVersion.VERSION));

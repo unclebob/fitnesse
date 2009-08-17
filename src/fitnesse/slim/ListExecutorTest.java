@@ -21,8 +21,9 @@ public class ListExecutorTest {
   private List<Object> expectedResults = new ArrayList<Object>();
 
   @Before
-  public void setup() {
-    executor = new ListExecutor();
+  public void setup() throws Exception {
+    SlimFactory slimFactory = new JavaSlimFactory();
+    executor = slimFactory.getListExecutor(false);
     statements = new ArrayList<Object>();
     statements.add(list("i1", "import", "fitnesse.slim.test"));
     statements.add(list("m1", "make", "testSlim", "TestSlim"));

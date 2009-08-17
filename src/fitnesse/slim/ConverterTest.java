@@ -2,8 +2,6 @@ package fitnesse.slim;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Date;
-
 import org.junit.Test;
 
 import fitnesse.slim.converters.BooleanConverter;
