@@ -27,6 +27,6 @@ If you're running tests in Java you probably don't want to change this.
 
 '''REMOTE_DEBUG_COMMAND''' is the command pattern used to execute tests in debug mode.  See DebugingFixtureCode for more details.
 ''default:'' '''java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m'''
-It has the same formate as the standand '''COMMAND_PATTERN'''
+It has the same format as the standand '''COMMAND_PATTERN'''
 
 '''CLASSPATH_PROPERTY''' specifies the name of the environment variable into which the classpath (gathered from !path statements) will be placed before running the test.  This is most commonly used when the size of the classpath is too large for certain inept operating systems to deal with.  Instead of specifying the %p argument of the COMMAND_PATTERN, you can instead !style_code[!-!define CLASSPATH_PROPERTY {CLASSPATH}-!].  This is most useful for Java.  For other languages it may not have much meaning.

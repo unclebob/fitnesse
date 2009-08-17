@@ -51,7 +51,7 @@ There are several plugins for FitNesse that are avaiable at the following URL: h
 
 !2 FitNesse Reference
 Answers to all your other FitNesse questions.
-|[[Staring and Stopping][>StartingAndStoppingFitNesse]]|''The details of running and stopping the FitNesse wiki/web server''|
+|[[Starting and Stopping][>StartingAndStoppingFitNesse]]|''The details of running and stopping the FitNesse wiki/web server''|
 |[[Development Environment][>TestDevelopmentEnvironment]]|''Setting up your test development environment''|
 |[[Utilities][>FitNesseUtilities]]|''Running FitNesse from a command line, Log files, import, export, and other similar matters.''|
 |[[Customizing Test Execution][>CustomizingTestExecution]]|''Modify the way tests are executed''|
