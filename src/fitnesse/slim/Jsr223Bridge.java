@@ -7,7 +7,7 @@ import java.lang.reflect.Proxy;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-public abstract class Jsr223Bridge {
+public abstract class gitJsr223Bridge {
 
   private ScriptEngine engine;
 

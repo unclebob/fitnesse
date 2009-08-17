@@ -101,7 +101,7 @@
   </target>
 
   <target name="compile" depends="init, stamp-version" description="compFitnesseile the source (make)">
-    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true"/>
+    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" compiler="javac1.6"/>
     <copy file="extra/ant/tasks.properties" todir="classes"/>
   </target>
 
