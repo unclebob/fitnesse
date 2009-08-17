@@ -5,16 +5,15 @@ a page is renamed, those strings should not be affected.
 
 First build a page with lots of these ''protected'' widgets.
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!path TargetPage-!|
-|enter|line|!-http://objectmentor.com/TargetPage-!|
-|enter|line|!-!img http://objectmentor.com/TargetPage.jpg-!|
-|enter|line|!-{{{TargetPage}}}-!|
-|enter|line|!-# TargetPage-!|
-|enter|line|!- !-TargetPage-! -!|
-|enter|line|this link should be renamed !-TargetPage-!|
-|enter|page|!-ProtectedWidgetPage-!|
+!|script|Page Builder|
+|line|!-!path TargetPage-!|
+|line|!-http://objectmentor.com/TargetPage-!|
+|line|!-!img http://objectmentor.com/TargetPage.jpg-!|
+|line|!-{{{TargetPage}}}-!|
+|line|!-# TargetPage-!|
+|line|!- !-TargetPage-! -!|
+|line|this link should be renamed !-TargetPage-!|
+|page|!-ProtectedWidgetPage-!|
 
 Next create the target page.
 
@@ -37,7 +36,7 @@ Next fetch the page.
 Make sure that the new page name does not appear.
 
 |Response Examiner.|
-|type  |pattern|matchCount()|wrapped html?|
+|type  |pattern|matchCount?|wrapped html?|
 |contents|!-RenamedPage&lt;/a>-!|1||
 
 

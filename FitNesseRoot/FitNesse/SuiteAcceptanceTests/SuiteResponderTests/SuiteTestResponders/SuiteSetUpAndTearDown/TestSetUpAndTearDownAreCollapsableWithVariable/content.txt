@@ -3,11 +3,11 @@
 By setting the variables COLLAPSE_SETUP or COLLAPSE_TEARDOWN to true (using the [[!-VariableWidget-!][.FitNesse.MarkupVariables]]), you can tell [[!-FitNesse-!][.FitNesse]] to automatically collapse !-SetUp and TearDown-! when they are rendered.
 ----
 * Create a page with the variable definitions.
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!define COLLAPSE_SETUP {true}-!|
-|enter|line|!-!define COLLAPSE_TEARDOWN {true}-!|
-|enter|page|!-ParentPage-!|
+
+|script|Page Builder|
+|line|!-!define COLLAPSE_SETUP {true}-!|
+|line|!-!define COLLAPSE_TEARDOWN {true}-!|
+|page|!-ParentPage-!|
 
 * Create !-SetUp-! and !-TearDown-!
 |Page creator.|
@@ -16,10 +16,10 @@ By setting the variables COLLAPSE_SETUP or COLLAPSE_TEARDOWN to true (using the 
 |!-TearDown-!|tear down|true|
 
 * Create a child test page
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|test something|
-|enter|page|!-ParentPage.TestPage-!|
+
+|script|Page Builder|
+|line|test something|
+|page|!-ParentPage.TestPage-!|
 
 * Now request the test page
 |Response Requester.|

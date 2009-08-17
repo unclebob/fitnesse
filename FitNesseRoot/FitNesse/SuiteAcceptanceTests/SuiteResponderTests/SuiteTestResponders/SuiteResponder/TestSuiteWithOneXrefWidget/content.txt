@@ -4,19 +4,17 @@ When you execute a suite page, !-FitNesse-! tests all the pages mentioned in !-!
 ----
 Create a simple test page
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!path classes-!|
-|enter|line|!-!path fitnesse.jar-!|
-|enter|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
-|enter|page|!-TestPage-!|
+|script|Page Builder|
+|line|!-!path classes-!|
+|line|!-!path fitnesse.jar-!|
+|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
+|page|!-TestPage-!|
 
 Create a Suite page that mentions the test page in a !-!test-! widget
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!see TestPage-!|
-|enter|page|!-SuitePage-!|
+|script|Page Builder|
+|line|!-!see TestPage-!|
+|page|!-SuitePage-!|
 
 |Response Requester.|
 |uri   |valid?|

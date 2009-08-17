@@ -2,11 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.responders.run.formatters.XmlFormatter;
-import fitnesse.wiki.*;
+import fitnesse.FitNesseExpediter;
 import fitnesse.authentication.OneUserAuthenticator;
-import org.htmlparser.*;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.run.formatters.XmlFormatter;
+import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.testutil.MockSocket;
+import fitnesse.wiki.*;
+import org.htmlparser.Node;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.Tag;
 import org.htmlparser.filters.AndFilter;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.TagNameFilter;
@@ -15,8 +23,8 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PageDriver {
@@ -46,6 +54,36 @@ public class PageDriver {
     requester.username = user;
     requester.password = password;
     return requestPage(uri);
+  }
+
+  public int requestPageSaveWithContentsByUserAndPassword(String pageName, String contents, String username, String password) throws Exception {
+    MockRequest request = new MockRequest();
+    if (username != null)
+      request.setCredentials(username, password);
+    request.addInput("responder", "saveData");
+    request.addInput(EditResponder.TIME_STAMP, "9999999999999");
+    request.addInput(EditResponder.TICKET_ID, "321");
+    request.addInput("pageContent", contents);
+    request.parseRequestUri("/" + pageName);
+    WikiPagePath path = PathParser.parse(request.getResource()); // uri;
+    FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(FitnesseFixtureContext.root, path);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
+    FitnesseFixtureContext.response = expediter.createGoodResponse(request);
+    FitnesseFixtureContext.sender = new MockResponseSender();
+    FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
+    return FitnesseFixtureContext.response.getStatus();
+  }
+
+  public int requestPageSaveWithContents(String pageName, String contents) throws Exception {
+    return requestPageSaveWithContentsByUserAndPassword(pageName, contents, null, null);
+  }
+
+  public String lastModifiedOfPage(String pageName) throws Exception {
+    WikiPage root = FitnesseFixtureContext.root;
+    WikiPagePath pagePath = PathParser.parse(pageName);
+    WikiPage thePage = root.getPageCrawler().getPage(root, pagePath);
+    PageData data = thePage.getData();
+    return data.getAttribute(PageData.LAST_MODIFYING_USER);
   }
 
   public void makeATestPage(String pageName) throws Exception {
@@ -120,8 +158,8 @@ public class PageDriver {
   public int countOfTagWithIdPrefix(String tag, String idPrefix) throws Exception {
     NodeFilter filter =
       new AndFilter(
-          new TagNameFilter(tag),
-          new HasAttributePrefixFilter("id", idPrefix));
+        new TagNameFilter(tag),
+        new HasAttributePrefixFilter("id", idPrefix));
     return getMatchingTags(filter).size();
   }
 
@@ -140,15 +178,15 @@ public class PageDriver {
 
   public int countOfTagWithIdAndWithClassBelowTagWithIdPrefix(String childTag, String childId, String tagClass, String parentTag, String parentIdPrefix) throws Exception {
     NodeList parents = getMatchingTags(
-        new AndFilter(
-            new TagNameFilter(parentTag),
-            new HasAttributePrefixFilter("id", parentIdPrefix))
+      new AndFilter(
+        new TagNameFilter(parentTag),
+        new HasAttributePrefixFilter("id", parentIdPrefix))
     );
 
     NodeFilter predicates[] = {
-        new TagNameFilter(childTag),
-        new HasAttributeFilter("class", tagClass),
-        new HasAttributeFilter("id", childId)
+      new TagNameFilter(childTag),
+      new HasAttributeFilter("class", tagClass),
+      new HasAttributeFilter("id", childId)
     };
     NodeFilter filter = new AndFilter(predicates);
     NodeList matches = parents.extractAllNodesThatMatch(filter, true);

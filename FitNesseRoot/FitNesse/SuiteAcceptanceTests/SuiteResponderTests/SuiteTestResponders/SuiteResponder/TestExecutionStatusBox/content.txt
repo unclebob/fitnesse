@@ -2,18 +2,16 @@ When you execute a suite page, the execution status box will be displayed in the
 ----
 Create a Suite page
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!path classes-!|
-|enter|line|!-!path fitnesse.jar-!|
-|enter|page|!-SuitePage-!|
+!|script|Page Builder|
+|line|!-!path classes-!|
+|line|!-!path fitnesse.jar-!|
+|page|!-SuitePage-!|
 
 Create a simple test page
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
-|enter|page|!-SuitePage.TestPage-!|
+!|script|Page Builder|
+|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
+|page|!-SuitePage.TestPage-!|
 
 Now run the suite page.
 
