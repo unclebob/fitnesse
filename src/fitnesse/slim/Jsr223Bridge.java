@@ -1,13 +1,12 @@
 package fitnesse.slim;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
-public abstract class gitJsr223Bridge {
+public abstract class Jsr223Bridge {
 
   private ScriptEngine engine;
 
