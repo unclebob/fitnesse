@@ -1,26 +1,22 @@
-!|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!path classes-!|
-|enter|line|&bang;path fitnesse.jar|
-|enter|line|!-!contents-!|
-|enter|page|SuiteFodder|
 
-!|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!|fitnesse.testutil.PassFixture|-!|
-|enter|page| SuiteFodder.TestPassing|
+!|script|Page Builder|
+|line|!-!path classes-!|
+|line|&bang;path fitnesse.jar|
+|line|!-!contents-!|
+|page|SuiteFodder|
 
-!|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!|fitnesse.testutil.FailFixture|-!|
-|enter|page| SuiteFodder.TestFailing|
+!|script|Page Builder|
+|line|!-!|fitnesse.testutil.PassFixture|-!|
+|page| SuiteFodder.TestPassing|
 
-!|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!|fitnesse.testutil.IgnoreFixture|-!|
-|enter|page| SuiteFodder.TestIgnoring|
+!|script|Page Builder|
+|line|!-!|fitnesse.testutil.FailFixture|-!|
+|page| SuiteFodder.TestFailing|
 
-!|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!|fitnesse.testutil.ErrorFixture|-!|
-|enter|page| SuiteFodder.TestCrashing|
+!|script|Page Builder|
+|line|!-!|fitnesse.testutil.IgnoreFixture|-!|
+|page| SuiteFodder.TestIgnoring|
+
+!|script|Page Builder|
+|line|!-!|fitnesse.testutil.ErrorFixture|-!|
+|page| SuiteFodder.TestCrashing|

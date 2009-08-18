@@ -1,6 +1,7 @@
-|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests||12:40:00 Tue, Aug 18, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerExitValue||12:39:28 Tue, Aug 18, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerGeneratesXmlReports||16:33:14 Mon, Aug 17, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests||14:01:30 Tue, Aug 18, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerGeneratesXmlReports||13:44:49 Tue, Aug 18, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerExitValue||12:57:23 Tue, Aug 18, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.CreateSamplePages||12:54:15 Tue, Aug 18, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestUnmodifiedPagesAreNotImported||16:04:59 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestAutomaticUpdate||16:03:25 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests||16:02:13 Mon, Aug 17, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.UserGuide.SliM.ScriptTable||09:53:27 Wed, Jun 24, 2009|
 |JunkPage.PointOfSale.ScenarioLibrary||21:17:23 Tue, Jun 23, 2009|
 |JunkPage.PointOfSale||20:45:48 Tue, Jun 23, 2009|
-|JunkPage.PointOfSale.SetUp||20:44:49 Tue, Jun 23, 2009|

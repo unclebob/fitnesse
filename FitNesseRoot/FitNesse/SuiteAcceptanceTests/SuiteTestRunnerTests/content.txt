@@ -3,3 +3,5 @@ The previous command line test runner use a trival implementation which was very
 
 !contents -R2 -g -p
 
+!define TEST_SYSTEM {slim:TEST_RUNNER}
+
