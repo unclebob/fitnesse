@@ -1,3 +1,10 @@
+|FitNesse.UserGuide.TestSuites||15:59:39 Tue, Aug 18, 2009|
+|FitNesse.UserGuide.TestSuites.SuiteQuery||15:57:54 Tue, Aug 18, 2009|
+|FitNesse.UserGuide.TestSuites.TagsAndFilters||15:38:03 Tue, Aug 18, 2009|
+|FitNesse.UserGuide.TestSuites.SubWikiSuites||15:36:58 Tue, Aug 18, 2009|
+|FitNesse.UserGuide.TestSuites.SuiteSetUpAndSuiteTearDown||15:30:39 Tue, Aug 18, 2009|
+|FitNesse.UserGuide.TestSuites.CrossReferenceSuites||15:20:08 Tue, Aug 18, 2009|
+|FitNesse.UserGuide.TestHistory||14:49:30 Tue, Aug 18, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests||14:01:30 Tue, Aug 18, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerGeneratesXmlReports||13:44:49 Tue, Aug 18, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerExitValue||12:57:23 Tue, Aug 18, 2009|
@@ -72,7 +79,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||13:29:25 Tue, Jul 28, 2009|
 |JunkPage.ExceptionTest||09:48:08 Sat, Jul 25, 2009|
 |FitNesse.UserGuide.RestfulServices||17:44:22 Thu, Jul 09, 2009|
-|FitNesse.UserGuide.TestHistory||17:39:37 Thu, Jul 09, 2009|
 |FitNesse.UserGuide.DownloadingAndInstallingFitNesse||14:50:07 Wed, Jul 08, 2009|
 |FitNesse.UserGuide||14:43:23 Wed, Jul 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BrotherScenarioLibraryIsIncluded||15:41:42 Wed, Jul 22, 2009|
@@ -92,9 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestSimpleMove||11:08:31 Tue, Jul 07, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestReferencesOfChildOfMovedPageAreRenamed||11:08:02 Tue, Jul 07, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestMovePageWithSubPages||11:04:14 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestMovePageWithExternalReference||11:03:44 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder||11:03:06 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestMovePageThreeLevelsDown||11:02:37 Tue, Jul 07, 2009|
-|FitNesse.UserGuide.SliM.ScriptTable||09:53:27 Wed, Jun 24, 2009|
-|JunkPage.PointOfSale.ScenarioLibrary||21:17:23 Tue, Jun 23, 2009|
-|JunkPage.PointOfSale||20:45:48 Tue, Jun 23, 2009|

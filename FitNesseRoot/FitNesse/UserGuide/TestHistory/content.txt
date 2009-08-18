@@ -18,4 +18,5 @@ There are buttons at the top of the ''Test History'' page that allow you to purg
 When viewing the history for a page, you can select any two test results by clicking in their checkboxes.  Then, if you click the ''Compare'' button, you will be shown the two test results side-by-side along with an indicator that tells you if the results are identical or not.
 
 Only tests can be compared this way.  Suites cannot.
-!note !style_blue(This is an ''alpha'' level feature.  Lots more goodies coming soon.)
+
+Notice that the comparison is pretty smart.  It tries to line up the two tests on a table-by-table basis.  It can detect if tables have been inserted or deleted.  The % code that you see on the left is just the match score for the tables.
