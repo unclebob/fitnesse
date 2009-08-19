@@ -1,8 +1,13 @@
 <?xml version="1.0"?>
 <properties>
+	<Edit/>
 	<Files/>
 	<Help/>
+	<Properties/>
 	<RecentChanges/>
+	<Refactor/>
 	<Suites>good</Suites>
 	<Test/>
+	<Versions/>
+	<WhereUsed/>
 </properties>

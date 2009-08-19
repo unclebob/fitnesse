@@ -2,19 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import fitnesse.runner.TestRunner;
+import fitnesse.wikitext.Utils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
-import fit.ColumnFixture;
-import fitnesse.runner.TestRunner;
-import fitnesse.wikitext.Utils;
-
-public class TestRunnerFixture extends ColumnFixture {
-  public String pageName;
-  public String args;
+public class TestRunnerFixture {
+  private String pageName;
+  private String args;
   private TestRunner runner;
   private ByteArrayOutputStream outputBytes;
 
@@ -57,5 +56,13 @@ public class TestRunnerFixture extends ColumnFixture {
     output = Utils.escapeHTML(output);
 
     return output;
+  }
+
+  public void setPageName(String pageName) {
+    this.pageName = pageName;
+  }
+
+  public void setArgs(String args) {
+    this.args = args;
   }
 }

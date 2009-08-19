@@ -4,9 +4,7 @@ package fitnesse.fixtures;
 
 import java.util.regex.Pattern;
 
-import fitlibrary.DoFixture;
-
-public class JavaProperties extends DoFixture {
+public class JavaProperties {
   public boolean propertyShouldMatch(String property, String pattern) {
     String value = System.getProperty(property);
     return Pattern.matches(pattern, value);

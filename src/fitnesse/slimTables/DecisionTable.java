@@ -66,7 +66,7 @@ public class DecisionTable extends SlimTable {
 
     private void putColumnHeaderInFunctionOrVariableList(int col) {
       String cell = table.getCellContents(col, 1);
-      if (cell.endsWith("?")) {
+      if (cell.endsWith("?") || cell.endsWith("!")) {
         String funcName = cell.substring(0, cell.length() - 1);
         funcsLeftToRight.add(funcName);
         funcs.put(funcName, col);

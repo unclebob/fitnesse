@@ -35,7 +35,7 @@ Change one of the imported pages.
 Now lets run the Suite.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?suite|yes|
+|ImportingPage?suite|true|
 
 An import message is displayed in the test output.
 !|Response Examiner|
@@ -45,7 +45,7 @@ An import message is displayed in the test output.
 Looking at the imported copy of the modified page will reveal that it was indeed updated.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage.PageOne|yes|
+|ImportingPage.PageOne|true|
 
 !|Response Examiner|
 |type|pattern|matches?|

@@ -4,21 +4,21 @@ example command line: '''!-java fitnesse.runner.TestRunner -xml stdout localhost
 
 !include CreateSamplePages
 
-!|Test Runner Fixture|
-|args|page name|=output?|
-|-xml stdout|SuiteFodder.TestPassing|testXml|
+!|Test Runner Fixture                         |
+|args       |page name              |output?  |
+|-xml stdout|SuiteFodder.TestPassing|$testXml=|
 
-!|String Fixture|
-|value=|starts with?|ends with?|contains?|
-|testXml|&lt;?xml version="1.0"?&gt;|&lt;/testResults&gt;\n|PassFixture|
+!|script|string comparator                                                         |
+|ensure|string|$testXml|starts with|<?xml version="1.0"?>|
+|ensure|string|$testXml|ends with|</testResults>\n\n|
+|ensure|string|$testXml|contains|PassFixture|
 
-!|Test Runner Fixture|
-|args|page name|=output?|
-|-xml stdout|SuiteFodder|suiteXml|
+!|Test Runner Fixture            |
+|args       |page name  |output?|
+|-xml stdout|SuiteFodder|$suiteXml=|
 
-!|String Fixture|
-|value=|contains?|
-|suiteXml|&lt;right&gt;1&lt;/right&gt;|
-|suiteXml|&lt;wrong&gt;1&lt;/wrong&gt;|
-|suiteXml|&lt;ignores&gt;1&lt;/ignores&gt;|
-|suiteXml|&lt;exceptions&gt;1&lt;/exceptions&gt;|
+!|script|string comparator|
+|ensure|string|$suiteXml|contains|<right>1</right>|
+|ensure|string|$suiteXml|contains|<wrong>1</wrong>|
+|ensure|string|$suiteXml|contains|<ignores>1</ignores>|
+|ensure|string|$suiteXml|contains|<exceptions>1</exceptions>|

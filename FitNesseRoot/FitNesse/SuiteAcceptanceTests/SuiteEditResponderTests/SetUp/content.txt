@@ -1,0 +1,3 @@
+!include <SuiteAcceptanceTests.SetUp
+
+!|script|page driver|

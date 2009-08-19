@@ -2,24 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static util.ListUtility.list;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import static util.ListUtility.list;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DecisionTableTest {
   private WikiPage root;
@@ -99,6 +97,28 @@ public class DecisionTableTest {
     List<Object> expectedInstructions = list(
       list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument"),
       list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "5"), list("7", "9"))),
+      list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
+      list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
+      list("decisionTable_id_4", "call", "decisionTable_id", "execute"),
+      list("decisionTable_id_5", "call", "decisionTable_id", "func"),
+      list("decisionTable_id_6", "call", "decisionTable_id", "reset"),
+      list("decisionTable_id_7", "call", "decisionTable_id", "setVar", "7"),
+      list("decisionTable_id_8", "call", "decisionTable_id", "execute"),
+      list("decisionTable_id_9", "call", "decisionTable_id", "func")
+    );
+    assertEquals(expectedInstructions.toString(), instructions.toString());
+  }
+
+  @Test
+  public void canUseBangToCallFunction() throws Exception {
+    makeDecisionTableAndBuildInstructions(
+      "|DT:fixture|argument|\n" +
+      "|var|func!|\n" +
+      "|3|5|\n" +
+      "|7|9|\n");
+    List<Object> expectedInstructions = list(
+      list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument"),
+      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func!"), list("3", "5"), list("7", "9"))),
       list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
       list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
       list("decisionTable_id_4", "call", "decisionTable_id", "execute"),

@@ -5,23 +5,20 @@ This example shows just one test subpage being executed.
 
 Create a Suite page
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-!path classes-!|
-|enter|line|!-!path fitnesse.jar-!|
-|enter|page|!-SuitePage-!|
+|script|Page Builder|
+|line|!-!path classes-!|
+|line|!-!path fitnesse.jar-!|
+|page|!-SuitePage-!|
 
 Create two sub pages
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
-|enter|page|!-SuitePage.TestPageOne-!|
+|script|Page Builder|
+|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
+|page|!-SuitePage.TestPageOne-!|
 
-|Action Fixture.|
-|start|Page Builder|
-|enter|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
-|enter|page|!-SuitePage.TestPageTwo-!|
+|script|Page Builder|
+|line|!-|!-fitnesse.testutil.PassFixture-!-!!-|-!|
+|page|!-SuitePage.TestPageTwo-!|
 
 Now run the suite page.
 
