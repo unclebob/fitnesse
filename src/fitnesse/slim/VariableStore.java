@@ -42,15 +42,17 @@ public class VariableStore {
     Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     int startingPosition = 0;
     while (true) {
-      if ("".equals(arg))
+      if ("".equals(arg) || null == arg) {
         break;
+      }
       Matcher symbolMatcher = symbolPattern.matcher(arg.substring(startingPosition));
       if (symbolMatcher.find()) {
         String symbolName = symbolMatcher.group(1);
         arg = replaceSymbolInArg(arg, symbolName);
         startingPosition += symbolMatcher.start(1);
-      } else
+      } else {
         break;
+      }
     }
     return arg;
   }
