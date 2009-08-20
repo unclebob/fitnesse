@@ -23,6 +23,13 @@ public class TestRunnerFixture {
     runner.run(buildArgs());
   }
 
+  public boolean outputForPageWithArgsMatches(String page, String args, String expected) throws Exception {
+    this.pageName = page;
+    this.args = args;
+    execute();
+    return output().indexOf(expected) != -1;
+  }
+
   private String[] buildArgs() {
     List<String> list = new LinkedList<String>();
     if (args != null && !args.equals("")) {
@@ -41,8 +48,7 @@ public class TestRunnerFixture {
     list.add(String.valueOf(FitnesseFixtureContext.context.port));
     list.add(pageName);
 
-    return (String[]) list.toArray(new String[]
-      {});
+    return list.toArray(new String[]{});
   }
 
   public int exitCode() {

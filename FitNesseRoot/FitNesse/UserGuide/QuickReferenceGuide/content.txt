@@ -239,22 +239,26 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${CODE} PATH_SEPARATOR    ${CODEend}  |${SPC} : ${SPC} ''!-(system-dependent)-!''                                               |${SPC} : ${SPC} ''!-(system-dependent)-!''                                              |${SPC} !-;-! ${SPC}                                                                     |
 |${CODE} TEST_RUNNER       ${CODEend}  |!-fit.FitServer-!                                                                        |!-fitlibrary.suite.FitLibraryServer-!                                                   |!-dotnet\FitServer.exe-!                                                                |
 
-|''' NAME '''                         |''' Default '''  |''' Values '''                |''' Notes '''                                                                                                                |
-|${CODE} TEST_SYSTEM       ${CODEend} |!c fit           |!c fit&bar;slim               |'' Selects the test system to use for this, and descendant pages.''                                                          |
-|${CODE} SLIM_PORT         ${CODEend} |!c 8085          |!c integer                    |'' Selects the starting port number in a range of 10 for slim.''                                                             |
-|${CODE} CLASSPATH_PROPERTY${CODEend} |!c nil           |!c ''an environment variable''|'' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See CustomizingTestExecution.''|
-|${CODE} CM_SYSTEM         ${CODEend} |!c nil           |!c java class                 |'' Selects the class that will handle CM system events.''                                                                    |
-|${CODE} COLLAPSE_SETUP    ${CODEend} |!c false         |!c true${BAR}false            |'' Collapses all !-SetUps-! ''                                                                                               |
-|${CODE} COLLAPSE_TEARDOWN ${CODEend} |!c false         |!c true${BAR}false            |'' Collapses all !-TearDowns-! ''                                                                                            |
-|${CODE} FILTER_TOC        ${CODEend} |!c false         |!c true${BAR}false            |'' Append suite fiters to TOC ''                                                                                             |
-|${CODE} HELP_PREFIX_TOC   ${CODEend} |!c :<''space''>  |!c ''any string''             |'' Define prefix for help text suffix ''                                                                                     |
-|${CODE} HELP_TOC          ${CODEend} |!c false         |!c true${BAR}false            |'' Append help text to TOC ''                                                                                                |
-|${CODE} MORE_SUFFIX_TOC   ${CODEend} |!c <''space''>...|!c ''any string''             |'' Define sequence to show more TOC levels ''                                                                                |
-|${CODE} PROPERTY_CHARACTERS${CODEend}|!c !- *+@>- -!   |!c ''any characters''         |'' Define property icons for TOC ''                                                                                          |
-|${CODE} PROPERTY_TOC      ${CODEend} |!c false         |!c true${BAR}false            |'' Append property icons to TOC ''                                                                                           |
-|${CODE} REGRACE_LINK      ${CODEend} |!c false         |!c true${BAR}false            |'' Makes links graceful ''                                                                                                   |
-|${CODE} REGRACE_TOC       ${CODEend} |!c false         |!c true${BAR}false            |'' Makes !contents list graceful ''                                                                                          |
-|${CODE} RSS_PREFIX        ${CODEend} |!c               |!c                            |'' Link prefix for [[RSS Feeds][RssFeed]] ''                                                                                 |
+|''' NAME '''                          |''' Default '''  |''' Values '''                |''' Notes '''                                                                                                                |
+|${CODE} TEST_SYSTEM ${CODEend}        |!c fit           |!c fit&bar;slim               |'' Selects the test system to use for this, and descendant pages.''                                                          |
+|${CODE} SLIM_PORT ${CODEend}          |!c 8085          |!c integer                    |'' Selects the starting port number in a range of 10 for slim.''                                                             |
+|${CODE} CLASSPATH_PROPERTY ${CODEend} |!c nil           |!c ''an environment variable''|'' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See CustomizingTestExecution.''|
+|${CODE} CM_SYSTEM ${CODEend}          |!c nil           |!c java class                 |'' Selects the class that will handle CM system events.''                                                                    |
+|${CODE} COLLAPSE_SETUP ${CODEend}     |!c false         |!c true${BAR}false            |'' Collapses all !-SetUps-! ''                                                                                               |
+|${CODE} COLLAPSE_TEARDOWN ${CODEend}  |!c false         |!c true${BAR}false            |'' Collapses all !-TearDowns-! ''                                                                                            |
+|${CODE} FILTER_TOC ${CODEend}         |!c false         |!c true${BAR}false            |'' Append suite fiters to TOC ''                                                                                             |
+|${CODE} HELP_PREFIX_TOC ${CODEend}    |!c :<''space''>  |!c ''any string''             |'' Define prefix for help text suffix ''                                                                                     |
+|${CODE} HELP_TOC ${CODEend}           |!c false         |!c true${BAR}false            |'' Append help text to TOC ''                                                                                                |
+|${CODE} MORE_SUFFIX_TOC ${CODEend}    |!c <''space''>...|!c ''any string''             |'' Define sequence to show more TOC levels ''                                                                                |
+|${CODE} PROPERTY_CHARACTERS ${CODEend}|!c !- *+@>- -!   |!c ''any characters''         |'' Define property icons for TOC ''                                                                                          |
+|${CODE} PROPERTY_TOC ${CODEend}       |!c false         |!c true${BAR}false            |'' Append property icons to TOC ''                                                                                           |
+|${CODE} REGRACE_LINK ${CODEend}       |!c false         |!c true${BAR}false            |'' Makes links graceful ''                                                                                                   |
+|${CODE} REGRACE_TOC ${CODEend}        |!c false         |!c true${BAR}false            |'' Makes !contents list graceful ''                                                                                          |
+|${CODE} RSS_PREFIX ${CODEend}         |!c               |!c                            |'' Link prefix for [[RSS Feeds][RssFeed]] ''                                                                                 |
+|${CODE} ''PAGE_NAME'' ${CODEend}      |!c               |!c Read Only                  |'' Name of current page''                                                                                                    |
+|${CODE} ''PAGE_PATH '' ${CODEend}     |!c               |!c Read Only                  |'' Fully qualified name of parent. ''                                                                                        |
+|${CODE} ''FITNESSE_PORT'' ${CODEend}  |!c               |!c Read Only                  |'' Port number that fitnesse is using. ''                                                                                    |
+
 !note (See the ''root'' page for overrides)
 
 #-------------------------------------------------------------------------------------------

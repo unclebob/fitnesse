@@ -341,14 +341,11 @@ public class SuiteResponderTest {
     for (int elementIndex = 0; elementIndex < 2; elementIndex++) {
       testResult = (Element) resultList.item(elementIndex);
       String pageName = XmlUtil.getTextValue(testResult, "relativePageName");
+      assertSubString(pageName + "?pageHistory&resultDate=", XmlUtil.getTextValue(testResult, "pageHistoryLink"));
       if ("SlimTest".equals(pageName)) {
         assertCounts(testResult, "2", "0", "0", "0");
-        assertSubString("DT:fitnesse.slim.test.TestSlim", XmlUtil.getTextValue(testResult, "content"));
-        Element instructions = XmlUtil.getElementByTagName(testResult, "instructions");
-        assertTrue(instructions != null);
       } else if ("TestOne".equals(pageName)) {
         assertCounts(testResult, "1", "0", "0", "0");
-        assertSubString("PassFixture", XmlUtil.getTextValue(testResult, "content"));
       } else {
         fail(pageName);
       }

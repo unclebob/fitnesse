@@ -7,9 +7,18 @@ import static util.ListUtility.list;
 import java.util.List;
 
 public class TestTable {
+  private String param = "";
+
+  public TestTable(String x) {
+    param = x;
+  }
+
+  public TestTable() {
+  }
+
   public List<?> doTable(List<?> l) {
     return list(
-      list("pass", "error:huh", ""),
+      list("pass", "error:huh", param),
       list("bill", "no change", "pass:jake")
     );
   }

@@ -11,7 +11,7 @@ example command line: '''!-java fitnesse.runner.TestRunner -xml stdout localhost
 !|script|string comparator                                                         |
 |ensure|string|$testXml|starts with|<?xml version="1.0"?>|
 |ensure|string|$testXml|ends with|</testResults>\n\n|
-|ensure|string|$testXml|contains|PassFixture|
+|ensure|string|$testXml|contains|<pageHistoryLink>SuiteFodder.TestPassing?pageHistory|
 
 !|Test Runner Fixture            |
 |args       |page name  |output?|

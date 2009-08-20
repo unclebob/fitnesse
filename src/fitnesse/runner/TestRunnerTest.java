@@ -2,35 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import fitnesse.responders.run.FitClientResponderTest;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertDoesntHaveRegexp;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertMatches;
-import static util.RegexTestCase.assertNotSubString;
-import static util.RegexTestCase.assertSubString;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import util.FileUtil;
+import static util.RegexTestCase.*;
 import util.XmlUtil;
-import fitnesse.responders.run.FitClientResponderTest;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class TestRunnerTest {
   static String endl = System.getProperty("line.separator");
@@ -86,21 +80,21 @@ public class TestRunnerTest {
   @Test
   public void verbosePassing() throws Exception {
     runPage("-v", "SuitePage.TestPassing");
-    assertEquals("Test Runner for Root Path: TestPassing" + endl +
-      "  Page:TestPassing right:1, wrong:0, ignored:0, exceptions:0" + endl +
-      "Test Pages: 1 right, 0 wrong, 0 ignored, 0 exceptions" + endl +
-      "Assertions: 1 right, 0 wrong, 0 ignored, 0 exceptions" + endl,
-      outputBytes.toString());
+    String output = outputBytes.toString();
+    assertSubString("Test Runner for Root Path: TestPassing", output);
+    assertSubString("Page:TestPassing right:1, wrong:0, ignored:0, exceptions:0", output);
+    assertSubString("Test Pages: 1 right, 0 wrong, 0 ignored, 0 exceptions", output);
+    assertSubString("Assertions: 1 right, 0 wrong, 0 ignored, 0 exceptions", output);
   }
 
   @Test
   public void verboseFailing() throws Exception {
     runPage("-v", "SuitePage.TestFailing");
-    assertEquals("Test Runner for Root Path: TestFailing" + endl +
-      "* Page:TestFailing right:0, wrong:1, ignored:0, exceptions:0" + endl +
-      "Test Pages: 0 right, 1 wrong, 0 ignored, 0 exceptions" + endl +
-      "Assertions: 0 right, 1 wrong, 0 ignored, 0 exceptions" + endl,
-      outputBytes.toString());
+    String output = outputBytes.toString();
+    assertSubString("Test Runner for Root Path: TestFailing", output);
+    assertSubString("* Page:TestFailing right:0, wrong:1, ignored:0, exceptions:0", output);
+    assertSubString("Test Pages: 0 right, 1 wrong, 0 ignored, 0 exceptions", output);
+    assertSubString("Assertions: 0 right, 1 wrong, 0 ignored, 0 exceptions", output);
   }
 
   @Test
@@ -131,8 +125,8 @@ public class TestRunnerTest {
   ) throws Exception {
     Element resultElement = (Element) result;
     assertEquals(pageName, XmlUtil.getTextValue(resultElement, "relativePageName"));
-    String content = XmlUtil.getTextValue(resultElement, "content");
-    assertSubString(fixtureName, content);
+    String content = XmlUtil.getTextValue(resultElement, "pageHistoryLink");
+    assertSubString(String.format("%s?pageHistory&resultDate=", pageName), content);
     Element counts = XmlUtil.getElementByTagName(resultElement, "counts");
     assertCounts(counts, right, wrong, ignores, exceptions);
   }

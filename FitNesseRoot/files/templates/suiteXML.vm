@@ -12,62 +12,10 @@
       <ignores>$result.Ignores</ignores>
       <exceptions>$result.Exceptions</exceptions>
     </counts>
-    <content><![CDATA[$result.Content]]></content>
     <relativePageName>$result.RelativePageName</relativePageName>
+    <pageHistoryLink>$reference.getPageName()?pageHistory&amp;resultDate=$reference.getResultDate()&amp;format=xml</pageHistoryLink>
     #if($result.Tags)
     <tags>$result.Tags</tags>
-    #end
-
-    #if($result.Tables.size() > 0)
-    <tables>
-      #foreach($table in $result.Tables)
-      <table>
-        <name>$table.Name</name>
-        #foreach($row in $table)
-        <row>
-          #foreach($col in $row)
-          <col><![CDATA[$col]]></col>
-          #end
-
-        </row>
-        #end
-
-      </table>
-      #end
-
-    </tables>
-    #end
-
-    #if($result.Instructions.size() > 0)
-
-    <instructions>
-      #foreach($instructionResult in $result.Instructions)
-      <instructionResult>
-        <instruction><![CDATA[$instructionResult.Instruction]]></instruction>
-        <slimResult><![CDATA[$instructionResult.SlimResult]]></slimResult>
-        #foreach($expectation in $instructionResult.Expectations)
-        <expectation>
-          <status>$expectation.Status</status>
-          <instructionId>$expectation.InstructionId</instructionId>
-          <col>$expectation.Col</col>
-          <row>$expectation.Row</row>
-          <type>$expectation.Type</type>
-          #if($expectation.Actual)
-          <actual><![CDATA[$expectation.Actual]]></actual>
-          #end
-          #if($expectation.Expected)
-          <expected><![CDATA[$expectation.Expected]]></expected>
-          #end
-          #if($expectation.EvaluationMessage)
-          <evaluationMessage><![CDATA[$expectation.EvaluationMessage]]></evaluationMessage>
-          #end
-        </expectation>
-        #end
-
-      </instructionResult>
-      #end
-
-    </instructions>
     #end
 
   </result>
