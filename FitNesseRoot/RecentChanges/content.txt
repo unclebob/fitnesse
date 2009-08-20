@@ -1,3 +1,8 @@
+|FitNesse.UserGuide.QuickReferenceGuide||09:19:28 Wed, Aug 19, 2009|
+|JunkPage.VarPage||09:07:06 Wed, Aug 19, 2009|
+|JunkPage.TestTableTable||08:53:50 Wed, Aug 19, 2009|
+|||20:45:23 Tue, Aug 18, 2009|
+|FrontPage||20:45:07 Tue, Aug 18, 2009|
 |FitNesse.UserGuide.TestSuites||15:59:39 Tue, Aug 18, 2009|
 |FitNesse.UserGuide.TestSuites.SuiteQuery||15:57:54 Tue, Aug 18, 2009|
 |FitNesse.UserGuide.TestSuites.TagsAndFilters||15:38:03 Tue, Aug 18, 2009|
@@ -73,7 +78,6 @@
 |JunkPage.SuiteTearDown||17:06:35 Tue, Aug 04, 2009|
 |JunkPage.SuiteSetUp||17:06:20 Tue, Aug 04, 2009|
 |JunkPage||17:05:31 Tue, Aug 04, 2009|
-|FitNesse.UserGuide.QuickReferenceGuide||11:30:15 Thu, Jul 30, 2009|
 |FitNesse.UserGuide.CustomizingTestExecution||11:27:16 Thu, Jul 30, 2009|
 |JunkPage.GregorsBug||11:16:48 Thu, Jul 30, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||13:29:25 Tue, Jul 28, 2009|
@@ -94,7 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteVersionResponder.TestUsenameInVersionList||13:05:49 Tue, Jul 07, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSecureSavePage||13:03:29 Tue, Jul 07, 2009|
 |FitNesse.UserGuide.RestfulPackets||11:42:51 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteRenameResponder.TestRenameDoesNotMove||11:09:26 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestSimpleMove||11:08:31 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestReferencesOfChildOfMovedPageAreRenamed||11:08:02 Tue, Jul 07, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteMoveResponder.TestMovePageWithSubPages||11:04:14 Tue, Jul 07, 2009|

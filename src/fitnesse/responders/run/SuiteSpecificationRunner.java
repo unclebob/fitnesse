@@ -28,7 +28,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
     crawler = root.getPageCrawler();
   }
 
-
+                                                                                              
   public void findPageMatches() throws Exception {
     SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, this);
     finder.search(searchRoot);
