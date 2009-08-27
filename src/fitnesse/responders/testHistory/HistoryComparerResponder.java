@@ -13,15 +13,15 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Set;
-import java.text.SimpleDateFormat;
 
 public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
-  public String baseDir = "";
   private VelocityContext velocityContext;
   private String firstFileName = "";
   private String secondFileName = "";
@@ -30,6 +30,7 @@ public class HistoryComparerResponder implements Responder {
   public boolean testing = false;
 
   private int count;
+  private FitNesseContext context;
 
   public HistoryComparerResponder(HistoryComparer historyComparer) {
     comparer = historyComparer;
@@ -40,6 +41,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.context = context;
     initializeReponseComponents(request);
     if (!getFileNameFromRequest(request))
       return makeErrorResponse(context, request, "Compare Failed because the wrong number of Input Files were given. " +
@@ -64,17 +66,15 @@ public class HistoryComparerResponder implements Responder {
     return ((new File(firstFilePath)).exists()) || ((new File(secondFilePath)).exists());
   }
 
-  private void initializeReponseComponents(Request request) {
+  private void initializeReponseComponents(Request request) throws IOException {
     if (comparer == null)
       comparer = new HistoryComparer();
-    if (baseDir.equals(""))
-      baseDir = "FitNesseRoot/files/testResults/";
     velocityContext = new VelocityContext();
     velocityContext.put("pageTitle", makePageTitle(request.getResource()));
   }
 
   private String composeFileName(Request request, String fileName) {
-    return baseDir + request.getResource() + "/" + fileName;
+    return context.getTestHistoryDirectory().getPath() + "/" + request.getResource() + "/" + fileName;
   }
 
   private boolean getFileNameFromRequest(Request request) {
@@ -108,11 +108,11 @@ public class HistoryComparerResponder implements Responder {
 
   private Response makeValidResponse() throws Exception {
     count = 0;
-    if(!testing){
-    velocityContext.put("firstFileName",dateFormat.parse(firstFileName));
-    velocityContext.put("secondFileName",dateFormat.parse(secondFileName));
-    velocityContext.put("completeMatch",comparer.allTablesMatch());
-    velocityContext.put("comparer", comparer);
+    if (!testing) {
+      velocityContext.put("firstFileName", dateFormat.parse(firstFileName));
+      velocityContext.put("secondFileName", dateFormat.parse(secondFileName));
+      velocityContext.put("completeMatch", comparer.allTablesMatch());
+      velocityContext.put("comparer", comparer);
     }
     velocityContext.put("resultContent", comparer.getResultContent());
     velocityContext.put("firstTables", comparer.firstTableResults);

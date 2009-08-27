@@ -22,6 +22,8 @@ public class HistoryComparerResponderTest {
   public WikiPage root;
   public MockRequest request;
   public HistoryComparer mockedComparer;
+  private final String FIRST_FILE_PATH = "./TestDir/files/testResults/TestFolder/firstFakeFile";
+  private final String SECOND_FILE_PATH = "./TestDir/files/testResults/TestFolder/secondFakeFile";
 
   @Before
   public void setup() throws Exception {
@@ -33,7 +35,7 @@ public class HistoryComparerResponderTest {
     mockedComparer.resultContent = new ArrayList<String>();
     mockedComparer.resultContent.add("pass");
     when(mockedComparer.getResultContent()).thenReturn(mockedComparer.resultContent);
-    when(mockedComparer.compare("testRoot/TestFolder/firstFakeFile", "testRoot/TestFolder/secondFakeFile")).thenReturn(true);
+    when(mockedComparer.compare(FIRST_FILE_PATH, SECOND_FILE_PATH)).thenReturn(true);
     mockedComparer.firstTableResults = new ArrayList<String>();
     mockedComparer.secondTableResults = new ArrayList<String>();
     mockedComparer.firstTableResults.add("<table><tr><td>This is the content</td></tr></table>");
@@ -42,9 +44,8 @@ public class HistoryComparerResponderTest {
     request.addInput("TestResult_firstFakeFile", "");
     request.addInput("TestResult_secondFakeFile", "");
     request.setResource("TestFolder");
-    FileUtil.createFile("testRoot/TestFolder/firstFakeFile","firstFile");
-    FileUtil.createFile("testRoot/TestFolder/secondFakeFile","secondFile");
-    responder.baseDir = "testRoot/";
+    FileUtil.createFile("TestDir/files/testResults/TestFolder/firstFakeFile","firstFile");
+    FileUtil.createFile("TestDir/files/testResults/TestFolder/secondFakeFile","secondFile");
     context = FitNesseUtil.makeTestContext(root);
     root = InMemoryPage.makeRoot("RooT");
   }
@@ -58,12 +59,12 @@ public class HistoryComparerResponderTest {
   @Test
   public void shouldGetTwoHistoryFilesFromRequest() throws Exception {
     responder.makeResponse(context, request);
-    verify(mockedComparer).compare("testRoot/TestFolder/firstFakeFile", "testRoot/TestFolder/secondFakeFile");
+    verify(mockedComparer).compare(FIRST_FILE_PATH, SECOND_FILE_PATH);
   }
 
   @Test
   public void shouldReturnErrorPageIfCompareFails() throws Exception {
-    when(mockedComparer.compare("testRoot/TestFolder/firstFakeFile", "testRoot/TestFolder/secondFakeFile")).thenReturn(false);
+    when(mockedComparer.compare(FIRST_FILE_PATH, SECOND_FILE_PATH)).thenReturn(false);
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals(400, response.getStatus());
     assertHasRegexp("These files could not be compared.  They might be suites, or something else might be wrong.", response.getContent());
