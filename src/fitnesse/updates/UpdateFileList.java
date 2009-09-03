@@ -13,6 +13,7 @@ public class UpdateFileList {
   private HashSet<String> doNotReplaceFiles = new HashSet<String>();
   private String baseDirectory = "";
   static UpdateFileList testUpdater = null;
+  private static String badFile;
 
   public static void main(String[] args) {
     UpdateFileList updater = testUpdater != null ? testUpdater : new UpdateFileList();
@@ -78,6 +79,7 @@ public class UpdateFileList {
     for (String dirName : mainDirectories) {
       File checkFile = new File(dirName);
       if (!checkFile.exists()) {
+        badFile = dirName;
         return false;
       }
     }

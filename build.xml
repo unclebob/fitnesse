@@ -39,10 +39,10 @@
       <exclude name="**/*TestSuite.class"/>
       <include name="Resources/**"/>
       <include name="tasks.properties"/>
-    	
-      <zipfileset src="lib/htmlparser.jar" />
-      <zipfileset src="lib/json.jar" />
-      <zipfileset src="lib/velocity-1.6.2-dep.jar" />
+
+      <zipfileset src="lib/htmlparser.jar"/>
+      <zipfileset src="lib/json.jar"/>
+      <zipfileset src="lib/velocity-1.6.2-dep.jar"/>
       <zipfileset src="lib/fitlibrary.jar"/>
 
       <manifest>
@@ -67,6 +67,8 @@
       <arg value="FitNesseRoot/files/templates"/>
       <arg value="FitNesseRoot/FitNesse"/>
       <arg value="FitNesseRoot/FrontPage"/>
+      <arg value="FitNesseRoot/PageFooter"/>
+      <arg value="FitNesseRoot/PageHeader"/>
     </java>
     <copy todir="classes/Resources">
       <fileset dir=".">
@@ -95,6 +97,8 @@
       <fileset dir="FitNesseRoot">
         <include name="FitNesse/**"/>
         <include name="FrontPage/**"/>
+        <include name="PageHeader/**"/>
+        <include name="PageFooter/**"/>
         <exclude name="**/*.zip"/>
       </fileset>
     </copy>
