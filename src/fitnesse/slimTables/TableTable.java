@@ -98,12 +98,11 @@ public class TableTable extends SlimTable {
   }
 
   private boolean colorCellWithMessage(int col, int row, String contents) {
-    String[] tokens = contents.split(":");
-    if (tokens.length != 2)
+    int colon = contents.indexOf(":");
+    if (colon == -1)
       return false;
-
-    String code = tokens[0];
-    String message = tokens[1];
+    String code = contents.substring(0, colon);
+    String message = contents.substring(colon+1);
 
     if (code.equalsIgnoreCase("error"))
       table.setCell(col, row, error(message));
