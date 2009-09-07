@@ -65,6 +65,28 @@ td, th {
   padding: 5px;
 }
 
+table.hash_table {
+  border: solid #777777;
+  margin: 5px;
+  padding: 0px;
+  border-width: 1px 0px 0px 1px;
+  border-style:dotted;
+}
+
+td.hash_key {
+  border-width: 0px 1px 1px 0px;
+  background: #dddddd;
+  padding: 5px;
+  font-weight: bold;
+  border-style:dotted;
+}
+
+td.hash_value {
+  border-width: 0px 1px 1px 0px;
+  padding: 5px;
+  border-style:dotted;  
+}
+
 table.confirmation-form {
   border: solid 1px #C6CCB7;
   padding: 5px;
@@ -105,7 +127,7 @@ textarea {
 }
 
 textarea.pageContent {
-  font-family: monaco, 'Lucida Sans Typewriter',monospace;
+  font-family: monaco, 'Lucida Sans Typewriter', monospace;
   font-size: 12px;
   height: 100%;
   rows: 40;
@@ -144,7 +166,7 @@ div.popup_title {
   position: absolute;
   top: 0px;
   height: 18px;
-  width:590px;
+  width: 590px;
   background-color: #aaa;
   border-bottom: groove gray 2px;
   padding: 3px 5px 2px 5px;
@@ -154,10 +176,10 @@ div.popup_title {
 div.popup_content {
   position: absolute;
   top: 25px;
-  height:265px;
+  height: 265px;
   width: 590px;
   padding: 5px;
-  overflow:auto;
+  overflow: auto;
   background-color: white;
 }
 
@@ -181,7 +203,7 @@ div.art_niche {
   left: 0px;
   height: 90px;
   border-bottom: solid 1px #984D00;
-  background-image: url( "/files/images/FitNesseLogo.gif" );
+  background-image: url("/files/images/FitNesseLogo.gif");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -256,7 +278,7 @@ div.virtual-wiki-properties {
 }
 
 #execution-status,
-#stop-test {
+  #stop-test {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -356,7 +378,7 @@ span.page_title {
 }
 
 .code {
-  font-family: courier, 'Lucida Sans Typewriter',monospace;
+  font-family: courier, 'Lucida Sans Typewriter', monospace;
   font-size: 16px;
   color: #004000;
   font-weight: bold;
@@ -431,13 +453,13 @@ span.page_title {
 }
 
 .virtual {
-  background-image: url( "/files/images/virtualPage.jpg" );
+  background-image: url("/files/images/virtualPage.jpg");
   background-position: center top;
   background-repeat: no-repeat;
 }
 
 .imported {
-  background-image: url( "/files/images/importedPage.jpg" );
+  background-image: url("/files/images/importedPage.jpg");
   background-position: center top;
   background-repeat: no-repeat;
 }
