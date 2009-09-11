@@ -2,20 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.responders.run.slimResponder.SlimTestSystem;
+import fitnesse.wikitext.Utils;
 import static util.ListUtility.list;
 
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.slimResponder.SlimTestContext;
-import fitnesse.responders.run.slimResponder.SlimTestSystem;
-import fitnesse.wikitext.Utils;
 
 public abstract class SlimTable {
   protected Table table;
@@ -486,6 +485,7 @@ public abstract class SlimTable {
 
   class SymbolReplacer {
     protected String stringToReplace;
+    protected List<String> alreadyReplaced = new ArrayList<String>();
 
     SymbolReplacer(String s) {
       this.stringToReplace = s;
@@ -493,22 +493,20 @@ public abstract class SlimTable {
 
     String replace() {
       Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
-      int startingPosition = 0;
-      while (true) {
-        Matcher symbolMatcher = symbolPattern.matcher(stringToReplace.substring(startingPosition));
-        if (symbolMatcher.find()) {
-          startingPosition += replaceSymbol(symbolMatcher);
-        } else
-          break;
-      }
+        Matcher symbolMatcher = symbolPattern.matcher(stringToReplace);
+        while (symbolMatcher.find()){
+          replaceSymbol(symbolMatcher);
+        }
       return stringToReplace;
     }
 
-    private int replaceSymbol(Matcher symbolMatcher) {
+    private void replaceSymbol(Matcher symbolMatcher) {
       String symbolName = symbolMatcher.group(1);
-      if (getSymbol(symbolName) != null)
+      if (getSymbol(symbolName) != null && !alreadyReplaced.contains(symbolName)){
+        alreadyReplaced.add(symbolName);
         stringToReplace = stringToReplace.replace("$" + symbolName, translate(symbolName));
-      return symbolMatcher.start(1);
+      }
+        
     }
 
     protected String translate(String symbolName) {

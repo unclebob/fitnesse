@@ -1,0 +1,38 @@
+!*< symbols
+!define TABLE_MARKUP (&bang;{
+  name:
+    Bob.
+}
+)
+
+!define TABLE (!{
+  name:
+    Bob.
+}
+)
+*!
+
+Hash Tables are collections of name-value pairs that can be passed as arguments into test fixtures.  They render as tables.  !-DoFixture-! will decode a name-value pair table into a true hashtable.
+
+Any text enclosed in '''!-!{-!''' and '''}''' will be treated as a Hash Table.
+
+|!c '''Markup Text'''|!c '''Displays as'''|
+|!-!{fname:Bob, lname:Martin, dob:5-Dec-1952}-!|!{fname:Bob, lname:Martin, dob:5-Dec-1952}|
+
+The key name must be plain text, but the value can be any reasonable wiki construct.
+
+|!c '''Markup Text'''|!c '''Displays as'''|
+|!-!{fname:''Bob'', lname:''Martin'', today:!today}-!|!{fname:''Bob'', lname:''Martin'', today:!today}|
+
+You can use line breaks inside them.
+
+|!c '''Markup Text'''|!c '''Displays as'''|
+|${TABLE_MARKUP}|${TABLE}|
+
+!3 Syntax issues.
+
+ * A colon, comma and closing brace simply cannot be placed in either the name or the value.  
+ * The comma is optional.  This is valid: !-!{name:bob dob:19521205}-!
+
+!3 CSS
+You can change their apperance using the css classes !style_code(hash_table), !style_code(hash_row), !style_code(hash_key), !style_code(and hash_value)
