@@ -2,10 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import java.io.File;
 
 import junit.framework.TestCase;
 import util.FileUtil;
+import fitnesse.Arguments;
 import fitnesse.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -16,14 +22,26 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
 
 public class FitNesseMainTest extends TestCase {
+
   private FitNesseContext context;
 
+  @Override
   public void setUp() throws Exception {
     context = new FitNesseContext();
   }
 
+  @Override
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory("testFitnesseRoot");
+  }
+
+  public void testInstallOnly() throws Exception {
+    Arguments args = new Arguments();
+    args.setInstallOnly(true);
+    FitNesse fitnesse = mock(FitNesse.class);
+    FitNesseMain.updateAndLaunch(args, context, fitnesse);
+    verify(fitnesse, never()).start();
+    verify(fitnesse, times(1)).applyUpdates();
   }
 
   public void testDirCreations() throws Exception {
@@ -36,12 +54,14 @@ public class FitNesseMainTest extends TestCase {
   }
 
   public void testMakeNullAuthenticator() throws Exception {
-    Authenticator a = FitNesseMain.makeAuthenticator(null, new ComponentFactory("blah"));
+    Authenticator a = FitNesseMain.makeAuthenticator(null,
+        new ComponentFactory("blah"));
     assertTrue(a instanceof PromiscuousAuthenticator);
   }
 
   public void testMakeOneUserAuthenticator() throws Exception {
-    Authenticator a = FitNesseMain.makeAuthenticator("bob:uncle", new ComponentFactory("blah"));
+    Authenticator a = FitNesseMain.makeAuthenticator("bob:uncle",
+        new ComponentFactory("blah"));
     assertTrue(a instanceof OneUserAuthenticator);
     OneUserAuthenticator oua = (OneUserAuthenticator) a;
     assertEquals("bob", oua.getUser());
@@ -52,7 +72,8 @@ public class FitNesseMainTest extends TestCase {
     final String passwordFilename = "testpasswd";
     File passwd = new File(passwordFilename);
     passwd.createNewFile();
-    Authenticator a = FitNesseMain.makeAuthenticator(passwordFilename, new ComponentFactory("blah"));
+    Authenticator a = FitNesseMain.makeAuthenticator(passwordFilename,
+        new ComponentFactory("blah"));
     assertTrue(a instanceof MultiUserAuthenticator);
     passwd.delete();
   }

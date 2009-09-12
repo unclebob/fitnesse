@@ -16,4 +16,4 @@ When you execute a test page, !-FitNesse-! gathers up the classpaths prior to ru
 !|script|page driver|
 |given page|ParentPage|with content|!path parentPath|
 |given page|ParentPage.TestPage|with content|${PROPERTY_DISPLAY}|
-|page|ParentPage.TestPage?test|should contain|classes:fitnesse.jar:parentPath|
+|page|ParentPage.TestPage?test|should contain|classes${path.separator}fitnesse.jar${path.separator}parentPath|

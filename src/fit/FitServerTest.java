@@ -3,20 +3,31 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import java.io.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static util.RegexTestCase.assertSubString;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import util.RegexTestCase;
-import util.StreamReader;
-import util.FileUtil;
-import static util.RegexTestCase.assertSubString;
-import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import util.FileUtil;
+import util.RegexTestCase;
+import util.StreamReader;
 
 public class FitServerTest {
+  private static final int PORT_NUMBER = 1634;
   private Process process;
   private Socket socket;
   private ServerSocket serverSocket;
@@ -28,7 +39,7 @@ public class FitServerTest {
 
   @Before
   public void setup() {
-    String sentinelName = FitServer.sentinelName(1234);
+    String sentinelName = FitServer.sentinelName(PORT_NUMBER);
     FileUtil.deleteFile(sentinelName);
   }
 
@@ -47,7 +58,8 @@ public class FitServerTest {
     String junkMessage = "x";
     connectionStatusSize = "0000000001";
     prepareSessionProcess();
-    assertTrue(new String(httpRequest).startsWith("GET /?responder=socketCatcher&ticket=23"));
+    assertTrue(new String(httpRequest)
+        .startsWith("GET /?responder=socketCatcher&ticket=23"));
     socketOutput.write(junkMessage.getBytes());
     process.waitFor();
   }
@@ -63,8 +75,8 @@ public class FitServerTest {
     String stdoutString = new String(stdoutBytes.toByteArray());
 
     assertTrue(exitValue != 0);
-    //TODO		This started to fail with Java 5.0... why does -1 turn into 255?
-    //		assertEquals("stdout: " + stdoutString, -1, exitValue);
+    // TODO This started to fail with Java 5.0... why does -1 turn into 255?
+    // assertEquals("stdout: " + stdoutString, -1, exitValue);
     assertTrue(stdoutString.indexOf(errorMessage) != -1);
   }
 
@@ -82,7 +94,7 @@ public class FitServerTest {
   }
 
   @Test
-    public void testOneSimpleRun_Fail() throws Exception {
+  public void testOneSimpleRun_Fail() throws Exception {
     String table = simpleTable("FailFixture");
     prepareSessionProcess();
     checkDocumentExecution(table);
@@ -93,7 +105,7 @@ public class FitServerTest {
   }
 
   @Test
-    public void testOneSimpleRun_Pass() throws Exception {
+  public void testOneSimpleRun_Pass() throws Exception {
     String table = simpleTable("PassFixture");
     prepareSessionProcess();
     checkDocumentExecution(table);
@@ -104,7 +116,7 @@ public class FitServerTest {
   }
 
   @Test
-    public void testTwoSimpleRuns() throws Exception {
+  public void testTwoSimpleRuns() throws Exception {
     String table = simpleTable("FailFixture");
     prepareSessionProcess();
     checkDocumentExecution(table);
@@ -117,7 +129,7 @@ public class FitServerTest {
   }
 
   @Test
-    public void testOneMulitiTableRun() throws Exception {
+  public void testOneMulitiTableRun() throws Exception {
     String document = simpleTable("FailFixture") + simpleTable("FailFixture");
     prepareSessionProcess();
 
@@ -131,7 +143,7 @@ public class FitServerTest {
   }
 
   @Test
-    public void testUnicodeCharacters() throws Exception {
+  public void testUnicodeCharacters() throws Exception {
     String table = "\uba80\uba81\uba82\uba83" + simpleTable("PassFixture");
     prepareSessionProcess();
     FitProtocol.writeData(table, socketOutput);
@@ -142,8 +154,9 @@ public class FitServerTest {
   }
 
   @Test
-    public void testExtraTextIdPrinted() throws Exception {
-    String document = "<html>" + simpleTable("PassFixture") + "monkey" + simpleTable("PassFixture") + "</html>";
+  public void testExtraTextIdPrinted() throws Exception {
+    String document = "<html>" + simpleTable("PassFixture") + "monkey"
+        + simpleTable("PassFixture") + "</html>";
     prepareSessionProcess();
 
     FitProtocol.writeData(document, socketOutput);
@@ -157,7 +170,7 @@ public class FitServerTest {
   }
 
   @Test
-    public void testFitParseExceptionDontCrashSuite() throws Exception {
+  public void testFitParseExceptionDontCrashSuite() throws Exception {
     String input = "no table";
     prepareSessionProcess();
     checkDocumentExecution(input);
@@ -175,7 +188,8 @@ public class FitServerTest {
 
   private void prepareSessionProcess() throws Exception {
     checkSentinelToMakeSureThatFitServerIsNotRunning();
-    String commandWithArguments = command() + " -s -v localhost 1234 23";
+    String commandWithArguments = command() + " -s -v localhost " + PORT_NUMBER
+        + " 23";
     process = Runtime.getRuntime().exec(commandWithArguments);
 
     stdoutBytes = new ByteArrayOutputStream();
@@ -186,14 +200,15 @@ public class FitServerTest {
     establishConnection();
   }
 
-  private void checkSentinelToMakeSureThatFitServerIsNotRunning() throws Exception {
-    String sentinelName = FitServer.sentinelName(1234);
+  private void checkSentinelToMakeSureThatFitServerIsNotRunning()
+      throws Exception {
+    String sentinelName = FitServer.sentinelName(PORT_NUMBER);
     File sentinel = new File(sentinelName);
     assertFalse(sentinel.exists());
   }
 
   private void establishConnection() throws Exception {
-    serverSocket = new ServerSocket(1234);
+    serverSocket = new ServerSocket(PORT_NUMBER);
     socket = null;
 
     listenForConnectionSocket();
@@ -218,6 +233,7 @@ public class FitServerTest {
 
   private void listenForConnectionSocket() {
     new Thread() {
+      @Override
       public void run() {
         try {
           synchronized (serverSocket) {
@@ -226,15 +242,15 @@ public class FitServerTest {
             socketOutput = socket.getOutputStream();
             serverSocket.notify();
           }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
     }.start();
   }
 
-  private void terminateSessionProcess() throws IOException, InterruptedException {
+  private void terminateSessionProcess() throws IOException,
+      InterruptedException {
     try {
       socketOutput.write("0000000000".getBytes());
       process.waitFor();
@@ -243,22 +259,24 @@ public class FitServerTest {
     }
   }
 
-  private void watchForOutput(final InputStream processOutput, final PrintStream consoleOutput) {
+  private void watchForOutput(final InputStream processOutput,
+      final PrintStream consoleOutput) {
     new Thread() {
+      @Override
       public void run() {
         try {
           int b = 0;
           while ((b = processOutput.read()) != -1)
             consoleOutput.print((char) b);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
     }.start();
   }
 
-  private void checkDocumentResults(int right, int wrong, int ignored, int exceptions) throws Exception {
+  private void checkDocumentResults(int right, int wrong, int ignored,
+      int exceptions) throws Exception {
     Counts actual = FitProtocol.readCounts(new StreamReader(socketInput));
 
     assertEquals(right, actual.right);
@@ -275,7 +293,8 @@ public class FitServerTest {
 
   private void checkForAttribute_class() throws Exception {
     String output = readFromFitServer();
-    assertTrue("'class' attribute was not found", output.indexOf("class=") != -1);
+    assertTrue("'class' attribute was not found",
+        output.indexOf("class=") != -1);
   }
 
   private String readFromFitServer() throws Exception {
@@ -312,8 +331,7 @@ public class FitServerTest {
   }
 
   protected String simpleTable(String fixtureName) {
-    return "<table>" +
-    "<tr><td>fitnesse.testutil." + fixtureName + "</td></tr>" +
-    "</table>";
+    return "<table>" + "<tr><td>fitnesse.testutil." + fixtureName
+        + "</td></tr>" + "</table>";
   }
 }
