@@ -42,7 +42,7 @@ public abstract class SlimTable {
 
   public void addChildTable(SlimTable slimtable, int row) throws Exception {
     slimtable.id = id + "." + children.size();
-    slimtable.tableName = makeInstructionTag(instructionNumber)+"/"+slimtable.tableName;
+    slimtable.tableName = makeInstructionTag(instructionNumber) + "/" + slimtable.tableName;
     instructionNumber++;
     slimtable.parent = this;
     children.add(slimtable);
@@ -274,9 +274,9 @@ public abstract class SlimTable {
 
 
   protected String makeExeptionMessage(String value) {
-    if (value.startsWith(SlimTestSystem.MESSAGE_FAIL)) 
+    if (value.startsWith(SlimTestSystem.MESSAGE_FAIL))
       return fail(value.substring(SlimTestSystem.MESSAGE_FAIL.length()));
-    else 
+    else
       return error(value.substring(SlimTestSystem.MESSAGE_ERROR.length()));
   }
 
@@ -433,8 +433,7 @@ public abstract class SlimTable {
         String originalContent = table.getCellContents(col, row);
         evaluationMessage = originalContent + " " + ignore("Test not run");
         returnValues.put(instructionTag, "Test not run");
-      }
-      else {
+      } else {
         String value;
         value = returnValue.toString();
         String originalContent = table.getCellContents(col, row);
@@ -486,33 +485,49 @@ public abstract class SlimTable {
   class SymbolReplacer {
     protected String stringToReplace;
     protected List<String> alreadyReplaced = new ArrayList<String>();
+    private Matcher symbolMatcher;
+    private final Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
 
     SymbolReplacer(String s) {
       this.stringToReplace = s;
+      symbolMatcher = symbolPattern.matcher(s);
     }
 
     String replace() {
-      Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
-        Matcher symbolMatcher = symbolPattern.matcher(stringToReplace);
-        while (symbolMatcher.find()){
-          replaceSymbol(symbolMatcher);
-        }
+      replaceAllSymbols();
       return stringToReplace;
     }
 
-    private void replaceSymbol(Matcher symbolMatcher) {
-      String symbolName = symbolMatcher.group(1);
-      if (getSymbol(symbolName) != null && !alreadyReplaced.contains(symbolName)){
-        alreadyReplaced.add(symbolName);
-        stringToReplace = stringToReplace.replace("$" + symbolName, translate(symbolName));
-      }
-        
+    private void replaceAllSymbols() {
+      for (String symbolName = nextSymbol(); symbolName != null; symbolName = nextSymbol())
+        replaceAllInstances(symbolName);
+    }
+
+    private String nextSymbol() {
+      return symbolMatcher.find() ? symbolMatcher.group(1) : null;
+    }
+
+    private void replaceAllInstances(String symbolName) {
+      if (shouldReplaceSymbol(symbolName))
+        replaceSymbol(symbolName);
+    }
+
+    private boolean shouldReplaceSymbol(String symbolName) {
+      return getSymbol(symbolName) != null && !alreadyReplaced.contains(symbolName);
+    }
+
+    private void replaceSymbol(String symbolName) {
+      alreadyReplaced.add(symbolName);
+      stringToReplace = stringToReplace.replace(symbolExpression(symbolName), translate(symbolName));
+    }
+
+    private String symbolExpression(String symbolName) {
+      return "$" + symbolName;
     }
 
     protected String translate(String symbolName) {
       return getSymbol(symbolName);
     }
-
   }
 
   class FullExpansionSymbolReplacer extends SymbolReplacer {
@@ -607,7 +622,7 @@ public abstract class SlimTable {
           );
       }
 
-      return evaluationMessage;                                     
+      return evaluationMessage;
     }
 
     private String announceBlank(String originalValue) {
