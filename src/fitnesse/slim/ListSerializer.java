@@ -41,6 +41,7 @@ public class ListSerializer {
     return result.toString();
   }
 
+  @SuppressWarnings("unchecked")
   private String marshalObjectToString(Object o) {
     String s;
     if (o == null)
