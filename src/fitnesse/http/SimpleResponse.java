@@ -15,6 +15,7 @@ public class SimpleResponse extends Response {
     super("html", status);
   }
 
+  @Override
   public void readyToSend(ResponseSender sender) throws Exception {
     byte[] bytes = getBytes();
     sender.send(bytes);
@@ -27,6 +28,12 @@ public class SimpleResponse extends Response {
 
   public void setContent(byte[] value) {
     content = value;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("status = %s,  contentType = %s, content = %s",
+        getStatus(), getContentType(), getContent());
   }
 
   public String getContent() {
@@ -44,15 +51,18 @@ public class SimpleResponse extends Response {
   public byte[] getBytes() {
     addStandardHeaders();
     byte[] headerBytes = makeHttpHeaders().getBytes();
-    ByteBuffer bytes = ByteBuffer.allocate(headerBytes.length + getContentSize());
+    ByteBuffer bytes = ByteBuffer.allocate(headerBytes.length
+        + getContentSize());
     bytes.put(headerBytes).put(content);
     return bytes.array();
   }
 
+  @Override
   public int getContentSize() {
     return content.length;
   }
 
+  @Override
   protected void addSpecificHeaders() {
     addHeader("Content-Length", String.valueOf(getContentSize()));
   }
