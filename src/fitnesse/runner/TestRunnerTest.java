@@ -233,4 +233,26 @@ public class TestRunnerTest {
     assertDoesntHaveRegexp(".*TestError.*", content);
     assertDoesntHaveRegexp(".*TestIgnore.*", content);
   }
+  
+  @Test
+  public void testIncludeAndExcludeSuiteFilter() throws Exception {
+    runPage("-xml testFile.txt -suiteFilter foo -excludeSuiteFilter skip", "SuitePage");
+    assertTrue(new File("testFile.txt").exists());
+    String content = FileUtil.getFileContent("testFile.txt");
+    assertDoesntHaveRegexp(".*TestPassing.*", content);
+    assertHasRegexp(".*TestAnotherFailing.*", content);
+    assertDoesntHaveRegexp(".*TestError.*", content);
+    assertDoesntHaveRegexp(".*TestIgnore.*", content);
+  }
+  
+  @Test
+  public void testExcludeSuiteFilter() throws Exception {
+    runPage("-xml testFile.txt  -excludeSuiteFilter skip,smoke", "SuitePage");
+    assertTrue(new File("testFile.txt").exists());
+    String content = FileUtil.getFileContent("testFile.txt");
+    assertDoesntHaveRegexp(".*TestPassing.*", content);
+    assertHasRegexp(".*TestAnotherFailing.*", content);
+    assertDoesntHaveRegexp(".*TestError.*", content);
+    assertDoesntHaveRegexp(".*TestIgnore.*", content);
+  }
 }

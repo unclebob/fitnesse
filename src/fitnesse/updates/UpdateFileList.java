@@ -120,7 +120,8 @@ public class UpdateFileList {
 
   private boolean isDoNotReplaceFile(File file) {
     String name = file.getPath();
-    name = name.replace(baseDirectory, "");
+    String baseDirectoryOnOS = baseDirectory.replace( "/", File.separator);
+    name = name.replace(baseDirectoryOnOS, "");
     name = name.replace(File.separator, "/");
     return doNotReplaceFiles.contains(name);
   }

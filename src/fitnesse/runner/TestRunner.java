@@ -25,6 +25,7 @@ public class TestRunner {
   private String pageName;
   private PrintStream output;
   private String suiteFilter = null;
+  private String excludeSuiteFilter = null;
   private StreamReader socketReader;
   private Document testResultsDocument;
   private TestSummary counts;
@@ -48,7 +49,7 @@ public class TestRunner {
   }
 
   public void args(String[] args) throws Exception {
-    CommandLine commandLine = new CommandLine("[-v] [-debug] [-xml file] [-suiteFilter filter] host port pageName");
+    CommandLine commandLine = new CommandLine("[-v] [-debug] [-xml file] [-suiteFilter filter] [-excludeSuiteFilter excludeFilter] host port pageName");
     if (!commandLine.parse(args))
       usage();
 
@@ -64,6 +65,8 @@ public class TestRunner {
       outputFileName = commandLine.getOptionArgument("xml", "file");
     if (commandLine.hasOption("suiteFilter"))
       suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
+    if (commandLine.hasOption("excludeSuiteFilter"))
+      excludeSuiteFilter = commandLine.getOptionArgument("excludeSuiteFilter", "excludeFilter");
   }
 
   private void usage() {
@@ -209,6 +212,8 @@ public class TestRunner {
     String request = "GET /" + pageName + "?responder=suite";
     if (suiteFilter != null)
       request += "&suiteFilter=" + suiteFilter;
+    if (excludeSuiteFilter != null)
+      request += "&excludeSuiteFilter=" + excludeSuiteFilter;
     request += "&format=xml";
 
     return request + " HTTP/1.1\r\n\r\n";

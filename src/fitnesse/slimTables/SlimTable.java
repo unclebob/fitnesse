@@ -486,6 +486,7 @@ public abstract class SlimTable {
 
   class SymbolReplacer {
     protected String stringToReplace;
+    protected List<String> alreadyReplaced = new ArrayList<String>();
 
     SymbolReplacer(String s) {
       this.stringToReplace = s;
@@ -493,22 +494,20 @@ public abstract class SlimTable {
 
     String replace() {
       Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
-      int startingPosition = 0;
-      while (true) {
-        Matcher symbolMatcher = symbolPattern.matcher(stringToReplace.substring(startingPosition));
-        if (symbolMatcher.find()) {
-          startingPosition += replaceSymbol(symbolMatcher);
-        } else
-          break;
-      }
+        Matcher symbolMatcher = symbolPattern.matcher(stringToReplace);
+        while (symbolMatcher.find()){
+          replaceSymbol(symbolMatcher);
+        }
       return stringToReplace;
     }
 
-    private int replaceSymbol(Matcher symbolMatcher) {
+    private void replaceSymbol(Matcher symbolMatcher) {
       String symbolName = symbolMatcher.group(1);
-      if (getSymbol(symbolName) != null)
+      if (getSymbol(symbolName) != null && !alreadyReplaced.contains(symbolName)){
+        alreadyReplaced.add(symbolName);
         stringToReplace = stringToReplace.replace("$" + symbolName, translate(symbolName));
-      return symbolMatcher.start(1);
+      }
+        
     }
 
     protected String translate(String symbolName) {

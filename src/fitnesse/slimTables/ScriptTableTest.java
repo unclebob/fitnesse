@@ -396,4 +396,18 @@ public class ScriptTableTest {
       "[[Script], [$V<-[3], function], [check, funcion, $V->[3], pass($V->[3])]]"
     );
   }
+
+  @Test
+  public void sameSymbolTwiceReplacement() throws Exception {
+    assertScriptResults(
+      "|$V=|function|\n" +
+        "|check|funcion|$V $V|$V|\n",
+      list(
+        list("scriptTable_id_0", "3"),
+        list("scriptTable_id_1", "3")
+      ),
+      "[[Script], [$V<-[3], function], [check, funcion, $V->[3] $V->[3], pass($V->[3])]]"
+    );
+  }
+
 }

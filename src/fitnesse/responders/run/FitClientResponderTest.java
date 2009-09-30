@@ -37,16 +37,20 @@ public class FitClientResponderTest extends RegexTestCase {
     suite = crawler.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
     WikiPage page1 = crawler.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
     WikiPage page2 = crawler.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
+    WikiPage page3 = crawler.addPage(suite, PathParser.parse("TestAnotherFailing"), "!|fitnesse.testutil.FailFixture|\n");
     crawler.addPage(suite, PathParser.parse("TestError"), "!|fitnesse.testutil.ErrorFixture|\n");
     crawler.addPage(suite, PathParser.parse("TestIgnore"), "!|fitnesse.testutil.IgnoreFixture|\n");
     crawler.addPage(suite, PathParser.parse("SomePage"), "This is just some page.");
 
     PageData data1 = page1.getData();
     PageData data2 = page2.getData();
-    data1.setAttribute(PageData.PropertySUITES, "foo");
-    data2.setAttribute(PageData.PropertySUITES, "bar, smoke");
+    PageData data3 = page3.getData();
+    data1.setAttribute(PageData.PropertySUITES, "skip,foo");
+    data2.setAttribute(PageData.PropertySUITES, "bar,smoke");
+    data3.setAttribute(PageData.PropertySUITES, "foo");
     page1.commit(data1);
     page2.commit(data2);
+    page3.commit(data3);
   }
 
   public void tearDown() throws Exception {
