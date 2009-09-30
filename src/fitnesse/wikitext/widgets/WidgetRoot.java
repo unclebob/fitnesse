@@ -2,16 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class WidgetRoot extends ParentWidget {
   private Map<String, String> variables = new HashMap<String, String>();
@@ -101,7 +101,8 @@ public class WidgetRoot extends ParentWidget {
       value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
     else if (key.equals("FITNESSE_PORT"))
       value = Integer.toString(FitNesseContext.globalContext.port);
-
+    else if (key.equals("FITNESSE_ROOTPATH"))
+      value = FitNesseContext.globalContext.rootPath;
     WikiPage page = getWikiPage();
     while (value == null && !page.getPageCrawler().isRoot(page)) {
       page = page.getParentForVariables(); // follow parents for variables

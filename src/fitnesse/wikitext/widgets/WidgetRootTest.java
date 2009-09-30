@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import util.RegexTestCase;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import util.RegexTestCase;
 
 public class WidgetRootTest extends RegexTestCase {
   private WikiPage rootPage;
@@ -79,5 +79,13 @@ public class WidgetRootTest extends RegexTestCase {
     new FitNesse(context, false);
     WidgetRoot root = new WidgetRoot("", rootPage);
     assertEquals("9876", root.getVariable("FITNESSE_PORT"));
+  }
+
+  public void testShouldHaveRootPathVariableAvailable() throws Exception {
+    FitNesseContext context = new FitNesseContext();
+    context.rootPath = "/home/fitnesse";
+    new FitNesse(context, false);
+    WidgetRoot root = new WidgetRoot("", rootPage);
+    assertEquals("/home/fitnesse", root.getVariable("FITNESSE_ROOTPATH"));
   }
 }
