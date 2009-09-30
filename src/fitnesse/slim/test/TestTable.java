@@ -19,7 +19,8 @@ public class TestTable {
   public List<?> doTable(List<?> l) {
     return list(
       list("pass", "error:huh", param),
-      list("bill", "no change", "pass:jake")
+      list("bill", "no change", "pass:jake"),
+      list("pass:<img src=http://localhost:8080/files/images/stop.gif/>")
     );
   }
 }

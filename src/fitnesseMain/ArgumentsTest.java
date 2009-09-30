@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import fitnesse.Arguments;
 import junit.framework.TestCase;
+import fitnesse.Arguments;
 
 public class ArgumentsTest extends TestCase {
   private Arguments args;
@@ -20,7 +20,7 @@ public class ArgumentsTest extends TestCase {
   }
 
   public void testArgumentsDefaults() throws Exception {
-    makeArgs(new String[]{});
+    makeArgs(new String[] {});
     assertEquals(80, args.getPort());
     assertEquals(".", args.getRootPath());
     assertEquals("FitNesseRoot", args.getRootDirectory());
@@ -28,10 +28,11 @@ public class ArgumentsTest extends TestCase {
     assertEquals(false, args.isOmittingUpdates());
     assertEquals(14, args.getDaysTillVersionsExpire());
     assertEquals(null, args.getUserpass());
+    assertEquals(false, args.isInstallOnly());
   }
 
   public void testArgumentsAlternates() throws Exception {
-    String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt";
+    String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt -i";
     makeArgs(argString.split(" "));
     assertEquals(123, args.getPort());
     assertEquals("MyWd", args.getRootPath());
@@ -40,11 +41,12 @@ public class ArgumentsTest extends TestCase {
     assertEquals(true, args.isOmittingUpdates());
     assertEquals(321, args.getDaysTillVersionsExpire());
     assertEquals("userpass.txt", args.getUserpass());
+    assertEquals(true, args.isInstallOnly());
   }
 
   public void testAllArguments() throws Exception {
-    args = makeArgs(new String[]{"-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory",
-      "-o", "-e", "22"});
+    args = makeArgs(new String[] { "-p", "81", "-d", "directory", "-r", "root",
+        "-l", "myLogDirectory", "-o", "-e", "22" });
     assertNotNull(args);
     assertEquals(81, args.getPort());
     assertEquals("directory", args.getRootPath());
@@ -55,7 +57,8 @@ public class ArgumentsTest extends TestCase {
   }
 
   public void testNotOmitUpdates() throws Exception {
-    args = makeArgs(new String[]{"-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory"});
+    args = makeArgs(new String[] { "-p", "81", "-d", "directory", "-r", "root",
+        "-l", "myLogDirectory" });
     assertNotNull(args);
     assertEquals(81, args.getPort());
     assertEquals("directory", args.getRootPath());
@@ -65,7 +68,7 @@ public class ArgumentsTest extends TestCase {
   }
 
   public void testBadArgument() throws Exception {
-    args = makeArgs(new String[]{"-x"});
+    args = makeArgs(new String[] { "-x" });
     assertNull(args);
   }
 }

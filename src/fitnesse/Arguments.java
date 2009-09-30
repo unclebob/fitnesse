@@ -15,6 +15,7 @@ public class Arguments {
   private boolean omitUpdate = false;
   private int daysTillVersionsExpire = DEFAULT_VERSION_DAYS;
   private String userpass;
+  private boolean installOnly;
 
   public String getRootPath() {
     return rootPath;
@@ -73,5 +74,13 @@ public class Arguments {
 
   public void setDaysTillVersionsExpire(String daysTillVersionsExpire) {
     this.daysTillVersionsExpire = Integer.parseInt(daysTillVersionsExpire);
+  }
+
+  public boolean isInstallOnly() {
+    return installOnly;
+  }
+
+  public void setInstallOnly(boolean installOnly) {
+    this.installOnly = installOnly;
   }
 }

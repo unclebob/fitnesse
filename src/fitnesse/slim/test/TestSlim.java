@@ -5,7 +5,7 @@ package fitnesse.slim.test;
 import java.util.Date;
 import java.util.List;
 
-public class TestSlim {
+public class TestSlim implements TestSlimInterface {
   private boolean niladWasCalled = false;
   private String stringArg;
   private int intArg;

@@ -1,16 +1,16 @@
 package fitnesse.slim;
 
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 
 public abstract class Jsr223Bridge {
 
   private ScriptEngine engine;
 
-  public abstract Proxy getStatementExecutor() throws Exception;
+  public abstract Object getStatementExecutor() throws Exception;
 
   public abstract Object invokeMethod(Object thiz, String name, Object... args)
       throws Exception;

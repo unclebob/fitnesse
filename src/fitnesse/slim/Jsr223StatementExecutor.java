@@ -2,12 +2,10 @@ package fitnesse.slim;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Proxy;
-
 
 public abstract class Jsr223StatementExecutor implements StatementExecutorInterface{
-  private Jsr223Bridge bridge;
-  private Proxy statementExecutorProxy;
+  protected Jsr223Bridge bridge;
+  private Object statementExecutorProxy;
   
   public Jsr223StatementExecutor(Jsr223Bridge bridge) throws Exception
   {
@@ -15,7 +13,7 @@ public abstract class Jsr223StatementExecutor implements StatementExecutorInterf
     statementExecutorProxy = bridge.getStatementExecutor();
   }
   
-  protected Proxy getStatementExecutorProxy()
+  protected Object getStatementExecutorProxy()
   {
     return statementExecutorProxy;
   }

@@ -12,8 +12,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This is the API for executing a SLIM statement.  This class should not know about
@@ -22,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class StatementExecutor implements StatementExecutorInterface {
   private Map<String, Object> instances = new HashMap<String, Object>();
-  private Map<String, Object> variables = new HashMap<String, Object>();
+  private VariableStore variables = new VariableStore();
   private List<String> paths = new ArrayList<String>();
   
   private boolean stopRequested = false;
@@ -50,7 +48,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public void setVariable(String name, Object value) {
-    variables.put(name, value);
+    variables.setVariable(name, value);
   }
 
   public Object addPath(String path) {
@@ -149,6 +147,10 @@ public class StatementExecutor implements StatementExecutorInterface {
     }
   }
 
+  private Object[] replaceVariables(Object[] args) {
+    return variables.replaceVariables(args);
+  }
+
   private String exceptionToString(Throwable exception) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(stringWriter);
@@ -162,57 +164,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     }
   }
 
-  private Object[] replaceVariables(Object[] args) {
-    Object result[] = new Object[args.length];
-    for (int i = 0; i < args.length; i++)
-      result[i] = replaceVariable(args[i]);
-
-    return result;
-  }
-
-  private List<Object> replaceArgsInList(List<Object> objects) {
-    List<Object> result = new ArrayList<Object>();
-    for (Object object : objects)
-      result.add(replaceVariable(object));
-
-    return result;
-  }
-
   @SuppressWarnings("unchecked")
-  private Object replaceVariable(Object object) {
-    if (object instanceof List)
-      return (replaceArgsInList((List<Object>) object));
-    else
-      return (replaceVariablesInString((String) object));
-  }
-
-  private Object replaceVariablesInString(String arg) {
-    Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
-    int startingPosition = 0;
-    while (true) {
-      if ("".equals(arg))
-        break;
-      Matcher symbolMatcher = symbolPattern.matcher(arg.substring(startingPosition));
-      if (symbolMatcher.find()) {
-        String symbolName = symbolMatcher.group(1);
-        arg = replaceSymbolInArg(arg, symbolName);
-        startingPosition += symbolMatcher.start(1);
-      } else
-        break;
-    }
-    return arg;
-  }
-
-  private String replaceSymbolInArg(String arg, String symbolName) {
-    if (variables.containsKey(symbolName)) {
-      String replacement = (String) variables.get(symbolName);
-      if (replacement == null)
-        replacement = "null";
-      arg = arg.replace("$" + symbolName, replacement);
-    }
-    return arg;
-  }
-
   private Object tryToInvokeMethod(Object instance, String methodName, Object args[]) throws Throwable {
     Class<?> k = instance.getClass();
     Method method = findMatchingMethod(methodName, k, args.length);
@@ -253,6 +205,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   //todo refactor this mess
+  @SuppressWarnings("unchecked")
   private Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
     Object[] convertedArgs = new Object[args.length];
     for (int i = 0; i < argumentTypes.length; i++) {
