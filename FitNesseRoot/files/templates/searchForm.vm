@@ -25,7 +25,7 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 								</tr>
 								<tr>
 									<td style="padding-right: 15px;">
-										<textarea name="Suites" cols="20" rows="3">#if ($request.hasInput("Suite"))$request.getInput("Suite")#end</textarea>
+										<textarea class="searchForm" name="Suites" rows="3" cols="20">#if ($request.hasInput("Suite"))$request.getInput("Suite")#end</textarea>
 									</td>
 								</tr>
 							</table>
