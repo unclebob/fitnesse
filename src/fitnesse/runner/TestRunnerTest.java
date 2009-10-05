@@ -74,7 +74,7 @@ public class TestRunnerTest {
 
   @Test
   public void testSuite() throws Exception {
-    testPageResults("SuitePage", new TestSummary(1, 1, 1, 1), 2);
+    testPageResults("SuitePage", new TestSummary(1, 2, 1, 1), 2);
   }
 
   @Test
@@ -108,15 +108,16 @@ public class TestRunnerTest {
     assertEquals("SuitePage", XmlUtil.getTextValue(testResultsElement, "rootPath"));
 
     Element finalCounts = XmlUtil.getElementByTagName(testResultsElement, "finalCounts");
-    assertCounts(finalCounts, "1", "1", "1", "1");
+    assertCounts(finalCounts, "1", "2", "1", "1");
 
     NodeList results = testResultsElement.getElementsByTagName("result");
-    assertEquals(4, results.getLength());
+    assertEquals(5, results.getLength());
 
-    assertResult(results.item(0), "TestError", "fitnesse.testutil.ErrorFixture", "0", "0", "0", "1");
-    assertResult(results.item(1), "TestFailing", "fitnesse.testutil.FailFixture", "0", "1", "0", "0");
-    assertResult(results.item(2), "TestIgnore", "fitnesse.testutil.IgnoreFixture", "0", "0", "1", "0");
-    assertResult(results.item(3), "TestPassing", "fitnesse.testutil.PassFixture", "1", "0", "0", "0");
+    assertResult(results.item(0), "TestAnotherFailing", "fitnesse.testutil.FailFixture", "0", "1", "0", "0");
+    assertResult(results.item(1), "TestError", "fitnesse.testutil.ErrorFixture", "0", "0", "0", "1");
+    assertResult(results.item(2), "TestFailing", "fitnesse.testutil.FailFixture", "0", "1", "0", "0");
+    assertResult(results.item(3), "TestIgnore", "fitnesse.testutil.IgnoreFixture", "0", "0", "1", "0");
+    assertResult(results.item(4), "TestPassing", "fitnesse.testutil.PassFixture", "1", "0", "0", "0");
   }
 
   private void assertResult(
@@ -232,5 +233,27 @@ public class TestRunnerTest {
     assertHasRegexp(".*TestFailing.*", content);
     assertDoesntHaveRegexp(".*TestError.*", content);
     assertDoesntHaveRegexp(".*TestIgnore.*", content);
+  }
+  
+  @Test
+  public void testIncludeAndExcludeSuiteFilter() throws Exception {
+    runPage("-xml testFile.txt -suiteFilter foo -excludeSuiteFilter skip", "SuitePage");
+    assertTrue(new File("testFile.txt").exists());
+    String content = FileUtil.getFileContent("testFile.txt");
+    assertDoesntHaveRegexp(".*TestPassing.*", content);
+    assertHasRegexp(".*TestAnotherFailing.*", content);
+    assertDoesntHaveRegexp(".*TestError.*", content);
+    assertDoesntHaveRegexp(".*TestIgnore.*", content);
+  }
+  
+  @Test
+  public void testExcludeSuiteFilter() throws Exception {
+    runPage("-xml testFile.txt -excludeSuiteFilter skip,smoke", "SuitePage");
+    assertTrue(new File("testFile.txt").exists());
+    String content = FileUtil.getFileContent("testFile.txt");
+    assertDoesntHaveRegexp(".*TestPassing.*", content);
+    assertHasRegexp(".*TestAnotherFailing.*", content);
+    assertHasRegexp(".*TestError.*", content);
+    assertHasRegexp(".*TestIgnore.*", content);
   }
 }
