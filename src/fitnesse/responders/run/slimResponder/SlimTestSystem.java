@@ -277,6 +277,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       return new DecisionTable(table, tableId, slimTestContext);
     else if (beginsWith(tableType, "ordered query:"))
       return new OrderedQueryTable(table, tableId, slimTestContext);
+    else if (beginsWith(tableType, "subset query:"))
+      return new SubsetQueryTable(table, tableId, slimTestContext);
     else if (beginsWith(tableType, "query:"))
       return new QueryTable(table, tableId, slimTestContext);
     else if (beginsWith(tableType, "table"))
