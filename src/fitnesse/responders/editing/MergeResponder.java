@@ -22,6 +22,7 @@ public class MergeResponder implements Responder {
   private String newContent;
   private String existingContent;
   private String resource;
+  private static final String OLD_CONTENT_INPUT_NAME = "oldContent";
 
   public MergeResponder(Request request) {
     this.request = request;
@@ -73,10 +74,11 @@ public class MergeResponder implements Responder {
 
   private HtmlTag makeOldContentTextArea() {
     HtmlTag oldContentTextArea = new HtmlTag("textarea");
-    oldContentTextArea.addAttribute("name", "oldContent");
+    oldContentTextArea.addAttribute("class", OLD_CONTENT_INPUT_NAME);
+    oldContentTextArea.addAttribute("name", OLD_CONTENT_INPUT_NAME);
     oldContentTextArea.addAttribute("rows", "25");
     oldContentTextArea.addAttribute("cols", "50");
-    oldContentTextArea.addAttribute("readonly", "");
+    oldContentTextArea.addAttribute("readonly", "readonly");
     oldContentTextArea.add(Utils.escapeHTML(existingContent));
     return oldContentTextArea;
   }

@@ -122,7 +122,7 @@ h4 {
   font-style: italic;
 }
 
-textarea {
+textarea.oldContent {
   width: 100%;
 }
 
@@ -130,8 +130,7 @@ textarea.pageContent {
   font-family: monaco, 'Lucida Sans Typewriter', monospace;
   font-size: 12px;
   height: 100%;
-  rows: 40;
-  columns: 70;
+  width: 100%;
 }
 
 textarea.no_wrap {
