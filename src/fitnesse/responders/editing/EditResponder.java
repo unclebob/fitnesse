@@ -14,12 +14,7 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
@@ -131,7 +126,7 @@ public class EditResponder implements SecureResponder {
 
     return group;
   }
-  
+
   private HtmlTag createOptions() throws Exception {
     HtmlTag options = HtmlUtil.makeDivTag("edit_options");
     options.add(makeScriptOptions());

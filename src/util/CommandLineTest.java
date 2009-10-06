@@ -46,6 +46,7 @@ public class CommandLineTest extends TestCase {
   public void testInvalidOption() throws Exception {
     assertFalse(createOptionsAndParse("", "-badArg"));
   }
+  
 
   public void testCombo() throws Exception {
     String descriptor = "[-opt1 arg1 arg2] [-opt2 arg1] [-opt3] arg1 arg2";
