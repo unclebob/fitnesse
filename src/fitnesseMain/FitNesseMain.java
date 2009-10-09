@@ -2,6 +2,7 @@ package fitnesseMain;
 
 import java.io.File;
 
+import fitnesse.components.PluginsClassLoader;
 import util.CommandLine;
 import fitnesse.Arguments;
 import fitnesse.ComponentFactory;
@@ -35,6 +36,7 @@ public class FitNesseMain {
   }
 
   private static void launchFitNesse(Arguments arguments) throws Exception {
+    loadPlugins();
     FitNesseContext context = loadContext(arguments);
     VelocityFactory.makeVelocityFactory(context);
     Updater updater = null;
@@ -44,6 +46,10 @@ public class FitNesseMain {
         .getDaysTillVersionsExpire();
     FitNesse fitnesse = new FitNesse(context, updater);
     updateAndLaunch(arguments, context, fitnesse);
+  }
+
+  private static void loadPlugins() {
+    new PluginsClassLoader().addPluginsToClassLoader();
   }
 
   static void updateAndLaunch(Arguments arguments, FitNesseContext context,
