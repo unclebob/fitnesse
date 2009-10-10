@@ -4,6 +4,9 @@ package util;
 
 import java.io.*;
 import java.util.*;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.lang.reflect.Method;
 
 public class FileUtil {
   public static final String ENDL = System.getProperty("line.separator");
@@ -184,5 +187,23 @@ public class FileUtil {
     List<String> parts = breakFilenameIntoParts(fileName);
     parts.remove(parts.size()-1);
     return buildPath(parts.toArray(new String[parts.size()]));
+  }
+
+  public static void addItemsToClasspath(String classpathItems) throws Exception {
+    final String separator = System.getProperty("path.separator");
+    System.setProperty("java.class.path", System.getProperty("java.class.path") + separator + classpathItems);
+    String[] items = classpathItems.split(separator);
+    for (int i = 0; i < items.length; i++) {
+      String item = items[i];
+      addUrlToClasspath(new File(item).toURI().toURL());
+    }
+  }
+
+  public static void addUrlToClasspath(URL u) throws Exception {
+    URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+    Class<URLClassLoader> sysclass = URLClassLoader.class;
+    Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
+    method.setAccessible(true);
+    method.invoke(sysloader, new Object[]{u});
   }
 }

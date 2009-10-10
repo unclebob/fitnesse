@@ -12,10 +12,7 @@ import util.StringUtil;
 import util.XmlUtil;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.net.Socket;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Arrays;
 
 public class TestRunner {
@@ -223,21 +220,4 @@ public class TestRunner {
     return counts;
   }
 
-  public static void addItemsToClasspath(String classpathItems) throws Exception {
-    final String separator = System.getProperty("path.separator");
-    System.setProperty("java.class.path", System.getProperty("java.class.path") + separator + classpathItems);
-    String[] items = classpathItems.split(separator);
-    for (int i = 0; i < items.length; i++) {
-      String item = items[i];
-      addUrlToClasspath(new File(item).toURI().toURL());
-    }
-  }
-
-  public static void addUrlToClasspath(URL u) throws Exception {
-    URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-    Class<URLClassLoader> sysclass = URLClassLoader.class;
-    Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
-    method.setAccessible(true);
-    method.invoke(sysloader, new Object[]{u});
-  }
 }
