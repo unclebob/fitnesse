@@ -191,12 +191,16 @@ public class FileUtil {
 
   public static void addItemsToClasspath(String classpathItems) throws Exception {
     final String separator = System.getProperty("path.separator");
-    System.setProperty("java.class.path", System.getProperty("java.class.path") + separator + classpathItems);
+    String currentClassPath = System.getProperty("java.class.path");
+    System.setProperty("java.class.path", currentClassPath + separator + classpathItems);
     String[] items = classpathItems.split(separator);
-    for (int i = 0; i < items.length; i++) {
-      String item = items[i];
-      addUrlToClasspath(new File(item).toURI().toURL());
+    for (String item : items) {
+      addFileToClassPath(item);
     }
+  }
+
+  private static void addFileToClassPath(String fileName) throws Exception {
+    addUrlToClasspath(new File(fileName).toURI().toURL());
   }
 
   public static void addUrlToClasspath(URL u) throws Exception {

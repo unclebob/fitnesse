@@ -1,26 +1,20 @@
 package fitnesseMain;
 
-import java.io.File;
-
-import fitnesse.components.PluginsClassLoader;
-import util.CommandLine;
-import fitnesse.Arguments;
-import fitnesse.ComponentFactory;
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.Updater;
-import fitnesse.VelocityFactory;
-import fitnesse.WikiPageFactory;
+import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
+import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
+import util.CommandLine;
+
+import java.io.File;
 
 public class FitNesseMain {
   private static String extraOutput;
@@ -48,7 +42,7 @@ public class FitNesseMain {
     updateAndLaunch(arguments, context, fitnesse);
   }
 
-  private static void loadPlugins() {
+  private static void loadPlugins() throws Exception {
     new PluginsClassLoader().addPluginsToClassLoader();
   }
 

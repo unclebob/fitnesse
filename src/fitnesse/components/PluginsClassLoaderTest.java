@@ -22,7 +22,7 @@ public class PluginsClassLoaderTest {
   }
 
   @Test
-  public void addPluginsToClassLoader() {
+  public void addPluginsToClassLoader() throws Exception {
     String[] dynamicClasses = new String[]{"fitnesse.testing.PluginX", "fitnesse.testing.PluginY"};
     assertLoadingClassCausesException(dynamicClasses);
     PluginsClassLoader pluginsClassLoader = new PluginsClassLoader();
