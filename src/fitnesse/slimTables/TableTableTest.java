@@ -273,4 +273,21 @@ public class TableTableTest {
       "[[pass(Table:fixture), argument], [, pass(x)], [pass(y), pass(z)]]"
     );
   }
+
+  @Test
+  public void tableWithSymbols() throws Exception {
+    makeTableTableAndBuildInstructions(tableTableHeader + "|$X|$X|\n");
+    tt.setSymbol("X", "value");
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("tableTable_id_0", "OK"),
+        list("tableTable_id_1", list(
+        list("pass", "fail")
+      ))
+      )
+    );
+    testContext.evaluateExpectations(pseudoResults);
+    tt.evaluateReturnValues(pseudoResults);
+    assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
+  }
 }

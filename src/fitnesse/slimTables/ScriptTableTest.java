@@ -46,8 +46,8 @@ public class ScriptTableTest {
     return new ScriptTable(t, "id", testContext);
   }
 
-  private void assertScriptResults(String sriptStatements, List<Object> scriptResults, String table) throws Exception {
-    buildInstructionsFor(sriptStatements);
+  private void assertScriptResults(String scriptStatements, List<Object> scriptResults, String table) throws Exception {
+    buildInstructionsFor(scriptStatements);
     List<Object> resultList = list(list("scriptTable_id_0", "OK"));
     resultList.addAll(scriptResults);
     Map<String, Object> pseudoResults = SlimClient.resultToMap(resultList);
