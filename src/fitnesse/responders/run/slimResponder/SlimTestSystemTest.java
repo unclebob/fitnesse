@@ -4,12 +4,15 @@ package fitnesse.responders.run.slimResponder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.net.BindException;
+import java.net.ServerSocket;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
@@ -17,6 +20,7 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -71,7 +75,7 @@ public class SlimTestSystemTest {
     for (int i=1; i<15; i++)
       assertEquals(8085 + (i%10), sys.getNextSlimSocket());
   }
-
+  
   @Test
   public void portStartsAtSlimPortVariable() throws Exception {
     WikiPage pageWithSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
@@ -426,6 +430,25 @@ public class SlimTestSystemTest {
   public void scenarioTableIsRegistered() throws Exception {
     getResultsForPageContents("|Scenario|myScenario|\n");
     assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
+  }
+  
+  /**
+   * This test is added to prevent an endless loop using the {@link HtmlSlimTestSystem#createSlimService(String)} when the
+   * port the server socket tries to connect to is already in use. This can happen when {@link SlimTestSystem#setFastTest(boolean)} 
+   * is set to <code>true</code>, trinidad uses this functionality.
+   */
+  @Test(expected=BindException.class)
+  public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
+    final ServerSocket serverSocket = new ServerSocket();
+    try {
+      serverSocket.bind(null);
+      SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
+      String slimArguments = String.format("%s %d", "", serverSocket.getLocalPort());
+      sys.createSlimService(slimArguments);
+      fail("should have thrown BindException indicating the port is already in use.");
+    } finally {
+      serverSocket.close();
+    }
   }
 
   private static class DummyListener implements TestSystemListener {
