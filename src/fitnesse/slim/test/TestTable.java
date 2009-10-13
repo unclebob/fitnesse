@@ -17,10 +17,12 @@ public class TestTable {
   }
 
   public List<?> doTable(List<?> l) {
+    List<String> row0 = (List<String>) l.get(0);
+    String firstCell = row0.get(0);
     return list(
       list("pass", "error:huh", param),
       list("bill", "no change", "pass:jake"),
-      list("pass:<img src=http://localhost:8080/files/images/stop.gif/>")
+      list("pass:<img src=http://localhost:8080/files/images/stop.gif/>", "pass:"+firstCell)
     );
   }
 }

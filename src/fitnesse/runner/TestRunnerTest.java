@@ -23,8 +23,6 @@ import util.XmlUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class TestRunnerTest {
   static String endl = System.getProperty("line.separator");
@@ -161,45 +159,6 @@ public class TestRunnerTest {
   public void testAcceptResults() throws Exception {
     PageResult result = new PageResult("SomePage");
     result.setTestSummary(new TestSummary(5, 0, 0, 0));
-  }
-
-  @Test
-  public void testAddUrlToClasspath() throws Exception {
-    ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-    assertTrue(systemClassLoader instanceof URLClassLoader);
-    URLClassLoader classLoader = (URLClassLoader) systemClassLoader;
-
-    URL sampleUrl = new File("src").toURI().toURL();
-
-    String classpath = classpathAsString(classLoader);
-    assertNotSubString(sampleUrl.toString(), classpath);
-
-    TestRunner.addUrlToClasspath(sampleUrl);
-    classpath = classpathAsString(classLoader);
-    assertSubString(sampleUrl.toString(), classpath);
-  }
-
-  @Test
-  public void testAddMultipleUrlsToClasspath() throws Exception {
-    String separator = System.getProperty("path.separator");
-    String paths = "/blah/blah" + separator + "C" + otherSeperator(separator) + "\\foo\\bar";
-    TestRunner.addItemsToClasspath(paths);
-    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-    String classpath = classpathAsString(classLoader);
-    assertSubString("/blah/blah", classpath);
-    assertMatches("[C" + otherSeperator(separator) + "?foo?bar]", classpath);
-  }
-
-  private String otherSeperator(String separator) {
-    return separator.equals(";") ? ":" : ";";
-  }
-
-  private String classpathAsString(URLClassLoader classLoader) {
-    URL[] urls = classLoader.getURLs();
-    StringBuffer urlString = new StringBuffer();
-    for (int i = 0; i < urls.length; i++)
-      urlString.append(urls[i].toString()).append(":");
-    return urlString.toString();
   }
 
   @Test
