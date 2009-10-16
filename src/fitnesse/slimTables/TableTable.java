@@ -80,21 +80,25 @@ public class TableTable extends SlimTable {
     List<Object> rowList = tableResults.get(resultRow);
     for (int col = 0; col < rowList.size(); col++) {
       int tableRow = resultRow + 1;
-      colorCell(col, tableRow, (String) rowList.get(col));
+      String contents = table.getCellContents(col, tableRow);
+      String replacedContents = replaceSymbolsWithFullExpansion(contents);
+      table.setCell(col, tableRow, replacedContents);
+      String result = (String) rowList.get(col);
+      colorCell(col, tableRow, result);
     }
   }
 
-  private void colorCell(int col, int row, String contents) {
-    if (contents.equalsIgnoreCase("no change") || contents.length() == 0)
+  private void colorCell(int col, int row, String result) {
+    if (result.equalsIgnoreCase("no change") || result.length() == 0)
       return; // do nothing
-    else if (contents.equalsIgnoreCase("pass"))
+    else if (result.equalsIgnoreCase("pass"))
       pass(col, row);
-    else if (contents.equalsIgnoreCase("fail"))
+    else if (result.equalsIgnoreCase("fail"))
       fail(col, row, table.getCellContents(col, row));
-    else if (contents.equalsIgnoreCase("ignore"))
+    else if (result.equalsIgnoreCase("ignore"))
       ignore(col, row, table.getCellContents(col, row));
-    else if (!colorCellWithMessage(col, row, contents))
-      fail(col, row, contents);
+    else if (!colorCellWithMessage(col, row, result))
+      fail(col, row, result);
   }
 
   private boolean colorCellWithMessage(int col, int row, String contents) {

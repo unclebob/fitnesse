@@ -18,6 +18,7 @@ import fitnesse.wiki.WikiPage;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -162,10 +163,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       Thread.sleep(10);
   }
 
-  private boolean tryCreateSlimService(String args) throws Exception {
+  private boolean tryCreateSlimService(String args) throws BindException {
     try {
       SlimService.main(args.trim().split(" "));
       return true;
+    } catch(BindException e) {
+      throw e;
     } catch (Exception e) {
       return false;
     }
