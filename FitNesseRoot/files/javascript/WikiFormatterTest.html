@@ -16,6 +16,26 @@ function setUp()
   formatter = new WikiFormatter();
 }
 
+function testIsNoTableRowIfRowStartsWithOtherCharacter()
+{
+    assertNull(formatter.isTableRow(">!|askj|as|"));
+}
+
+function testIsTableRowIfRowStartsWithBangBar()
+{
+    assertNotNull(formatter.isTableRow("!|askj|as|"));
+}
+
+function testIsTableRowIfRowStartsWithBar()
+{
+    assertNotNull(formatter.isTableRow("|askj|as|"));
+}
+
+function testIsTableRowIfRowStartsWithBarButDoesNotEndWithBar()
+{
+    assertNotNull(formatter.isTableRow("|askj|as|dd"));
+}
+
 function testFormat()
 {
   var original = "|cell1|cell2|cell3|\n"
@@ -122,6 +142,32 @@ function testFormatWithNoTables()
 {
   var original = "!note some wiki text\nwithout tables";
   assertEquals(original, formatter.format(original));
+}
+
+function testFormatWithXmlWikiMarkup()
+{
+  var original = "|xy|a|b|\n"
+               + "|x|!<<a>b</a>>!|z|\n";
+                              
+  var expected = "|xy|a           |b|\n"
+               + "|x |!<<a>b</a>>!|z|\n";
+                              
+  assertEquals(expected, formatter.format(original));
+}
+
+function testFormatWithMultiLineXmlWikiMarkup()
+{
+  var original = "|xy|a|bc|\n"
+               + "|x|!<\n"
+               + "<a>b</a>\n"
+               + ">!|z|\n";
+                              
+  var expected = "|xy|a|bc|\n"
+               + "|x      |!<\n"
+               + "<a>b</a>\n"
+               + ">!|z|\n";
+                              
+  assertEquals(expected, formatter.format(original));
 }
 
 </script>
