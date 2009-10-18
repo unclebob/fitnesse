@@ -139,7 +139,7 @@ public class ScriptTable extends SlimTable {
     int secondFuncNameCol = startingCol + 2;
     for (int actionNameCol = secondFuncNameCol; actionNameCol <= endingCol; actionNameCol += 2)
       actionName.append(" ").append(table.getCellContents(actionNameCol, row));
-    return actionName.toString();
+    return actionName.toString().trim();
   }
 
   private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row) {

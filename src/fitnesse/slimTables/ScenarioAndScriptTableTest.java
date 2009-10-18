@@ -2,22 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimClient;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 import static util.ListUtility.list;
 import static util.RegexTestCase.assertSubString;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.slim.SlimClient;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
 
 public class ScenarioAndScriptTableTest extends MockSlimTestContext {
   private WikiPage root;
@@ -54,6 +52,22 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     List<Object> expectedInstructions =
       list(
         list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "function", "7")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void simpleNameWithUnnamedArgument() throws Exception {
+    makeTables(
+      "!|scenario|f|a||b|\n" +
+        "|function|@a||@b|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|f|1||2|\n"
+    );
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "function", "1", "2")
       );
     assertEquals(expectedInstructions, instructions);
   }
