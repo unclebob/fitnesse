@@ -38,6 +38,17 @@ public class PageDataTest extends RegexTestCase {
     assertHasRegexp("<i>italics</i>", html);
   }
 
+  public void testVariablesWithinVariablesAreResolved() throws Exception {
+    String text = "!define x {b}\n!define y (a${x}c)\n${y}";
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), text);
+    String html = page.getData().getHtml();
+    assertHasRegexp("abc", html);
+    assertHasRegexp("variable defined: y=a\\$\\{x\\}c", html);
+    String variableContents = page.getData().getVariable("y");
+    assertEquals("abc", variableContents);
+  }
+
   public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
     PageData d = new PageData(new WikiPageDummy(), "<b>");
     String html = d.getHtml();

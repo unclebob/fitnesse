@@ -23,6 +23,7 @@ import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.PreformattedWidget;
 import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
 import fitnesse.wikitext.widgets.VariableDefinitionWidget;
+import fitnesse.wikitext.widgets.VariableWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import fitnesse.wikitext.widgets.WidgetWithTextArgument;
 import fitnesse.wikitext.widgets.XRefWidget;
@@ -40,7 +41,7 @@ public class PageData implements Serializable {
 
   public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(
       IncludeWidget.class, PreformattedWidget.class,
-      VariableDefinitionWidget.class);
+      VariableDefinitionWidget.class, VariableWidget.class);
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -221,25 +222,30 @@ public class PageData implements Serializable {
   }
 
   public String getVariable(String name) throws Exception {
-    initializeVariableRoot();
-    return variableRoot.getVariable(name);
+    return getInitializedVariableRoot().getVariable(name);
   }
 
   public void setLiterals(List<String> literals) {
     this.literals = literals;
   }
 
-  private void initializeVariableRoot() throws Exception {
+  private ParentWidget getInitializedVariableRoot() throws Exception {
     if (variableRoot == null) {
-      variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage,
-          literals, variableDefinitionWidgetBuilder);
-      variableRoot.render();
+      initializeVariableRoot();
     }
+    return variableRoot;
+  }
+  
+  
+  private void initializeVariableRoot() throws Exception {
+    variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage,
+        literals, variableDefinitionWidgetBuilder
+    );
+    variableRoot.render();
   }
 
   public void addVariable(String name, String value) throws Exception {
-    initializeVariableRoot();
-    variableRoot.addVariable(name, value);
+    getInitializedVariableRoot().addVariable(name, value);
   }
 
   private String processHTMLWidgets(String content, WikiPage context)
