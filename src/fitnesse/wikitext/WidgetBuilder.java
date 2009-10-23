@@ -71,7 +71,7 @@ public class WidgetBuilder {
 
   public WidgetBuilder() {
   }
-  
+
   public WidgetBuilder(Class<? extends WikiWidget>... widgetClasses) {
     for (Class<? extends WikiWidget> widgetClass : widgetClasses) {
       addWidgetClass(widgetClass);
@@ -92,7 +92,8 @@ public class WidgetBuilder {
       return widget;
     }
     catch (Exception e) {
-      RuntimeException exception = new RuntimeException("Widget Construction failed for " + 
+      System.out.println("text = " + text);
+      RuntimeException exception = new RuntimeException("Widget Construction failed for " +
         widgetClass.getName() + "\n" + e.getMessage());
       exception.setStackTrace(e.getStackTrace());
       throw exception;
