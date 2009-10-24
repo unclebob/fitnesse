@@ -2,20 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class ScenarioTableTest {
   private WikiPage root;
@@ -91,7 +89,7 @@ public class ScenarioTableTest {
 
   @Test
   public void manyInputsAndOutputs() throws Exception {
-     makeScenarioTable("|scenario|login user|user name|with password|password|giving message|message?|and status|login status?|\n");
+    makeScenarioTable("|scenario|login user|user name|with password|password|giving message|message?|and status|login status?|\n");
     assertEquals("LoginUserWithPasswordGivingMessageAndStatus", st.getName());
     Set<String> inputs = st.getInputs();
     assertEquals(2, inputs.size());
@@ -103,4 +101,13 @@ public class ScenarioTableTest {
     assertTrue(outputs.contains("loginStatus"));
   }
 
+  @Test
+  public void simpleNameWithUnnamedArguments() throws Exception {
+    makeScenarioTable("|scenario|f|a||b|\n");
+    assertEquals("f", st.getName());
+    Set<String> inputs = st.getInputs();
+    assertEquals(2, inputs.size());
+    assertTrue(inputs.contains("a"));
+    assertTrue(inputs.contains("b"));
+  }
 }

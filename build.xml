@@ -42,7 +42,6 @@
 			<zipfileset src="lib/json.jar" />
 			<zipfileset src="lib/velocity-1.6.2-dep.jar" />
 			<zipfileset src="lib/fitlibrary.jar" />
-			<zipfileset src="lib/maven-embedder-3.0-alpha-2-jar-with-dependencies.jar" />
 
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />

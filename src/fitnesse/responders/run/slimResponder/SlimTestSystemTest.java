@@ -2,16 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.net.BindException;
-import java.net.ServerSocket;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -21,12 +11,14 @@ import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.net.BindException;
+import java.net.ServerSocket;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -103,7 +95,7 @@ public class SlimTestSystemTest {
   @Test
   public void verboseOutputIfSlimFlagSet() throws Exception {
     getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-    assertTrue(responder.getCommandLine().indexOf("java -cp classes fitnesse.slim.SlimService -v") != -1);
+    assertTrue(responder.getCommandLine().indexOf("fitnesse.slim.SlimService -v") != -1);
   }
 
   @Test

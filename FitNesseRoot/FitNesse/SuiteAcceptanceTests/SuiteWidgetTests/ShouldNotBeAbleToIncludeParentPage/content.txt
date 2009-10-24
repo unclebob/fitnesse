@@ -1,0 +1,4 @@
+!|script|
+|given page|ParentPage|
+|given page|ParentPage.ChildPage|with content|&bang;include <ParentPage|
+|it should contain|Cannot include parent page|

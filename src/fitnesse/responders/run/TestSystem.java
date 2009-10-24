@@ -5,11 +5,14 @@ package fitnesse.responders.run;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-import java.util.Map;
 import java.util.Collections;
+import java.util.Map;
 
 public abstract class TestSystem implements TestSystemListener {
-  public static final String DEFAULT_COMMAND_PATTERN = "java -cp %p %m";
+  public static final String DEFAULT_COMMAND_PATTERN =
+    "java -cp fitnesse.jar" +
+    System.getProperties().get("path.separator") +
+    "%p %m";
   public static final String DEFAULT_DEBUG_PATTERN = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
   protected WikiPage page;
   protected boolean fastTest;
@@ -49,11 +52,11 @@ public abstract class TestSystem implements TestSystemListener {
       testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;
   }
-  
+
   private static String getCommandPattern(PageData pageData, boolean isRemoteDebug) throws Exception {
-    if (isRemoteDebug) 
+    if (isRemoteDebug)
       return getRemoteDebugCommandPattern(pageData);
-    else  
+    else
       return getNormalCommandPattern(pageData);
   }
 
