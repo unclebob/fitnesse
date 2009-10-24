@@ -18,7 +18,8 @@ public class TestSystemTest {
     WikiPage page = makeTestPage(pageText);
     
     Descriptor defaultDescriptor = TestSystem.getDescriptor(page.getData(), false);
-    assertEquals("java -cp %p %m", defaultDescriptor.commandPattern);
+    String sep = System.getProperty("path.separator");
+    assertEquals("java -cp fitnesse.jar"+sep+"%p %m", defaultDescriptor.commandPattern);
 
     Descriptor debugDescriptor = TestSystem.getDescriptor(page.getData(), true);
     assertEquals("java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m", debugDescriptor.commandPattern);
