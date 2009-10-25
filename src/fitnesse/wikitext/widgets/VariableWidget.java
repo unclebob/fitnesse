@@ -34,6 +34,7 @@ public class VariableWidget extends ParentWidget {
     if (value != null) {
       addChildWidgets(value);
       renderedText = childHtml();
+      parent.addVariable(name, renderedText);
     } else
       renderedText = makeUndefinedVariableExpression(name);
     rendered = true;

@@ -23,6 +23,7 @@ import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.PreformattedWidget;
 import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
 import fitnesse.wikitext.widgets.VariableDefinitionWidget;
+import fitnesse.wikitext.widgets.VariableWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import fitnesse.wikitext.widgets.WidgetWithTextArgument;
 import fitnesse.wikitext.widgets.XRefWidget;
@@ -40,7 +41,7 @@ public class PageData implements Serializable {
 
   public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(
       IncludeWidget.class, PreformattedWidget.class,
-      VariableDefinitionWidget.class);
+      VariableDefinitionWidget.class, VariableWidget.class);
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -89,6 +90,10 @@ public class PageData implements Serializable {
   private ParentWidget variableRoot;
   private List<String> literals;
 
+  public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
+  public static final String TEST_RUNNER = "TEST_RUNNER";
+  public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
+
   public PageData(WikiPage page) throws Exception {
     wikiPage = page;
     initializeAttributes();
@@ -101,9 +106,7 @@ public class PageData implements Serializable {
   }
 
   public PageData(PageData data) throws Exception {
-    this(data.getWikiPage());
-    wikiPage = data.wikiPage;
-    content = data.content;
+    this(data.getWikiPage(), data.content);
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
     variableRoot = data.variableRoot;
@@ -221,25 +224,41 @@ public class PageData implements Serializable {
   }
 
   public String getVariable(String name) throws Exception {
-    initializeVariableRoot();
-    return variableRoot.getVariable(name);
+    return getInitializedVariableRoot().getVariable(name);
+  }
+
+  public void addVariable(String name, String value) throws Exception {
+    getInitializedVariableRoot().addVariable(name, value);
   }
 
   public void setLiterals(List<String> literals) {
     this.literals = literals;
   }
 
-  private void initializeVariableRoot() throws Exception {
+  private ParentWidget getInitializedVariableRoot() throws Exception {
     if (variableRoot == null) {
-      variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage,
-          literals, variableDefinitionWidgetBuilder);
-      variableRoot.render();
+      initializeVariableRoot();
     }
+    return variableRoot;
+  }
+  
+  private void initializeVariableRoot() throws Exception {
+    variableRoot = new TextIgnoringWidgetRoot(getContentWithVariableRenderTriggers(), wikiPage,
+        literals, variableDefinitionWidgetBuilder
+    );
+    variableRoot.render();
   }
 
-  public void addVariable(String name, String value) throws Exception {
-    initializeVariableRoot();
-    variableRoot.addVariable(name, value);
+  private String getContentWithVariableRenderTriggers() throws Exception {
+    StringBuffer content = new StringBuffer(getContent())
+        .append(getVariableRenderTrigger(PATH_SEPARATOR))
+        .append(getVariableRenderTrigger(COMMAND_PATTERN))
+        .append(getVariableRenderTrigger(TEST_RUNNER));
+    return content.toString();
+  }
+
+  private String getVariableRenderTrigger(String variableName) {
+    return "\n#${" + variableName + "}";
   }
 
   private String processHTMLWidgets(String content, WikiPage context)

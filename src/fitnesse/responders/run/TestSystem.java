@@ -47,7 +47,7 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   private static String getNormalCommandPattern(PageData pageData) throws Exception {
-    String testRunner = pageData.getVariable("COMMAND_PATTERN");
+    String testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
     if (testRunner == null)
       testRunner = DEFAULT_COMMAND_PATTERN;
     return testRunner;
@@ -87,7 +87,7 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   public static String getPathSeparator(PageData pageData) throws Exception {
-    String separator = pageData.getVariable("PATH_SEPARATOR");
+    String separator = pageData.getVariable(PageData.PATH_SEPARATOR);
     if (separator == null)
       separator = (String) System.getProperties().get("path.separator");
     return separator;
@@ -115,7 +115,7 @@ public abstract class TestSystem implements TestSystemListener {
   public abstract void start() throws Exception;
 
   public static String getTestRunner(PageData data) throws Exception {
-    String program = data.getVariable("TEST_RUNNER");
+    String program = data.getVariable(PageData.TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner(data);
     return program;

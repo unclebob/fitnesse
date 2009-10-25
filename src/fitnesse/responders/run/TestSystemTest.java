@@ -36,6 +36,26 @@ public class TestSystemTest {
     assertEquals("java -remoteDebug -cp %p %m", debugDescriptor2.commandPattern);
   }
 
+  @Test
+  public void testCommandPatternWithVariable() throws Exception {
+    String specifiedPageText = "!define COMMAND_PATTERN (${MY_RUNNER} %p %m)\n" +
+                               "!define MY_RUNNER {rubyslim}\n";
+    WikiPage specifiedPage = makeTestPage(specifiedPageText);
+    
+    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage.getData(), false);
+    assertEquals("rubyslim %p %m", myDescriptor.commandPattern);
+  }
+
+  @Test
+  public void testTestRunnerWithVariable() throws Exception {
+    String specifiedPageText = "!define TEST_RUNNER (${MY_RUNNER}.rb)\n" +
+                               "!define MY_RUNNER {rubyslim}\n";
+    WikiPage specifiedPage = makeTestPage(specifiedPageText);
+    
+    Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage.getData(), false);
+    assertEquals("rubyslim.rb", myDescriptor.testRunner);
+  }
+
   WikiPage makeTestPage(String pageText) throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     PageCrawler crawler = root.getPageCrawler();

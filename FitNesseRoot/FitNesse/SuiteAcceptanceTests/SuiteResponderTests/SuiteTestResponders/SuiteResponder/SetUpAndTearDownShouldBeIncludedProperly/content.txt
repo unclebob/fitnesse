@@ -3,8 +3,8 @@
 !define PATHS {
 !path classes
 !path fitnesse.jar
-!define TEST_SYSTEM (slim:A)
-!define SLIM_PORT (9000)
+!-!define TEST_SYSTEM (slim:A)-!
+!-!define SLIM_PORT (9000)-!
 }
 
 !|script|page driver|
