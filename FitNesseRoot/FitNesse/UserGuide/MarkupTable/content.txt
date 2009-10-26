@@ -22,4 +22,17 @@ If you don't want any markup directives interpreted in the table, then you can u
 |!1 like a literal|--and is especially useful--|''for test tables.''|
 |^SinceTheyTend| * to have WikiWord symbols in them.|
 
+!2 Hidden table heads
+You can hide the first row of a table. This allows you to write comment tables that just look like ordinary HTML tables.
+The complete table still gets executed, the first row is just hidden by a CSS rule. 
+Precede the first row with a '#'. This also works for literal tables.
+
+'''Markup Text'''
+{{{#!|Comment|
+|Beta|gamma|Delta|
+|1|2|3|}}}----
+'''Displays as:'''
+#!|Comment|
+|Beta|gamma|Delta|
+|1|2|3|
 

@@ -10,6 +10,7 @@ public class TableRowWidget extends ParentWidget {
   private TableWidget parentTable;
 
   private boolean isLiteral;
+  private boolean isCommentRow = false;
 
   public TableRowWidget(TableWidget parentTable, String text, boolean isLiteral) throws Exception {
     super(parentTable);
@@ -27,17 +28,29 @@ public class TableRowWidget extends ParentWidget {
   }
 
   public String render() throws Exception {
-    StringBuffer html = new StringBuffer("<tr>");
+    StringBuffer html = new StringBuffer(getRowStartTag());
     html.append(childHtml()).append("</tr>\n");
     return html.toString();
   }
 
+  private String getRowStartTag() {
+    if (isCommentRow) {
+      return "<tr class=\"hidden\">";
+    } else {
+      return "<tr>";
+    }
+  }
+  
   public void addCells(String text) throws Exception {
     Matcher match = pattern.matcher(text);
     if (match.find()) {
       new TableCellWidget(this, match.group(1), isLiteral);
       addCells(text.substring(match.end()));
     }
+  }
+
+  public void markAsCommentRow() {
+    isCommentRow  = true;
   }
 }
 

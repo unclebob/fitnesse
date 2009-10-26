@@ -22,8 +22,24 @@ public class CommentWidgetTest extends TestCase {
     assertTrue("match1", Pattern.matches(CommentWidget.REGEXP, "# Comment text\n"));
     assertTrue("match2", Pattern.matches(CommentWidget.REGEXP, "#\n"));
     assertTrue("match3", !Pattern.matches(CommentWidget.REGEXP, " #\n"));
+    assertTrue("match4", Pattern.matches(CommentWidget.REGEXP, "#|Comment|no table, because no ending bar\n"));
+    assertTrue("match5", Pattern.matches(CommentWidget.REGEXP, "#!|Comment|no table, because no ending bar\n"));
+    assertTrue("match6", Pattern.matches(CommentWidget.REGEXP, "#Comment|no table, because no starting bar|\n"));
   }
 
+  public void testCommentTablesAreNotCommentLines() throws Exception {
+    assertFalse("match1", Pattern.matches(CommentWidget.REGEXP, "#|Comment table|\n"));
+    assertFalse("match2", Pattern.matches(CommentWidget.REGEXP, "#|Comment|table|\n"));
+    assertFalse("match3", Pattern.matches(CommentWidget.REGEXP, "#!|Comment table|\n"));
+  }
+
+  public void testRegexpMatchesOnlyOneLine() throws Exception {
+    assertFalse("match1", Pattern.matches(CommentWidget.REGEXP, "#\na\n"));
+    assertFalse("match2", Pattern.matches(CommentWidget.REGEXP, "#\n a\n"));
+    assertFalse("match3", Pattern.matches(CommentWidget.REGEXP, "#a\na\n"));
+    assertFalse("match4", Pattern.matches(CommentWidget.REGEXP, "#a\n a\n"));
+  }
+  
   public void testHtml() throws Exception {
     CommentWidget widget = new CommentWidget(root, "# some text\n");
     assertEquals("", widget.render());

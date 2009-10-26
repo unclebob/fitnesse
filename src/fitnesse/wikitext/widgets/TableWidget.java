@@ -9,10 +9,11 @@ import fitnesse.wikitext.WikiWidget;
 
 public class TableWidget extends ParentWidget {
   public static final String LF = LINE_BREAK_PATTERN;
-  public static final String REGEXP = "^!?(?:\\|[^\r\n]*?\\|" + LF + ")+";
-  private static final Pattern pattern = Pattern.compile("(!?)(\\|[^\r\n]*?)\\|" + LF);
+  public static final String REGEXP = "^#?!?(?:\\|[^\r\n]*?\\|" + LF + ")+";
+  private static final Pattern pattern = Pattern.compile("(#?)(!?)(\\|[^\r\n]*?)\\|" + LF);
 
   public boolean isLiteralTable;
+  public boolean isCommentTable;
   private int columns = 0;
 
   public int getColumns() {
@@ -21,6 +22,9 @@ public class TableWidget extends ParentWidget {
 
   public String asWikiText() throws Exception {
     StringBuffer wikiText = new StringBuffer();
+    if (isCommentTable) {
+      wikiText.append("#");
+    }
     if (isLiteralTable)
       wikiText.append("!");
     appendTableWikiText(wikiText);
@@ -53,8 +57,9 @@ public class TableWidget extends ParentWidget {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
-      isLiteralTable = "!".equals(match.group(1));
-      addRows(text);
+      isCommentTable = "#".equals(match.group(1));
+      isLiteralTable = "!".equals(match.group(2));
+      addRows(text, isCommentTable);
       getMaxNumberOfColumns();
     } else
       ; // throw Exception?
@@ -74,13 +79,21 @@ public class TableWidget extends ParentWidget {
     return html.toString();
   }
 
-  public void addRows(String text) throws Exception {
+  private void addRows(String text, boolean markAsCommentRow) throws Exception {
     Matcher match = pattern.matcher(text);
     if (match.find()) {
-      new TableRowWidget(this, match.group(2), isLiteralTable);
-      addRows(text.substring(match.end()));
+      addRow(match.group(3), markAsCommentRow);
+      addRows(text.substring(match.end()), false);
     }
   }
+
+  private void addRow(String wikiTextRow, boolean markAsCommentRow) throws Exception {
+    TableRowWidget rowWidget = new TableRowWidget(this, wikiTextRow, isLiteralTable);
+    if (markAsCommentRow) {
+      rowWidget.markAsCommentRow();
+    }
+  }
+  
 
   public void setLiteralTable(boolean isLiteralTable) {
     this.isLiteralTable = isLiteralTable;
