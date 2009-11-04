@@ -25,7 +25,7 @@ public class VariableWidget extends ParentWidget {
 
   public String render() throws Exception {
     if (!rendered)
-      doRender();
+      doRender();                                              
     return renderedText;
   }
 
