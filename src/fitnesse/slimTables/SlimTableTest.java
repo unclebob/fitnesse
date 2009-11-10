@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static fitnesse.slimTables.SlimTable.approximatelyEqual;
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static fitnesse.slimTables.SlimTable.Disgracer.disgraceClassName;
 import static fitnesse.slimTables.SlimTable.Disgracer.disgraceMethodName;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import static fitnesse.slimTables.SlimTable.approximatelyEqual;
+import static org.junit.Assert.*;
 import org.junit.Test;
+
+import java.util.Map;
 
 public class SlimTableTest {
   @Test
@@ -69,5 +69,92 @@ public class SlimTableTest {
   @Test
   public void classicRoundUp() throws Exception {
     assertTrue(approximatelyEqual("3.05", "3.049"));
+  }
+
+  @Test
+  public void replaceSymbolsShouldReplaceSimpleSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    assertEquals("this is a", table.replaceSymbols("this is $x"));
+  }
+
+  @Test
+  public void replaceSymbolsShouldReplaceMoreThanOneSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    table.setSymbol("y", "b");
+    assertEquals("this is a and b", table.replaceSymbols("this is $x and $y"));
+  }
+
+  @Test
+  public void replaceSymbolsShouldConcatenate() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    table.setSymbol("y", "b");
+    assertEquals("this is ab", table.replaceSymbols("this is $x$y"));
+  }
+
+  @Test
+  public void replaceSymbolsShouldReplaceSameSymbolMoreThanOnce() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    assertEquals("this is a and a again", table.replaceSymbols("this is $x and $x again"));
+  }
+
+  @Test
+  public void replaceSymbolsShouldMatchFullSymbolName() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("V", "v");
+    table.setSymbol("VX", "x");
+    String actual = table.replaceSymbols("$V $VX");
+    assertEquals("v x", actual);
+  }
+
+  @Test
+  public void replaceSymbolsFullExpansion_ShouldReplaceSimpleSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    assertEquals("this is $x->[a]", table.replaceSymbolsWithFullExpansion("this is $x"));
+  }
+
+  @Test
+  public void replaceSymbolsFullExpansion_ShouldReplaceMoreThanOneSymbol() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    table.setSymbol("y", "b");
+    assertEquals("this is $x->[a] and $y->[b]", table.replaceSymbolsWithFullExpansion("this is $x and $y"));
+  }
+
+  @Test
+  public void replaceSymbolsFullExpansion_ShouldReplaceSameSymbolMoreThanOnce() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    assertEquals("this is $x->[a] and $x->[a] again", table.replaceSymbolsWithFullExpansion("this is $x and $x again"));
+  }
+
+  @Test
+  public void replaceSymbolsFullExpansion_ShouldMatchFullSymbolName() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("V", "v");
+    table.setSymbol("VX", "x");
+    String actual = table.replaceSymbolsWithFullExpansion("$V $VX");
+    assertEquals("$V->[v] $VX->[x]", actual);
+  }
+
+
+  private static class MockTable extends SlimTable {
+    public MockTable() {
+      super(new MockSlimTestContext());
+    }
+
+    protected String getTableType() {
+      return null;
+    }
+
+    public void appendInstructions() {
+    }
+
+    public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+    }
   }
 }
