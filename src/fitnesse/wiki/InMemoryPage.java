@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import fitnesse.ComponentFactory;
+import util.FileSystem;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -20,9 +21,13 @@ public class InMemoryPage extends CommitingPage {
   protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
   protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
-  public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) throws Exception {
-    this(rootPageName, null);
-  }
+    public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) throws Exception {
+      this(rootPageName, null);
+    }
+
+    public InMemoryPage(String rootPath, String rootPageName, FileSystem fileSystem, ComponentFactory factory) throws Exception {
+      this(rootPageName, null);
+    }
 
   protected InMemoryPage(String name, WikiPage parent) throws Exception {
     super(name, parent);

@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import util.DiskFileSystem;
+import util.FileSystem;
 import util.FileUtil;
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
@@ -27,26 +29,24 @@ public class FileSystemPage extends CachingPage {
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
 
-  public FileSystemPage(final String path, final String name, final ComponentFactory componentFactory) throws Exception {
+  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) throws Exception {
     super(name, null);
     this.path = path;
 
     versionsController = createVersionsController(componentFactory);
-    createDirectoryIfNewPage();
-  }
-
-  protected FileSystemPage(final String path, final String name, final WikiPage parent,
-                           final VersionsController versionsController) throws Exception {
-    super(name, parent);
-    this.path = path;
-
-    this.versionsController = versionsController;
-    createDirectoryIfNewPage();
+    createDirectoryIfNewPage(fileSystem);
   }
 
   public FileSystemPage(final String path, final String name) throws Exception {
-    this(path, name, new ComponentFactory());
+    this(path, name, new DiskFileSystem(), new ComponentFactory());
   }
+
+    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) throws Exception {
+        super(name, parent);
+        path = parent.getFileSystemPath();
+        versionsController = parent.versionsController;
+        createDirectoryIfNewPage(fileSystem);
+    }
 
   private VersionsController createVersionsController(ComponentFactory factory) throws Exception {
     return (VersionsController) factory.createComponent(ComponentFactory.VERSIONS_CONTROLLER,
@@ -133,7 +133,8 @@ public class FileSystemPage extends CachingPage {
 
   @Override
   protected WikiPage createChildPage(final String name) throws Exception {
-    return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
+    //return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
+    return new PageRepository().makeChildPage(name, this);
   }
 
   private void loadContent(final PageData data) throws Exception {
@@ -256,11 +257,10 @@ public class FileSystemPage extends CachingPage {
     return this.versionsController.getRevisionData(this, versionName);
   }
 
-  private void createDirectoryIfNewPage() throws Exception {
+  private void createDirectoryIfNewPage(FileSystem fileSystem) throws Exception {
     String pagePath = getFileSystemPath();
-    File baseDir = new File(pagePath);
-    if (!baseDir.exists()) {
-      baseDir.mkdirs();
+    if (!fileSystem.exists(pagePath)) {
+      fileSystem.makeDirectory(pagePath);
       cmSystem.update(pagePath);
     }
   }
