@@ -34,6 +34,16 @@ public class TableWidgetTest extends WidgetTestCase {
     assertNoMatch(" !|a|\n");
   }
 
+  public void testRegexpForCommentedTable() throws Exception {
+    assertMatch("#|comment|\n");
+    assertMatch("#|something|\n");
+    assertMatch("#!|something|\n");
+    assertNoMatch("# |a|\n");
+    assertNoMatch(" #|a|\n");
+    assertNoMatch("# !|a|\n");
+    assertNoMatch("!#|a|\n");
+  }
+  
   public void testSimpleTable() throws Exception {
     TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|\n");
     assertEquals(1, table.numberOfChildren());
@@ -91,6 +101,27 @@ public class TableWidgetTest extends WidgetTestCase {
 
   public void testCanBuildWikiTextFromTestTable() throws Exception {
     String testTable = "!|a|b|\n|c|d|\n";
+    TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
+    assertEquals(testTable, table.asWikiText());
+  }
+  
+  public void testCommentTableAsHtml() throws Exception {
+    TableWidget table = new TableWidget(new MockWidgetRoot(), "#|a|\n|b|c|\n");
+    String expected = "<table border=\"1\" cellspacing=\"0\">\n<tr class=\"hidden\"><td colspan=\"2\">a</td>" +
+      HtmlElement.endl + "</tr>\n<tr><td>b</td>" +
+      HtmlElement.endl + "<td>c</td>" +
+      HtmlElement.endl + "</tr>\n</table>\n";
+    assertEquals(expected, table.render());
+  }
+
+  public void testCanBuildWikiTextFromCommentTable() throws Exception {
+    String testTable = "#|a|b|\n|c|d|\n";
+    TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
+    assertEquals(testTable, table.asWikiText());
+  }
+
+  public void testCanBuildWikiTextFromLiteralCommentTable() throws Exception {
+    String testTable = "#!|a|b|\n|c|d|\n";
     TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
     assertEquals(testTable, table.asWikiText());
   }

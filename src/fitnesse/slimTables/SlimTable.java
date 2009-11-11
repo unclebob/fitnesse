@@ -36,6 +36,10 @@ public abstract class SlimTable {
     instructions = new ArrayList<Object>();
   }
 
+  SlimTable(SlimTestContext testContext) {
+    this.testContext = testContext;
+  }
+
   public SlimTable getParent() {
     return parent;
   }
@@ -483,46 +487,47 @@ public abstract class SlimTable {
   }
 
   class SymbolReplacer {
-    protected String stringToReplace;
-    protected List<String> alreadyReplaced = new ArrayList<String>();
+    protected String replacedString;
     private Matcher symbolMatcher;
     private final Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
+    private int startingPosition;
 
     SymbolReplacer(String s) {
-      this.stringToReplace = s;
+      this.replacedString = s;
       symbolMatcher = symbolPattern.matcher(s);
     }
 
     String replace() {
       replaceAllSymbols();
-      return stringToReplace;
+      return replacedString;
     }
 
     private void replaceAllSymbols() {
-      for (String symbolName = nextSymbol(); symbolName != null; symbolName = nextSymbol())
-        replaceAllInstances(symbolName);
+      startingPosition = 0;
+      while (symbolFound())
+        replaceOneSymbol();
     }
 
-    private String nextSymbol() {
-      return symbolMatcher.find() ? symbolMatcher.group(1) : null;
+    private void replaceOneSymbol() {
+      String symbolName = symbolMatcher.group(1);
+      String value = getSymbolValue(symbolName);
+      String prefix = replacedString.substring(0, symbolMatcher.start());
+      String suffix = replacedString.substring(symbolMatcher.end());
+      replacedString = prefix + value + suffix;
+      int replacementEnd = symbolMatcher.start() + value.length();
+      startingPosition = Math.min(replacementEnd, replacedString.length());
     }
 
-    private void replaceAllInstances(String symbolName) {
-      if (shouldReplaceSymbol(symbolName))
-        replaceSymbol(symbolName);
+    private String getSymbolValue(String symbolName) {
+      String value = translate(symbolName);
+      if (value == null)
+        value = "";
+      return value;
     }
 
-    private boolean shouldReplaceSymbol(String symbolName) {
-      return getSymbol(symbolName) != null && !alreadyReplaced.contains(symbolName);
-    }
-
-    private void replaceSymbol(String symbolName) {
-      alreadyReplaced.add(symbolName);
-      stringToReplace = stringToReplace.replace(symbolExpression(symbolName), translate(symbolName));
-    }
-
-    private String symbolExpression(String symbolName) {
-      return "$" + symbolName;
+    private boolean symbolFound() {
+      symbolMatcher = symbolPattern.matcher(replacedString);
+      return symbolMatcher.find(startingPosition);
     }
 
     protected String translate(String symbolName) {

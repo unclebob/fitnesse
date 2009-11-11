@@ -169,7 +169,8 @@ public class PageHistory {
 
   public SortedSet<Date> datesInChronologicalOrder() {
     Set<Date> dates = testResultMap.keySet();
-    SortedSet<Date> sortedDates = new TreeSet<Date>(dates);
+    SortedSet<Date> sortedDates = new TreeSet<Date>(Collections.reverseOrder());
+    sortedDates.addAll(dates);
     return sortedDates;
   }
 

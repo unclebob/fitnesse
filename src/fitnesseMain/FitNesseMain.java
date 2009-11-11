@@ -151,6 +151,7 @@ public class FitNesseMain {
     System.err.println("\t-o omit updates");
     System.err
         .println("\t-a {user:pwd | user-file-name} enable authentication.");
+    System.err.println("\t-i Install only, then quit.");
   }
 
   private static void printStartMessage(Arguments args, FitNesseContext context) {

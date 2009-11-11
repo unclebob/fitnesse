@@ -2,18 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.converters.VoidConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.slim.converters.VoidConverter;
 
 public abstract class ListExecutorTestBase {
   protected List<Object> statements;
@@ -150,6 +148,14 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id1", "callAndAssign", "v1", "testSlim", "echoString", "Bob"));
     statements.add(list("id2", "callAndAssign", "v2", "testSlim", "echoString", "Martin"));
     statements.add(list("id3", "call", "testSlim", "echoString", "name: $v1 $v2"));
+    respondsWith(list(list("id1", "Bob"), list("id2", "Martin"), list("id3", "name: Bob Martin")));
+  }
+
+  @Test
+  public void canReplaceMultipleVariablesInAnArgumentWhenOneVarIsPrefixOfAnother() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "echoString", "Bob"));
+    statements.add(list("id2", "callAndAssign", "v1", "testSlim", "echoString", "Martin"));
+    statements.add(list("id3", "call", "testSlim", "echoString", "name: $v $v1"));
     respondsWith(list(list("id1", "Bob"), list("id2", "Martin"), list("id3", "name: Bob Martin")));
   }
 

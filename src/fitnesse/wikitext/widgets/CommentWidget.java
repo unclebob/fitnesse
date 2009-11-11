@@ -3,7 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 public class CommentWidget extends TextWidget {
-  public static final String REGEXP = "^#[^\r\n]*(?:(?:\r\n)|\n|\r)?";
+  public static final String REGEXP = "^#(" + LINE_BREAK_PATTERN + "|(?:[^!\\|\r\n])[^\r\n]*" + LINE_BREAK_PATTERN + "?|!?\\|[^\r\n]*[^\\|]" + LINE_BREAK_PATTERN + ")";
 
   public CommentWidget(ParentWidget parent, String text) {
     super(parent, text);

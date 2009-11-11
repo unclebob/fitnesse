@@ -128,8 +128,8 @@ public class PageHistoryResponderTest {
     Date date1 = dateFormat.parse("20090418123103");
     Date date2 = dateFormat.parse("20090503110451");
     Date[] dateArray = dates.toArray(new Date[dates.size()]);
-    assertEquals(date1, dateArray[0]);
-    assertEquals(date2, dateArray[1]);
+    assertEquals(date1, dateArray[1]);
+    assertEquals(date2, dateArray[0]);
     PageHistory.PassFailBar passFailBar = pageHistory.getPassFailBar(date1, 50);
     assertEquals(1, passFailBar.getPass());
     assertEquals(6, passFailBar.getFail());

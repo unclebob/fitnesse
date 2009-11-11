@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 public class VariableStore {
   private Map<String, Object> variables = new HashMap<String, Object>();
+  private Matcher symbolMatcher;
 
   public void setVariable(String name, Object value) {
     variables.put(name, value);
@@ -45,11 +46,11 @@ public class VariableStore {
       if ("".equals(arg) || null == arg) {
         break;
       }
-      Matcher symbolMatcher = symbolPattern.matcher(arg.substring(startingPosition));
-      if (symbolMatcher.find()) {
+      symbolMatcher = symbolPattern.matcher(arg);
+      if (symbolMatcher.find(startingPosition)) {
         String symbolName = symbolMatcher.group(1);
         arg = replaceSymbolInArg(arg, symbolName);
-        startingPosition += symbolMatcher.start(1);
+        startingPosition = symbolMatcher.start(1);
       } else {
         break;
       }
@@ -62,7 +63,7 @@ public class VariableStore {
       String replacement = (String) variables.get(symbolName);
       if (replacement == null)
         replacement = "null";
-      arg = arg.replace("$" + symbolName, replacement);
+      arg = arg.substring(0, symbolMatcher.start()) + replacement + arg.substring(symbolMatcher.end());
     }
     return arg;
   }

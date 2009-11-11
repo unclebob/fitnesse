@@ -97,4 +97,13 @@ public class VariableWidgetTest extends WidgetTestCase {
     w = new VariableWidget(widgetRoot, "${paren}");
     assertEquals("paren literal", w.render());
   }
+
+  public void testNestedVariable() throws Exception {
+    WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define var {zot}\n!define voo (x${var})\n");
+    WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
+
+    ParentWidget widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+    VariableWidget w = new VariableWidget(widgetRoot, "${voo}");
+    assertEquals("xzot", w.render());
+  }
 }

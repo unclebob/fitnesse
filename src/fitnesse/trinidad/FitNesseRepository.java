@@ -165,6 +165,7 @@ public class FitNesseRepository implements TestRepository {
     try {
       // this should ideally execute FitNesseMain.loadContext
       FitNesseContext context = new FitNesseContext();
+      FitNesseContext.globalContext = context; // TODO Uncle Bob says "ICK!"
       context.rootPath = rootPath;
       ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
       context.rootDirectoryName = "FitNesseRoot";

@@ -29,7 +29,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
     crawler = root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-    page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page '''two'''");
+    page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
     child1 = crawler.addPage(page2, PathParser.parse("ChildOne"), "child page");
     child2 = crawler.addPage(page2, PathParser.parse("ChildTwo"), "child two");
     grandChild1 = crawler.addPage(child1, PathParser.parse("GrandChildOne"), "grand child one");
@@ -51,19 +51,19 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   public void testIsCollapsable() throws Exception {
-    IncludeWidget widget = createIncludeWidget(page1, "PageOne");
+    IncludeWidget widget = createIncludeWidget(page1, "PageTwo");
     final String result = widget.render();
     assertSubString("class=\"collapsable\"", result);
   }
 
   public void testSeamlessIsNotCollapsable() throws Exception {
-    IncludeWidget widget = createIncludeWidget(page1, "-seamless PageOne");
+    IncludeWidget widget = createIncludeWidget(page1, "-seamless PageTwo");
     final String result = widget.render();
     assertNotSubString("class=\"collapsable\"", result);
   }
 
   public void testCollapsedIsHidden() throws Exception {
-    IncludeWidget widget = createIncludeWidget(page1, "-c PageOne");
+    IncludeWidget widget = createIncludeWidget(page1, "-c PageTwo");
     final String result = widget.render();
     assertNotSubString("class=\"collapsable\"", result);
     assertSubString("class=\"hidden\"", result);
@@ -71,7 +71,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   public void testHasEditLink() throws Exception {
-    IncludeWidget widget = createIncludeWidget(page1, "PageOne");
+    IncludeWidget widget = createIncludeWidget(page1, "PageTwo");
     final String result = widget.render();
     assertHasRegexp("^.*href.*edit.*$", result);
   }
@@ -292,15 +292,15 @@ public class IncludeWidgetTest extends WidgetTestCase {
   }
 
   public void testRenderIncludedSibling() throws Exception {
-    IncludeWidget widget = createIncludeWidget(page1, "PageOne");
+    IncludeWidget widget = createIncludeWidget(page1, "PageTwo");
     final String result = widget.render();
-    verifyRegexes(new String[]{"page one", "Included page: .*PageOne"}, result);
+    verifyRegexes(new String[]{"page two", "Included page: .*PageTwo"}, result);
   }
 
   public void testRenderIncludedSiblingSeamless() throws Exception {
-    IncludeWidget widget = createIncludeWidget(page1, "-seamless PageOne");
+    IncludeWidget widget = createIncludeWidget(page1, "-seamless PageTwo");
     final String result = widget.render();
-    verifySubstrings(new String[]{"page one<br/>"}, result);
+    verifySubstrings(new String[]{"page two<br/>"}, result);
   }
 
   public void testRenderIncludedNephew() throws Exception {
@@ -313,6 +313,13 @@ public class IncludeWidgetTest extends WidgetTestCase {
     IncludeWidget widget = createIncludeWidget(page2, ">ChildOne");
     String result = widget.render();
     verifyRegexes(new String[]{"child page", "class=\"included\""}, result);
+  }
+
+  public void testCannotIncludeParentPage() throws Exception {
+    WikiPage childPage = crawler.addPage(page1, PathParser.parse("ChildPage"));
+    IncludeWidget widget = createIncludeWidget(childPage, "<PageOne");
+    String result = widget.render();
+    assertSubString("Cannot include parent page", result);
   }
 
   public void testRenderBackwardsSearch() throws Exception {

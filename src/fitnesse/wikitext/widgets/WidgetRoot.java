@@ -93,7 +93,7 @@ public class WidgetRoot extends ParentWidget {
   }
 
   public String getVariable(String key) throws Exception {
-    String value = (String) variables.get(key);
+    String value = variables.get(key);
 
     if (key.equals("PAGE_NAME"))
       value = page.getName();

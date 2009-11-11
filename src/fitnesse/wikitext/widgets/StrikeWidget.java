@@ -28,5 +28,4 @@ public class StrikeWidget extends ParentWidget {
     return strike.toString();
 
   }
-
 }
