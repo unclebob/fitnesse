@@ -44,7 +44,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     Slim.addConverter(Boolean[].class, new BooleanArrayConverter());
     Slim.addConverter(double[].class, new DoubleArrayConverter());
     Slim.addConverter(Double[].class, new DoubleArrayConverter());
-
+    PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
   }
 
   public void setVariable(String name, Object value) {
