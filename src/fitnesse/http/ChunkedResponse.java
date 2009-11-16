@@ -30,7 +30,8 @@ public class ChunkedResponse extends Response {
   }
 
   protected void addSpecificHeaders() {
-    addHeader("Transfer-Encoding", "chunked");
+    if (!dontChunk)
+      addHeader("Transfer-Encoding", "chunked");
   }
 
   public static String asHex(int value) {

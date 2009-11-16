@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;
-  private boolean closed = false;
+  protected boolean closed = false;
 
   public MockResponseSender() {
     socket = new MockSocket("Mock");
@@ -51,5 +51,14 @@ public class MockResponseSender implements ResponseSender {
 
   public boolean isClosed() {
     return closed;
+  }
+
+  public static class WaitingSender extends MockResponseSender {
+    @Override
+    public void doSending(Response response) throws Exception {
+      response.readyToSend(this);
+      while (!closed)
+        Thread.sleep(1000);
+    }
   }
 }

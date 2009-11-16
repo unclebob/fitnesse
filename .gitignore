@@ -14,6 +14,7 @@ classes/*
 *-*.zip
 *.ipr
 fitnesse*.zip
+fitnesse.jar
 .DS_Store
 target/*
 *.iml

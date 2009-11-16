@@ -2,15 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import java.io.File;
-
-import junit.framework.TestCase;
-import util.FileUtil;
 import fitnesse.Arguments;
 import fitnesse.ComponentFactory;
 import fitnesse.FitNesse;
@@ -20,21 +11,32 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import static org.mockito.Mockito.*;
+import util.FileUtil;
 
-public class FitNesseMainTest extends TestCase {
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+
+public class FitNesseMainTest {
 
   private FitNesseContext context;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
     context = new FitNesseContext();
   }
 
-  @Override
+  @After
   public void tearDown() throws Exception {
     FileUtil.deleteFileSystemDirectory("testFitnesseRoot");
   }
 
+  @Test
   public void testInstallOnly() throws Exception {
     Arguments args = new Arguments();
     args.setInstallOnly(true);
@@ -44,6 +46,20 @@ public class FitNesseMainTest extends TestCase {
     verify(fitnesse, times(1)).applyUpdates();
   }
 
+  @Test
+  public void commandArgCallsExecuteSingleCommand() throws Exception {
+    Arguments args = new Arguments();
+    args.setCommand("command");
+    FitNesse fitnesse = mock(FitNesse.class);
+    when(fitnesse.start()).thenReturn(true);
+    FitNesseMain.updateAndLaunch(args, context, fitnesse);
+    verify(fitnesse, times(1)).applyUpdates();
+    verify(fitnesse, times(1)).start();
+    verify(fitnesse, times(1)).executeSingleCommand("command");
+    verify(fitnesse, times(1)).stop();
+  }
+
+  @Test
   public void testDirCreations() throws Exception {
     context.port = 80;
     context.rootPagePath = "testFitnesseRoot";
@@ -53,36 +69,41 @@ public class FitNesseMainTest extends TestCase {
     assertTrue(new File("testFitnesseRoot/files").exists());
   }
 
+  @Test
   public void testMakeNullAuthenticator() throws Exception {
     Authenticator a = FitNesseMain.makeAuthenticator(null,
-        new ComponentFactory("blah"));
+      new ComponentFactory("blah"));
     assertTrue(a instanceof PromiscuousAuthenticator);
   }
 
+  @Test
   public void testMakeOneUserAuthenticator() throws Exception {
     Authenticator a = FitNesseMain.makeAuthenticator("bob:uncle",
-        new ComponentFactory("blah"));
+      new ComponentFactory("blah"));
     assertTrue(a instanceof OneUserAuthenticator);
     OneUserAuthenticator oua = (OneUserAuthenticator) a;
     assertEquals("bob", oua.getUser());
     assertEquals("uncle", oua.getPassword());
   }
 
+  @Test
   public void testMakeMultiUserAuthenticator() throws Exception {
     final String passwordFilename = "testpasswd";
     File passwd = new File(passwordFilename);
     passwd.createNewFile();
     Authenticator a = FitNesseMain.makeAuthenticator(passwordFilename,
-        new ComponentFactory("blah"));
+      new ComponentFactory("blah"));
     assertTrue(a instanceof MultiUserAuthenticator);
     passwd.delete();
   }
 
+  @Test
   public void testContextFitNesseGetSet() throws Exception {
     FitNesse fitnesse = new FitNesse(context, false);
     assertSame(fitnesse, context.fitnesse);
   }
 
+  @Test
   public void testIsRunning() throws Exception {
     context.port = FitNesseUtil.port;
     FitNesse fitnesse = new FitNesse(context, false);
@@ -96,9 +117,21 @@ public class FitNesseMainTest extends TestCase {
     assertFalse(fitnesse.isRunning());
   }
 
+  @Test
   public void testShouldInitializeFitNesseContext() {
     context.port = FitNesseUtil.port;
     new FitNesse(context, false);
     assertNotNull(FitNesseContext.globalContext);
+  }
+
+  @Test
+  public void canRunSingleCommand() throws Exception {
+    PrintStream out = System.out;
+    ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputBytes));
+    FitNesseMain.main(new String[] {"-o", "-c", "/root"});
+    System.setOut(out);
+    String response = outputBytes.toString();
+    assertTrue(response.indexOf("HTTP/1.1 200 OK") != -1);
   }
 }

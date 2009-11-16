@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import junit.framework.TestCase;
 import fitnesse.Arguments;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class ArgumentsTest extends TestCase {
+public class ArgumentsTest {
   private Arguments args;
 
+  @Test
   public void testSimpleCommandline() throws Exception {
     args = makeArgs(new String[0]);
     assertNotNull(args);
@@ -19,6 +21,7 @@ public class ArgumentsTest extends TestCase {
     return args = FitNesseMain.parseCommandLine(argArray);
   }
 
+  @Test
   public void testArgumentsDefaults() throws Exception {
     makeArgs(new String[] {});
     assertEquals(80, args.getPort());
@@ -29,8 +32,10 @@ public class ArgumentsTest extends TestCase {
     assertEquals(14, args.getDaysTillVersionsExpire());
     assertEquals(null, args.getUserpass());
     assertEquals(false, args.isInstallOnly());
+    assertNull(args.getCommand());
   }
 
+  @Test
   public void testArgumentsAlternates() throws Exception {
     String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt -i";
     makeArgs(argString.split(" "));
@@ -44,6 +49,7 @@ public class ArgumentsTest extends TestCase {
     assertEquals(true, args.isInstallOnly());
   }
 
+  @Test
   public void testAllArguments() throws Exception {
     args = makeArgs(new String[] { "-p", "81", "-d", "directory", "-r", "root",
         "-l", "myLogDirectory", "-o", "-e", "22" });
@@ -56,6 +62,7 @@ public class ArgumentsTest extends TestCase {
     assertEquals(22, args.getDaysTillVersionsExpire());
   }
 
+  @Test
   public void testNotOmitUpdates() throws Exception {
     args = makeArgs(new String[] { "-p", "81", "-d", "directory", "-r", "root",
         "-l", "myLogDirectory" });
@@ -67,6 +74,23 @@ public class ArgumentsTest extends TestCase {
     assertFalse(args.isOmittingUpdates());
   }
 
+  @Test
+  public void commandShouldUseDifferentDefaultPort() throws Exception {
+    args = makeArgs(new String[] {"-c", "someCommand"});
+    assertNotNull(args);
+    assertEquals("someCommand", args.getCommand());
+    assertEquals(Arguments.DEFAULT_COMMAND_PORT, args.getPort());
+  }
+
+  @Test
+  public void commandShouldAllowPortToBeSet() throws Exception {
+    args = makeArgs(new String[] {"-c", "someCommand", "-p", "666"});
+    assertNotNull(args);
+    assertEquals("someCommand", args.getCommand());
+    assertEquals(666, args.getPort());
+  }
+
+  @Test
   public void testBadArgument() throws Exception {
     args = makeArgs(new String[] { "-x" });
     assertNull(args);

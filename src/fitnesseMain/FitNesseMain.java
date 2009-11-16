@@ -51,10 +51,27 @@ public class FitNesseMain {
     if (!arguments.isOmittingUpdates())
       fitnesse.applyUpdates();
     if (!arguments.isInstallOnly()) {
-      boolean started = fitnesse.start();
-      if (started)
-        printStartMessage(arguments, context);
+      runFitNesse(arguments, context, fitnesse);
     }
+  }
+
+  private static void runFitNesse(Arguments arguments, FitNesseContext context, FitNesse fitnesse) throws Exception {
+    boolean started = fitnesse.start();
+    if (started) {
+      printStartMessage(arguments, context);
+      if (arguments.getCommand() != null) {
+        executeSingleCommand(arguments, fitnesse, context);
+      }
+    }
+  }
+
+  private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
+    context.doNotChunk = true;
+    System.out.println("Executing command: " + arguments.getCommand());
+    String response = fitnesse.executeSingleCommand(arguments.getCommand());
+    System.out.println("-----Command Output-----");
+    System.out.println(response);
+    fitnesse.stop();
   }
 
   private static FitNesseContext loadContext(Arguments arguments)
@@ -95,7 +112,7 @@ public class FitNesseMain {
 
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-        "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass]");
+        "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -108,10 +125,11 @@ public class FitNesseMain {
       if (commandLine.hasOption("l"))
         arguments.setLogDirectory(commandLine.getOptionArgument("l", "logDir"));
       if (commandLine.hasOption("e"))
-        arguments.setDaysTillVersionsExpire(commandLine.getOptionArgument("e",
-            "days"));
+        arguments.setDaysTillVersionsExpire(commandLine.getOptionArgument("e", "days"));
       if (commandLine.hasOption("a"))
         arguments.setUserpass(commandLine.getOptionArgument("a", "userpass"));
+      if (commandLine.hasOption("c"))
+        arguments.setCommand(commandLine.getOptionArgument("c", "command"));
       arguments.setOmitUpdates(commandLine.hasOption("o"));
       arguments.setInstallOnly(commandLine.hasOption("i"));
     }
@@ -152,6 +170,7 @@ public class FitNesseMain {
     System.err
         .println("\t-a {user:pwd | user-file-name} enable authentication.");
     System.err.println("\t-i Install only, then quit.");
+    System.err.println("\t-c <command> execute single command.");
   }
 
   private static void printStartMessage(Arguments args, FitNesseContext context) {
@@ -159,6 +178,7 @@ public class FitNesseMain {
     System.out.print(context.toString());
     System.out.println("\tpage version expiration set to "
         + args.getDaysTillVersionsExpire() + " days.");
-    System.out.print(extraOutput);
+    if (extraOutput != null)
+      System.out.print(extraOutput);
   }
 }
