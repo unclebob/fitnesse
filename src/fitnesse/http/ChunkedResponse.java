@@ -12,6 +12,8 @@ public class ChunkedResponse extends Response {
 
   public ChunkedResponse(String format) {
     super(format);
+    if (isTextFormat())
+      dontChunk = true;
   }
 
   public void readyToSend(ResponseSender sender) throws Exception {

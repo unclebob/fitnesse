@@ -4,6 +4,8 @@ package fitnesse.http;
 
 import fitnesse.testutil.MockSocket;
 
+import java.io.OutputStream;
+import java.io.PipedInputStream;
 import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
@@ -53,8 +55,11 @@ public class MockResponseSender implements ResponseSender {
     return closed;
   }
 
-  public static class WaitingSender extends MockResponseSender {
-    @Override
+  public static class OutputStreamSender extends MockResponseSender {
+    public OutputStreamSender(OutputStream out) {
+      socket = new MockSocket(new PipedInputStream(), out);
+    }
+
     public void doSending(Response response) throws Exception {
       response.readyToSend(this);
       while (!closed)
