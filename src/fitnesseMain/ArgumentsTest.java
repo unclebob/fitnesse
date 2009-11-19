@@ -75,10 +75,23 @@ public class ArgumentsTest {
   }
 
   @Test
+  public void commandWillBePrefixedWithSlashIfNone() throws Exception {
+    args = makeArgs(new String[] {"-c", "someCommand"});
+    assertNotNull(args);
+    assertEquals("/someCommand", args.getCommand());
+  }
+
+  @Test
+  public void commandWillNotBePrefixedWithExtraSlashIfAlreadyPresent() throws Exception {
+    args = makeArgs(new String[] {"-c", "/someCommand"});
+    assertNotNull(args);
+    assertEquals("/someCommand", args.getCommand());
+  }
+
+  @Test
   public void commandShouldUseDifferentDefaultPort() throws Exception {
     args = makeArgs(new String[] {"-c", "someCommand"});
     assertNotNull(args);
-    assertEquals("someCommand", args.getCommand());
     assertEquals(Arguments.DEFAULT_COMMAND_PORT, args.getPort());
   }
 
@@ -86,7 +99,6 @@ public class ArgumentsTest {
   public void commandShouldAllowPortToBeSet() throws Exception {
     args = makeArgs(new String[] {"-c", "someCommand", "-p", "666"});
     assertNotNull(args);
-    assertEquals("someCommand", args.getCommand());
     assertEquals(666, args.getPort());
   }
 

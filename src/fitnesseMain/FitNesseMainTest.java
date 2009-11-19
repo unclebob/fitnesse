@@ -56,7 +56,7 @@ public class FitNesseMainTest {
     FitNesseMain.updateAndLaunch(args, context, fitnesse);
     verify(fitnesse, times(1)).applyUpdates();
     verify(fitnesse, times(1)).start();
-    verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
+    verify(fitnesse, times(1)).executeSingleCommand("/command", System.out);
     verify(fitnesse, times(1)).stop();
   }
 

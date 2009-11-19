@@ -9,7 +9,6 @@ Most often you will use this to run tests and/or suites from the command line as
 |!style_code(java -jar fitnesse.jar -c "MyTestPage?test&format=text")
 
 The ''text'' format causes a simple summary of the tests to be printed to standard output.  It looks like this:{{{
-
 Starting Test System: slim using fitnesse.slim.SlimService.
 . 07:37:29 R:0    W:0    I:0    E:0    JunkPage (JunkPage)
 X 07:37:29 R:0    W:0    I:0    E:3    ExceptionTest    (JunkPage.ExceptionTest)
@@ -42,3 +41,15 @@ The key for the counts is Right, Wrong, Ignored, Exceptions.
 The rest should be self explanatory.
 
 The exit code for the command is 0 unless you run a test with ''text'' formatting, in which case it is the number of failing tests.
+
+!2 Running FitNesse with Ant
+You can run a test suite with Ant using the following ant task {{{
+  <target name="my_fitnesse_tests">
+    <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+      <arg value="-c"/>
+      <arg value="FitNesse.MySuitePage?suite&amp;format=text"/>
+      <arg value="-p"/>
+      <arg value="9234"/>
+    </java>
+  </target>}}}
+!note !style_green[You only need to set the port if the default command port (9123) will collide with something.]
