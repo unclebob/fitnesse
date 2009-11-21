@@ -39,7 +39,9 @@ public class TestHistoryResponder implements SecureResponder {
   }
 
   private String makePageTitle(String pageName) {
-    return "".equals(pageName) ? "Test History" : "Test History for " + pageName;
+    return "".equals(pageName) ?
+      "Test History" :
+      "Test History for " + pageName;
   }
 
   private boolean formatIsXML(Request request) {
