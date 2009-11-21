@@ -23,12 +23,13 @@ public class TestHistoryResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     if (!generateNullResponseForTest) {
       TestHistory history = new TestHistory();
-      history.readHistoryDirectory(resultsDirectory);
+      String pageName = request.getResource();
+      history.readPageHistoryDirectory(resultsDirectory, pageName);
       VelocityContext velocityContext = new VelocityContext();
-      velocityContext.put("pageTitle", new PageTitle("Test History"));
+      velocityContext.put("pageTitle", new PageTitle("Test History for " + pageName));
       velocityContext.put("testHistory", history);
       String velocityTemplate = "testHistory.vm";
-      if(formatIsXML(request)){
+      if (formatIsXML(request)) {
         response.setContentType("text/xml");
         velocityTemplate = "testHistoryXML.vm";
       }

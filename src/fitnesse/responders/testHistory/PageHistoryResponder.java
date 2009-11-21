@@ -128,8 +128,8 @@ public class PageHistoryResponder implements SecureResponder {
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
     history = new TestHistory();
-    history.readHistoryDirectory(resultsDirectory);
     pageName = request.getResource();
+    history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
     velocityContext = new VelocityContext();
     pageTitle = makePageTitle(request.getResource());

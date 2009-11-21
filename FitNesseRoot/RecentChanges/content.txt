@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.RestfulServices||12:45:30 Sat, Nov 21, 2009|
 |FitNesse.UserGuide.StartingAndStoppingFitNesse||14:10:22 Thu, Nov 19, 2009|
 |FitNesse.UserGuide.CommandLineRestCommands||14:09:29 Thu, Nov 19, 2009|
 |FitNesse.UserGuide.CommandLineTestRunner||07:53:01 Thu, Nov 19, 2009|
@@ -28,7 +29,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||14:31:26 Thu, Aug 20, 2009|
 |FitNesse.UserGuide.RestfulTests||14:03:07 Thu, Aug 20, 2009|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||13:58:29 Thu, Aug 20, 2009|
-|FitNesse.UserGuide.RestfulServices||13:54:05 Thu, Aug 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerGeneratesXmlReports||13:50:31 Thu, Aug 20, 2009|
 |FitNesse.UserGuide.QuickReferenceGuide||09:19:28 Wed, Aug 19, 2009|
 |JunkPage.VarPage||09:07:06 Wed, Aug 19, 2009|
