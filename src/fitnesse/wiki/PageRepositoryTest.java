@@ -28,9 +28,24 @@ public class PageRepositoryTest {
     }
 
     @Test
+    public void DirectoryOfDirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
+        fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
+        WikiPage page = pageRepository.makeChildPage("ExternalSuite", rootPage);
+        assertEquals(ExternalSuitePage.class, page.getClass());
+    }
+
+    @Test
     public void DirectoryWithoutHtmlFilesIsFileSystemPage() throws Exception {
         fileSystem.makeFile("./somepath/WikiPage/myfile.txt", "stuff");
         fileSystem.makeFile("./somepath/OtherPage/myfile.html", "stuff");
+        WikiPage page = pageRepository.makeChildPage("WikiPage", rootPage);
+        assertEquals(FileSystemPage.class, page.getClass());
+    }
+
+    @Test
+    public void DirectoryWithContentIsFileSystemPage() throws Exception {
+        fileSystem.makeFile("./somepath/WikiPage/content.txt", "stuff");
+        fileSystem.makeFile("./somepath/WikiPage/subsuite/myfile.html", "stuff");
         WikiPage page = pageRepository.makeChildPage("WikiPage", rootPage);
         assertEquals(FileSystemPage.class, page.getClass());
     }
@@ -41,6 +56,15 @@ public class PageRepositoryTest {
         ExternalSuitePage page = (ExternalSuitePage)pageRepository.makeChildPage("ExternalSuite", rootPage);
         WikiPage child = pageRepository.findChildren(page).get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
-        assertEquals("myfile", child.getName());
+        assertEquals("MyfilE", child.getName());
+    }
+
+    @Test
+    public void DirectoryOfHtmlFilesIsExternalSuitePageChild() throws Exception {
+        fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
+        ExternalSuitePage page = (ExternalSuitePage)pageRepository.makeChildPage("ExternalSuite", rootPage);
+        WikiPage child = pageRepository.findChildren(page).get(0);
+        assertEquals(ExternalSuitePage.class, child.getClass());
+        assertEquals("SubsuitE", child.getName());
     }
 }

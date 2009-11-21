@@ -82,6 +82,14 @@ public class WikiWordWidgetTest extends TestCase {
     checkWord(false, "Page123");
   }
 
+    public void testMakeWikiWord() {
+        assertEquals("ExistingWikiWord", WikiWordWidget.makeWikiWord("ExistingWikiWord"));
+        assertEquals("LowercaseworD", WikiWordWidget.makeWikiWord("lowercaseword"));
+        assertEquals("AaA", WikiWordWidget.makeWikiWord("a"));
+        assertEquals("AbA", WikiWordWidget.makeWikiWord("ab"));
+        assertEquals("AbC", WikiWordWidget.makeWikiWord("aBc"));
+    }
+
   public void testHtmlForNormalLink() throws Exception {
     WikiPage page = addPage(root, "PageOne");
     WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");

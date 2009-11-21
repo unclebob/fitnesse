@@ -36,11 +36,14 @@ public class ExternalSuitePage extends CachingPage {
     }
 
     protected PageData makePageData() throws Exception {
-        PageData pagedata = new PageData(this);
-        pagedata.setContent("!contents");
-        //loadAttributes(pagedata);
-        //pagedata.addVersions(this.versionsController.history(this));
-        return pagedata;
+        PageData pageData = new PageData(this);
+        pageData.setContent("!contents");
+        pageData.removeAttribute(PageData.PropertyEDIT);
+        pageData.removeAttribute(PageData.PropertyPROPERTIES);
+        pageData.removeAttribute(PageData.PropertyVERSIONS);
+        pageData.removeAttribute(PageData.PropertyREFACTOR);
+        pageData.setAttribute(PageType.SUITE.toString(), Boolean.toString(true));
+        return pageData;
     }
 
     protected VersionInfo makeVersion() throws Exception {

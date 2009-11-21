@@ -40,11 +40,14 @@ public class ExternalTestPage extends CachingPage {
 
     @Override
     protected PageData makePageData() throws Exception {
-        PageData pagedata = new PageData(this);
-        pagedata.setContent(fileSystem.getContent(path));
-        //loadAttributes(pagedata);
-        //pagedata.addVersions(this.versionsController.history(this));
-        return pagedata;
+        PageData pageData = new PageData(this);
+        pageData.setContent("!-" + fileSystem.getContent(path) + "-!");
+        pageData.removeAttribute(PageData.PropertyEDIT);
+        pageData.removeAttribute(PageData.PropertyPROPERTIES);
+        pageData.removeAttribute(PageData.PropertyVERSIONS);
+        pageData.removeAttribute(PageData.PropertyREFACTOR);
+        pageData.setAttribute(PageType.TEST.toString(), Boolean.toString(true));
+        return pageData;
     }
 
     public PageData getDataVersion(String versionName) throws Exception {

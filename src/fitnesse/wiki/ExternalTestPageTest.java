@@ -11,6 +11,6 @@ public class ExternalTestPageTest {
     public void PageDataIsFileContents() throws Exception {
         FileSystem fileSystem = new MemoryFileSystem();
         fileSystem.makeFile("somewhere/myfile.html", "stuff");
-        assertEquals("stuff", new ExternalTestPage("somewhere/myfile.html", "myfile.html", null, fileSystem).getData().getContent());
+        assertEquals("!-stuff-!", new ExternalTestPage("somewhere/myfile.html", "myfile.html", null, fileSystem).getData().getContent());
     }
 }
