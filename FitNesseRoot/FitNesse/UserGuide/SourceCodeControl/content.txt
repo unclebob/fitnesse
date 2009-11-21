@@ -15,17 +15,22 @@ Here's the plugin I use for git.  This ships with !-FitNesse-! so you can use it
    //git doesn't need this.
   }
 
+  public static void cmPreDelete(String file, String payload) throws IOException {
+    //git doesn't need this.
+  }
+
   public static void cmDelete(String file, String payload) throws IOException {
     Runtime.getRuntime().exec("/usr/local/bin/git rm -rf --cached " + file);
   }
 } }}}
 
-The three functions: !style_code[cmUpdate], !style_code(cmEdit), and !style_code(cmDelete) are called if:
+The four functions: !style_code[cmUpdate], !style_code(cmEdit), !style_code(cmPreDelete), and !style_code(cmDelete) are called if:
  1 The name of the class is in the CM_SYSTEM variable, and
  2 that page is being created, modified, or deleted.
 
  * !style_code[cmEdit(file, payload)] is called just before file is about to be written
  * !style_code[cmUpdate(file, payload)] is called just after file has been written
+ * !style_code[cmPreDelete(directory, payload)] is called just before the directory defining a page will be deleted.
  * !style_code[cmDelete(directory, payload)] is called just after the directory defining a page has been deleted.
 
 Remember that each page is defined by a directory that bears it's name, and two files that contain it's content.

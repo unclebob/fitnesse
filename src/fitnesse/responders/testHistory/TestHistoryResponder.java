@@ -26,7 +26,7 @@ public class TestHistoryResponder implements SecureResponder {
       String pageName = request.getResource();
       history.readPageHistoryDirectory(resultsDirectory, pageName);
       VelocityContext velocityContext = new VelocityContext();
-      velocityContext.put("pageTitle", new PageTitle("Test History for " + pageName));
+      velocityContext.put("pageTitle", new PageTitle(makePageTitle(pageName)));
       velocityContext.put("testHistory", history);
       String velocityTemplate = "testHistory.vm";
       if (formatIsXML(request)) {
@@ -36,6 +36,10 @@ public class TestHistoryResponder implements SecureResponder {
       response.setContent(VelocityFactory.translateTemplate(velocityContext, velocityTemplate));
     }
     return response;
+  }
+
+  private String makePageTitle(String pageName) {
+    return "".equals(pageName) ? "Test History" : "Test History for " + pageName;
   }
 
   private boolean formatIsXML(Request request) {

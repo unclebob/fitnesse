@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryShouldHaveTitle||16:18:49 Sat, Nov 21, 2009|
+|FitNesse.UserGuide.SourceCodeControl||15:16:02 Sat, Nov 21, 2009|
 |FitNesse.UserGuide.RestfulServices||12:45:30 Sat, Nov 21, 2009|
 |FitNesse.UserGuide.StartingAndStoppingFitNesse||14:10:22 Thu, Nov 19, 2009|
 |FitNesse.UserGuide.CommandLineRestCommands||14:09:29 Thu, Nov 19, 2009|
@@ -96,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSecureFilesAccess||19:51:49 Sat, Aug 01, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSecureEditPage||19:38:57 Sat, Aug 01, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSearchingIsReadLevel||24:25:25 Sat, Aug 01, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestReadChildOfSecurePage||20:41:04 Fri, Jul 31, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestInsecureReadPage||20:26:10 Fri, Jul 31, 2009|

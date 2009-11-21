@@ -3,24 +3,17 @@
 
 package fitnesse.wiki;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.After;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import util.FileUtil;
 
 public class FileSystemPageTest {
   private static final String defaultPath = "./teststorage";
@@ -218,6 +211,10 @@ public class FileSystemPageTest {
     cmMethodCalls.add(String.format("delete %s|%s", file, payload));
   }
 
+  public static void cmPreDelete(String file, String payload) {
+    cmMethodCalls.add(String.format("preDelete %s|%s", file, payload));
+  }
+
   @Test
   public void cmPluginNotCalledIfBlank() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {}");
@@ -260,7 +257,7 @@ public class FileSystemPageTest {
   public void cmPluginEditNotCalledIfNewPage() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
     cmMethodCalls.clear();
-    crawler.addPage(page, PathParser.parse("NewPage"),"raw content");
+    crawler.addPage(page, PathParser.parse("NewPage"), "raw content");
     assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
     assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
     assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
@@ -273,7 +270,8 @@ public class FileSystemPageTest {
     page.addChildPage("CreatedPage");
     cmMethodCalls.clear();
     page.removeChildPage("CreatedPage");
-    assertEquals(1, cmMethodCalls.size());
-    assertEquals("delete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+    assertEquals(2, cmMethodCalls.size());
+    assertEquals("preDelete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+    assertEquals("delete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
   }
 }
