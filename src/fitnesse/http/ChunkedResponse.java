@@ -12,6 +12,8 @@ public class ChunkedResponse extends Response {
 
   public ChunkedResponse(String format) {
     super(format);
+    if (isTextFormat())
+      dontChunk = true;
   }
 
   public void readyToSend(ResponseSender sender) throws Exception {
@@ -30,7 +32,8 @@ public class ChunkedResponse extends Response {
   }
 
   protected void addSpecificHeaders() {
-    addHeader("Transfer-Encoding", "chunked");
+    if (!dontChunk)
+      addHeader("Transfer-Encoding", "chunked");
   }
 
   public static String asHex(int value) {

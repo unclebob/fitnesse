@@ -26,11 +26,13 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 public class PageDriver {
   private PageCreator creator = new PageCreator();
   private ResponseRequester requester = new ResponseRequester();
   private ResponseExaminer examiner = new ResponseExaminer();
+  private Map<String, String> hash;
 
   public void createPageWithContent(String pageName, String content) throws Exception {
     creator.pageName = pageName;
@@ -261,5 +263,13 @@ public class PageDriver {
 
   public void givenUserWithPassword(String user, String password) {
     FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(user, password);
+  }
+
+  public void sendAsHash(Map<String, String> hash) {
+    this.hash = hash;
+  }
+
+  public String hashIs(String key) {
+    return hash.get(key);
   }
 }

@@ -1,3 +1,7 @@
+|FitNesse.UserGuide.StartingAndStoppingFitNesse||14:10:22 Thu, Nov 19, 2009|
+|FitNesse.UserGuide.CommandLineRestCommands||14:09:29 Thu, Nov 19, 2009|
+|FitNesse.UserGuide.CommandLineTestRunner||07:53:01 Thu, Nov 19, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.HashTableTests.ShouldConvertHashWidgetToHashTable||12:08:38 Fri, Nov 13, 2009|
 |JunkPage.ErikPragtBug||15:03:57 Tue, Nov 10, 2009|
 |JunkPage.VariableTest||16:39:44 Tue, Nov 03, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTestHistoryTests.PageHistoryFailCountIsSumOfFailuresAndExceptions||12:25:08 Mon, Nov 02, 2009|
@@ -94,7 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSearchingIsReadLevel||24:25:25 Sat, Aug 01, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestReadChildOfSecurePage||20:41:04 Fri, Jul 31, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestInsecureReadPage||20:26:10 Fri, Jul 31, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SetUp||20:11:21 Fri, Jul 31, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests||20:01:04 Fri, Jul 31, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SetUpAndTearDownShouldBeIncludedProperly||15:32:43 Wed, Aug 05, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder||13:30:22 Wed, Aug 05, 2009|

@@ -4,7 +4,9 @@
  * Can be included in build scripts like ANT
  * Can generate XML output to a file
 
-!3 Using the TestRunner
+The best way to run tests from the command line is to use the -c command line option.  See CommandLineRestCommands
+
+!3 Using the TestRunner (Deprecated)
 {{{
 usage: java fitnesse.runner.TestRunner [options] host port page-name
         -v                              verbose: prints test progress to stdout

@@ -1,0 +1,55 @@
+You can run any REST command (See RestfulServices) from the command line by using the -c command line option as follows:
+
+|!style_code(java -jar fitnesse.jar -c <rest-command>)|
+
+This starts up fitnesse, runs the command, emits the output to standard out, and then exits.  
+
+Most often you will use this to run tests and/or suites from the command line as follows:
+
+|!style_code(java -jar fitnesse.jar -c "MyTestPage?test&format=text")
+
+The ''text'' format causes a simple summary of the tests to be printed to standard output.  It looks like this:{{{
+Starting Test System: slim using fitnesse.slim.SlimService.
+. 07:37:29 R:0    W:0    I:0    E:0    JunkPage (JunkPage)
+X 07:37:29 R:0    W:0    I:0    E:3    ExceptionTest    (JunkPage.ExceptionTest)
+. 07:37:29 R:0    W:0    I:0    E:0    FirstPage        (JunkPage.FirstPage)
+. 07:37:29 R:2    W:0    I:0    E:0    GivWenZen        (JunkPage.GivWenZen)
+F 07:37:30 R:6    W:1    I:0    E:0    HashTablePage    (JunkPage.HashTablePage)
+F 07:37:30 R:1    W:20   I:0    E:8    CanTotalOrder    (JunkPage.ImportingPage.CanTotalOrder)
+X 07:37:30 R:0    W:0    I:0    E:6    JunkPage (JunkPage.JunkPage)
+. 07:37:30 R:0    W:0    I:0    E:0    JunkTest (JunkPage.JunkTest)
+F 07:37:30 R:1    W:20   I:0    E:8    CanTotalOrder    (JunkPage.PointOfSale.CanTotalOrder)
+. 07:37:30 R:0    W:0    I:0    E:0    SeeTest  (JunkPage.SeeTest)
+. 07:37:31 R:1    W:0    I:0    E:0    SymbolPage       (JunkPage.SymbolPage)
+. 07:37:31 R:0    W:0    I:0    E:0    TestNothing      (JunkPage.TestNothing)
+X 07:37:31 R:2    W:0    I:0    E:2    TestTableTable   (JunkPage.TestTableTable)
+X 07:37:31 R:0    W:0    I:0    E:4    UseVarPage       (JunkPage.UseVarPage)
+. 07:37:31 R:0    W:0    I:0    E:0    VariableTest     (JunkPage.VariableTest)
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteChildTwo.SuiteSetUp)
+. 07:37:31 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.SuiteChildTwo.TestPage)
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteChildTwo.SuiteTearDown)
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteSetUp)
+. 07:37:31 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.TestPage)
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteTearDown)
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteChildOne.SuiteSetUp)
+. 07:37:32 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.SuiteChildOne.TestPage)
+. 07:37:32 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteChildOne.SuiteTearDown)
+--------
+24 Tests,       7 Failures.}}}
+Each line begins with . if the test passes, F if the test fails, or X if the test throws an exception.
+The key for the counts is Right, Wrong, Ignored, Exceptions.
+The rest should be self explanatory.
+
+The exit code for the command is 0 unless you run a test with ''text'' formatting, in which case it is the number of failing tests.
+
+!2 Running FitNesse with Ant
+You can run a test suite with Ant using the following ant task {{{
+  <target name="my_fitnesse_tests">
+    <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+      <arg value="-c"/>
+      <arg value="FitNesse.MySuitePage?suite&amp;format=text"/>
+      <arg value="-p"/>
+      <arg value="9234"/>
+    </java>
+  </target>}}}
+!note !style_green[You only need to set the port if the default command port (9123) will collide with something.]

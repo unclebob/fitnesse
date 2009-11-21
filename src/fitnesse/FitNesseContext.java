@@ -10,12 +10,8 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.Template;
 
 import java.io.File;
-import java.io.StringWriter;
 
 public class FitNesseContext {
   public FitNesse fitnesse;
@@ -36,6 +32,7 @@ public class FitNesseContext {
   public static FitNesseContext globalContext;
   public String testResultsDirectoryName = "testResults";
   public boolean shouldCollectHistory = false;
+  public boolean doNotChunk;
 
   public FitNesseContext() {
     this(null);

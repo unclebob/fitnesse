@@ -6,16 +6,18 @@ public class Arguments {
   public static final String DEFAULT_PATH = ".";
   public static final String DEFAULT_ROOT = "FitNesseRoot";
   public static final int DEFAULT_PORT = 80;
-  public static final int DEFAULT_VERSION_DAYS = 14;
+  public static final int DEFAULT_COMMAND_PORT = 9123;
 
+  public static final int DEFAULT_VERSION_DAYS = 14;
   private String rootPath = DEFAULT_PATH;
-  private int port = DEFAULT_PORT;
+  private int port = -1;
   private String rootDirectory = DEFAULT_ROOT;
   private String logDirectory;
   private boolean omitUpdate = false;
   private int daysTillVersionsExpire = DEFAULT_VERSION_DAYS;
   private String userpass;
   private boolean installOnly;
+  private String command = null;
 
   public String getRootPath() {
     return rootPath;
@@ -26,7 +28,11 @@ public class Arguments {
   }
 
   public int getPort() {
-    return port;
+    return port == -1 ? getDefaultPort() : port;
+  }
+
+  private int getDefaultPort() {
+    return command == null ? DEFAULT_PORT : DEFAULT_COMMAND_PORT;
   }
 
   public void setPort(String port) {
@@ -82,5 +88,18 @@ public class Arguments {
 
   public void setInstallOnly(boolean installOnly) {
     this.installOnly = installOnly;
+  }
+
+  public String getCommand() {
+    if (command == null)
+      return null;
+    else if (command.startsWith("/"))
+      return command;
+    else
+      return "/" + command;
+  }
+
+  public void setCommand(String command) {
+    this.command = command;
   }
 }

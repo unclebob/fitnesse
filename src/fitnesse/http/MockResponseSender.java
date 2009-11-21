@@ -4,11 +4,13 @@ package fitnesse.http;
 
 import fitnesse.testutil.MockSocket;
 
+import java.io.OutputStream;
+import java.io.PipedInputStream;
 import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;
-  private boolean closed = false;
+  protected boolean closed = false;
 
   public MockResponseSender() {
     socket = new MockSocket("Mock");
@@ -51,5 +53,17 @@ public class MockResponseSender implements ResponseSender {
 
   public boolean isClosed() {
     return closed;
+  }
+
+  public static class OutputStreamSender extends MockResponseSender {
+    public OutputStreamSender(OutputStream out) {
+      socket = new MockSocket(new PipedInputStream(), out);
+    }
+
+    public void doSending(Response response) throws Exception {
+      response.readyToSend(this);
+      while (!closed)
+        Thread.sleep(1000);
+    }
   }
 }

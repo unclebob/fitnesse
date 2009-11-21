@@ -11,7 +11,7 @@ import java.util.TimeZone;
 public abstract class Response {
 
   public enum Format {
-    XML, HTML
+    XML, HTML, TEXT
   }
 
   public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
@@ -40,6 +40,11 @@ public abstract class Response {
     } else if (formatString.equalsIgnoreCase("xml")) {
       format = Format.XML;
       setContentType("text/xml");
+    } else if (formatString.equalsIgnoreCase("text")) {
+      format = Format.TEXT;
+      setContentType("text/text");
+    } else {
+      format = Format.HTML;
     }
   }
 
@@ -54,6 +59,10 @@ public abstract class Response {
 
   public boolean isHtmlFormat() {
     return format == Format.HTML;
+  }
+
+  public boolean isTextFormat() {
+    return format == Format.TEXT;
   }
 
   public abstract void readyToSend(ResponseSender sender) throws Exception;
@@ -72,10 +81,12 @@ public abstract class Response {
 
   public String makeHttpHeaders() {
     StringBuffer text = new StringBuffer();
-    text.append("HTTP/1.1 ").append(status).append(" ").append(
+    if (format != Format.TEXT) {
+      text.append("HTTP/1.1 ").append(status).append(" ").append(
         getReasonPhrase()).append(CRLF);
-    makeHeaders(text);
-    text.append(CRLF);
+      makeHeaders(text);
+      text.append(CRLF);
+    }
     return text.toString();
   }
 
@@ -116,9 +127,9 @@ public abstract class Response {
     return value.getBytes("UTF-8");
   }
 
-  private void makeHeaders(StringBuffer text) {
+  void makeHeaders(StringBuffer text) {
     for (Iterator<String> iterator = headers.keySet().iterator(); iterator
-        .hasNext();) {
+      .hasNext();) {
       String key = iterator.next();
       String value = headers.get(key);
       text.append(key).append(": ").append(value).append(CRLF);
@@ -136,6 +147,7 @@ public abstract class Response {
 
   private static Map<Integer, String> reasonCodes = new HashMap<Integer, String>() {
     private static final long serialVersionUID = 1L;
+
     {
       put(100, "Continue");
       put(101, "Switching Protocols");
