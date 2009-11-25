@@ -1,3 +1,4 @@
+|JunkPage.GregorsBug||08:30:26 Wed, Nov 25, 2009|
 |JunkPage.DansBug||06:02:17 Wed, Nov 25, 2009|
 |ErrorLogs.JunkPage.DansBug||05:59:55 Wed, Nov 25, 2009|
 |FitNesse.UserGuide.SliM.DataTypes||18:02:21 Mon, Nov 23, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SecureTestOperations||15:45:37 Wed, Aug 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteVersionResponder||15:43:08 Wed, Aug 05, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.ScenarioLibrary||16:24:55 Tue, Aug 04, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SecureWriteOperations||16:20:26 Tue, Aug 04, 2009|
