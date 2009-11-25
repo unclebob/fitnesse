@@ -41,12 +41,15 @@ public class ExternalTestPage extends CachingPage {
     @Override
     protected PageData makePageData() throws Exception {
         PageData pageData = new PageData(this);
-        pageData.setContent("!-" + fileSystem.getContent(path) + "-!");
+        String content = fileSystem.getContent(path);
+        pageData.setContent("!-" + content + "-!");
         pageData.removeAttribute(PageData.PropertyEDIT);
         pageData.removeAttribute(PageData.PropertyPROPERTIES);
         pageData.removeAttribute(PageData.PropertyVERSIONS);
         pageData.removeAttribute(PageData.PropertyREFACTOR);
-        pageData.setAttribute(PageType.TEST.toString(), Boolean.toString(true));
+        if (content.contains("<table")) {
+            pageData.setAttribute(PageType.TEST.toString(), Boolean.toString(true));
+        }
         return pageData;
     }
 
