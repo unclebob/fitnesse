@@ -2,31 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import static fitnesse.wiki.PageType.*;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import util.StringUtil;
-
 import fitnesse.responders.run.ExecutionLog;
+import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.ClasspathWidget;
-import fitnesse.wikitext.widgets.IncludeWidget;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.PreformattedWidget;
-import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
-import fitnesse.wikitext.widgets.VariableDefinitionWidget;
-import fitnesse.wikitext.widgets.VariableWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
-import fitnesse.wikitext.widgets.WidgetWithTextArgument;
-import fitnesse.wikitext.widgets.XRefWidget;
+import fitnesse.wikitext.widgets.*;
+import util.StringUtil;
+
+import java.io.Serializable;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class PageData implements Serializable {
@@ -41,7 +25,7 @@ public class PageData implements Serializable {
 
   public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(
       IncludeWidget.class, PreformattedWidget.class,
-      VariableDefinitionWidget.class, VariableWidget.class);
+      VariableDefinitionWidget.class);
 
   // TODO: Find a better place for us
   public static final String PropertyLAST_MODIFIED = "LastModified";
@@ -243,28 +227,17 @@ public class PageData implements Serializable {
   }
   
   private void initializeVariableRoot() throws Exception {
-    variableRoot = new TextIgnoringWidgetRoot(getContentWithVariableRenderTriggers(), wikiPage,
+    variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage,
         literals, variableDefinitionWidgetBuilder
     );
     variableRoot.render();
-  }
-
-  private String getContentWithVariableRenderTriggers() throws Exception {
-    StringBuffer content = new StringBuffer(getContent())
-        .append(getVariableRenderTrigger(PATH_SEPARATOR))
-        .append(getVariableRenderTrigger(COMMAND_PATTERN))
-        .append(getVariableRenderTrigger(TEST_RUNNER));
-    return content.toString();
-  }
-
-  private String getVariableRenderTrigger(String variableName) {
-    return "\n#${" + variableName + "}";
   }
 
   private String processHTMLWidgets(String content, WikiPage context)
       throws Exception {
     ParentWidget root = new WidgetRoot(content, context,
         WidgetBuilder.htmlWidgetBuilder);
+
     return root.render();
   }
 

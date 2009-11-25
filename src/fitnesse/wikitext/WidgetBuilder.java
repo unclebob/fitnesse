@@ -115,7 +115,7 @@ public class WidgetBuilder {
           new TextWidget(parent, preString);
         constructWidget(firstMatch.widgetClass, parent, match.group());
         String postString = value.substring(match.end());
-        if (!postString.equals(""))
+        if (!postString.equals(""))                                                  
           addChildWidgets(postString, parent, includeTextWidgets);
       } else if (includeTextWidgets)
         new TextWidget(parent, value);
