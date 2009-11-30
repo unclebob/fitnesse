@@ -2,13 +2,15 @@
 
 In the standard distribution there is a file named ''run.bat'' for windows and ''run.sh'' for Unix, Linux, and OS X.  Double-clicking this file should get things going in most cases.  The main class that gets executed is '''!-fitnesseMain.FitNesseMain-!'''.  Here is how to invoke this class:
 {{{Usage: java -jar fitnesse.jar [-pdrleoa]
-        -p <port number> {80}
+        -p <port number> {80} or {9123 if -c}
         -d <working directory> {.}
         -r <page root directory> {FitNesseRoot}
         -l <log directory> {no logging}
         -e <days> {14} Number of days before page versions expire
         -o omit updates
         -a {user:pwd | user-file-name} enable authentication.
+        -i Install only, do not run fitnesse after install. 
+        -c <command> Run the command (same as restful url) and then exit.  Return status is the number of test pages that failed as a result of the command.
 }}}
 The values shown between braces are the default values.
 
@@ -17,6 +19,9 @@ Most of the options here speak for themselves.  The most commonly used option is
 You can also pass these options to the ''run.bat'' and ''run.sh'' scripts. The ''run.sh'' script also accepts one or more '''-J JVM_option''' flags for passing options to the JVM. If you like to double-click the script file to start it and you always use particular options, such as a different port number, then consider editing the file to add these options.
 
 See PasswordFile for a description of how to set up per user authentication.
+
+!2 Running Rest Commands using the -c option.
+See CommandLineRestCommands
 
 !2 Stopping FitNesse
 

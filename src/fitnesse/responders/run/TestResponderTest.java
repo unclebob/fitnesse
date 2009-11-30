@@ -291,6 +291,36 @@ public class TestResponderTest {
     xmlChecker.assertXmlReportOfSlimScenarioTableIsCorrect();
   }
 
+  @Test
+  public void simpleTextFormatForPassingTest() throws Exception {
+    request.addInput("format", "text");
+    doSimpleRun(passFixtureTable());
+    assertEquals("text/text", response.getContentType());
+    assertTrue(results.indexOf("\n. ") != -1);
+    assertTrue(results.indexOf("R:1    W:0    I:0    E:0    TestPage\t(TestPage)") != -1);
+    assertTrue(results.indexOf("1 Tests,\t0 Failures.") != -1);
+  }
+
+  @Test
+  public void simpleTextFormatForFailingTest() throws Exception {
+    request.addInput("format", "text");
+    doSimpleRun(failFixtureTable());
+    assertEquals("text/text", response.getContentType());
+    assertTrue(results.indexOf("\nF ") != -1);
+    assertTrue(results.indexOf("R:0    W:1    I:0    E:0    TestPage\t(TestPage)") != -1);
+    assertTrue(results.indexOf("1 Tests,\t1 Failures.") != -1);
+  }
+
+  @Test
+  public void simpleTextFormatForErrorTest() throws Exception {
+    request.addInput("format", "text");
+    doSimpleRun(errorFixtureTable());
+    assertEquals("text/text", response.getContentType());
+    assertTrue(results.indexOf("\nX ") != -1);
+    assertTrue(results.indexOf("R:0    W:0    I:0    E:1    TestPage\t(TestPage)") != -1);
+    assertTrue(results.indexOf("1 Tests,\t1 Failures.") != -1);
+  }
+
   private String getExecutionStatusMessage() throws Exception {
     Pattern pattern = Pattern.compile("<div id=\"execution-status\">.*?<a href=\"ErrorLogs\\.[^\"]*\">([^<>]*?)</a>.*?</div>", Pattern.DOTALL);
     Matcher matcher = pattern.matcher(results);
@@ -506,6 +536,10 @@ public class TestResponderTest {
 
   private String failFixtureTable() {
     return "|!-fitnesse.testutil.FailFixture-!|\n";
+  }
+
+  private String errorFixtureTable() {
+    return "|!-fitnesse.testutil.ErrorFixture-!|\n";
   }
 
   class XmlChecker {

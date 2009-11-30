@@ -1,12 +1,12 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.wikitext.widgets.WikiWordWidget;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.wikitext.widgets.WikiWordWidget;
 import util.FileUtil;
 
 import java.io.File;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TestHistory {
   Map<String, File> pageDirectoryMap = new HashMap<String, File>();
@@ -38,6 +38,13 @@ public class TestHistory {
       else
         return pageHistory;
     }
+  }
+
+  public void readPageHistoryDirectory(File historyDirectory, String pageName) {
+    File[] pageDirectories = FileUtil.getDirectoryListing(historyDirectory);
+    for (File file : pageDirectories)
+      if ((isValidFile(file)) && file.getName().startsWith(pageName))
+        pageDirectoryMap.put(file.getName(), file);
   }
 
   public static String makeResultFileName(TestSummary summary, long time) {

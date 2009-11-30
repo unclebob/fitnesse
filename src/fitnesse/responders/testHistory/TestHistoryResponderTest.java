@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 public class TestHistoryResponderTest {
   private File resultsDirectory;
@@ -107,6 +108,19 @@ public class TestHistoryResponderTest {
     assertEquals(0, history.getPageNames().size());
     assertFalse(history.getPageNames().contains("SomePage"));
     assertFalse(history.getPageNames().contains("SomeOtherPage"));
+  }
+
+  @Test
+  public void testHistoryWithPageSelectedShouldShowPagesBelowSelectedPage() throws Exception {
+    addPageDirectoryWithOneResult("ParentOne.PageOne", "20090418123103_1_2_3_4");
+    addPageDirectoryWithOneResult("ParentOne.PageTwo", "20090418123103_1_2_3_4");
+    addPageDirectoryWithOneResult("ParentTwo.PageThree", "20090418123103_1_2_3_4");
+
+    history.readPageHistoryDirectory(resultsDirectory, "ParentOne");
+    Set<String> pageNames = history.getPageNames();
+    assertEquals(2, pageNames.size());
+    assertTrue(pageNames.contains("ParentOne.PageOne"));
+    assertTrue(pageNames.contains("ParentOne.PageTwo"));
   }
 
   @Test

@@ -10,6 +10,7 @@ import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
+import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
 import util.CommandLine;
@@ -18,6 +19,7 @@ import java.io.File;
 
 public class FitNesseMain {
   private static String extraOutput;
+  public static boolean dontExitAfterSingleCommand;
 
   public static void main(String[] args) throws Exception {
     Arguments arguments = parseCommandLine(args);
@@ -37,7 +39,7 @@ public class FitNesseMain {
     if (!arguments.isOmittingUpdates())
       updater = new UpdaterImplementation(context);
     PageVersionPruner.daysTillVersionsExpire = arguments
-        .getDaysTillVersionsExpire();
+      .getDaysTillVersionsExpire();
     FitNesse fitnesse = new FitNesse(context, updater);
     updateAndLaunch(arguments, context, fitnesse);
   }
@@ -47,7 +49,7 @@ public class FitNesseMain {
   }
 
   static void updateAndLaunch(Arguments arguments, FitNesseContext context,
-      FitNesse fitnesse) throws Exception {
+                              FitNesse fitnesse) throws Exception {
     if (!arguments.isOmittingUpdates())
       fitnesse.applyUpdates();
     if (!arguments.isInstallOnly()) {
@@ -67,15 +69,18 @@ public class FitNesseMain {
 
   private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
     context.doNotChunk = true;
+    TestTextFormatter.finalErrorCount = 0;
     System.out.println("Executing command: " + arguments.getCommand());
-    String response = fitnesse.executeSingleCommand(arguments.getCommand());
     System.out.println("-----Command Output-----");
-    System.out.println(response);
+    fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
+    System.out.println("-----Command Complete-----");
     fitnesse.stop();
+    if (!dontExitAfterSingleCommand)
+      System.exit(TestTextFormatter.finalErrorCount);
   }
 
   private static FitNesseContext loadContext(Arguments arguments)
-      throws Exception {
+    throws Exception {
     FitNesseContext context = new FitNesseContext();
     context.port = arguments.getPort();
     context.rootPath = arguments.getRootPath();
@@ -83,19 +88,19 @@ public class FitNesseMain {
     context.rootDirectoryName = arguments.getRootDirectory();
     context.setRootPagePath();
     String defaultNewPageContent = componentFactory
-        .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+      .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
     if (defaultNewPageContent != null)
       context.defaultNewPageContent = defaultNewPageContent;
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
     context.responderFactory = new ResponderFactory(context.rootPagePath);
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(),
-        componentFactory);
+      componentFactory);
     context.htmlPageFactory = componentFactory
-        .getHtmlPageFactory(new HtmlPageFactory());
+      .getHtmlPageFactory(new HtmlPageFactory());
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,
-        wikiPageFactory);
+      wikiPageFactory);
     extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
     extraOutput += componentFactory.loadResponders(context.responderFactory);
     extraOutput += componentFactory.loadWikiWidgets();
@@ -103,7 +108,7 @@ public class FitNesseMain {
     extraOutput += componentFactory.loadContentFilter();
 
     context.root = wikiPageFactory.makeRootPage(context.rootPath,
-        context.rootDirectoryName, componentFactory);
+      context.rootDirectoryName, componentFactory);
 
     WikiImportTestEventListener.register();
 
@@ -112,7 +117,7 @@ public class FitNesseMain {
 
   public static Arguments parseCommandLine(String[] args) {
     CommandLine commandLine = new CommandLine(
-        "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
+      "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
     Arguments arguments = null;
     if (commandLine.parse(args)) {
       arguments = new Arguments();
@@ -142,7 +147,7 @@ public class FitNesseMain {
   }
 
   public static Authenticator makeAuthenticator(String authenticationParameter,
-      ComponentFactory componentFactory) throws Exception {
+                                                ComponentFactory componentFactory) throws Exception {
     Authenticator authenticator = new PromiscuousAuthenticator();
     if (authenticationParameter != null) {
       if (new File(authenticationParameter).exists())
@@ -160,15 +165,15 @@ public class FitNesseMain {
     System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
     System.err.println("\t-p <port number> {" + Arguments.DEFAULT_PORT + "}");
     System.err.println("\t-d <working directory> {" + Arguments.DEFAULT_PATH
-        + "}");
+      + "}");
     System.err.println("\t-r <page root directory> {" + Arguments.DEFAULT_ROOT
-        + "}");
+      + "}");
     System.err.println("\t-l <log directory> {no logging}");
     System.err.println("\t-e <days> {" + Arguments.DEFAULT_VERSION_DAYS
-        + "} Number of days before page versions expire");
+      + "} Number of days before page versions expire");
     System.err.println("\t-o omit updates");
     System.err
-        .println("\t-a {user:pwd | user-file-name} enable authentication.");
+      .println("\t-a {user:pwd | user-file-name} enable authentication.");
     System.err.println("\t-i Install only, then quit.");
     System.err.println("\t-c <command> execute single command.");
   }
@@ -177,7 +182,7 @@ public class FitNesseMain {
     System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
     System.out.print(context.toString());
     System.out.println("\tpage version expiration set to "
-        + args.getDaysTillVersionsExpire() + " days.");
+      + args.getDaysTillVersionsExpire() + " days.");
     if (extraOutput != null)
       System.out.print(extraOutput);
   }

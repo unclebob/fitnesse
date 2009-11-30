@@ -48,6 +48,7 @@ public class FitNesseMainTest {
 
   @Test
   public void commandArgCallsExecuteSingleCommand() throws Exception {
+    FitNesseMain.dontExitAfterSingleCommand = true;
     Arguments args = new Arguments();
     args.setCommand("command");
     FitNesse fitnesse = mock(FitNesse.class);
@@ -55,7 +56,7 @@ public class FitNesseMainTest {
     FitNesseMain.updateAndLaunch(args, context, fitnesse);
     verify(fitnesse, times(1)).applyUpdates();
     verify(fitnesse, times(1)).start();
-    verify(fitnesse, times(1)).executeSingleCommand("command");
+    verify(fitnesse, times(1)).executeSingleCommand("/command", System.out);
     verify(fitnesse, times(1)).stop();
   }
 
@@ -132,6 +133,6 @@ public class FitNesseMainTest {
     FitNesseMain.main(new String[] {"-o", "-c", "/root"});
     System.setOut(out);
     String response = outputBytes.toString();
-    assertTrue(response.indexOf("HTTP/1.1 200 OK") != -1);
+    assertTrue(response.indexOf("Command Output") != -1);
   }
 }

@@ -4,6 +4,8 @@ package fitnesse.http;
 
 import fitnesse.testutil.MockSocket;
 
+import java.io.OutputStream;
+import java.io.PipedInputStream;
 import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
@@ -36,25 +38,29 @@ public class MockResponseSender implements ResponseSender {
 
   public void doSending(Response response) throws Exception {
     response.readyToSend(this);
-    waitForClose(5000);
+    waitForClose(10000);
   }
 
   // Utility method that returns when this.closed is true. Throws an exception
   // if the timeout is reached.
-  public synchronized void waitForClose(final long timeoutMillis) throws Exception {
-    if (!closed) {
-      wait(timeoutMillis);
-      if (!closed)
-        throw new Exception("MockResponseSender could not be closed");
+  public synchronized void waitForClose(long timeoutMillis) throws Exception {
+    while (!closed && timeoutMillis > 0) {
+      wait(100);
+      timeoutMillis -= 100;
     }
+    if (!closed)
+      throw new Exception("MockResponseSender could not be closed");
   }
 
   public boolean isClosed() {
     return closed;
   }
 
-  public static class WaitingSender extends MockResponseSender {
-    @Override
+  public static class OutputStreamSender extends MockResponseSender {
+    public OutputStreamSender(OutputStream out) {
+      socket = new MockSocket(new PipedInputStream(), out);
+    }
+
     public void doSending(Response response) throws Exception {
       response.readyToSend(this);
       while (!closed)

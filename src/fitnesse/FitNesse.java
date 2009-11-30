@@ -10,6 +10,7 @@ import fitnesse.socketservice.SocketService;
 import fitnesse.testutil.MockSocket;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
 
@@ -99,13 +100,12 @@ public class FitNesse {
     return context;
   }
 
-  public String executeSingleCommand(String command) throws Exception  {
+  public void executeSingleCommand(String command, OutputStream out) throws Exception  {
     Request request = new MockRequest();
     request.parseRequestUri(command);
-    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), context);
+    FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);
-    MockResponseSender sender = new MockResponseSender.WaitingSender();
+    MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
     sender.doSending(response);
-    return sender.sentData();
   }
 }

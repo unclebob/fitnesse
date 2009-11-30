@@ -51,6 +51,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   protected void createFormatterAndWriteHead() throws Exception {
     if (response.isXmlFormat())
       addXmlFormatter();
+    else if (response.isTextFormat())
+      addTextFormatter();
     else
       addHtmlFormatter();
 
@@ -69,6 +71,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       }
     };
     formatters.add(new XmlFormatter(context, page, writerSource));
+  }
+
+  void addTextFormatter() {
+    formatters.add(new TestTextFormatter(response));
   }
 
   protected Writer makeResponseWriter() {

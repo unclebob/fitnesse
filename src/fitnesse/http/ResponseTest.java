@@ -3,7 +3,7 @@
 package fitnesse.http;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class ResponseTest {
@@ -53,5 +53,66 @@ public class ResponseTest {
 
   private void checkPhrase(int reasonCode, String reasonPhrase) {
     assertEquals(reasonPhrase, Response.getReasonPhrase(reasonCode));
+  }
+
+  class MockResponse extends Response {
+    public MockResponse(String formatString) {
+      super(formatString);
+    }
+
+    public void readyToSend(ResponseSender sender) throws Exception {
+    }
+
+    protected void addSpecificHeaders() {
+    }
+
+    public int getContentSize() {
+      return 0;
+    }
+  }
+
+  @Test
+  public void htmlFormat() throws Exception {
+    Response response = new MockResponse("html");
+    assertTrue(response.isHtmlFormat());
+  }
+
+  @Test
+  public void xmlFormat() throws Exception {
+    Response response = new MockResponse("xml");
+    assertTrue(response.isXmlFormat());    
+  }
+
+  @Test
+  public void textFormat() throws Exception {
+    Response response = new MockResponse("text");
+    assertTrue(response.isTextFormat());    
+  }
+
+  @Test
+  public void defaultFormat() throws Exception {
+    Response response = new MockResponse("");
+    assertTrue(response.isHtmlFormat());    
+  }
+
+  @Test
+  public void shouldNotHaveHeadersIfText() throws Exception {
+    Response response = new MockResponse("text");
+    response.addStandardHeaders();
+    assertEquals("", response.makeHttpHeaders());
+  }
+
+  @Test
+  public void shouldHaveHeadersIfHtml() throws Exception {
+    Response response = new MockResponse("html");
+    response.addStandardHeaders();
+    assertTrue(response.makeHttpHeaders().indexOf("HTTP/1.1 200 OK") != -1);
+  }
+
+  @Test
+  public void shouldHaveHeadersIfXml() throws Exception {
+    Response response = new MockResponse("xml");
+    response.addStandardHeaders();
+    assertTrue(response.makeHttpHeaders().indexOf("HTTP/1.1 200 OK") != -1);
   }
 }
