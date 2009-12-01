@@ -4,6 +4,6 @@ package fitnesse;
 
 public class FitNesseVersion {
 	public String toString() {
-		return "v20091125";
+		return "v20091201";
 	}
 }
