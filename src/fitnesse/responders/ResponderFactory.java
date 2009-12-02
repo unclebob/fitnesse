@@ -82,6 +82,7 @@ public class ResponderFactory {
     addResponder("addChild", AddChildPageResponder.class);
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
+    addResponder("complete", CodeCompletionResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {

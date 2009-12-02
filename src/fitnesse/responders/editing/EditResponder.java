@@ -19,6 +19,7 @@ import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
+  public static final String CONTENT_INPUT_ID = "pageContentId";
   public static final String TIME_STAMP = "editTime";
   public static final String TICKET_ID = "ticketId";
 
@@ -84,6 +85,13 @@ public class EditResponder implements SecureResponder {
     HtmlPage html = context.htmlPageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.title.use(title + resource + ":");
+    
+    html.head.add(html.makeCssLink("/files/css/jquery.autocomplete.css", "screen"));
+    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.js"));
+    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.autocomplete.js"));
+    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.bgiframe.min.js"));
+    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/completion.js"));
+    
     html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
     HtmlTag header = makeHeader(resource, title);
     html.header.use(header);
@@ -156,7 +164,7 @@ public class EditResponder implements SecureResponder {
     includeJavaScriptFile("/files/javascript/WikiFormatter.js", scripts);
     includeJavaScriptFile("/files/javascript/wikiFormatterSupport.js", scripts);
     includeJavaScriptFile("/files/javascript/fitnesse.js", scripts);
-
+    
     return scripts;
   }
 
@@ -177,6 +185,7 @@ public class EditResponder implements SecureResponder {
     textarea.addAttribute("class", CONTENT_INPUT_NAME + " no_wrap");
     textarea.addAttribute("wrap", "off");
     textarea.addAttribute("name", CONTENT_INPUT_NAME);
+    textarea.addAttribute("id", CONTENT_INPUT_ID);
     textarea.addAttribute("rows", "30");
     textarea.addAttribute("cols", "70");
     textarea.addAttribute("tabindex", "1");

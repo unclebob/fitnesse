@@ -85,7 +85,7 @@
       <fileset dir="FitNesseRoot/files">
         <include name="images/**"/>
         <include name="css/*.css"/>
-        <include name="javascript/*.js"/>
+        <include name="javascript/**/*.js"/>
         <include name="html/**"/>
         <include name="templates/**"/>
         <exclude name="juUnitTestLink.js"/>
