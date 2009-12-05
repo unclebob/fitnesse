@@ -25,26 +25,15 @@ public class VariableWidget extends ParentWidget {
 
   public String render() throws Exception {
     if (!rendered)
-      doRender();                                              
+      doRender();
     return renderedText;
   }
 
   private void doRender() throws Exception {
-    //Todo: The nonlocalities in this function are truly horrendous.  There is a loop in the widget builder that
-    //reapplies the variable widgets until all the variables have been replaced.  This function is part of the
-    //body of that loop.  The parent.addVariable statement ensures that the value of a variable is updated
-    //each time through the loop which makes sure that nested variables are expressed properly.
-    //The if (matcher.find()) statement ensures that if there are no more nested variables to express, we don't
-    //continue to change the value of the variable.  If you don't understand that, well, I'm not sure I do either.
-    //The whole variable mechanism needs to be completely redone...
-
     String value = parent.getVariable(name);
     if (value != null) {
-      Matcher matcher = pattern.matcher(value);
       addChildWidgets(value);
       renderedText = childHtml();
-      if (matcher.find())
-        parent.addVariable(name, renderedText);
     } else
       renderedText = makeUndefinedVariableExpression(name);
     rendered = true;

@@ -38,17 +38,18 @@ public class MockResponseSender implements ResponseSender {
 
   public void doSending(Response response) throws Exception {
     response.readyToSend(this);
-    waitForClose(5000);
+    waitForClose(10000);
   }
 
   // Utility method that returns when this.closed is true. Throws an exception
   // if the timeout is reached.
-  public synchronized void waitForClose(final long timeoutMillis) throws Exception {
-    if (!closed) {
-      wait(timeoutMillis);
-      if (!closed)
-        throw new Exception("MockResponseSender could not be closed");
+  public synchronized void waitForClose(long timeoutMillis) throws Exception {
+    while (!closed && timeoutMillis > 0) {
+      wait(100);
+      timeoutMillis -= 100;
     }
+    if (!closed)
+      throw new Exception("MockResponseSender could not be closed");
   }
 
   public boolean isClosed() {

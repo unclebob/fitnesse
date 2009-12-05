@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 public class WidgetRoot extends ParentWidget {
   private Map<String, String> variables = new HashMap<String, String>();
@@ -117,7 +118,28 @@ public class WidgetRoot extends ParentWidget {
     if (value == null) {
       value = System.getProperty(key);
     }
+
+    if (value != null) {
+      while (includesVariable(value))
+        value = replaceVariable(value);
+
+      variables.put(key, value);
+    }
     return value;
+  }
+
+  public boolean includesVariable(String string) {
+    Matcher matcher = VariableWidget.pattern.matcher(string);
+    return matcher.find();
+  }
+
+  public String replaceVariable(String string) throws Exception {
+    Matcher matcher = VariableWidget.pattern.matcher(string);
+    if (matcher.find()) {
+      String name = matcher.group(1);
+      return string.substring(0, matcher.start()) + getVariable(name) + string.substring(matcher.end());
+    }
+    return string;
   }
 
   public void addVariable(String key, String value) {

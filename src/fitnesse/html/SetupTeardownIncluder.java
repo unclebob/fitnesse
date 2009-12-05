@@ -110,6 +110,7 @@ public class SetupTeardownIncluder {
 
   private void includeScenaiorLibrariesIfAny() throws Exception {
     List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", testPage);
+
     if (uncles.size() > 0)
       includeScenarioLibraries(uncles);
   }
