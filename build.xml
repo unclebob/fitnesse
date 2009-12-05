@@ -136,6 +136,7 @@
           <exclude name="**/ShutdownResponderTest.java"/>
           <exclude name="**/QueryTableBaseTest.java"/>
           <exclude name="**/Test.java"/>
+          <exclude name="**/SystemUnderTest.java"/>
         </fileset>
       </batchtest>
     </junit>
