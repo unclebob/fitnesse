@@ -39,6 +39,8 @@
       <exclude name="**/*TestSuite.class"/>
       <include name="Resources/**"/>
       <include name="tasks.properties"/>
+      
+      <fileset dir="classes" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class"/>
 
       <zipfileset src="lib/htmlparser.jar"/>
       <zipfileset src="lib/json.jar"/>
@@ -137,6 +139,7 @@
           <exclude name="**/QueryTableBaseTest.java"/>
           <exclude name="**/Test.java"/>
           <exclude name="**/SystemUnderTest.java"/>
+          <exclude name="**/MySystemUnderTest.java"/>
         </fileset>
       </batchtest>
     </junit>

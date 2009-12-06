@@ -10,7 +10,7 @@ Remember that indentation level is 2 spaces, and we never use tabs.  Braces foll
     //
   }
 
-2. Never commit changes without running BOTH the unit tests AND the acceptance tests.  The ant target 'testbuild' in
+2. Never commit changes without running BOTH the unit tests AND the acceptance tests.  The ant target 'all' in
 the build.xml file will run them both, but it's slow.  I just use the IDE to run the unit tests, and then run the
 acceptance tests with FitNesse.
 
