@@ -23,6 +23,15 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
   public static final String REGEXP = "(?:[<>^.])?(?:" + SINGLE_WIKIWORD_REGEXP + "[.]?)+\\b";
   public static final String REGRACE_LINK = "REGRACE_LINK";
 
+    public static String makeWikiWord(String input) {
+        if (isWikiWord(input)) return input;
+        String base = input;
+        while (base.length() < 3) base += "a";
+        return base.substring(0, 1).toUpperCase()
+                + base.substring(1, base.length() - 1).toLowerCase()
+                + base.substring(base.length() - 1).toUpperCase();
+    }
+
   public WikiPage parentPage;
 
   public WikiWordWidget(ParentWidget parent, String text) throws Exception {
