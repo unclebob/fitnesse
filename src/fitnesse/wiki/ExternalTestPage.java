@@ -15,27 +15,26 @@ public class ExternalTestPage extends CachingPage {
     
     @Override
     protected VersionInfo makeVersion() throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     protected void doCommit(PageData data) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public boolean hasChildPage(String pageName) throws Exception {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     @Override
     protected WikiPage createChildPage(String name) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     protected void loadChildren() throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
@@ -54,6 +53,6 @@ public class ExternalTestPage extends CachingPage {
     }
 
     public PageData getDataVersion(String versionName) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;  
     }
 }

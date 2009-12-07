@@ -16,15 +16,15 @@ public class ExternalSuitePage extends CachingPage {
     public String getFileSystemPath() { return path; }
 
     public boolean hasChildPage(String pageName) throws Exception {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     public PageData getDataVersion(String versionName) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     protected WikiPage createChildPage(String name) throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     protected void loadChildren() throws Exception {
@@ -47,10 +47,10 @@ public class ExternalSuitePage extends CachingPage {
     }
 
     protected VersionInfo makeVersion() throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     protected void doCommit(PageData data) throws Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        
     }
 }
