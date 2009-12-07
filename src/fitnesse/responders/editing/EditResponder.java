@@ -90,8 +90,7 @@ public class EditResponder implements SecureResponder {
     html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.js"));
     html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.autocomplete.js"));
     html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.bgiframe.min.js"));
-//    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/completion.js"));
-    
+
     html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
     HtmlTag header = makeHeader(resource, title);
     html.header.use(header);

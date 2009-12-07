@@ -2,15 +2,36 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import util.StringUtil;
 import fitnesse.Responder;
 import fitnesse.http.Request;
-import fitnesse.responders.editing.*;
-import fitnesse.responders.files.*;
+import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.editing.PropertiesResponder;
+import fitnesse.responders.editing.SavePropertiesResponder;
+import fitnesse.responders.editing.SaveResponder;
+import fitnesse.responders.editing.SymbolicLinkResponder;
+import fitnesse.responders.files.CreateDirectoryResponder;
+import fitnesse.responders.files.DeleteConfirmationResponder;
+import fitnesse.responders.files.DeleteFileResponder;
+import fitnesse.responders.files.FileResponder;
+import fitnesse.responders.files.RenameFileConfirmationResponder;
+import fitnesse.responders.files.RenameFileResponder;
+import fitnesse.responders.files.UploadResponder;
 import fitnesse.responders.refactoring.DeletePageResponder;
 import fitnesse.responders.refactoring.MovePageResponder;
 import fitnesse.responders.refactoring.RefactorPageResponder;
 import fitnesse.responders.refactoring.RenamePageResponder;
-import fitnesse.responders.run.*;
+import fitnesse.responders.run.FitClientResponder;
+import fitnesse.responders.run.SocketCatchingResponder;
+import fitnesse.responders.run.StopTestResponder;
+import fitnesse.responders.run.SuiteResponder;
+import fitnesse.responders.run.TestResponder;
+import fitnesse.responders.run.TestResultFormattingResponder;
 import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
@@ -24,12 +45,6 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.StringUtil;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResponderFactory {
   private final String rootPath;
@@ -82,7 +97,6 @@ public class ResponderFactory {
     addResponder("addChild", AddChildPageResponder.class);
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
-    addResponder("complete", CodeCompletionResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {
