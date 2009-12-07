@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.SlimTestContext;
+import static fitnesse.responders.run.slimResponder.SlimTestSystem.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import fitnesse.responders.run.slimResponder.SlimTestContext;
 
 public class TableTable extends SlimTable {
   private String doTableId;
@@ -24,13 +26,32 @@ public class TableTable extends SlimTable {
     doTableId = callFunction(getTableName(), "doTable", tableAsList());
   }
 
-  public void evaluateReturnValues(Map<String, Object> returnValues)
-  throws Exception {
-    if (doTableMethodIsInvalid(returnValues)) {
+  public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
+    if (doTableId == null || returnValues.get(doTableId) == null) {
       table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
       return;
     }
+
+    Object tableReturn = returnValues.get(doTableId);
+    if (tableReturn instanceof String) {
+      String value = (String) tableReturn;
+      if (isTestCaseErrorMessage(value)) {
+        table.appendToCell(0, 0, error("Table fixture has no valid doTable method"));
+      } else if (isExceptionFailureMessage(value)) {
+        table.appendToCell(0, 0, error(value));
+      }
+      return;
+    }
+
     resizeTableAndEvaluateRows(returnValues);
+  }
+
+  private boolean isExceptionFailureMessage(String value) {
+    return value.startsWith("Exception: ");
+  }
+
+  private boolean isTestCaseErrorMessage(String value) {
+    return value.startsWith(MESSAGE_ERROR);
   }
 
   @SuppressWarnings("unchecked")
@@ -39,15 +60,6 @@ public class TableTable extends SlimTable {
     extendTable(table, tableResults);
     for (int row = 0; row < tableResults.size(); row++)
       evaluateRow(tableResults, row);
-  }
-
-  private boolean doTableMethodIsInvalid(Map<String, Object> returnValues) {
-    if (doTableId == null)
-      return true;
-    else {
-      Object tableReturn = returnValues.get(doTableId);
-      return tableReturn == null || (tableReturn instanceof String);
-    }
   }
 
   private void extendTable(Table table, List<List<Object>> tableResults) throws Exception {
@@ -69,11 +81,9 @@ public class TableTable extends SlimTable {
       extendRow(table, row, tableResults.get(row - 1));
   }
 
-  private void extendRow(Table table, int row, List<Object> cellList)
-  throws Exception {
+  private void extendRow(Table table, int row, List<Object> cellList) throws Exception {
     while (table.getColumnCountInRow(row) < cellList.size())
-      table.appendCellToRow(row,
-          (String) cellList.get(table.getColumnCountInRow(row)));
+      table.appendCellToRow(row, (String) cellList.get(table.getColumnCountInRow(row)));
   }
 
   private void evaluateRow(List<List<Object>> tableResults, int resultRow) {
@@ -106,7 +116,7 @@ public class TableTable extends SlimTable {
     if (colon == -1)
       return false;
     String code = contents.substring(0, colon);
-    String message = contents.substring(colon+1);
+    String message = contents.substring(colon + 1);
 
     if (code.equalsIgnoreCase("error"))
       table.setCell(col, row, error(message));

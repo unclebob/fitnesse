@@ -2,19 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.slim.SlimClient;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
 import static util.ListUtility.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimClient;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageUtil;
 
 public class TableTableTest {
   private WikiPage root;
@@ -289,5 +291,27 @@ public class TableTableTest {
     testContext.evaluateExpectations(pseudoResults);
     tt.evaluateReturnValues(pseudoResults);
     assertEquals("[[pass(Table:fixture), argument], [pass($X->[value]), fail($X->[value])]]", tt.getTable().toString());
+  }
+
+  @Test
+  public void tableMethodReturnsNull() throws Exception {
+    assertTableResults("|2|4|\n", null,
+        "[[pass(Table:fixture), argument ignore(Test not run)], [2, 4]]"
+      );
+  }
+
+  @Test
+  public void tableMethodThrowsException() throws Exception {
+    makeTableTableAndBuildInstructions(tableTableHeader + "|2|4|\n");
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("tableTable_id_0", "OK"),
+        list("tableTable_id_1", "Exception: except")
+      )
+    );
+    testContext.evaluateExpectations(pseudoResults);
+    tt.evaluateReturnValues(pseudoResults);
+    assertEquals("[[pass(Table:fixture)error(Exception: except), argument], [2, 4]]",
+        tt.getTable().toString());
   }
 }
