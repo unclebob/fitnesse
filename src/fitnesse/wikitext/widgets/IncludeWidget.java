@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class IncludeWidget extends ParentWidget implements PageReferencer {
   public static final String REGEXP =
-    "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + LINE_BREAK_PATTERN + "?";
+    "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + "\n" + "?";
   static final Pattern pattern = Pattern.compile("^!include *(-setup|-teardown|-seamless|-c)? (.*)");
 
   public static final String COLLAPSE_SETUP = "COLLAPSE_SETUP";
@@ -108,7 +108,8 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
 
   //TODO MDM I know this is bad...  But it seems better then creating two new widgets.
   private void buildWidget() throws Exception {
-    String widgetText = processLiterals(getIncludedPageContent(includeOption));
+    String includedText = getIncludedPageContent(includeOption);
+    String widgetText = processLiterals(includedText);
 
     //Create imposter root with alias = this if included page found.
     ParentWidget incRoot = (includedPage == null) ? this : new WidgetRoot(includedPage, this);

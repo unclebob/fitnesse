@@ -4,20 +4,23 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 import util.RegexTestCase;
+import util.StringUtil;
 
-public class WidgetRootTest extends RegexTestCase {
+public class WidgetRootTest {
   private WikiPage rootPage;
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     rootPage = InMemoryPage.makeRoot("RooT");
   }
 
   //PAGE_NAME: Test
+  @Test
   public void testPageNameVariable() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     PageData data = root.getData();
@@ -26,7 +29,8 @@ public class WidgetRootTest extends RegexTestCase {
     assertEquals("SomePage", data.getVariable("PAGE_NAME"));
   }
 
-  public void testVariablesOneTheRootPage() throws Exception {
+  @Test
+    public void testVariablesOneTheRootPage() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     PageData data = root.getData();
     data.setContent("!define v1 {Variable #1}\n");
@@ -36,7 +40,8 @@ public class WidgetRootTest extends RegexTestCase {
     assertEquals("Variable #1", data.getVariable("v1"));
   }
 
-  public void testVariablesFromSystemProperties() throws Exception {
+  @Test
+    public void testVariablesFromSystemProperties() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     PageData data = root.getData();
     System.getProperties().setProperty("widgetRootTestKey", "widgetRootTestValue");
@@ -46,22 +51,25 @@ public class WidgetRootTest extends RegexTestCase {
     assertEquals("widgetRootTestValue", data.getVariable("widgetRootTestKey"));
   }
 
-  public void testProcessLiterals() throws Exception {
+  @Test
+    public void testProcessLiterals() throws Exception {
     WidgetRoot root = new WidgetRoot("", rootPage);
     assertEquals(0, root.getLiterals().size());
     String result = root.processLiterals("With a !-literal-! in the middle");
-    assertNotSubString("!-", result);
+    RegexTestCase.assertNotSubString("!-", result);
     assertEquals(1, root.getLiterals().size());
     assertEquals("literal", root.getLiteral(0));
   }
 
-  public void testProcessLiteralsCalledWhenConstructed() throws Exception {
+  @Test
+    public void testProcessLiteralsCalledWhenConstructed() throws Exception {
     WidgetRoot root = new WidgetRoot("With !-another literal-! in the middle", rootPage);
     assertEquals(1, root.getLiterals().size());
     assertEquals("another literal", root.getLiteral(0));
   }
 
-  public void testLiteralsInConstructionAndAfterwards() throws Exception {
+  @Test
+    public void testLiteralsInConstructionAndAfterwards() throws Exception {
     WidgetRoot root = new WidgetRoot("the !-first-! literal", rootPage);
     String result = root.processLiterals("the !-second-! literal");
 
@@ -73,7 +81,8 @@ public class WidgetRootTest extends RegexTestCase {
     assertEquals("second", root.getLiteral(1));
   }
 
-  public void testShouldHavePortVariableAvailable() throws Exception {
+  @Test
+    public void testShouldHavePortVariableAvailable() throws Exception {
     FitNesseContext context = new FitNesseContext();
     context.port = 9876;
     new FitNesse(context, false);
@@ -81,11 +90,22 @@ public class WidgetRootTest extends RegexTestCase {
     assertEquals("9876", root.getVariable("FITNESSE_PORT"));
   }
 
-  public void testShouldHaveRootPathVariableAvailable() throws Exception {
+  @Test
+    public void testShouldHaveRootPathVariableAvailable() throws Exception {
     FitNesseContext context = new FitNesseContext();
     context.rootPath = "/home/fitnesse";
     new FitNesse(context, false);
     WidgetRoot root = new WidgetRoot("", rootPage);
     assertEquals("/home/fitnesse", root.getVariable("FITNESSE_ROOTPATH"));
+  }
+
+  @Test
+  public void carriageReturnsShouldNotMatterIfPresentOnPage() throws Exception {
+    WikiPage root = InMemoryPage.makeRoot("RooT");
+    PageCrawler crawler = root.getPageCrawler();
+    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "''italics''\r\n\r'''bold'''\r\n\r");
+    PageData data = page.getData();
+    String html = data.getHtml();
+    assertEquals("<i>italics</i><br/><b>bold</b><br/>", html);
   }
 }

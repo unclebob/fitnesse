@@ -85,7 +85,8 @@ public class WidgetRoot extends ParentWidget {
   }
 
   protected void buildWidgets(String value) throws Exception {
-    String nonLiteralContent = processLiterals(stripTrialingWhiteSpaceInLines(value));
+    String strippedText = stripTrailingWhiteSpaceInLines(value);
+    String nonLiteralContent = processLiterals(strippedText);
     addChildWidgets(nonLiteralContent);
   }
 

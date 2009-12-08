@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CenterWidget extends ParentWidget {
-  public static final String REGEXP = "^![cC] [^\r\n]*" + LINE_BREAK_PATTERN + "?";
+  public static final String REGEXP = "^![cC] [^\n]*\n?";
   private static final Pattern pattern = Pattern.compile("^![cC] (.*)");
 
   public CenterWidget(ParentWidget parent, String text) throws Exception {

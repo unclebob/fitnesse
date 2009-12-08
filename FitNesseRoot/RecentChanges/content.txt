@@ -1,3 +1,6 @@
+|FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests.SetUp||11:30:58 Tue, Dec 08, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateAbsoluteSymbolicLink||11:29:01 Tue, Dec 08, 2009|
+|JunkPage.NunkPage||11:16:16 Tue, Dec 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||10:48:22 Mon, Dec 07, 2009|
 |JunkPage.HashTablePage||10:35:47 Mon, Dec 07, 2009|
 |JunkPage.CalculationBug||18:14:59 Sun, Dec 06, 2009|
@@ -95,6 +98,3 @@
 |JunkPage.PointOfSale.CanTotalOrder||14:43:12 Wed, Aug 12, 2009|
 |JunkPage.ImportingPage||14:42:42 Wed, Aug 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestImportFromSecureWikiWithCredentials||16:05:29 Wed, Aug 05, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestCantImportFromSecureWiki||16:04:21 Wed, Aug 05, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteFileSection.TestFileSectionOrder||15:56:26 Wed, Aug 05, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteFileSection||15:48:37 Wed, Aug 05, 2009|

@@ -182,7 +182,7 @@ public class PageData implements Serializable {
   }
 
   public String getContent() throws Exception {
-    return content;
+    return StringUtil.stripCarriageReturns(content);
   }
 
   public void setContent(String content) {

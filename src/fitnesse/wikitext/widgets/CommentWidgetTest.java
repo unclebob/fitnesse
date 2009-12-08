@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Pattern;
-
-import junit.framework.TestCase;
 import fitnesse.wiki.WikiPageDummy;
+import junit.framework.TestCase;
+
+import java.util.regex.Pattern;
 
 public class CommentWidgetTest extends TestCase {
   private ParentWidget root;
@@ -19,12 +19,13 @@ public class CommentWidgetTest extends TestCase {
   }
 
   public void testRegexp() throws Exception {
-    assertTrue("match1", Pattern.matches(CommentWidget.REGEXP, "# Comment text\n"));
-    assertTrue("match2", Pattern.matches(CommentWidget.REGEXP, "#\n"));
-    assertTrue("match3", !Pattern.matches(CommentWidget.REGEXP, " #\n"));
-    assertTrue("match4", Pattern.matches(CommentWidget.REGEXP, "#|Comment|no table, because no ending bar\n"));
-    assertTrue("match5", Pattern.matches(CommentWidget.REGEXP, "#!|Comment|no table, because no ending bar\n"));
-    assertTrue("match6", Pattern.matches(CommentWidget.REGEXP, "#Comment|no table, because no starting bar|\n"));
+    assertTrue(Pattern.matches(CommentWidget.REGEXP, "# Comment text\n"));
+    assertTrue(Pattern.matches(CommentWidget.REGEXP, "#\n"));
+    assertTrue(!Pattern.matches(CommentWidget.REGEXP, " #\n"));
+    assertTrue(Pattern.matches(CommentWidget.REGEXP, "#|Comment|no table, because no ending bar\n"));
+    assertTrue(Pattern.matches(CommentWidget.REGEXP, "#!|Comment|no table, because no ending bar\n"));
+    assertTrue(Pattern.matches(CommentWidget.REGEXP, "#Comment|no table, because no starting bar|\n"));
+    assertTrue(Pattern.matches(CommentWidget.REGEXP, "#|is comment because next line starts with #|\n#hi\n"));
   }
 
   public void testCommentTablesAreNotCommentLines() throws Exception {

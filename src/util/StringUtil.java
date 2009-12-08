@@ -58,4 +58,11 @@ public class StringUtil {
   public static boolean stringsNullOrEqual(String s1, String s2) {
     return (s1 == null && s2 == null) || (s1 != null && s2 != null && s1.equals(s2));
   }
+
+  public static String stripCarriageReturns(String s) {
+    if (s == null)
+      return null;
+    else
+      return s.replaceAll("\r", "");
+  }
 }

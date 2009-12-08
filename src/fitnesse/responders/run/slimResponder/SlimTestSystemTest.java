@@ -13,12 +13,13 @@ import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.BindException;
 import java.net.ServerSocket;
+import java.net.SocketException;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -64,24 +65,24 @@ public class SlimTestSystemTest {
   @Test
   public void portRotates() throws Exception {
     SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
-    for (int i=1; i<15; i++)
-      assertEquals(8085 + (i%10), sys.getNextSlimSocket());
+    for (int i = 1; i < 15; i++)
+      assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
   }
-  
+
   @Test
   public void portStartsAtSlimPortVariable() throws Exception {
     WikiPage pageWithSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
     SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimPortDefined, dummyListener);
-    for (int i=1; i<15; i++)
-      assertEquals(9000 + (i%10), sys.getNextSlimSocket());
+    for (int i = 1; i < 15; i++)
+      assertEquals(9000 + (i % 10), sys.getNextSlimSocket());
   }
 
   @Test
   public void badSlimPortVariableDefaults() throws Exception {
     WikiPage pageWithBadSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
     SlimTestSystem sys = new HtmlSlimTestSystem(pageWithBadSlimPortDefined, dummyListener);
-    for (int i=1; i<15; i++)
-      assertEquals(8085 + (i%10), sys.getNextSlimSocket());
+    for (int i = 1; i < 15; i++)
+      assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
   }
 
   @Test
@@ -259,13 +260,13 @@ public class SlimTestSystemTest {
     );
     assertTestResultsContain("<span class=\"error\">Method setNoSuchVar[1] not found in fitnesse.slim.test.TestSlim");
   }
-  
+
   @Test
   public void tableWithStopTestMessageException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
-        "|throwStopTestExceptionWithMessage?|\n" +
-        "| once |\n" +
-        "| twice |\n");
+      "|throwStopTestExceptionWithMessage?|\n" +
+      "| once |\n" +
+      "| twice |\n");
     assertTestResultsContain("<td>once <span class=\"fail\">Stop Test</span></td>");
     assertTestResultsContain("<td>twice <span class=\"ignore\">Test not run</span>");
   }
@@ -273,8 +274,8 @@ public class SlimTestSystemTest {
   @Test
   public void tableWithMessageException() throws Exception {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
-        "|throwExceptionWithMessage?|\n" +
-        "| once |\n");
+      "|throwExceptionWithMessage?|\n" +
+      "| once |\n");
     assertTestResultsContain("<td>once <span class=\"error\">Test message</span></td>");
   }
 
@@ -283,7 +284,7 @@ public class SlimTestSystemTest {
     getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
       "|throwNormal?| throwStopping? |\n" +
       "| first | second  |\n" +
-      "| should fail1| true           |\n" + 
+      "| should fail1| true           |\n" +
       "\n\n" +
       "!|DT:fitnesse.slim.test.ThrowException|\n" +
       "|throwNormal?|\n" +
@@ -294,7 +295,7 @@ public class SlimTestSystemTest {
     assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
     assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
   }
-  
+
   @Test
   public void tableWithSymbolSubstitution() throws Exception {
     getResultsForPageContents(
@@ -402,13 +403,13 @@ public class SlimTestSystemTest {
         "|1|\n");
     assertTestResultsContain("A Reportable Exception");
   }
-  
+
   @Test
   public void checkTestClassPrecededByDefine() throws Exception {
     getResultsForPageContents("!define PI {3.141592}\n" +
-    "!path classes\n" +
-    "!path fitnesse.jar\n" +
-    "|fitnesse.testutil.PassFixture|\n");
+      "!path classes\n" +
+      "!path fitnesse.jar\n" +
+      "|fitnesse.testutil.PassFixture|\n");
     assertTestResultsContain("PassFixture");
   }
 
@@ -423,23 +424,17 @@ public class SlimTestSystemTest {
     getResultsForPageContents("|Scenario|myScenario|\n");
     assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
   }
-  
-  /**
-   * This test is added to prevent an endless loop using the {@link HtmlSlimTestSystem#createSlimService(String)} when the
-   * port the server socket tries to connect to is already in use. This can happen when {@link SlimTestSystem#setFastTest(boolean)} 
-   * is set to <code>true</code>, trinidad uses this functionality.
-   */
-  @Test(expected=BindException.class)
+
+  @Test(expected = SocketException.class)
   public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
-    final ServerSocket serverSocket = new ServerSocket();
+    final int slimServerPort = 10258;
+    ServerSocket slimSocket = new ServerSocket(slimServerPort);
     try {
-      serverSocket.bind(null);
       SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
-      String slimArguments = String.format("%s %d", "", serverSocket.getLocalPort());
+      String slimArguments = String.format("%s %d", "", slimServerPort);
       sys.createSlimService(slimArguments);
-      fail("should have thrown BindException indicating the port is already in use.");
     } finally {
-      serverSocket.close();
+      slimSocket.close();
     }
   }
 

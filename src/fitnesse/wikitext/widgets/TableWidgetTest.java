@@ -16,16 +16,6 @@ public class TableWidgetTest extends WidgetTestCase {
     assertMatch("|a|b|\n|c|\n");
     assertMatch("|a|\n|b|\n|c|\n");
     assertNoMatch("|abc\n|\n");
-    assertMatch("|a|\r");
-    assertMatch("|a|b|\r");
-    assertMatch("|a|b|\r|c|\r");
-    assertMatch("|a|\r|b|\r|c|\r");
-    assertNoMatch("|abc\r|\r");
-    assertMatch("|a|\r\n");
-    assertMatch("|a|b|\r\n");
-    assertMatch("|a|b|\r\n|c|\r\n");
-    assertMatch("|a|\r\n|b|\r\n|c|\r\n");
-    assertNoMatch("|abc\r\n|\r\n");
   }
 
   public void testRegexpForLiteralTable() throws Exception {

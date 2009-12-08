@@ -2,15 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.wikitext.WikiWidget;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fitnesse.wikitext.WikiWidget;
-
 public class TableWidget extends ParentWidget {
-  public static final String LF = LINE_BREAK_PATTERN;
-  public static final String REGEXP = "^#?!?(?:\\|[^\r\n]*?\\|" + LF + ")+";
-  private static final Pattern pattern = Pattern.compile("(#?)(!?)(\\|[^\r\n]*?)\\|" + LF);
+  public static final String REGEXP = "^#?!?(?:\\|[^\n]*?\\|\n)+";
+  private static final Pattern pattern = Pattern.compile("(#?)(!?)(\\|[^\n]*?)\\|\n");
 
   public boolean isLiteralTable;
   public boolean isCommentTable;

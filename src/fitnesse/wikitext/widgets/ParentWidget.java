@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetVisitor;
 import fitnesse.wikitext.WikiWidget;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class ParentWidget extends WikiWidget {
   protected LinkedList<WikiWidget> children = new LinkedList<WikiWidget>();
@@ -138,8 +138,8 @@ public abstract class ParentWidget extends WikiWidget {
     return (new VariableExpandingWidgetRoot(this, content)).childHtml();
   }
 
-  protected String stripTrialingWhiteSpaceInLines(String value) {
-    return Pattern.compile("[ \\t]+(" + LINE_BREAK_PATTERN + ")").matcher(value).replaceAll("$1");
+  protected String stripTrailingWhiteSpaceInLines(String value) {
+    return Pattern.compile("[ \\t]+(\n)").matcher(value).replaceAll("$1");
   }
 
   public static class LiteralProcessingWidgetRoot extends ParentWidget {

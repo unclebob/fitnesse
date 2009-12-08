@@ -2,21 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
 import fitnesse.wiki.WikiPageDummy;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CollapsableWidgetTest extends WidgetTestCase {
   public void testRegExp() throws Exception {
     assertMatch("!* Some title\n content \n*!");
     assertMatch("!*> Some title\n content \n*!");
     assertMatch("!********** Some title\n content \n**************!");
-    assertMatch("!* title\n * list\r*!");
 
     assertNoMatch("!* title content *!");
     assertNoMatch("!*missing a space\n content \n*!");

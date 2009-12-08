@@ -2,32 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import junit.framework.TestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wikitext.widgets.AnchorDeclarationWidget;
-import fitnesse.wikitext.widgets.AnchorMarkerWidget;
-import fitnesse.wikitext.widgets.BoldWidget;
-import fitnesse.wikitext.widgets.CenterWidget;
-import fitnesse.wikitext.widgets.ClasspathWidget;
-import fitnesse.wikitext.widgets.CollapsableWidget;
-import fitnesse.wikitext.widgets.EmailWidget;
-import fitnesse.wikitext.widgets.HeaderWidget;
-import fitnesse.wikitext.widgets.HruleWidget;
-import fitnesse.wikitext.widgets.ItalicWidget;
-import fitnesse.wikitext.widgets.ListWidget;
-import fitnesse.wikitext.widgets.MockWidgetRoot;
-import fitnesse.wikitext.widgets.NoteWidget;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.PreformattedWidget;
-import fitnesse.wikitext.widgets.StrikeWidget;
-import fitnesse.wikitext.widgets.TableWidget;
-import fitnesse.wikitext.widgets.TextWidget;
-import fitnesse.wikitext.widgets.VirtualWikiWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.widgets.*;
+import junit.framework.TestCase;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WidgetBuilderTest extends TestCase {
   private WikiPage mockSource;
@@ -255,9 +235,9 @@ public class WidgetBuilderTest extends TestCase {
     for (int i = 0; i < 100; i++)
       b.append("****************************************************************\n");
     for (int i = 0; i < 100; i++)
-      b.append("****************************************************************\r");
+      b.append("****************************************************************\n");
     for (int i = 0; i < 100; i++)
-      b.append("****************************************************************\r\n");
+      b.append("****************************************************************\n");
 
     long start = System.currentTimeMillis();
     ParentWidget root = new WidgetRoot(b.toString(), mockSource);

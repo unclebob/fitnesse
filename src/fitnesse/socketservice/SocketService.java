@@ -52,6 +52,7 @@ public class SocketService {
         System.exit(99);
       }
       catch (IOException e) {
+        throw new RuntimeException(e);
       }
     }
   }
