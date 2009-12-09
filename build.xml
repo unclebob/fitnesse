@@ -45,7 +45,6 @@
       <zipfileset src="lib/htmlparser.jar"/>
       <zipfileset src="lib/json.jar"/>
       <zipfileset src="lib/velocity-1.6.2-dep.jar"/>
-      <zipfileset src="lib/fitlibrary.jar"/>
 
       <manifest>
         <attribute name="Built-By" value="Object Mentor, Inc."/>
