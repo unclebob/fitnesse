@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public class ScriptTable extends SlimTable {
+  private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
   private Matcher symbolAssignmentMatcher;
 
   public ScriptTable(Table table, String tableId, SlimTestContext context) {
@@ -135,20 +136,31 @@ public class ScriptTable extends SlimTable {
 
   private String getActionNameStartingAt(int startingCol, int endingCol, int row) {
     StringBuffer actionName = new StringBuffer();
-    actionName.append(table.getCellContents(startingCol, row));
-    int secondFuncNameCol = startingCol + 2;
-    for (int actionNameCol = secondFuncNameCol; actionNameCol <= endingCol; actionNameCol += 2)
+    int actionNameCol = startingCol;
+    do {
       actionName.append(" ").append(table.getCellContents(actionNameCol, row));
+      actionNameCol += 2;
+    } while (actionNameCol <= endingCol &&
+      !invokesSequentialArgumentProcessing(actionName.toString()));
     return actionName.toString().trim();
   }
 
   private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row) {
     List<String> arguments = new ArrayList<String>();
-    for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += 2) {
+    int increment = 2;
+    boolean useSequentialArgumentProcessing = false;
+    for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += increment) {
       arguments.add(table.getUnescapedCellContents(argumentColumn, row));
       addExpectation(new ArgumentExpectation(getInstructionTag(), argumentColumn, row));
+      useSequentialArgumentProcessing = (useSequentialArgumentProcessing ||
+        invokesSequentialArgumentProcessing(table.getCellContents(argumentColumn - 1, row)));
+      increment = useSequentialArgumentProcessing ? 1 : 2;
     }
     return arguments.toArray(new String[arguments.size()]);
+  }
+
+  private boolean invokesSequentialArgumentProcessing(String cellContents) {
+    return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
   }
 
   private void startActor(int row) {

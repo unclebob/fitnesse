@@ -145,6 +145,46 @@ public class ScriptTableTest {
   }
 
   @Test
+  public void functionCallWithSequentialArgumentProcessingAndOneArgument() throws Exception {
+    buildInstructionsFor("|function;|arg0|\n");
+    List<Object> expectedInstructions = 
+      list(
+        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg0")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+  
+  @Test
+  public void functionCallWithSequentialArgumentProcessingAndMultipleArguments() throws Exception {
+    buildInstructionsFor("|function;|arg0|arg1|arg2|\n");
+    List<Object> expectedInstructions = 
+      list(
+        list("scriptTable_id_0", "call", "scriptTableActor", "function", "arg0", "arg1", "arg2")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+  
+  @Test
+  public void functionCallWithSequentialArgumentProcessingEmbedded() throws Exception {
+    buildInstructionsFor("|set name|Marisa|department and title;|QA|Tester|\n");
+    List<Object> expectedInstructions = 
+      list(
+        list("scriptTable_id_0", "call", "scriptTableActor", "setNameDepartmentAndTitle", "Marisa", "QA", "Tester")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+  
+  @Test
+  public void functionCallWithSequentialArgumentProcessingEmbedded2() throws Exception {
+    buildInstructionsFor("|set name|Marisa|department|QA|title and length of employment;|Tester|2 years|\n");
+    List<Object> expectedInstructions = 
+      list(
+        list("scriptTable_id_0", "call", "scriptTableActor", "setNameDepartmentTitleAndLengthOfEmployment", "Marisa", "QA", "Tester", "2 years")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+  
+  @Test
   public void checkWithFunction() throws Exception {
     buildInstructionsFor("|check|function|arg|result|\n");
     List<Object> expectedInstructions =

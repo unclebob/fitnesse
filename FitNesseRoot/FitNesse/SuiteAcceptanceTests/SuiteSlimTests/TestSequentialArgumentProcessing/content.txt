@@ -1,0 +1,29 @@
+!1 Sequential Argument Processing in Script Tables
+''concatenateThreeArgs(Integer i, Double d, char c)'' returns the concatenated arguments, separated by a space
+!3 Affixing a semi-colon ";" to the end of a cell's contents should invoke sequential argument processing. Mixing every-other-cell and sequential-cell processing within the same row is permitted.
+!|script                |fitnesse.slim.test.TestSlim|
+|concatenate three args;|1  |2.0          |three    |
+|concatenate            |a  |three args;  |b   |c   |
+|concatenate three      |x  |args;        |why |zee |
+
+!3 Results of the function call should be equal regardless of processing style.
+!|script                                                                                                                                           |
+|$RESULT_WITH_EVERY_OTHER_CELL_PROCESSING=|concatenate            |a                                      |three           |b     |args     |c     |
+|$RESULT_WITH_SEQUENTIAL_CELL_PROCESSING= |concatenate three args;|a                                      |b               |c                      |
+|$RESULT_WITH_MIXED_PROCESSING=           |concatenate            |a                                      |three args;     |b     |c               |
+|check                                    |echo string            |$RESULT_WITH_SEQUENTIAL_CELL_PROCESSING|$RESULT_WITH_EVERY_OTHER_CELL_PROCESSING|
+|check                                    |echo string            |$RESULT_WITH_MIXED_PROCESSING          |$RESULT_WITH_EVERY_OTHER_CELL_PROCESSING|
+
+!3 script table keywords
+!|script                                                     |
+|check    |concatenate three args;|1|2.0|three|1 2.0 three   |
+|check not|concatenate three args;|a|b  |c    |something else|
+|show     |concatenate three args;|a|b  |c                   |
+
+!3 Sequential argument processing can be used in scenario tables
+!|scenario|concatenate            |input1 |and    |input2|and|input3|
+|$RESULT= |concatenate three args;|@input1|@input2|@input3          |
+
+!|script                                |
+|concatenate|a          |and    |b|and|c|
+|check      |echo string|$RESULT|a b c  |
