@@ -226,11 +226,15 @@ public class StatementExecutor implements StatementExecutorInterface {
   private Field findSystemUnderTest(Class<?> k) {
     Field[] fields = k.getDeclaredFields();
     for (Field field : fields) {
-      if (field.getAnnotation(SystemUnderTest.class) != null) {
+      if (isSystemUnderTest(field)) {
         return field;
       }
     }
     return null;
+  }
+
+  private boolean isSystemUnderTest(Field field) {
+    return "systemUnderTest".equals(field.getName()) || field.getAnnotation(SystemUnderTest.class) != null;
   }
 
   private Object[] convertArgs(Method method, Object args[]) {

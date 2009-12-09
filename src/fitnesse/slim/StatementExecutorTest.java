@@ -19,13 +19,27 @@ public class StatementExecutorTest {
     }
   }
 
-  public static class MyFixture {
+  public static class MyAnnotatedFixture {
     public boolean called = false;
 
     @SystemUnderTest
+    public MySystemUnderTest sut;
+
+    public MyAnnotatedFixture() {
+      sut = new MySystemUnderTest();
+    }
+
+    public void echo() {
+      called = true;
+    }
+  }
+
+  public static class MyNamedFixture {
+    public boolean called = false;
+
     public MySystemUnderTest systemUnderTest;
 
-    public MyFixture() {
+    public MyNamedFixture() {
       systemUnderTest = new MySystemUnderTest();
     }
 
@@ -41,39 +55,67 @@ public class StatementExecutorTest {
 
   @Test
   public void shouldCallMethodOnGivenInstanceBeforeTryingToInvokeOnSystemUnderTest() {
-    MyFixture myInstance = createFixture();
+    MyAnnotatedFixture myInstance = createAnnotatedFixture();
 
     Object result = statementExecutor.call("myInstance", "echo");
     assertEquals("/__VOID__/", result);
     assertTrue(myInstance.called);
-    assertFalse(myInstance.systemUnderTest.called);
+    assertFalse(myInstance.sut.called);
   }
 
-  private MyFixture createFixture() {
-    Object created = statementExecutor.create("myInstance", MyFixture.class.getName(),
+  private MyAnnotatedFixture createAnnotatedFixture() {
+    createFixtureInstance(MyAnnotatedFixture.class);
+
+    MyAnnotatedFixture myInstance = (MyAnnotatedFixture) statementExecutor.getInstance("myInstance");
+    assertFalse(myInstance.called);
+    return myInstance;
+  }
+
+  private void createFixtureInstance(Class<?> fixtureClass) {
+    Class<?> clazz = fixtureClass;
+    Object created = statementExecutor.create("myInstance", clazz.getName(),
         new Object[] {});
-    MyFixture myInstance = (MyFixture) statementExecutor.getInstance("myInstance");
     assertEquals("OK", created);
+  }
+
+  @Test
+  public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethod() {
+    MyAnnotatedFixture myFixture = createAnnotatedFixture();
+
+    executeStatementAndVerifyResultIsVoid();
+    assertFalse(myFixture.called);
+    assertTrue(myFixture.sut.called);
+  }
+  
+  @Test
+  public void shouldCallMethodOnFieldNamed_systemUnderTest_WhenFixtureDoesNotHaveMethod() {
+    MyNamedFixture myFixture = createNamedFixture();
+    
+    executeStatementAndVerifyResultIsVoid();
+    assertFalse(myFixture.called);
+    assertTrue(myFixture.systemUnderTest.called);
+  }
+
+  private void executeStatementAndVerifyResultIsVoid() {
+    Object result = statementExecutor.call("myInstance", "specialCall");
+    assertEquals("/__VOID__/", result);
+  }
+  
+  private MyNamedFixture createNamedFixture() {
+    createFixtureInstance(MyNamedFixture.class);
+    
+    MyNamedFixture myInstance = (MyNamedFixture) statementExecutor.getInstance("myInstance");
     assertFalse(myInstance.called);
     return myInstance;
   }
 
   @Test
-  public void shouldCallMethodOnSystemUnderTestWhenFixtureDoesNotHaveMethod() {
-    MyFixture myFixture = createFixture();
-
-    Object result = statementExecutor.call("myInstance", "specialCall");
-    assertEquals("/__VOID__/", result);
-    assertFalse(myFixture.called);
-    assertTrue(myFixture.systemUnderTest.called);
-  }
-
-  @Test
   public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest() {
-    createFixture();
+    createAnnotatedFixture();
     String result = (String) statementExecutor.call("myInstance", "noSuchMethod");
     String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
-        MyFixture.class.getName());
+        MyAnnotatedFixture.class.getName());
     assertTrue(result.contains(expectedErrorMessage));
   }
+  
 }

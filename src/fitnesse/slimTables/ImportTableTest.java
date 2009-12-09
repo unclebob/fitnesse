@@ -5,51 +5,18 @@ package fitnesse.slimTables;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageUtil;
-
-public class ImportTableTest {
-  private WikiPage root;
-  private List<Object> instructions;
+public class ImportTableTest extends SlimTableTestSupport<ImportTable> {
   private final String importTableHeader = "|Import|\n";
-  public ImportTable importTable;
-  private MockSlimTestContext testContext;
-
-  @Before
-  public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("root");
-    instructions = new ArrayList<Object>();
-  }
-
-  private ImportTable makeScriptTableAndBuildInstructions(String pageContents) throws Exception {
-    importTable = makeImportTable(pageContents);
-    importTable.appendInstructions(instructions);
-    return importTable;
-  }
-
-  private ImportTable makeImportTable(String tableText) throws Exception {
-    WikiPageUtil.setPageContents(root, tableText);
-    String html = root.getData().getHtml();
-    TableScanner ts = new HtmlTableScanner(html);
-    Table t = ts.getTable(0);
-    testContext = new MockSlimTestContext();
-    return new ImportTable(t, "id", testContext);
-  }
-
   private void buildInstructionsFor(String scriptStatements) throws Exception {
-    makeScriptTableAndBuildInstructions(importTableHeader + scriptStatements);
+    makeSlimTableAndBuildInstructions(importTableHeader + scriptStatements);
   }
 
   @Test
-  public void instructionsForScriptTable() throws Exception {
+  public void instructionsForImportTable() throws Exception {
     buildInstructionsFor("||\n");
     assertEquals(0, instructions.size());
   }
