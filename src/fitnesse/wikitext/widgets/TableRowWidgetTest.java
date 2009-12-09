@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.TestCase;
 import fitnesse.wikitext.WikiWidget;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-public class TableRowWidgetTest extends TestCase {
+public class TableRowWidgetTest {
+  @Test
   public void testSimpleRow() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "");
     TableRowWidget row = new TableRowWidget(table, "|a", false);
     assertEquals(1, row.numberOfChildren());
     WikiWidget child = row.nextChild();
@@ -17,5 +19,13 @@ public class TableRowWidgetTest extends TestCase {
     child = cell.nextChild();
     assertEquals(TextWidget.class, child.getClass());
     assertEquals("a", ((TextWidget) child).getText());
+  }
+
+  @Test
+  public void testPlainTextRow() throws Exception {
+    PlainTextTableWidget table = new PlainTextTableWidget(new MockWidgetRoot(), "");
+    table.maximizeColumns(3);
+    TableRowWidget row = new TableRowWidget(table, new String[] {"a", "b", "c"});
+    assertEquals("<tr><td>a</td><td>b</td><td>c</td></tr>", row.render().replaceAll("\n", ""));
   }
 }

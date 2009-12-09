@@ -5,9 +5,9 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlElement;
 import fitnesse.wikitext.WikiWidget;
 
-public class TableWidgetTest extends WidgetTestCase {
+public class StandarTableWidgetTest extends WidgetTestCase {
   protected String getRegexp() {
-    return TableWidget.REGEXP;
+    return StandardTableWidget.REGEXP;
   }
 
   public void testRegexp() throws Exception {
@@ -35,7 +35,7 @@ public class TableWidgetTest extends WidgetTestCase {
   }
   
   public void testSimpleTable() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "|a|\n");
     assertEquals(1, table.numberOfChildren());
     assertEquals(1, table.getColumns());
     WikiWidget child = table.nextChild();
@@ -52,19 +52,19 @@ public class TableWidgetTest extends WidgetTestCase {
   }
 
   public void testBiggerTable() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|b|c|\n|d|\n|e|f|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "|a|b|c|\n|d|\n|e|f|\n");
     assertEquals(3, table.numberOfChildren());
     assertEquals(3, table.getColumns());
   }
 
   public void testHtml() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "|a|\n");
     String expected = "<table border=\"1\" cellspacing=\"0\">\n<tr><td>a</td>" + HtmlElement.endl + "</tr>\n</table>\n";
     assertEquals(expected, table.render());
   }
 
   public void testBiggerHtml() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|\n|b|c|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "|a|\n|b|c|\n");
     String expected = "<table border=\"1\" cellspacing=\"0\">\n<tr><td colspan=\"2\">a</td>" +
       HtmlElement.endl + "</tr>\n<tr><td>b</td>" +
       HtmlElement.endl + "<td>c</td>" +
@@ -73,30 +73,30 @@ public class TableWidgetTest extends WidgetTestCase {
   }
 
   public void testTestTable() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "!|'''bold text'''|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "!|'''bold text'''|\n");
     assertTrue(table.isLiteralTable);
     assertSubString("'''bold text'''", table.render());
   }
 
   public void testCanBuildWikiTextFromSimpleTable() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "|a|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "|a|\n");
     assertEquals("|a|\n", table.asWikiText());
   }
 
   public void testCanBuildWikiTextFromComplexTable() throws Exception {
     String complexTable = "|a|b|c|\n|d|e|f|\n";
-    TableWidget table = new TableWidget(new MockWidgetRoot(), complexTable);
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), complexTable);
     assertEquals(complexTable, table.asWikiText());
   }
 
   public void testCanBuildWikiTextFromTestTable() throws Exception {
     String testTable = "!|a|b|\n|c|d|\n";
-    TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), testTable);
     assertEquals(testTable, table.asWikiText());
   }
   
   public void testCommentTableAsHtml() throws Exception {
-    TableWidget table = new TableWidget(new MockWidgetRoot(), "#|a|\n|b|c|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "#|a|\n|b|c|\n");
     String expected = "<table border=\"1\" cellspacing=\"0\">\n<tr class=\"hidden\"><td colspan=\"2\">a</td>" +
       HtmlElement.endl + "</tr>\n<tr><td>b</td>" +
       HtmlElement.endl + "<td>c</td>" +
@@ -106,13 +106,13 @@ public class TableWidgetTest extends WidgetTestCase {
 
   public void testCanBuildWikiTextFromCommentTable() throws Exception {
     String testTable = "#|a|b|\n|c|d|\n";
-    TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), testTable);
     assertEquals(testTable, table.asWikiText());
   }
 
   public void testCanBuildWikiTextFromLiteralCommentTable() throws Exception {
     String testTable = "#!|a|b|\n|c|d|\n";
-    TableWidget table = new TableWidget(new MockWidgetRoot(), testTable);
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), testTable);
     assertEquals(testTable, table.asWikiText());
   }
 }

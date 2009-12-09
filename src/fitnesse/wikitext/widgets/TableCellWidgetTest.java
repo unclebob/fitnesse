@@ -7,10 +7,10 @@ import fitnesse.wikitext.WikiWidget;
 
 public class TableCellWidgetTest extends RegexTestCase {
   public TableRowWidget row;
-  private TableWidget table;
+  private StandardTableWidget table;
 
   public void setUp() throws Exception {
-    table = new TableWidget(new MockWidgetRoot(), "");
+    table = new StandardTableWidget(new MockWidgetRoot(), "");
     row = new TableRowWidget(table, "", false);
   }
 
@@ -39,7 +39,7 @@ public class TableCellWidgetTest extends RegexTestCase {
   public void testLiteralInLiteralCell() throws Exception {
     ParentWidget root = new MockWidgetRoot();
     root.defineLiteral("blah");
-    table = new TableWidget(root, "");
+    table = new StandardTableWidget(root, "");
     row = new TableRowWidget(table, "", true);
     //Paren Literal: () -> ??
     TableCellWidget cell = new TableCellWidget(row, "''!lit?0?''", true);
@@ -49,7 +49,7 @@ public class TableCellWidgetTest extends RegexTestCase {
   public void testVariableInLiteralCell() throws Exception {
     ParentWidget root = new MockWidgetRoot();
     root.addVariable("X", "abc");
-    table = new TableWidget(root, "");
+    table = new StandardTableWidget(root, "");
     row = new TableRowWidget(table, "", true);
     TableCellWidget cell = new TableCellWidget(row, "''${X}''", true);
     assertSubString("''abc''", cell.render());

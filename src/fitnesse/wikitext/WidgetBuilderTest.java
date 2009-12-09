@@ -123,7 +123,7 @@ public class WidgetBuilderTest extends TestCase {
     ParentWidget page = new WidgetRoot("|a|b|\n|c|d|\n", mockSource);
     assertEquals(1, page.numberOfChildren());
     WikiWidget widget = page.nextChild();
-    assertEquals(TableWidget.class, widget.getClass());
+    assertEquals(StandardTableWidget.class, widget.getClass());
   }
 
   public void testList() throws Exception {

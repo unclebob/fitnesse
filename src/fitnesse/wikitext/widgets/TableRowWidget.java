@@ -12,11 +12,20 @@ public class TableRowWidget extends ParentWidget {
   private boolean isLiteral;
   private boolean isCommentRow = false;
 
-  public TableRowWidget(TableWidget parentTable, String text, boolean isLiteral) throws Exception {
+  public TableRowWidget(StandardTableWidget parentTable, String text, boolean isLiteral) throws Exception {
     super(parentTable);
     this.parentTable = parentTable;
     this.isLiteral = isLiteral;
     addCells(text);
+  }
+
+  public TableRowWidget(PlainTextTableWidget tableWidget, String[] cells) throws Exception {
+    super(tableWidget);
+    this.parentTable = tableWidget;
+    tableWidget.maximizeColumns(cells.length);
+    for (String cell : cells) {
+      new TableCellWidget(this, cell, true);
+    }
   }
 
   public int getColumns() {
@@ -51,6 +60,10 @@ public class TableRowWidget extends ParentWidget {
 
   public void markAsCommentRow() {
     isCommentRow  = true;
+  }
+
+  public void setCommentRow(boolean b) {
+    isCommentRow = b;
   }
 }
 
