@@ -26,6 +26,6 @@ public class TableRowWidgetTest {
     PlainTextTableWidget table = new PlainTextTableWidget(new MockWidgetRoot(), "");
     table.maximizeColumns(3);
     TableRowWidget row = new TableRowWidget(table, new String[] {"a", "b", "c"});
-    assertEquals("<tr><td>a</td><td>b</td><td>c</td></tr>", row.render().replaceAll("\n", ""));
+    assertEquals("<tr><td>a</td><td>b</td><td>c</td></tr>", row.render().replaceAll("\n", "").replaceAll("\r", ""));
   }
 }

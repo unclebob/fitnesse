@@ -73,7 +73,7 @@ public class PlainTextTableWidgetTest {
 
   private void render(String widgetText , String html) throws Exception {
     PlainTextTableWidget widget = new PlainTextTableWidget(new MockWidgetRoot(), widgetText);
-    assertEquals(html, widget.render().replaceAll("\n", ""));
+    assertEquals(html, widget.render().replaceAll("\n", "").replaceAll("\r", ""));
   }
 }
 

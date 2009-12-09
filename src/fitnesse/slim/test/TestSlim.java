@@ -224,6 +224,10 @@ public class TestSlim implements TestSlimInterface {
     throw new StopTestException("message:<<Stop Test>>");
   }  
 
+  public String concatenateThreeArgs(String first, String second, String third) {
+    return first + " " + second + " " + third;
+  }
+  
   @SuppressWarnings("serial")
   class StopTestException extends Exception {
     public StopTestException(String description) {
