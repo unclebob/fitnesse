@@ -1,14 +1,16 @@
 package fitnesse.slim;
 
-import static fitnesse.slim.StatementExecutor.MESSAGE_NO_METHOD_IN_CLASS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class StatementExecutorTest {
+  private static final String INSTANCE_NAME = "myInstance";
+  private static final String MESSAGE_NO_METHOD_IN_CLASS = "message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>";
   private StatementExecutor statementExecutor;
 
   public static class MySystemUnderTest {
@@ -19,13 +21,13 @@ public class StatementExecutorTest {
     }
   }
 
-  public static class MyAnnotatedFixture {
+  public static class MyAnnotatedSystemUnderTestFixture {
     public boolean called = false;
 
     @SystemUnderTest
     public MySystemUnderTest sut;
 
-    public MyAnnotatedFixture() {
+    public MyAnnotatedSystemUnderTestFixture() {
       sut = new MySystemUnderTest();
     }
 
@@ -34,16 +36,29 @@ public class StatementExecutorTest {
     }
   }
 
-  public static class MyNamedFixture {
+  public static class MyNamedSystemUnderTestFixture {
     public boolean called = false;
 
     public MySystemUnderTest systemUnderTest;
 
-    public MyNamedFixture() {
+    public MyNamedSystemUnderTestFixture() {
       systemUnderTest = new MySystemUnderTest();
     }
 
     public void echo() {
+      called = true;
+    }
+  }
+  
+  public static class SimpleFixture {
+    public String echo(String message) {
+      return message;
+    }
+  }
+  
+  public static class FileSupport {
+    public boolean called;
+    public void delete(String fileName) {
       called = true;
     }
   }
@@ -55,32 +70,32 @@ public class StatementExecutorTest {
 
   @Test
   public void shouldCallMethodOnGivenInstanceBeforeTryingToInvokeOnSystemUnderTest() {
-    MyAnnotatedFixture myInstance = createAnnotatedFixture();
+    MyAnnotatedSystemUnderTestFixture myInstance = createAnnotatedFixture();
 
-    Object result = statementExecutor.call("myInstance", "echo");
+    Object result = statementExecutor.call(INSTANCE_NAME, "echo");
     assertEquals("/__VOID__/", result);
     assertTrue(myInstance.called);
     assertFalse(myInstance.sut.called);
   }
 
-  private MyAnnotatedFixture createAnnotatedFixture() {
-    createFixtureInstance(MyAnnotatedFixture.class);
+  private MyAnnotatedSystemUnderTestFixture createAnnotatedFixture() {
+    createFixtureInstance(MyAnnotatedSystemUnderTestFixture.class);
 
-    MyAnnotatedFixture myInstance = (MyAnnotatedFixture) statementExecutor.getInstance("myInstance");
+    MyAnnotatedSystemUnderTestFixture myInstance = (MyAnnotatedSystemUnderTestFixture) statementExecutor.getInstance(INSTANCE_NAME);
     assertFalse(myInstance.called);
     return myInstance;
   }
 
   private void createFixtureInstance(Class<?> fixtureClass) {
     Class<?> clazz = fixtureClass;
-    Object created = statementExecutor.create("myInstance", clazz.getName(),
+    Object created = statementExecutor.create(INSTANCE_NAME, clazz.getName(),
         new Object[] {});
     assertEquals("OK", created);
   }
 
   @Test
   public void shouldCallMethodOnFieldAnnotatedWithSystemUnderTestWhenFixtureDoesNotHaveMethod() {
-    MyAnnotatedFixture myFixture = createAnnotatedFixture();
+    MyAnnotatedSystemUnderTestFixture myFixture = createAnnotatedFixture();
 
     executeStatementAndVerifyResultIsVoid();
     assertFalse(myFixture.called);
@@ -89,7 +104,7 @@ public class StatementExecutorTest {
   
   @Test
   public void shouldCallMethodOnFieldNamed_systemUnderTest_WhenFixtureDoesNotHaveMethod() {
-    MyNamedFixture myFixture = createNamedFixture();
+    MyNamedSystemUnderTestFixture myFixture = createNamedFixture();
     
     executeStatementAndVerifyResultIsVoid();
     assertFalse(myFixture.called);
@@ -97,14 +112,13 @@ public class StatementExecutorTest {
   }
 
   private void executeStatementAndVerifyResultIsVoid() {
-    Object result = statementExecutor.call("myInstance", "specialCall");
+    Object result = statementExecutor.call(INSTANCE_NAME, "specialCall");
     assertEquals("/__VOID__/", result);
   }
   
-  private MyNamedFixture createNamedFixture() {
-    createFixtureInstance(MyNamedFixture.class);
-    
-    MyNamedFixture myInstance = (MyNamedFixture) statementExecutor.getInstance("myInstance");
+  private MyNamedSystemUnderTestFixture createNamedFixture() {
+    createFixtureInstance(MyNamedSystemUnderTestFixture.class);
+    MyNamedSystemUnderTestFixture myInstance = (MyNamedSystemUnderTestFixture) statementExecutor.getInstance(INSTANCE_NAME);
     assertFalse(myInstance.called);
     return myInstance;
   }
@@ -112,10 +126,33 @@ public class StatementExecutorTest {
   @Test
   public void shouldReportMissingMethodOnFixtureClassWhenMethodCanNotBeFoundOnBothFixtureAndSystemUnderTest() {
     createAnnotatedFixture();
-    String result = (String) statementExecutor.call("myInstance", "noSuchMethod");
+    String result = (String) statementExecutor.call(INSTANCE_NAME, "noSuchMethod");
     String expectedErrorMessage = String.format(MESSAGE_NO_METHOD_IN_CLASS, "noSuchMethod", 0,
-        MyAnnotatedFixture.class.getName());
+        MyAnnotatedSystemUnderTestFixture.class.getName());
     assertTrue(result.contains(expectedErrorMessage));
   }
   
+  @Test
+  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture_WithSystemUnderTestInFixture() {
+    createNamedFixture();
+    statementExecutor.create("library1", FileSupport.class.getName(), new Object[]{});
+    FileSupport library1 = (FileSupport) statementExecutor.getInstance("library1");
+    assertNotNull(library1);
+    Object result = statementExecutor.call(INSTANCE_NAME, "delete", "filename.txt");
+    assertEquals("/__VOID__/", result);
+    assertTrue(library1.called);
+    
+  }
+  
+  @Test
+  public void shouldCallMethodOnInstallLibraryWhenMethodIsNotFoundInAFixture() {
+    createFixtureInstance(SimpleFixture.class);
+    statementExecutor.create("library1", FileSupport.class.getName(), new Object[]{});
+    FileSupport library1 = (FileSupport) statementExecutor.getInstance("library1");
+    assertNotNull(library1);
+    Object result = statementExecutor.call(INSTANCE_NAME, "delete", "filename.txt");
+    assertEquals("/__VOID__/", result);
+    assertTrue(library1.called);
+    
+  }
 }

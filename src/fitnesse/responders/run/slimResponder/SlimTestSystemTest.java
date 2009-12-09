@@ -171,7 +171,7 @@ public class SlimTestSystemTest {
   @Test
   public void tableFixtureHasNoDoTableFunction() throws Exception {
     getResultsForPageContents(
-      "|Table:fitnesse.slim.test.TestSlim|\n" +
+      "!|Table:fitnesse.slim.test.TestSlim|\n" +
         "|a|b|\n"
     );
     assertTestResultsContain("Table fixture has no valid doTable method");

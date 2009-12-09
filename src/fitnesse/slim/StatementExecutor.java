@@ -2,17 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.slim.converters.*;
-
-import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import fitnesse.slim.converters.BooleanArrayConverter;
+import fitnesse.slim.converters.BooleanConverter;
+import fitnesse.slim.converters.CharConverter;
+import fitnesse.slim.converters.DateConverter;
+import fitnesse.slim.converters.DoubleArrayConverter;
+import fitnesse.slim.converters.DoubleConverter;
+import fitnesse.slim.converters.IntConverter;
+import fitnesse.slim.converters.IntegerArrayConverter;
+import fitnesse.slim.converters.ListConverter;
+import fitnesse.slim.converters.MapEditor;
+import fitnesse.slim.converters.StringArrayConverter;
+import fitnesse.slim.converters.StringConverter;
+import fitnesse.slim.converters.VoidConverter;
 
 /**
  * This is the API for executing a SLIM statement. This class should not know
@@ -20,9 +33,12 @@ import java.util.*;
  */
 
 public class StatementExecutor implements StatementExecutorInterface {
-  static final String MESSAGE_NO_METHOD_IN_CLASS = "message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>";
-  
+
   private Map<String, Object> instances = new HashMap<String, Object>();
+  private Map<String, Object> libraries = new HashMap<String, Object>();
+
+  private List<MethodExecutor> executorChain = new ArrayList<MethodExecutor>();
+
   private VariableStore variables = new VariableStore();
   private List<String> paths = new ArrayList<String>();
 
@@ -48,6 +64,10 @@ public class StatementExecutor implements StatementExecutorInterface {
     Slim.addConverter(double[].class, new DoubleArrayConverter());
     Slim.addConverter(Double[].class, new DoubleArrayConverter());
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
+
+    executorChain.add(new SystemUnderTestMethodExecutor(instances));
+    executorChain.add(new LibraryMethodExecutor(libraries));
+    executorChain.add(new FixtureMethodExecutor(instances));
   }
 
   public void setVariable(String name, Object value) {
@@ -63,24 +83,25 @@ public class StatementExecutor implements StatementExecutorInterface {
     Object instance = instances.get(instanceName);
     if (instance != null)
       return instance;
+    instance = libraries.get(instanceName);
+    if (instance != null) {
+      return instance;
+    }
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
 
   public Converter getConverter(Class<?> k) {
-    Converter c = Slim.converters.get(k);
-    if (c != null)
-      return c;
-    PropertyEditor pe = PropertyEditorManager.findEditor(k);
-    if (pe != null) {
-      return new PropertyEditorConverter(pe);
-    }
-    return null;
+    return ConverterSupport.getConverter(k);
   }
 
   public Object create(String instanceName, String className, Object[] args) {
     try {
       Object instance = createInstanceOfConstructor(className, replaceVariables(args));
-      instances.put(instanceName, instance);
+      if (isLibrary(instanceName)) {
+        libraries.put(instanceName, instance);
+      } else {
+        instances.put(instanceName, instance);
+      }
       return "OK";
     } catch (SlimError e) {
       return couldNotInvokeConstructorException(className, args);
@@ -89,6 +110,10 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (Throwable e) {
       return exceptionToString(e);
     }
+  }
+
+  private boolean isLibrary(String instanceName) {
+    return instanceName.startsWith("library");
   }
 
   private String couldNotInvokeConstructorException(String className, Object[] args) {
@@ -102,7 +127,8 @@ public class StatementExecutor implements StatementExecutorInterface {
     if (constructor == null)
       throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>", className));
 
-    return constructor.newInstance(convertArgs(args, constructor.getParameterTypes()));
+    return constructor.newInstance(ConverterSupport.convertArgs(args, constructor
+        .getParameterTypes()));
   }
 
   private Class<?> searchPathsForClass(String className) {
@@ -138,8 +164,14 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object call(String instanceName, String methodName, Object... args) {
     try {
-      Object instance = getInstance(instanceName);
-      return tryToInvokeMethod(instance, methodName, replaceVariables(args));
+      MethodExecutionResult result = null;
+      for (MethodExecutor next : executorChain) {
+        result = next.execute(instanceName, methodName, replaceVariables(args));
+        if (result.hasResult()) {
+          break;
+        }
+      }
+      return result.returnValue();
     } catch (Throwable e) {
       return exceptionToString(e);
     }
@@ -159,118 +191,6 @@ public class StatementExecutor implements StatementExecutorInterface {
     } else {
       return SlimServer.EXCEPTION_TAG + stringWriter.toString();
     }
-  }
-
-  private Object tryToInvokeMethod(Object instance, String methodName, Object args[])
-      throws Throwable {
-    Class<?> k = instance.getClass();
-    Method method = findMatchingMethod(methodName, k, args.length);
-    if (method == null) {
-      return tryInvokeMethodOnSystemUnderTest(instance, methodName, args, k);
-    }
-    return internalInvokeMethod(instance, method, args);
-  }
-
-  @SuppressWarnings("unchecked")
-  private Object internalInvokeMethod(Object instance, Method method, Object[] args)
-      throws Throwable {
-    Object convertedArgs[] = convertArgs(method, args);
-    Object retval = callMethod(instance, method, convertedArgs);
-    Class<?> retType = method.getReturnType();
-    if (retType == List.class && retval instanceof List)
-      return retval;
-    return convertToString(retval, retType);
-  }
-
-  private Object tryInvokeMethodOnSystemUnderTest(Object instance, String methodName,
-      Object[] args, Class<?> k) throws IllegalAccessException, Throwable, SlimError {
-    Field field = findSystemUnderTest(k);
-    if (field != null) {
-      Object systemUnderTest = field.get(instance);
-      Method method = findMatchingMethod(methodName, systemUnderTest.getClass(), args.length);
-      if (method != null) {
-        return internalInvokeMethod(systemUnderTest, method, args);
-      }
-    }
-    throw noMethodInClass(methodName, k, args.length);
-  }
-
-  private Object callMethod(Object instance, Method method, Object[] convertedArgs)
-      throws Throwable {
-    Object retval = null;
-    try {
-      retval = method.invoke(instance, convertedArgs);
-    } catch (InvocationTargetException e) {
-      throw e.getCause();
-    }
-    return retval;
-  }
-
-  private Method findMatchingMethod(String methodName, Class<? extends Object> k, int nArgs) {
-    Method methods[] = k.getMethods();
-
-    for (Method method : methods) {
-      boolean hasMatchingName = method.getName().equals(methodName);
-      boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
-      if (hasMatchingName && hasMatchingArguments) {
-        return method;
-      }
-    }
-    return null;
-  }
-
-  private SlimError noMethodInClass(String methodName, Class<? extends Object> k, int nArgs) {
-    return new SlimError(String.format(MESSAGE_NO_METHOD_IN_CLASS, methodName, nArgs, k.getName()));
-  }
-
-  private Field findSystemUnderTest(Class<?> k) {
-    Field[] fields = k.getDeclaredFields();
-    for (Field field : fields) {
-      if (isSystemUnderTest(field)) {
-        return field;
-      }
-    }
-    return null;
-  }
-
-  private boolean isSystemUnderTest(Field field) {
-    return "systemUnderTest".equals(field.getName()) || field.getAnnotation(SystemUnderTest.class) != null;
-  }
-
-  private Object[] convertArgs(Method method, Object args[]) {
-    Class<?>[] argumentTypes = method.getParameterTypes();
-    Object[] convertedArgs = convertArgs(args, argumentTypes);
-    return convertedArgs;
-  }
-
-  // todo refactor this mess
-  @SuppressWarnings("unchecked")
-  private Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
-    Object[] convertedArgs = new Object[args.length];
-    for (int i = 0; i < argumentTypes.length; i++) {
-      Class<?> argumentType = argumentTypes[i];
-      if (argumentType == List.class && args[i] instanceof List) {
-        convertedArgs[i] = args[i];
-      } else {
-        Converter converter = getConverter(argumentType);
-        if (converter != null)
-          convertedArgs[i] = converter.fromString((String) args[i]);
-        else
-          throw new SlimError(String.format("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>",
-              argumentType.getName()));
-      }
-    }
-    return convertedArgs;
-  }
-
-  private Object convertToString(Object retval, Class<?> retType) {
-    Converter converter = getConverter(retType);
-    if (converter != null)
-      return converter.toString(retval);
-    if (retval == null)
-      return "null";
-    else
-      return retval.toString();
   }
 
   public boolean stopHasBeenRequested() {
