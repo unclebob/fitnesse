@@ -125,8 +125,11 @@ public class ResponseParser {
     InputStream socketIn = socket.getInputStream();
     builder.send(socketOut);
     socketOut.flush();
-    ResponseParser parser = new ResponseParser(socketIn);
-    socket.close();
-    return parser;
+    try {
+      return new ResponseParser(socketIn);
+    } finally {
+      socketOut.close();
+      socket.close();
+    }
   }
 }

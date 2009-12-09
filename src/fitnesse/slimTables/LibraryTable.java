@@ -4,11 +4,11 @@ import java.util.Map;
 
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 
-public class InstallTable extends SlimTable {
+public class LibraryTable extends SlimTable {
 
-  private static final String TABLE_TYPE = "install";
+  private static final String TABLE_TYPE = "library";
 
-  public InstallTable(Table table, String id, SlimTestContext testContext) {
+  public LibraryTable(Table table, String id, SlimTestContext testContext) {
     super(table, id, testContext);
   }
 

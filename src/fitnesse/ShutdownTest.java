@@ -49,7 +49,7 @@ public class ShutdownTest extends RegexTestCase {
       String status = shutdown.checkResponse(response);
       assertEquals("Not a FitNesse server", status);
     }
-    catch (UnknownHostException e) {
+    catch (Exception e) {
     }
   }
 }

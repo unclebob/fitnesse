@@ -32,8 +32,8 @@ public class SlimTableFactory {
       return null;
     else if (tableType.equalsIgnoreCase("import"))
       return new ImportTable(table, tableId, slimTestContext);
-    else if(tableType.equalsIgnoreCase("install"))
-      return new InstallTable(table, tableId, slimTestContext);
+    else if(tableType.equalsIgnoreCase("library"))
+      return new LibraryTable(table, tableId, slimTestContext);
     else if (doesNotHaveColon(tableType))
       return new DecisionTable(table, tableId, slimTestContext);
     else

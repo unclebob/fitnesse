@@ -7,34 +7,34 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class InstallTableTest extends SlimTableTestSupport<InstallTable> {
-  private String installTableHeader = "|Install|\n";
+public class LibraryTableTest extends SlimTableTestSupport<LibraryTable> {
+  private String tableHeader = "|Library|\n";
 
   private void buildInstructionsFor(String scriptStatements) throws Exception {
-    makeSlimTableAndBuildInstructions(installTableHeader + scriptStatements);
+    makeSlimTableAndBuildInstructions(tableHeader + scriptStatements);
   }
 
   @Test
-  public void emptyInstructionsForInstallTable() throws Exception {
+  public void emptyInstructionsForLibraryTable() throws Exception {
     buildInstructionsFor("||\n");
     assertEquals(0, instructions.size());
   }
 
   @Test
-  public void correctInstructionsForInstallTableForOneLibrary() throws Exception {
+  public void correctInstructionsForLibraryTableForOneLibrary() throws Exception {
     buildInstructionsFor("|echo support|\n");
     List<Object> expectedInstructions = list(
-        list("install_id_0", "make", "library1", "EchoSupport")
+        list("library_id_0", "make", "library1", "EchoSupport")
     );
     assertEquals(expectedInstructions, instructions);
   }
 
   @Test
-  public void correctInstructionsForInstallTableForMultipleLibraries() throws Exception {
+  public void correctInstructionsForLibraryTableForMultipleLibraries() throws Exception {
     buildInstructionsFor("|echo support|\n|file support|\n");
     List<Object> expectedInstructions = list(
-        list("install_id_0", "make", "library1", "EchoSupport"),
-        list("install_id_1", "make", "library2", "FileSupport")
+        list("library_id_0", "make", "library1", "EchoSupport"),
+        list("library_id_1", "make", "library2", "FileSupport")
     );
     assertEquals(expectedInstructions, instructions);
   }

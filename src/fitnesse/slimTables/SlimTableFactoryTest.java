@@ -38,7 +38,7 @@ public class SlimTableFactoryTest {
     map.put("scenario", ScenarioTable.class);
     map.put("import", ImportTable.class);
     map.put("something", DecisionTable.class);
-    map.put("install", InstallTable.class);
+    map.put("library", LibraryTable.class);
   }
 
   @Test
