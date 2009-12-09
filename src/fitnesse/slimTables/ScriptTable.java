@@ -141,19 +141,19 @@ public class ScriptTable extends SlimTable {
       actionName.append(" ").append(table.getCellContents(actionNameCol, row));
       actionNameCol += 2;
     } while (actionNameCol <= endingCol &&
-        !invokesSequentialArgumentProcessing(actionName.toString()));
+      !invokesSequentialArgumentProcessing(actionName.toString()));
     return actionName.toString().trim();
   }
 
   private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row) {
     List<String> arguments = new ArrayList<String>();
-  int increment = 2;
+    int increment = 2;
     boolean useSequentialArgumentProcessing = false;
     for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += increment) {
       arguments.add(table.getUnescapedCellContents(argumentColumn, row));
       addExpectation(new ArgumentExpectation(getInstructionTag(), argumentColumn, row));
-      useSequentialArgumentProcessing = (useSequentialArgumentProcessing || 
-        invokesSequentialArgumentProcessing(table.getCellContents(argumentColumn - 1, row))); 
+      useSequentialArgumentProcessing = (useSequentialArgumentProcessing ||
+        invokesSequentialArgumentProcessing(table.getCellContents(argumentColumn - 1, row)));
       increment = useSequentialArgumentProcessing ? 1 : 2;
     }
     return arguments.toArray(new String[arguments.size()]);
@@ -162,7 +162,7 @@ public class ScriptTable extends SlimTable {
   private boolean invokesSequentialArgumentProcessing(String cellContents) {
     return cellContents.endsWith(SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX);
   }
-  
+
   private void startActor(int row) {
     int classNameColumn = 1;
     String className = Disgracer.disgraceClassName(table.getCellContents(classNameColumn, row));
