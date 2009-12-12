@@ -16,6 +16,7 @@ public class TestTable {
   public TestTable() {
   }
 
+  @SuppressWarnings("unchecked")
   public List<?> doTable(List<?> l) {
     List<String> row0 = (List<String>) l.get(0);
     String firstCell = row0.get(0);

@@ -35,7 +35,7 @@ import fitnesse.slim.converters.VoidConverter;
 public class StatementExecutor implements StatementExecutorInterface {
 
   private Map<String, Object> instances = new HashMap<String, Object>();
-  private Map<String, Object> libraries = new HashMap<String, Object>();
+  private List<Library> libraries = new ArrayList<Library>();
 
   private List<MethodExecutor> executorChain = new ArrayList<MethodExecutor>();
 
@@ -65,9 +65,9 @@ public class StatementExecutor implements StatementExecutorInterface {
     Slim.addConverter(Double[].class, new DoubleArrayConverter());
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
 
+    executorChain.add(new FixtureMethodExecutor(instances));
     executorChain.add(new SystemUnderTestMethodExecutor(instances));
     executorChain.add(new LibraryMethodExecutor(libraries));
-    executorChain.add(new FixtureMethodExecutor(instances));
   }
 
   public void setVariable(String name, Object value) {
@@ -81,11 +81,14 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object getInstance(String instanceName) {
     Object instance = instances.get(instanceName);
-    if (instance != null)
-      return instance;
-    instance = libraries.get(instanceName);
     if (instance != null) {
       return instance;
+    }
+
+    for (Library library : libraries) {
+      if (library.instanceName.equals(instanceName)) {
+        return library.instance;
+      }
     }
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
@@ -98,7 +101,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     try {
       Object instance = createInstanceOfConstructor(className, replaceVariables(args));
       if (isLibrary(instanceName)) {
-        libraries.put(instanceName, instance);
+        libraries.add(new Library(instanceName, instance));
       } else {
         instances.put(instanceName, instance);
       }
@@ -164,14 +167,16 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object call(String instanceName, String methodName, Object... args) {
     try {
-      MethodExecutionResult result = null;
-      for (MethodExecutor next : executorChain) {
-        result = next.execute(instanceName, methodName, replaceVariables(args));
+      MethodExecutionResults results = new MethodExecutionResults();
+      for (int i = 0; i < executorChain.size(); i++) {
+        MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
+            replaceVariables(args));
         if (result.hasResult()) {
-          break;
+          return result.returnValue();
         }
+        results.add(result);
       }
-      return result.returnValue();
+      return results.returnValue();
     } catch (Throwable e) {
       return exceptionToString(e);
     }
