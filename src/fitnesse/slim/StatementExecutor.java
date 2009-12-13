@@ -2,30 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.slim.converters.*;
+
 import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import fitnesse.slim.converters.BooleanArrayConverter;
-import fitnesse.slim.converters.BooleanConverter;
-import fitnesse.slim.converters.CharConverter;
-import fitnesse.slim.converters.DateConverter;
-import fitnesse.slim.converters.DoubleArrayConverter;
-import fitnesse.slim.converters.DoubleConverter;
-import fitnesse.slim.converters.IntConverter;
-import fitnesse.slim.converters.IntegerArrayConverter;
-import fitnesse.slim.converters.ListConverter;
-import fitnesse.slim.converters.MapEditor;
-import fitnesse.slim.converters.StringArrayConverter;
-import fitnesse.slim.converters.StringConverter;
-import fitnesse.slim.converters.VoidConverter;
+import java.util.*;
 
 /**
  * This is the API for executing a SLIM statement. This class should not know
@@ -35,7 +18,7 @@ import fitnesse.slim.converters.VoidConverter;
 public class StatementExecutor implements StatementExecutorInterface {
 
   private Map<String, Object> instances = new HashMap<String, Object>();
-  private Map<String, Object> libraries = new HashMap<String, Object>();
+  private List<Library> libraries = new ArrayList<Library>();
 
   private List<MethodExecutor> executorChain = new ArrayList<MethodExecutor>();
 
@@ -65,9 +48,9 @@ public class StatementExecutor implements StatementExecutorInterface {
     Slim.addConverter(Double[].class, new DoubleArrayConverter());
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
 
+    executorChain.add(new FixtureMethodExecutor(instances));
     executorChain.add(new SystemUnderTestMethodExecutor(instances));
     executorChain.add(new LibraryMethodExecutor(libraries));
-    executorChain.add(new FixtureMethodExecutor(instances));
   }
 
   public void setVariable(String name, Object value) {
@@ -81,11 +64,14 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object getInstance(String instanceName) {
     Object instance = instances.get(instanceName);
-    if (instance != null)
-      return instance;
-    instance = libraries.get(instanceName);
     if (instance != null) {
       return instance;
+    }
+
+    for (Library library : libraries) {
+      if (library.instanceName.equals(instanceName)) {
+        return library.instance;
+      }
     }
     throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
   }
@@ -98,7 +84,7 @@ public class StatementExecutor implements StatementExecutorInterface {
     try {
       Object instance = createInstanceOfConstructor(className, replaceVariables(args));
       if (isLibrary(instanceName)) {
-        libraries.put(instanceName, instance);
+        libraries.add(new Library(instanceName, instance));
       } else {
         instances.put(instanceName, instance);
       }
@@ -164,14 +150,16 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object call(String instanceName, String methodName, Object... args) {
     try {
-      MethodExecutionResult result = null;
-      for (MethodExecutor next : executorChain) {
-        result = next.execute(instanceName, methodName, replaceVariables(args));
+      MethodExecutionResults results = new MethodExecutionResults();
+      for (int i = 0; i < executorChain.size(); i++) {
+        MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
+            replaceVariables(args));
         if (result.hasResult()) {
-          break;
+          return result.returnValue();
         }
+        results.add(result);
       }
-      return result.returnValue();
+      return results.returnValue();
     } catch (Throwable e) {
       return exceptionToString(e);
     }

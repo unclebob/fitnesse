@@ -153,10 +153,6 @@ public class PageDriver {
     return lines.length;
   }
 
-  public String echo(String it) {
-    return it;
-  }
-
   public int countOfTagWithIdPrefix(String tag, String idPrefix) throws Exception {
     NodeFilter filter =
       new AndFilter(
@@ -251,10 +247,6 @@ public class PageDriver {
     WikiPage page = crawler.getPage(FitnesseFixtureContext.root, PathParser.parse(fullPathOfPage));
     PageData data = page.getData();
     return data.hasAttribute(attribute);
-  }
-
-  public int echoInt(int i) {
-    return i;
   }
 
   public void setXmlFormatterTimeTo(String time) throws ParseException {

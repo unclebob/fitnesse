@@ -16,4 +16,8 @@ public class EchoFixture {
   public String echo(String s) {
     return s;
   }
+   
+  public int echoInt(int i) {
+    return i;
+  }
 }

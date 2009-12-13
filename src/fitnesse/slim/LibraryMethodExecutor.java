@@ -1,20 +1,21 @@
 package fitnesse.slim;
 
-import java.util.Map;
+import java.util.List;
 
 public class LibraryMethodExecutor extends MethodExecutor {
 
-  private final Map<String, Object> libraries;
-  
-  public LibraryMethodExecutor(Map<String, Object> libraries) {
+  private final List<Library> libraries;
+
+  public LibraryMethodExecutor(List<Library> libraries) {
     this.libraries = libraries;
   }
+
   @Override
   public MethodExecutionResult execute(String instanceName, String methodName, Object[] args)
       throws Throwable {
-    for (Object library : libraries.values()) {
-      MethodExecutionResult result = findAndInvoke(methodName, args, library);
-      if(result.hasResult()) {
+    for (int i = (libraries.size() - 1); i >= 0; i--) {
+      MethodExecutionResult result = findAndInvoke(methodName, args, libraries.get(i).instance);
+      if (result.hasResult()) {
         return result;
       }
     }

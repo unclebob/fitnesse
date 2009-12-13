@@ -3,6 +3,5 @@
  * SisterSites -- Cross Referencing with other wikis sites.
  * RootPage -- Accessing the root page of the entire wiki so you can put variables, fixtures, and paths in.
  * Run suites from the command line with the CommandLineTestRunner
- * You can include ExternalHtmlPages as sub-wikis.
 
 

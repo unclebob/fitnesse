@@ -22,6 +22,7 @@ public class MapConverterTest {
     assertEquals(0, result.size());
   }
 
+  @SuppressWarnings("unchecked")
   private void makeMap(String inputString) {
     result = (Map<String, String>) converter.fromString(inputString);
   }
