@@ -35,13 +35,7 @@
 |>SubPage                                           |>SubPage<a title="create page" href="WidgetPage.SubPage\?edit&nonExistent=true">\[\?\]</a>                                                                          |
 |This is an@email.com text                          |This is <a href="mailto:an@email.com">an@email.com</a> text                                |email widget                                                            |
 
-!|widget should render                                                                                                                                                                                                                                     |
-|wiki text                |html text                                                                                                                                                                                                                       |
-|!{name:Bob, address:here}|<table class="hash_table"><tr class="hash_row"><td class="hash_key">name</td><td class="hash_value">Bob</td></tr><tr class="hash_row"><td class="hash_key">address</td><td class="hash_value">here</td></tr></table>|hash widget|
-
-
 >DavidHookersBug
-
 
 
 

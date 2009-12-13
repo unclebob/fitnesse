@@ -22,6 +22,7 @@ The first cell of a slim table tells you what kind of table it is. Here are the 
 |[[Import][>ImportTable]]|Add a path to the fixture search path.|
 |[[Comment][>CommentTable]]|A table that does nothing.|
 |[[Scenario Table][>ScenarioTable]]|A table that can be called from other tables.|
+|[[Library Table][>LibraryTable]]|A table that installs fixtures available for all test pages|
 
 !4 Data Types.
 The data in your tables is all Strings.  However your fixtures don't want to be constrained to Strings.  So Slim comes with several standard data type converters that will automatically convert the strings in the tables into the data types expected by your fixtures.
@@ -36,6 +37,8 @@ You can also create your own custom type converters if you like.
 |[[''Value comparisons''][>ValueComparisons]]|
 |[[''Graceful names''][>GracefulNames]]|
 
-!4 Extra Goodies that only work in '''some''' ports.
+!4 New goodies
+
 |[[''System Under Test''][>SystemUnderTest]]|
+
  
