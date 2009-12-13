@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests||16:52:28 Wed, Dec 09, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSequentialArgumentProcessing||09:02:18 Wed, Dec 09, 2009|
 |JunkPage.PlainTextTables||20:13:34 Tue, Dec 08, 2009|
 |FitNesse.UserGuide.PlainTextTable||20:12:13 Tue, Dec 08, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestEditNewPage||20:22:00 Fri, Aug 14, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestEditExistingPage||08:55:31 Fri, Aug 14, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.SetUp||08:23:09 Fri, Aug 14, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests||07:58:55 Fri, Aug 14, 2009|
