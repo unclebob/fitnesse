@@ -2,5 +2,5 @@
 
 |Library|
 |echo fixture|
+|page driver|
 
-!|script|page driver|
