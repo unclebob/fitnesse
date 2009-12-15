@@ -1,3 +1,8 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ParameterizedScenarios||24:14:52 Tue, Dec 15, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenariosOnlyInSlimTests||24:04:58 Tue, Dec 15, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SetUp||24:02:24 Tue, Dec 15, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||23:58:40 Mon, Dec 14, 2009|
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SetUp||23:29:22 Mon, Dec 14, 2009|
 |JunkPage.SeeInNestedSuites.SuiteParentOne.SuiteA||21:26:47 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SetUp||16:49:36 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests||16:52:28 Wed, Dec 09, 2009|
@@ -93,8 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteSetUpAndTearDown.TestSetUpAndTearDownAreUncollapsedWithVariable||15:52:52 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteSetUpAndTearDown.TestSetUpAndTearDownAreCollapsableWithVariable||15:52:17 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestTwoSubPages||15:51:14 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestSuiteWithOneXrefWidget||15:50:17 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestSuiteFilter||15:49:21 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestPrunedPageIsExcluded||15:48:27 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestOneSubPage||15:47:29 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.TestNotSuiteFilter||15:46:44 Mon, Aug 17, 2009|

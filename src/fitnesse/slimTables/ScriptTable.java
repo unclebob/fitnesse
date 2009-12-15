@@ -8,9 +8,7 @@ import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.wikitext.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class ScriptTable extends SlimTable {
@@ -87,11 +85,39 @@ public class ScriptTable extends SlimTable {
     ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
     if (scenario != null) {
       scenario.call(args, this, row);
-    } else {
+    } else if (!invokeParameterizedScenarioIfPossible(row)) {
       addExpectation(new ScriptActionExpectation(getInstructionTag(), 0, row));
       callFunction("scriptTableActor", actionName, (Object[]) args);
     }
   }
+
+  private boolean invokeParameterizedScenarioIfPossible(int row) {
+    String firstNameCell = table.getCellContents(0, row);
+    for (ScenarioTable scenario : getScenariosWithMostArgumentsFirst()) {
+      String[] arguments = scenario.matchParameters(firstNameCell);
+      if (arguments != null) {
+        scenario.call(arguments, this, row);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
+    Map<String, ScenarioTable> scenarioMap = getTestContext().getScenarios();
+    List<ScenarioTable> scenarios = new ArrayList(scenarioMap.values());
+    Collections.sort(scenarios, new ScenarioTableLengthComparator());
+    return scenarios;
+  }
+
+  private static class ScenarioTableLengthComparator implements java.util.Comparator<ScenarioTable> {
+    public int compare(ScenarioTable st1, ScenarioTable st2) {
+      int size1 = st1.getInputs().size();
+      int size2 = st2.getInputs().size();
+      return size2 - size1;
+    }
+  }
+
 
   private void note(int row) {
   }

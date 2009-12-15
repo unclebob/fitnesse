@@ -172,7 +172,7 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       "[[scenario, echo, input, giving, output], [check, echo, $V->[7], pass($V->[7])]]";
     assertEquals(expectedScript, scriptTable);
   }
-  
+
   @Test
   public void scenarioHasTooFewArguments() throws Exception {
     makeTables(
@@ -225,5 +225,60 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     assertEquals(0, script.getTestSummary().getExceptions());
   }
 
+  @Test
+  public void callParameterizedScenario() throws Exception {
+    makeTables(
+      "!|scenario|Login user _ with password _|name,password|\n" +
+        "|login|@name|with|@password|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|Login user Bob with password xyzzy|\n"
+    );
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
 
+  @Test
+  public void callNormalScenarioAsThoughItWereParameterized() throws Exception {
+    makeTables(
+      "!|scenario|Login user|name|with password|password|\n" +
+        "|login|@name|with|@password|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|Login user Bob with password xyzzy|\n"
+    );
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0/scriptTable_s_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  @Test
+  public void matchesScenarioWithMostArguments() throws Exception {
+    WikiPageUtil.setPageContents(root, "" +
+        "!|scenario|Login user|name|\n" +
+        "|should not get here|\n" +
+        "\n" +
+        "!|scenario|Login user|name|with password|password|\n" +
+        "|login|@name|with|@password|\n" +
+        "\n" +
+        "!|script|\n" +
+        "|Login user Bob with password xyzzy|\n");
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
+    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
+    script = new ScriptTable(ts.getTable(2), "id", this);
+    st1.appendInstructions(instructions);
+    st2.appendInstructions(instructions);
+    script.appendInstructions(instructions);
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor", "loginWith", "Bob", "xyzzy")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
 }

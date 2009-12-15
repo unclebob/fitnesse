@@ -6,8 +6,7 @@ import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +42,7 @@ public class ScenarioTableTest {
     assertEquals("myScenario", st.getName());
     assertEquals(0, st.getInputs().size());
     assertEquals(0, st.getOutputs().size());
+    assertFalse(st.isParameterized());
   }
 
   @Test
@@ -53,6 +53,7 @@ public class ScenarioTableTest {
     assertEquals(1, inputs.size());
     assertTrue(inputs.contains("input"));
     assertEquals(0, st.getOutputs().size());
+    assertFalse(st.isParameterized());
   }
 
   @Test
@@ -63,6 +64,7 @@ public class ScenarioTableTest {
     assertEquals(1, inputs.size());
     assertTrue(inputs.contains("input"));
     assertEquals(0, st.getOutputs().size());
+    assertFalse(st.isParameterized());
   }
 
   @Test
@@ -74,6 +76,7 @@ public class ScenarioTableTest {
     assertTrue(inputs.contains("userName"));
     assertTrue(inputs.contains("password"));
     assertEquals(0, st.getOutputs().size());
+    assertFalse(st.isParameterized());
   }
 
   @Test
@@ -85,6 +88,7 @@ public class ScenarioTableTest {
     assertTrue(inputs.contains("userName"));
     assertTrue(inputs.contains("password"));
     assertEquals(0, st.getOutputs().size());
+    assertFalse(st.isParameterized());
   }
 
   @Test
@@ -99,6 +103,7 @@ public class ScenarioTableTest {
     assertEquals(2, outputs.size());
     assertTrue(outputs.contains("message"));
     assertTrue(outputs.contains("loginStatus"));
+    assertFalse(st.isParameterized());
   }
 
   @Test
@@ -109,5 +114,46 @@ public class ScenarioTableTest {
     assertEquals(2, inputs.size());
     assertTrue(inputs.contains("a"));
     assertTrue(inputs.contains("b"));
+    assertFalse(st.isParameterized());
+  }
+
+  @Test
+  public void parameterizedNameWithOneArgAtEnd() throws Exception {
+    makeScenarioTable("|scenario|login user _|name|\n");
+    assertEquals("LoginUser", st.getName());
+    Set<String> inputs = st.getInputs();
+    assertEquals(1, inputs.size());
+    assertTrue(inputs.contains("name"));
+    assertTrue(st.isParameterized());
+  }
+
+  @Test
+  public void parameterizedNameWithOneArgInMiddle() throws Exception {
+    makeScenarioTable("|scenario|login _ user|name|\n");
+    assertEquals("LoginUser", st.getName());
+    Set<String> inputs = st.getInputs();
+    assertEquals(1, inputs.size());
+    assertTrue(inputs.contains("name"));
+    assertTrue(st.isParameterized());
+  }
+
+  @Test
+  public void parameterizedNameWithTwoArgs() throws Exception {
+    makeScenarioTable("|scenario|login user _ password _|name,password|\n");
+    assertEquals("LoginUserPassword", st.getName());
+    Set<String> inputs = st.getInputs();
+    assertEquals(2, inputs.size());
+    assertTrue(inputs.contains("name"));
+    assertTrue(inputs.contains("password"));
+    assertTrue(st.isParameterized());    
+  }
+
+  @Test
+  public void getArgumentsFromParameterizedInvocation() throws Exception {
+    makeScenarioTable("|scenario|login user _ password _|name,password|\n");
+    String[] arguments = st.matchParameters("login user Bob password xyzzy");
+    assertEquals(2, arguments.length);
+    assertEquals("Bob", arguments[0]);
+    assertEquals("xyzzy", arguments[1]);
   }
 }

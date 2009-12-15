@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import fitnesse.slimTables.ScenarioTable;
+import fitnesse.slimTables.SlimTable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import fitnesse.slimTables.ScenarioTable;
-import fitnesse.slimTables.SlimTable;
 
 public class MockSlimTestContext implements SlimTestContext {
   private Map<String, String> symbols = new HashMap<String, String>();
@@ -33,6 +33,10 @@ public class MockSlimTestContext implements SlimTestContext {
 
   public void addExpectation(SlimTable.Expectation e) {
     expectations.add(e);
+  }
+
+  public Map<String, ScenarioTable> getScenarios() {
+    return scenarios;
   }
 
   public void evaluateExpectations(Map<String, Object> results) {

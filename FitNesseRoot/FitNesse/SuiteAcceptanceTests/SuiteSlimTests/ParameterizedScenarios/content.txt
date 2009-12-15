@@ -1,0 +1,17 @@
+![:
+scenario:login user _ with password _:name, password:
+check:echo:@name:Bob
+check:echo:@password:xyzzy 
+]!
+
+![ script
+login user Bob with password xyzzy
+]!
+
+!|scenario|beat|name|with a|object|
+|check|echo|@name|Bill|
+|check|echo|@object|noodle|
+
+![ script
+beat Bill with a noodle
+]!

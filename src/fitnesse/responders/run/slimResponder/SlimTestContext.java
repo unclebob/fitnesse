@@ -5,6 +5,8 @@ package fitnesse.responders.run.slimResponder;
 import fitnesse.slimTables.ScenarioTable;
 import fitnesse.slimTables.SlimTable;
 
+import java.util.Map;
+
 public interface SlimTestContext {
   String getSymbol(String symbolName);
 
@@ -15,4 +17,6 @@ public interface SlimTestContext {
   ScenarioTable getScenario(String scenarioName);
 
   void addExpectation(SlimTable.Expectation e);
+
+  Map<String, ScenarioTable> getScenarios();
 }
