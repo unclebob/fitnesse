@@ -1,12 +1,14 @@
 !include -c .FitNesse.SuiteAcceptanceTests.SetUp
 !*< classpath
 !path classes
+!path lib/*.jar
 *!
 ----
 A Scenario table is a table that can be called from other tables; namely ScriptTable and DecisionTable.
 
 The format of a Scenario table is the same as the format of a ScriptTable, but with a few differences.  You can see a Scenario table in action [[here][.FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets]].
 
+!4 Declaring Scenarios using ''Interposed'' style
 The basic format looks like this:
 
 !|scenario|widget|wikiText|renders|htmlText|
@@ -16,17 +18,24 @@ The basic format looks like this:
 |show|content|
 
 !*> No Peeking
-|script|
-|start|page driver|
+|script|page driver|
 
 *!
 
-The first word in the table is ''Scenario''.  Following that is the signature of the scenario.  This signature is a lot like a function declaration.  The name of the scenario in the table above is ''!-WidgetRenders-!'', and it takes two arguments: ''wikiText'' and ''htmlText''.  Notice how this looks a lot like a function call in a ScriptTable.  The name is composed of every other table cell appropriately camel-cased.  The arguments are the intervening cells, also appropriately camel-cased.  Scenario names will be camel-cased with a leading upper-case letter.  Arguments will be camel-cased with a leading ''lower-case'' letter.
+The first word in the table is ''Scenario''.  Following that is the signature of the scenario.  This signature is a lot like a function declaration.  The name of the scenario in the table above is ''!-WidgetRenders-!'', and it takes two arguments: ''wikiText'' and ''htmlText''.  Notice how this looks a lot like a function call in a ScriptTable.  The name is composed of every other table cell appropriately camel-cased.  The arguments are the interposed cells, also appropriately camel-cased.  Scenario names will be camel-cased with a leading upper-case letter.  Arguments will be camel-cased with a leading ''lower-case'' letter.
+
+!4 Declaring Scenarios using ''Parameterized'' style.
+You can also declare a scenario by embedding underscores within a string.  Each underscore represents an argument.  The arguments are named in a comma separated list in the following cell.  
+
+!|scenario|widget _ renders _|wikiText,htmlText|
+|create page|WidgetPage|with content|@wikiText|
+|check|request page|WidgetPage|200|
+|ensure|content matches|@htmlText|
+|show|content|
 
 The body of the scenario uses the arguments by prefixing them with an '@' sign. The token that follows the '@' ''must be the camel-cased name of the argument.''
 
-Here is the way this scenario is called from a DecisionTable
-
+!4 Invoking a scenario from a DecisionTable
 !|widget renders|
 |wiki text|html text|
 |this is ''italic'' text|this is <i>italic</i> text|italic widget|
@@ -47,8 +56,7 @@ Notice that there is no concept of an ''output'' header; i.e. there is no '?' in
 
 If you hit the test button, you will see the scenario operate.  It's pretty self-explanatory.  If you look at the resulting DecisionTable you'll see that an extra column has been added to each row.  That column contains a collapsed section with the entire scenario table with all the arguments replaced.  You can expand it by clicking on the litte arrow. Try it.
 
-You can also call a scenario from a script table.  Take a look at this:
-
+!4 Invoking a scenario from a script table using ''Interposed'' style
 !|Script|
 |widget|!3 hello|renders|<h3>hello</h3>|
 
@@ -56,6 +64,13 @@ Notice how the scenario is called exactly the way a function is called.  Remembe
 
 By the way, what fixture was being used here?  If you look inside the ''No Peeking'' section above, you'll see where I started the fixture.  What's neat about this is that you can start any fixture you like, so long as it has appropriately named functions.  So the scenario and script calls are ''polymorphic'' with respect to the fixture.  (Let the reader understand and beware!)
 
+!4 Invoking a scenario using ''Parameterized'' style
+!|Script|
+|widget !3 hello renders <h3>hello</h3>|
+
+As you can see you can also drop the table cells and simply write the scenario name and arguments on a single line without any separators.  The secenario with the ''most'' arguments that matches the statement will be selected.  So given two scenarios: !style_code(widget _ renders _) and !style_code(widget _), both match the statement !style_code(widget foo renders bar), but the first will be invoked because it has more arguments than the second.
+
+!4 Nested Scenarios
 Scenarios can also be nested! If you hit the test button, you'll see scenarios executing within other scenarios.
 
 !|scenario|make page|page name|with|wikiText|
@@ -70,8 +85,10 @@ Scenarios can also be nested! If you hit the test button, you'll see scenarios e
 !|Script|
 |page|!3 hello|renders|<h3>hello</h3>|
 
-I'll leave you with one last thought.  There are no ''if'' or ''while'' statements within scenarios.  They are macros, not programs.  They are constructed via text substitution.  Their purpose is to help you eliminate redundancy in your tests.
+!4 Philosophy
+There are no ''if'' or ''while'' statements within scenarios.  They are macros, not programs.  They are constructed via text substitution.  Their purpose is to help you eliminate redundancy in your tests.
 
-!2 Scenario Libraries
+!4 Scenario Libraries
 See <UserGuide.SpecialPages.  You can place libraries of scenarios into pages named !-ScenarioLibrary-!. These pages will be automatically included into any Slim test page using the familiar ''uncle hierarchy'' used for !-SetUp-!, !-TearDown-!, etc.  !-ScenarioLibrary-! pages are special because all uncles and brothers are loaded.
 
+!include -c .FitNesse.SuiteAcceptanceTests.TearDown

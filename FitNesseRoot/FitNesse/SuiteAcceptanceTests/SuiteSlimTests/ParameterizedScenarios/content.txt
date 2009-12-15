@@ -1,6 +1,6 @@
 ![:
-scenario:login user _ with password _:name, password:
-check:echo:@name:Bob
+scenario:login user _ with password _:user name, password:
+check:echo:@userName:Bob
 check:echo:@password:xyzzy 
 ]!
 
@@ -15,3 +15,13 @@ login user Bob with password xyzzy
 ![ script
 beat Bill with a noodle
 ]!
+
+!|login user with password|
+|user name|password|
+|Bob|xyzzy|
+
+!|script|
+|login user|Bob|with password|xyzzy|
+
+!|script|
+|login user with password;|Bob|xyzzy|
