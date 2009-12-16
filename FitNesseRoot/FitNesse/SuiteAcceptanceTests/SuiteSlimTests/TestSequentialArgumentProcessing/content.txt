@@ -1,5 +1,5 @@
 !1 Sequential Argument Processing in Script Tables
-''concatenateThreeArgs(Integer i, Double d, char c)'' returns the concatenated arguments, separated by a space
+''concatenateThreeArgs(String first, String second, String third)'' returns the concatenated arguments, separated by a space
 !3 Affixing a semi-colon ";" to the end of a cell's contents should invoke sequential argument processing. Mixing every-other-cell and sequential-cell processing within the same row is permitted.
 !|script                |fitnesse.slim.test.TestSlim|
 |concatenate three args;|1  |2.0          |three    |
@@ -14,7 +14,7 @@
 |check                                    |echo string            |$RESULT_WITH_SEQUENTIAL_CELL_PROCESSING|$RESULT_WITH_EVERY_OTHER_CELL_PROCESSING|
 |check                                    |echo string            |$RESULT_WITH_MIXED_PROCESSING          |$RESULT_WITH_EVERY_OTHER_CELL_PROCESSING|
 
-!3 script table keywords
+!3 Script Table Keywords
 !|script                                                     |
 |check    |concatenate three args;|1|2.0|three|1 2.0 three   |
 |check not|concatenate three args;|a|b  |c    |something else|
@@ -27,3 +27,10 @@
 !|script                                |
 |concatenate|a          |and    |b|and|c|
 |check      |echo string|$RESULT|a b c  |
+
+!|concatenate|input1|and|input2|and|input3|
+|input1      |input2|input3               |
+|x           |y     |z                    |
+
+!|script                        |
+|check|echo string|$RESULT|x y z|
