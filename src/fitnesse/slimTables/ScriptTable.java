@@ -136,27 +136,23 @@ public class ScriptTable extends SlimTable {
 
   private String getActionNameStartingAt(int startingCol, int endingCol, int row) {
     StringBuffer actionName = new StringBuffer();
-    int actionNameCol = startingCol;
-    do {
+    actionName.append(table.getCellContents(startingCol, row));
+    int actionNameCol = startingCol + 2;
+    while (actionNameCol <= endingCol && 
+    !invokesSequentialArgumentProcessing(actionName.toString())) {
       actionName.append(" ").append(table.getCellContents(actionNameCol, row));
       actionNameCol += 2;
-    } while (actionNameCol <= endingCol &&
-        !invokesSequentialArgumentProcessing(actionName.toString()));
+    } 
     return actionName.toString().trim();
   }
 
   private String[] getArgumentsStartingAt(int startingCol, int endingCol, int row) {
-    List<String> arguments = new ArrayList<String>();
-  int increment = 2;
-    boolean useSequentialArgumentProcessing = false;
-    for (int argumentColumn = startingCol; argumentColumn <= endingCol; argumentColumn += increment) {
-      arguments.add(table.getUnescapedCellContents(argumentColumn, row));
-      addExpectation(new ArgumentExpectation(getInstructionTag(), argumentColumn, row));
-      useSequentialArgumentProcessing = (useSequentialArgumentProcessing || 
-        invokesSequentialArgumentProcessing(table.getCellContents(argumentColumn - 1, row))); 
-      increment = useSequentialArgumentProcessing ? 1 : 2;
+    ArgumentExtractor extractor = new ArgumentExtractor(startingCol, endingCol, row);
+    while (extractor.isMoreToExtract()) {
+      addExpectation(new ArgumentExpectation(getInstructionTag(), extractor.argumentColumn, row));
+      extractor.extractNextArgument();
     }
-    return arguments.toArray(new String[arguments.size()]);
+    return extractor.getArguments();
   }
 
   private boolean invokesSequentialArgumentProcessing(String cellContents) {
@@ -172,6 +168,39 @@ public class ScriptTable extends SlimTable {
   public void evaluateReturnValues(Map<String, Object> returnValues) throws Exception {
   }
 
+  class ArgumentExtractor {
+    private int argumentColumn;
+    private int endingCol;
+    private int row;
+
+    private List<String> arguments = new ArrayList<String>();
+    private int increment = 2;
+    private boolean sequentialArguments = false;
+
+    ArgumentExtractor(int startingCol, int endingCol, int row) {
+      this.argumentColumn = startingCol;
+      this.endingCol = endingCol;
+      this.row = row;
+    }
+
+    public boolean isMoreToExtract() {
+      return argumentColumn <= endingCol;
+    }
+
+    public void extractNextArgument() {
+      arguments.add(table.getUnescapedCellContents(argumentColumn, row));
+      String argumentKeyword = table.getCellContents(argumentColumn - 1, row);
+      boolean argumentIsSequential = invokesSequentialArgumentProcessing(argumentKeyword);
+      sequentialArguments = (sequentialArguments || argumentIsSequential);
+      increment = sequentialArguments ? 1 : 2;
+      argumentColumn += increment;
+    }
+
+    public String[] getArguments() {
+      return arguments.toArray(new String[arguments.size()]);
+    }
+  }
+  
   private class ScriptActionExpectation extends Expectation {
     private ScriptActionExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
