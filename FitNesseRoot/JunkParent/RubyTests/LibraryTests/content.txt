@@ -1,0 +1,9 @@
+!|Library|
+|LibraryOld|
+|LibraryNew|
+
+|script|
+|method on library old|
+|method on library new|
+|a method|
+
