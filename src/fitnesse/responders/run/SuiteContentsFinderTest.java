@@ -58,6 +58,18 @@ public class SuiteContentsFinderTest {
     assertTrue(xrefTestPages.contains(pageA));
     assertTrue(xrefTestPages.contains(pageB));
   }
+
+  @Test
+  public void shouldTestXRefsInSubSuites() throws Exception {
+    crawler.addPage(suite, PathParser.parse("SubSuite"), "!see .PageA\n!see .PageB");
+    WikiPage pageA = crawler.addPage(root, PathParser.parse("PageA"));
+    WikiPage pageB = crawler.addPage(root, PathParser.parse("PageB"));
+    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+    List<WikiPage> xrefTestPages = finder.gatherCrossReferencedTestPages();
+    assertEquals(2, xrefTestPages.size());
+    assertTrue(xrefTestPages.contains(pageA));
+    assertTrue(xrefTestPages.contains(pageB));
+  }
   
   
   private void setUpForGetAllTestPages() throws Exception {
