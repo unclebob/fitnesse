@@ -19,17 +19,13 @@ public class FitNesseUtil {
   public static final String URL = "http://localhost:" + port + "/";
 
   public static void startFitnesse(WikiPage root) throws Exception {
-    context = new FitNesseContext();
-    context.root = root;
-    context.port = port;
-    context.rootPath = "TestDir";
-    context.rootDirectoryName = root.getName();
-    context.rootPagePath = context.rootPath + "/" + context.rootDirectoryName;
+    context = makeTestContext(root);
     context.responderFactory = new ResponderFactory(context.rootPagePath);
-    VelocityFactory.makeVelocityFactory(context);
-    VelocityEngine engine = new VelocityEngine();
-    engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
-    VelocityFactory.setVelocityEngine(engine);
+    context.port = port;
+    startFitnesse(context);
+  }
+
+  public static void startFitnesse(FitNesseContext context) {
     instance = new FitNesse(context);
     instance.start();
   }
@@ -44,7 +40,7 @@ public class FitNesseUtil {
     ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
   }
 
-  public static FitNesseContext makeTestContext(WikiPage root) {
+  public static FitNesseContext makeTestContext(WikiPage root) throws Exception {
     FitNesseContext context = new FitNesseContext(root);
     context.rootDirectoryName = "TestDir";
     context.setRootPagePath();
