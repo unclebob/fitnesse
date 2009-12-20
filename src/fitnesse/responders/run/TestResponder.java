@@ -53,6 +53,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       addXmlFormatter();
     else if (response.isTextFormat())
       addTextFormatter();
+    else if (response.isJavaFormat())
+      addJavaFormatter();
     else
       addHtmlFormatter();
 
@@ -76,7 +78,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   void addTextFormatter() {
     formatters.add(new TestTextFormatter(response));
   }
-
+  void addJavaFormatter() throws Exception{
+    formatters.add(JavaFormatter.getInstance());
+  }
   protected Writer makeResponseWriter() {
     return new Writer() {
       public void write(char[] cbuf, int off, int len) {

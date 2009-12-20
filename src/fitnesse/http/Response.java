@@ -11,7 +11,7 @@ import java.util.TimeZone;
 public abstract class Response {
 
   public enum Format {
-    XML, HTML, TEXT
+    XML, HTML, TEXT, JAVA
   }
 
   public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
@@ -43,6 +43,9 @@ public abstract class Response {
     } else if (formatString.equalsIgnoreCase("text")) {
       format = Format.TEXT;
       setContentType("text/text");
+    } else if (formatString.equalsIgnoreCase("java")){
+      format = Format.JAVA;
+      setContentType("java");    
     } else {
       format = Format.HTML;
     }
@@ -63,6 +66,9 @@ public abstract class Response {
 
   public boolean isTextFormat() {
     return format == Format.TEXT;
+  }
+  public boolean isJavaFormat(){
+    return format == Format.JAVA;
   }
 
   public abstract void readyToSend(ResponseSender sender) throws Exception;
