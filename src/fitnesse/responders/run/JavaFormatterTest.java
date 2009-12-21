@@ -1,26 +1,31 @@
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
 
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
 public class JavaFormatterTest {
 
   private final String nestedPageName = "ParentTest.ChildTest";
+  private final String suiteName="MySuite";
   JavaFormatter jf;
   JavaFormatter.ResultsRepository mockResultsRepository;
-
-
+  ResultsListener listener;
+  
   @Before
   public void prepare(){
-    jf=new JavaFormatter();
+    jf=new JavaFormatter(suiteName);
     mockResultsRepository=mock(JavaFormatter.ResultsRepository.class);
     jf.setResultsRepository(mockResultsRepository);
+    listener=mock(ResultsListener.class);
   }
   @Test
   public void getFullPath_WalksUpWikiPageParentsAndBuildsFullPathToPage() throws Exception{
@@ -78,4 +83,45 @@ public class JavaFormatterTest {
     jf.testOutputChunk("Hey there!");
     verify(mockResultsRepository).write("Hey there!");
   }
+  @Test
+  public void getInstance_ReturnsTheSameObjectForTheSameTest(){
+    assertSame(JavaFormatter.getInstance("TestOne"),JavaFormatter.getInstance("TestOne"));
+    assertNotSame(JavaFormatter.getInstance("TestOne"),JavaFormatter.getInstance("TestTwo"));    
+  }
+  @Test
+  public void allTestingComplete_writesSummaryIfMainPageWasntExecuted() throws Exception{
+    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
+    jf.allTestingComplete();
+    verify(mockResultsRepository).open(suiteName);     
+  }
+  @Test
+  public void allTestingComplete_doesntWriteSummaryIfMainPageWasExecuted() throws Exception{
+    jf=JavaFormatter.getInstance(nestedPageName);
+    jf.setResultsRepository(mockResultsRepository);
+    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
+    jf.allTestingComplete();
+    verify(mockResultsRepository,times(0)).open(nestedPageName);     
+  }
+  @Test
+  public void ifListenerIsSet_newTestStartedFiresTestStarted() throws Exception{
+    jf.setListener(listener);
+    WikiPage page=buildNestedTestPage();
+    jf.newTestStarted(page, 12);
+    verify(listener).newTestStarted(page, 12);
+  }
+  @Test
+  public void ifListenerIsSet_TestCompleteFiresTestComplete() throws Exception{
+    jf.setListener(listener);
+    WikiPage page=buildNestedTestPage();
+    jf.testComplete(page, new TestSummary(1,2,3,4));
+    verify(listener).testComplete(page, new TestSummary(1,2,3,4));
+  }
+  @Test
+  public void ifListenerIsSet_AllTestingCompleteFiresAllTestingComplete() throws Exception{
+    jf.setListener(listener);
+    WikiPage page=buildNestedTestPage();
+    jf.allTestingComplete();
+    verify(listener).allTestingComplete();
+  }
+  
 }

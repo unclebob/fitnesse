@@ -18,7 +18,9 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class JavaFormatter extends BaseFormatter {
-  
+   
+  private String mainPageName;
+  private boolean isSuite=true;
   public static final String SUMMARY_FOOTER = "</table>";
   public static final String SUMMARY_HEADER = "<table><tr><td>Name</td><td>Right</td><td>Wrong</td><td>Exceptions</td></tr>";
   public interface ResultsRepository {
@@ -102,19 +104,6 @@ public class JavaFormatter extends BaseFormatter {
 
   public String getFullPath(final WikiPage wikiPage) throws Exception{
     return new WikiPagePath(wikiPage).toString();
-//    
-//    Stack<String> stack=new Stack<String>();
-//    WikiPage current=wikiPage;
-//    while (current!=null){
-//       stack.push(current.getName());
-//       current=current.getParent();
-//    }
-//    StringBuffer sb=new StringBuffer();
-//    while (stack.size()>0){
-//      if (sb.length()>0) sb.append(".");
-//      sb.append(stack.pop());
-//    }
-//    return sb.toString();
   }
   private List<String> visitedTestPages=new ArrayList<String>();
   private Map<String,TestSummary> testSummaries=new HashMap<String,TestSummary>();
@@ -122,7 +111,7 @@ public class JavaFormatter extends BaseFormatter {
   @Override
   public void newTestStarted(WikiPage test, long time) throws Exception {
     resultsRepository.open(getFullPath(test));
-    
+    if (listener!=null) listener.newTestStarted(test, time);
   }
 
   @Override
@@ -132,12 +121,13 @@ public class JavaFormatter extends BaseFormatter {
 
   @Override
   public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
-    System.out.println (test.getName() + " r " + testSummary.getRight() + " w "+  testSummary.getWrong() + " e " + testSummary.getExceptions());
     String fullPath=getFullPath(test);
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
     testSummaries.put(fullPath, testSummary);
     resultsRepository.close();
+    isSuite=isSuite && (!mainPageName.equals(fullPath));
+    if (listener!=null) listener.testComplete(test, testSummary);
   }
 
   @Override
@@ -166,17 +156,26 @@ public class JavaFormatter extends BaseFormatter {
     
   }
   
+  /** package-private to prevent instantiation apart from getInstance and tests*/
+  JavaFormatter(String suiteName){
+    this.mainPageName=suiteName;
+  }
+  private static Map<String,JavaFormatter> allocatedInstances=new HashMap<String, JavaFormatter>();
+  private ResultsListener listener;
+  public synchronized static JavaFormatter getInstance(String testName) {
+    JavaFormatter existing=allocatedInstances.get(testName);
+    if (existing!=null) return existing;
+    existing=new JavaFormatter(testName);
+    allocatedInstances.put(testName,existing);
+    return existing;
+  }
+  @Override
+  public void allTestingComplete() throws Exception {
+    if (isSuite)
+      writeSummary(mainPageName);
+    if (listener!=null) listener.allTestingComplete();
+  }
   
-  /** singleton ugliness */
-  private static JavaFormatter instance;
-  JavaFormatter(){
-    
-  }
-  public synchronized static JavaFormatter getInstance() {
-    if (instance==null) instance=new JavaFormatter();
-    return instance;
-  }
-
   public void writeSummary(String suiteName) throws IOException {
     resultsRepository.open(suiteName);
     resultsRepository.write(SUMMARY_HEADER);
@@ -205,6 +204,14 @@ public class JavaFormatter extends BaseFormatter {
     if (ts.right > 0)
       return "pass";
     return "plain";
+  }
+
+  public void setListener(ResultsListener listener) {
+    this.listener = listener;    
+  }
+
+  public List<String> getTestsExecuted() {
+    return visitedTestPages;
   }
 
 }
