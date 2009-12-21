@@ -1,13 +1,19 @@
 package fitnesse.updates;
 
-import fitnesse.Updater;
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
-
-import java.util.Properties;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.io.*;
+import java.util.Properties;
+
+import fitnesse.FitNesseContext;
+import fitnesse.Updater;
 
 public class UpdaterBase implements Updater {
   public FitNesseContext context;

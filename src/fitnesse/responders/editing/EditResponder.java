@@ -86,11 +86,6 @@ public class EditResponder implements SecureResponder {
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.title.use(title + resource + ":");
     
-    html.head.add(html.makeCssLink("/files/css/jquery.autocomplete.css", "screen"));
-    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.js"));
-    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.autocomplete.js"));
-    html.head.add(HtmlUtil.makeJavascriptLink("/files/javascript/completion/jquery.bgiframe.min.js"));
-
     html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
     HtmlTag header = makeHeader(resource, title);
     html.header.use(header);
