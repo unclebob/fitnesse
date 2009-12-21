@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SetUpLinkTest||10:21:14 Mon, Dec 21, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ParameterizedScenarios||18:34:09 Wed, Dec 16, 2009|
 |JunkPage.PlainTextTables||17:54:29 Wed, Dec 16, 2009|
 |JunkParent.RubyTests.LibraryTests||06:31:49 Wed, Dec 16, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests||16:02:13 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.TestShutdown||15:56:40 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.TestStatusBox||15:55:23 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.TestResponder||15:54:40 Mon, Aug 17, 2009|
