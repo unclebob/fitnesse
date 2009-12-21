@@ -114,11 +114,23 @@ public class SuiteContentsFinder {
 	  }
 
   protected List<WikiPage> gatherCrossReferencedTestPages() throws Exception {
-    LinkedList<WikiPage> pages = new LinkedList<WikiPage>();
-    PageData data = pageToRun.getData();
+    List<WikiPage> pages = new LinkedList<WikiPage>();
+    addAllXRefs(pages, pageToRun);
+    return pages;
+  }
+
+  private void addAllXRefs(List<WikiPage> xrefPages, WikiPage page) throws Exception {
+    List<WikiPage> children = page.getChildren();
+    addXrefPages(xrefPages, page);
+    for (WikiPage child: children)
+       addAllXRefs(xrefPages, child);
+  }
+
+  private void addXrefPages(List<WikiPage> pages, WikiPage thePage) throws Exception {
+    PageData data = thePage.getData();
     List<String> pageReferences = data.getXrefPages();
-    PageCrawler crawler = pageToRun.getPageCrawler();
-    WikiPagePath testPagePath = crawler.getFullPath(pageToRun);
+    PageCrawler crawler = thePage.getPageCrawler();
+    WikiPagePath testPagePath = crawler.getFullPath(thePage);
     WikiPage parent = crawler.getPage(wikiRootPage, testPagePath.parentPath());
     for (String pageReference : pageReferences) {
       WikiPagePath path = PathParser.parse(pageReference);
@@ -126,7 +138,6 @@ public class SuiteContentsFinder {
       if (referencedPage != null)
         pages.add(referencedPage);
     }
-    return pages;
   }
 
   public static boolean isSuiteSetupOrTearDown(WikiPage testPage) throws Exception {

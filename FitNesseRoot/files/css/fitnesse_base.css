@@ -69,23 +69,15 @@ table.plain_text_table {
 }
 
 table.plain_text_table td {
-  border-width:0px 0px 0px 0px;
-  border-style:none;
-  margin: 1px;
-  padding: 1px;
-  padding-right:6px;
+  border-width:0px 0px 1px 1px;
+  border-style:dotted;
+  border-color:#D0D0D0;
+  padding: 0px 6px 0px 6px;
+  margin: 0px;
 }
 
 table.plain_text_table tr {
   margin: 1px;
-}
-
-table.plain_text_table td.pass {
-  border-width:0px 0px 0px 0px;
-  border-style:none;
-  margin: 1px;
-  padding: 1px;
-  padding-right:6px;  
 }
 
 td, th {
