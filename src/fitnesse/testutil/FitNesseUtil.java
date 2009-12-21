@@ -22,10 +22,10 @@ public class FitNesseUtil {
     context = makeTestContext(root);
     context.responderFactory = new ResponderFactory(context.rootPagePath);
     context.port = port;
-    startFitnesse(context);
+    startFitnesseWithContext(context);
   }
 
-  public static void startFitnesse(FitNesseContext context) {
+  public static void startFitnesseWithContext(FitNesseContext context) {
     instance = new FitNesse(context);
     instance.start();
   }

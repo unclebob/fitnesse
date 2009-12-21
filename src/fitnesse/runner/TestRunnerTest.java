@@ -2,10 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import fitnesse.FitNesseContext;
+import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.responders.run.FitClientResponderTest;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -53,6 +56,30 @@ public class TestRunnerTest {
   @Test
   public void testOnePassingTest() throws Exception {
     testPageResults("SuitePage.TestPassing", new TestSummary(1, 0, 0, 0), 0);
+  }
+
+  @Test
+  public void testOnePassingTestWhenServerHasAuthenticaltionEnabled() throws Exception {
+    tearDown();
+    enableTestExecuteProtectionOnPage(root);
+    FitNesseUtil.startFitnesseWithContext(testContextWithAuthentication("user", "passw0rd"));
+
+    runPage("-credentials user:passw0rd", "SuitePage.TestPassing");
+    assertEquals(new TestSummary(1, 0, 0, 0), runner.getCounts());
+    assertEquals(0, runner.exitCode());
+  }
+
+  private void enableTestExecuteProtectionOnPage(WikiPage page) throws Exception {
+    PageData pageData = page.getData();
+    pageData.setAttribute(PageData.PropertySECURE_TEST, "true");
+    page.commit(pageData);
+  }
+
+  private FitNesseContext testContextWithAuthentication(String username, String password) throws Exception {
+    FitNesseContext testContext = FitNesseUtil.makeTestContext(root);
+    testContext.port = FitNesseUtil.port;
+    testContext.authenticator = new OneUserAuthenticator(username, password);
+    return testContext;
   }
 
   @Test
