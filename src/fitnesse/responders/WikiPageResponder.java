@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
@@ -14,10 +16,12 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.threadlocal.ThreadLocalUtil;
-import fitnesse.wiki.*;
-import fitnesse.wikitext.widgets.Constants;
-import org.apache.velocity.VelocityContext;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class WikiPageResponder implements SecureResponder {
   protected WikiPage page;
@@ -63,18 +67,13 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   private SimpleResponse makePageResponse(FitNesseContext context) throws Exception {
-    try {
       pageTitle = PathParser.render(crawler.getFullPath(page));
-      ThreadLocalUtil.setValue(Constants.ENTRY_PAGE, pageTitle);
       String html = makeHtml(context);
 
       SimpleResponse response = new SimpleResponse();
       response.setMaxAge(0);
       response.setContent(html);
       return response;
-    } finally {
-      ThreadLocalUtil.clear();
-    }
   }
 
   public String makeHtml(FitNesseContext context) throws Exception {

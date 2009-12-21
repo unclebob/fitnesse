@@ -1,13 +1,15 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.slimTables.HtmlTableScanner;
-import fitnesse.slimTables.Table;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.htmlparser.util.ParserException;
 import org.junit.Before;
 import org.junit.Test;
-import org.htmlparser.util.ParserException;
+
+import fitnesse.slimTables.HtmlTableScanner;
+import fitnesse.slimTables.Table;
 
 public class TableListComparerTest {
   private TableListComparer comparer;
