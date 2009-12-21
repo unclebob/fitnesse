@@ -46,7 +46,7 @@ public class JUnitHelper {
     arguments.setInstallOnly(false);
     arguments.setOmitUpdates(true);
     arguments.setRootPath(fitNesseRootPath);
-    arguments.setCommand(pageName+"?"+pageType+"&format=java"); 
+    arguments.setCommand(pageName+"?"+pageType+"&debug=true&format=java"); 
     FitNesseMain.dontExitAfterSingleCommand=true;
     FitNesseMain.launchFitNesse(arguments);   
     Assert.assertEquals("wrong", 0, testFormatter.getTotalSummary().wrong);
