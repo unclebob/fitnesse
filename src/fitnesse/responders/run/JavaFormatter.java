@@ -35,14 +35,12 @@ public class JavaFormatter extends BaseFormatter {
       this.outputPath=outputPath;
       initFolder(fitNesseRoot);
     }
-    @Override
     public void close() throws IOException {
       if (currentWriter!=null) {
         currentWriter.write("</body></html>");
         currentWriter.close();      
       }
     }
-    @Override
     public void open(String testName) throws IOException {
       currentWriter=new FileWriter(new File(outputPath,testName+".html"));
       
@@ -95,7 +93,7 @@ public class JavaFormatter extends BaseFormatter {
           "images/collapsableClosed.gif");
     }
   }
-  public static TestSummary totalSummary=new TestSummary();
+  private TestSummary totalSummary=new TestSummary();
 
   @Override
   public void writeHead(String pageType) throws Exception {

@@ -18,7 +18,6 @@ public class PrintTestListener implements ResultsListener{
     }
     @Override
     public void errorOccured() {
-      
     }
     @Override
     public void newTestStarted(WikiPage test, long time) throws Exception {

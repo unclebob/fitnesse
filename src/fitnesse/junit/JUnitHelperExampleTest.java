@@ -46,21 +46,24 @@ public class JUnitHelperExampleTest {
     helper=new JUnitHelper(".", 
         new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath());
   }
-  @Test
-  public void assertTestPasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception{
-    String testName="FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict";
-    helper.assertTestPasses(testName);
-    JavaFormatter formatter=JavaFormatter.getInstance(testName);
-    Assert.assertEquals(testName,formatter.getTestsExecuted().get(0));
-    Assert.assertEquals(1,formatter.getTestsExecuted().size());        
-  }
-  @Test
-  public void assertSuitePasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception{
-    helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-   
-    JavaFormatter formatter=JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-    Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTests)),
-          new HashSet<String>(formatter.getTestsExecuted()));
-  }
- 
+    @Test
+    public void assertTestPasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception{
+      String testName="FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SystemUnderTestTest";
+      helper.assertTestPasses(testName);
+      JavaFormatter formatter=JavaFormatter.getInstance(testName);
+      Assert.assertEquals(testName,formatter.getTestsExecuted().get(0));
+      Assert.assertEquals(1,formatter.getTestsExecuted().size());        
+    }
+    @Test
+    public void assertSuitePasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception{
+      helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+     
+      JavaFormatter formatter=JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+      Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTests)),
+            new HashSet<String>(formatter.getTestsExecuted()));
+    }
+    @Test
+    public void dummy(){
+      
+    }
 }
