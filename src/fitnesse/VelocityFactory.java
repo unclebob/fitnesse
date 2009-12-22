@@ -13,7 +13,8 @@ public class VelocityFactory {
   private String rootDirectoryName;
 
   public static void makeVelocityFactory(FitNesseContext context) {
-    instance = new VelocityFactory(context.rootPath, context.rootDirectoryName);
+    if (instance==null)
+      instance = new VelocityFactory(context.rootPath, context.rootDirectoryName);
   }
 
   public static void setVelocityEngine(VelocityEngine velocityEngine) {

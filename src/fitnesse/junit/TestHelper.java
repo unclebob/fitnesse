@@ -38,7 +38,7 @@ public class TestHelper {
     arguments.setInstallOnly(false);
     arguments.setOmitUpdates(true);
     arguments.setRootPath(fitNesseRootPath);
-    arguments.setCommand(pageName+"?"+pageType+"&debug=true&format=java"); 
+    arguments.setCommand(pageName+"?"+pageType+"&debug=true&nohistory=true&format=java"); 
     FitNesseMain.dontExitAfterSingleCommand=true;
     FitNesseMain.launchFitNesse(arguments);   
     return testFormatter.getTotalSummary();

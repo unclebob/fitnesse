@@ -244,6 +244,13 @@ public class TestResponderTest {
     xmlChecker.assertFitPassFixtureXmlReportIsCorrect();
   }
 
+  @Test
+  public void noHistory_skipsHistoryFormatter() throws Exception{
+    ensureXmlResultFileDoesNotExist(new TestSummary(2, 0, 0, 0));
+    request.addInput("nohistory", "true");
+    doSimpleRun(simpleSlimDecisionTable());
+    assertFalse(xmlResultsFile.exists());
+  }
   private String slimDecisionTable() {
     return "!define TEST_SYSTEM {slim}\n" +
       "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +

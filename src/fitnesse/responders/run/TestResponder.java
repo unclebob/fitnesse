@@ -58,8 +58,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       addJavaFormatter();
     else
       addHtmlFormatter();
-
-    addTestHistoryFormatter();
+    if (!request.hasInput("nohistory"))
+      addTestHistoryFormatter();
     formatters.writeHead(getTitle());
   }
 

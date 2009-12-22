@@ -16,6 +16,7 @@ import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.*;
+import org.mockito.cglib.transform.impl.AddInitTransformer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -356,11 +357,7 @@ public class SuiteResponderTest {
 
   @Test
   public void normalSuiteRunWithThreePassingTestsProducesSuiteResultFile() throws Exception {
-    TestSummary counts = new TestSummary(3, 0, 0, 0);
-    XmlFormatter.setTestTime("12/5/2008 01:19:00");
-    String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
-      context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
-    File xmlResultsFile = new File(resultsFileName);
+    File xmlResultsFile = expectedXmlResultsFile();
 
     if (xmlResultsFile.exists())
       xmlResultsFile.delete();
@@ -373,6 +370,28 @@ public class SuiteResponderTest {
     XmlUtil.newDocument(xmlResultsStream);
     xmlResultsStream.close();
     xmlResultsFile.delete();
+  }
+  @Test
+  public void NoHistory_avoidsProducingSuiteResultFile() throws Exception {
+    File xmlResultsFile = expectedXmlResultsFile();
+
+    if (xmlResultsFile.exists())
+      xmlResultsFile.delete();
+
+    request.addInput("nohistory", "true");
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
+    runSuite();
+    assertFalse(xmlResultsFile.exists());
+  }
+
+  private File expectedXmlResultsFile() {
+    TestSummary counts = new TestSummary(3, 0, 0, 0);
+    XmlFormatter.setTestTime("12/5/2008 01:19:00");
+    String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
+      context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
+    File xmlResultsFile = new File(resultsFileName);
+    return xmlResultsFile;
   }
 
   @Test
