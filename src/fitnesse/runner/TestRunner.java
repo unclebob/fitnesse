@@ -12,7 +12,10 @@ import util.StreamReader;
 import util.StringUtil;
 import util.XmlUtil;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Arrays;
 
@@ -42,6 +45,10 @@ public class TestRunner {
   }
 
   public static void main(String[] args) throws Exception {
+    System.out.println("***************************************");
+    System.out.println("THIS TEST RUNNER HAS BEEN DEPRECATED!!!");
+    System.out.println("Use java -jar fitnesse.jar -c \"REST-COMMAND\" instead.");
+    System.out.println("***************************************");
     TestRunner runner = new TestRunner();
     runner.run(args);
     System.exit(runner.exitCode());
@@ -138,7 +145,8 @@ public class TestRunner {
 
   private void writeOutputFile() throws Exception {
     if (outputFileName != null) {
-      debug(String.format("Writing: %s", outputFileName));;
+      debug(String.format("Writing: %s", outputFileName));
+      ;
       OutputStream os = getOutputStream();
       os.write(xmlDocumentString.getBytes());
       os.close();

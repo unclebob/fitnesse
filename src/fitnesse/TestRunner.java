@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import fitnesse.http.RequestBuilder;
+import fitnesse.http.ResponseParser;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
-
-import fitnesse.http.RequestBuilder;
-import fitnesse.http.ResponseParser;
 
 //TODO-MdM DELETE ME SOON
 public class TestRunner {
@@ -20,7 +20,7 @@ public class TestRunner {
   public static void main(String[] args) throws Exception {
     System.out.println("***************************************");
     System.out.println("THIS TEST RUNNER HAS BEEN DEPRECATED!!!");
-    System.out.println("Use fitnesse.runner.TestRunner instead.");
+    System.out.println("Use java -jar fitnesse.jar -c \"REST-COMMAND\" instead.");
     System.out.println("***************************************");
     TestRunner runner = new TestRunner();
     int exitCode = runner.run(args);
