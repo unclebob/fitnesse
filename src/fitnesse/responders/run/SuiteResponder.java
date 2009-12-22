@@ -33,6 +33,7 @@ public class SuiteResponder extends TestResponder {
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
     runner.setDebug(isRemoteDebug());
+    runner.setFastTest(isFastTest());
     runner.executeTestPages();
   }
 
