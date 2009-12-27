@@ -1,3 +1,5 @@
+|FitNesse.UserGuide.MarkupLanguageReference||13:10:44 Sun, Dec 27, 2009|
+|FitNesse.UserGuide.MarkupTable||13:09:37 Sun, Dec 27, 2009|
 |PageFooter||18:57:45 Sun, Dec 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SetUpLinkTest||10:21:14 Mon, Dec 21, 2009|
 |JunkPage.SetUpBug||10:03:06 Sun, Dec 20, 2009|
@@ -32,8 +34,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableReturnsNull||23:46:02 Sat, Dec 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSequentialArgumentProcessing||09:02:18 Wed, Dec 09, 2009|
 |FitNesse.UserGuide.PlainTextTable||20:12:13 Tue, Dec 08, 2009|
-|FitNesse.UserGuide.MarkupTable||20:02:27 Tue, Dec 08, 2009|
-|FitNesse.UserGuide.MarkupLanguageReference||20:01:44 Tue, Dec 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||19:56:36 Tue, Dec 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests.SetUp||11:30:58 Tue, Dec 08, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateAbsoluteSymbolicLink||11:29:01 Tue, Dec 08, 2009|
@@ -98,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestUnmodifiedPagesAreNotImported||16:04:59 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestAutomaticUpdate||16:03:25 Mon, Aug 17, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests||16:02:13 Mon, Aug 17, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.TestShutdown||15:56:40 Mon, Aug 17, 2009|
