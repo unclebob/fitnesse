@@ -98,6 +98,13 @@ public class WikiWordWidgetTest extends TestCase {
     widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
     assertEquals("<a href=\"WikiWord\">WikiWord</a>", widget.render());
   }
+  
+  public void testHtmlForSetUpLink() throws Exception {
+    WikiPage page = addPage(root, "PageOne");
+    WikiPage pageTwo = addPage(page, "PageTwo");
+    WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(pageTwo), ">SetUp");
+    assertEquals(makeExpectedNonExistentWikiWord("&gt;SetUp", "PageOne.PageTwo.SetUp"), widget.render());
+  }
 
   private String makeExpectedNonExistentWikiWord(String wikiWord, String fullWikiWord) {
     return wikiWord + "<a title=\"create page\" href=\"" + fullWikiWord + "?edit&nonExistent=true\">[?]</a>";

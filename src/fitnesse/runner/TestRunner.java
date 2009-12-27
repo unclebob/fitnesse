@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import fitnesse.http.RequestBuilder;
 import fitnesse.responders.run.TestSummary;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,7 +12,10 @@ import util.StreamReader;
 import util.StringUtil;
 import util.XmlUtil;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Arrays;
 
@@ -23,6 +27,7 @@ public class TestRunner {
   private PrintStream output;
   private String suiteFilter = null;
   private String excludeSuiteFilter = null;
+  private String credentials = null;
   private StreamReader socketReader;
   private Document testResultsDocument;
   private TestSummary counts;
@@ -40,13 +45,17 @@ public class TestRunner {
   }
 
   public static void main(String[] args) throws Exception {
+    System.out.println("***************************************");
+    System.out.println("THIS TEST RUNNER HAS BEEN DEPRECATED!!!");
+    System.out.println("Use java -jar fitnesse.jar -c \"REST-COMMAND\" instead.");
+    System.out.println("***************************************");
     TestRunner runner = new TestRunner();
     runner.run(args);
     System.exit(runner.exitCode());
   }
 
   public void args(String[] args) throws Exception {
-    CommandLine commandLine = new CommandLine("[-v] [-debug] [-xml file] [-suiteFilter filter] [-excludeSuiteFilter excludeFilter] host port pageName");
+    CommandLine commandLine = new CommandLine("[-v] [-debug] [-xml file] [-suiteFilter filter] [-excludeSuiteFilter excludeFilter] [-credentials userpass] host port pageName");
     if (!commandLine.parse(args))
       usage();
 
@@ -64,6 +73,8 @@ public class TestRunner {
       suiteFilter = commandLine.getOptionArgument("suiteFilter", "filter");
     if (commandLine.hasOption("excludeSuiteFilter"))
       excludeSuiteFilter = commandLine.getOptionArgument("excludeSuiteFilter", "excludeFilter");
+    if (commandLine.hasOption("credentials"))
+      credentials = commandLine.getOptionArgument("credentials", "userpass");
   }
 
   private void usage() {
@@ -71,6 +82,7 @@ public class TestRunner {
     System.out.println("\t-v\tPrint test results.");
     System.out.println("\t-xml <file>\t Write XML test results to file.  If file is 'stdout' write to standard out");
     System.out.println("\t-suiteFilter <filter> \texecutes only tests which are flagged with the given filter");
+    System.out.println("\t-credentials <user:pwd> \tAuthenticates with given credentials when sending commands to the server");
 
     System.exit(-1);
   }
@@ -133,7 +145,8 @@ public class TestRunner {
 
   private void writeOutputFile() throws Exception {
     if (outputFileName != null) {
-      debug(String.format("Writing: %s", outputFileName));;
+      debug(String.format("Writing: %s", outputFileName));
+      ;
       OutputStream os = getOutputStream();
       os.write(xmlDocumentString.getBytes());
       os.close();
@@ -195,7 +208,7 @@ public class TestRunner {
     }
   }
 
-  private void requestTest() throws IOException {
+  private void requestTest() throws Exception {
     Socket socket = new Socket(host, port);
     OutputStream socketOutput = socket.getOutputStream();
     socketReader = new StreamReader(socket.getInputStream());
@@ -205,15 +218,32 @@ public class TestRunner {
     socketOutput.flush();
   }
 
-  public String makeHttpRequest() {
-    String request = "GET /" + pageName + "?responder=suite";
-    if (suiteFilter != null)
-      request += "&suiteFilter=" + suiteFilter;
-    if (excludeSuiteFilter != null)
-      request += "&excludeSuiteFilter=" + excludeSuiteFilter;
-    request += "&format=xml";
+  public String makeHttpRequest() throws Exception {
+    String requestUrl = makeRequestUrl();
+    return buildRequestFromUrl(requestUrl);
+  }
 
-    return request + " HTTP/1.1\r\n\r\n";
+  private String buildRequestFromUrl(String requestUrl) throws Exception {
+    RequestBuilder requestBuilder = new RequestBuilder(requestUrl);
+    if (credentialsSpecified()) {
+      String[] userPass = credentials.split(":");
+      requestBuilder.addCredentials(userPass[0], userPass[1]);
+    }
+    return requestBuilder.getText();
+  }
+
+  private boolean credentialsSpecified() {
+    return credentials != null;
+  }
+
+  private String makeRequestUrl() {
+    String requestUrl = "/" + pageName + "?responder=suite";
+    if (suiteFilter != null)
+      requestUrl += "&suiteFilter=" + suiteFilter;
+    if (excludeSuiteFilter != null)
+      requestUrl += "&excludeSuiteFilter=" + excludeSuiteFilter;
+    requestUrl += "&format=xml";
+    return requestUrl;
   }
 
   public TestSummary getCounts() throws Exception {

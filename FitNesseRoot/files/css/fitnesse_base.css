@@ -60,6 +60,26 @@ table {
   border-width: 1px 0px 0px 1px;
 }
 
+table.plain_text_table {
+  background: #FFFFFF;
+  margin: 5px;
+  padding: 0px;
+  border-width: 1px 1px 1px 1px;
+  border-style:dotted;
+}
+
+table.plain_text_table td {
+  border-width:0px 0px 1px 1px;
+  border-style:dotted;
+  border-color:#D0D0D0;
+  padding: 0px 6px 0px 6px;
+  margin: 0px;
+}
+
+table.plain_text_table tr {
+  margin: 1px;
+}
+
 td, th {
   border-width: 0px 1px 1px 0px;
   padding: 5px;

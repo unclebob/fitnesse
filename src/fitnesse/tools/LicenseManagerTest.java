@@ -3,18 +3,15 @@
 package fitnesse.tools;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
+import static util.RegexTestCase.assertMatches;
 
 import java.io.File;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import util.FileUtil;
-import util.RegexTestCase;
-import static util.RegexTestCase.*;
 
 public class LicenseManagerTest {
   private final String dir = "toolsTempTestDirectory";

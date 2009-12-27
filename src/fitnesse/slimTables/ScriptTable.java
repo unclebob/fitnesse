@@ -105,7 +105,7 @@ public class ScriptTable extends SlimTable {
 
   private List<ScenarioTable> getScenariosWithMostArgumentsFirst() {
     Map<String, ScenarioTable> scenarioMap = getTestContext().getScenarios();
-    List<ScenarioTable> scenarios = new ArrayList(scenarioMap.values());
+    List<ScenarioTable> scenarios = new ArrayList<ScenarioTable>(scenarioMap.values());
     Collections.sort(scenarios, new ScenarioTableLengthComparator());
     return scenarios;
   }

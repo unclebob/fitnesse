@@ -2,14 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.*;
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import util.RegexTestCase;
-import util.StringUtil;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 public class WidgetRootTest {
   private WikiPage rootPage;

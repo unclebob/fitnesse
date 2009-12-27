@@ -10,7 +10,6 @@ import util.StringUtil;
 import fitnesse.components.PageReferencer;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.threadlocal.ThreadLocalUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -202,8 +201,6 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     PageCrawler crawler = wikiPage.getPageCrawler();
     if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
       String prefix = wikiPage.getName();
-      if(theWord.equals(">SetUp") || theWord.equals(">TearDown"))
-        prefix =  ThreadLocalUtil.getValue(Constants.ENTRY_PAGE, wikiPage.getName());
       return String.format("%s.%s", prefix, theWord.substring(1));
     } else if (theWord.charAt(0) == '<') {
       String undecoratedPath = theWord.substring(1);

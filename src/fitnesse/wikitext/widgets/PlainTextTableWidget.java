@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class PlainTextTableWidget extends ParentWidget implements TableWidget {
-  public static final String REGEXP = "^!\\[(?:\\p{Punct}?(?: [^\n]*)?)?\n.+?\n\\]!";
+  public static final String REGEXP = "^!\\[(?:\\p{Punct}?(?: [^\n]*)?)?\n.+?\n\\]!\n";
   private static final Pattern pattern = Pattern.compile("^!\\[(?:(\\p{Punct}?)(?: ([^\n]*))?)?\n(.+?)\n\\]!", Pattern.DOTALL);
   private String delimiter;
   private String hiddenFirstRow;
@@ -47,7 +47,7 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
   }
 
   public String render() throws Exception {
-    StringBuffer html = new StringBuffer("<table>");
+    StringBuffer html = new StringBuffer("<table class=\"plain_text_table\">");
     html.append(childHtml()).append("</table>");
 
     return html.toString();
