@@ -39,3 +39,11 @@ This command will send an HTTP request to the designated server.  If the server 
 
 Alternatively you may manually type a URL to shutdown a server.
 http://hostname:port/?responder=shutdown
+
+!2 Running from JUnit
+
+see RunningFromJunit
+
+!2 Running from Maven
+
+see RunningFromMaven

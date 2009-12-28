@@ -1,0 +1,13 @@
+You can run FitNesse Java (Fit and Slim) tests from a developer IDE without starting the FitNesse server. This is a developer-centric approach to running tests and is not suitable for collaboration with customers or testers, but it is very efficient for troubleshooting purposes. FitNesse includes a set of JUnit helpers that enable you to execute a test or a suite using JUnit. These helpers will execute FitNesse tests in-process, allowing you to debug and inspect the fixture or domain code during test execution. Test pass/failure reports are integrated with JUnit but the normal page output (tables etc) gets saved to the disk for later inspection, if required.
+
+ - import fitnesse.junit.JUnitHelper
+ - instantiate the helper (eg in the setup method of the test class)
+{{{ JUnitHelper helper=new JUnitHelper(FITNESSE_ROOT_PATH, DIRECTORY_FOR_OUTPUT_FILES);  }}}
+FITNESSE_ROOT_PATH is the directory where the wiki pages are, the one which contains your FitNesseRoot directory. DIRECTORY_FOR_OUTPUT_FILES  where HTML test results will be stored. The test result directory will be created if required. For example, the following command will instantiate a helper for a project that contains FitNesseRoot in the base directory and store the results in the fitnesse subfolder of the system-specific temporary folder.   
+{{{ JUnitHelper helper=new JUnitHelper(".", new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath());  }}}
+ - you can now use helper.assertTestPasses(testName) or helper.assertSuitePasses(suiteName) in JUnit code to assert that a FitNesse test or suite pass. For example:
+{{{helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");}}} [[Here's a full example][http://github.com/unclebob/fitnesse/blob/master/src/fitnesse/junit/JUnitHelperExampleTest.java]]
+
+!2 Integration with graphical runners
+
+For better reporting in JUnit graphical test runners, you can use the fitnesse.junit.FitNesseSuite JUnit 4 runner. This will list individual test pages in the JUnit report window and give you detailed statistics for individual tests in a suite. To use it, set the test or suite name to run using the @Name attribute, the root FitNesse path using !-@FitNesseDir-! attribute and the result directory using !-@OutputDir-! attribute. [[Here's a full example][http://github.com/unclebob/fitnesse/blob/master/src/fitnesse/junit/FitNesseSuiteExampleTest.java]]

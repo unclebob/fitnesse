@@ -1,0 +1,7 @@
+Trinidad is a Maven plugin that connects to the [[JUnit][RunningFromJunit]] helper which allows you to easily integrate FitNesse tests into a Maven build system. To use this plugin:
+ - Add http://maven.neuri.com/ as a plugin repository
+ - Add maven-trinidad-plugin to your project POM file, using the same version as the target FitNesse release
+ - Invoke the target directly from the command line by specifying all the arguments using -D definitions. Use -Dtrinidad.test.location to specify the test result location and trinidad.run.suite to specify a test suite to execute. For example:
+{{{mvn -o trinidad:run-tests -Dtrinidad.test.location=../../fitnesse  -Dtrinidad.run.suite=FitNesse.SuiteAcceptanceTests.SuiteSlimTests}}}
+You can also bind the plugin to a build phase to automatically execute FitNesse suites as part of the test or integration-test phase, for example. For more information on that, see the [[plugin configuration details][http://neuri.co.uk/resources/projects/trinidad/maven-trinidad-plugin/]] and a [[full POM example][http://trinidad.googlecode.com/svn/trunk/trinidad/maven-trinidad-plugin-test/pom.xml]].
+
