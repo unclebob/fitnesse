@@ -1,5 +1,6 @@
-
  * CommandLineTestRunner
  * CommandLineArguments
+ * RunningFromJunit
+ * RunningFromMaven
  * LogFiles
  * FilesSection
