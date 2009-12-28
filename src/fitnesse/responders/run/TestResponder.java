@@ -12,6 +12,7 @@ import fitnesse.responders.run.formatters.*;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -53,10 +54,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       addXmlFormatter();
     else if (response.isTextFormat())
       addTextFormatter();
+    else if (response.isJavaFormat())
+      addJavaFormatter();
     else
       addHtmlFormatter();
-
-    addTestHistoryFormatter();
+    if (!request.hasInput("nohistory"))
+      addTestHistoryFormatter();
     formatters.writeHead(getTitle());
   }
 
@@ -76,7 +79,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   void addTextFormatter() {
     formatters.add(new TestTextFormatter(response));
   }
-
+  void addJavaFormatter() throws Exception{
+    formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
+  }
   protected Writer makeResponseWriter() {
     return new Writer() {
       public void write(char[] cbuf, int off, int len) {

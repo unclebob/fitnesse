@@ -31,7 +31,7 @@ public class FitNesseMain {
     }
   }
 
-  private static void launchFitNesse(Arguments arguments) throws Exception {
+  public static void launchFitNesse(Arguments arguments) throws Exception {
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
     VelocityFactory.makeVelocityFactory(context);

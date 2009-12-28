@@ -5,15 +5,16 @@ package fitnesse.socketservice;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.LinkedList;
 
 public class SocketService {
   private ServerSocket serverSocket = null;
   private Thread serviceThread = null;
-  private boolean running = false;
+  private volatile boolean running = false;
   private SocketServer server = null;
   private LinkedList<Thread> threads = new LinkedList<Thread>();
-
+  private volatile boolean everRan=false;
   public SocketService(int port, SocketServer server) throws Exception {
     this.server = server;
     serverSocket = new ServerSocket(port);
@@ -36,11 +37,13 @@ public class SocketService {
   }
 
   private void waitForServiceThreadToStart() {
+    if (everRan) return;
     while (running == false) Thread.yield();
   }
 
   private void serviceThread() {
     running = true;
+    everRan=true;
     while (running) {
       try {
         Socket s = serverSocket.accept();
@@ -50,6 +53,9 @@ public class SocketService {
         System.err.println("Can't create new thread.  Out of Memory.  Aborting");
         e.printStackTrace();
         System.exit(99);
+      }
+      catch (SocketException sox){
+        running=false;// do nothing
       }
       catch (IOException e) {
         throw new RuntimeException(e);

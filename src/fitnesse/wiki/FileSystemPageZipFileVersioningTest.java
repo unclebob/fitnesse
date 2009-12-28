@@ -22,6 +22,7 @@ public class FileSystemPageZipFileVersioningTest extends TestCase {
 
   @Override
   public void setUp() throws Exception {
+    PageVersionPruner.daysTillVersionsExpire=1;
     root = new FileSystemPage("testDir", "RooT");
     crawler = root.getPageCrawler();
     page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");
