@@ -1,2 +1,4 @@
 !include <SuiteAcceptanceTests.SetUp
-!|script|PageDriver|
+!|Library|
+|page driver|
+|echo fixture|
