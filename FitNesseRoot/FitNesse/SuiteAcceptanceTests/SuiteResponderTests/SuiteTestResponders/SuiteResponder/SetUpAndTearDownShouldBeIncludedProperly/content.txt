@@ -7,7 +7,9 @@
 !-!define SLIM_PORT (9000)-!
 }
 
-!|script|page driver|
+!|Library|
+|page driver|
+|echo fixture|
 
 !|given page with content                                                  |
 |page                                    |content                          |

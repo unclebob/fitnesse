@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SetUpAndTearDownShouldBeIncludedProperly||14:53:50 Fri, Jan 01, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameInProperties||11:21:44 Fri, Jan 01, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SetUp||11:05:50 Fri, Jan 01, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.AddChildResponderSuite.SetUp||10:59:54 Fri, Jan 01, 2010|
@@ -97,4 +98,3 @@
 |FitNesse.UserGuide.TestSuites.SuiteSetUpAndSuiteTearDown||15:30:39 Tue, Aug 18, 2009|
 |FitNesse.UserGuide.TestSuites.CrossReferenceSuites||15:20:08 Tue, Aug 18, 2009|
 |FitNesse.UserGuide.TestHistory||14:49:30 Tue, Aug 18, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests||14:01:30 Tue, Aug 18, 2009|
