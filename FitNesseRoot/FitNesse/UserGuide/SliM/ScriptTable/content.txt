@@ -42,7 +42,13 @@ The fixture for this table is:
 This should be pretty clear.  Each row is a single instruction in the script.
  * The first row is simply the word "Script" followed by the name and constructor arguments of the fixture (known as the "actor") that will be used by the rest of the table.  If there is no actor specified then the previous script table's actor on this test page will be used.
 
- * Most instructions involve some kind of function call.  The name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells.
+ * Most instructions involve some kind of function call.  By default, the name of the function is assembled from tokens in ''every other'' cell.  The arguments of the function are the intervening cells. Appending ";" to the end of a function name in a cell invokes sequential argument processing, which means that the arguments to the function are all subsequent cells.
+
+''Interposing Function Call (Default)''
+|login with username|Bob|and password|xyzzy|
+
+''Sequential Argument Processing Function Call''
+|login with username and password;|Bob|xyzzy|
 
  * A function alone in a row will turn red or green if it returns a boolean.  Otherwise it will simply remain uncolored.
 
