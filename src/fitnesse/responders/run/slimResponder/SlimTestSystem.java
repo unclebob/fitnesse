@@ -191,6 +191,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
     initializeTest();
+    checkForAndReportVersionMismatch();
     String html = processAllTablesOnPage(pageData);
     testComplete(testSummary);
     return html;
@@ -207,6 +208,14 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     exceptions.resetForNewTest();
   }
 
+  private void checkForAndReportVersionMismatch() {
+    double expectedVersionNumber = SlimClient.EXPECTED_SLIM_VERSION;
+    double serverVersionNumber = slimClient.getServerVersion();
+    if (!slimClient.versionsMatch())
+      exceptions.addException("Slim Protocol Version Error", 
+        String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
+  }
+  
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable) throws Exception;
 
   String processAllTablesOnPage(PageData pageData) throws Exception {

@@ -37,6 +37,11 @@ public class SlimTestSystemTest {
     assertTrue(unescapedResults, unescapedResults.indexOf(fragment) != -1);
   }
 
+  private void assertTestResultsDoNotContain(String fragment) {
+    String unescapedResults = unescape(testResults);
+    assertTrue(unescapedResults, unescapedResults.indexOf(fragment) == -1);
+  }
+  
   private void getResultsForPageContents(String pageContents) throws Exception {
     request.setResource("TestPage");
     PageData data = testPage.getData();
@@ -405,6 +410,12 @@ public class SlimTestSystemTest {
   }
 
   @Test
+  public void versionMismatchIsNotReported() throws Exception {
+    getResultsForPageContents("");
+    assertTestResultsDoNotContain("Slim Protocol Version Error");
+  }
+  
+  @Test
   public void checkTestClassPrecededByDefine() throws Exception {
     getResultsForPageContents("!define PI {3.141592}\n" +
       "!path classes\n" +
@@ -424,7 +435,7 @@ public class SlimTestSystemTest {
     getResultsForPageContents("|Scenario|myScenario|\n");
     assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
   }
-
+  
   @Test(expected = SocketException.class)
   public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
     final int slimServerPort = 10258;
