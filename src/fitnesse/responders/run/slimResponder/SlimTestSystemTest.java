@@ -7,6 +7,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
+import fitnesse.slim.SlimClient;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
@@ -413,6 +414,13 @@ public class SlimTestSystemTest {
   public void versionMismatchIsNotReported() throws Exception {
     getResultsForPageContents("");
     assertTestResultsDoNotContain("Slim Protocol Version Error");
+  }
+
+  @Test
+  public void versionMismatchIsReported() throws Exception {
+    SlimClient.MINIMUM_REQUIRED_SLIM_VERSION = 1000.0;  // I doubt will ever get here.
+    getResultsForPageContents("");
+    assertTestResultsContain("Slim Protocol Version Error");
   }
   
   @Test

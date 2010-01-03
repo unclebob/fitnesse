@@ -3,5 +3,5 @@
 package fitnesse.slim;
 
 public class SlimVersion {
-  public static String VERSION = "V0.1";
+  public static String VERSION = "0.1";
 }

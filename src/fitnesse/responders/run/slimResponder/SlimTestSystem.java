@@ -209,7 +209,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   private void checkForAndReportVersionMismatch() {
-    double expectedVersionNumber = SlimClient.EXPECTED_SLIM_VERSION;
+    double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
     double serverVersionNumber = slimClient.getServerVersion();
     if (!slimClient.versionsMatch())
       exceptions.addException("Slim Protocol Version Error", 

@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import util.ListUtility;
+import util.StreamReader;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -10,11 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.ListUtility;
-import util.StreamReader;
-
 public class SlimClient {
-  public static final double EXPECTED_SLIM_VERSION = 0.1; 
+  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.1; 
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -64,9 +64,9 @@ public class SlimClient {
   }
 
   public boolean versionsMatch() {
-    return slimServerVersion == EXPECTED_SLIM_VERSION;
+    return slimServerVersion >= MINIMUM_REQUIRED_SLIM_VERSION;
   }
-  
+
   public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws Exception {
     String instructions = ListSerializer.serialize(statements);
     writeString(instructions);
