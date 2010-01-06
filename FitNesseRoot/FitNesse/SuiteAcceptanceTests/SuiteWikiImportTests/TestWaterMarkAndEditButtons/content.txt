@@ -1,6 +1,3 @@
-!define TEST_SYSTEM {slim}
-!|script|page driver|
-
 !|script|
 |given page|ImportingPage|
 |given page|ImportedPage|

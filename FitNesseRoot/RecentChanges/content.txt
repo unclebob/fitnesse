@@ -1,3 +1,8 @@
+|JunkPage.NestedTablesInSymbols||08:34:44 Wed, Jan 06, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.TestWaterMarkAndEditButtons||08:29:35 Wed, Jan 06, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteWikiImportTests.SetUp||08:28:18 Wed, Jan 06, 2010|
+|JunkParent.SuiteTearDown||08:11:18 Mon, Jan 04, 2010|
+|JunkParent.SuiteSetUp||08:11:04 Mon, Jan 04, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SetUpAndTearDownShouldBeIncludedProperly||14:53:50 Fri, Jan 01, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameInProperties||11:21:44 Fri, Jan 01, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SetUp||11:05:50 Fri, Jan 01, 2010|
@@ -93,8 +98,3 @@
 |JunkPage.TestTableTable||08:53:50 Wed, Aug 19, 2009|
 |FitNesse.UserGuide.TestSuites||15:59:39 Tue, Aug 18, 2009|
 |FitNesse.UserGuide.TestSuites.SuiteQuery||15:57:54 Tue, Aug 18, 2009|
-|FitNesse.UserGuide.TestSuites.TagsAndFilters||15:38:03 Tue, Aug 18, 2009|
-|FitNesse.UserGuide.TestSuites.SubWikiSuites||15:36:58 Tue, Aug 18, 2009|
-|FitNesse.UserGuide.TestSuites.SuiteSetUpAndSuiteTearDown||15:30:39 Tue, Aug 18, 2009|
-|FitNesse.UserGuide.TestSuites.CrossReferenceSuites||15:20:08 Tue, Aug 18, 2009|
-|FitNesse.UserGuide.TestHistory||14:49:30 Tue, Aug 18, 2009|
