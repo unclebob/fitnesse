@@ -7,6 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 
+import junit.framework.AssertionFailedError;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -115,7 +117,9 @@ public class FitNesseSuite extends ParentRunner<String>{
       JUnitHelper helper=new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
       try{
         helper.assertSuitePasses(suiteName);
-      }catch(Exception e){
+      }catch(AssertionFailedError e){
+        notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
+      } catch (Exception e) {
         notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
       }
   }
@@ -125,8 +129,11 @@ public class FitNesseSuite extends ParentRunner<String>{
     JUnitHelper helper=new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
     try{
       helper.assertTestPasses(suiteName);
-    }catch(Exception e){
+    }catch(AssertionFailedError e){
+      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
+    } catch (Exception e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
     }
   }
 }
+
