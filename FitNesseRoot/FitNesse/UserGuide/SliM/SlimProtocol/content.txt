@@ -70,7 +70,7 @@ Sometimes a function or a constructor will throw an exception in response to a '
 !5 Standard exception messages
 There are some standard exception messages that every Slim implementation should create.
 
-|COULD_NOT_INVOKE_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class whose instructor cannot be invoked.|
+|COULD_NOT_INVOKE_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class whose constructor cannot be invoked.|
 |NO_METHOD_IN_CLASS ''<some method>'' ''<some class>''|Where ''<some method>'' is the name of the missing method.|
 |NO_CONSTRUCTOR ''<some class>''|Where ''<some class>'' is the name of the class that is missing the constructor.|
 |NO_CONVERTER_FOR_ARGUMENT_NUMBER ''<argument type>''|Where ''<argument type>'' is the class that has no corresponding converter.|
