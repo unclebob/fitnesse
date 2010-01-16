@@ -41,10 +41,15 @@ public class JUnitHelperExampleTest {
       "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSymbolsDontGetTurnedToStringsInTheOutput",
       "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict" 
   };
+  private String[] expectedTestsWithSuiteFilter=new String[]{
+      "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ErikPragtBug",
+      "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim" 
+  };
   @Before
   public void prepare(){
     helper=new JUnitHelper(".", 
         new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath());
+    JavaFormatter.dropInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
   }
     @Test
     public void assertTestPasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception{
@@ -61,6 +66,15 @@ public class JUnitHelperExampleTest {
       JavaFormatter formatter=JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
       Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTests)),
             new HashSet<String>(formatter.getTestsExecuted()));
+    }
+    @Test
+    public void assertSuitePasses_appliesSuiteFilterIfDefined() throws Exception{
+      helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests","testSuite");
+      
+      JavaFormatter formatter=JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+      Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTestsWithSuiteFilter)),
+            new HashSet<String>(formatter.getTestsExecuted()));
+      
     }
     @Test
     public void dummy(){

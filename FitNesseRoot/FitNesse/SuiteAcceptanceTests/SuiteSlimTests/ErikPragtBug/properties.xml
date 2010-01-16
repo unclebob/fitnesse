@@ -7,7 +7,7 @@
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
-	<Suites/>
+	<Suites>testSuite</Suites>
 	<Test/>
 	<Versions/>
 	<WhereUsed/>

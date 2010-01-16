@@ -67,6 +67,17 @@ public class JavaFormatterTest {
     verify(mockResultsRepository, times(1)).write(JavaFormatter.SUMMARY_FOOTER);
   }
   @Test
+  public void testComplete_clones_TestSummary_Objects() throws Exception{
+    WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
+    secondPage.setParent(new WikiPageDummy("root", null));
+
+    TestSummary ts=new TestSummary(5,6,7,8);
+    jf.testComplete(buildNestedTestPage(),ts );
+    ts.right=11; ts.wrong=12; ts.ignores=13; ts.exceptions=14;
+    jf.testComplete(secondPage, ts);
+    assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
+  }
+  @Test
   public void summaryRowFormatsTestOutputRows(){
     assertEquals("pass, no errors or exceptions", 
         "<tr class=\"pass\"><td><a href=\"TestName.html\">TestName</a></td><td>5</td><td>0</td><td>0</td></tr>",
@@ -123,5 +134,11 @@ public class JavaFormatterTest {
     jf.allTestingComplete();
     verify(listener).allTestingComplete();
   }
-  
+  @Test
+  public void dropInstance_drops_test_results(){
+    JavaFormatter first=JavaFormatter.getInstance("TestName");
+    JavaFormatter.dropInstance("TestName");
+    JavaFormatter second=JavaFormatter.getInstance("TestName");
+    assertNotSame(first, second);
+  }
 }

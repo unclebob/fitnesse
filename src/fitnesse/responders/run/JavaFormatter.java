@@ -122,12 +122,15 @@ public class JavaFormatter extends BaseFormatter {
     String fullPath=getFullPath(test);
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
-    testSummaries.put(fullPath, testSummary);
+    testSummaries.put(fullPath, new TestSummary(testSummary));
     resultsRepository.close();
     isSuite=isSuite && (!mainPageName.equals(fullPath));
     if (listener!=null) listener.testComplete(test, testSummary);
   }
 
+  TestSummary getTestSummary(String testPath){
+    return testSummaries.get(testPath);
+  }
   @Override
   public void testOutputChunk(String output) throws Exception {
     resultsRepository.write(output);
@@ -210,6 +213,10 @@ public class JavaFormatter extends BaseFormatter {
 
   public List<String> getTestsExecuted() {
     return visitedTestPages;
+  }
+
+  public static void dropInstance(String testName) {
+    allocatedInstances.remove(testName);
   }
 
 }
