@@ -25,6 +25,7 @@ The FitNesse markup language is straightforward to learn, and powerful enough to
 |[[Classpaths][MarkupPath]]|''Marking a line as a directory path.''|
 |[[Tables][MarkupTable]]|''Creating tables.''|
 |[[Hash Tables][MarkupHashTable]]|''Creating lookup tables.''|
+|[[Plain Text Tables][PlainTextTable]]|''Creating tables from plain text without vertical strokes''|
 |[[Table of Contents][MarkupContents]]|''Generate a table of contents for a SubWiki.''|
 |[[Including][MarkupPageInclude]]|''Pulling the content from one page into another.''|
 |[[Last Modification Time][LastModificationTime]]|''Showing the time that a page was last modified.''|

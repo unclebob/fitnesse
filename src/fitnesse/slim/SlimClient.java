@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import util.ListUtility;
+import util.StreamReader;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -10,14 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.ListUtility;
-import util.StreamReader;
-
 public class SlimClient {
+  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.1; 
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
-  private String slimServerVersion;
+  private String slimServerVersionMessage;
+  private double slimServerVersion;
   private String hostName;
   private int port;
 
@@ -40,7 +42,8 @@ public class SlimClient {
     }
     reader = new StreamReader(client.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
-    slimServerVersion = reader.readLine();
+    slimServerVersionMessage = reader.readLine();
+    slimServerVersion = isConnected() ? Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", "")) : -1;
   }
 
   private boolean tryConnect() {
@@ -52,12 +55,16 @@ public class SlimClient {
     }
   }
 
-  public String getVersion() {
+  public double getServerVersion() {
     return slimServerVersion;
   }
 
   public boolean isConnected() {
-    return slimServerVersion.startsWith("Slim -- V");
+    return slimServerVersionMessage.startsWith("Slim -- V");
+  }
+
+  public boolean versionsMatch() {
+    return slimServerVersion >= MINIMUM_REQUIRED_SLIM_VERSION;
   }
 
   public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws Exception {

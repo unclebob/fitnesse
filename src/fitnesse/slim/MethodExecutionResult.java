@@ -8,6 +8,11 @@ public class MethodExecutionResult {
     private final String methodName;
     private final Class<?> clazz;
 
+    @Override
+    public boolean hasResult() {
+      return false;
+    }
+
     public NoMethod(String methodName, Class<?> clazz, int numberOfArgs) {
       super(null);
       this.methodName = methodName;
@@ -18,7 +23,7 @@ public class MethodExecutionResult {
     @Override
     public Object returnValue() {
       throw new SlimError(String.format(MESSAGE_NO_METHOD_IN_CLASS, methodName, numberOfArgs, clazz
-          .getName()));
+        .getName()));
     }
 
   }
@@ -34,11 +39,20 @@ public class MethodExecutionResult {
 
     public Object returnValue() {
       throw new SlimError(String.format("message:<<NO_INSTANCE %s.>>", instanceName));
-    };
+    }
 
+    @Override
+    public boolean hasResult() {
+      return false;
+    }
   }
 
-  public static final MethodExecutionResult NO_METHOD_IN_LIBRARIES = new MethodExecutionResult(null);
+  public static final MethodExecutionResult NO_METHOD_IN_LIBRARIES = new MethodExecutionResult(null) {
+    @Override
+    public boolean hasResult() {
+      return false;
+    }
+  };
 
   private final Object result;
 
@@ -55,7 +69,7 @@ public class MethodExecutionResult {
   }
 
   public boolean hasResult() {
-    return this.result != null;
+    return true;
   }
 
   public Object returnValue() {

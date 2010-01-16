@@ -30,9 +30,12 @@ Precede the first row with a '#'. This also works for literal tables.
 '''Markup Text'''
 {{{#!|Comment|
 |Beta|gamma|Delta|
-|1|2|3|}}}----
+|1|2|3|}}}
 '''Displays as:'''
 #!|Comment|
 |Beta|gamma|Delta|
 |1|2|3|
+
+!2 Plain Text Tables
+!see <UserGuide.PlainTextTable
 
