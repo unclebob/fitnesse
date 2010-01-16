@@ -26,10 +26,16 @@ public class TestHelper {
   public TestSummary runSuite(String suiteName) throws Exception{
     return run(suiteName, PAGE_TYPE_SUITE);
   }
+  public TestSummary runSuite(String suiteName, String suiteFilter) throws Exception{
+    return run(suiteName, PAGE_TYPE_SUITE, suiteFilter);
+  }
   public TestSummary runTest(String suiteName) throws Exception{
     return run(suiteName, PAGE_TYPE_TEST);
   }
   public  TestSummary run(String pageName, String pageType) throws Exception{
+    return run(pageName, pageType, null);
+  }
+  public  TestSummary run(String pageName, String pageType, String suiteFilter) throws Exception{
     JavaFormatter testFormatter=JavaFormatter.getInstance(pageName);
     testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputPath,fitNesseRootPath));
     testFormatter.setListener(resultListener);
@@ -38,10 +44,18 @@ public class TestHelper {
     arguments.setInstallOnly(false);
     arguments.setOmitUpdates(true);
     arguments.setRootPath(fitNesseRootPath);
-    arguments.setCommand(pageName+"?"+pageType+"&debug=true&nohistory=true&format=java"); 
+    arguments.setCommand(getCommand(pageName, pageType, suiteFilter)); 
     FitNesseMain.dontExitAfterSingleCommand=true;
     FitNesseMain.launchFitNesse(arguments);   
     return testFormatter.getTotalSummary();
   }
+  private static String COMMON_ARGS="&debug=true&nohistory=true&format=java";
+  String getCommand(String pageName, String pageType, String suiteFilter) {
+    if (suiteFilter!=null)
+      return pageName+"?"+pageType+COMMON_ARGS + "&suiteFilter="+suiteFilter;
+    else 
+      return pageName+"?"+pageType+COMMON_ARGS; 
+   }
+ 
 
 }

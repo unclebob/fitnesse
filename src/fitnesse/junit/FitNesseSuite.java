@@ -7,6 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 
+import junit.framework.AssertionFailedError;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -27,7 +29,17 @@ public class FitNesseSuite extends ParentRunner<String>{
     public @interface Name {
       public String value();
     }
-   
+
+    /**
+     * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
+     * to be run, e.g.: fasttests
+     */
+     @Retention(RetentionPolicy.RUNTIME)
+     @Target(ElementType.TYPE)
+     public @interface SuiteFilter {
+       public String value();
+     }
+
     /**
   * The <code>FitnesseDir</code> annotation specifies the absolute or relative
   * path to the directory in which FitNesseRoot can be found
@@ -61,12 +73,14 @@ public class FitNesseSuite extends ParentRunner<String>{
   private final String suiteName;
   private String fitNesseDir;
   private String outputDir;
+  private String suiteFilter;
   public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
     super(suiteClass);
     this.suiteClass = suiteClass;
     this.suiteName=getSuiteName(suiteClass);
     this.fitNesseDir=getFitnesseDir(suiteClass);
     this.outputDir=getOutputDir(suiteClass);
+    this.suiteFilter=getSuiteFilter(suiteClass);
   }
   @Override
   protected Description describeChild(String child) {
@@ -78,7 +92,7 @@ public class FitNesseSuite extends ParentRunner<String>{
     return JavaFormatter.getInstance(suiteName).getTestsExecuted();
   }
  
-  private static String getFitnesseDir(Class<?> klass)
+  static String getFitnesseDir(Class<?> klass)
   throws InitializationError {
     FitnesseDir fitnesseDirAnnotation = klass.getAnnotation(FitnesseDir.class);
     if (fitnesseDirAnnotation == null) {
@@ -86,15 +100,23 @@ public class FitNesseSuite extends ParentRunner<String>{
     }
     return fitnesseDirAnnotation.value();
   }
+  static String getSuiteFilter(Class<?> klass)
+  throws InitializationError {
+    SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
+    if (suiteFilterAnnotation == null) {
+      return null;
+    }
+    return suiteFilterAnnotation.value();
+  }
   
-  private static String getSuiteName(Class<?> klass) throws InitializationError {
+  static String getSuiteName(Class<?> klass) throws InitializationError {
     Name nameAnnotation = klass.getAnnotation(Name.class);
     if (nameAnnotation == null) {
       throw new InitializationError("There must be a @Name annotation");
     }
     return nameAnnotation.value();
   }
-  private static String getOutputDir(Class<?> klass) throws InitializationError {
+  static String getOutputDir(Class<?> klass) throws InitializationError {
     OutputDir outputDirAnnotation = klass.getAnnotation(OutputDir.class);
     if (outputDirAnnotation == null) {
       throw new InitializationError("There must be a @OutputDir annotation");
@@ -114,8 +136,10 @@ public class FitNesseSuite extends ParentRunner<String>{
   public void run(final RunNotifier notifier) { 
       JUnitHelper helper=new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
       try{
-        helper.assertSuitePasses(suiteName);
-      }catch(Exception e){
+        helper.assertSuitePasses(suiteName, suiteFilter);
+      }catch(AssertionFailedError e){
+        notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
+      } catch (Exception e) {
         notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
       }
   }
@@ -125,8 +149,11 @@ public class FitNesseSuite extends ParentRunner<String>{
     JUnitHelper helper=new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
     try{
       helper.assertTestPasses(suiteName);
-    }catch(Exception e){
+    }catch(AssertionFailedError e){
+      notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
+    } catch (Exception e) {
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
     }
   }
 }
+
