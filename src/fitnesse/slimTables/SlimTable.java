@@ -666,10 +666,10 @@ public abstract class SlimTable {
     private String actual;
     private String expected;
     private Pattern simpleComparison = Pattern.compile(
-      "\\A\\s*_?\\s*(!?(?:(?:[<>]=?)|(?:[~]?=)))\\s*(\\d*\\.?\\d+)\\s*\\Z"
+      "\\A\\s*_?\\s*(!?(?:(?:[<>]=?)|(?:[~]?=)))\\s*(-?\\d*\\.?\\d+)\\s*\\Z"
     );
     private Pattern range = Pattern.compile(
-      "\\A\\s*(\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(\\d*\\.?\\d+)\\s*\\Z"
+      "\\A\\s*(-?\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(-?\\d*\\.?\\d+)\\s*\\Z"
     );
     private double v;
     private double arg1;

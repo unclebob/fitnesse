@@ -149,4 +149,16 @@ public class ReturnedValueExpectationTest {
     assertExpectationMessage(" 2.1 < _ <= 5.9", "5.9", "pass(2.1<5.9<=5.9)");
     assertExpectationMessage(" 2.1 < _ <= 5.9", "8.3", "fail(2.1<8.3<=5.9)");
   }
+
+  @Test
+  public void negativeNumberInSimpleComparison() throws Exception {
+    assertExpectationMessage(" < -2 ", "-3", "pass(-3<-2)");
+    assertExpectationMessage(" < -3 ", "-2", "fail(-2<-3)");    
+  }
+
+  @Test
+  public void negativeNumberInRangeComparison() throws Exception {
+    assertExpectationMessage(" -4 < _ < -2", "-3", "pass(-4<-3<-2)");
+    assertExpectationMessage(" -4 < _ < -2", "3", "fail(-4<3<-2)");    
+  }
 }
