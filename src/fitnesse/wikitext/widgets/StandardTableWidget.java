@@ -8,8 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StandardTableWidget extends ParentWidget implements TableWidget {
-  public static final String REGEXP = "^#?!?(?:\\|[^\n]*?\\|\n)+";
-  private static final Pattern pattern = Pattern.compile("(#?)(!?)(\\|[^\n]*?)\\|\n");
+  public static final String REGEXP = "^-?!?(?:\\|[^\n]*?\\|\n)+";
+  private static final Pattern pattern = Pattern.compile("(-?)(!?)(\\|[^\n]*?)\\|\n");
 
   public boolean isLiteralTable;
   public boolean isCommentTable;
@@ -22,7 +22,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
   public String asWikiText() throws Exception {
     StringBuffer wikiText = new StringBuffer();
     if (isCommentTable) {
-      wikiText.append("#");
+      wikiText.append("-");
     }
     if (isLiteralTable)
       wikiText.append("!");
@@ -56,7 +56,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
-      isCommentTable = "#".equals(match.group(1));
+      isCommentTable = "-".equals(match.group(1));
       isLiteralTable = "!".equals(match.group(2));
       addRows(text, isCommentTable);
       getMaxNumberOfColumns();

@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlElement;
 import fitnesse.wikitext.WikiWidget;
 
-public class StandarTableWidgetTest extends WidgetTestCase {
+public class StandardTableWidgetTest extends WidgetTestCase {
   protected String getRegexp() {
     return StandardTableWidget.REGEXP;
   }
@@ -25,13 +25,13 @@ public class StandarTableWidgetTest extends WidgetTestCase {
   }
 
   public void testRegexpForCommentedTable() throws Exception {
-    assertMatch("#|comment|\n");
-    assertMatch("#|something|\n");
-    assertMatch("#!|something|\n");
-    assertNoMatch("# |a|\n");
-    assertNoMatch(" #|a|\n");
-    assertNoMatch("# !|a|\n");
-    assertNoMatch("!#|a|\n");
+    assertMatch("-|comment|\n");
+    assertMatch("-|something|\n");
+    assertMatch("-!|something|\n");
+    assertNoMatch("- |a|\n");
+    assertNoMatch(" -|a|\n");
+    assertNoMatch("- !|a|\n");
+    assertNoMatch("!-|a|\n");
   }
   
   public void testSimpleTable() throws Exception {
@@ -96,7 +96,7 @@ public class StandarTableWidgetTest extends WidgetTestCase {
   }
   
   public void testCommentTableAsHtml() throws Exception {
-    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "#|a|\n|b|c|\n");
+    StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), "-|a|\n|b|c|\n");
     String expected = "<table border=\"1\" cellspacing=\"0\">\n<tr class=\"hidden\"><td colspan=\"2\">a</td>" +
       HtmlElement.endl + "</tr>\n<tr><td>b</td>" +
       HtmlElement.endl + "<td>c</td>" +
@@ -105,13 +105,13 @@ public class StandarTableWidgetTest extends WidgetTestCase {
   }
 
   public void testCanBuildWikiTextFromCommentTable() throws Exception {
-    String testTable = "#|a|b|\n|c|d|\n";
+    String testTable = "-|a|b|\n|c|d|\n";
     StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), testTable);
     assertEquals(testTable, table.asWikiText());
   }
 
   public void testCanBuildWikiTextFromLiteralCommentTable() throws Exception {
-    String testTable = "#!|a|b|\n|c|d|\n";
+    String testTable = "-!|a|b|\n|c|d|\n";
     StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(), testTable);
     assertEquals(testTable, table.asWikiText());
   }

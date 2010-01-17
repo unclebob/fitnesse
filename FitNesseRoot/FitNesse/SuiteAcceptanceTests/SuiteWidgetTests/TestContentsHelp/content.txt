@@ -3,7 +3,7 @@
 #-------------------------------------------------
 !3 Test Rollover Help
 '''First create the parent page.'''
-#|script|
+-|script|
 |start|Page Builder|
 |line|I'm the parent|
 |line|!-!contents-!|
@@ -24,7 +24,7 @@
 #-------------------------------------------------
 !3 Explicitly Request Help Text Suffix
 '''First create the parent page.'''
-#|script|
+-|script|
 |start|Page Builder|
 |line|I'm also the parent|
 |line|!-!contents -h-!|
@@ -47,7 +47,7 @@
 #-------------------------------------------------
 !3 Implicitly Request Help Text Suffix via Variable
 '''First create the parent page.'''
-#|script|
+-|script|
 |start|Page Builder|
 |line|I'm also the parent|
 |line|!-!define HELP_TOC {true}-!|
