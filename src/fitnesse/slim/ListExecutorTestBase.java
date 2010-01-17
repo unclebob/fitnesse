@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// Extracted Test class to be implemented by all Java based Slim ports
+// The tests for PhpSlim and JsSlim implement this class
+
 public abstract class ListExecutorTestBase {
   protected List<Object> statements;
   protected ListExecutor executor;

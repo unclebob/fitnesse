@@ -8,6 +8,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+// Extracted Test class to be implemented by all Java based Slim ports
+// The tests for PhpSlim and JsSlim implement this class
+
 public abstract class SlimInstanceCreationTestBase {
   protected StatementExecutorInterface caller;
   protected String testClass = "TestSlim";

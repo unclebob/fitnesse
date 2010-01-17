@@ -16,6 +16,9 @@ import fitnesse.slim.converters.DateConverter;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.slim.test.TestSlimInterface;
 
+// Extracted Test class to be implemented by all Java based Slim ports
+// The tests for PhpSlim and JsSlim implement this class
+
 abstract public class SlimMethodInvocationTestBase {
   protected StatementExecutorInterface caller;
   protected TestSlimInterface testSlim;
