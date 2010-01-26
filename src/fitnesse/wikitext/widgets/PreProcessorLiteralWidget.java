@@ -11,6 +11,7 @@ import fitnesse.wikitext.WikiWidget;
 public class PreProcessorLiteralWidget extends WikiWidget {
   public static final String REGEXP = "![<-].*?[>-]!";
   public static final Pattern pattern = Pattern.compile("![<-](.*?)[>-]!", Pattern.MULTILINE + Pattern.DOTALL);
+  public static final String literalNewline = "!-\n-!";
   private String literalToRender = null;
   private int literalNumber;
   private boolean escapedLiteral = false;

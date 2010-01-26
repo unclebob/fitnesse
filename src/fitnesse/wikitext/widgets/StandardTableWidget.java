@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class StandardTableWidget extends ParentWidget implements TableWidget {
   public static final String REGEXP = "^-?!?(?:\\|[^\n]*?\\|\n)+";
-  private static final Pattern pattern = Pattern.compile("(-?)(!?)(\\|[^\n]*?)\\|\n");
+  public static final Pattern pattern = Pattern.compile("(-?)(!?)(\\|[^\n]*?)\\|\n");
 
   public boolean isLiteralTable;
   public boolean isCommentTable;
