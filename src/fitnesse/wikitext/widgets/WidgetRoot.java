@@ -124,6 +124,7 @@ public class WidgetRoot extends ParentWidget {
       while (includesVariable(value))
         value = replaceVariable(value);
 
+      value = value.replaceAll(VariableWidget.prefixDisabled, VariableWidget.prefix);
       variables.put(key, value);
     }
     return value;
@@ -134,11 +135,25 @@ public class WidgetRoot extends ParentWidget {
     return matcher.find();
   }
 
+  //
+  // If it has a variable, get it and replace newlines with literals.
+  // If the result is a table, then ignore the replacement and leave
+  // the variable reference unexpanded.
+  //
+  // Nested tables cannot be expanded in place due to ambiguities, and
+  // newlines internal to table cells wreak havoc on table recognition.
+  //
   public String replaceVariable(String string) throws Exception {
     Matcher matcher = VariableWidget.pattern.matcher(string);
     if (matcher.find()) {
       String name = matcher.group(1);
-      return string.substring(0, matcher.start()) + getVariable(name) + string.substring(matcher.end());
+      String value = processLiterals
+                     ( getVariable(name)
+                       .replaceAll("(^|[^|])\n", "$1" + PreProcessorLiteralWidget.literalNewline)
+                     );
+      Matcher tblMatcher = StandardTableWidget.pattern.matcher(value);
+      if (tblMatcher.find()) value = "!{" + name + "}";
+      return string.substring(0, matcher.start()) + value + string.substring(matcher.end());
     }
     return string;
   }
