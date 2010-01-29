@@ -22,7 +22,7 @@ public class SlimTableFactory {
       return new SubsetQueryTable(table, tableId, slimTestContext);
     else if (beginsWith(tableType, "query:"))
       return new QueryTable(table, tableId, slimTestContext);
-    else if (beginsWith(tableType, "table"))
+    else if (beginsWith(tableType, "table:"))
       return new TableTable(table, tableId, slimTestContext);
     else if (tableType.equalsIgnoreCase("script"))
       return new ScriptTable(table, tableId, slimTestContext);
