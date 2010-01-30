@@ -13,6 +13,7 @@ import org.junit.Test;
 
 public abstract class HashWidgetConversionTestBase {
 
+  private static final String OTHER_INSTANCE = "otherInstance";
   private static final String MY_INSTANCE = "myInstance";
   protected StatementExecutorInterface statementExecutor;
 
@@ -31,9 +32,14 @@ public abstract class HashWidgetConversionTestBase {
 
   protected abstract String mapReceptorClassName();
 
+  protected abstract String mapConstructorClassName();
+
   private void assertConvertsTo(String string, List<Object> list) {
     assertEquals("true", statementExecutor.call(MY_INSTANCE, "setMap", string));
     assertEquals(list, statementExecutor.call(MY_INSTANCE, "query", new Object[] {}));
+    Object created = statementExecutor.create(OTHER_INSTANCE, mapConstructorClassName(), new Object[] {string});
+    assertEquals("OK", created);
+    assertEquals(list, statementExecutor.call(OTHER_INSTANCE, "query", new Object[] {}));
   }
 
   @Test

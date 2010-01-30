@@ -9,8 +9,18 @@ import java.util.TreeSet;
 
 public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
 
+  public static class MapConstructor extends MapReceptor {
+    public MapConstructor(Map<String, String> map) {
+      theMap = map;
+    }
+    
+    public boolean setMap(Map<String, String> map) {
+      return false;
+    }
+  }
+
   public static class MapReceptor {
-    Map<String, String> theMap;
+    public Map<String, String> theMap;
     
     public boolean setMap(Map<String, String> map) {
       theMap = map;
@@ -29,12 +39,17 @@ public class HashWidgetConversionTest extends HashWidgetConversionTestBase {
   }
 
   @Override
-  protected StatementExecutor createStatementExecutor() {
+  protected StatementExecutorInterface createStatementExecutor() {
     return new StatementExecutor();
   }
 
   @Override
   protected String mapReceptorClassName() {
     return MapReceptor.class.getName();
+  }
+
+  @Override
+  protected String mapConstructorClassName() {
+    return MapConstructor.class.getName();
   }
 }
