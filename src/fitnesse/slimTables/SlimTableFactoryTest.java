@@ -1,20 +1,18 @@
 package fitnesse.slimTables;
 
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
+import org.junit.Before;
+import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public class SlimTableFactoryTest {
@@ -33,7 +31,7 @@ public class SlimTableFactoryTest {
     map.put("ordered query:", OrderedQueryTable.class);
     map.put("subset query:", SubsetQueryTable.class);
     map.put("query:", QueryTable.class);
-    map.put("table", TableTable.class);
+    map.put("table:", TableTable.class);
     map.put("script", ScriptTable.class);
     map.put("scenario", ScenarioTable.class);
     map.put("import", ImportTable.class);
