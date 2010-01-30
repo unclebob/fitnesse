@@ -22,7 +22,7 @@ public abstract class HashWidgetConversionTestBase {
     createMapReceptorInstance();
   }
 
-  protected abstract StatementExecutor createStatementExecutor();
+  protected abstract StatementExecutorInterface createStatementExecutor() throws Exception;
   
   protected void createMapReceptorInstance() {
     Object created = statementExecutor.create(MY_INSTANCE, mapReceptorClassName(), new Object[] {});
