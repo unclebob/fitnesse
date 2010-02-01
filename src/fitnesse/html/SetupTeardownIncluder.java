@@ -47,8 +47,8 @@ public class SetupTeardownIncluder {
   }
 
   private void includeSetupAndTeardownPages() throws Exception {
-    includeSetupPages();
     includeScenarioLibrary();
+    includeSetupPages();
     includePageContent();
     includeTeardownPages();
     updatePageContent();
