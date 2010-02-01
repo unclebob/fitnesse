@@ -9,8 +9,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public abstract class Response {
-
-  public enum Format {
+    public enum Format {
     XML, HTML, TEXT, JAVA
   }
 

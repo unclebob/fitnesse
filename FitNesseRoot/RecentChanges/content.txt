@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.RestfulServices||09:34:14 Mon, Feb 01, 2010|
 |JunkParent||09:50:16 Fri, Jan 29, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsIncludeWithHelp||17:33:03 Sun, Jan 17, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp||17:32:46 Sun, Jan 17, 2010|
@@ -68,7 +69,6 @@
 |JunkParent.RubyTests||16:51:37 Mon, Nov 23, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryShouldHaveTitle||16:18:49 Sat, Nov 21, 2009|
 |FitNesse.UserGuide.SourceCodeControl||15:16:02 Sat, Nov 21, 2009|
-|FitNesse.UserGuide.RestfulServices||12:45:30 Sat, Nov 21, 2009|
 |FitNesse.UserGuide.StartingAndStoppingFitNesse||14:10:22 Thu, Nov 19, 2009|
 |FitNesse.UserGuide.CommandLineRestCommands||14:09:29 Thu, Nov 19, 2009|
 |FitNesse.UserGuide.CommandLineTestRunner||07:53:01 Thu, Nov 19, 2009|
