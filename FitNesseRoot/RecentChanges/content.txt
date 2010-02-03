@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||08:44:35 Wed, Feb 03, 2010|
+|FitNesse.SuiteAcceptanceTests.PageFooter||08:43:11 Wed, Feb 03, 2010|
 |FitNesse.UserGuide.SliM.ValueComparisons||19:06:36 Tue, Feb 02, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.RegularExpressionMatching||19:03:43 Tue, Feb 02, 2010|
 |FitNesse.UserGuide.QuickReferenceGuide||12:19:41 Mon, Feb 01, 2010|
@@ -35,7 +37,6 @@
 |FitNesse.UserGuide.SliM.SetUp||10:42:48 Tue, Dec 15, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.ScenariosOnlyInSlimTests||24:04:58 Tue, Dec 15, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SetUp||24:02:24 Tue, Dec 15, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestComment||23:58:40 Mon, Dec 14, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SetUp||23:29:22 Mon, Dec 14, 2009|
 |JunkPage.SeeInNestedSuites.SuiteParentOne.SuiteA||21:26:47 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SetUp||16:49:36 Sun, Dec 13, 2009|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerVerboseOutput||14:31:26 Thu, Aug 20, 2009|
 |FitNesse.UserGuide.RestfulTests||14:03:07 Thu, Aug 20, 2009|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||13:58:29 Thu, Aug 20, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerGeneratesXmlReports||13:50:31 Thu, Aug 20, 2009|

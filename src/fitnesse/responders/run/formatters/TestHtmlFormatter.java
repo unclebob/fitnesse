@@ -124,7 +124,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected void finishWritingOutput() throws Exception {
+    writeData("<br/><div class=\"footer\">\n");
     writeData(getPage().getData().getFooterPageHtml());
+    writeData("</div>\n");    
     writeData(htmlPage.postDivision);
   }
 
