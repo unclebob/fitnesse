@@ -1,3 +1,5 @@
+|FitNesse.UserGuide.SliM.ValueComparisons||19:06:36 Tue, Feb 02, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.RegularExpressionMatching||19:03:43 Tue, Feb 02, 2010|
 |FitNesse.UserGuide.QuickReferenceGuide||12:19:41 Mon, Feb 01, 2010|
 |FitNesse.UserGuide.RestfulServices||09:34:14 Mon, Feb 01, 2010|
 |JunkParent||09:50:16 Fri, Jan 29, 2010|
@@ -96,5 +98,3 @@
 |FitNesse.UserGuide.RestfulTests||14:03:07 Thu, Aug 20, 2009|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||13:58:29 Thu, Aug 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestRunnerTests.TestRunnerGeneratesXmlReports||13:50:31 Thu, Aug 20, 2009|
-|JunkPage.VarPage||09:07:06 Wed, Aug 19, 2009|
-|JunkPage.TestTableTable||08:53:50 Wed, Aug 19, 2009|

@@ -161,4 +161,24 @@ public class ReturnedValueExpectationTest {
     assertExpectationMessage(" -4 < _ < -2", "-3", "pass(-4<-3<-2)");
     assertExpectationMessage(" -4 < _ < -2", "3", "fail(-4<3<-2)");    
   }
+
+  @Test
+  public void simpleRegularExpression() throws Exception {
+    assertExpectationMessage("=~/Bob/", "Bob", "pass(/Bob/ found in: Bob)");
+  }
+
+  @Test
+  public void regularExpressionMatchesSomethingInsideActualResult() throws Exception {
+    assertExpectationMessage("=~/Bob/", "My name is Bob Martin", "pass(/Bob/ found in: My name is Bob Martin)");
+  }
+
+  @Test
+  public void complexRegularExpressionMatches() throws Exception {
+    assertExpectationMessage("=~/B.b/", "Oh Bob, how could you.", "pass(/B.b/ found in: Oh Bob, how could you.)");
+  }
+
+  @Test
+  public void simpleRegexFails() throws Exception {
+    assertExpectationMessage("=~/Bob/", "Pete", "fail(/Bob/ not found in: Pete)");
+  }
 }
