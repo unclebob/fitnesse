@@ -98,7 +98,7 @@ public class TestResponderTest {
     }
     request.setResource(testPage.getName());
 
-    responder.turnOffChunkingForTests();
+    responder.turnOffChunking();
     response = responder.makeResponse(context, request);
     sender = new MockResponseSender();
     sender.doSending(response);

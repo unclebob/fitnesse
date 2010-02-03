@@ -139,13 +139,19 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public void start() throws Exception {
     slimRunner.asynchronousStart();
-    slimClient = new SlimClient("localhost", slimSocket);
+
+    slimClient = new SlimClient(determineSlimHost(), slimSocket);
     try {
       waitForConnection();
       started = true;
     } catch (SlimError e) {
       testSystemListener.exceptionOccurred(e);
     }
+  }
+
+  String determineSlimHost() throws Exception {
+    String slimHost = page.getData().getVariable("SLIM_HOST");
+    return slimHost == null ? "localhost" : slimHost;
   }
 
   public String getCommandLine() {

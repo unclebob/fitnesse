@@ -16,7 +16,6 @@ import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.*;
-import org.mockito.cglib.transform.impl.AddInitTransformer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -56,7 +55,7 @@ public class SuiteResponderTest {
     request = new MockRequest();
     request.setResource(suitePageName);
     responder = new SuiteResponder();
-    responder.turnOffChunkingForTests();
+    responder.turnOffChunking();
     responder.setFastTest(true);
     responder.page = suite;
     context = FitNesseUtil.makeTestContext(root);

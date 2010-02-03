@@ -671,6 +671,8 @@ public abstract class SlimTable {
     private Pattern range = Pattern.compile(
       "\\A\\s*(-?\\d*\\.?\\d+)\\s*<(=?)\\s*_\\s*<(=?)\\s*(-?\\d*\\.?\\d+)\\s*\\Z"
     );
+
+    private Pattern regexPattern = Pattern.compile("\\s*=~/(.*)/");
     private double v;
     private double arg1;
     private double arg2;
@@ -686,6 +688,10 @@ public abstract class SlimTable {
     }
 
     private String evaluate() {
+      String message = evaluateRegularExpressionIfPresent();
+      if (message != null)
+        return message;
+
       operation = matchSimpleComparison();
       if (operation != null)
         return doSimpleComparison();
@@ -695,6 +701,27 @@ public abstract class SlimTable {
         return doRange(matcher);
       } else
         return null;
+    }
+
+    private String evaluateRegularExpressionIfPresent() {
+      Matcher regexMatcher = regexPattern.matcher(expression);
+      String message = null;
+      if (regexMatcher.matches()) {
+        String pattern = regexMatcher.group(1);
+        message = evaluateRegularExpression(pattern);
+      }
+      return message;
+    }
+
+    private String evaluateRegularExpression(String pattern) {
+      String message;
+      Matcher patternMatcher = Pattern.compile(pattern).matcher(actual);
+      if (patternMatcher.find()) {
+        message = returnedValueExpectation.pass(String.format("/%s/ found in: %s", pattern, actual));
+      } else {
+        message = returnedValueExpectation.fail(String.format("/%s/ not found in: %s", pattern, actual));
+      }
+      return message;
     }
 
     private String doRange(Matcher matcher) {

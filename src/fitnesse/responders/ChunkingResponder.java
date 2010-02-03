@@ -29,8 +29,8 @@ public abstract class ChunkingResponder implements Responder {
     this.root = context.root;
     String format = (String) request.getInput("format");
     response = new ChunkedResponse(format);
-    if (dontChunk || context.doNotChunk)
-      response.turnOffChunkingForTest();
+    if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
+      response.turnOffChunking();
     getRequestedPage(request);
     if (page == null && shouldRespondWith404())
       return pageNotFoundResponse(context, request);
@@ -41,7 +41,7 @@ public abstract class ChunkingResponder implements Responder {
     return response;
   }
 
-  public void turnOffChunkingForTests() {
+  public void turnOffChunking() {
     dontChunk = true;
   }
 

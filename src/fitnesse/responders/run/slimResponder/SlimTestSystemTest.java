@@ -14,13 +14,14 @@ import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.ServerSocket;
 import java.net.SocketException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -42,7 +43,7 @@ public class SlimTestSystemTest {
     String unescapedResults = unescape(testResults);
     assertTrue(unescapedResults, unescapedResults.indexOf(fragment) == -1);
   }
-  
+
   private void getResultsForPageContents(String pageContents) throws Exception {
     request.setResource("TestPage");
     PageData data = testPage.getData();
@@ -89,6 +90,20 @@ public class SlimTestSystemTest {
     SlimTestSystem sys = new HtmlSlimTestSystem(pageWithBadSlimPortDefined, dummyListener);
     for (int i = 1; i < 15; i++)
       assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
+  }
+
+  @Test
+  public void slimHostDefaultsTolocalhost() throws Exception {
+    WikiPage pageWithoutSlimHostVariable = crawler.addPage(root, PathParser.parse("PageWithoutSlimHostVariable"), "some gunk\n");
+    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithoutSlimHostVariable, dummyListener);
+    assertEquals("localhost", sys.determineSlimHost());
+  }
+
+  @Test
+  public void slimHostVariableSetsTheHost() throws Exception {
+    WikiPage pageWithSlimHostVariable = crawler.addPage(root, PathParser.parse("PageWithSlimHostVariable"), "!define SLIM_HOST {somehost}\n");
+    SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimHostVariable, dummyListener);
+    assertEquals("somehost", sys.determineSlimHost());
   }
 
   @Test
@@ -422,7 +437,7 @@ public class SlimTestSystemTest {
     getResultsForPageContents("");
     assertTestResultsContain("Slim Protocol Version Error");
   }
-  
+
   @Test
   public void checkTestClassPrecededByDefine() throws Exception {
     getResultsForPageContents("!define PI {3.141592}\n" +
@@ -443,7 +458,7 @@ public class SlimTestSystemTest {
     getResultsForPageContents("|Scenario|myScenario|\n");
     assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
   }
-  
+
   @Test(expected = SocketException.class)
   public void createSlimServiceFailsFastWhenSlimPortIsNotAvailable() throws Exception {
     final int slimServerPort = 10258;

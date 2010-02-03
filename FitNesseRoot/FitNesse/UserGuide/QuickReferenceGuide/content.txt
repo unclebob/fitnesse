@@ -242,6 +242,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |''' NAME '''                          |''' Default '''  |''' Values '''                |''' Notes '''                                                                                                                |
 |${CODE} TEST_SYSTEM ${CODEend}        |!c fit           |!c fit&bar;slim               |'' Selects the test system to use for this, and descendant pages.''                                                          |
 |${CODE} SLIM_PORT ${CODEend}          |!c 8085          |!c integer                    |'' Selects the starting port number in a range of 10 for slim.''                                                             |
+|${CODE} SLIM_HOST ${CODEend}          |!c localhost     |!c string                     |'' The name of the host on which !-SlimServer-! is running.''                                                                    |
 |${CODE} CLASSPATH_PROPERTY ${CODEend} |!c nil           |!c ''an environment variable''|'' If not nil, loads classpath (as gathered from !path) into the named environment variable.  See CustomizingTestExecution.''|
 |${CODE} CM_SYSTEM ${CODEend}          |!c nil           |!c java class                 |'' Selects the class that will handle CM system events.''                                                                    |
 |${CODE} COLLAPSE_SETUP ${CODEend}     |!c false         |!c true${BAR}false            |'' Collapses all !-SetUps-! ''                                                                                               |

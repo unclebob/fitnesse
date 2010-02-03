@@ -90,7 +90,11 @@ public class ChunkedResponse extends Response {
     this.isReadyToSend = isReadyToSend;
   }
 
-  public void turnOffChunkingForTest() {
+  public void turnOffChunking() {
     dontChunk = true;
+  }
+
+  public boolean isChunkingTurnedOff() {
+    return dontChunk;
   }
 }
