@@ -44,7 +44,7 @@ public class SearchReplaceResponder extends ResultResponder {
 
     observer = new ContentReplacingSearchObserver(searchString, replacementString);
     finder = new RegularExpressionWikiPageFinder(searchString, this);
-    finder.search(root);
+    finder.search(page);
   }
 
 }
