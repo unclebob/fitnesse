@@ -45,6 +45,11 @@ public class ReturnedValueExpectationTest {
   }
 
   @Test
+  public void doubleDollarReducedToSingleDollar() throws Exception {
+    assertExpectationMessage("a $$ x", "a $ x", "pass(a $$ x)");
+  }
+
+  @Test
   public void lessThanComparisons() throws Exception {
     assertExpectationMessage(" < 5.2", "3", "pass(3<5.2)");
     assertExpectationMessage(" < 5.2", "2", "pass(2<5.2)");

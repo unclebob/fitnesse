@@ -6,15 +6,16 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.wikitext.Utils;
-import static util.ListUtility.list;
 
-import static java.lang.Character.isLetterOrDigit;
-import static java.lang.Character.toUpperCase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.Character.isLetterOrDigit;
+import static java.lang.Character.toUpperCase;
+import static util.ListUtility.list;
 
 public abstract class SlimTable {
   protected Table table;
@@ -509,6 +510,13 @@ public abstract class SlimTable {
     }
 
     private void replaceOneSymbol() {
+      if (isDollarDollar())
+        startingPosition += 2;
+       else
+        replaceSymbol();
+    }
+
+    private void replaceSymbol() {
       String symbolName = symbolMatcher.group(1);
       String value = getSymbolValue(symbolName);
       String prefix = replacedString.substring(0, symbolMatcher.start());
@@ -516,6 +524,10 @@ public abstract class SlimTable {
       replacedString = prefix + value + suffix;
       int replacementEnd = symbolMatcher.start() + value.length();
       startingPosition = Math.min(replacementEnd, replacedString.length());
+    }
+
+    private boolean isDollarDollar() {
+      return symbolMatcher.start() > 0 && replacedString.charAt(symbolMatcher.start() - 1) == '$';
     }
 
     private String getSymbolValue(String symbolName) {
@@ -609,6 +621,10 @@ public abstract class SlimTable {
     protected String createEvaluationMessage(String actual, String expected) {
       String evaluationMessage;
       String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
+      int dolDolIndex = 0;
+      while ((dolDolIndex = replacedExpected.indexOf("$$")) != -1) {
+        replacedExpected = replacedExpected.substring(0, dolDolIndex) + replacedExpected.substring(dolDolIndex+1);
+      }
       if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (actual.equals(replacedExpected))
