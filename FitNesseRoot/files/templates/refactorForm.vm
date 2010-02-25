@@ -1,0 +1,27 @@
+#set ($page_title="Refactor: $pageTitle.link")
+#parse("pageHead.vm")
+				<h3>Delete:</h3>
+Delete this entire sub-wiki.				<form method="get" action="$refactoredRootPage">
+					<input type="submit" name="" value="Delete Page"/>
+					<input type="hidden" name="responder" value="deletePage"/>
+				</form>
+<br/>				<h3>Rename:</h3>
+				<form method="get" action="$refactoredRootPage">
+					<input type="hidden" name="responder" value="renamePage"/>
+  New Name: 
+					<input type="text" name="newName" value="" size="50"/>
+<br/>
+					<input type="checkbox" name="refactorReferences"/>
+ - Find all references to this page and change them accordingly (May take several minutes)<br/>
+					<input type="submit" name="" value="Rename Page"/>
+				</form>
+<br/>				<h3>Move:</h3>
+				<form method="get" action="$refactoredRootPage">
+					<input type="hidden" name="responder" value="movePage"/>
+New Location: 
+					<input type="text" name="newLocation" value="" size="80"/>
+<br/>
+					<input type="checkbox" name="refactorReferences"/>
+ - Find all references to this page and change them accordingly (May take several minutes)<br/>
+					<input type="submit" name="" value="Move Page"/>
+				</form>

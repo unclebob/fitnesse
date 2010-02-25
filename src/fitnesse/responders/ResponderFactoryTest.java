@@ -7,15 +7,9 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
-import fitnesse.responders.refactoring.DeletePageResponder;
-import fitnesse.responders.refactoring.MovePageResponder;
-import fitnesse.responders.refactoring.RefactorPageResponder;
-import fitnesse.responders.refactoring.RenamePageResponder;
+import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
-import fitnesse.responders.search.SearchFormResponder;
-import fitnesse.responders.search.SearchResponder;
-import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
@@ -267,6 +261,11 @@ public class ResponderFactoryTest {
   @Test
   public void testStopTestResponder() throws Exception {
     assertResponderTypeMatchesInput("stoptest", StopTestResponder.class);
+  }
+
+  @Test
+  public void testReplaceResponder() throws Exception {
+    assertResponderTypeMatchesInput("replace", SearchReplaceResponder.class);
   }
 
   @Test

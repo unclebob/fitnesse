@@ -1,0 +1,57 @@
+!c !2 Search & Replace
+
+Searches for the specified string in the content of every wiki page under the current page and replaces it with the given replacements.
+It's triggered by the following URL:
+
+http://<host>/<replacement_root>?responder=replace&searchString=<regular_expression>&replacementString=<replacement>
+
+!include SamplePages
+
+Search for a page !-PageAbc-!
+|Response Requester.                                                              |
+|uri                                                                      |status?|
+|!-root?responder=replace&searchString=PageAbc&replacementString=PageDef-!|       |
+
+Check for the proper title.
+|Response Examiner.                       |
+|type    |pattern  |matches?|wrapped html?|
+|contents|Replacing|true    |             |
+
+Since no page, not even !-PageAbc-! contains that content, no results will be returned.
+|Response Examiner.                                      |
+|type    |pattern                               |matches?|
+|contents|!->PageAbc<-!                         |false   |
+|contents|No pages matched your search criteria.|true    |
+
+Now search for ABC.
+|Response Requester.                                                      |
+|uri                                                              |status?|
+|!-root?responder=replace&searchString=ABC&replacementString=DEF-!|       |
+
+Make sure we get !-PageAbc-! in the result list.
+|Response Examiner.                         |
+|type    |pattern    |matches?|wrapped html?|
+|contents|!-PageAbc-!|true    |             |
+
+Now search for xyz.
+|Response Requester.                                                      |
+|uri                                                              |status?|
+|!-root?responder=replace&searchString=XYZ&replacementString=xyz-!|       |
+
+Make sure we get !-XyzPage-! in the result list.  Searches are case insensitive.
+|Response Examiner.                         |
+|type    |pattern    |matches?|wrapped html?|
+|contents|!-XyzPage-!|true    |             |
+
+Now search for the word page.
+|Response Requester.                                                               |
+|uri                                                                       |status?|
+|!-root?responder=replace&searchString=page&replacementString=wiki%20page-!|       |
+
+Make sure we get all 4 pages in the result list.
+|Response Examiner.                      |
+|type    |pattern               |matches?|
+|contents|!-PageAbc-!           |true    |
+|contents|!-XyzPage-!           |true    |
+|contents|!-BasePage-!          |true    |
+|contents|!-BasePage.ChildPage-!|true    |

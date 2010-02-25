@@ -14,6 +14,20 @@ Searches in page titles only.  Will run fairly quickly.<br/>
 					<b>Search Content!: </b>
 Searches in the content of every page.  Don't hold your breath.				</form>
 				<hr/>
+				<h2>Search &amp; Replace</h2>
+				<form action="$refactoredRootPage" method="post">
+					<input type="hidden" name="responder" value="replace"/>
+Search String:
+					<input type="text" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+Replacement:
+					<input type="text" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+					<br/>
+					<input type="submit" name="replace" value="Replace!"/>
+<br/><br/>
+					<b>Search &amp; Replace: </b>
+Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).  
+				</form>
+				<hr/>
 				<h2>Search Properties</h2>
 				<form method="post" action="$searchedRootPage">
 					<input type="hidden" name="responder" value="executeSearchProperties"/>

@@ -22,20 +22,14 @@ import fitnesse.responders.files.FileResponder;
 import fitnesse.responders.files.RenameFileConfirmationResponder;
 import fitnesse.responders.files.RenameFileResponder;
 import fitnesse.responders.files.UploadResponder;
-import fitnesse.responders.refactoring.DeletePageResponder;
-import fitnesse.responders.refactoring.MovePageResponder;
-import fitnesse.responders.refactoring.RefactorPageResponder;
-import fitnesse.responders.refactoring.RenamePageResponder;
+import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.FitClientResponder;
 import fitnesse.responders.run.SocketCatchingResponder;
 import fitnesse.responders.run.StopTestResponder;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.responders.run.TestResultFormattingResponder;
-import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
-import fitnesse.responders.search.SearchFormResponder;
-import fitnesse.responders.search.SearchResponder;
-import fitnesse.responders.search.WhereUsedResponder;
+import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
@@ -97,6 +91,7 @@ public class ResponderFactory {
     addResponder("addChild", AddChildPageResponder.class);
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
+    addResponder("replace", SearchReplaceResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {

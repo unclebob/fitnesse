@@ -52,6 +52,12 @@ public class SearchFormResponderTest {
   }
 
   @Test
+  public void testForSearchAndReplace() throws Exception {
+    assertSubString("value=\"Replace!\"", content);
+    assertSubString("Search &amp; Replace", content);
+  }
+
+  @Test
   public void propertiesForm() throws Exception {
     assertHasRegexp("<input.*value=\"Search Properties\".*>", content);
     assertHasRegexp("<input.*name=\"responder\".*value=\"executeSearchProperties\"", content);
