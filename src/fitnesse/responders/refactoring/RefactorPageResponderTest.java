@@ -37,6 +37,7 @@ public class RefactorPageResponderTest extends RegexTestCase {
     assertEquals(200, response.getStatus());
 
     String content = response.getContent();
+    assertSubString("Replace", content);
     assertSubString("Delete Page", content);
     assertSubString("Rename Page", content);
     assertSubString("Move Page", content);

@@ -1,4 +1,4 @@
-package fitnesse.responders.search;
+package fitnesse.responders.refactoring;
 
 import static org.hamcrest.core.IsNot.*;
 import static org.junit.Assert.*;
