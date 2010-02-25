@@ -43,7 +43,7 @@ public class SearchReplaceResponderTest {
 
   @Test
   public void testSingleReplacementHtml() throws Exception {
-    String content = getResponseContentUsingSearchReplaceString("(.*)something(.*)", "$1replacedthing$2");
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
 
     assertThat(content, containsString("replacedthing"));
     assertThat(content, containsString("SomePage"));
@@ -52,7 +52,7 @@ public class SearchReplaceResponderTest {
   @Test
   public void multipleReplacements() throws Exception {
     crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has something too.");
-    String content = getResponseContentUsingSearchReplaceString("(.*)something(.*)", "$1replacedthing$2");
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, containsString("SomePage"));
     assertThat(content, containsString("ChildPage"));
   }
@@ -60,14 +60,14 @@ public class SearchReplaceResponderTest {
   @Test
   public void onlyReplacedPagesAreListed() throws Exception {
     crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has nothing to replace.");
-    String content = getResponseContentUsingSearchReplaceString("(.*)something(.*)", "$1replacedthing$2");
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, containsString("SomePage"));
     assertThat(content, not(containsString("ChildPage")));
   }
 
   @Test
   public void testReplacement() throws Exception {
-    getResponseContentUsingSearchReplaceString("(.*)something(.*)", "$1replacedthing$2");
+    getResponseContentUsingSearchReplaceString("something", "replacedthing");
     WikiPage page = crawler.getPage(root, pagePath);
     assertThat(page.getData().getContent(), containsString("has replacedthing in it"));
   }
@@ -83,7 +83,7 @@ public class SearchReplaceResponderTest {
   public void onlySelectedPageAndChildrenAreSearched() throws Exception {
     request.setResource("SomePage.ChildPage");
     crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
-    String content = getResponseContentUsingSearchReplaceString("(.*)something(.*)", "$1replacedthing$2");
+    String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, not(containsString("<a href=\"SomePage\">")));
     assertThat(content, containsString("<a href=\"SomePage.ChildPage\">"));
   }
