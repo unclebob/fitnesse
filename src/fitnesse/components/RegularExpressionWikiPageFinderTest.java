@@ -1,8 +1,11 @@
 package fitnesse.components;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Description;
@@ -23,7 +26,7 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
   private PageCrawler crawler;
 
   List<WikiPage> foundPages = new ArrayList<WikiPage>();
-  private RegularExpressionWikiPageFinder pageFinder;
+  private WikiPageFinder pageFinder;
 
   public void hit(WikiPage page) throws Exception {
     foundPages.add(page);
@@ -43,6 +46,34 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
         + FitNesseUtil.port + "/PageOne");
     virtualPage.commit(data);
     foundPages.clear();
+  }
+
+  @Test
+  public void searcher() throws Exception {
+    pageFinder = pageFinder("has");
+    pageFinder.search(root);
+    assertThat(foundPages, found(pageOne, virtualPage));
+  }
+
+  @Test
+  public void searcherAgain() throws Exception {
+    pageFinder = pageFinder("a");
+    pageFinder.search(root);
+    assertThat(foundPages, found(pageOne, childPage, virtualPage));
+  }
+
+  @Test
+  public void dontSearchProxyPages() throws Exception {
+    pageFinder = pageFinder("a");
+    pageFinder.search(virtualPage);
+    assertEquals(1, foundPages.size());
+  }
+
+  @Test
+  public void observing() throws Exception {
+    pageFinder = pageFinder("has");
+    pageFinder.search(root);
+    assertEquals(2, foundPages.size());
   }
 
   @Test
@@ -93,7 +124,7 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
     return "this search text does not match any page";
   }
 
-  private RegularExpressionWikiPageFinder pageFinder(String searchText) {
+  private WikiPageFinder pageFinder(String searchText) {
     return new RegularExpressionWikiPageFinder(searchText, this);
   }
 

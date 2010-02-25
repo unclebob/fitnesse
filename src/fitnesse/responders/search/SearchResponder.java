@@ -2,7 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.components.ContentWikiPageFinder;
+import static java.util.regex.Pattern.*;
+
+import java.util.regex.Pattern;
+
+import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
 
 public class SearchResponder extends ResultResponder {
@@ -36,8 +40,10 @@ public class SearchResponder extends ResultResponder {
       String searchType = getSearchType();
       if ("Title".equals(searchType))
         new TitleWikiPageFinder(searchString, this).search(root);
-      else
-        new ContentWikiPageFinder(searchString, this).search(root);
+      else {
+        Pattern regularExpression = Pattern.compile(searchString, CASE_INSENSITIVE + LITERAL);
+        new RegularExpressionWikiPageFinder(regularExpression, this).search(root);
+      }
     }
   }
 
