@@ -16,7 +16,7 @@ import fitnesse.wiki.*;
 
 public class RegularExpressionWikiPageFinderTest implements SearchObserver {
 
-  WikiPage root;
+  private WikiPage root;
   private WikiPage pageOne;
   private WikiPage childPage;
   private WikiPage virtualPage;
@@ -69,7 +69,7 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
 
     pageFinder.search(root);
 
-    assertThat(foundPages, found(root, pageOne, childPage));
+    assertThat(foundPages, found(root, pageOne, childPage, virtualPage));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
   }
 
   private String matchTextForPageOne() {
-    return ".*PageOne content.*";
+    return "PageOne content";
   }
 
   private String notMatchingSearchText() {

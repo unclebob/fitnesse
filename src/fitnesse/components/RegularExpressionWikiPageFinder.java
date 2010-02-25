@@ -1,5 +1,7 @@
 package fitnesse.components;
 
+import static java.util.regex.Pattern.*;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,18 +11,17 @@ public class RegularExpressionWikiPageFinder extends WikiPageFinder {
 
   private Pattern regularExpression;
 
-  public RegularExpressionWikiPageFinder(String string,
+  public RegularExpressionWikiPageFinder(String regularExpression,
       SearchObserver observer) {
     super(observer);
-    regularExpression = Pattern.compile(string);
+    this.regularExpression = Pattern.compile(regularExpression);
   }
 
-  @Override
   protected boolean pageMatches(WikiPage page) throws Exception {
     String pageContent = page.getData().getContent();
 
     Matcher matcher = regularExpression.matcher(pageContent);
-    return matcher.matches();
+    return matcher.find();
   }
 
 }

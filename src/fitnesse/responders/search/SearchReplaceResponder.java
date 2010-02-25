@@ -11,12 +11,10 @@ public class SearchReplaceResponder extends ResultResponder {
   private PageFinder finder;
   private SearchObserver observer;
 
-  @Override
   protected String getPageFooterInfo(int hits) throws Exception {
     return String.format("Replaced %d matches for your search.", hits);
   }
 
-  @Override
   protected String getTitle() throws Exception {
     return String.format("Replacing matching content \"%s\" with content \"%s\"",
         getSearchString(), getReplacementString());
@@ -30,13 +28,11 @@ public class SearchReplaceResponder extends ResultResponder {
     return (String) request.getInput("searchString");
   }
 
-  @Override
   public void hit(WikiPage page) throws Exception {
     observer.hit(page);
     super.hit(page);
   }
 
-  @Override
   protected void startSearching() throws Exception {
     super.startSearching();
     String searchString = getSearchString();
