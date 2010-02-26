@@ -227,7 +227,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 #-------------------------------------------------------------------------------------------
 !anchor VARIABLES
 |${HDR} Variables ${HDRend}                                                                                                                                                  |
-|Variable Definition  |${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')''' ${CODEend}${NL}|
+|Variable Definition  |${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')'''${NL}${BANG}'''define''' ''name'' '''['''${NUL}''value''${NUL}''']''' ${CODEend}${NL}|
 |Variable Usage       |${CODE} '''$'''${LBRACE}''name''${RBRACE} ${CODEend}                                                                                                  |
 |Expression Evaluation|${CODE} '''!-${=-!'''${NUL}''expression''${NUL}'''!-=}-!''' ${CODEend}                      |''expression'' may contain variables                     |
 #-------------------------------------------------------------------------------------------
