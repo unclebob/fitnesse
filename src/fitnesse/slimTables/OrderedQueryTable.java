@@ -24,26 +24,26 @@ public class OrderedQueryTable extends QueryTable {
 
   private void markColumns(int tableRow, int matchedRow, int columns) {
     for (int col = 0; col < columns; col++) {
-      markColumn(tableRow, matchedRow, col);
+      markField(tableRow, matchedRow, col);
     }
   }
 
-  private void markColumn(int tableRow, int matchedRow, int col) {
-    if (col >= fieldNames.size())
-      return; // ignore strange table geometry.
-    String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
-    String expectedValue = table.getCellContents(col, tableRow);
-    table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
-    if (actualValue == null)
-      failMessage(col, tableRow, "field not present");
-    else if (actualValue.equals(replaceSymbols(expectedValue))) {
-      markMatch(tableRow, matchedRow, col);
-    } else {
-      expected(col, tableRow, actualValue);
-    }
-  }
+//  private void markColumn(int tableRow, int matchedRow, int col) {
+//    if (col >= fieldNames.size())
+//      return; // ignore strange table geometry.
+//    String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
+//    String expectedValue = table.getCellContents(col, tableRow);
+//    table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
+//    if (actualValue == null)
+//      failMessage(col, tableRow, "field not present");
+//    else if (actualValue.equals(replaceSymbols(expectedValue))) {
+//      markMatch(tableRow, matchedRow, col);
+//    } else {
+//      expected(col, tableRow, actualValue);
+//    }
+//  }
 
-  private void markMatch(int tableRow, int matchedRow, int col) {
+  protected void markMatch(int tableRow, int matchedRow, int col) {
     if (col == 0 && matchedRow <= lastMatchedRow) {
       failMessage(0, tableRow, "out of order: row " + (matchedRow+1));
     } else {

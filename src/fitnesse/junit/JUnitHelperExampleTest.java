@@ -32,6 +32,7 @@ public class JUnitHelperExampleTest {
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableReturnsNull",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestCanPassSymbolsIntoConstructors",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestComparators",
+    "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.SlimSymbolDollarDollar",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestOrderedQueryWithDuplicateRows",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestPageWithInclude",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSequentialArgumentProcessing",

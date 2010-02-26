@@ -147,7 +147,7 @@ public abstract class ListExecutorTestBase {
   }
 
   @Test
-  public void canReplaceMultipleVariablesInAnArgument() throws Exception {
+  public void canReplaceMultipleSymbolsInAnArgument() throws Exception {
     statements.add(list("id1", "callAndAssign", "v1", "testSlim", "echoString", "Bob"));
     statements.add(list("id2", "callAndAssign", "v2", "testSlim", "echoString", "Martin"));
     statements.add(list("id3", "call", "testSlim", "echoString", "name: $v1 $v2"));
@@ -155,7 +155,7 @@ public abstract class ListExecutorTestBase {
   }
 
   @Test
-  public void canReplaceMultipleVariablesInAnArgumentWhenOneVarIsPrefixOfAnother() throws Exception {
+  public void canReplaceMultipleSymbolsInAnArgumentWhenOneVarIsPrefixOfAnother() throws Exception {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "echoString", "Bob"));
     statements.add(list("id2", "callAndAssign", "v1", "testSlim", "echoString", "Martin"));
     statements.add(list("id3", "call", "testSlim", "echoString", "name: $v $v1"));
@@ -168,6 +168,22 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
     statements.add(list("id3", "call", "testSlim", "echoString", "$v"));
     respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "null")));
+  }
+
+  @Test
+  public void doesNotReplaceSymbolWithDoubleDollar() throws Exception {
+    statements.add(list("id1", "make", "nf", "NullFixture"));
+    statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
+    statements.add(list("id3", "call", "testSlim", "echoString", "$$v"));
+    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "$v")));
+  }
+
+    @Test
+  public void stripOneDollarOffDoubleDollar() throws Exception {
+    statements.add(list("id1", "make", "nf", "NullFixture"));
+    statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
+    statements.add(list("id3", "call", "testSlim", "echoString", "$$"));
+    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "$")));
   }
 
   @Test

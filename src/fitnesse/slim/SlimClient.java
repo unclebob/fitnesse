@@ -68,6 +68,8 @@ public class SlimClient {
   }
 
   public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws Exception {
+    if (statements.size() == 0)
+      return new HashMap<String, Object>();
     String instructions = ListSerializer.serialize(statements);
     writeString(instructions);
     String resultLength = reader.read(6);

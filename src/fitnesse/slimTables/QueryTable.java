@@ -48,14 +48,17 @@ public class QueryTable extends SlimTable {
       table.appendToCell(0, 0, error("query method did not return a list."));
       return;
     } else if (queryReturn instanceof String) {
-      String message = (String) queryReturn;
-      if (isExceptionMessage(message))
-        table.appendToCell(0, 0, makeExeptionMessage(message));
-      else
-        table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
+      appendQueryErrorMessage((String) queryReturn);
     } else {
       scanRowsForMatches(ListUtility.uncheckedCast(Object.class, queryReturn));
     }
+  }
+
+  private void appendQueryErrorMessage(String message) {
+    if (isExceptionMessage(message))
+      table.appendToCell(0, 0, makeExeptionMessage(message));
+    else
+      table.appendToCell(0, 0, error(String.format("The query method returned: %s", message)));
   }
 
   protected void scanRowsForMatches(List<Object> queryResultList) throws Exception {
@@ -110,16 +113,23 @@ public class QueryTable extends SlimTable {
   }
 
   protected void markField(int tableRow, int matchedRow, int col) {
+    if (col >= fieldNames.size())
+      return; // ignore strange table geometry.
     String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
     table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
     if (actualValue == null)
       failMessage(col, tableRow, "field not present");
-    else if (actualValue.equals(replaceSymbols(expectedValue))) {
-      pass(col, tableRow);
-    } else {
+    else if (expectedValue == null || expectedValue.length() == 0)
+      ignore(col, tableRow, actualValue);
+    else if (actualValue.equals(replaceSymbols(expectedValue)))
+      markMatch(tableRow, matchedRow, col);
+    else
       expected(col, tableRow, actualValue);
-    }
+  }
+
+  protected void markMatch(int tableRow, int matchedRow, int col) {
+    pass(col, tableRow);
   }
 
   class QueryResults {
@@ -135,7 +145,7 @@ public class QueryTable extends SlimTable {
     }
 
     @SuppressWarnings("unchecked")
-	private Map<String, String> makeRowMap(Object row) {
+    private Map<String, String> makeRowMap(Object row) {
       Map<String, String> rowMap = new HashMap<String, String>();
       for (List<Object> columnPair : (List<List<Object>>) row) {
         String fieldName = (String) columnPair.get(0);
