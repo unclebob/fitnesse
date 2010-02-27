@@ -58,6 +58,7 @@ table {
   margin: 5px;
   padding: 0px;
   border-width: 1px 0px 0px 1px;
+  white-space:pre;
 }
 
 table.plain_text_table {
