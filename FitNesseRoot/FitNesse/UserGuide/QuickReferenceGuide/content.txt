@@ -258,6 +258,8 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${CODE} RSS_PREFIX ${CODEend}         |!c               |!c                            |'' Link prefix for [[RSS Feeds][RssFeed]] ''                                                                                 |
 |${CODE} ''PAGE_NAME'' ${CODEend}      |!c               |!c Read Only                  |'' Name of current page''                                                                                                    |
 |${CODE} ''PAGE_PATH '' ${CODEend}     |!c               |!c Read Only                  |'' Fully qualified name of parent. ''                                                                                        |
+|${CODE} ''PARENT_NAME'' ${CODEend}    |!c               |!c Read Only                  |'' Name of including page''                                                                                                  |
+|${CODE} ''PARENT_PATH '' ${CODEend}   |!c               |!c Read Only                  |'' Fully qualified name of including page's parent. ''                                                                       |
 |${CODE} ''FITNESSE_PORT'' ${CODEend}  |!c               |!c Read Only                  |'' Port number that fitnesse is using. ''                                                                                    |
 
 !note (See the ''root'' page for overrides)

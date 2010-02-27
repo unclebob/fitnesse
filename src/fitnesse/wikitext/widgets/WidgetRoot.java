@@ -21,6 +21,16 @@ public class WidgetRoot extends ParentWidget {
   private boolean doEscaping = true;
   private List<String> literals = new LinkedList<String>();
   private boolean isGatheringInfo = false;
+  private WidgetRoot includingPage;
+  private static final Map<String, String> includingPagePropertyMap = new HashMap<String, String>();
+
+  private static final String PARENT_NAME = "PARENT_NAME";
+  private static final String PARENT_PATH = "PARENT_PATH";
+
+  static {
+    includingPagePropertyMap.put(PARENT_NAME,"PAGE_NAME");
+    includingPagePropertyMap.put(PARENT_PATH,"PAGE_PATH");
+  }
 
   //Constructor for IncludeWidget support (alias locale & scope)
   public WidgetRoot(WikiPage aliasPage, ParentWidget imposterWidget) throws Exception {
@@ -33,6 +43,7 @@ public class WidgetRoot extends ParentWidget {
     this.literals = aliasRoot.literals;
     this.isGatheringInfo = aliasRoot.isGatheringInfo;
     this.page = aliasPage;
+    this.includingPage = aliasRoot;
   }
 
   public WidgetRoot getRoot() {
@@ -105,6 +116,9 @@ public class WidgetRoot extends ParentWidget {
       value = Integer.toString(FitNesseContext.globalContext.port);
     else if (key.equals("FITNESSE_ROOTPATH"))
       value = FitNesseContext.globalContext.rootPath;
+
+    value = getVariableFromIncludingPage(key, value);
+
     WikiPage page = getWikiPage();
     while (value == null && !page.getPageCrawler().isRoot(page)) {
       page = page.getParentForVariables(); // follow parents for variables
@@ -126,6 +140,23 @@ public class WidgetRoot extends ParentWidget {
 
       value = value.replaceAll(VariableWidget.prefixDisabled, VariableWidget.prefix);
       variables.put(key, value);
+    }
+    return value;
+  }
+
+  private String getVariableFromIncludingPage(String key, String value) throws Exception {
+    if (value == null) {
+      if (includingPagePropertyMap.containsKey(key)) {
+        String newKey = includingPagePropertyMap.get(key);
+        if (includingPage == null) {
+          value = getVariable(newKey);
+        } else {
+          value = includingPage.getVariable(key);
+          if (value == null) {
+            value = includingPage.getVariable(newKey);
+          }
+        }
+      }
     }
     return value;
   }
