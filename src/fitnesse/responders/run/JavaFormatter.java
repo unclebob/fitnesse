@@ -54,7 +54,8 @@ public class JavaFormatter extends BaseFormatter {
       currentWriter.write("<head><title>");
       currentWriter.write(testName);
       currentWriter
-          .write("</title><link rel='stylesheet' type='text/css' href='fitnesse.css' media='screen'/>"
+          .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
+              + "<link rel='stylesheet' type='text/css' href='fitnesse.css' media='screen'/>"
               + "<link rel='stylesheet' type='text/css' href='fitnesse_print.css' media='print'/>"
               + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
       currentWriter.write(testName);
