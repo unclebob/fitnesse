@@ -121,7 +121,8 @@ public class WidgetRoot extends ParentWidget {
     }
 
     if (value != null) {
-      while (includesVariable(value))
+
+//todo delete this line.      while (includesVariable(value))
         value = replaceVariable(value);
 
       value = value.replaceAll(VariableWidget.prefixDisabled, VariableWidget.prefix);
@@ -147,10 +148,12 @@ public class WidgetRoot extends ParentWidget {
     Matcher matcher = VariableWidget.pattern.matcher(string);
     if (matcher.find()) {
       String name = matcher.group(1);
-      String value = processLiterals
-                     ( getVariable(name)
-                       .replaceAll("(^|[^|])\n", "$1" + PreProcessorLiteralWidget.literalNewline)
-                     );
+      String variableText = getVariable(name);
+      if (variableText == null) {
+        return string;
+      }
+      String replacedValue = variableText.replaceAll("(^|[^|])\n", "$1" + PreProcessorLiteralWidget.literalNewline);
+      String value = processLiterals(replacedValue);
       Matcher tblMatcher = StandardTableWidget.pattern.matcher(value);
       if (tblMatcher.find()) value = "!{" + name + "}";
       return string.substring(0, matcher.start()) + value + string.substring(matcher.end());
