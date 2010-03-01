@@ -52,7 +52,7 @@ public class ContentBufferTest extends TestCase {
 
   public void testUnicode() throws Exception {
     ContentBuffer buffer = new ContentBuffer();
-    buffer.append("??¾š");
-    assertEquals("??¾š", new StreamReader(buffer.getInputStream()).read(buffer.getSize()));
+    buffer.append("??\uFFFD\uFFFD");
+    assertEquals("??\uFFFD\uFFFD", new StreamReader(buffer.getInputStream()).read(buffer.getSize()));
   }
 }
