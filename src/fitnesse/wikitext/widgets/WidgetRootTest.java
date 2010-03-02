@@ -45,7 +45,7 @@ public class WidgetRootTest {
     PageData data = includedPage.getData();
     assertEquals(INCLUDED_PAGE_NAME,data.getVariable("PAGE_NAME"));
     assertEquals(INCLUDED_PAGE_NAME, includedRoot.getVariable("PAGE_NAME"));
-    assertEquals(ROOT_PAGE_NAME,includedRoot.getVariable("PARENT_NAME"));
+    assertEquals(ROOT_PAGE_NAME,includedRoot.getVariable("RUNNING_PAGE_NAME"));
   }
 
   @Test
@@ -56,8 +56,8 @@ public class WidgetRootTest {
     WikiPage includedPage = crawler.addPage(rootPage, PathParser.parse("IncludedPage"));
     WidgetRoot includedRoot = new WidgetRoot(includedPage);
     assertEquals("IncludedPage", includedRoot.getVariable("PAGE_NAME"));
-    // PARENT_NAME returns PAGE_NAME if the page isn't included.
-    assertEquals("IncludedPage",includedRoot.getVariable("PARENT_NAME"));
+    // RUNNING_PAGE_NAME returns PAGE_NAME if the page isn't included.
+    assertEquals("IncludedPage",includedRoot.getVariable("RUNNING_PAGE_NAME"));
   }
 
   @Test
@@ -76,7 +76,7 @@ public class WidgetRootTest {
     PageData data = secondLevelIncludedPage.getData();
     assertEquals(SECOND_LEVEL_INCLUDED_PAGE_NAME,data.getVariable("PAGE_NAME"));
     assertEquals(SECOND_LEVEL_INCLUDED_PAGE_NAME, secondLevelRoot.getVariable("PAGE_NAME"));
-    assertEquals(ROOT_PAGE_NAME,secondLevelRoot.getVariable("PARENT_NAME"));
+    assertEquals(ROOT_PAGE_NAME,secondLevelRoot.getVariable("RUNNING_PAGE_NAME"));
   }
 
   @Test

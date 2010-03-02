@@ -24,12 +24,12 @@ public class WidgetRoot extends ParentWidget {
   private WidgetRoot includingPage;
   private static final Map<String, String> includingPagePropertyMap = new HashMap<String, String>();
 
-  private static final String PARENT_NAME = "PARENT_NAME";
-  private static final String PARENT_PATH = "PARENT_PATH";
+  private static final String RUNNING_PAGE_NAME = "RUNNING_PAGE_NAME";
+  private static final String RUNNING_PAGE_PATH = "RUNNING_PAGE_PATH";
 
   static {
-    includingPagePropertyMap.put(PARENT_NAME, "PAGE_NAME");
-    includingPagePropertyMap.put(PARENT_PATH, "PAGE_PATH");
+    includingPagePropertyMap.put(RUNNING_PAGE_NAME,"PAGE_NAME");
+    includingPagePropertyMap.put(RUNNING_PAGE_PATH,"PAGE_PATH");
   }
 
   //Constructor for IncludeWidget support (alias locale & scope)
