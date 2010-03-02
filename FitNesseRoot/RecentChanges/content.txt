@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.RestfulServices||16:18:38 Tue, Mar 02, 2010|
 |JunkPage.JunkTest||09:08:21 Sat, Feb 27, 2010|
 |JunkPage.LisasNpeBug.RollInTests.RothRollinInstructions1||22:01:05 Fri, Feb 26, 2010|
 |JunkPage.LisasNpeBug||21:54:55 Fri, Feb 26, 2010|
@@ -18,7 +19,6 @@
 |FitNesse.SuiteAcceptanceTests.PageFooter||08:43:11 Wed, Feb 03, 2010|
 |FitNesse.UserGuide.SliM.ValueComparisons||19:06:36 Tue, Feb 02, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.RegularExpressionMatching||19:03:43 Tue, Feb 02, 2010|
-|FitNesse.UserGuide.RestfulServices||09:34:14 Mon, Feb 01, 2010|
 |JunkParent||09:50:16 Fri, Jan 29, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.ContentsTestsIncludeWithHelp||17:33:03 Sun, Jan 17, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.TestContentsHelp||17:32:46 Sun, Jan 17, 2010|
@@ -98,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BlankCellsInNestedScenariosShouldWork||15:39:30 Sun, Oct 18, 2009|
 |ErrorLogs||09:13:03 Mon, Oct 12, 2009|
 |JunkParent.DotNetTests||09:11:04 Mon, Oct 12, 2009|
-|JunkParent.TableTableTest||17:52:33 Sat, Oct 10, 2009|
-|JunkPage.GivWenZen||16:40:24 Mon, Oct 05, 2009|
