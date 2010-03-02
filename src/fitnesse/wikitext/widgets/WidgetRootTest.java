@@ -16,26 +16,25 @@ import static org.junit.Assert.assertTrue;
 
 public class WidgetRootTest {
   private WikiPage rootPage;
+  private PageCrawler crawler;
 
   @Before
   public void setUp() throws Exception {
     rootPage = InMemoryPage.makeRoot("RooT");
+    crawler = rootPage.getPageCrawler();
   }
 
   //PAGE_NAME: Test
   @Test
   public void testPageNameVariable() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageData data = root.getData();
-    WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
-    data = page.getData();
+    WikiPage page = crawler.addPage(rootPage, PathParser.parse("SomePage"));
+    PageData data = page.getData();
     assertEquals("SomePage", data.getVariable("PAGE_NAME"));
   }
 
   @Test
   public void testParentPageNameVariable() throws Exception
   {
-    PageCrawler crawler = rootPage.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     final String ROOT_PAGE_NAME = "RootPage";
     WikiPage root = crawler.addPage(rootPage, PathParser.parse(ROOT_PAGE_NAME));
@@ -52,7 +51,6 @@ public class WidgetRootTest {
   @Test
   public void testParentPageNameVariableWithNoParent() throws Exception
   {
-    PageCrawler crawler = rootPage.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     WikiPage root = crawler.addPage(rootPage, PathParser.parse("RootPage"));
     WikiPage includedPage = crawler.addPage(rootPage, PathParser.parse("IncludedPage"));
@@ -65,7 +63,6 @@ public class WidgetRootTest {
   @Test
   public void testMultipleLevelsOfIncludedPages() throws Exception
   {
-    PageCrawler crawler = rootPage.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     final String ROOT_PAGE_NAME = "RootPage";
     WikiPage root = crawler.addPage(rootPage, PathParser.parse(ROOT_PAGE_NAME));
@@ -83,55 +80,63 @@ public class WidgetRootTest {
   }
 
   @Test
-  public void testVariablesOneTheRootPage() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageData data = root.getData();
+  public void testVariablesOnTheRootPage() throws Exception {
+    PageData data = rootPage.getData();
     data.setContent("!define v1 {Variable #1}\n");
-    root.commit(data);
-    WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "!define v2 {blah}\n${v1}\n");
+    rootPage.commit(data);
+    WikiPage page = crawler.addPage(rootPage, PathParser.parse("SomePage"), "!define v2 {blah}\n${v1}\n");
     data = page.getData();
     assertEquals("Variable #1", data.getVariable("v1"));
   }
 
   @Test
+  public void VariableOnParentShouldBeAbleToUseVariablesDeclaredOnChild() throws Exception {
+    WikiPagePath parentPath = PathParser.parse("ParentPage");
+    WikiPagePath childPath = PathParser.parse("ChildPage");
+    WikiPage parent = crawler.addPage(rootPage, parentPath, "!define X (value=${Y})\n");
+    WikiPage child = crawler.addPage(parent, childPath, "!define Y {saba}\n");
+    PageData childData = child.getData();
+    assertEquals("value=saba", childData.getVariable("X"));
+  }
+
+  @Test
     public void testVariablesFromSystemProperties() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageData data = root.getData();
+    PageData data = rootPage.getData();
     System.getProperties().setProperty("widgetRootTestKey", "widgetRootTestValue");
-    root.commit(data);
-    WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "!define v2 {blah}\n${v1}\n");
+    rootPage.commit(data);
+    WikiPage page = crawler.addPage(rootPage, PathParser.parse("SomePage"), "!define v2 {blah}\n${v1}\n");
     data = page.getData();
     assertEquals("widgetRootTestValue", data.getVariable("widgetRootTestKey"));
   }
 
   @Test
     public void testProcessLiterals() throws Exception {
-    WidgetRoot root = new WidgetRoot("", rootPage);
-    assertEquals(0, root.getLiterals().size());
-    String result = root.processLiterals("With a !-literal-! in the middle");
+    WidgetRoot widgetRoot = new WidgetRoot("", rootPage);
+    assertEquals(0, widgetRoot.getLiterals().size());
+    String result = widgetRoot.processLiterals("With a !-literal-! in the middle");
     RegexTestCase.assertNotSubString("!-", result);
-    assertEquals(1, root.getLiterals().size());
-    assertEquals("literal", root.getLiteral(0));
+    assertEquals(1, widgetRoot.getLiterals().size());
+    assertEquals("literal", widgetRoot.getLiteral(0));
   }
 
   @Test
     public void testProcessLiteralsCalledWhenConstructed() throws Exception {
-    WidgetRoot root = new WidgetRoot("With !-another literal-! in the middle", rootPage);
-    assertEquals(1, root.getLiterals().size());
-    assertEquals("another literal", root.getLiteral(0));
+    WidgetRoot widgetRoot = new WidgetRoot("With !-another literal-! in the middle", rootPage);
+    assertEquals(1, widgetRoot.getLiterals().size());
+    assertEquals("another literal", widgetRoot.getLiteral(0));
   }
 
   @Test
     public void testLiteralsInConstructionAndAfterwards() throws Exception {
-    WidgetRoot root = new WidgetRoot("the !-first-! literal", rootPage);
-    String result = root.processLiterals("the !-second-! literal");
+    WidgetRoot widgetRoot = new WidgetRoot("the !-first-! literal", rootPage);
+    String result = widgetRoot.processLiterals("the !-second-! literal");
 
-    assertEquals("the first literal", root.render());
+    assertEquals("the first literal", widgetRoot.render());
     //Paren Literal: () -> ??
     assertEquals("the !lit?1? literal", result);
-    assertEquals(2, root.getLiterals().size());
-    assertEquals("first", root.getLiteral(0));
-    assertEquals("second", root.getLiteral(1));
+    assertEquals(2, widgetRoot.getLiterals().size());
+    assertEquals("first", widgetRoot.getLiteral(0));
+    assertEquals("second", widgetRoot.getLiteral(1));
   }
 
   @Test
@@ -154,9 +159,7 @@ public class WidgetRootTest {
 
   @Test
   public void carriageReturnsShouldNotMatterIfPresentOnPage() throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = root.getPageCrawler();
-    WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "''italics''\r\n\r'''bold'''\r\n\r");
+    WikiPage page = crawler.addPage(rootPage, PathParser.parse("TestPage"), "''italics''\r\n\r'''bold'''\r\n\r");
     PageData data = page.getData();
     String html = data.getHtml();
     assertEquals("<i>italics</i><br/><b>bold</b><br/>", html);
@@ -164,13 +167,12 @@ public class WidgetRootTest {
 
   @Test
   public void nestedTableExpansion () throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageData data = root.getData();
+    PageData data = rootPage.getData();
     data.setContent("!define AA {|aa|\n}\n" +
                     "!define BB (|${AA}|\n)\n"
                    );
-    root.commit(data);
-    WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "${BB}\n");
+    rootPage.commit(data);
+    WikiPage page = crawler.addPage(rootPage, PathParser.parse("SomePage"), "${BB}\n");
     data = page.getData();
     String html = data.getHtml();
 
@@ -182,13 +184,12 @@ public class WidgetRootTest {
 
   @Test
   public void nestedNewlineExpansion () throws Exception {
-    WikiPage root = InMemoryPage.makeRoot("RooT");
-    PageData data = root.getData();
+    PageData data = rootPage.getData();
     data.setContent("!define LIST {\n * list\n}\n" +
                     "!define BB (|${LIST}|\n)\n"
                    );
-    root.commit(data);
-    WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "${BB}\n");
+    rootPage.commit(data);
+    WikiPage page = crawler.addPage(rootPage, PathParser.parse("SomePage"), "${BB}\n");
     data = page.getData();
     String html = data.getHtml();
 
@@ -197,7 +198,5 @@ public class WidgetRootTest {
                     .matcher(html).find();
 
     assertTrue("[" + html + "]", found);
-
-
   }
 }
