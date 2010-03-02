@@ -43,6 +43,10 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
      return suiteExecutionReport.getRootPath();
   }
 
+  public String getFitNesseVersion() {
+    return new FitNesseVersion().toString();
+  }
+
   public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
     referenceToCurrentTest.setTestSummary(testSummary);
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
