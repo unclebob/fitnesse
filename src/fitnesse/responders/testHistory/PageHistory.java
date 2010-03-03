@@ -203,6 +203,13 @@ public class PageHistory {
       TestHistory.makeResultFileName(counts, time));
   }
 
+  public Date getLatestDate() {
+    Set<Date> dateSet = testResultMap.keySet();
+    List<Date> dates = new ArrayList<Date>(dateSet);
+    Collections.sort(dates);
+    return dates.get(dates.size()-1);
+  }
+
 
   public static class TestResultRecord extends TestSummary {
     private File file;
