@@ -5,12 +5,22 @@ package fitnesse.responders.run;
 import fitnesse.responders.run.formatters.*;
 
 public class SuiteResponder extends TestResponder {
+  private boolean includeHtml;
+
   String getTitle() {
     return "Suite Results";
   }
 
+  protected void checkArguments() {
+    super.checkArguments();
+    includeHtml |= request.hasInput("includehtml");
+  }
+
   void addXmlFormatter() throws Exception {
-    formatters.add(new CachingSuiteXmlFormatter(context, page, makeResponseWriter()));
+    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
+    if (includeHtml)
+      xmlFormatter.includeHtml();
+    formatters.add(xmlFormatter);
   }
 
   void addHtmlFormatter() throws Exception {
