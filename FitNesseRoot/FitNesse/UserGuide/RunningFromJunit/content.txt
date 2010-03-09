@@ -11,3 +11,13 @@ FITNESSE_ROOT_PATH is the directory where the wiki pages are, the one which cont
 !2 Integration with graphical runners
 
 For better reporting in JUnit graphical test runners, you can use the fitnesse.junit.FitNesseSuite JUnit 4 runner. This will list individual test pages in the JUnit report window and give you detailed statistics for individual tests in a suite. To use it, set the test or suite name to run using the @Name attribute, the root FitNesse path using !-@FitNesseDir-! attribute and the result directory using !-@OutputDir-! attribute. [[Here's a full example][http://github.com/unclebob/fitnesse/blob/master/src/fitnesse/junit/FitNesseSuiteExampleTest.java]]
+
+!2 Outputing JUnit XML files
+
+For integration with continous build systems test history statistics, override the default listener for the JUnitHelper and set it to a JUnitXMLTestListener instance. 
+
+{{{
+  JUnitHelper helper = new JUnitHelper(fitNesseRootDir,htmlOutputDir,new JUnitXMLTestListener(xmlOutputDir));
+}}}
+
+Then point your CI system to pick up JUnit XML files from the folder specified as xmlOutputDir. Remember to also archive the html files from the htmlOutputDir if you want to preserve them as a build artifact
