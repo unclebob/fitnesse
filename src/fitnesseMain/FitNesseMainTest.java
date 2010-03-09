@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
+import static org.junit.matchers.JUnitMatchers.*;
 import util.FileUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -56,7 +57,7 @@ public class FitNesseMainTest {
     FitNesseMain.updateAndLaunch(args, context, fitnesse);
     verify(fitnesse, times(1)).applyUpdates();
     verify(fitnesse, times(1)).start();
-    verify(fitnesse, times(1)).executeSingleCommand("/command", System.out);
+    verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
     verify(fitnesse, times(1)).stop();
   }
 
@@ -127,12 +128,24 @@ public class FitNesseMainTest {
 
   @Test
   public void canRunSingleCommand() throws Exception {
+    String response = runFitnesseMainWith("-o",  "-c", "/root");
+    assertThat(response, containsString("Command Output"));
+  }
+
+  @Test
+  public void canRunSingleCommandWithAuthentication() throws Exception {
+    String response = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
+    assertThat(response, containsString("HTTP/1.1 200 OK"));
+  }
+
+  private String runFitnesseMainWith(String... args) throws Exception {
+    FitNesseMain.dontExitAfterSingleCommand = true;
     PrintStream out = System.out;
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     System.setOut(new PrintStream(outputBytes));
-    FitNesseMain.main(new String[] {"-o", "-c", "/root"});
+    FitNesseMain.main(args);
     System.setOut(out);
     String response = outputBytes.toString();
-    assertTrue(response.indexOf("Command Output") != -1);
+    return response;
   }
 }

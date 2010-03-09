@@ -17,13 +17,13 @@ public class ArgumentsTest {
     assertEquals(".", args.getRootPath());
   }
 
-  private Arguments makeArgs(String[] argArray) {
+  private Arguments makeArgs(String... argArray) {
     return args = FitNesseMain.parseCommandLine(argArray);
   }
 
   @Test
   public void testArgumentsDefaults() throws Exception {
-    makeArgs(new String[] {});
+    makeArgs();
     assertEquals(80, args.getPort());
     assertEquals(".", args.getRootPath());
     assertEquals("FitNesseRoot", args.getRootDirectory());
@@ -51,8 +51,8 @@ public class ArgumentsTest {
 
   @Test
   public void testAllArguments() throws Exception {
-    args = makeArgs(new String[] { "-p", "81", "-d", "directory", "-r", "root",
-        "-l", "myLogDirectory", "-o", "-e", "22" });
+    args = makeArgs("-p", "81", "-d", "directory", "-r", "root",
+        "-l", "myLogDirectory", "-o", "-e", "22");
     assertNotNull(args);
     assertEquals(81, args.getPort());
     assertEquals("directory", args.getRootPath());
@@ -64,8 +64,8 @@ public class ArgumentsTest {
 
   @Test
   public void testNotOmitUpdates() throws Exception {
-    args = makeArgs(new String[] { "-p", "81", "-d", "directory", "-r", "root",
-        "-l", "myLogDirectory" });
+    args = makeArgs("-p", "81", "-d", "directory", "-r", "root",
+        "-l", "myLogDirectory");
     assertNotNull(args);
     assertEquals(81, args.getPort());
     assertEquals("directory", args.getRootPath());
@@ -75,36 +75,22 @@ public class ArgumentsTest {
   }
 
   @Test
-  public void commandWillBePrefixedWithSlashIfNone() throws Exception {
-    args = makeArgs(new String[] {"-c", "someCommand"});
-    assertNotNull(args);
-    assertEquals("/someCommand", args.getCommand());
-  }
-
-  @Test
-  public void commandWillNotBePrefixedWithExtraSlashIfAlreadyPresent() throws Exception {
-    args = makeArgs(new String[] {"-c", "/someCommand"});
-    assertNotNull(args);
-    assertEquals("/someCommand", args.getCommand());
-  }
-
-  @Test
   public void commandShouldUseDifferentDefaultPort() throws Exception {
-    args = makeArgs(new String[] {"-c", "someCommand"});
+    args = makeArgs("-c", "someCommand");
     assertNotNull(args);
     assertEquals(Arguments.DEFAULT_COMMAND_PORT, args.getPort());
   }
 
   @Test
   public void commandShouldAllowPortToBeSet() throws Exception {
-    args = makeArgs(new String[] {"-c", "someCommand", "-p", "666"});
+    args = makeArgs("-c", "someCommand", "-p", "666");
     assertNotNull(args);
     assertEquals(666, args.getPort());
   }
 
   @Test
   public void testBadArgument() throws Exception {
-    args = makeArgs(new String[] { "-x" });
+    args = makeArgs("-x");
     assertNull(args);
   }
 }

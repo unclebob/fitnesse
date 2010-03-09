@@ -93,10 +93,8 @@ public class Arguments {
   public String getCommand() {
     if (command == null)
       return null;
-    else if (command.startsWith("/"))
-      return command;
     else
-      return "/" + command;
+      return command;
   }
 
   public void setCommand(String command) {
