@@ -4,6 +4,7 @@ package fitnesse.slim.test;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class TestSlim implements TestSlimInterface {
   private boolean niladWasCalled = false;
@@ -21,6 +22,7 @@ public class TestSlim implements TestSlimInterface {
   private Boolean[] booleanArray;
   private Double[] doubleArray;
   private Zork zork;
+  private Map<String, String> map;
 
   public TestSlim() {
 
@@ -226,6 +228,16 @@ public class TestSlim implements TestSlimInterface {
 
   public String concatenateThreeArgs(String first, String second, String third) {
     return first + " " + second + " " + third;
+  }
+
+  public void setMap(Map map) {
+    System.out.println("set map = " + map);
+    this.map = map;
+  }
+
+  public Map getMap() {
+    System.out.println("got map = " + map);
+    return  map;
   }
   
   @SuppressWarnings("serial")
