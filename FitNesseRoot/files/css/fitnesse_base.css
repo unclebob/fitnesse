@@ -58,6 +58,7 @@ table {
   margin: 5px;
   padding: 0px;
   border-width: 1px 0px 0px 1px;
+  white-space:pre;
 }
 
 table.plain_text_table {
@@ -652,6 +653,7 @@ table.dirListing {
   border: 0px;
   width: 99%;
   font-size: 1.0em;
+  white-space:nowrap;
 }
 
 .dirListing td, .dirListing th {
@@ -667,14 +669,17 @@ table.dirListing {
 
 .pass {
   background-color: #AAFFAA;
+  white-space:nowrap;
 }
 
 .fail {
   background-color: #FFAAAA;
+  white-space:nowrap;
 }
 
 .error {
   background-color: #FFFFAA;
+  white-space:nowrap;
 }
 
 .ignore {

@@ -21,6 +21,16 @@ public class WidgetRoot extends ParentWidget {
   private boolean doEscaping = true;
   private List<String> literals = new LinkedList<String>();
   private boolean isGatheringInfo = false;
+  private WidgetRoot includingPage;
+  private static final Map<String, String> includingPagePropertyMap = new HashMap<String, String>();
+
+  private static final String RUNNING_PAGE_NAME = "RUNNING_PAGE_NAME";
+  private static final String RUNNING_PAGE_PATH = "RUNNING_PAGE_PATH";
+
+  static {
+    includingPagePropertyMap.put(RUNNING_PAGE_NAME,"PAGE_NAME");
+    includingPagePropertyMap.put(RUNNING_PAGE_PATH,"PAGE_PATH");
+  }
 
   //Constructor for IncludeWidget support (alias locale & scope)
   public WidgetRoot(WikiPage aliasPage, ParentWidget imposterWidget) throws Exception {
@@ -33,6 +43,7 @@ public class WidgetRoot extends ParentWidget {
     this.literals = aliasRoot.literals;
     this.isGatheringInfo = aliasRoot.isGatheringInfo;
     this.page = aliasPage;
+    this.includingPage = aliasRoot;
   }
 
   public WidgetRoot getRoot() {
@@ -95,16 +106,42 @@ public class WidgetRoot extends ParentWidget {
   }
 
   public String getVariable(String key) throws Exception {
-    String value = variables.get(key);
+    String value = getValueOfVariableFromAllPossibleSources(key);
+    if (value != null) {
+      value = replaceAllKnownVariables(value);
 
-    if (key.equals("PAGE_NAME"))
-      value = page.getName();
-    else if (key.equals("PAGE_PATH"))
-      value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
-    else if (key.equals("FITNESSE_PORT"))
-      value = Integer.toString(FitNesseContext.globalContext.port);
-    else if (key.equals("FITNESSE_ROOTPATH"))
-      value = FitNesseContext.globalContext.rootPath;
+      value = value.replaceAll(VariableWidget.prefixDisabled, VariableWidget.prefix);
+      variables.put(key, value);
+    }
+    return value;
+  }
+
+  private String replaceAllKnownVariables(String value) throws Exception {
+    int pos = 0;
+    while ((pos = includesVariableAt(value, pos)) != -1) {
+      value = replaceVariable(value, pos);
+      pos++;
+    }
+    return value;
+  }
+
+  private String getValueOfVariableFromAllPossibleSources(String key) throws Exception {
+    String value = getSpecialVariableValue(key);
+    if (value == null)
+      value = variables.get(key);
+    if (value == null)
+      value = getVariableFromIncludingPage(key);
+    if (value == null)
+      value = getVariableFromParentPages(key);
+    if (value == null)
+      value = System.getenv(key);
+    if (value == null)
+      value = System.getProperty(key);
+    return value;
+  }
+
+  private String getVariableFromParentPages(String key) throws Exception {
+    String value = null;
     WikiPage page = getWikiPage();
     while (value == null && !page.getPageCrawler().isRoot(page)) {
       page = page.getParentForVariables(); // follow parents for variables
@@ -113,26 +150,44 @@ public class WidgetRoot extends ParentWidget {
       pageData.setLiterals(this.getLiterals());
       value = pageData.getVariable(key);
     }
-    if (value == null) {
-      value = System.getenv(key);
-    }
-    if (value == null) {
-      value = System.getProperty(key);
-    }
+    return value;
+  }
 
-    if (value != null) {
-      while (includesVariable(value))
-        value = replaceVariable(value);
+  private String getSpecialVariableValue(String key) throws Exception {
+    String value = null;
+    if (key.equals("PAGE_NAME"))
+      value = page.getName();
+    else if (key.equals("PAGE_PATH"))
+      value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
+    else if (key.equals("FITNESSE_PORT"))
+      value = Integer.toString(FitNesseContext.globalContext.port);
+    else if (key.equals("FITNESSE_ROOTPATH"))
+      value = FitNesseContext.globalContext.rootPath;
+    return value;
+  }
 
-      value = value.replaceAll(VariableWidget.prefixDisabled, VariableWidget.prefix);
-      variables.put(key, value);
+  private String getVariableFromIncludingPage(String key) throws Exception {
+    String value = null;
+    if (includingPagePropertyMap.containsKey(key)) {
+      String newKey = includingPagePropertyMap.get(key);
+      if (includingPage == null) {
+        value = getVariable(newKey);
+      } else {
+        value = includingPage.getVariable(key);
+        if (value == null) {
+          value = includingPage.getVariable(newKey);
+        }
+      }
     }
     return value;
   }
 
-  public boolean includesVariable(String string) {
+  public int includesVariableAt(String string, int pos) {
     Matcher matcher = VariableWidget.pattern.matcher(string);
-    return matcher.find();
+    if (matcher.find(pos))
+      return matcher.start();
+    else
+      return -1;
   }
 
   //
@@ -143,14 +198,16 @@ public class WidgetRoot extends ParentWidget {
   // Nested tables cannot be expanded in place due to ambiguities, and
   // newlines internal to table cells wreak havoc on table recognition.
   //
-  public String replaceVariable(String string) throws Exception {
+  public String replaceVariable(String string, int pos) throws Exception {
     Matcher matcher = VariableWidget.pattern.matcher(string);
-    if (matcher.find()) {
+    if (matcher.find(pos)) {
       String name = matcher.group(1);
-      String value = processLiterals
-                     ( getVariable(name)
-                       .replaceAll("(^|[^|])\n", "$1" + PreProcessorLiteralWidget.literalNewline)
-                     );
+      String variableText = getVariable(name);
+      if (variableText == null) {
+        return string;
+      }
+      String replacedValue = variableText.replaceAll("(^|[^|])\n", "$1" + PreProcessorLiteralWidget.literalNewline);
+      String value = processLiterals(replacedValue);
       Matcher tblMatcher = StandardTableWidget.pattern.matcher(value);
       if (tblMatcher.find()) value = "!{" + name + "}";
       return string.substring(0, matcher.start()) + value + string.substring(matcher.end());

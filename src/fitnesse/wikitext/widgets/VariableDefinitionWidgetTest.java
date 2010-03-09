@@ -2,12 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
+import org.junit.Test;
 
 public class VariableDefinitionWidgetTest extends WidgetTestCase {
   public WikiPage root;
@@ -31,10 +28,22 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     assertMatch("!define abc {1}");
     assertMatch("!define abc (1)");
     assertMatch("!define x (!define y {123})");
+    assertMatch("!define x [1]");
+    assertMatch("!define x (!define y [123])");
+    assertMatch("!define x [!define y {123}]");
+
 
     assertNoMatch("!define");
     assertNoMatch("!define x");
     assertNoMatch(" !define x {1}");
+    
+    assertNoMatch("!define x {1)");
+    assertNoMatch("!define x {1]");
+    assertNoMatch("!define x (1]");
+    assertNoMatch("!define x (1}");
+    assertNoMatch("!define x [x)");
+    assertNoMatch("!define x [x}");
+
 
     //Test allow periods
     assertMatch("!define x.y.z {1}");
@@ -45,6 +54,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     //Paren Literal: Test matches
     assertMatch("!define curly {!-some curly literal-!}");
     assertMatch("!define paren (!-some paren literal-!)");
+    assertMatch("!define brace [!-some brace literal-!]");
   }
 
   public void testHtml() throws Exception {
@@ -60,6 +70,27 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     widget = new VariableDefinitionWidget(widgetRoot, "!define xyzzy (\nbird\n)\n");
     widget.render();
     assertEquals("\nbird\n", widgetRoot.getVariable("xyzzy"));
+  }
+
+  @Test
+  public void testBraceParsesNameAndValue() throws Exception {
+    VariableDefinitionWidget widget = new VariableDefinitionWidget(widgetRoot, "!define x {1}");
+    assertEquals("x", widget.name);
+    assertEquals("1", widget.value);
+  }
+
+  @Test
+  public void testParenParsesNameAndValue() throws Exception {
+    VariableDefinitionWidget widget = new VariableDefinitionWidget(widgetRoot, "!define x (1)");
+    assertEquals("x", widget.name);
+    assertEquals("1", widget.value);
+  }
+
+  @Test
+  public void testBracketParsesNameAndValue() throws Exception {
+    VariableDefinitionWidget widget = new VariableDefinitionWidget(widgetRoot, "!define x [1]");
+    assertEquals("x", widget.name);
+    assertEquals("1", widget.value);
   }
 
   public void testRenderedText() throws Exception {
@@ -97,10 +128,23 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     assertNotSubString("SOME_VARIABLE=Variable #1</span><br/><br/><span", data.getHtml());
   }
 
-  public void testAsWikiText() throws Exception {
+  public void testBraceAsWikiText() throws Exception {
     VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x {1}\n");
     assertEquals("!define x {1}", widget.asWikiText());
-    widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x ({1})\n");
+  }
+
+  public void testParenAsWikiText() throws Exception {
+    VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x (1)\n");
+    assertEquals("!define x (1)", widget.asWikiText());
+  }
+
+  public void testBracketAsWikiText() throws Exception {
+    VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x [1]\n");
+    assertEquals("!define x [1]", widget.asWikiText());
+  }
+
+  public void testParentAndBraceAsWikeText() throws Exception {
+    VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x ({1})\n");
     assertEquals("!define x ({1})", widget.asWikiText());
   }
 }

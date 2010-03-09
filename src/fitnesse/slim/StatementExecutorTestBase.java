@@ -16,11 +16,20 @@ public abstract class StatementExecutorTestBase {
   protected static final String INSTANCE_NAME = "myInstance";
   protected StatementExecutorInterface statementExecutor;
 
-  // some untyped languages do not explicitely define void return values
-  protected abstract String voidMessage();
+  // some untyped languages do not explicitly define void return values
+  protected String voidMessage() {
+    return "/__VOID__/";
+  }
 
   // echo is a keyword in some languages, allow for other methodNames
-  protected abstract String echoMethodName();
+  protected String echoMethodName() {
+    return "echo";
+  }
+
+  // delete is a keyword in some languages, allow for other methodNames
+  protected String deleteMethodName() {
+    return "delete";
+  }
 
   protected int library = 0;
 
@@ -145,7 +154,7 @@ public abstract class StatementExecutorTestBase {
     createNamedFixture();
     FileSupport library = createFileSupportLibrary();
     assertNotNull(library);
-    Object result = statementExecutor.call(INSTANCE_NAME, "delete", "filename.txt");
+    Object result = statementExecutor.call(INSTANCE_NAME, deleteMethodName(), "filename.txt");
     assertEquals(voidMessage(), result);
     assertTrue(library.deleteCalled());
   }
@@ -155,7 +164,7 @@ public abstract class StatementExecutorTestBase {
     createFixtureInstance(echoLibraryName());
     FileSupport library = createFileSupportLibrary();
     assertNotNull(library);
-    Object result = statementExecutor.call(INSTANCE_NAME, "delete", "filename.txt");
+    Object result = statementExecutor.call(INSTANCE_NAME, deleteMethodName(), "filename.txt");
     assertEquals(voidMessage(), result);
     assertTrue(library.deleteCalled());
   }

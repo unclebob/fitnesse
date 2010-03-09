@@ -17,6 +17,9 @@
     #if($result.Tags)
     <tags>$result.Tags</tags>
     #end
+    #if($formatter.shouldIncludeHtml())
+      <content><![CDATA[$result.Content]]></content>
+    #end 
 
   </result>
   #end

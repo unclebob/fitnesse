@@ -65,6 +65,14 @@ public class VariableWidgetTest extends WidgetTestCase {
     assertEquals("zot", w.render());
   }
 
+  public void testVariableInParentPageCanReferenceVariableInChildPage() throws Exception {
+    WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define X (value=${Y})\n");
+    WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "!define Y {child}\n${X}\n");
+
+    String html = child.getData().getHtml();
+    assertSubString("value=child", html);
+  }
+
   public void testUndefinedVariable() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
     ParentWidget widgetRoot = new WidgetRoot("", page);

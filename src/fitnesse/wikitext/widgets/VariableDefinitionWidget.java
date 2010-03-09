@@ -8,19 +8,21 @@ import java.util.regex.Pattern;
 import fitnesse.html.HtmlUtil;
 
 public class VariableDefinitionWidget extends ParentWidget {
-  public static final String REGEXP = "^!define [\\w\\.]+ +(?:(?:\\{[^}]*\\})|(?:\\([^)]*\\)))";
+  public static final String REGEXP = "^!define [\\w\\.]+ +(?:(?:\\{[^}]*\\})|(?:\\([^)]*\\))|(?:\\[[^]]*\\]))";
   private static final Pattern pattern =
-    Pattern.compile("^!define ([\\w\\.]+) +([\\{\\(])(.*)[\\}\\)]",
+    Pattern.compile("^!define ([\\w\\.]+) +([\\{\\(\\[])(.*)[\\}\\)\\]]",
       Pattern.DOTALL + Pattern.MULTILINE);
 
   public String name;
   public String value;
+  public String bracket;
 
   public VariableDefinitionWidget(ParentWidget parent, String text) throws Exception {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
       name = match.group(1);
+      bracket = match.group(2);
       value = match.group(3);
     }
   }
@@ -32,10 +34,12 @@ public class VariableDefinitionWidget extends ParentWidget {
 
   public String asWikiText() throws Exception {
     String text = "!define " + name + " ";
-    if (value.indexOf("{") == -1)
+    if (bracket.equals("{"))
       text += "{" + value + "}";
-    else
+    else if (bracket.equals("("))
       text += "(" + value + ")";
+    else
+      text += "[" + value + "]";
     return text;
   }
 }

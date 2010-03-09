@@ -11,35 +11,45 @@ public class VariableStore {
   private Map<String, Object> variables = new HashMap<String, Object>();
   private Matcher symbolMatcher;
 
-  public void setVariable(String name, Object value) {
+  public void setSymbol(String name, Object value) {
     variables.put(name, value);
   }
 
-  public Object[] replaceVariables(Object[] args) {
+  public Object[] replaceSymbols(Object[] args) {
     Object result[] = new Object[args.length];
     for (int i = 0; i < args.length; i++)
-      result[i] = replaceVariable(args[i]);
+      result[i] = replaceSymbol(args[i]);
 
     return result;
   }
 
-  private List<Object> replaceArgsInList(List<Object> objects) {
+  private List<Object> replaceSymbolsInList(List<Object> objects) {
     List<Object> result = new ArrayList<Object>();
     for (Object object : objects)
-      result.add(replaceVariable(object));
+      result.add(replaceSymbol(object));
 
     return result;
   }
 
   @SuppressWarnings("unchecked")
-  private Object replaceVariable(Object object) {
+  private Object replaceSymbol(Object object) {
     if (object instanceof List)
-      return (replaceArgsInList((List<Object>) object));
+      return (replaceSymbolsInList((List<Object>) object));
     else
-      return (replaceVariablesInString((String) object));
+      return (trimDoubleDollars(replaceSymbolsInString((String) object)));
   }
 
-  private Object replaceVariablesInString(String arg) {
+  private String trimDoubleDollars(String s) {
+    if (s != null) {
+      int doubleDollarIndex = 0;
+      while ((doubleDollarIndex = s.indexOf("$$")) != -1) {
+        s = s.substring(0, doubleDollarIndex) + s.substring(doubleDollarIndex + 1);
+      }
+    }
+    return s;
+  }
+
+  private String replaceSymbolsInString(String arg) {
     Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     int startingPosition = 0;
     while (true) {
@@ -48,14 +58,23 @@ public class VariableStore {
       }
       symbolMatcher = symbolPattern.matcher(arg);
       if (symbolMatcher.find(startingPosition)) {
-        String symbolName = symbolMatcher.group(1);
-        arg = replaceSymbolInArg(arg, symbolName);
-        startingPosition = symbolMatcher.start(1);
+        if (isDoubleDollar(arg)) {
+          arg = arg.substring(0, symbolMatcher.start()) + arg.substring(symbolMatcher.start() + 1);
+          startingPosition += 2;
+        } else {
+          String symbolName = symbolMatcher.group(1);
+          arg = replaceSymbolInArg(arg, symbolName);
+          startingPosition = symbolMatcher.start(1);
+        }
       } else {
         break;
       }
     }
     return arg;
+  }
+
+  private boolean isDoubleDollar(String arg) {
+    return symbolMatcher.start() > 0 && arg.charAt(symbolMatcher.start() - 1) == '$';
   }
 
   private String replaceSymbolInArg(String arg, String symbolName) {

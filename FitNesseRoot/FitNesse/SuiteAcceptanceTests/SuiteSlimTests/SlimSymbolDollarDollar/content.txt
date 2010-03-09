@@ -1,0 +1,10 @@
+$$ should prevent symbol expression and reduce to a single $.  
+So $$a should translate to $a.
+
+|script|
+|$x=|echo|bob|
+|check|echo|$$x|$$x|
+|check|echo|$$a|$$a|
+|check|echo|$$|$$|
+
+

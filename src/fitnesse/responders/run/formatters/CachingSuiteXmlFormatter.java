@@ -19,6 +19,7 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   private VelocityContext velocityContext;
   private VelocityEngine velocityEngine;
   private Writer writer;
+  private boolean includeHtml = false;
 
   public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) throws Exception {
     super(context, page);
@@ -61,4 +62,11 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     return new TestExecutionReport();
   }
 
+  public void includeHtml() {
+    includeHtml = true;
+  }
+
+  public boolean shouldIncludeHtml() {
+    return includeHtml;
+  }
 }

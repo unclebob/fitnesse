@@ -4,5 +4,3 @@
 |given page|CommentTextPage|with content|one!-<br/>-!#two!lit?1?three|
 |it should contain|one!-<br/>-!three|
 |and should not contain|two|
-
-

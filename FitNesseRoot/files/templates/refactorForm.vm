@@ -1,0 +1,41 @@
+#set ($page_title="Refactor: $pageTitle.link")
+#parse("pageHead.vm")
+				<h2>Replace</h2>
+				<form action="$refactoredRootPage" method="post">
+					<input type="hidden" name="responder" value="replace"/>
+Search String:
+					<input type="text" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+Replacement:
+					<input type="text" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+					<br/>
+					<input type="submit" name="replace" value="Replace!"/>
+<br/><br/>
+					<b>Search &amp; Replace: </b>
+Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).  
+				</form>
+				<hr/>
+				<h3>Delete:</h3>
+Delete this entire sub-wiki.				<form method="get" action="$refactoredRootPage">
+					<input type="submit" name="" value="Delete Page"/>
+					<input type="hidden" name="responder" value="deletePage"/>
+				</form>
+<br/>				<h3>Rename:</h3>
+				<form method="get" action="$refactoredRootPage">
+					<input type="hidden" name="responder" value="renamePage"/>
+  New Name: 
+					<input type="text" name="newName" value="" size="50"/>
+<br/>
+					<input type="checkbox" name="refactorReferences"/>
+ - Find all references to this page and change them accordingly (May take several minutes)<br/>
+					<input type="submit" name="" value="Rename Page"/>
+				</form>
+<br/>				<h3>Move:</h3>
+				<form method="get" action="$refactoredRootPage">
+					<input type="hidden" name="responder" value="movePage"/>
+New Location: 
+					<input type="text" name="newLocation" value="" size="80"/>
+<br/>
+					<input type="checkbox" name="refactorReferences"/>
+ - Find all references to this page and change them accordingly (May take several minutes)<br/>
+					<input type="submit" name="" value="Move Page"/>
+				</form>

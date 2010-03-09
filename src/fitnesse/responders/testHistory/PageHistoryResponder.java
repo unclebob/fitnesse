@@ -20,7 +20,6 @@ import util.FileUtil;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -62,19 +61,19 @@ public class PageHistoryResponder implements SecureResponder {
   }
 
   private Response tryToMakeTestExecutionReport(Request request) throws Exception {
-    Date resultDate = getResultDate(request);
+    Date resultDate;
+    String date = (String) request.getInput("resultDate");
+    if ("latest".equals(date)) {
+      resultDate = pageHistory.getLatestDate();
+    } else {
+      resultDate = dateFormat.parse(date);
+    }
     PageHistory.TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {
       return makeTestExecutionReportResponse(request, resultDate, testResultRecord);
     } catch (Exception e) {
       return makeCorruptFileResponse(request);
     }
-  }
-
-  private Date getResultDate(Request request) throws ParseException {
-    String date = (String) request.getInput("resultDate");
-    Date resultDate = dateFormat.parse(date);
-    return resultDate;
   }
 
   private Response makeCorruptFileResponse(Request request) throws Exception {

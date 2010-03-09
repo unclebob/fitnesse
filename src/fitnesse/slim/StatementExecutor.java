@@ -54,7 +54,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public void setVariable(String name, Object value) {
-    variables.setVariable(name, value);
+    variables.setSymbol(name, value);
   }
 
   public Object addPath(String path) {
@@ -82,7 +82,7 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object create(String instanceName, String className, Object[] args) {
     try {
-      Object instance = createInstanceOfConstructor(className, replaceVariables(args));
+      Object instance = createInstanceOfConstructor(className, replaceSymbols(args));
       if (isLibrary(instanceName)) {
         libraries.add(new Library(instanceName, instance));
       } else {
@@ -153,7 +153,7 @@ public class StatementExecutor implements StatementExecutorInterface {
       MethodExecutionResults results = new MethodExecutionResults();
       for (int i = 0; i < executorChain.size(); i++) {
         MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
-            replaceVariables(args));
+            replaceSymbols(args));
         if (result.hasResult()) {
           return result.returnValue();
         }
@@ -165,8 +165,8 @@ public class StatementExecutor implements StatementExecutorInterface {
     }
   }
 
-  private Object[] replaceVariables(Object[] args) {
-    return variables.replaceVariables(args);
+  private Object[] replaceSymbols(Object[] args) {
+    return variables.replaceSymbols(args);
   }
 
   private String exceptionToString(Throwable exception) {

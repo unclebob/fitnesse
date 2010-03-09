@@ -14,3 +14,7 @@ You can combine symbols as follows:
 |$V and $X are symbols|
 
 The symbols V and X will be replaced with their values...  
+
+-----
+!4 $$ (Slim v0.2)
+If you want to pass a $ from FitNesse into a slim fixture you can use $$ to do it.  For example $$bob will get be interpreted as $bob and _not_ replaced with the symbol value of bob.

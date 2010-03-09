@@ -384,6 +384,16 @@ public class SuiteResponderTest {
     assertFalse(xmlResultsFile.exists());
   }
 
+  @Test
+  public void Includehtml_producesHTMLResultsInXMLSuite() throws Exception {
+    request.addInput("format", "xml");
+    request.addInput("includehtml", "true");
+    addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
+    addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
+    String results = runSuite();
+    assertSubString("<content><![CDATA[", results);   
+  }
+
   private File expectedXmlResultsFile() {
     TestSummary counts = new TestSummary(3, 0, 0, 0);
     XmlFormatter.setTestTime("12/5/2008 01:19:00");

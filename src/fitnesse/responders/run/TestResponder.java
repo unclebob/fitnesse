@@ -37,8 +37,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void doSending() throws Exception {
-    fastTest |= request.hasInput("debug");
-    remoteDebug |= request.hasInput("remote_debug");
+    checkArguments();
     data = page.getData();
 
     createFormatterAndWriteHead();
@@ -47,6 +46,11 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     int exitCode = formatters.getErrorCount();
     closeHtmlResponse(exitCode);
+  }
+
+  protected void checkArguments() {
+    fastTest |= request.hasInput("debug");
+    remoteDebug |= request.hasInput("remote_debug");
   }
 
   protected void createFormatterAndWriteHead() throws Exception {

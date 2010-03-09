@@ -18,6 +18,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
 import fitnesse.wikitext.Utils;
 
+import static util.ListUtility.*;
+
 public abstract class QueryTableBaseTest {
   private WikiPage root;
   private List<Object> instructions;
@@ -62,10 +64,10 @@ public abstract class QueryTableBaseTest {
 
   protected void assertQueryResults(String queryRows, List<Object> queryResults, String table) throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader + queryRows);
-    Map<String, Object> pseudoResults = SlimClient.resultToMap(util.ListUtility.list(
-      util.ListUtility.list("queryTable_id_0", "OK"),
-      util.ListUtility.list("queryTable_id_1", "blah"),
-      util.ListUtility.list("queryTable_id_2", queryResults)
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(list(
+      list("queryTable_id_0", "OK"),
+      list("queryTable_id_1", "blah"),
+      list("queryTable_id_2", queryResults)
     )
     );
     testContext.evaluateExpectations(pseudoResults);
@@ -76,17 +78,17 @@ public abstract class QueryTableBaseTest {
   @Test
   public void instructionsForQueryTable() throws Exception {
     makeQueryTableAndBuildInstructions(queryTableHeader);
-    List<Object> expectedInstructions = util.ListUtility.list(
-      util.ListUtility.list("queryTable_id_0", "make", "queryTable_id", "fixture", "argument"),
-      util.ListUtility.list("queryTable_id_1", "call", "queryTable_id", "table", util.ListUtility.list(util.ListUtility.list("n", "2n"))),
-      util.ListUtility.list("queryTable_id_2", "call", "queryTable_id", "query")
+    List<Object> expectedInstructions = list(
+      list("queryTable_id_0", "make", "queryTable_id", "fixture", "argument"),
+      list("queryTable_id_1", "call", "queryTable_id", "table", list(list("n", "2n"))),
+      list("queryTable_id_2", "call", "queryTable_id", "query")
     );
     org.junit.Assert.assertEquals(expectedInstructions, instructions);
   }
 
   @Test
   public void nullResultsForNullTable() throws Exception {
-    assertQueryResults("", util.ListUtility.list(),
+    assertQueryResults("", list(),
       "[" +
         headRow +
         "[n, 2n]" +
@@ -97,8 +99,8 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowThatMatches() throws Exception {
     assertQueryResults("|2|4|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4"))
+      list(
+        list(list("n", "2"), list("2n", "4"))
       ),
       "[" +
         headRow +
@@ -109,10 +111,24 @@ public abstract class QueryTableBaseTest {
   }
 
   @Test
+  public void oneRowFirstCellMatchesSecondCellBlank() throws Exception {
+    assertQueryResults("|2||\n",
+      list(
+        list(list("n", "2"), list("2n", "4"))
+      ),
+      "[" +
+        headRow +
+        "[n, 2n], " +
+        "[pass(2), ignore(4)]" +
+        "]"
+    );
+  }
+
+  @Test
   public void oneRowThatFails() throws Exception {
     assertQueryResults("|2|4|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "5"))
+      list(
+        list(list("n", "3"), list("2n", "5"))
       ),
       "[" +
         headRow +
@@ -126,8 +142,8 @@ public abstract class QueryTableBaseTest {
   @Test
   public void oneRowWithPartialMatch() throws Exception {
     assertQueryResults("|2|4|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "5"))
+      list(
+        list(list("n", "2"), list("2n", "5"))
       ),
       "[" +
         headRow +
@@ -142,9 +158,9 @@ public abstract class QueryTableBaseTest {
     assertQueryResults(
       "|2|4|\n" +
         "|3|6|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
-        util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
+      list(
+        list(list("n", "2"), list("2n", "4")),
+        list(list("n", "3"), list("2n", "6"))
       ),
       "[" +
         headRow +
@@ -160,9 +176,9 @@ public abstract class QueryTableBaseTest {
     assertQueryResults(
       "|3|6|\n" +
         "|99|99|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
-        util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
+      list(
+        list(list("n", "2"), list("2n", "4")),
+        list(list("n", "3"), list("2n", "6"))
       ),
       "[" +
         headRow +
@@ -179,9 +195,9 @@ public abstract class QueryTableBaseTest {
     assertQueryResults(
       "|99|99|\n" +
         "|2|4|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4")),
-        util.ListUtility.list(util.ListUtility.list("n", "3"), util.ListUtility.list("2n", "6"))
+      list(
+        list(list("n", "2"), list("2n", "4")),
+        list(list("n", "3"), list("2n", "6"))
       ),
       "[" +
         headRow +
@@ -197,8 +213,8 @@ public abstract class QueryTableBaseTest {
   public void fieldInMatchingRowDoesntExist() throws Exception {
     assertQueryResults(
       "|3|4|\n",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "3"))
+      list(
+        list(list("n", "3"))
       ),
       "[" +
         headRow +
@@ -212,8 +228,8 @@ public abstract class QueryTableBaseTest {
   public void fieldInSurplusRowDoesntExist() throws Exception {
     assertQueryResults(
       "",
-      util.ListUtility.list(
-        util.ListUtility.list(util.ListUtility.list("n", "3"))
+      list(
+        list(list("n", "3"))
       ),
       "[" +
         headRow +
@@ -228,12 +244,12 @@ public abstract class QueryTableBaseTest {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "4");
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      util.ListUtility.list(
-        util.ListUtility.list("queryTable_id_0", "OK"),
-        util.ListUtility.list("queryTable_id_1", VoidConverter.VOID_TAG),
-        util.ListUtility.list("queryTable_id_2",
-          util.ListUtility.list(
-            util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4"))
+      list(
+        list("queryTable_id_0", "OK"),
+        list("queryTable_id_1", VoidConverter.VOID_TAG),
+        list("queryTable_id_2",
+          list(
+            list(list("n", "2"), list("2n", "4"))
           )
         )
       )
@@ -255,12 +271,12 @@ public abstract class QueryTableBaseTest {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|2|$V|\n");
     qt.setSymbol("V", "5");
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      util.ListUtility.list(
-        util.ListUtility.list("queryTable_id_0", "OK"),
-        util.ListUtility.list("queryTable_id_1", VoidConverter.VOID_TAG),
-        util.ListUtility.list("queryTable_id_2",
-          util.ListUtility.list(
-            util.ListUtility.list(util.ListUtility.list("n", "2"), util.ListUtility.list("2n", "4"))
+      list(
+        list("queryTable_id_0", "OK"),
+        list("queryTable_id_1", VoidConverter.VOID_TAG),
+        list("queryTable_id_2",
+          list(
+            list(list("n", "2"), list("2n", "4"))
           )
         )
       )
@@ -282,11 +298,11 @@ public abstract class QueryTableBaseTest {
     makeQueryTableAndBuildInstructions(queryTableHeader + "|3|$V|\n");
     qt.setSymbol("V", "5");
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
-      util.ListUtility.list(
-        util.ListUtility.list("queryTable_id_0", "OK"),
-        util.ListUtility.list("queryTable_id_1", VoidConverter.VOID_TAG),
-        util.ListUtility.list("queryTable_id_2",
-          util.ListUtility.list(
+      list(
+        list("queryTable_id_0", "OK"),
+        list("queryTable_id_1", VoidConverter.VOID_TAG),
+        list("queryTable_id_2",
+          list(
           )
         )
       )

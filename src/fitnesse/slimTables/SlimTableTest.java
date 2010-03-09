@@ -95,6 +95,13 @@ public class SlimTableTest {
   }
 
   @Test
+  public void replaceSymbolShouldNotReplaceWhenTwoConsecutiveDollars() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "a");
+    assertEquals("this is $$x", table.replaceSymbols("this is $$x"));
+  }
+
+  @Test
   public void replaceSymbolsShouldReplaceSameSymbolMoreThanOnce() throws Exception {
     SlimTable table = new MockTable();
     table.setSymbol("x", "a");

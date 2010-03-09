@@ -167,11 +167,11 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
     throws Exception {
-    String tag = String.format("<h3>%s</h3>\n", testSystemName + ":" + testRunner);
+    testSystemFullName = (testSystemName + ":" + testRunner).replaceAll("\\\\", "/");
+    String tag = String.format("<h3>%s</h3>\n", testSystemFullName);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
 
-    testSystemFullName = testSystemName + ":" + testRunner;
   }
 
   @Override

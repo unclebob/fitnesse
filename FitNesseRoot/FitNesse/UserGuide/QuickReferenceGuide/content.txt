@@ -227,7 +227,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 #-------------------------------------------------------------------------------------------
 !anchor VARIABLES
 |${HDR} Variables ${HDRend}                                                                                                                                                  |
-|Variable Definition  |${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')''' ${CODEend}${NL}|
+|Variable Definition  |${CODE} ${BANG}'''define''' ''name'' ${LBRACE}''value''${RBRACE} ${NL}${BANG}'''define''' ''name'' '''('''${NUL}''value''${NUL}''')'''${NL}${BANG}'''define''' ''name'' '''['''${NUL}''value''${NUL}''']''' ${CODEend}${NL}|
 |Variable Usage       |${CODE} '''$'''${LBRACE}''name''${RBRACE} ${CODEend}                                                                                                  |
 |Expression Evaluation|${CODE} '''!-${=-!'''${NUL}''expression''${NUL}'''!-=}-!''' ${CODEend}                      |''expression'' may contain variables                     |
 #-------------------------------------------------------------------------------------------
@@ -258,6 +258,8 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${CODE} RSS_PREFIX ${CODEend}         |!c               |!c                            |'' Link prefix for [[RSS Feeds][RssFeed]] ''                                                                                 |
 |${CODE} ''PAGE_NAME'' ${CODEend}      |!c               |!c Read Only                  |'' Name of current page''                                                                                                    |
 |${CODE} ''PAGE_PATH '' ${CODEend}     |!c               |!c Read Only                  |'' Fully qualified name of parent. ''                                                                                        |
+|${CODE} ''RUNNING_PAGE_NAME'' ${CODEend}    |!c         |!c Read Only                  |'' Name of current top level running page''                                                                                  |
+|${CODE} ''RUNNING_PAGE_PATH '' ${CODEend}   |!c         |!c Read Only                  |'' Fully qualified name of the current tope level running  page's parent. ''                                                 |
 |${CODE} ''FITNESSE_PORT'' ${CODEend}  |!c               |!c Read Only                  |'' Port number that fitnesse is using. ''                                                                                    |
 
 !note (See the ''root'' page for overrides)

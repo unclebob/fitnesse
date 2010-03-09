@@ -1,173 +1,168 @@
 <project name="Fitnesse" default="all" basedir=".">
-  <description>
+	<description>
     Fitnesse is a wiki wrapper for fit, an acceptance test framework.
   </description>
 
-  <property environment="env"/>
-  <property name="env.FITNESSE_TEST_PORT" value="8080"/>
-  <property name="src" location="src"/>
-  <property name="src2" location="srcFitServerTests"/>
-  <property name="classes" location="classes"/>
-  <property name="fitnesseRoot" value="FitNesseRoot"/>
-  <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
-  <property name="zipDir" location="dist/fitnesse"/>
-  <property name="results.dir" location="test-results"/>
+	<property environment="env" />
+	<property name="env.FITNESSE_TEST_PORT" value="8080" />
+	<property name="src" location="src" />
+	<property name="src2" location="srcFitServerTests" />
+	<property name="classes" location="classes" />
+	<property name="fitnesseRoot" value="FitNesseRoot" />
+	<property name="fitnesseRootZip" value="FitNesseRoot.zip" />
+	<property name="zipDir" location="dist/fitnesse" />
+	<property name="results.dir" location="test-results" />
 
-  <path id="classpath">
-    <pathelement path="classes"/>
-    <fileset dir="lib">
-      <include name="*.jar"/>
-      <exclude name="dummy.jar"/>
-    </fileset>
-  </path>
+	<path id="classpath">
+		<pathelement path="classes" />
+		<fileset dir="lib">
+			<include name="*.jar" />
+			<exclude name="dummy.jar" />
+		</fileset>
+	</path>
 
-  <target name="all" depends="unit_tests"
-          description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests."/>
+	<target name="all" depends="unit_tests" description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fitnesse acceptance tests." />
 
-  <target name="build" depends="clean, compile" description="clean, then compile the source"/>
+	<target name="build" depends="clean, compile" description="clean, then compile the source" />
 
-  <target name="unit_tests" depends="clean, unit_test"
-          description="builds code from scratch, runs all the unit tests"/>
+	<target name="unit_tests" depends="clean, unit_test" description="builds code from scratch, runs all the unit tests" />
 
-  <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
-    <mkdir dir="dist"/>
-    <delete file="dist/fitnesse.jar"/>
+	<target name="jar" depends="build, createUpdateLists" description="generate the jar file">
+		<mkdir dir="dist" />
+		<delete file="dist/fitnesse.jar" />
 
-    <jar jarfile="dist/fitnesse.jar" basedir="classes">
-      <include name="**/*.class"/>
-      <exclude name="**/*Test.class"/>
-      <exclude name="**/*TestSuite.class"/>
-      <include name="Resources/**"/>
-      <include name="tasks.properties"/>
-      
-      <fileset dir="classes" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class"/>
+		<jar jarfile="dist/fitnesse.jar" basedir="classes">
+			<include name="**/*.class" />
+			<exclude name="**/*Test.class" />
+			<exclude name="**/*TestSuite.class" />
+			<include name="Resources/**" />
+			<include name="tasks.properties" />
 
-      <zipfileset src="lib/htmlparser.jar"/>
-      <zipfileset src="lib/json.jar"/>
-      <zipfileset src="lib/velocity-1.6.2-dep.jar"/>
+			<fileset dir="classes" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
-      <manifest>
-        <attribute name="Built-By" value="Object Mentor, Inc."/>
-        <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
-      </manifest>
-    </jar>
-    <delete dir="classes/Resources"/>
-  </target>
+			<zipfileset src="lib/htmlparser.jar" />
+			<zipfileset src="lib/json.jar" />
+			<zipfileset src="lib/velocity-1.6.2-dep.jar" />
 
-  <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
-    <java classpath="classes" classname="fitnesse.updates.UpdateFileList" failonerror="true">
-      <arg value="-baseDirectory:classes/Resources"/>
-      <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
-      <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
-      <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
-      <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>
-      <arg value="FitNesseRoot/files/images"/>
-      <arg value="FitNesseRoot/files/css"/>
-      <arg value="FitNesseRoot/files/javascript"/>
-      <arg value="FitNesseRoot/files/html"/>
-      <arg value="FitNesseRoot/files/templates"/>
-      <arg value="FitNesseRoot/FitNesse"/>
-      <arg value="FitNesseRoot/FrontPage"/>
-      <arg value="FitNesseRoot/PageFooter"/>
-      <arg value="FitNesseRoot/PageHeader"/>
-    </java>
-    <copy todir="classes/Resources">
-      <fileset dir=".">
-        <include name="updateList"/>
-        <include name="updateDoNotCopyOverList"/>
-      </fileset>
-    </copy>
-  </target>
+			<manifest>
+				<attribute name="Built-By" value="Object Mentor, Inc." />
+				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
+			</manifest>
+		</jar>
+		<delete dir="classes/Resources" />
+	</target>
 
-  <target name="copyResources" description="copy images, css, and other resources into the classes directory">
-    <delete dir="classes/Resources"/>
-    <mkdir dir="classes/Resources"/>
-    <copy todir="classes/Resources/FitNesseRoot/files">
-      <fileset dir="FitNesseRoot/files">
-        <include name="images/**"/>
-        <include name="css/*.css"/>
-        <include name="javascript/**/*.js"/>
-        <include name="html/**"/>
-        <include name="templates/**"/>
-        <exclude name="juUnitTestLink.js"/>
-        <exclude name="**/unused/**"/>
-      </fileset>
-    </copy>
-    <copy todir="classes/Resources/FitNesseRoot">
-      <fileset dir="FitNesseRoot">
-        <include name="FitNesse/**"/>
-        <include name="FrontPage/**"/>
-        <include name="PageHeader/**"/>
-        <include name="PageFooter/**"/>
-        <exclude name="**/*.zip"/>
-      </fileset>
-    </copy>
-  </target>
+	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
+		<java classpath="classes" classname="fitnesse.updates.UpdateFileList" failonerror="true">
+			<arg value="-baseDirectory:classes/Resources" />
+			<arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css" />
+			<arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css" />
+			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
+			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
+			<arg value="FitNesseRoot/files/images" />
+			<arg value="FitNesseRoot/files/css" />
+			<arg value="FitNesseRoot/files/javascript" />
+			<arg value="FitNesseRoot/files/html" />
+			<arg value="FitNesseRoot/files/templates" />
+			<arg value="FitNesseRoot/FitNesse" />
+			<arg value="FitNesseRoot/FrontPage" />
+			<arg value="FitNesseRoot/PageFooter" />
+			<arg value="FitNesseRoot/PageHeader" />
+		</java>
+		<copy todir="classes/Resources">
+			<fileset dir=".">
+				<include name="updateList" />
+				<include name="updateDoNotCopyOverList" />
+			</fileset>
+		</copy>
+	</target>
 
-  <target name="compile" depends="init, stamp-version" description="compile the source (make)">
-    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" compiler="javac1.6"/>
-    <copy file="extra/ant/tasks.properties" todir="classes"/>
-  </target>
+	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
+		<delete dir="classes/Resources" />
+		<mkdir dir="classes/Resources" />
+		<copy todir="classes/Resources/FitNesseRoot/files">
+			<fileset dir="FitNesseRoot/files">
+				<include name="images/**" />
+				<include name="css/*.css" />
+				<include name="javascript/**/*.js" />
+				<include name="html/**" />
+				<include name="templates/**" />
+				<exclude name="juUnitTestLink.js" />
+				<exclude name="**/unused/**" />
+			</fileset>
+		</copy>
+		<copy todir="classes/Resources/FitNesseRoot">
+			<fileset dir="FitNesseRoot">
+				<include name="FitNesse/**" />
+				<include name="FrontPage/**" />
+				<include name="PageHeader/**" />
+				<include name="PageFooter/**" />
+				<exclude name="**/*.zip" />
+			</fileset>
+		</copy>
+	</target>
 
-  <target name="stamp-version">
-    <delete file="pom.xml"/>
-    <delete file="src/fitnesse/FitNesseVersion.java"/>
-    <delete file="FitNesseRoot/FrontPage/content.txt"/>
-    <tstamp/>
-    <filter token="version" value="${DSTAMP}"/>
-    <copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml"/>
-    <copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java"/>
-    <copy filtering="true" file="templates/FrontPage.content.txt.template" tofile="FitNesseRoot/FrontPage/content.txt"/>
-  </target>
+	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
+		<javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" source="1.6" target="1.6" />
+		<copy file="extra/ant/tasks.properties" todir="classes" />
+	</target>
 
-  <target name="clean" description="delete everything in the classes directory">
-    <delete dir="classes"/>
-    <mkdir dir="classes"/>
-    <delete dir="test-results"/>
-  </target>
+	<target name="stamp-version">
+		<delete file="pom.xml" />
+		<delete file="src/fitnesse/FitNesseVersion.java" />
+		<delete file="FitNesseRoot/FrontPage/content.txt" />
+		<tstamp />
+		<filter token="version" value="${DSTAMP}" />
+		<copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml" />
+		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
+		<copy filtering="true" file="templates/FrontPage.content.txt.template" tofile="FitNesseRoot/FrontPage/content.txt" />
+	</target>
 
-  <target name="unit_test" depends="compile" description="run the unit tests">
-    <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
-      <classpath refid="classpath"/>
-      <formatter type="xml" usefile="true"/>
-      <formatter type="plain" usefile="false"/>
-      <batchtest todir="test-results">
-        <fileset dir="src">
-          <include name="**/*Test.java"/>
-          <exclude name="**/ShutdownResponderTest.java"/>
-          <exclude name="**/QueryTableBaseTest.java"/>
-          <exclude name="**/Test.java"/>
-          <exclude name="**/SystemUnderTest.java"/>
-          <exclude name="**/MySystemUnderTest.java"/>
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
+	<target name="clean" description="delete everything in the classes directory">
+		<delete dir="classes" />
+		<mkdir dir="classes" />
+		<delete dir="test-results" />
+	</target>
 
-  <target name="init">
-    <mkdir dir="classes"/>
-    <mkdir dir="test-results"/>
-  </target>
+	<target name="unit_test" depends="compile" description="run the unit tests">
+		<junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
+			<classpath refid="classpath" />
+			<formatter type="xml" usefile="true" />
+			<formatter type="plain" usefile="false" />
+			<batchtest todir="test-results">
+				<fileset dir="src">
+					<include name="**/*Test.java" />
+					<exclude name="**/ShutdownResponderTest.java" />
+					<exclude name="**/QueryTableBaseTest.java" />
+					<exclude name="**/Test.java" />
+					<exclude name="**/SystemUnderTest.java" />
+					<exclude name="**/MySystemUnderTest.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
 
-  <target name="load_fitnesse_taskdef">
-    <taskdef classpathref="classpath" resource="tasks.properties"/>
-  </target>
+	<target name="init">
+		<mkdir dir="classes" />
+		<mkdir dir="test-results" />
+	</target>
 
-  <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef"
-          description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests"
-                        fitnesseport="${env.FITNESSE_TEST_PORT}" resultsdir="test-results"
-                        resultsxmlpage="fit-results.xml" classpathref="classpath"/>
-  </target>
+	<target name="load_fitnesse_taskdef">
+		<taskdef classpathref="classpath" resource="tasks.properties" />
+	</target>
 
-  <target name="release" depends="unit_tests, acceptance_tests"/>
+	<target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef" description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
+		<run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests" fitnesseport="${env.FITNESSE_TEST_PORT}" resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath" />
+	</target>
 
-  <target name="acceptance_tests" depends="jar">
-    <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
-      <arg value="-c"/>
-      <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
-      <arg value="-p"/>
-      <arg value="9234"/>
-    </java>
-  </target>
+	<target name="release" depends="unit_tests, acceptance_tests" />
+
+	<target name="acceptance_tests" depends="jar">
+		<java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+			<arg value="-c" />
+			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text" />
+			<arg value="-p" />
+			<arg value="9234" />
+		</java>
+	</target>
 </project>

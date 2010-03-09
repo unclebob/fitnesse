@@ -4,14 +4,6 @@ import org.junit.Before;
 
 public class StatementExecutorTest extends StatementExecutorTestBase {
 
-  protected String voidMessage() {
-    return "/__VOID__/";
-  }
-
-  protected String echoMethodName() {
-    return "echo";
-  }
-
   public static class MySystemUnderTestJava extends MySystemUnderTestBase {
     private boolean echoCalled = false;
     private boolean speakCalled;

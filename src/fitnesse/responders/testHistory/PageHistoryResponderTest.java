@@ -305,6 +305,27 @@ public class PageHistoryResponderTest {
     assertSubString("SuitePage.TestPageOne?pageHistory&resultDate=19801205012000", response.getContent());
   }
 
+  @Test
+  public void canGetLatestWhenOnlyOneTestResultExists() throws Exception {
+    File pageDirectory = addPageDirectory("TestPage");
+    addDummyTestResult(new File(pageDirectory, "19801205012000_30_20_3_0"));
+
+    makeResultForDate("TestPage", "latest");
+    assertHasRegexp("Fri Dec 05 01:20:00 [A-Z]+ 1980", response.getContent());
+  }
+
+  @Test
+  public void canGetLatestWhenManyTestResultsExists() throws Exception {
+    File pageDirectory = addPageDirectory("TestPage");
+    addDummyTestResult(new File(pageDirectory, "19801205012000_30_20_3_0"));
+    addDummyTestResult(new File(pageDirectory, "19901205012000_30_20_3_0"));
+    addDummyTestResult(new File(pageDirectory, "19951205012000_30_20_3_0"));
+    addDummyTestResult(new File(pageDirectory, "19941205012000_30_20_3_0"));
+
+    makeResultForDate("TestPage", "latest");
+    assertHasRegexp("Tue Dec 05 01:20:00 [A-Z]+ 1995", response.getContent());
+  }
+
   private void addDummySuiteResult(File resultFile) throws Exception {
     SuiteExecutionReport report = makeDummySuiteResponse();
     report.version = "version";
