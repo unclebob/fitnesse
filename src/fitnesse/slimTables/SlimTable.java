@@ -506,13 +506,6 @@ public abstract class SlimTable {
     private void replaceAllSymbols() {
       startingPosition = 0;
       while (symbolFound())
-        replaceOneSymbol();
-    }
-
-    private void replaceOneSymbol() {
-      if (isDollarDollar())
-        startingPosition += 2;
-      else
         replaceSymbol();
     }
 
@@ -532,10 +525,6 @@ public abstract class SlimTable {
         return "$" + symbolName;
       else
         return formatSymbolValue(symbolName, value);
-    }
-
-    private boolean isDollarDollar() {
-      return symbolMatcher.start() > 0 && replacedString.charAt(symbolMatcher.start() - 1) == '$';
     }
 
     private boolean symbolFound() {
@@ -622,10 +611,7 @@ public abstract class SlimTable {
     protected String createEvaluationMessage(String actual, String expected) {
       String evaluationMessage;
       String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
-      int dolDolIndex = 0;
-      while ((dolDolIndex = replacedExpected.indexOf("$$")) != -1) {
-        replacedExpected = replacedExpected.substring(0, dolDolIndex) + replacedExpected.substring(dolDolIndex + 1);
-      }
+
       if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (actual.equals(replacedExpected))
