@@ -512,13 +512,13 @@ public abstract class SlimTable {
     private void replaceOneSymbol() {
       if (isDollarDollar())
         startingPosition += 2;
-       else
+      else
         replaceSymbol();
     }
 
     private void replaceSymbol() {
       String symbolName = symbolMatcher.group(1);
-      String value = getSymbolValue(symbolName);
+      String value = formatSymbol(symbolName);
       String prefix = replacedString.substring(0, symbolMatcher.start());
       String suffix = replacedString.substring(symbolMatcher.end());
       replacedString = prefix + value + suffix;
@@ -526,15 +526,16 @@ public abstract class SlimTable {
       startingPosition = Math.min(replacementEnd, replacedString.length());
     }
 
-    private boolean isDollarDollar() {
-      return symbolMatcher.start() > 0 && replacedString.charAt(symbolMatcher.start() - 1) == '$';
+    private String formatSymbol(String symbolName) {
+      String value = getSymbol(symbolName);
+      if (value == null)
+        return "$" + symbolName;
+      else
+        return formatSymbolValue(symbolName, value);
     }
 
-    private String getSymbolValue(String symbolName) {
-      String value = translate(symbolName);
-      if (value == null)
-        value = "";
-      return value;
+    private boolean isDollarDollar() {
+      return symbolMatcher.start() > 0 && replacedString.charAt(symbolMatcher.start() - 1) == '$';
     }
 
     private boolean symbolFound() {
@@ -542,8 +543,8 @@ public abstract class SlimTable {
       return symbolMatcher.find(startingPosition);
     }
 
-    protected String translate(String symbolName) {
-      return getSymbol(symbolName);
+    protected String formatSymbolValue(String name, String value) {
+      return value;
     }
   }
 
@@ -552,8 +553,8 @@ public abstract class SlimTable {
       super(s);
     }
 
-    protected String translate(String symbolName) {
-      return String.format("$%s->[%s]", symbolName, getSymbol(symbolName));
+    protected String formatSymbolValue(String name, String value) {
+        return String.format("$%s->[%s]", name, value);
     }
   }
 
@@ -623,7 +624,7 @@ public abstract class SlimTable {
       String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
       int dolDolIndex = 0;
       while ((dolDolIndex = replacedExpected.indexOf("$$")) != -1) {
-        replacedExpected = replacedExpected.substring(0, dolDolIndex) + replacedExpected.substring(dolDolIndex+1);
+        replacedExpected = replacedExpected.substring(0, dolDolIndex) + replacedExpected.substring(dolDolIndex + 1);
       }
       if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.

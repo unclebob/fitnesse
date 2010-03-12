@@ -333,7 +333,7 @@ public class SlimTestSystemTest {
     assertEquals("$V->[Bob]", unescape(dt.getCellContents(0, 3)));
     assertEquals("<span class=\"pass\">$V->[Bob]</span>", unescape(dt.getCellContents(1, 3)));
     assertEquals("[Bill] <span class=\"fail\">expected [$V->[Bob]]</span>", unescape(dt.getCellContents(1, 4)));
-    assertEquals("<span class=\"ignore\">John</span>", unescape(dt.getCellContents(1, 5)));
+    assertEquals("[John] <span class=\"fail\">expected [$Q]</span>", unescape(dt.getCellContents(1, 5)));
   }
 
   protected TableScanner getScannedResults() throws Exception {
