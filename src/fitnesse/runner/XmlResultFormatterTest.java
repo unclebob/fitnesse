@@ -28,7 +28,6 @@ public class XmlResultFormatterTest extends RegexTestCase {
 
   public void tearDown() throws Exception {
     formatter = null;
-    System.gc();
   }
 
   public void testValidXml() throws Exception {
