@@ -12,6 +12,8 @@ public class TestHelper {
   private final String outputPath;
   private final ResultsListener resultListener;
   
+  private boolean debug = true;
+  
   public static final String PAGE_TYPE_SUITE="suite";
   public static final String PAGE_TYPE_TEST="test";
   
@@ -49,13 +51,26 @@ public class TestHelper {
     FitNesseMain.launchFitNesse(arguments);   
     return testFormatter.getTotalSummary();
   }
-  private static String COMMON_ARGS="&debug=true&nohistory=true&format=java";
   String getCommand(String pageName, String pageType, String suiteFilter) {
+    String commandPrefix = pageName+"?"+pageType;
     if (suiteFilter!=null)
-      return pageName+"?"+pageType+COMMON_ARGS + "&suiteFilter="+suiteFilter;
+      return commandPrefix + getCommandArgs() + "&suiteFilter=" + suiteFilter;
     else 
-      return pageName+"?"+pageType+COMMON_ARGS; 
-   }
+      return commandPrefix + getCommandArgs(); 
+  }
+
+  private static String COMMON_ARGS = "&nohistory=true&format=java";
+  private static String DEBUG_ARG = "&debug=true";
+  private String getCommandArgs() {
+    if (debug) {
+      return DEBUG_ARG + COMMON_ARGS;
+    }
+    return COMMON_ARGS;
+  }
+  
+  public void setDebugMode(boolean enabled) {
+    debug = enabled;
+  }
  
 
 }
