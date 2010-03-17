@@ -10,7 +10,8 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class PageCreator extends ColumnFixture {
+public class
+  PageCreator extends ColumnFixture {
   public String pageName;
   public String pageContents;
   public String pageAttributes = "";
