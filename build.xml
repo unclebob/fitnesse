@@ -160,9 +160,9 @@
   <target  name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
   <target  name="acceptance_tests_xml" depends="jar">  
-    <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+    <java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
-			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml &gt;fitnesse-results.xml" />
+			<arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml" />
 			<arg value="-p" />
 			<arg value="9234" />
 		</java>
