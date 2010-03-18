@@ -39,7 +39,7 @@ public class EqualPairTokenTest {
 
     @Test public void scansDoubleDashes() {
         ParserTest.assertScans("abc--123--def", "TextToken=abc,EqualPairToken=--,TextToken=123,EqualPairToken=--,TextToken=def");
-        ParserTest.assertScans("------", "EqualPairToken=--,EqualPairToken=--,EqualPairToken=--");
+        ParserTest.assertScans("--- -", "EqualPairToken=--,TextToken=- -");
     }
 
     @Test public void translatesStrike() {

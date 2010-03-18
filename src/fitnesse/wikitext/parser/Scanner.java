@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Scanner {
     private static final Token[] tokens = {
+            new TableToken(),
+            new HorizontalRuleToken(),
             new EqualPairToken("'''", "b", ""),
             new EqualPairToken("''", "i", ""),
             new EqualPairToken("--", "span", "strike"),
@@ -12,6 +14,7 @@ public class Scanner {
             new DelimiterToken(")"),
             new DelimiterToken("}"),
             new DelimiterToken("]"),
+            new CellDelimiterToken(),
             new LineToken(),
             new NewlineToken(),
             new AnchorNameToken(),

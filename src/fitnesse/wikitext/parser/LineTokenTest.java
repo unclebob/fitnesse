@@ -41,7 +41,7 @@ public class LineTokenTest {
         ParserTest.assertScans("! note some note\n", "TextToken=! note some note,NewlineToken=\n");
     }
 
-    @Test public void translatesNotess() {
+    @Test public void translatesNotes() {
         ParserTest.assertTranslates("!note some note\n", "<span class=\"note\">some note</span>" + HtmlElement.endl);
     }
 }

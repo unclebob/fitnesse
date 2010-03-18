@@ -16,6 +16,7 @@ public abstract class ContentToken implements Token {
                 ? new TokenMatch(this, content.length())
                 : TokenMatch.noMatch;
     }
+    
     public Maybe<String> render(Scanner scanner) {
         return new Maybe<String>(content);
     }
