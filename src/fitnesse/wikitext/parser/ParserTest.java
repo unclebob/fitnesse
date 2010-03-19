@@ -15,10 +15,10 @@ public class ParserTest {
             if (scanner.isEnd()) break;
             if (result.length() > 0) result.append(",");
             Token current = scanner.getCurrent();
-            String name = current.getClass().getSimpleName();
+            String name = current.getType().toString();
             result.append(name);
             String string = current.toString();
-            if (!string.contains(name)) result.append("=").append(string);
+            if (string.length() > 0) result.append("=").append(string);
         }
         assertEquals(expected, result.toString());
     }

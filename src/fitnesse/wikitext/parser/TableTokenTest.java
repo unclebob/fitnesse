@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class TableTokenTest {
     @Test public void scansTables() {
-        ParserTest.assertScans("|a|\n", "TableToken,TextToken=a,CellDelimiterToken=|\n");
+        ParserTest.assertScans("|a|\n", "Table,Word=a,EndCell=|\n");
     }
 
     @Test public void translatesTables() {

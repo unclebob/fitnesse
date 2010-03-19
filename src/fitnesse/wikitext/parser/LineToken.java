@@ -49,6 +49,8 @@ public class LineToken extends ContentToken {
     }
 
     public Maybe<String> render(Scanner scanner) {
+        scanner.moveNext();
+        if (scanner.getCurrent().getType() != TokenType.Whitespace) return Maybe.noString;
         String body = new Translator().translate(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag html = renderers.get(getContent()).render(getContent());

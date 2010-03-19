@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import util.Maybe;
 
-public class TableToken implements Token {
+public class TableToken extends TokenBase {
     public Maybe<String> render(Scanner scanner) {
         HtmlTag table = new HtmlTag("table");
         table.addAttribute("border", "1");

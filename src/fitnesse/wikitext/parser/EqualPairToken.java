@@ -3,15 +3,14 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import util.Maybe;
 
-public class EqualPairToken extends ContentTypeToken {
-    public static final EqualPairToken BoldToken = new EqualPairToken("'''", "b", "");
-    public static final EqualPairToken ItalicToken = new EqualPairToken("''", "i", "");
-    public static final EqualPairToken StrikeToken = new EqualPairToken("--", "span", "strike");
+public class EqualPairToken extends TokenBase {
+    public static final EqualPairToken BoldToken = new EqualPairToken("b", "");
+    public static final EqualPairToken ItalicToken = new EqualPairToken("i", "");
+    public static final EqualPairToken StrikeToken = new EqualPairToken("span", "strike");
     private String tag;
     private String classAttribute;
 
-    public EqualPairToken(String content, String tag, String classAttribute) {
-        super(content);
+    public EqualPairToken(String tag, String classAttribute) {
         this.tag = tag;
         this.classAttribute = classAttribute;
     }

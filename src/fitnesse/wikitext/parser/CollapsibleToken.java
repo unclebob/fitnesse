@@ -12,9 +12,13 @@ public class CollapsibleToken extends ContentToken {
     public CollapsibleToken(String content) { super(content); }
 
     public Maybe<String> render(Scanner scanner) {
-        long id = nextId++;
+        scanner.moveNext();
+        if (scanner.getCurrent().getType() != TokenType.Whitespace) return Maybe.noString;
+        
         String titleText = new Translator().translate(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
+        
+        long id = nextId++;
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapse_rim");
         HtmlTag floatRight = new HtmlTag("div");

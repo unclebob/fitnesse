@@ -5,7 +5,8 @@ import org.junit.Test;
 
 public class CollapsibleTokenTest {
     @Test public void scansCollapsible() {
-        ParserTest.assertScans("!* Some title\n content \n*!", "CollapsibleToken=collapsable,TextToken=Some title,NewlineToken=\n,TextToken= content ,NewlineToken=\n,EndSectionToken");
+        ParserTest.assertScans("!* Some title\n content \n*!",
+                "Collapsible=collapsable,Whitespace= ,Word=Some,Whitespace= ,Word=title,Newline=\n,Whitespace= ,Word=content,Whitespace= ,Newline=\n,EndSection=*!");
     }
 
     @Test public void translatesCollapsible() {
@@ -39,5 +40,6 @@ public class CollapsibleTokenTest {
                 "\t<span class=\"meta\">Some title</span>" + HtmlElement.endl +
                 "\t<div class=\"hidden\" id=\"2\"> content \n</div>" + HtmlElement.endl +
                 "</div>" + HtmlElement.endl);
+        ParserTest.assertTranslates("!**\n**!", "!**\n**!");
     }
 }

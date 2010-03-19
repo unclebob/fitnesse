@@ -19,12 +19,6 @@ public class ScanString {
         return matches(match, 0);
     }
 
-    public boolean isBetween(String minimum, String maximum, int startsAt) {
-        if (offset + startsAt + minimum.length() > input.length()) return false;
-        String test = substring(startsAt, startsAt + minimum.length());
-        return test.compareTo(minimum) >= 0 && test.compareTo(maximum) <= 0;
-    }
-
     public boolean startsLine() {
         return offset == 0 || input.charAt(offset - 1) == '\n';
     }
@@ -56,5 +50,15 @@ public class ScanString {
             current++;
         }
         return current - offset - startsAt;
+    }
+
+    public int whitespaceLength() {
+        int current = offset;
+        while (current < input.length()) {
+            if (!Character.isWhitespace(input.charAt(current))) break;
+            if (input.charAt(current) == '\n' || input.charAt(current) == '\r') break;
+            current++;
+        }
+        return current - offset;
     }
 }

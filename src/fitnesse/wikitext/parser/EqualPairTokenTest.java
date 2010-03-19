@@ -6,10 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 public class EqualPairTokenTest {
     @Test public void scansTripleQuotes() {
-        ParserTest.assertScans("'''bold'''", "EqualPairToken=''',TextToken=bold,EqualPairToken='''");
-        ParserTest.assertScans("''''bold''''", "EqualPairToken=''',TextToken='bold,EqualPairToken=''',TextToken='");
-        ParserTest.assertScans("'' 'not bold' ''", "EqualPairToken='',TextToken= 'not bold' ,EqualPairToken=''");
-        ParserTest.assertScans("''''some text' '''", "EqualPairToken=''',TextToken='some text' ,EqualPairToken='''");
+        ParserTest.assertScans("'''bold'''", "Bold,Word=bold,Bold");
+        ParserTest.assertScans("''''bold''''", "Bold,Text=',Word=bold,Bold,Text='");
+        ParserTest.assertScans("'' 'not bold' ''", "Italic,Whitespace= ,Text=',Word=not,Whitespace= ,Word=bold,Text=',Whitespace= ,Italic");
+        ParserTest.assertScans("''''some text' '''", "Bold,Text=',Word=some,Whitespace= ,Word=text,Text=',Whitespace= ,Bold");
     }
 
     @Test public void translatesBold() {
@@ -17,8 +17,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void scansDoubleQuotes() {
-        ParserTest.assertScans("''italic''", "EqualPairToken='',TextToken=italic,EqualPairToken=''");
-        ParserTest.assertScans("'' 'italic' ''", "EqualPairToken='',TextToken= 'italic' ,EqualPairToken=''");
+        ParserTest.assertScans("''italic''", "Italic,Word=italic,Italic");
+        ParserTest.assertScans("'' 'italic' ''", "Italic,Whitespace= ,Text=',Word=italic,Text=',Whitespace= ,Italic");
     }
 
     @Test public void translatesItalic() {
@@ -38,8 +38,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void scansDoubleDashes() {
-        ParserTest.assertScans("abc--123--def", "TextToken=abc,EqualPairToken=--,TextToken=123,EqualPairToken=--,TextToken=def");
-        ParserTest.assertScans("--- -", "EqualPairToken=--,TextToken=- -");
+        ParserTest.assertScans("abc--123--def", "Word=abc,Strike,Word=123,Strike,Word=def");
+        ParserTest.assertScans("--- -", "Strike,Text=-,Whitespace= ,Text=-");
     }
 
     @Test public void translatesStrike() {

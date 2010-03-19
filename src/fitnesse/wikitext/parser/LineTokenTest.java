@@ -5,17 +5,17 @@ import org.junit.Test;
 
 public class LineTokenTest {
     @Test public void scansHeaders() {
-        ParserTest.assertScans("!1 some text\n", "LineToken=1,TextToken=some text,NewlineToken=\n");
-        ParserTest.assertScans("!2 \n", "LineToken=2,NewlineToken=\n");
-        ParserTest.assertScans("!3 text\n", "LineToken=3,TextToken=text,NewlineToken=\n");
-        ParserTest.assertScans("!4 text\n", "LineToken=4,TextToken=text,NewlineToken=\n");
-        ParserTest.assertScans("!5 text\n", "LineToken=5,TextToken=text,NewlineToken=\n");
-        ParserTest.assertScans("!6 text\n", "LineToken=6,TextToken=text,NewlineToken=\n");
-        ParserTest.assertScans("!3text\n", "TextToken=!3text,NewlineToken=\n");
-        ParserTest.assertScans("!0 text\n", "TextToken=!0 text,NewlineToken=\n");
-        ParserTest.assertScans("!7 text\n", "TextToken=!7 text,NewlineToken=\n");
-        ParserTest.assertScans("not start !1 text\n", "TextToken=not start !1 text,NewlineToken=\n");
-        ParserTest.assertScans("at start\n!1 text\n", "TextToken=at start,NewlineToken=\n,LineToken=1,TextToken=text,NewlineToken=\n");
+        ParserTest.assertScans("!1 some text\n", "HeaderLine=1,Whitespace= ,Word=some,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!2 \n", "HeaderLine=2,Whitespace= ,Newline=\n");
+        ParserTest.assertScans("!3 text\n", "HeaderLine=3,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!4 text\n", "HeaderLine=4,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!5 text\n", "HeaderLine=5,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!6 text\n", "HeaderLine=6,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!3text\n", "HeaderLine=3,Word=text,Newline=\n");
+        ParserTest.assertScans("!0 text\n", "Text=!,Word=0,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!7 text\n", "Text=!,Word=7,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("not start !1 text\n", "Word=not,Whitespace= ,Word=start,Whitespace= ,Text=!,Word=1,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("at start\n!1 text\n", "Word=at,Whitespace= ,Word=start,Newline=\n,HeaderLine=1,Whitespace= ,Word=text,Newline=\n");
     }
 
     @Test public void translatesHeaders() {
@@ -24,12 +24,12 @@ public class LineTokenTest {
     }
 
     @Test public void scansCenters() {
-        ParserTest.assertScans("!c some text\n", "LineToken=c,TextToken=some text,NewlineToken=\n");
-        ParserTest.assertScans("!C more text\n", "LineToken=C,TextToken=more text,NewlineToken=\n");
-        ParserTest.assertScans("!ctext\n", "TextToken=!ctext,NewlineToken=\n");
-        ParserTest.assertScans("!c text\n", "LineToken=c,TextToken=text,NewlineToken=\n");
-        ParserTest.assertScans(" !c text\n", "TextToken= !c text,NewlineToken=\n");
-        ParserTest.assertScans("!c text", "LineToken=c,TextToken=text");
+        ParserTest.assertScans("!c some text\n", "CenterLine=c,Whitespace= ,Word=some,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!C more text\n", "CenterLine=C,Whitespace= ,Word=more,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!ctext\n", "CenterLine=c,Word=text,Newline=\n");
+        ParserTest.assertScans("!c text\n", "CenterLine=c,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans(" !c text\n", "Whitespace= ,Text=!,Word=c,Whitespace= ,Word=text,Newline=\n");
+        ParserTest.assertScans("!c text", "CenterLine=c,Whitespace= ,Word=text");
     }
 
     @Test public void translatesCenters() {
@@ -37,8 +37,8 @@ public class LineTokenTest {
     }
 
     @Test public void scansNotes() {
-        ParserTest.assertScans("!note some note\n", "LineToken=note,TextToken=some note,NewlineToken=\n");
-        ParserTest.assertScans("! note some note\n", "TextToken=! note some note,NewlineToken=\n");
+        ParserTest.assertScans("!note some note\n", "NoteLine=note,Whitespace= ,Word=some,Whitespace= ,Word=note,Newline=\n");
+        ParserTest.assertScans("! note some note\n", "Text=!,Whitespace= ,Word=note,Whitespace= ,Word=some,Whitespace= ,Word=note,Newline=\n");
     }
 
     @Test public void translatesNotes() {

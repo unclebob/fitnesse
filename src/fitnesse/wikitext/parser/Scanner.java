@@ -53,7 +53,7 @@ public class Scanner {
             newNext = scan;
         }
         if (scan > next) {
-            activeToken = new TextToken(input.substring(next, scan));
+            activeToken = new ContentToken(TokenType.Text, input.substring(next, scan));
             next = scan;
         }
         else {

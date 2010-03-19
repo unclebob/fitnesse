@@ -1,6 +1,20 @@
 package fitnesse.wikitext.parser;
 
 public enum TokenType {
+    Whitespace(new Matcher() {
+        public TokenMatch makeMatch(TokenType type, ScanString input) {
+            int size = input.whitespaceLength();
+            return size > 0 ? new TokenMatch(new ContentToken(type, " "), size) : TokenMatch.noMatch;
+        }
+    }),
+
+    Word(new Matcher() {
+        public TokenMatch makeMatch(TokenType type, ScanString input) {
+            int size = input.wordLength(0);
+            return size > 0 ? new TokenMatch(new ContentToken(type, input.substring(0, size)), size) : TokenMatch.noMatch;
+        }
+    }),
+
     Table(new Matcher() {
         public TokenMatch makeMatch(TokenType type, ScanString input) {
             return input.startsLine() && input.startsWith("|") ?
@@ -19,9 +33,7 @@ public enum TokenType {
                     offset++;
                     bodyStyle="hidden";
                 }
-                if (input.charAt(offset) == ' ') {
-                    return new TokenMatch(new CollapsibleToken(bodyStyle), offset + 1);
-                }
+                return new TokenMatch(new CollapsibleToken(bodyStyle), offset);
             }
             return TokenMatch.noMatch;
         }
@@ -33,7 +45,7 @@ public enum TokenType {
                 int offset = 1;
                 while (input.charAt(offset) == '*') offset++;
                 if (input.charAt(offset) == '!') {
-                    return new TokenMatch(new EndSectionToken(), offset + 1);
+                    return new TokenMatch(new ContentToken(type, input.substring(0, offset + 1)), offset + 1);
                 }
             }
             return TokenMatch.noMatch;
@@ -51,9 +63,13 @@ public enum TokenType {
         }
     }),
 
-    Bold(new StringMatcher("'''", EqualPairToken.BoldToken)),
-    Italic(new StringMatcher("''", EqualPairToken.ItalicToken)),
-    Strike(new StringMatcher("--", EqualPairToken.StrikeToken)),
+    Bold(new BasicTokenMatcher("'''", EqualPairToken.BoldToken)),
+    Italic(new BasicTokenMatcher("''", EqualPairToken.ItalicToken)),
+    Strike(new BasicTokenMatcher("--", EqualPairToken.StrikeToken)),
+    CloseParenthesis(new StringMatcher(")", new ContentToken())),
+    CloseBrace(new StringMatcher("}", new ContentToken())),
+    CloseBracket(new StringMatcher("]", new ContentToken())),
+    Newline(new StringMatcher("\n", new NewlineToken())),
 
     Style(new Matcher() {
         private final String delimiter = "!style_";
@@ -72,16 +88,12 @@ public enum TokenType {
             return TokenMatch.noMatch;
         }
 
-        private DelimiterToken makeTerminator(char beginner) {
-            return beginner == '[' ? DelimiterToken.CloseBracketToken
-                    : beginner == '{' ? DelimiterToken.CloseBraceToken
-                    : DelimiterToken.CloseParenthesisToken;
+        private TokenType makeTerminator(char beginner) {
+            return beginner == '[' ? TokenType.CloseBracket
+                    : beginner == '{' ? TokenType.CloseBrace
+                    : TokenType.CloseParenthesis;
         }
     }),
-
-    CloseParenthesis(new StringMatcher(")", DelimiterToken.CloseParenthesisToken)),
-    CloseBrace(new StringMatcher("}", DelimiterToken.CloseBraceToken)),
-    CloseBracket(new StringMatcher("]", DelimiterToken.CloseBracketToken)),
 
     EndCell(new Matcher() {
         public TokenMatch makeMatch(TokenType type, ScanString input) {
@@ -92,43 +104,12 @@ public enum TokenType {
         }
     }),
 
-    HeaderLine(new LineMatcher(new String[] {"1", "2", "3", "4", "5", "6"}, LineToken.HeaderLine)),
-    CenterLine(new LineMatcher(new String[] {"c", "C"}, LineToken.CenterLine)),
-    NoteLine(new LineMatcher(new String[] {"note"}, LineToken.NoteLine)),
-    Newline(new StringMatcher("\n", new NewlineToken())),
+    HeaderLine(new LineMatcher(new String[] {"1", "2", "3", "4", "5", "6"})),
+    CenterLine(new LineMatcher(new String[] {"c", "C"})),
+    NoteLine(new LineMatcher(new String[] {"note"})),
 
-    AnchorName(new Matcher() {
-        private final String delimiter = "!anchor ";
-
-        public TokenMatch makeMatch(TokenType type, ScanString input) {
-            if (input.startsWith(delimiter)) {
-                int wordLength = input.wordLength(delimiter.length());
-                if (wordLength > 0) {
-                    return new TokenMatch(
-                            new AnchorNameToken(input.substring(delimiter.length(), delimiter.length() + wordLength)),
-                            delimiter.length() + wordLength);
-                }
-            }
-            return TokenMatch.noMatch;
-        }
-    }),
-
-    AnchorReference(new Matcher() {
-        private final String delimiter = ".#";
-        
-        public TokenMatch makeMatch(TokenType type, ScanString input) {
-            if (input.startsWith(delimiter)) {
-                int wordLength = input.wordLength(delimiter.length());
-                if (wordLength > 0) {
-                    return new TokenMatch(
-                            new AnchorReferenceToken(input.substring(delimiter.length(), delimiter.length() + wordLength)),
-                            delimiter.length() + wordLength);
-                }
-            }
-            return TokenMatch.noMatch;
-        }
-
-    }),
+    AnchorName(new BasicMatcher("!anchor", AnchorNameToken.class)),
+    AnchorReference(new BasicMatcher(".#", AnchorReferenceToken.class)),
 
     Text(new NoMatch()),
     Empty(new NoMatch());
@@ -139,19 +120,63 @@ public enum TokenType {
 
     public TokenMatch makeMatch(ScanString input) { return matcher.makeMatch(this, input); }
 
+    private static class BasicMatcher implements Matcher {
+        private String delimiter;
+        private Class<? extends ContentToken> tokenClass;
+
+        public BasicMatcher(String delimiter, Class<? extends ContentToken> tokenClass) {
+            this.delimiter = delimiter;
+            this.tokenClass = tokenClass;
+        }
+
+        public TokenMatch makeMatch(TokenType type, ScanString input)  {
+            if (input.startsWith(delimiter)) {
+                ContentToken token;
+                try {
+                    token = tokenClass.newInstance();
+                } catch (InstantiationException e) {
+                    throw new IllegalArgumentException(e);
+                } catch (IllegalAccessException e) {
+                    throw new IllegalArgumentException(e);
+                }
+                return new TokenMatch(token, delimiter.length());
+            }
+            return TokenMatch.noMatch;
+        }
+    }
+
+    private static class BasicTokenMatcher implements Matcher {
+        private String delimiter;
+        private TokenBase token;
+
+        public BasicTokenMatcher(String delimiter, TokenBase token) {
+            this.delimiter = delimiter;
+            this.token = token;
+        }
+
+        public TokenMatch makeMatch(TokenType type, ScanString input)  {
+            if (input.startsWith(delimiter)) {
+                token.setType(type);
+                return new TokenMatch(token, delimiter.length());
+            }
+            return TokenMatch.noMatch;
+        }
+    }
+
     private static class StringMatcher implements Matcher {
         private final String match;
-        private ContentTypeToken token;
+        private ContentToken token;
 
-        public StringMatcher(String match, ContentTypeToken token) {
+        public StringMatcher(String match, ContentToken token) {
             this.match = match;
             this.token = token;
         }
 
         public TokenMatch makeMatch(TokenType type, ScanString input) {
             if (input.startsWith(match)) {
-                 token.setType(type);
-                 return new TokenMatch(token, match.length());
+                token.setType(type);
+                token.setContent(match);
+                return new TokenMatch(token, match.length());
             }
             return TokenMatch.noMatch;
         }
@@ -160,19 +185,15 @@ public enum TokenType {
     private static class LineMatcher implements Matcher {
         private final String[] matches;
 
-        public LineMatcher(String[] matches, TokenType type) {
+        public LineMatcher(String[] matches) {
             this.matches = matches;
         }
 
         public TokenMatch makeMatch(TokenType type, ScanString input) {
             if (input.startsLine() && input.startsWith("!")) {
-                int blank = input.find(new char[] {' '}, 1);
-                if (blank > 1) {
-                    String content = input.substring(1, blank);
-                    for (String match: matches) {
-                    if (match.equals(content))
-                        return new TokenMatch(new LineToken(content, type), content.length() + 2);
-                    }
+                for (String match: matches) {
+                if (input.matches(match, 1))
+                    return new TokenMatch(new LineToken(match, type), match.length() + 1);
                 }
             }
             return TokenMatch.noMatch;
