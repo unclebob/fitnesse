@@ -6,6 +6,8 @@ import java.util.List;
 public class Scanner {
     private static final Token[] tokens = {
             new TableToken(),
+            new CollapsibleToken(),
+            new EndSectionToken(),
             new HorizontalRuleToken(),
             new EqualPairToken("'''", "b", ""),
             new EqualPairToken("''", "i", ""),

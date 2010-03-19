@@ -6,6 +6,7 @@ import fitnesse.responders.run.ExecutionLog;
 import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.parser.Translator;
 import fitnesse.wikitext.widgets.*;
 import util.StringUtil;
 
@@ -233,13 +234,17 @@ public class PageData implements Serializable {
     variableRoot.render();
   }
 
-  private String processHTMLWidgets(String content, WikiPage context)
-      throws Exception {
-    ParentWidget root = new WidgetRoot(content, context,
-        WidgetBuilder.htmlWidgetBuilder);
+    /*private String processHTMLWidgets(String content, WikiPage context)
+        throws Exception {
+      ParentWidget root = new WidgetRoot(content, context,
+          WidgetBuilder.htmlWidgetBuilder);
 
-    return root.render();
-  }
+      return root.render();
+    }*/
+
+    private String processHTMLWidgets(String content, WikiPage context) {
+        return new Translator().translate(content);
+    }
 
   public void setWikiPage(WikiPage page) {
     wikiPage = page;
