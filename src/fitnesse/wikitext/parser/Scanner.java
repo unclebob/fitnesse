@@ -4,24 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scanner {
-    private static final Token[] tokens = {
-            new TableToken(),
-            new CollapsibleToken(),
-            new EndSectionToken(),
-            new HorizontalRuleToken(),
-            new EqualPairToken("'''", "b", ""),
-            new EqualPairToken("''", "i", ""),
-            new EqualPairToken("--", "span", "strike"),
-            new StyleToken(),
-            new DelimiterToken(")"),
-            new DelimiterToken("}"),
-            new DelimiterToken("]"),
-            new CellDelimiterToken(),
-            new LineToken(),
-            new NewlineToken(),
-            new AnchorNameToken(),
-            new AnchorReferenceToken()
-    };
+
     private static final Token endToken = new EmptyToken();
 
     private String input;
@@ -44,15 +27,15 @@ public class Scanner {
     }
 
     public void moveNext() {
-        moveNextIgnoreFirst(new ArrayList<Token>());
+        moveNextIgnoreFirst(new ArrayList<TokenType>());
     }
 
-    public void moveNextIgnoreFirst(List<Token> ignoreFirst) {
+    public void moveNextIgnoreFirst(List<TokenType> ignoreFirst) {
         int scan = next;
         int newNext = next;
         Token matchToken = null;
         while (scan < input.length()) {
-            for (Token candidate: tokens) {
+            for (TokenType candidate: TokenType.values()) {
                 if (scan != next || !contains(ignoreFirst, candidate)) {
                     TokenMatch match = candidate.makeMatch(new ScanString(input, scan));
                     if (match.isMatch()) {
@@ -79,9 +62,9 @@ public class Scanner {
         }
     }
 
-    private boolean contains(List<Token> ignoreList, Token candidate) {
-        for (Token ignore: ignoreList) {
-            if (ignore.sameAs(candidate)) return true;
+    private boolean contains(List<TokenType> ignoreList, TokenType candidate) {
+        for (TokenType ignore: ignoreList) {
+            if (ignore == candidate) return true;
         }
         return false;
     }

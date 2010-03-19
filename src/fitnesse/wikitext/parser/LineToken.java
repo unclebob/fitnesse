@@ -7,6 +7,9 @@ import util.Maybe;
 import java.util.HashMap;
 
 public class LineToken extends ContentToken {
+    public static final TokenType HeaderLine = TokenType.HeaderLine;
+    public static final TokenType CenterLine = TokenType.CenterLine;
+    public static final TokenType NoteLine = TokenType.NoteLine;
 
     private interface Renderer { HtmlTag render(String content); }
     private static final HashMap<String, Renderer> renderers;
@@ -38,31 +41,20 @@ public class LineToken extends ContentToken {
         });
     }
 
-    public LineToken(String content) { super(content); }
-    public LineToken() { this(""); }
+    private final TokenType type;
 
-    public TokenMatch makeMatch(ScanString input) {
-        if (input.startsLine() && input.startsWith("!")) {
-            int blank = input.find(new char[] {' '}, 1);
-            if (blank > 1) {
-                String content = input.substring(1, blank);
-                if (renderers.containsKey(content)) {
-                    return new TokenMatch(new LineToken(content), content.length() + 2);
-                }
-            }
-        }
-        return TokenMatch.noMatch;
+    public LineToken(String content, TokenType type) {
+        super(content);
+        this.type = type;
     }
 
     public Maybe<String> render(Scanner scanner) {
-        String body = new Translator().translate(scanner, new NewlineToken());
+        String body = new Translator().translate(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag html = renderers.get(getContent()).render(getContent());
         html.add(body.trim());
         return new Maybe<String>(html.html());
     }
 
-    public boolean sameAs(Token other) {
-        return other instanceof LineToken && ((LineToken)other).getContent().equals(getContent());
-    }
+    public TokenType getType() { return type; }
 }

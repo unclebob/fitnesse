@@ -10,27 +10,10 @@ public class CollapsibleToken extends ContentToken {
     public static void resetId() { nextId = 1; }
 
     public CollapsibleToken(String content) { super(content); }
-    public CollapsibleToken() { this(""); }
-
-    public TokenMatch makeMatch(ScanString input) {
-        if (input.startsLine() && input.startsWith("!*")) {
-            String bodyStyle ="collapsable";
-            int offset = 2;
-            while (input.charAt(offset) == '*') offset++;
-            if (input.charAt(offset) == '>') {
-                offset++;
-                bodyStyle="hidden";
-            }
-            if (input.charAt(offset) == ' ') {
-                return new TokenMatch(new CollapsibleToken(bodyStyle), offset + 1);
-            }
-        }
-        return TokenMatch.noMatch;
-    }
 
     public Maybe<String> render(Scanner scanner) {
         long id = nextId++;
-        String titleText = new Translator().translate(scanner, new NewlineToken());
+        String titleText = new Translator().translate(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapse_rim");
@@ -56,7 +39,7 @@ public class CollapsibleToken extends ContentToken {
         outerBlock.add("&nbsp;");
         HtmlTag title = HtmlUtil.makeSpanTag("meta", titleText);
         outerBlock.add(title);
-        String bodyText = new Translator().translate(scanner, new EndSectionToken());
+        String bodyText = new Translator().translate(scanner, TokenType.EndSection);
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag body = new HtmlTag("div", bodyText);
         body.addAttribute("class", getContent());
@@ -65,7 +48,5 @@ public class CollapsibleToken extends ContentToken {
         return new Maybe<String>(outerBlock.html());
     }
 
-    public boolean sameAs(Token other) {
-        return other instanceof CollapsibleToken;
-    }
+    public TokenType getType() { return TokenType.Collapsible; }
 }

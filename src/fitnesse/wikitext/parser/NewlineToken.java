@@ -1,9 +1,7 @@
 package fitnesse.wikitext.parser;
 
-public class NewlineToken extends ContentToken {
+public class NewlineToken extends ContentTypeToken {
     public NewlineToken() { super("\n"); }
 
-    public boolean sameAs(Token other) {
-        return other instanceof NewlineToken;
-    }
+    public TokenType getType() { return TokenType.Newline; }
 }
