@@ -1,4 +1,4 @@
-package fitnesse;
+package fitnesse.http;
 
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;

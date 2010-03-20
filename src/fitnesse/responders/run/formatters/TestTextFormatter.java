@@ -10,10 +10,7 @@ import fitnesse.wiki.WikiPage;
 import java.text.SimpleDateFormat;
 
 public class TestTextFormatter extends BaseFormatter {
-  public static int finalErrorCount = 0;
   private ChunkedResponse response;
-  private int testCount = 0;
-  private int failCount = 0;
   private String timeString;
 
   public TestTextFormatter(ChunkedResponse response) {
@@ -42,18 +39,16 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   public void testComplete(WikiPage page, TestSummary summary) throws Exception {
+    super.testComplete(page, summary);
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\n",
       passFail(summary), timeString, summary.right, summary.wrong, summary.ignores, summary.exceptions, page.getName(), getPath(page)));
   }
 
   private String passFail(TestSummary summary) {
-    testCount++;
     if (summary.wrong > 0){
-      failCount++;
       return "F";
     }
     if (summary.exceptions > 0) {
-      failCount++;
       return "X";
     }
     return ".";
@@ -61,7 +56,7 @@ public class TestTextFormatter extends BaseFormatter {
 
   @Override
   public void allTestingComplete() throws Exception {
+    super.allTestingComplete();
     response.add(String.format("--------\n%d Tests,\t%d Failures.\n", testCount, failCount));
-    finalErrorCount = failCount;
   }
 }

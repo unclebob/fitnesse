@@ -2,19 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import static org.junit.Assert.assertEquals;
-
+import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import static org.junit.Assert.assertEquals;
 
 public class ReturnedValueExpectationTest {
   private MockSlimTestContext testContext;
 
+  @Before
+  public void setup() {
+    testContext = new MockSlimTestContext();
+  }
+
   private void assertExpectationMessage(String expected, String value, String message) throws Exception {
     TableScanner ts = new HtmlTableScanner("<table><tr><td>x</td></tr></table>");
     Table t = ts.getTable(0);
-    testContext = new MockSlimTestContext();
     SlimTable slimTable = new DecisionTable(t, "id", testContext);
     SlimTable.Expectation expectation = slimTable.makeReturnedValueExpectation("instructionId", 1, 2);
     assertEquals(message, HtmlTable.colorize(expectation.evaluationMessage(value, expected)));
@@ -45,8 +49,25 @@ public class ReturnedValueExpectationTest {
   }
 
   @Test
-  public void doubleDollarReducedToSingleDollar() throws Exception {
-    assertExpectationMessage("a $$ x", "a $ x", "pass(a $$ x)");
+  public void matchedSymbolIsReplaced() throws Exception {
+    testContext.setSymbol("S", "Value");
+    assertExpectationMessage("$S", "Value", "pass($S->[Value])");
+  }
+
+  @Test
+  public void mismatchedSymbolIsReplaced() throws Exception {
+    testContext.setSymbol("S", "Value");
+    assertExpectationMessage("$S", "WrongValue", "[WrongValue] fail(expected [$S->[Value]])");
+  }
+
+  @Test
+  public void matchedUnboundSymbolIsNotReplaced() throws Exception {
+    assertExpectationMessage("$S", "$S", "pass($S)");
+  }
+
+  @Test
+  public void mismatchedUnboundSymbolIsNotReplaced() throws Exception {
+    assertExpectationMessage("$S", "$X", "[$X] fail(expected [$S])");
   }
 
   @Test
@@ -158,13 +179,13 @@ public class ReturnedValueExpectationTest {
   @Test
   public void negativeNumberInSimpleComparison() throws Exception {
     assertExpectationMessage(" < -2 ", "-3", "pass(-3<-2)");
-    assertExpectationMessage(" < -3 ", "-2", "fail(-2<-3)");    
+    assertExpectationMessage(" < -3 ", "-2", "fail(-2<-3)");
   }
 
   @Test
   public void negativeNumberInRangeComparison() throws Exception {
     assertExpectationMessage(" -4 < _ < -2", "-3", "pass(-4<-3<-2)");
-    assertExpectationMessage(" -4 < _ < -2", "3", "fail(-4<3<-2)");    
+    assertExpectationMessage(" -4 < _ < -2", "3", "fail(-4<3<-2)");
   }
 
   @Test

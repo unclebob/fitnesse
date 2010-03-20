@@ -9,10 +9,6 @@ import junit.framework.TestCase;
 import util.StreamReader;
 
 public class ContentBufferTest extends TestCase {
-  protected void tearDown() throws Exception {
-    System.gc();
-  }
-
   public void testName() throws Exception {
     String name = new ContentBuffer().getFile().getName();
     assertTrue(name.startsWith("FitNesse-"));

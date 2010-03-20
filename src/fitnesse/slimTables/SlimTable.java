@@ -506,19 +506,12 @@ public abstract class SlimTable {
     private void replaceAllSymbols() {
       startingPosition = 0;
       while (symbolFound())
-        replaceOneSymbol();
-    }
-
-    private void replaceOneSymbol() {
-      if (isDollarDollar())
-        startingPosition += 2;
-       else
         replaceSymbol();
     }
 
     private void replaceSymbol() {
       String symbolName = symbolMatcher.group(1);
-      String value = getSymbolValue(symbolName);
+      String value = formatSymbol(symbolName);
       String prefix = replacedString.substring(0, symbolMatcher.start());
       String suffix = replacedString.substring(symbolMatcher.end());
       replacedString = prefix + value + suffix;
@@ -526,15 +519,12 @@ public abstract class SlimTable {
       startingPosition = Math.min(replacementEnd, replacedString.length());
     }
 
-    private boolean isDollarDollar() {
-      return symbolMatcher.start() > 0 && replacedString.charAt(symbolMatcher.start() - 1) == '$';
-    }
-
-    private String getSymbolValue(String symbolName) {
-      String value = translate(symbolName);
+    private String formatSymbol(String symbolName) {
+      String value = getSymbol(symbolName);
       if (value == null)
-        value = "";
-      return value;
+        return "$" + symbolName;
+      else
+        return formatSymbolValue(symbolName, value);
     }
 
     private boolean symbolFound() {
@@ -542,8 +532,8 @@ public abstract class SlimTable {
       return symbolMatcher.find(startingPosition);
     }
 
-    protected String translate(String symbolName) {
-      return getSymbol(symbolName);
+    protected String formatSymbolValue(String name, String value) {
+      return value;
     }
   }
 
@@ -552,8 +542,8 @@ public abstract class SlimTable {
       super(s);
     }
 
-    protected String translate(String symbolName) {
-      return String.format("$%s->[%s]", symbolName, getSymbol(symbolName));
+    protected String formatSymbolValue(String name, String value) {
+        return String.format("$%s->[%s]", name, value);
     }
   }
 
@@ -621,10 +611,7 @@ public abstract class SlimTable {
     protected String createEvaluationMessage(String actual, String expected) {
       String evaluationMessage;
       String replacedExpected = Utils.unescapeHTML(replaceSymbols(expected));
-      int dolDolIndex = 0;
-      while ((dolDolIndex = replacedExpected.indexOf("$$")) != -1) {
-        replacedExpected = replacedExpected.substring(0, dolDolIndex) + replacedExpected.substring(dolDolIndex+1);
-      }
+
       if (actual == null)
         evaluationMessage = fail("null"); //todo can't be right message.
       else if (actual.equals(replacedExpected))
@@ -639,11 +626,15 @@ public abstract class SlimTable {
           evaluationMessage = error(actual);
         } else
           evaluationMessage = failMessage(actual,
-            String.format("expected [%s]", replaceSymbolsWithFullExpansion(expected))
+            String.format("%s [%s]", expectationAdjective(), replaceSymbolsWithFullExpansion(expected))
           );
       }
 
       return evaluationMessage;
+    }
+
+    protected String expectationAdjective() {
+      return "expected";
     }
 
     private String announceBlank(String originalValue) {
@@ -666,6 +657,11 @@ public abstract class SlimTable {
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
+    }
+
+    @Override
+    protected String expectationAdjective() {
+      return "is not";
     }
 
     protected String pass(String message) {

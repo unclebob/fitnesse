@@ -323,17 +323,12 @@ public class SlimTestSystemTest {
       "!|DT:fitnesse.slim.test.TestSlim|\n" +
         "|string|getStringArg?|\n" +
         "|Bob|$V=|\n" +
-        "|$V|$V|\n" +
-        "|Bill|$V|\n" +
-        "|John|$Q|\n"
+        "|$V|$V|\n"
     );
     TableScanner ts = getScannedResults();
     Table dt = ts.getTable(0);
     assertEquals("$V<-[Bob]", unescape(dt.getCellContents(1, 2)));
     assertEquals("$V->[Bob]", unescape(dt.getCellContents(0, 3)));
-    assertEquals("<span class=\"pass\">$V->[Bob]</span>", unescape(dt.getCellContents(1, 3)));
-    assertEquals("[Bill] <span class=\"fail\">expected [$V->[Bob]]</span>", unescape(dt.getCellContents(1, 4)));
-    assertEquals("<span class=\"ignore\">John</span>", unescape(dt.getCellContents(1, 5)));
   }
 
   protected TableScanner getScannedResults() throws Exception {

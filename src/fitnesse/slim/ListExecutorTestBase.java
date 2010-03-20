@@ -171,22 +171,6 @@ public abstract class ListExecutorTestBase {
   }
 
   @Test
-  public void doesNotReplaceSymbolWithDoubleDollar() throws Exception {
-    statements.add(list("id1", "make", "nf", "NullFixture"));
-    statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
-    statements.add(list("id3", "call", "testSlim", "echoString", "$$v"));
-    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "$v")));
-  }
-
-    @Test
-  public void stripOneDollarOffDoubleDollar() throws Exception {
-    statements.add(list("id1", "make", "nf", "NullFixture"));
-    statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
-    statements.add(list("id3", "call", "testSlim", "echoString", "$$"));
-    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "$")));
-  }
-
-  @Test
   public void passAndReturnList() throws Exception {
     List<String> l = list("one", "two");
     statements.add(list("id", "call", "testSlim", "echoList", l));

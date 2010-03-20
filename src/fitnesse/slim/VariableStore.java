@@ -36,17 +36,7 @@ public class VariableStore {
     if (object instanceof List)
       return (replaceSymbolsInList((List<Object>) object));
     else
-      return (trimDoubleDollars(replaceSymbolsInString((String) object)));
-  }
-
-  private String trimDoubleDollars(String s) {
-    if (s != null) {
-      int doubleDollarIndex = 0;
-      while ((doubleDollarIndex = s.indexOf("$$")) != -1) {
-        s = s.substring(0, doubleDollarIndex) + s.substring(doubleDollarIndex + 1);
-      }
-    }
-    return s;
+      return (replaceSymbolsInString((String) object));
   }
 
   private String replaceSymbolsInString(String arg) {
@@ -58,14 +48,9 @@ public class VariableStore {
       }
       symbolMatcher = symbolPattern.matcher(arg);
       if (symbolMatcher.find(startingPosition)) {
-        if (isDoubleDollar(arg)) {
-          arg = arg.substring(0, symbolMatcher.start()) + arg.substring(symbolMatcher.start() + 1);
-          startingPosition += 2;
-        } else {
-          String symbolName = symbolMatcher.group(1);
-          arg = replaceSymbolInArg(arg, symbolName);
-          startingPosition = symbolMatcher.start(1);
-        }
+        String symbolName = symbolMatcher.group(1);
+        arg = replaceSymbolInArg(arg, symbolName);
+        startingPosition = symbolMatcher.start(1);
       } else {
         break;
       }
