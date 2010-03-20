@@ -1,8 +1,16 @@
+!3 Motivations
+
+It is possible to issue single commands to FitNesse from the command line. This is useful when:
+ * Running test suites from your build scripts (see how this is achieved for Ant below .#antIntegration)
+ * Generating XML output from a test execution to a file
+
+!3 Command Syntax
+
 You can run any REST command (See RestfulServices) from the command line by using the -c command line option as follows:
 
 |!style_code(java -jar fitnesse.jar -c <rest-command>)|
 
-This starts up fitnesse, runs the command, emits the output to standard out, and then exits.  
+This starts up fitnesse, runs the command, emits the output to standard out, and then exits.
 
 Most often you will use this to run tests and/or suites from the command line as follows:
 
@@ -42,6 +50,8 @@ The rest should be self explanatory.
 
 The exit code for the command is 0 unless you run a test with ''text'' formatting, in which case it is the number of failing tests.
 
+!anchor antIntegration
+
 !2 Running FitNesse with Ant
 You can run a test suite with Ant using the following ant task {{{
   <target name="my_fitnesse_tests">
@@ -50,7 +60,7 @@ You can run a test suite with Ant using the following ant task {{{
       <arg value="FitNesse.MySuitePage?suite&amp;format=text"/>
       <arg value="-p"/>
       <arg value="9234"/>
-    </java> 
+    </java>
   </target>}}}
 !note !style_green[You only need to set the port if the default command port (9123) will collide with something.]
 

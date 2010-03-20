@@ -7,7 +7,6 @@
 |>SuiteWikiImportTests|''Specify the behavior of the Wiki Import feature''|
 |>SuiteAuthenticationTests|''Specify the authentication design''|
 |>SuiteFixtureTests|''Specify the behavior of various fixtures''|
-|>SuiteTestRunnerTests|''Describe the behavior of the command line test runner''|
 |>SuiteSymbolicLinkTests|''Demonstrate usage and behavior of symbolic links''|
 |>SuiteFitDecoratorTests|''Demonstrate usage and behavior of Fit Decorators''|
 |>SuiteSlimTests|''Slim Specific Tests''|
