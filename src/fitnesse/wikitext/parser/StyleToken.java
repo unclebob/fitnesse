@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlUtil;
 import util.Maybe;
 
-public class StyleToken extends ContentToken {
+public class StyleToken extends Token {
     private final TokenType terminator;
 
     public StyleToken(String content, TokenType terminator) {
@@ -12,7 +12,7 @@ public class StyleToken extends ContentToken {
     }
 
     public Maybe<String> render(Scanner scanner) {
-        String body = new Translator().translate(scanner, terminator);
+        String body = new Translator(getPage()).translate(scanner, terminator);
         if (scanner.isEnd()) return Maybe.noString;
         return new Maybe<String>(HtmlUtil.makeSpanTag(getContent(), body).html());
     }

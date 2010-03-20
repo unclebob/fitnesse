@@ -17,14 +17,14 @@ public class ParserTest {
             Token current = scanner.getCurrent();
             String name = current.getType().toString();
             result.append(name);
-            String string = current.toString();
-            if (string.length() > 0) result.append("=").append(string);
+            String content = current.getContent();
+            if (content.length() > 0) result.append("=").append(content);
         }
         assertEquals(expected, result.toString());
     }
 
     public static void assertTranslates(String input, String expected) {
-        Translator translator = new Translator();
+        Translator translator = new Translator(null);
         assertEquals(expected, translator.translate(input));
     }
 }

@@ -6,7 +6,7 @@ import util.Maybe;
 
 import java.util.HashMap;
 
-public class LineToken extends ContentToken {
+public class LineToken extends Token {
     public static final TokenType HeaderLine = TokenType.HeaderLine;
     public static final TokenType CenterLine = TokenType.CenterLine;
     public static final TokenType NoteLine = TokenType.NoteLine;
@@ -51,7 +51,7 @@ public class LineToken extends ContentToken {
     public Maybe<String> render(Scanner scanner) {
         scanner.moveNext();
         if (scanner.getCurrent().getType() != TokenType.Whitespace) return Maybe.noString;
-        String body = new Translator().translate(scanner, TokenType.Newline);
+        String body = new Translator(getPage()).translate(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag html = renderers.get(getContent()).render(getContent());
         html.add(body.trim());

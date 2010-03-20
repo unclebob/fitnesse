@@ -243,7 +243,7 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(String content, WikiPage context) {
-        return new Translator().translate(content);
+        return new Translator(context).translate(content);
     }
 
   public void setWikiPage(WikiPage page) {

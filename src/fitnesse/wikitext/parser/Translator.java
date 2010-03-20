@@ -1,10 +1,15 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.WikiPage;
 import util.Maybe;
 
 import java.util.ArrayList;
 
 public class Translator {
+    private WikiPage currentPage;
+
+    public Translator(WikiPage currentPage) { this.currentPage = currentPage; }
+
     public String translate(String input) {
         return translate(new Scanner(input), TokenType.Empty);
     }
@@ -19,6 +24,7 @@ public class Translator {
             if (scanner.isEnd()) break;
             Token currentToken = scanner.getCurrent();
             if (currentToken.getType() == terminator) break;
+            currentToken.setPage(currentPage);
             Maybe<String> translation = currentToken.render(scanner);
             if (translation.isNothing()) {
                 ignore.add(currentToken.getType());

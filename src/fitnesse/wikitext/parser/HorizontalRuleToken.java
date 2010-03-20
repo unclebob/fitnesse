@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import util.Maybe;
 
-public class HorizontalRuleToken extends ContentToken {
+public class HorizontalRuleToken extends Token {
 
     public HorizontalRuleToken(String content) { super(content); }
 

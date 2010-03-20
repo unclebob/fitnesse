@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import util.Maybe;
 
-public class EqualPairToken extends TokenBase {
+public class EqualPairToken extends Token {
     public static final EqualPairToken BoldToken = new EqualPairToken("b", "");
     public static final EqualPairToken ItalicToken = new EqualPairToken("i", "");
     public static final EqualPairToken StrikeToken = new EqualPairToken("span", "strike");
@@ -16,7 +16,7 @@ public class EqualPairToken extends TokenBase {
     }
 
     public Maybe<String> render(Scanner scanner) {
-        String body = new Translator().translate(scanner, this.getType());
+        String body = new Translator(getPage()).translate(scanner, this.getType());
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag html = new HtmlTag(tag);
         if (classAttribute.length() > 0) html.addAttribute("class", classAttribute);
