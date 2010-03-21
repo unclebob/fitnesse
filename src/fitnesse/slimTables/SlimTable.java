@@ -626,11 +626,15 @@ public abstract class SlimTable {
           evaluationMessage = error(actual);
         } else
           evaluationMessage = failMessage(actual,
-            String.format("expected [%s]", replaceSymbolsWithFullExpansion(expected))
+            String.format("%s [%s]", expectationAdjective(), replaceSymbolsWithFullExpansion(expected))
           );
       }
 
       return evaluationMessage;
+    }
+
+    protected String expectationAdjective() {
+      return "expected";
     }
 
     private String announceBlank(String originalValue) {
@@ -653,6 +657,11 @@ public abstract class SlimTable {
   class RejectedValueExpectation extends ReturnedValueExpectation {
     public RejectedValueExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
+    }
+
+    @Override
+    protected String expectationAdjective() {
+      return "is not";
     }
 
     protected String pass(String message) {

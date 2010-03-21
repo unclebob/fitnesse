@@ -70,6 +70,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   public void testComplete(WikiPage test, TestSummary testSummary)
     throws Exception {
+    super.testComplete(test, testSummary);
     getAssertionCounts().add(testSummary);
   }
 
@@ -114,6 +115,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   public void allTestingComplete() throws Exception {
+    super.allTestingComplete();
     removeStopTestLink();
     publishAndAddLog();
     finishWritingOutput();
@@ -127,7 +129,8 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     writeData("<br/><div class=\"footer\">\n");
     writeData(getPage().getData().getFooterPageHtml());
     writeData("</div>\n");    
-    writeData(htmlPage.postDivision);
+    if (htmlPage != null)
+      writeData(htmlPage.postDivision);
   }
 
   protected void publishAndAddLog() throws Exception {

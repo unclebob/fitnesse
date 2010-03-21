@@ -1,1 +1,0 @@
-A program used from the command line that will execute FitNesse tests

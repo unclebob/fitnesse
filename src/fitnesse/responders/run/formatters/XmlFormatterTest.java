@@ -26,5 +26,4 @@ public class XmlFormatterTest {
       "20090413152143_1_2_3_4.xml", 
       TestHistory.makeResultFileName(summary, formatter.getTime()));
   }
-
 }
