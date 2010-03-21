@@ -1,7 +1,0 @@
-!c !3 The New Improved Test Runner
-The previous command line test runner use a trival implementation which was very limiting in functionallity.  This new implementation is should be much more extensible.  Among the top priority features are the following:
-
-!contents -R2 -g -p
-
-!define TEST_SYSTEM {slim:TEST_RUNNER}
-
