@@ -31,6 +31,16 @@ public class FitNesseSuite extends ParentRunner<String>{
     }
 
     /**
+     * The <code>DebugMode</code> annotation specifies whether the test is run 
+     * with the REST debug option. Default is true
+     */
+       @Retention(RetentionPolicy.RUNTIME)
+       @Target(ElementType.TYPE)
+       public @interface DebugMode {
+         public boolean value();
+       }
+
+    /**
      * The <code>SuiteFilter</code> annotation specifies the suite filter of the Fitnesse suite
      * to be run, e.g.: fasttests
      */
@@ -74,6 +84,7 @@ public class FitNesseSuite extends ParentRunner<String>{
   private String fitNesseDir;
   private String outputDir;
   private String suiteFilter;
+  private boolean debugMode = false;
   public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
     super(suiteClass);
     this.suiteClass = suiteClass;
@@ -81,7 +92,9 @@ public class FitNesseSuite extends ParentRunner<String>{
     this.fitNesseDir=getFitnesseDir(suiteClass);
     this.outputDir=getOutputDir(suiteClass);
     this.suiteFilter=getSuiteFilter(suiteClass);
+    this.debugMode=useDebugMode(suiteClass);
   }
+  
   @Override
   protected Description describeChild(String child) {
     return Description.createTestDescription(suiteClass, child);
@@ -132,9 +145,18 @@ public class FitNesseSuite extends ParentRunner<String>{
     throw new InitializationError(
         "In annotation @OutputDir you have to specify either 'value' or 'systemProperty'");
   }  
+
+  public static boolean useDebugMode(Class<?> klass) {
+    DebugMode debugModeAnnotation = klass.getAnnotation(DebugMode.class);
+    if (null == debugModeAnnotation) {
+      return true;
+    }
+    return debugModeAnnotation.value();
+  }
+
   @Override
   public void run(final RunNotifier notifier) { 
-      JUnitHelper helper=new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
+      JUnitHelper helper=createJUnitHelper(notifier);
       try{
         helper.assertSuitePasses(suiteName, suiteFilter);
       }catch(AssertionFailedError e){
@@ -143,10 +165,10 @@ public class FitNesseSuite extends ParentRunner<String>{
         notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
       }
   }
- 
+
   @Override
   protected void runChild(String test, RunNotifier notifier) {
-    JUnitHelper helper=new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
+    JUnitHelper helper=createJUnitHelper(notifier);
     try{
       helper.assertTestPasses(suiteName);
     }catch(AssertionFailedError e){
@@ -155,5 +177,12 @@ public class FitNesseSuite extends ParentRunner<String>{
       notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
     }
   }
+
+  private JUnitHelper createJUnitHelper(final RunNotifier notifier) {
+    JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
+    jUnitHelper.setDebugMode(debugMode);
+    return jUnitHelper;
+  }
+  
 }
 

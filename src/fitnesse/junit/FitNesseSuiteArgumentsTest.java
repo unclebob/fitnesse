@@ -16,6 +16,8 @@ public class FitNesseSuiteArgumentsTest {
     assertEquals(new File(System.getProperty("java.io.tmpdir"),"fitnesse").getAbsolutePath(),FitNesseSuite.getOutputDir(FitNesseSuiteExampleTest.class));
     assertNull("null filter allowed", FitNesseSuite.getSuiteFilter(FitNesseSuiteExampleTest.class));
     assertEquals("testSuite", FitNesseSuite.getSuiteFilter(FitNesseSuiteWithFilterExampleTest.class));
-     
+    assertEquals(true, FitNesseSuite.useDebugMode(FitNesseSuiteExampleTest.class));
+    assertEquals(true, FitNesseSuite.useDebugMode(FitNesseSuiteWithFilterExampleTest.class));
+    assertEquals(false, FitNesseSuite.useDebugMode(FitNesseSuiteExampleTestNoDebug.class));
   }
 }
