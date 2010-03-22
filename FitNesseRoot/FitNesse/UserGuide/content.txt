@@ -19,8 +19,8 @@ FitNesse is a [[wiki web server][http://wiki.org/wiki.cgi?WhatIsWiki]]. Learn ho
 |[[Markup Language Reference][>MarkupLanguageReference]]|''A reference for formatting FitNesse pages using the wiki markup language.''|
 |[[Sub Wikis][>SubWiki]]|''How to create hierarchies of FitNesse pages.''|
 |[[Special Wiki Functions][>SpecialWikiFunctions]]|''Special things you can do with wikis.''|
-|[[Wiki Import][>WikiImport]]|''Importing wiki pages from a remote FitNesse server''|
-|[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure''|
+|[[Wiki Import][>WikiImport]]|''Importing wiki pages from a remote FitNesse server.''|
+|[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure.''|
 |[[Special Pages][>SpecialPages]]|''Some pages in FitNesse that serve special purposes.''|
 
 ----
@@ -31,9 +31,9 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |[[Acceptance Tests][>AcceptanceTests]]|''What are the advantages of FitNesse automated acceptance tests?''|
 |[[Delivering the Right System][>DeliveringTheRightSystem]]|''An intro to how software teams can use FitNesse to build better systems.''|
 |[[Creating Test Tables][>CreatingTestTables]]|''Creating and enabling test tables on FitNesse pages.''|
-|[[Graceful Names][>GracefulName]]|''Managing the names of fixtures, packages, and variables''|
+|[[Graceful Names][>GracefulName]]|''Managing the names of fixtures, packages, and variables.''|
 |[[Test Table Styles][>TestTableStyles]]|''The different styles and uses of test tables and corresponding fixtures.''|
-|[[Test Suites][>TestSuites]]|''How to group many test pages into a suite; then tag, search, and execute them..''|
+|[[Test Suites][>TestSuites]]|''How to group many test pages into a suite; then tag, search, and execute them.''|
 |[[Acceptance Test Patterns][>AcceptanceTestPatterns]]|''Some patterns we have seen emerge while writing FitNesse [[Acceptance Tests][>AcceptanceTests]].''|
 |[[Test History][>TestHistory]]|''The results of all test runs are recorded.  You can access and display those results at any time.''|
 
@@ -41,26 +41,26 @@ Acceptance tests are what FitNesse is about. Learn why and how to make, run, and
 |[[Fixture Code][>FixtureCode]]|''An intro to the fixture code that lets you run FitNesse tables.''|
 |[[Class Path][>ClassPath]]|''Telling FitNesse where your Fixture Code is.''|
 |[[Test Table Styles][>TestTableStyles]]|''The styles of FitNesse test tables, and corresponding Fixture Code they use.''|
-|[[Fixture Gallery][>FixtureGallery]]|''A walk through of the various Fit Fixtures''|
-|[[Debuging Fixture Code][>DebugingFixtureCode]]|''How to debug the testing code''|
+|[[Fixture Gallery][>FixtureGallery]]|''A walk through of the various Fit Fixtures.''|
+|[[Debuging Fixture Code][>DebugingFixtureCode]]|''How to debug the testing code.''|
 
-!2 FitNesse Plugins
-There are several plugins for FitNesse that are avaiable at the following URL: http://www.fitnesse.org/FrontPage.PluginsPage
+!2 FitNesse for Integrators
 |[[Source Code Control][>SourceCodeControl]]|''How to create a plugin for marrying !-FitNesse-! to your SCM system.''|
-|[[git plugin][>SourceCodeControl.GitPlugin]]|''This plugin ships with FitNesse.''|
+|[[Customizing Test Execution][>CustomizingTestExecution]]|''Modify the way tests are executed.''|
+|[[Multi-Language Fitnesse][>MultiLanguageFitNesse]] |''Using fixtures written in programming languages other than Java.''|
+|[[Executing Tests from Outside The UI][>ExecutingTestsOutsideTheUserInterface]]|''How to run tests from IDEs, commandline and build scripts.''|
+|[[Plugin Usage][>PluginUsage]]|''How to create and use plugins.''|
+Several plugins for FitNesse are available at http://www.fitnesse.org/FrontPage.PluginsPage.
 
-!2 FitNesse Reference
-Answers to all your other FitNesse questions.
-|[[Starting and Stopping][>StartingAndStoppingFitNesse]]|''The details of running and stopping the FitNesse wiki/web server''|
-|[[Development Environment][>TestDevelopmentEnvironment]]|''Setting up your test development environment''|
-|[[Utilities][>FitNesseUtilities]]|''Running FitNesse from a command line, Log files, import, export, and other similar matters.''|
-|[[Customizing Test Execution][>CustomizingTestExecution]]|''Modify the way tests are executed''|
-|[[Controlling Fitnesse from the Command Line][>ControllingFitNesseFromTheCommandLine]]|''Running tests (and accessing other functionality) from the command line.''|
-|[[RESTful Services][>RestfulServices]]|''Accessing FitNesse through URLs''|
-|[[Multi-Language Fitnesse][>MultiLanguageFitNesse]] |''Running tests written in languages other than Java''|
+!2 Administering FitNesse
+|[[Starting and Stopping][>StartingAndStoppingFitNesse]]|''The details of starting and stopping the FitNesse wiki/web server.''|
+|[[Administration over REST][>RestfulServices]]|''Controlling FitNesse through URLs.''|
+|[[Customizing Look and Feel][>CustomizingLookAndFeel]]|''Changing the colors and layout of the various pages.''|
+|[[Server Access Logging][>LogFiles]]|''Logging access to the FitNesse server.''|
+|[[Using Static and Image Files][>FilesSection]]|''How to upload, and manage and link to static files and images.''|
 |[[Security][>SecurityDescription]] |''Managing the security of wiki pages''|
-|[[Customizing Look and Feel][>CustomizingLookAndFeel]]|''Changing the colors and layout of the various pages''|
-|[[Plugin Usage][>PluginUsage]]|''How to create and use plugins''|
+
+!2 Miscellaneous
 |[[Design Notes][>DesignNotes]]|''Various articles and discussions on the design of FitNesse.''|
 |[[!-FitNesse-! Tests][<FitNesse.SuiteAcceptanceTests]]|''The suite of acceptance tests for !-FitNesse-! itself.''|
 ----

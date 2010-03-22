@@ -4,7 +4,7 @@ Let's say you want to marry !-FitNesse-! with git.  You could start !-FitNesse-!
 
 The value of this variable is the fully qualified name of a class that looks like !-GitCmSystem-! (see below).  Make sure that class in in your classpath when you start fitnesse.
 
-Here's the plugin I use for git.  This ships with !-FitNesse-! so you can use it if it works for you.
+Here's the plugin I use for git.  This ships with !-FitNesse-! so you can [[use it][>GitPlugin]] if it works for you.
 
 {{{public class GitCmSystem {
   public static void cmUpdate(String file, String payload) throws IOException {

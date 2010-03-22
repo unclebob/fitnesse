@@ -20,6 +20,8 @@ You can also pass these options to the ''run.bat'' and ''run.sh'' scripts. The '
 
 See PasswordFile for a description of how to set up per user authentication.
 
+For more details, see CommandLineArguments.
+
 !2 Running Rest Commands using the -c option.
 See ControllingFitNesseFromTheCommandLine
 
