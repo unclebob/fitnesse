@@ -5,27 +5,27 @@ import org.junit.Test;
 
 public class StyleTokenTest {
     @Test public void scansParenthesisStyle() throws Exception {
-        ParserTest.assertScans("!style_x(my text)", "Style=x,Word=my,Whitespace= ,Word=text,CloseParenthesis=)");
-        ParserTest.assertScans("!style_style(my text)", "Style=style,Word=my,Whitespace= ,Word=text,CloseParenthesis=)");
-        ParserTest.assertScans("!style(Hi)", "Text=!,Word=style,Text=(,Word=Hi,CloseParenthesis=)");
-        ParserTest.assertScans("!style_(Hi)", "Text=!,Word=style_,Text=(,Word=Hi,CloseParenthesis=)");
-        ParserTest.assertScans("!style_myStyle(hi))", "Style=myStyle,Word=hi,CloseParenthesis=),CloseParenthesis=)");
+        ParserTest.assertScansTokenType("!style_x(my text)", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style_style(my text)", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style(Hi)", TokenType.Style, false);
+        ParserTest.assertScansTokenType("!style_(Hi)", TokenType.Style, false);
+        ParserTest.assertScansTokenType("!style_myStyle(hi))", TokenType.Style, true);
     }
 
     @Test public void scansBraceStyle() throws Exception {
-        ParserTest.assertScans("!style_x{my text}", "Style=x,Word=my,Whitespace= ,Word=text,CloseBrace=}");
-        ParserTest.assertScans("!style_style{my text}", "Style=style,Word=my,Whitespace= ,Word=text,CloseBrace=}");
-        ParserTest.assertScans("!style{Hi}", "Text=!,Word=style,Text={,Word=Hi,CloseBrace=}");
-        ParserTest.assertScans("!style_{Hi}", "Text=!,Word=style_,Text={,Word=Hi,CloseBrace=}");
-        ParserTest.assertScans("!style_myStyle{hi}}", "Style=myStyle,Word=hi,CloseBrace=},CloseBrace=}");
+        ParserTest.assertScansTokenType("!style_x{my text}", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style_style{my text}", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style{Hi}", TokenType.Style, false);
+        ParserTest.assertScansTokenType("!style_{Hi}", TokenType.Style, false);
+        ParserTest.assertScansTokenType("!style_myStyle{hi}}", TokenType.Style, true);
     }
 
     @Test public void scansBracketStyle() throws Exception {
-        ParserTest.assertScans("!style_x[my text]", "Style=x,Word=my,Whitespace= ,Word=text,CloseBracket=]");
-        ParserTest.assertScans("!style_style[my text]", "Style=style,Word=my,Whitespace= ,Word=text,CloseBracket=]");
-        ParserTest.assertScans("!style[Hi]", "Text=!,Word=style,Text=[,Word=Hi,CloseBracket=]");
-        ParserTest.assertScans("!style_[Hi]", "Text=!,Word=style_,Text=[,Word=Hi,CloseBracket=]");
-        ParserTest.assertScans("!style_myStyle[hi]]", "Style=myStyle,Word=hi,CloseBracket=],CloseBracket=]");
+        ParserTest.assertScansTokenType("!style_x[my text]", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style_style[my text]", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style[Hi]", TokenType.Style, false);
+        ParserTest.assertScansTokenType("!style_[Hi]", TokenType.Style, false);
+        ParserTest.assertScansTokenType("!style_myStyle[hi]]", TokenType.Style, true);
     }
 
     @Test public void translatesStyle() {

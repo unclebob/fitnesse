@@ -5,12 +5,12 @@ import org.junit.Test;
 
 public class AnchorNameTokenTest {
     @Test public void scansAnchors() {
-        ParserTest.assertScans("!anchor name", "AnchorName,Whitespace= ,Word=name");
-        ParserTest.assertScans("!anchor 1234", "AnchorName,Whitespace= ,Word=1234");
-        ParserTest.assertScans("!anchor @#$@#%", "AnchorName,Whitespace= ,Text=@#$@#%");
-        ParserTest.assertScans("! anchor name", "Text=!,Whitespace= ,Word=anchor,Whitespace= ,Word=name");
-        ParserTest.assertScans("!anchor name other stuff", "AnchorName,Whitespace= ,Word=name,Whitespace= ,Word=other,Whitespace= ,Word=stuff");
-        ParserTest.assertScans("!anchor name ", "AnchorName,Whitespace= ,Word=name,Whitespace= ");
+        ParserTest.assertScansTokenType("!anchor name", TokenType.AnchorName, true);
+        ParserTest.assertScansTokenType("!anchor 1234", TokenType.AnchorName, true);
+        ParserTest.assertScansTokenType("!anchor @#$@#%", TokenType.AnchorName, true);
+        ParserTest.assertScansTokenType("! anchor name", TokenType.AnchorName, false);
+        ParserTest.assertScansTokenType("!anchor name other stuff", TokenType.AnchorName, true);
+        ParserTest.assertScansTokenType("!anchor name ", TokenType.AnchorName, true);
     }
 
     @Test public void translatesAnchors() {

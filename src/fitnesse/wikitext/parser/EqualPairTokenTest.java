@@ -6,10 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 public class EqualPairTokenTest {
     @Test public void scansTripleQuotes() {
-        ParserTest.assertScans("'''bold'''", "Bold,Word=bold,Bold");
-        ParserTest.assertScans("''''bold''''", "Bold,Text=',Word=bold,Bold,Text='");
-        ParserTest.assertScans("'' 'not bold' ''", "Italic,Whitespace= ,Text=',Word=not,Whitespace= ,Word=bold,Text=',Whitespace= ,Italic");
-        ParserTest.assertScans("''''some text' '''", "Bold,Text=',Word=some,Whitespace= ,Word=text,Text=',Whitespace= ,Bold");
+        ParserTest.assertScansTokenType("'''bold'''", TokenType.Bold, true);
+        ParserTest.assertScansTokenType("''''bold''''", TokenType.Bold, true);
+        ParserTest.assertScansTokenType("'' 'not bold' ''", TokenType.Bold, false);
+        ParserTest.assertScansTokenType("''''some text' '''", TokenType.Bold, true);
     }
 
     @Test public void translatesBold() {
@@ -17,8 +17,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void scansDoubleQuotes() {
-        ParserTest.assertScans("''italic''", "Italic,Word=italic,Italic");
-        ParserTest.assertScans("'' 'italic' ''", "Italic,Whitespace= ,Text=',Word=italic,Text=',Whitespace= ,Italic");
+        ParserTest.assertScansTokenType("''italic''", TokenType.Italic, true);
+        ParserTest.assertScansTokenType("'' 'italic' ''", TokenType.Italic, true);
     }
 
     @Test public void translatesItalic() {
@@ -38,8 +38,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void scansDoubleDashes() {
-        ParserTest.assertScans("abc--123--def", "Word=abc,Strike,Word=123,Strike,Word=def");
-        ParserTest.assertScans("--- -", "Strike,Text=-,Whitespace= ,Text=-");
+        ParserTest.assertScansTokenType("abc--123--def", TokenType.Strike, true);
+        ParserTest.assertScansTokenType("--- -", TokenType.Strike, true);
     }
 
     @Test public void translatesStrike() {

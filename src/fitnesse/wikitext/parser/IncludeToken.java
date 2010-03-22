@@ -6,9 +6,16 @@ import util.Maybe;
 public class IncludeToken extends Token {
     public Maybe<String> render(Scanner scanner) {
         scanner.moveNext();
-        if (scanner.getCurrent().getType() != TokenType.Whitespace) return Maybe.noString;
+        if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
         scanner.moveNext();
-        if (scanner.getCurrent().getType() != TokenType.Word) return Maybe.noString;
+        String option = "";
+        if (scanner.isType(TokenType.Text) && scanner.getCurrent().getContent().startsWith("-")) {
+            option = scanner.getCurrent().getContent();
+            scanner.moveNext();
+            if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
+            scanner.moveNext();
+        }
+        if (!scanner.isType(TokenType.Text)) return Maybe.noString;
         String pageName = scanner.getCurrent().getContent();
         scanner.moveNext();
         if (scanner.getCurrent().getType() != TokenType.Newline) return Maybe.noString;
@@ -19,7 +26,8 @@ public class IncludeToken extends Token {
         WikiPage includedPage;
         try {
             includedPage = crawler.getSiblingPage(getPage(), pagePath);
-            return new Maybe<String>(new CollapsibleToken("collapsable").generateHtml("", includedPage.getData().getContent()));
+            String collapseType = option.equals("-setup") ? "hidden" : "collapsable";
+            return new Maybe<String>(new CollapsibleToken(collapseType).generateHtml(pageName, includedPage.getData().getContent()));
         } catch (Exception e) {
             return new Maybe<String>(e.toString());
         }

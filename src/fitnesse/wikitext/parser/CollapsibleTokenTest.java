@@ -6,7 +6,7 @@ import org.junit.Test;
 public class CollapsibleTokenTest {
     @Test public void scansCollapsible() {
         ParserTest.assertScans("!* Some title\n content \n*!",
-                "Collapsible=collapsable,Whitespace= ,Word=Some,Whitespace= ,Word=title,Newline=\n,Whitespace= ,Word=content,Whitespace= ,Newline=\n,EndSection=*!");
+                "Collapsible=collapsable,Whitespace= ,Text=Some,Whitespace= ,Text=title,Newline=\n,Whitespace= ,Text=content,Whitespace= ,Newline=\n,EndSection=*!");
     }
 
     @Test public void translatesCollapsible() {

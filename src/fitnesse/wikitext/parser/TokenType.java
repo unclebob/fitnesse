@@ -8,13 +8,6 @@ public enum TokenType {
         }
     }),
 
-    Word(new Matcher() {
-        public TokenMatch makeMatch(TokenType type, ScanString input) {
-            int size = input.wordLength(0);
-            return size > 0 ? new TokenMatch(new Token(type, input.substring(0, size)), size) : TokenMatch.noMatch;
-        }
-    }),
-
     Table(new Matcher() {
         public TokenMatch makeMatch(TokenType type, ScanString input) {
             return input.startsLine() && input.startsWith("|") ?
@@ -22,6 +15,19 @@ public enum TokenType {
                 TokenMatch.noMatch;
         }
     }),
+
+    Colon(new BasicMatcher(":", Token.class)),
+    Comma(new BasicMatcher(",", Token.class)),
+    HashTable(new BasicMatcher("!{", HashTableToken.class)),
+    OpenParenthesis(new StringMatcher("(", new Token())),
+    OpenBrace(new StringMatcher("{", new Token())),
+    OpenBracket(new StringMatcher("[", new Token())),
+    CloseParenthesis(new StringMatcher(")", new Token())),
+    CloseBrace(new StringMatcher("}", new Token())),
+    CloseBracket(new StringMatcher("]", new Token())),
+    Newline(new StringMatcher("\n", new NewlineToken())),
+    OpenLiteral(new BasicMatcher("!-", OpenLiteralToken.class)),
+    CloseLiteral(new BasicMatcher("-!", Token.class)),
 
     Collapsible(new Matcher() {
         public TokenMatch makeMatch(TokenType type, ScanString input) {
@@ -66,10 +72,6 @@ public enum TokenType {
     Bold(new BasicTokenMatcher("'''", EqualPairToken.BoldToken)),
     Italic(new BasicTokenMatcher("''", EqualPairToken.ItalicToken)),
     Strike(new BasicTokenMatcher("--", EqualPairToken.StrikeToken)),
-    CloseParenthesis(new StringMatcher(")", new Token())),
-    CloseBrace(new StringMatcher("}", new Token())),
-    CloseBracket(new StringMatcher("]", new Token())),
-    Newline(new StringMatcher("\n", new NewlineToken())),
 
     Style(new Matcher() {
         private final String delimiter = "!style_";
@@ -112,9 +114,17 @@ public enum TokenType {
     AnchorReference(new BasicMatcher(".#", AnchorReferenceToken.class)),
 
     Include(new StartLineMatcher("!include", IncludeToken.class)),
+    Define(new StartLineMatcher("!define", DefineToken.class)),
 
     Text(new NoMatch()),
     Empty(new NoMatch());
+
+    public static TokenType closeType(TokenType type) {
+        return type == OpenBrace ? CloseBrace
+                : type == OpenBracket ? CloseBracket
+                : type == OpenParenthesis ? CloseParenthesis
+                : Empty;
+    }
 
     private Matcher matcher;
 
@@ -141,6 +151,8 @@ public enum TokenType {
                 } catch (IllegalAccessException e) {
                     throw new IllegalArgumentException(e);
                 }
+                token.setType(type);
+                token.setContent(delimiter);
                 return new TokenMatch(token, delimiter.length());
             }
             return TokenMatch.noMatch;
@@ -159,6 +171,7 @@ public enum TokenType {
         public TokenMatch makeMatch(TokenType type, ScanString input)  {
             if (input.startsWith(delimiter)) {
                 token.setType(type);
+                token.setContent(delimiter);
                 return new TokenMatch(token, delimiter.length());
             }
             return TokenMatch.noMatch;

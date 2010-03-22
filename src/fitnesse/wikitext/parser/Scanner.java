@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Scanner {
@@ -24,6 +25,30 @@ public class Scanner {
         input = other.input;
         next = other.next;
         activeToken = other.activeToken;
+    }
+
+    public List<Token> nextTokens(TokenType[] tokenTypes) {
+        ArrayList<Token> tokens = new ArrayList<Token>();
+        for (TokenType type: tokenTypes) {
+            moveNext();
+            if (!isType(type)) return new ArrayList<Token>();
+            tokens.add(getCurrent());
+        }
+        return tokens;
+    }
+
+    public void makeLiteral(TokenType terminator) {
+        int scan = next;
+        while (scan < input.length()) {
+            TokenMatch match = terminator.makeMatch(new ScanString(input, scan));
+            if (match.isMatch()) {
+                activeToken = new TextToken(input.substring(next, scan));
+                next = scan + match.getMatchLength();
+                return;
+            }
+            scan++;
+        }
+        activeToken = endToken;
     }
 
     public void moveNext() {
@@ -53,7 +78,7 @@ public class Scanner {
             newNext = scan;
         }
         if (scan > next) {
-            activeToken = new Token(TokenType.Text, input.substring(next, scan));
+            activeToken = new TextToken(input.substring(next, scan));
             next = scan;
         }
         else {
@@ -70,5 +95,6 @@ public class Scanner {
     }
 
     public boolean isEnd() { return activeToken == endToken; }
+    public boolean isType(TokenType type) { return activeToken.getType() == type; }
     public Token getCurrent() { return activeToken; }
 }

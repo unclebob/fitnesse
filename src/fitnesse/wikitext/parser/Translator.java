@@ -15,15 +15,19 @@ public class Translator {
     }
 
     public String translate(Scanner scanner, TokenType terminator) {
+        return translate(scanner, new TokenType[] {terminator});
+    }
+
+    public String translate(Scanner scanner, TokenType[] terminators) {
         StringBuilder result = new StringBuilder();
         ArrayList<TokenType> ignore = new ArrayList<TokenType>();
-        ignore.add(terminator);
+        for (TokenType terminator: terminators) ignore.add(terminator);
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(ignore);
             if (scanner.isEnd()) break;
             Token currentToken = scanner.getCurrent();
-            if (currentToken.getType() == terminator) break;
+            if (contains(terminators, currentToken.getType())) break;
             currentToken.setPage(currentPage);
             Maybe<String> translation = currentToken.render(scanner);
             if (translation.isNothing()) {
@@ -36,5 +40,11 @@ public class Translator {
             }
         }
         return result.toString();
+    }
+
+    private boolean contains(TokenType[] terminators, TokenType currentType) {
+        for (TokenType terminator: terminators)
+            if (currentType == terminator) return true;
+        return false;
     }
 }

@@ -5,10 +5,10 @@ import org.junit.Test;
 
 public class AnchorReferenceTokenTest {
     @Test public void scansAnchors() {
-        ParserTest.assertScans(".#anchorName", "AnchorReference,Word=anchorName");
-        ParserTest.assertScans(".# anchorName", "AnchorReference,Whitespace= ,Word=anchorName");
-        ParserTest.assertScans(".#anchor Name", "AnchorReference,Word=anchor,Whitespace= ,Word=Name");
-        ParserTest.assertScans("blah.#anchorName", "Word=blah,AnchorReference,Word=anchorName");
+        ParserTest.assertScansTokenType(".#anchorName", TokenType.AnchorReference, true);
+        ParserTest.assertScansTokenType(".# anchorName", TokenType.AnchorReference, true);
+        ParserTest.assertScansTokenType(".#anchor Name", TokenType.AnchorReference, true);
+        ParserTest.assertScansTokenType("blah.#anchorName", TokenType.AnchorReference, true);
     }
 
     @Test public void translatesAnchors() {

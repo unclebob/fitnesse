@@ -18,6 +18,8 @@ public class PageData implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+    private HashMap<String, String> pageVariables = new HashMap<String, String>();
+
   public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(
       IncludeWidget.class, VariableDefinitionWidget.class,
       ClasspathWidget.class);
@@ -95,6 +97,7 @@ public class PageData implements Serializable {
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
     variableRoot = data.variableRoot;
+      pageVariables = data.pageVariables;
   }
 
   public String getStringOfAllAttributes() {
@@ -209,10 +212,12 @@ public class PageData implements Serializable {
   }
 
   public String getVariable(String name) throws Exception {
+      if (pageVariables.containsKey(name)) return pageVariables.get(name);
     return getInitializedVariableRoot().getVariable(name);
   }
 
   public void addVariable(String name, String value) throws Exception {
+      pageVariables.put(name, value);
     getInitializedVariableRoot().addVariable(name, value);
   }
 

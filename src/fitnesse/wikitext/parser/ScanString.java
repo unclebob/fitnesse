@@ -43,15 +43,6 @@ public class ScanString {
         return input.charAt(offset + startAt);
     }
 
-    public int wordLength(int startsAt) {
-        int current = offset + startsAt;
-        while (current < input.length()) {
-            if (!Character.isLetterOrDigit(input.charAt(current)) && input.charAt(current) != '_') break;
-            current++;
-        }
-        return current - offset - startsAt;
-    }
-
     public int whitespaceLength() {
         int current = offset;
         while (current < input.length()) {
@@ -60,5 +51,12 @@ public class ScanString {
             current++;
         }
         return current - offset;
+    }
+
+    public static boolean isWord(String content) {
+        for (char c: content.toCharArray()) {
+            if (!Character.isLetterOrDigit(c) && c != '_') return false;
+        }
+        return true;
     }
 }
