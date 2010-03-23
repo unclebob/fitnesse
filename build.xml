@@ -159,6 +159,8 @@
 
   <target  name="release_xml" depends="unit_tests, acceptance_tests_xml" />
 
+  <target  name="release_jar" depends="unit_tests, jar"/>
+
   <target  name="acceptance_tests_xml" depends="jar">  
     <java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
 			<arg value="-c" />
