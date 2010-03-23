@@ -14,10 +14,10 @@ public class HashTableToken extends Token {
             row.addAttribute("class", "hash_row");
             table.add(row);
             for (int i = 0; i < 2; i++) {
-                String body = new Translator(getPage()).translate(scanner,
+                String body = new Translator(getPage()).translateIgnoreFirst(scanner,
                         new TokenType[] {TokenType.Colon, TokenType.Comma, TokenType.CloseBrace});
                 if (scanner.isEnd()) return Maybe.noString;
-                HtmlTag cell = new HtmlTag("td", body);
+                HtmlTag cell = new HtmlTag("td", body.trim());
                 cell.addAttribute("class", cellClasses[i]);
                 row.add(cell);
             }

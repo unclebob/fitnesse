@@ -6,8 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 public class IncludeTokenTest {
     @Test public void scansIncludes() {
-        ParserTest.assertScans("!include name", "Include,Whitespace= ,Text=name");
-        ParserTest.assertScans("!include -setup name", "Include,Whitespace= ,Text=-setup,Whitespace= ,Text=name");
+        ParserTest.assertScansTokenType("!include name", TokenType.Include, true);
     }
 
     @Test public void translatesIncludedSibling() throws Exception {

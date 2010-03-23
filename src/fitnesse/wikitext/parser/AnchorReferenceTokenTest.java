@@ -16,6 +16,9 @@ public class AnchorReferenceTokenTest {
         ParserTest.assertTranslates(".# anchorName", ".# anchorName");
         ParserTest.assertTranslates(".#anchorName stuff", "<a href=\"#anchorName\">.#anchorName</a>" + HtmlElement.endl + " stuff");
         ParserTest.assertTranslates("more.#anchorName stuff", "more<a href=\"#anchorName\">.#anchorName</a>" + HtmlElement.endl + " stuff");
-        ParserTest.assertTranslates("more\r\n.#anchorName stuff", "more\r\n<a href=\"#anchorName\">.#anchorName</a>" + HtmlElement.endl + " stuff");
+        ParserTest.assertTranslates("more\r\n.#anchorName stuff",
+                "more<br/>" + HtmlElement.endl
+                + "<a href=\"#anchorName\">.#anchorName</a>" + HtmlElement.endl
+                + " stuff");
     }
 }

@@ -12,15 +12,25 @@ public class TableToken extends Token {
             HtmlTag row = new HtmlTag("tr");
             table.add(row);
             while (true) {
-                String body = new Translator(getPage()).translate(scanner, TokenType.EndCell);
+                String body = makeBody(scanner);
                 if (scanner.isEnd()) return Maybe.noString;
-                HtmlTag cell = new HtmlTag("td", body);
+                HtmlTag cell = new HtmlTag("td", body.trim());
                 row.add(cell);
                 if (scanner.getCurrent().getContent().indexOf("\n") > 0) break;
             }
             if (scanner.getCurrent().getContent().indexOf("\n|") < 0) break;
         }
         return new Maybe<String>(table.html());
+    }
+
+    private String makeBody(Scanner scanner) {
+        if (getContent().startsWith("!")) {
+            scanner.makeLiteral(TokenType.EndCell);
+            String body = scanner.getCurrent().getContent();
+            scanner.moveNext();
+            return body;
+        }
+        return new Translator(getPage()).translate(scanner, TokenType.EndCell);
     }
 
     public TokenType getType() { return TokenType.Table; }

@@ -21,6 +21,9 @@ public class Scanner {
         copy(other);
     }
 
+    public int getOffset() { return next; }
+    public String substring(int startAt, int endBefore) { return input.substring(startAt, endBefore); }
+
     public void copy(Scanner other) {
         input = other.input;
         next = other.next;
@@ -43,7 +46,7 @@ public class Scanner {
             TokenMatch match = terminator.makeMatch(new ScanString(input, scan));
             if (match.isMatch()) {
                 activeToken = new TextToken(input.substring(next, scan));
-                next = scan + match.getMatchLength();
+                next = scan;
                 return;
             }
             scan++;

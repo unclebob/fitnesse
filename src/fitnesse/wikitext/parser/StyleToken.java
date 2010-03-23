@@ -12,7 +12,7 @@ public class StyleToken extends Token {
     }
 
     public Maybe<String> render(Scanner scanner) {
-        String body = new Translator(getPage()).translate(scanner, terminator);
+        String body = new Translator(getPage()).translateIgnoreFirst(scanner, terminator);
         if (scanner.isEnd()) return Maybe.noString;
         return new Maybe<String>(HtmlUtil.makeSpanTag(getContent(), body).html());
     }

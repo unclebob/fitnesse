@@ -16,7 +16,7 @@ public class EqualPairToken extends Token {
     }
 
     public Maybe<String> render(Scanner scanner) {
-        String body = new Translator(getPage()).translate(scanner, this.getType());
+        String body = new Translator(getPage()).translateIgnoreFirst(scanner, this.getType());
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag html = new HtmlTag(tag);
         if (classAttribute.length() > 0) html.addAttribute("class", classAttribute);

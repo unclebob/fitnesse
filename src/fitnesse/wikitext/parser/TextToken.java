@@ -10,8 +10,15 @@ public class TextToken extends Token {
     public TextToken(String content) { super(content); }
 
     public Maybe<String> render(Scanner scanner) {
-        if (!isWikiWordPath()) return new Maybe<String>(getContent());
+        if (!isWikiWordPath()) return new Maybe<String>(escapeHtml(getContent()));
         return new Maybe<String>(HtmlUtil.makeLink(qualifiedName(), getContent()).html());
+    }
+
+    private String escapeHtml(String rawText) {
+        return rawText
+                .replaceAll("\r", "")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;");
     }
 
     private String qualifiedName() {
@@ -38,6 +45,7 @@ public class TextToken extends Token {
     }
 
     private boolean isWikiWord(String candidate) {
+        if (candidate.length() == 0) return false;
         if (!isUpperCaseLetter(candidate, 0)) return false;
         if (!isDigit(candidate, 1) && !isLowerCaseLetter(candidate, 1)) return false;
 
@@ -58,7 +66,12 @@ public class TextToken extends Token {
     }
 
     private boolean isDigit(String candidate, int offset) { return Character.isDigit(candidate.charAt(offset)); }
-    private boolean isLetter(String candidate, int offset) { return Character.isLetter(candidate.charAt(offset)); }
+    private boolean isLetter(String candidate, int offset) {
+        if (offset >= candidate.length()) {
+            int x = 1;
+        }
+        return Character.isLetter(candidate.charAt(offset));
+    }
     private boolean isCharacter(String candidate, char character, int offset) { return candidate.charAt(offset) == character; }
 
     public TokenType getType() { return TokenType.Text; }

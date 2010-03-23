@@ -18,7 +18,8 @@ public class DefineToken extends Token {
         TokenType close = TokenType.closeType(open);
         if (close == TokenType.Empty) return Maybe.noString;
 
-        String value = new Translator(getPage()).translate(scanner, close);
+        int start = scanner.getOffset();
+        String value = new Translator(getPage()).translateIgnoreFirst(scanner, close);
         if (scanner.isEnd()) return Maybe.noString;
 
         try {
@@ -26,6 +27,7 @@ public class DefineToken extends Token {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-        return new Maybe<String>(HtmlUtil.metaText("variable defined: " + name + "=" + value));
+        return new Maybe<String>(HtmlUtil.metaText("variable defined: "
+                + name + "=" + scanner.substring(start, scanner.getOffset() - 1)));
     }
 }

@@ -16,6 +16,9 @@ public class TextTokenTest {
         ParserTest.assertTranslates("hi mom", "hi mom");
         ParserTest.assertTranslates("Hi MOM", "Hi MOM");
         ParserTest.assertTranslates("Hi+Mom", "Hi+Mom");
+        ParserTest.assertTranslates(".", ".");
+        ParserTest.assertTranslates("<hi>", "&lt;hi&gt;");
+        ParserTest.assertTranslates("\rmore\rstuff\r", "morestuff");
     }
 
     @Test public void translatesWikiWords() throws Exception {

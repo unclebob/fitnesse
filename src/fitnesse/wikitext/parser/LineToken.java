@@ -51,7 +51,7 @@ public class LineToken extends Token {
     public Maybe<String> render(Scanner scanner) {
         scanner.moveNext();
         if (scanner.getCurrent().getType() != TokenType.Whitespace) return Maybe.noString;
-        String body = new Translator(getPage()).translate(scanner, TokenType.Newline);
+        String body = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
         HtmlTag html = renderers.get(getContent()).render(getContent());
         html.add(body.trim());

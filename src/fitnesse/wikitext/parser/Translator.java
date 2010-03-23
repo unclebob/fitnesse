@@ -11,17 +11,29 @@ public class Translator {
     public Translator(WikiPage currentPage) { this.currentPage = currentPage; }
 
     public String translate(String input) {
-        return translate(new Scanner(input), TokenType.Empty);
+        return translateIgnoreFirst(new Scanner(input), TokenType.Empty);
     }
 
     public String translate(Scanner scanner, TokenType terminator) {
         return translate(scanner, new TokenType[] {terminator});
     }
 
+    public String translateIgnoreFirst(Scanner scanner, TokenType terminator) {
+        return translateIgnoreFirst(scanner, new TokenType[] {terminator});
+    }
+
     public String translate(Scanner scanner, TokenType[] terminators) {
+        return translate(scanner, terminators, new TokenType[] {});
+    }
+
+    public String translateIgnoreFirst(Scanner scanner, TokenType[] terminators) {
+        return translate(scanner, terminators, terminators);
+    }
+
+    private String translate(Scanner scanner, TokenType[] terminators, TokenType[] ignoresFirst) {
         StringBuilder result = new StringBuilder();
         ArrayList<TokenType> ignore = new ArrayList<TokenType>();
-        for (TokenType terminator: terminators) ignore.add(terminator);
+        for (TokenType ignoreFirst: ignoresFirst) ignore.add(ignoreFirst);
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(ignore);

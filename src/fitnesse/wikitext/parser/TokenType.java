@@ -8,17 +8,15 @@ public enum TokenType {
         }
     }),
 
-    Table(new Matcher() {
-        public TokenMatch makeMatch(TokenType type, ScanString input) {
-            return input.startsLine() && input.startsWith("|") ?
-                new TokenMatch(new TableToken(), 1) :
-                TokenMatch.noMatch;
-        }
-    }),
-
+    Table(new StartLineMatcher(new String[] {"|", "!|"}, TableToken.class)),
     Colon(new BasicMatcher(":", Token.class)),
     Comma(new BasicMatcher(",", Token.class)),
+    Evaluator(new BasicMatcher("${=", EvaluatorToken.class)),
+    CloseEvaluator(new BasicMatcher("=}", Token.class)),
+    Variable(new BasicMatcher("${", VariableToken.class)),
     HashTable(new BasicMatcher("!{", HashTableToken.class)),
+    Preformat(new BasicMatcher("{{{", PreformatToken.class)),
+    ClosePreformat(new StringMatcher("}}}", new Token())),
     OpenParenthesis(new StringMatcher("(", new Token())),
     OpenBrace(new StringMatcher("{", new Token())),
     OpenBracket(new StringMatcher("[", new Token())),

@@ -13,12 +13,12 @@ public class CollapsibleToken extends Token {
 
     public Maybe<String> render(Scanner scanner) {
         scanner.moveNext();
-        if (scanner.getCurrent().getType() != TokenType.Whitespace) return Maybe.noString;
+        if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
         
-        String titleText = new Translator(getPage()).translate(scanner, TokenType.Newline);
+        String titleText = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.Newline);
         if (scanner.isEnd()) return Maybe.noString;
         
-        String bodyText = new Translator(getPage()).translate(scanner, TokenType.EndSection);
+        String bodyText = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.EndSection);
         if (scanner.isEnd()) return Maybe.noString;
 
         return new Maybe<String>(generateHtml(titleText, bodyText));
