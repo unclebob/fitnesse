@@ -1,6 +1,0 @@
- * CommandLineArguments
- * RunningFromJunit
- * RunningFromMaven
- * LogFiles
- * FilesSection
- * ControllingFitNesseFromTheCommandLine

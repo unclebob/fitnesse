@@ -1,7 +1,7 @@
 !3 Motivations
 
 It is possible to issue single commands to FitNesse from the command line. This is useful when:
- * Running test suites from your build scripts (see how this is achieved for Ant below .#antIntegration)
+ * Running test suites from your build scripts (see how this is achieved for Ant [[below][#antIntegration]])
  * Generating XML output from a test execution to a file
 
 !3 Command Syntax
@@ -52,7 +52,7 @@ The exit code for the command is 0 unless you run a test with ''text'' formattin
 
 !anchor antIntegration
 
-!2 Running FitNesse with Ant
+!2 Executing Tests from Ant
 You can run a test suite with Ant using the following ant task {{{
   <target name="my_fitnesse_tests">
     <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
