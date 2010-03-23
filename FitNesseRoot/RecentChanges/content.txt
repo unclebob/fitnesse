@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.DownloadingAndInstallingFitNesse||17:20:09 Tue, Mar 23, 2010|
 |JunkPage.SuitePage||08:49:39 Mon, Mar 22, 2010|
 |JunkPage.HashTablePage||08:46:42 Mon, Mar 22, 2010|
 |FitNesse.UserGuide.CreatingTestTables||07:46:28 Sun, Mar 21, 2010|
@@ -97,4 +98,3 @@
 |JunkParent.RubyTests.JukeBox||16:52:06 Mon, Nov 23, 2009|
 |JunkParent.RubyTests||16:51:37 Mon, Nov 23, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SuiteTopLevelTestHistory.TopLevelHistoryShouldHaveTitle||16:18:49 Sat, Nov 21, 2009|
-|FitNesse.UserGuide.SourceCodeControl||15:16:02 Sat, Nov 21, 2009|

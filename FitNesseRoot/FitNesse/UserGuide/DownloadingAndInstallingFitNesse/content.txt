@@ -20,7 +20,7 @@ It really takes very little time and effort to get FitNesse running on your mach
    * If you are still having trouble then check out FitNesseWontStart.
 
  4 Start up a browser and go to !style_code(http://localhost)
-  * ''or if you had to edit run.bat in step 3 then go to !style_code(http://localhost:8080).''
+  * ''or if you had to port 8080 then go to !style_code(http://localhost:8080).''
  5 The main FitNesse screen should come up. That's it. You're ready to start using FitNesse.
 
 !2 Learning More
