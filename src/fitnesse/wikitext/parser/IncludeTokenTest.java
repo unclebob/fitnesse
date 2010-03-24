@@ -13,7 +13,7 @@ public class IncludeTokenTest {
         String result = translate("!include PageTwo\n");
         assertContains(result, "class=\"collapsable\"");
         assertContains(result, "PageTwo");
-        assertContains(result, "page two");
+        assertContains(result, "page <i>two</i>");
     }
 
     @Test public void translatesSetup() throws Exception {
@@ -26,7 +26,7 @@ public class IncludeTokenTest {
         PageCrawler crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPage currentPage = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-        crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
+        crawler.addPage(root, PathParser.parse("PageTwo"), "page ''two''");
         String result = new Translator(currentPage).translate(input);
         return result;
     }

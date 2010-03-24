@@ -9,5 +9,6 @@ public class EvaluatorTokenTest {
 
     @Test public void translatesEvaluators() {
         ParserTest.assertTranslates("${=3+4=}", "7");
+        ParserTest.assertTranslates("${=abort=}", "<span class=\"meta\">invalid expression: abort</span>");
     }
 }

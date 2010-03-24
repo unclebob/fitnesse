@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import util.Expression;
 import fitnesse.html.HtmlUtil;
+import util.Maybe;
 
 public class EvaluatorWidget extends ParentWidget {
   public static final String REGEXP = "\\$\\{=[ \\t]*(?:%[-#+ 0,(]*(?:[0-9]*\\.?[0-9]*)?[a-zA-Z]+[ \\t]*:)?[^:=]*=\\}";
@@ -37,12 +38,7 @@ public class EvaluatorWidget extends ParentWidget {
   private void doRender() throws Exception {
     parseOutFormat(expandVariables(name));
     if (renderedText.length() > 0) {
-      try {
         evaluateAndFormat();
-      }
-      catch (Exception e) {
-        renderedText = makeInvalidVariableExpression(name);
-      }
     }
     rendered = true;
   }
@@ -59,8 +55,14 @@ public class EvaluatorWidget extends ParentWidget {
     }
   }
 
-  private void evaluateAndFormat() throws Exception {
-    Double result = (new Expression(renderedText)).evaluate();
+  private void evaluateAndFormat() {
+    Maybe<Double> evaluation = (new Expression(renderedText)).evaluate();
+    if (evaluation.isNothing()) {
+        renderedText = makeInvalidVariableExpression(name);
+        return;
+    }
+    Double result = evaluation.getValue();
+
     Long iResult = new Long(Math.round(result));
 
     if (formatSpec == null)
@@ -94,11 +96,11 @@ public class EvaluatorWidget extends ParentWidget {
     }
   }
 
-  private String makeInvalidVariableExpression(String name) throws Exception {
+  private String makeInvalidVariableExpression(String name) {
     return HtmlUtil.metaText("invalid expression: " + name);
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "${=" + name + "=}";
   }
 }

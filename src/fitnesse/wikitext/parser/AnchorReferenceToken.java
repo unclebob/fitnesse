@@ -6,8 +6,6 @@ import util.Maybe;
 import java.util.List;
 
 public class AnchorReferenceToken extends Token {
-    public AnchorReferenceToken() { super(); }
-
     public Maybe<String> render(Scanner scanner) {
         List<Token> tokens = scanner.nextTokens(new TokenType[] {TokenType.Text});
         if (tokens.size() == 0) return Maybe.noString;
@@ -17,6 +15,4 @@ public class AnchorReferenceToken extends Token {
         
         return new Maybe<String>(HtmlUtil.makeLink("#" + anchor, ".#" + anchor).html());
     }
-    
-    public TokenType getType() { return TokenType.AnchorReference; }
 }

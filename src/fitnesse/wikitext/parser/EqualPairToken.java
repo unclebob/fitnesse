@@ -2,24 +2,28 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import util.Maybe;
+import java.util.HashMap;
 
 public class EqualPairToken extends Token {
-    public static final EqualPairToken BoldToken = new EqualPairToken("b", "");
-    public static final EqualPairToken ItalicToken = new EqualPairToken("i", "");
-    public static final EqualPairToken StrikeToken = new EqualPairToken("span", "strike");
-    private String tag;
-    private String classAttribute;
+    private static final HashMap<TokenType, String> tags;
+    private static final HashMap<TokenType, String> classes;
 
-    public EqualPairToken(String tag, String classAttribute) {
-        this.tag = tag;
-        this.classAttribute = classAttribute;
+    static {
+        tags = new HashMap<TokenType, String>();
+        tags.put(TokenType.Bold, "b");
+        tags.put(TokenType.Italic, "i");
+        tags.put(TokenType.Strike, "span");
+
+        classes = new HashMap<TokenType, String>();
+        classes.put(TokenType.Strike, "strike");
     }
 
     public Maybe<String> render(Scanner scanner) {
         String body = new Translator(getPage()).translateIgnoreFirst(scanner, this.getType());
         if (scanner.isEnd()) return Maybe.noString;
-        HtmlTag html = new HtmlTag(tag);
-        if (classAttribute.length() > 0) html.addAttribute("class", classAttribute);
+        
+        HtmlTag html = new HtmlTag(tags.get(getType()));
+        if (classes.containsKey(getType())) html.addAttribute("class", classes.get(getType()));
         html.add(body);
         return new Maybe<String>(html.html());
     }

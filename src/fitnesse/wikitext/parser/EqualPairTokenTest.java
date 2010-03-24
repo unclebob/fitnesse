@@ -26,7 +26,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void translatesBoldItalic() {
-        ParserTest.assertTranslates("'''''stuff'''''", "<b><i>stuff</i>" + HtmlElement.endl + "</b>" + HtmlElement.endl);
+        ParserTest.assertTranslates("'''''stuff&nonsense'''''",
+                "<b><i>stuff&amp;nonsense</i>" + HtmlElement.endl + "</b>" + HtmlElement.endl);
     }
 
     @Test public void ignoresAdjacentItalics() {

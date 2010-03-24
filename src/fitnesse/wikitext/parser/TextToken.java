@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlText;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -10,19 +12,21 @@ public class TextToken extends Token {
     public TextToken(String content) { super(content); }
 
     public Maybe<String> render(Scanner scanner) {
-        if (!isWikiWordPath()) return new Maybe<String>(escapeHtml(getContent()));
-        return new Maybe<String>(HtmlUtil.makeLink(qualifiedName(), getContent()).html());
-    }
-
-    private String escapeHtml(String rawText) {
-        return rawText
-                .replaceAll("\r", "")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;");
+        if (!isWikiWordPath()) return new Maybe<String>(new HtmlText(getContent()).html());
+        
+        HtmlTag link = new HtmlTag("a", new HtmlText(getContent()));
+        link.addAttribute("href", qualifiedName());
+        return new Maybe<String>(link.html());
     }
 
     private String qualifiedName() {
-        WikiPagePath pathOfWikiWord = PathParser.parse(getContent());
+        String wikiWordPath = getContent();
+
+        if (wikiWordPath.startsWith("^") || wikiWordPath.startsWith(">")) {
+            wikiWordPath = String.format("%s.%s", getPage().getName(), wikiWordPath.substring(1));
+        }
+
+        WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
         try {
             WikiPage parentPage = getPage().getParent();
@@ -45,7 +49,7 @@ public class TextToken extends Token {
     }
 
     private boolean isWikiWord(String candidate) {
-        if (candidate.length() == 0) return false;
+        if (candidate.length() < 3) return false;
         if (!isUpperCaseLetter(candidate, 0)) return false;
         if (!isDigit(candidate, 1) && !isLowerCaseLetter(candidate, 1)) return false;
 
@@ -65,13 +69,13 @@ public class TextToken extends Token {
         return isLetter(candidate, offset) && Character.isLowerCase(candidate.charAt(offset));
     }
 
-    private boolean isDigit(String candidate, int offset) { return Character.isDigit(candidate.charAt(offset)); }
+    private boolean isDigit(String candidate, int offset) {
+        return Character.isDigit(candidate.charAt(offset));
+    }
     private boolean isLetter(String candidate, int offset) {
-        if (offset >= candidate.length()) {
-            int x = 1;
-        }
         return Character.isLetter(candidate.charAt(offset));
     }
+    
     private boolean isCharacter(String candidate, char character, int offset) { return candidate.charAt(offset) == character; }
 
     public TokenType getType() { return TokenType.Text; }

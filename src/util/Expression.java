@@ -41,7 +41,7 @@ public class Expression {
     if (temp.length() == 0) //...invalid expression term
       isInvalid = true;
     else
-      ans = Double.valueOf(temp.toString()).doubleValue();
+      ans = Double.valueOf(temp.toString());
 
     return ans;
   }
@@ -194,12 +194,11 @@ public class Expression {
   /*
    * Public access method to evaluate this expression.
    */
-  public double evaluate() throws Exception {
+  public Maybe<Double> evaluate() {
     isInvalid = false;
     s = x.intern();
     double last = add();
-    if (isInvalid) throw (new Exception("invalid expression"));
-    return last;
+    return isInvalid ? Maybe.noDouble : new Maybe<Double>(last);
   }
 
   /*

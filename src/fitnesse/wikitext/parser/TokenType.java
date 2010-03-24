@@ -67,9 +67,9 @@ public enum TokenType {
         }
     }),
 
-    Bold(new BasicTokenMatcher("'''", EqualPairToken.BoldToken)),
-    Italic(new BasicTokenMatcher("''", EqualPairToken.ItalicToken)),
-    Strike(new BasicTokenMatcher("--", EqualPairToken.StrikeToken)),
+    Bold(new BasicMatcher("'''", EqualPairToken.class)),
+    Italic(new BasicMatcher("''", EqualPairToken.class)),
+    Strike(new BasicMatcher("--", EqualPairToken.class)),
 
     Style(new Matcher() {
         private final String delimiter = "!style_";
@@ -104,15 +104,16 @@ public enum TokenType {
         }
     }),
 
-    HeaderLine(new LineMatcher(new String[] {"1", "2", "3", "4", "5", "6"})),
-    CenterLine(new LineMatcher(new String[] {"c", "C"})),
-    NoteLine(new LineMatcher(new String[] {"note"})),
 
-    AnchorName(new BasicMatcher("!anchor", AnchorNameToken.class)),
     AnchorReference(new BasicMatcher(".#", AnchorReferenceToken.class)),
 
-    Include(new StartLineMatcher("!include", IncludeToken.class)),
+    HeaderLine(new LineMatcher(new String[] {"1", "2", "3", "4", "5", "6"})),
+    AnchorName(new BasicMatcher("!anchor", AnchorNameToken.class)),
+    Contents(new StartLineMatcher("!contents", ContentsToken.class)),
+    CenterLine(new LineMatcher(new String[] {"c", "C"})),
     Define(new StartLineMatcher("!define", DefineToken.class)),
+    Include(new StartLineMatcher("!include", IncludeToken.class)),
+    NoteLine(new LineMatcher(new String[] {"note"})),
 
     Text(new NoMatch()),
     Empty(new NoMatch());

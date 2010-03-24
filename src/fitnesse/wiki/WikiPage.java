@@ -24,7 +24,7 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   public List<WikiPage> getChildren() throws Exception;
 
-  public String getName() throws Exception;
+  public String getName();
 
   public PageData getData() throws Exception;
 

@@ -10,12 +10,18 @@ public class VariableTokenTest {
     @Test public void scansVariables() {
         ParserTest.assertScansTokenType("${x}", TokenType.Variable, true);
     }
-    
+
     @Test public void translatesVariables() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        PageCrawler crawler = root.getPageCrawler();
-        WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
+        WikiPage pageOne = new TestRoot().makePage("PageOne");
         pageOne.getData().addVariable("x", "y");
         ParserTest.assertTranslates(pageOne, "${x}", "y");
+    }
+
+    @Test public void translatesVariablesFromParent() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage parent = root.makePage("PageOne");
+        parent.getData().addVariable("x", "y");
+        WikiPage child = root.makePage(parent, "PageTwo");
+        ParserTest.assertTranslates(child, "${x}", "y");
     }
 }

@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.html.HtmlUtil;
 import util.Expression;
 import util.Maybe;
 
@@ -8,12 +9,10 @@ public class EvaluatorToken extends Token {
         String body = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.CloseEvaluator);
         if (scanner.isEnd()) return Maybe.noString;
 
-        try {
-            Double result = new Expression(body).evaluate();
-            Long iResult = new Long(Math.round(result));
-            return new Maybe<String>(result.equals(iResult.doubleValue()) ? iResult.toString() : result.toString());
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+        Maybe<Double> result = new Expression(body).evaluate();
+        if (result.isNothing()) return new Maybe<String>(HtmlUtil.metaText("invalid expression: " + body));
+
+        Long iResult = Math.round(result.getValue());
+        return new Maybe<String>(result.getValue().equals(iResult.doubleValue()) ? iResult.toString() : result.toString());
     }
 }

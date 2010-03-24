@@ -27,7 +27,7 @@ public class IncludeToken extends Token {
         try {
             includedPage = crawler.getSiblingPage(getPage(), pagePath);
             String collapseType = option.equals("-setup") ? "hidden" : "collapsable";
-            return new Maybe<String>(new CollapsibleToken(collapseType).generateHtml(pageName, includedPage.getData().getContent()));
+            return new Maybe<String>(new CollapsibleToken(collapseType).generateHtml(pageName, includedPage.getData().getHtml()));
         } catch (Exception e) {
             return new Maybe<String>(e.toString());
         }
