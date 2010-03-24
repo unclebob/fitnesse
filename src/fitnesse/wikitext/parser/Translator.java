@@ -4,6 +4,7 @@ import fitnesse.wiki.WikiPage;
 import util.Maybe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Translator {
     private WikiPage currentPage;
@@ -33,7 +34,7 @@ public class Translator {
     private String translate(Scanner scanner, TokenType[] terminators, TokenType[] ignoresFirst) {
         StringBuilder result = new StringBuilder();
         ArrayList<TokenType> ignore = new ArrayList<TokenType>();
-        for (TokenType ignoreFirst: ignoresFirst) ignore.add(ignoreFirst);
+        ignore.addAll(Arrays.asList(ignoresFirst));
         while (true) {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(ignore);

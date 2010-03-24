@@ -9,10 +9,13 @@ public class CollapsibleToken extends Token {
 
     public static void resetId() { nextId = 1; }
 
-    public CollapsibleToken(String content) { super(content); }
-
     public Maybe<String> render(Scanner scanner) {
+        String bodyClass = "collapsable";
         scanner.moveNext();
+        if (scanner.getCurrentContent().equals(">")) {
+            bodyClass = "hidden";
+            scanner.moveNext();
+        }
         if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
         
         String titleText = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.Newline);
@@ -21,10 +24,10 @@ public class CollapsibleToken extends Token {
         String bodyText = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.EndSection);
         if (scanner.isEnd()) return Maybe.noString;
 
-        return new Maybe<String>(generateHtml(titleText, bodyText));
+        return new Maybe<String>(generateHtml(titleText, bodyText, bodyClass));
     }
 
-    public String generateHtml(String titleText, String bodyText) {
+    public String generateHtml(String titleText, String bodyText, String bodyClass) {
         long id = nextId++;
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapse_rim");
@@ -51,7 +54,7 @@ public class CollapsibleToken extends Token {
         HtmlTag title = HtmlUtil.makeSpanTag("meta", titleText);
         outerBlock.add(title);
         HtmlTag body = new HtmlTag("div", bodyText);
-        body.addAttribute("class", getContent());
+        body.addAttribute("class", bodyClass);
         body.addAttribute("id", Long.toString(id));
         outerBlock.add(body);
         return outerBlock.html();

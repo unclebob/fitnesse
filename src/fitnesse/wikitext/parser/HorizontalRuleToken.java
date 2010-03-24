@@ -5,13 +5,10 @@ import util.Maybe;
 
 public class HorizontalRuleToken extends Token {
 
-    public HorizontalRuleToken(String content) { super(content); }
-
     public Maybe<String> render(Scanner scanner) {
         HtmlTag html = new HtmlTag("hr");
-        if (!getContent().equals("1")) html.addAttribute("size", getContent());
+        int size = getContent().length() - 3;
+        if (size > 1) html.addAttribute("size", Integer.toString(size));
         return new Maybe<String>(html.html());
     }
-    
-    public TokenType getType() { return TokenType.HorizontalRule; }
 }

@@ -19,8 +19,8 @@ public class ScanString {
         return matches(match, 0);
     }
 
-    public boolean startsLine() {
-        return offset == 0 || input.charAt(offset - 1) == '\n';
+    public boolean startsLine(int startAt) {
+        return offset + startAt == 0 || input.charAt(offset +startAt - 1) == '\n';
     }
 
     public int find(char[] matches, int startAt) {
@@ -43,14 +43,14 @@ public class ScanString {
         return input.charAt(offset + startAt);
     }
 
-    public int whitespaceLength() {
-        int current = offset;
+    public int whitespaceLength(int startAt) {
+        int current = offset + startAt;
         while (current < input.length()) {
             if (!Character.isWhitespace(input.charAt(current))) break;
             if (input.charAt(current) == '\n' || input.charAt(current) == '\r') break;
             current++;
         }
-        return current - offset;
+        return current - offset - startAt;
     }
 
     public static boolean isWord(String content) {

@@ -16,9 +16,9 @@ public class TableToken extends Token {
                 if (scanner.isEnd()) return Maybe.noString;
                 HtmlTag cell = new HtmlTag("td", body.trim());
                 row.add(cell);
-                if (scanner.getCurrent().getContent().indexOf("\n") > 0) break;
+                if (scanner.getCurrentContent().indexOf("\n") > 0) break;
             }
-            if (scanner.getCurrent().getContent().indexOf("\n|") < 0) break;
+            if (scanner.getCurrentContent().indexOf("\n|") < 0) break;
         }
         return new Maybe<String>(table.html());
     }
@@ -26,7 +26,7 @@ public class TableToken extends Token {
     private String makeBody(Scanner scanner) {
         if (getContent().startsWith("!")) {
             scanner.makeLiteral(TokenType.EndCell);
-            String body = scanner.getCurrent().getContent();
+            String body = scanner.getCurrentContent();
             scanner.moveNext();
             return body;
         }

@@ -9,16 +9,16 @@ public class IncludeToken extends Token {
         if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
         scanner.moveNext();
         String option = "";
-        if (scanner.isType(TokenType.Text) && scanner.getCurrent().getContent().startsWith("-")) {
-            option = scanner.getCurrent().getContent();
+        if (scanner.isType(TokenType.Text) && scanner.getCurrentContent().startsWith("-")) {
+            option = scanner.getCurrentContent();
             scanner.moveNext();
             if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
             scanner.moveNext();
         }
         if (!scanner.isType(TokenType.Text)) return Maybe.noString;
-        String pageName = scanner.getCurrent().getContent();
+        String pageName = scanner.getCurrentContent();
         scanner.moveNext();
-        if (scanner.getCurrent().getType() != TokenType.Newline) return Maybe.noString;
+        if (!scanner.isType(TokenType.Newline)) return Maybe.noString;
 
         PageCrawler crawler = getPage().getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -27,7 +27,7 @@ public class IncludeToken extends Token {
         try {
             includedPage = crawler.getSiblingPage(getPage(), pagePath);
             String collapseType = option.equals("-setup") ? "hidden" : "collapsable";
-            return new Maybe<String>(new CollapsibleToken(collapseType).generateHtml(pageName, includedPage.getData().getHtml()));
+            return new Maybe<String>(new CollapsibleToken().generateHtml(pageName, includedPage.getData().getHtml(), collapseType));
         } catch (Exception e) {
             return new Maybe<String>(e.toString());
         }

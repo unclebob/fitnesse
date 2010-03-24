@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Scanner {
@@ -9,7 +8,7 @@ public class Scanner {
     private static final Token endToken = new EmptyToken();
 
     private String input;
-    private Token activeToken;
+    private Token currentToken;
     private int next;
 
     public Scanner(String input) {
@@ -23,11 +22,15 @@ public class Scanner {
 
     public int getOffset() { return next; }
     public String substring(int startAt, int endBefore) { return input.substring(startAt, endBefore); }
+    public boolean isEnd() { return currentToken == endToken; }
+    public boolean isType(TokenType type) { return currentToken.getType() == type; }
+    public String getCurrentContent() { return currentToken.getContent(); }
+    public Token getCurrent() { return currentToken; }
 
     public void copy(Scanner other) {
         input = other.input;
         next = other.next;
-        activeToken = other.activeToken;
+        currentToken = other.currentToken;
     }
 
     public List<Token> nextTokens(TokenType[] tokenTypes) {
@@ -45,13 +48,13 @@ public class Scanner {
         while (scan < input.length()) {
             TokenMatch match = terminator.makeMatch(new ScanString(input, scan));
             if (match.isMatch()) {
-                activeToken = new TextToken(input.substring(next, scan));
+                currentToken = new TextToken(input.substring(next, scan));
                 next = scan;
                 return;
             }
             scan++;
         }
-        activeToken = endToken;
+        currentToken = endToken;
     }
 
     public void moveNext() {
@@ -81,11 +84,11 @@ public class Scanner {
             newNext = scan;
         }
         if (scan > next) {
-            activeToken = new TextToken(input.substring(next, scan));
+            currentToken = new TextToken(input.substring(next, scan));
             next = scan;
         }
         else {
-            activeToken = matchToken;
+            currentToken = matchToken;
             next = newNext;
         }
     }
@@ -96,8 +99,4 @@ public class Scanner {
         }
         return false;
     }
-
-    public boolean isEnd() { return activeToken == endToken; }
-    public boolean isType(TokenType type) { return activeToken.getType() == type; }
-    public Token getCurrent() { return activeToken; }
 }
