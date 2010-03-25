@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class PerformanceTest {
     private String pageContent = "";
     public PerformanceTest() {
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 500; i++) {
             pageContent += "|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|\n";
         }
     }
@@ -27,7 +27,7 @@ public class PerformanceTest {
         assertEquals("done", "done");
     }
 
-    @Ignore @Test
+    @Test
     public void NewParser() throws Exception {
         long start = System.currentTimeMillis();
         String result = new Translator(new TestRoot().makePage("NewTest")).translate(pageContent);

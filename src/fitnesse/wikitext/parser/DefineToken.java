@@ -19,6 +19,7 @@ public class DefineToken extends Token {
         if (close == TokenType.Empty) return Maybe.noString;
 
         int start = scanner.getOffset();
+        scanner.markStart();
         String value = new Translator(getPage()).translateIgnoreFirst(scanner, close);
         if (scanner.isEnd()) return Maybe.noString;
 

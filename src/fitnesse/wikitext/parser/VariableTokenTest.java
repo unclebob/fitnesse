@@ -19,8 +19,7 @@ public class VariableTokenTest {
 
     @Test public void translatesVariablesFromParent() throws Exception {
         TestRoot root = new TestRoot();
-        WikiPage parent = root.makePage("PageOne");
-        parent.getData().addVariable("x", "y");
+        WikiPage parent = root.makePage("PageOne", "!define x {y}\n");
         WikiPage child = root.makePage(parent, "PageTwo");
         ParserTest.assertTranslates(child, "${x}", "y");
     }

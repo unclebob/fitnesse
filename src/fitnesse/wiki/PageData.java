@@ -8,6 +8,7 @@ import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Translator;
 import fitnesse.wikitext.widgets.*;
+import util.Maybe;
 import util.StringUtil;
 
 import java.io.Serializable;
@@ -212,9 +213,13 @@ public class PageData implements Serializable {
   }
 
   public String getVariable(String name) throws Exception {
-      if (pageVariables.containsKey(name)) return pageVariables.get(name);
-    return getInitializedVariableRoot().getVariable(name);
+    Maybe<String> local = getLocalVariable(name);
+    return local.isNothing() ? getInitializedVariableRoot().getVariable(name) : local.getValue();
   }
+
+    public Maybe<String> getLocalVariable(String name) {
+        return pageVariables.containsKey(name) ? new Maybe<String>(pageVariables.get(name)) : Maybe.noString;
+    }
 
   public void addVariable(String name, String value) throws Exception {
       pageVariables.put(name, value);

@@ -7,12 +7,12 @@ public class Scanner {
 
     private static final Token endToken = new EmptyToken();
 
-    private String input;
+    private ScanString input;
     private Token currentToken;
     private int next;
 
     public Scanner(String input) {
-        this.input = input;
+        this.input = new ScanString(input, 0);
         next = 0;
     }
 
@@ -21,14 +21,15 @@ public class Scanner {
     }
 
     public int getOffset() { return next; }
-    public String substring(int startAt, int endBefore) { return input.substring(startAt, endBefore); }
+    public void markStart() { input.markStart(next); }
+    public String substring(int startAt, int endBefore) { return input.rawSubstring(startAt, endBefore); }
     public boolean isEnd() { return currentToken == endToken; }
     public boolean isType(TokenType type) { return currentToken.getType() == type; }
     public String getCurrentContent() { return currentToken.getContent(); }
     public Token getCurrent() { return currentToken; }
 
     public void copy(Scanner other) {
-        input = other.input;
+        input = new ScanString(other.input);
         next = other.next;
         currentToken = other.currentToken;
     }
@@ -44,15 +45,15 @@ public class Scanner {
     }
 
     public void makeLiteral(TokenType terminator) {
-        int scan = next;
-        while (scan < input.length()) {
-            TokenMatch match = terminator.makeMatch(new ScanString(input, scan));
+        input.setOffset(next);
+        while (!input.isEnd()) {
+            TokenMatch match = terminator.makeMatch(input);
             if (match.isMatch()) {
-                currentToken = new TextToken(input.substring(next, scan));
-                next = scan;
+                currentToken = new TextToken(input.substringFrom(next));
+                next = input.getOffset();
                 return;
             }
-            scan++;
+            input.moveNext();
         }
         currentToken = endToken;
     }
@@ -62,30 +63,30 @@ public class Scanner {
     }
 
     public void moveNextIgnoreFirst(List<TokenType> ignoreFirst) {
-        int scan = next;
+        input.setOffset(next);
         int newNext = next;
         Token matchToken = null;
-        while (scan < input.length()) {
-            for (TokenType candidate: TokenType.values()) {
-                if (scan != next || !contains(ignoreFirst, candidate)) {
-                    TokenMatch match = candidate.makeMatch(new ScanString(input, scan));
+        while (!input.isEnd()) {
+            for (TokenType candidate: TokenType.getMatchTypes(input.charAt(0))) {
+                if (input.getOffset() != next || !contains(ignoreFirst, candidate)) {
+                    TokenMatch match = candidate.makeMatch(input);
                     if (match.isMatch()) {
                         matchToken = match.getToken();
-                        newNext = scan + match.getMatchLength();
+                        newNext = input.getOffset() + match.getMatchLength();
                         break;
                     }
                 }
             }
             if (matchToken != null) break;
-            scan++;
+            input.moveNext();
         }
-        if (scan >= input.length()) {
+        if (input.isEnd()) {
             matchToken = endToken;
-            newNext = scan;
+            newNext = input.getOffset();
         }
-        if (scan > next) {
-            currentToken = new TextToken(input.substring(next, scan));
-            next = scan;
+        if (input.getOffset() > next) {
+            currentToken = new TextToken(input.substringFrom(next));
+            next = input.getOffset();
         }
         else {
             currentToken = matchToken;

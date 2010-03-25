@@ -1,9 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -13,19 +10,32 @@ public class DefineTokenTest {
         ParserTest.assertScansTokenType("!define x {y}", TokenType.Define, true);
     }
 
-    @Test public void translatesDefine() throws Exception {
-        assertTranslatesDefine("x", "y", "y");
-        assertTranslatesDefine("x", "''y''", "<i>y</i>"  + HtmlElement.endl);
+    @Test public void translatesDefines() throws Exception {
+        assertTranslatesDefine("!define x {y}", "x=y");
+        assertTranslatesDefine("!define x (y)", "x=y");
+        assertTranslatesDefine("!define x [y]", "x=y");
+        assertTranslatesDefine("!define x {''y''}", "x=''y''");
     }
 
-    private void assertTranslatesDefine(String name, String inputValue, String definedValue) throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        PageCrawler crawler = root.getPageCrawler();
-        WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
+    @Test public void definesValues() throws Exception {
+        assertDefinesValue("!define x {y}", "x", "y");
+        assertDefinesValue("!define x {''y''}", "x", "<i>y</i>" + HtmlElement.endl);
+        assertDefinesValue("!define x {!note y\n}", "x", "<span class=\"note\">y</span>" + HtmlElement.endl);
+        assertDefinesValue("!define z {y}\n!define x {${z}}", "x", "y");
+        assertDefinesValue("!define z {''y''}\n!define x {${z}}", "x", "<i>y</i>" + HtmlElement.endl);
+        assertDefinesValue("!define z {y}\n!define x {''${z}''}", "x", "<i>y</i>" + HtmlElement.endl);
+    }
 
-        ParserTest.assertTranslates(pageOne,
-                "!define " + name + " {" + inputValue + "}",
-                "<span class=\"meta\">variable defined: " + name + "=" + inputValue + "</span>");
+    private void assertDefinesValue(String input, String name, String definedValue) throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne");
+        ParserTest.translate(pageOne, input);
         assertEquals(definedValue, pageOne.getData().getVariable(name));
     }
+
+    private void assertTranslatesDefine(String input, String definition) throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne");
+        ParserTest.assertTranslates(pageOne, input,
+                "<span class=\"meta\">variable defined: " + definition + "</span>");
+    }
+
 }

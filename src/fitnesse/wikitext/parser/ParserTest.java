@@ -44,7 +44,10 @@ public class ParserTest {
     }
 
     public static void assertTranslates(WikiPage page, String input, String expected) {
-        Translator translator = new Translator(page);
-        assertEquals(expected, translator.translate(input));
+        assertEquals(expected, translate(page, input));
+    }
+
+    public static String translate(WikiPage page, String input) {
+        return new Translator(page).translate(input);
     }
 }
