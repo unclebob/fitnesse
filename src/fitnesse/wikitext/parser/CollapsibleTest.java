@@ -1,23 +1,28 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
+import fitnesse.wikitext.translator.CollapsibleBuilder;
 import org.junit.Test;
 
-public class CollapsibleTokenTest {
+public class CollapsibleTest {
     @Test public void scansCollapsible() {
-        ParserTest.assertScansTokenType("!* Some title\n content \n*!", TokenType.Collapsible, true);
+        ParserTest.assertScansTokenType("!* title\ncontent\n*!", SymbolType.Collapsible, true);
+    }
+
+    @Test public void parsesCollapsible() {
+        ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[Text, SymbolList[Text], SymbolList[Text, Newline]]]");
     }
 
     @Test public void translatesCollapsible() {
-        CollapsibleToken.resetId();
-        ParserTest.assertTranslates("!* Some title\n content \n*!",
+        CollapsibleBuilder.resetId();
+        ParserTest.assertTranslatesTo("!* Some title\n content \n*!",
                 sectionWithClass("collapsable"));
 
-        CollapsibleToken.resetId();
-        ParserTest.assertTranslates("!*> Some title\n content \n*!",
+        CollapsibleBuilder.resetId();
+        ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",
                 sectionWithClass("hidden"));
         
-        ParserTest.assertTranslates("!**\n**!", "!**<br/>" + HtmlElement.endl + "**!");
+        ParserTest.assertTranslatesTo("!**\n**!", "!**<br/>" + HtmlElement.endl + "**!");
     }
 
     private String sectionWithClass(String sectionClass) {

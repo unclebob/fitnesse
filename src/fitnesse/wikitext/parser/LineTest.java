@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class LineTokenTest {
+public class LineTest {
     @Test public void scansHeaders() {
         ParserTest.assertScans("!1 some text\n", "HeaderLine=!1,Whitespace= ,Text=some,Whitespace= ,Text=text,Newline=\n");
         ParserTest.assertScans("!2 \n", "HeaderLine=!2,Whitespace= ,Newline=\n");

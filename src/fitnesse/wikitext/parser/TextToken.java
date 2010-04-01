@@ -2,11 +2,14 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlText;
-import fitnesse.html.HtmlUtil;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import util.Maybe;
+import util.StringUtil;
+
+import java.util.Arrays;
 
 public class TextToken extends Token {
     public TextToken(String content) { super(content); }
@@ -19,22 +22,51 @@ public class TextToken extends Token {
         return new Maybe<String>(link.html());
     }
 
+    public String toHtml() { return new HtmlText(getContent()).html(); }
+
     private String qualifiedName() {
-        String wikiWordPath = getContent();
-
-        if (wikiWordPath.startsWith("^") || wikiWordPath.startsWith(">")) {
-            wikiWordPath = String.format("%s.%s", getPage().getName(), wikiWordPath.substring(1));
-        }
-
+        String wikiWordPath = makePath();
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
         try {
             WikiPage parentPage = getPage().getParent();
             fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalStateException(e);
         }
         return PathParser.render(fullPathOfWikiWord);
+    }
+
+    public String makePath() {
+        String content = getContent();
+        if (content.startsWith("^") || content.startsWith(">")) {
+            return makeChildPath();
+        }
+        if (content.startsWith("<")) {
+            return makeParentPath();
+        }
+        return content;
+    }
+
+    private String makeParentPath() {
+        String undecoratedPath = getContent().substring(1);
+        String[] pathElements = undecoratedPath.split("\\.");
+        String target = pathElements[0];
+        PageCrawler crawler = getPage().getPageCrawler();
+        try {
+            WikiPage ancestor = crawler.findAncestorWithName(getPage(), target);
+            if (ancestor != null) {
+                pathElements[0] = PathParser.render(crawler.getFullPath(ancestor));
+                return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+        return "." + undecoratedPath;
+    }
+
+    private String makeChildPath() {
+        return String.format("%s.%s", getPage().getName(), getContent().substring(1));
     }
 
     private boolean isWikiWordPath() {
@@ -78,5 +110,5 @@ public class TextToken extends Token {
     
     private boolean isCharacter(String candidate, char character, int offset) { return candidate.charAt(offset) == character; }
 
-    public TokenType getType() { return TokenType.Text; }
+    public SymbolType getType() { return SymbolType.Text; }
 }

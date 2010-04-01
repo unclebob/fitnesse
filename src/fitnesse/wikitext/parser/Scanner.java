@@ -24,8 +24,9 @@ public class Scanner {
     public void markStart() { input.markStart(next); }
     public String substring(int startAt, int endBefore) { return input.rawSubstring(startAt, endBefore); }
     public boolean isEnd() { return currentToken == endToken; }
-    public boolean isType(TokenType type) { return currentToken.getType() == type; }
+    public boolean isType(SymbolType type) { return currentToken.getType() == type; }
     public String getCurrentContent() { return currentToken.getContent(); }
+    public SymbolType getCurrentType() { return currentToken.getType(); }
     public Token getCurrent() { return currentToken; }
 
     public void copy(Scanner other) {
@@ -34,9 +35,9 @@ public class Scanner {
         currentToken = other.currentToken;
     }
 
-    public List<Token> nextTokens(TokenType[] tokenTypes) {
+    public List<Token> nextTokens(SymbolType[] symbolTypes) {
         ArrayList<Token> tokens = new ArrayList<Token>();
-        for (TokenType type: tokenTypes) {
+        for (SymbolType type: symbolTypes) {
             moveNext();
             if (!isType(type)) return new ArrayList<Token>();
             tokens.add(getCurrent());
@@ -44,7 +45,7 @@ public class Scanner {
         return tokens;
     }
 
-    public void makeLiteral(TokenType terminator) {
+    public void makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
             TokenMatch match = terminator.makeMatch(input);
@@ -59,15 +60,15 @@ public class Scanner {
     }
 
     public void moveNext() {
-        moveNextIgnoreFirst(new ArrayList<TokenType>());
+        moveNextIgnoreFirst(new ArrayList<SymbolType>());
     }
 
-    public void moveNextIgnoreFirst(List<TokenType> ignoreFirst) {
+    public void moveNextIgnoreFirst(List<SymbolType> ignoreFirst) {
         input.setOffset(next);
         int newNext = next;
         Token matchToken = null;
         while (!input.isEnd()) {
-            for (TokenType candidate: TokenType.getMatchTypes(input.charAt(0))) {
+            for (SymbolType candidate: SymbolType.getMatchTypes(input.charAt(0))) {
                 if (input.getOffset() != next || !contains(ignoreFirst, candidate)) {
                     TokenMatch match = candidate.makeMatch(input);
                     if (match.isMatch()) {
@@ -94,8 +95,8 @@ public class Scanner {
         }
     }
 
-    private boolean contains(List<TokenType> ignoreList, TokenType candidate) {
-        for (TokenType ignore: ignoreList) {
+    private boolean contains(List<SymbolType> ignoreList, SymbolType candidate) {
+        for (SymbolType ignore: ignoreList) {
             if (ignore == candidate) return true;
         }
         return false;

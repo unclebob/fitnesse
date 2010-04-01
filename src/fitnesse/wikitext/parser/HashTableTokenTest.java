@@ -5,9 +5,9 @@ import org.junit.Test;
 
 public class HashTableTokenTest {
     @Test public void scansHashTables() {
-        ParserTest.assertScansTokenType("!{a:b,c:d}", TokenType.HashTable, true);
-        ParserTest.assertScansTokenType("!{a:b,c:d}", TokenType.Colon, true);
-        ParserTest.assertScansTokenType("!{a:b,c:d}", TokenType.Comma, true);
+        ParserTest.assertScansTokenType("!{a:b,c:d}", SymbolType.HashTable, true);
+        ParserTest.assertScansTokenType("!{a:b,c:d}", SymbolType.Colon, true);
+        ParserTest.assertScansTokenType("!{a:b,c:d}", SymbolType.Comma, true);
     }
 
     @Test public void translatesHashTables() {

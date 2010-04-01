@@ -162,10 +162,9 @@ public class PageCrawlerImpl implements PageCrawler {
       return getPage(page, relativePath);
     } else if (pathRelativeToSibling.isBackwardSearchPath()) {
       String target = pathRelativeToSibling.getFirst();
-      for (WikiPage current = page.getParent(); !crawler.isRoot(current); current = current.getParent()) {
-        if (current.getName().equals(target))
-          return getPage(current, pathRelativeToSibling.getRest());
-      }
+      WikiPage ancestor = findAncestorWithName(page, target);
+      if (ancestor != null) return getPage(ancestor, pathRelativeToSibling.getRest());
+        
       WikiPagePath absolutePath = new WikiPagePath(pathRelativeToSibling);
       absolutePath.makeAbsolute();
       return getPage(crawler.getRoot(page), absolutePath);
@@ -174,6 +173,13 @@ public class PageCrawlerImpl implements PageCrawler {
       return getPage(parent, pathRelativeToSibling);
     }
   }
+
+    public WikiPage findAncestorWithName(WikiPage page, String name) throws Exception {
+        for (WikiPage current = page.getParent(); !isRoot(current); current = current.getParent()) {
+          if (current.getName().equals(name)) return current;
+        }
+        return null;
+    }
 
   public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) throws Exception {
     List<WikiPage> uncles = new ArrayList<WikiPage>();

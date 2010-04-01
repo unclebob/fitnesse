@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.wikitext.translator.Translator;
 import util.Maybe;
 
 public class HashTableToken extends Token {
@@ -15,13 +16,13 @@ public class HashTableToken extends Token {
             table.add(row);
             for (int i = 0; i < 2; i++) {
                 String body = new Translator(getPage()).translateIgnoreFirst(scanner,
-                        new TokenType[] {TokenType.Colon, TokenType.Comma, TokenType.CloseBrace});
+                        new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace});
                 if (scanner.isEnd()) return Maybe.noString;
                 HtmlTag cell = new HtmlTag("td", body.trim());
                 cell.addAttribute("class", cellClasses[i]);
                 row.add(cell);
             }
-            if (scanner.isType(TokenType.CloseBrace)) break;
+            if (scanner.isType(SymbolType.CloseBrace)) break;
         }
         return new Maybe<String>(table.html());
     }

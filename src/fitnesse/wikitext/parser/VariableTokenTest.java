@@ -1,14 +1,11 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
 public class VariableTokenTest {
     @Test public void scansVariables() {
-        ParserTest.assertScansTokenType("${x}", TokenType.Variable, true);
+        ParserTest.assertScansTokenType("${x}", SymbolType.Variable, true);
     }
 
     @Test public void translatesVariables() throws Exception {

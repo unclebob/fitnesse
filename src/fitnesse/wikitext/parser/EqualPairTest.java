@@ -4,12 +4,12 @@ import fitnesse.html.HtmlElement;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
-public class EqualPairTokenTest {
+public class EqualPairTest {
     @Test public void scansTripleQuotes() {
-        ParserTest.assertScansTokenType("'''bold'''", TokenType.Bold, true);
-        ParserTest.assertScansTokenType("''''bold''''", TokenType.Bold, true);
-        ParserTest.assertScansTokenType("'' 'not bold' ''", TokenType.Bold, false);
-        ParserTest.assertScansTokenType("''''some text' '''", TokenType.Bold, true);
+        ParserTest.assertScansTokenType("'''bold'''", SymbolType.Bold, true);
+        ParserTest.assertScansTokenType("''''bold''''", SymbolType.Bold, true);
+        ParserTest.assertScansTokenType("'' 'not bold' ''", SymbolType.Bold, false);
+        ParserTest.assertScansTokenType("''''some text' '''", SymbolType.Bold, true);
     }
 
     @Test public void translatesBold() {
@@ -17,8 +17,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void scansDoubleQuotes() {
-        ParserTest.assertScansTokenType("''italic''", TokenType.Italic, true);
-        ParserTest.assertScansTokenType("'' 'italic' ''", TokenType.Italic, true);
+        ParserTest.assertScansTokenType("''italic''", SymbolType.Italic, true);
+        ParserTest.assertScansTokenType("'' 'italic' ''", SymbolType.Italic, true);
     }
 
     @Test public void translatesItalic() {
@@ -39,8 +39,8 @@ public class EqualPairTokenTest {
     }
 
     @Test public void scansDoubleDashes() {
-        ParserTest.assertScansTokenType("abc--123--def", TokenType.Strike, true);
-        ParserTest.assertScansTokenType("--- -", TokenType.Strike, true);
+        ParserTest.assertScansTokenType("abc--123--def", SymbolType.Strike, true);
+        ParserTest.assertScansTokenType("--- -", SymbolType.Strike, true);
     }
 
     @Test public void translatesStrike() {

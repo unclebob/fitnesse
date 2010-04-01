@@ -6,9 +6,9 @@ import org.junit.Test;
 public class ListTokenTest {
     @Test
     public void scansLists() {
-        ParserTest.assertScansTokenType(" * item", TokenType.List, true);
-        ParserTest.assertScansTokenType("  * item", TokenType.List, true);
-        ParserTest.assertScansTokenType("* item", TokenType.List, false);
+        ParserTest.assertScansTokenType(" * item", SymbolType.List, true);
+        ParserTest.assertScansTokenType("  * item", SymbolType.List, true);
+        ParserTest.assertScansTokenType("* item", SymbolType.List, false);
     }
 
     @Test

@@ -10,6 +10,8 @@ public class Maybe<T> {
 
     public Maybe(T value) { this(value, false); }
 
+    public Maybe() { this(null, true); }
+
     private Maybe(T value, boolean isNothing) {
         this.value = value;
         this.isNothing = isNothing;

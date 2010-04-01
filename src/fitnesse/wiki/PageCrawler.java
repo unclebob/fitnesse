@@ -29,4 +29,6 @@ public interface PageCrawler {
   void traverse(WikiPage root, TraversalListener pageCrawlerTest) throws Exception;
 
   WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
+
+  WikiPage findAncestorWithName(WikiPage page, String name) throws Exception;
 }

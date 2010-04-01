@@ -5,14 +5,10 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 import util.Maybe;
 
-import java.util.List;
-
-public class ContentsToken extends Token {
+public class ContentsRule extends Rule {
     public Maybe<String> render(Scanner scanner) {
         HtmlTag div = HtmlUtil.makeDivTag("toc" + 1);
         HtmlTag contentsDiv = HtmlUtil.makeDivTag("contents");
@@ -39,5 +35,10 @@ public class ContentsToken extends Token {
 
     private HtmlElement getLinkText(WikiPage wikiPage) throws Exception {
         return new RawHtml(wikiPage.getName());
+    }
+
+    @Override
+    public Maybe<Symbol> parse(Scanner scanner) {
+        return new Maybe<Symbol>(new Phrase(SymbolType.Contents));
     }
 }

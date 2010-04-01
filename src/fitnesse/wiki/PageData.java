@@ -6,7 +6,10 @@ import fitnesse.responders.run.ExecutionLog;
 import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.parser.Translator;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.Phrase;
+import fitnesse.wikitext.translator.Translator;
+import fitnesse.wikitext.translator.Variables;
 import fitnesse.wikitext.widgets.*;
 import util.Maybe;
 import util.StringUtil;
@@ -18,8 +21,6 @@ import java.util.*;
 public class PageData implements Serializable {
 
   private static final long serialVersionUID = 1L;
-
-    private HashMap<String, String> pageVariables = new HashMap<String, String>();
 
   public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(
       IncludeWidget.class, VariableDefinitionWidget.class,
@@ -82,7 +83,9 @@ public class PageData implements Serializable {
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-  public PageData(WikiPage page) throws Exception {
+    private Phrase contentSyntaxTree = null;
+
+    public PageData(WikiPage page) throws Exception {
     wikiPage = page;
     initializeAttributes();
     versions = new HashSet<VersionInfo>();
@@ -98,7 +101,7 @@ public class PageData implements Serializable {
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
     variableRoot = data.variableRoot;
-      pageVariables = data.pageVariables;
+      contentSyntaxTree = data.contentSyntaxTree;
   }
 
   public String getStringOfAllAttributes() {
@@ -192,8 +195,10 @@ public class PageData implements Serializable {
 
   public void setContent(String content) {
     this.content = content;
+      contentSyntaxTree = null;
   }
 
+  /* this is the public entry to page parse and translate */
   public String getHtml() throws Exception {
     return processHTMLWidgets(getContent(), wikiPage);
   }
@@ -217,12 +222,14 @@ public class PageData implements Serializable {
     return local.isNothing() ? getInitializedVariableRoot().getVariable(name) : local.getValue();
   }
 
-    public Maybe<String> getLocalVariable(String name) {
-        return pageVariables.containsKey(name) ? new Maybe<String>(pageVariables.get(name)) : Maybe.noString;
+    public Maybe<String> getLocalVariable(String name) throws Exception {
+        if (contentSyntaxTree == null) {
+            contentSyntaxTree = new Parser(wikiPage).parse(getContent());
+        }
+        return new Variables(wikiPage, contentSyntaxTree).getValue(name);
     }
 
   public void addVariable(String name, String value) throws Exception {
-      pageVariables.put(name, value);
     getInitializedVariableRoot().addVariable(name, value);
   }
 
@@ -253,7 +260,8 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(String content, WikiPage context) {
-        return new Translator(context).translate(content);
+        contentSyntaxTree = new Parser(context).parse(content);
+        return new Translator(context).translateToHtml(contentSyntaxTree);
     }
 
   public void setWikiPage(WikiPage page) {

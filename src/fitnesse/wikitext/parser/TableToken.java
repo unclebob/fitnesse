@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.wikitext.translator.Translator;
 import util.Maybe;
 
 public class TableToken extends Token {
@@ -25,13 +26,13 @@ public class TableToken extends Token {
 
     private String makeBody(Scanner scanner) {
         if (getContent().startsWith("!")) {
-            scanner.makeLiteral(TokenType.EndCell);
+            scanner.makeLiteral(SymbolType.EndCell);
             String body = scanner.getCurrentContent();
             scanner.moveNext();
             return body;
         }
-        return new Translator(getPage()).translate(scanner, TokenType.EndCell);
+        return new Translator(getPage()).translate(scanner, SymbolType.EndCell);
     }
 
-    public TokenType getType() { return TokenType.Table; }
+    public SymbolType getType() { return SymbolType.Table; }
 }

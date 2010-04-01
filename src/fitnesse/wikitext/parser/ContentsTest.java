@@ -4,9 +4,9 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
-public class ContentsTokenTest {
+public class ContentsTest {
     @Test public void scansContents() {
-        ParserTest.assertScansTokenType("!contents", TokenType.Contents, true);
+        ParserTest.assertScansTokenType("!contents", SymbolType.Contents, true);
     }
 
     @Test public void translatesContents() throws Exception {
@@ -15,7 +15,7 @@ public class ContentsTokenTest {
          root.makePage(pageOne, "PageTwo");
          root.makePage(pageOne, "PageThree");
 
-         ParserTest.assertTranslates(pageOne, "!contents",
+         ParserTest.assertTranslatesTo(pageOne, "!contents",
                 "<div class=\"toc1\">" + HtmlElement.endl +
                 "\t<div class=\"contents\">" + HtmlElement.endl +
                 "\t\t<b>Contents:</b>" + HtmlElement.endl +

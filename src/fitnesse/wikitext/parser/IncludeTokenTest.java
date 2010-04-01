@@ -1,12 +1,13 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.*;
+import fitnesse.wikitext.translator.Translator;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class IncludeTokenTest {
     @Test public void scansIncludes() {
-        ParserTest.assertScansTokenType("!include name", TokenType.Include, true);
+        ParserTest.assertScansTokenType("!include name", SymbolType.Include, true);
     }
 
     @Test public void translatesIncludedSibling() throws Exception {

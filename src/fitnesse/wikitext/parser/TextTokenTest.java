@@ -1,9 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -27,11 +24,20 @@ public class TextTokenTest {
         TestRoot root = new TestRoot();
         WikiPage pageOne = root.makePage("PageOne");
         WikiPage pageOneTwo = root.makePage(pageOne, "PageTwo");
+        WikiPage pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");
         WikiPage pageOneThree = root.makePage(pageOne, "PageThree");
 
-        ParserTest.assertTranslates(pageOne, "PageOne", "<a href=\"PageOne\">PageOne</a>" + HtmlElement.endl);
-        ParserTest.assertTranslates(pageOneTwo, "PageTwo", "<a href=\"PageOne.PageTwo\">PageTwo</a>" + HtmlElement.endl);
-        ParserTest.assertTranslates(pageOneThree, ".PageOne", "<a href=\"PageOne\">.PageOne</a>" + HtmlElement.endl);
-        ParserTest.assertTranslates(pageOne, ">PageTwo", "<a href=\"PageOne.PageTwo\">&gt;PageTwo</a>" + HtmlElement.endl);
+        ParserTest.assertTranslates(pageOne, "PageOne", wikiLink("PageOne", "PageOne"));
+        ParserTest.assertTranslates(pageOneTwo, "PageTwo", wikiLink("PageOne.PageTwo", "PageTwo"));
+
+        ParserTest.assertTranslates(pageOneThree, ".PageOne", wikiLink("PageOne", ".PageOne"));
+
+        ParserTest.assertTranslates(pageOne, ">PageTwo", wikiLink("PageOne.PageTwo", "&gt;PageTwo"));
+
+        ParserTest.assertTranslates(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
+    }
+
+    private String wikiLink(String link, String text) {
+        return "<a href=\"" + link + "\">" + text + "</a>" + HtmlElement.endl;
     }
 }

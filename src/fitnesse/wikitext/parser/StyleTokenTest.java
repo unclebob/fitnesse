@@ -5,27 +5,27 @@ import org.junit.Test;
 
 public class StyleTokenTest {
     @Test public void scansParenthesisStyle() throws Exception {
-        ParserTest.assertScansTokenType("!style_x(my text)", TokenType.Style, true);
-        ParserTest.assertScansTokenType("!style_style(my text)", TokenType.Style, true);
-        ParserTest.assertScansTokenType("!style(Hi)", TokenType.Style, false);
-        ParserTest.assertScansTokenType("!style_(Hi)", TokenType.Style, false);
-        ParserTest.assertScansTokenType("!style_myStyle(hi))", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style_x(my text)", SymbolType.Style, true);
+        ParserTest.assertScansTokenType("!style_style(my text)", SymbolType.Style, true);
+        ParserTest.assertScansTokenType("!style(Hi)", SymbolType.Style, false);
+        ParserTest.assertScansTokenType("!style_(Hi)", SymbolType.Style, false);
+        ParserTest.assertScansTokenType("!style_myStyle(hi))", SymbolType.Style, true);
     }
 
     @Test public void scansBraceStyle() throws Exception {
-        ParserTest.assertScansTokenType("!style_x{my text}", TokenType.Style, true);
-        ParserTest.assertScansTokenType("!style_style{my text}", TokenType.Style, true);
-        ParserTest.assertScansTokenType("!style{Hi}", TokenType.Style, false);
-        ParserTest.assertScansTokenType("!style_{Hi}", TokenType.Style, false);
-        ParserTest.assertScansTokenType("!style_myStyle{hi}}", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style_x{my text}", SymbolType.Style, true);
+        ParserTest.assertScansTokenType("!style_style{my text}", SymbolType.Style, true);
+        ParserTest.assertScansTokenType("!style{Hi}", SymbolType.Style, false);
+        ParserTest.assertScansTokenType("!style_{Hi}", SymbolType.Style, false);
+        ParserTest.assertScansTokenType("!style_myStyle{hi}}", SymbolType.Style, true);
     }
 
     @Test public void scansBracketStyle() throws Exception {
-        ParserTest.assertScansTokenType("!style_x[my text]", TokenType.Style, true);
-        ParserTest.assertScansTokenType("!style_style[my text]", TokenType.Style, true);
-        ParserTest.assertScansTokenType("!style[Hi]", TokenType.Style, false);
-        ParserTest.assertScansTokenType("!style_[Hi]", TokenType.Style, false);
-        ParserTest.assertScansTokenType("!style_myStyle[hi]]", TokenType.Style, true);
+        ParserTest.assertScansTokenType("!style_x[my text]", SymbolType.Style, true);
+        ParserTest.assertScansTokenType("!style_style[my text]", SymbolType.Style, true);
+        ParserTest.assertScansTokenType("!style[Hi]", SymbolType.Style, false);
+        ParserTest.assertScansTokenType("!style_[Hi]", SymbolType.Style, false);
+        ParserTest.assertScansTokenType("!style_myStyle[hi]]", SymbolType.Style, true);
     }
 
     @Test public void translatesStyle() {

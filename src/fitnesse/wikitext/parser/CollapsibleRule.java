@@ -4,27 +4,29 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import util.Maybe;
 
-public class CollapsibleToken extends Token {
+public class CollapsibleRule extends Rule {
     private static long nextId = 1;
 
-    public static void resetId() { nextId = 1; }
-
-    public Maybe<String> render(Scanner scanner) {
+    @Override
+    public Maybe<Symbol> parse(Scanner scanner) {
         String bodyClass = "collapsable";
         scanner.moveNext();
         if (scanner.getCurrentContent().equals(">")) {
             bodyClass = "hidden";
             scanner.moveNext();
         }
-        if (!scanner.isType(TokenType.Whitespace)) return Maybe.noString;
-        
-        String titleText = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.Newline);
-        if (scanner.isEnd()) return Maybe.noString;
-        
-        String bodyText = new Translator(getPage()).translateIgnoreFirst(scanner, TokenType.EndSection);
-        if (scanner.isEnd()) return Maybe.noString;
+        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
 
-        return new Maybe<String>(generateHtml(titleText, bodyText, bodyClass));
+        Phrase titleText = new Parser(getPage()).parseIgnoreFirst(scanner, SymbolType.Newline);
+        if (scanner.isEnd()) return Symbol.Nothing;
+
+        Phrase bodyText = new Parser(getPage()).parseIgnoreFirst(scanner, SymbolType.CloseCollapsible);
+        if (scanner.isEnd()) return Symbol.Nothing;
+
+        return new Maybe<Symbol>(new Phrase(SymbolType.Collapsible)
+                .add(bodyClass)
+                .add(titleText)
+                .add(bodyText));
     }
 
     public String generateHtml(String titleText, String bodyText, String bodyClass) {
@@ -60,5 +62,5 @@ public class CollapsibleToken extends Token {
         return outerBlock.html();
     }
 
-    public TokenType getType() { return TokenType.Collapsible; }
+    public SymbolType getType() { return SymbolType.Collapsible; }
 }

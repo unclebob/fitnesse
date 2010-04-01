@@ -10,10 +10,14 @@ public class Matcher {
     }
 
     private ArrayList<ScanMatch> matches = new ArrayList<ScanMatch>();
-    private Class<? extends Token> tokenClass = Token.class;
+    private Class<? extends Rule> ruleClass;
+
+    public Matcher ruleClass(Class<? extends Rule> ruleClass) {
+        this.ruleClass = ruleClass;
+        return this;
+    }
 
     public Matcher tokenClass(Class<? extends Token> tokenClass) {
-        this.tokenClass = tokenClass;
         return this;
     }
 
@@ -98,7 +102,7 @@ public class Matcher {
         return this;
     }
 
-    public TokenMatch makeMatch(TokenType type, ScanString input)  {
+    public TokenMatch makeMatch(SymbolType type, ScanString input)  {
         int totalLength = 0;
         for (ScanMatch match: matches) {
             Maybe<Integer> matchLength = match.match(input, totalLength);
@@ -106,16 +110,23 @@ public class Matcher {
             totalLength += matchLength.getValue();
         }
 
-        Token token;
+        Token token = new Token();
+
+        if (ruleClass != null) {
+            token.setProduction(makeProduction());
+        }
+        token.setType(type);
+        token.setContent(input.substring(0, totalLength));
+        return new TokenMatch(token, totalLength);
+    }
+
+    private Rule makeProduction() {
         try {
-            token = tokenClass.newInstance();
+            return ruleClass.newInstance();
         } catch (InstantiationException e) {
             throw new IllegalArgumentException(e);
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException(e);
         }
-        token.setType(type);
-        token.setContent(input.substring(0, totalLength));
-        return new TokenMatch(token, totalLength);
-     }
+    }
 }

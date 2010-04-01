@@ -1,6 +1,9 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.translator.Translator;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,7 +14,7 @@ public class ParserTest {
         assertScans(expected, scanner);
     }
 
-    public static  void assertScansTokenType(String input, TokenType expected, boolean found) {
+    public static  void assertScansTokenType(String input, SymbolType expected, boolean found) {
         Scanner scanner = new Scanner(input);
         while (true) {
             scanner.moveNext();
@@ -49,5 +52,35 @@ public class ParserTest {
 
     public static String translate(WikiPage page, String input) {
         return new Translator(page).translate(input);
+    }
+
+    public static void assertTranslatesTo(String input, String expected) {
+        assertTranslatesTo(null, input, expected);
+    }
+
+    public static void assertTranslatesTo(WikiPage page, String input, String expected) {
+        assertEquals(expected, translateTo(page, input));
+    }
+
+    public static String translateTo(WikiPage page, String input) {
+        return new Translator(page).translateToHtml(input);
+    }
+
+    public static void assertParses(String input, String expected) {
+        Phrase result = new Parser(null).parse(input);
+        assertEquals(expected, serialize(result));
+    }
+
+    public static String serialize(Symbol symbol) {
+        StringBuilder result = new StringBuilder();
+        result.append(symbol.getType() != null ? symbol.getType().toString() : "?no type?");
+        int i = 0;
+        for (Symbol child : symbol.getChildren()) {
+            result.append(i == 0 ? "[" : ", ");
+            result.append(serialize(child));
+            i++;
+        }
+        if (i > 0) result.append("]");
+        return result.toString();
     }
 }
