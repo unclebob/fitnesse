@@ -1,7 +1,10 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.parser.SymbolType;
+import fitnesse.wikitext.test.TestRoot;
 import org.junit.Test;
 
 public class ContentsTest {

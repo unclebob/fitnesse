@@ -1,10 +1,9 @@
 package fitnesse.wikitext;
 
-import fitnesse.wikitext.parser.TestRoot;
+import fitnesse.wikitext.test.TestRoot;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

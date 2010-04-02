@@ -38,6 +38,7 @@ public class Translator {
         translations.put(SymbolType.Table, new TableBuilder());
         translations.put(SymbolType.Text, new TextBuilder());
         translations.put(SymbolType.Variable, new VariableBuilder());
+        translations.put(SymbolType.WikiWord, new WikiWordBuilder());
     }
 
     public Translator(WikiPage currentPage) { this.currentPage = currentPage; }

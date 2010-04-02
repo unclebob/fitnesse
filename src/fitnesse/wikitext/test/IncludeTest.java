@@ -1,6 +1,8 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.test;
 
 import fitnesse.wiki.*;
+import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.translator.Translator;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;

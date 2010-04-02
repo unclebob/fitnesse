@@ -86,7 +86,7 @@ public class Scanner {
             newNext = input.getOffset();
         }
         if (input.getOffset() > next) {
-            currentToken = new Token(SymbolType.Text, input.substringFrom(next));
+            currentToken =  new TextMaker().makeToken(input.substringFrom(next));
             next = input.getOffset();
         }
         else {

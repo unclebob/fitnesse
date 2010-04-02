@@ -1,6 +1,7 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.test;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.translator.Translator;
 
 import java.util.List;

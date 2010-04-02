@@ -42,10 +42,9 @@ public enum SymbolType {
     NoteLine(new Matcher().startLine().string("!note").ruleClass(LineRule.class)),
     Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}).ruleClass(StyleRule.class)),
 
-    //WikiWord(new Matcher().noMatch()),
+    WikiWord(),
     Text(),
     Empty(),
-
     SymbolList();
 
     public static SymbolType closeType(SymbolType type) {

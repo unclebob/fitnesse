@@ -1,4 +1,4 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.test;
 
 import fitnesse.wiki.*;
 

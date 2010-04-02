@@ -1,5 +1,7 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.test;
 
+import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class EvaluatorTest {
