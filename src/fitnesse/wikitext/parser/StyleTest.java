@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class StyleTokenTest {
+public class StyleTest {
     @Test public void scansParenthesisStyle() throws Exception {
         ParserTest.assertScansTokenType("!style_x(my text)", SymbolType.Style, true);
         ParserTest.assertScansTokenType("!style_style(my text)", SymbolType.Style, true);
@@ -29,18 +29,18 @@ public class StyleTokenTest {
     }
 
     @Test public void translatesStyle() {
-        ParserTest.assertTranslates("!style_myStyle(wow zap)", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
-        ParserTest.assertTranslates("!style_myStyle[wow zap]", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
-        ParserTest.assertTranslates("!style_myStyle[)]", "<span class=\"myStyle\">)</span>" + HtmlElement.endl);
-        ParserTest.assertTranslates("!style_myStyle{wow zap}", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!style_myStyle(wow zap)", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!style_myStyle[wow zap]", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!style_myStyle[)]", "<span class=\"myStyle\">)</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!style_myStyle{wow zap}", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
     }
 
     @Test public void ignoresMismatchedStyle() {
-        ParserTest.assertTranslates("!style_myStyle[stuff)", "!style_myStyle[stuff)");
+        ParserTest.assertTranslatesTo("!style_myStyle[stuff)", "!style_myStyle[stuff)");
     }
 
     @Test public void translatesNestedStyle() {
-        ParserTest.assertTranslates("!style_myStyle(!style_otherStyle(stuff))",
+        ParserTest.assertTranslatesTo("!style_myStyle(!style_otherStyle(stuff))",
                 "<span class=\"myStyle\"><span class=\"otherStyle\">stuff</span>" + HtmlElement.endl + "</span>" + HtmlElement.endl);
     }
 }

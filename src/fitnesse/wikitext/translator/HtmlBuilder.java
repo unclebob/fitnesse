@@ -29,7 +29,7 @@ public class HtmlBuilder implements Translation {
         return this;
     }
 
-    public HtmlTag toHtml(Translator translator, Symbol symbol) {
+    public String toHtml(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag(tagName);
         if (bodyIndex > -1) {
             result.add(translator.translate(symbol.childAt(bodyIndex)));
@@ -40,6 +40,6 @@ public class HtmlBuilder implements Translation {
         if (attributeName != null) {
              result.addAttribute(attributeName, translator.translate(symbol.childAt(0)));
         }
-        return result;
+        return result.html();
     }
 }

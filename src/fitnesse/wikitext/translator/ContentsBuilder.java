@@ -9,7 +9,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Symbol;
 
 public class ContentsBuilder implements Translation {
-    public HtmlTag toHtml(Translator translator, Symbol symbol) {
+    public String toHtml(Translator translator, Symbol symbol) {
         HtmlTag div = HtmlUtil.makeDivTag("toc" + 1);
         HtmlTag contentsDiv = HtmlUtil.makeDivTag("contents");
         contentsDiv.add(HtmlUtil.makeBold("Contents:"));
@@ -26,7 +26,7 @@ public class ContentsBuilder implements Translation {
         }
         contentsDiv.add(list);
         div.add(contentsDiv);
-        return div;
+        return div.html();
     }
 
     private String getHref(WikiPage wikiPage) throws Exception {

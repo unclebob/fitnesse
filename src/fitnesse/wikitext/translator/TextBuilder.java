@@ -1,4 +1,4 @@
-package fitnesse.wikitext.parser;
+package fitnesse.wikitext.translator;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlText;
@@ -6,30 +6,26 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.Maybe;
+import fitnesse.wikitext.parser.Symbol;
 import util.StringUtil;
 
 import java.util.Arrays;
 
-public class TextToken extends Token {
-    public TextToken(String content) { super(content); }
+public class TextBuilder implements Translation {
+    public String toHtml(Translator translator, Symbol symbol) {
+        if (!isWikiWordPath(symbol.getContent())) return new HtmlText(symbol.getContent()).html();
 
-    public Maybe<String> render(Scanner scanner) {
-        if (!isWikiWordPath()) return new Maybe<String>(new HtmlText(getContent()).html());
-        
-        HtmlTag link = new HtmlTag("a", new HtmlText(getContent()));
-        link.addAttribute("href", qualifiedName());
-        return new Maybe<String>(link.html());
+        HtmlTag link = new HtmlTag("a", new HtmlText(symbol.getContent()));
+        link.addAttribute("href", qualifiedName(translator.getPage(), symbol.getContent()));
+        return link.html();
     }
 
-    public String toHtml() { return new HtmlText(getContent()).html(); }
-
-    private String qualifiedName() {
-        String wikiWordPath = makePath();
+    private String qualifiedName(WikiPage page, String content) {
+        String wikiWordPath = makePath(page, content);
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
         try {
-            WikiPage parentPage = getPage().getParent();
+            WikiPage parentPage = page.getParent();
             fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -37,24 +33,23 @@ public class TextToken extends Token {
         return PathParser.render(fullPathOfWikiWord);
     }
 
-    public String makePath() {
-        String content = getContent();
+    public String makePath(WikiPage page, String content) {
         if (content.startsWith("^") || content.startsWith(">")) {
-            return makeChildPath();
+            return makeChildPath(page, content);
         }
         if (content.startsWith("<")) {
-            return makeParentPath();
+            return makeParentPath(page, content);
         }
         return content;
     }
 
-    private String makeParentPath() {
-        String undecoratedPath = getContent().substring(1);
+    private String makeParentPath(WikiPage page, String content) {
+        String undecoratedPath = content.substring(1);
         String[] pathElements = undecoratedPath.split("\\.");
         String target = pathElements[0];
-        PageCrawler crawler = getPage().getPageCrawler();
+        PageCrawler crawler = page.getPageCrawler();
         try {
-            WikiPage ancestor = crawler.findAncestorWithName(getPage(), target);
+            WikiPage ancestor = crawler.findAncestorWithName(page, target);
             if (ancestor != null) {
                 pathElements[0] = PathParser.render(crawler.getFullPath(ancestor));
                 return "." + StringUtil.join(Arrays.asList(pathElements), ".");
@@ -65,12 +60,12 @@ public class TextToken extends Token {
         return "." + undecoratedPath;
     }
 
-    private String makeChildPath() {
-        return String.format("%s.%s", getPage().getName(), getContent().substring(1));
+    private String makeChildPath(WikiPage page, String content) {
+        return String.format("%s.%s", page.getName(), content.substring(1));
     }
 
-    private boolean isWikiWordPath() {
-        String candidate = getContent() + ".";
+    private boolean isWikiWordPath(String content) {
+        String candidate = content + ".";
         int offset = "<>^.".indexOf(candidate.substring(0, 1)) >= 0 ? 1 : 0;
         while (offset < candidate.length()) {
             int dot = candidate.indexOf(".", offset);
@@ -107,8 +102,6 @@ public class TextToken extends Token {
     private boolean isLetter(String candidate, int offset) {
         return Character.isLetter(candidate.charAt(offset));
     }
-    
-    private boolean isCharacter(String candidate, char character, int offset) { return candidate.charAt(offset) == character; }
 
-    public SymbolType getType() { return SymbolType.Text; }
+    private boolean isCharacter(String candidate, char character, int offset) { return candidate.charAt(offset) == character; }
 }

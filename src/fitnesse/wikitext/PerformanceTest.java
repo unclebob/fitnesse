@@ -16,7 +16,7 @@ public class PerformanceTest {
         }
     }
 
-    @Ignore @Test
+    @Test
     public void OldParser() throws Exception {
         long start = System.currentTimeMillis();
         ParentWidget root = new WidgetRoot(pageContent, new TestRoot().makePage("OldTest"),
@@ -30,7 +30,7 @@ public class PerformanceTest {
     @Test
     public void NewParser() throws Exception {
         long start = System.currentTimeMillis();
-        String result = new Translator(new TestRoot().makePage("NewTest")).translate(pageContent);
+        String result = new Translator(new TestRoot().makePage("NewTest")).translateToHtml(pageContent);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

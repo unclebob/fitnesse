@@ -9,7 +9,14 @@ public class CollapsibleBuilder implements Translation {
 
     public static void resetId() { nextId = 1; }
 
-    public HtmlTag toHtml(Translator translator, Symbol symbol) {
+    public String toHtml(Translator translator, Symbol symbol) {
+        return generateHtml(
+                translator.translate(symbol.childAt(1)),
+                translator.translate(symbol.childAt(2)),
+                symbol.childAt(0).getContent());
+    }
+
+    public static String generateHtml(String titleText, String bodyText, String bodyClass) {
         long id = nextId++;
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapse_rim");
@@ -33,12 +40,12 @@ public class CollapsibleBuilder implements Translation {
         toggle.add(image);
         outerBlock.add(toggle);
         outerBlock.add("&nbsp;");
-        HtmlTag title = HtmlUtil.makeSpanTag("meta", translator.translate(symbol.childAt(1)));
+        HtmlTag title = HtmlUtil.makeSpanTag("meta", titleText);
         outerBlock.add(title);
-        HtmlTag body = new HtmlTag("div", translator.translate(symbol.childAt(2)));
-        body.addAttribute("class", translator.translate(symbol.childAt(0)));
+        HtmlTag body = new HtmlTag("div", bodyText);
+        body.addAttribute("class", bodyClass);
         body.addAttribute("id", Long.toString(id));
         outerBlock.add(body);
-        return outerBlock;
+        return outerBlock.html();
     }
 }

@@ -1,16 +1,15 @@
 package fitnesse.wikitext.translator;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.Phrase;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
 import util.Maybe;
 
 public class Variables {
-    private Phrase syntaxTree;
+    private Symbol syntaxTree;
     private WikiPage page;
 
-    public Variables(WikiPage page, Phrase syntaxTree) {
+    public Variables(WikiPage page, Symbol syntaxTree) {
         this.syntaxTree = syntaxTree;
         this.page = page;
     }
@@ -21,7 +20,7 @@ public class Variables {
 
     private Maybe<String> getValue(Symbol tree, String name) {
         if (tree.getType() == SymbolType.Define) {
-            if (tree.childAt(0).toHtml().equals(name)) {
+            if (tree.childAt(0).getContent().equals(name)) {
                 return new Maybe<String>(new Translator(page).translateToHtml(tree.childAt(1)));
             }
             else {

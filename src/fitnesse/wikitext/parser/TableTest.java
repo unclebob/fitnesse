@@ -3,20 +3,20 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class TableTokenTest {
+public class TableTest {
     @Test public void scansTables() {
         ParserTest.assertScans("|a|\n", "Table=|,Text=a,EndCell=|\n");
         ParserTest.assertScans("!|a|\n", "Table=!|,Text=a,EndCell=|\n");
     }
 
     @Test public void translatesTables() {
-        ParserTest.assertTranslates("|a|\n", tableWithCell("a"));
-        ParserTest.assertTranslates("||\n", tableWithCell(""));
-        ParserTest.assertTranslates("| a |\n", tableWithCell("a"));
-        ParserTest.assertTranslates("|''a''|\n", tableWithCell("<i>a</i>"));
-        ParserTest.assertTranslates("!|''a''|\n", tableWithCell("''a''"));
+        ParserTest.assertTranslatesTo("|a|\n", tableWithCell("a"));
+        ParserTest.assertTranslatesTo("||\n", tableWithCell(""));
+        ParserTest.assertTranslatesTo("| a |\n", tableWithCell("a"));
+        ParserTest.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
+        ParserTest.assertTranslatesTo("!|''a''|\n", tableWithCell("''a''"));
 
-        ParserTest.assertTranslates("|a|b|c|\n|d|e|f|\n",
+        ParserTest.assertTranslatesTo("|a|b|c|\n|d|e|f|\n",
                 "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
                 "\t<tr>" + HtmlElement.endl +
                 "\t\t<td>a</td>" + HtmlElement.endl +

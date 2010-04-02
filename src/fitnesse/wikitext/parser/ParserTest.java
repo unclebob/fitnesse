@@ -42,18 +42,6 @@ public class ParserTest {
         assertEquals(expected, result.toString());
     }
 
-    public static void assertTranslates(String input, String expected) {
-        assertTranslates(null, input, expected);
-    }
-
-    public static void assertTranslates(WikiPage page, String input, String expected) {
-        assertEquals(expected, translate(page, input));
-    }
-
-    public static String translate(WikiPage page, String input) {
-        return new Translator(page).translate(input);
-    }
-
     public static void assertTranslatesTo(String input, String expected) {
         assertTranslatesTo(null, input, expected);
     }
@@ -67,7 +55,7 @@ public class ParserTest {
     }
 
     public static void assertParses(String input, String expected) {
-        Phrase result = new Parser(null).parse(input);
+        Symbol result = new Parser(null).parse(input);
         assertEquals(expected, serialize(result));
     }
 

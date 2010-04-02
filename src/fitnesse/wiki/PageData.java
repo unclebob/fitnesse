@@ -7,7 +7,7 @@ import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.Phrase;
+import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.translator.Variables;
 import fitnesse.wikitext.widgets.*;
@@ -83,7 +83,7 @@ public class PageData implements Serializable {
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-    private Phrase contentSyntaxTree = null;
+    private Symbol contentSyntaxTree = null;
 
     public PageData(WikiPage page) throws Exception {
     wikiPage = page;

@@ -3,7 +3,7 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class ListTokenTest {
+public class ListTest {
     @Test
     public void scansLists() {
         ParserTest.assertScansTokenType(" * item", SymbolType.List, true);
@@ -13,7 +13,7 @@ public class ListTokenTest {
 
     @Test
     public void translatesLists() {
-        ParserTest.assertTranslates(" * item\n",
+        ParserTest.assertTranslatesTo(" * item\n",
                 "<ul>" + HtmlElement.endl +
                 "\t<li> item</li>" + HtmlElement.endl +
                 "</ul>" + HtmlElement.endl);

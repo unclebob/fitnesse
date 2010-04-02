@@ -11,28 +11,28 @@ public class Parser {
 
     public Parser(WikiPage currentPage) { this.currentPage = currentPage; }
 
-    public Phrase parse(String input) {
+    public Symbol parse(String input) {
         return parseIgnoreFirst(new Scanner(input), SymbolType.Empty);
     }
 
-    public Phrase parse(Scanner scanner, SymbolType terminator) {
+    public Symbol parse(Scanner scanner, SymbolType terminator) {
         return parse(scanner, new SymbolType[] {terminator});
     }
 
-    public Phrase parseIgnoreFirst(Scanner scanner, SymbolType terminator) {
+    public Symbol parseIgnoreFirst(Scanner scanner, SymbolType terminator) {
         return parseIgnoreFirst(scanner, new SymbolType[] {terminator});
     }
 
-    public Phrase parse(Scanner scanner, SymbolType[] terminators) {
+    public Symbol parse(Scanner scanner, SymbolType[] terminators) {
         return parse(scanner, terminators, new SymbolType[] {});
     }
 
-    public Phrase parseIgnoreFirst(Scanner scanner, SymbolType[] terminators) {
+    public Symbol parseIgnoreFirst(Scanner scanner, SymbolType[] terminators) {
         return parse(scanner, terminators, terminators);
     }
 
-    private Phrase parse(Scanner scanner, SymbolType[] terminators, SymbolType[] ignoresFirst) {
-        Phrase result = new Phrase(SymbolType.SymbolList);
+    private Symbol parse(Scanner scanner, SymbolType[] terminators, SymbolType[] ignoresFirst) {
+        Symbol result = new Symbol(SymbolType.SymbolList);
         ArrayList<SymbolType> ignore = new ArrayList<SymbolType>();
         ignore.addAll(Arrays.asList(ignoresFirst));
         while (true) {
@@ -41,7 +41,7 @@ public class Parser {
             if (scanner.isEnd()) break;
             Token currentToken = scanner.getCurrent();
             if (contains(terminators, currentToken.getType())) break;
-            Rule rule = currentToken.getProduction();
+            Rule rule = currentToken.getRule();
             if (rule == null) {
                 result.add(currentToken);
                 ignore.clear();

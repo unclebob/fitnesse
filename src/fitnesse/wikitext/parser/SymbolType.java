@@ -3,15 +3,15 @@ package fitnesse.wikitext.parser;
 import java.util.HashMap;
 
 public enum SymbolType {
-    List(new Matcher().startLine().whitespace().string("*").tokenClass(ListToken.class)),
+    List(new Matcher().startLine().whitespace().string("*").ruleClass(ListRule.class)),
     Whitespace(new Matcher().whitespace()),
     Newline(new Matcher().string("\n")),
     Colon(new Matcher().string(":")),
     Comma(new Matcher().string(",")),
-    Evaluator(new Matcher().string("${=").tokenClass(EvaluatorToken.class)),
+    Evaluator(new Matcher().string("${=").ruleClass(EvaluatorRule.class)),
     CloseEvaluator(new Matcher().string("=}")),
-    Variable(new Matcher().string("${").tokenClass(VariableToken.class)),
-    Preformat(new Matcher().string("{{{").tokenClass(PreformatToken.class)),
+    Variable(new Matcher().string("${").ruleClass(VariableRule.class)),
+    Preformat(new Matcher().string("{{{").ruleClass(PreformatRule.class)),
     ClosePreformat(new Matcher().string("}}}")),
     OpenParenthesis(new Matcher().string("(")),
     OpenBrace(new Matcher().string("{")),
@@ -21,26 +21,26 @@ public enum SymbolType {
     CloseBracket(new Matcher().string("]")),
     CloseLiteral(new Matcher().string("-!")),
     CloseCollapsible(new Matcher().startLine().repeat('*').string("!")),
-    HorizontalRule(new Matcher().string("---").repeat('-').tokenClass(HorizontalRuleToken.class)),
+    HorizontalRule(new Matcher().string("---").repeat('-')),
     Bold(new Matcher().string("'''").ruleClass(EqualPairRule.class)),
     Italic(new Matcher().string("''").ruleClass(EqualPairRule.class)),
     Strike(new Matcher().string("--").ruleClass(EqualPairRule.class)),
     AnchorReference(new Matcher().string(".#").ruleClass(AnchorReferenceRule.class)),
 
-    Table(new Matcher().startLine().string(new String[] {"|", "!|"}).tokenClass(TableToken.class)),
+    Table(new Matcher().startLine().string(new String[] {"|", "!|"}).ruleClass(TableRule.class)),
     EndCell(new Matcher().string(new String[] {"|\n|", "|\n", "|"})),
     
-    HashTable(new Matcher().string("!{").tokenClass(HashTableToken.class)),
+    HashTable(new Matcher().string("!{").ruleClass(HashTableRule.class)),
     HeaderLine(new Matcher().startLine().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"}).ruleClass(LineRule.class)),
-    OpenLiteral(new Matcher().string("!-").tokenClass(OpenLiteralToken.class)),
+    Literal(new Matcher().string("!-").ruleClass(LiteralRule.class)),
     Collapsible(new Matcher().startLine().string("!").repeat('*').ruleClass(CollapsibleRule.class)),
     AnchorName(new Matcher().string("!anchor").ruleClass(AnchorNameRule.class)),
     CenterLine(new Matcher().startLine().string(new String[] {"!c", "!C"}).ruleClass(LineRule.class)),
     Contents(new Matcher().startLine().string("!contents").ruleClass(ContentsRule.class)),
     Define(new Matcher().startLine().string("!define").ruleClass(DefineRule.class)),
-    Include(new Matcher().startLine().string("!include").tokenClass(IncludeToken.class)),
+    Include(new Matcher().startLine().string("!include").ruleClass(IncludeRule.class)),
     NoteLine(new Matcher().startLine().string("!note").ruleClass(LineRule.class)),
-    Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}).tokenClass(StyleToken.class)),
+    Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}).ruleClass(StyleRule.class)),
 
     //WikiWord(new Matcher().noMatch()),
     Text(),
@@ -69,7 +69,7 @@ public enum SymbolType {
         dispatch.put('|', new SymbolType[]
             { Table, EndCell });
         dispatch.put('!', new SymbolType[]
-            { HashTable, HeaderLine, OpenLiteral, Collapsible, AnchorName, Contents, CenterLine, Define, Include, NoteLine, Style, Table });
+            { HashTable, HeaderLine, Literal, Collapsible, AnchorName, Contents, CenterLine, Define, Include, NoteLine, Style, Table });
         for (char letter = 'a'; letter <= 'z'; letter++) dispatch.put(letter, new SymbolType[] {});
         for (char letter = 'A'; letter <= 'Z'; letter++) dispatch.put(letter, new SymbolType[] {});
         for (char digit = '0'; digit <= '9'; digit++) dispatch.put(digit, new SymbolType[] {});

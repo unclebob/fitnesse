@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Scanner {
 
-    private static final Token endToken = new EmptyToken();
+    private static final Token endToken = new Token(SymbolType.Empty);
 
     private ScanString input;
     private Token currentToken;
@@ -50,7 +50,7 @@ public class Scanner {
         while (!input.isEnd()) {
             TokenMatch match = terminator.makeMatch(input);
             if (match.isMatch()) {
-                currentToken = new TextToken(input.substringFrom(next));
+                currentToken = new Token(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset();
                 return;
             }
@@ -86,7 +86,7 @@ public class Scanner {
             newNext = input.getOffset();
         }
         if (input.getOffset() > next) {
-            currentToken = new TextToken(input.substringFrom(next));
+            currentToken = new Token(SymbolType.Text, input.substringFrom(next));
             next = input.getOffset();
         }
         else {

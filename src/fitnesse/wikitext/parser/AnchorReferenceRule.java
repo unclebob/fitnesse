@@ -5,7 +5,6 @@ import util.Maybe;
 import java.util.List;
 
 public class AnchorReferenceRule extends Rule {
-
     @Override
     public Maybe<Symbol> parse(Scanner scanner) {
         List<Token> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Text});
@@ -14,6 +13,6 @@ public class AnchorReferenceRule extends Rule {
         String anchor = tokens.get(0).getContent();
         if (!ScanString.isWord(anchor)) return Symbol.Nothing;
 
-        return new Maybe<Symbol>(new Phrase(SymbolType.AnchorReference).add(tokens.get(0)));
+        return new Maybe<Symbol>(new Symbol(SymbolType.AnchorReference).add(tokens.get(0)));
     }
 }

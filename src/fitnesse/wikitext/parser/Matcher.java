@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
 import util.Maybe;
-
 import java.util.ArrayList;
 
 public class Matcher {
@@ -14,10 +13,6 @@ public class Matcher {
 
     public Matcher ruleClass(Class<? extends Rule> ruleClass) {
         this.ruleClass = ruleClass;
-        return this;
-    }
-
-    public Matcher tokenClass(Class<? extends Token> tokenClass) {
         return this;
     }
 
@@ -113,7 +108,7 @@ public class Matcher {
         Token token = new Token();
 
         if (ruleClass != null) {
-            token.setProduction(makeProduction());
+            token.setRule(makeProduction());
         }
         token.setType(type);
         token.setContent(input.substring(0, totalLength));

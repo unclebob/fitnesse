@@ -13,7 +13,7 @@ public class EqualPairTest {
     }
 
     @Test public void translatesBold() {
-        ParserTest.assertTranslates("'''bold text'''", "<b>bold text</b>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("'''bold text'''", "<b>bold text</b>" + HtmlElement.endl);
     }
 
     @Test public void scansDoubleQuotes() {
@@ -22,20 +22,20 @@ public class EqualPairTest {
     }
 
     @Test public void translatesItalic() {
-        ParserTest.assertTranslates("''italic text''", "<i>italic text</i>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("''italic text''", "<i>italic text</i>" + HtmlElement.endl);
     }
 
     @Test public void translatesBoldItalic() {
-        ParserTest.assertTranslates("'''''stuff&nonsense'''''",
+        ParserTest.assertTranslatesTo("'''''stuff&nonsense'''''",
                 "<b><i>stuff&amp;nonsense</i>" + HtmlElement.endl + "</b>" + HtmlElement.endl);
     }
 
     @Test public void ignoresAdjacentItalics() {
-        ParserTest.assertTranslates("''''", "''''");
+        ParserTest.assertTranslatesTo("''''", "''''");
     }
 
     @Test public void translatesItalicQuote() {
-        ParserTest.assertTranslates("'''''", "<i>'</i>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("'''''", "<i>'</i>" + HtmlElement.endl);
     }
 
     @Test public void scansDoubleDashes() {
@@ -44,14 +44,14 @@ public class EqualPairTest {
     }
 
     @Test public void translatesStrike() {
-        ParserTest.assertTranslates("--some text--", "<span class=\"strike\">some text</span>" + HtmlElement.endl);
-        ParserTest.assertTranslates("--embedded-dash--", "<span class=\"strike\">embedded-dash</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("--some text--", "<span class=\"strike\">some text</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("--embedded-dash--", "<span class=\"strike\">embedded-dash</span>" + HtmlElement.endl);
     }
 
     @Test public void testEvilExponentialMatch() throws Exception {
         long startTime = System.currentTimeMillis();
 
-        ParserTest.assertTranslates("--1234567890123456789012", "--1234567890123456789012");
+        ParserTest.assertTranslatesTo("--1234567890123456789012", "--1234567890123456789012");
 
         long endTime = System.currentTimeMillis();
         assertTrue("took too long", endTime - startTime < 20);

@@ -20,7 +20,7 @@ public class LineTest {
 
     @Test public void translatesHeaders() {
         for (int i = 1; i < 7; i++)
-            ParserTest.assertTranslates("!" + i + " some text \n", "<h" + i + ">some text</h" + i + ">" + HtmlElement.endl);
+            ParserTest.assertTranslatesTo("!" + i + " some text \n", "<h" + i + ">some text</h" + i + ">" + HtmlElement.endl);
     }
 
     @Test public void scansCenters() {
@@ -33,7 +33,7 @@ public class LineTest {
     }
 
     @Test public void translatesCenters() {
-        ParserTest.assertTranslates("!c some text\n", "<div class=\"centered\">some text</div>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!c some text\n", "<div class=\"centered\">some text</div>" + HtmlElement.endl);
     }
 
     @Test public void scansNotes() {
@@ -42,6 +42,6 @@ public class LineTest {
     }
 
     @Test public void translatesNotes() {
-        ParserTest.assertTranslates("!note some note\n", "<span class=\"note\">some note</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!note some note\n", "<span class=\"note\">some note</span>" + HtmlElement.endl);
     }
 }

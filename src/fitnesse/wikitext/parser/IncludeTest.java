@@ -5,7 +5,7 @@ import fitnesse.wikitext.translator.Translator;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
-public class IncludeTokenTest {
+public class IncludeTest {
     @Test public void scansIncludes() {
         ParserTest.assertScansTokenType("!include name", SymbolType.Include, true);
     }
@@ -28,8 +28,7 @@ public class IncludeTokenTest {
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPage currentPage = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
         crawler.addPage(root, PathParser.parse("PageTwo"), "page ''two''");
-        String result = new Translator(currentPage).translate(input);
-        return result;
+        return new Translator(currentPage).translateToHtml(input);
     }
 
     private void assertContains(String result, String substring) {
