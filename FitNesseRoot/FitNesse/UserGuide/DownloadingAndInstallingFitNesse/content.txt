@@ -5,7 +5,6 @@ It really takes very little time and effort to get FitNesse running on your mach
   * If this is an update, then copy it on top of the old fitnesse.jar in your current installation.
  2 Type !style_code(java -jar fitnesse.jar)
   * It will ask you to be patient as it installs or updates.
-  * When it's done, it will ask you to reload fitnesse.  Type !style_code(java -jar fitnesse.jar) again.
   * If you have nothing running on port 80 on your machine, you should see a message similar to the following:
 {{{FitNesse (<version info>) Started...
 	port:              80
