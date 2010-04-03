@@ -53,9 +53,6 @@ If you'll be spending a lot of time writing tests, you'll probably want to study
 |[[Wiki Import][>WikiImport]]|''Importing wiki pages from a remote FitNesse server.''|
 |[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure.''|
 |[[Special Pages][>SpecialPages]]|''Some pages in FitNesse that serve special purposes.''|
-|[[Wiki Import][>WikiImport]]|''Importing wiki pages from a remote FitNesse server''|
-|[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure''|
-|[[Special Pages][>SpecialPages]]|''Some pages in FitNesse that serve special purposes.''|
 |[[Quick Reference Guide][>QuickReferenceGuide]]|''A cheat sheet for markups and usage.''|
 
 !3 Creating the Fixtures
