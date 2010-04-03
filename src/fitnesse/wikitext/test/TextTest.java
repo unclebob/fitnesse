@@ -22,24 +22,4 @@ public class TextTest {
         ParserTest.assertTranslatesTo("\rmore\rstuff\r", "morestuff");
     }
 
-    @Test public void translatesWikiWords() throws Exception {
-        TestRoot root = new TestRoot();
-        WikiPage pageOne = root.makePage("PageOne");
-        WikiPage pageOneTwo = root.makePage(pageOne, "PageTwo");
-        WikiPage pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");
-        WikiPage pageOneThree = root.makePage(pageOne, "PageThree");
-
-        ParserTest.assertTranslatesTo(pageOne, "PageOne", wikiLink("PageOne", "PageOne"));
-        ParserTest.assertTranslatesTo(pageOneTwo, "PageTwo", wikiLink("PageOne.PageTwo", "PageTwo"));
-
-        ParserTest.assertTranslatesTo(pageOneThree, ".PageOne", wikiLink("PageOne", ".PageOne"));
-
-        ParserTest.assertTranslatesTo(pageOne, ">PageTwo", wikiLink("PageOne.PageTwo", "&gt;PageTwo"));
-
-        ParserTest.assertTranslatesTo(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
-    }
-
-    private String wikiLink(String link, String text) {
-        return "<a href=\"" + link + "\">" + text + "</a>" + HtmlElement.endl;
-    }
 }

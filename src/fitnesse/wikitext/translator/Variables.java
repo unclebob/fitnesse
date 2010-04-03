@@ -14,23 +14,29 @@ public class Variables {
         this.page = page;
     }
 
-    public Maybe<String> getValue(String name) {
-        return getValue(syntaxTree, name);
+    public Maybe<Symbol> getSymbol(String name) {
+        return getSymbol(syntaxTree, name);
     }
 
-    private Maybe<String> getValue(Symbol tree, String name) {
+    private Maybe<Symbol> getSymbol(Symbol tree, String name) {
         if (tree.getType() == SymbolType.Define) {
             if (tree.childAt(0).getContent().equals(name)) {
-                return new Maybe<String>(new Translator(page).translateToHtml(tree.childAt(1)));
+                return new Maybe<Symbol>(tree.childAt(1));
             }
             else {
-                return Maybe.noString;
+                return Symbol.Nothing;
             }
         }
         for (Symbol child: tree.getChildren()) {
-            Maybe<String> value = getValue(child, name);
+            Maybe<Symbol> value = getSymbol(child, name);
             if (!value.isNothing()) return value;
         }
-        return Maybe.noString;
+        return Symbol.Nothing;
+    }
+
+    public Maybe<String> getValue(String name) {
+        Maybe<Symbol> symbol = getSymbol(syntaxTree, name);
+        if (symbol.isNothing()) return Maybe.noString;
+        return new Maybe<String>(new Translator(page).translateToHtml(symbol.getValue()));
     }
 }

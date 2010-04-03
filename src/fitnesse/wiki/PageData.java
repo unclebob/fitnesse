@@ -9,6 +9,7 @@ import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.translator.Translator;
+import fitnesse.wikitext.translator.VariableBuilder;
 import fitnesse.wikitext.translator.Variables;
 import fitnesse.wikitext.widgets.*;
 import util.Maybe;
@@ -222,11 +223,15 @@ public class PageData implements Serializable {
     return local.isNothing() ? getInitializedVariableRoot().getVariable(name) : local.getValue();
   }
 
-    public Maybe<String> getLocalVariable(String name) throws Exception {
+    public Maybe<Symbol> getLocalVariableSymbol(String name) throws Exception {
         if (contentSyntaxTree == null) {
             contentSyntaxTree = new Parser(wikiPage).parse(getContent());
         }
-        return new Variables(wikiPage, contentSyntaxTree).getValue(name);
+        return new Variables(wikiPage, contentSyntaxTree).getSymbol(name);
+    }
+
+    public Maybe<String> getLocalVariable(String name) throws Exception {
+        return new VariableBuilder().findVariableInPages(wikiPage, name);
     }
 
   public void addVariable(String name, String value) throws Exception {

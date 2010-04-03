@@ -55,6 +55,10 @@ public class ParserTest {
         return new Translator(page).translateToHtml(input);
     }
 
+    public static String translateTo(WikiPage page) throws Exception {
+        return translateTo(page, page.getData().getContent());
+    }
+
     public static void assertParses(String input, String expected) {
         Symbol result = new Parser(null).parse(input);
         assertEquals(expected, serialize(result));

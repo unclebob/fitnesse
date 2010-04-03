@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
 import org.junit.Test;
@@ -124,7 +125,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     PageData data = root.getData();
     String content = "!define SOME_VARIABLE {Variable #1}\n!define ANOTHER_VARIABLE {Variable #2}";
     data.setContent(content);
-    assertSubString("SOME_VARIABLE=Variable #1</span><br/><span", data.getHtml());
+    assertSubString("SOME_VARIABLE=Variable #1</span>" + HtmlElement.endl + "<br/>" + HtmlElement.endl + "<span", data.getHtml());
     assertNotSubString("SOME_VARIABLE=Variable #1</span><br/><br/><span", data.getHtml());
   }
 

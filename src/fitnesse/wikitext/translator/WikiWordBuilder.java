@@ -6,29 +6,53 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.widgets.WikiWordWidget;
+import util.GracefulNamer;
+import util.Maybe;
 import util.StringUtil;
 
 import java.util.Arrays;
 
 public class WikiWordBuilder implements Translation  {
-
     public String toHtml(Translator translator, Symbol symbol) {
-        HtmlTag link = new HtmlTag("a", new HtmlText(symbol.getContent()));
-        link.addAttribute("href", qualifiedName(translator.getPage(), symbol.getContent()));
-        return link.html();
-    }
-    private String qualifiedName(WikiPage page, String content) {
-        String wikiWordPath = makePath(page, content);
+        String wikiWordPath = makePath(translator.getPage(), symbol.getContent());
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
+        WikiPage targetPage;
         try {
-            WikiPage parentPage = page.getParent();
+            WikiPage parentPage = translator.getPage().getParent();
             fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
+            targetPage = parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-        return PathParser.render(fullPathOfWikiWord);
+        String qualifiedName = PathParser.render(fullPathOfWikiWord);
+        if (targetPage != null)
+            return makeLinkToExistingWikiPage(translator.getPage(), qualifiedName, symbol.getContent());
+        else
+            return makeLinkToNonExistentWikiPage(symbol.getContent(), qualifiedName);
+    }
+
+    public String makeLinkToExistingWikiPage(WikiPage page, String qualifiedName, String name) {
+        HtmlTag link = new HtmlTag("a", new HtmlText(formatWikiWord(page, name)));
+        link.addAttribute("href", qualifiedName);
+        return link.html();
+    }
+
+    private String formatWikiWord(WikiPage page, String originalName) {
+        Maybe<String> regraceOption = new VariableBuilder().findVariable(page, WikiWordWidget.REGRACE_LINK);
+        //todo don't use the GracefulNamer for this.  It's only for java instance and variable names.  Write a different tool.
+        return !regraceOption.isNothing() && regraceOption.getValue().equals("true") ? GracefulNamer.regrace(originalName) : originalName;
+    }
+
+    private String makeLinkToNonExistentWikiPage(String text, String qualifiedName) {
+        HtmlText htmlText = new HtmlText(text);
+        HtmlTag link = new HtmlTag("a", "[?]");
+        link.addAttribute("title", "create page");
+        link.addAttribute("href", qualifiedName + "?edit&nonExistent=true");
+        return htmlText.html() + link.html();
     }
 
     public String makePath(WikiPage page, String content) {

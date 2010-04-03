@@ -25,9 +25,13 @@ public class TestRoot {
 
     public WikiPage makePage(WikiPage parent, String pageName, String content) throws Exception {
         WikiPage page = makePage(parent, pageName);
+        setPageData(page, content);
+        return page;
+    }
+
+    public void setPageData(WikiPage page, String content) throws Exception {
         PageData data = page.getData();
         data.setContent(content);
         page.commit(data);
-        return page;
     }
 }
