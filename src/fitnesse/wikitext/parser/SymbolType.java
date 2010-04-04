@@ -11,7 +11,7 @@ public enum SymbolType {
     Evaluator(new Matcher().string("${=").ruleClass(EvaluatorRule.class)),
     CloseEvaluator(new Matcher().string("=}")),
     Variable(new Matcher().string("${").ruleClass(VariableRule.class)),
-    Preformat(new Matcher().string("{{{").ruleClass(PreformatRule.class)),
+    Preformat(new Matcher().string("{{{").ruleClass(LiteralRule.class)),
     ClosePreformat(new Matcher().string("}}}")),
     OpenParenthesis(new Matcher().string("(")),
     OpenBrace(new Matcher().string("{")),
@@ -51,6 +51,8 @@ public enum SymbolType {
         return type == OpenBrace ? CloseBrace
                 : type == OpenBracket ? CloseBracket
                 : type == OpenParenthesis ? CloseParenthesis
+                : type == Literal ? CloseLiteral
+                : type == Preformat ? ClosePreformat
                 : Empty;
     }
 
@@ -58,31 +60,6 @@ public enum SymbolType {
         return beginner == '[' ? SymbolType.CloseBracket
                 : beginner == '{' ? SymbolType.CloseBrace
                 : SymbolType.CloseParenthesis;
-    }
-
-    /* Keeping these tables in sync with the matchers is a hassle but a major performance gain */
-
-    private static HashMap<Character, SymbolType[]> dispatch;
-    static {
-        dispatch = new HashMap<Character, SymbolType[]>();
-        dispatch.put('|', new SymbolType[]
-            { Table, EndCell });
-        dispatch.put('!', new SymbolType[]
-            { HashTable, HeaderLine, Literal, Collapsible, AnchorName, Contents, CenterLine, Define, Include, NoteLine, Style, Table });
-        for (char letter = 'a'; letter <= 'z'; letter++) dispatch.put(letter, new SymbolType[] {});
-        for (char letter = 'A'; letter <= 'Z'; letter++) dispatch.put(letter, new SymbolType[] {});
-        for (char digit = '0'; digit <= '9'; digit++) dispatch.put(digit, new SymbolType[] {});
-    }
-
-    /* These can be broken out further */
-    private static final SymbolType[] otherTokens = new SymbolType[]
-            { List, Whitespace, Newline, Colon, Comma, Evaluator, CloseEvaluator, Variable, Preformat, ClosePreformat, OpenParenthesis,
-              OpenBrace, OpenBracket, CloseParenthesis, CloseBrace, CloseBracket, CloseLiteral, Collapsible, CloseCollapsible, HorizontalRule,
-              Bold, Italic, Strike, AnchorReference};
-
-    public static SymbolType[] getMatchTypes(Character match) {
-        if (dispatch.containsKey(match)) return dispatch.get(match);
-        return otherTokens;
     }
 
     private Matcher matcher;

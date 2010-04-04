@@ -32,6 +32,14 @@ public class TableTest {
                 "</table>"+ HtmlElement.endl);
     }
 
+    @Test public void ignoreMostMarkupInLiteralTable() {
+        ParserTest.assertTranslatesTo("!|''a''|\n", tableWithCell("''a''"));
+    }
+
+    @Test public void evaluatesExpressionsInLiteralTable() {
+        ParserTest.assertTranslatesTo("!|${=3+4=}|\n", tableWithCell("7"));
+    }
+
     private String tableWithCell(String cellContent) {
         return "<table border=\"1\" cellspacing=\"0\">"+ HtmlElement.endl +
         "\t<tr>" + HtmlElement.endl +

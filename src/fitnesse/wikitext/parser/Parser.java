@@ -15,29 +15,33 @@ public class Parser {
         return parseIgnoreFirst(new Scanner(input), SymbolType.Empty);
     }
 
+    public Symbol parse(Scanner scanner, SymbolProvider provider, SymbolType terminator) {
+        return parse(scanner, provider, new SymbolType[] {terminator});
+    }
+
     public Symbol parse(Scanner scanner, SymbolType terminator) {
-        return parse(scanner, new SymbolType[] {terminator});
+        return parse(scanner, new SymbolProvider(), terminator);
     }
 
     public Symbol parseIgnoreFirst(Scanner scanner, SymbolType terminator) {
         return parseIgnoreFirst(scanner, new SymbolType[] {terminator});
     }
 
-    public Symbol parse(Scanner scanner, SymbolType[] terminators) {
-        return parse(scanner, terminators, new SymbolType[] {});
+    public Symbol parse(Scanner scanner, SymbolProvider provider, SymbolType[] terminators) {
+        return parse(scanner, provider, terminators, new SymbolType[] {});
     }
 
     public Symbol parseIgnoreFirst(Scanner scanner, SymbolType[] terminators) {
-        return parse(scanner, terminators, terminators);
+        return parse(scanner, new SymbolProvider(), terminators, terminators);
     }
 
-    private Symbol parse(Scanner scanner, SymbolType[] terminators, SymbolType[] ignoresFirst) {
+    private Symbol parse(Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst) {
         Symbol result = new Symbol(SymbolType.SymbolList);
         ArrayList<SymbolType> ignore = new ArrayList<SymbolType>();
         ignore.addAll(Arrays.asList(ignoresFirst));
         while (true) {
             Scanner backup = new Scanner(scanner);
-            scanner.moveNextIgnoreFirst(ignore);
+            scanner.moveNextIgnoreFirst(provider, ignore);
             if (scanner.isEnd()) break;
             Token currentToken = scanner.getCurrent();
             if (contains(terminators, currentToken.getType())) break;

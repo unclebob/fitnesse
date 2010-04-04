@@ -13,6 +13,7 @@ public class VariableTest {
     @Test public void translatesVariables() throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {y}");
         ParserTest.assertTranslatesTo(pageOne, "${x}", "y");
+        ParserTest.assertTranslatesTo(pageOne, "${z}", "<span class=\"meta\">undefined variable: z</span>");
     }
 
     @Test public void translatesVariablesFromParent() throws Exception {

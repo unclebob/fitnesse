@@ -64,11 +64,15 @@ public class Scanner {
     }
 
     public void moveNextIgnoreFirst(List<SymbolType> ignoreFirst) {
+        moveNextIgnoreFirst(new SymbolProvider(), ignoreFirst);
+    }
+
+    public void moveNextIgnoreFirst(SymbolProvider provider, List<SymbolType> ignoreFirst) {
         input.setOffset(next);
         int newNext = next;
         Token matchToken = null;
         while (!input.isEnd()) {
-            for (SymbolType candidate: SymbolType.getMatchTypes(input.charAt(0))) {
+            for (SymbolType candidate: provider.candidates(input.charAt(0))) {
                 if (input.getOffset() != next || !contains(ignoreFirst, candidate)) {
                     TokenMatch match = candidate.makeMatch(input);
                     if (match.isMatch()) {
@@ -86,7 +90,7 @@ public class Scanner {
             newNext = input.getOffset();
         }
         if (input.getOffset() > next) {
-            currentToken =  new TextMaker().makeToken(input.substringFrom(next));
+            currentToken =  new TextMaker().makeToken(provider, input.substringFrom(next));
             next = input.getOffset();
         }
         else {

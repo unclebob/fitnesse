@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser;
 
 public class TextMaker {
-    public Token makeToken(String text) {
-        return new Token(isWikiWordPath(text) ? SymbolType.WikiWord : SymbolType.Text, text);
+    public Token makeToken(SymbolProvider provider, String text) {
+        return new Token(provider.hasType(SymbolType.WikiWord) && isWikiWordPath(text) ? SymbolType.WikiWord : SymbolType.Text, text);
     }
 
     public boolean isWikiWordPath(String text) {

@@ -1,5 +1,6 @@
 package fitnesse.wikitext.translator;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Symbol;
 import util.Maybe;
@@ -7,7 +8,11 @@ import util.Maybe;
 public class VariableBuilder implements Translation {
 
     public String toHtml(Translator translator, Symbol symbol) {
-        return findVariable(translator.getPage(), symbol.childAt(0).getContent()).getValue();
+        String name = symbol.childAt(0).getContent();
+        Maybe<String> variable = findVariable(translator.getPage(), name);
+        return variable.isNothing()
+                ? HtmlUtil.metaText("undefined variable: " + name)
+                : variable.getValue();
     }
 
     public Maybe<String> findVariable(WikiPage currentPage, String name) {

@@ -32,7 +32,7 @@ public class Translator {
         translations.put(SymbolType.List, new ListBuilder());
         translations.put(SymbolType.Newline, new HtmlBuilder().tag("br"));
         translations.put(SymbolType.NoteLine, new HtmlBuilder().tag("span").body(0).cssClass("note"));
-        translations.put(SymbolType.Preformat, new HtmlBuilder().tag("pre").body(0));
+        translations.put(SymbolType.Preformat, new HtmlBuilder().tag("pre").bodyContent());
         translations.put(SymbolType.Strike, new HtmlBuilder().tag("span").body(0).cssClass("strike"));
         translations.put(SymbolType.Style, new StyleBuilder());
         translations.put(SymbolType.Table, new TableBuilder());

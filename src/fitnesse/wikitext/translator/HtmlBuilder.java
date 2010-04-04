@@ -8,6 +8,7 @@ public class HtmlBuilder implements Translation {
     private String attributeName;
     private int bodyIndex = -1;
     private String cssClass;
+    private boolean bodyContent = false;
 
     public HtmlBuilder tag(String htmlTag) {
         this.tagName = htmlTag;
@@ -16,6 +17,11 @@ public class HtmlBuilder implements Translation {
 
     public HtmlBuilder cssClass(String cssClass) {
         this.cssClass = cssClass;
+        return this;
+    }
+
+    public HtmlBuilder bodyContent() {
+        this.bodyContent = true;
         return this;
     }
 
@@ -33,6 +39,9 @@ public class HtmlBuilder implements Translation {
         HtmlTag result = new HtmlTag(tagName);
         if (bodyIndex > -1) {
             result.add(translator.translate(symbol.childAt(bodyIndex)));
+        }
+        else if (bodyContent) {
+            result.add(symbol.getContent());
         }
         if (cssClass != null) {
             result.addAttribute("class", cssClass);
