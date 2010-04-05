@@ -1,10 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.*;
-import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.translator.Translator;
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 public class IncludeTest {
@@ -12,25 +11,32 @@ public class IncludeTest {
         ParserTest.assertScansTokenType("!include name", SymbolType.Include, true);
     }
 
+    @Test public void parsesIncludes() {
+        ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord]]");
+    }
+
     @Test public void translatesIncludedSibling() throws Exception {
-        String result = translate("!include PageTwo\n");
+        TestRoot root = new TestRoot();
+        WikiPage currentPage = root.makePage("PageOne", "!include PageTwo\n");
+        root.makePage("PageTwo", "page ''two''");
+
+        String result = ParserTest.translateTo(currentPage);
+
         assertContains(result, "class=\"collapsable\"");
-        assertContains(result, "PageTwo");
+        assertContains(result, "Included page: <a href=\"PageTwo\">PageTwo</a>");
         assertContains(result, "page <i>two</i>");
     }
 
     @Test public void translatesSetup() throws Exception {
-        String result = translate("!include -setup PageTwo\n");
-        assertContains(result, "class=\"hidden\"");
-    }
+        TestRoot root = new TestRoot();
+        WikiPage parent = root.makePage("PageOne");
+        WikiPage child = root.makePage(parent, "PageTwo", "!include -setup >SetUp\n");
+        root.makePage(child, "SetUp", "page ''setup''");
 
-    private String translate(String input) throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        PageCrawler crawler = root.getPageCrawler();
-        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        WikiPage currentPage = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
-        crawler.addPage(root, PathParser.parse("PageTwo"), "page ''two''");
-        return new Translator(currentPage).translateToHtml(input);
+        String result = ParserTest.translateTo(child);
+
+        assertContains(result, "class=\"hidden\"");
+        assertContains(result, "<a href=\"PageOne.PageTwo.SetUp\">");
     }
 
     private void assertContains(String result, String substring) {

@@ -16,7 +16,7 @@ public class IncludeRule extends Rule {
             scanner.moveNext();
         }
         if (!scanner.isType(SymbolType.Text) && !scanner.isType(SymbolType.WikiWord)) return Symbol.Nothing;
-        String pageName = scanner.getCurrentContent();
+        Symbol pageName = scanner.getCurrent();
         scanner.moveNext();
         if (!scanner.isType(SymbolType.Newline)) return Symbol.Nothing;
 

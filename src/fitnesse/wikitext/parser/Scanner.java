@@ -45,18 +45,20 @@ public class Scanner {
         return tokens;
     }
 
-    public void makeLiteral(SymbolType terminator) {
+    public SymbolType makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
             TokenMatch match = terminator.makeMatch(input);
             if (match.isMatch()) {
                 currentToken = new Token(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset();
-                return;
+                return terminator;
             }
             input.moveNext();
         }
-        currentToken = endToken;
+        currentToken = new Token(SymbolType.Text, input.substringFrom(next));
+        next = input.getOffset();
+        return SymbolType.Empty;
     }
 
     public void moveNext() {

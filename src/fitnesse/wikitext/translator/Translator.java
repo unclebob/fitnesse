@@ -21,6 +21,7 @@ public class Translator {
         translations.put(SymbolType.Bold, new HtmlBuilder().tag("b").body(0));
         translations.put(SymbolType.CenterLine, new HtmlBuilder().tag("div").body(0).cssClass("centered"));
         translations.put(SymbolType.Collapsible, new CollapsibleBuilder());
+        translations.put(SymbolType.Comment, new CommentBuilder());
         translations.put(SymbolType.Contents, new ContentsBuilder());
         translations.put(SymbolType.Define, new DefineBuilder());
         translations.put(SymbolType.Evaluator, new EvaluatorBuilder());

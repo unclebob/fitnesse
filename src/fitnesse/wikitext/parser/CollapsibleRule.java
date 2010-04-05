@@ -3,12 +3,14 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class CollapsibleRule extends Rule {
+    public static final String OpenState = "Open";
+    public static final String ClosedState = "Closed";
     @Override
     public Maybe<Symbol> parse(Scanner scanner) {
-        String bodyClass = "collapsable";
+        String state = OpenState;
         scanner.moveNext();
         if (scanner.getCurrentContent().equals(">")) {
-            bodyClass = "hidden";
+            state = ClosedState;
             scanner.moveNext();
         }
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
@@ -20,7 +22,7 @@ public class CollapsibleRule extends Rule {
         if (scanner.isEnd()) return Symbol.Nothing;
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Collapsible)
-                .add(bodyClass)
+                .add(state)
                 .add(titleText)
                 .add(bodyText));
     }

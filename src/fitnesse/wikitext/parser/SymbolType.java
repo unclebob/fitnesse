@@ -1,9 +1,8 @@
 package fitnesse.wikitext.parser;
 
-import java.util.HashMap;
-
 public enum SymbolType {
     List(new Matcher().startLine().whitespace().string("*").ruleClass(ListRule.class)),
+    Comment(new Matcher().startLine().string("#").ruleClass(CommentRule.class)),
     Whitespace(new Matcher().whitespace()),
     Newline(new Matcher().string("\n")),
     Colon(new Matcher().string(":")),
@@ -53,6 +52,7 @@ public enum SymbolType {
                 : type == OpenParenthesis ? CloseParenthesis
                 : type == Literal ? CloseLiteral
                 : type == Preformat ? ClosePreformat
+                : type == Comment ? Newline
                 : Empty;
     }
 

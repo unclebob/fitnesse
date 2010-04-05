@@ -2,6 +2,7 @@ package fitnesse.wikitext.translator;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.parser.CollapsibleRule;
 import fitnesse.wikitext.parser.Symbol;
 
 public class CollapsibleBuilder implements Translation {
@@ -11,12 +12,13 @@ public class CollapsibleBuilder implements Translation {
 
     public String toHtml(Translator translator, Symbol symbol) {
         return generateHtml(
+                symbol.childAt(0).getContent(),
                 translator.translate(symbol.childAt(1)),
-                translator.translate(symbol.childAt(2)),
-                symbol.childAt(0).getContent());
+                translator.translate(symbol.childAt(2))
+                );
     }
 
-    public static String generateHtml(String titleText, String bodyText, String bodyClass) {
+    public static String generateHtml(String state, String titleText, String bodyText) {
         long id = nextId++;
         HtmlTag outerBlock = new HtmlTag("div");
         outerBlock.addAttribute("class", "collapse_rim");
@@ -34,7 +36,7 @@ public class CollapsibleBuilder implements Translation {
         HtmlTag toggle = new HtmlTag("a");
         toggle.addAttribute("href", "javascript:toggleCollapsable('" + Long.toString(id) + "');");
         HtmlTag image = new HtmlTag("img");
-        image.addAttribute("src", "/files/images/collapsableOpen.gif");
+        image.addAttribute("src", "/files/images/collapsable" + state + ".gif");
         image.addAttribute("class", "left");
         image.addAttribute("id", "img" + Long.toString(id));
         toggle.add(image);
@@ -43,9 +45,13 @@ public class CollapsibleBuilder implements Translation {
         HtmlTag title = HtmlUtil.makeSpanTag("meta", titleText);
         outerBlock.add(title);
         HtmlTag body = new HtmlTag("div", bodyText);
-        body.addAttribute("class", bodyClass);
+        body.addAttribute("class", bodyClass(state));
         body.addAttribute("id", Long.toString(id));
         outerBlock.add(body);
         return outerBlock.html();
+    }
+
+    private static String bodyClass(String state) {
+        return state == CollapsibleRule.OpenState ? "collapsable" : "hidden";
     }
 }
