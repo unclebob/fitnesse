@@ -219,8 +219,7 @@ public class PageData implements Serializable {
   }
 
   public String getVariable(String name) throws Exception {
-    Maybe<String> local = getLocalVariable(name);
-    return local.isNothing() ? getInitializedVariableRoot().getVariable(name) : local.getValue();
+    return getInitializedVariableRoot().getVariable(name);
   }
 
     public Maybe<Symbol> getLocalVariableSymbol(String name) throws Exception {

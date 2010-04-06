@@ -17,28 +17,36 @@ import java.util.Arrays;
 
 public class WikiWordBuilder implements Translation  {
     public String toHtml(Translator translator, Symbol symbol) {
-        String wikiWordPath = makePath(translator.getPage(), symbol.getContent());
+        return buildLink(
+                translator.getPage(),
+                symbol.getContent(),
+                new HtmlText(formatWikiWord(translator.getPage(), symbol.getContent())).html());
+    }
+
+    public String buildLink(WikiPage currentPage, String pagePath, String linkBody) {
+        String wikiWordPath = makePath(currentPage, pagePath);
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
         WikiPage targetPage;
         try {
-            WikiPage parentPage = translator.getPage().getParent();
+            WikiPage parentPage = currentPage.getParent();
             fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
             targetPage = parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
         String qualifiedName = PathParser.render(fullPathOfWikiWord);
-        if (targetPage != null)
-            return makeLinkToExistingWikiPage(translator.getPage(), qualifiedName, symbol.getContent());
+        if (targetPage != null) {
+            return makeLinkToExistingWikiPage(qualifiedName, linkBody);
+        }
         else
-            return makeLinkToNonExistentWikiPage(symbol.getContent(), qualifiedName);
+            return makeLinkToNonExistentWikiPage(pagePath, qualifiedName);
     }
 
-    public String makeLinkToExistingWikiPage(WikiPage page, String qualifiedName, String name) {
-        HtmlTag link = new HtmlTag("a", new HtmlText(formatWikiWord(page, name)));
+    public String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
+        HtmlTag link = new HtmlTag("a", linkBody);
         link.addAttribute("href", qualifiedName);
-        return link.html();
+        return link.htmlInline();
     }
 
     private String formatWikiWord(WikiPage page, String originalName) {
@@ -52,7 +60,7 @@ public class WikiWordBuilder implements Translation  {
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
         link.addAttribute("href", qualifiedName + "?edit&nonExistent=true");
-        return htmlText.html() + link.html();
+        return htmlText.html() + link.htmlInline();
     }
 
     public String makePath(WikiPage page, String content) {

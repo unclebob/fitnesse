@@ -3,11 +3,11 @@ package fitnesse.wikitext.test;
 import fitnesse.wiki.*;
 
 public class TestRoot {
-    private WikiPage root;
+    public WikiPage root;
     private PageCrawler crawler;
 
     public TestRoot() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("root");
         crawler = root.getPageCrawler();
     }
 

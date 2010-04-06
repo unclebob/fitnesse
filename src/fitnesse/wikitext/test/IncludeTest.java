@@ -13,6 +13,7 @@ public class IncludeTest {
 
     @Test public void parsesIncludes() {
         ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord]]");
+        ParserTest.assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord]]");
     }
 
     @Test public void translatesIncludedSibling() throws Exception {

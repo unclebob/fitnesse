@@ -2,7 +2,6 @@ package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.test.ParserTest;
 import org.junit.Test;
 
 public class AnchorNameTest {

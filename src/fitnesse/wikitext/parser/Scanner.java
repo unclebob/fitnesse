@@ -92,8 +92,9 @@ public class Scanner {
             newNext = input.getOffset();
         }
         if (input.getOffset() > next) {
-            currentToken =  new TextMaker().makeToken(provider, input.substringFrom(next));
-            next = input.getOffset();
+            TokenMatch match = new TextMaker().make(provider, input.substringFrom(next));
+            currentToken = match.getToken();
+            next += match.getMatchLength();
         }
         else {
             currentToken = matchToken;

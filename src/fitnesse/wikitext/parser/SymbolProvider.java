@@ -23,7 +23,7 @@ public class SymbolProvider {
 
         /* This is the default list. These can be broken out further */
         dispatch.put(defaultMatch, new SymbolType[] {
-            SymbolType.List, SymbolType.Comment, SymbolType.Whitespace, SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
+            SymbolType.Alias, SymbolType.List, SymbolType.Comment, SymbolType.Whitespace, SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
             SymbolType.Evaluator, SymbolType.CloseEvaluator, SymbolType.Variable, SymbolType.Preformat,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.CloseBracket, SymbolType.CloseLiteral,

@@ -16,6 +16,7 @@ public class Translator {
     static {
         translations = new HashMap<SymbolType, Translation>();
         
+        translations.put(SymbolType.Alias, new AliasBuilder());
         translations.put(SymbolType.AnchorName, new HtmlBuilder().tag("a").attribute("name"));
         translations.put(SymbolType.AnchorReference, new AnchorReferenceBuilder());
         translations.put(SymbolType.Bold, new HtmlBuilder().tag("b").body(0));

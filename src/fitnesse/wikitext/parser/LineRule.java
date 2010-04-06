@@ -9,7 +9,7 @@ public class LineRule extends Rule {
         scanner.moveNext();
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
         Symbol body = new Parser(getPage()).parseIgnoreFirst(scanner, SymbolType.Newline);
-        if (scanner.isEnd()) return Symbol.Nothing;
+        //if (scanner.isEnd()) return Symbol.Nothing;
         return new Maybe<Symbol>(result.add(body));
     }
 }

@@ -3,9 +3,6 @@ package fitnesse.wikitext.test;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.translator.Translator;
-
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

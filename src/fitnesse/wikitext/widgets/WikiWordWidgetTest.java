@@ -119,10 +119,10 @@ public class WikiWordWidgetTest extends TestCase {
     data.setContent("^SubPage");
     superPage.commit(data);
     String renderedText = superPage.getData().getHtml();
-    assertEquals(makeExpectedNonExistentWikiWord("^SubPage", "SuperPage.SubPage") + HtmlElement.endl, renderedText);
+    assertEquals(makeExpectedNonExistentWikiWord("^SubPage", "SuperPage.SubPage"), renderedText);
     addPage(superPage, "SubPage");
     renderedText = superPage.getData().getHtml();
-    assertEquals("<a href=\"SuperPage.SubPage\">^SubPage</a>" + HtmlElement.endl, renderedText);
+    assertEquals("<a href=\"SuperPage.SubPage\">^SubPage</a>", renderedText);
   }
 
   public void testGTSubPageWidget() throws Exception {
@@ -131,10 +131,10 @@ public class WikiWordWidgetTest extends TestCase {
     data.setContent(">SubPage");
     superPage.commit(data);
     String renderedText = superPage.getData().getHtml();
-    assertEquals(makeExpectedNonExistentWikiWord("&gt;SubPage", "SuperPage.SubPage") + HtmlElement.endl, renderedText);
+    assertEquals(makeExpectedNonExistentWikiWord("&gt;SubPage", "SuperPage.SubPage"), renderedText);
     addPage(superPage, "SubPage");
     renderedText = superPage.getData().getHtml();
-    assertEquals("<a href=\"SuperPage.SubPage\">&gt;SubPage</a>" + HtmlElement.endl, renderedText);
+    assertEquals("<a href=\"SuperPage.SubPage\">&gt;SubPage</a>", renderedText);
   }
 
   public void testBackwardSearchWidget() throws Exception {
@@ -154,7 +154,7 @@ public class WikiWordWidgetTest extends TestCase {
     data.setContent("<TargetPage.SubTarget");
     referer.commit(data);
     String renderedLink = referer.getData().getHtml();
-    assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>" + HtmlElement.endl, renderedLink);
+    assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
   }
 
   public void testHtmlForNormalLinkRegraced() throws Exception {
@@ -181,11 +181,11 @@ public class WikiWordWidgetTest extends TestCase {
     childPage.commit(data);
 
     String renderedText = childPage.getData().getHtml();
-    assertEquals(makeExpectedNonExistentWikiWord("&gt;Sub123Page", "SuperPage.SubPage.Sub123Page") + HtmlElement.endl, renderedText);
+    assertEquals(makeExpectedNonExistentWikiWord("&gt;Sub123Page", "SuperPage.SubPage.Sub123Page"), renderedText);
 
     addPage(childPage, "Sub123Page");
     renderedText = childPage.getData().getHtml();
-    assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt;Sub 123 Page</a>" + HtmlElement.endl, renderedText);
+    assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt;Sub 123 Page</a>", renderedText);
   }
 
   public void testBackwardSearchWidgetRegraced() throws Exception {
@@ -203,7 +203,7 @@ public class WikiWordWidgetTest extends TestCase {
     data.setContent("<TargetPage.SubTarget");
     referer.commit(data);
     String renderedLink = referer.getData().getHtml();
-    assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;Target Page .Sub Target</a>" + HtmlElement.endl, renderedLink);
+    assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;Target Page .Sub Target</a>", renderedLink);
   }
 
   private WikiPage addPage(WikiPage parent, String childName) throws Exception {

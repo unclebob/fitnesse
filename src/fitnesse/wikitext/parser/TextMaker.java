@@ -1,32 +1,40 @@
 package fitnesse.wikitext.parser;
 
 public class TextMaker {
-    public Token makeToken(SymbolProvider provider, String text) {
-        return new Token(provider.hasType(SymbolType.WikiWord) && isWikiWordPath(text) ? SymbolType.WikiWord : SymbolType.Text, text);
+    public TokenMatch make(SymbolProvider provider, String text) {
+        if (provider.hasType(SymbolType.WikiWord)) {
+            int length = wikiWordPathLength(text);
+            if (length > 0) return new TokenMatch(new Token(SymbolType.WikiWord, text.substring(0, length)), length);
+        }
+        return new TokenMatch(new Token(SymbolType.Text, text), text.length());
     }
 
-    public boolean isWikiWordPath(String text) {
+    public int wikiWordPathLength(String text) {
         String candidate = text + ".";
         int offset = "<>^.".indexOf(candidate.substring(0, 1)) >= 0 ? 1 : 0;
         while (offset < candidate.length()) {
             int dot = candidate.indexOf(".", offset);
-            if (!isWikiWord(candidate.substring(offset, dot))) return false;
+            int word = wikiWordLength(candidate.substring(offset, dot));
+            if (word == 0) return offset > 1 ? offset - 1 : 0;
+            if (offset + word < dot) return offset + word;
             offset = dot + 1;
         }
-        return true;
+        return text.length();
     }
 
-    private boolean isWikiWord(String candidate) {
-        if (candidate.length() < 3) return false;
-        if (!isUpperCaseLetter(candidate, 0)) return false;
-        if (!isDigit(candidate, 1) && !isLowerCaseLetter(candidate, 1)) return false;
+    private int wikiWordLength(String candidate) {
+        if (candidate.length() < 3) return 0;
+        if (!isUpperCaseLetter(candidate, 0)) return 0;
+        if (!isDigit(candidate, 1) && !isLowerCaseLetter(candidate, 1)) return 0;
 
         boolean includesUpperCaseLetter = false;
-        for (int i = 2; i < candidate.length(); i++) {
+        int i;
+        for (i = 2; i < candidate.length(); i++) {
             if (isUpperCaseLetter(candidate, i)) includesUpperCaseLetter =  true;
-            else if (!isDigit(candidate, i) && !isLetter(candidate, i) && !isCharacter(candidate, '.', i)) return false;
+            else if (!isDigit(candidate, i) && !isLetter(candidate, i) && !isCharacter(candidate, '.', i)) break;
         }
-        return includesUpperCaseLetter;
+        if (includesUpperCaseLetter && i > 2) return i;
+        return 0;
     }
 
     private boolean isUpperCaseLetter(String candidate, int offset) {

@@ -34,7 +34,7 @@ public class DefineTest {
         WikiPage pageOne = new TestRoot().makePage("PageOne");
         PageData data = new PageData(pageOne, input);
         pageOne.commit(data);
-        assertEquals(definedValue, pageOne.getData().getVariable(name));
+        assertEquals(definedValue, pageOne.getData().getLocalVariable(name).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {

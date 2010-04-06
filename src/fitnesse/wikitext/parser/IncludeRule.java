@@ -18,7 +18,7 @@ public class IncludeRule extends Rule {
         if (!scanner.isType(SymbolType.Text) && !scanner.isType(SymbolType.WikiWord)) return Symbol.Nothing;
         Symbol pageName = scanner.getCurrent();
         scanner.moveNext();
-        if (!scanner.isType(SymbolType.Newline)) return Symbol.Nothing;
+        if (!scanner.isEnd() && !scanner.isType(SymbolType.Newline) ) return Symbol.Nothing;
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Include).add(option).add(pageName));
     }

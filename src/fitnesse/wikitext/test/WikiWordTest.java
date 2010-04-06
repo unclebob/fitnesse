@@ -34,7 +34,7 @@ public class WikiWordTest {
     @Test
     public void translatesMissingWikiWords() throws Exception {
         ParserTest.assertTranslatesTo(pageOne, "PageNine",
-                "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>" + HtmlElement.endl);
+                "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
     }
 
     @Test
@@ -44,6 +44,6 @@ public class WikiWordTest {
     }
 
     private String wikiLink(String link, String text) {
-        return "<a href=\"" + link + "\">" + text + "</a>" + HtmlElement.endl;
+        return "<a href=\"" + link + "\">" + text + "</a>";
     }
 }

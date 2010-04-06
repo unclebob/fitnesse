@@ -40,6 +40,24 @@ public class TableTest {
         ParserTest.assertTranslatesTo("!|${=3+4=}|\n", tableWithCell("7"));
     }
 
+    @Test public void normalizesRowLength() {
+        ParserTest.assertTranslatesTo("|a|\n|b|c|\n|d|e|f|\n",
+                "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
+                "\t<tr>" + HtmlElement.endl +
+                "\t\t<td colspan=\"3\">a</td>" + HtmlElement.endl +
+                "\t</tr>" + HtmlElement.endl +
+                "\t<tr>" + HtmlElement.endl +
+                "\t\t<td>b</td>" + HtmlElement.endl +
+                "\t\t<td colspan=\"2\">c</td>" + HtmlElement.endl +
+                "\t</tr>" + HtmlElement.endl +
+                "\t<tr>" + HtmlElement.endl +
+                "\t\t<td>d</td>" + HtmlElement.endl +
+                "\t\t<td>e</td>" + HtmlElement.endl +
+                "\t\t<td>f</td>" + HtmlElement.endl +
+                "\t</tr>" + HtmlElement.endl +
+                "</table>"+ HtmlElement.endl);
+    }
+
     private String tableWithCell(String cellContent) {
         return "<table border=\"1\" cellspacing=\"0\">"+ HtmlElement.endl +
         "\t<tr>" + HtmlElement.endl +

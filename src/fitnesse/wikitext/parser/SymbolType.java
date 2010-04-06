@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 public enum SymbolType {
+    Alias(new Matcher().string("[[").ruleClass(AliasRule.class)),
     List(new Matcher().startLine().whitespace().string("*").ruleClass(ListRule.class)),
     Comment(new Matcher().startLine().string("#").ruleClass(CommentRule.class)),
     Whitespace(new Matcher().whitespace()),
