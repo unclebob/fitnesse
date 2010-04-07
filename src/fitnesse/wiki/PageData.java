@@ -9,6 +9,7 @@ import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.Scanner;
 import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.translator.Paths;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.translator.VariableBuilder;
 import fitnesse.wikitext.translator.Variables;
@@ -85,7 +86,7 @@ public class PageData implements Serializable {
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
-    private Symbol contentSyntaxTree = null;
+  private Symbol contentSyntaxTree = null;
 
     public PageData(WikiPage page) throws Exception {
     wikiPage = page;
@@ -103,7 +104,7 @@ public class PageData implements Serializable {
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
     variableRoot = data.variableRoot;
-      contentSyntaxTree = data.contentSyntaxTree;
+    contentSyntaxTree = data.contentSyntaxTree;
   }
 
   public String getStringOfAllAttributes() {
@@ -197,7 +198,7 @@ public class PageData implements Serializable {
 
   public void setContent(String content) {
     this.content = content;
-      contentSyntaxTree = null;
+    contentSyntaxTree = null;
   }
 
   /* this is the public entry to page parse and translate */
@@ -224,14 +225,18 @@ public class PageData implements Serializable {
   }
 
     public Maybe<Symbol> getLocalVariableSymbol(String name) throws Exception {
-        if (contentSyntaxTree == null) {
-            contentSyntaxTree = Parser.make(wikiPage, getContent()).parse();
-        }
-        return new Variables(wikiPage, contentSyntaxTree).getSymbol(name);
+        return new Variables(wikiPage, getSyntaxTree()).getSymbol(name);
     }
 
     public Maybe<String> getLocalVariable(String name) throws Exception {
         return new VariableBuilder().findVariableInPages(wikiPage, name);
+    }
+
+    private Symbol getSyntaxTree() throws Exception {
+        if (contentSyntaxTree == null) {
+            contentSyntaxTree = Parser.make(wikiPage, getContent()).parse();
+        }
+        return contentSyntaxTree;
     }
 
   public void addVariable(String name, String value) throws Exception {
@@ -264,9 +269,8 @@ public class PageData implements Serializable {
       return root.render();
     }*/
 
-    private String processHTMLWidgets(String content, WikiPage context) {
-        contentSyntaxTree = Parser.make(context, content).parse();
-        return new Translator(context).translateToHtml(contentSyntaxTree);
+    private String processHTMLWidgets(String content, WikiPage context) throws Exception {
+        return new Translator(context).translateToHtml(getSyntaxTree());
     }
 
   public void setWikiPage(WikiPage page) {
@@ -278,7 +282,8 @@ public class PageData implements Serializable {
   }
 
   public List<String> getClasspaths() throws Exception {
-    return getTextOfWidgets(classpathWidgetBuilder);
+    return new Paths(wikiPage, getSyntaxTree()).getPaths();
+    //return getTextOfWidgets(classpathWidgetBuilder);
   }
 
   public List<String> getXrefPages() throws Exception {

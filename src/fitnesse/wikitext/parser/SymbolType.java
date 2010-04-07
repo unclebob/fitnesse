@@ -31,15 +31,15 @@ public enum SymbolType {
     EndCell(new Matcher().string(new String[] {"|\n|", "|\n", "|"})),
     
     HashTable(new Matcher().string("!{").ruleClass(HashTableRule.class)),
-    HeaderLine(new Matcher().startLine().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"}).ruleClass(LineRule.class)),
+    HeaderLine(new Matcher().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"}).ruleClass(LineRule.class)),
     Literal(new Matcher().string("!-").ruleClass(LiteralRule.class)),
     Collapsible(new Matcher().startLine().string("!").repeat('*').ruleClass(CollapsibleRule.class)),
     AnchorName(new Matcher().string("!anchor").ruleClass(AnchorNameRule.class)),
-    CenterLine(new Matcher().startLine().string(new String[] {"!c", "!C"}).ruleClass(LineRule.class)),
+    CenterLine(new Matcher().string(new String[] {"!c", "!C"}).ruleClass(LineRule.class)),
     Contents(new Matcher().startLine().string("!contents").ruleClass(ContentsRule.class)),
     Define(new Matcher().startLine().string("!define").ruleClass(DefineRule.class)),
     Include(new Matcher().startLine().string("!include").ruleClass(IncludeRule.class)),
-    NoteLine(new Matcher().startLine().string("!note").ruleClass(LineRule.class)),
+    NoteLine(new Matcher().string("!note").ruleClass(LineRule.class)),
     Path(new Matcher().startLine().string("!path").ruleClass(LineRule.class)),
     Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}).ruleClass(StyleRule.class)),
 

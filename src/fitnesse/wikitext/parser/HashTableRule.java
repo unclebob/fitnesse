@@ -4,7 +4,8 @@ import util.Maybe;
 
 public class HashTableRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
+        Scanner scanner = parser.getScanner();
         Symbol table = new Symbol(SymbolType.HashTable);
         while (true) {
             Symbol row = new Symbol(SymbolType.SymbolList);

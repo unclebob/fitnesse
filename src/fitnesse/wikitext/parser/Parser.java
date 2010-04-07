@@ -7,13 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Parser {
-    private WikiPage currentPage;
-    private SymbolProvider provider;
-    private Scanner scanner;
-    private SymbolType[] terminators;
-    private SymbolType[] ignoresFirst;
-    private SymbolType[] ends;
-
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
 
     public static Parser makeIgnoreFirst(WikiPage currentPage, Scanner scanner, SymbolType type) {
@@ -21,8 +14,7 @@ public class Parser {
         return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
 
-    public static Parser makeEnds(WikiPage currentPage, Scanner scanner, SymbolType type) {
-        SymbolType[] types = new SymbolType[] {type};
+    public static Parser makeEnds(WikiPage currentPage, Scanner scanner, SymbolType[] types) {
         return new Parser(currentPage, scanner, new SymbolProvider(), emptyTypes, emptyTypes, types);
     }
 
@@ -44,6 +36,13 @@ public class Parser {
         return new Parser(currentPage, new Scanner(input), new SymbolProvider(), emptyTypes, emptyTypes, emptyTypes);
     }
 
+    private WikiPage currentPage;
+    private SymbolProvider provider;
+    private Scanner scanner;
+    private SymbolType[] terminators;
+    private SymbolType[] ignoresFirst;
+    private SymbolType[] ends;
+
     public Parser(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
         this.currentPage = currentPage;
         this.scanner = scanner;
@@ -52,6 +51,10 @@ public class Parser {
         this.ignoresFirst = ignoresFirst;
         this.ends = ends;
     }
+
+    public Scanner getScanner() { return scanner; }
+    public SymbolType[] getTerminators() { return terminators; }
+    public SymbolType[] getEnds() { return ends; }
 
     public Symbol parse() {
         Symbol result = new Symbol(SymbolType.SymbolList);
@@ -74,7 +77,7 @@ public class Parser {
             }
             else {
                 rule.setPage(currentPage);
-                Maybe<Symbol> translation = rule.parse(scanner);
+                Maybe<Symbol> translation = rule.parse(this);
                 if (translation.isNothing()) {
                     ignore.add(currentToken.getType());
                     scanner.copy(backup);

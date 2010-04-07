@@ -7,7 +7,8 @@ public class TableRule extends Rule {
             SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
     
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
+        Scanner scanner = parser.getScanner();
         String content = scanner.getCurrentContent();
         Symbol table = new Symbol(SymbolType.Table);
         while (true) {

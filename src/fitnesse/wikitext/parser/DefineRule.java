@@ -5,7 +5,8 @@ import java.util.List;
 
 public class DefineRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
+        Scanner scanner = parser.getScanner();
         List<Token> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text, SymbolType.Whitespace});
         if (tokens.size() == 0) return Symbol.Nothing;
 

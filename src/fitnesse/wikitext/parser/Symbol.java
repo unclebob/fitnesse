@@ -49,4 +49,16 @@ public class Symbol {
         for (int i = after + 1; i < children.size(); i++) result.add(children.get(i));
         return result;
     }
+
+    public void walk(SymbolTreeWalker walker) {
+        walk(this, walker);
+    }
+
+    private boolean walk(Symbol symbol, SymbolTreeWalker walker) {
+        if (!walker.visit(symbol)) return false;
+        for (Symbol child: symbol.children) {
+            if (!walk(child, walker)) return false;
+        }
+        return true;
+    }
 }

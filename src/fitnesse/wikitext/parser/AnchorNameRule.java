@@ -6,8 +6,8 @@ import java.util.List;
 
 public class AnchorNameRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
-        List<Token> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
+    public Maybe<Symbol> parse(Parser parser) {
+        List<Token> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
         if (tokens.size() == 0) return Symbol.Nothing;
 
         String anchor = tokens.get(1).getContent();

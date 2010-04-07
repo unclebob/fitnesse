@@ -15,7 +15,9 @@ public class TableTest {
         ParserTest.assertTranslatesTo("||\n", tableWithCell(""));
         ParserTest.assertTranslatesTo("| a |\n", tableWithCell("a"));
         ParserTest.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
-        ParserTest.assertTranslatesTo("!|''a''|\n", tableWithCell("''a''"));
+        ParserTest.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
+        ParserTest.assertTranslatesTo("|!c !1 a|\n",
+                tableWithCell("<div class=\"centered\"><h1>a</h1>" + HtmlElement.endl + "</div>"));
 
         ParserTest.assertTranslatesTo("|a|b|c|\n|d|e|f|\n",
                 "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +

@@ -10,7 +10,7 @@ import util.Maybe;
 
 public class ContentsRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
         return new Maybe<Symbol>(new Symbol(SymbolType.Contents));
     }
 }

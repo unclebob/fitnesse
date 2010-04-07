@@ -4,7 +4,8 @@ import util.Maybe;
 
 public class StyleRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
+        Scanner scanner = parser.getScanner();
         String content = scanner.getCurrentContent();
         char beginner = content.charAt(content.length() - 1);
         Symbol body = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.closeType(beginner)).parse();

@@ -57,8 +57,16 @@ public class ParserTest {
     }
 
     public static void assertParses(String input, String expected) {
-        Symbol result = Parser.make(null, input).parse();
+        Symbol result = parse(null, input);
         assertEquals(expected, serialize(result));
+    }
+
+    public static Symbol parse(WikiPage page) throws Exception {
+        return Parser.make(page, page.getData().getContent()).parse();
+    }
+
+    private static Symbol parse(WikiPage page, String input) {
+        return Parser.make(page, input).parse();
     }
 
     public static String serialize(Symbol symbol) {

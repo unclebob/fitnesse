@@ -5,8 +5,8 @@ import java.util.List;
 
 public class VariableRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
-        List<Token> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Text, SymbolType.CloseBrace});
+    public Maybe<Symbol> parse(Parser parser) {
+        List<Token> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Text, SymbolType.CloseBrace});
         if (tokens.size() == 0) return Symbol.Nothing;
 
         String name = tokens.get(0).getContent();

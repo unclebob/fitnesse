@@ -4,7 +4,8 @@ import util.Maybe;
 
 public class IncludeRule extends Rule {
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
+        Scanner scanner = parser.getScanner();
         scanner.moveNext();
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
         scanner.moveNext();

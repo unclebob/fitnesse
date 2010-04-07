@@ -15,7 +15,7 @@ public class LineTest {
         ParserTest.assertScans("!3text\n", "HeaderLine=!3,Text=text,Newline=\n");
         ParserTest.assertScans("!0 text\n", "Text=!0,Whitespace= ,Text=text,Newline=\n");
         ParserTest.assertScans("!7 text\n", "Text=!7,Whitespace= ,Text=text,Newline=\n");
-        ParserTest.assertScans("not start !1 text\n", "Text=not,Whitespace= ,Text=start,Whitespace= ,Text=!1,Whitespace= ,Text=text,Newline=\n");
+        ParserTest.assertScans("not start !1 text\n", "Text=not,Whitespace= ,Text=start,Whitespace= ,HeaderLine=!1,Whitespace= ,Text=text,Newline=\n");
         ParserTest.assertScans("at start\n!1 text\n", "Text=at,Whitespace= ,Text=start,Newline=\n,HeaderLine=!1,Whitespace= ,Text=text,Newline=\n");
     }
 
@@ -29,7 +29,7 @@ public class LineTest {
         ParserTest.assertScans("!C more text\n", "CenterLine=!C,Whitespace= ,Text=more,Whitespace= ,Text=text,Newline=\n");
         ParserTest.assertScans("!ctext\n", "CenterLine=!c,Text=text,Newline=\n");
         ParserTest.assertScans("!c text\n", "CenterLine=!c,Whitespace= ,Text=text,Newline=\n");
-        ParserTest.assertScans(" !c text\n", "Whitespace= ,Text=!c,Whitespace= ,Text=text,Newline=\n");
+        ParserTest.assertScans(" !c text\n", "Whitespace= ,CenterLine=!c,Whitespace= ,Text=text,Newline=\n");
         ParserTest.assertScans("!c text", "CenterLine=!c,Whitespace= ,Text=text");
     }
 

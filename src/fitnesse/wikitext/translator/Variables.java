@@ -2,6 +2,7 @@ package fitnesse.wikitext.translator;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.SymbolType;
 import util.Maybe;
 
@@ -15,28 +16,29 @@ public class Variables {
     }
 
     public Maybe<Symbol> getSymbol(String name) {
-        return getSymbol(syntaxTree, name);
-    }
-
-    private Maybe<Symbol> getSymbol(Symbol tree, String name) {
-        if (tree.getType() == SymbolType.Define) {
-            if (tree.childAt(0).getContent().equals(name)) {
-                return new Maybe<Symbol>(tree.childAt(1));
-            }
-            else {
-                return Symbol.Nothing;
-            }
-        }
-        for (Symbol child: tree.getChildren()) {
-            Maybe<Symbol> value = getSymbol(child, name);
-            if (!value.isNothing()) return value;
-        }
-        return Symbol.Nothing;
+        TreeWalker walker = new TreeWalker(name);
+        syntaxTree.walk(walker);
+        return walker.result;
     }
 
     public Maybe<String> getValue(String name) {
-        Maybe<Symbol> symbol = getSymbol(syntaxTree, name);
+        Maybe<Symbol> symbol = getSymbol(name);
         if (symbol.isNothing()) return Maybe.noString;
         return new Maybe<String>(new Translator(page).translateToHtml(symbol.getValue()));
+    }
+
+    private class TreeWalker implements SymbolTreeWalker {
+        private String name;
+        public Maybe<Symbol> result = Symbol.Nothing;
+
+        public TreeWalker(String name) { this.name = name; }
+
+        public boolean visit(Symbol node) {
+            if (node.getType() == SymbolType.Define && node.childAt(0).getContent().equals(name)) {
+                result = new Maybe<Symbol>(node.childAt(1));
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -6,7 +6,8 @@ public class CollapsibleRule extends Rule {
     public static final String OpenState = "Open";
     public static final String ClosedState = "Closed";
     @Override
-    public Maybe<Symbol> parse(Scanner scanner) {
+    public Maybe<Symbol> parse(Parser parser) {
+        Scanner scanner = parser.getScanner();
         String state = OpenState;
         scanner.moveNext();
         if (scanner.getCurrentContent().equals(">")) {
