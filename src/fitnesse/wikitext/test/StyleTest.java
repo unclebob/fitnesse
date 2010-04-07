@@ -31,10 +31,10 @@ public class StyleTest {
     }
 
     @Test public void translatesStyle() {
-        ParserTest.assertTranslatesTo("!style_myStyle(wow zap)", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
-        ParserTest.assertTranslatesTo("!style_myStyle[wow zap]", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
-        ParserTest.assertTranslatesTo("!style_myStyle[)]", "<span class=\"myStyle\">)</span>" + HtmlElement.endl);
-        ParserTest.assertTranslatesTo("!style_myStyle{wow zap}", "<span class=\"myStyle\">wow zap</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("!style_myStyle(wow zap)", "<span class=\"myStyle\">wow zap</span>");
+        ParserTest.assertTranslatesTo("!style_myStyle[wow zap]", "<span class=\"myStyle\">wow zap</span>");
+        ParserTest.assertTranslatesTo("!style_myStyle[)]", "<span class=\"myStyle\">)</span>");
+        ParserTest.assertTranslatesTo("!style_myStyle{wow zap}", "<span class=\"myStyle\">wow zap</span>");
     }
 
     @Test public void ignoresMismatchedStyle() {
@@ -43,6 +43,6 @@ public class StyleTest {
 
     @Test public void translatesNestedStyle() {
         ParserTest.assertTranslatesTo("!style_myStyle(!style_otherStyle(stuff))",
-                "<span class=\"myStyle\"><span class=\"otherStyle\">stuff</span>" + HtmlElement.endl + "</span>" + HtmlElement.endl);
+                "<span class=\"myStyle\"><span class=\"otherStyle\">stuff</span></span>");
     }
 }

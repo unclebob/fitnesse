@@ -10,8 +10,9 @@ public class HashTableRule extends Rule {
             Symbol row = new Symbol(SymbolType.SymbolList);
             table.add(row);
             for (int i = 0; i < 2; i++) {
-                Symbol cell = new Parser(getPage()).parseIgnoreFirst(scanner,
-                        new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace});
+                Symbol cell = Parser.makeIgnoreFirst(getPage(), scanner,
+                        new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace})
+                        .parse();
                 if (scanner.isEnd()) return Symbol.Nothing;
                 row.add(cell);
             }

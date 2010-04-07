@@ -57,7 +57,7 @@ public class ParserTest {
     }
 
     public static void assertParses(String input, String expected) {
-        Symbol result = new Parser(null).parse(input);
+        Symbol result = Parser.make(null, input).parse();
         assertEquals(expected, serialize(result));
     }
 

@@ -25,6 +25,6 @@ public class AnchorNameTest {
     }
 
     private String anchorWithName(String name) {
-        return "<a name=\"" + name + "\"/>" + HtmlElement.endl;
+        return "<a name=\"" + name + "\"/>";
     }
 }

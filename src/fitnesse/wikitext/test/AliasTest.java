@@ -14,8 +14,9 @@ public class AliasTest {
 
     @Test
     public void parsesAliases() {
-        ParserTest.assertParses("[[tag][PageOne]]", "SymbolList[Alias[SymbolList[Text], WikiWord]]");
-        ParserTest.assertParses("[[PageOne][PageOne]]", "SymbolList[Alias[SymbolList[WikiWord], WikiWord]]");
+        ParserTest.assertParses("[[tag][PageOne]]", "SymbolList[Alias[SymbolList[Text], SymbolList[WikiWord]]]");
+        ParserTest.assertParses("[[PageOne][PageOne]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[WikiWord]]]");
+        ParserTest.assertParses("[[PageOne][PageOne?edit]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[WikiWord, Text]]]");
     }
 
     @Test
@@ -23,9 +24,10 @@ public class AliasTest {
         WikiPage page = new TestRoot().makePage("PageOne");
         ParserTest.assertTranslatesTo(page, "[[tag][link]]", link("tag", "link"));
         ParserTest.assertTranslatesTo(page, "[[tag][PageOne]]", link("tag", "PageOne"));
-        ParserTest.assertTranslatesTo(page, "[[''tag''][PageOne]]", link("<i>tag</i>" + HtmlElement.endl, "PageOne"));
+        ParserTest.assertTranslatesTo(page, "[[''tag''][PageOne]]", link("<i>tag</i>", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[you're it][PageOne]]", link("you're it", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[PageOne][IgnoredPage]]", link("PageOne", "PageOne"));
+        ParserTest.assertTranslatesTo(page, "[[tag][PageOne?edit]]", link("tag", "PageOne?edit"));
     }
 
     private String link(String body, String href) {

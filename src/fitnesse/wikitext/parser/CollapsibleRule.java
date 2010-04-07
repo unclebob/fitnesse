@@ -15,10 +15,10 @@ public class CollapsibleRule extends Rule {
         }
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
 
-        Symbol titleText = new Parser(getPage()).parseIgnoreFirst(scanner, SymbolType.Newline);
+        Symbol titleText = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.Newline).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
 
-        Symbol bodyText = new Parser(getPage()).parseIgnoreFirst(scanner, SymbolType.CloseCollapsible);
+        Symbol bodyText = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.CloseCollapsible).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Collapsible)

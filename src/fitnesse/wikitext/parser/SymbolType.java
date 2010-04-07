@@ -40,6 +40,7 @@ public enum SymbolType {
     Define(new Matcher().startLine().string("!define").ruleClass(DefineRule.class)),
     Include(new Matcher().startLine().string("!include").ruleClass(IncludeRule.class)),
     NoteLine(new Matcher().startLine().string("!note").ruleClass(LineRule.class)),
+    Path(new Matcher().startLine().string("!path").ruleClass(LineRule.class)),
     Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}).ruleClass(StyleRule.class)),
 
     WikiWord(),

@@ -163,9 +163,9 @@ public class WidgetRootTest {
     WikiPage page = crawler.addPage(rootPage, PathParser.parse("TestPage"), "''italics''\r\n\r'''bold'''\r\n\r");
     PageData data = page.getData();
     String html = data.getHtml();
-    assertEquals("<i>italics</i>" + HtmlElement.endl
+    assertEquals("<i>italics</i>"
             + "<br/>" + HtmlElement.endl
-            + "<b>bold</b>" + HtmlElement.endl
+            + "<b>bold</b>" 
             + "<br/>" + HtmlElement.endl, html);
   }
 

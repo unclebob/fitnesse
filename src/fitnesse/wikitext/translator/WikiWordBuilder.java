@@ -23,7 +23,11 @@ public class WikiWordBuilder implements Translation  {
                 new HtmlText(formatWikiWord(translator.getPage(), symbol.getContent())).html());
     }
 
-    public String buildLink(WikiPage currentPage, String pagePath, String linkBody) {
+    private String buildLink(WikiPage currentPage, String pagePath, String linkBody) {
+         return buildLink(currentPage, pagePath, "", linkBody);
+    }
+
+    public String buildLink(WikiPage currentPage, String pagePath, String pageSuffix, String linkBody) {
         String wikiWordPath = makePath(currentPage, pagePath);
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
@@ -37,7 +41,7 @@ public class WikiWordBuilder implements Translation  {
         }
         String qualifiedName = PathParser.render(fullPathOfWikiWord);
         if (targetPage != null) {
-            return makeLinkToExistingWikiPage(qualifiedName, linkBody);
+            return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody);
         }
         else
             return makeLinkToNonExistentWikiPage(pagePath, qualifiedName);

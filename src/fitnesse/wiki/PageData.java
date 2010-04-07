@@ -7,6 +7,7 @@ import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.Scanner;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.translator.VariableBuilder;
@@ -224,7 +225,7 @@ public class PageData implements Serializable {
 
     public Maybe<Symbol> getLocalVariableSymbol(String name) throws Exception {
         if (contentSyntaxTree == null) {
-            contentSyntaxTree = new Parser(wikiPage).parse(getContent());
+            contentSyntaxTree = Parser.make(wikiPage, getContent()).parse();
         }
         return new Variables(wikiPage, contentSyntaxTree).getSymbol(name);
     }
@@ -264,7 +265,7 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(String content, WikiPage context) {
-        contentSyntaxTree = new Parser(context).parse(content);
+        contentSyntaxTree = Parser.make(context, content).parse();
         return new Translator(context).translateToHtml(contentSyntaxTree);
     }
 

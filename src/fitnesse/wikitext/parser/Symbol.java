@@ -43,4 +43,10 @@ public class Symbol {
         children.add(new Token(SymbolType.Text, text));
         return this;
     }
+
+    public Symbol childrenAfter(int after) {
+        Symbol result = new Symbol(SymbolType.SymbolList);
+        for (int i = after + 1; i < children.size(); i++) result.add(children.get(i));
+        return result;
+    }
 }

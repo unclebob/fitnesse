@@ -26,16 +26,10 @@ public class TableRule extends Rule {
 
     private Symbol parseCell(Scanner scanner, String content) {
         if (content.startsWith("!")) {
-            return new Parser(getPage()).parse(
-                    scanner,
-                    new SymbolProvider().setTypes(literalTableTypes),
-                    SymbolType.EndCell);
-            /*scanner.makeLiteral(SymbolType.EndCell);
-            String body = scanner.getCurrentContent();
-            scanner.moveNext();
-            return new Symbol(SymbolType.Literal, body);*/
+            return Parser.make(getPage(), scanner, new SymbolProvider().setTypes(literalTableTypes), SymbolType.EndCell)
+                    .parse();
         }
         else
-            return new Parser(getPage()).parse(scanner, SymbolType.EndCell);
+            return Parser.make(getPage(), scanner, SymbolType.EndCell).parse();
     }
 }

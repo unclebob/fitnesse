@@ -8,34 +8,52 @@ import java.util.Arrays;
 
 public class Parser {
     private WikiPage currentPage;
+    private SymbolProvider provider;
+    private Scanner scanner;
+    private SymbolType[] terminators;
+    private SymbolType[] ignoresFirst;
+    private SymbolType[] ends;
 
-    public Parser(WikiPage currentPage) { this.currentPage = currentPage; }
+    private static final SymbolType[] emptyTypes = new SymbolType[] {};
 
-    public Symbol parse(String input) {
-        return parseIgnoreFirst(new Scanner(input), SymbolType.Empty);
+    public static Parser makeIgnoreFirst(WikiPage currentPage, Scanner scanner, SymbolType type) {
+        SymbolType[] types = new SymbolType[] {type};
+        return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
 
-    public Symbol parse(Scanner scanner, SymbolProvider provider, SymbolType terminator) {
-        return parse(scanner, provider, new SymbolType[] {terminator});
+    public static Parser makeEnds(WikiPage currentPage, Scanner scanner, SymbolType type) {
+        SymbolType[] types = new SymbolType[] {type};
+        return new Parser(currentPage, scanner, new SymbolProvider(), emptyTypes, emptyTypes, types);
     }
 
-    public Symbol parse(Scanner scanner, SymbolType terminator) {
-        return parse(scanner, new SymbolProvider(), terminator);
+    public static Parser makeIgnoreFirst(WikiPage currentPage, Scanner scanner, SymbolType[] types) {
+        return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
 
-    public Symbol parseIgnoreFirst(Scanner scanner, SymbolType terminator) {
-        return parseIgnoreFirst(scanner, new SymbolType[] {terminator});
+    public static Parser make(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType type) {
+        SymbolType[] types = new SymbolType[] {type};
+        return new Parser(currentPage, scanner, provider, types, emptyTypes, emptyTypes);
     }
 
-    public Symbol parse(Scanner scanner, SymbolProvider provider, SymbolType[] terminators) {
-        return parse(scanner, provider, terminators, new SymbolType[] {});
+    public static Parser make(WikiPage currentPage, Scanner scanner, SymbolType type) {
+        SymbolType[] types = new SymbolType[] {type};
+        return new Parser(currentPage, scanner, new SymbolProvider(), types, emptyTypes, emptyTypes);
     }
 
-    public Symbol parseIgnoreFirst(Scanner scanner, SymbolType[] terminators) {
-        return parse(scanner, new SymbolProvider(), terminators, terminators);
+    public static Parser make(WikiPage currentPage, String input) {
+        return new Parser(currentPage, new Scanner(input), new SymbolProvider(), emptyTypes, emptyTypes, emptyTypes);
     }
 
-    private Symbol parse(Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst) {
+    public Parser(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
+        this.currentPage = currentPage;
+        this.scanner = scanner;
+        this.provider = provider;
+        this.terminators = terminators;
+        this.ignoresFirst = ignoresFirst;
+        this.ends = ends;
+    }
+
+    public Symbol parse() {
         Symbol result = new Symbol(SymbolType.SymbolList);
         ArrayList<SymbolType> ignore = new ArrayList<SymbolType>();
         ignore.addAll(Arrays.asList(ignoresFirst));
@@ -44,6 +62,10 @@ public class Parser {
             scanner.moveNextIgnoreFirst(provider, ignore);
             if (scanner.isEnd()) break;
             Token currentToken = scanner.getCurrent();
+            if (contains(ends, currentToken.getType())) {
+                scanner.copy(backup);
+                break;
+            }
             if (contains(terminators, currentToken.getType())) break;
             Rule rule = currentToken.getRule();
             if (rule == null) {

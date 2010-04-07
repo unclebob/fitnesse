@@ -19,7 +19,7 @@ public class DefineRule extends Rule {
 
         int start = scanner.getOffset();
         scanner.markStart();
-        Symbol value = new Parser(getPage()).parseIgnoreFirst(scanner, close);
+        Symbol value = Parser.makeIgnoreFirst(getPage(), scanner, close).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Define)

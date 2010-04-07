@@ -15,7 +15,7 @@ public class EqualPairTest {
     }
 
     @Test public void translatesBold() {
-        ParserTest.assertTranslatesTo("'''bold text'''", "<b>bold text</b>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("'''bold text'''", "<b>bold text</b>");
     }
 
     @Test public void scansDoubleQuotes() {
@@ -24,12 +24,12 @@ public class EqualPairTest {
     }
 
     @Test public void translatesItalic() {
-        ParserTest.assertTranslatesTo("''italic text''", "<i>italic text</i>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("''italic text''", "<i>italic text</i>");
     }
 
     @Test public void translatesBoldItalic() {
         ParserTest.assertTranslatesTo("'''''stuff&nonsense'''''",
-                "<b><i>stuff&amp;nonsense</i>" + HtmlElement.endl + "</b>" + HtmlElement.endl);
+                "<b><i>stuff&amp;nonsense</i></b>");
     }
 
     @Test public void ignoresAdjacentItalics() {
@@ -37,7 +37,7 @@ public class EqualPairTest {
     }
 
     @Test public void translatesItalicQuote() {
-        ParserTest.assertTranslatesTo("'''''", "<i>'</i>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("'''''", "<i>'</i>");
     }
 
     @Test public void scansDoubleDashes() {
@@ -46,8 +46,8 @@ public class EqualPairTest {
     }
 
     @Test public void translatesStrike() {
-        ParserTest.assertTranslatesTo("--some text--", "<span class=\"strike\">some text</span>" + HtmlElement.endl);
-        ParserTest.assertTranslatesTo("--embedded-dash--", "<span class=\"strike\">embedded-dash</span>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("--some text--", "<span class=\"strike\">some text</span>");
+        ParserTest.assertTranslatesTo("--embedded-dash--", "<span class=\"strike\">embedded-dash</span>");
     }
 
     @Test public void testEvilExponentialMatch() throws Exception {
