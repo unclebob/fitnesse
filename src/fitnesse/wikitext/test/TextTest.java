@@ -19,7 +19,7 @@ public class TextTest {
         ParserTest.assertTranslatesTo("Aa", "Aa");
         ParserTest.assertTranslatesTo(".", ".");
         ParserTest.assertTranslatesTo("<hi>", "&lt;hi&gt;");
-        ParserTest.assertTranslatesTo("\rmore\rstuff\r", "morestuff");
+        ParserTest.assertTranslatesTo("http://fitnesse.org", "stuff");
     }
 
 }

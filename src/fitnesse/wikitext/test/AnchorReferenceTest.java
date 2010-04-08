@@ -22,7 +22,7 @@ public class AnchorReferenceTest {
         ParserTest.assertTranslatesTo(".#anchorName", anchorReferenceWithName("anchorName"));
         ParserTest.assertTranslatesTo(".#anchorName stuff", anchorReferenceWithName("anchorName") + " stuff");
         ParserTest.assertTranslatesTo("more.#anchorName stuff", "more" + anchorReferenceWithName("anchorName") + " stuff");
-        ParserTest.assertTranslatesTo("more\r\n.#anchorName stuff",
+        ParserTest.assertTranslatesTo("more\n.#anchorName stuff",
                 "more<br/>" + HtmlElement.endl
                 + anchorReferenceWithName("anchorName")
                 + " stuff");

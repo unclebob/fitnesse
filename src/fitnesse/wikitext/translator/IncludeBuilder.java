@@ -3,26 +3,52 @@ package fitnesse.wikitext.translator;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.CollapsibleRule;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
+import util.Maybe;
 
 public class IncludeBuilder implements Translation {
     public String toHtml(Translator translator, Symbol symbol) {
-        String option = symbol.childAt(0).getContent();
         String pageName = symbol.childAt(1).getContent();
-        String title = "Included page: " + translator.translate(symbol.childAt(1));
-        PageCrawler crawler = translator.getPage().getPageCrawler();
+        Maybe<String> includedContent = findIncludedData(translator.getPage(), pageName);
+        if (includedContent.isNothing()) {
+            return translator.formatError(includedContent.because());
+        }
+        else {
+            String option = symbol.childAt(0).getContent();
+            String collapseState = option.equals("-setup") ? CollapsibleRule.ClosedState : CollapsibleRule.OpenState;
+            String title = "Included page: " + translator.translate(symbol.childAt(1));
+            return CollapsibleBuilder.generateHtml(collapseState, title, includedContent.getValue());
+        }
+    }
+
+    private Maybe<String> findIncludedData(WikiPage includingPage, String pageName) {
+        PageCrawler crawler = includingPage.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPagePath pagePath = PathParser.parse(pageName);
-        WikiPage includedPage;
         try {
-            includedPage = crawler.getSiblingPage(translator.getPage(), pagePath);
-            if (isParentOf(includedPage, translator.getPage()))
-               return translator.translate(new Symbol(SymbolType.Meta).add(String.format("Error! Cannot include parent page (%s).\n", pageName)));
-            else {
-                String collapseState = option.equals("-setup") ? CollapsibleRule.ClosedState : CollapsibleRule.OpenState;
-                return CollapsibleBuilder.generateHtml(collapseState, title, includedPage.getData().getHtml());
+            WikiPage includedPage = crawler.getSiblingPage(includingPage, pagePath);
+            if (includedPage == null) {
+                if (includingPage instanceof ProxyPage) {
+                    ProxyPage proxy = (ProxyPage) includingPage;
+                    String host = proxy.getHost();
+                    int port = proxy.getHostPort();
+                    try {
+                        ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath);
+                        return new Maybe<String>(remoteIncludedPage.getData().getHtml());
+                    }
+                    catch (Exception e) {
+                        return Maybe.nothingBecause("Remote page \" + host + \":\" + port + \"/\" + pageName + \" does not exist.\n");
+                    }
+                } else {
+                    return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
+                }
             }
-        } catch (Exception e) {
+            else if (isParentOf(includedPage, includingPage))
+               return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
+            else {
+                return new Maybe<String>(includedPage.getData().getHtml());
+            }
+        }
+        catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }

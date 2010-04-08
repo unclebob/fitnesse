@@ -71,4 +71,8 @@ public class Translator {
             return result.toString();
         }
     }
+
+    public String formatError(String message) {
+        return translate(new Symbol(SymbolType.Meta).add(message));
+    }
 }

@@ -1,5 +1,7 @@
 package fitnesse.html;
 
+import fitnesse.wikitext.Utils;
+
 public class HtmlText extends HtmlElement {
     private String text;
 
@@ -7,11 +9,6 @@ public class HtmlText extends HtmlElement {
 
     @Override
     public String html() {
-        return text
-                .replaceAll("\r", "")
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;");
+        return Utils.escapeHTML(text);
     }
 }
