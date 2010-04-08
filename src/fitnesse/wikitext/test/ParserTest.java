@@ -48,6 +48,10 @@ public class ParserTest {
         assertEquals(expected, translateTo(page, input));
     }
 
+    public static void assertTranslatesTo(WikiPage page, String expected) throws Exception {
+        assertEquals(expected, translateTo(page));
+    }
+
     public static String translateTo(WikiPage page, String input) {
         return new Translator(page).translateToHtml(input);
     }

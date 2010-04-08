@@ -16,7 +16,8 @@ public class SymbolProvider {
         dispatch.put('!', new SymbolType[] {
                 SymbolType.HashTable, SymbolType.HeaderLine, SymbolType.Literal, SymbolType.Collapsible,
                 SymbolType.AnchorName, SymbolType.Contents, SymbolType.CenterLine, SymbolType.Define,
-                SymbolType.Include, SymbolType.NoteLine, SymbolType.Path, SymbolType.Style, SymbolType.Table });
+                SymbolType.Include, SymbolType.Meta, SymbolType.NoteLine, SymbolType.Path, SymbolType.Style,
+                SymbolType.Table });
         for (char letter = 'a'; letter <= 'z'; letter++) dispatch.put(letter, new SymbolType[] {});
         for (char letter = 'A'; letter <= 'Z'; letter++) dispatch.put(letter, new SymbolType[] {});
         for (char digit = '0'; digit <= '9'; digit++) dispatch.put(digit, new SymbolType[] {});

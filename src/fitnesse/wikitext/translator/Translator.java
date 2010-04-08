@@ -2,10 +2,7 @@ package fitnesse.wikitext.translator;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import util.Maybe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Translator {
@@ -32,6 +29,7 @@ public class Translator {
         translations.put(SymbolType.Include, new IncludeBuilder());
         translations.put(SymbolType.Italic, new HtmlBuilder("i").body(0).inline());
         translations.put(SymbolType.List, new ListBuilder());
+        translations.put(SymbolType.Meta, new HtmlBuilder("span").body(0).attribute("class", "meta").inline());
         translations.put(SymbolType.Newline, new HtmlBuilder("br"));
         translations.put(SymbolType.NoteLine, new HtmlBuilder("span").body(0).attribute("class", "note").inline());
         translations.put(SymbolType.Path, new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
@@ -50,10 +48,10 @@ public class Translator {
 
     public String translateToHtml(String input) {
         Symbol list = Parser.make(currentPage,input).parse();
-        return translateToHtml(list);
+        return translateList(list);
     }
 
-    public String translateToHtml(Symbol list) {
+    public String translateList(Symbol list) {
         StringBuilder result = new StringBuilder();
         for (Symbol symbol : list.getChildren()) {
             result.append(translate(symbol));

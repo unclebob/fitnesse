@@ -40,6 +40,14 @@ public class IncludeTest {
         assertContains(result, "<a href=\"PageOne.PageTwo.SetUp\">");
     }
 
+    @Test public void doesNotIncludeParent() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage parent = root.makePage("ParentPage", "stuff");
+        WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage\n");
+        ParserTest.assertTranslatesTo(currentPage,
+                "<span class=\"meta\">Error! Cannot include parent page (&lt;ParentPage).\n</span>");
+
+    }
     private void assertContains(String result, String substring) {
         assertTrue(result.indexOf(substring) >= 0);
     }

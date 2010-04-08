@@ -29,7 +29,7 @@ public class Paths {
 
         public boolean visit(Symbol node) {
             if (node.getType() == SymbolType.Path) {
-                result.add(new Translator(page).translateToHtml(node.childAt(0)));
+                result.add(new Translator(page).translate(node.childAt(0)));
             }
             return true;
         }

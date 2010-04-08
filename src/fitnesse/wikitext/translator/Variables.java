@@ -24,7 +24,7 @@ public class Variables {
     public Maybe<String> getValue(String name) {
         Maybe<Symbol> symbol = getSymbol(name);
         if (symbol.isNothing()) return Maybe.noString;
-        return new Maybe<String>(new Translator(page).translateToHtml(symbol.getValue()));
+        return new Maybe<String>(new Translator(page).translate(symbol.getValue()));
     }
 
     private class TreeWalker implements SymbolTreeWalker {

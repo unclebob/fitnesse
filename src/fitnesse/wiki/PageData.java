@@ -7,7 +7,6 @@ import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.Scanner;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.translator.Paths;
 import fitnesse.wikitext.translator.Translator;
@@ -270,7 +269,7 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(String content, WikiPage context) throws Exception {
-        return new Translator(context).translateToHtml(getSyntaxTree());
+        return new Translator(context).translateList(getSyntaxTree());
     }
 
   public void setWikiPage(WikiPage page) {
