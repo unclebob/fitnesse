@@ -35,7 +35,7 @@ public class TableTest {
     }
 
     @Test public void ignoreMostMarkupInLiteralTable() {
-        ParserTest.assertTranslatesTo("!|''a''|\n", tableWithCell("''a''"));
+        ParserTest.assertTranslatesTo("!|''<a''|\n", tableWithCell("''&lt;a''"));
     }
 
     @Test public void evaluatesExpressionsInLiteralTable() {

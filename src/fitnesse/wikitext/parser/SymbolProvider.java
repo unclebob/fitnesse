@@ -29,9 +29,12 @@ public class SymbolProvider {
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Collapsible, SymbolType.CloseCollapsible, SymbolType.HorizontalRule, SymbolType.Bold,
-            SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord});
+            SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord, SymbolType.Text });
     }
 
+    public static final SymbolType[]literalTableTypes = {
+            SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
+    
     private HashMap<Character, SymbolType[]> currentDispatch = dispatch;
     private SymbolType[] currentTypes;
     private int currentIndex;

@@ -31,7 +31,7 @@ public class ParserTest {
             scanner.moveNext();
             if (scanner.isEnd()) break;
             if (result.length() > 0) result.append(",");
-            Token current = scanner.getCurrent();
+            Symbol current = scanner.getCurrent();
             String name = current.getType().toString();
             result.append(name);
             String content = current.getContent();

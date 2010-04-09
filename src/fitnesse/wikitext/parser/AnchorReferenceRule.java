@@ -7,7 +7,7 @@ import java.util.List;
 public class AnchorReferenceRule extends Rule {
     @Override
     public Maybe<Symbol> parse(Parser parser) {
-        List<Token> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Text});
+        List<Symbol> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Text});
         if (tokens.size() == 0) return Symbol.Nothing;
 
         String anchor = tokens.get(0).getContent();

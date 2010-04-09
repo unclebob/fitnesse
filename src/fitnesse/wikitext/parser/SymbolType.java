@@ -1,17 +1,17 @@
 package fitnesse.wikitext.parser;
 
 public enum SymbolType {
-    Alias(new Matcher().string("[[").ruleClass(AliasRule.class)),
-    List(new Matcher().startLine().whitespace().string("*").ruleClass(ListRule.class)),
-    Comment(new Matcher().startLine().string("#").ruleClass(CommentRule.class)),
+    Alias(new Matcher().string("[["), new AliasRule()),
+    List(new Matcher().startLine().whitespace().string("*"), new ListRule()),
+    Comment(new Matcher().startLine().string("#"), new CommentRule()),
     Whitespace(new Matcher().whitespace()),
     Newline(new Matcher().string("\n")),
     Colon(new Matcher().string(":")),
     Comma(new Matcher().string(",")),
-    Evaluator(new Matcher().string("${=").ruleClass(EvaluatorRule.class)),
+    Evaluator(new Matcher().string("${="), new EvaluatorRule()),
     CloseEvaluator(new Matcher().string("=}")),
-    Variable(new Matcher().string("${").ruleClass(VariableRule.class)),
-    Preformat(new Matcher().string("{{{").ruleClass(LiteralRule.class)),
+    Variable(new Matcher().string("${"), new VariableRule()),
+    Preformat(new Matcher().string("{{{"), new LiteralRule()),
     ClosePreformat(new Matcher().string("}}}")),
     OpenParenthesis(new Matcher().string("(")),
     OpenBrace(new Matcher().string("{")),
@@ -22,27 +22,27 @@ public enum SymbolType {
     CloseLiteral(new Matcher().string("-!")),
     CloseCollapsible(new Matcher().startLine().repeat('*').string("!")),
     HorizontalRule(new Matcher().string("---").repeat('-')),
-    Bold(new Matcher().string("'''").ruleClass(EqualPairRule.class)),
-    Italic(new Matcher().string("''").ruleClass(EqualPairRule.class)),
-    Strike(new Matcher().string("--").ruleClass(EqualPairRule.class)),
-    AnchorReference(new Matcher().string(".#").ruleClass(AnchorReferenceRule.class)),
+    Bold(new Matcher().string("'''"), new EqualPairRule()),
+    Italic(new Matcher().string("''"), new EqualPairRule()),
+    Strike(new Matcher().string("--"), new EqualPairRule()),
+    AnchorReference(new Matcher().string(".#"), new AnchorReferenceRule()),
 
-    Table(new Matcher().startLine().string(new String[] {"|", "!|"}).ruleClass(TableRule.class)),
+    Table(new Matcher().startLine().string(new String[] {"|", "!|"}), new TableRule()),
     EndCell(new Matcher().string(new String[] {"|\n|", "|\n", "|"})),
     
-    HashTable(new Matcher().string("!{").ruleClass(HashTableRule.class)),
-    HeaderLine(new Matcher().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"}).ruleClass(LineRule.class)),
-    Literal(new Matcher().string("!-").ruleClass(LiteralRule.class)),
-    Collapsible(new Matcher().startLine().string("!").repeat('*').ruleClass(CollapsibleRule.class)),
-    AnchorName(new Matcher().string("!anchor").ruleClass(AnchorNameRule.class)),
-    CenterLine(new Matcher().string(new String[] {"!c", "!C"}).ruleClass(LineRule.class)),
-    Contents(new Matcher().string("!contents").ruleClass(ContentsRule.class)),
-    Define(new Matcher().startLine().string("!define").ruleClass(DefineRule.class)),
-    Include(new Matcher().startLine().string("!include").ruleClass(IncludeRule.class)),
-    Meta(new Matcher().string("!meta").ruleClass(LineRule.class)),
-    NoteLine(new Matcher().string("!note").ruleClass(LineRule.class)),
-    Path(new Matcher().startLine().string("!path").ruleClass(LineRule.class)),
-    Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}).ruleClass(StyleRule.class)),
+    HashTable(new Matcher().string("!{"), new HashTableRule()),
+    HeaderLine(new Matcher().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"}), new LineRule()),
+    Literal(new Matcher().string("!-"), new LiteralRule()),
+    Collapsible(new Matcher().startLine().string("!").repeat('*'), new CollapsibleRule()),
+    AnchorName(new Matcher().string("!anchor"), new AnchorNameRule()),
+    CenterLine(new Matcher().string(new String[] {"!c", "!C"}), new LineRule()),
+    Contents(new Matcher().string("!contents"), new ContentsRule()),
+    Define(new Matcher().startLine().string("!define"), new DefineRule()),
+    Include(new Matcher().startLine().string("!include"), new IncludeRule()),
+    Meta(new Matcher().string("!meta"), new LineRule()),
+    NoteLine(new Matcher().string("!note"), new LineRule()),
+    Path(new Matcher().startLine().string("!path"), new LineRule()),
+    Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}), new StyleRule()),
 
     WikiWord(),
     Text(),
@@ -66,9 +66,16 @@ public enum SymbolType {
     }
 
     private Matcher matcher;
+    private Rule rule;
 
     SymbolType() { this.matcher = new Matcher().noMatch(); }
     SymbolType(Matcher matcher) { this.matcher = matcher; }
+    SymbolType(Matcher matcher, Rule rule) {
+        this.matcher = matcher;
+        this.rule = rule;
+    }
+
+    public Rule getRule() { return rule; }
 
     public TokenMatch makeMatch(ScanString input) { return matcher.makeMatch(this, input); }
 }

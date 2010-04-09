@@ -64,13 +64,13 @@ public class Parser {
             Scanner backup = new Scanner(scanner);
             scanner.moveNextIgnoreFirst(provider, ignore);
             if (scanner.isEnd()) break;
-            Token currentToken = scanner.getCurrent();
+            Symbol currentToken = scanner.getCurrent();
             if (contains(ends, currentToken.getType())) {
                 scanner.copy(backup);
                 break;
             }
             if (contains(terminators, currentToken.getType())) break;
-            Rule rule = currentToken.getRule();
+            Rule rule = currentToken.getType().getRule();
             if (rule == null) {
                 result.add(currentToken);
                 ignore.clear();

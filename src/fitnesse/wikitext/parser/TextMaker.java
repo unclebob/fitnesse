@@ -4,9 +4,9 @@ public class TextMaker {
     public TokenMatch make(SymbolProvider provider, String text) {
         if (provider.hasType(SymbolType.WikiWord)) {
             int length = wikiWordPathLength(text);
-            if (length > 0) return new TokenMatch(new Token(SymbolType.WikiWord, text.substring(0, length)), length);
+            if (length > 0) return new TokenMatch(new Symbol(SymbolType.WikiWord, text.substring(0, length)), length);
         }
-        return new TokenMatch(new Token(SymbolType.Text, text), text.length());
+        return new TokenMatch(new Symbol(SymbolType.Text, text), text.length());
     }
 
     public int wikiWordPathLength(String text) {

@@ -12,13 +12,15 @@ public class IncludeTest {
     }
 
     @Test public void parsesIncludes() {
-        ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord]]");
+        ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord], Newline]");
         ParserTest.assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord]]");
+        ParserTest.assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord]]");
+        ParserTest.assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord], Text]");
     }
 
     @Test public void translatesIncludedSibling() throws Exception {
         TestRoot root = new TestRoot();
-        WikiPage currentPage = root.makePage("PageOne", "!include PageTwo\n");
+        WikiPage currentPage = root.makePage("PageOne", "!include PageTwo");
         root.makePage("PageTwo", "page ''two''");
 
         String result = ParserTest.translateTo(currentPage);
@@ -31,7 +33,7 @@ public class IncludeTest {
     @Test public void translatesSetup() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage parent = root.makePage("PageOne");
-        WikiPage child = root.makePage(parent, "PageTwo", "!include -setup >SetUp\n");
+        WikiPage child = root.makePage(parent, "PageTwo", "!include -setup >SetUp");
         root.makePage(child, "SetUp", "page ''setup''");
 
         String result = ParserTest.translateTo(child);
@@ -43,7 +45,7 @@ public class IncludeTest {
     @Test public void doesNotIncludeParent() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage parent = root.makePage("ParentPage", "stuff");
-        WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage\n");
+        WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage");
         ParserTest.assertTranslatesTo(currentPage,
                 "<span class=\"meta\">Error! Cannot include parent page (&lt;ParentPage).\n</span>");
 

@@ -40,7 +40,7 @@ public class Symbol {
     }
 
     public Symbol add(String text) {
-        children.add(new Token(SymbolType.Text, text));
+        children.add(new Symbol(SymbolType.Text, text));
         return this;
     }
 

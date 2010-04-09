@@ -16,7 +16,7 @@ public class AliasRule extends Rule {
 
         Symbol link = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.CloseBracket).parse();
 
-        List<Token> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.CloseBracket});
+        List<Symbol> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.CloseBracket});
         if (tokens.size() == 0) return Symbol.Nothing;
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Alias)

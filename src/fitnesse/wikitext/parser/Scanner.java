@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Scanner {
 
-    private static final Token endToken = new Token(SymbolType.Empty);
+    private static final Symbol endToken = new Symbol(SymbolType.Empty);
 
     private ScanString input;
-    private Token currentToken;
+    private Symbol currentToken;
     private int next;
 
     public Scanner(String input) {
@@ -27,7 +27,7 @@ public class Scanner {
     public boolean isType(SymbolType type) { return currentToken.getType() == type; }
     public String getCurrentContent() { return currentToken.getContent(); }
     public SymbolType getCurrentType() { return currentToken.getType(); }
-    public Token getCurrent() { return currentToken; }
+    public Symbol getCurrent() { return currentToken; }
 
     public void copy(Scanner other) {
         input = new ScanString(other.input);
@@ -35,11 +35,11 @@ public class Scanner {
         currentToken = other.currentToken;
     }
 
-    public List<Token> nextTokens(SymbolType[] symbolTypes) {
-        ArrayList<Token> tokens = new ArrayList<Token>();
+    public List<Symbol> nextTokens(SymbolType[] symbolTypes) {
+        ArrayList<Symbol> tokens = new ArrayList<Symbol>();
         for (SymbolType type: symbolTypes) {
             moveNext();
-            if (!isType(type)) return new ArrayList<Token>();
+            if (!isType(type)) return new ArrayList<Symbol>();
             tokens.add(getCurrent());
         }
         return tokens;
@@ -50,13 +50,13 @@ public class Scanner {
         while (!input.isEnd()) {
             TokenMatch match = terminator.makeMatch(input);
             if (match.isMatch()) {
-                currentToken = new Token(SymbolType.Text, input.substringFrom(next));
+                currentToken = new Symbol(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset();
                 return terminator;
             }
             input.moveNext();
         }
-        currentToken = new Token(SymbolType.Text, input.substringFrom(next));
+        currentToken = new Symbol(SymbolType.Text, input.substringFrom(next));
         next = input.getOffset();
         return SymbolType.Empty;
     }
@@ -72,7 +72,7 @@ public class Scanner {
     public void moveNextIgnoreFirst(SymbolProvider provider, List<SymbolType> ignoreFirst) {
         input.setOffset(next);
         int newNext = next;
-        Token matchToken = null;
+        Symbol matchToken = null;
         while (!input.isEnd()) {
             for (SymbolType candidate: provider.candidates(input.charAt(0))) {
                 if (input.getOffset() != next || !contains(ignoreFirst, candidate)) {

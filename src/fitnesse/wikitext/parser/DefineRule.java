@@ -7,7 +7,7 @@ public class DefineRule extends Rule {
     @Override
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
-        List<Token> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text, SymbolType.Whitespace});
+        List<Symbol> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text, SymbolType.Whitespace});
         if (tokens.size() == 0) return Symbol.Nothing;
 
         String name = tokens.get(1).getContent();

@@ -3,9 +3,7 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class TableRule extends Rule {
-    private static final SymbolType[]literalTableTypes = {
-            SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
-    
+
     @Override
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
@@ -27,8 +25,7 @@ public class TableRule extends Rule {
 
     private Symbol parseCell(Scanner scanner, String content) {
         if (content.startsWith("!")) {
-            //todo: the text should be Literal
-            return Parser.make(getPage(), scanner, new SymbolProvider().setTypes(literalTableTypes), SymbolType.EndCell)
+            return Parser.make(getPage(), scanner, new SymbolProvider().setTypes(SymbolProvider.literalTableTypes), SymbolType.EndCell)
                     .parse();
         }
         else
