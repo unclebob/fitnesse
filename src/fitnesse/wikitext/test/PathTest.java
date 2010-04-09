@@ -22,6 +22,15 @@ public class PathTest {
     }
 
     @Test
+    public void translatesVariableInPath() throws Exception {
+        WikiPage page = new TestRoot().makePage("TestPage", "!define x {stuff}\n!path ${x}y\n");
+        ParserTest.assertTranslatesTo(page, 
+                "<span class=\"meta\">variable defined: x=stuff</span>" + HtmlElement.endl +
+                        "<br/>" + HtmlElement.endl +
+                        "<span class=\"meta\">classpath: stuffy</span><br/>" + HtmlElement.endl);
+    }
+
+    @Test
     public void findsDefinitions() throws Exception {
         WikiPage page = new TestRoot().makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
         List<String> paths = new Paths(page, ParserTest.parse(page)).getPaths();

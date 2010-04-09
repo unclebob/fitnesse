@@ -27,6 +27,7 @@ public class TableRule extends Rule {
 
     private Symbol parseCell(Scanner scanner, String content) {
         if (content.startsWith("!")) {
+            //todo: the text should be Literal
             return Parser.make(getPage(), scanner, new SymbolProvider().setTypes(literalTableTypes), SymbolType.EndCell)
                     .parse();
         }
