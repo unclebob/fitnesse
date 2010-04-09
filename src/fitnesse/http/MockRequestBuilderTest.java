@@ -1,8 +1,9 @@
-package fitnesse;
+package fitnesse.http;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import fitnesse.http.MockRequestBuilder;
 import org.junit.Test;
 
 import fitnesse.http.Request;

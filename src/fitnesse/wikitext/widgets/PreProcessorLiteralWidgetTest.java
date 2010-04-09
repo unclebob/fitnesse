@@ -32,6 +32,12 @@ public class PreProcessorLiteralWidgetTest extends WidgetTestCase {
     assertEquals("abc", root.getLiteral(0));
   }
 
+  public void testThatNewlinesShouldBeRenderedAsLinebreak() throws Exception {
+    PreProcessorLiteralWidget widget = new PreProcessorLiteralWidget(root, "!-abc\ndef\nxyz-!");
+    assertEquals("!lit?0?", widget.render());
+    assertEquals("abc<br/>def<br/>xyz", root.getLiteral(0));
+  }
+
   public void testEscapedLiteral() throws Exception {
     PreProcessorLiteralWidget widget = new PreProcessorLiteralWidget(root, "!< <br> >!");
     assertEquals("!lit?0?", widget.render());

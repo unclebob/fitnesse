@@ -9,7 +9,7 @@ In the standard distribution there is a file named ''run.bat'' for windows and '
         -e <days> {14} Number of days before page versions expire
         -o omit updates
         -a {user:pwd | user-file-name} enable authentication.
-        -i Install only, do not run fitnesse after install. 
+        -i Install only, do not run fitnesse after install.
         -c <command> Run the command (same as restful url) and then exit.  Return status is the number of test pages that failed as a result of the command.
 }}}
 The values shown between braces are the default values.
@@ -20,8 +20,10 @@ You can also pass these options to the ''run.bat'' and ''run.sh'' scripts. The '
 
 See PasswordFile for a description of how to set up per user authentication.
 
+For more details, see CommandLineArguments.
+
 !2 Running Rest Commands using the -c option.
-See CommandLineRestCommands
+See ControllingFitNesseFromTheCommandLine
 
 !2 Stopping FitNesse
 

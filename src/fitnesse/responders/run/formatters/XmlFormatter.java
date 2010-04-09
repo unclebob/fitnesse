@@ -56,6 +56,7 @@ public class XmlFormatter extends BaseFormatter {
 
   public void testComplete(WikiPage test, TestSummary testSummary)
     throws Exception {
+    super.testComplete(test, testSummary);
     processTestResults(test.getName(), testSummary);
   }
 
@@ -65,7 +66,7 @@ public class XmlFormatter extends BaseFormatter {
     currentResult = new TestExecutionReport.TestResult();
     testResponse.results.add(currentResult);
     currentResult.startTime = getTime();
-    currentResult.content = outputBuffer.toString();
+    currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
     outputBuffer = null;
     addCountsToResult(testSummary);
     currentResult.relativePageName = relativeTestName;
@@ -91,6 +92,7 @@ public class XmlFormatter extends BaseFormatter {
   }
 
   public void allTestingComplete() throws Exception {
+    super.allTestingComplete();
     writeResults();
   }
 

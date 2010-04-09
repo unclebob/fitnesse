@@ -1,0 +1,8 @@
+In order to support automation and contionuous integration efforts, FitNesse allows test execution from outside the wiki.
+
+There are several ways of doing this:
+
+|''Method''                                                                   |''Benefits''                                                                                        |
+|[[Test execution on the command line][ControllingFitnesseFromTheCommandLine]]|[[Ant/Maven support][ControllingFitnesseFromTheCommandLine#antIntegration]]                         |
+|[[Test execution through JUnit][RunningFromJunit]]                           |IDE integration, [[Maven support][RunningFromMaven]], fixture debugging, JUnit XML result generation|
+|[[!-FitNesse-! Automation with REST commands][RestfulServices]]              |Can be used with any program that can send HTTP requests                                            |

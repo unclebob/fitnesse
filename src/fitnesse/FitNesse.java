@@ -2,10 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
+import fitnesse.http.*;
 import fitnesse.socketservice.SocketService;
 import fitnesse.testutil.MockSocket;
 

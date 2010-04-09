@@ -24,7 +24,7 @@ public class PreProcessorLiteralWidget extends WikiWidget {
       if (match.group(0).charAt(1) == '<')
         escapedLiteral = true;
       literalText = match.group(1);
-      literalToRender = escapedLiteral ? Utils.escapeHTML(literalText) : literalText;
+      literalToRender = htmlify(literalText);
       literalNumber = this.parent.defineLiteral(literalToRender);
     }
   }
@@ -38,5 +38,17 @@ public class PreProcessorLiteralWidget extends WikiWidget {
       return "!<" + literalText + ">!";
     else
       return "!-" + literalToRender + "-!";
+  }
+
+  private String htmlify(String targetString) {
+    return replaceNewlinesWithHTMLBreaksIn(escapeIfNeeded(literalText));
+  }
+
+  private String escapeIfNeeded(String targetString) {
+    return escapedLiteral ? Utils.escapeHTML(targetString) : targetString;
+  }
+
+  private String replaceNewlinesWithHTMLBreaksIn(String targetString) {
+    return targetString.replaceAll("\n", "<br/>");
   }
 }

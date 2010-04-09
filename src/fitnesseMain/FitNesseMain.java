@@ -75,8 +75,12 @@ public class FitNesseMain {
     fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
     System.out.println("-----Command Complete-----");
     fitnesse.stop();
-    if (!dontExitAfterSingleCommand)
+    if (shouldExitAfterSingleCommand())
       System.exit(TestTextFormatter.finalErrorCount);
+  }
+
+  private static boolean shouldExitAfterSingleCommand() {
+    return !dontExitAfterSingleCommand;
   }
 
   private static FitNesseContext loadContext(Arguments arguments)

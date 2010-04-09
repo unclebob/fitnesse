@@ -15,6 +15,11 @@ public class JUnitHelper {
       ResultsListener resultsListener) {
       helper=new TestHelper(fitNesseDir, outputDir, resultsListener);
   }
+  
+  public void setDebugMode(boolean enabled) {
+    helper.setDebugMode(enabled);
+  }
+  
   public void assertTestPasses(String testName) throws Exception{
     assertPasses(testName, TestHelper.PAGE_TYPE_TEST,null);
   }

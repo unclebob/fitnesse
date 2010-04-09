@@ -101,6 +101,12 @@ public class HashWidgetTest {
 
   }
 
+  @Test
+  public void multiLineHash() throws Exception {
+    HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{\n a :  b ,  \n  c :   d   \n}");
+    assertThat(widget.render(), matches(HTML_FOR_ABCD_HASH));
+  }
+
   private Matcher<String> matches(String s) {
     return new RegularExpressionMatcher(s);
   }

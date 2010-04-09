@@ -368,7 +368,7 @@ public class ScriptTableTest {
       list(
         list("scriptTable_id_0", "4")
       ),
-      "[[Script], [check not, func, [4] pass(expected [3])]]"
+      "[[Script], [check not, func, [4] pass(is not [3])]]"
     );
   }
 

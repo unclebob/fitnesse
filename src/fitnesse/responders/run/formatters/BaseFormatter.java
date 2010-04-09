@@ -1,8 +1,11 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.responders.run.*;
-import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.ResultsListener;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
+import fitnesse.wiki.WikiPage;
 import util.DateTimeUtil;
 
 public abstract class BaseFormatter implements ResultsListener {
@@ -11,6 +14,9 @@ public abstract class BaseFormatter implements ResultsListener {
   protected FitNesseContext context;
   public static final BaseFormatter NULL = new NullFormatter();
   protected static long testTime;
+  public static int finalErrorCount = 0;
+  protected int testCount = 0;
+  protected int failCount = 0;
 
   public abstract void writeHead(String pageType) throws Exception;
 
@@ -35,13 +41,25 @@ public abstract class BaseFormatter implements ResultsListener {
   }
 
   public void allTestingComplete() throws Exception {
+    finalErrorCount = failCount;
   }
 
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
-  public void addMessageForBlankHtml() throws Exception
-  {}
+  @Override
+  public void testComplete(WikiPage test, TestSummary summary) throws Exception {
+    testCount++;
+    if (summary.wrong > 0) {
+      failCount++;
+    }
+    if (summary.exceptions > 0) {
+      failCount++;
+    }
+  }
+
+  public void addMessageForBlankHtml() throws Exception {
+  }
 
   public int getErrorCount() {
     return 0;
