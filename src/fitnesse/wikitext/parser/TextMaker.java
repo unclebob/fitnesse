@@ -1,12 +1,18 @@
 package fitnesse.wikitext.parser;
 
+import java.util.regex.Pattern;
+
 public class TextMaker {
+    public static final String eMailPattern = "[\\w-_.]+@[\\w-_.]+\\.[\\w-_.]+";
+
     public TokenMatch make(SymbolProvider provider, String text) {
         if (provider.hasType(SymbolType.WikiWord)) {
             int length = wikiWordPathLength(text);
             if (length > 0) return new TokenMatch(new Symbol(SymbolType.WikiWord, text.substring(0, length)), length);
         }
-        return new TokenMatch(new Symbol(SymbolType.Text, text), text.length());
+        return new TokenMatch(
+                new Symbol(Pattern.matches(eMailPattern, text) ? SymbolType.EMail : SymbolType.Text, text),
+                text.length());
     }
 
     public int wikiWordPathLength(String text) {

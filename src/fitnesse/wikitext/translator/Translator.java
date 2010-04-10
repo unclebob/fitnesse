@@ -22,15 +22,17 @@ public class Translator {
         translations.put(SymbolType.Comment, new CommentBuilder());
         translations.put(SymbolType.Contents, new ContentsBuilder());
         translations.put(SymbolType.Define, new DefineBuilder());
+        translations.put(SymbolType.EMail, new HtmlBuilder("a").body(-1).attribute("href", -1, "mailto:").inline());
         translations.put(SymbolType.Evaluator, new EvaluatorBuilder());
         translations.put(SymbolType.HashTable, new HashTableBuilder());
         translations.put(SymbolType.HeaderLine, new HeaderLineBuilder());
         translations.put(SymbolType.HorizontalRule, new HorizontalRuleBuilder());
         translations.put(SymbolType.Include, new IncludeBuilder());
         translations.put(SymbolType.Italic, new HtmlBuilder("i").body(0).inline());
+        translations.put(SymbolType.Link, new LinkBuilder());
         translations.put(SymbolType.List, new ListBuilder());
         translations.put(SymbolType.Meta, new HtmlBuilder("span").body(0).attribute("class", "meta").inline());
-        translations.put(SymbolType.Newline, new HtmlBuilder("br"));
+        translations.put(SymbolType.Newline, new HtmlBuilder("br").inline());
         translations.put(SymbolType.NoteLine, new HtmlBuilder("span").body(0).attribute("class", "note").inline());
         translations.put(SymbolType.Path, new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
         translations.put(SymbolType.Preformat, new HtmlBuilder("pre").body(-1));

@@ -1,6 +1,5 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
@@ -28,6 +27,7 @@ public class AliasTest {
         ParserTest.assertTranslatesTo(page, "[[you're it][PageOne]]", link("you're it", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[PageOne][IgnoredPage]]", link("PageOne", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[tag][PageOne?edit]]", link("tag", "PageOne?edit"));
+        ParserTest.assertTranslatesTo(page, "[[tag][http://files/myfile]]", link("tag", "/files/myfile"));
     }
 
     private String link(String body, String href) {

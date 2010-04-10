@@ -125,7 +125,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     PageData data = root.getData();
     String content = "!define SOME_VARIABLE {Variable #1}\n!define ANOTHER_VARIABLE {Variable #2}";
     data.setContent(content);
-    assertSubString("SOME_VARIABLE=Variable #1</span>" + HtmlElement.endl + "<br/>" + HtmlElement.endl + "<span", data.getHtml());
+    assertSubString("SOME_VARIABLE=Variable #1</span>" + HtmlElement.endl + "<br/><span", data.getHtml());
     assertNotSubString("SOME_VARIABLE=Variable #1</span><br/><br/><span", data.getHtml());
   }
 

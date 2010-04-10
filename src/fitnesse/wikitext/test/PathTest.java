@@ -18,7 +18,7 @@ public class PathTest {
     public void translatesPaths() throws Exception {
         ParserTest.assertTranslatesTo("!path stuff", "<span class=\"meta\">classpath: stuff</span>");
         ParserTest.assertTranslatesTo("!path stuff\n",
-                "<span class=\"meta\">classpath: stuff</span><br/>" + HtmlElement.endl);
+                "<span class=\"meta\">classpath: stuff</span><br/>");
     }
 
     @Test
@@ -26,8 +26,7 @@ public class PathTest {
         WikiPage page = new TestRoot().makePage("TestPage", "!define x {stuff}\n!path ${x}y\n");
         ParserTest.assertTranslatesTo(page, 
                 "<span class=\"meta\">variable defined: x=stuff</span>" + HtmlElement.endl +
-                        "<br/>" + HtmlElement.endl +
-                        "<span class=\"meta\">classpath: stuffy</span><br/>" + HtmlElement.endl);
+                        "<br/><span class=\"meta\">classpath: stuffy</span><br/>");
     }
 
     @Test

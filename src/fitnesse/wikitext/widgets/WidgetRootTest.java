@@ -164,9 +164,9 @@ public class WidgetRootTest {
     PageData data = page.getData();
     String html = data.getHtml();
     assertEquals("<i>italics</i>"
-            + "<br/>" + HtmlElement.endl
+            + "<br/>"
             + "<b>bold</b>" 
-            + "<br/>" + HtmlElement.endl, html);
+            + "<br/>" , html);
   }
 
   @Test

@@ -33,17 +33,19 @@ public class HtmlBuilder implements Translation {
         return this;
     }
 
-    public HtmlBuilder attribute(final String name, final int index) {
+    public HtmlBuilder attribute(String name, int index) { return attribute(name, index, ""); }
+    
+    public HtmlBuilder attribute(final String name, final int index, final String prefix) {
         builders.add(new TagBuilder() {
             public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.addAttribute(name,
-                        index< 0 ? symbol.getContent() : translator.translate(symbol.childAt(index)));
+                tag.addAttribute(name, prefix +
+                        (index < 0 ? symbol.getContent() : translator.translate(symbol.childAt(index))));
             }
         });
         return this;
     }
 
-    public HtmlBuilder body(final int index) { return body(index, ""); }
+    public HtmlBuilder body(int index) { return body(index, ""); }
 
     public HtmlBuilder body(final int index, final String prefix) {
         builders.add(new TagBuilder() {

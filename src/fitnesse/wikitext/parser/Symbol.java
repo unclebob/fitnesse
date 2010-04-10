@@ -44,6 +44,10 @@ public class Symbol {
         return this;
     }
 
+    public void removeLastChild() {
+        children.remove(children.size() - 1);
+    }
+
     public Symbol childrenAfter(int after) {
         Symbol result = new Symbol(SymbolType.SymbolList);
         for (int i = after + 1; i < children.size(); i++) result.add(children.get(i));

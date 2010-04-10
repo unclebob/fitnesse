@@ -22,6 +22,7 @@ public class CollapsibleRule extends Rule {
         Symbol bodyText = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.CloseCollapsible).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
 
+        bodyText.removeLastChild();
         return new Maybe<Symbol>(new Symbol(SymbolType.Collapsible)
                 .add(state)
                 .add(titleText)

@@ -33,4 +33,12 @@ public class TextMakerTest {
         assertEquals("HiMom", match.getToken().getContent());
         assertEquals(5, match.getMatchLength());
     }
+
+    @Test
+    public void makesEMail() {
+        TokenMatch match = new TextMaker().make(provider, "bob@bl.org");
+        assertEquals(SymbolType.EMail, match.getToken().getType());
+        assertEquals("bob@bl.org", match.getToken().getContent());
+        assertEquals(10, match.getMatchLength());
+    }
 }

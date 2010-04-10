@@ -12,7 +12,8 @@ public class CollapsibleTest {
     }
 
     @Test public void parsesCollapsible() {
-        ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[Text, SymbolList[Text], SymbolList[Text, Newline]]]");
+        ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[Text, SymbolList[Text], SymbolList[Text]]]");
+        ParserTest.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
     }
 
     @Test public void translatesCollapsible() {
@@ -24,7 +25,7 @@ public class CollapsibleTest {
         ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",
                 sectionWithClass("hidden", "Closed"));
         
-        ParserTest.assertTranslatesTo("!**\n**!", "!**<br/>" + HtmlElement.endl + "**!");
+        ParserTest.assertTranslatesTo("!**\n**!", "!**<br/>**!");
     }
 
     private String sectionWithClass(String sectionClass, String image) {
@@ -39,8 +40,7 @@ public class CollapsibleTest {
         "\t</a>" + HtmlElement.endl +
         "&nbsp;" + HtmlElement.endl +
         "\t<span class=\"meta\">Some title</span>" + HtmlElement.endl +
-        "\t<div class=\"" + sectionClass + "\" id=\"1\"> content <br/>" + HtmlElement.endl +
-        "</div>" + HtmlElement.endl +
+        "\t<div class=\"" + sectionClass + "\" id=\"1\"> content </div>" + HtmlElement.endl +
         "</div>" + HtmlElement.endl;
     }
 }
