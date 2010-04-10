@@ -5,6 +5,8 @@ import util.Maybe;
 public class CollapsibleRule extends Rule {
     public static final String OpenState = "Open";
     public static final String ClosedState = "Closed";
+    public static final String InvisibleState = "Invisible";
+
     @Override
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
@@ -12,6 +14,10 @@ public class CollapsibleRule extends Rule {
         scanner.moveNext();
         if (scanner.getCurrentContent().equals(">")) {
             state = ClosedState;
+            scanner.moveNext();
+        }
+        else if (scanner.getCurrentContent().equals("<")) {
+            state = InvisibleState;
             scanner.moveNext();
         }
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;

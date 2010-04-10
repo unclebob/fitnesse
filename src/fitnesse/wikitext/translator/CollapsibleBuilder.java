@@ -11,11 +11,18 @@ public class CollapsibleBuilder implements Translation {
     public static void resetId() { nextId = 1; }
 
     public String toHtml(Translator translator, Symbol symbol) {
-        return generateHtml(
-                symbol.childAt(0).getContent(),
-                translator.translate(symbol.childAt(1)),
-                translator.translate(symbol.childAt(2))
-                );
+        String option = symbol.childAt(0).getContent();
+        String title = translator.translate(symbol.childAt(1));
+        String body = translator.translate(symbol.childAt(2));
+        return option.equals(CollapsibleRule.InvisibleState)
+                ? makeInvisibleSection(body)
+                : generateHtml(option, title, body);
+    }
+
+    private String makeInvisibleSection(String body) {
+        HtmlTag section = new HtmlTag("div", body);
+        section.addAttribute("class", "invisible");
+        return section.html();
     }
 
     public static String generateHtml(String state, String titleText, String bodyText) {
@@ -52,6 +59,8 @@ public class CollapsibleBuilder implements Translation {
     }
 
     private static String bodyClass(String state) {
-        return state == CollapsibleRule.OpenState ? "collapsable" : "hidden";
+        return state.equals(CollapsibleRule.OpenState) ? "collapsable"
+               : state.equals(CollapsibleRule.ClosedState) ? "hidden"
+               : "invisible";
     }
 }
