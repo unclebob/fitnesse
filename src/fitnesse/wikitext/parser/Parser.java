@@ -6,6 +6,8 @@ import util.Maybe;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static java.lang.System.arraycopy;
+
 public class Parser {
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
 
@@ -95,5 +97,19 @@ public class Parser {
         for (SymbolType terminator: terminators)
             if (currentType == terminator) return true;
         return false;
+    }
+
+    public Symbol parseToNewline(WikiPage page) {
+        return Parser.makeEnds(page, scanner, makeEndList()).parse();
+    }
+
+    public SymbolType[] makeEndList() {
+        SymbolType[] parentEnds = getEnds();
+        SymbolType[] parentTerminators = getTerminators();
+        SymbolType[] ends = new SymbolType[parentTerminators.length + parentEnds.length + 1];
+        arraycopy(parentEnds, 0, ends, 0, parentEnds.length);
+        arraycopy(parentTerminators, 0, ends, parentEnds.length, parentTerminators.length);
+        ends[parentEnds.length + parentTerminators.length] = SymbolType.Newline;
+        return ends;
     }
 }

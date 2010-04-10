@@ -11,6 +11,16 @@ import util.Maybe;
 public class ContentsRule extends Rule {
     @Override
     public Maybe<Symbol> parse(Parser parser) {
-        return new Maybe<Symbol>(new Symbol(SymbolType.Contents));
+        Scanner scanner = parser.getScanner();
+        Symbol result = scanner.getCurrent();
+
+        Symbol body = parser.parseToNewline(getPage());
+        for (Symbol option: body.getChildren()) {
+            if (option.getType() == SymbolType.Whitespace) continue;
+            if (!option.getContent().startsWith("-")) return Symbol.Nothing;
+            result.add(option);
+        }
+
+        return new Maybe<Symbol>(result);
     }
 }
