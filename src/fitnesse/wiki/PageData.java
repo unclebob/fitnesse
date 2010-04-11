@@ -10,10 +10,7 @@ import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.translator.Paths;
 import fitnesse.wikitext.translator.Translator;
-import fitnesse.wikitext.translator.VariableBuilder;
-import fitnesse.wikitext.translator.Variables;
 import fitnesse.wikitext.widgets.*;
-import util.Maybe;
 import util.StringUtil;
 
 import java.io.Serializable;
@@ -223,15 +220,7 @@ public class PageData implements Serializable {
     return getInitializedVariableRoot().getVariable(name);
   }
 
-    public Maybe<Symbol> getLocalVariableSymbol(String name) throws Exception {
-        return new Variables(wikiPage, getSyntaxTree()).getSymbol(name);
-    }
-
-    public Maybe<String> getLocalVariable(String name) throws Exception {
-        return new VariableBuilder().findVariableInPages(wikiPage, name);
-    }
-
-    private Symbol getSyntaxTree() throws Exception {
+    public Symbol getSyntaxTree() throws Exception {
         if (contentSyntaxTree == null) {
             contentSyntaxTree = Parser.make(wikiPage, getContent()).parse();
         }
@@ -269,7 +258,7 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(String content, WikiPage context) throws Exception {
-        return new Translator(context).translateList(getSyntaxTree());
+        return new Translator(context, getSyntaxTree()).translate();
     }
 
   public void setWikiPage(WikiPage page) {
@@ -281,7 +270,7 @@ public class PageData implements Serializable {
   }
 
   public List<String> getClasspaths() throws Exception {
-    return new Paths(wikiPage, getSyntaxTree()).getPaths();
+    return new Paths(new Translator(wikiPage, getSyntaxTree())).getPaths();
     //return getTextOfWidgets(classpathWidgetBuilder);
   }
 

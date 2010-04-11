@@ -25,6 +25,7 @@ public class ContentsBuilder implements Translation {
                 list.add(listItem);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException(e);
         }
         contentsDiv.add(list);
@@ -64,8 +65,13 @@ public class ContentsBuilder implements Translation {
             try {
                 PageData data = wikiPage.getData();
                 WikiPageProperties props = data.getProperties();
-                return props.has(PageData.PropertySUITES) ? props.get(PageData.PropertySUITES).trim() : "";
+                if (props.has(PageData.PropertySUITES)) {
+                    String propertyValue = props.get(PageData.PropertySUITES);
+                    if (propertyValue != null) return propertyValue.trim();
+                }
+                return "";
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new IllegalStateException(e);
             }
         }

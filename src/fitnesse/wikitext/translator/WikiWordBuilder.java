@@ -6,7 +6,6 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import util.GracefulNamer;
@@ -20,7 +19,7 @@ public class WikiWordBuilder implements Translation  {
         return buildLink(
                 translator.getPage(),
                 symbol.getContent(),
-                new HtmlText(formatWikiWord(translator.getPage(), symbol.getContent())).html());
+                new HtmlText(formatWikiWord(translator, symbol.getContent(), symbol)).html());
     }
 
     private String buildLink(WikiPage currentPage, String pagePath, String linkBody) {
@@ -53,8 +52,8 @@ public class WikiWordBuilder implements Translation  {
         return link.htmlInline();
     }
 
-    private String formatWikiWord(WikiPage page, String originalName) {
-        Maybe<String> regraceOption = new VariableBuilder().findVariable(page, WikiWordWidget.REGRACE_LINK);
+    private String formatWikiWord(Translator translator, String originalName, Symbol symbol) {
+        Maybe<String> regraceOption = new VariableBuilder().findVariable(translator, WikiWordWidget.REGRACE_LINK, symbol);
         //todo don't use the GracefulNamer for this.  It's only for java instance and variable names.  Write a different tool.
         return !regraceOption.isNothing() && regraceOption.getValue().equals("true") ? GracefulNamer.regrace(originalName) : originalName;
     }

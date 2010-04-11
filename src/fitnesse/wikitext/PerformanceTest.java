@@ -29,7 +29,7 @@ public class PerformanceTest {
     @Test
     public void NewParser() throws Exception {
         long start = System.currentTimeMillis();
-        String result = new Translator(new TestRoot().makePage("NewTest")).translateToHtml(pageContent);
+        String result = Translator.translateToHtml(new TestRoot().makePage("NewTest"), pageContent);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

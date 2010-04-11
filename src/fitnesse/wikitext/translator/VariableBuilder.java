@@ -9,28 +9,32 @@ public class VariableBuilder implements Translation {
 
     public String toHtml(Translator translator, Symbol symbol) {
         String name = symbol.childAt(0).getContent();
-        Maybe<String> variable = findVariable(translator.getPage(), name);
+        Maybe<String> variable = findVariable(translator, name, symbol);
         return variable.isNothing()
                 ? HtmlUtil.metaText("undefined variable: " + name)
                 : variable.getValue();
     }
 
-    public Maybe<String> findVariable(WikiPage currentPage, String name) {
-        Maybe<String> result = findVariableInPages(currentPage, name);
+    public Maybe<String> findVariable(Translator translator, String name, Symbol symbol) {
+        Maybe<String> result = findVariableInPages(translator, name, symbol);
         if (!result.isNothing()) return result;
         try {
-            String oldValue = currentPage.getData().getVariable(name);
+            String oldValue = translator.getPage().getData().getVariable(name);
             return oldValue == null ? Maybe.noString : new Maybe<String>(oldValue);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public Maybe<String> findVariableInPages(WikiPage currentPage, String name) {
+    private Maybe<String> findVariableInPages(Translator translator, String name, Symbol symbol) {
         try {
-            for (WikiPage page = currentPage; page != null; page = page.getParent()) {
-                Maybe<Symbol> result = page.getData().getLocalVariableSymbol(name);
-                if (!result.isNothing()) return new Maybe<String>(new Translator(currentPage).translate(result.getValue()));
+            Maybe<Symbol> result = new Variables(translator)
+                    .getSymbolBefore(name, symbol);
+            if (!result.isNothing()) return new Maybe<String>(translator.translate(result.getValue()));
+            
+            for (WikiPage page = translator.getPage().getParent(); page != null; page = page.getParent()) {
+                result = new Variables(new Translator(page, page.getData().getSyntaxTree())).getSymbol(name);
+                if (!result.isNothing()) return new Maybe<String>(translator.translate(result.getValue()));
                 if (page.getPageCrawler().isRoot(page)) break;
             }
         }

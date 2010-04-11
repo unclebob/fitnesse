@@ -10,17 +10,15 @@ import java.util.List;
 
 
 public class Paths {
-    private Symbol syntaxTree;
-    private WikiPage page;
+    private Translator translator;
 
-    public Paths(WikiPage page, Symbol syntaxTree) {
-        this.syntaxTree = syntaxTree;
-        this.page = page;
+    public Paths(Translator translator) {
+        this.translator = translator;
     }
 
     public List<String> getPaths() {
         TreeWalker walker = new TreeWalker();
-        syntaxTree.walk(walker);
+        translator.getSyntaxTree().walk(walker);
         return walker.result;
     }
 
@@ -29,7 +27,7 @@ public class Paths {
 
         public boolean visit(Symbol node) {
             if (node.getType() == SymbolType.Path) {
-                result.add(new Translator(page).translate(node.childAt(0)));
+                result.add(translator.translate(node.childAt(0)));
             }
             return true;
         }

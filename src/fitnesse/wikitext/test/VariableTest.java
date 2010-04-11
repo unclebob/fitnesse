@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
@@ -16,7 +17,15 @@ public class VariableTest {
         ParserTest.assertTranslatesTo(pageOne, "${z}", "<span class=\"meta\">undefined variable: z</span>");
     }
 
-    @Test public void translatesVariablesFromParent() throws Exception {
+    @Test public void evaluatesVariablesAtCurrentLocation() throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {y}\n${x}\n!define x {z}\n${x}");
+        ParserTest.assertTranslatesTo(pageOne,
+                "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +
+                "<br/>y<br/><span class=\"meta\">variable defined: x=z</span>" + HtmlElement.endl +
+                "<br/>z");
+    }
+
+    @Test public void evaluatesVariablesFromParent() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage parent = root.makePage("PageOne", "!define x {y}\n");
         WikiPage child = root.makePage(parent, "PageTwo");

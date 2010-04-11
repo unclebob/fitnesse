@@ -3,9 +3,12 @@ package fitnesse.wikitext.test;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.test.ParserTest;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.test.TestRoot;
+import fitnesse.wikitext.translator.Translator;
+import fitnesse.wikitext.translator.VariableBuilder;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -34,7 +37,8 @@ public class DefineTest {
         WikiPage pageOne = new TestRoot().makePage("PageOne");
         PageData data = new PageData(pageOne, input);
         pageOne.commit(data);
-        assertEquals(definedValue, pageOne.getData().getLocalVariable(name).getValue());
+        assertEquals(definedValue,
+                new VariableBuilder().findVariable(new Translator(pageOne, ParserTest.parse(pageOne)), name, null).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {

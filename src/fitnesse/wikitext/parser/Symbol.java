@@ -59,10 +59,10 @@ public class Symbol {
     }
 
     private boolean walk(Symbol symbol, SymbolTreeWalker walker) {
-        if (!walker.visit(symbol)) return false;
         for (Symbol child: symbol.children) {
             if (!walk(child, walker)) return false;
         }
+        if (!walker.visit(symbol)) return false;
         return true;
     }
 }

@@ -53,11 +53,11 @@ public class ParserTest {
     }
 
     public static String translateTo(WikiPage page, String input) {
-        return new Translator(page).translateToHtml(input);
+        return Translator.translateToHtml(page, input);
     }
 
     public static String translateTo(WikiPage page) throws Exception {
-        return translateTo(page, page.getData().getContent());
+        return page.getData().getHtml();
     }
 
     public static void assertParses(String input, String expected) {
