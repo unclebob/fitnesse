@@ -1,9 +1,7 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
@@ -24,13 +22,6 @@ public class ContentsTest {
                  contentsWithPages("PageThree", "PageTwo"));
      }
 
-    @Test public void translatesContentsWithFilters() throws Exception {
-        WikiPage pageOne = makePages();
-        setProperties(pageOne.getChildPage("PageTwo"), new String[]{"Suites=F1"});
-         ParserTest.assertTranslatesTo(pageOne, "!contents -f",
-                 contentsWithPages("PageThree", "PageTwo (F1)"));
-     }
-
     private WikiPage makePages() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage pageOne = root.makePage("PageOne");
@@ -39,17 +30,6 @@ public class ContentsTest {
         return pageOne;
     }
 
-    private void setProperties(WikiPage page, String[] propList) throws Exception {
-      PageData data = page.getData();
-      WikiPageProperties props = data.getProperties();
-      for (int i = 0; i < propList.length; i++) {
-        String[] parts = propList[i].split("=");
-        if (parts.length == 1) props.set(parts[0]);
-        else props.set(parts[0], parts[1]);
-      }
-
-      page.commit(data);
-    }
 
     private String contentsWithPages(String name1, String name2) {
         return "<div class=\"toc1\">" + HtmlElement.endl +

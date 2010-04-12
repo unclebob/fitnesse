@@ -53,7 +53,7 @@ public class WikiWordBuilder implements Translation  {
     }
 
     private String formatWikiWord(Translator translator, String originalName, Symbol symbol) {
-        Maybe<String> regraceOption = new VariableBuilder().findVariable(translator, WikiWordWidget.REGRACE_LINK, symbol);
+        Maybe<String> regraceOption = new VariableFinder(translator, symbol).findVariable(WikiWordWidget.REGRACE_LINK);
         //todo don't use the GracefulNamer for this.  It's only for java instance and variable names.  Write a different tool.
         return !regraceOption.isNothing() && regraceOption.getValue().equals("true") ? GracefulNamer.regrace(originalName) : originalName;
     }

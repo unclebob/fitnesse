@@ -23,6 +23,8 @@ public class SymbolProvider {
                 SymbolType.AnchorName, SymbolType.Contents, SymbolType.CenterLine, SymbolType.Define,
                 SymbolType.Include, SymbolType.Meta, SymbolType.NoteLine, SymbolType.Path, SymbolType.Style,
                 SymbolType.Table });
+        dispatch.put('-', new SymbolType[] {
+                SymbolType.HorizontalRule, SymbolType.Table, SymbolType.CloseLiteral, SymbolType.Strike});
 
         /* This is the default list. These can be broken out further */
         dispatch.put(defaultMatch, new SymbolType[] {

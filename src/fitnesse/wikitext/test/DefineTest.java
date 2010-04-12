@@ -9,6 +9,7 @@ import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.test.TestRoot;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.translator.VariableBuilder;
+import fitnesse.wikitext.translator.VariableFinder;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -38,7 +39,7 @@ public class DefineTest {
         PageData data = new PageData(pageOne, input);
         pageOne.commit(data);
         assertEquals(definedValue,
-                new VariableBuilder().findVariable(new Translator(pageOne, ParserTest.parse(pageOne)), name, null).getValue());
+                new VariableFinder(new Translator(pageOne, ParserTest.parse(pageOne)), null).findVariable(name).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {

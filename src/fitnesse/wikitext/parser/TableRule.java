@@ -7,8 +7,8 @@ public class TableRule extends Rule {
     @Override
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
-        String content = scanner.getCurrentContent();
-        Symbol table = new Symbol(SymbolType.Table);
+        Symbol table = scanner.getCurrent();
+        String content = table.getContent();
         while (true) {
             Symbol row = new Symbol(SymbolType.SymbolList);
             table.add(row);
@@ -24,7 +24,7 @@ public class TableRule extends Rule {
     }
 
     private Symbol parseCell(Scanner scanner, String content) {
-        if (content.startsWith("!")) {
+        if (content.indexOf("!") >= 0) {
             return Parser.make(getPage(), scanner, new SymbolProvider().setTypes(SymbolProvider.literalTableTypes), SymbolType.EndCell)
                     .parse();
         }

@@ -42,7 +42,7 @@ public enum SymbolType {
     Strike(new Matcher().string("--"), new EqualPairRule()),
     Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}), new StyleRule()),
     SymbolList(),
-    Table(new Matcher().startLine().string(new String[] {"|", "!|"}), new TableRule()),
+    Table(new Matcher().startLine().string(new String[] {"|", "!|", "-|", "-!|"}), new TableRule()),
     Text(),
     Variable(new Matcher().string("${"), new VariableRule()),
     Whitespace(new Matcher().whitespace()),

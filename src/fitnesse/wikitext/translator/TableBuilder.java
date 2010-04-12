@@ -9,8 +9,13 @@ public class TableBuilder implements Translation {
         table.addAttribute("border", "1");
         table.addAttribute("cellspacing", "0");
         int longestRow = longestRow(symbol);
+        int rowCount = 0;
         for (Symbol child: symbol.getChildren()) {
+            rowCount++;
             HtmlTag row = new HtmlTag("tr");
+            if (rowCount == 1 && symbol.getContent().charAt(0) == '-') {
+                row.addAttribute("class", "hidden");
+            }
             table.add(row);
             int extraColumnSpan = longestRow - rowLength(child);
             int column = 1;

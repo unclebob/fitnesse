@@ -1,13 +1,15 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class TableTest {
     @Test public void scansTables() {
-        ParserTest.assertScans("|a|\n", "Table=|,Text=a,EndCell=|\n");
-        ParserTest.assertScans("!|a|\n", "Table=!|,Text=a,EndCell=|\n");
+        ParserTest.assertScansTokenType("|a|\n", SymbolType.Table, true);
+        ParserTest.assertScansTokenType("!|a|\n", SymbolType.Table, true);
+        ParserTest.assertScansTokenType("-|a|\n", SymbolType.Table, true);
+        ParserTest.assertScansTokenType("-!|a|\n", SymbolType.Table, true);
     }
 
     @Test public void translatesTables() {
@@ -60,9 +62,20 @@ public class TableTest {
                 "</table>"+ HtmlElement.endl);
     }
 
+    @Test public void hidesFirstRowInCommentTable() {
+        ParserTest.assertTranslatesTo("-|a|\n", tableWithCellAndRow("a", "<tr class=\"hidden\">"));
+    }
+    @Test public void combinesLiteralAndCommentOptionse() {
+        ParserTest.assertTranslatesTo("-!|''<a''|\n", tableWithCellAndRow("''&lt;a''", "<tr class=\"hidden\">"));
+    }
+
     private String tableWithCell(String cellContent) {
+        return tableWithCellAndRow(cellContent, "<tr>");
+    }
+
+    private String tableWithCellAndRow(String cellContent, String firstRow) {
         return "<table border=\"1\" cellspacing=\"0\">"+ HtmlElement.endl +
-        "\t<tr>" + HtmlElement.endl +
+        "\t" + firstRow + HtmlElement.endl +
         "\t\t<td>" + cellContent + "</td>" + HtmlElement.endl +
         "\t</tr>" + HtmlElement.endl +
         "</table>"+ HtmlElement.endl;
