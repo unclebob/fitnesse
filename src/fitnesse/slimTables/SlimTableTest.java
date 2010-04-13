@@ -141,6 +141,15 @@ public class SlimTableTest {
     assertEquals("$V->[v] $VX->[x]", actual);
   }
 
+  @Test
+  public void replaceSymbols_ShouldReplaceConcutenatedSymbols() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "1");
+    table.setSymbol("y", "1");    
+    assertEquals("this is $x->[1]1 and $y->[1]1", table.replaceSymbolsWithFullExpansion("this is $x1 and $y1"));
+  }
+  
+
 
   private static class MockTable extends SlimTable {
     public MockTable() {
