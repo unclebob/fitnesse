@@ -1,5 +1,6 @@
 package fitnesse.wikitext;
 
+import fitnesse.wikitext.test.ParserTest;
 import fitnesse.wikitext.test.TestRoot;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.widgets.ParentWidget;
@@ -29,7 +30,7 @@ public class PerformanceTest {
     @Test
     public void NewParser() throws Exception {
         long start = System.currentTimeMillis();
-        String result = Translator.translateToHtml(new TestRoot().makePage("NewTest"), pageContent);
+        String result = ParserTest.translateToHtml(new TestRoot().makePage("NewTest"), pageContent);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

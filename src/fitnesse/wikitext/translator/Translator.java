@@ -6,9 +6,6 @@ import fitnesse.wikitext.parser.*;
 import java.util.HashMap;
 
 public class Translator {
-    private WikiPage currentPage;
-    private Symbol syntaxTree;
-
     private static final HashMap<SymbolType, Translation> translations;
 
     static {
@@ -45,18 +42,25 @@ public class Translator {
         translations.put(SymbolType.WikiWord, new WikiWordBuilder());
     }
 
+    private WikiPage currentPage;
+    private Symbol syntaxTree;
+    private VariableSource variableSource;
+
+    public Translator(WikiPage currentPage, Symbol syntaxTree, VariableSource variableSource) {
+        this.currentPage = currentPage;
+        this.syntaxTree =  syntaxTree;
+        this.variableSource = variableSource;
+    }
+
     public Translator(WikiPage currentPage, Symbol syntaxTree) {
         this.currentPage = currentPage;
         this.syntaxTree =  syntaxTree;
+        this.variableSource = new VariableFinder(this);
     }
 
     public WikiPage getPage() { return currentPage; }
     public Symbol getSyntaxTree() { return syntaxTree; }
-
-    public static String translateToHtml(WikiPage page, String input) {
-        Symbol list = Parser.make(page, input).parse();
-        return new Translator(page, list).translate();
-    }
+    public VariableSource getVariableSource() { return variableSource; }
 
     public String translate() {
         StringBuilder result = new StringBuilder();

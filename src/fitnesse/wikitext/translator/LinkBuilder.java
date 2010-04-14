@@ -5,14 +5,15 @@ import fitnesse.wikitext.parser.Symbol;
 
 public class LinkBuilder implements Translation {
     public String toHtml(Translator translator, Symbol symbol) {
-        return buildLink(symbol.getContent() + symbol.childAt(0).getContent(), symbol);
+        String target = symbol.getContent() + translator.translate(symbol.childAt(0));
+        return buildLink(translator, target, symbol);
     }
 
-    public String buildLink(String body, Symbol symbol) {
-        String reference = symbol.childAt(0).getContent();
-        String url = symbol.getContent() + reference;
+    public String buildLink(Translator translator, String body, Symbol link) {
+        String reference = translator.translate(link.childAt(0));
+        String prefix = link.getContent();
         HtmlTag tag = new HtmlTag("a", body);
-        tag.addAttribute("href", reference.startsWith("files/") ? "/" + reference : url);
+        tag.addAttribute("href", reference.startsWith("files/") ? "/" + reference : prefix + reference);
         return tag.htmlInline();
 
     }

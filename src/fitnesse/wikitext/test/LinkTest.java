@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
@@ -14,11 +15,16 @@ public class LinkTest {
     }
 
     @Test public void parsesLinks() {
-        ParserTest.assertParses("http://mysite.org", "SymbolList[Link[Text]]");
+        ParserTest.assertParses("http://mysite.org", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTest.assertParses("http://${site}", "SymbolList[Link[SymbolList[Variable[Text]]]]");
     }
 
     @Test public void translatesLinks() {
         ParserTest.assertTranslatesTo("http://mysite.org","<a href=\"http://mysite.org\">http://mysite.org</a>");
         ParserTest.assertTranslatesTo("http://files/myfile","<a href=\"/files/myfile\">http://files/myfile</a>");
+    }
+
+    @Test public void translatesLinkWithVariable() {
+        ParserTest.assertTranslatesTo("http://${site}", new TestVariableSource("site", "mysite.org"), "<a href=\"http://mysite.org\">http://mysite.org</a>");
     }
 }

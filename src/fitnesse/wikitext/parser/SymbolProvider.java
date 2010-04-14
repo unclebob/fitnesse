@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -37,9 +39,11 @@ public class SymbolProvider {
             SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord, SymbolType.Text });
     }
 
-    public static final SymbolType[]literalTableTypes = {
+    public static final SymbolType[] literalTableTypes = {
             SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
-    
+    public static final SymbolType[] linkTargetTypes = {
+            SymbolType.Literal, SymbolType.Variable};
+
     private HashMap<Character, SymbolType[]> currentDispatch = dispatch;
     private SymbolType[] currentTypes;
     private int currentIndex;
@@ -53,6 +57,17 @@ public class SymbolProvider {
         currentDispatch = new HashMap<Character, SymbolType[]>();
         currentDispatch.put(defaultMatch, types);
         return this;
+    }
+
+    public void addTypes(SymbolType[] types) {
+        ArrayList<SymbolType> defaults = new ArrayList<SymbolType>();
+        defaults.addAll(Arrays.asList(currentDispatch.get(defaultMatch)));
+        for (SymbolType type: types) {
+            if (!defaults.contains(type)) defaults.add(type);
+        }
+        SymbolType[] newDefaults = new SymbolType[defaults.size()];
+        for (int i = 0; i < defaults.size(); i++) newDefaults[i] = defaults.get(i);
+        currentDispatch.put(defaultMatch, newDefaults);
     }
 
     public boolean hasType(SymbolType type) {

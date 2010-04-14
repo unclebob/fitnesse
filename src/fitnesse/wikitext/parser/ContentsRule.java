@@ -14,7 +14,7 @@ public class ContentsRule extends Rule {
         Scanner scanner = parser.getScanner();
         Symbol result = scanner.getCurrent();
 
-        Symbol body = parser.parseToNewline(getPage());
+        Symbol body = parser.parseTo(getPage(), new SymbolType[] {SymbolType.Newline});
         for (Symbol option: body.getChildren()) {
             if (option.getType() == SymbolType.Whitespace) continue;
             if (!option.getContent().startsWith("-")) return Symbol.Nothing;

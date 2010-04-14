@@ -8,15 +8,13 @@ import util.Maybe;
 
 public class VariableFinder implements VariableSource {
     private Translator translator;
-    private Symbol currentSymbol;
 
-    public VariableFinder(Translator translator, Symbol currentSymbol) {
+    public VariableFinder(Translator translator) {
         this.translator = translator;
-        this.currentSymbol = currentSymbol;
     }
 
-    public Maybe<String> findVariable(String name) {
-        Maybe<String> result = findVariableInPages(name);
+    public Maybe<String> findVariable(String name, Symbol currentSymbol) {
+        Maybe<String> result = findVariableInPages(name, currentSymbol);
         if (!result.isNothing()) return result;
         try {
             String oldValue = translator.getPage().getData().getVariable(name);
@@ -26,9 +24,9 @@ public class VariableFinder implements VariableSource {
         }
     }
 
-    private Maybe<String> findVariableInPages(String name) {
+    private Maybe<String> findVariableInPages(String name, Symbol currentSymbol) {
         try {
-            Maybe<Symbol> result = getSymbolBefore(name, translator.getSyntaxTree());
+            Maybe<Symbol> result = getSymbolBefore(name, currentSymbol);
             if (!result.isNothing()) return new Maybe<String>(translator.translate(result.getValue()));
 
             for (WikiPage page = translator.getPage().getParent(); page != null; page = page.getParent()) {
@@ -38,19 +36,21 @@ public class VariableFinder implements VariableSource {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalStateException(e);
         }
         return Maybe.noString;
     }
+    
     public Maybe<Symbol> getSymbol(String name, Symbol syntaxTree) {
         TreeWalker walker = new TreeWalker(name);
         syntaxTree.walk(walker);
         return walker.result;
     }
 
-    public Maybe<Symbol> getSymbolBefore(String name, Symbol syntaxTree) {
+    private Maybe<Symbol> getSymbolBefore(String name, Symbol currentSymbol) {
         TreeWalker walker = new TreeWalker(name, currentSymbol);
-        syntaxTree.walk(walker);
+        translator.getSyntaxTree().walk(walker);
         return walker.result;
     }
 

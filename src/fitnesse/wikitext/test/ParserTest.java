@@ -3,6 +3,8 @@ package fitnesse.wikitext.test;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.translator.Translator;
+import fitnesse.wikitext.translator.VariableSource;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -44,6 +46,10 @@ public class ParserTest {
         assertTranslatesTo(null, input, expected);
     }
 
+    public static void assertTranslatesTo(String input, VariableSource variableSource, String expected) {
+        assertEquals(expected, translateToHtml(null, input, variableSource));
+    }
+
     public static void assertTranslatesTo(WikiPage page, String input, String expected) {
         assertEquals(expected, translateTo(page, input));
     }
@@ -53,7 +59,17 @@ public class ParserTest {
     }
 
     public static String translateTo(WikiPage page, String input) {
-        return Translator.translateToHtml(page, input);
+        return translateToHtml(page, input);
+    }
+
+    public static String translateToHtml(WikiPage page, String input) {
+        Symbol list = Parser.make(page, input).parse();
+        return new Translator(page, list).translate();
+    }
+
+    public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
+        Symbol list = Parser.make(page, input).parse();
+        return new Translator(page, list, variableSource).translate();
     }
 
     public static String translateTo(WikiPage page) throws Exception {

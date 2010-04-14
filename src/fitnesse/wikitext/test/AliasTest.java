@@ -28,6 +28,7 @@ public class AliasTest {
         ParserTest.assertTranslatesTo(page, "[[PageOne][IgnoredPage]]", link("PageOne", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[tag][PageOne?edit]]", link("tag", "PageOne?edit"));
         ParserTest.assertTranslatesTo(page, "[[tag][http://files/myfile]]", link("tag", "/files/myfile"));
+        ParserTest.assertTranslatesTo(page, "[[tag][NonExistentPage]]", "tag<a title=\"create page\" href=\"NonExistentPage?edit&nonExistent=true\">[?]</a>");
     }
 
     private String link(String body, String href) {

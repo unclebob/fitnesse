@@ -7,8 +7,11 @@ public class LinkRule extends Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         Symbol current = scanner.getCurrent();
-        scanner.moveNext();
-        if (!scanner.isType(SymbolType.Text)) return Symbol.Nothing;
-        return new Maybe<Symbol>(current.add(scanner.getCurrent()));
+        Symbol targetList = Parser.makeEnds(
+                getPage(),
+                scanner,
+                new SymbolProvider().setTypes(SymbolProvider.linkTargetTypes),
+                parser.makeEndList(new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace})).parse();
+        return new Maybe<Symbol>(current.add(targetList));
     }
 }

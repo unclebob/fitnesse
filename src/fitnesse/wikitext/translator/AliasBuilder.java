@@ -21,7 +21,7 @@ public class AliasBuilder implements Translation {
         }
 
         if (linkReference.childAt(0).getType() == SymbolType.Link) {
-            return new LinkBuilder().buildLink(linkBody, linkReference.childAt(0)); 
+            return new LinkBuilder().buildLink(translator, linkBody, linkReference.childAt(0));
         }
 
         HtmlTag alias = new HtmlTag("a", linkBody);

@@ -39,7 +39,7 @@ public class DefineTest {
         PageData data = new PageData(pageOne, input);
         pageOne.commit(data);
         assertEquals(definedValue,
-                new VariableFinder(new Translator(pageOne, ParserTest.parse(pageOne)), null).findVariable(name).getValue());
+                new VariableFinder(new Translator(pageOne, ParserTest.parse(pageOne))).findVariable(name, null).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {

@@ -20,6 +20,11 @@ public class Parser {
         return new Parser(currentPage, scanner, new SymbolProvider(), emptyTypes, emptyTypes, types);
     }
 
+    public static Parser makeEnds(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] types) {
+        provider.addTypes(types);
+        return new Parser(currentPage, scanner, provider, emptyTypes, emptyTypes, types);
+    }
+
     public static Parser makeIgnoreFirst(WikiPage currentPage, Scanner scanner, SymbolType[] types) {
         return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
@@ -99,17 +104,17 @@ public class Parser {
         return false;
     }
 
-    public Symbol parseToNewline(WikiPage page) {
-        return Parser.makeEnds(page, scanner, makeEndList()).parse();
+    public Symbol parseTo(WikiPage page, SymbolType[] terminators) {
+        return Parser.makeEnds(page, scanner, makeEndList(terminators)).parse();
     }
 
-    public SymbolType[] makeEndList() {
+    public SymbolType[] makeEndList(SymbolType[] terminators) {
         SymbolType[] parentEnds = getEnds();
         SymbolType[] parentTerminators = getTerminators();
-        SymbolType[] ends = new SymbolType[parentTerminators.length + parentEnds.length + 1];
+        SymbolType[] ends = new SymbolType[parentTerminators.length + parentEnds.length + terminators.length];
         arraycopy(parentEnds, 0, ends, 0, parentEnds.length);
         arraycopy(parentTerminators, 0, ends, parentEnds.length, parentTerminators.length);
-        ends[parentEnds.length + parentTerminators.length] = SymbolType.Newline;
+        arraycopy(terminators, 0, ends, parentTerminators.length + parentEnds.length, terminators.length);
         return ends;
     }
 }
