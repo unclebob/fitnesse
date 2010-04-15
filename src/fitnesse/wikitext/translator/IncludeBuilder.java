@@ -14,10 +14,21 @@ public class IncludeBuilder implements Translation {
         }
         else {
             String option = symbol.childAt(0).getContent();
-            String collapseState = option.equals("-setup") ? CollapsibleRule.ClosedState : CollapsibleRule.OpenState;
-            String title = "Included page: " + translator.translate(symbol.childAt(1));
-            return CollapsibleBuilder.generateHtml(collapseState, title, includedContent.getValue());
+            if (option.equals("-seamless")) {
+                return includedContent.getValue();
+            }
+            else {
+                String collapseState = stateForOption(option);
+                String title = "Included page: " + translator.translate(symbol.childAt(1));
+                return CollapsibleBuilder.generateHtml(collapseState, title, includedContent.getValue());
+            }
         }
+    }
+
+    private String stateForOption(String option) {
+        return option.equals("-setup") || option.equals("-c") 
+                ? CollapsibleRule.ClosedState
+                : CollapsibleRule.OpenState;
     }
 
     private Maybe<String> findIncludedData(WikiPage includingPage, String pageName) {

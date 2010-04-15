@@ -14,6 +14,7 @@ public class IncludeTest {
     @Test public void parsesIncludes() {
         ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord], Newline]");
         ParserTest.assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord]]");
+        ParserTest.assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord]]");
         ParserTest.assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord]]");
         ParserTest.assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord], Text]");
     }
@@ -32,14 +33,31 @@ public class IncludeTest {
 
     @Test public void translatesSetup() throws Exception {
         TestRoot root = new TestRoot();
-        WikiPage parent = root.makePage("PageOne");
-        WikiPage child = root.makePage(parent, "PageTwo", "!include -setup >SetUp");
-        root.makePage(child, "SetUp", "page ''setup''");
+        WikiPage includingPage = root.makePage("PageTwo", "!include -setup >SetUp");
+        root.makePage(includingPage, "SetUp", "setup");
 
-        String result = ParserTest.translateTo(child);
+        String result = ParserTest.translateTo(includingPage);
 
         assertContains(result, "class=\"hidden\"");
-        assertContains(result, "<a href=\"PageOne.PageTwo.SetUp\">");
+        assertContains(result, "<a href=\"PageTwo.SetUp\">");
+    }
+
+    @Test public void translatesCollapsed() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage includingPage = root.makePage("PageOne", "!include -c PageTwo");
+        root.makePage("PageTwo", "two");
+
+        String result = ParserTest.translateTo(includingPage);
+
+        assertContains(result, "class=\"hidden\"");
+    }
+
+    @Test public void translatesSeamless() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage includingPage = root.makePage("PageOne", "!include -seamless PageTwo");
+        root.makePage("PageTwo", "two");
+
+        ParserTest.assertTranslatesTo(includingPage, "two");
     }
 
     @Test public void doesNotIncludeParent() throws Exception {

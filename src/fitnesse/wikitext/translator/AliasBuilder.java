@@ -17,7 +17,9 @@ public class AliasBuilder implements Translation {
                     translator.getPage(),
                     linkReference.childAt(0).getContent(),
                     translator.translate(linkReference.childrenAfter(0)),
-                    linkBody);
+                    linkBody,
+                    linkBody
+                    );
         }
 
         if (linkReference.childAt(0).getType() == SymbolType.Link) {

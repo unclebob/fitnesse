@@ -23,10 +23,10 @@ public class WikiWordBuilder implements Translation  {
     }
 
     private String buildLink(WikiPage currentPage, String pagePath, String linkBody) {
-         return buildLink(currentPage, pagePath, "", linkBody);
+         return buildLink(currentPage, pagePath, "", linkBody, pagePath);
     }
 
-    public String buildLink(WikiPage currentPage, String pagePath, String pageSuffix, String linkBody) {
+    public String buildLink(WikiPage currentPage, String pagePath, String pageSuffix, String linkBody, String originalName) {
         String wikiWordPath = makePath(currentPage, pagePath);
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
@@ -43,7 +43,7 @@ public class WikiWordBuilder implements Translation  {
             return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody);
         }
         else
-            return makeLinkToNonExistentWikiPage(linkBody, qualifiedName);
+            return makeLinkToNonExistentWikiPage(originalName, qualifiedName);
     }
 
     public String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
@@ -58,11 +58,10 @@ public class WikiWordBuilder implements Translation  {
     }
 
     private String makeLinkToNonExistentWikiPage(String text, String qualifiedName) {
-        HtmlText htmlText = new HtmlText(text);
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
         link.addAttribute("href", qualifiedName + "?edit&nonExistent=true");
-        return htmlText.html() + link.htmlInline();
+        return new HtmlText(text).html() + link.htmlInline();
     }
 
     public String makePath(WikiPage page, String content) {
