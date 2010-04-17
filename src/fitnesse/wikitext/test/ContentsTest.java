@@ -10,7 +10,7 @@ public class ContentsTest {
         ParserTest.assertScansTokenType("!contents", SymbolType.Contents, true);
     }
 
-    @Test public void parsesContents() {
+    @Test public void parsesContents() throws Exception {
         ParserTest.assertParses("!contents -f -g", "SymbolList[Contents[Text, Text]]");
         ParserTest.assertParses("!contents hi", "SymbolList[Text, Whitespace, Text]");
         ParserTest.assertParses("!contents ]", "SymbolList[Text, Whitespace, CloseBracket]");

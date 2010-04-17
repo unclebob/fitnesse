@@ -12,7 +12,7 @@ public class AliasTest {
     }
 
     @Test
-    public void parsesAliases() {
+    public void parsesAliases() throws Exception {
         ParserTest.assertParses("[[tag][PageOne]]", "SymbolList[Alias[SymbolList[Text], SymbolList[WikiWord]]]");
         ParserTest.assertParses("[[PageOne][PageOne]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[WikiWord]]]");
         ParserTest.assertParses("[[PageOne][PageOne?edit]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[WikiWord, Text]]]");

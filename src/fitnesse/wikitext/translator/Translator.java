@@ -55,7 +55,7 @@ public class Translator {
     public Translator(WikiPage currentPage, Symbol syntaxTree) {
         this.currentPage = currentPage;
         this.syntaxTree =  syntaxTree;
-        this.variableSource = new VariableFinder(this);
+        this.variableSource = new VariableFinder(new ParsingPage(currentPage));
     }
 
     public WikiPage getPage() { return currentPage; }

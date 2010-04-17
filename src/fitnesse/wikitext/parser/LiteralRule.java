@@ -2,8 +2,7 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-public class LiteralRule extends Rule {
-    @Override
+public class LiteralRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         SymbolType type = scanner.getCurrentType();

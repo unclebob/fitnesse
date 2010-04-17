@@ -1,8 +1,8 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.translator.VariableFinder;
+import fitnesse.wikitext.translator.VariableSource;
 import util.Maybe;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,57 +11,79 @@ import static java.lang.System.arraycopy;
 public class Parser {
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
 
-    public static Parser makeIgnoreFirst(WikiPage currentPage, Scanner scanner, SymbolType type) {
+    public static Parser makeIgnoreFirst(ParsingPage currentPage, Scanner scanner, SymbolType type) {
         SymbolType[] types = new SymbolType[] {type};
         return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
 
-    public static Parser makeEnds(WikiPage currentPage, Scanner scanner, SymbolType[] types) {
-        return new Parser(currentPage, scanner, new SymbolProvider(), emptyTypes, emptyTypes, types);
-    }
-
-    public static Parser makeEnds(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] types) {
-        provider.addTypes(types);
-        return new Parser(currentPage, scanner, provider, emptyTypes, emptyTypes, types);
-    }
-
-    public static Parser makeIgnoreFirst(WikiPage currentPage, Scanner scanner, SymbolType[] types) {
+    public static Parser makeIgnoreFirst(ParsingPage currentPage, Scanner scanner, SymbolType[] types) {
         return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
 
-    public static Parser make(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType type) {
+    public static Parser make(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType type) {
         SymbolType[] types = new SymbolType[] {type};
         return new Parser(currentPage, scanner, provider, types, emptyTypes, emptyTypes);
     }
 
-    public static Parser make(WikiPage currentPage, Scanner scanner, SymbolType type) {
-        SymbolType[] types = new SymbolType[] {type};
-        return new Parser(currentPage, scanner, new SymbolProvider(), types, emptyTypes, emptyTypes);
+    public static Parser make(ParsingPage currentPage, String input) {
+        return make(currentPage, input, new VariableFinder(currentPage));
     }
 
-    public static Parser make(WikiPage currentPage, String input) {
-        return new Parser(currentPage, new Scanner(input), new SymbolProvider(), emptyTypes, emptyTypes, emptyTypes);
+    public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource) {
+        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), new SymbolProvider(), variableSource, emptyTypes, emptyTypes, emptyTypes);
     }
 
-    private WikiPage currentPage;
+    private ParsingPage currentPage;
     private SymbolProvider provider;
+    private VariableSource variableSource;
     private Scanner scanner;
     private SymbolType[] terminators;
     private SymbolType[] ignoresFirst;
     private SymbolType[] ends;
 
-    public Parser(WikiPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
+    public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
         this.currentPage = currentPage;
         this.scanner = scanner;
         this.provider = provider;
         this.terminators = terminators;
         this.ignoresFirst = ignoresFirst;
         this.ends = ends;
+        this.variableSource = new VariableFinder(currentPage);
+    }
+
+    public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, VariableSource variableSource, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
+        this.currentPage = currentPage;
+        this.scanner = scanner;
+        this.provider = provider;
+        this.terminators = terminators;
+        this.ignoresFirst = ignoresFirst;
+        this.ends = ends;
+        this.variableSource = variableSource;
     }
 
     public Scanner getScanner() { return scanner; }
+    public ParsingPage getPage() { return currentPage; }
+    public VariableSource getVariableSource() { return variableSource; }
     public SymbolType[] getTerminators() { return terminators; }
     public SymbolType[] getEnds() { return ends; }
+
+    public Symbol parse(String input) {
+        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypes).parse();
+    }
+
+    public Symbol parseTo(SymbolType terminator) {
+        SymbolType[] terminators = new SymbolType[] {terminator};
+        return new Parser(currentPage, scanner, new SymbolProvider(), terminators, emptyTypes, emptyTypes).parse();
+    }
+
+    public Symbol parseWithEnds(SymbolType[] ends) {
+        return new Parser(currentPage, scanner, new SymbolProvider(), emptyTypes, emptyTypes, makeEndList(ends)).parse();
+    }
+
+    public Symbol parseWithEnds(SymbolProvider provider, SymbolType[] types) {
+        provider.addTypes(types);
+        return new Parser(currentPage, scanner, provider, variableSource, emptyTypes, emptyTypes, types).parse();
+    }
 
     public Symbol parse() {
         Symbol result = new Symbol(SymbolType.SymbolList);
@@ -83,7 +105,6 @@ public class Parser {
                 ignore.clear();
             }
             else {
-                rule.setPage(currentPage);
                 Maybe<Symbol> translation = rule.parse(this);
                 if (translation.isNothing()) {
                     ignore.add(currentToken.getType());
@@ -102,10 +123,6 @@ public class Parser {
         for (SymbolType terminator: terminators)
             if (currentType == terminator) return true;
         return false;
-    }
-
-    public Symbol parseTo(WikiPage page, SymbolType[] terminators) {
-        return Parser.makeEnds(page, scanner, makeEndList(terminators)).parse();
     }
 
     public SymbolType[] makeEndList(SymbolType[] terminators) {

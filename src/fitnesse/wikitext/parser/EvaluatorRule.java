@@ -2,11 +2,10 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-public class EvaluatorRule extends Rule {
-    @Override
+public class EvaluatorRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
-        Symbol body = Parser.make(getPage(), scanner, SymbolType.CloseEvaluator).parse();
+        Symbol body = parser.parseTo(SymbolType.CloseEvaluator);
         if (scanner.isEnd()) return Symbol.Nothing;
         return new Maybe<Symbol>(new Symbol(SymbolType.Evaluator).add(body));
     }

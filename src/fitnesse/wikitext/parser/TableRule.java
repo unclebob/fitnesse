@@ -2,9 +2,7 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-public class TableRule extends Rule {
-
-    @Override
+public class TableRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         Symbol table = scanner.getCurrent();
@@ -13,7 +11,7 @@ public class TableRule extends Rule {
             Symbol row = new Symbol(SymbolType.SymbolList);
             table.add(row);
             while (true) {
-                Symbol cell = parseCell(scanner, content);
+                Symbol cell = parseCell(parser, content);
                 if (scanner.isEnd()) return Symbol.Nothing;
                 row.add(cell);
                 if (scanner.getCurrentContent().indexOf("\n") > 0) break;
@@ -23,12 +21,12 @@ public class TableRule extends Rule {
         return new Maybe<Symbol>(table);
     }
 
-    private Symbol parseCell(Scanner scanner, String content) {
+    private Symbol parseCell(Parser parser, String content) {
         if (content.indexOf("!") >= 0) {
-            return Parser.make(getPage(), scanner, new SymbolProvider().setTypes(SymbolProvider.literalTableTypes), SymbolType.EndCell)
+            return Parser.make(parser.getPage(), parser.getScanner(), new SymbolProvider().setTypes(SymbolProvider.literalTableTypes), SymbolType.EndCell)
                     .parse();
         }
         else
-            return Parser.make(getPage(), scanner, SymbolType.EndCell).parse();
+            return parser.parseTo(SymbolType.EndCell);
     }
 }

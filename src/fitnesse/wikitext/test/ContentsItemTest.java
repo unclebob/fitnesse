@@ -53,7 +53,8 @@ public class ContentsItemTest {
     private void assertBuilds(String page, String[] properties, String option, String variable, String result) throws Exception {
         Symbol contents = new Symbol(SymbolType.Contents);
         contents.add(new Symbol(SymbolType.Text, option));
-        ContentsItemBuilder builder = new ContentsItemBuilder(contents, new TestVariableSource(variable, "true"), 1);
+        contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
+        ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
         assertEquals(result + HtmlElement.endl, builder.buildItem(withProperties(new TestRoot().makePage(page), properties)).html());
     }
 

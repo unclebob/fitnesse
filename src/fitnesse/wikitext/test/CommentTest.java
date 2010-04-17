@@ -9,7 +9,7 @@ public class CommentTest {
         ParserTest.assertScansTokenType(" # comment\n", SymbolType.Comment, false);
     }
 
-    @Test public void parsesComments() {
+    @Test public void parsesComments() throws Exception {
         ParserTest.assertParses("# comment\n", "SymbolList[Comment]");
         ParserTest.assertParses("# comment", "SymbolList[Comment]");
     }

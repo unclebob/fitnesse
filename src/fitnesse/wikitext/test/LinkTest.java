@@ -14,9 +14,8 @@ public class LinkTest {
         ParserTest.assertScansTokenType("httpx://mysite.org", SymbolType.Link, false);
     }
 
-    @Test public void parsesLinks() {
+    @Test public void parsesLinks() throws Exception {
         ParserTest.assertParses("http://mysite.org", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTest.assertParses("http://${site}", "SymbolList[Link[SymbolList[Variable[Text]]]]");
     }
 
     @Test public void translatesLinks() {

@@ -39,8 +39,8 @@ public class WikiWordTest {
 
     @Test
     public void regracesWikiWords() throws Exception {
-        root.setPageData(pageOne, "!define " + WikiWordWidget.REGRACE_LINK + " {true}\nPageOne");
-        assertTrue(ParserTest.translateTo(pageOne).endsWith(wikiLink("PageOne", "Page One")));
+        root.setPageData(pageOne, "!define " + WikiWordWidget.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWordWidget.REGRACE_LINK + " {false}\n");
+        assertTrue(ParserTest.translateTo(pageOne).indexOf(wikiLink("PageOne", "Page One")) >= 0);
     }
 
     private String wikiLink(String link, String text) {

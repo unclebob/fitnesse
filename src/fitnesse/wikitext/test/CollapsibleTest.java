@@ -10,7 +10,7 @@ public class CollapsibleTest {
         ParserTest.assertScansTokenType("!* title\ncontent\n*!", SymbolType.Collapsible, true);
     }
 
-    @Test public void parsesCollapsible() {
+    @Test public void parsesCollapsible() throws Exception {
         ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[Text, SymbolList[Text], SymbolList[Text]]]");
         ParserTest.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
     }

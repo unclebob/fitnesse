@@ -4,7 +4,7 @@ import org.junit.Test;
 
 public class EMailTest {
     @Test
-    public void parsesEMail() {
+    public void parsesEMail() throws Exception {
         ParserTest.assertParses("bob@bl.org", "SymbolList[EMail]");
     }
 

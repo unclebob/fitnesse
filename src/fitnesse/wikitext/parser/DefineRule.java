@@ -3,8 +3,7 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 import java.util.List;
 
-public class DefineRule extends Rule {
-    @Override
+public class DefineRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         List<Symbol> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text, SymbolType.Whitespace});
@@ -20,12 +19,15 @@ public class DefineRule extends Rule {
 
         int start = scanner.getOffset();
         scanner.markStart();
-        Symbol value = Parser.makeIgnoreFirst(getPage(), scanner, close).parse();
+        Symbol value = Parser.makeIgnoreFirst(parser.getPage(), scanner, close).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
+
+        String valueString = scanner.substring(start, scanner.getOffset() - 1);
+        parser.getPage().putVariable(name, valueString);
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Define)
                 .add(name)
                 .add(value)
-                .add(scanner.substring(start, scanner.getOffset() - 1)));
+                .add(valueString));
     }
 }

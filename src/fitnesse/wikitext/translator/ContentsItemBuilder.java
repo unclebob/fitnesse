@@ -10,12 +10,10 @@ import util.GracefulNamer;
 
 public class ContentsItemBuilder {
     private Symbol contents;
-    private VariableSource variables;
     private int level;
 
-    public ContentsItemBuilder(Symbol contents, VariableSource variables, int level) {
+    public ContentsItemBuilder(Symbol contents, int level) {
         this.contents = contents;
-        this.variables = variables;
         this.level = level;
     }
 
@@ -28,7 +26,7 @@ public class ContentsItemBuilder {
                 listItem.add(buildItem(child));
                 if (hasOption("-R", "") && child.getChildren().size() > 0) {
                     HtmlTag nestedDiv =  HtmlUtil.makeDivTag("nested-contents");
-                    listItem.add(new ContentsItemBuilder(contents, variables, level + 1).buildLevel(child, nestedDiv));
+                    listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
                 }
                 list.add(listItem);
             }
@@ -92,7 +90,7 @@ public class ContentsItemBuilder {
            if (child.getContent().equals(option)) return true;
         }
         return variableName.length() > 0
-                && variables.findVariable(variableName, contents).getValue().equals("true");
+                && contents.getVariable(variableName, "").equals("true");
     }
 
     private String getBooleanProperties(WikiPage wikiPage) {

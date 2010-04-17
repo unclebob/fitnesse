@@ -13,7 +13,7 @@ public class AnchorReferenceTest {
         ParserTest.assertScansTokenType("blah.#anchorName", SymbolType.AnchorReference, true);
     }
 
-    @Test public void parsesAnchors() {
+    @Test public void parsesAnchors() throws Exception {
         ParserTest.assertParses(".#anchorName", "SymbolList[AnchorReference[Text]]");
         ParserTest.assertParses(".# anchorName", "SymbolList[Text, Whitespace, Text]");
     }

@@ -10,7 +10,7 @@ public class AnchorNameTest {
         ParserTest.assertScansTokenType("! anchor name", SymbolType.AnchorName, false);
     }
 
-    @Test public void parsesAnchors() {
+    @Test public void parsesAnchors() throws Exception {
         ParserTest.assertParses("!anchor name", "SymbolList[AnchorName[Text]]");
         ParserTest.assertParses("!anchor 1234", "SymbolList[AnchorName[Text]]");
         ParserTest.assertParses("!anchor @#$@#%", "SymbolList[Text, Whitespace, Text]");

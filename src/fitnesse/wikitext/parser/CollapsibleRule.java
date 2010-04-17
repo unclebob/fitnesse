@@ -2,12 +2,11 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-public class CollapsibleRule extends Rule {
+public class CollapsibleRule implements Rule {
     public static final String OpenState = "Open";
     public static final String ClosedState = "Closed";
     public static final String InvisibleState = "Invisible";
 
-    @Override
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         String state = OpenState;
@@ -22,10 +21,10 @@ public class CollapsibleRule extends Rule {
         }
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
 
-        Symbol titleText = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.Newline).parse();
+        Symbol titleText = Parser.makeIgnoreFirst(parser.getPage(), scanner, SymbolType.Newline).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
 
-        Symbol bodyText = Parser.makeIgnoreFirst(getPage(), scanner, SymbolType.CloseCollapsible).parse();
+        Symbol bodyText = Parser.makeIgnoreFirst(parser.getPage(), scanner, SymbolType.CloseCollapsible).parse();
         if (scanner.isEnd()) return Symbol.Nothing;
 
         bodyText.removeLastChild();

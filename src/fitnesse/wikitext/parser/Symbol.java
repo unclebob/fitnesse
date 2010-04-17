@@ -1,8 +1,10 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.translator.VariableSource;
 import util.Maybe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Symbol {
@@ -11,6 +13,7 @@ public class Symbol {
     private SymbolType type;
     private String content = "";
     private List<Symbol> children = new ArrayList<Symbol>();
+    private HashMap<String ,String> variables;
 
     public Symbol(SymbolType type) { setType(type); }
     public Symbol() { this(SymbolType.Empty); }
@@ -64,5 +67,17 @@ public class Symbol {
         }
         if (!walker.visit(symbol)) return false;
         return true;
+    }
+
+    public void evaluateVariables(String[] names, VariableSource source) {
+        if (variables == null) variables = new HashMap<String, String>();
+        for (String name: names) {
+            Maybe<String> value = source.findVariable(name);
+            if (!value.isNothing()) variables.put(name, value.getValue());
+        }
+    }
+
+    public String getVariable(String name, String defaultValue) {
+        return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
     }
 }

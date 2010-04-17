@@ -63,12 +63,12 @@ public class ParserTest {
     }
 
     public static String translateToHtml(WikiPage page, String input) {
-        Symbol list = Parser.make(page, input).parse();
+        Symbol list = Parser.make(new ParsingPage(page), input).parse();
         return new Translator(page, list).translate();
     }
 
     public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-        Symbol list = Parser.make(page, input).parse();
+        Symbol list = Parser.make(new ParsingPage(page), input, variableSource).parse();
         return new Translator(page, list, variableSource).translate();
     }
 
@@ -76,17 +76,18 @@ public class ParserTest {
         return page.getData().getHtml();
     }
 
-    public static void assertParses(String input, String expected) {
-        Symbol result = parse(null, input);
+    public static void assertParses(String input, String expected) throws Exception {
+        WikiPage page = new TestRoot().makePage("TestPage", input);
+        Symbol result = parse(page, input);
         assertEquals(expected, serialize(result));
     }
 
     public static Symbol parse(WikiPage page) throws Exception {
-        return Parser.make(page, page.getData().getContent()).parse();
+        return Parser.make(new ParsingPage(page), page.getData().getContent()).parse();
     }
 
     private static Symbol parse(WikiPage page, String input) {
-        return Parser.make(page, input).parse();
+        return Parser.make(new ParsingPage(page), input).parse();
     }
 
     public static String serialize(Symbol symbol) {

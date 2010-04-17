@@ -7,11 +7,12 @@ import util.Maybe;
 public class VariableBuilder implements Translation {
 
     public String toHtml(Translator translator, Symbol symbol) {
-        String name = symbol.childAt(0).getContent();
-        Maybe<String> variable = translator.getVariableSource().findVariable(name, symbol);
-        return variable.isNothing()
-                ? HtmlUtil.metaText("undefined variable: " + name)
-                : variable.getValue();
+        //String name = symbol.childAt(0).getContent();
+        //Maybe<String> variable = translator.getVariableSource().findVariable(name, symbol);
+        //return variable.isNothing()
+        //        ? HtmlUtil.metaText("undefined variable: " + name)
+        //        : variable.getValue();
+        return translator.translate(symbol.childAt(1));
     }
 
 }

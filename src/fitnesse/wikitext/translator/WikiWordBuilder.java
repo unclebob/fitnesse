@@ -53,8 +53,8 @@ public class WikiWordBuilder implements Translation  {
     }
 
     private String formatWikiWord(Translator translator, String originalName, Symbol symbol) {
-        Maybe<String> regraceOption = translator.getVariableSource().findVariable(WikiWordWidget.REGRACE_LINK, symbol);
-        return !regraceOption.isNothing() && regraceOption.getValue().equals("true") ? GracefulNamer.regrace(originalName) : originalName;
+        String regraceOption = symbol.getVariable(WikiWordWidget.REGRACE_LINK, "");
+        return regraceOption.equals("true") ? GracefulNamer.regrace(originalName) : originalName;
     }
 
     private String makeLinkToNonExistentWikiPage(String text, String qualifiedName) {

@@ -1,5 +1,8 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wikitext.translator.VariableSource;
+import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +13,22 @@ public class Scanner {
     private ScanString input;
     private Symbol currentToken;
     private int next;
+    private TextMaker textMaker;
 
     public Scanner(String input) {
         this.input = new ScanString(input, 0);
         next = 0;
+        textMaker = new TextMaker(new VariableSource() {
+            public Maybe<String> findVariable(String name) {
+                return Maybe.noString;
+            }
+        });
+    }
+
+    public Scanner(TextMaker textMaker, String input) {
+        this.input = new ScanString(input, 0);
+        next = 0;
+        this.textMaker = textMaker;
     }
 
     public Scanner(Scanner other) {
@@ -33,6 +48,7 @@ public class Scanner {
         input = new ScanString(other.input);
         next = other.next;
         currentToken = other.currentToken;
+        textMaker = other.textMaker;
     }
 
     public List<Symbol> nextTokens(SymbolType[] symbolTypes) {
@@ -92,7 +108,7 @@ public class Scanner {
             newNext = input.getOffset();
         }
         if (input.getOffset() > next) {
-            TokenMatch match = new TextMaker().make(provider, input.substringFrom(next));
+            TokenMatch match = textMaker.make(provider, input.substringFrom(next));
             currentToken = match.getToken();
             next += match.getMatchLength();
         }
@@ -108,4 +124,5 @@ public class Scanner {
         }
         return false;
     }
+
 }

@@ -4,8 +4,7 @@ import util.Maybe;
 
 import java.util.List;
 
-public class AnchorNameRule extends Rule {
-    @Override
+public class AnchorNameRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         List<Symbol> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
         if (tokens.size() == 0) return Symbol.Nothing;

@@ -11,7 +11,7 @@ public class IncludeTest {
         ParserTest.assertScansTokenType("!include name", SymbolType.Include, true);
     }
 
-    @Test public void parsesIncludes() {
+    @Test public void parsesIncludes() throws Exception {
         ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord], Newline]");
         ParserTest.assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord]]");
         ParserTest.assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord]]");
