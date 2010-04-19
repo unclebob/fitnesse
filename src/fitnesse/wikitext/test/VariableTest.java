@@ -57,4 +57,11 @@ public class VariableTest {
         WikiPage child = root.makePage(parent, "PageTwo", "!define y {stuff}\n${x}");
         assertTrue(ParserTest.translateTo(child).endsWith("stuff"));
     }
+
+    @Test public void evaluatesVariablesFromInclude() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage includer = root.makePage("PageOne", "!include -seamless PageTwo\n${x}");
+        root.makePage("PageTwo", "!define x {y}");
+        ParserTest.assertTranslatesTo(includer, "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl + "<br/>y");
+    }
 }

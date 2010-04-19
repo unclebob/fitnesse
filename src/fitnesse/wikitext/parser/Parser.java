@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.translator.VariableFinder;
-import fitnesse.wikitext.translator.VariableSource;
 import util.Maybe;
 import java.util.ArrayList;
 import java.util.Arrays;

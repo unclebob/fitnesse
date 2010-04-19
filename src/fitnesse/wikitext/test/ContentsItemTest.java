@@ -7,9 +7,7 @@ import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.translator.ContentsItemBuilder;
-import fitnesse.wikitext.translator.VariableSource;
 import org.junit.Test;
-import util.Maybe;
 
 import static org.junit.Assert.assertEquals;
 

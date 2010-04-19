@@ -3,10 +3,10 @@ package fitnesse.wikitext.test;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.translator.Translator;
-import fitnesse.wikitext.translator.VariableFinder;
+import fitnesse.wikitext.parser.VariableFinder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -34,11 +34,10 @@ public class DefineTest {
     }
 
     private void assertDefinesValue(String input, String name, String definedValue) throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne");
-        PageData data = new PageData(pageOne, input);
-        pageOne.commit(data);
-        assertEquals(definedValue,
-                new VariableFinder(new ParsingPage(pageOne)).findVariable(name).getValue());
+        WikiPage pageOne = new TestRoot().makePage("PageOne", input);
+        ParsingPage page = new ParsingPage(pageOne);
+        Parser.make(page, input).parse();
+        assertEquals(definedValue, page.findVariable(name).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {

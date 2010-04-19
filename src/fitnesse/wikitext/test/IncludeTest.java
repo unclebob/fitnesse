@@ -12,11 +12,11 @@ public class IncludeTest {
     }
 
     @Test public void parsesIncludes() throws Exception {
-        ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord], Newline]");
-        ParserTest.assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord]]");
-        ParserTest.assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord]]");
-        ParserTest.assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord]]");
-        ParserTest.assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord], Text]");
+        ParserTest.assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Meta[Text]], Newline]");
+        ParserTest.assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
+        ParserTest.assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
+        ParserTest.assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
+        ParserTest.assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Meta[Text]], Text]");
     }
 
     @Test public void translatesIncludedSibling() throws Exception {

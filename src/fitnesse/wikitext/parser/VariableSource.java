@@ -1,4 +1,4 @@
-package fitnesse.wikitext.translator;
+package fitnesse.wikitext.parser;
 
 import util.Maybe;
 

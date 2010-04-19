@@ -1,10 +1,7 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wikitext.parser.SymbolProvider;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.TextMaker;
-import fitnesse.wikitext.parser.TokenMatch;
-import fitnesse.wikitext.translator.VariableSource;
+import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

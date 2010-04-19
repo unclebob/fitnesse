@@ -17,21 +17,19 @@ public class CollapsibleTest {
 
     @Test public void translatesCollapsible() {
         CollapsibleBuilder.resetId();
-        ParserTest.assertTranslatesTo("!* Some title\n content \n*!",
-                sectionWithClass("collapsable", "Open"));
+        ParserTest.assertTranslatesTo("!* Some title\n''content''\n*!",
+                sectionWithClass("collapsable", "Open", "<i>content</i>"));
 
         CollapsibleBuilder.resetId();
         ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",
-                sectionWithClass("hidden", "Closed"));
+                sectionWithClass("hidden", "Closed", " content "));
 
         CollapsibleBuilder.resetId();
         ParserTest.assertTranslatesTo("!*< Some title\n content \n*!",
                 "<div class=\"invisible\"> content </div>" + HtmlElement.endl);
-
-        ParserTest.assertTranslatesTo("!**\n**!", "!**<br/>**!");
     }
 
-    private String sectionWithClass(String sectionClass, String image) {
+    private String sectionWithClass(String sectionClass, String image, String content) {
         return "<div class=\"collapse_rim\">" + HtmlElement.endl +
         "\t<div style=\"float: right;\" class=\"meta\">" + HtmlElement.endl +
         "\t\t<a href=\"javascript:expandAll();\">Expand All</a>" + HtmlElement.endl +
@@ -43,7 +41,7 @@ public class CollapsibleTest {
         "\t</a>" + HtmlElement.endl +
         "&nbsp;" + HtmlElement.endl +
         "\t<span class=\"meta\">Some title</span>" + HtmlElement.endl +
-        "\t<div class=\"" + sectionClass + "\" id=\"1\"> content </div>" + HtmlElement.endl +
+        "\t<div class=\"" + sectionClass + "\" id=\"1\">" + content + "</div>" + HtmlElement.endl +
         "</div>" + HtmlElement.endl;
     }
 }
