@@ -12,7 +12,7 @@ public class VariableFinder implements VariableSource {
     }
 
     public Maybe<String> findVariable(String name) {
-        Maybe<String> result = getSpecialVariableValue(name);
+        Maybe<String> result = page.getSpecialVariableValue(name);
         if (!result.isNothing()) return result;
 
         result = findVariableInPages(name);
@@ -71,20 +71,5 @@ public class VariableFinder implements VariableSource {
             e.printStackTrace();
             throw new IllegalStateException(e);
         }
-    }
-
-    private Maybe<String> getSpecialVariableValue(String key) {
-        String value;
-        if (key.equals("PAGE_NAME"))
-            value = page.getPageName();
-        else if (key.equals("PAGE_PATH"))
-            value = page.getPagePath();
-        else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(FitNesseContext.globalContext.port);
-        else if (key.equals("FITNESSE_ROOTPATH"))
-            value = FitNesseContext.globalContext.rootPath;
-        else
-            return Maybe.noString;
-        return new Maybe<String>(value);
     }
 }

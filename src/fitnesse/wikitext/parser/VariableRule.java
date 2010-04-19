@@ -10,7 +10,7 @@ public class VariableRule implements Rule {
         if (tokens.size() == 0) return Symbol.Nothing;
 
         String name = tokens.get(0).getContent();
-        if (!ScanString.isWord(name)) return Symbol.Nothing;
+        if (!ScanString.isVariableName(name)) return Symbol.Nothing;
 
         current.add(name);
 

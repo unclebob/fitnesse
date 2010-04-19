@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.FitNesseContext;
 import fitnesse.wiki.WikiPage;
 import util.Maybe;
 
@@ -30,13 +31,32 @@ public class ParsingPage {
 
     public WikiPage getPage() { return page; }
 
-    public String getPageName() {
+    public Maybe<String> getSpecialVariableValue(String key) {
+        String value;
+        if (key.equals("PARENT_NAME"))
+            value = getPageName(page);
+        else if (key.equals("PARENT_PATH"))
+            value = getPagePath(page);
+        else if (key.equals("PAGE_NAME"))
+            value = getPageName(namedPage);
+        else if (key.equals("PAGE_PATH"))
+            value = getPagePath(namedPage);
+        else if (key.equals("FITNESSE_PORT"))
+            value = Integer.toString(FitNesseContext.globalContext.port);
+        else if (key.equals("FITNESSE_ROOTPATH"))
+            value = FitNesseContext.globalContext.rootPath;
+        else
+            return Maybe.noString;
+        return new Maybe<String>(value);
+    }
+
+    private String getPageName(WikiPage namedPage) {
         return namedPage.getName();
     }
 
-    public String getPagePath() {
+    private String getPagePath(WikiPage namedPage) {
         try {
-            return namedPage.getPageCrawler().getFullPath(namedPage).parentPath().toString();
+            return namedPage.getPageCrawler().getFullPath(this.namedPage).parentPath().toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException(e);

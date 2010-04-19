@@ -10,7 +10,7 @@ public class DefineRule implements Rule {
         if (tokens.size() == 0) return Symbol.Nothing;
 
         String name = tokens.get(1).getContent();
-        if (!ScanString.isWord(name)) return Symbol.Nothing;
+        if (!ScanString.isVariableName(name)) return Symbol.Nothing;
 
         scanner.moveNext();
         SymbolType open = scanner.getCurrent().getType();
