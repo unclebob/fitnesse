@@ -41,6 +41,8 @@ public class SymbolProvider {
 
     public static final SymbolType[] literalTableTypes = {
             SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
+    public static final SymbolType[] aliasLinkTypes = {
+            SymbolType.CloseBracket, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
     public static final SymbolType[] linkTargetTypes = {
             SymbolType.Literal, SymbolType.Variable};
 
@@ -59,7 +61,7 @@ public class SymbolProvider {
         return this;
     }
 
-    public void addTypes(SymbolType[] types) {
+    public SymbolProvider addTypes(SymbolType[] types) {
         ArrayList<SymbolType> defaults = new ArrayList<SymbolType>();
         defaults.addAll(Arrays.asList(currentDispatch.get(defaultMatch)));
         for (SymbolType type: types) {
@@ -68,6 +70,7 @@ public class SymbolProvider {
         SymbolType[] newDefaults = new SymbolType[defaults.size()];
         for (int i = 0; i < defaults.size(); i++) newDefaults[i] = defaults.get(i);
         currentDispatch.put(defaultMatch, newDefaults);
+        return this;
     }
 
     public boolean hasType(SymbolType type) {

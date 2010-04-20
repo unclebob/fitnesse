@@ -1,8 +1,11 @@
 package fitnesse.wikitext.translator;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
+import fitnesse.wikitext.Utils;
 
 public class AliasBuilder implements Translation {
 
@@ -10,7 +13,8 @@ public class AliasBuilder implements Translation {
         if (symbol.childAt(0).childAt(0).getType() == SymbolType.WikiWord) return translator.translate(symbol.childAt(0));
         
         String linkBody = translator.translate(symbol.childAt(0));
-        Symbol linkReference = symbol.childAt(1);
+        String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
+        Symbol linkReference = Parser.make(new ParsingPage(translator.getPage()), linkReferenceString).parse();
 
         if (linkReference.childAt(0).getType() == SymbolType.WikiWord) {
             return new WikiWordBuilder().buildLink(

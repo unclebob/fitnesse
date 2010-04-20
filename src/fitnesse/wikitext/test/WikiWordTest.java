@@ -18,7 +18,7 @@ public class WikiWordTest {
     public void setUp() throws Exception {
         root = new TestRoot();
         pageOne = root.makePage("PageOne");
-        pageOneTwo = root.makePage(pageOne, "PageTwo");
+        pageOneTwo = root.makePage(pageOne, "PageOne2");
         pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");
         pageOneThree = root.makePage(pageOne, "PageThree");
     }
@@ -26,9 +26,9 @@ public class WikiWordTest {
     @Test
     public void translatesWikiWords() throws Exception {
         ParserTest.assertTranslatesTo(pageOne, "PageOne", wikiLink("PageOne", "PageOne"));
-        ParserTest.assertTranslatesTo(pageOneTwo, "PageTwo", wikiLink("PageOne.PageTwo", "PageTwo"));
+        ParserTest.assertTranslatesTo(pageOneTwo, "PageOne2", wikiLink("PageOne.PageOne2", "PageOne2"));
         ParserTest.assertTranslatesTo(pageOneThree, ".PageOne", wikiLink("PageOne", ".PageOne"));
-        ParserTest.assertTranslatesTo(pageOne, ">PageTwo", wikiLink("PageOne.PageTwo", "&gt;PageTwo"));
+        ParserTest.assertTranslatesTo(pageOne, ">PageOne2", wikiLink("PageOne.PageOne2", "&gt;PageOne2"));
         ParserTest.assertTranslatesTo(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
     }
     @Test

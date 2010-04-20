@@ -9,11 +9,6 @@ import static java.lang.System.arraycopy;
 public class Parser {
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
 
-    public static Parser makeIgnoreFirst(ParsingPage currentPage, Scanner scanner, SymbolType type) {
-        SymbolType[] types = new SymbolType[] {type};
-        return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
-    }
-
     public static Parser makeIgnoreFirst(ParsingPage currentPage, Scanner scanner, SymbolType[] types) {
         return new Parser(currentPage, scanner, new SymbolProvider(), types, types, emptyTypes);
     }
@@ -69,6 +64,17 @@ public class Parser {
         return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypes).parse();
     }
 
+    public Symbol parseIgnoreFirst(SymbolType type) {
+        SymbolType[] types = new SymbolType[] {type};
+        return new Parser(currentPage, scanner, provider, variableSource, types, types, emptyTypes).parse();
+    }
+
+    public Symbol parseIgnoreFirstWithSymbols(SymbolType ignore, SymbolType[] symbols) {
+        SymbolType[] ignores = new SymbolType[] {ignore};
+        SymbolProvider provider = new SymbolProvider().setTypes(symbols);
+        return new Parser(currentPage, scanner, provider, variableSource, ignores, ignores, emptyTypes).parse();
+    }
+    
     public Symbol parseTo(SymbolType terminator) {
         SymbolType[] terminators = new SymbolType[] {terminator};
         return new Parser(currentPage, scanner, new SymbolProvider(), terminators, emptyTypes, emptyTypes).parse();

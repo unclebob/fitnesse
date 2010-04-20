@@ -12,6 +12,7 @@ public class VariableTest {
     }
 
     @Test public void translatesVariables() throws Exception {
+        ParserTest.assertTranslatesTo("${x}", new TestVariableSource("x", "y"), "y");
         assertTranslatesVariable("${x}", "y");
         assertTranslatesVariable("${z}", "<span class=\"meta\">undefined variable: z</span>");
     }

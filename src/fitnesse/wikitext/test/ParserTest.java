@@ -46,6 +46,10 @@ public class ParserTest {
         assertTranslatesTo(null, input, expected);
     }
 
+    public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) throws Exception{
+        assertEquals(expected, translateToHtml(page, page.getData().getContent(), variableSource));
+    }
+
     public static void assertTranslatesTo(String input, VariableSource variableSource, String expected) {
         assertEquals(expected, translateToHtml(null, input, variableSource));
     }
@@ -69,7 +73,7 @@ public class ParserTest {
 
     public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
         Symbol list = Parser.make(new ParsingPage(page), input, variableSource).parse();
-        return new Translator(page, list, variableSource).translate();
+        return new Translator(page, list).translate();
     }
 
     public static String translateTo(WikiPage page) throws Exception {
