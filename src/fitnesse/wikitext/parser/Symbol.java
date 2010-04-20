@@ -36,6 +36,13 @@ public class Symbol {
 
     public Symbol childAt(int index) { return getChildren().get(index); }
     public List<Symbol> getChildren() { return children; }
+    public Maybe<Symbol> getLastChild() { return children.size() > 0 ? new Maybe<Symbol>(lastChild()) : Symbol.Nothing; }
+    private Symbol lastChild() { return childAt(children.size() - 1); }
+
+    public boolean hasLastChild(Symbol candidate) {
+        if (children.size() == 0) return false;
+        return lastChild() == candidate;
+    }
 
     public Symbol add(Symbol child) {
         children.add(child);

@@ -20,7 +20,7 @@ public class Translator {
         translations.put(SymbolType.Comment, new CommentBuilder());
         translations.put(SymbolType.Contents, new ContentsBuilder());
         translations.put(SymbolType.Define, new DefineBuilder());
-        translations.put(SymbolType.EMail, new HtmlBuilder("a").body(-1).attribute("href", -1, "mailto:").inline());
+        translations.put(SymbolType.EMail, new HtmlBuilder("a").bodyContent().attribute("href", -1, "mailto:").inline());
         translations.put(SymbolType.Evaluator, new EvaluatorBuilder());
         translations.put(SymbolType.HashTable, new HashTableBuilder());
         translations.put(SymbolType.HeaderLine, new HeaderLineBuilder());
@@ -28,16 +28,17 @@ public class Translator {
         translations.put(SymbolType.Include, new IncludeBuilder());
         translations.put(SymbolType.Italic, new HtmlBuilder("i").body(0).inline());
         translations.put(SymbolType.Link, new LinkBuilder());
-        translations.put(SymbolType.List, new ListBuilder());
         translations.put(SymbolType.Meta, new HtmlBuilder("span").body(0).attribute("class", "meta").inline());
         translations.put(SymbolType.Newline, new HtmlBuilder("br").inline());
         translations.put(SymbolType.NoteLine, new HtmlBuilder("span").body(0).attribute("class", "note").inline());
+        translations.put(SymbolType.OrderedList, new ListBuilder("ol"));
         translations.put(SymbolType.Path, new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
-        translations.put(SymbolType.Preformat, new HtmlBuilder("pre").body(-1));
+        translations.put(SymbolType.Preformat, new HtmlBuilder("pre").bodyContent());
         translations.put(SymbolType.Strike, new HtmlBuilder("span").body(0).attribute("class", "strike").inline());
         translations.put(SymbolType.Style, new HtmlBuilder("span").body(0).attribute("class", -1).inline());
         translations.put(SymbolType.Table, new TableBuilder());
         translations.put(SymbolType.Text, new TextBuilder());
+        translations.put(SymbolType.UnorderedList, new ListBuilder("ul"));
         translations.put(SymbolType.Variable, new VariableBuilder());
         translations.put(SymbolType.WikiWord, new WikiWordBuilder());
     }

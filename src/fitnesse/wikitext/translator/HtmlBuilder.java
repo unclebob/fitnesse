@@ -1,6 +1,7 @@
 package fitnesse.wikitext.translator;
 
 import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlText;
 import fitnesse.wikitext.parser.Symbol;
 
 import java.util.ArrayList;
@@ -50,8 +51,16 @@ public class HtmlBuilder implements Translation {
     public HtmlBuilder body(final int index, final String prefix) {
         builders.add(new TagBuilder() {
             public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.add(prefix +
-                        (index < 0 ? symbol.getContent() : translator.translate(symbol.childAt(index))));
+                tag.add(prefix + translator.translate(symbol.childAt(index)));
+            }
+        });
+        return this;
+    }
+
+    public HtmlBuilder bodyContent() {
+        builders.add(new TagBuilder() {
+            public void build(Translator translator, Symbol symbol, HtmlTag tag) {
+                tag.add(new HtmlText(symbol.getContent()));
             }
         });
         return this;

@@ -29,7 +29,6 @@ public enum SymbolType {
     Include(new Matcher().startLine().string("!include"), new IncludeRule()),
     Italic(new Matcher().string("''"), new EqualPairRule()),
     Link(new Matcher().string(new String[] {"http://", "https://"}), new LinkRule()),
-    List(new Matcher().startLine().whitespace().string("*"), new ListRule()),
     Literal(new Matcher().string("!-"), new LiteralRule()),
     Meta(new Matcher().string("!meta"), new LineRule()),
     Newline(new Matcher().string("\n")),
@@ -37,6 +36,7 @@ public enum SymbolType {
     OpenBrace(new Matcher().string("{")),
     OpenBracket(new Matcher().string("[")),
     OpenParenthesis(new Matcher().string("(")),
+    OrderedList(new Matcher().startLine().whitespace().string(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"}).string(" "), new ListRule()),
     Path(new Matcher().startLine().string("!path"), new LineRule()),
     Preformat(new Matcher().string("{{{"), new LiteralRule()),
     Strike(new Matcher().string("--"), new EqualPairRule()),
@@ -44,6 +44,7 @@ public enum SymbolType {
     SymbolList(),
     Table(new Matcher().startLine().string(new String[] {"|", "!|", "-|", "-!|"}), new TableRule()),
     Text(),
+    UnorderedList(new Matcher().startLine().whitespace().string("* "), new ListRule()),
     Variable(new Matcher().string("${"), new VariableRule()),
     Whitespace(new Matcher().whitespace()),
     WikiWord();

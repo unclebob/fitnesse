@@ -23,8 +23,7 @@ public class TableRule implements Rule {
 
     private Symbol parseCell(Parser parser, String content) {
         if (content.indexOf("!") >= 0) {
-            return Parser.make(parser.getPage(), parser.getScanner(), new SymbolProvider().setTypes(SymbolProvider.literalTableTypes), SymbolType.EndCell)
-                    .parse();
+            return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableTypes);
         }
         else
             return parser.parseTo(SymbolType.EndCell);

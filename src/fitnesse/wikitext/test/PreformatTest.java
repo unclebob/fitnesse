@@ -13,5 +13,6 @@ public class PreformatTest {
     @Test public void translatesPreformats() {
         ParserTest.assertTranslatesTo("{{{stuff}}}", "<pre>stuff</pre>" + HtmlElement.endl);
         ParserTest.assertTranslatesTo("{{{''stuff''}}}", "<pre>''stuff''</pre>" + HtmlElement.endl);
+        ParserTest.assertTranslatesTo("{{{<stuff>}}}", "<pre>&lt;stuff&gt;</pre>" + HtmlElement.endl);
     }
 }

@@ -30,7 +30,7 @@ public class SymbolProvider {
 
         /* This is the default list. These can be broken out further */
         dispatch.put(defaultMatch, new SymbolType[] {
-            SymbolType.Alias, SymbolType.List, SymbolType.Comment, SymbolType.Whitespace, SymbolType.CloseCollapsible,
+            SymbolType.Alias, SymbolType.UnorderedList, SymbolType.OrderedList, SymbolType.Comment, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
             SymbolType.Evaluator, SymbolType.CloseEvaluator, SymbolType.Variable, SymbolType.Preformat,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
