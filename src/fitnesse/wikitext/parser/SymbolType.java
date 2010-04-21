@@ -39,6 +39,7 @@ public enum SymbolType {
     OrderedList(new Matcher().startLine().whitespace().string(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"}).string(" "), new ListRule()),
     Path(new Matcher().startLine().string("!path"), new LineRule()),
     Preformat(new Matcher().string("{{{"), new LiteralRule()),
+    See(new Matcher().string("!see").whitespace(), new SeeRule()),
     Strike(new Matcher().string("--"), new EqualPairRule()),
     Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}), new StyleRule()),
     SymbolList(),

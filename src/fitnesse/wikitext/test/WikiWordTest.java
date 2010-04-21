@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 public class WikiWordTest {
