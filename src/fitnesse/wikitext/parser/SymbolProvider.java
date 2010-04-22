@@ -18,14 +18,12 @@ public class SymbolProvider {
         for (char digit = '0'; digit <= '9'; digit++) dispatch.put(digit, new SymbolType[] {});
 
         dispatch.put('h', new SymbolType[] { SymbolType.Link });
-        dispatch.put('|', new SymbolType[]
-            { SymbolType.Table, SymbolType.EndCell });
+        dispatch.put('|', new SymbolType[] { SymbolType.Table, SymbolType.EndCell });
         dispatch.put('!', new SymbolType[] {
                 SymbolType.HashTable, SymbolType.HeaderLine, SymbolType.Literal, SymbolType.Collapsible,
                 SymbolType.AnchorName, SymbolType.Contents, SymbolType.CenterLine, SymbolType.Define,
-                SymbolType.Include, SymbolType.Meta, SymbolType.NoteLine, SymbolType.Path, SymbolType.See,
-                SymbolType.Style,
-                SymbolType.Table });
+                SymbolType.Include, SymbolType.Meta, SymbolType.NoteLine, SymbolType.Path, SymbolType.PlainTextTable,
+                SymbolType.See, SymbolType.Style, SymbolType.Table });
         dispatch.put('-', new SymbolType[] {
                 SymbolType.HorizontalRule, SymbolType.Table, SymbolType.CloseLiteral, SymbolType.Strike});
 
@@ -35,7 +33,7 @@ public class SymbolProvider {
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
             SymbolType.Evaluator, SymbolType.CloseEvaluator, SymbolType.Variable, SymbolType.Preformat,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
-            SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.CloseBracket, SymbolType.CloseLiteral,
+            SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Collapsible, SymbolType.HorizontalRule, SymbolType.Bold,
             SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord, SymbolType.Text });
     }

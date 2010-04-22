@@ -33,6 +33,7 @@ public class Translator {
         translations.put(SymbolType.NoteLine, new HtmlBuilder("span").body(0).attribute("class", "note").inline());
         translations.put(SymbolType.OrderedList, new ListBuilder("ol"));
         translations.put(SymbolType.Path, new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
+        translations.put(SymbolType.PlainTextTable, new TableBuilder());
         translations.put(SymbolType.Preformat, new HtmlBuilder("pre").bodyContent());
         translations.put(SymbolType.See, new HtmlBuilder("b").body(0, "See: ").inline());
         translations.put(SymbolType.Strike, new HtmlBuilder("span").body(0).attribute("class", "strike").inline());

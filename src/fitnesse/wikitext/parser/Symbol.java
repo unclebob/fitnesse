@@ -1,8 +1,6 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.VariableSource;
 import util.Maybe;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +11,8 @@ public class Symbol {
     private SymbolType type;
     private String content = "";
     private List<Symbol> children = new ArrayList<Symbol>();
-    private HashMap<String ,String> variables;
+    private HashMap<String, String> variables;
+    private HashMap<String, String> properties;
 
     public Symbol(SymbolType type) { setType(type); }
     public Symbol() { this(SymbolType.Empty); }
@@ -64,6 +63,14 @@ public class Symbol {
         return result;
     }
 
+    public boolean hasOption(String option) {
+        if (children.size() == 0) return false;
+        for (Symbol child: childAt(0).getChildren()) {
+            if (child.getContent().equals(option)) return true;
+        }
+        return false;
+    }
+
     public void walk(SymbolTreeWalker walker) {
         walk(this, walker);
     }
@@ -86,5 +93,22 @@ public class Symbol {
 
     public String getVariable(String name, String defaultValue) {
         return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
+    }
+
+    public void putProperty(String key, String value) {
+        if (properties == null) properties = new HashMap<String, String> ();
+        properties.put(key, value);
+    }
+
+    public boolean hasProperty(String key) {
+        return properties != null && properties.containsKey(key);
+    }
+
+    public String getProperty(String key, String defaultValue) {
+        return properties != null && properties.containsKey(key) ? properties.get(key) : defaultValue;
+    }
+
+    public String getProperty(String key) {
+        return getProperty(key, "");
     }
 }

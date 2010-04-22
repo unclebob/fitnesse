@@ -9,11 +9,6 @@ public class EvaluatorTest {
     }
 
     @Test public void translatesEvaluators() {
-
-        String line = "axb";
-        line = line.replace("x", "$");
-
-
         ParserTest.assertTranslatesTo("${= 8 =}", "8");
         ParserTest.assertTranslatesTo("${=42.24=}", "42.24");
         ParserTest.assertTranslatesTo("${=1.2E+3=}", "1200");

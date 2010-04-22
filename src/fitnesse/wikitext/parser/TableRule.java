@@ -5,8 +5,9 @@ import util.Maybe;
 public class TableRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
-        Symbol table = scanner.getCurrent();
+        Symbol table = parser.getCurrent();
         String content = table.getContent();
+        if (table.getContent().charAt(0) == '-') table.putProperty("hideFirst", "");
         while (true) {
             Symbol row = new Symbol(SymbolType.SymbolList);
             table.add(row);

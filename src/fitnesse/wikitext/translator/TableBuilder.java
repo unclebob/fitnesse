@@ -6,14 +6,19 @@ import fitnesse.wikitext.parser.Symbol;
 public class TableBuilder implements Translation {
     public String toHtml(Translator translator, Symbol symbol) {
         HtmlTag table = new HtmlTag("table");
-        table.addAttribute("border", "1");
-        table.addAttribute("cellspacing", "0");
+        if (symbol.hasProperty("class")) {
+            table.addAttribute("class", symbol.getProperty("class"));
+        }
+        else {
+            table.addAttribute("border", "1");
+            table.addAttribute("cellspacing", "0");
+        }
         int longestRow = longestRow(symbol);
         int rowCount = 0;
         for (Symbol child: symbol.getChildren()) {
             rowCount++;
             HtmlTag row = new HtmlTag("tr");
-            if (rowCount == 1 && symbol.getContent().charAt(0) == '-') {
+            if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
                 row.addAttribute("class", "hidden");
             }
             table.add(row);

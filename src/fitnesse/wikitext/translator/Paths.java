@@ -1,13 +1,10 @@
 package fitnesse.wikitext.translator;
 
-import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolTreeWalker;
 import fitnesse.wikitext.parser.SymbolType;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Paths {
     private Translator translator;

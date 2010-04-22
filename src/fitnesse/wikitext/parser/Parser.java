@@ -56,6 +56,8 @@ public class Parser {
     public SymbolType[] getTerminators() { return terminators; }
     public SymbolType[] getEnds() { return ends; }
 
+    public Symbol getCurrent() { return scanner.getCurrent(); }
+
     public Maybe<Symbol> getPrevious(SymbolType requestedType) {
         if (result == null) return Symbol.Nothing;
         Maybe<Symbol> lastChild = result.getLastChild();
