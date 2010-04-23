@@ -33,7 +33,7 @@ public class PathTest {
     @Test
     public void findsDefinitions() throws Exception {
         WikiPage page = new TestRoot().makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
-        List<String> paths = new Paths(new Translator(page, ParserTest.parse(page))).getPaths();
+        List<String> paths = new Paths(new Translator(page)).getPaths(ParserTest.parse(page));
         assertEquals(2, paths.size());
         assertEquals("stuff", paths.get(0));
         assertEquals("nonsense", paths.get(1));

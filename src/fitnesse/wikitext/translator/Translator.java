@@ -46,17 +46,14 @@ public class Translator {
     }
 
     private WikiPage currentPage;
-    private Symbol syntaxTree;
 
-    public Translator(WikiPage currentPage, Symbol syntaxTree) {
+    public Translator(WikiPage currentPage) {
         this.currentPage = currentPage;
-        this.syntaxTree =  syntaxTree;
     }
 
     public WikiPage getPage() { return currentPage; }
-    public Symbol getSyntaxTree() { return syntaxTree; }
 
-    public String translate() {
+    public String translateTree(Symbol syntaxTree) {
         StringBuilder result = new StringBuilder();
         for (Symbol symbol : syntaxTree.getChildren()) {
             result.append(translate(symbol));

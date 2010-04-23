@@ -21,10 +21,10 @@ public class CollapsibleRule implements Rule {
         }
         if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
 
-        Symbol titleText = parser.parseIgnoreFirst(SymbolType.Newline);
+        Symbol titleText = parser.parseToIgnoreFirst(SymbolType.Newline);
         if (scanner.isEnd()) return Symbol.Nothing;
 
-        Symbol bodyText = parser.parseIgnoreFirst(SymbolType.CloseCollapsible);
+        Symbol bodyText = parser.parseToIgnoreFirst(SymbolType.CloseCollapsible);
         if (scanner.isEnd()) return Symbol.Nothing;
 
         bodyText.removeLastChild();

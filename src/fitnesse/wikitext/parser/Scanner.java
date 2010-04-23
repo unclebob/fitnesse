@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.wikitext.parser.VariableSource;
 import util.Maybe;
 
 import java.util.ArrayList;
@@ -90,7 +89,7 @@ public class Scanner {
         int newNext = next;
         Symbol matchToken = null;
         while (!input.isEnd()) {
-            for (SymbolType candidate: provider.candidates(input.charAt(0))) {
+            for (Matchable candidate: provider.candidates(input.charAt(0))) {
                 if (input.getOffset() != next || !contains(ignoreFirst, candidate)) {
                     TokenMatch match = candidate.makeMatch(input);
                     if (match.isMatch()) {
@@ -118,7 +117,7 @@ public class Scanner {
         }
     }
 
-    private boolean contains(List<SymbolType> ignoreList, SymbolType candidate) {
+    private boolean contains(List<SymbolType> ignoreList, Matchable candidate) {
         for (SymbolType ignore: ignoreList) {
             if (ignore == candidate) return true;
         }

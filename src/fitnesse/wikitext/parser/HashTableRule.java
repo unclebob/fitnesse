@@ -3,6 +3,8 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class HashTableRule implements Rule {
+    private static final SymbolType[] terminators = new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace};
+
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         Symbol table = new Symbol(SymbolType.HashTable);
@@ -10,9 +12,7 @@ public class HashTableRule implements Rule {
             Symbol row = new Symbol(SymbolType.SymbolList);
             table.add(row);
             for (int i = 0; i < 2; i++) {
-                Symbol cell = Parser.makeIgnoreFirst(parser.getPage(), scanner,
-                        new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace})
-                        .parse();
+                Symbol cell = parser.parseToIgnoreFirst(terminators);
                 if (scanner.isEnd()) return Symbol.Nothing;
                 row.add(cell);
             }

@@ -13,9 +13,9 @@ public class Paths {
         this.translator = translator;
     }
 
-    public List<String> getPaths() {
+    public List<String> getPaths(Symbol syntaxTree) {
         TreeWalker walker = new TreeWalker();
-        translator.getSyntaxTree().walk(walker);
+        syntaxTree.walk(walker);
         return walker.result;
     }
 

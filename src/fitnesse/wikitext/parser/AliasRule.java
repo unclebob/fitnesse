@@ -6,7 +6,7 @@ import java.util.List;
 public class AliasRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
-        Symbol tag = parser.parseIgnoreFirst(SymbolType.CloseBracket);
+        Symbol tag = parser.parseToIgnoreFirst(SymbolType.CloseBracket);
         if (scanner.isEnd()) return Symbol.Nothing;
 
         scanner.moveNext();

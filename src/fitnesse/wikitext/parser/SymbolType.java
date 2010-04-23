@@ -1,6 +1,6 @@
 package fitnesse.wikitext.parser;
 
-public enum SymbolType {
+public enum SymbolType implements Matchable {
     Alias(new Matcher().string("[["), new AliasRule()),
     AnchorName(new Matcher().string("!anchor"), new AnchorNameRule()),
     AnchorReference(new Matcher().string(".#"), new AnchorReferenceRule()),
@@ -39,6 +39,7 @@ public enum SymbolType {
     OpenParenthesis(new Matcher().string("(")),
     OrderedList(new Matcher().startLine().whitespace().string(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"}).string(" "), new ListRule()),
     Path(new Matcher().startLine().string("!path"), new LineRule()),
+    PlainTextCellSeparator(),
     PlainTextTable(new Matcher().startLine().string("!["), new PlainTextTableRule()),
     Preformat(new Matcher().string("{{{"), new LiteralRule()),
     See(new Matcher().string("!see").whitespace(), new SeeRule()),
@@ -73,6 +74,7 @@ public enum SymbolType {
 
     SymbolType() { this.matcher = new Matcher().noMatch(); }
     SymbolType(Matcher matcher) { this.matcher = matcher; }
+
     SymbolType(Matcher matcher, Rule rule) {
         this.matcher = matcher;
         this.rule = rule;
@@ -80,6 +82,10 @@ public enum SymbolType {
 
     public Rule getRule() { return rule; }
 
-    public TokenMatch makeMatch(ScanString input) { return matcher.makeMatch(this, input); }
+    public TokenMatch makeMatch(ScanString input) { return getMatcher().makeMatch(this, input); }
+
+    public Matcher getMatcher() {
+        return matcher;
+    }
 }
 

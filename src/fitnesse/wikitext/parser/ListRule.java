@@ -10,6 +10,7 @@ public class ListRule implements Rule {
         Symbol body = parser.parseTo(SymbolType.Newline);
         if (scanner.isEnd()) return Symbol.Nothing;
 
+        //todo: use scanner look-ahead instead?
         Maybe<Symbol> previous = parser.getPrevious(list.getType());
         if (previous.isNothing()) {
             list.add(body);

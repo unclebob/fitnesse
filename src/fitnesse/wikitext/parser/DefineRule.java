@@ -19,7 +19,7 @@ public class DefineRule implements Rule {
 
         int start = scanner.getOffset();
         scanner.markStart();
-        Symbol value = parser.parseIgnoreFirst(close);
+        Symbol value = parser.parseToIgnoreFirst(close);
         if (scanner.isEnd()) return Symbol.Nothing;
 
         String valueString = scanner.substring(start, scanner.getOffset() - 1);

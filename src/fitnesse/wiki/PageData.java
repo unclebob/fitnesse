@@ -200,11 +200,11 @@ public class PageData implements Serializable {
 
   /* this is the public entry to page parse and translate */
   public String getHtml() throws Exception {
-    return processHTMLWidgets(getContent(), wikiPage);
+    return processHTMLWidgets(wikiPage);
   }
 
   public String getHtml(WikiPage context) throws Exception {
-    return processHTMLWidgets(getContent(), context);
+    return processHTMLWidgets(context);
   }
 
   public String getHeaderPageHtml() throws Exception {
@@ -258,8 +258,8 @@ public class PageData implements Serializable {
       return root.render();
     }*/
 
-    private String processHTMLWidgets(String content, WikiPage context) throws Exception {
-        return new Translator(context, getSyntaxTree()).translate();
+    private String processHTMLWidgets(WikiPage context) throws Exception {
+        return new Translator(context).translateTree(getSyntaxTree());
     }
 
   public void setWikiPage(WikiPage page) {
@@ -271,7 +271,7 @@ public class PageData implements Serializable {
   }
 
   public List<String> getClasspaths() throws Exception {
-    return new Paths(new Translator(wikiPage, getSyntaxTree())).getPaths();
+    return new Paths(new Translator(wikiPage)).getPaths(getSyntaxTree());
     //return getTextOfWidgets(classpathWidgetBuilder);
   }
 

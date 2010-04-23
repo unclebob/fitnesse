@@ -10,9 +10,9 @@ public class SymbolProvider {
     /* We could build these tables automatically... */
 
     private static char defaultMatch = '\0';
-    private static HashMap<Character, SymbolType[]> dispatch;
+    private static HashMap<Character, Matchable[]> dispatch;
     static {
-        dispatch = new HashMap<Character, SymbolType[]>();
+        dispatch = new HashMap<Character, Matchable[]>();
         for (char letter = 'a'; letter <= 'z'; letter++) dispatch.put(letter, new SymbolType[] {});
         for (char letter = 'A'; letter <= 'Z'; letter++) dispatch.put(letter, new SymbolType[] {});
         for (char digit = '0'; digit <= '9'; digit++) dispatch.put(digit, new SymbolType[] {});
@@ -45,52 +45,52 @@ public class SymbolProvider {
     public static final SymbolType[] linkTargetTypes = {
             SymbolType.Literal, SymbolType.Variable};
 
-    private HashMap<Character, SymbolType[]> currentDispatch = dispatch;
-    private SymbolType[] currentTypes;
+    private HashMap<Character, Matchable[]> currentDispatch = dispatch;
+    private Matchable[] currentTypes;
     private int currentIndex;
 
-    private SymbolType[] getMatchTypes(Character match) {
+    private Matchable[] getMatchTypes(Character match) {
         if (currentDispatch.containsKey(match)) return currentDispatch.get(match);
         return currentDispatch.get(defaultMatch);
     }
 
-    public SymbolProvider setTypes(SymbolType[] types) {
-        currentDispatch = new HashMap<Character, SymbolType[]>();
+    public SymbolProvider setTypes(Matchable[] types) {
+        currentDispatch = new HashMap<Character, Matchable[]>();
         currentDispatch.put(defaultMatch, types);
         return this;
     }
 
     public SymbolProvider addTypes(SymbolType[] types) {
-        ArrayList<SymbolType> defaults = new ArrayList<SymbolType>();
+        ArrayList<Matchable> defaults = new ArrayList<Matchable>();
         defaults.addAll(Arrays.asList(currentDispatch.get(defaultMatch)));
         for (SymbolType type: types) {
             if (!defaults.contains(type)) defaults.add(type);
         }
-        SymbolType[] newDefaults = new SymbolType[defaults.size()];
+        Matchable[] newDefaults = new Matchable[defaults.size()];
         for (int i = 0; i < defaults.size(); i++) newDefaults[i] = defaults.get(i);
         currentDispatch.put(defaultMatch, newDefaults);
         return this;
     }
 
-    public boolean hasType(SymbolType type) {
-        for (SymbolType currentType: currentDispatch.get(defaultMatch)) {
+    public boolean hasType(Matchable type) {
+        for (Matchable currentType: currentDispatch.get(defaultMatch)) {
             if (type == currentType) return true;
         }
         return false;
     }
 
-    public Iterable<SymbolType> candidates(char startsWith) {
+    public Iterable<Matchable> candidates(char startsWith) {
         currentTypes = getMatchTypes(startsWith);
         currentIndex = 0;
-        return new Iterable<SymbolType> () {
-            public Iterator<SymbolType> iterator() {
-                return new Iterator<SymbolType>() {
+        return new Iterable<Matchable> () {
+            public Iterator<Matchable> iterator() {
+                return new Iterator<Matchable>() {
 
                     public boolean hasNext() {
                         return currentIndex < currentTypes.length;
                     }
 
-                    public SymbolType next() {
+                    public Matchable next() {
                         return currentTypes[currentIndex++];
                     }
 

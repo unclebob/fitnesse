@@ -24,4 +24,23 @@ public class PlainTextTableTest {
                 "\t</tr>" + HtmlElement.endl +
                 "</table>" + HtmlElement.endl);
     }
+
+    @Test public void hidesFirstRow() throws Exception {
+        ParserTest.assertTranslatesTo("![ stuff\n]!",
+                "<table class=\"plain_text_table\">" + HtmlElement.endl +
+                "\t<tr class=\"hidden\">" + HtmlElement.endl +
+                "\t\t<td>stuff</td>" + HtmlElement.endl +
+                "\t</tr>" + HtmlElement.endl +
+                "</table>" + HtmlElement.endl);
+    }
+
+    @Test public void translatesDelimitedColumns() throws Exception {
+        ParserTest.assertTranslatesTo("![:\nstuff:nonsense\n]!",
+                "<table class=\"plain_text_table\">" + HtmlElement.endl +
+                "\t<tr>" + HtmlElement.endl +
+                "\t\t<td>stuff</td>" + HtmlElement.endl +
+                "\t\t<td>nonsense</td>" + HtmlElement.endl +
+                "\t</tr>" + HtmlElement.endl +
+                "</table>" + HtmlElement.endl);
+    }
 }

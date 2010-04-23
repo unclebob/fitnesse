@@ -68,12 +68,12 @@ public class ParserTest {
 
     public static String translateToHtml(WikiPage page, String input) {
         Symbol list = Parser.make(new ParsingPage(page), input).parse();
-        return new Translator(page, list).translate();
+        return new Translator(page).translateTree(list);
     }
 
     public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
         Symbol list = Parser.make(new ParsingPage(page), input, variableSource).parse();
-        return new Translator(page, list).translate();
+        return new Translator(page).translateTree(list);
     }
 
     public static String translateTo(WikiPage page) throws Exception {
