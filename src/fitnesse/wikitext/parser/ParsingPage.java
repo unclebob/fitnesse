@@ -33,9 +33,9 @@ public class ParsingPage {
 
     public Maybe<String> getSpecialVariableValue(String key) {
         String value;
-        if (key.equals("PARENT_NAME"))
+        if (key.equals("RUNNING_PAGE_NAME"))
             value = getPageName(page);
-        else if (key.equals("PARENT_PATH"))
+        else if (key.equals("RUNNING_PAGE_PATH"))
             value = getPagePath(page);
         else if (key.equals("PAGE_NAME"))
             value = getPageName(namedPage);
