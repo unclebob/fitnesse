@@ -58,8 +58,12 @@ public class ParserTest {
         assertEquals(expected, translateTo(page, input));
     }
 
-    public static void assertTranslatesTo(WikiPage page, String expected) throws Exception {
+    public static void assertTranslatesTo(SourcePage page, String expected) throws Exception {
         assertEquals(expected, translateTo(page));
+    }
+
+    public static void assertTranslatesTo(WikiPage page, String expected) throws Exception {
+        assertEquals(expected, translateTo(new WikiSourcePage(page)));
     }
 
     public static String translateTo(WikiPage page, String input) {
@@ -77,7 +81,11 @@ public class ParserTest {
     }
 
     public static String translateTo(WikiPage page) throws Exception {
-        return page.getData().getHtml();
+        return translateTo(new WikiSourcePage(page));
+    }
+
+    public static String translateTo(SourcePage page) throws Exception {
+        return new Translator(page).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
     }
 
     public static void assertParses(String input, String expected) throws Exception {
@@ -105,5 +113,9 @@ public class ParserTest {
         }
         if (i > 0) result.append("]");
         return result.toString();
+    }
+
+    public static String metaHtml(String message) {
+        return "<span class=\"meta\">" + message + "</span>";
     }
 }
