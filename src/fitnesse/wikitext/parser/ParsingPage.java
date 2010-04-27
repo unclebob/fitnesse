@@ -1,46 +1,45 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
 import util.Maybe;
 
 import java.util.HashMap;
 
 public class ParsingPage {
-    private WikiPage page;
-    private WikiPage namedPage;
-    private HashMap<WikiPage, HashMap<String, Maybe<String>>> cache;
+    private SourcePage page;
+    private SourcePage namedPage;
+    private HashMap<String, HashMap<String, Maybe<String>>> cache;
 
-    public ParsingPage(WikiPage page) {
-        this(page, page, new HashMap<WikiPage, HashMap<String, Maybe<String>>>());
+    public ParsingPage(SourcePage page) {
+        this(page, page, new HashMap<String, HashMap<String, Maybe<String>>>());
     }
 
-    public ParsingPage copyForPage(WikiPage page) {
+    public ParsingPage copyForPage(SourcePage page) {
         return new ParsingPage(page, page, this.cache);
     }
 
-    public ParsingPage copyForNamedPage(WikiPage namedPage) {
+    public ParsingPage copyForNamedPage(SourcePage namedPage) {
         return new ParsingPage(this.page, namedPage, this.cache);
     }
     
-    private ParsingPage(WikiPage page, WikiPage namedPage, HashMap<WikiPage, HashMap<String, Maybe<String>>> cache) {
+    private ParsingPage(SourcePage page, SourcePage namedPage, HashMap<String, HashMap<String, Maybe<String>>> cache) {
         this.page = page;
         this.namedPage = namedPage;
         this.cache = cache;
     }
 
-    public WikiPage getPage() { return page; }
+    public SourcePage getPage() { return page; }
 
     public Maybe<String> getSpecialVariableValue(String key) {
         String value;
         if (key.equals("RUNNING_PAGE_NAME"))
-            value = getPageName(page);
+            value = page.getName();
         else if (key.equals("RUNNING_PAGE_PATH"))
-            value = getPagePath(page);
+            value = page.getPath();
         else if (key.equals("PAGE_NAME"))
-            value = getPageName(namedPage);
+            value = namedPage.getName();
         else if (key.equals("PAGE_PATH"))
-            value = getPagePath(namedPage);
+            value = namedPage.getPath();
         else if (key.equals("FITNESSE_PORT"))
             value = Integer.toString(FitNesseContext.globalContext.port);
         else if (key.equals("FITNESSE_ROOTPATH"))
@@ -50,41 +49,30 @@ public class ParsingPage {
         return new Maybe<String>(value);
     }
 
-    private String getPageName(WikiPage namedPage) {
-        return namedPage.getName();
+    public boolean inCache(SourcePage page) {
+        return cache.containsKey(page.getFullName());
     }
 
-    private String getPagePath(WikiPage namedPage) {
-        try {
-            return namedPage.getPageCrawler().getFullPath(this.namedPage).parentPath().toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
-    }
-
-    public boolean inCache(WikiPage page) {
-        return cache.containsKey(page);
-    }
-
-    public Maybe<String> findVariable(WikiPage page, String name) {
-        if (!cache.containsKey(page)) return Maybe.noString;
-        if (!cache.get(page).containsKey(name)) return Maybe.noString;
-        return cache.get(page).get(name);
+    public Maybe<String> findVariable(SourcePage page, String name) {
+        String key = page.getFullName();
+        if (!cache.containsKey(key)) return Maybe.noString;
+        if (!cache.get(key).containsKey(name)) return Maybe.noString;
+        return cache.get(key).get(name);
     }
 
     public Maybe<String> findVariable(String name) {
         return findVariable(page, name);
     }
 
-    public String findVariable(WikiPage page, String name, String defaultValue) {
+    public String findVariable(SourcePage page, String name, String defaultValue) {
         Maybe<String> result = findVariable(page, name);
         return result.isNothing() ? defaultValue : result.getValue();
     }
 
-    public void putVariable(WikiPage page, String name, Maybe<String> value) {
-        if (!cache.containsKey(page)) cache.put(page, new HashMap<String, Maybe<String>>());
-        cache.get(page).put(name, value);
+    public void putVariable(SourcePage page, String name, Maybe<String> value) {
+        String key = page.getFullName();
+        if (!cache.containsKey(key)) cache.put(key, new HashMap<String, Maybe<String>>());
+        cache.get(key).put(name, value);
     }
 
     public void putVariable(String name, String value) {

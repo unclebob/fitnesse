@@ -6,6 +6,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import fitnesse.wikitext.translator.ContentsItemBuilder;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class ContentsItemTest {
         contents.add(new Symbol(SymbolType.Text, option));
         contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
-        assertEquals(result + HtmlElement.endl, builder.buildItem(withProperties(new TestRoot().makePage(page), properties)).html());
+        assertEquals(result + HtmlElement.endl, builder.buildItem(new WikiSourcePage(withProperties(new TestRoot().makePage(page), properties))).html());
     }
 
     private WikiPage withProperties(WikiPage page, String[] propList) throws Exception {

@@ -23,7 +23,7 @@ public class SymbolProvider {
                 SymbolType.HashTable, SymbolType.HeaderLine, SymbolType.Literal, SymbolType.Collapsible,
                 SymbolType.AnchorName, SymbolType.Contents, SymbolType.CenterLine, SymbolType.Define,
                 SymbolType.Include, SymbolType.Meta, SymbolType.NoteLine, SymbolType.Path, SymbolType.PlainTextTable,
-                SymbolType.See, SymbolType.Style, SymbolType.Table });
+                SymbolType.See, SymbolType.Style, SymbolType.Table, SymbolType.LastModified });
         dispatch.put('-', new SymbolType[] {
                 SymbolType.HorizontalRule, SymbolType.Table, SymbolType.CloseLiteral, SymbolType.Strike});
 

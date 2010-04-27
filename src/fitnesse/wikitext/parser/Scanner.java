@@ -85,6 +85,17 @@ public class Scanner {
     }
 
     public void moveNextIgnoreFirst(SymbolProvider provider, List<SymbolType> ignoreFirst) {
+        Step step = makeNextStep(provider, ignoreFirst);
+        next = step.nextPosition;
+        currentToken = step.token;
+    }
+
+    public Symbol peek(SymbolProvider provider, List<SymbolType> ignoreFirst) {
+        Step step = makeNextStep(provider, ignoreFirst);
+        return step.token;
+    }
+
+    private Step makeNextStep(SymbolProvider provider, List<SymbolType> ignoreFirst) {
         input.setOffset(next);
         int newNext = next;
         Symbol matchToken = null;
@@ -102,18 +113,22 @@ public class Scanner {
             if (matchToken != null) break;
             input.moveNext();
         }
-        if (input.isEnd()) {
-            matchToken = endToken;
-            newNext = input.getOffset();
-        }
         if (input.getOffset() > next) {
             TokenMatch match = textMaker.make(provider, input.substringFrom(next));
-            currentToken = match.getToken();
-            next += match.getMatchLength();
+            return new Step(match.getToken(), next + match.getMatchLength());
         }
-        else {
-            currentToken = matchToken;
-            next = newNext;
+        if (input.isEnd()) {
+            return new Step(endToken, input.getOffset());
+        }
+        return new Step(matchToken, newNext);
+    }
+
+    private class Step {
+        public Symbol token;
+        public int nextPosition;
+        public Step(Symbol token, int nextPosition) {
+            this.token = token;
+            this.nextPosition = nextPosition;
         }
     }
 

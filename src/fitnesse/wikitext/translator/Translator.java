@@ -1,6 +1,5 @@
 package fitnesse.wikitext.translator;
 
-import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 
 import java.util.HashMap;
@@ -27,6 +26,7 @@ public class Translator {
         translations.put(SymbolType.HorizontalRule, new HorizontalRuleBuilder());
         translations.put(SymbolType.Include, new IncludeBuilder());
         translations.put(SymbolType.Italic, new HtmlBuilder("i").body(0).inline());
+        translations.put(SymbolType.LastModified, new LastModifiedBuilder());
         translations.put(SymbolType.Link, new LinkBuilder());
         translations.put(SymbolType.Meta, new HtmlBuilder("span").body(0).attribute("class", "meta").inline());
         translations.put(SymbolType.Newline, new HtmlBuilder("br").inline());
@@ -45,13 +45,13 @@ public class Translator {
         translations.put(SymbolType.WikiWord, new WikiWordBuilder());
     }
 
-    private WikiPage currentPage;
+    private SourcePage currentPage;
 
-    public Translator(WikiPage currentPage) {
+    public Translator(SourcePage currentPage) {
         this.currentPage = currentPage;
     }
 
-    public WikiPage getPage() { return currentPage; }
+    public SourcePage getPage() { return currentPage; }
 
     public String translateTree(Symbol syntaxTree) {
         StringBuilder result = new StringBuilder();
@@ -74,7 +74,7 @@ public class Translator {
         }
     }
 
-    public String formatError(String message) {
+    public String formatMessage(String message) {
         return translate(new Symbol(SymbolType.Meta).add(message));
     }
 }

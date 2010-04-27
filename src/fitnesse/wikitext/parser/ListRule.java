@@ -4,37 +4,29 @@ import util.Maybe;
 
 public class ListRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        Symbol list = scanner.getCurrent();
-        
-        Symbol body = parser.parseTo(SymbolType.Newline);
-        if (scanner.isEnd()) return Symbol.Nothing;
+        Symbol list = parser.getCurrent();
+        return populateList(parser, list);
+    }
 
-        //todo: use scanner look-ahead instead?
-        Maybe<Symbol> previous = parser.getPrevious(list.getType());
-        if (previous.isNothing()) {
-            list.add(body);
-            return new Maybe<Symbol>(list);
-        }
-
-        Symbol previousList = previous.getValue();
+    private Maybe<Symbol> populateList(Parser parser, Symbol list) {
+        Symbol nextSymbol = list;
         while (true) {
-            if (indent(previousList) == indent(list)) break;
-            Maybe<Symbol> lastChild = previousList.getLastChild();
-            if (lastChild.isNothing()) break;
-            Symbol previousChild = lastChild.getValue();
-            if (previousChild.getType() != list.getType()) break;
-            previousList = previousChild;
+            if (nextSymbol.getType() != list.getType()) break;
+            if (indent(nextSymbol) < indent(list)) break;
+            if (nextSymbol != list) parser.getScanner().moveNext();
+            if (indent(nextSymbol) > indent(list)) {
+                Maybe<Symbol> subList = populateList(parser, nextSymbol);
+                if (subList.isNothing()) return Symbol.Nothing;
+                list.add(subList.getValue());
+            }
+            else {
+                Symbol body = parser.parseTo(SymbolType.Newline);
+                if (parser.getScanner().isEnd()) return Symbol.Nothing;
+                list.add(body);
+            }
+            nextSymbol = parser.peek();
         }
-
-        if (indent(previousList) < indent(list)) {
-            list.add(body);
-            previousList.add(list);
-        }
-        else {
-            previousList.add(body);
-        }
-        return previous;
+        return new Maybe<Symbol>(list);
     }
 
     private int indent(Symbol symbol) {

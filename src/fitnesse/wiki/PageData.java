@@ -9,6 +9,7 @@ import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
 import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import fitnesse.wikitext.translator.Paths;
 import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.widgets.*;
@@ -223,7 +224,7 @@ public class PageData implements Serializable {
 
     public Symbol getSyntaxTree() throws Exception {
         if (contentSyntaxTree == null) {
-            contentSyntaxTree = Parser.make(new ParsingPage(wikiPage), getContent()).parse();
+            contentSyntaxTree = Parser.make(new ParsingPage(new WikiSourcePage(wikiPage)), getContent()).parse();
         }
         return contentSyntaxTree;
     }
@@ -259,7 +260,7 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(WikiPage context) throws Exception {
-        return new Translator(context).translateTree(getSyntaxTree());
+        return new Translator(new WikiSourcePage(context)).translateTree(getSyntaxTree());
     }
 
   public void setWikiPage(WikiPage page) {
@@ -271,7 +272,7 @@ public class PageData implements Serializable {
   }
 
   public List<String> getClasspaths() throws Exception {
-    return new Paths(new Translator(wikiPage)).getPaths(getSyntaxTree());
+    return new Paths(new Translator(new WikiSourcePage(wikiPage))).getPaths(getSyntaxTree());
     //return getTextOfWidgets(classpathWidgetBuilder);
   }
 

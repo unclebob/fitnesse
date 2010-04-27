@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.FitNesseContext;
-import fitnesse.wiki.WikiPage;
 import util.Maybe;
 
 public class VariableFinder implements VariableSource {
@@ -42,34 +40,13 @@ public class VariableFinder implements VariableSource {
     }
 
     private Maybe<String> lookInParentPages(String name) {
-        try {
-            for (WikiPage wikiPage = getParent(page.getPage()); wikiPage != null; wikiPage = getParent(wikiPage)) {
-                if (!page.inCache(wikiPage)) {
-                    Parser.make(page.copyForPage(wikiPage), wikiPage.getData().getContent()).parse();
-                }
-                Maybe<String> result = page.findVariable(wikiPage, name);
-                if (!result.isNothing()) return result;
-
-                if (wikiPage.getPageCrawler().isRoot(wikiPage)) break;
+        for (SourcePage sourcePage: page.getPage().getAncestors()) {
+            if (!page.inCache(sourcePage)) {
+                Parser.make(page.copyForPage(sourcePage), sourcePage.getContent()).parse();
             }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
+            Maybe<String> result = page.findVariable(sourcePage, name);
+            if (!result.isNothing()) return result;
         }
         return Maybe.noString;
-    }
-
-    private WikiPage getParent(WikiPage child) {
-        if (child == null) return null;
-        try {
-            WikiPage parent = child.getParent();
-            if (parent == child) return null;
-            return parent;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
     }
 }

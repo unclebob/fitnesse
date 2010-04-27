@@ -29,6 +29,7 @@ public enum SymbolType implements Matchable {
     HorizontalRule(new Matcher().string("---").repeat('-')),
     Include(new Matcher().startLine().string("!include"), new IncludeRule()),
     Italic(new Matcher().string("''"), new EqualPairRule()),
+    LastModified(new Matcher().string("!lastmodified")),
     Link(new Matcher().string(new String[] {"http://", "https://"}), new LinkRule()),
     Literal(new Matcher().string("!-"), new LiteralRule()),
     Meta(new Matcher().string("!meta"), new LineRule()),

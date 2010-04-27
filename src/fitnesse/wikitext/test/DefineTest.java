@@ -3,10 +3,7 @@ package fitnesse.wikitext.test;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.VariableFinder;
+import fitnesse.wikitext.parser.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -37,7 +34,7 @@ public class DefineTest {
 
     private void assertDefinesValue(String input, String name, String definedValue) throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne", input);
-        ParsingPage page = new ParsingPage(pageOne);
+        ParsingPage page = new ParsingPage(new WikiSourcePage(pageOne));
         Parser.make(page, input).parse();
         assertEquals(definedValue, page.findVariable(name).getValue());
     }

@@ -4,6 +4,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.widgets.TOCWidget;
 import util.GracefulNamer;
@@ -17,11 +18,11 @@ public class ContentsItemBuilder {
         this.level = level;
     }
 
-    public HtmlTag buildLevel(WikiPage page, HtmlTag contentsDiv) {
+    public HtmlTag buildLevel(SourcePage page, HtmlTag contentsDiv) {
         HtmlTag div = HtmlUtil.makeDivTag("toc" + level);
         HtmlTag list = new HtmlTag("ul");
         try {
-            for (WikiPage child: page.getChildren()) {
+            for (SourcePage child: page.getChildren()) {
                 HtmlTag listItem = new HtmlTag("li");
                 listItem.add(buildItem(child));
                 if (hasOption("-R", "") && child.getChildren().size() > 0) {
@@ -39,10 +40,10 @@ public class ContentsItemBuilder {
         return div;
     }
 
-    public HtmlTag buildItem(WikiPage page) {
+    public HtmlTag buildItem(SourcePage page) {
         HtmlTag result = new HtmlTag("a", buildBody(page));
         result.addAttribute("href", buildReference(page));
-        String help = getPageProperties(page, PageData.PropertyHELP);
+        String help = page.getProperty(PageData.PropertyHELP);
         if (help.length() > 0) {
             if (hasOption("-h", TOCWidget.HELP_TOC)) {
                 result.tail = HtmlUtil.makeSpanTag("pageHelp", ": " + help).htmlInline();
@@ -54,7 +55,7 @@ public class ContentsItemBuilder {
         return result;
     }
 
-    private String buildBody(WikiPage page) {
+    private String buildBody(SourcePage page) {
         String itemText = page.getName();
 
         if (hasOption("-g", TOCWidget.REGRACE_TOC)) {
@@ -68,21 +69,16 @@ public class ContentsItemBuilder {
         }
 
         if (hasOption("-f", TOCWidget.FILTER_TOC)) {
-            String filters = getPageProperties(page, PageData.PropertySUITES);
+            String filters = page.getProperty(PageData.PropertySUITES);
             if (filters.length() > 0) itemText += " (" + filters + ")";
         }
         
         return itemText;
     }
 
-    private String buildReference(WikiPage wikiPage)  {
+    private String buildReference(SourcePage sourcePage) {
         //todo: DRY? see wikiwordbuilder
-        try {
-            return PathParser.render(wikiPage.getPageCrawler().getFullPath(wikiPage));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
+        return sourcePage.getFullName();
     }
 
     private boolean hasOption(String option, String variableName) {
@@ -93,29 +89,12 @@ public class ContentsItemBuilder {
                 && contents.getVariable(variableName, "").equals("true");
     }
 
-    private String getBooleanProperties(WikiPage wikiPage) {
-        try {
-            PageData data = wikiPage.getData();
-            WikiPageProperties props = data.getProperties();
-            String result = "";
-            if (props.has(PageType.SUITE.toString())) result += "*";
-            if (props.has(PageType.TEST.toString())) result += "+";
-            if (props.has(WikiImportProperty.PROPERTY_NAME)) result += "@";
-            if (props.has(PageData.PropertyPRUNE)) result += "-";
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
-    }
-    
-    private String getPageProperties(WikiPage wikiPage, String propertyName) {
-        try {
-            String propertyValue = wikiPage.getData().getAttribute(propertyName);
-            return propertyValue != null ? propertyValue.trim() : "";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
+    private String getBooleanProperties(SourcePage sourcePage) {
+        String result = "";
+        if (sourcePage.hasProperty(PageType.SUITE.toString())) result += "*";
+        if (sourcePage.hasProperty(PageType.TEST.toString())) result += "+";
+        if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += "@";
+        if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += "-";
+        return result;
     }
 }

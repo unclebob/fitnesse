@@ -67,13 +67,13 @@ public class ParserTest {
     }
 
     public static String translateToHtml(WikiPage page, String input) {
-        Symbol list = Parser.make(new ParsingPage(page), input).parse();
-        return new Translator(page).translateTree(list);
+        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
+        return new Translator(new WikiSourcePage(page)).translateTree(list);
     }
 
     public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-        Symbol list = Parser.make(new ParsingPage(page), input, variableSource).parse();
-        return new Translator(page).translateTree(list);
+        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input, variableSource).parse();
+        return new Translator(new WikiSourcePage(page)).translateTree(list);
     }
 
     public static String translateTo(WikiPage page) throws Exception {
@@ -87,11 +87,11 @@ public class ParserTest {
     }
 
     public static Symbol parse(WikiPage page) throws Exception {
-        return Parser.make(new ParsingPage(page), page.getData().getContent()).parse();
+        return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
     }
 
     private static Symbol parse(WikiPage page, String input) {
-        return Parser.make(new ParsingPage(page), input).parse();
+        return Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
     }
 
     public static String serialize(Symbol symbol) {

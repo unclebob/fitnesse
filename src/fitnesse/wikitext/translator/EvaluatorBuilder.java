@@ -8,7 +8,7 @@ public class EvaluatorBuilder implements Translation {
     public String toHtml(Translator translator, Symbol symbol) {
         String body = translator.translate(symbol.childAt(0));
         Maybe<String> result = new FormattedExpression(body).evaluate();
-        if (result.isNothing()) return translator.formatError(result.because());
+        if (result.isNothing()) return translator.formatMessage(result.because());
         return result.getValue().toString();
     }
 }

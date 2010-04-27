@@ -2,33 +2,26 @@ package fitnesse.wikitext.translator;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlText;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import util.GracefulNamer;
-import util.Maybe;
-import util.StringUtil;
-
-import java.util.Arrays;
 
 public class WikiWordBuilder implements Translation  {
     public String toHtml(Translator translator, Symbol symbol) {
         return buildLink(
                 translator.getPage(),
                 symbol.getContent(),
-                new HtmlText(formatWikiWord(translator, symbol.getContent(), symbol)).html());
+                new HtmlText(formatWikiWord(symbol.getContent(), symbol)).html());
     }
 
-    private String buildLink(WikiPage currentPage, String pagePath, String linkBody) {
+    private String buildLink(SourcePage currentPage, String pagePath, String linkBody) {
          return buildLink(currentPage, pagePath, "", linkBody, pagePath);
     }
 
-    public String buildLink(WikiPage currentPage, String pagePath, String pageSuffix, String linkBody, String originalName) {
+    public String buildLink(SourcePage currentPage, String pagePath, String pageSuffix, String linkBody, String originalName) {
         String wikiWordPath = makePath(currentPage, pagePath);
-        WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
+        /*WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
         WikiPagePath fullPathOfWikiWord;
         WikiPage targetPage;
         try {
@@ -37,9 +30,9 @@ public class WikiWordBuilder implements Translation  {
             targetPage = parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord);
         } catch (Exception e) {
             throw new IllegalStateException(e);
-        }
-        String qualifiedName = PathParser.render(fullPathOfWikiWord);
-        if (targetPage != null) {
+        }*/
+        String qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);
+        if (currentPage.targetExists(wikiWordPath)) {
             return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody);
         }
         else
@@ -52,7 +45,7 @@ public class WikiWordBuilder implements Translation  {
         return link.htmlInline();
     }
 
-    private String formatWikiWord(Translator translator, String originalName, Symbol symbol) {
+    private String formatWikiWord(String originalName, Symbol symbol) {
         String regraceOption = symbol.getVariable(WikiWordWidget.REGRACE_LINK, "");
         return regraceOption.equals("true") ? GracefulNamer.regrace(originalName) : originalName;
     }
@@ -64,7 +57,7 @@ public class WikiWordBuilder implements Translation  {
         return new HtmlText(text).html() + link.htmlInline();
     }
 
-    public String makePath(WikiPage page, String content) {
+    public String makePath(SourcePage page, String content) {
         if (content.startsWith("^") || content.startsWith(">")) {
             return makeChildPath(page, content);
         }
@@ -74,24 +67,11 @@ public class WikiWordBuilder implements Translation  {
         return content;
     }
 
-    private String makeParentPath(WikiPage page, String content) {
-        String undecoratedPath = content.substring(1);
-        String[] pathElements = undecoratedPath.split("\\.");
-        String target = pathElements[0];
-        PageCrawler crawler = page.getPageCrawler();
-        try {
-            WikiPage ancestor = crawler.findAncestorWithName(page, target);
-            if (ancestor != null) {
-                pathElements[0] = PathParser.render(crawler.getFullPath(ancestor));
-                return "." + StringUtil.join(Arrays.asList(pathElements), ".");
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-        return "." + undecoratedPath;
+    private String makeParentPath(SourcePage page, String content) {
+        return page.findParentPath(content.substring(1));
     }
 
-    private String makeChildPath(WikiPage page, String content) {
+    private String makeChildPath(SourcePage page, String content) {
         return String.format("%s.%s", page.getName(), content.substring(1));
     }
 }

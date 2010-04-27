@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,7 +25,6 @@ public class Parser {
     private SymbolType[] terminators;
     private SymbolType[] ignoresFirst;
     private SymbolType[] ends;
-    private Symbol result;
 
     public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
         this.currentPage = currentPage;
@@ -54,11 +54,8 @@ public class Parser {
 
     public Symbol getCurrent() { return scanner.getCurrent(); }
 
-    public Maybe<Symbol> getPrevious(SymbolType requestedType) {
-        if (result == null) return Symbol.Nothing;
-        Maybe<Symbol> lastChild = result.getLastChild();
-        if (lastChild.isNothing() || lastChild.getValue().getType() != requestedType) return Symbol.Nothing;
-        return lastChild;
+    public Symbol peek() {
+        return scanner.peek(provider, new ArrayList<SymbolType>());
     }
 
     public Symbol parse(String input) {
@@ -107,7 +104,7 @@ public class Parser {
     }
 
     public Symbol parse() {
-        result = new Symbol(SymbolType.SymbolList);
+        Symbol result = new Symbol(SymbolType.SymbolList);
         ArrayList<SymbolType> ignore = new ArrayList<SymbolType>();
         ignore.addAll(Arrays.asList(ignoresFirst));
         while (true) {
