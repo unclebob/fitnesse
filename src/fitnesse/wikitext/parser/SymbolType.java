@@ -83,10 +83,6 @@ public enum SymbolType implements Matchable {
 
     public Rule getRule() { return rule; }
 
-    public TokenMatch makeMatch(ScanString input) { return getMatcher().makeMatch(this, input); }
-
-    public Matcher getMatcher() {
-        return matcher;
-    }
+    public TokenMatch makeMatch(ScanString input) { return matcher.makeMatch(this, input); }
 }
 

@@ -15,9 +15,9 @@ public class TableRule implements Rule {
                 Symbol cell = parseCell(parser, content);
                 if (scanner.isEnd()) return Symbol.Nothing;
                 row.add(cell);
-                if (scanner.getCurrentContent().indexOf("\n") > 0) break;
+                if (scanner.getCurrentContent().indexOf("\n") > 0 || scanner.isLast()) break;
             }
-            if (scanner.getCurrentContent().indexOf("\n|") < 0) break;
+            if (scanner.getCurrentContent().indexOf("\n|") < 0 || scanner.isLast()) break;
         }
         return new Maybe<Symbol>(table);
     }

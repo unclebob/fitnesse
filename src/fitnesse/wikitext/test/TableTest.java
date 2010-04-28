@@ -14,6 +14,7 @@ public class TableTest {
 
     @Test public void translatesTables() {
         ParserTest.assertTranslatesTo("|a|\n", tableWithCell("a"));
+        ParserTest.assertTranslatesTo("|a|", tableWithCell("a"));
         ParserTest.assertTranslatesTo("||\n", tableWithCell(""));
         ParserTest.assertTranslatesTo("| a |\n", tableWithCell("a"));
         ParserTest.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
