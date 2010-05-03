@@ -26,4 +26,8 @@ public class LinkTest {
     @Test public void translatesLinkWithVariable() {
         ParserTest.assertTranslatesTo("http://${site}", new TestVariableSource("site", "mysite.org"), "<a href=\"http://mysite.org\">http://mysite.org</a>");
     }
+
+    @Test public void translatesImageLinks() {
+        ParserTest.assertTranslatesTo("http://some.jpg", "<img src=\"http://some.jpg\"/>");
+    }
 }

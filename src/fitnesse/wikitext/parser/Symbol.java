@@ -95,9 +95,10 @@ public class Symbol {
         return variables != null && variables.containsKey(name) ? variables.get(name) : defaultValue;
     }
 
-    public void putProperty(String key, String value) {
+    public Symbol putProperty(String key, String value) {
         if (properties == null) properties = new HashMap<String, String> ();
         properties.put(key, value);
+        return this;
     }
 
     public boolean hasProperty(String key) {

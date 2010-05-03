@@ -3,6 +3,10 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class LinkRule implements Rule {
+    public static final String ImageProperty = "image";
+    public static final String Left = "left";
+    public static final String Right = "right";
+
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         Symbol current = scanner.getCurrent();

@@ -27,6 +27,7 @@ public enum SymbolType implements Matchable {
     HashTable(new Matcher().string("!{"), new HashTableRule()),
     HeaderLine(new Matcher().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"}), new LineRule()),
     HorizontalRule(new Matcher().string("---").repeat('-')),
+    Image(new Matcher().string(new String[] {"!img-l", "!img-r", "!img"}), new ImageRule()),
     Include(new Matcher().startLine().string("!include"), new IncludeRule()),
     Italic(new Matcher().string("''"), new EqualPairRule()),
     LastModified(new Matcher().string("!lastmodified")),
