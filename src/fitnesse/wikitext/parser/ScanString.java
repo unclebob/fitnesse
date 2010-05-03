@@ -6,7 +6,7 @@ public class ScanString {
     private int markStartOffset;
 
     public ScanString(String input, int offset) {
-        this.input = input;
+        this.input = input != null ? input : "";
         this.offset = offset;
     }
 

@@ -21,22 +21,12 @@ public class WikiWordBuilder implements Translation  {
 
     public String buildLink(SourcePage currentPage, String pagePath, String pageSuffix, String linkBody, String originalName) {
         String wikiWordPath = makePath(currentPage, pagePath);
-        /*WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
-        WikiPagePath fullPathOfWikiWord;
-        WikiPage targetPage;
-        try {
-            WikiPage parentPage = currentPage.getParent();
-            fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
-            targetPage = parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }*/
         String qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);
         if (currentPage.targetExists(wikiWordPath)) {
             return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody);
         }
         else
-            return makeLinkToNonExistentWikiPage(originalName, qualifiedName);
+            return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
     }
 
     public String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
@@ -50,10 +40,10 @@ public class WikiWordBuilder implements Translation  {
         return regraceOption.equals("true") ? GracefulNamer.regrace(originalName) : originalName;
     }
 
-    private String makeLinkToNonExistentWikiPage(String text, String qualifiedName) {
+    private String makeLinkToNonExistentWikiPage(String text, String url) {
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
-        link.addAttribute("href", qualifiedName + "?edit&nonExistent=true");
+        link.addAttribute("href", url+ "?edit&nonExistent=true");
         return new HtmlText(text).html() + link.htmlInline();
     }
 

@@ -3,6 +3,7 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class IncludeRule implements Rule {
+    private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
     public Maybe<Symbol> parse(Parser parser) {
         Scanner scanner = parser.getScanner();
         Symbol include = scanner.getCurrent();
@@ -31,15 +32,11 @@ public class IncludeRule implements Rule {
             ParsingPage included = option.equals("-setup") || option.equals("-teardown")
                     ? parser.getPage()
                     : parser.getPage().copyForNamedPage(includedPage.getValue());
-            try {
-                include.add("").add(Parser.make(
-                                included,
-                                includedPage.getValue().getContent())
-                                .parse());
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new IllegalStateException(e);
-            }
+            include.add("").add(Parser.make(
+                            included,
+                            includedPage.getValue().getContent())
+                            .parse());
+            if (option.equals("-setup")) include.evaluateVariables(setUpSymbols, parser.getVariableSource());
         }
 
         return new Maybe<Symbol>(include);

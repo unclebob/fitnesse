@@ -77,7 +77,6 @@ public class ContentsItemBuilder {
     }
 
     private String buildReference(SourcePage sourcePage) {
-        //todo: DRY? see wikiwordbuilder
         return sourcePage.getFullName();
     }
 

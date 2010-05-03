@@ -13,14 +13,15 @@ public class IncludeBuilder implements Translation {
                 return translator.translate(symbol.childAt(3));
         }
         else {
-            String collapseState = stateForOption(option);
+            String collapseState = stateForOption(option, symbol);
             String title = "Included page: " + translator.translate(symbol.childAt(1));
             return CollapsibleBuilder.generateHtml(collapseState, title, translator.translate(symbol.childAt(3)));
         }
     }
 
-    private String stateForOption(String option) {
-        return option.equals("-setup") || option.equals("-c") 
+    private String stateForOption(String option, Symbol symbol) {
+        return (option.equals("-setup") && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
+                || option.equals("-c")
                 ? CollapsibleRule.ClosedState
                 : CollapsibleRule.OpenState;
     }

@@ -138,6 +138,13 @@ public class WikiSourcePage implements SourcePage {
             for (WikiPage child: page.getChildren()) {
                 children.add(new WikiSourcePage(child));
             }
+            if (page.hasExtension(VirtualCouplingExtension.NAME)) {
+                VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
+                WikiPage virtualCoupling = extension.getVirtualCoupling();
+                for (WikiPage child: virtualCoupling.getChildren()) {
+                    children.add(new WikiSourcePage(child));
+                }
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -165,6 +172,18 @@ public class WikiSourcePage implements SourcePage {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+
+    public String makeUrl(String wikiWordPath) {
+        if (!(page instanceof ProxyPage))
+            return makeFullPathOfTarget(wikiWordPath) ;
+
+        ProxyPage proxy = (ProxyPage) page;
+        String remoteURLOfPage = proxy.getThisPageUrl();
+        String nameOfThisPage = proxy.getName();
+        int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
+        String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
+        return remoteURLOfParent + wikiWordPath;
     }
 
     private boolean isParentOf(WikiPage possibleParent) {

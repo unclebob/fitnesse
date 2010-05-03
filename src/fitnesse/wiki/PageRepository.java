@@ -34,20 +34,6 @@ public class PageRepository {
     private Boolean hasContentChild(String path) {
         for (String child: fileSystem.list(path)) {
             if (child.equals("content.txt")) return true;
-            if (child.length() == 11
-                    && child.charAt(0) == 'c'
-                    && child.charAt(1) == 'o'
-                    && child.charAt(2) == 'n'
-                    && child.charAt(3) == 't'
-                    && child.charAt(4) == 'e'
-                    && child.charAt(5) == 'n'
-                    && child.charAt(6) == 't'
-                    && child.charAt(7) == '.'
-                    && child.charAt(8) == 't'
-                    && child.charAt(9) == 'x'
-                    && child.charAt(10) == 't'
-
-                    ) return true;
         }
         return false;
     }

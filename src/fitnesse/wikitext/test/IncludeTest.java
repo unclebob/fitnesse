@@ -32,13 +32,23 @@ public class IncludeTest {
     }
 
     @Test public void translatesSetup() throws Exception {
-        TestRoot root = new TestRoot();
-        WikiPage includingPage = root.makePage("PageTwo", "!include -setup >SetUp");
-        root.makePage(includingPage, "SetUp", "setup");
-
-        String result = ParserTest.translateTo(includingPage);
+        String result = ParserTest.translateTo(makeIncludingPage());
 
         assertContains(result, "class=\"hidden\"");
+        assertContains(result, "<a href=\"PageTwo.SetUp\">");
+    }
+
+    private TestSourcePage makeIncludingPage() {
+        return new TestSourcePage()
+                .withContent("!include -setup >SetUp")
+                .withTarget("PageTwo.SetUp")
+                .withIncludedPage(new TestSourcePage().withContent("setup"));
+    }
+
+    @Test public void translatesSetupWithoutCollapse() throws Exception {
+        String result = ParserTest.translateTo(makeIncludingPage(), new TestVariableSource("COLLAPSE_SETUP", "false"));
+
+        assertContains(result, "class=\"collapsable\"");
         assertContains(result, "<a href=\"PageTwo.SetUp\">");
     }
 
@@ -69,7 +79,7 @@ public class IncludeTest {
 
     }
     private void assertContains(String result, String substring) {
-        assertTrue(result.indexOf(substring) >= 0);
+        assertTrue(result, result.indexOf(substring) >= 0);
     }
 
 }
