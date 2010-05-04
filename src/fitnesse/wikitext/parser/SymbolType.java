@@ -49,6 +49,7 @@ public enum SymbolType implements Matchable {
     Style(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}), new StyleRule()),
     SymbolList(),
     Table(new Matcher().startLine().string(new String[] {"|", "!|", "-|", "-!|"}), new TableRule()),
+    Today(new Matcher().string("!today"), new TodayRule()),
     Text(),
     UnorderedList(new Matcher().startLine().whitespace().string("* "), new ListRule()),
     Variable(new Matcher().string("${"), new VariableRule()),

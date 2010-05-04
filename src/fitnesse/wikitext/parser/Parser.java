@@ -4,6 +4,7 @@ import util.Maybe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.System.arraycopy;
 
@@ -54,8 +55,8 @@ public class Parser {
 
     public Symbol getCurrent() { return scanner.getCurrent(); }
 
-    public Symbol peek() {
-        return scanner.peek(provider, new ArrayList<SymbolType>());
+    public List<Symbol> peek(int count) {
+        return scanner.peek(count, provider, new ArrayList<SymbolType>());
     }
 
     public Symbol parse(String input) {

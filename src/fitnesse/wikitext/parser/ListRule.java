@@ -24,7 +24,7 @@ public class ListRule implements Rule {
                 if (parser.getScanner().isEnd()) return Symbol.Nothing;
                 list.add(body);
             }
-            nextSymbol = parser.peek();
+            nextSymbol = parser.peek(1).get(0);
         }
         return new Maybe<Symbol>(list);
     }

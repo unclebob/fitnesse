@@ -39,6 +39,7 @@ public class Translator {
         translations.put(SymbolType.Strike, new HtmlBuilder("span").body(0).attribute("class", "strike").inline());
         translations.put(SymbolType.Style, new HtmlBuilder("span").body(0).attribute("class", -1).inline());
         translations.put(SymbolType.Table, new TableBuilder());
+        translations.put(SymbolType.Today, new TodayBuilder());
         translations.put(SymbolType.Text, new TextBuilder());
         translations.put(SymbolType.UnorderedList, new ListBuilder("ul"));
         translations.put(SymbolType.Variable, new VariableBuilder());

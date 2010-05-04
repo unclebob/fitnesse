@@ -86,23 +86,30 @@ public class Scanner {
     }
 
     public void moveNextIgnoreFirst(SymbolProvider provider, List<SymbolType> ignoreFirst) {
-        Step step = makeNextStep(provider, ignoreFirst);
+        Step step = makeNextStep(provider, ignoreFirst, next);
         next = step.nextPosition;
         currentToken = step.token;
     }
 
-    public Symbol peek(SymbolProvider provider, List<SymbolType> ignoreFirst) {
-        Step step = makeNextStep(provider, ignoreFirst);
-        return step.token;
+    public List<Symbol> peek(int count, SymbolProvider provider, List<SymbolType> ignoreFirst) {
+        List<Symbol> result = new ArrayList<Symbol>();
+        int startPosition = next;
+        for (int i = 0; i < count; i++) {
+            Step step = makeNextStep(provider, ignoreFirst, startPosition);
+            result.add(step.token);
+            if (input.isEnd()) break;
+            startPosition = step.nextPosition;
+        }
+        return result;
     }
 
-    private Step makeNextStep(SymbolProvider provider, List<SymbolType> ignoreFirst) {
-        input.setOffset(next);
-        int newNext = next;
+    private Step makeNextStep(SymbolProvider provider, List<SymbolType> ignoreFirst, int startPosition) {
+        input.setOffset(startPosition);
+        int newNext = startPosition;
         Symbol matchToken = null;
         while (!input.isEnd()) {
             for (Matchable candidate: provider.candidates(input.charAt(0))) {
-                if (input.getOffset() != next || !contains(ignoreFirst, candidate)) {
+                if (input.getOffset() != startPosition || !contains(ignoreFirst, candidate)) {
                     TokenMatch match = candidate.makeMatch(input);
                     if (match.isMatch()) {
                         matchToken = match.getToken();
@@ -114,9 +121,9 @@ public class Scanner {
             if (matchToken != null) break;
             input.moveNext();
         }
-        if (input.getOffset() > next) {
-            TokenMatch match = textMaker.make(provider, input.substringFrom(next));
-            return new Step(match.getToken(), next + match.getMatchLength());
+        if (input.getOffset() > startPosition) {
+            TokenMatch match = textMaker.make(provider, input.substringFrom(startPosition));
+            return new Step(match.getToken(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
             return new Step(endToken, input.getOffset());
