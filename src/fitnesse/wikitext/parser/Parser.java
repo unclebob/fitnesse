@@ -10,6 +10,7 @@ import static java.lang.System.arraycopy;
 
 public class Parser {
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
+    private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
 
     public static Parser make(ParsingPage currentPage, String input) {
         return make(currentPage, input, new VariableFinder(currentPage));
@@ -54,9 +55,15 @@ public class Parser {
     public SymbolType[] getEnds() { return ends; }
 
     public Symbol getCurrent() { return scanner.getCurrent(); }
+    public void moveNext(int count) { for (int i = 0; i < count; i++) scanner.moveNext(); }
 
-    public List<Symbol> peek(int count) {
-        return scanner.peek(count, provider, new ArrayList<SymbolType>());
+    public List<Symbol> peek(SymbolType[] types) {
+        List<Symbol> lookAhead = scanner.peek(types.length, provider, new ArrayList<SymbolType>());
+        if (lookAhead.size() != types.length) return emptySymbols;
+        for (int i = 0; i < lookAhead.size(); i++) {
+            if (lookAhead.get(i).getType() != types[i]) return emptySymbols;
+        }
+        return lookAhead;
     }
 
     public Symbol parse(String input) {

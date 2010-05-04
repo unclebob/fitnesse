@@ -10,7 +10,7 @@ public class PlainTextTableRule implements Rule {
         Symbol table = parser.getCurrent();
         table.putProperty("class", "plain_text_table");
 
-        parser.getScanner().moveNext();
+        parser.moveNext(1);
         if (parser.getScanner().isEnd()) return Symbol.Nothing;
 
         Matchable[] plainTextTableTypes;
@@ -18,7 +18,7 @@ public class PlainTextTableRule implements Rule {
             Matchable columnSeparator = new ColumnSeparator(parser.getCurrent().getContent().substring(0, 1));
             plainTextTableTypes = new Matchable[]
                 {columnSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
-            parser.getScanner().moveNext();
+            parser.moveNext(1);
             if (parser.getScanner().isEnd()) return Symbol.Nothing;
         }
         else {

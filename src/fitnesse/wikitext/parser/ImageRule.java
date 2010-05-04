@@ -12,10 +12,10 @@ public class ImageRule implements Rule {
                 : current.getContent().endsWith("r") ? LinkRule.Right
                 : "";
 
-        parser.getScanner().moveNext();
+        parser.moveNext(1);
         if (parser.getCurrent().getType() != SymbolType.Whitespace) return Symbol.Nothing;
 
-        parser.getScanner().moveNext();
+        parser.moveNext(1);
         if (parser.getCurrent().getType() == SymbolType.Link) {
             Maybe<Symbol> link = SymbolType.Link.getRule().parse(parser);
             if (link.isNothing()) return Symbol.Nothing;

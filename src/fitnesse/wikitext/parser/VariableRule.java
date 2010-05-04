@@ -5,7 +5,7 @@ import java.util.List;
 
 public class VariableRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
-        Symbol current = parser.getScanner().getCurrent();
+        Symbol current = parser.getCurrent();
         List<Symbol> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Text, SymbolType.CloseBrace});
         if (tokens.size() == 0) return Symbol.Nothing;
 
