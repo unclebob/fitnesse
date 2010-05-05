@@ -10,8 +10,8 @@ public class ContentsRule implements Rule {
 
         Symbol body = parser.parseWithEnds(new SymbolType[] {SymbolType.Newline});
         for (Symbol option: body.getChildren()) {
-            if (option.getType() == SymbolType.Whitespace) continue;
-            if (!option.getContent().startsWith("-")) return Symbol.Nothing;
+            if (option.isType(SymbolType.Whitespace)) continue;
+            if (!option.getContent().startsWith("-")) return Symbol.nothing;
             result.add(option);
         }
 

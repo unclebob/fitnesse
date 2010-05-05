@@ -17,12 +17,12 @@ public class ListRule implements Rule {
             if (nextSymbol != list) parser.moveNext(1);
             if (indent(nextSymbol) > indent(list)) {
                 Maybe<Symbol> subList = populateList(parser, nextSymbol);
-                if (subList.isNothing()) return Symbol.Nothing;
+                if (subList.isNothing()) return Symbol.nothing;
                 list.add(subList.getValue());
             }
             else {
                 Symbol body = parser.parseTo(SymbolType.Newline);
-                if (parser.getScanner().isEnd()) return Symbol.Nothing;
+                if (parser.getScanner().isEnd()) return Symbol.nothing;
                 list.add(body);
             }
             List<Symbol> nextSymbols = parser.peek(new SymbolType[] {list.getType()});

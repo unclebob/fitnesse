@@ -7,7 +7,7 @@ public class LiteralRule implements Rule {
         Scanner scanner = parser.getScanner();
         SymbolType type = scanner.getCurrentType();
         SymbolType terminator = scanner.makeLiteral(SymbolType.closeType(type));
-        if (terminator == SymbolType.Empty) return Symbol.Nothing;
+        if (terminator == SymbolType.Empty) return Symbol.nothing;
         String literal = scanner.getCurrentContent();
         scanner.moveNext();
         return new Maybe<Symbol>(new Symbol(type, literal));

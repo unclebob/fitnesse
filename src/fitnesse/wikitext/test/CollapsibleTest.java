@@ -12,7 +12,7 @@ public class CollapsibleTest {
 
     @Test public void parsesCollapsible() throws Exception {
         ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[Text, SymbolList[Text], SymbolList[Text]]]");
-        ParserTest.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
+        ParserTest.assertParses("!**\n**!", "SymbolList[Text, CloseCollapsible]");
     }
 
     @Test public void translatesCollapsible() {

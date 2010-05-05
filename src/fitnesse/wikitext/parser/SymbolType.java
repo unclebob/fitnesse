@@ -8,7 +8,7 @@ public enum SymbolType implements Matchable {
     CenterLine(new Matcher().string(new String[] {"!c", "!C"}), new LineRule()),
     CloseBrace(new Matcher().string("}")),
     CloseBracket(new Matcher().string("]")),
-    CloseCollapsible(new Matcher().startLine().repeat('*').string("!")),
+    CloseCollapsible(new Matcher().string("\n").repeat('*').string("!")),
     CloseEvaluator(new Matcher().string("=}")),
     CloseLiteral(new Matcher().string("-!")),
     CloseParenthesis(new Matcher().string(")")),

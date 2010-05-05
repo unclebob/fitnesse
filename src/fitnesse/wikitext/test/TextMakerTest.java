@@ -4,6 +4,7 @@ import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TextMakerTest {
     private SymbolProvider provider = new SymbolProvider();
@@ -12,7 +13,7 @@ public class TextMakerTest {
     @Test
     public void makesText() {
         TokenMatch match = makeMatch("hi");
-        assertEquals(SymbolType.Text, match.getToken().getType());
+        assertTrue(match.getToken().isType(SymbolType.Text));
         assertEquals("hi", match.getToken().getContent());
         assertEquals(2, match.getMatchLength());
     }
@@ -25,7 +26,7 @@ public class TextMakerTest {
     @Test
     public void makesWikiWord() {
         TokenMatch match = makeMatch("HiMom");
-        assertEquals(SymbolType.WikiWord, match.getToken().getType());
+        assertTrue(match.getToken().isType(SymbolType.WikiWord));
         assertEquals("HiMom", match.getToken().getContent());
         assertEquals(5, match.getMatchLength());
     }
@@ -33,7 +34,7 @@ public class TextMakerTest {
     @Test
     public void makesWikiWordWithTrailingText() {
         TokenMatch match = makeMatch("HiMom's");
-        assertEquals(SymbolType.WikiWord, match.getToken().getType());
+        assertTrue(match.getToken().isType(SymbolType.WikiWord));
         assertEquals("HiMom", match.getToken().getContent());
         assertEquals(5, match.getMatchLength());
     }
@@ -41,7 +42,7 @@ public class TextMakerTest {
     @Test
     public void makesEMail() {
         TokenMatch match = makeMatch("bob@bl.org");
-        assertEquals(SymbolType.EMail, match.getToken().getType());
+        assertTrue(match.getToken().isType(SymbolType.EMail));
         assertEquals("bob@bl.org", match.getToken().getContent());
         assertEquals(10, match.getMatchLength());
     }

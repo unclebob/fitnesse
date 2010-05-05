@@ -13,7 +13,7 @@ public class TableRule implements Rule {
             table.add(row);
             while (true) {
                 Symbol cell = parseCell(parser, content);
-                if (scanner.isEnd()) return Symbol.Nothing;
+                if (scanner.isEnd()) return Symbol.nothing;
                 row.add(cell);
                 if (scanner.getCurrentContent().indexOf("\n") > 0 || scanner.isLast()) break;
             }

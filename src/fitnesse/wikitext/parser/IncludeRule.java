@@ -9,17 +9,17 @@ public class IncludeRule implements Rule {
         Symbol include = scanner.getCurrent();
 
         scanner.moveNext();
-        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
+        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
         
         scanner.moveNext();
         String option = "";
         if (scanner.isType(SymbolType.Text) && scanner.getCurrentContent().startsWith("-")) {
             option = scanner.getCurrentContent();
             scanner.moveNext();
-            if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
+            if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
             scanner.moveNext();
         }
-        if (!scanner.isType(SymbolType.Text) && !scanner.isType(SymbolType.WikiWord)) return Symbol.Nothing;
+        if (!scanner.isType(SymbolType.Text) && !scanner.isType(SymbolType.WikiWord)) return Symbol.nothing;
 
         Symbol pageName = scanner.getCurrent();
         include.add(option).add(pageName);

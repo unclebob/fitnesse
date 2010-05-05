@@ -8,7 +8,7 @@ public class LineRule implements Rule {
         Symbol result = scanner.getCurrent();
         
         scanner.moveNext();
-        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
+        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
 
         return new Maybe<Symbol>(result.add(parser.parseWithEnds(new SymbolType[] {SymbolType.Newline})));
     }

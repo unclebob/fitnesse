@@ -7,10 +7,10 @@ public class VariableRule implements Rule {
     public Maybe<Symbol> parse(Parser parser) {
         Symbol current = parser.getCurrent();
         List<Symbol> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Text, SymbolType.CloseBrace});
-        if (tokens.size() == 0) return Symbol.Nothing;
+        if (tokens.size() == 0) return Symbol.nothing;
 
         String name = tokens.get(0).getContent();
-        if (!ScanString.isVariableName(name)) return Symbol.Nothing;
+        if (!ScanString.isVariableName(name)) return Symbol.nothing;
 
         current.add(name);
 

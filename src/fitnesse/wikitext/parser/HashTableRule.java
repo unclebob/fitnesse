@@ -13,7 +13,7 @@ public class HashTableRule implements Rule {
             table.add(row);
             for (int i = 0; i < 2; i++) {
                 Symbol cell = parser.parseToIgnoreFirst(terminators);
-                if (scanner.isEnd()) return Symbol.Nothing;
+                if (scanner.isEnd()) return Symbol.nothing;
                 row.add(cell);
             }
             if (scanner.isType(SymbolType.CloseBrace)) break;

@@ -8,7 +8,7 @@ public class StyleRule implements Rule {
         String content = scanner.getCurrentContent();
         char beginner = content.charAt(content.length() - 1);
         Symbol body = parser.parseToIgnoreFirst(SymbolType.closeType(beginner));
-        if (scanner.isEnd()) return Symbol.Nothing;
+        if (scanner.isEnd()) return Symbol.nothing;
         return new Maybe<Symbol>(new Symbol(SymbolType.Style, content.substring(7, content.length() - 1)).add(body));
     }
 }

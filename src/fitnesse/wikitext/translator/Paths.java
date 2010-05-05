@@ -23,7 +23,7 @@ public class Paths {
         public List<String> result = new ArrayList<String>();
 
         public boolean visit(Symbol node) {
-            if (node.getType() == SymbolType.Path) {
+            if (node.isType(SymbolType.Path) ) {
                 result.add(translator.translate(node.childAt(0)));
             }
             return true;

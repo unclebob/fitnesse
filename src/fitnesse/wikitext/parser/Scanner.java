@@ -39,7 +39,7 @@ public class Scanner {
     public String substring(int startAt, int endBefore) { return input.rawSubstring(startAt, endBefore); }
     public boolean isEnd() { return currentToken == endToken; }
     public boolean isLast() { return input.isEnd(1); }
-    public boolean isType(SymbolType type) { return currentToken.getType() == type; }
+    public boolean isType(SymbolType type) { return currentToken.isType(type); }
     public String getCurrentContent() { return currentToken.getContent(); }
     public SymbolType getCurrentType() { return currentToken.getType(); }
     public Symbol getCurrent() { return currentToken; }

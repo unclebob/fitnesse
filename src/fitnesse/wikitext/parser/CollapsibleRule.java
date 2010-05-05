@@ -19,15 +19,14 @@ public class CollapsibleRule implements Rule {
             state = InvisibleState;
             scanner.moveNext();
         }
-        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.Nothing;
+        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
 
         Symbol titleText = parser.parseToIgnoreFirst(SymbolType.Newline);
-        if (scanner.isEnd()) return Symbol.Nothing;
+        if (scanner.isEnd()) return Symbol.nothing;
 
         Symbol bodyText = parser.parseToIgnoreFirst(SymbolType.CloseCollapsible);
-        if (scanner.isEnd()) return Symbol.Nothing;
+        if (scanner.isEnd()) return Symbol.nothing;
 
-        bodyText.removeLastChild();
         return new Maybe<Symbol>(new Symbol(SymbolType.Collapsible)
                 .add(state)
                 .add(titleText)

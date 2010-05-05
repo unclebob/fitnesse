@@ -11,36 +11,36 @@ public class PlainTextTableRule implements Rule {
         table.putProperty("class", "plain_text_table");
 
         parser.moveNext(1);
-        if (parser.getScanner().isEnd()) return Symbol.Nothing;
+        if (parser.getScanner().isEnd()) return Symbol.nothing;
 
         Matchable[] plainTextTableTypes;
-        if (parser.getCurrent().getType() != SymbolType.Newline && parser.getCurrent().getType() != SymbolType.Whitespace) {
+        if (!parser.getCurrent().isType(SymbolType.Newline) && !parser.getCurrent().isType(SymbolType.Whitespace)) {
             Matchable columnSeparator = new ColumnSeparator(parser.getCurrent().getContent().substring(0, 1));
             plainTextTableTypes = new Matchable[]
                 {columnSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
             parser.moveNext(1);
-            if (parser.getScanner().isEnd()) return Symbol.Nothing;
+            if (parser.getScanner().isEnd()) return Symbol.nothing;
         }
         else {
             plainTextTableTypes = new Matchable[]
                 {SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
         }
 
-        if (parser.getCurrent().getType() == SymbolType.Whitespace) {
+        if (parser.getCurrent().isType(SymbolType.Whitespace)) {
             table.putProperty("hideFirst", "");
         }
         
         Symbol row = null;
         while (true) {
             Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes);
-            if (parser.getScanner().isEnd()) return Symbol.Nothing;
-            if (parser.getCurrent().getType() == SymbolType.ClosePlainTextTable) return new Maybe<Symbol>(table);
+            if (parser.getScanner().isEnd()) return Symbol.nothing;
+            if (parser.getCurrent().isType(SymbolType.ClosePlainTextTable)) return new Maybe<Symbol>(table);
             if (row == null) {
                 row = new Symbol(SymbolType.SymbolList);
                 table.add(row);
             }
             row.add(line);
-            if (parser.getCurrent().getType() == SymbolType.Newline) row = null;
+            if (parser.getCurrent().isType(SymbolType.Newline)) row = null;
         }
     }
     

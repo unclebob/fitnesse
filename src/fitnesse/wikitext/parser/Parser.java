@@ -61,7 +61,7 @@ public class Parser {
         List<Symbol> lookAhead = scanner.peek(types.length, provider, new ArrayList<SymbolType>());
         if (lookAhead.size() != types.length) return emptySymbols;
         for (int i = 0; i < lookAhead.size(); i++) {
-            if (lookAhead.get(i).getType() != types[i]) return emptySymbols;
+            if (!lookAhead.get(i).isType(types[i])) return emptySymbols;
         }
         return lookAhead;
     }
@@ -137,9 +137,7 @@ public class Parser {
                     scanner.copy(backup);
                 }
                 else {
-                    if (!result.hasLastChild(translation.getValue())) {
-                        result.add(translation.getValue());
-                    }
+                    result.add(translation.getValue());
                     ignore.clear();
                 }
             }

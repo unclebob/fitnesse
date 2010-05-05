@@ -7,7 +7,7 @@ public class EqualPairRule implements Rule {
         Scanner scanner = parser.getScanner();
         SymbolType type = scanner.getCurrentType();
         Symbol body = parser.parseToIgnoreFirst(type);
-        if (scanner.isEnd()) return Symbol.Nothing;
+        if (scanner.isEnd()) return Symbol.nothing;
 
         return new Maybe<Symbol>(new Symbol(type).add(body));
     }

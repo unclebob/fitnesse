@@ -13,19 +13,19 @@ public class ImageRule implements Rule {
                 : "";
 
         parser.moveNext(1);
-        if (parser.getCurrent().getType() != SymbolType.Whitespace) return Symbol.Nothing;
+        if (!parser.getCurrent().isType(SymbolType.Whitespace)) return Symbol.nothing;
 
         parser.moveNext(1);
-        if (parser.getCurrent().getType() == SymbolType.Link) {
+        if (parser.getCurrent().isType(SymbolType.Link)) {
             Maybe<Symbol> link = SymbolType.Link.getRule().parse(parser);
-            if (link.isNothing()) return Symbol.Nothing;
+            if (link.isNothing()) return Symbol.nothing;
             return makeImageLink(link.getValue(), imageProperty);
         }
-        else if (parser.getCurrent().getType() == SymbolType.Text) {
+        else if (parser.getCurrent().isType(SymbolType.Text)) {
             Symbol list = new Symbol(SymbolType.SymbolList).add(parser.getCurrent());
             return makeImageLink(new Symbol(SymbolType.Link).add(list), imageProperty);
         }
-        else return Symbol.Nothing;
+        else return Symbol.nothing;
     }
 
     private Maybe<Symbol> makeImageLink(Symbol link, String imageProperty) {
