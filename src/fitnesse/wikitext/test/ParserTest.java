@@ -19,7 +19,7 @@ public class ParserTest {
         while (true) {
             scanner.moveNext();
             if (scanner.isEnd()) break;
-            if (scanner.isType(expected)) {
+            if (scanner.getCurrent().isType(expected)) {
                 assertTrue(found);
                 return;
             }

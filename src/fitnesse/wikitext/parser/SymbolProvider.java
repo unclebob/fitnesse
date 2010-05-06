@@ -39,26 +39,22 @@ public class SymbolProvider {
             SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord, SymbolType.Text });
     }
 
-    public static final SymbolType[] literalTableTypes = {
-            SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
-    public static final SymbolType[] aliasLinkTypes = {
-            SymbolType.CloseBracket, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
-    public static final SymbolType[] linkTargetTypes = {
-            SymbolType.Literal, SymbolType.Variable};
-
-    private HashMap<Character, Matchable[]> currentDispatch = dispatch;
+    private HashMap<Character, Matchable[]> currentDispatch;
     private Matchable[] currentTypes;
     private int currentIndex;
+
+    public SymbolProvider() {
+        currentDispatch = dispatch;
+    }
+
+    public SymbolProvider(Matchable[] types) {
+        currentDispatch = new HashMap<Character, Matchable[]>();
+        currentDispatch.put(defaultMatch, types);
+    }
 
     private Matchable[] getMatchTypes(Character match) {
         if (currentDispatch.containsKey(match)) return currentDispatch.get(match);
         return currentDispatch.get(defaultMatch);
-    }
-
-    public SymbolProvider setTypes(Matchable[] types) {
-        currentDispatch = new HashMap<Character, Matchable[]>();
-        currentDispatch.put(defaultMatch, types);
-        return this;
     }
 
     public SymbolProvider addTypes(SymbolType[] types) {

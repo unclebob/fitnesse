@@ -3,12 +3,10 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class EqualPairRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        SymbolType type = scanner.getCurrentType();
-        Symbol body = parser.parseToIgnoreFirst(type);
-        if (scanner.isEnd()) return Symbol.nothing;
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        Symbol body = parser.parseToIgnoreFirst(current.getType());
+        if (parser.atEnd()) return Symbol.nothing;
 
-        return new Maybe<Symbol>(new Symbol(type).add(body));
+        return new Maybe<Symbol>(current.add(body));
     }
 }

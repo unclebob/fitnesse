@@ -12,8 +12,8 @@ public class TodayBuilder implements Translation {
     public String toHtml(Translator translator, Symbol symbol) {
         String increment = symbol.getProperty(TodayRule.Increment);
         int incrementDays =
-                increment.startsWith("+") ? Integer.valueOf(increment.substring(1)) :
-                increment.startsWith("-") ? - Integer.valueOf(increment.substring(1)) :
+                increment.startsWith("+") ? Integer.parseInt(increment.substring(1)) :
+                increment.startsWith("-") ? - Integer.parseInt(increment.substring(1)) :
                 0;
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(SystemClock.now());

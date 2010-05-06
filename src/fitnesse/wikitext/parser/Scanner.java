@@ -39,9 +39,6 @@ public class Scanner {
     public String substring(int startAt, int endBefore) { return input.rawSubstring(startAt, endBefore); }
     public boolean isEnd() { return currentToken == endToken; }
     public boolean isLast() { return input.isEnd(1); }
-    public boolean isType(SymbolType type) { return currentToken.isType(type); }
-    public String getCurrentContent() { return currentToken.getContent(); }
-    public SymbolType getCurrentType() { return currentToken.getType(); }
     public Symbol getCurrent() { return currentToken; }
 
     public void copy(Scanner other) {
@@ -49,16 +46,6 @@ public class Scanner {
         next = other.next;
         currentToken = other.currentToken;
         textMaker = other.textMaker;
-    }
-
-    public List<Symbol> nextTokens(SymbolType[] symbolTypes) {
-        ArrayList<Symbol> tokens = new ArrayList<Symbol>();
-        for (SymbolType type: symbolTypes) {
-            moveNext();
-            if (!isType(type)) return new ArrayList<Symbol>();
-            tokens.add(getCurrent());
-        }
-        return tokens;
     }
 
     public SymbolType makeLiteral(SymbolType terminator) {

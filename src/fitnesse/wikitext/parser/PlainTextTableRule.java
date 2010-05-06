@@ -6,12 +6,12 @@ public class PlainTextTableRule implements Rule {
     private static final SymbolType[] terminators = new SymbolType[]
             {SymbolType.PlainTextCellSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable};
 
-    public Maybe<Symbol> parse(Parser parser) {
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol table = parser.getCurrent();
         table.putProperty("class", "plain_text_table");
 
         parser.moveNext(1);
-        if (parser.getScanner().isEnd()) return Symbol.nothing;
+        if (parser.atEnd()) return Symbol.nothing;
 
         Matchable[] plainTextTableTypes;
         if (!parser.getCurrent().isType(SymbolType.Newline) && !parser.getCurrent().isType(SymbolType.Whitespace)) {
@@ -19,7 +19,7 @@ public class PlainTextTableRule implements Rule {
             plainTextTableTypes = new Matchable[]
                 {columnSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
             parser.moveNext(1);
-            if (parser.getScanner().isEnd()) return Symbol.nothing;
+            if (parser.atEnd()) return Symbol.nothing;
         }
         else {
             plainTextTableTypes = new Matchable[]
@@ -32,8 +32,8 @@ public class PlainTextTableRule implements Rule {
         
         Symbol row = null;
         while (true) {
-            Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes);
-            if (parser.getScanner().isEnd()) return Symbol.nothing;
+            Symbol line = parser.parseToWithSymbols(terminators, new SymbolProvider(plainTextTableTypes));
+            if (parser.atEnd()) return Symbol.nothing;
             if (parser.getCurrent().isType(SymbolType.ClosePlainTextTable)) return new Maybe<Symbol>(table);
             if (row == null) {
                 row = new Symbol(SymbolType.SymbolList);

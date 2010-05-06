@@ -23,14 +23,6 @@ public class VariableFinder implements VariableSource {
         if (value != null) return new Maybe<String>(value);
 
         return Maybe.noString;
-
-
-        /*try {
-            String oldValue = page.getPage().getData().getVariable(name);
-            return oldValue == null ? Maybe.noString : new Maybe<String>(oldValue);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }*/
     }
 
     private Maybe<String> findVariableInPages(String name) {

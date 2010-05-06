@@ -4,41 +4,37 @@ import util.Maybe;
 
 public class IncludeRule implements Rule {
     private static final String[] setUpSymbols = new String[] {"COLLAPSE_SETUP"};
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        Symbol include = scanner.getCurrent();
-
-        scanner.moveNext();
-        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        Symbol next = parser.moveNext(1);
+        if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
         
-        scanner.moveNext();
+        next = parser.moveNext(1);
         String option = "";
-        if (scanner.isType(SymbolType.Text) && scanner.getCurrentContent().startsWith("-")) {
-            option = scanner.getCurrentContent();
-            scanner.moveNext();
-            if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
-            scanner.moveNext();
+        if (next.isType(SymbolType.Text) && next.getContent().startsWith("-")) {
+            option = next.getContent();
+            next = parser.moveNext(1);
+            if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
+            next = parser.moveNext(1);
         }
-        if (!scanner.isType(SymbolType.Text) && !scanner.isType(SymbolType.WikiWord)) return Symbol.nothing;
+        if (!next.isType(SymbolType.Text) && !next.isType(SymbolType.WikiWord)) return Symbol.nothing;
 
-        Symbol pageName = scanner.getCurrent();
-        include.add(option).add(pageName);
+        current.add(option).add(next);
 
-        Maybe<SourcePage> includedPage = parser.getPage().getPage().findIncludedPage(pageName.getContent());
+        Maybe<SourcePage> includedPage = parser.getPage().getPage().findIncludedPage(next.getContent());
         if (includedPage.isNothing()) {
-            include.add(new Symbol(SymbolType.Meta).add(includedPage.because()));
+            current.add(new Symbol(SymbolType.Meta).add(includedPage.because()));
         }
         else {
             ParsingPage included = option.equals("-setup") || option.equals("-teardown")
                     ? parser.getPage()
                     : parser.getPage().copyForNamedPage(includedPage.getValue());
-            include.add("").add(Parser.make(
+            current.add("").add(Parser.make(
                             included,
                             includedPage.getValue().getContent())
                             .parse());
-            if (option.equals("-setup")) include.evaluateVariables(setUpSymbols, parser.getVariableSource());
+            if (option.equals("-setup")) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
         }
 
-        return new Maybe<Symbol>(include);
+        return new Maybe<Symbol>(current);
     }
 }

@@ -3,13 +3,10 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class LiteralRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        SymbolType type = scanner.getCurrentType();
-        SymbolType terminator = scanner.makeLiteral(SymbolType.closeType(type));
-        if (terminator == SymbolType.Empty) return Symbol.nothing;
-        String literal = scanner.getCurrentContent();
-        scanner.moveNext();
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        SymbolType type = current.getType();
+        String literal = parser.parseLiteral(type.closeType());
+        if (parser.atEnd())  return Symbol.nothing;
         return new Maybe<Symbol>(new Symbol(type, literal));
     }
 }

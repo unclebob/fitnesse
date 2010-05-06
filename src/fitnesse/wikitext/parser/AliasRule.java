@@ -1,24 +1,18 @@
 package fitnesse.wikitext.parser;
 
 import util.Maybe;
-import java.util.List;
 
 public class AliasRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
+    private static final SymbolProvider aliasLinkProvider = new SymbolProvider(
+            new SymbolType[] {SymbolType.CloseBracket, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol tag = parser.parseToIgnoreFirst(SymbolType.CloseBracket);
-        if (scanner.isEnd()) return Symbol.nothing;
+        if (!parser.isMoveNext(SymbolType.OpenBracket)) return Symbol.nothing;
 
-        scanner.moveNext();
-        if (!scanner.isType(SymbolType.OpenBracket)) return Symbol.nothing;
+        Symbol link = parser.parseToIgnoreFirstWithSymbols(SymbolType.CloseBracket, aliasLinkProvider);
+        if (!parser.isMoveNext(SymbolType.CloseBracket)) return Symbol.nothing;
 
-        Symbol link = parser.parseIgnoreFirstWithSymbols(SymbolType.CloseBracket, SymbolProvider.aliasLinkTypes);
-
-        List<Symbol> tokens = scanner.nextTokens(new SymbolType[] {SymbolType.CloseBracket});
-        if (tokens.size() == 0) return Symbol.nothing;
-
-        return new Maybe<Symbol>(new Symbol(SymbolType.Alias)
-                .add(tag)
-                .add(link));
+        return new Maybe<Symbol>(current.add(tag).add(link));
     }
 }

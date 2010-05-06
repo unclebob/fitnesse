@@ -3,5 +3,5 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public interface Rule {
-    Maybe<Symbol> parse(Parser parser);
+    Maybe<Symbol> parse(Symbol current, Parser parser);
 }

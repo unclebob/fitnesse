@@ -4,9 +4,8 @@ import util.Maybe;
 import java.util.List;
 
 public class VariableRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Symbol current = parser.getCurrent();
-        List<Symbol> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.Text, SymbolType.CloseBrace});
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        List<Symbol> tokens = parser.moveNext(new SymbolType[] {SymbolType.Text, SymbolType.CloseBrace});
         if (tokens.size() == 0) return Symbol.nothing;
 
         String name = tokens.get(0).getContent();

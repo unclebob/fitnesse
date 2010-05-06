@@ -8,8 +8,7 @@ public class TodayRule implements Rule {
     public static final String Format = "Format";
     public static final String Increment = "Increment";
 
-    public Maybe<Symbol> parse(Parser parser) {
-        Symbol current = parser.getCurrent();
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
         List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
         if (lookAhead.size() != 0 ) {
             String option = lookAhead.get(1).getContent();
@@ -29,7 +28,7 @@ public class TodayRule implements Rule {
         if (lookAhead.size() != 0) {
             String increment = lookAhead.get(1).getContent();
             if ((increment.startsWith("+") || increment.startsWith("-"))
-                    && Integer.valueOf(increment.substring(1)) != 0) {
+                    && ScanString.isDigits(increment.substring(1))) {
                 current.putProperty(Increment, increment);
                 parser.moveNext(2);
             }

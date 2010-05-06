@@ -3,32 +3,32 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class CollapsibleRule implements Rule {
-    public static final String OpenState = "Open";
-    public static final String ClosedState = "Closed";
-    public static final String InvisibleState = "Invisible";
+    public static final String State = "State";
+    public static final String Open = "Open";
+    public static final String Closed = "Closed";
+    public static final String Invisible = "Invisible";
 
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        String state = OpenState;
-        scanner.moveNext();
-        if (scanner.getCurrentContent().equals(">")) {
-            state = ClosedState;
-            scanner.moveNext();
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        String state = Open;
+        Symbol next = parser.moveNext(1);
+        if (next.getContent().equals(">")) {
+            state = Closed;
+            next = parser.moveNext(1);
         }
-        else if (scanner.getCurrentContent().equals("<")) {
-            state = InvisibleState;
-            scanner.moveNext();
+        else if (next.getContent().equals("<")) {
+            state = Invisible;
+            next = parser.moveNext(1);
         }
-        if (!scanner.isType(SymbolType.Whitespace)) return Symbol.nothing;
+        if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
 
         Symbol titleText = parser.parseToIgnoreFirst(SymbolType.Newline);
-        if (scanner.isEnd()) return Symbol.nothing;
+        if (parser.atEnd()) return Symbol.nothing;
 
         Symbol bodyText = parser.parseToIgnoreFirst(SymbolType.CloseCollapsible);
-        if (scanner.isEnd()) return Symbol.nothing;
+        if (parser.atEnd()) return Symbol.nothing;
 
         return new Maybe<Symbol>(new Symbol(SymbolType.Collapsible)
-                .add(state)
+                .putProperty(State, state)
                 .add(titleText)
                 .add(bodyText));
     }

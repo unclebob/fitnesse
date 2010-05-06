@@ -7,12 +7,13 @@ public class LinkRule implements Rule {
     public static final String Left = "left";
     public static final String Right = "right";
 
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        Symbol current = scanner.getCurrent();
+    private static final SymbolProvider linkTargetProvider = new SymbolProvider(
+            new SymbolType[] {SymbolType.Literal, SymbolType.Variable});
+
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol targetList = parser.parseWithEnds(
-                new SymbolProvider().setTypes(SymbolProvider.linkTargetTypes),
-                parser.makeEndList(new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace}));
+                linkTargetProvider,
+                new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace});
         return new Maybe<Symbol>(current.add(targetList));
     }
 }

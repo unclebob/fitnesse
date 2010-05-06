@@ -4,11 +4,45 @@ import util.Maybe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.System.arraycopy;
 
 public class Parser {
+    public static final HashMap<SymbolType, Rule> rules = new HashMap<SymbolType, Rule>();
+    static {
+        rules.put(SymbolType.Alias, new AliasRule());
+        rules.put(SymbolType.AnchorName, new AnchorNameRule());
+        rules.put(SymbolType.AnchorReference, new AnchorReferenceRule());
+        rules.put(SymbolType.Bold, new EqualPairRule());
+        rules.put(SymbolType.CenterLine, new LineRule());
+        rules.put(SymbolType.Collapsible, new CollapsibleRule());
+        rules.put(SymbolType.Comment, new CommentRule());
+        rules.put(SymbolType.Contents, new ContentsRule());
+        rules.put(SymbolType.Define, new DefineRule());
+        rules.put(SymbolType.Evaluator, new EvaluatorRule());
+        rules.put(SymbolType.HashTable, new HashTableRule());
+        rules.put(SymbolType.HeaderLine, new LineRule());
+        rules.put(SymbolType.Image, new ImageRule());
+        rules.put(SymbolType.Include, new IncludeRule());
+        rules.put(SymbolType.Italic, new EqualPairRule());
+        rules.put(SymbolType.Link, new LinkRule());
+        rules.put(SymbolType.Literal, new LiteralRule());
+        rules.put(SymbolType.Meta, new LineRule());
+        rules.put(SymbolType.NoteLine, new LineRule());
+        rules.put(SymbolType.OrderedList, new ListRule());
+        rules.put(SymbolType.Path, new LineRule());
+        rules.put(SymbolType.PlainTextTable, new PlainTextTableRule());
+        rules.put(SymbolType.Preformat, new LiteralRule());
+        rules.put(SymbolType.See, new SeeRule());
+        rules.put(SymbolType.Strike, new EqualPairRule());
+        rules.put(SymbolType.Style, new StyleRule());
+        rules.put(SymbolType.Table, new TableRule());
+        rules.put(SymbolType.Today, new TodayRule());
+        rules.put(SymbolType.UnorderedList, new ListRule());
+        rules.put(SymbolType.Variable, new VariableRule());
+    }
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
 
@@ -28,16 +62,6 @@ public class Parser {
     private SymbolType[] ignoresFirst;
     private SymbolType[] ends;
 
-    public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
-        this.currentPage = currentPage;
-        this.scanner = scanner;
-        this.provider = provider;
-        this.terminators = terminators;
-        this.ignoresFirst = ignoresFirst;
-        this.ends = ends;
-        this.variableSource = new VariableFinder(currentPage);
-    }
-
     public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, VariableSource variableSource, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
         this.currentPage = currentPage;
         this.scanner = scanner;
@@ -48,14 +72,28 @@ public class Parser {
         this.variableSource = variableSource;
     }
 
-    public Scanner getScanner() { return scanner; }
     public ParsingPage getPage() { return currentPage; }
     public VariableSource getVariableSource() { return variableSource; }
-    public SymbolType[] getTerminators() { return terminators; }
-    public SymbolType[] getEnds() { return ends; }
 
     public Symbol getCurrent() { return scanner.getCurrent(); }
-    public void moveNext(int count) { for (int i = 0; i < count; i++) scanner.moveNext(); }
+    public boolean atEnd() { return scanner.isEnd(); }
+    public boolean atLast() { return scanner.isLast(); }
+    public boolean isMoveNext(SymbolType type) { return moveNext(1).isType(type); }
+    
+    public Symbol moveNext(int count) {
+        for (int i = 0; i < count; i++) scanner.moveNext();
+        return scanner.getCurrent();
+    }
+
+    public List<Symbol> moveNext(SymbolType[] symbolTypes) {
+        ArrayList<Symbol> tokens = new ArrayList<Symbol>();
+        for (SymbolType type: symbolTypes) {
+            Symbol current = moveNext(1);
+            if (!current.isType(type)) return new ArrayList<Symbol>();
+            tokens.add(current);
+        }
+        return tokens;
+    }
 
     public List<Symbol> peek(SymbolType[] types) {
         List<Symbol> lookAhead = scanner.peek(types.length, provider, new ArrayList<SymbolType>());
@@ -64,6 +102,20 @@ public class Parser {
             if (!lookAhead.get(i).isType(types[i])) return emptySymbols;
         }
         return lookAhead;
+    }
+
+    public String parseToIgnoreFirstAsString(SymbolType terminator) {
+        int start = scanner.getOffset();
+        scanner.markStart();
+        parseToIgnoreFirst(terminator);
+        return scanner.substring(start, scanner.getOffset() - 1);
+    }
+
+    public String parseLiteral(SymbolType terminator) {
+        scanner.makeLiteral(terminator);
+        String literal = scanner.getCurrent().getContent();
+        scanner.moveNext();
+        return literal;
     }
 
     public Symbol parse(String input) {
@@ -78,9 +130,8 @@ public class Parser {
         return new Parser(currentPage, scanner, provider, variableSource, types, types, emptyTypes).parse();
     }
 
-    public Symbol parseIgnoreFirstWithSymbols(SymbolType ignore, SymbolType[] validSymbols) {
+    public Symbol parseToIgnoreFirstWithSymbols(SymbolType ignore, SymbolProvider provider) {
         SymbolType[] ignores = new SymbolType[] {ignore};
-        SymbolProvider provider = new SymbolProvider().setTypes(validSymbols);
         return new Parser(currentPage, scanner, provider, variableSource, ignores, ignores, emptyTypes).parse();
     }
     
@@ -89,26 +140,25 @@ public class Parser {
     }
 
     public Symbol parseTo(SymbolType[] terminators) {
-        return new Parser(currentPage, scanner, new SymbolProvider(), terminators, emptyTypes, emptyTypes).parse();
+        return new Parser(currentPage, scanner, new SymbolProvider(), variableSource, terminators, emptyTypes, emptyTypes).parse();
     }
 
-    public Symbol parseToWithSymbols(SymbolType terminator, SymbolType[] validSymbols) {
+    public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider) {
         SymbolType[] terminators = new SymbolType[] {terminator};
-        return parseToWithSymbols(terminators, validSymbols);
+        return parseToWithSymbols(terminators, provider);
     }
 
-    public Symbol parseToWithSymbols(SymbolType[] terminators, Matchable[] validSymbols) {
-        SymbolProvider provider = new SymbolProvider().setTypes(validSymbols);
-        return new Parser(currentPage, scanner, provider, terminators, emptyTypes, emptyTypes).parse();
+    public Symbol parseToWithSymbols(SymbolType[] terminators, SymbolProvider provider) {
+        return new Parser(currentPage, scanner, provider, variableSource, terminators, emptyTypes, emptyTypes).parse();
     }
 
     public Symbol parseWithEnds(SymbolType[] ends) {
-        return new Parser(currentPage, scanner, new SymbolProvider(), emptyTypes, emptyTypes, makeEndList(ends)).parse();
+        return new Parser(currentPage, scanner, new SymbolProvider(), variableSource, emptyTypes, emptyTypes, makeEndList(ends)).parse();
     }
 
     public Symbol parseWithEnds(SymbolProvider provider, SymbolType[] types) {
         provider.addTypes(types);
-        return new Parser(currentPage, scanner, provider, variableSource, emptyTypes, emptyTypes, types).parse();
+        return new Parser(currentPage, scanner, provider, variableSource, emptyTypes, emptyTypes, makeEndList(types)).parse();
     }
 
     public Symbol parse() {
@@ -125,21 +175,20 @@ public class Parser {
                 break;
             }
             if (contains(terminators, currentToken.getType())) break;
-            Rule rule = currentToken.getType().getRule();
-            if (rule == null) {
-                result.add(currentToken);
-                ignore.clear();
-            }
-            else {
-                Maybe<Symbol> translation = rule.parse(this);
-                if (translation.isNothing()) {
+            if (rules.containsKey(currentToken.getType())) {
+                Maybe<Symbol> parsedSymbol = rules.get(currentToken.getType()).parse(currentToken, this);
+                if (parsedSymbol.isNothing()) {
                     ignore.add(currentToken.getType());
                     scanner.copy(backup);
                 }
                 else {
-                    result.add(translation.getValue());
+                    result.add(parsedSymbol.getValue());
                     ignore.clear();
                 }
+            }
+            else {
+                result.add(currentToken);
+                ignore.clear();
             }
         }
         return result;
@@ -151,9 +200,9 @@ public class Parser {
         return false;
     }
 
-    public SymbolType[] makeEndList(SymbolType[] terminators) {
-        SymbolType[] parentEnds = getEnds();
-        SymbolType[] parentTerminators = getTerminators();
+    private SymbolType[] makeEndList(SymbolType[] terminators) {
+        SymbolType[] parentEnds = this.ends;
+        SymbolType[] parentTerminators = this.terminators;
         SymbolType[] ends = new SymbolType[parentTerminators.length + parentEnds.length + terminators.length];
         arraycopy(parentEnds, 0, ends, 0, parentEnds.length);
         arraycopy(parentTerminators, 0, ends, parentEnds.length, parentTerminators.length);

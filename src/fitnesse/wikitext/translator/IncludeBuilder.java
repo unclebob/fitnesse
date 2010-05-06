@@ -22,7 +22,7 @@ public class IncludeBuilder implements Translation {
     private String stateForOption(String option, Symbol symbol) {
         return (option.equals("-setup") && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
                 || option.equals("-c")
-                ? CollapsibleRule.ClosedState
-                : CollapsibleRule.OpenState;
+                ? CollapsibleRule.Closed
+                : CollapsibleRule.Open;
     }
 }

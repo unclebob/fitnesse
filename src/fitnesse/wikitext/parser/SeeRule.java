@@ -2,14 +2,11 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-import java.util.List;
-
 public class SeeRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Symbol current = parser.getScanner().getCurrent();
-        List<Symbol> tokens = parser.getScanner().nextTokens(new SymbolType[] {SymbolType.WikiWord});
-        if (tokens.size() == 0) return Symbol.nothing;
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        Symbol next = parser.moveNext(1);
+        if (!next.isType(SymbolType.WikiWord)) return Symbol.nothing;
 
-        return new Maybe<Symbol>(current.add(tokens.get(0)));
+        return new Maybe<Symbol>(current.add(next));
     }
 }

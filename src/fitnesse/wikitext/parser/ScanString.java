@@ -82,6 +82,13 @@ public class ScanString {
         return true;
     }
 
+    public static boolean isDigits(String content) {
+        for (char c: content.toCharArray()) {
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
+    }
+
     public static boolean isVariableName(String content) {
         for (char c: content.toCharArray()) {
             if (!Character.isLetterOrDigit(c) && c != '_' && c != '.') return false;

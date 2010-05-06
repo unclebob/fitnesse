@@ -9,7 +9,7 @@ public class DefineBuilder implements Translation {
         HtmlTag result = new HtmlTag("span", "variable defined: "
                 + translator.translate(symbol.childAt(0))
                 + "="
-                + translator.translate(symbol.childAt(2)));
+                + translator.translate(symbol.childAt(1)));
         result.addAttribute("class", "meta");
         return result.html();
     }

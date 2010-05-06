@@ -5,9 +5,8 @@ import util.Maybe;
 import java.util.List;
 
 public class ListRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Symbol list = parser.getCurrent();
-        return populateList(parser, list);
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        return populateList(parser, current);
     }
 
     private Maybe<Symbol> populateList(Parser parser, Symbol list) {
@@ -22,7 +21,7 @@ public class ListRule implements Rule {
             }
             else {
                 Symbol body = parser.parseTo(SymbolType.Newline);
-                if (parser.getScanner().isEnd()) return Symbol.nothing;
+                if (parser.atEnd()) return Symbol.nothing;
                 list.add(body);
             }
             List<Symbol> nextSymbols = parser.peek(new SymbolType[] {list.getType()});

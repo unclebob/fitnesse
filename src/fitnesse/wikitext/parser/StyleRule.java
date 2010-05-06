@@ -3,12 +3,11 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class StyleRule implements Rule {
-    public Maybe<Symbol> parse(Parser parser) {
-        Scanner scanner = parser.getScanner();
-        String content = scanner.getCurrentContent();
+    public Maybe<Symbol> parse(Symbol current, Parser parser) {
+        String content = current.getContent();
         char beginner = content.charAt(content.length() - 1);
         Symbol body = parser.parseToIgnoreFirst(SymbolType.closeType(beginner));
-        if (scanner.isEnd()) return Symbol.nothing;
+        if (parser.atEnd()) return Symbol.nothing;
         return new Maybe<Symbol>(new Symbol(SymbolType.Style, content.substring(7, content.length() - 1)).add(body));
     }
 }
