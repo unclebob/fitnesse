@@ -9,7 +9,7 @@ import fitnesse.wikitext.Utils;
 
 public class AliasBuilder implements Translation {
 
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         if (symbol.childAt(0).childAt(0).isType(SymbolType.WikiWord)) return translator.translate(symbol.childAt(0));
         
         String linkBody = translator.translate(symbol.childAt(0));

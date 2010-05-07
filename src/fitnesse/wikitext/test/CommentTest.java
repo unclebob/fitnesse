@@ -10,8 +10,8 @@ public class CommentTest {
     }
 
     @Test public void parsesComments() throws Exception {
-        ParserTest.assertParses("# comment\n", "SymbolList[Comment]");
-        ParserTest.assertParses("# comment", "SymbolList[Comment]");
+        ParserTest.assertParses("# comment\n", "SymbolList[Comment[Text]]");
+        ParserTest.assertParses("# comment", "SymbolList[Comment[Text]]");
     }
 
     @Test public void translatesComments() {

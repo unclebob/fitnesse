@@ -4,7 +4,7 @@ import fitnesse.wikitext.parser.CollapsibleRule;
 import fitnesse.wikitext.parser.Symbol;
 
 public class IncludeBuilder implements Translation {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         if (symbol.getChildren().size() < 4) {
             return translator.translate(symbol.childAt(2));
         }

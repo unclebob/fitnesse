@@ -6,7 +6,7 @@ import fitnesse.wikitext.parser.Symbol;
 public class HashTableBuilder implements Translation {
     private static final String[] cellClasses = {"hash_key", "hash_value"};
 
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag table = new HtmlTag("table");
         table.addAttribute("class", "hash_table");
         for (Symbol child: symbol.getChildren()) {

@@ -5,7 +5,7 @@ import fitnesse.wikitext.parser.LinkRule;
 import fitnesse.wikitext.parser.Symbol;
 
 public class LinkBuilder implements Translation {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         String target = symbol.getContent() + translator.translate(symbol.childAt(0));
         return buildLink(translator, target, symbol);
     }
@@ -26,7 +26,7 @@ public class LinkBuilder implements Translation {
         }
         return tag.htmlInline();
     }
-    
+
     private class Reference {
         private String reference;
 

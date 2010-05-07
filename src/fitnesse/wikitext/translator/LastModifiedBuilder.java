@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LastModifiedBuilder implements Translation {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         String user = translator.getPage().getProperty(PageData.LAST_MODIFYING_USER);
         String date = translator.getPage().getProperty(PageData.PropertyLAST_MODIFIED);
         return translator.formatMessage(

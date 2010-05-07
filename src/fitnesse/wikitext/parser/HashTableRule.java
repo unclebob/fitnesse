@@ -7,7 +7,7 @@ public class HashTableRule implements Rule {
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         while (true) {
-            Symbol row = new Symbol(SymbolType.SymbolList);
+            Symbol row = new Symbol(SymbolType.HashRow);
             current.add(row);
             for (int i = 0; i < 2; i++) {
                 Symbol cell = parser.parseToIgnoreFirst(terminators);

@@ -66,7 +66,7 @@ public class HtmlBuilder implements Translation {
         return this;
     }
 
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag(tagName);
         for (TagBuilder builder: builders) {
             builder.build(translator, symbol, result);

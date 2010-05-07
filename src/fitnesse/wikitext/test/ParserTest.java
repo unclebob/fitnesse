@@ -2,8 +2,9 @@ package fitnesse.wikitext.test;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.translator.Translator;
+import fitnesse.wikitext.translator.HtmlTranslator;
 import fitnesse.wikitext.parser.VariableSource;
+import fitnesse.wikitext.translator.WikiTranslator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,7 +44,7 @@ public class ParserTest {
     }
 
     public static void assertTranslatesTo(String input, String expected) {
-        assertTranslatesTo(null, input, expected);
+        assertTranslatesTo(new TestSourcePage(), input, expected);
     }
 
     public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) throws Exception{
@@ -58,6 +59,11 @@ public class ParserTest {
         assertEquals(expected, translateTo(page, input));
     }
 
+    public static void assertTranslatesTo(SourcePage page, String input, String expected) {
+        assertEquals(expected, translateTo(page, input));
+        assertEquals("round trip", input, roundTrip(page, input));
+    }
+
     public static void assertTranslatesTo(SourcePage page, String expected) throws Exception {
         assertEquals(expected, translateTo(page));
     }
@@ -68,12 +74,22 @@ public class ParserTest {
 
     public static String translateTo(WikiPage page, String input) {
         Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
-        return new Translator(new WikiSourcePage(page)).translateTree(list);
+        return new HtmlTranslator(new WikiSourcePage(page)).translateTree(list);
+    }
+
+    public static String translateTo(SourcePage page, String input) {
+        Symbol list = Parser.make(new ParsingPage(page), input).parse();
+        return new HtmlTranslator(page).translateTree(list);
+    }
+
+    public static String roundTrip(SourcePage page, String input) {
+        Symbol list = Parser.make(new ParsingPage(page), input, SymbolProvider.refactoringProvider).parse();
+        return new WikiTranslator(page).translateTree(list);
     }
 
     public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input, variableSource).parse();
-        return new Translator(new WikiSourcePage(page)).translateTree(list);
+        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input, variableSource, new SymbolProvider()).parse();
+        return new HtmlTranslator(new WikiSourcePage(page)).translateTree(list);
     }
 
     public static String translateTo(WikiPage page) throws Exception {
@@ -81,11 +97,11 @@ public class ParserTest {
     }
 
     public static String translateTo(SourcePage page, VariableSource variableSource) throws Exception {
-        return new Translator(page).translateTree(Parser.make(new ParsingPage(page), page.getContent(), variableSource).parse());
+        return new HtmlTranslator(page).translateTree(Parser.make(new ParsingPage(page), page.getContent(), variableSource, new SymbolProvider()).parse());
     }
 
     public static String translateTo(SourcePage page) throws Exception {
-        return new Translator(page).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
+        return new HtmlTranslator(page).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
     }
 
     public static void assertParses(String input, String expected) throws Exception {

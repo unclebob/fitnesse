@@ -10,7 +10,7 @@ public class CollapsibleBuilder implements Translation {
 
     public static void resetId() { nextId = 1; }
 
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         String option = symbol.getProperty(CollapsibleRule.State);
         String title = translator.translate(symbol.childAt(0));
         String body = translator.translate(symbol.childAt(1));

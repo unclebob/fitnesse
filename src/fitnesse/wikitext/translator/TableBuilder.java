@@ -4,7 +4,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.wikitext.parser.Symbol;
 
 public class TableBuilder implements Translation {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag table = new HtmlTag("table");
         if (symbol.hasProperty("class")) {
             table.addAttribute("class", symbol.getProperty("class"));

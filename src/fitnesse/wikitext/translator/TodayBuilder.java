@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class TodayBuilder implements Translation {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         String increment = symbol.getProperty(TodayRule.Increment);
         int incrementDays =
                 increment.startsWith("+") ? Integer.parseInt(increment.substring(1)) :

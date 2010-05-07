@@ -8,7 +8,7 @@ import fitnesse.wikitext.widgets.WikiWordWidget;
 import util.GracefulNamer;
 
 public class WikiWordBuilder implements Translation  {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         return buildLink(
                 translator.getPage(),
                 symbol.getContent(),

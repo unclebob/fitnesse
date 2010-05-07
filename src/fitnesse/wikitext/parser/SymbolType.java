@@ -25,6 +25,7 @@ public enum SymbolType implements Matchable {
     EndCell(new Matcher().string(new String[] {"|\n|", "|\n", "|"})),
     Evaluator(new Matcher().string("${=")),
     HashTable(new Matcher().string("!{")),
+    HashRow(),
     HeaderLine(new Matcher().string("!").string(new String[] {"1", "2", "3", "4", "5", "6"})),
     HorizontalRule(new Matcher().string("---").repeat('-')),
     Image(new Matcher().string(new String[] {"!img-l", "!img-r", "!img"})),

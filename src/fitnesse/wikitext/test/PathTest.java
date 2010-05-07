@@ -4,6 +4,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.WikiSourcePage;
+import fitnesse.wikitext.translator.HtmlTranslator;
 import fitnesse.wikitext.translator.Paths;
 import fitnesse.wikitext.translator.Translator;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class PathTest {
     @Test
     public void findsDefinitions() throws Exception {
         WikiPage page = new TestRoot().makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
-        List<String> paths = new Paths(new Translator(new WikiSourcePage(page))).getPaths(ParserTest.parse(page));
+        List<String> paths = new Paths(new HtmlTranslator(new WikiSourcePage(page))).getPaths(ParserTest.parse(page));
         assertEquals(2, paths.size());
         assertEquals("stuff", paths.get(0));
         assertEquals("nonsense", paths.get(1));

@@ -8,7 +8,7 @@ public class ListBuilder implements Translation {
 
     public ListBuilder(String listTag) { this.listTag = listTag; }
 
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag list = new HtmlTag(listTag);
         for (Symbol child: symbol.getChildren()) {
             list.add(new HtmlTag("li", translator.translate(child)));

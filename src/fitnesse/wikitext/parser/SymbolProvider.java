@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class SymbolProvider {
+    public static final SymbolProvider refactoringProvider = new SymbolProvider( new SymbolType[] {
+            SymbolType.Alias, SymbolType.OpenBracket, SymbolType.CloseBracket, SymbolType.Comment, SymbolType.Image,
+            SymbolType.Literal, SymbolType.Preformat, SymbolType.Link, SymbolType.Path, SymbolType.WikiWord,
+            SymbolType.Newline, SymbolType.Whitespace
+    });
+    
     /* Keeping these tables in sync with the matchers is a hassle but a major performance gain */
     /* We could build these tables automatically... */
 

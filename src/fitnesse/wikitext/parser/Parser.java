@@ -47,11 +47,15 @@ public class Parser {
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
 
     public static Parser make(ParsingPage currentPage, String input) {
-        return make(currentPage, input, new VariableFinder(currentPage));
+        return make(currentPage, input, new SymbolProvider());
     }
 
-    public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource) {
-        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), new SymbolProvider(), variableSource, emptyTypes, emptyTypes, emptyTypes);
+    public static Parser make(ParsingPage currentPage, String input, SymbolProvider provider) {
+        return make(currentPage, input, new VariableFinder(currentPage), provider);
+    }
+
+    public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource, SymbolProvider provider) {
+        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypes);
     }
 
     private ParsingPage currentPage;

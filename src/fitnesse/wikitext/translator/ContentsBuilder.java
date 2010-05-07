@@ -5,7 +5,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.parser.Symbol;
 
 public class ContentsBuilder implements Translation {
-    public String toHtml(Translator translator, Symbol symbol) {
+    public String toTarget(Translator translator, Symbol symbol) {
         ContentsItemBuilder itemBuilder
                 = new ContentsItemBuilder(symbol, 1);
         HtmlTag contentsDiv = HtmlUtil.makeDivTag("contents");
