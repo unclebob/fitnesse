@@ -521,11 +521,19 @@ public abstract class SlimTable {
 
     private String formatSymbol(String symbolName) {
       String value = getSymbol(symbolName);
-      if (value == null)
+      if (value == null) {
+        for (int i=symbolName.length()-1;i>0;i--) {
+          String str = symbolName.substring(0, i);
+          if ((value=getSymbol(str))!=null)
+            return  formatSymbolValue(str, value) + symbolName.substring(i, symbolName.length());
+        }
+
         return "$" + symbolName;
+      }
       else
         return formatSymbolValue(symbolName, value);
     }
+
 
     private boolean symbolFound() {
       symbolMatcher = symbolPattern.matcher(replacedString);

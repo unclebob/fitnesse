@@ -1,0 +1,16 @@
+There are several commands you can run to control the FitNesse wiki, as shown below.  (The values shown between braces are the default values.)
+
+{{{ java -jar fitnesse.jar [-pdrleoa]
+        -p <port number> {80} or {9123 if -c}
+        -d <working directory> {.}
+        -r <page root directory> {FitNesseRoot}
+        -l <log directory> {no logging}
+        -e <days> {14} Number of days before page versions expire
+        -o omit updates
+        -a {user:pwd | user-file-name} enable authentication.
+        -i Install only, do not run fitnesse after install. 
+        -c <command> Run a Rest Command and then exit.  
+            (Return status is the number of test pages that failed as a result of the command.)
+}}}
+
+You can find more information on the -c options at CommandLineRestCommands.
