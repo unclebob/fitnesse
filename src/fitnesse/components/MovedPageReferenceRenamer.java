@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.AliasLinkWidget;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.parser.SymbolType;
 
-public class MovedPageReferenceRenamer extends ReferenceRenamer implements WidgetVisitor {
+public class MovedPageReferenceRenamer extends ReferenceRenamer /* implements WidgetVisitor*/ {
   private WikiPage pageToBeMoved;
   private String newParentName;
 
@@ -18,13 +18,40 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer implements Widge
     this.newParentName = newParentName;
   }
 
-  public void visit(AliasLinkWidget widget) throws Exception {
-  }
+    public boolean visit(Symbol node) {
+        try {
+            if (node.isType(SymbolType.WikiWord)) {
+                wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
 
-  public void visit(WikiWidget widget) throws Exception {
-  }
+    public boolean visitChildren(Symbol node) {
+        return !node.isType(SymbolType.Alias);
+    }
 
-  public void visit(WikiWordWidget widget) throws Exception {
-    widget.renameMovedPageIfReferenced(pageToBeMoved, newParentName);
-  }
+    private void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) throws Exception {
+      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath(pageToBeMoved);
+      pathOfPageToBeMoved.makeAbsolute();
+      String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
+      String reference = getQualifiedWikiWord(wikiWord.getContent());
+      if (refersTo(reference, QualifiedNameOfPageToBeMoved)) {
+        String referenceTail = reference.substring(QualifiedNameOfPageToBeMoved.length());
+        String childPortionOfReference = pageToBeMoved.getName();
+        if (referenceTail.length() > 0)
+          childPortionOfReference += referenceTail;
+        String newQualifiedName;
+        if ("".equals(newParentName))
+          newQualifiedName = "." + childPortionOfReference;
+        else
+          newQualifiedName = "." + newParentName + "." + childPortionOfReference;
+
+        wikiWord.setContent(newQualifiedName);
+      }
+    }
 }

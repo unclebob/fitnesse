@@ -24,6 +24,7 @@ public class Symbol {
     public SymbolType getType() { return type; }
     public boolean isType(SymbolType type) { return this.type == type; }
     public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
 
     public Symbol childAt(int index) { return getChildren().get(index); }
     public List<Symbol> getChildren() { return children; }
@@ -44,15 +45,23 @@ public class Symbol {
         return result;
     }
 
-    public void walk(SymbolTreeWalker walker) {
-        walk(this, walker);
+    public boolean walkPostOrder(SymbolTreeWalker walker) {
+        if (walker.visitChildren(this)) {
+            for (Symbol child: children) {
+                if (!child.walkPostOrder(walker)) return false;
+            }
+        }
+        return walker.visit(this);
     }
 
-    private boolean walk(Symbol symbol, SymbolTreeWalker walker) {
-        for (Symbol child: symbol.children) {
-            if (!walk(child, walker)) return false;
+    public boolean walkPreOrder(SymbolTreeWalker walker) {
+        if (!walker.visit(this)) return false;
+        if (walker.visitChildren(this)) {
+            for (Symbol child: children) {
+                if (!child.walkPreOrder(walker)) return false;
+            }
         }
-        return walker.visit(symbol);
+        return true;
     }
 
     public void evaluateVariables(String[] names, VariableSource source) {

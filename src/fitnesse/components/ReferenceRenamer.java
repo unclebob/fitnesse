@@ -2,23 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.widgets.AliasLinkWidget;
-import fitnesse.wikitext.widgets.ClasspathWidget;
-import fitnesse.wikitext.widgets.CommentWidget;
-import fitnesse.wikitext.widgets.ImageWidget;
-import fitnesse.wikitext.widgets.LinkWidget;
-import fitnesse.wikitext.widgets.LiteralWidget;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.PreformattedWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.translator.WikiTranslator;
+import util.StringUtil;
 
-public abstract class ReferenceRenamer implements TraversalListener, WidgetVisitor {
+import java.util.Arrays;
+
+public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeWalker {
   protected WikiPage root;
+    protected WikiPage currentPage;
 
   public ReferenceRenamer(WikiPage root) {
     this.root = root;
@@ -31,10 +24,12 @@ public abstract class ReferenceRenamer implements TraversalListener, WidgetVisit
   public void processPage(WikiPage currentPage) throws Exception {
     PageData data = currentPage.getData();
     String content = data.getContent();
-    ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceModifyingWidgetBuilder);
-    widgetRoot.acceptVisitor(this);
 
-    String newContent = widgetRoot.asWikiText();
+      Symbol syntaxTree = Parser.make(new ParsingPage(new WikiSourcePage(currentPage)), content).parse();
+      this.currentPage = currentPage;
+      syntaxTree.walkPreOrder(this);
+      String newContent = new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
+
     boolean pageHasChanged = !newContent.equals(content);
     if (pageHasChanged) {
       data.setContent(newContent);
@@ -42,15 +37,42 @@ public abstract class ReferenceRenamer implements TraversalListener, WidgetVisit
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public static WidgetBuilder referenceModifyingWidgetBuilder = new WidgetBuilder(new Class[]{
-      WikiWordWidget.class,
-      LiteralWidget.class,
-      CommentWidget.class,
-      PreformattedWidget.class,
-      LinkWidget.class,
-      ImageWidget.class,
-      AliasLinkWidget.class,
-      ClasspathWidget.class
-  });
+    protected String getQualifiedWikiWord(String wikiWordText) throws Exception {
+      String pathName = expandPrefix(wikiWordText);
+      WikiPagePath expandedPath = PathParser.parse(pathName);
+      if (expandedPath == null)
+        return wikiWordText;
+      WikiPagePath fullPath = currentPage.getParent().getPageCrawler().getFullPathOfChild(currentPage.getParent(), expandedPath);
+      return "." + PathParser.render(fullPath); //todo rcm 2/6/05 put that '.' into pathParser.  Perhaps WikiPagePath.setAbsolute()
+    }
+
+    private String expandPrefix(String theWord) throws Exception {
+      WikiPage wikiPage = currentPage;
+      return expandPrefix(wikiPage, theWord);
+    }
+
+    private String expandPrefix(WikiPage wikiPage, String theWord) throws Exception {
+      PageCrawler crawler = wikiPage.getPageCrawler();
+      if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
+        String prefix = wikiPage.getName();
+        return String.format("%s.%s", prefix, theWord.substring(1));
+      } else if (theWord.charAt(0) == '<') {
+        String undecoratedPath = theWord.substring(1);
+        String[] pathElements = undecoratedPath.split("\\.");
+        String target = pathElements[0];
+        //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
+        for (WikiPage current = wikiPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
+          if (current.getName().equals(target)) {
+            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+          }
+        }
+        return "." + undecoratedPath;
+      }
+      return theWord;
+    }
+    
+    protected boolean refersTo(String qualifiedReference, String qualifiedTarget) {
+        return qualifiedReference.equals(qualifiedTarget) || qualifiedReference.startsWith(qualifiedTarget + ".");
+    }
 }

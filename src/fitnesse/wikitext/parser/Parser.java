@@ -32,7 +32,7 @@ public class Parser {
         rules.put(SymbolType.Meta, new LineRule());
         rules.put(SymbolType.NoteLine, new LineRule());
         rules.put(SymbolType.OrderedList, new ListRule());
-        rules.put(SymbolType.Path, new LineRule());
+        rules.put(SymbolType.Path, new PathRule());
         rules.put(SymbolType.PlainTextTable, new PlainTextTableRule());
         rules.put(SymbolType.Preformat, new LiteralRule());
         rules.put(SymbolType.See, new SeeRule());

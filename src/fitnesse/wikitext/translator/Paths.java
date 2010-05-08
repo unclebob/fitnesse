@@ -15,7 +15,7 @@ public class Paths {
 
     public List<String> getPaths(Symbol syntaxTree) {
         TreeWalker walker = new TreeWalker();
-        syntaxTree.walk(walker);
+        syntaxTree.walkPostOrder(walker);
         return walker.result;
     }
 
@@ -28,5 +28,7 @@ public class Paths {
             }
             return true;
         }
+
+        public boolean visitChildren(Symbol node) { return true; }
     }
 }
