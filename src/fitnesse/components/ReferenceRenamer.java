@@ -25,7 +25,11 @@ public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeW
     PageData data = currentPage.getData();
     String content = data.getContent();
 
-      Symbol syntaxTree = Parser.make(new ParsingPage(new WikiSourcePage(currentPage)), content).parse();
+      Symbol syntaxTree = Parser.make(
+              new ParsingPage(new WikiSourcePage(currentPage)),
+              content,
+              SymbolProvider.refactoringProvider)
+              .parse();
       this.currentPage = currentPage;
       syntaxTree.walkPreOrder(this);
       String newContent = new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
