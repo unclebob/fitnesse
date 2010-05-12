@@ -23,6 +23,7 @@ public class WikiWordPath {
         boolean includesUpperCaseLetter = false;
         int i;
         for (i = 2; i < candidate.length(); i++) {
+            if (isCharacter(candidate, '_', i)) return 0;
             if (isUpperCaseLetter(candidate, i)) includesUpperCaseLetter =  true;
             else if (!isDigit(candidate, i) && !isLetter(candidate, i) && !isCharacter(candidate, '.', i)) break;
         }

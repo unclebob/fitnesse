@@ -16,7 +16,7 @@ public class DefineRule implements Rule {
         SymbolType close = open.closeType();
         if (close == SymbolType.Empty) return Symbol.nothing;
 
-        String valueString = parser.parseToIgnoreFirstAsString(close);
+        String valueString = parser.parseToAsString(close);
         if (parser.atEnd()) return Symbol.nothing;
         parser.getPage().putVariable(name, valueString);
 

@@ -108,10 +108,10 @@ public class Parser {
         return lookAhead;
     }
 
-    public String parseToIgnoreFirstAsString(SymbolType terminator) {
+    public String parseToAsString(SymbolType terminator) {
         int start = scanner.getOffset();
         scanner.markStart();
-        parseToIgnoreFirst(terminator);
+        parseTo(terminator);
         return scanner.substring(start, scanner.getOffset() - 1);
     }
 

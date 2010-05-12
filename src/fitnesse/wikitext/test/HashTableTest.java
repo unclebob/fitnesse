@@ -1,7 +1,6 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.test.ParserTest;
 import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 

@@ -45,6 +45,22 @@ public class VariableTest {
                 "<br/>z");
     }
 
+    @Test public void evaluatesNestedVariableDefinition() throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {y}\n!define z {${x}}\n${z}");
+        ParserTest.assertTranslatesTo(pageOne,
+                "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +
+                        "<br/><span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl +
+                        "<br/>y");
+    }
+
+    @Test public void evaluatesEmptyNestedVariableDefinition() throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {}\n!define z {${x}}\n${z}");
+        ParserTest.assertTranslatesTo(pageOne,
+                "<span class=\"meta\">variable defined: x=</span>" + HtmlElement.endl +
+                        "<br/><span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl +
+                        "<br/>");
+    }
+
     @Test public void evaluatesVariablesFromParent() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage parent = root.makePage("PageOne", "!define x {y}\n");

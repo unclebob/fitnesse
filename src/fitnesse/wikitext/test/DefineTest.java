@@ -15,6 +15,7 @@ public class DefineTest {
 
     @Test public void translatesDefines() throws Exception {
         assertTranslatesDefine("!define x {y}", "x=y");
+        assertTranslatesDefine("!define x {}", "x=");
         assertTranslatesDefine("!define x_x {y}", "x_x=y");
         assertTranslatesDefine("!define x.x {y}", "x.x=y");
         assertTranslatesDefine("!define x (y)", "x=y");

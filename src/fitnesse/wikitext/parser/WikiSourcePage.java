@@ -56,6 +56,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String makeFullPathOfTarget(String wikiWordPath) {
         WikiPagePath pathOfWikiWord = PathParser.parse(wikiWordPath);
+        if (pathOfWikiWord == null) throw new IllegalArgumentException("Can't parse path: " + wikiWordPath);
         try {
             WikiPage parentPage = page.getParent();
             return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord));

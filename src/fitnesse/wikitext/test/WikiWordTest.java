@@ -31,6 +31,7 @@ public class WikiWordTest {
         ParserTest.assertTranslatesTo(pageOne, ">PageOne2", wikiLink("PageOne.PageOne2", "&gt;PageOne2"));
         ParserTest.assertTranslatesTo(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
     }
+    
     @Test
     public void translatesMissingWikiWords() throws Exception {
         ParserTest.assertTranslatesTo(pageOne, "PageNine",
