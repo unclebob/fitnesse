@@ -81,8 +81,9 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public Object create(String instanceName, String className, Object[] args) {
+    String replacedClassName = variables.replaceSymbolsInString(className);
     try {
-      Object instance = createInstanceOfConstructor(className, replaceSymbols(args));
+      Object instance = createInstanceOfConstructor(replacedClassName, replaceSymbols(args));
       if (isLibrary(instanceName)) {
         libraries.add(new Library(instanceName, instance));
       } else {

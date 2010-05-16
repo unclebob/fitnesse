@@ -39,7 +39,7 @@ public class VariableStore {
       return (replaceSymbolsInString((String) object));
   }
 
-  private String replaceSymbolsInString(String arg) {
+  public String replaceSymbolsInString(String arg) {
     Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     int startingPosition = 0;
     while (true) {
