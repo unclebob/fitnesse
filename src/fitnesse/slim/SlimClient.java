@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SlimClient {
-  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.1; 
+  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.2; 
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
@@ -61,10 +61,6 @@ public class SlimClient {
 
   public boolean isConnected() {
     return slimServerVersionMessage.startsWith("Slim -- V");
-  }
-
-  public boolean versionsMatch() {
-    return slimServerVersion >= MINIMUM_REQUIRED_SLIM_VERSION;
   }
 
   public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws Exception {
