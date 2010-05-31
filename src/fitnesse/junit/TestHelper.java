@@ -45,6 +45,7 @@ public class TestHelper {
     arguments.setDaysTillVersionsExpire("0");
     arguments.setInstallOnly(false);
     arguments.setOmitUpdates(true);
+    arguments.setPort("0");
     arguments.setRootPath(fitNesseRootPath);
     arguments.setCommand(getCommand(pageName, pageType, suiteFilter)); 
     FitNesseMain.dontExitAfterSingleCommand=true;
