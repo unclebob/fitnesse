@@ -12,8 +12,7 @@ public class DefineRule implements Rule {
         if (!ScanString.isVariableName(name)) return Symbol.nothing;
 
         Symbol next = parser.moveNext(1);
-        SymbolType open = next.getType();
-        SymbolType close = open.closeType();
+        SymbolType close = next.closeType();
         if (close == SymbolType.Empty) return Symbol.nothing;
 
         String valueString = parser.parseToAsString(close);

@@ -2,8 +2,6 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 
-import java.util.List;
-
 public class ImageRule implements Rule {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         String imageProperty =

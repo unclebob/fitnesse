@@ -13,16 +13,16 @@ public class TextMaker {
         this.variableSource = variableSource;
     }
 
-    public TokenMatch make(SymbolProvider provider, String text) {
-        if (provider.hasType(SymbolType.WikiWord)) {
+    public SymbolMatch make(SymbolProvider provider, String text) {
+        if (provider.matchesFor(SymbolType.WikiWord)) {
             int length = new WikiWordPath().findLength(text);
             if (length > 0) {
                 Symbol wikiWord = new Symbol(SymbolType.WikiWord, text.substring(0, length));
                 wikiWord.evaluateVariables(new String[] {WikiWordWidget.REGRACE_LINK}, variableSource);
-                return new TokenMatch(wikiWord, length);
+                return new SymbolMatch(wikiWord, length);
             }
         }
-        return new TokenMatch(
+        return new SymbolMatch(
                 new Symbol(Pattern.matches(eMailPattern, text) ? SymbolType.EMail : SymbolType.Text, text),
                 text.length());
     }

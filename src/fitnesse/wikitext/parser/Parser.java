@@ -12,42 +12,46 @@ import static java.lang.System.arraycopy;
 public class Parser {
     public static final HashMap<SymbolType, Rule> rules = new HashMap<SymbolType, Rule>();
     static {
-        rules.put(SymbolType.Alias, new AliasRule());
-        rules.put(SymbolType.AnchorName, new AnchorNameRule());
-        rules.put(SymbolType.AnchorReference, new AnchorReferenceRule());
-        rules.put(SymbolType.Bold, new EqualPairRule());
-        rules.put(SymbolType.CenterLine, new LineRule());
-        rules.put(SymbolType.Collapsible, new CollapsibleRule());
-        rules.put(SymbolType.Comment, new CommentRule());
-        rules.put(SymbolType.Contents, new ContentsRule());
-        rules.put(SymbolType.Define, new DefineRule());
-        rules.put(SymbolType.Evaluator, new EvaluatorRule());
-        rules.put(SymbolType.HashTable, new HashTableRule());
-        rules.put(SymbolType.HeaderLine, new LineRule());
-        rules.put(SymbolType.Image, new ImageRule());
-        rules.put(SymbolType.Include, new IncludeRule());
-        rules.put(SymbolType.Italic, new EqualPairRule());
-        rules.put(SymbolType.Link, new LinkRule());
-        rules.put(SymbolType.Literal, new LiteralRule());
-        rules.put(SymbolType.Meta, new LineRule());
-        rules.put(SymbolType.NoteLine, new LineRule());
-        rules.put(SymbolType.OrderedList, new ListRule());
-        rules.put(SymbolType.Path, new PathRule());
-        rules.put(SymbolType.PlainTextTable, new PlainTextTableRule());
-        rules.put(SymbolType.Preformat, new LiteralRule());
-        rules.put(SymbolType.See, new SeeRule());
-        rules.put(SymbolType.Strike, new EqualPairRule());
-        rules.put(SymbolType.Style, new StyleRule());
-        rules.put(SymbolType.Table, new TableRule());
-        rules.put(SymbolType.Today, new TodayRule());
-        rules.put(SymbolType.UnorderedList, new ListRule());
-        rules.put(SymbolType.Variable, new VariableRule());
+        addRule(SymbolType.Alias, new AliasRule());
+        addRule(SymbolType.AnchorName, new AnchorNameRule());
+        addRule(SymbolType.AnchorReference, new AnchorReferenceRule());
+        addRule(SymbolType.Bold, new EqualPairRule());
+        addRule(SymbolType.CenterLine, new LineRule());
+        addRule(SymbolType.Collapsible, new CollapsibleRule());
+        addRule(SymbolType.Comment, new CommentRule());
+        addRule(SymbolType.Contents, new ContentsRule());
+        addRule(SymbolType.Define, new DefineRule());
+        addRule(SymbolType.Evaluator, new EvaluatorRule());
+        addRule(SymbolType.HashTable, new HashTableRule());
+        addRule(SymbolType.HeaderLine, new LineRule());
+        addRule(SymbolType.Image, new ImageRule());
+        addRule(SymbolType.Include, new IncludeRule());
+        addRule(SymbolType.Italic, new EqualPairRule());
+        addRule(SymbolType.Link, new LinkRule());
+        addRule(SymbolType.Literal, new LiteralRule());
+        addRule(SymbolType.Meta, new LineRule());
+        addRule(SymbolType.NoteLine, new LineRule());
+        addRule(SymbolType.OrderedList, new ListRule());
+        addRule(SymbolType.Path, new PathRule());
+        addRule(SymbolType.PlainTextTable, new PlainTextTableRule());
+        addRule(SymbolType.Preformat, new LiteralRule());
+        addRule(SymbolType.See, new SeeRule());
+        addRule(SymbolType.Strike, new EqualPairRule());
+        addRule(SymbolType.Style, new StyleRule());
+        addRule(SymbolType.Table, new TableRule());
+        addRule(SymbolType.Today, new TodayRule());
+        addRule(SymbolType.UnorderedList, new ListRule());
+        addRule(SymbolType.Variable, new VariableRule());
     }
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
+    
+    private static void addRule(SymbolType symbolType, Rule rule) {
+        rules.put(symbolType, rule);
+    }
 
     public static Parser make(ParsingPage currentPage, String input) {
-        return make(currentPage, input, new SymbolProvider());
+        return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
 
     public static Parser make(ParsingPage currentPage, String input, SymbolProvider provider) {
@@ -144,7 +148,7 @@ public class Parser {
     }
 
     public Symbol parseTo(SymbolType[] terminators) {
-        return new Parser(currentPage, scanner, new SymbolProvider(), variableSource, terminators, emptyTypes, emptyTypes).parse();
+        return new Parser(currentPage, scanner, SymbolProvider.wikiParsingProvider, variableSource, terminators, emptyTypes, emptyTypes).parse();
     }
 
     public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider) {
@@ -157,7 +161,7 @@ public class Parser {
     }
 
     public Symbol parseWithEnds(SymbolType[] ends) {
-        return new Parser(currentPage, scanner, new SymbolProvider(), variableSource, emptyTypes, emptyTypes, makeEndList(ends)).parse();
+        return new Parser(currentPage, scanner, SymbolProvider.wikiParsingProvider, variableSource, emptyTypes, emptyTypes, makeEndList(ends)).parse();
     }
 
     public Symbol parseWithEnds(SymbolProvider provider, SymbolType[] types) {

@@ -51,7 +51,11 @@ public class Scanner {
     public SymbolType makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
-            TokenMatch match = terminator.makeMatch(input);
+            SymbolMatch match = new SymbolProvider(new SymbolType[] {terminator}).findMatch(input, new MatchableFilter() {
+                public boolean isValid(Matchable candidate) {
+                    return true;
+                }
+            });
             if (match.isMatch()) {
                 currentToken = new Symbol(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset();
@@ -69,7 +73,7 @@ public class Scanner {
     }
 
     public void moveNextIgnoreFirst(List<SymbolType> ignoreFirst) {
-        moveNextIgnoreFirst(new SymbolProvider(), ignoreFirst);
+        moveNextIgnoreFirst(SymbolProvider.wikiParsingProvider, ignoreFirst);
     }
 
     public void moveNextIgnoreFirst(SymbolProvider provider, List<SymbolType> ignoreFirst) {
@@ -90,33 +94,33 @@ public class Scanner {
         return result;
     }
 
-    private Step makeNextStep(SymbolProvider provider, List<SymbolType> ignoreFirst, int startPosition) {
+    private Step makeNextStep(SymbolProvider provider, final List<SymbolType> ignoreFirst, final int startPosition) {
         input.setOffset(startPosition);
         int newNext = startPosition;
-        Symbol matchToken = null;
+        Symbol matchSymbol = null;
         while (!input.isEnd()) {
-            for (Matchable candidate: provider.candidates(input.charAt(0))) {
-                if (input.getOffset() != startPosition || !contains(ignoreFirst, candidate)) {
-                    TokenMatch match = candidate.makeMatch(input);
-                    if (match.isMatch()) {
-                        matchToken = match.getToken();
-                        newNext = input.getOffset() + match.getMatchLength();
-                        break;
-                    }
+            SymbolMatch match = provider.findMatch(input, new MatchableFilter() {
+                public boolean isValid(Matchable candidate) {
+                    return input.getOffset() != startPosition || !contains(ignoreFirst, candidate);
                 }
+            });
+            if (match.isMatch()) {
+                matchSymbol = match.getSymbol();
+                newNext = input.getOffset() + match.getMatchLength();
+                break;
             }
-            if (matchToken != null) break;
             input.moveNext();
         }
         if (input.getOffset() > startPosition) {
-            TokenMatch match = textMaker.make(provider, input.substringFrom(startPosition));
-            return new Step(match.getToken(), startPosition + match.getMatchLength());
+            SymbolMatch match = textMaker.make(provider, input.substringFrom(startPosition));
+            return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
             return new Step(endToken, input.getOffset());
         }
-        return new Step(matchToken, newNext);
+        return new Step(matchSymbol, newNext);
     }
+
 
     private class Step {
         public Symbol token;
@@ -129,9 +133,8 @@ public class Scanner {
 
     private boolean contains(List<SymbolType> ignoreList, Matchable candidate) {
         for (SymbolType ignore: ignoreList) {
-            if (ignore == candidate) return true;
+            if (candidate.matchesFor(ignore)) return true;
         }
         return false;
     }
-
 }

@@ -13,17 +13,18 @@ public class PlainTextTableRule implements Rule {
         parser.moveNext(1);
         if (parser.atEnd()) return Symbol.nothing;
 
-        Matchable[] plainTextTableTypes;
+        SymbolProvider plainTextTableTypes;
         if (!parser.getCurrent().isType(SymbolType.Newline) && !parser.getCurrent().isType(SymbolType.Whitespace)) {
             Matchable columnSeparator = new ColumnSeparator(parser.getCurrent().getContent().substring(0, 1));
-            plainTextTableTypes = new Matchable[]
-                {columnSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
+            plainTextTableTypes = new SymbolProvider(new SymbolType[]
+                {SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+            plainTextTableTypes.addMatcher(columnSeparator);
             parser.moveNext(1);
             if (parser.atEnd()) return Symbol.nothing;
         }
         else {
-            plainTextTableTypes = new Matchable[]
-                {SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable};
+            plainTextTableTypes = new SymbolProvider(new SymbolType[]
+                {SymbolType.Newline, SymbolType.ClosePlainTextTable, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
         }
 
         if (parser.getCurrent().isType(SymbolType.Whitespace)) {
@@ -32,7 +33,7 @@ public class PlainTextTableRule implements Rule {
         
         Symbol row = null;
         while (true) {
-            Symbol line = parser.parseToWithSymbols(terminators, new SymbolProvider(plainTextTableTypes));
+            Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes);
             if (parser.atEnd()) return Symbol.nothing;
             if (parser.getCurrent().isType(SymbolType.ClosePlainTextTable)) return new Maybe<Symbol>(table);
             if (row == null) {
@@ -51,7 +52,11 @@ public class PlainTextTableRule implements Rule {
             matcher = new Matcher().string(separator);
         }
 
-        public TokenMatch makeMatch(ScanString input) {
+        public boolean matchesFor(SymbolType symbolType) {
+            return symbolType == SymbolType.PlainTextCellSeparator;
+        }
+
+        public SymbolMatch makeMatch(ScanString input) {
             return matcher.makeMatch(SymbolType.PlainTextCellSeparator, input);
         }
     }

@@ -93,4 +93,16 @@ public class Symbol {
     public String getProperty(String key) {
         return getProperty(key, "");
     }
+
+    public SymbolType closeType() {
+        return type == SymbolType.OpenBrace ? SymbolType.CloseBrace
+                : type == SymbolType.OpenBracket ? SymbolType.CloseBracket
+                : type == SymbolType.OpenParenthesis ? SymbolType.CloseParenthesis
+                : type == SymbolType.Literal ? SymbolType.CloseLiteral
+                : type == SymbolType.Preformat ? SymbolType.ClosePreformat
+                : type == SymbolType.Comment ? SymbolType.Newline
+                : SymbolType.Empty;
+    }
+
+
 }

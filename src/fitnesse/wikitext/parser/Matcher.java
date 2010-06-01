@@ -2,15 +2,28 @@ package fitnesse.wikitext.parser;
 
 import util.Maybe;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Matcher {
+    
     private interface ScanMatch {
         Maybe<Integer> match(ScanString input, int offset);
     }
 
+    private static final ArrayList<Character> defaultList = new ArrayList<Character>();
+    static {
+        defaultList.add('\0');
+    }
+
     private ArrayList<ScanMatch> matches = new ArrayList<ScanMatch>();
+    private ArrayList<Character> firsts = null;
+
+    public List<Character> getFirsts() {
+        return firsts != null ? firsts : defaultList;
+    }
 
     public Matcher whitespace() {
+        if (firsts == null) firsts = defaultList;
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
                 int length = input.whitespaceLength(offset);
@@ -30,6 +43,10 @@ public class Matcher {
     }
 
     public Matcher string(final String delimiter) {
+        if (firsts == null) {
+            firsts = new ArrayList<Character>();
+            firsts.add(delimiter.charAt(0));
+        }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
                 return input.matches(delimiter, offset) ? new Maybe<Integer>(delimiter.length()) : Maybe.noInteger;
@@ -39,6 +56,10 @@ public class Matcher {
     }
 
     public Matcher string(final String[] delimiters) {
+        if (firsts == null) {
+            firsts = new ArrayList<Character>();
+            for (String delimiter: delimiters) firsts.add(delimiter.charAt(0));
+        }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
                 for (String delimiter: delimiters) {
@@ -51,6 +72,10 @@ public class Matcher {
     }
 
     public Matcher repeat(final char delimiter) {
+        if (firsts == null) {
+            firsts = new ArrayList<Character>();
+            firsts.add(delimiter);
+        }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
                 int size = 0;
@@ -82,23 +107,14 @@ public class Matcher {
         return this;
     }
 
-    public Matcher noMatch() {
-        matches.add(new ScanMatch() {
-            public Maybe<Integer> match(ScanString input, int offset) {
-                return Maybe.noInteger;
-            }
-        });
-        return this;
-    }
-
-    public TokenMatch makeMatch(SymbolType type, ScanString input)  {
+    public SymbolMatch makeMatch(SymbolType type, ScanString input)  {
         int totalLength = 0;
         for (ScanMatch match: matches) {
             Maybe<Integer> matchLength = match.match(input, totalLength);
-            if (matchLength.isNothing()) return TokenMatch.noMatch;
+            if (matchLength.isNothing()) return SymbolMatch.noMatch;
             totalLength += matchLength.getValue();
         }
 
-        return new TokenMatch(new Symbol(type, input.substring(0, totalLength)), totalLength);
+        return new SymbolMatch(new Symbol(type, input.substring(0, totalLength)), totalLength);
     }
 }

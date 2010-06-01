@@ -1,6 +1,5 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.PathParser;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Test;
@@ -8,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TextMakerTest {
-    private SymbolProvider provider = new SymbolProvider();
+    private SymbolProvider provider = SymbolProvider.wikiParsingProvider;
     private VariableSource source = new TestVariableSource("x", "y");
 
     @Test
@@ -23,9 +22,9 @@ public class TextMakerTest {
     }
 
     private void assertText(String input) {
-        TokenMatch match = makeMatch(input);
-        assertTrue(match.getToken().isType(SymbolType.Text));
-        assertEquals(input, match.getToken().getContent());
+        SymbolMatch match = makeMatch(input);
+        assertTrue(match.getSymbol().isType(SymbolType.Text));
+        assertEquals(input, match.getSymbol().getContent());
         assertEquals(input.length(), match.getMatchLength());
     }
 
@@ -50,21 +49,21 @@ public class TextMakerTest {
     }
 
     private void assertWikiWord(String input, String wikiWord) {
-        TokenMatch match = makeMatch(input);
-        assertTrue(match.getToken().isType(SymbolType.WikiWord));
-        assertEquals(wikiWord, match.getToken().getContent());
+        SymbolMatch match = makeMatch(input);
+        assertTrue(match.getSymbol().isType(SymbolType.WikiWord));
+        assertEquals(wikiWord, match.getSymbol().getContent());
         assertEquals(wikiWord.length(), match.getMatchLength());
     }
 
     @Test
     public void makesEMail() {
-        TokenMatch match = makeMatch("bob@bl.org");
-        assertTrue(match.getToken().isType(SymbolType.EMail));
-        assertEquals("bob@bl.org", match.getToken().getContent());
+        SymbolMatch match = makeMatch("bob@bl.org");
+        assertTrue(match.getSymbol().isType(SymbolType.EMail));
+        assertEquals("bob@bl.org", match.getSymbol().getContent());
         assertEquals(10, match.getMatchLength());
     }
 
-    private TokenMatch makeMatch(String text) {
+    private SymbolMatch makeMatch(String text) {
         return new TextMaker(source).make(provider, text);
     }
 }

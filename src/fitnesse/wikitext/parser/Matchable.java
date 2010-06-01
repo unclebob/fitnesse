@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
 public interface Matchable {
-    TokenMatch makeMatch(ScanString input);
+    boolean matchesFor(SymbolType symbolType);
+    SymbolMatch makeMatch(ScanString input);
 }
