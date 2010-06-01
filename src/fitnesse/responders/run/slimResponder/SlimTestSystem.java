@@ -197,7 +197,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
     initializeTest();
-    checkForAndReportVersionMismatch();
+    checkForAndReportVersionMismatch(pageData);
     String html = processAllTablesOnPage(pageData);
     testComplete(testSummary);
     return html;
@@ -214,14 +214,27 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     exceptions.resetForNewTest();
   }
 
-  private void checkForAndReportVersionMismatch() {
-    double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
+  private void checkForAndReportVersionMismatch(PageData pageData) throws Exception {
+    double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
-    if (!slimClient.versionsMatch())
-      exceptions.addException("Slim Protocol Version Error", 
+    if (serverVersionNumber < expectedVersionNumber)
+      exceptions.addException("Slim Protocol Version Error",
         String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
   }
-  
+
+  private double getExpectedSlimVersion(PageData pageData) throws Exception {
+    double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
+    String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
+    if (pageSpecificSlimVersion != null) {
+      try {
+        double pageSpecificSlimVersionDouble = Double.parseDouble(pageSpecificSlimVersion);
+        expectedVersionNumber = pageSpecificSlimVersionDouble;
+      } catch (NumberFormatException e) {
+      }
+    }
+    return expectedVersionNumber;
+  }
+
   protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable) throws Exception;
 
   String processAllTablesOnPage(PageData pageData) throws Exception {

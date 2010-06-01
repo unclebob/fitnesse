@@ -363,13 +363,17 @@ public abstract class SlimTable {
     }
 
     private String disgraceClassNameIfNecessary() {
-      if (nameHasDotsBeforeEnd())
+      if (nameHasDotsBeforeEnd() || nameHasDollars())
         return name;
       else if (isGraceful()) {
         return disgraceClassName();
       } else {
         return name;
       }
+    }
+
+    private boolean nameHasDollars() {
+      return name.indexOf("$") != -1;
     }
 
     private String disgraceClassName() {
@@ -590,7 +594,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return pass(expected);
+        return pass(replaceSymbolsWithFullExpansion(expected));
       else
         return "!style_error(Unknown construction message:) " + actual;
     }

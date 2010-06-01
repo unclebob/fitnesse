@@ -39,7 +39,8 @@ public class JUnitHelperExampleTest {
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSubsetQuery",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSymbolsDontGetTurnedToStringsInTheOutput",
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict",
-    "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.RegularExpressionMatching"
+    "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.RegularExpressionMatching",
+    "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ChainTest"
   };
   private String[] expectedTestsWithSuiteFilter = new String[]{
     "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ErikPragtBug",

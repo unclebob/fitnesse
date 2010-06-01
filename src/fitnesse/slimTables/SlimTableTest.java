@@ -14,12 +14,19 @@ import java.util.Map;
 public class SlimTableTest {
   @Test
   public void gracefulClassNames() throws Exception {
-    assertEquals("MyClass", disgraceClassName("my class"));
-    assertEquals("myclass", disgraceClassName("myclass"));
-    assertEquals("x.y", disgraceClassName("x.y"));
-    assertEquals("x_y", disgraceClassName("x_y"));
-    assertEquals("MeAndMrs_jones", disgraceClassName("me and mrs_jones"));
-    assertEquals("PageCreator", disgraceClassName("Page creator."));
+    assertDisgracedClassName("MyClass", "my class");
+    assertDisgracedClassName("myclass", "myclass");
+    assertDisgracedClassName("x.y", "x.y");
+    assertDisgracedClassName("x_y", "x_y");
+    assertDisgracedClassName("MeAndMrs_jones", "me and mrs_jones");
+    assertDisgracedClassName("PageCreator", "Page creator.");
+    assertDisgracedClassName("$symbol", "$symbol");
+    assertDisgracedClassName("$MySymbol", "$MySymbol");
+    assertDisgracedClassName("myEmbedded$Symbol", "myEmbedded$Symbol");
+  }
+
+  private void assertDisgracedClassName(String disgracedName, String sourceName) {
+    assertEquals(disgracedName, disgraceClassName(sourceName));
   }
 
   @Test
