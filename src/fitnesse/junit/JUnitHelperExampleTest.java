@@ -83,6 +83,21 @@ public class JUnitHelperExampleTest {
   }
 
   @Test
+  public void helperWillFailTestsIfNoTestsAreExecuted() throws Exception{
+    try{
+      helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests", "nonExistingFilter");
+    
+    }
+    catch (AssertionError ae){
+      Assert.assertEquals("at least one test executed", ae.getMessage());
+    }
+    
+    JavaFormatter formatter = JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+    Assert.assertEquals(new HashSet<String>(),
+      new HashSet<String>(formatter.getTestsExecuted()));
+    
+  }
+  @Test
   public void dummy() {
 
   }
