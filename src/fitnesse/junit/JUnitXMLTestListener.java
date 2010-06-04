@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import util.TimeMeasurement;
+
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
@@ -57,9 +59,9 @@ public class JUnitXMLTestListener implements ResultsListener {
     
   }
 
-  private long lastTestStartTimeStamp;
+  private TimeMeasurement timeMeasurement = new TimeMeasurement();
   public void newTestStarted(WikiPage test, long time) throws Exception {
-    lastTestStartTimeStamp=System.currentTimeMillis();
+    timeMeasurement.start();
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
@@ -68,8 +70,8 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
-    long testEndTimeStamp=System.currentTimeMillis();
-    recordTestResult(new WikiPagePath(test).toString(), testSummary, testEndTimeStamp-lastTestStartTimeStamp);
+    timeMeasurement.stop();
+    recordTestResult(new WikiPagePath(test).toString(), testSummary, timeMeasurement.elapsed());
   }
 
   public void testOutputChunk(String output) throws Exception {

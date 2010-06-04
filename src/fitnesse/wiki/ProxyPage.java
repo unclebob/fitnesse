@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import util.Clock;
+
 import fitnesse.http.ResponseParser;
 
 public class ProxyPage extends CachingPage implements Serializable {
@@ -50,10 +52,10 @@ public class ProxyPage extends CachingPage implements Serializable {
     retrievalCount++;
     URL url = new URL(urlString + "?responder=proxy&type=bones");
     ProxyPage page = (ProxyPage) getObjectFromUrl(url);
-    page.setTransientValues(url.getHost(), new Date().getTime());
+    page.setTransientValues(url.getHost(), Clock.currentTimeInMillis());
     int port = url.getPort();
     page.setHostPort((port == -1) ? 80 : port);
-    page.lastLoadChildrenTime = System.currentTimeMillis();
+    page.lastLoadChildrenTime = Clock.currentTimeInMillis();
     return page;
   }
 
@@ -63,7 +65,7 @@ public class ProxyPage extends CachingPage implements Serializable {
   }
 
   protected void loadChildren() throws Exception {
-    if (cacheTime <= (System.currentTimeMillis() - lastLoadChildrenTime)) {
+    if (cacheTime <= (Clock.currentTimeInMillis() - lastLoadChildrenTime)) {
       ProxyPage page = retrievePage(getThisPageUrl());
       children.clear();
       for (Iterator<?> iterator = page.children.values().iterator(); iterator.hasNext();) {
@@ -71,7 +73,7 @@ public class ProxyPage extends CachingPage implements Serializable {
         child.parent = this;
         children.put(child.getName(), child);
       }
-      lastLoadChildrenTime = System.currentTimeMillis();
+      lastLoadChildrenTime = Clock.currentTimeInMillis();
     }
   }
 

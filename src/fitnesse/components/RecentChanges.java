@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import util.Clock;
+
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -71,7 +73,7 @@ public class RecentChanges {
     String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
     if (user == null)
       user = "";
-    return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(new Date()) + "|";
+    return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(Clock.currentDate()) + "|";
   }
 
   private static void removeDuplicate(List<String> lines, String resource) {

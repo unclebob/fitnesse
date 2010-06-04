@@ -8,6 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
+import util.Clock;
 import util.FileUtil;
 
 import java.io.File;
@@ -33,7 +34,7 @@ public class PurgeHistoryResponder implements SecureResponder {
   private void initializeResponder(FitNesseContext context) {
     if (resultsDirectory == null)
       resultsDirectory = context.getTestHistoryDirectory();
-    todaysDate = new Date();
+    todaysDate = Clock.currentDate();
   }
 
   private SimpleResponse makeValidResponse() throws Exception {

@@ -4,6 +4,8 @@ package fitnesse.authentication;
 
 import java.util.Random;
 
+import util.TimeMeasurement;
+
 import junit.framework.TestCase;
 
 public class HashingCipherTest extends TestCase {
@@ -58,11 +60,11 @@ public class HashingCipherTest extends TestCase {
       inputs[i] = new String(passwd);
     }
 
-    long startTime = System.currentTimeMillis();
+    TimeMeasurement measurement = new TimeMeasurement().start();
     for (int i = 0; i < inputs.length; i++) {
       crypter.encrypt(inputs[i]);
     }
-    long duration = System.currentTimeMillis() - startTime;
+    long duration = measurement.elapsed();
 
     assertTrue(duration < 1000);
   }

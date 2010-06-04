@@ -11,6 +11,8 @@ import fitnesse.wiki.WikiPage;
 
 import java.util.*;
 
+import util.Clock;
+
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private final ResultsListener resultsListener;
@@ -200,7 +202,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
       currentTest = firstInQueue;
-      resultsListener.newTestStarted(currentTest, System.currentTimeMillis());
+      resultsListener.newTestStarted(currentTest, Clock.currentTimeInMillis());
     }
     resultsListener.testOutputChunk(output);
   }

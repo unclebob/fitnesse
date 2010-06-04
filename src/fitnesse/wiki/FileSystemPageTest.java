@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import util.Clock;
 import util.FileUtil;
 
 import java.io.File;
@@ -175,9 +177,9 @@ public class FileSystemPageTest {
   public void testLastModifiedTime() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
     page.commit(page.getData());
-    Date now = new Date();
+    long now = Clock.currentTimeInMillis();
     Date lastModified = page.getData().getProperties().getLastModificationTime();
-    assertTrue(now.getTime() - lastModified.getTime() <= 5000);
+    assertTrue(now - lastModified.getTime() <= 5000);
   }
 
   @Test

@@ -5,6 +5,7 @@ package fitnesse.wiki;
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.widgets.WikiWordWidget;
+import util.Clock;
 import util.DiskFileSystem;
 import util.FileSystem;
 import util.FileUtil;
@@ -212,7 +213,7 @@ public class FileSystemPage extends CachingPage {
     if (file.exists()) {
       lastModifiedTime = file.lastModified();
     } else {
-      lastModifiedTime = new Date().getTime();
+      lastModifiedTime = Clock.currentTimeInMillis();
     }
     return lastModifiedTime;
   }

@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import util.Clock;
 import util.XmlUtil;
 import util.XmlWriter;
 import fitnesse.wikitext.Utils;
@@ -147,7 +148,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   public Date getLastModificationTime() throws Exception {
     String dateStr = get(PageData.PropertyLAST_MODIFIED);
     if (dateStr == null)
-      return new Date();
+      return Clock.currentDate();
     else
       return getTimeFormat().parse(dateStr);
   }
