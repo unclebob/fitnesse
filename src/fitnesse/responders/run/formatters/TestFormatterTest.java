@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import util.TimeMeasurement;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -70,9 +72,10 @@ public class TestFormatterTest {
 
   @Test
   public void testComplete_shouldCountTestResults() throws Exception {
-    formatter.testComplete(page, right);
-    formatter.testComplete(page, wrong);
-    formatter.testComplete(page, exception);
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start().stop();
+    formatter.testComplete(page, right, timeMeasurement);
+    formatter.testComplete(page, wrong, timeMeasurement);
+    formatter.testComplete(page, exception, timeMeasurement);
     formatter.allTestingComplete();
     assertEquals(3, formatter.testCount);
     assertEquals(2, formatter.failCount);

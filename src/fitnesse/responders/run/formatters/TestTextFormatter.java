@@ -9,6 +9,8 @@ import fitnesse.wiki.WikiPage;
 
 import java.text.SimpleDateFormat;
 
+import util.TimeMeasurement;
+
 public class TestTextFormatter extends BaseFormatter {
   private ChunkedResponse response;
   private String timeString;
@@ -27,8 +29,8 @@ public class TestTextFormatter extends BaseFormatter {
     response.add(String.format("\nStarting Test System: %s using %s.\n", testSystemName, testRunner));
   }
 
-  public void newTestStarted(WikiPage page, long time) throws Exception {
-    timeString = new SimpleDateFormat("HH:mm:ss").format(time);
+  public void newTestStarted(WikiPage page, TimeMeasurement timeMeasurement) throws Exception {
+    timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
   }
 
   private String getPath(WikiPage page) throws Exception {
@@ -38,8 +40,8 @@ public class TestTextFormatter extends BaseFormatter {
   public void testOutputChunk(String output) throws Exception {
   }
 
-  public void testComplete(WikiPage page, TestSummary summary) throws Exception {
-    super.testComplete(page, summary);
+  public void testComplete(WikiPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
+    super.testComplete(page, summary, timeMeasurement);
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\n",
       passFail(summary), timeString, summary.right, summary.wrong, summary.ignores, summary.exceptions, page.getName(), getPath(page)));
   }

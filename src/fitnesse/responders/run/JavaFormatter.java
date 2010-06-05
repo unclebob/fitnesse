@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.TimeMeasurement;
+
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -112,17 +114,17 @@ public class JavaFormatter extends BaseFormatter {
   private List<String> visitedTestPages = new ArrayList<String>();
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     resultsRepository.open(getFullPath(test));
     if (listener != null)
-      listener.newTestStarted(test, time);
+      listener.newTestStarted(test, timeMeasurement);
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
       throws Exception {
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     String fullPath = getFullPath(test);
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -130,7 +132,7 @@ public class JavaFormatter extends BaseFormatter {
     resultsRepository.close();
     isSuite = isSuite && (!mainPageName.equals(fullPath));
     if (listener != null)
-      listener.testComplete(test, testSummary);
+      listener.testComplete(test, testSummary, timeMeasurement);
   }
 
   TestSummary getTestSummary(String testPath) {

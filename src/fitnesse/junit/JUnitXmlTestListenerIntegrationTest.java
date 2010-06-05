@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
 
+import util.TimeMeasurement;
+
 import fitnesse.responders.run.TestSummary;
 
 public class JUnitXmlTestListenerIntegrationTest {
@@ -27,7 +29,6 @@ public class JUnitXmlTestListenerIntegrationTest {
         "</testcase></testsuite>";    
   @Test  
   public void checkJunitXmlTestListenerPrintsXmlFiles() throws Exception{
-    
     JUnitHelper helper = new JUnitHelper(fitNesseRootDir,htmlOutputDir,xmlTestListener);
     helper.assertTestPasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim");
     
@@ -39,14 +40,12 @@ public class JUnitXmlTestListenerIntegrationTest {
 
   @Test
   public void failuresAreRecordedCorrectly() throws Exception{
-    xmlTestListener.newTestStarted(null, 0);
     xmlTestListener.recordTestResult("testName", new TestSummary(1,2,0,0), 100);
     Assert.assertEquals(readContents(new File(xmlOutputDir,"TEST-testName.xml")),
         "<testsuite errors=\"0\" skipped=\"0\" tests=\"1\" time=\"0.1\" failures=\"1\" name=\"testName\"><properties></properties><testcase classname=\"testName\" time=\"0.1\" name=\"testName\"><failure type=\"java.lang.AssertionError\" message=\" exceptions: 0 wrong: 2\"></failure></testcase></testsuite>");    
   }
   @Test
   public void exceptionsAreRecordedCorrectly() throws Exception{
-    xmlTestListener.newTestStarted(null, 0);
     xmlTestListener.recordTestResult("testName", new TestSummary(1,2,0,1), 100);
     Assert.assertEquals(readContents(new File(xmlOutputDir,"TEST-testName.xml")),
         "<testsuite errors=\"1\" skipped=\"0\" tests=\"1\" time=\"0.1\" failures=\"0\" name=\"testName\"><properties></properties><testcase classname=\"testName\" time=\"0.1\" name=\"testName\"><failure type=\"java.lang.AssertionError\" message=\" exceptions: 1 wrong: 2\"></failure></testcase></testsuite>");    

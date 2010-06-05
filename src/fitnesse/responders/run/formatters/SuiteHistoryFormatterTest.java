@@ -14,6 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import util.DateTimeUtil;
+import util.TimeMeasurement;
 import util.XmlUtil;
 
 import java.io.StringWriter;
@@ -50,8 +51,18 @@ public class SuiteHistoryFormatterTest {
   }
 
   private void addTest() throws Exception {
-    formatter.newTestStarted(testPage, testTime);
-    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4));
+    TimeMeasurement timeMeasurement = new TimeMeasurement() {
+      @Override
+      public long startedAt() {
+        return testTime;
+      }
+      @Override
+      public long stoppedAt() {
+        return testTime+1;
+      }
+    };
+    formatter.newTestStarted(testPage, timeMeasurement);
+    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4), timeMeasurement);
   }
 
   @Test

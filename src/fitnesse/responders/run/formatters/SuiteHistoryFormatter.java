@@ -7,6 +7,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import util.TimeMeasurement;
+
 import java.io.Writer;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
@@ -20,10 +22,10 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     if (suiteTime == 0)
-      suiteTime = time;
-    super.newTestStarted(test, time);
+      suiteTime = timeMeasurement.startedAt();
+    super.newTestStarted(test, timeMeasurement);
   }
 
   public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) throws Exception {

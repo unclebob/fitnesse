@@ -7,6 +7,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPage;
 import util.DateTimeUtil;
+import util.TimeMeasurement;
 
 public abstract class BaseFormatter implements ResultsListener {
 
@@ -32,6 +33,7 @@ public abstract class BaseFormatter implements ResultsListener {
     return page;
   }
 
+  @Override
   public void errorOccured() {
     try {
       allTestingComplete();
@@ -40,15 +42,17 @@ public abstract class BaseFormatter implements ResultsListener {
     }
   }
 
+  @Override
   public void allTestingComplete() throws Exception {
     finalErrorCount = failCount;
   }
 
+  @Override
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary summary) throws Exception {
+  public void testComplete(WikiPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
     testCount++;
     if (summary.wrong > 0) {
       failCount++;
@@ -83,26 +87,33 @@ class NullFormatter extends BaseFormatter {
     return null;
   }
 
+  @Override
   public void errorOccured() {
 
   }
 
+  @Override
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  @Override
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
+  @Override
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
   }
 
   public void writeHead(String pageType) throws Exception {

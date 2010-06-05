@@ -1,5 +1,6 @@
 package fitnesse.responders.run.formatters;
 
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
@@ -13,16 +14,16 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiPage testedPage, long time) throws Exception {
+  public void newTestStarted(WikiPage testedPage, TimeMeasurement timeMeasurement) throws Exception {
     testResponse = new TestExecutionReport();
     writeHead(testedPage);
     historyPage = testedPage;
-    super.newTestStarted(testedPage, time);
+    super.newTestStarted(testedPage, timeMeasurement);
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
-    super.testComplete(test, testSummary);
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    super.testComplete(test, testSummary, timeMeasurement);
     writeResults();
   }
 

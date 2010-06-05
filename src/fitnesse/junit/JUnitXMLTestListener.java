@@ -59,9 +59,8 @@ public class JUnitXMLTestListener implements ResultsListener {
     
   }
 
-  private TimeMeasurement timeMeasurement = new TimeMeasurement();
-  public void newTestStarted(WikiPage test, long time) throws Exception {
-    timeMeasurement.start();
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+
   }
 
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
@@ -69,8 +68,7 @@ public class JUnitXMLTestListener implements ResultsListener {
     
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
-    timeMeasurement.stop();
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     recordTestResult(new WikiPagePath(test).toString(), testSummary, timeMeasurement.elapsed());
   }
 

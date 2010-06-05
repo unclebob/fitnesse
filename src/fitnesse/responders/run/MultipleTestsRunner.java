@@ -12,6 +12,7 @@ import fitnesse.wiki.WikiPage;
 import java.util.*;
 
 import util.Clock;
+import util.TimeMeasurement;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
@@ -30,6 +31,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
+  private TimeMeasurement currentTestTime;
 
   private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
     private static final long serialVersionUID = 1L;
@@ -117,11 +119,15 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
     for (WikiPage testPage : pagesInTestSystem) {
-      processingQueue.addLast(testPage);
+      addToProcessingQueue(testPage);
       PageData pageData = testPage.getData();
       SetupTeardownIncluder.includeInto(pageData);
       testSystem.runTestsAndGenerateHtml(pageData);
     }
+  }
+
+  void addToProcessingQueue(WikiPage testPage) {
+    processingQueue.addLast(testPage);
   }
 
   private void waitForTestSystemToSendResults() throws InterruptedException {
@@ -201,16 +207,21 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     WikiPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
-      currentTest = firstInQueue;
-      resultsListener.newTestStarted(currentTest, Clock.currentTimeInMillis());
+      startingNewTest(firstInQueue);
     }
     resultsListener.testOutputChunk(output);
+  }
+
+  void startingNewTest(WikiPage test) throws Exception {
+    currentTest = test;
+    currentTestTime = new TimeMeasurement().start();
+    resultsListener.newTestStarted(currentTest, currentTestTime);
   }
 
   public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
 
-    resultsListener.testComplete(testPage, testSummary);
+    resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
 
   public synchronized void exceptionOccurred(Throwable e) {

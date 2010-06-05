@@ -18,6 +18,8 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import util.TimeMeasurement;
+
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +43,8 @@ public class XmlFormatter extends BaseFormatter {
     this.writerFactory = writerFactory;
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
-    currentTestStartTime = time;
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    currentTestStartTime = timeMeasurement.startedAt();
     appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
 
@@ -54,9 +56,9 @@ public class XmlFormatter extends BaseFormatter {
     appendHtmlToBuffer(output);
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary)
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
-    super.testComplete(test, testSummary);
+    super.testComplete(test, testSummary, timeMeasurement);
     processTestResults(test.getName(), testSummary);
   }
 

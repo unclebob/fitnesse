@@ -1,5 +1,6 @@
 package fitnesse.responders.run;
 
+import util.TimeMeasurement;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
@@ -22,7 +23,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(WikiPage testPage, TestSummary testSummary)
+  public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
       throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage);

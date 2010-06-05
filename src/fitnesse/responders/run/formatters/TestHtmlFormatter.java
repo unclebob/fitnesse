@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.*;
 import fitnesse.responders.WikiImportProperty;
@@ -56,7 +57,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return "";
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     writeData(getPage().getData().getHeaderPageHtml());
   }
 
@@ -68,9 +69,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     writeData(output);
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary)
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
-    super.testComplete(test, testSummary);
+    super.testComplete(test, testSummary, timeMeasurement);
     getAssertionCounts().add(testSummary);
   }
 

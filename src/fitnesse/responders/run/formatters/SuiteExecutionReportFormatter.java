@@ -11,6 +11,8 @@ import fitnesse.wiki.PathParser;
 
 import java.util.List;
 
+import util.TimeMeasurement;
+
 public class SuiteExecutionReportFormatter extends BaseFormatter {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   protected SuiteExecutionReport suiteExecutionReport;
@@ -22,20 +24,25 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     suiteExecutionReport.rootPath = this.page.getName();
   }
 
+  @Override
   public void writeHead(String pageType) throws Exception {
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  @Override
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     String pageName = PathParser.render(test.getPageCrawler().getFullPath(test));
-    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, time);
+    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt());
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
   }
 
@@ -47,7 +54,8 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     return new FitNesseVersion().toString();
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
+  @Override
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     referenceToCurrentTest.setTestSummary(testSummary);
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
     suiteExecutionReport.tallyPageCounts(testSummary);

@@ -19,6 +19,7 @@ import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.testutil.FitNesseUtil;
 import util.DateTimeUtil;
+import util.TimeMeasurement;
 
 import java.io.Writer;
 import java.io.File;
@@ -49,8 +50,18 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void shouldRememberThePageNameAndDate() throws Exception {
-    formatter.newTestStarted(testPage, testTime);
-    formatter.testComplete(testPage, testSummary);
+    TimeMeasurement timeMeasurement = new TimeMeasurement() {
+      @Override
+      public long startedAt() {
+        return testTime;
+      }
+      @Override
+      public long stoppedAt() {
+        return testTime+1;
+      }
+    };
+    formatter.newTestStarted(testPage, timeMeasurement);
+    formatter.testComplete(testPage, testSummary, timeMeasurement);
     assertEquals(1, formatter.getPageHistoryReferences().size());
     assertEquals("TestPage", formatter.getPageHistoryReferences().get(0).getPageName());
     assertEquals(testTime, formatter.getPageHistoryReferences().get(0).getTime());
@@ -115,8 +126,9 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldTallyPageCounts() throws Exception {
-    formatter.newTestStarted(testPage, testTime);
-    formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0)); // 1 right.
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
+    formatter.newTestStarted(testPage, timeMeasurement.start());
+    formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0), timeMeasurement.stop()); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
   }
 }

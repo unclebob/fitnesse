@@ -9,6 +9,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
 import util.RegexTestCase;
+import util.TimeMeasurement;
 
 public class TestHtmlFormatterTest extends RegexTestCase {
   private BaseFormatter formatter;
@@ -41,10 +42,10 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testTestSummaryTestPass() throws Exception {
-
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
-    formatter.newTestStarted(page, 0);
-    formatter.testComplete(page, new TestSummary(4, 0, 0, 0));
+    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.testComplete(page, new TestSummary(4, 0, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete();
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
@@ -52,37 +53,41 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testTestSummaryTestFail() throws Exception {
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
-    formatter.newTestStarted(page, 0);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
+    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete();
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
   }
 
   public void testExecutionStatusHtml() throws Exception {
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page, 0);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
+    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete();
     assertSubString("<div id=\"execution-status\">", pageBuffer.toString());
   }
 
   public void testTail() throws Exception {
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
-    formatter.newTestStarted(page, 0);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
+    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete();
 
     assertSubString("</html>", pageBuffer.toString());
   }
 
   public void testStop() throws Exception {
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page, 0);
-    formatter.testComplete(page, new TestSummary(4, 1, 0, 0));
+    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete();
     //assert stop button added
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('?responder=stoptest&id=2')\">", pageBuffer.toString());
@@ -91,9 +96,10 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testIncompleteMessageAfterException() throws Exception {
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
-    formatter.newTestStarted(page, 0);
+    formatter.newTestStarted(page, timeMeasurement.start());
     pageBuffer.setLength(0);
     formatter.errorOccured();
     //assert stop button added
