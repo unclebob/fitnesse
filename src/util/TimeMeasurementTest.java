@@ -146,4 +146,21 @@ public class TimeMeasurementTest {
     measurement.start();
     assertThat(measurement.stop().stoppedAtDate().getTime(), is(measurement.stoppedAt()));
   }
+  
+  @Test
+  public void elapsedSecondsShouldBeDoubleRepresentationOfElapsed() throws Exception {
+    assertThat(timeMeasurementWithElapsedMillis(1).elapsedSeconds(), is(0.001d));
+    assertThat(timeMeasurementWithElapsedMillis(1000).elapsedSeconds(), is(1.0d));
+    assertThat(timeMeasurementWithElapsedMillis(2345).elapsedSeconds(), is(2.345d));
+    assertThat(timeMeasurementWithElapsedMillis(0).elapsedSeconds(), is(0d));
+  }
+
+  private TimeMeasurement timeMeasurementWithElapsedMillis(final long millis) {
+    return new TimeMeasurement() {
+      @Override
+      public long elapsed() {
+        return millis;
+      }
+    };
+  }
 }

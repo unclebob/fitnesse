@@ -73,4 +73,8 @@ public class TimeMeasurement {
     return new Date(stoppedAt());
   }
 
+  public double elapsedSeconds() {
+    return elapsed() / 1000d;
+  }
+
 }

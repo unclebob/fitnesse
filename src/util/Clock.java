@@ -5,7 +5,7 @@ package util;
 import java.util.Date;
 
 public abstract class Clock {
-  private static Clock instance = new SystemClock();
+  protected static Clock instance = new SystemClock();
   
   protected Clock() {
     this(false);
