@@ -11,6 +11,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import util.TimeMeasurement;
+
 import java.io.Writer;
 import java.util.Date;
 
@@ -39,7 +41,12 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    super.allTestingComplete(totalTimeMeasurement);
+    writeOutSuiteXML();
+  }
+
+  protected void writeOutSuiteXML() throws Exception {
     testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
     velocityContext.put("formatter", this);
     Template template = velocityEngine.getTemplate("suiteXML.vm");
@@ -68,5 +75,11 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
 
   public boolean shouldIncludeHtml() {
     return includeHtml;
+  }
+
+  public long getTotalRunTimeInMillis() {
+    // for velocity macro only -- would be nicer to rewrite the macro
+    // so that it reads from the report directly as per SuiteHistoryFormatter
+    return suiteExecutionReport.getTotalRunTimeInMillis();
   }
 }

@@ -39,7 +39,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   @Override
   public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     String pageName = PathParser.render(test.getPageCrawler().getFullPath(test));
-    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt());
+    referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt(), timeMeasurement.elapsed());
   }
 
   @Override
@@ -57,6 +57,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   @Override
   public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     referenceToCurrentTest.setTestSummary(testSummary);
+    referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
     suiteExecutionReport.tallyPageCounts(testSummary);
   }
@@ -68,8 +69,14 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   @Override
   public int getErrorCount() {
    return getPageCounts().wrong + getPageCounts().exceptions;
- }
+  }
 
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    super.allTestingComplete(totalTimeMeasurement);
+    suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
+  }
+  
   public TestSummary getPageCounts() {
    return suiteExecutionReport.getFinalCounts();
  }

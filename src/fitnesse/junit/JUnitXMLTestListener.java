@@ -21,6 +21,7 @@ public class JUnitXMLTestListener implements ResultsListener {
     this.outputPath=outputPath;
     new File(outputPath).mkdirs();
   }
+  
   public void recordTestResult(String testName, TestSummary result, long executionTime) throws IOException {
     int errors = 0;
     int failures = 0;
@@ -47,37 +48,38 @@ public class JUnitXMLTestListener implements ResultsListener {
     fw.close();
   }
 
-  public void allTestingComplete() throws Exception {
-    
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
   }
 
+  @Override
   public void announceNumberTestsToRun(int testsToRun) {
-    
   }
 
+  @Override
   public void errorOccured() {
-    
   }
 
+  @Override
   public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
-
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
       throws Exception {
-    
   }
 
+  @Override
   public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     recordTestResult(new WikiPagePath(test).toString(), testSummary, timeMeasurement.elapsed());
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
-    
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
       throws Exception {
-    
   }
 }

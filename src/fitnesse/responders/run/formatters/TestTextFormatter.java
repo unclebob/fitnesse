@@ -13,7 +13,6 @@ import util.TimeMeasurement;
 
 public class TestTextFormatter extends BaseFormatter {
   private ChunkedResponse response;
-  private String timeString;
 
   public TestTextFormatter(ChunkedResponse response) {
     this.response = response;
@@ -30,7 +29,6 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   public void newTestStarted(WikiPage page, TimeMeasurement timeMeasurement) throws Exception {
-    timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
   }
 
   private String getPath(WikiPage page) throws Exception {
@@ -42,8 +40,9 @@ public class TestTextFormatter extends BaseFormatter {
 
   public void testComplete(WikiPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
     super.testComplete(page, summary, timeMeasurement);
-    response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\n",
-      passFail(summary), timeString, summary.right, summary.wrong, summary.ignores, summary.exceptions, page.getName(), getPath(page)));
+    String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
+    response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
+      passFail(summary), timeString, summary.right, summary.wrong, summary.ignores, summary.exceptions, page.getName(), getPath(page), timeMeasurement.elapsedSeconds()));
   }
 
   private String passFail(TestSummary summary) {
@@ -57,8 +56,8 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
-    super.allTestingComplete();
-    response.add(String.format("--------\n%d Tests,\t%d Failures.\n", testCount, failCount));
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    super.allTestingComplete(totalTimeMeasurement);
+    response.add(String.format("--------\n%d Tests,\t%d Failures\t%.03f seconds.\n", testCount, failCount, totalTimeMeasurement.elapsedSeconds()));
   }
 }

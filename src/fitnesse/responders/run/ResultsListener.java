@@ -7,7 +7,7 @@ import fitnesse.wiki.WikiPage;
 
 public interface ResultsListener {
 
-  public void allTestingComplete() throws Exception;
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception;
   
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception;
 

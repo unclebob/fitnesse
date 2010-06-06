@@ -3,6 +3,7 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import static fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
@@ -41,34 +42,43 @@ public class SuiteHistoryFormatterTest {
     testTime = DateTimeUtil.getTimeFromString("12/5/1952 1:19:00");
   }
 
-
   @Test
   public void shouldRememberTestSummariesInReferences() throws Exception {
-    addTest();
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
+    performTest(totalTimeMeasurement);
     List<PageHistoryReference> references = formatter.getPageHistoryReferences();
     assertEquals(1, references.size());
-    assertEquals(new TestSummary(1, 2, 3, 4), references.get(0).getTestSummary());
+    PageHistoryReference pageHistoryReference = references.get(0);
+    assertEquals(new TestSummary(1, 2, 3, 4), pageHistoryReference.getTestSummary());
+    assertEquals(13, pageHistoryReference.getRunTimeInMillis());
   }
 
-  private void addTest() throws Exception {
-    TimeMeasurement timeMeasurement = new TimeMeasurement() {
+  private void performTest(TimeMeasurement totalTimeMeasurement) throws Exception {
+    formatter.announceNumberTestsToRun(1);
+    while (totalTimeMeasurement.elapsed() == 0) {
+      Thread.sleep(50);
+    }
+    TimeMeasurement testTimeMeasurement = new TimeMeasurement() {
       @Override
       public long startedAt() {
         return testTime;
       }
       @Override
-      public long stoppedAt() {
-        return testTime+1;
+      public long elapsed() {
+        return 13;
       }
     };
-    formatter.newTestStarted(testPage, timeMeasurement);
-    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4), timeMeasurement);
+    formatter.newTestStarted(testPage, testTimeMeasurement);
+    formatter.testComplete(testPage, new TestSummary(1, 2, 3, 4), testTimeMeasurement);
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
   }
 
   @Test
-  public void allTestingCompleteShouldProduceLinks() throws Exception {
-    addTest();
-    formatter.allTestingComplete();
+  public void allTestingCompleteShouldProduceLinksAndSetTotalRunTimeOnReport() throws Exception {
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
+    performTest(totalTimeMeasurement);
+    assertEquals(totalTimeMeasurement.elapsed(), formatter.suiteExecutionReport.getTotalRunTimeInMillis());
+    
     String output = writer.toString();
     Document document = XmlUtil.newDocument(output);
     Element suiteResultsElement = document.getDocumentElement();
@@ -89,6 +99,7 @@ public class SuiteHistoryFormatterTest {
       assertEquals("2", XmlUtil.getTextValue(countsElement, "wrong"));
       assertEquals("3", XmlUtil.getTextValue(countsElement, "ignores"));
       assertEquals("4", XmlUtil.getTextValue(countsElement, "exceptions"));
+      assertEquals("13", XmlUtil.getTextValue(pageHistoryReferenceElement, "runTimeInMillis"));
     }
 
     Element finalCounts = XmlUtil.getElementByTagName(suiteResultsElement, "finalCounts");
@@ -96,5 +107,8 @@ public class SuiteHistoryFormatterTest {
     assertEquals("1", XmlUtil.getTextValue(finalCounts, "wrong"));
     assertEquals("0", XmlUtil.getTextValue(finalCounts, "ignores"));
     assertEquals("0", XmlUtil.getTextValue(finalCounts, "exceptions"));
+    
+    assertEquals(String.valueOf(totalTimeMeasurement.elapsed()), 
+        XmlUtil.getTextValue(suiteResultsElement, "totalRunTimeInMillis"));
   }
 }

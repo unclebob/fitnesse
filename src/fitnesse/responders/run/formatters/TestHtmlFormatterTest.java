@@ -42,53 +42,63 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   }
 
   public void testTestSummaryTestPass() throws Exception {
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
+    formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 0, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete();
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 4 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", pageBuffer.toString());
   }
 
   public void testTestSummaryTestFail() throws Exception {
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
+    formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete();
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<strong>Assertions:</strong> 4 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
   }
 
   public void testExecutionStatusHtml() throws Exception {
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete();
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
     assertSubString("<div id=\"execution-status\">", pageBuffer.toString());
   }
 
   public void testTail() throws Exception {
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
+    formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete();
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
 
     assertSubString("</html>", pageBuffer.toString());
   }
 
   public void testStop() throws Exception {
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
-    formatter.allTestingComplete();
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
     //assert stop button added
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('?responder=stoptest&id=2')\">", pageBuffer.toString());
     //assert stop button removed
@@ -99,6 +109,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     TimeMeasurement timeMeasurement = new TimeMeasurement();
     formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
+    formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     pageBuffer.setLength(0);
     formatter.errorOccured();

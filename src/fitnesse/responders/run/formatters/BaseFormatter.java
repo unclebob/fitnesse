@@ -32,21 +32,21 @@ public abstract class BaseFormatter implements ResultsListener {
   protected WikiPage getPage() {
     return page;
   }
-
+  
   @Override
   public void errorOccured() {
     try {
-      allTestingComplete();
+      allTestingComplete(new TimeMeasurement().start().stop());
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-
+  
   @Override
-  public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     finalErrorCount = failCount;
   }
-
+  
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
   }
@@ -68,7 +68,7 @@ public abstract class BaseFormatter implements ResultsListener {
   public int getErrorCount() {
     return 0;
   }
-
+  
   public static void setTestTime(String dateString) {
     BaseFormatter.testTime = DateTimeUtil.getTimeFromString(dateString);
   }
@@ -86,14 +86,13 @@ class NullFormatter extends BaseFormatter {
   protected WikiPage getPage() {
     return null;
   }
-
+  
   @Override
-  public void errorOccured() {
-
+  public void announceNumberTestsToRun(int testsToRun) {
   }
 
   @Override
-  public void announceNumberTestsToRun(int testsToRun) {
+  public void errorOccured() {
   }
 
   @Override
@@ -116,6 +115,7 @@ class NullFormatter extends BaseFormatter {
   public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
   }
 
+  @Override
   public void writeHead(String pageType) throws Exception {
   }
 }

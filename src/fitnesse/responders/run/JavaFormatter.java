@@ -114,12 +114,14 @@ public class JavaFormatter extends BaseFormatter {
   private List<String> visitedTestPages = new ArrayList<String>();
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
+  @Override
   public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     resultsRepository.open(getFullPath(test));
     if (listener != null)
       listener.newTestStarted(test, timeMeasurement);
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
       throws Exception {
   }
@@ -139,13 +141,14 @@ public class JavaFormatter extends BaseFormatter {
     return testSummaries.get(testPath);
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
     resultsRepository.write(output);
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
       throws Exception {
-
   }
 
   private ResultsRepository resultsRepository;
@@ -181,11 +184,11 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     if (isSuite)
       writeSummary(mainPageName);
     if (listener != null)
-      listener.allTestingComplete();
+      listener.allTestingComplete(totalTimeMeasurement);
   }
 
   public void writeSummary(String suiteName) throws IOException {

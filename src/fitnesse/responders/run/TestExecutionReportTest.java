@@ -60,6 +60,7 @@ public class TestExecutionReportTest {
     result.exceptions = "4";
     result.relativePageName = "relativePageName";
     result.tags = "tags";
+    result.runTimeInMillis = "234";
     expected.results.add(result);
   }
 
@@ -76,6 +77,7 @@ public class TestExecutionReportTest {
     addDummyResult();
     serializeAndDeserialize();
     assertEquals(1, actual.getResults().size());
+    assertEquals("234", actual.getResults().get(0).runTimeInMillis);
   }
 
   @Test

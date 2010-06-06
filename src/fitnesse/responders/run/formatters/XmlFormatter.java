@@ -32,45 +32,49 @@ public class XmlFormatter extends BaseFormatter {
     Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception;
   }
 
-  protected TestExecutionReport testResponse = new TestExecutionReport();
-  private TestExecutionReport.TestResult currentResult;
   private StringBuilder outputBuffer;
   private TestSystem testSystem;
+  protected TestExecutionReport testResponse = new TestExecutionReport();
   protected TestSummary finalSummary = new TestSummary();
 
   public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) throws Exception {
     super(context, page);
     this.writerFactory = writerFactory;
   }
-
+  
+  @Override
   public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     currentTestStartTime = timeMeasurement.startedAt();
     appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
-
+  
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
     this.testSystem = testSystem;
   }
-
+  
+  @Override
   public void testOutputChunk(String output) throws Exception {
     appendHtmlToBuffer(output);
   }
-
+  
+  @Override
   public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
     super.testComplete(test, testSummary, timeMeasurement);
-    processTestResults(test.getName(), testSummary);
+    processTestResults(test.getName(), testSummary, timeMeasurement);
   }
 
-  public void processTestResults(final String relativeTestName, TestSummary testSummary)
+  public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
     finalSummary = new TestSummary(testSummary);
-    currentResult = new TestExecutionReport.TestResult();
+    TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
     currentResult.startTime = getTime();
     currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
     outputBuffer = null;
-    addCountsToResult(testSummary);
+    addCountsToResult(currentResult, testSummary);
+    currentResult.runTimeInMillis = String.valueOf(timeMeasurement.elapsed());
     currentResult.relativePageName = relativeTestName;
     currentResult.tags = page.getData().getAttribute(PageData.PropertySUITES);
 
@@ -80,10 +84,16 @@ public class XmlFormatter extends BaseFormatter {
     }
   }
 
+  protected TestExecutionReport.TestResult newTestResult() {
+    return new TestExecutionReport.TestResult();
+  }
+  
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId,
                                            CompositeExecutionLog log) throws Exception {
   }
-
+  
+  @Override
   public void writeHead(String pageType) throws Exception {
     writeHead(getPage());
   }
@@ -93,11 +103,17 @@ public class XmlFormatter extends BaseFormatter {
     testResponse.rootPath = testPage.getName();
   }
 
-  public void allTestingComplete() throws Exception {
-    super.allTestingComplete();
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    super.allTestingComplete(totalTimeMeasurement);
+    setTotalRunTimeOnReport(totalTimeMeasurement);
     writeResults();
   }
 
+  protected void setTotalRunTimeOnReport(TimeMeasurement totalTimeMeasurement) {
+    testResponse.setTotalRunTimeInMillis(totalTimeMeasurement);
+  }
+  
   protected void writeResults() throws Exception {
     writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, getTime()));
   }
@@ -123,13 +139,11 @@ public class XmlFormatter extends BaseFormatter {
     return finalSummary;
   }
 
-
-  private void addCountsToResult(TestSummary testSummary) {
+  private void addCountsToResult(TestExecutionReport.TestResult currentResult, TestSummary testSummary) {
     currentResult.right = Integer.toString(testSummary.getRight());
     currentResult.wrong = Integer.toString(testSummary.getWrong());
     currentResult.ignores = Integer.toString(testSummary.getIgnores());
     currentResult.exceptions = Integer.toString(testSummary.getExceptions());
-
   }
 
   private void appendHtmlToBuffer(String output) {

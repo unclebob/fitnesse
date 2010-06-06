@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.PagesByTestSystem;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.mockito.Mockito.*;
@@ -132,7 +133,8 @@ public class MultipleTestsRunnerTest {
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
     
     runner.startingNewTest(page);
-    verify(resultsListener).newTestStarted(same(page), argThat(isAStartedTimeMeasurement()));
+    verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
+    assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
   }
 
   private ArgumentMatcher<TimeMeasurement> isAStartedTimeMeasurement() {
@@ -158,7 +160,8 @@ public class MultipleTestsRunnerTest {
     
     runner.startingNewTest(page);
     runner.testComplete(testSummary);
-    verify(resultsListener).testComplete(same(page), same(testSummary), argThat(isAStoppedTimeMeasurement()));
+    verify(resultsListener).testComplete(same(page), same(testSummary), same(runner.currentTestTime));
+    assertThat(runner.currentTestTime, isAStoppedTimeMeasurement());
   }
 
   private ArgumentMatcher<TimeMeasurement> isAStoppedTimeMeasurement() {
@@ -168,5 +171,32 @@ public class MultipleTestsRunnerTest {
         return ((TimeMeasurement) argument).stoppedAt() > 0;
       }
     };
+  }
+  
+  @Test
+  public void announceTotalTestsToRunShouldStartTotalTimeMeasurement() throws Exception {
+    List<WikiPage> testPagesToRun = mock(List.class);
+    WikiPage page = mock(WikiPage.class);
+    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    ResultsListener resultsListener = mock(ResultsListener.class);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    
+    runner.announceTotalTestsToRun(new PagesByTestSystem());
+    verify(resultsListener).announceNumberTestsToRun(0);
+    assertThat(runner.totalTestTime, isAStartedTimeMeasurement());
+  }
+  
+  @Test
+  public void allTestingCompleteShouldStopTotalTimeMeasurement() throws Exception {
+    List<WikiPage> testPagesToRun = mock(List.class);
+    WikiPage page = mock(WikiPage.class);
+    FitNesseContext fitNesseContext = mock(FitNesseContext.class);
+    ResultsListener resultsListener = mock(ResultsListener.class);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    runner.announceTotalTestsToRun(new PagesByTestSystem());
+    
+    runner.allTestingComplete();
+    verify(resultsListener).allTestingComplete(same(runner.totalTestTime));
+    assertThat(runner.totalTestTime, isAStoppedTimeMeasurement());
   }
 }

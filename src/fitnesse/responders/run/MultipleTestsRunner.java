@@ -31,11 +31,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private boolean isStopped = false;
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
-  private TimeMeasurement currentTestTime;
-
-  private class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
-    private static final long serialVersionUID = 1L;
-  }
+  TimeMeasurement currentTestTime, totalTestTime;
 
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
@@ -59,13 +55,19 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   public void executeTestPages() {
     try {
       internalExecuteTestPages();
-      resultsListener.allTestingComplete();
+      allTestingComplete();
     }
     catch (Exception exception) {
       //hoped to write exceptions to log file but will take some work.
       exception.printStackTrace(System.out);
       exceptionOccurred(exception);
     }
+  }
+
+  void allTestingComplete() throws Exception {
+    TimeMeasurement completionTimeMeasurement = new TimeMeasurement().start();
+    resultsListener.allTestingComplete(totalTestTime.stop());
+    completionTimeMeasurement.stop(); // a non-trivial amount of time elapses here
   }
 
   private void internalExecuteTestPages() throws Exception {
@@ -175,16 +177,16 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return pagesByTestSystem;
   }
 
-  private void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
+  void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
     int tests = 0;
     for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
     resultsListener.announceNumberTestsToRun(tests);
+    totalTestTime = new TimeMeasurement().start();
   }
 
   public String buildClassPath() throws Exception {
-
     final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = classPathBuilder.getPathSeparator(page);
     List<String> classPathElements = new ArrayList<String>();
@@ -253,4 +255,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       testSystemGroup.kill();
     }
   }
+}
+
+class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
+  private static final long serialVersionUID = 1L;
 }

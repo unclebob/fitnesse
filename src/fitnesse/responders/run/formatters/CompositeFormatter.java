@@ -71,9 +71,9 @@ public class CompositeFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters)
-      formatter.allTestingComplete();
+      formatter.allTestingComplete(totalTimeMeasurement);
   }
 
   public int getErrorCount() {

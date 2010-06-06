@@ -28,7 +28,8 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-   public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    setTotalRunTimeOnReport(totalTimeMeasurement);
   }
 
   @Override
