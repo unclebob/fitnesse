@@ -6,10 +6,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Test;
 
 public class ClockTest {
 
+  @After
+  public void restoreSystemClock() {
+    Clock.instance = new SystemClock();
+  }
+  
   @Test
   public void systemClockTimeInMillisShouldIncreaseAsTimeFlies() throws Exception {
     Clock clock = new SystemClock();
