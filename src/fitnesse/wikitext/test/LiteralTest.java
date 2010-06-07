@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class LiteralTest {
     @Test public void scansLiteral() {
-        ParserTest.assertScansTokenType("!- stuff -!", SymbolType.Literal, true);
+        ParserTest.assertScansTokenType("!- stuff -!", "Literal", true);
     }
 
     @Test public void translatesLiteral() {

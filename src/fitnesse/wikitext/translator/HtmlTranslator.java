@@ -3,13 +3,9 @@ package fitnesse.wikitext.translator;
 import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.SymbolType;
 
-import java.util.HashMap;
-
 public class HtmlTranslator extends Translator {
-    private static final HashMap<SymbolType, Translation> translations;
 
-    static {
-        translations = new HashMap<SymbolType, Translation>();
+    /*static {
 
         addTranslation(SymbolType.Alias, new AliasBuilder());
         addTranslation(SymbolType.AnchorName, new HtmlBuilder("a").attribute("name", 0).inline());
@@ -45,15 +41,11 @@ public class HtmlTranslator extends Translator {
         addTranslation(SymbolType.UnorderedList, new ListBuilder("ul"));
         addTranslation(SymbolType.Variable, new VariableBuilder());
         addTranslation(SymbolType.WikiWord, new WikiWordBuilder());
-    }
-    
-    private static void addTranslation(SymbolType symbolType, Translation translation) {
-        translations.put(symbolType, translation);
-    }
+    }*/
 
     @Override
-    protected HashMap<SymbolType, Translation> getTranslations() {
-        return translations;
+    protected Translation getTranslation(SymbolType symbolType) {
+        return symbolType.getHtmlTranslation();
     }
 
     public HtmlTranslator(SourcePage page) {

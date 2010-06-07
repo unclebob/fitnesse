@@ -14,7 +14,7 @@ public class ImageRule implements Rule {
 
         parser.moveNext(1);
         if (parser.getCurrent().isType(SymbolType.Link)) {
-            Maybe<Symbol> link = Parser.rules.get(SymbolType.Link).parse(parser.getCurrent(), parser);
+            Maybe<Symbol> link = SymbolType.Link.getWikiRule().parse(parser.getCurrent(), parser);
             if (link.isNothing()) return Symbol.nothing;
             return makeImageLink(link.getValue(), imageProperty);
         }

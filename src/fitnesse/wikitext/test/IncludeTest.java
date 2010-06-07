@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 public class IncludeTest {
     @Test public void scansIncludes() {
-        ParserTest.assertScansTokenType("!include name", SymbolType.Include, true);
+        ParserTest.assertScansTokenType("!include name", "Include", true);
     }
 
     @Test public void parsesIncludes() throws Exception {

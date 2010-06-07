@@ -6,10 +6,10 @@ import org.junit.Test;
 
 public class TableTest {
     @Test public void scansTables() {
-        ParserTest.assertScansTokenType("|a|\n", SymbolType.Table, true);
-        ParserTest.assertScansTokenType("!|a|\n", SymbolType.Table, true);
-        ParserTest.assertScansTokenType("-|a|\n", SymbolType.Table, true);
-        ParserTest.assertScansTokenType("-!|a|\n", SymbolType.Table, true);
+        ParserTest.assertScansTokenType("|a|\n", "Table", true);
+        ParserTest.assertScansTokenType("!|a|\n", "Table", true);
+        ParserTest.assertScansTokenType("-|a|\n", "Table", true);
+        ParserTest.assertScansTokenType("-!|a|\n", "Table", true);
     }
 
     @Test public void translatesTables() {

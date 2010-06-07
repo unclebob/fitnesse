@@ -8,10 +8,10 @@ import static org.junit.Assert.assertTrue;
 
 public class EqualPairTest {
     @Test public void scansTripleQuotes() {
-        ParserTest.assertScansTokenType("'''bold'''", SymbolType.Bold, true);
-        ParserTest.assertScansTokenType("''''bold''''", SymbolType.Bold, true);
-        ParserTest.assertScansTokenType("'' 'not bold' ''", SymbolType.Bold, false);
-        ParserTest.assertScansTokenType("''''some text' '''", SymbolType.Bold, true);
+        ParserTest.assertScansTokenType("'''bold'''", "Bold", true);
+        ParserTest.assertScansTokenType("''''bold''''", "Bold", true);
+        ParserTest.assertScansTokenType("'' 'not bold' ''", "Bold", false);
+        ParserTest.assertScansTokenType("''''some text' '''", "Bold", true);
     }
 
     @Test public void translatesBold() {
@@ -19,8 +19,8 @@ public class EqualPairTest {
     }
 
     @Test public void scansDoubleQuotes() {
-        ParserTest.assertScansTokenType("''italic''", SymbolType.Italic, true);
-        ParserTest.assertScansTokenType("'' 'italic' ''", SymbolType.Italic, true);
+        ParserTest.assertScansTokenType("''italic''", "Italic", true);
+        ParserTest.assertScansTokenType("'' 'italic' ''", "Italic", true);
     }
 
     @Test public void translatesItalic() {
@@ -41,8 +41,8 @@ public class EqualPairTest {
     }
 
     @Test public void scansDoubleDashes() {
-        ParserTest.assertScansTokenType("abc--123--def", SymbolType.Strike, true);
-        ParserTest.assertScansTokenType("--- -", SymbolType.Strike, true);
+        ParserTest.assertScansTokenType("abc--123--def", "Strike", true);
+        ParserTest.assertScansTokenType("--- -", "Strike", true);
     }
 
     @Test public void translatesStrike() {

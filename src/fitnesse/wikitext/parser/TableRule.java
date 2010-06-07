@@ -3,8 +3,6 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class TableRule implements Rule {
-    private static final SymbolProvider literalTableProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         String content = current.getContent();
@@ -25,7 +23,7 @@ public class TableRule implements Rule {
 
     private Symbol parseCell(Parser parser, String content) {
         if (content.indexOf("!") >= 0) {
-            return parser.parseToWithSymbols(SymbolType.EndCell, literalTableProvider);
+            return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider);
         }
         else
             return parser.parseTo(SymbolType.EndCell);

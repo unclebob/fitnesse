@@ -12,6 +12,7 @@ public class AnchorNameRule implements Rule {
         String anchor = tokens.get(1).getContent();
         if (!ScanString.isWord(anchor)) return Symbol.nothing;
 
-        return new Maybe<Symbol>(new Symbol(SymbolType.AnchorName).add(tokens.get(1)));
+        current.add(tokens.get(1));
+        return new Maybe<Symbol>(current);
     }
 }

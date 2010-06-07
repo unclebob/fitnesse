@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class CollapsibleTest {
     @Test public void scansCollapsible() {
-        ParserTest.assertScansTokenType("!* title\ncontent\n*!", SymbolType.Collapsible, true);
+        ParserTest.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true);
     }
 
     @Test public void parsesCollapsible() throws Exception {

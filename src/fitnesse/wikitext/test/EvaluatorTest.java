@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class EvaluatorTest {
     @Test public void scansEvaluators() {
-        ParserTest.assertScansTokenType("${=3+4=}", SymbolType.Evaluator, true);
+        ParserTest.assertScansTokenType("${=3+4=}", "Evaluator", true);
     }
 
     @Test public void translatesEvaluators() {

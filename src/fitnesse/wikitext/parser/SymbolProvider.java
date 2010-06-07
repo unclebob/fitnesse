@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class SymbolProvider {
     public static final SymbolProvider refactoringProvider = new SymbolProvider( new SymbolType[] {
@@ -25,28 +24,48 @@ public class SymbolProvider {
             SymbolType.Evaluator, SymbolType.CloseEvaluator, SymbolType.Variable, SymbolType.Preformat,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
-            SymbolType.Collapsible, SymbolType.HorizontalRule, SymbolType.Bold,
+            SymbolType.Bold,
             SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord, SymbolType.Text,
     });
     
+    public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
+            new SymbolType[] {SymbolType.CloseBracket, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+
+    public static final SymbolProvider linkTargetProvider = new SymbolProvider(
+            new SymbolType[] {SymbolType.Literal, SymbolType.Variable});
+
+    public static final SymbolProvider pathRuleProvider = new SymbolProvider(new SymbolType[] {
+          SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+
+    public static final SymbolProvider literalTableProvider = new SymbolProvider(
+            new SymbolType[] {SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+
     private static final char defaultMatch = '\0';
 
     private HashMap<Character, ArrayList<Matchable>> currentDispatch;
+    private ArrayList<SymbolType> symbolTypes;
 
     public SymbolProvider(SymbolType[] types) {
+        symbolTypes = new ArrayList<SymbolType>();
         currentDispatch = new HashMap<Character, ArrayList<Matchable>>();
         currentDispatch.put(defaultMatch, new ArrayList<Matchable>());
+        addTypes(types);
+    }
+
+    public void addTypes(SymbolType[] types) {
         for (SymbolType symbolType: types) {
-            if (symbolType.hasAttribute(SymbolType.WikiMatch)) {
-                for (char first: ((Matcher)symbolType.getAttribute(SymbolType.WikiMatch)).getFirsts()) {
-                    if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
-                    currentDispatch.get(first).add(new SymbolMatcher(symbolType));
-                }
-            }
-            else {
-                currentDispatch.get(defaultMatch).add(new SymbolMatcher(symbolType));
-            }
+            add(symbolType);
         }
+    }
+    
+    public SymbolProvider add(SymbolType symbolType) {
+        if (matchesFor(symbolType)) return this;
+        symbolTypes.add(symbolType);
+        for (char first: symbolType.getWikiMatcher().getFirsts()) {
+            if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
+            currentDispatch.get(first).add(new SymbolMatcher(symbolType));
+        }
+        return this;
     }
 
     private ArrayList<Matchable> getMatchTypes(Character match) {
@@ -54,28 +73,13 @@ public class SymbolProvider {
         return currentDispatch.get(defaultMatch);
     }
 
-    public SymbolProvider addTypes(SymbolType[] types) {
-        ArrayList<Matchable> defaults = currentDispatch.get(defaultMatch);
-        for (SymbolType type: types) {
-            if (!matchesFor(defaults, type)) defaults.add(new SymbolMatcher(type));
-        }
-        return this;
-    }
-
     public void addMatcher(Matchable matcher) {
         ArrayList<Matchable> defaults = currentDispatch.get(defaultMatch);
         defaults.add(matcher);
     }
     
-    private boolean matchesFor(List<Matchable> matchables, SymbolType symbolType) {
-        for (Matchable matchable: matchables) {
-            if (matchable.matchesFor(symbolType)) return true;
-        }
-        return false;
-    }
-
     public boolean matchesFor(SymbolType type) {
-        return matchesFor(currentDispatch.get(defaultMatch), type);
+        return symbolTypes.contains(type);
     }
 
     public SymbolMatch findMatch(ScanString input, MatchableFilter filter) {
@@ -100,9 +104,7 @@ public class SymbolProvider {
         }
 
         public SymbolMatch makeMatch(ScanString input) {
-            return symbolType.hasAttribute(SymbolType.WikiMatch)
-                    ? ((Matcher)symbolType.getAttribute(SymbolType.WikiMatch)).makeMatch(symbolType, input)
-                    : SymbolMatch.noMatch;
+            return symbolType.getWikiMatcher().makeMatch(symbolType, input);
         }
     }
 }

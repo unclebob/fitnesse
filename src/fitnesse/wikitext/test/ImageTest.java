@@ -6,7 +6,7 @@ import org.junit.Test;
 public class ImageTest {
     @Test
     public void scansImages() {
-        ParserTest.assertScansTokenType("!img name", SymbolType.Image, true);
+        ParserTest.assertScansTokenType("!img name", "Image", true);
     }
 
     @Test

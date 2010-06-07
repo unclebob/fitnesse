@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class PreformatTest {
     @Test public void scansPreformats() {
-        ParserTest.assertScansTokenType("{{{stuff}}}", SymbolType.Preformat, true);
+        ParserTest.assertScansTokenType("{{{stuff}}}", "Preformat", true);
     }
 
     @Test public void translatesPreformats() {

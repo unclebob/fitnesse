@@ -27,7 +27,7 @@ public class WikiTranslator extends Translator {
     }
 
     @Override
-    protected HashMap<SymbolType, Translation> getTranslations() {
-        return translations;
+    protected Translation getTranslation(SymbolType symbolType) {
+        return translations.get(symbolType);
     }
 }

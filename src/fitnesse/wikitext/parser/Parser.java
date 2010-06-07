@@ -4,52 +4,14 @@ import util.Maybe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.System.arraycopy;
 
 public class Parser {
-    public static final HashMap<SymbolType, Rule> rules = new HashMap<SymbolType, Rule>();
-    static {
-        addRule(SymbolType.Alias, new AliasRule());
-        addRule(SymbolType.AnchorName, new AnchorNameRule());
-        addRule(SymbolType.AnchorReference, new AnchorReferenceRule());
-        addRule(SymbolType.Bold, new EqualPairRule());
-        addRule(SymbolType.CenterLine, new LineRule());
-        addRule(SymbolType.Collapsible, new CollapsibleRule());
-        addRule(SymbolType.Comment, new CommentRule());
-        addRule(SymbolType.Contents, new ContentsRule());
-        addRule(SymbolType.Define, new DefineRule());
-        addRule(SymbolType.Evaluator, new EvaluatorRule());
-        addRule(SymbolType.HashTable, new HashTableRule());
-        addRule(SymbolType.HeaderLine, new LineRule());
-        addRule(SymbolType.Image, new ImageRule());
-        addRule(SymbolType.Include, new IncludeRule());
-        addRule(SymbolType.Italic, new EqualPairRule());
-        addRule(SymbolType.Link, new LinkRule());
-        addRule(SymbolType.Literal, new LiteralRule());
-        addRule(SymbolType.Meta, new LineRule());
-        addRule(SymbolType.NoteLine, new LineRule());
-        addRule(SymbolType.OrderedList, new ListRule());
-        addRule(SymbolType.Path, new PathRule());
-        addRule(SymbolType.PlainTextTable, new PlainTextTableRule());
-        addRule(SymbolType.Preformat, new LiteralRule());
-        addRule(SymbolType.See, new SeeRule());
-        addRule(SymbolType.Strike, new EqualPairRule());
-        addRule(SymbolType.Style, new StyleRule());
-        addRule(SymbolType.Table, new TableRule());
-        addRule(SymbolType.Today, new TodayRule());
-        addRule(SymbolType.UnorderedList, new ListRule());
-        addRule(SymbolType.Variable, new VariableRule());
-    }
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
     
-    private static void addRule(SymbolType symbolType, Rule rule) {
-        rules.put(symbolType, rule);
-    }
-
     public static Parser make(ParsingPage currentPage, String input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
@@ -183,8 +145,9 @@ public class Parser {
                 break;
             }
             if (contains(terminators, currentToken.getType())) break;
-            if (rules.containsKey(currentToken.getType())) {
-                Maybe<Symbol> parsedSymbol = rules.get(currentToken.getType()).parse(currentToken, this);
+            Rule currentRule = currentToken.getType().getWikiRule();
+            if (currentRule != null) {
+                Maybe<Symbol> parsedSymbol = currentRule.parse(currentToken, this);
                 if (parsedSymbol.isNothing()) {
                     ignore.add(currentToken.getType());
                     scanner.copy(backup);

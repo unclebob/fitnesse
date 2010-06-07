@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class ContentsTest {
     @Test public void scansContents() {
-        ParserTest.assertScansTokenType("!contents", SymbolType.Contents, true);
+        ParserTest.assertScansTokenType("!contents", "Contents", true);
     }
 
     @Test public void parsesContents() throws Exception {

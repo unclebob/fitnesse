@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 public class VariableTest {
     @Test public void scansVariables() {
-        ParserTest.assertScansTokenType("${x}", SymbolType.Variable, true);
+        ParserTest.assertScansTokenType("${x}", "Variable", true);
     }
 
     @Test public void translatesVariables() throws Exception {

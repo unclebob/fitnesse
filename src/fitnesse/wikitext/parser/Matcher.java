@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Matcher {
+
+    public static final Matcher noMatch = new NullMatcher();
     
     private interface ScanMatch {
         Maybe<Integer> match(ScanString input, int offset);
@@ -117,4 +119,5 @@ public class Matcher {
 
         return new SymbolMatch(new Symbol(type, input.substring(0, totalLength)), totalLength);
     }
+   
 }

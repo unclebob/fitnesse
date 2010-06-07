@@ -5,8 +5,8 @@ import org.junit.Test;
 
 public class CommentTest {
     @Test public void scansComments() {
-        ParserTest.assertScansTokenType("# comment\n", SymbolType.Comment, true);
-        ParserTest.assertScansTokenType(" # comment\n", SymbolType.Comment, false);
+        ParserTest.assertScansTokenType("# comment\n", "Comment", true);
+        ParserTest.assertScansTokenType(" # comment\n", "Comment", false);
     }
 
     @Test public void parsesComments() throws Exception {

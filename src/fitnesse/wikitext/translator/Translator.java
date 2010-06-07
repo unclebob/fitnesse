@@ -7,7 +7,7 @@ import java.util.HashMap;
 public abstract class Translator {
 
     private SourcePage currentPage;
-    protected abstract HashMap<SymbolType, Translation> getTranslations();
+    protected abstract Translation getTranslation(SymbolType symbolType);
 
     public Translator(SourcePage currentPage) {
         this.currentPage = currentPage;
@@ -24,8 +24,8 @@ public abstract class Translator {
     }
 
     public String translate(Symbol symbol) {
-        if (getTranslations().containsKey(symbol.getType())) {
-            return getTranslations().get(symbol.getType()).toTarget(this, symbol);
+        if (getTranslation(symbol.getType()) != null) {
+            return getTranslation(symbol.getType()).toTarget(this, symbol);
         }
         else {
             StringBuilder result = new StringBuilder(symbol.getContent());

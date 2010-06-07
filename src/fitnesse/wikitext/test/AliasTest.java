@@ -7,8 +7,8 @@ import org.junit.Test;
 public class AliasTest {
     @Test
     public void scansAliases() {
-        ParserTest.assertScansTokenType("[[tag][link]]", SymbolType.Alias, true);
-        ParserTest.assertScansTokenType("[ [tag][link]]", SymbolType.Alias, false);
+        ParserTest.assertScansTokenType("[[tag][link]]", "Alias", true);
+        ParserTest.assertScansTokenType("[ [tag][link]]", "Alias", false);
     }
 
     @Test

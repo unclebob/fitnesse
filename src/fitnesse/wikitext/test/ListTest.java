@@ -7,12 +7,12 @@ import org.junit.Test;
 public class ListTest {
     @Test
     public void scansLists() {
-        ParserTest.assertScansTokenType(" * item", SymbolType.UnorderedList, true);
-        ParserTest.assertScansTokenType("  * item", SymbolType.UnorderedList, true);
-        ParserTest.assertScansTokenType("* item", SymbolType.UnorderedList, false);
-        ParserTest.assertScansTokenType(" 1 item", SymbolType.OrderedList, true);
-        ParserTest.assertScansTokenType("  9 item", SymbolType.OrderedList, true);
-        ParserTest.assertScansTokenType("1 item", SymbolType.OrderedList, false);
+        ParserTest.assertScansTokenType(" * item", "UnorderedList", true);
+        ParserTest.assertScansTokenType("  * item", "UnorderedList", true);
+        ParserTest.assertScansTokenType("* item", "UnorderedList", false);
+        ParserTest.assertScansTokenType(" 1 item", "OrderedList", true);
+        ParserTest.assertScansTokenType("  9 item", "OrderedList", true);
+        ParserTest.assertScansTokenType("1 item", "OrderedList", false);
     }
 
     @Test

@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 public class LastModifiedTest {
     @Test
     public void scansLastModified() {
-        ParserTest.assertScansTokenType("!lastmodified", SymbolType.LastModified, true);
+        ParserTest.assertScansTokenType("!lastmodified", "LastModified", true);
     }
 
     @Test

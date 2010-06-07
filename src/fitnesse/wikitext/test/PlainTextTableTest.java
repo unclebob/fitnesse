@@ -8,8 +8,8 @@ import org.junit.Test;
 public class PlainTextTableTest {
     @Test
     public void scansPlainTextTables() {
-        ParserTest.assertScansTokenType("![\nstuff\n]!", SymbolType.PlainTextTable, true);
-        ParserTest.assertScansTokenType("![\nstuff\n]!", SymbolType.ClosePlainTextTable, true);
+        ParserTest.assertScansTokenType("![\nstuff\n]!", "PlainTextTable", true);
+        ParserTest.assertScansTokenType("![\nstuff\n]!", "ClosePlainTextTable", true);
     }
 
     @Test public void parsesPlainTextTables() throws Exception {

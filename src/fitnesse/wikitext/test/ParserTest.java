@@ -15,12 +15,12 @@ public class ParserTest {
         assertScans(expected, scanner);
     }
 
-    public static  void assertScansTokenType(String input, SymbolType expected, boolean found) {
+    public static  void assertScansTokenType(String input, String expected, boolean found) {
         Scanner scanner = new Scanner(input);
         while (true) {
             scanner.moveNext();
             if (scanner.isEnd()) break;
-            if (scanner.getCurrent().isType(expected)) {
+            if (scanner.getCurrent().getType().toString().equals(expected)) {
                 assertTrue(found);
                 return;
             }

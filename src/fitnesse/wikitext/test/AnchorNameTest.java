@@ -5,8 +5,8 @@ import org.junit.Test;
 
 public class AnchorNameTest {
     @Test public void scansAnchors() {
-        ParserTest.assertScansTokenType("!anchor name", SymbolType.AnchorName, true);
-        ParserTest.assertScansTokenType("! anchor name", SymbolType.AnchorName, false);
+        ParserTest.assertScansTokenType("!anchor name", "AnchorName", true);
+        ParserTest.assertScansTokenType("! anchor name", "AnchorName", false);
     }
 
     @Test public void parsesAnchors() throws Exception {

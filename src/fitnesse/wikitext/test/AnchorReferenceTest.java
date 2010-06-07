@@ -7,10 +7,10 @@ import org.junit.Test;
 
 public class AnchorReferenceTest {
     @Test public void scansAnchors() {
-        ParserTest.assertScansTokenType(".#anchorName", SymbolType.AnchorReference, true);
-        ParserTest.assertScansTokenType(".# anchorName", SymbolType.AnchorReference, true);
-        ParserTest.assertScansTokenType(". #anchor Name", SymbolType.AnchorReference, false);
-        ParserTest.assertScansTokenType("blah.#anchorName", SymbolType.AnchorReference, true);
+        ParserTest.assertScansTokenType(".#anchorName", "AnchorReference", true);
+        ParserTest.assertScansTokenType(".# anchorName", "AnchorReference", true);
+        ParserTest.assertScansTokenType(". #anchor Name", "AnchorReference", false);
+        ParserTest.assertScansTokenType("blah.#anchorName", "AnchorReference", true);
     }
 
     @Test public void parsesAnchors() throws Exception {

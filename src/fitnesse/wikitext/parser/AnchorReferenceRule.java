@@ -12,6 +12,6 @@ public class AnchorReferenceRule implements Rule {
         String anchor = tokens.get(0).getContent();
         if (!ScanString.isWord(anchor)) return Symbol.nothing;
 
-        return new Maybe<Symbol>(new Symbol(SymbolType.AnchorReference).add(tokens.get(0)));
+        return new Maybe<Symbol>(current.add(tokens.get(0)));
     }
 }

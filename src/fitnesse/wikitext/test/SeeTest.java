@@ -7,8 +7,8 @@ import org.junit.Test;
 public class SeeTest {
     @Test
     public void scansSees() {
-        ParserTest.assertScansTokenType("!see Stuff", SymbolType.See, true);
-        ParserTest.assertScansTokenType("!seeStuff", SymbolType.See, false);
+        ParserTest.assertScansTokenType("!see Stuff", "See", true);
+        ParserTest.assertScansTokenType("!seeStuff", "See", false);
     }
 
     @Test public void parsesSees() throws Exception {

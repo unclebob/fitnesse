@@ -7,8 +7,8 @@ import org.junit.Test;
 
 public class HorizontalRuleTest {
     @Test public void scansHorizontalRules() {
-        ParserTest.assertScansTokenType("----", SymbolType.HorizontalRule, true);
-        ParserTest.assertScansTokenType("------", SymbolType.HorizontalRule, true);
+        ParserTest.assertScansTokenType("----", "HorizontalRule", true);
+        ParserTest.assertScansTokenType("------", "HorizontalRule", true);
     }
 
     @Test public void translatesNotes() {

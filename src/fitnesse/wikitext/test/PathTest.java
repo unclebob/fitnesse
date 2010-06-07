@@ -14,7 +14,7 @@ import java.util.List;
 public class PathTest {
     @Test
     public void scansPaths() {
-        ParserTest.assertScansTokenType("!path stuff", SymbolType.Path, true);
+        ParserTest.assertScansTokenType("!path stuff", "Path", true);
     }
 
     @Test

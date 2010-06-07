@@ -8,10 +8,10 @@ import org.junit.Test;
 public class LinkTest {
     @Test
     public void scansLinks() {
-        ParserTest.assertScansTokenType("http://mysite.org", SymbolType.Link, true);
-        ParserTest.assertScansTokenType("https://mysite.org", SymbolType.Link, true);
-        ParserTest.assertScansTokenType("http:/mysite.org", SymbolType.Link, false);
-        ParserTest.assertScansTokenType("httpx://mysite.org", SymbolType.Link, false);
+        ParserTest.assertScansTokenType("http://mysite.org", "Link", true);
+        ParserTest.assertScansTokenType("https://mysite.org", "Link", true);
+        ParserTest.assertScansTokenType("http:/mysite.org", "Link", false);
+        ParserTest.assertScansTokenType("httpx://mysite.org", "Link", false);
     }
 
     @Test public void parsesLinks() throws Exception {

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DefineTest {
     @Test public void scansDefine() {
-        ParserTest.assertScansTokenType("!define x {y}", SymbolType.Define, true);
+        ParserTest.assertScansTokenType("!define x {y}", "Define", true);
     }
 
     @Test public void translatesDefines() throws Exception {
