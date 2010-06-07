@@ -1,3 +1,6 @@
+|FitNesse.UserGuide.ControllingFitnesseFromTheCommandLine||11:11:43 Mon, Jun 07, 2010|
+|FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
+|FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:16 Sun, May 16, 2010|
 |FitNesse.UserGuide.QuickReferenceGuide||11:12:04 Sun, May 16, 2010|
 |JunkPage.SlimVersionTest||11:07:17 Sun, May 16, 2010|
@@ -95,6 +98,3 @@
 |JunkPage.CalculationBug||18:14:59 Sun, Dec 06, 2009|
 |JunkPage.FirstPage||12:05:57 Mon, Nov 30, 2009|
 |JunkPage.GregorsBug||08:30:26 Wed, Nov 25, 2009|
-|JunkPage.DansBug||06:02:17 Wed, Nov 25, 2009|
-|ErrorLogs.JunkPage.DansBug||05:59:55 Wed, Nov 25, 2009|
-|FitNesse.UserGuide.SliM.DataTypes||18:02:21 Mon, Nov 23, 2009|

@@ -11,6 +11,9 @@ The XML result for a test comes back in the following form:
 			<ignores>0</ignores>
 			<exceptions>0</exceptions>
 		</counts>
+		<runTimeInMillis>
+			1022
+		</runTimeInMillis>
 		<content>
                         <![CDATA[HTML OF TEST PAGE
                 </content>
