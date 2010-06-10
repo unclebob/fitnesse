@@ -98,9 +98,9 @@ public class Symbol {
         return type == SymbolType.OpenBrace ? SymbolType.CloseBrace
                 : type == SymbolType.OpenBracket ? SymbolType.CloseBracket
                 : type == SymbolType.OpenParenthesis ? SymbolType.CloseParenthesis
-                : type == SymbolType.Literal ? SymbolType.CloseLiteral
+                : type == Literal.symbolType ? SymbolType.CloseLiteral
                 : type == SymbolType.Preformat ? SymbolType.ClosePreformat
-                : type == SymbolType.Comment ? SymbolType.Newline
+                : type == Comment.symbolType ? SymbolType.Newline
                 : SymbolType.Empty;
     }
 

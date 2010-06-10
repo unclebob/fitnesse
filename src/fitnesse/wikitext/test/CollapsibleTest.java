@@ -1,8 +1,7 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.translator.CollapsibleBuilder;
+import fitnesse.wikitext.parser.Collapsible;
 import org.junit.Test;
 
 public class CollapsibleTest {
@@ -16,15 +15,15 @@ public class CollapsibleTest {
     }
 
     @Test public void translatesCollapsible() {
-        CollapsibleBuilder.resetId();
+        Collapsible.resetId();
         ParserTest.assertTranslatesTo("!* Some title\n''content''\n*!",
                 sectionWithClass("collapsable", "Open", "<i>content</i>"));
 
-        CollapsibleBuilder.resetId();
+        Collapsible.resetId();
         ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",
                 sectionWithClass("hidden", "Closed", " content "));
 
-        CollapsibleBuilder.resetId();
+        Collapsible.resetId();
         ParserTest.assertTranslatesTo("!*< Some title\n content \n*!",
                 "<div class=\"invisible\"> content </div>" + HtmlElement.endl);
     }

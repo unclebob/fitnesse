@@ -2,11 +2,9 @@ package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SymbolType;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.parser.WikiSourcePage;
-import fitnesse.wikitext.translator.HtmlTranslator;
-import fitnesse.wikitext.translator.Paths;
-import fitnesse.wikitext.translator.Translator;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import java.util.List;

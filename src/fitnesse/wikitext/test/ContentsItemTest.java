@@ -4,10 +4,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import fitnesse.wikitext.translator.ContentsItemBuilder;
+import fitnesse.wikitext.parser.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,7 +47,7 @@ public class ContentsItemTest {
     }
 
     private void assertBuilds(String page, String[] properties, String option, String variable, String result) throws Exception {
-        Symbol contents = new Symbol(SymbolType.Contents);
+        Symbol contents = new Symbol(new Contents());
         contents.add(new Symbol(SymbolType.Text, option));
         contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
@@ -60,11 +57,11 @@ public class ContentsItemTest {
     private WikiPage withProperties(WikiPage page, String[] propList) throws Exception {
         PageData data = page.getData();
         WikiPageProperties props = data.getProperties();
-        for (int i = 0; i < propList.length; i++) {
-            String[] parts = propList[i].split("=");
+        for (String aPropList : propList) {
+            String[] parts = aPropList.split("=");
             if (parts.length == 1) props.set(parts[0]);
             else props.set(parts[0], parts[1]);
-          }
+        }
 
         page.commit(data);
         return page;

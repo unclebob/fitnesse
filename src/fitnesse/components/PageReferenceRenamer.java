@@ -5,6 +5,7 @@ package fitnesse.components;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
 import fitnesse.wikitext.parser.WikiWordPath;
@@ -27,7 +28,7 @@ public class PageReferenceRenamer extends ReferenceRenamer {
             if (node.isType(SymbolType.WikiWord)) {
                 wikiWordRenamePageIfReferenced(node, subjectPage, newName);
             }
-            else if (node.isType(SymbolType.Alias)) {
+            else if (node.isType(Alias.symbolType)) {
                 if (new WikiWordPath().findLength(node.childAt(1).childAt(0).getContent()) > 0) {
                     wikiWordRenamePageIfReferenced(node.childAt(1).childAt(0), subjectPage, newName);
                 }
@@ -41,7 +42,7 @@ public class PageReferenceRenamer extends ReferenceRenamer {
     }
 
     public boolean visitChildren(Symbol node) {
-        return !node.isType(SymbolType.Alias);
+        return !node.isType(Alias.symbolType);
     }
 
     private void wikiWordRenamePageIfReferenced(Symbol wikiWord, WikiPage pageToRename, String newName) throws Exception {

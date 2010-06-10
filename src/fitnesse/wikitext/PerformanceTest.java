@@ -2,7 +2,6 @@ package fitnesse.wikitext;
 
 import fitnesse.wikitext.test.ParserTest;
 import fitnesse.wikitext.test.TestRoot;
-import fitnesse.wikitext.translator.Translator;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import org.junit.Test;

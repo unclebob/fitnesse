@@ -4,7 +4,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.translator.WikiTranslator;
+import fitnesse.wikitext.parser.WikiTranslator;
 import util.StringUtil;
 
 import java.util.Arrays;

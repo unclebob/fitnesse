@@ -5,40 +5,39 @@ import java.util.HashMap;
 
 public class SymbolProvider {
     public static final SymbolProvider refactoringProvider = new SymbolProvider( new SymbolType[] {
-            SymbolType.Alias, SymbolType.OpenBracket, SymbolType.CloseBracket, SymbolType.Comment, SymbolType.Image,
-            SymbolType.Literal, SymbolType.Preformat, SymbolType.Link, SymbolType.Path, SymbolType.WikiWord,
+            Alias.symbolType, SymbolType.OpenBracket, SymbolType.CloseBracket, Comment.symbolType, Image.symbolType,
+            Literal.symbolType, SymbolType.Preformat, Link.symbolType, Path.symbolType, SymbolType.WikiWord,
             SymbolType.Newline, SymbolType.Whitespace
     });
 
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider( new SymbolType[] {
-            SymbolType.Link,
-            SymbolType.Table, SymbolType.EndCell,
-            SymbolType.HashTable, SymbolType.HeaderLine, SymbolType.Literal, SymbolType.Collapsible,
-            SymbolType.AnchorName, SymbolType.Contents, SymbolType.CenterLine, SymbolType.Define,
-            SymbolType.Include, SymbolType.Meta, SymbolType.NoteLine, SymbolType.Path, SymbolType.PlainTextTable,
-            SymbolType.See, SymbolType.Style, SymbolType.Table, SymbolType.LastModified, SymbolType.Image,
-            SymbolType.Today,
-            SymbolType.HorizontalRule, SymbolType.Table, SymbolType.CloseLiteral, SymbolType.Strike,
-            SymbolType.Alias, SymbolType.UnorderedList, SymbolType.OrderedList, SymbolType.Comment, SymbolType.Whitespace, SymbolType.CloseCollapsible,
+            Link.symbolType, new Table(), SymbolType.EndCell,
+            new HashTable(),  new HeaderLine(), Literal.symbolType, new Collapsible(),
+            new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(),
+            new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
+            new See(), SymbolType.Style, new LastModified(), Image.symbolType,
+            new Today(),
+            new HorizontalRule(), SymbolType.CloseLiteral, SymbolType.Strike,
+            Alias.symbolType, SymbolType.UnorderedList, SymbolType.OrderedList, Comment.symbolType, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
-            SymbolType.Evaluator, SymbolType.CloseEvaluator, SymbolType.Variable, SymbolType.Preformat,
+            Evaluator.symbolType, SymbolType.CloseEvaluator, Variable.symbolType, SymbolType.Preformat,
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Bold,
-            SymbolType.Italic, SymbolType.Strike, SymbolType.AnchorReference, SymbolType.WikiWord, SymbolType.Text,
+            SymbolType.Italic, SymbolType.Strike, new AnchorReference(), SymbolType.WikiWord, SymbolType.Text,
     });
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.CloseBracket, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+            new SymbolType[] {SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider linkTargetProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.Literal, SymbolType.Variable});
+            new SymbolType[] {Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider pathRuleProvider = new SymbolProvider(new SymbolType[] {
-          SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+          Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider literalTableProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.EndCell, SymbolType.Evaluator, SymbolType.Literal, SymbolType.Variable});
+            new SymbolType[] {SymbolType.EndCell, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     private static final char defaultMatch = '\0';
 

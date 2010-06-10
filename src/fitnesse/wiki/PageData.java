@@ -6,13 +6,9 @@ import fitnesse.responders.run.ExecutionLog;
 import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.parser.Parser;
-import fitnesse.wikitext.parser.ParsingPage;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.WikiSourcePage;
-import fitnesse.wikitext.translator.HtmlTranslator;
-import fitnesse.wikitext.translator.Paths;
-import fitnesse.wikitext.translator.Translator;
+import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.parser.HtmlTranslator;
+import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.widgets.*;
 import util.StringUtil;
 

@@ -2,9 +2,9 @@ package fitnesse.wikitext.test;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.translator.HtmlTranslator;
+import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.translator.WikiTranslator;
+import fitnesse.wikitext.parser.WikiTranslator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

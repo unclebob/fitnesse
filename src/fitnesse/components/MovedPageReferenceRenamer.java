@@ -5,6 +5,7 @@ package fitnesse.components;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
 
@@ -32,7 +33,7 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer /* implements Wi
     }
 
     public boolean visitChildren(Symbol node) {
-        return !node.isType(SymbolType.Alias);
+        return !node.isType(Alias.symbolType);
     }
 
     private void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) throws Exception {
