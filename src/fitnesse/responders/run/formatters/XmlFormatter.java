@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
-  private WriterFactory writerFactory;
-  private long currentTestStartTime;
-
   public interface WriterFactory {
     Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception;
   }
 
+  private WriterFactory writerFactory;
+  private long currentTestStartTime;
   private StringBuilder outputBuffer;
   private TestSystem testSystem;
   protected TestExecutionReport testResponse = new TestExecutionReport();
@@ -70,7 +69,7 @@ public class XmlFormatter extends BaseFormatter {
     finalSummary = new TestSummary(testSummary);
     TestExecutionReport.TestResult currentResult = newTestResult();
     testResponse.results.add(currentResult);
-    currentResult.startTime = getTime();
+    currentResult.startTime = currentTestStartTime;
     currentResult.content = outputBuffer == null ? null : outputBuffer.toString();
     outputBuffer = null;
     addCountsToResult(currentResult, testSummary);
@@ -115,7 +114,7 @@ public class XmlFormatter extends BaseFormatter {
   }
   
   protected void writeResults() throws Exception {
-    writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, getTime()));
+    writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime));
   }
 
   protected WikiPage getPageForHistory() {
@@ -150,13 +149,6 @@ public class XmlFormatter extends BaseFormatter {
     if (outputBuffer == null)
       outputBuffer = new StringBuilder();
     outputBuffer.append(output);
-  }
-
-  public long getTime() {
-    if (testTime != 0)
-      return testTime;
-    else
-      return currentTestStartTime;
   }
 
   private static class SlimTestXmlFormatter {

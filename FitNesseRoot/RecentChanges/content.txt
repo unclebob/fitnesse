@@ -1,3 +1,5 @@
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||16:44:26 Fri, Jun 11, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SetUp||16:39:55 Fri, Jun 11, 2010|
 |FitNesse.UserGuide.ControllingFitnesseFromTheCommandLine||11:11:43 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|
