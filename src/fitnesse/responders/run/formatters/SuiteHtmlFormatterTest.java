@@ -3,10 +3,12 @@
 package fitnesse.responders.run.formatters;
 
 import util.RegexTestCase;
+import util.TimeMeasurement;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.wiki.WikiPageDummy;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
   private HtmlPage htmlPage;
@@ -108,5 +110,45 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     assertSubString("<script>document.getElementById(\"test-summary\").innerHTML =" +
         " \"<div id=\\\"progressBar\\\" class=\\\"pass\\\" style=\\\"width:10.0%\\\">", pageBuffer.toString());
     assertSubString("(3/20)", pageBuffer.toString());
+  }
+  
+  public void testTotalTimingShouldAppearInSummary() throws Exception {
+    TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
+    TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
+    formatter.page = new WikiPageDummy();
+    formatter.writeHead("test");
+    formatter.announceNumberTestsToRun(1);
+    WikiPageDummy firstPage = new WikiPageDummy("page1", "content");
+    formatter.newTestStarted(firstPage, timeMeasurement.start());
+    formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
+  }
+
+  public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
+    TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
+    TimeMeasurement firstTimeMeasurement = newConstantElapsedTimeMeasurement(670);
+    TimeMeasurement secondTimeMeasurement = newConstantElapsedTimeMeasurement(890);
+    formatter.page = new WikiPageDummy();
+    formatter.writeHead("test");
+    formatter.announceNumberTestsToRun(2);
+    WikiPageDummy firstPage = new WikiPageDummy("page1", "content");
+    WikiPageDummy secondPage = new WikiPageDummy("page2", "content");
+    formatter.newTestStarted(firstPage, firstTimeMeasurement.start());
+    formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), firstTimeMeasurement.stop());
+    formatter.newTestStarted(secondPage, secondTimeMeasurement.start());
+    formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8), secondTimeMeasurement.stop());
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    assertHasRegexp("<div.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</div>", pageBuffer.toString());
+    assertHasRegexp("<div.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</div>", pageBuffer.toString());
+  }
+
+  private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {
+    return new TimeMeasurement() {
+      @Override
+      public long elapsed() {
+        return theElapsedTime;
+      }
+    };
   }
 }

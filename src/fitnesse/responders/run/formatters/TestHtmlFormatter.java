@@ -17,6 +17,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   private CompositeExecutionLog log = null;
   private HtmlPage htmlPage = null;
   private boolean wasInterupted = false;
+  protected TimeMeasurement latestTestTime;
 
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
@@ -73,9 +74,24 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
+  public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
-    super.testComplete(test, testSummary, timeMeasurement);
+    super.testComplete(testPage, testSummary, timeMeasurement);
+    latestTestTime = timeMeasurement;
+    
+    processTestResults(getRelativeName(testPage), testSummary);
+  }
+
+  protected String getRelativeName(WikiPage testPage) throws Exception {
+    PageCrawler pageCrawler = getPage().getPageCrawler();
+    String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
+    if ("".equals(relativeName)) {
+      relativeName = String.format("(%s)", testPage.getName());
+    }
+    return relativeName;
+  }
+
+  public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
     getAssertionCounts().add(testSummary);
   }
 
@@ -133,6 +149,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected void finishWritingOutput() throws Exception {
+    writeData(testSummary());
     writeData("<br/><div class=\"footer\">\n");
     writeData(getPage().getData().getFooterPageHtml());
     writeData("</div>\n");    
@@ -141,7 +158,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected void publishAndAddLog() throws Exception {
-    writeData(testSummary());
     if (log != null) {
       log.publish();
       writeData(executionStatus(log));
@@ -165,8 +181,12 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   protected String makeSummaryContent() {
-    String summaryContent = testPageSummary();
-    summaryContent += "<strong>Assertions:</strong> " + assertionCounts.toString();
+    String summaryContent;
+    if (latestTestTime != null) {
+      summaryContent = String.format("%s<strong>Assertions:</strong> %s (%.03f seconds)", testPageSummary(), assertionCounts, latestTestTime.elapsedSeconds());
+    } else {
+      summaryContent = String.format("%s<strong>Assertions:</strong> %s ", testPageSummary(), assertionCounts);
+    }
     return summaryContent;
   }
 
@@ -209,6 +229,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   @Override
   public void errorOccured() {
     wasInterupted = true;
+    latestTestTime = null;
     super.errorOccured();
   }
 }
