@@ -48,6 +48,9 @@ public class SymbolProvider {
         symbolTypes = new ArrayList<SymbolType>();
         currentDispatch = new HashMap<Character, ArrayList<Matchable>>();
         currentDispatch.put(defaultMatch, new ArrayList<Matchable>());
+        for (char c = 'a'; c <= 'z'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
+        for (char c = 'A'; c <= 'Z'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
+        for (char c = '0'; c <= '9'; c++) currentDispatch.put(c, new ArrayList<Matchable>());
         addTypes(types);
     }
 
@@ -62,7 +65,7 @@ public class SymbolProvider {
         symbolTypes.add(symbolType);
         for (char first: symbolType.getWikiMatcher().getFirsts()) {
             if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
-            currentDispatch.get(first).add(new SymbolMatcher(symbolType));
+            currentDispatch.get(first).add(symbolType);
         }
         return this;
     }
@@ -89,21 +92,5 @@ public class SymbolProvider {
             }
         }
         return SymbolMatch.noMatch;
-    }
-
-    private static class SymbolMatcher implements Matchable {
-        private SymbolType symbolType;
-
-        public SymbolMatcher(SymbolType symbolType) {
-            this.symbolType = symbolType;
-        }
-
-        public boolean matchesFor(SymbolType symbolType) {
-            return this.symbolType == symbolType;
-        }
-
-        public SymbolMatch makeMatch(ScanString input) {
-            return symbolType.getWikiMatcher().makeMatch(symbolType, input);
-        }
     }
 }

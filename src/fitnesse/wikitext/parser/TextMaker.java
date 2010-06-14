@@ -23,8 +23,10 @@ public class TextMaker {
             }
         }
         return new SymbolMatch(
-                new Symbol(Pattern.matches(eMailPattern, text) ? SymbolType.EMail : SymbolType.Text, text),
+                new Symbol(
+                        text.indexOf("@") > 0 && Pattern.matches(eMailPattern, text)
+                                ? SymbolType.EMail
+                                : SymbolType.Text, text),
                 text.length());
     }
-
 }

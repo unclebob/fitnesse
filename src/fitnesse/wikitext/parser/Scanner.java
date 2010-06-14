@@ -48,7 +48,7 @@ public class Scanner {
         textMaker = other.textMaker;
     }
 
-    public SymbolType makeLiteral(SymbolType terminator) {
+    public Symbol makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
             SymbolMatch match = new SymbolProvider(new SymbolType[] {terminator}).findMatch(input, new MatchableFilter() {
@@ -57,15 +57,16 @@ public class Scanner {
                 }
             });
             if (match.isMatch()) {
-                currentToken = new Symbol(SymbolType.Text, input.substringFrom(next));
-                next = input.getOffset();
-                return terminator;
+                Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
+                next = input.getOffset() + match.getMatchLength();
+                return result;
             }
             input.moveNext();
         }
-        currentToken = new Symbol(SymbolType.Text, input.substringFrom(next));
+        Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
         next = input.getOffset();
-        return SymbolType.Empty;
+        currentToken = endToken;
+        return result;
     }
 
     public void moveNext() {

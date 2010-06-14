@@ -82,10 +82,7 @@ public class Parser {
     }
 
     public String parseLiteral(SymbolType terminator) {
-        scanner.makeLiteral(terminator);
-        String literal = scanner.getCurrent().getContent();
-        scanner.moveNext();
-        return literal;
+        return scanner.makeLiteral(terminator).getContent();
     }
 
     public Symbol parse(String input) {

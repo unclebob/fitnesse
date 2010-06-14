@@ -12,5 +12,6 @@ public class LiteralTest {
     @Test public void translatesLiteral() {
         ParserTest.assertTranslatesTo("!-stuff-!", "stuff");
         ParserTest.assertTranslatesTo("!-''not italic''-!", "''not italic''");
+        ParserTest.assertTranslatesTo("!-break\n-!|", "break\n|");
     }
 }

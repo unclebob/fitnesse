@@ -1,6 +1,6 @@
 package fitnesse.wikitext.parser;
 
-public class SymbolType {
+public class SymbolType implements Matchable {
     
     public static final SymbolType Bold = new SymbolType("Bold")
             .wikiMatcher(new Matcher().string("'''"))
@@ -112,5 +112,13 @@ public class SymbolType {
     }
 
     @Override public String toString() { return name; }
+
+    public boolean matchesFor(SymbolType symbolType) {
+        return this == symbolType;
+    }
+
+    public SymbolMatch makeMatch(ScanString input) {
+        return getWikiMatcher().makeMatch(this, input);
+    }
 }
 

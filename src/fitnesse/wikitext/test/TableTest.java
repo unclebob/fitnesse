@@ -21,6 +21,7 @@ public class TableTest {
         ParserTest.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
         ParserTest.assertTranslatesTo("|!c !1 a|\n",
                 tableWithCell("<div class=\"centered\"><h1>a</h1>" + HtmlElement.endl + "</div>"));
+        ParserTest.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks"));
 
         ParserTest.assertTranslatesTo("|a|b|c|\n|d|e|f|\n",
                 "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
@@ -66,7 +67,7 @@ public class TableTest {
     @Test public void hidesFirstRowInCommentTable() {
         ParserTest.assertTranslatesTo("-|a|\n", tableWithCellAndRow("a", "<tr class=\"hidden\">"));
     }
-    @Test public void combinesLiteralAndCommentOptionse() {
+    @Test public void combinesLiteralAndCommentOptions() {
         ParserTest.assertTranslatesTo("-!|''<a''|\n", tableWithCellAndRow("''&lt;a''", "<tr class=\"hidden\">"));
     }
 
