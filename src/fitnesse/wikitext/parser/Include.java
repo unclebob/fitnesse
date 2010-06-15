@@ -7,7 +7,7 @@ public class Include extends SymbolType implements Rule, Translation {
 
     public Include() {
         super("Include");
-        wikiMatcher(new Matcher().startLine().string("!include"));
+        wikiMatcher(new Matcher().startLineOrCell().string("!include"));
         wikiRule(this);
         htmlTranslation(this);
     }

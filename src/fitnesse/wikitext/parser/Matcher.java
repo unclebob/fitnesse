@@ -44,6 +44,15 @@ public class Matcher {
         return this;
     }
 
+    public Matcher startLineOrCell() {
+        matches.add(new ScanMatch() {
+            public Maybe<Integer> match(ScanString input, int offset) {
+                return input.startsLine(offset, "\n|") ? new Maybe<Integer>(0) : Maybe.noInteger;
+            }
+        });
+        return this;
+    }
+
     public Matcher string(final String delimiter) {
         if (firsts == null) {
             firsts = new ArrayList<Character>();
