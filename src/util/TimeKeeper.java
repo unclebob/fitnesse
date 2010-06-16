@@ -2,6 +2,6 @@ package util;
 
 import java.util.Date;
 
-public interface Clock {
+public interface TimeKeeper {
     Date getNow();
 }

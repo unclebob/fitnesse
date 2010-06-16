@@ -1,10 +1,9 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wiki.PageData;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
-import util.SystemClock;
-import util.TestClock;
+import util.SystemTimeKeeper;
+import util.TestTimeKeeper;
 
 import java.util.GregorianCalendar;
 
@@ -29,7 +28,7 @@ public class LastModifiedTest {
 
     @Test
     public void usesNowIfNoDate() throws Exception {
-        SystemClock.instance = new TestClock(new GregorianCalendar(2002, 2, 4, 5, 6, 7).getTime());
+        SystemTimeKeeper.instance = new TestTimeKeeper(new GregorianCalendar(2002, 2, 4, 5, 6, 7).getTime());
         TestSourcePage page = makeTestPage();
         ParserTest.assertTranslatesTo(page, ParserTest.metaHtml("Last modified anonymously on Mar 04, 2002 at 05:06:07 AM"));
     }

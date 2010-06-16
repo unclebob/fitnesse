@@ -2,7 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperties;
-import util.SystemClock;
+import util.SystemTimeKeeper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,7 +26,7 @@ public class LastModified extends SymbolType implements Translation {
 
     private String formatDate(String dateString) {
         Date date;
-        if (dateString.length() == 0) date = SystemClock.now();
+        if (dateString.length() == 0) date = SystemTimeKeeper.now();
         else {
             try {
                 date = WikiPageProperties.getTimeFormat().parse(dateString);
