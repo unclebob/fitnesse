@@ -10,6 +10,7 @@ import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.parser.HtmlTranslator;
 import fitnesse.wikitext.parser.Paths;
 import fitnesse.wikitext.widgets.*;
+import util.Clock;
 import util.StringUtil;
 
 import java.io.Serializable;
@@ -115,7 +116,7 @@ public class PageData implements Serializable {
     properties.set(PropertyFILES, Boolean.toString(true));
     properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
     properties.set(PropertySEARCH, Boolean.toString(true));
-    properties.setLastModificationTime(new Date());
+    properties.setLastModificationTime(Clock.currentDate());
 
     initTestOrSuiteProperty();
   }

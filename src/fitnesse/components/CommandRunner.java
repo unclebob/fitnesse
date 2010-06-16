@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fitnesse.FitNesseContext;
+
+import util.TimeMeasurement;
+
 public class CommandRunner {
  protected Process process;
  protected String input = "";
@@ -21,8 +25,7 @@ public class CommandRunner {
  protected StringBuffer outputBuffer = new StringBuffer();
  protected StringBuffer errorBuffer = new StringBuffer();
  protected int exitCode = -1;
- private long startTime;
- private long endTime;
+ private TimeMeasurement timeMeasurement = new TimeMeasurement();
  private String command = "";
  private Map<String, String> environmentVariables;
 
@@ -41,7 +44,7 @@ public class CommandRunner {
 
  public void asynchronousStart() throws Exception {
    Runtime rt = Runtime.getRuntime();
-   startTime = System.currentTimeMillis();
+   timeMeasurement.start();
    String[] environmentVariables = determineEnvironment();
    process = rt.exec(command, environmentVariables);
    stdin = process.getOutputStream();
@@ -74,7 +77,7 @@ public class CommandRunner {
 
  public void join() throws Exception {
    process.waitFor();
-   endTime = System.currentTimeMillis();
+   timeMeasurement.stop();
    exitCode = process.exitValue();
  }
 
@@ -126,7 +129,7 @@ public class CommandRunner {
  }
 
  public long getExecutionTime() {
-   return endTime - startTime;
+   return timeMeasurement.elapsed();
  }
 
  protected void sendInput() throws Exception {

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import util.RegexTestCase;
+import util.TimeMeasurement;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
@@ -89,15 +90,15 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
     assertSubString("Exception", client.commandRunner.getError());
   }
 
-  public void testDosntwaitForTimeoutOnBadCommand() throws Exception {
+  public void testDoesntwaitForTimeoutOnBadCommand() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
-    long startTime = System.currentTimeMillis();
+    TimeMeasurement measurement = new TimeMeasurement().start();
     client = new CommandRunningFitClient(this, "java blah", port, new SocketDealer());
     client.start();
     Thread.sleep(50);
     client.join();
     assertTrue(exceptionOccurred);
-    assertTrue(System.currentTimeMillis() - startTime < CommandRunningFitClient.TIMEOUT);
+    assertTrue(measurement.elapsed() < CommandRunningFitClient.TIMEOUT);
 
   }
 

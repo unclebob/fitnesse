@@ -10,6 +10,7 @@
       <ignores>$result.Ignores</ignores>
       <exceptions>$result.Exceptions</exceptions>
     </counts>
+    <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
     <content><![CDATA[$result.Content]]></content>
     <relativePageName>$result.RelativePageName</relativePageName>
     #if($result.Tags)
@@ -72,13 +73,13 @@
   #end
 
   #if($response.FinalCounts)
-
   <finalCounts>
     <right>$response.FinalCounts.Right</right>
     <wrong>$response.FinalCounts.Wrong</wrong>
     <ignores>$response.FinalCounts.Ignores</ignores>
     <exceptions>$response.FinalCounts.Exceptions</exceptions>
   </finalCounts>
+  <totalRunTimeInMillis>$response.TotalRunTimeInMillis</totalRunTimeInMillis>
   #end
 
 </testResults>

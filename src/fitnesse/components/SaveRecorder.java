@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import util.Clock;
+
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -28,7 +30,7 @@ public class SaveRecorder {
   }
 
   public static long timeStamp() {
-    return System.currentTimeMillis();
+    return Clock.currentTimeInMillis();
   }
 
   public static long newTicket() {

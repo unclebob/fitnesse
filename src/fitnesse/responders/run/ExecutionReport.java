@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import util.StringUtil;
+import util.TimeMeasurement;
 import util.XmlUtil;
 import util.DateTimeUtil;
 
@@ -14,6 +15,7 @@ public abstract class ExecutionReport {
   public TestSummary finalCounts = new TestSummary(0, 0, 0, 0);
   public Date date;
   protected Document xmlDoc;
+  private long totalRunTimeInMillis = 0;
 
   protected ExecutionReport(Document xmlDocument) throws Exception {
     xmlDoc = xmlDocument;
@@ -40,6 +42,8 @@ public abstract class ExecutionReport {
       return false;
     else if(!finalCounts.equals(e.finalCounts))
       return false;
+    else if(totalRunTimeInMillis != e.totalRunTimeInMillis)
+      return false;
     return true;
   }
 
@@ -62,6 +66,12 @@ public abstract class ExecutionReport {
     if (dateString != null)
       date = DateTimeUtil.getDateFromString(dateString);
     unpackFinalCounts(documentElement);
+    totalRunTimeInMillis = getTotalRunTimeInMillisOrZeroIfNotPresent(documentElement);
+  }
+
+  protected long getTotalRunTimeInMillisOrZeroIfNotPresent(Element documentElement) throws Exception {
+    String textValue = XmlUtil.getTextValue(documentElement, "totalRunTimeInMillis");
+    return textValue == null ? 0 : Long.parseLong(textValue);
   }
 
   private void unpackFinalCounts(Element testResults) throws Exception {
@@ -90,6 +100,14 @@ public abstract class ExecutionReport {
 
   public String getVersion() {
     return version;
+  }
+
+  public long getTotalRunTimeInMillis() {
+    return totalRunTimeInMillis;
+  }
+  
+  public void setTotalRunTimeInMillis(TimeMeasurement totalTimeMeasurement) {
+    totalRunTimeInMillis = totalTimeMeasurement.elapsed();
   }
 
   public String getRootPath() {

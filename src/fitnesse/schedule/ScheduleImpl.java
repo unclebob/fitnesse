@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import util.Clock;
+
 public class ScheduleImpl implements Schedule, Runnable {
   private long delay;
   private Thread thread;
@@ -46,7 +48,7 @@ public class ScheduleImpl implements Schedule, Runnable {
   }
 
   public void runScheduledItems() throws Exception {
-    long time = System.currentTimeMillis();
+    long time = Clock.currentTimeInMillis();
     synchronized (scheduleItems) {
       for (ScheduleItem item : scheduleItems) {
         runItem(item, time);

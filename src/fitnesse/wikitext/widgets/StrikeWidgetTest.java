@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import util.TimeMeasurement;
 import fitnesse.wikitext.WikiWidget;
 
 // created by Jason Sypher
@@ -32,12 +33,12 @@ public class StrikeWidgetTest extends WidgetTestCase {
   }
 
   public void testEvilExponentialMatch() throws Exception {
-    long startTime = System.currentTimeMillis();
+    TimeMeasurement measurement = new TimeMeasurement().start();
 
     assertNoMatch("--1234567890123456789012");
 
-    long endTime = System.currentTimeMillis();
-    assertTrue("took too long", endTime - startTime < 1000);
+    long duration = measurement.elapsed();
+    assertTrue("took too long", duration < 1000);
   }
 
   public static void main(String[] args) {

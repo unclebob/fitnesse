@@ -12,6 +12,7 @@
       <ignores>$result.Ignores</ignores>
       <exceptions>$result.Exceptions</exceptions>
     </counts>
+    <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
     <relativePageName>$result.RelativePageName</relativePageName>
     <pageHistoryLink>$reference.getPageName()?pageHistory&amp;resultDate=$reference.getResultDate()&amp;format=xml</pageHistoryLink>
     #if($result.Tags)
@@ -30,6 +31,7 @@
     <ignores>$formatter.getPageCounts().ignores</ignores>
     <exceptions>$formatter.getPageCounts().exceptions</exceptions>
   </finalCounts>
+  <totalRunTimeInMillis>$formatter.TotalRunTimeInMillis</totalRunTimeInMillis>
 
 </testResults>
 

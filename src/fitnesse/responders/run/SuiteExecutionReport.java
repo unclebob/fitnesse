@@ -82,7 +82,8 @@ public class SuiteExecutionReport extends ExecutionReport {
       Element refElement = (Element) references.item(referenceIndex);
       String name = XmlUtil.getTextValue(refElement,"name");
       long time = DateTimeUtil.getTimeFromString(XmlUtil.getTextValue(refElement,"date"));
-      PageHistoryReference r1 = new PageHistoryReference(name,time);
+      long runTimeInMillis = getRunTimeInMillisOrZeroIfNotPresent(refElement);
+      PageHistoryReference r1 = new PageHistoryReference(name,time,runTimeInMillis);
       Element counts = XmlUtil.getElementByTagName(refElement,"counts");
       r1.getTestSummary().right = new Integer(XmlUtil.getTextValue(counts,"right"));
       r1.getTestSummary().wrong = new Integer(XmlUtil.getTextValue(counts,"wrong"));
@@ -90,6 +91,11 @@ public class SuiteExecutionReport extends ExecutionReport {
       r1.getTestSummary().exceptions = new Integer(XmlUtil.getTextValue(counts,"exceptions"));
       pageHistoryReferences.add(r1);
     }
+  }
+
+  protected long getRunTimeInMillisOrZeroIfNotPresent(Element refElement) throws Exception {
+    String textValue = XmlUtil.getTextValue(refElement, "runTimeInMillis");
+    return textValue == null ? 0 : Long.parseLong(textValue);
   }
 
   public List<PageHistoryReference> getPageHistoryReferences() {
@@ -103,20 +109,22 @@ public class SuiteExecutionReport extends ExecutionReport {
   public void tallyPageCounts(TestSummary testSummary) {
     finalCounts.tallyPageCounts(testSummary);
   }
-
+  
   public static class PageHistoryReference {
     private String pageName;
     private long time;
+    private long runTimeInMillis;
     private TestSummary testSummary = new TestSummary();
 
-    public PageHistoryReference(String pageName, long time) {
+    public PageHistoryReference(String pageName, long time, long runTimeInMillis) {
       this.pageName = pageName;
       this.time = time;
+      this.runTimeInMillis = runTimeInMillis;
     }
 
     @Override
     public String toString() {
-      return String.format("[%s, %s, %s]", pageName, DateTimeUtil.formatDate(new Date(time)), testSummary);
+      return String.format("[%s, %s, %s, %s]", pageName, DateTimeUtil.formatDate(new Date(time)), testSummary, runTimeInMillis);
     }
 
     @Override
@@ -126,7 +134,8 @@ public class SuiteExecutionReport extends ExecutionReport {
       PageHistoryReference r = (PageHistoryReference) o;
       return StringUtil.stringsNullOrEqual(pageName, r.pageName) &&
         time == r.time &&
-        testSummary.equals(r.testSummary);
+        testSummary.equals(r.testSummary) &&
+        runTimeInMillis == r.runTimeInMillis;
     }
 
     public String getPageName() {
@@ -135,6 +144,14 @@ public class SuiteExecutionReport extends ExecutionReport {
 
     public long getTime() {
       return time;
+    }
+
+    public long getRunTimeInMillis() {
+      return runTimeInMillis;
+    }
+
+    public void setRunTimeInMillis(long runTimeInMillis) {
+      this.runTimeInMillis = runTimeInMillis;
     }
 
     public String getDateString() {
@@ -154,4 +171,5 @@ public class SuiteExecutionReport extends ExecutionReport {
       this.testSummary = new TestSummary(testSummary);
     }
   }
+
 }

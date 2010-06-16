@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.*;
 import fitnesse.responders.WikiImportProperty;
@@ -56,24 +57,29 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return "";
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  @Override
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     writeData(getPage().getData().getHeaderPageHtml());
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
     throws Exception {
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
     writeData(output);
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary)
+  @Override
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
-    super.testComplete(test, testSummary);
+    super.testComplete(test, testSummary, timeMeasurement);
     getAssertionCounts().add(testSummary);
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
     this.log = log;
     addStopLink(stopResponderId);
@@ -114,8 +120,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return html;
   }
 
-  public void allTestingComplete() throws Exception {
-    super.allTestingComplete();
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    super.allTestingComplete(totalTimeMeasurement);
     removeStopTestLink();
     publishAndAddLog();
     finishWritingOutput();
@@ -172,10 +179,12 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return script.html();
   }
 
+  @Override
   public int getErrorCount() {
     return getAssertionCounts().getWrong() + getAssertionCounts().getExceptions();
   }
 
+  @Override
   public void addMessageForBlankHtml() throws Exception {
     TagGroup html = new TagGroup();
     HtmlTag h2 = new HtmlTag("h2");

@@ -18,32 +18,32 @@ Most often you will use this to run tests and/or suites from the command line as
 
 The ''text'' format causes a simple summary of the tests to be printed to standard output.  It looks like this:{{{
 Starting Test System: slim using fitnesse.slim.SlimService.
-. 07:37:29 R:0    W:0    I:0    E:0    JunkPage (JunkPage)
-X 07:37:29 R:0    W:0    I:0    E:3    ExceptionTest    (JunkPage.ExceptionTest)
-. 07:37:29 R:0    W:0    I:0    E:0    FirstPage        (JunkPage.FirstPage)
-. 07:37:29 R:2    W:0    I:0    E:0    GivWenZen        (JunkPage.GivWenZen)
-F 07:37:30 R:6    W:1    I:0    E:0    HashTablePage    (JunkPage.HashTablePage)
-F 07:37:30 R:1    W:20   I:0    E:8    CanTotalOrder    (JunkPage.ImportingPage.CanTotalOrder)
-X 07:37:30 R:0    W:0    I:0    E:6    JunkPage (JunkPage.JunkPage)
-. 07:37:30 R:0    W:0    I:0    E:0    JunkTest (JunkPage.JunkTest)
-F 07:37:30 R:1    W:20   I:0    E:8    CanTotalOrder    (JunkPage.PointOfSale.CanTotalOrder)
-. 07:37:30 R:0    W:0    I:0    E:0    SeeTest  (JunkPage.SeeTest)
-. 07:37:31 R:1    W:0    I:0    E:0    SymbolPage       (JunkPage.SymbolPage)
-. 07:37:31 R:0    W:0    I:0    E:0    TestNothing      (JunkPage.TestNothing)
-X 07:37:31 R:2    W:0    I:0    E:2    TestTableTable   (JunkPage.TestTableTable)
-X 07:37:31 R:0    W:0    I:0    E:4    UseVarPage       (JunkPage.UseVarPage)
-. 07:37:31 R:0    W:0    I:0    E:0    VariableTest     (JunkPage.VariableTest)
-. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteChildTwo.SuiteSetUp)
-. 07:37:31 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.SuiteChildTwo.TestPage)
-. 07:37:31 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteChildTwo.SuiteTearDown)
-. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteSetUp)
-. 07:37:31 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.TestPage)
-. 07:37:31 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteTearDown)
-. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteChildOne.SuiteSetUp)
-. 07:37:32 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.SuiteChildOne.TestPage)
-. 07:37:32 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteChildOne.SuiteTearDown)
+. 07:37:29 R:0    W:0    I:0    E:0    JunkPage (JunkPage) 0.124 seconds
+X 07:37:29 R:0    W:0    I:0    E:3    ExceptionTest    (JunkPage.ExceptionTest) 0.034 seconds
+. 07:37:29 R:0    W:0    I:0    E:0    FirstPage        (JunkPage.FirstPage) 0.329 seconds
+. 07:37:29 R:2    W:0    I:0    E:0    GivWenZen        (JunkPage.GivWenZen) 0.528 seconds
+F 07:37:30 R:6    W:1    I:0    E:0    HashTablePage    (JunkPage.HashTablePage) 0.045 seconds
+F 07:37:30 R:1    W:20   I:0    E:8    CanTotalOrder    (JunkPage.ImportingPage.CanTotalOrder) 0.623 seconds
+X 07:37:30 R:0    W:0    I:0    E:6    JunkPage (JunkPage.JunkPage) 0.083 seconds
+. 07:37:30 R:0    W:0    I:0    E:0    JunkTest (JunkPage.JunkTest) 0.884 seconds
+F 07:37:30 R:1    W:20   I:0    E:8    CanTotalOrder    (JunkPage.PointOfSale.CanTotalOrder) 0.004 seconds
+. 07:37:30 R:0    W:0    I:0    E:0    SeeTest  (JunkPage.SeeTest) 0.765 seconds
+. 07:37:31 R:1    W:0    I:0    E:0    SymbolPage       (JunkPage.SymbolPage) 0.198 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    TestNothing      (JunkPage.TestNothing) 0.923 seconds
+X 07:37:31 R:2    W:0    I:0    E:2    TestTableTable   (JunkPage.TestTableTable) 1.120 seconds
+X 07:37:31 R:0    W:0    I:0    E:4    UseVarPage       (JunkPage.UseVarPage) 0.034 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    VariableTest     (JunkPage.VariableTest) 0.512 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteChildTwo.SuiteSetUp) 0.321 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.SuiteChildTwo.TestPage) 0.432 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteChildTwo.SuiteTearDown) 0.387 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteSetUp) 0.712 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.TestPage) 0.209 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteTearDown) 0.314 seconds
+. 07:37:31 R:0    W:0    I:0    E:0    SuiteSetUp       (JunkPage.ParentSuite.SuiteChildOne.SuiteSetUp) 0.159 seconds
+. 07:37:32 R:0    W:0    I:0    E:0    TestPage (JunkPage.ParentSuite.SuiteChildOne.TestPage) 0.265 seconds
+. 07:37:32 R:0    W:0    I:0    E:0    SuiteTearDown    (JunkPage.ParentSuite.SuiteChildOne.SuiteTearDown) 0.358 seconds
 --------
-24 Tests,       7 Failures.}}}
+24 Tests,       7 Failures.      90.409 seconds.}}}
 Each line begins with . if the test passes, F if the test fails, or X if the test throws an exception.
 The key for the counts is Right, Wrong, Ignored, Exceptions.
 The rest should be self explanatory.

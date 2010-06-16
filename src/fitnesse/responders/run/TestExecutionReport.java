@@ -59,6 +59,7 @@ public class TestExecutionReport extends ExecutionReport {
     result.exceptions = XmlUtil.getTextValue(xmlResult, "exceptions");
     result.relativePageName = XmlUtil.getTextValue(xmlResult, "relativePageName");
     result.tags = XmlUtil.getTextValue(xmlResult, "tags");
+    result.runTimeInMillis = XmlUtil.getTextValue(xmlResult, "runTimeInMillis");
 
     unpackTables(xmlResult, result);
     Element xmlInstructions = XmlUtil.getElementByTagName(xmlResult, "instructions");
@@ -158,6 +159,7 @@ public class TestExecutionReport extends ExecutionReport {
     public String tags;
     public List<Table> tables = new ArrayList<Table>();
     public long startTime;
+    public String runTimeInMillis;
 
     public String getRight() {
       return right;
@@ -173,6 +175,10 @@ public class TestExecutionReport extends ExecutionReport {
 
     public String getExceptions() {
       return exceptions;
+    }
+    
+    public String getRunTimeInMillis() {
+      return runTimeInMillis;
     }
 
     public String getContent() {

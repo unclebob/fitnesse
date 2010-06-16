@@ -7,6 +7,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPage;
 import util.DateTimeUtil;
+import util.TimeMeasurement;
 
 public abstract class BaseFormatter implements ResultsListener {
 
@@ -31,24 +32,27 @@ public abstract class BaseFormatter implements ResultsListener {
   protected WikiPage getPage() {
     return page;
   }
-
+  
+  @Override
   public void errorOccured() {
     try {
-      allTestingComplete();
+      allTestingComplete(new TimeMeasurement().start().stop());
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-
-  public void allTestingComplete() throws Exception {
+  
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     finalErrorCount = failCount;
   }
-
+  
+  @Override
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary summary) throws Exception {
+  public void testComplete(WikiPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
     testCount++;
     if (summary.wrong > 0) {
       failCount++;
@@ -64,7 +68,7 @@ public abstract class BaseFormatter implements ResultsListener {
   public int getErrorCount() {
     return 0;
   }
-
+  
   public static void setTestTime(String dateString) {
     BaseFormatter.testTime = DateTimeUtil.getTimeFromString(dateString);
   }
@@ -82,29 +86,36 @@ class NullFormatter extends BaseFormatter {
   protected WikiPage getPage() {
     return null;
   }
-
-  public void errorOccured() {
-
-  }
-
+  
+  @Override
   public void announceNumberTestsToRun(int testsToRun) {
   }
 
+  @Override
+  public void errorOccured() {
+  }
+
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  @Override
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
+  @Override
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
   }
 
+  @Override
   public void writeHead(String pageType) throws Exception {
   }
 }

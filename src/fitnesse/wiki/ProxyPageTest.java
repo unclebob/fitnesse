@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import util.Clock;
+
 import junit.framework.TestCase;
 import fitnesse.testutil.FitNesseUtil;
 
@@ -32,7 +34,7 @@ public class ProxyPageTest extends TestCase {
     FitNesseUtil.startFitnesse(root);
 
     proxy = new ProxyPage(original);
-    proxy.setTransientValues("localhost", new Date().getTime());
+    proxy.setTransientValues("localhost", Clock.currentTimeInMillis());
     proxy.setHostPort(FitNesseUtil.port);
   }
 
@@ -70,7 +72,7 @@ public class ProxyPageTest extends TestCase {
 
   public void testSetHostAndPort() throws Exception {
     List<?> children = proxy.getChildren();
-    proxy.setTransientValues("a.new.host", new Date().getTime());
+    proxy.setTransientValues("a.new.host", Clock.currentTimeInMillis());
     proxy.setHostPort(123);
 
     assertEquals("a.new.host", proxy.getHost());

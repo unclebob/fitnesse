@@ -4,6 +4,8 @@ package fitnesse.testutil;
 
 import java.util.Date;
 
+import util.Clock;
+
 import fitnesse.wiki.CachingPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
@@ -37,7 +39,7 @@ public class SimpleCachinePage extends CachingPage {
   }
 
   protected VersionInfo makeVersion() throws Exception {
-    return new VersionInfo("abc", "Jon", new Date());
+    return new VersionInfo("abc", "Jon", Clock.currentDate());
   }
 
   protected void doCommit(PageData data) throws Exception {
