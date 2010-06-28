@@ -4,12 +4,12 @@ import util.Maybe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-
-import static java.lang.System.arraycopy;
 
 public class Parser {
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
+    private static final Collection<SymbolType> emptyTypesList = new ArrayList<SymbolType>();
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
     
     public static Parser make(ParsingPage currentPage, String input) {
@@ -21,7 +21,7 @@ public class Parser {
     }
 
     public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource, SymbolProvider provider) {
-        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypes);
+        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypesList);
     }
 
     private ParsingPage currentPage;
@@ -30,9 +30,9 @@ public class Parser {
     private Scanner scanner;
     private SymbolType[] terminators;
     private SymbolType[] ignoresFirst;
-    private SymbolType[] ends;
+    private Collection<SymbolType> ends;
 
-    public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, VariableSource variableSource, SymbolType[] terminators, SymbolType[] ignoresFirst, SymbolType[] ends) {
+    public Parser(ParsingPage currentPage, Scanner scanner, SymbolProvider provider, VariableSource variableSource, SymbolType[] terminators, SymbolType[] ignoresFirst, Collection<SymbolType> ends) {
         this.currentPage = currentPage;
         this.scanner = scanner;
         this.provider = provider;
@@ -86,7 +86,7 @@ public class Parser {
     }
 
     public Symbol parse(String input) {
-        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypes).parse();
+        return new Parser(currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, emptyTypes, emptyTypes, emptyTypesList).parse();
     }
 
     public Symbol parseToIgnoreFirst(SymbolType type) {
@@ -94,12 +94,12 @@ public class Parser {
     }
 
     public Symbol parseToIgnoreFirst(SymbolType[] types) {
-        return new Parser(currentPage, scanner, provider, variableSource, types, types, emptyTypes).parse();
+        return new Parser(currentPage, scanner, provider, variableSource, types, types, emptyTypesList).parse();
     }
 
     public Symbol parseToIgnoreFirstWithSymbols(SymbolType ignore, SymbolProvider provider) {
         SymbolType[] ignores = new SymbolType[] {ignore};
-        return new Parser(currentPage, scanner, provider, variableSource, ignores, ignores, emptyTypes).parse();
+        return new Parser(currentPage, scanner, provider, variableSource, ignores, ignores, emptyTypesList).parse();
     }
     
     public Symbol parseTo(SymbolType terminator) {
@@ -107,7 +107,7 @@ public class Parser {
     }
 
     public Symbol parseTo(SymbolType[] terminators) {
-        return new Parser(currentPage, scanner, SymbolProvider.wikiParsingProvider, variableSource, terminators, emptyTypes, emptyTypes).parse();
+        return new Parser(currentPage, scanner, SymbolProvider.wikiParsingProvider, variableSource, terminators, emptyTypes, emptyTypesList).parse();
     }
 
     public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider) {
@@ -116,7 +116,7 @@ public class Parser {
     }
 
     public Symbol parseToWithSymbols(SymbolType[] terminators, SymbolProvider provider) {
-        return new Parser(currentPage, scanner, provider, variableSource, terminators, emptyTypes, emptyTypes).parse();
+        return new Parser(currentPage, scanner, provider, variableSource, terminators, emptyTypes, emptyTypesList).parse();
     }
 
     public Symbol parseWithEnds(SymbolType[] ends) {
@@ -124,8 +124,10 @@ public class Parser {
     }
 
     public Symbol parseWithEnds(SymbolProvider provider, SymbolType[] types) {
-        provider.addTypes(types);
-        return new Parser(currentPage, scanner, provider, variableSource, emptyTypes, emptyTypes, makeEndList(types)).parse();
+        Iterable<SymbolType> endList = makeEndList(types);
+        SymbolProvider newProvider = new SymbolProvider(provider);
+        newProvider.addTypes(endList);
+        return new Parser(currentPage, scanner, newProvider, variableSource, emptyTypes, emptyTypes, makeEndList(types)).parse();
     }
 
     public Symbol parse() {
@@ -168,13 +170,17 @@ public class Parser {
         return false;
     }
 
-    private SymbolType[] makeEndList(SymbolType[] terminators) {
-        SymbolType[] parentEnds = this.ends;
-        SymbolType[] parentTerminators = this.terminators;
-        SymbolType[] ends = new SymbolType[parentTerminators.length + parentEnds.length + terminators.length];
-        arraycopy(parentEnds, 0, ends, 0, parentEnds.length);
-        arraycopy(parentTerminators, 0, ends, parentEnds.length, parentTerminators.length);
-        arraycopy(terminators, 0, ends, parentTerminators.length + parentEnds.length, terminators.length);
-        return ends;
+    private boolean contains(Iterable<SymbolType> terminators, SymbolType currentType) {
+        for (SymbolType terminator: terminators)
+            if (currentType == terminator) return true;
+        return false;
+    }
+
+    private Collection<SymbolType> makeEndList(SymbolType[] moreEnds) {
+        ArrayList<SymbolType> endList = new ArrayList<SymbolType>();
+        endList.addAll(ends);
+        endList.addAll(Arrays.asList(terminators));
+        endList.addAll(Arrays.asList(moreEnds));
+        return endList;
     }
 }

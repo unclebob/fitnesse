@@ -36,6 +36,7 @@ public class Include extends SymbolType implements Rule, Translation {
             ParsingPage included = option.equals("-setup") || option.equals("-teardown")
                     ? parser.getPage()
                     : parser.getPage().copyForNamedPage(includedPage.getValue());
+            System.out.print("<include>");
             current.add("").add(Parser.make(
                             included,
                             includedPage.getValue().getContent())

@@ -1,7 +1,6 @@
 package fitnesse.wikitext.parser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class SymbolProvider {
     public static final SymbolProvider refactoringProvider = new SymbolProvider( new SymbolType[] {
@@ -44,7 +43,7 @@ public class SymbolProvider {
     private HashMap<Character, ArrayList<Matchable>> currentDispatch;
     private ArrayList<SymbolType> symbolTypes;
 
-    public SymbolProvider(SymbolType[] types) {
+    public SymbolProvider(Iterable<SymbolType> types) {
         symbolTypes = new ArrayList<SymbolType>();
         currentDispatch = new HashMap<Character, ArrayList<Matchable>>();
         currentDispatch.put(defaultMatch, new ArrayList<Matchable>());
@@ -54,7 +53,15 @@ public class SymbolProvider {
         addTypes(types);
     }
 
-    public void addTypes(SymbolType[] types) {
+    public SymbolProvider(SymbolProvider other)  {
+        this(other.symbolTypes);
+    }
+
+    public SymbolProvider(SymbolType[] types)  {
+        this(Arrays.asList(types));
+    }
+
+    public void addTypes(Iterable<SymbolType> types) {
         for (SymbolType symbolType: types) {
             add(symbolType);
         }

@@ -83,6 +83,7 @@ public class PageData implements Serializable {
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
   private Symbol contentSyntaxTree = null;
+  private ParsingPage parsingPage;
 
     public PageData(WikiPage page) throws Exception {
     wikiPage = page;
@@ -101,6 +102,7 @@ public class PageData implements Serializable {
     versions.addAll(data.versions);
     variableRoot = data.variableRoot;
     contentSyntaxTree = data.contentSyntaxTree;
+    parsingPage = data.parsingPage;
   }
 
   public String getStringOfAllAttributes() {
@@ -195,6 +197,7 @@ public class PageData implements Serializable {
   public void setContent(String content) {
     this.content = content;
     contentSyntaxTree = null;
+    parsingPage = null;
   }
 
   /* this is the public entry to page parse and translate */
@@ -222,7 +225,12 @@ public class PageData implements Serializable {
 
     public Symbol getSyntaxTree() throws Exception {
         if (contentSyntaxTree == null) {
-            contentSyntaxTree = Parser.make(new ParsingPage(new WikiSourcePage(wikiPage)), getContent()).parse();
+            long start = System.currentTimeMillis();
+            System.out.print("start " + wikiPage.getName());
+            parsingPage = new ParsingPage(new WikiSourcePage(wikiPage));
+            contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
+            System.out.print(System.currentTimeMillis() - start);
+            System.out.println(" done");
         }
         return contentSyntaxTree;
     }
@@ -258,7 +266,8 @@ public class PageData implements Serializable {
     }*/
 
     private String processHTMLWidgets(WikiPage context) throws Exception {
-        return new HtmlTranslator(new WikiSourcePage(context)).translateTree(getSyntaxTree());
+        Symbol tree = getSyntaxTree();
+        return new HtmlTranslator(new WikiSourcePage(context), parsingPage).translateTree(tree);
     }
 
   public void setWikiPage(WikiPage page) {
@@ -270,7 +279,8 @@ public class PageData implements Serializable {
   }
 
   public List<String> getClasspaths() throws Exception {
-    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage))).getPaths(getSyntaxTree());
+    Symbol tree = getSyntaxTree();
+    return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage)).getPaths(tree);
     //return getTextOfWidgets(classpathWidgetBuilder);
   }
 

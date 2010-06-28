@@ -5,12 +5,12 @@ public abstract class Translator {
     private SourcePage currentPage;
     protected abstract Translation getTranslation(SymbolType symbolType);
 
-    public Translator(SourcePage currentPage) {
-        this.currentPage = currentPage;
-    }
-
     public SourcePage getPage() { return currentPage; }
 
+    protected Translator(SourcePage currentPage) {
+        this.currentPage = currentPage;
+    }
+    
     public String translateTree(Symbol syntaxTree) {
         StringBuilder result = new StringBuilder();
         for (Symbol symbol : syntaxTree.getChildren()) {
