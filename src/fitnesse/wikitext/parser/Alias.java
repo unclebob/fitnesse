@@ -29,9 +29,8 @@ public class Alias extends SymbolType implements Rule, Translation {
 
         String linkBody = translator.translate(symbol.childAt(0));
         String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
-        System.out.print("<alias>" + linkReferenceString);
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
-        Symbol linkReference = Parser.make(new ParsingPage(translator.getPage()), linkReferenceString).parse();
+        Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parse();
 
         if (linkReference.childAt(0).isType(SymbolType.WikiWord)) {
             return new WikiWordBuilder().buildLink(

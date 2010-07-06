@@ -18,6 +18,7 @@ import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetInterceptor;
+import fitnesse.wikitext.parser.SymbolProvider;
 
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
@@ -36,6 +37,7 @@ public class ComponentFactory {
   private final Properties loadedProperties;
   private final String propertiesLocation;
   private boolean propertiesAreLoaded = false;
+  private SymbolProvider symbolProvider;
 
   public ComponentFactory() {
     this(new Properties());
@@ -46,9 +48,14 @@ public class ComponentFactory {
   }
 
   public ComponentFactory(Properties properties) {
+      this(properties, SymbolProvider.wikiParsingProvider);
+  }
+
+  public ComponentFactory(Properties properties, SymbolProvider symbolProvider) {
     this.propertiesLocation = null;
     this.loadedProperties = properties;
     propertiesAreLoaded = true;
+    this.symbolProvider = symbolProvider;
   }
 
   public ComponentFactory(String propertiesLocation, Properties properties) {
@@ -122,7 +129,7 @@ public class ComponentFactory {
         Class<?> pluginClass = Class.forName(responderPlugin);
         loadWikiPageFromPlugin(pluginClass, wikiPageFactory, buffer);
         loadRespondersFromPlugin(pluginClass, responderFactory, buffer);
-        loadWikiWidgetsFromPlugin(pluginClass, WidgetBuilder.htmlWidgetBuilder, buffer);
+        loadSymbolTypesFromPlugin(pluginClass, symbolProvider, buffer);
       }
     }
     return buffer.toString();
@@ -150,11 +157,11 @@ public class ComponentFactory {
     }
   }
 
-  private void loadWikiWidgetsFromPlugin(Class<?> pluginClass, WidgetBuilder widgetBuilder, StringBuffer buffer)
+  private void loadSymbolTypesFromPlugin(Class<?> pluginClass, SymbolProvider symbolProvider, StringBuffer buffer)
     throws IllegalAccessException, InvocationTargetException {
     try {
-      Method method = pluginClass.getMethod("registerWikiWidgets", WidgetBuilder.class);
-      method.invoke(pluginClass, widgetBuilder);
+      Method method = pluginClass.getMethod("registerSymbolTypes", SymbolProvider.class);
+      method.invoke(pluginClass, symbolProvider);
       buffer.append("\t\t").append("widgets:").append(pluginClass.getName()).append(endl);
     } catch (NoSuchMethodException e) {
       // ok, no widgets to register in this plugin

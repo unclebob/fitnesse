@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import fitnesse.wikitext.parser.*;
 import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -34,11 +35,13 @@ import fitnesse.wikitext.widgets.WidgetRoot;
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
   private ComponentFactory factory;
+  private SymbolProvider testProvider;
 
   @Override
   public void setUp() throws Exception {
     testProperties = new Properties();
-    factory = new ComponentFactory(testProperties);
+    testProvider = new SymbolProvider(new SymbolType[] {});
+    factory = new ComponentFactory(testProperties, testProvider);
   }
 
   @Override
@@ -93,11 +96,9 @@ public class ComponentFactoryTest extends RegexTestCase {
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
 
-    WidgetBuilder htmlWidgetBuilder = WidgetBuilder.htmlWidgetBuilder;
-    WidgetBuilder.htmlWidgetBuilder = new WidgetBuilder();
-    assertNull(WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("'''text'''"));
-    assertNull(WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("''text''"));
-    
+    assertMatch("'''text'''", false);
+    assertMatch("''text''", false);
+
     String output = factory.loadPlugins(responderFactory, wikiPageFactory);
 
     assertSubString(DummyPlugin.class.getName(), output);
@@ -105,13 +106,17 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
-    assertEquals(BoldWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("'''text'''"));
-    assertEquals(ItalicWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("''text''"));
-
-    WidgetBuilder.htmlWidgetBuilder = htmlWidgetBuilder;
+    assertMatch("'''text'''", true);
+    assertMatch("''text''", true);
   }
 
-  public void testAddResponderPlugins() throws Exception {
+    private void assertMatch(String input, boolean expected) {
+        SymbolMatch match = testProvider.findMatch(new ScanString(input, 0), new MatchableFilter() {
+                    public boolean isValid(Matchable candidate) { return true; }});
+        assertEquals(match.isMatch(), expected);
+    }
+
+    public void testAddResponderPlugins() throws Exception {
     String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
     testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
 
@@ -221,9 +226,9 @@ public class ComponentFactoryTest extends RegexTestCase {
       factory.addResponder("custom2", EditResponder.class);
     }
 
-    public static void registerWikiWidgets(WidgetBuilder builder) {
-      builder.addWidgetClass(BoldWidget.class);
-      builder.addWidgetClass(ItalicWidget.class);
+    public static void registerSymbolTypes(SymbolProvider provider) {
+        provider.add(SymbolType.Bold);
+        provider.add(SymbolType.Italic);
     }
   }
 }

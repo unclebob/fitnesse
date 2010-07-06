@@ -11,7 +11,6 @@ public class HtmlTranslator extends Translator {
 
     public ParsingPage getParsingPage() { return parsingPage; }
 
-
     public HtmlTranslator(SourcePage currentPage, ParsingPage parsingPage) {
         super(currentPage);
         this.parsingPage = parsingPage;

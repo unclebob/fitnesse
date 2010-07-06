@@ -34,10 +34,7 @@ public class VariableFinder implements VariableSource {
     private Maybe<String> lookInParentPages(String name) {
         for (SourcePage sourcePage: page.getPage().getAncestors()) {
             if (!page.inCache(sourcePage)) {
-                System.out.print("<variable:" + name +"," + sourcePage.getName() + ">");
-                long start = System.currentTimeMillis();
                 Parser.make(page.copyForPage(sourcePage), sourcePage.getContent()).parse();
-                System.out.println(System.currentTimeMillis() - start);
                 // todo: make this a method on ParsingPage
                 page.putVariable(sourcePage, "", Maybe.noString);
             }

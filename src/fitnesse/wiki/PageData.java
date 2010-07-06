@@ -225,12 +225,8 @@ public class PageData implements Serializable {
 
     public Symbol getSyntaxTree() throws Exception {
         if (contentSyntaxTree == null) {
-            long start = System.currentTimeMillis();
-            System.out.print("start " + wikiPage.getName());
             parsingPage = new ParsingPage(new WikiSourcePage(wikiPage));
             contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
-            System.out.print(System.currentTimeMillis() - start);
-            System.out.println(" done");
         }
         return contentSyntaxTree;
     }
