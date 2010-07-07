@@ -19,6 +19,7 @@ import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.parser.SymbolProvider;
+import fitnesse.wikitext.parser.SymbolType;
 
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
@@ -27,7 +28,7 @@ public class ComponentFactory {
   public static final String HTML_PAGE_FACTORY = "HtmlPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
-  public static final String WIKI_WIDGETS = "WikiWidgets";
+  public static final String SYMBOL_TYPES = "SymbolTypes";
   public static final String WIKI_WIDGET_INTERCEPTORS = "WikiWidgetInterceptors";
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
@@ -197,18 +198,17 @@ public class ComponentFactory {
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
-  public String loadWikiWidgets() throws Exception {
+  public String loadSymbolTypes() throws Exception {
     StringBuffer buffer = new StringBuffer();
-    String[] widgetNames = getListFromProperties(WIKI_WIDGETS);
-    if (widgetNames != null) {
-      buffer.append("\tCustom wiki widgets loaded:").append(endl);
-      for (String widgetName : widgetNames) {
-        Class<?> widgetClass = Class.forName(widgetName.trim());
-        WidgetBuilder.htmlWidgetBuilder.addWidgetClass(widgetClass);
-        buffer.append("\t\t").append(widgetClass.getName()).append(endl);
+    String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
+    if (symbolTypeNames != null) {
+      buffer.append("\tCustom symbol types loaded:").append(endl);
+      for (String symbolTypeName : symbolTypeNames) {
+        Class<?> symbolTypeClass = Class.forName(symbolTypeName.trim());
+        symbolProvider.add((SymbolType)symbolTypeClass.newInstance());
+        buffer.append("\t\t").append(symbolTypeClass.getName()).append(endl);
       }
     }
-
     return buffer.toString();
   }
 

@@ -96,8 +96,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     WikiPageFactory wikiPageFactory = new WikiPageFactory();
     ResponderFactory responderFactory = new ResponderFactory(".");
 
-    assertMatch("'''text'''", false);
-    assertMatch("''text''", false);
+    assertMatch("!today", false);
 
     String output = factory.loadPlugins(responderFactory, wikiPageFactory);
 
@@ -106,8 +105,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
     assertEquals(WikiPageResponder.class, responderFactory.getResponderClass("custom1"));
     assertEquals(EditResponder.class, responderFactory.getResponderClass("custom2"));
-    assertMatch("'''text'''", true);
-    assertMatch("''text''", true);
+    assertMatch("!today", true);
   }
 
     private void assertMatch(String input, boolean expected) {
@@ -131,16 +129,14 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   public void testWikiWidgetPlugins() throws Exception {
-    String widgetsValue = BoldWidget.class.getName() + ", " + ItalicWidget.class.getName();
-    testProperties.setProperty(ComponentFactory.WIKI_WIDGETS, widgetsValue);
+    String symbolValues = Today.class.getName();
+    testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
 
-    String output = factory.loadWikiWidgets();
+    String output = factory.loadSymbolTypes();
 
-    assertSubString(BoldWidget.class.getName(), output);
-    assertSubString(ItalicWidget.class.getName(), output);
+    assertSubString(Today.class.getName(), output);
 
-    assertEquals(BoldWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("'''text'''"));
-    assertEquals(ItalicWidget.class, WidgetBuilder.htmlWidgetBuilder.findWidgetClassMatching("''text''"));
+    assertMatch("!today", true);
   }
 
   public void testWikiWidgetInterceptors() throws Exception {
@@ -227,8 +223,7 @@ public class ComponentFactoryTest extends RegexTestCase {
     }
 
     public static void registerSymbolTypes(SymbolProvider provider) {
-        provider.add(SymbolType.Bold);
-        provider.add(SymbolType.Italic);
+        provider.add(new Today());
     }
   }
 }
