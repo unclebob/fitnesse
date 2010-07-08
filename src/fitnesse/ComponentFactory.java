@@ -16,8 +16,6 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 
@@ -29,7 +27,6 @@ public class ComponentFactory {
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
   public static final String SYMBOL_TYPES = "SymbolTypes";
-  public static final String WIKI_WIDGET_INTERCEPTORS = "WikiWidgetInterceptors";
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
   public static final String VERSIONS_CONTROLLER = "VersionsController";
@@ -207,20 +204,6 @@ public class ComponentFactory {
         Class<?> symbolTypeClass = Class.forName(symbolTypeName.trim());
         symbolProvider.add((SymbolType)symbolTypeClass.newInstance());
         buffer.append("\t\t").append(symbolTypeClass.getName()).append(endl);
-      }
-    }
-    return buffer.toString();
-  }
-
-  public String loadWikiWidgetInterceptors() throws Exception {
-    StringBuffer buffer = new StringBuffer();
-
-    String[] widgetInterceptorList = getListFromProperties(WIKI_WIDGET_INTERCEPTORS);
-    if (widgetInterceptorList != null) {
-      buffer.append("\tCustom wiki widget interceptors loaded:").append(endl);
-      for (String interceptorClass : widgetInterceptorList) {
-        WidgetBuilder.htmlWidgetBuilder.addInterceptor((WidgetInterceptor) Class.forName(interceptorClass).newInstance());
-        buffer.append("\t\t").append(interceptorClass).append(endl);
       }
     }
     return buffer.toString();

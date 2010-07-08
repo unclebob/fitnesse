@@ -25,12 +25,8 @@ import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.BoldWidget;
-import fitnesse.wikitext.widgets.ItalicWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
@@ -137,17 +133,6 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertSubString(Today.class.getName(), output);
 
     assertMatch("!today", true);
-  }
-
-  public void testWikiWidgetInterceptors() throws Exception {
-    testProperties.setProperty(ComponentFactory.WIKI_WIDGET_INTERCEPTORS, TestWidgetInterceptor.class.getName());
-
-    String output = factory.loadWikiWidgetInterceptors();
-
-    assertSubString(TestWidgetInterceptor.class.getName(), output);
-
-    new WidgetRoot("hello '''world'''" + "\n", (WikiPage) null, WidgetBuilder.htmlWidgetBuilder);
-    assertTrue(TestWidgetInterceptor.widgetsIntercepted.contains(BoldWidget.class));
   }
 
   public static class TestWidgetInterceptor implements WidgetInterceptor {
