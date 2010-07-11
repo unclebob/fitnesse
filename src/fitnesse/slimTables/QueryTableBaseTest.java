@@ -219,7 +219,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[pass(3), [4] fail(field not present)]" +
+        "[pass(3), [4] fail(field 2n not present)]" +
         "]"
     );
   }
@@ -234,7 +234,7 @@ public abstract class QueryTableBaseTest {
       "[" +
         headRow +
         "[n, 2n], " +
-        "[[3] fail(surplus), fail(field not present)]" +
+        "[[3] fail(surplus), fail(field 2n not present)]" +
         "]"
     );
   }
@@ -317,4 +317,19 @@ public abstract class QueryTableBaseTest {
         "]", qt.getTable().toString()
     );
   }
+
+  @Test
+  public void oneRowThatMatchesExpression() throws Exception {
+    assertQueryResults("|<5|4|\n",
+      list(
+        list(list("n", "2"), list("2n", "4"))
+      ),
+      "[" +
+        headRow +
+        "[n, 2n], " +
+        "[pass(2&lt;5), pass(4)]" +
+        "]"
+    );
+  }
+
 }

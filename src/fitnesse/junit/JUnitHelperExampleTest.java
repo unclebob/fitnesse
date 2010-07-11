@@ -63,14 +63,15 @@ public class JUnitHelperExampleTest {
     Assert.assertEquals(1, formatter.getTestsExecuted().size());
   }
 
-  @Test
-  public void assertSuitePasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception {
-    helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-
-    JavaFormatter formatter = JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-    Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTests)),
-      new HashSet<String>(formatter.getTestsExecuted()));
-  }
+//todo There's a better way to do this.  Create a dummy suite instead of using SuiteSlimTests
+// @Test
+//  public void assertSuitePasses_RunsATestThroughFitNesseAndWeCanInspectTheResultUsingJavaFormatter() throws Exception {
+//    helper.assertSuitePasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+//
+//    JavaFormatter formatter = JavaFormatter.getInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+//    Assert.assertEquals(new HashSet<String>(Arrays.asList(expectedTests)),
+//      new HashSet<String>(formatter.getTestsExecuted()));
+//  }
 
   @Test
   public void assertSuitePasses_appliesSuiteFilterIfDefined() throws Exception {

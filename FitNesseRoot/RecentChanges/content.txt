@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.QueryTableSuite.TestMatching||11:42:28 Sun, Jul 11, 2010|
 |FitNesse.UserGuide.ControllingFitnesseFromTheCommandLine||11:11:43 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|
@@ -97,4 +98,3 @@
 |JunkPage.NunkPage||11:16:16 Tue, Dec 08, 2009|
 |JunkPage.CalculationBug||18:14:59 Sun, Dec 06, 2009|
 |JunkPage.FirstPage||12:05:57 Mon, Nov 30, 2009|
-|JunkPage.GregorsBug||08:30:26 Wed, Nov 25, 2009|

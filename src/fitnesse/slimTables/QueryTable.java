@@ -21,6 +21,25 @@ public class QueryTable extends SlimTable {
     return "queryTable";
   }
 
+  public boolean matches(String actual, String expected) {
+    if (actual == null || expected == null)
+      return false;
+    if (actual.equals(replaceSymbols(expected)))
+      return true;
+    Comparator c = new Comparator(actual, expected);
+    c.evaluate();
+    return c.matches();
+  }
+
+  public String matchMessage(String actual, String expected) {
+    if (actual == null)
+      return "NULL";
+    if (actual.equals(replaceSymbols(expected)))
+      return expected;
+    Comparator c = new Comparator(actual, expected);
+    return c.evaluate();
+  }
+
   public void appendInstructions() {
     if (table.getRowCount() < 2)
       throw new SlimTable.SyntaxError("Query tables must have at least two rows.");
@@ -82,8 +101,10 @@ public class QueryTable extends SlimTable {
   private void markMissingFields(List<String> surplusRow, int newTableRow) {
     for (int col = 0; col < surplusRow.size(); col++) {
       String surplusField = surplusRow.get(col);
-      if (surplusField == null)
-        fail(col, newTableRow, "field not present");
+      if (surplusField == null) {
+        String fieldName = fieldNames.get(col);
+        fail(col, newTableRow, String.format("field %s not present", fieldName));
+      }
     }
   }
 
@@ -115,17 +136,24 @@ public class QueryTable extends SlimTable {
   protected void markField(int tableRow, int matchedRow, int col) {
     if (col >= fieldNames.size())
       return; // ignore strange table geometry.
-    String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
+    String fieldName = fieldNames.get(col);
+    String actualValue = queryResults.getCell(fieldName, matchedRow);
     String expectedValue = table.getCellContents(col, tableRow);
-    table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
     if (actualValue == null)
-      failMessage(col, tableRow, "field not present");
+      failMessage(col, tableRow, String.format("field %s not present", fieldName));
     else if (expectedValue == null || expectedValue.length() == 0)
       ignore(col, tableRow, actualValue);
-    else if (actualValue.equals(replaceSymbols(expectedValue)))
-      markMatch(tableRow, matchedRow, col);
-    else
-      expected(col, tableRow, actualValue);
+    else {
+      String message = matchMessage(actualValue, expectedValue);
+      if (message != null)
+        table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(message));
+      else
+        table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
+      if (matches(actualValue, expectedValue))
+        markMatch(tableRow, matchedRow, col);
+      else
+        expected(col, tableRow, actualValue);
+    }
   }
 
   protected void markMatch(int tableRow, int matchedRow, int col) {
@@ -215,7 +243,7 @@ public class QueryTable extends SlimTable {
           int row = rowIterator.next();
           String actualValue = rows.get(row).get(fieldName);
           String expectedValue = table.getCellContents(fieldIndex, tableRow);
-          if (actualValue != null && actualValue.equals(replaceSymbols(expectedValue))) {
+          if (matches(actualValue, expectedValue)) {
             recordMatch(row);
           } else {
             rowIterator.remove();
