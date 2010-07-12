@@ -2,7 +2,6 @@ package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -50,6 +49,14 @@ public class VariableTest {
         ParserTest.assertTranslatesTo(pageOne,
                 "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +
                         "<br/><span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl +
+                        "<br/>y");
+    }
+
+    @Test public void evaluatesForwardNestedVariableDefinition() throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define z {${x}}\n!define x {y}\n${z}");
+        ParserTest.assertTranslatesTo(pageOne,
+                "<span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl +
+                        "<br/><span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +
                         "<br/>y");
     }
 

@@ -18,26 +18,6 @@ public class PerformanceTest {
     }
 
     @Test
-    public void OldParserTable() throws Exception {
-        runOldParser(tablePageContent);
-    }
-
-    @Test
-    public void OldParserDefine() throws Exception {
-    //    runOldParser(definePageContent);
-    }
-
-    private void runOldParser(String pageContent) throws Exception {
-        long start = System.currentTimeMillis();
-        ParentWidget root = new WidgetRoot(pageContent, new TestRoot().makePage("OldTest"),
-            WidgetBuilder.htmlWidgetBuilder);
-        String result = root.render();
-        System.out.println(System.currentTimeMillis() - start);
-        //System.out.println(result);
-        assertEquals("done", "done");
-    }
-
-    @Test
     public void NewParserTable() throws Exception {
         runNewParser(tablePageContent);
     }
