@@ -6,19 +6,18 @@ It really takes very little time and effort to get FitNesse running on your mach
  2 Type !style_code(java -jar fitnesse.jar)
   * It will ask you to be patient as it installs or updates.
   * When it's done, it will ask you to reload fitnesse.  Type !style_code(java -jar fitnesse.jar) again.
-  * If you have nothing running on port 80 on your machine, you should see a message similar to the following:
-   * !style_code(Fitnesse (''date code'')) !style_code( Started...)
-   * !style_code(on port      80)
-   * !style_code(using path   '.')
-   * !style_code(using dir    '!-FitNesseRoot-!')
-   * !style_code(Not logging.)
-  * If you don't see this, you may have something running on port 80 already,
-   * So try the command !style_code(java -jar fitnesse.jar -p 8080)
-   * If you are still having trouble then check out FitNesseWontStart.
+  * Your shell should respond with something like this:
+   !img http://files/images/fitnessestarted.png
+ 3 Start up a browser and go to !style_code(http://localhost)
+ 4 The main FitNesse screen should come up. That's it. You're ready to start using FitNesse.
 
- 4 Start up a browser and go to !style_code(http://localhost)
-  * ''or if you had to edit run.bat in step 3 then go to !style_code(http://localhost:8080).''
- 5 The main FitNesse screen should come up. That's it. You're ready to start using FitNesse.
+!3 It didn't work!
+Most likely you have another web server running.  Web servers default to port 80, so if another one is running on your machine you'll have to specify another port via a CommandLineOption.  Try this command:
+ !style_code(java -jar fitnesse.jar -p 8080)
+
+Then point your browser to !style_code(http://localhost:8080)
+
+Still no?  Check out FitNesseWontStart for some more tips.
 
 !2 Learning More
 If you have not yet done so, check out the TwoMinuteExample. To learn more about what FitNesse acceptance testing is all about, see AcceptanceTests.  If you are ready to start creating FitNesse pages and test tables, check out EditingFitNessePages and CreatingTestTables.

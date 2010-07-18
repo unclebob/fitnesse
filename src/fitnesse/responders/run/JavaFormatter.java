@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.TimeMeasurement;
+
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
@@ -112,17 +114,19 @@ public class JavaFormatter extends BaseFormatter {
   private List<String> visitedTestPages = new ArrayList<String>();
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  @Override
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     resultsRepository.open(getFullPath(test));
     if (listener != null)
-      listener.newTestStarted(test, time);
+      listener.newTestStarted(test, timeMeasurement);
   }
 
+  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
       throws Exception {
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     String fullPath = getFullPath(test);
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -130,20 +134,21 @@ public class JavaFormatter extends BaseFormatter {
     resultsRepository.close();
     isSuite = isSuite && (!mainPageName.equals(fullPath));
     if (listener != null)
-      listener.testComplete(test, testSummary);
+      listener.testComplete(test, testSummary, timeMeasurement);
   }
 
   TestSummary getTestSummary(String testPath) {
     return testSummaries.get(testPath);
   }
 
+  @Override
   public void testOutputChunk(String output) throws Exception {
     resultsRepository.write(output);
   }
 
+  @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
       throws Exception {
-
   }
 
   private ResultsRepository resultsRepository;
@@ -179,11 +184,11 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     if (isSuite)
       writeSummary(mainPageName);
     if (listener != null)
-      listener.allTestingComplete();
+      listener.allTestingComplete(totalTimeMeasurement);
   }
 
   public void writeSummary(String suiteName) throws IOException {

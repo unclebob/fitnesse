@@ -9,6 +9,8 @@ import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Date;
 
+import util.Clock;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
@@ -90,7 +92,7 @@ public class FileResponder implements Responder {
   private Response createNotModifiedResponse() {
     Response response = new SimpleResponse();
     response.setStatus(304);
-    response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(new Date()));
+    response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(Clock.currentDate()));
     response.addHeader("Cache-Control", "private");
     response.setLastModifiedHeader(lastModifiedDateString);
     return response;

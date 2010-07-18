@@ -14,12 +14,19 @@ import java.util.Map;
 public class SlimTableTest {
   @Test
   public void gracefulClassNames() throws Exception {
-    assertEquals("MyClass", disgraceClassName("my class"));
-    assertEquals("myclass", disgraceClassName("myclass"));
-    assertEquals("x.y", disgraceClassName("x.y"));
-    assertEquals("x_y", disgraceClassName("x_y"));
-    assertEquals("MeAndMrs_jones", disgraceClassName("me and mrs_jones"));
-    assertEquals("PageCreator", disgraceClassName("Page creator."));
+    assertDisgracedClassName("MyClass", "my class");
+    assertDisgracedClassName("myclass", "myclass");
+    assertDisgracedClassName("x.y", "x.y");
+    assertDisgracedClassName("x_y", "x_y");
+    assertDisgracedClassName("MeAndMrs_jones", "me and mrs_jones");
+    assertDisgracedClassName("PageCreator", "Page creator.");
+    assertDisgracedClassName("$symbol", "$symbol");
+    assertDisgracedClassName("$MySymbol", "$MySymbol");
+    assertDisgracedClassName("myEmbedded$Symbol", "myEmbedded$Symbol");
+  }
+
+  private void assertDisgracedClassName(String disgracedName, String sourceName) {
+    assertEquals(disgracedName, disgraceClassName(sourceName));
   }
 
   @Test
@@ -140,6 +147,15 @@ public class SlimTableTest {
     String actual = table.replaceSymbolsWithFullExpansion("$V $VX");
     assertEquals("$V->[v] $VX->[x]", actual);
   }
+
+  @Test
+  public void replaceSymbols_ShouldReplaceConcutenatedSymbols() throws Exception {
+    SlimTable table = new MockTable();
+    table.setSymbol("x", "1");
+    table.setSymbol("y", "1");    
+    assertEquals("this is $x->[1]1 and $y->[1]1", table.replaceSymbolsWithFullExpansion("this is $x1 and $y1"));
+  }
+  
 
 
   private static class MockTable extends SlimTable {

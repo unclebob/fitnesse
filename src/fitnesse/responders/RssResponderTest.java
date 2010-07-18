@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import util.Clock;
 import util.XmlUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -34,9 +35,9 @@ public class RssResponderTest extends ResponderTestCase {
   public void setUp() throws Exception {
     super.setUp();
     SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
-    date = dateFormat.format(new Date());
+    date = dateFormat.format(Clock.currentDate());
     SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
-    rfcDate = rfcDateFormat.format(new Date());
+    rfcDate = rfcDateFormat.format(Clock.currentDate());
     hostName = java.net.InetAddress.getLocalHost().getHostName();
     Locale.setDefault(Locale.US);
   }
@@ -103,8 +104,8 @@ public class RssResponderTest extends ResponderTestCase {
   public void testConvertDateFormat() throws Exception {
     SimpleDateFormat oldFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
     SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
-    String inDate = oldFormat.format(new Date());
-    String outDate = newFormat.format(new Date());
+    String inDate = oldFormat.format(Clock.currentDate());
+    String outDate = newFormat.format(Clock.currentDate());
     RssResponder responder = new RssResponder();
     String convertedDate = responder.convertDateFormat(inDate);
     assertEquals(convertedDate, outDate);
@@ -112,7 +113,7 @@ public class RssResponderTest extends ResponderTestCase {
 
   public void testBadDateFormat() throws Exception {
     SimpleDateFormat oldFormat = new SimpleDateFormat("h:mm:ss a EEE MMM dd, yyyy");
-    String inDate = oldFormat.format(new Date());
+    String inDate = oldFormat.format(Clock.currentDate());
     RssResponder responder = new RssResponder();
     String convertedDate = responder.convertDateFormat(inDate);
     assertEquals(convertedDate, inDate);

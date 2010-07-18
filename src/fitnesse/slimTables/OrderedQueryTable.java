@@ -28,21 +28,6 @@ public class OrderedQueryTable extends QueryTable {
     }
   }
 
-//  private void markColumn(int tableRow, int matchedRow, int col) {
-//    if (col >= fieldNames.size())
-//      return; // ignore strange table geometry.
-//    String actualValue = queryResults.getCell(fieldNames.get(col), matchedRow);
-//    String expectedValue = table.getCellContents(col, tableRow);
-//    table.setCell(col, tableRow, replaceSymbolsWithFullExpansion(expectedValue));
-//    if (actualValue == null)
-//      failMessage(col, tableRow, "field not present");
-//    else if (actualValue.equals(replaceSymbols(expectedValue))) {
-//      markMatch(tableRow, matchedRow, col);
-//    } else {
-//      expected(col, tableRow, actualValue);
-//    }
-//  }
-
   protected void markMatch(int tableRow, int matchedRow, int col) {
     if (col == 0 && matchedRow <= lastMatchedRow) {
       failMessage(0, tableRow, "out of order: row " + (matchedRow+1));

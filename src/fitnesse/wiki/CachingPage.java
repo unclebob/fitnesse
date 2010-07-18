@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.Clock;
+import util.TimeMeasurement;
+
 public abstract class CachingPage extends CommitingPage {
   private static final long serialVersionUID = 1L;
 
@@ -16,7 +19,7 @@ public abstract class CachingPage extends CommitingPage {
 
   protected Map<String, WikiPage> children = new HashMap<String, WikiPage>();
   private transient SoftReference<PageData> cachedData;
-  private transient long cachedDataCreationTime = 0;
+  private transient TimeMeasurement cachedTime;
 
   public CachingPage(String name, WikiPage parent) throws Exception {
     super(name, parent);
@@ -73,8 +76,7 @@ public abstract class CachingPage extends CommitingPage {
   }
 
   private boolean cachedDataExpired() throws Exception {
-    long now = System.currentTimeMillis();
-    return getCachedData() == null || now >= cachedDataCreationTime + cacheTime;
+    return getCachedData() == null || cachedTime.elapsed() >= cacheTime;
   }
 
   public void dumpExpiredCachedData() throws Exception {
@@ -93,7 +95,7 @@ public abstract class CachingPage extends CommitingPage {
     if (cachedData != null)
       cachedData.clear();
     cachedData = new SoftReference<PageData>(data);
-    cachedDataCreationTime = System.currentTimeMillis();
+    cachedTime = new TimeMeasurement().start();
   }
 
   public PageData getCachedData() throws Exception {

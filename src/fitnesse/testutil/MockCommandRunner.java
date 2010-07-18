@@ -41,4 +41,8 @@ public class MockCommandRunner extends CommandRunner {
   public void setExitCode(int i) {
     exitCode = i;
   }
+  
+  public long getExecutionTime() {
+    return -1;
+  }
 }

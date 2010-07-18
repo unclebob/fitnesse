@@ -33,5 +33,6 @@ public class JUnitHelper {
     TestSummary summary=helper.run(pageName, pageType, suiteFilter);
     Assert.assertEquals("wrong", 0, summary.wrong);
     Assert.assertEquals("exceptions", 0, summary.exceptions);
+    Assert.assertTrue("at least one test executed",summary.right>0);
   }
 }

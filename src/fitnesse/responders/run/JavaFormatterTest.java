@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 
+import util.TimeMeasurement;
+
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
@@ -42,22 +44,25 @@ public class JavaFormatterTest {
   @Test
   public void newTestStarted_SwitchesResultRepositoryToCurrentTest() throws Exception{
     WikiPageDummy wp=buildNestedTestPage();
-    jf.newTestStarted(wp, 0);
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
+    jf.newTestStarted(wp, timeMeasurement.start());
     verify(mockResultsRepository).open(nestedPageName);
   }
   @Test
   public void testComplete_closesResultRepositoryAndAddsToTotalTestSummary() throws Exception{
     jf.setTotalSummary(new TestSummary(1,2,3,4));
-    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
+    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8), timeMeasurement.stop());
     assertEquals(new TestSummary(6,8,10,12),jf.getTotalSummary());
     verify(mockResultsRepository).close();
   }
   @Test
   public void writeSummary_WritesSummaryOfTestExecutions() throws Exception{
-    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
+    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8), timeMeasurement.stop());
     WikiPageDummy secondPage=new WikiPageDummy("SecondPage", null);
     secondPage.setParent(new WikiPageDummy("root", null));
-    jf.testComplete(secondPage, new TestSummary(11,12,13,14));
+    jf.testComplete(secondPage, new TestSummary(11,12,13,14), timeMeasurement.stop());
     jf.writeSummary("SummaryPageName");
     verify(mockResultsRepository).open("SummaryPageName");
     StringBuffer sb=new StringBuffer();
@@ -72,9 +77,10 @@ public class JavaFormatterTest {
     secondPage.setParent(new WikiPageDummy("root", null));
 
     TestSummary ts=new TestSummary(5,6,7,8);
-    jf.testComplete(buildNestedTestPage(),ts );
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
+    jf.testComplete(buildNestedTestPage(), ts, timeMeasurement.stop());
     ts.right=11; ts.wrong=12; ts.ignores=13; ts.exceptions=14;
-    jf.testComplete(secondPage, ts);
+    jf.testComplete(secondPage, ts, timeMeasurement.stop());
     assertEquals(new TestSummary(5,6,7,8), jf.getTestSummary("ParentTest.ChildTest"));
   }
   @Test
@@ -101,38 +107,43 @@ public class JavaFormatterTest {
   }
   @Test
   public void allTestingComplete_writesSummaryIfMainPageWasntExecuted() throws Exception{
-    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
-    jf.allTestingComplete();
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
+    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8), timeMeasurement.stop());
+    jf.allTestingComplete(timeMeasurement);
     verify(mockResultsRepository).open(suiteName);     
   }
   @Test
   public void allTestingComplete_doesntWriteSummaryIfMainPageWasExecuted() throws Exception{
     jf=JavaFormatter.getInstance(nestedPageName);
     jf.setResultsRepository(mockResultsRepository);
-    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8));
-    jf.allTestingComplete();
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
+    jf.testComplete(buildNestedTestPage(), new TestSummary(5,6,7,8), timeMeasurement.stop());
+    jf.allTestingComplete(timeMeasurement);
     verify(mockResultsRepository,times(0)).open(nestedPageName);     
   }
   @Test
   public void ifListenerIsSet_newTestStartedFiresTestStarted() throws Exception{
     jf.setListener(listener);
     WikiPage page=buildNestedTestPage();
-    jf.newTestStarted(page, 12);
-    verify(listener).newTestStarted(page, 12);
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
+    jf.newTestStarted(page, timeMeasurement.start());
+    verify(listener).newTestStarted(page, timeMeasurement);
   }
   @Test
   public void ifListenerIsSet_TestCompleteFiresTestComplete() throws Exception{
     jf.setListener(listener);
     WikiPage page=buildNestedTestPage();
-    jf.testComplete(page, new TestSummary(1,2,3,4));
-    verify(listener).testComplete(page, new TestSummary(1,2,3,4));
+    TimeMeasurement timeMeasurement = new TimeMeasurement().start();
+    jf.testComplete(page, new TestSummary(1,2,3,4), timeMeasurement.stop());
+    verify(listener).testComplete(page, new TestSummary(1,2,3,4), timeMeasurement);
   }
   @Test
   public void ifListenerIsSet_AllTestingCompleteFiresAllTestingComplete() throws Exception{
     jf.setListener(listener);
     WikiPage page=buildNestedTestPage();
-    jf.allTestingComplete();
-    verify(listener).allTestingComplete();
+    TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start().stop();
+    jf.allTestingComplete(totalTimeMeasurement);
+    verify(listener).allTestingComplete(same(totalTimeMeasurement));
   }
   @Test
   public void dropInstance_drops_test_results(){

@@ -173,7 +173,7 @@ public class SlimTestSystemTest {
 
   @Test
   public void scriptTableWithBadConstructor() throws Exception {
-    getResultsForPageContents("|Script|NoSuchClass|\n");
+    getResultsForPageContents("!|Script|NoSuchClass|\n");
     assertTestResultsContain("<span class=\"error\">Could not invoke constructor for NoSuchClass");
   }
 

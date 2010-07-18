@@ -11,6 +11,9 @@ The format for a suite is similar to the format for a test as shown in <UserGuid
 			<ignores>0</ignores>
 			<exceptions>0</exceptions>
 		</counts>
+		<runTimeInMillis>
+			1022
+		</runTimeInMillis>
                 <pageHistoryLink>FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SuiteWidgetTests.TestBrokenWikiWordLink?pageHistory&resultDate=20090820&format=xml</pageHistoryLink>
 	</result>
 	...
@@ -21,5 +24,8 @@ The format for a suite is similar to the format for a test as shown in <UserGuid
 		<ignores>0</ignores>
 		<exceptions>0</exceptions>
 	</finalCounts>
+	<totalRunTimeInMillis>
+		6234
+	</totalRunTimeInMillis>
 </testResults>
 }}}

@@ -2,11 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import util.TimeMeasurement;
 import fitnesse.wiki.WikiPage;
 
 public interface ResultsListener {
 
-  public void allTestingComplete() throws Exception;
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception;
   
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception;
 
@@ -14,11 +15,11 @@ public interface ResultsListener {
 
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception;
 
-  public void newTestStarted(WikiPage test, long time) throws Exception;
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception;
 
   public void testOutputChunk(String output) throws Exception;
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception;
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception;
   
   public void errorOccured();
 }

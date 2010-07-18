@@ -5,6 +5,7 @@ package fitnesse.responders;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import util.Clock;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -58,7 +59,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
 
   public void testLastUpdated() throws Exception {
     SimpleDateFormat format = WikiPageProperty.getTimeFormat();
-    Date date = new Date();
+    Date date = Clock.currentDate();
     property.setLastRemoteModificationTime(date);
 
     assertEquals(format.format(date), format.format(property.getLastRemoteModificationTime()));
@@ -75,7 +76,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
     rawImportProperty.set("IsRoot");
     rawImportProperty.set("AutoUpdate");
     rawImportProperty.set("Source", "some source");
-    Date date = new Date();
+    Date date = Clock.currentDate();
     rawImportProperty.set("LastRemoteModification", WikiPageProperty.getTimeFormat().format(date));
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(property);

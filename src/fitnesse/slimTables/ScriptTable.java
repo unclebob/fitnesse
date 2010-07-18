@@ -187,7 +187,8 @@ public class ScriptTable extends SlimTable {
 
   private void startActor(int row) {
     int classNameColumn = 1;
-    String className = Disgracer.disgraceClassName(table.getCellContents(classNameColumn, row));
+    String cellContents = table.getCellContents(classNameColumn, row);
+    String className = Disgracer.disgraceClassName(cellContents);
     constructInstance("scriptTableActor", className, classNameColumn, row);
   }
 

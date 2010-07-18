@@ -221,10 +221,19 @@ public abstract class SlimTable {
     table.setCell(col, row, passingContents);
   }
 
+  protected void pass(int col, int row, String passMessage) {
+    String passingContents = pass(passMessage);
+    table.setCell(col, row, passingContents);
+  }
+
   protected void expected(int col, int tableRow, String actual) {
     String contents = table.getCellContents(col, tableRow);
-    String failureMessage = failMessage(actual, String.format("expected [%s]", contents));
+    String failureMessage = expected(actual, contents);
     table.setCell(col, tableRow, failureMessage);
+  }
+
+  public String expected(String actual, String expected) {
+    return failMessage(actual, String.format("expected [%s]", expected));
   }
 
   protected String fail(String value) {
@@ -363,13 +372,17 @@ public abstract class SlimTable {
     }
 
     private String disgraceClassNameIfNecessary() {
-      if (nameHasDotsBeforeEnd())
+      if (nameHasDotsBeforeEnd() || nameHasDollars())
         return name;
       else if (isGraceful()) {
         return disgraceClassName();
       } else {
         return name;
       }
+    }
+
+    private boolean nameHasDollars() {
+      return name.indexOf("$") != -1;
     }
 
     private String disgraceClassName() {
@@ -521,11 +534,18 @@ public abstract class SlimTable {
 
     private String formatSymbol(String symbolName) {
       String value = getSymbol(symbolName);
-      if (value == null)
+      if (value == null) {
+        for (int i = symbolName.length() - 1; i > 0; i--) {
+          String str = symbolName.substring(0, i);
+          if ((value = getSymbol(str)) != null)
+            return formatSymbolValue(str, value) + symbolName.substring(i, symbolName.length());
+        }
+
         return "$" + symbolName;
-      else
+      } else
         return formatSymbolValue(symbolName, value);
     }
+
 
     private boolean symbolFound() {
       symbolMatcher = symbolPattern.matcher(replacedString);
@@ -543,7 +563,7 @@ public abstract class SlimTable {
     }
 
     protected String formatSymbolValue(String name, String value) {
-        return String.format("$%s->[%s]", name, value);
+      return String.format("$%s->[%s]", name, value);
     }
   }
 
@@ -582,7 +602,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return pass(expected);
+        return pass(replaceSymbolsWithFullExpansion(expected));
       else
         return "!style_error(Unknown construction message:) " + actual;
     }
@@ -602,8 +622,13 @@ public abstract class SlimTable {
     }
   }
 
+  public static interface ExpectationPassFailReporter {
+    String pass(String message);
 
-  class ReturnedValueExpectation extends Expectation {
+    String fail(String message);
+  }
+
+  class ReturnedValueExpectation extends Expectation implements ExpectationPassFailReporter {
     public ReturnedValueExpectation(String instructionTag, int col, int row) {
       super(instructionTag, col, row);
     }
@@ -641,11 +666,13 @@ public abstract class SlimTable {
       return originalValue.length() == 0 ? "BLANK" : originalValue;
     }
 
-    protected String pass(String message) {
+    @Override
+    public String pass(String message) {
       return SlimTable.this.pass(message);
     }
 
-    protected String fail(String message) {
+    @Override
+    public String fail(String message) {
       return SlimTable.this.fail(message);
     }
 
@@ -664,11 +691,11 @@ public abstract class SlimTable {
       return "is not";
     }
 
-    protected String pass(String message) {
+    public String pass(String message) {
       return super.fail(message);
     }
 
-    protected String fail(String message) {
+    public String fail(String message) {
       return super.pass(message);
     }
   }
@@ -690,16 +717,46 @@ public abstract class SlimTable {
     private double arg2;
     public String operation;
     private String arg1Text;
-    private ReturnedValueExpectation returnedValueExpectation;
+    private ExpectationPassFailReporter passFailReporter;
+    boolean match = false;
 
-    private Comparator(ReturnedValueExpectation returnedValueExpectation, String expression, String actual, String expected) {
-      this.returnedValueExpectation = returnedValueExpectation;
+    public Comparator(String actual, String expected) {
+      this.passFailReporter = new ExpectationPassFailReporter() {
+        public String pass(String message) {
+          return message;
+        }
+
+        public String fail(String message) {
+          return message;
+        }
+      };
+      this.expression = Utils.unescapeHTML(replaceSymbols(expected));
+      this.actual = actual;
+      this.expected = expected;
+    }
+
+    public Comparator(ExpectationPassFailReporter passFailReporter, String expression, String actual, String expected) {
+      this.passFailReporter = passFailReporter;
       this.expression = expression;
       this.actual = actual;
       this.expected = expected;
     }
 
-    private String evaluate() {
+    private String pass(String message) {
+      match = true;
+      return passFailReporter.pass(message);
+    }
+
+    private String fail(String message) {
+      match = false;
+      return passFailReporter.fail(message);
+    }
+
+    public boolean matches() {
+      return match;
+    }
+
+    public String evaluate() {
       String message = evaluateRegularExpressionIfPresent();
       if (message != null)
         return message;
@@ -729,9 +786,9 @@ public abstract class SlimTable {
       String message;
       Matcher patternMatcher = Pattern.compile(pattern).matcher(actual);
       if (patternMatcher.find()) {
-        message = returnedValueExpectation.pass(String.format("/%s/ found in: %s", pattern, actual));
+        message = pass(String.format("/%s/ found in: %s", pattern, actual));
       } else {
-        message = returnedValueExpectation.fail(String.format("/%s/ not found in: %s", pattern, actual));
+        message = fail(String.format("/%s/ not found in: %s", pattern, actual));
       }
       return message;
     }
@@ -747,7 +804,7 @@ public abstract class SlimTable {
       String[] fragments = expected.replaceAll(" ", "").split("_");
       String message = String.format("%s%s%s", fragments[0], actual, fragments[1]);
       message = replaceSymbolsWithFullExpansion(message);
-      return pass ? returnedValueExpectation.pass(message) : returnedValueExpectation.fail(message);
+      return pass ? pass(message) : fail(message);
 
     }
 
@@ -786,7 +843,7 @@ public abstract class SlimTable {
     private String simpleComparisonMessage(boolean pass) {
       String message = String.format("%s%s", actual, expected.replaceAll(" ", ""));
       message = replaceSymbolsWithFullExpansion(message);
-      return pass ? returnedValueExpectation.pass(message) : returnedValueExpectation.fail(message);
+      return pass ? pass(message) : fail(message);
 
     }
 

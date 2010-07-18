@@ -5,14 +5,20 @@ package fitnesse.wiki;
 
 import junit.framework.TestCase;
 import fitnesse.testutil.SimpleCachinePage;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class CachingPageTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class CachingPageTest {
   private CachingPage root;
   private PageCrawler crawler;
   private WikiPagePath pageOnePath;
   private WikiPagePath childOnePath;
   private WikiPagePath rootPath;
 
+  @Before
   public void setUp() throws Exception {
     root = new SimpleCachinePage("RooT", null);
     crawler = root.getPageCrawler();
@@ -21,6 +27,7 @@ public class CachingPageTest extends TestCase {
     rootPath = PathParser.parse("root");
   }
 
+  @Test
   public void testCreate() throws Exception {
     String alpha = "AlphaAlpha";
     WikiPage root = InMemoryPage.makeRoot("root");
@@ -30,6 +37,7 @@ public class CachingPageTest extends TestCase {
     assertTrue(root.hasChildPage(alpha));
   }
 
+  @Test
   public void testTwoLevel() throws Exception {
     String alpha = "AlphaAlpha";
     String beta = "BetaBeta";
@@ -39,6 +47,7 @@ public class CachingPageTest extends TestCase {
 
   }
 
+  @Test
   public void testDoubleDot() throws Exception {
     String alpha = "AlphaAlpha";
     String beta = "BetaBeta";
@@ -48,6 +57,7 @@ public class CachingPageTest extends TestCase {
 
   }
 
+  @Test
   public void testClearPage() throws Exception {
     String child = "ChildPage";
     crawler.addPage(root, PathParser.parse(child), "content");
@@ -56,6 +66,7 @@ public class CachingPageTest extends TestCase {
     assertFalse(root.hasCachedSubpage(child));
   }
 
+  @Test
   public void testGetName() throws Exception {
     WikiPage frontPage = crawler.addPage(root, PathParser.parse("FrontPage"), "FrontPage");
     WikiPage c1 = crawler.addPage(frontPage, PathParser.parse("ChildOne"), "ChildOne");
@@ -63,6 +74,7 @@ public class CachingPageTest extends TestCase {
     assertEquals(PathParser.parse("FrontPage.ChildOne"), crawler.getFullPath(c1));
   }
 
+  @Test
   public void testDefaultAttributes() throws Exception {
     WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"));
     assertTrue(page.getData().hasAttribute("Edit"));
@@ -71,6 +83,7 @@ public class CachingPageTest extends TestCase {
     assertFalse(page.getData().hasAttribute("TestSuite"));
   }
 
+  @Test
   public void testPageDataIsCached() throws Exception {
     CachingPage.cacheTime = 100;
     CachingPage page = (CachingPage) crawler.addPage(root, PathParser.parse("PageOne"), "some content");
@@ -85,6 +98,7 @@ public class CachingPageTest extends TestCase {
     assertNotSame(data1, data3);
   }
 
+  @Test
   public void testDumpCachedExpiredData() throws Exception {
     CachingPage.cacheTime = 100;
     CachingPage page = (CachingPage) crawler.addPage(root, PathParser.parse("PageOne"), "some content");
@@ -95,6 +109,7 @@ public class CachingPageTest extends TestCase {
     assertNull(page.getCachedData());
   }
 
+  @Test
   public void testGetPageThatStartsWithDot() throws Exception {
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
     WikiPage child1 = crawler.addPage(root, PathParser.parse("PageOne.ChildOne"), "child one");
@@ -103,12 +118,14 @@ public class CachingPageTest extends TestCase {
     assertSame(page1, crawler.getPage(child1, pageOnePath));
   }
 
+  @Test
   public void testGetPageUsingRootKeyWord() throws Exception {
     WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
     assertSame(root, crawler.getPage(page1, rootPath));
     assertSame(root, crawler.getPage(root, rootPath));
   }
 
+  @Test
   public void testEquals() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
     WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "content");
@@ -119,6 +136,7 @@ public class CachingPageTest extends TestCase {
     assertEquals(pageOne, pageOneOne);
   }
 
+  @Test
   public void testCachedDataIsTrashedBeforeOutOfMemoryError() throws Exception {
     CachingPage page = (CachingPage) crawler.addPage(root, PathParser.parse("SomePage"), "some content");
     page.getData();

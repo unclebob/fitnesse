@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import util.Clock;
+
 public class WikiPageDummy implements WikiPage {
   private static final long serialVersionUID = 1L;
 
@@ -59,7 +61,7 @@ public class WikiPageDummy implements WikiPage {
 
   public VersionInfo commit(PageData data) throws Exception {
     pageData = data;
-    return new VersionInfo("mockVersionName", "mockAuthor", new Date());
+    return new VersionInfo("mockVersionName", "mockAuthor", Clock.currentDate());
   }
 
   public List<WikiPage> getChildren() {

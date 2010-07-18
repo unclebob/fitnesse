@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import util.Clock;
+
 public class VersionInfo implements Comparable<VersionInfo>, Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -35,7 +37,7 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
   }
 
   public VersionInfo(String complexName) {
-    this(complexName, "", new Date());
+    this(complexName, "", Clock.currentDate());
     Matcher match = COMPEX_NAME_PATTERN.matcher(complexName);
     if (match.find()) {
       author = match.group(1);

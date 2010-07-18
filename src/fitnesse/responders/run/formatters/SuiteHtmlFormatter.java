@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
@@ -92,7 +93,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiPage newTest, long time) throws Exception {
+  public void newTestStarted(WikiPage newTest, TimeMeasurement timeMeasurement) throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), newTest);
     WikiPagePath fullPath = pageCrawler.getFullPath(newTest);
@@ -146,7 +147,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void testComplete(WikiPage testPage, TestSummary testSummary)
+  public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage);

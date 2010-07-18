@@ -7,6 +7,7 @@ import static fitnesse.wiki.PageType.*;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.widgets.*;
+import util.Clock;
 import util.StringUtil;
 
 import java.io.Serializable;
@@ -109,7 +110,7 @@ public class PageData implements Serializable {
     properties.set(PropertyFILES, Boolean.toString(true));
     properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
     properties.set(PropertySEARCH, Boolean.toString(true));
-    properties.setLastModificationTime(new Date());
+    properties.setLastModificationTime(Clock.currentDate());
 
     initTestOrSuiteProperty();
   }

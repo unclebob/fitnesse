@@ -333,8 +333,8 @@ public class PageHistoryResponderTest {
     report.finalCounts = new TestSummary(4,5,6,7);
     report.rootPath = "SuitePage";
     long time = DateTimeUtil.getTimeFromString("12/5/1980 01:20:00");
-    SuiteExecutionReport.PageHistoryReference r1 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageOne", time);
-    SuiteExecutionReport.PageHistoryReference r2 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageTwo", time);
+    SuiteExecutionReport.PageHistoryReference r1 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageOne", time, 9);
+    SuiteExecutionReport.PageHistoryReference r2 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageTwo", time, 11);
 
     r1.getTestSummary().right=4;
     r2.getTestSummary().right=4;
@@ -390,6 +390,7 @@ public class PageHistoryResponderTest {
     result.exceptions = "44";
     result.relativePageName = "relativePageName";
     result.content = "wad of HTML content";
+    result.runTimeInMillis = "99";
     return testResponse;
   }
 

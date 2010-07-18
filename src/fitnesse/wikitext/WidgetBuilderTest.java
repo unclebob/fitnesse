@@ -9,6 +9,8 @@ import junit.framework.TestCase;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import util.TimeMeasurement;
+
 public class WidgetBuilderTest extends TestCase {
   private WikiPage mockSource;
 
@@ -239,17 +241,16 @@ public class WidgetBuilderTest extends TestCase {
     for (int i = 0; i < 100; i++)
       b.append("****************************************************************\n");
 
-    long start = System.currentTimeMillis();
+    TimeMeasurement measurement = new TimeMeasurement().start();
     ParentWidget root = new WidgetRoot(b.toString(), mockSource);
     String html = root.childHtml();
-    long stop = System.currentTimeMillis();
+    long duration = measurement.elapsed();
 
     StringBuffer expected = new StringBuffer();
     for (int i = 0; i < 300; i++)
       expected.append("****************************************************************<br/>");
 
     assertEquals(expected.toString(), html);
-    long duration = stop - start;
     assertTrue(String.format("parsing took %s ms.", duration), duration < 500);
   }
 

@@ -15,11 +15,14 @@ import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
+import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.testutil.FitNesseUtil;
 import util.DateTimeUtil;
+import util.TimeMeasurement;
 
+import java.io.StringWriter;
 import java.io.Writer;
 import java.io.File;
 import java.util.Date;
@@ -41,6 +44,7 @@ public class CachingSuiteXmlFormatterTest {
     formatter = new CachingSuiteXmlFormatter(context,root, null);
     testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
   }
+  
   @Test
   public void canCreateFormatter() throws Exception {
     Assert.assertTrue(formatter instanceof BaseFormatter);
@@ -48,16 +52,54 @@ public class CachingSuiteXmlFormatterTest {
   }
 
   @Test
-  public void shouldRememberThePageNameAndDate() throws Exception {
-    formatter.newTestStarted(testPage, testTime);
-    formatter.testComplete(testPage, testSummary);
+  public void shouldRememberThePageNameAndDateAndRunTime() throws Exception {
+    formatter = newNonWritingCachingSuiteXmlFormatter();
+    formatter.announceNumberTestsToRun(1);
+    TimeMeasurement timeMeasurement = constantStartTimeAndElapsedTimeMeasurement(testTime, 39);
+    formatter.newTestStarted(testPage, timeMeasurement);
+    
+    formatter.testComplete(testPage, testSummary, timeMeasurement);
     assertEquals(1, formatter.getPageHistoryReferences().size());
-    assertEquals("TestPage", formatter.getPageHistoryReferences().get(0).getPageName());
-    assertEquals(testTime, formatter.getPageHistoryReferences().get(0).getTime());
+    PageHistoryReference pageHistoryReference = formatter.getPageHistoryReferences().get(0);
+    assertEquals("TestPage", pageHistoryReference.getPageName());
+    assertEquals(testTime, pageHistoryReference.getTime());
+    assertEquals(39, pageHistoryReference.getRunTimeInMillis());
+    
+    formatter.allTestingComplete(constantStartTimeAndElapsedTimeMeasurement(testTime, 49));
+    assertEquals(49, formatter.suiteExecutionReport.getTotalRunTimeInMillis());
+  }
+  
+  @Test
+  public void shouldDelegateToReportForTotalRunTime() throws Exception {
+    formatter.suiteExecutionReport = mock(SuiteExecutionReport.class);
+    formatter.getTotalRunTimeInMillis();
+    verify(formatter.suiteExecutionReport).getTotalRunTimeInMillis(); 
+  }
+
+  private CachingSuiteXmlFormatter newNonWritingCachingSuiteXmlFormatter() throws Exception {
+    return new CachingSuiteXmlFormatter(context,root, null) {
+      @Override
+      protected void writeOutSuiteXML() throws Exception {
+      }
+    };
+  }
+
+  private TimeMeasurement constantStartTimeAndElapsedTimeMeasurement(final long startTime, final long elapsed) {
+    return new TimeMeasurement() {
+      @Override
+      public long startedAt() {
+        return startTime;
+      }
+      @Override
+      public long elapsed() {
+        return elapsed;
+      }
+    };
   }
 
   @Test
   public void allTestsCompleteShouldReadTestHistoryAndInvokeVelocity() throws Exception {
+    formatter.announceNumberTestsToRun(0);
     TestHistory testHistory = mock(TestHistory.class);
     formatter.setTestHistoryForTests(testHistory);
     VelocityContext velocityContext = mock(VelocityContext.class);
@@ -66,7 +108,7 @@ public class CachingSuiteXmlFormatterTest {
     formatter.setVelocityForTests(velocityContext, velocityEngine, writer);
     Template template = mock(Template.class);
     when(velocityEngine.getTemplate("suiteXML.vm")).thenReturn(template);
-    formatter.allTestingComplete();
+    formatter.allTestingComplete(new TimeMeasurement().start().stop());
     verify(testHistory).readHistoryDirectory(context.getTestHistoryDirectory());
     verify(velocityContext).put("formatter", formatter);
     verify(velocityEngine).getTemplate("suiteXML.vm");
@@ -95,7 +137,7 @@ public class CachingSuiteXmlFormatterTest {
     when(pageHistory.get(referenceDate)).thenReturn(expectedRecord);
     when(expectedReport.read(file)).thenReturn(expectedReport);
     SuiteExecutionReport.PageHistoryReference reference;
-    reference = new SuiteExecutionReport.PageHistoryReference("TestPage", referenceDate.getTime());
+    reference = new SuiteExecutionReport.PageHistoryReference("TestPage", referenceDate.getTime(), 27);
     TestExecutionReport actualReport = formatter.getTestExecutionReport(reference);
     verify(testHistory).getPageHistory("TestPage");
     verify(pageHistory).get(referenceDate);
@@ -115,8 +157,9 @@ public class CachingSuiteXmlFormatterTest {
 
   @Test
   public void formatterShouldTallyPageCounts() throws Exception {
-    formatter.newTestStarted(testPage, testTime);
-    formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0)); // 1 right.
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
+    formatter.newTestStarted(testPage, timeMeasurement.start());
+    formatter.testComplete(testPage, new TestSummary(32, 0, 0, 0), timeMeasurement.stop()); // 1 right.
     assertEquals(new TestSummary(1, 0, 0, 0), formatter.getPageCounts());
   }
 }

@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 // Extracted Test class to be implemented by all Java based Slim ports
 // The tests for PhpSlim and JsSlim implement this class
@@ -14,21 +14,30 @@ import org.junit.Test;
 public abstract class SlimInstanceCreationTestBase {
   protected StatementExecutorInterface caller;
   protected String testClass = "TestSlim";
-  
+
   @Before
   public abstract void setUp() throws Exception;
 
   protected abstract void assertInstanceOfTestSlim(Object x);
-  
+
   protected abstract String getTestClassPath();
-  
+
   protected String getTestClassName() {
     return getTestClassPath() + "." + testClass;
   }
-  
+
   @Test
   public void canCreateInstance() throws Exception {
     Object response = caller.create("x", getTestClassName(), new Object[0]);
+    assertEquals("OK", response);
+    Object x = caller.getInstance("x");
+    assertInstanceOfTestSlim(x);
+  }
+
+  @Test
+  public void canCreateInstanceWhenSpecifiedBySymbol() throws Exception {
+    caller.setVariable("X", getTestClassName());
+    Object response = caller.create("x", "$X", new Object[0]);
     assertEquals("OK", response);
     Object x = caller.getInstance("x");
     assertInstanceOfTestSlim(x);
@@ -75,7 +84,7 @@ public abstract class SlimInstanceCreationTestBase {
     Object x = caller.getInstance("x");
     assertInstanceOfTestSlim(x);
   }
-  
+
   @Test
   public void cantCreateInstanceWithoutPath() {
     String result = (String) caller.create("x", testClass, new Object[0]);

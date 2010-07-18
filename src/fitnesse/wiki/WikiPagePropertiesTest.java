@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
+import util.Clock;
 import util.RegexTestCase;
 
 public class WikiPagePropertiesTest extends RegexTestCase {
@@ -111,7 +112,7 @@ public class WikiPagePropertiesTest extends RegexTestCase {
   public void testLastModificationTime() throws Exception {
     SimpleDateFormat format = WikiPageProperty.getTimeFormat();
     WikiPageProperties props = new WikiPageProperties();
-    assertEquals(format.format(new Date()), format.format(props.getLastModificationTime()));
+    assertEquals(format.format(Clock.currentDate()), format.format(props.getLastModificationTime()));
     Date date = format.parse("20040101000001");
     props.setLastModificationTime(date);
     assertEquals("20040101000001", props.get(PageData.PropertyLAST_MODIFIED));

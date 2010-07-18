@@ -8,6 +8,8 @@ import fitnesse.responders.run.TestSummary;
 import java.util.ArrayList;
 import java.util.List;
 
+import util.TimeMeasurement;
+
 public class CompositeFormatter extends BaseFormatter {
   List<BaseFormatter> formatters = new ArrayList<BaseFormatter>();
 
@@ -48,9 +50,9 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
-  public void newTestStarted(WikiPage test, long time) throws Exception {
+  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters)
-      formatter.newTestStarted(test, time);
+      formatter.newTestStarted(test, timeMeasurement);
   }
 
   public void testOutputChunk(String output) throws Exception {
@@ -58,9 +60,9 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testOutputChunk(output);
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary) throws Exception {
+  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters)
-      formatter.testComplete(test, testSummary);
+      formatter.testComplete(test, testSummary, timeMeasurement);
   }
 
   public void writeHead(String pageType) throws Exception {
@@ -69,9 +71,9 @@ public class CompositeFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete() throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters)
-      formatter.allTestingComplete();
+      formatter.allTestingComplete(totalTimeMeasurement);
   }
 
   public int getErrorCount() {

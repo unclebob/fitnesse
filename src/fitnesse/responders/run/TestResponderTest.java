@@ -17,16 +17,21 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import org.junit.After;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import util.Clock;
+import util.DateAlteringClock;
 import util.FileUtil;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
@@ -51,6 +56,7 @@ public class TestResponderTest {
   private PageCrawler crawler;
   private File xmlResultsFile;
   private XmlChecker xmlChecker = new XmlChecker();
+  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
@@ -65,6 +71,17 @@ public class TestResponderTest {
     context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
     context.port = receiver.receiveSocket();
+    clock = monotonicIncreasingClock();
+  }
+  
+  private DateAlteringClock monotonicIncreasingClock() {
+    return new DateAlteringClock(Clock.currentDate()) {
+      private long tick = 0;
+      @Override
+      public long currentClockTimeInMillis() {
+        return ++tick;
+      }
+    };
   }
 
   @After
@@ -72,6 +89,7 @@ public class TestResponderTest {
     receiver.close();
     FitNesseUtil.destroyTestContext();
     XmlFormatter.clearTestTime();
+    clock.restoreDefaultClock();
   }
 
   @Test
@@ -305,7 +323,7 @@ public class TestResponderTest {
     assertEquals("text/text", response.getContentType());
     assertTrue(results.indexOf("\n. ") != -1);
     assertTrue(results.indexOf("R:1    W:0    I:0    E:0    TestPage\t(TestPage)") != -1);
-    assertTrue(results.indexOf("1 Tests,\t0 Failures.") != -1);
+    assertTrue(results.indexOf("1 Tests,\t0 Failures") != -1);
   }
 
   @Test
@@ -315,7 +333,7 @@ public class TestResponderTest {
     assertEquals("text/text", response.getContentType());
     assertTrue(results.indexOf("\nF ") != -1);
     assertTrue(results.indexOf("R:0    W:1    I:0    E:0    TestPage\t(TestPage)") != -1);
-    assertTrue(results.indexOf("1 Tests,\t1 Failures.") != -1);
+    assertTrue(results.indexOf("1 Tests,\t1 Failures") != -1);
   }
 
   @Test
@@ -325,7 +343,7 @@ public class TestResponderTest {
     assertEquals("text/text", response.getContentType());
     assertTrue(results.indexOf("\nX ") != -1);
     assertTrue(results.indexOf("R:0    W:0    I:0    E:1    TestPage\t(TestPage)") != -1);
-    assertTrue(results.indexOf("1 Tests,\t1 Failures.") != -1);
+    assertTrue(results.indexOf("1 Tests,\t1 Failures") != -1);
   }
 
   private String getExecutionStatusMessage() throws Exception {
@@ -566,6 +584,9 @@ public class TestResponderTest {
       Element counts = getElementByTagName(result, "counts");
       assertCounts(counts, "1", "0", "0", "0");
 
+      String runTimeInMillis = XmlUtil.getTextValue(result, "runTimeInMillis");
+      assertThat(Long.parseLong(runTimeInMillis), is(not(0L)));
+
       Element tags = getElementByTagName(result, "tags");
       assertNull(tags);
 
@@ -668,6 +689,9 @@ public class TestResponderTest {
       Element counts = getElementByTagName(result, "counts");
       assertCounts(counts, "3", "0", "0", "0");
 
+      String runTimeInMillis = XmlUtil.getTextValue(result, "runTimeInMillis");
+      assertThat(Long.parseLong(runTimeInMillis), is(not(0L)));
+
       assertTablesInSlimScenarioAreCorrect(result);
       assertInstructionsOfSlimScenarioTableAreCorrect(result);
     }
@@ -748,7 +772,6 @@ public class TestResponderTest {
         }
       }
     }
-
 
     private void checkExpectation(NodeList instructionList, int index, String id, String col, String row, String status, String type, String actual, String expected, String message) throws Exception {
       Element instructionElement = (Element) instructionList.item(index);
