@@ -20,5 +20,6 @@ public class TextTest {
         ParserTest.assertTranslatesTo(".", ".");
         ParserTest.assertTranslatesTo("<hi>", "&lt;hi&gt;");
         ParserTest.assertTranslatesTo("text &bar; &bang; &dollar;", "text | ! $");
+        ParserTest.assertTranslatesTo("HiMOM02", "HiMOM02");
     }
 }

@@ -20,14 +20,17 @@ public class WikiWordPath {
         if (!isUpperCaseLetter(candidate, 0)) return 0;
         if (!isDigit(candidate, 1) && !isLowerCaseLetter(candidate, 1)) return 0;
 
-        boolean includesUpperCaseLetter = false;
+        int lastUpperCaseLetter = 0;
         int i;
         for (i = 2; i < candidate.length(); i++) {
             if (isCharacter(candidate, '_', i)) return 0;
-            if (isUpperCaseLetter(candidate, i)) includesUpperCaseLetter =  true;
+            if (isUpperCaseLetter(candidate, i)) {
+                if (i == lastUpperCaseLetter + 1) return 0;
+                lastUpperCaseLetter =  i;
+            }
             else if (!isDigit(candidate, i) && !isLetter(candidate, i) && !isCharacter(candidate, '.', i)) break;
         }
-        if (includesUpperCaseLetter && i > 2) return i;
+        if (lastUpperCaseLetter > 0 && i > 2) return i;
         return 0;
     }
 
