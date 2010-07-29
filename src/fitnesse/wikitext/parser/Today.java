@@ -29,10 +29,12 @@ public class Today extends SymbolType implements Rule, Translation {
             }
         }
         else {
-            lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.OpenParenthesis, SymbolType.Text, SymbolType.CloseParenthesis});
+            lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.OpenParenthesis});
             if (lookAhead.size() != 0) {
-                current.putProperty(Format, lookAhead.get(2).getContent());
-                parser.moveNext(4);
+                parser.moveNext(2);
+                String format = parser.parseLiteral(SymbolType.CloseParenthesis);
+                if (parser.atEnd())  return Symbol.nothing;
+                current.putProperty(Format, format);
             }
         }
         lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
