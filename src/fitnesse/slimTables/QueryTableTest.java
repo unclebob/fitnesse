@@ -4,6 +4,8 @@ package fitnesse.slimTables;
 
 import org.junit.Test;
 
+import static util.ListUtility.list;
+
 public class QueryTableTest extends QueryTableBaseTest {
 
   protected String tableType() {

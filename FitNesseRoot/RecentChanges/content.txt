@@ -1,3 +1,6 @@
+|FitNesse.UserGuide.MarkupTable||20:14:19 Tue, Jul 20, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSecureTestPage||14:05:13 Fri, Jul 16, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.QueryTableSuite.TestMatching||11:42:28 Sun, Jul 11, 2010|
 |FitNesse.UserGuide.ControllingFitnesseFromTheCommandLine||11:11:43 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|
@@ -63,7 +66,6 @@
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.SetUp||10:57:01 Fri, Jan 01, 2010|
 |JunkPage.RicksDefineBug||10:18:32 Tue, Dec 29, 2009|
 |FitNesse.UserGuide.MarkupLanguageReference||13:10:44 Sun, Dec 27, 2009|
-|FitNesse.UserGuide.MarkupTable||13:09:37 Sun, Dec 27, 2009|
 |PageFooter||18:57:45 Sun, Dec 20, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SetUpLinkTest||10:21:14 Mon, Dec 21, 2009|
 |JunkPage.SetUpBug||10:03:06 Sun, Dec 20, 2009|
@@ -96,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSymbolicLinkTests.CreateAbsoluteSymbolicLink||11:29:01 Tue, Dec 08, 2009|
 |JunkPage.NunkPage||11:16:16 Tue, Dec 08, 2009|
 |JunkPage.CalculationBug||18:14:59 Sun, Dec 06, 2009|
-|JunkPage.FirstPage||12:05:57 Mon, Nov 30, 2009|
-|JunkPage.GregorsBug||08:30:26 Wed, Nov 25, 2009|
