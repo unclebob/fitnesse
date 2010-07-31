@@ -215,6 +215,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${HDR} Includes & Informational ${HDRend}                                                    |
 |Timestamp                    |${CODE} ${BANG}'''lastmodified'''     ${CODEend}               |
 |Timestamp                    |${CODE} ${BANG}'''today'''            ${CODEend}               |
+|Help text                    |${CODE} ${BANG}'''help'''            ${CODEend}                |
 |Contents List                |${CODE} ${BANG}'''contents'''     ${CODEend}                   |
 |Contents Tree                |${CODE} ${BANG}'''contents -R'''  ${CODEend}                   |
 |Contents Sub-tree            |${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend}|
