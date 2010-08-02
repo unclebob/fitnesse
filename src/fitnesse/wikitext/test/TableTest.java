@@ -1,7 +1,6 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class TableTest {
@@ -41,6 +40,7 @@ public class TableTest {
 
     @Test public void ignoreMostMarkupInLiteralTable() {
         ParserTest.assertTranslatesTo("!|''<a''|\n", tableWithCell("''&lt;a''"));
+        ParserTest.assertTranslatesTo("!|a@b.com|\n", tableWithCell("a@b.com"));
     }
 
     @Test public void evaluatesExpressionsInLiteralTable() {

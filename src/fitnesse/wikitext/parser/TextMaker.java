@@ -22,11 +22,13 @@ public class TextMaker {
                 return new SymbolMatch(wikiWord, length);
             }
         }
-        return new SymbolMatch(
-                new Symbol(
-                        text.indexOf("@") > 0 && Pattern.matches(eMailPattern, text)
-                                ? SymbolType.EMail
-                                : SymbolType.Text, text),
-                text.length());
+        if (provider.matchesFor(SymbolType.EMail) && isEmailAddress(text)) {
+            return new SymbolMatch(new Symbol(SymbolType.EMail, text), text.length());
+        }
+        return new SymbolMatch(new Symbol(SymbolType.Text, text), text.length());
+    }
+
+    private boolean isEmailAddress(String text) {
+        return text.indexOf("@") > 0 && Pattern.matches(eMailPattern, text);
     }
 }

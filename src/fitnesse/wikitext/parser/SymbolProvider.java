@@ -23,7 +23,7 @@ public class SymbolProvider {
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Bold,
-            SymbolType.Italic, SymbolType.Strike, new AnchorReference(), SymbolType.WikiWord, SymbolType.Text,
+            SymbolType.Italic, SymbolType.Strike, new AnchorReference(), SymbolType.WikiWord, SymbolType.EMail, SymbolType.Text,
     });
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
