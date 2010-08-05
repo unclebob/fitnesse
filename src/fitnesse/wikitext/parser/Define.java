@@ -13,10 +13,10 @@ public class Define extends SymbolType implements Rule, Translation {
     }
     
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        List<Symbol> tokens = parser.moveNext(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text, SymbolType.Whitespace});
-        if (tokens.size() == 0) return Symbol.nothing;
+        if (!parser.isMoveNext(SymbolType.Whitespace)) return Symbol.nothing;
 
-        String name = tokens.get(1).getContent();
+        String name = parser.parseToAsString(SymbolType.Whitespace);
+        if (parser.atEnd()) return Symbol.nothing;
         if (!ScanString.isVariableName(name)) return Symbol.nothing;
 
         Symbol next = parser.moveNext(1);

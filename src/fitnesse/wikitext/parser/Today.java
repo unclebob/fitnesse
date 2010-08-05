@@ -32,7 +32,7 @@ public class Today extends SymbolType implements Rule, Translation {
             lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.OpenParenthesis});
             if (lookAhead.size() != 0) {
                 parser.moveNext(2);
-                String format = parser.parseLiteral(SymbolType.CloseParenthesis);
+                String format = parser.parseToAsString(SymbolType.CloseParenthesis);
                 if (parser.atEnd())  return Symbol.nothing;
                 current.putProperty(Format, format);
             }
