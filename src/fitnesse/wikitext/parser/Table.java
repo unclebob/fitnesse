@@ -21,6 +21,7 @@ public class Table extends SymbolType implements Rule, Translation {
             while (true) {
                 Symbol cell = parseCell(parser, content);
                 if (parser.atEnd()) return Symbol.nothing;
+                if (containsNewLine(cell)) return Symbol.nothing;
                 row.add(cell);
                 if (parser.getCurrent().getContent().indexOf("\n") > 0 || parser.atLast()) break;
             }
@@ -35,6 +36,13 @@ public class Table extends SymbolType implements Rule, Translation {
         }
         else
             return parser.parseTo(SymbolType.EndCell);
+    }
+
+    private boolean containsNewLine(Symbol cell) {
+        for (Symbol child: cell.getChildren()) {
+            if (child.isType(SymbolType.Newline)) return true;
+        }
+        return false;
     }
 
     public String toTarget(Translator translator, Symbol symbol) {

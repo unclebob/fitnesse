@@ -38,6 +38,10 @@ public class TableTest {
                 "</table>"+ HtmlElement.endl);
     }
 
+    @Test public void ignoresMalformedTables() {
+        ParserTest.assertTranslatesTo("!|\n\n|a|\n", "!|\n<br/>" + tableWithCell("a"));
+    }
+
     @Test public void ignoreMostMarkupInLiteralTable() {
         ParserTest.assertTranslatesTo("!|''<a''|\n", tableWithCell("''&lt;a''"));
         ParserTest.assertTranslatesTo("!|a@b.com|\n", tableWithCell("a@b.com"));

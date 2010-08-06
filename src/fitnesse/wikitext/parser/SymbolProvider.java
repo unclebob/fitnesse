@@ -36,7 +36,7 @@ public class SymbolProvider {
           Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     public static final SymbolProvider literalTableProvider = new SymbolProvider(
-            new SymbolType[] {SymbolType.EndCell, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+            new SymbolType[] {SymbolType.EndCell, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
     private static final char defaultMatch = '\0';
 
