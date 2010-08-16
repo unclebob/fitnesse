@@ -94,8 +94,9 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
   @Override
   public void newTestStarted(WikiPage newTest, TimeMeasurement timeMeasurement) throws Exception {
+    String relativeName = getRelativeName(newTest);
+    
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), newTest);
     WikiPagePath fullPath = pageCrawler.getFullPath(newTest);
     String fullPathName = PathParser.render(fullPath);
 
@@ -119,6 +120,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     return progressDiv.html();
   }
 
+  @Override
   public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
     finishOutputForTest();
 
@@ -132,6 +134,10 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     HtmlTag link = HtmlUtil.makeLink("#" + relativeName + currentTest, relativeName);
     link.addAttribute("class", "test_summary_link");
     mainDiv.add(link);
+    
+    if (latestTestTime != null) {
+      mainDiv.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
+    }
 
     pageCounts.tallyPageCounts(testSummary);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, mainDiv.html(2));
@@ -147,15 +153,9 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
-    throws Exception {
-    PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
-    if ("".equals(relativeName)) {
-      relativeName = String.format("(%s)", testPage.getName());
-    }
-
-    processTestResults(relativeName, testSummary);
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    latestTestTime = totalTimeMeasurement;
+    super.allTestingComplete(totalTimeMeasurement);
   }
 
   private void switchCssSuffix() {

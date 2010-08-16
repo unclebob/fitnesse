@@ -5,7 +5,11 @@ package util;
 import java.util.Date;
 
 public abstract class Clock {
-  protected static Clock instance = new SystemClock();
+  protected static final SystemClock SYSTEM_CLOCK = new SystemClock();
+  protected static Clock instance;
+  static {
+    restoreDefaultClock();
+  }
   
   protected Clock() {
     this(false);
@@ -28,18 +32,16 @@ public abstract class Clock {
   public static Date currentDate() {
     return instance.currentClockDate();
   }
+  
+  public static void restoreDefaultClock() {
+    Clock.instance = SYSTEM_CLOCK;
+}
+
 }
 
 class SystemClock extends Clock {
   @Override
   long currentClockTimeInMillis() {
     return System.currentTimeMillis();
-  }  
-}
-
-class GlobalClock extends Clock {
-  @Override
-  long currentClockTimeInMillis() {
-    return currentTimeInMillis();
   }  
 }

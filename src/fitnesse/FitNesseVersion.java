@@ -3,7 +3,23 @@
 package fitnesse;
 
 public class FitNesseVersion {
-	public String toString() {
-		return "v20100816";
-	}
+  private final String version;
+	
+  public FitNesseVersion() {
+    this("v20100816");
+  }
+
+  public FitNesseVersion(String version) {
+    this.version = version;
+  }
+
+  public String toString() {
+    return version;
+  }
+
+  public boolean isAtLeast(String requiredVersion) {
+    long thisVersion = Long.parseLong(version.substring(1));
+    long otherVersion = Long.parseLong(requiredVersion.substring(1));
+    return thisVersion >= otherVersion;
+  }
 }

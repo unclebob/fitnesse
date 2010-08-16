@@ -12,7 +12,7 @@ public class TimeMeasurement {
   private Long stoppedAt;
   
   public TimeMeasurement() {
-    this(new GlobalClock());
+    this(Clock.instance);
   }
 
   TimeMeasurement(Clock measuringClock) {

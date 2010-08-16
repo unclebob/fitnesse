@@ -2,6 +2,8 @@
 |FitNesse.UserGuide.MarkupTable||20:14:19 Tue, Jul 20, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.TestSecureTestPage||14:05:13 Fri, Jul 16, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.QueryTableSuite.TestMatching||11:42:28 Sun, Jul 11, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.ScenarioLibrary||16:44:26 Fri, Jun 11, 2010|
+|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SetUp||16:39:55 Fri, Jun 11, 2010|
 |FitNesse.UserGuide.ControllingFitnesseFromTheCommandLine||11:11:43 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|

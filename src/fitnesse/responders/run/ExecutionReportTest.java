@@ -100,4 +100,22 @@ public class ExecutionReportTest {
     assertThat(report.getTotalRunTimeInMillisOrZeroIfNotPresent(element), is(255L));
   }
 
+  @Test
+  public void hasRunTimesShouldBeVersionAware() throws Exception {
+    assertFalse(executionReportWithVersion("v20100303").hasRunTimes());
+    assertTrue(executionReportWithVersion("v20100607").hasRunTimes());
+    assertTrue(executionReportWithVersion("v20100608").hasRunTimes());
+  }
+  
+  private ExecutionReport executionReportWithVersion(final String theVersion) {
+    return new ExecutionReport() {
+      @Override
+      protected void unpackResults(Element testResults) throws Exception {
+      }
+      @Override
+      public String getVersion() {
+        return theVersion;
+      }
+    };
+  }
 }

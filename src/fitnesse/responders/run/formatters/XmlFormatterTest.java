@@ -7,10 +7,16 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
@@ -22,14 +28,17 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
 public class XmlFormatterTest {
+  private static final String TEST_TIME = "4/13/2009 15:21:43";
+  private DateAlteringClock clock;
+  
   @Before
-  public void setUp() {
-    XmlFormatter.setTestTime("4/13/2009 15:21:43");
+  public void setUp() throws ParseException {
+    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
   }
 
   @After
   public void tearDown() {
-    XmlFormatter.clearTestTime();
+    Clock.restoreDefaultClock();
   }
 
   @Test
@@ -38,7 +47,7 @@ public class XmlFormatterTest {
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     assertEquals(
       "20090413152143_1_2_3_4.xml", 
-      TestHistory.makeResultFileName(summary, formatter.getTime()));
+      TestHistory.makeResultFileName(summary, clock.currentClockTimeInMillis()));
   }
   
   @Test
@@ -57,8 +66,11 @@ public class XmlFormatterTest {
     
     formatter.testOutputChunk("outputChunk");
     
-    TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
-    when(timeMeasurement.elapsed()).thenReturn(27L);
+    TimeMeasurement timeMeasurement = new TimeMeasurement() {
+      public long elapsed() {
+        return 27;
+      }
+    }.start();
     formatter.newTestStarted(page, timeMeasurement);
     
     TestSummary summary = new TestSummary(9,8,7,6);
@@ -66,7 +78,7 @@ public class XmlFormatterTest {
     assertThat(formatter.finalSummary, equalTo(summary));
     assertThat(formatter.testResponse.results.size(), is(1));
     assertThat(formatter.testResponse.results.get(0), is(testResult));
-    assertThat(testResult.startTime, is(formatter.getTime()));
+    assertThat(testResult.startTime, is(timeMeasurement.startedAt()));
     assertThat(testResult.content, is("outputChunk"));
     assertThat(testResult.right, is("9"));
     assertThat(testResult.wrong, is("8"));

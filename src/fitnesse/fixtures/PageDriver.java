@@ -249,10 +249,6 @@ public class PageDriver {
     return data.hasAttribute(attribute);
   }
 
-  public void setXmlFormatterTimeTo(String time) throws ParseException {
-    XmlFormatter.setTestTime(time);
-  }
-
   public void givenUserWithPassword(String user, String password) {
     FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(user, password);
   }
