@@ -8,7 +8,7 @@ This pattern shows up repeatedly in !-FitNesse-! Acceptance Tests. You need to u
 
 !3 Examples:
 |[[Test Bread Crumbs][<FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests.TestBreadCrumbs]]|''Classic BOC fitnesse test for showing that ''!-FitNesse-!'' deals properly with bold widgets.''|
-|[[Add And Pay Test][<UserGuide.PayrollTests.AddAndPayTest]]|''BOC fitnesse test for making sure paychecks are being generated properly.  This test uses two '' ''' ''Check'' ''' ''tables.''|
+|[[Payroll Cheque Printing Test][<UserGuide.PayrollTests.PayrollChequePrintingTest]]|''BOC fitnesse test for making sure paychecks are being generated properly.  This test uses two rows in a '' ''' ''Check'' ''' ''table.''|
 
 
 
