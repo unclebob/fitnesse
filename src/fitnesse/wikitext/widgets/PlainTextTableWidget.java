@@ -2,8 +2,8 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WidgetBuilder;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PlainTextTableWidget extends ParentWidget implements TableWidget {
   public static final String REGEXP = "^!\\[(?:\\p{Punct}?(?: [^\n]*)?)?\n.+?\n\\]!\n";

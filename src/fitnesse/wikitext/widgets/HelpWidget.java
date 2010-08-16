@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WikiWidget;
 
@@ -20,19 +19,17 @@ public class HelpWidget extends WikiWidget {
   public String render() throws Exception {
     String helpText = getWikiPage().getHelpText();
     String editString = "edit";
-    if (helpText == null) 
-    {
+    if (helpText == null) {
       helpText = "";
       editString = "edit help text";
     }
-    
-    
+
+
     WikiPagePath path = getWikiPage().getPageCrawler().getFullPath(getWikiPage());
-    if (editable)
-    {
+    if (editable) {
       helpText += " <a href=\"" + path.toString() + "?properties\">(" + editString + ")</a>";
     }
-    
+
     return helpText;
   }
 }

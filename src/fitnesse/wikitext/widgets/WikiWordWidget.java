@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import util.StringUtil;
 import fitnesse.components.PageReferencer;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -16,6 +11,11 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.WidgetVisitor;
+import util.StringUtil;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class WikiWordWidget extends TextWidget implements PageReferencer {
   public static final String SINGLE_WIKIWORD_REGEXP = "\\b[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+";

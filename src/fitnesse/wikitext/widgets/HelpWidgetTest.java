@@ -2,18 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.regex.Pattern;
-
-import com.sun.xml.internal.fastinfoset.sax.Properties;
-
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+
+import java.util.regex.Pattern;
 
 //created by Clare McLennan
 
@@ -43,7 +37,7 @@ public class HelpWidgetTest extends WidgetTestCase {
 
     HelpWidget editableWidget = new HelpWidget(new WidgetRoot(page), "!help -editable");
     assertEquals("some page is about some text " +
-    		"<a href=\"SomePage?properties\">(edit)</a>", editableWidget.render());
+      "<a href=\"SomePage?properties\">(edit)</a>", editableWidget.render());
   }
 
   public void testResultsWithoutHelp() throws Exception {
@@ -55,7 +49,7 @@ public class HelpWidgetTest extends WidgetTestCase {
     assertEquals(" <a href=\"NoHelp?properties\">(edit help text)</a>", editableWidget.render());
   }
 
-  
+
   protected String getRegexp() {
     return HelpWidget.REGEXP;
   }
