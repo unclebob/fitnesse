@@ -13,7 +13,9 @@ public abstract class TestSystem implements TestSystemListener {
     "java -cp fitnesse.jar" +
     System.getProperties().get("path.separator") +
     "%p %m";
-  public static final String DEFAULT_DEBUG_PATTERN = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
+  public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
+  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
+  public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
   protected WikiPage page;
   protected boolean fastTest;
   protected static final String emptyPageContent = "OH NO! This page is empty!";
@@ -41,8 +43,12 @@ public abstract class TestSystem implements TestSystemListener {
 
   private static String getRemoteDebugCommandPattern(PageData pageData) throws Exception {
     String testRunner = pageData.getVariable("REMOTE_DEBUG_COMMAND");
-    if (testRunner == null)
-      testRunner = DEFAULT_DEBUG_PATTERN;
+    if (testRunner == null) {
+      testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
+      if (testRunner == null || testRunner.toLowerCase().contains("java")) {
+        testRunner = DEFAULT_JAVA_DEBUG_COMMAND;
+      }
+    }
     return testRunner;
   }
 
@@ -68,14 +74,13 @@ public abstract class TestSystem implements TestSystemListener {
 
     return value.substring(0, index) + replacement + value.substring(index + mark.length());
   }
-
   public void setFastTest(boolean fastTest) {
     this.fastTest = fastTest;
   }
 
   public static String getTestSystemName(PageData data) throws Exception {
     String testSystemName = getTestSystem(data);
-    String testRunner = getTestRunner(data);
+    String testRunner = getTestRunnerNormal(data);
     return String.format("%s:%s", testSystemName, testRunner);
   }
 
@@ -114,7 +119,26 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void start() throws Exception;
 
-  public static String getTestRunner(PageData data) throws Exception {
+  private static String getTestRunner(PageData pageData, boolean isRemoteDebug) throws Exception {
+    if (isRemoteDebug)
+      return getTestRunnerDebug(pageData);
+    else
+      return getTestRunnerNormal(pageData);
+  }
+
+  
+  private static String getTestRunnerDebug(PageData data) throws Exception {
+    String program = data.getVariable("REMOTE_DEBUG_RUNNER");
+    if (program == null) {
+      program = getTestRunnerNormal(data);
+      if (program.toLowerCase().contains(DEFAULT_CSHARP_DEBUG_RUNNER_FIND))
+        program = program.toLowerCase().replace(DEFAULT_CSHARP_DEBUG_RUNNER_FIND, 
+                                                DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE); 
+    }
+    return program;
+  }
+
+  public static String getTestRunnerNormal(PageData data) throws Exception {
     String program = data.getVariable(PageData.TEST_RUNNER);
     if (program == null)
       program = defaultTestRunner(data);
@@ -139,7 +163,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public static Descriptor getDescriptor(PageData data, boolean isRemoteDebug) throws Exception {
     String testSystemName = getTestSystem(data);
-    String testRunner = getTestRunner(data);
+    String testRunner = getTestRunner(data, isRemoteDebug);
     String commandPattern = getCommandPattern(data, isRemoteDebug);
     String pathSeparator = getPathSeparator(data);
     return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator);
