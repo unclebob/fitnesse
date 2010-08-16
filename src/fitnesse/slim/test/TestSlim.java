@@ -134,6 +134,10 @@ public class TestSlim implements TestSlimInterface {
     return s;
   }
 
+  public void printString(String s) {
+    System.out.println(s);
+  }
+
   public List<Object> echoList(List<Object> l) {
     return l;
   }
