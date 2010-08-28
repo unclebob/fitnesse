@@ -13,6 +13,7 @@ public class TableTest {
 
     @Test public void translatesTables() {
         ParserTest.assertTranslatesTo("|a|\n", tableWithCell("a"));
+        ParserTest.assertTranslatesTo("|a| \n", tableWithCell("a"));
         ParserTest.assertTranslatesTo("|a|", tableWithCell("a"));
         ParserTest.assertTranslatesTo("||\n", tableWithCell(""));
         ParserTest.assertTranslatesTo("| a |\n", tableWithCell("a"));
@@ -39,7 +40,7 @@ public class TableTest {
     }
 
     @Test public void ignoresMalformedTables() {
-        ParserTest.assertTranslatesTo("!|\n\n|a|\n", "!|\n<br/>" + tableWithCell("a"));
+        ParserTest.assertTranslatesTo("!|\n\n|a|\n", "!|\n" + ParserTest.newLineRendered + tableWithCell("a"));
     }
 
     @Test public void ignoreMostMarkupInLiteralTable() {

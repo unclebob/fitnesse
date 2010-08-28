@@ -11,7 +11,8 @@ public class Link extends SymbolType implements Rule, Translation {
 
     public Link() {
         super("Link");
-        wikiMatcher(new Matcher().string(new String[] {"http://", "https://"}));
+        wikiMatcher(new Matcher().string("http://"));
+        wikiMatcher(new Matcher().string("https://"));
         wikiRule(this);
         htmlTranslation(this);
     }

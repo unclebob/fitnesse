@@ -6,6 +6,7 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.test.ParserTest;
 import org.junit.Before;
 import org.junit.Test;
 import util.RegexTestCase;
@@ -164,9 +165,9 @@ public class WidgetRootTest {
     PageData data = page.getData();
     String html = data.getHtml();
     assertEquals("<i>italics</i>"
-            + "<br/>"
+            + ParserTest.newLineRendered
             + "<b>bold</b>" 
-            + "<br/>" , html);
+            + ParserTest.newLineRendered , html);
   }
 
   @Test

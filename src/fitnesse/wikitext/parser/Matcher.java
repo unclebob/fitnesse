@@ -6,8 +6,6 @@ import java.util.List;
 
 public class Matcher {
 
-    public static final Matcher noMatch = new NullMatcher();
-    
     private interface ScanMatch {
         Maybe<Integer> match(ScanString input, int offset);
     }
@@ -66,17 +64,26 @@ public class Matcher {
         return this;
     }
 
-    public Matcher string(final String[] delimiters) {
+    public Matcher digit() {
         if (firsts == null) {
             firsts = new ArrayList<Character>();
-            for (String delimiter: delimiters) firsts.add(delimiter.charAt(0));
+            for (char i = '1'; i <= '9'; i++) firsts.add(i);
         }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
-                for (String delimiter: delimiters) {
-                    if (input.matches(delimiter, offset)) return new Maybe<Integer>(delimiter.length());
+                for (char i = '1'; i <= '9'; i++) {
+                   if (input.matches(new String(new char[] {i}), offset)) return new Maybe<Integer>(1);
                 }
                 return Maybe.noInteger;
+            }
+        });
+        return this;
+    }
+
+    public Matcher ignoreWhitespace() {
+        matches.add(new ScanMatch() {
+            public Maybe<Integer> match(ScanString input, int offset) {
+                return new Maybe<Integer>(input.whitespaceLength(offset));
             }
         });
         return this;
@@ -119,6 +126,7 @@ public class Matcher {
     }
 
     public SymbolMatch makeMatch(SymbolType type, ScanString input)  {
+        //todo: doesn't use type, let caller deal with it
         int totalLength = 0;
         for (ScanMatch match: matches) {
             Maybe<Integer> matchLength = match.match(input, totalLength);

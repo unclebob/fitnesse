@@ -1,15 +1,15 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.VariableSource;
-import fitnesse.wikitext.parser.WikiTranslator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ParserTest {
+    public static final String newLineRendered = "<br/>";
+    
     public static  void assertScans(String input, String expected) {
         Scanner scanner = new Scanner(input);
         assertScans(expected, scanner);

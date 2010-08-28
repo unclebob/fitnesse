@@ -23,7 +23,7 @@ public class AnchorReferenceTest {
         ParserTest.assertTranslatesTo(".#anchorName stuff", anchorReferenceWithName("anchorName") + " stuff");
         ParserTest.assertTranslatesTo("more.#anchorName stuff", "more" + anchorReferenceWithName("anchorName") + " stuff");
         ParserTest.assertTranslatesTo("more\n.#anchorName stuff",
-                "more<br/>" + anchorReferenceWithName("anchorName") + " stuff");
+                "more" + ParserTest.newLineRendered + anchorReferenceWithName("anchorName") + " stuff");
     }
 
     private String anchorReferenceWithName(String name) {

@@ -7,7 +7,9 @@ public class Image extends SymbolType implements Rule {
     
     public Image() {
         super("Image");
-        wikiMatcher(new Matcher().string(new String[] {"!img-l", "!img-r", "!img"}));
+        wikiMatcher(new Matcher().string("!img-l"));
+        wikiMatcher(new Matcher().string("!img-r"));
+        wikiMatcher(new Matcher().string("!img"));
         wikiRule(this);
     }
 

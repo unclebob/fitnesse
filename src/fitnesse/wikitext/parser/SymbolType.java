@@ -1,5 +1,8 @@
 package fitnesse.wikitext.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SymbolType implements Matchable {
     
     public static final SymbolType Bold = new SymbolType("Bold")
@@ -7,7 +10,8 @@ public class SymbolType implements Matchable {
             .wikiRule(new EqualPairRule())
             .htmlTranslation(new HtmlBuilder("b").body(0).inline());
     public static final SymbolType CenterLine = new SymbolType("CenterLine")
-            .wikiMatcher(new Matcher().string(new String[] {"!c", "!C"}))
+            .wikiMatcher(new Matcher().string("!c"))
+            .wikiMatcher(new Matcher().string("!C"))
             .wikiRule(new LineRule())
             .htmlTranslation(new HtmlBuilder("div").body(0).attribute("class", "centered"));
     public static final SymbolType CloseBrace = new SymbolType("CloseBrace")
@@ -34,7 +38,9 @@ public class SymbolType implements Matchable {
             .htmlTranslation(new HtmlBuilder("a").bodyContent().attribute("href", -1, "mailto:").inline());
     public static final SymbolType Empty = new SymbolType("Empty");
     public static final SymbolType EndCell = new SymbolType("EndCell")
-            .wikiMatcher(new Matcher().string(new String[] {"|\n|", "|\n", "|"}));
+            .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\n|"))
+            .wikiMatcher(new Matcher().string("|").ignoreWhitespace().string("\n"))
+            .wikiMatcher(new Matcher().string("|"));
     public static final SymbolType Italic = new SymbolType("Italic")
             .wikiMatcher(new Matcher().string("''"))
             .wikiRule(new EqualPairRule())
@@ -57,7 +63,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType OpenParenthesis = new SymbolType("OpenParenthesis")
             .wikiMatcher(new Matcher().string("("));
     public static final SymbolType OrderedList = new SymbolType("OrderedList")
-            .wikiMatcher(new Matcher().startLine().whitespace().string(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"}).string(" "))
+            .wikiMatcher(new Matcher().startLine().whitespace().digit().string(" "))
             .wikiRule(new ListRule())
             .htmlTranslation(new ListBuilder("ol"));
     public static final SymbolType PlainTextCellSeparator = new SymbolType("PlainTextCellSeparator");
@@ -86,18 +92,18 @@ public class SymbolType implements Matchable {
             .htmlTranslation(new WikiWordBuilder());
     
     private String name;
-    private Matcher wikiMatcher =  new NullMatcher();
+    private ArrayList<Matcher> wikiMatchers =  new ArrayList<Matcher>();
     private Rule wikiRule = null;
     private Translation htmlTranslation = null;
 
     public SymbolType(String name) { this.name = name; }
 
-    public Matcher getWikiMatcher() { return wikiMatcher; }
+    public List<Matcher> getWikiMatchers() { return wikiMatchers; }
     public Rule getWikiRule() { return wikiRule; }
     public Translation getHtmlTranslation() { return htmlTranslation; }
 
     public SymbolType wikiMatcher(Matcher value) {
-        wikiMatcher = value;
+        wikiMatchers.add(value);
         return this;
     }
 
@@ -118,7 +124,11 @@ public class SymbolType implements Matchable {
     }
 
     public SymbolMatch makeMatch(ScanString input) {
-        return getWikiMatcher().makeMatch(this, input);
+        for (Matcher matcher: getWikiMatchers()) {
+            SymbolMatch result = matcher.makeMatch(this, input);
+            if (result != SymbolMatch.noMatch) return result;
+        }
+        return SymbolMatch.noMatch;
     }
 }
 

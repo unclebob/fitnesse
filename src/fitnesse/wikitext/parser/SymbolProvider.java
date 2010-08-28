@@ -70,9 +70,11 @@ public class SymbolProvider {
     public SymbolProvider add(SymbolType symbolType) {
         if (matchesFor(symbolType)) return this;
         symbolTypes.add(symbolType);
-        for (char first: symbolType.getWikiMatcher().getFirsts()) {
-            if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
-            currentDispatch.get(first).add(symbolType);
+        for (Matcher matcher: symbolType.getWikiMatchers()) {
+            for (char first: matcher.getFirsts()) {
+                if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
+                currentDispatch.get(first).add(symbolType);
+            }
         }
         return this;
     }

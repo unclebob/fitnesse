@@ -7,7 +7,10 @@ public class Table extends SymbolType implements Rule, Translation {
 
     public Table() {
         super("Table");
-        wikiMatcher(new Matcher().startLine().string(new String[] {"|", "!|", "-|", "-!|"}));
+        wikiMatcher(new Matcher().startLine().string("|"));
+        wikiMatcher(new Matcher().startLine().string("!|"));
+        wikiMatcher(new Matcher().startLine().string("-|"));
+        wikiMatcher(new Matcher().startLine().string("-!|"));
         wikiRule(this);
         htmlTranslation(this);
     }
