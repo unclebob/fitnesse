@@ -23,9 +23,9 @@ public class TextMaker {
             }
         }
         if (provider.matchesFor(SymbolType.EMail) && isEmailAddress(text)) {
-            return new SymbolMatch(new Symbol(SymbolType.EMail, text), text.length());
+            return new SymbolMatch(SymbolType.EMail, text);
         }
-        return new SymbolMatch(new Symbol(SymbolType.Text, text), text.length());
+        return new SymbolMatch(SymbolType.Text, text);
     }
 
     private boolean isEmailAddress(String text) {

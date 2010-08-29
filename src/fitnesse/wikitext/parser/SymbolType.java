@@ -1,5 +1,7 @@
 package fitnesse.wikitext.parser;
 
+import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +127,8 @@ public class SymbolType implements Matchable {
 
     public SymbolMatch makeMatch(ScanString input) {
         for (Matcher matcher: getWikiMatchers()) {
-            SymbolMatch result = matcher.makeMatch(this, input);
-            if (result != SymbolMatch.noMatch) return result;
+            Maybe<Integer> matchLength = matcher.makeMatch(input);
+            if (!matchLength.isNothing()) return new SymbolMatch(this, input, matchLength.getValue());
         }
         return SymbolMatch.noMatch;
     }

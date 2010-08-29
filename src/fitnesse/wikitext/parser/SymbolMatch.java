@@ -9,7 +9,17 @@ public class SymbolMatch {
         this.symbol = token;
         this.matchLength = matchLength;
     }
-    
+
+    public SymbolMatch(SymbolType symbolType, ScanString input, int matchLength) {
+        this.symbol = new Symbol(symbolType, input.substring(0, matchLength));
+        this.matchLength = matchLength;
+    }
+
+    public SymbolMatch(SymbolType symbolType, String text) {
+        this.symbol = new Symbol(symbolType, text);
+        this.matchLength = text.length();
+    }
+
     private SymbolMatch() {
         symbol = null;
         matchLength = -1;

@@ -125,16 +125,15 @@ public class Matcher {
         return this;
     }
 
-    public SymbolMatch makeMatch(SymbolType type, ScanString input)  {
-        //todo: doesn't use type, let caller deal with it
+    public Maybe<Integer> makeMatch(ScanString input)  {
         int totalLength = 0;
         for (ScanMatch match: matches) {
             Maybe<Integer> matchLength = match.match(input, totalLength);
-            if (matchLength.isNothing()) return SymbolMatch.noMatch;
+            if (matchLength.isNothing()) return Maybe.noInteger;
             totalLength += matchLength.getValue();
         }
 
-        return new SymbolMatch(new Symbol(type, input.substring(0, totalLength)), totalLength);
+        return new Maybe<Integer>(totalLength);
     }
    
 }
