@@ -4,7 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import static fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
