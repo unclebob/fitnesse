@@ -14,14 +14,18 @@ import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.widgets.CollapsableWidget;
+import fitnesse.wikitext.widgets.IncludeWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SlimTestSystemTest {
   private WikiPage root;
@@ -465,6 +469,62 @@ public class SlimTestSystemTest {
     } finally {
       slimSocket.close();
     }
+  }
+
+  @Test
+  public void gettingPrecompiledScenarioWidgetsForChildLibraryPage() throws Exception {
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
+    crawler.addPage(suitePage, PathParser.parse("ScenarioLibrary"), "child library");
+    SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+
+    WidgetRoot scenarios = sys.getPrecompiledScenarioWidgets();
+
+    List<WikiWidget> widgetList = scenarios.getChildren();
+    CollapsableWidget includeParent = getCollapsibleWidget(widgetList);
+    assertNotNull(includeParent);
+    assertEquals(true, includeParent.render().contains("Precompiled Libraries"));
+    IncludeWidget childLibraryInclude = getIncludeWidget(includeParent);
+    assertTrue(childLibraryInclude.render().contains("child library"));
+  }
+
+  @Test
+  public void gettingPrecompiledScenarioWidgetsForUncleLibraryPage() throws Exception {
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("ParentPage.MySuite"), "my suite content");
+    crawler.addPage(root, PathParser.parse("ScenarioLibrary"), "uncle library");
+    SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+
+    WidgetRoot scenarios = sys.getPrecompiledScenarioWidgets();
+
+    List<WikiWidget> widgetList = scenarios.getChildren();
+    CollapsableWidget includeParent = getCollapsibleWidget(widgetList);
+    assertNotNull(includeParent);
+    assertEquals(true, includeParent.render().contains("Precompiled Libraries"));
+    IncludeWidget uncleLibraryInclude = getIncludeWidget(includeParent);
+    assertNotNull(uncleLibraryInclude);
+    assertTrue(uncleLibraryInclude.render().contains("uncle library"));
+  }
+
+  @Test
+  public void precompiledScenarioWidgetsAreCreatedOnlyOnce() throws Exception {
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
+    SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+
+    assertSame(sys.getPrecompiledScenarioWidgets(), sys.getPrecompiledScenarioWidgets());
+  }
+
+  private IncludeWidget getIncludeWidget(CollapsableWidget collapsableWidget) {
+    for (WikiWidget widget : collapsableWidget.getChildren())
+      if (widget instanceof IncludeWidget)
+        return (IncludeWidget) widget;
+    return null;
+  }
+
+  private CollapsableWidget getCollapsibleWidget(List<WikiWidget> widgetList) {
+    for (WikiWidget widget : widgetList) {
+      if (widget instanceof CollapsableWidget)
+        return (CollapsableWidget) widget;
+    }
+    return null;
   }
 
   private static class DummyListener implements TestSystemListener {

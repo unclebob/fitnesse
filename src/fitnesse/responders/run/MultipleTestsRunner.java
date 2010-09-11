@@ -4,14 +4,13 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.util.*;
 
-import util.Clock;
 import util.TimeMeasurement;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
@@ -123,7 +122,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     for (WikiPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       PageData pageData = testPage.getData();
-      SetupTeardownIncluder.includeInto(pageData);
+      SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(pageData, page);
       testSystem.runTestsAndGenerateHtml(pageData);
     }
   }

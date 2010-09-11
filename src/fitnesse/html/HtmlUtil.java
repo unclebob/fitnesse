@@ -231,7 +231,7 @@ public class HtmlUtil {
   }
 
   public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
-    SetupTeardownIncluder.includeInto(pageData);
+    SetupTeardownAndLibraryIncluder.includeInto(pageData);
     return makePageHtmlWithHeaderAndFooter(pageData);
   }
 

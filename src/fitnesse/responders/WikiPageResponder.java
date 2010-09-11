@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.FitNesseContext;
@@ -11,7 +12,6 @@ import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
-import fitnesse.html.SetupTeardownIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -85,7 +85,7 @@ public class WikiPageResponder implements SecureResponder {
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
     html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
     html.actions.use(HtmlUtil.makeActions(page.getActions()));
-    SetupTeardownIncluder.includeInto(pageData);
+    SetupTeardownAndLibraryIncluder.includeInto(pageData);
     html.main.use(generateHtml(pageData));
     VelocityContext velocityContext = new VelocityContext();
 
