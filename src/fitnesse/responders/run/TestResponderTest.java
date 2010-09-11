@@ -590,8 +590,8 @@ public class TestResponderTest {
     }
 
     public void assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect() throws Exception {
-      String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
-      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
+      String instructionContents[] = {"make", "table", "beginTable", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg", "endTable"};
+      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow", "EXCEPTION"};
       assertHeaderOfXmlDocumentsInResponseIsCorrect();
 
       Element result = getElementByTagName(testResultsElement, "result");
@@ -627,10 +627,10 @@ public class TestResponderTest {
       }
 
       checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "right", "ConstructionExpectation", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
-      checkExpectation(instructionList, 3, "decisionTable_0_3", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
-      checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
-      checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
-      checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+      checkExpectation(instructionList, 4, "decisionTable_0_4", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
+      checkExpectation(instructionList, 6, "decisionTable_0_6", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
+      checkExpectation(instructionList, 8, "decisionTable_0_8", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
+      checkExpectation(instructionList, 10, "decisionTable_0_10", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
     }
 
     private String tableElementToString(Element tableElement) {
