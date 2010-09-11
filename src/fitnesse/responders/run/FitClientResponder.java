@@ -10,7 +10,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
-import fitnesse.html.SetupTeardownIncluder;
+import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
@@ -91,7 +91,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 
   private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws Exception {
     String pageName = crawler.getRelativeName(page, data.getWikiPage());
-    SetupTeardownIncluder.includeInto(data, includeSuiteSetup);
+    SetupTeardownAndLibraryIncluder.includeInto(data, includeSuiteSetup);
     String testableHtml = data.getHtml();
     String sendableHtml = pageName + "\n" + testableHtml;
     client.send(sendableHtml);

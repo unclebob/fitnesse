@@ -178,7 +178,6 @@ public abstract class TestSystem implements TestSystemListener {
     return environmentVariables;
   }
 
-
   public static class Descriptor {
     public String testSystemName;
     public String testRunner;

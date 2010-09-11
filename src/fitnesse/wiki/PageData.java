@@ -78,6 +78,7 @@ public class PageData implements Serializable {
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
+  private WidgetRoot widgetRoot;
 
   public PageData(WikiPage page) throws Exception {
     wikiPage = page;
@@ -234,12 +235,20 @@ public class PageData implements Serializable {
     variableRoot.render();
   }
 
-  private String processHTMLWidgets(String content, WikiPage context)
-      throws Exception {
-    ParentWidget root = new WidgetRoot(content, context,
-        WidgetBuilder.htmlWidgetBuilder);
+  private String processHTMLWidgets(String content, WikiPage context) throws Exception {
+    return getWidgets(content, context).render();
+  }
 
-    return root.render();
+  private WidgetRoot getWidgets(String content, WikiPage context) throws Exception {
+    if(widgetRoot == null)
+      widgetRoot = new WidgetRoot(content, context, WidgetBuilder.htmlWidgetBuilder);
+    return widgetRoot;
+  }
+
+  public WidgetRoot getWidgets() throws Exception {
+    if(widgetRoot == null)
+      widgetRoot = new WidgetRoot(content, wikiPage, WidgetBuilder.htmlWidgetBuilder);
+    return widgetRoot;
   }
 
   public void setWikiPage(WikiPage page) {
