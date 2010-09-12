@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.SliM.DecisionTable||10:37:01 Sat, Sep 11, 2010|
 |FitNesse.UserGuide.FixtureGallery.ImportantConcepts.MarkupVariables||16:10:05 Mon, Aug 23, 2010|
 |JunkPage.VariableTest||11:25:53 Mon, Aug 16, 2010|
 |FitNesse.UserGuide.MarkupTable||20:14:19 Tue, Jul 20, 2010|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableReturnsNull||23:46:02 Sat, Dec 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSequentialArgumentProcessing||09:02:18 Wed, Dec 09, 2009|
 |FitNesse.UserGuide.PlainTextTable||20:12:13 Tue, Dec 08, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||19:56:36 Tue, Dec 08, 2009|
