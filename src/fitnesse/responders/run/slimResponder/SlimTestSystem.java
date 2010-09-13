@@ -448,7 +448,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private String getWidgetRootContent() throws Exception {
     String content = "!*> Precompiled Libraries\n\n";
-    content += includeChildLibrary();
     content += includeUncleLibraries();
     content += "*!\n";
     return content;
@@ -457,17 +456,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private String includeUncleLibraries() throws Exception {
     String content = "";
     List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", page);
+    Collections.reverse(uncles);
     for (WikiPage uncle : uncles)
       content += include(page.getPageCrawler().getFullPath(uncle));
-    return content;
-  }
-
-  private String includeChildLibrary() throws Exception {
-    String content = "";
-    WikiPage childLibrary = page.getChildPage("ScenarioLibrary");
-    if (childLibrary != null) {
-      content += include(page.getPageCrawler().getFullPath(childLibrary));
-    }
     return content;
   }
 
