@@ -3,9 +3,14 @@ package fitnesse.wikitext.parser;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.WikiImportProperty;
-import fitnesse.wiki.*;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PageType;
 import fitnesse.wikitext.widgets.TOCWidget;
 import util.GracefulNamer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class ContentsItemBuilder {
     private Symbol contents;
@@ -20,7 +25,7 @@ public class ContentsItemBuilder {
         HtmlTag div = HtmlUtil.makeDivTag("toc" + level);
         HtmlTag list = new HtmlTag("ul");
         try {
-            for (SourcePage child: page.getChildren()) {
+            for (SourcePage child: getSortedChildren(page)) {
                 HtmlTag listItem = new HtmlTag("li");
                 listItem.add(buildItem(child));
                 if (hasOption("-R", "") && child.getChildren().size() > 0) {
@@ -36,6 +41,12 @@ public class ContentsItemBuilder {
         contentsDiv.add(list);
         div.add(contentsDiv);
         return div;
+    }
+
+    private Collection<SourcePage> getSortedChildren(SourcePage parent) {
+        ArrayList<SourcePage> result = new ArrayList<SourcePage>(parent.getChildren());
+        Collections.sort(result);
+        return result;
     }
 
     public HtmlTag buildItem(SourcePage page) {

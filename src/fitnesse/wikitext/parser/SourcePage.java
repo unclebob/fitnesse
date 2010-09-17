@@ -4,7 +4,7 @@ import util.Maybe;
 
 import java.util.Collection;
 
-public interface SourcePage {
+public interface SourcePage extends Comparable<SourcePage> {
     String getName();
     String getFullName();
     String getPath();

@@ -199,4 +199,8 @@ public class WikiSourcePage implements SourcePage {
             throw new RuntimeException(e);
         }
     }
+
+    public int compareTo(SourcePage other) {
+        return getName().compareTo(other.getName());
+    }
 }

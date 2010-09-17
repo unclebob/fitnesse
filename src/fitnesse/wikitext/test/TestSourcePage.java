@@ -65,4 +65,8 @@ public class TestSourcePage implements SourcePage {
     public String makeUrl(String wikiWordPath) {
         return url;
     }
+
+    public int compareTo(SourcePage other) {
+        return getName().compareTo(other.getName());
+    }
 }
