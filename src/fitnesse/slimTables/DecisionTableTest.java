@@ -27,7 +27,7 @@ public class DecisionTableTest {
       "|var|func?|\n" +
       "|3|5|\n" +
       "|7|9|\n";
-  public DecisionTable dt;
+  private DecisionTable decisionTable;
   private MockSlimTestContext testContext;
 
   @Before
@@ -38,34 +38,44 @@ public class DecisionTableTest {
   }
 
   private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
-    dt = makeDecisionTable(tableText);
-    dt.appendInstructions(instructions);
-    return dt;
+    decisionTable = makeDecisionTable(tableText);
+    decisionTable.appendInstructions(instructions);
+    return decisionTable;
   }
 
   private DecisionTable makeDecisionTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    DecisionTable dt = new DecisionTable(t, "id", testContext);
-    return dt;
+    return new DecisionTable(t, "id", testContext);
   }
 
   @Test
-  public void badTableHasTwoRows() throws Exception {
-    makeDecisionTableAndBuildInstructions("|x|\n|y|\n");
-    assertTrue(dt.getTable().getCellContents(0, 0).indexOf("Bad table") != -1);
+  public void aDecisionTableWithOnlyTwoRowsIsBad() throws Exception {
+    assertTableIsBad(makeDecisionTableWithTwoRows());
+  }
+
+  private void assertTableIsBad(DecisionTable decisionTable) {
+    assertTrue(firstCellOfTable(decisionTable).contains("Bad table"));
+  }
+
+  private String firstCellOfTable(DecisionTable decisionTable) {
+    return decisionTable.getTable().getCellContents(0, 0);
+  }
+
+  private DecisionTable makeDecisionTableWithTwoRows() throws Exception {
+    return makeDecisionTableAndBuildInstructions("|x|\n|y|\n");
   }
 
   @Test
   public void wrongNumberOfColumns() throws Exception {
-    makeDecisionTableAndBuildInstructions(
+    DecisionTable aDecisionTable = makeDecisionTableAndBuildInstructions(
       "|DT:fixture|argument|\n" +
         "|var|var2|\n" +
         "|3|\n" +
         "|7|9|\n"
     );
-    assertTrue(dt.getTable().getCellContents(0, 0).indexOf("Bad table") != -1);
+    assertTableIsBad(aDecisionTable);
   }
 
   @Test
@@ -84,7 +94,7 @@ public class DecisionTableTest {
     );
     testContext.evaluateExpectations(pseudoResults);
 
-    String colorizedTable = dt.getTable().toString();
+    String colorizedTable = decisionTable.getTable().toString();
     String expectedColorizedTable =
       "[[pass(fixture), argument]]";
     assertEquals(expectedColorizedTable, colorizedTable);
