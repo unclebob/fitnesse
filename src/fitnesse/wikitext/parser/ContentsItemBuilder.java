@@ -26,13 +26,7 @@ public class ContentsItemBuilder {
         HtmlTag list = new HtmlTag("ul");
         try {
             for (SourcePage child: getSortedChildren(page)) {
-                HtmlTag listItem = new HtmlTag("li");
-                listItem.add(buildItem(child));
-                if (hasOption("-R", "") && child.getChildren().size() > 0) {
-                    HtmlTag nestedDiv =  HtmlUtil.makeDivTag("nested-contents");
-                    listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
-                }
-                list.add(listItem);
+                list.add(buildListItem(child));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,6 +35,22 @@ public class ContentsItemBuilder {
         contentsDiv.add(list);
         div.add(contentsDiv);
         return div;
+    }
+
+    private HtmlTag buildListItem(SourcePage child) {
+        HtmlTag listItem = new HtmlTag("li");
+        HtmlTag childItem = buildItem(child);
+        listItem.add(childItem);
+        if (child.getChildren().size() > 0) {
+            if (level < getRecursionLimit()) {
+                HtmlTag nestedDiv =  HtmlUtil.makeDivTag("nested-contents");
+                listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
+            }
+            else if (getRecursionLimit() > 0){
+                childItem.add(contents.getVariable(TOCWidget.MORE_SUFFIX_TOC, TOCWidget.MORE_SUFFIX_DEFAULT));
+            }
+        }
+        return listItem;
     }
 
     private Collection<SourcePage> getSortedChildren(SourcePage parent) {
@@ -87,6 +97,21 @@ public class ContentsItemBuilder {
 
     private String buildReference(SourcePage sourcePage) {
         return sourcePage.getFullName();
+    }
+
+    private int getRecursionLimit() {
+        for (Symbol child: contents.getChildren()) {
+            if (!child.getContent().startsWith("-R")) continue;
+            String level = child.getContent().substring(2);
+            if (level.length() == 0) return Integer.MAX_VALUE;
+            try {
+              return Integer.parseInt(level);
+            }
+            catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     private boolean hasOption(String option, String variableName) {

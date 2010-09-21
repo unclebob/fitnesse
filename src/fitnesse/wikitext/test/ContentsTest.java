@@ -2,7 +2,6 @@ package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class ContentsTest {
@@ -25,14 +24,30 @@ public class ContentsTest {
     @Test public void translatesRecursiveContents() throws Exception {
         WikiPage pageOne = makePages();
          ParserTest.assertTranslatesTo(pageOne, "!contents -R",
-                 contentsWithPages("PageThree", "PageTwo", nestedContents()));
+             contentsWithPages("PageThree", "PageTwo",
+                 nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild</a>",
+                     nestedContents("\t\t\t\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\">PageTwoGrandChild</a>", ""))));
+     }
+
+    @Test public void translatesRecursiveContentsToLevel() throws Exception {
+        WikiPage pageOne = makePages();
+         ParserTest.assertTranslatesTo(pageOne, "!contents -R2",
+             contentsWithPages("PageThree", "PageTwo",
+                 nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild ...</a>", "")));
+     }
+
+    @Test public void translatesContentsWithInvalidRecursionLimit() throws Exception {
+        WikiPage pageOne = makePages();
+         ParserTest.assertTranslatesTo(pageOne, "!contents -Rx",
+                 contentsWithPages("PageThree", "PageTwo", ""));
      }
 
     private WikiPage makePages() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage pageOne = root.makePage("PageOne");
         WikiPage pageTwo = root.makePage(pageOne, "PageTwo");
-        root.makePage(pageTwo, "PageTwoChild");
+        WikiPage pageTwoChild = root.makePage(pageTwo, "PageTwoChild");
+        root.makePage(pageTwoChild, "PageTwoGrandChild");
         root.makePage(pageOne, "PageThree");
         return pageOne;
     }
@@ -54,14 +69,13 @@ public class ContentsTest {
         "</div>" + HtmlElement.endl;
     }
 
-    private String nestedContents() {
-        String indent = "\t\t\t\t";
+    private String nestedContents(String indent, String level, String pageReference, String nested) {
         return
-                indent + "<div class=\"toc2\">" + HtmlElement.endl +
+                indent + "<div class=\"toc" + level + "\">" + HtmlElement.endl +
                 indent + "\t<div class=\"nested-contents\">" + HtmlElement.endl +
                 indent + "\t\t<ul>" + HtmlElement.endl +
                 indent + "\t\t\t<li>" + HtmlElement.endl +
-                indent + "\t\t\t\t<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild</a>" + HtmlElement.endl +
+                indent + "\t\t\t\t" + pageReference + HtmlElement.endl + nested +
                 indent + "\t\t\t</li>" + HtmlElement.endl +
                 indent + "\t\t</ul>" + HtmlElement.endl +
                 indent + "\t</div>" + HtmlElement.endl +
