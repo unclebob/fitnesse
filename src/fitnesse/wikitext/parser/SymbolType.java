@@ -91,7 +91,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType Whitespace = new SymbolType("Whitespace")
             .wikiMatcher(new Matcher().whitespace());
     public static final SymbolType WikiWord = new SymbolType("WikiWord")
-            .htmlTranslation(new WikiWordBuilder());
+            .htmlTranslation(new WikiWordTranslation());
     
     private String name;
     private ArrayList<Matcher> wikiMatchers =  new ArrayList<Matcher>();

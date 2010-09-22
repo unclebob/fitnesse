@@ -1,7 +1,6 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -28,7 +27,7 @@ public class IncludeTest {
         String result = ParserTest.translateTo(currentPage);
 
         assertContains(result, "class=\"collapsable\"");
-        assertContains(result, "Included page: <a href=\"PageTwo\">PageTwo</a>");
+        assertContains(result, "Included page: <a href=\"PageTwo\">PageTwo</a> <a href=\"PageTwo?edit&amp;redirectToReferer=true&amp;redirectAction=\">(edit)</a>");
         assertContains(result, "page <i>two</i>");
     }
 

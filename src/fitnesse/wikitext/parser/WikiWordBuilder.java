@@ -2,22 +2,19 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlText;
-import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.GracefulNamer;
 
-public class WikiWordBuilder implements Translation  {
-    public String toTarget(Translator translator, Symbol symbol) {
-        return buildLink(
-                translator.getPage(),
-                symbol.getContent(),
-                new HtmlText(formatWikiWord(symbol.getContent(), symbol)).html());
+public class WikiWordBuilder {
+    private SourcePage currentPage;
+    private String pagePath;
+    private String linkBody;
+
+    public WikiWordBuilder(SourcePage currentPage, String pagePath, String linkBody) {
+        this.currentPage = currentPage;
+        this.pagePath = pagePath;
+        this.linkBody = linkBody;
     }
 
-    private String buildLink(SourcePage currentPage, String pagePath, String linkBody) {
-         return buildLink(currentPage, pagePath, "", linkBody, pagePath);
-    }
-
-    public String buildLink(SourcePage currentPage, String pagePath, String pageSuffix, String linkBody, String originalName) {
+    public String buildLink(String pageSuffix, String originalName) {
         String wikiWordPath = makePath(currentPage, pagePath);
         String qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);
         if (currentPage.targetExists(wikiWordPath)) {
@@ -27,25 +24,7 @@ public class WikiWordBuilder implements Translation  {
             return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
     }
 
-    public String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
-        HtmlTag link = new HtmlTag("a", linkBody);
-        link.addAttribute("href", qualifiedName);
-        return link.htmlInline();
-    }
-
-    private String formatWikiWord(String originalName, Symbol symbol) {
-        String regraceOption = symbol.getVariable(WikiWordWidget.REGRACE_LINK, "");
-        return regraceOption.equals("true") ? GracefulNamer.regrace(originalName) : originalName;
-    }
-
-    private String makeLinkToNonExistentWikiPage(String text, String url) {
-        HtmlTag link = new HtmlTag("a", "[?]");
-        link.addAttribute("title", "create page");
-        link.addAttribute("href", url+ "?edit&nonExistent=true");
-        return new HtmlText(text).html() + link.htmlInline();
-    }
-
-    public String makePath(SourcePage page, String content) {
+    private String makePath(SourcePage page, String content) {
         if (content.startsWith("^") || content.startsWith(">")) {
             return makeChildPath(page, content);
         }
@@ -53,6 +32,18 @@ public class WikiWordBuilder implements Translation  {
             return makeParentPath(page, content);
         }
         return content;
+    }
+    private String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
+        HtmlTag link = new HtmlTag("a", linkBody);
+        link.addAttribute("href", qualifiedName);
+        return link.htmlInline();
+    }
+
+    private String makeLinkToNonExistentWikiPage(String text, String url) {
+        HtmlTag link = new HtmlTag("a", "[?]");
+        link.addAttribute("title", "create page");
+        link.addAttribute("href", url+ "?edit&nonExistent=true");
+        return new HtmlText(text).html() + link.htmlInline();
     }
 
     private String makeParentPath(SourcePage page, String content) {

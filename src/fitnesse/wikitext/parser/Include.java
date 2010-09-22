@@ -52,11 +52,15 @@ public class Include extends SymbolType implements Rule, Translation {
         }
         String option = symbol.childAt(0).getContent();
         if (option.equals("-seamless")) {
-                return translator.translate(symbol.childAt(3));
+            return translator.translate(symbol.childAt(3));
         }
         else {
             String collapseState = stateForOption(option, symbol);
-            String title = "Included page: " + translator.translate(symbol.childAt(1));
+            String title = "Included page: "
+                    + translator.translate(symbol.childAt(1))
+                    + " "
+                    + new WikiWordBuilder(translator.getPage(), symbol.childAt(1).getContent(), "(edit)")
+                        .buildLink("?edit&amp;redirectToReferer=true&amp;redirectAction=", symbol.childAt(1).getContent());
             return Collapsible.generateHtml(collapseState, title, translator.translate(symbol.childAt(3)));
         }
     }

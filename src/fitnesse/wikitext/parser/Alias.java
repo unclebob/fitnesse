@@ -33,13 +33,8 @@ public class Alias extends SymbolType implements Rule, Translation {
         Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parse();
 
         if (linkReference.childAt(0).isType(SymbolType.WikiWord)) {
-            return new WikiWordBuilder().buildLink(
-                    translator.getPage(),
-                    linkReference.childAt(0).getContent(),
-                    translator.translate(linkReference.childrenAfter(0)),
-                    linkBody,
-                    linkBody
-                    );
+            return new WikiWordBuilder(translator.getPage(), linkReference.childAt(0).getContent(), linkBody)
+                    .buildLink(translator.translate(linkReference.childrenAfter(0)), linkBody);
         }
 
         if (linkReference.childAt(0).isType(Link.symbolType)) {
