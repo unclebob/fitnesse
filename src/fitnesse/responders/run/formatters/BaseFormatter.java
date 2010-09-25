@@ -14,7 +14,6 @@ public abstract class BaseFormatter implements ResultsListener {
   protected WikiPage page = null;
   protected FitNesseContext context;
   public static final BaseFormatter NULL = new NullFormatter();
-  protected static long testTime;
   public static int finalErrorCount = 0;
   protected int testCount = 0;
   protected int failCount = 0;
@@ -69,13 +68,6 @@ public abstract class BaseFormatter implements ResultsListener {
     return 0;
   }
   
-  public static void setTestTime(String dateString) {
-    BaseFormatter.testTime = DateTimeUtil.getTimeFromString(dateString);
-  }
-
-  public static void clearTestTime() {
-    testTime = 0;
-  }
 }
 
 class NullFormatter extends BaseFormatter {

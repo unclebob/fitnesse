@@ -18,36 +18,47 @@
     $finalCounts.Wrong wrong,
     $finalCounts.Ignores ignored,
     $finalCounts.Exceptions exceptions
+    #if($suiteExecutionReport.hasRunTimes())
+    ($suiteExecutionReport.totalRunTimeInMillis ms)
+    #end
   </div>
 </div>
 #end
 <p/>
 <table border="1" cellspacing="0">
   <tr>
-    <th>Right</th>
-    <th>Wrong</th>
-    <th>Ignored</th>
-    <th>Exceptions</th>
+    <th class="numeric">Right</th>
+    <th class="numeric">Wrong</th>
+    <th class="numeric">Ignored</th>
+    <th class="numeric">Exceptions</th>
     <th>Page</th>
+    #if($suiteExecutionReport.hasRunTimes())
+    <th class="numeric">Run time (ms)</th>
+    #end
   </tr>
   #foreach($pageHistoryReference in $suiteExecutionReport.getPageHistoryReferences())
   #set($counts = $pageHistoryReference.getTestSummary())
   <tr class="$suiteExecutionReport.summaryClass($counts)">
-    <td>
+    <td class="numeric">
       $counts.Right
     </td>
-    <td>
+    <td class="numeric">
       $counts.Wrong
     </td>
-    <td>
+    <td class="numeric">
       $counts.Ignores
     </td>
-    <td>
+    <td class="numeric">
       $counts.Exceptions
     </td>
     <td>
       <a href="$pageHistoryReference.getPageName()?pageHistory&resultDate=$pageHistoryReference.getResultDate()">$pageHistoryReference.getPageName()</a>
     </td>
+    #if($suiteExecutionReport.hasRunTimes())
+    <td class="numeric">
+      $pageHistoryReference.RunTimeInMillis
+    </td>
+    #end
   </tr>
   #end
 </table>

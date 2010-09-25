@@ -59,9 +59,6 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     Date date;
     date = new Date(reference.getTime());
     PageHistory.TestResultRecord record = pageHistory.get(date);
-    if(record == null) { //todo get rid of this when we get rid of XMLFormatter.setTestTime().
-      throw new RuntimeException("Did you forget to call XmlFormatter.clearTestTime?");
-    }
     return makeTestExecutionReport().read(record.getFile());
   }
 

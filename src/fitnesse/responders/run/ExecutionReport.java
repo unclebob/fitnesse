@@ -2,6 +2,8 @@ package fitnesse.responders.run;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import fitnesse.FitNesseVersion;
 import util.StringUtil;
 import util.TimeMeasurement;
 import util.XmlUtil;
@@ -131,5 +133,9 @@ public abstract class ExecutionReport {
       return "error";
     else
       return "ignore";
+  }
+
+  public boolean hasRunTimes() {
+    return new FitNesseVersion(getVersion()).isAtLeast("v20100607");
   }
 }

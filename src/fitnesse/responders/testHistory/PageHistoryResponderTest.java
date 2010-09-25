@@ -1,6 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
 import fitnesse.VelocityFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -12,13 +13,16 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.junit.After;
+
+import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.DateTimeUtil;
 import util.FileUtil;
 import util.RegexTestCase;
+import util.TimeMeasurement;
 import static util.RegexTestCase.*;
 
 import java.io.File;
@@ -37,7 +41,8 @@ public class PageHistoryResponderTest {
   private SimpleResponse response;
   private MockRequest request;
   private FitNesseContext context;
-
+  private FitNesseVersion fitNesseVersion = new FitNesseVersion();
+  
   @Before
   public void setup() throws Exception {
     resultsDirectory = new File("testHistoryDirectory");
@@ -286,23 +291,25 @@ public class PageHistoryResponderTest {
     File resultFile = new File(pageDirectory, "20090503110451_30_20_3_0.xml");
     addDummyTestResult(resultFile);
     makeResultForDate("TestPage", "20090503110451");
-    assertHasRegexp("v1", response.getContent());
+    assertHasRegexp(fitNesseVersion.toString(), response.getContent());
     assertHasRegexp("relativePageName", response.getContent());
     assertHasRegexp("11 Right", response.getContent());
     assertHasRegexp("22 Wrong", response.getContent());
     assertHasRegexp("33 Ignores", response.getContent());
     assertHasRegexp("44 Exceptions", response.getContent());
+    assertHasRegexp("99 ms", response.getContent());
     assertHasRegexp("wad of HTML content", response.getContent());
   }
-
+  
   @Test
   public void canGetSuiteExecutionReport() throws Exception {
     File pageDirectory = addPageDirectory("SuitePage");
     File resultFile = new File(pageDirectory, "19801205012000_30_20_3_0.xml");
     addDummySuiteResult(resultFile);
     makeResultForDate("SuitePage", "19801205012000");
-    assertSubString("version", response.getContent());
+    assertSubString(fitNesseVersion.toString(), response.getContent());
     assertSubString("SuitePage.TestPageOne?pageHistory&resultDate=19801205012000", response.getContent());
+    assertHasRegexp("(12321 ms)", response.getContent());
   }
 
   @Test
@@ -328,10 +335,13 @@ public class PageHistoryResponderTest {
 
   private void addDummySuiteResult(File resultFile) throws Exception {
     SuiteExecutionReport report = makeDummySuiteResponse();
-    report.version = "version";
+    report.version = fitNesseVersion.toString();
     report.date = DateTimeUtil.getDateFromString("12/5/1980 01:19:00");
     report.finalCounts = new TestSummary(4,5,6,7);
     report.rootPath = "SuitePage";
+    TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
+    when (timeMeasurement.elapsed()).thenReturn(12321L);
+    report.setTotalRunTimeInMillis(timeMeasurement);
     long time = DateTimeUtil.getTimeFromString("12/5/1980 01:20:00");
     SuiteExecutionReport.PageHistoryReference r1 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageOne", time, 9);
     SuiteExecutionReport.PageHistoryReference r2 = new SuiteExecutionReport.PageHistoryReference("SuitePage.TestPageTwo", time, 11);
@@ -379,7 +389,7 @@ public class PageHistoryResponderTest {
 
   private TestExecutionReport makeDummyTestResponse() {
     TestExecutionReport testResponse = new TestExecutionReport();
-    testResponse.version = "v1";
+    testResponse.version = fitNesseVersion.toString();
     testResponse.rootPath = "rootPath";
     testResponse.finalCounts = new TestSummary(1, 2, 3, 4);
     TestExecutionReport.TestResult result = new TestExecutionReport.TestResult();

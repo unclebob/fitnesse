@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import util.GracefulNamer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.ParentWidget;
+import util.GracefulNamer;
 
 public abstract class WikiWidget {
   protected ParentWidget parent = null;
@@ -17,6 +17,10 @@ public abstract class WikiWidget {
 
   public ParentWidget getParent() {
     return parent;
+  }
+
+  public void setParent(ParentWidget parent) {
+    this.parent = parent;
   }
 
   protected void addToParent() {
@@ -48,5 +52,6 @@ public abstract class WikiWidget {
     if (isRegracing()) newName = GracefulNamer.regrace(disgracefulName);
     return newName;
   }
+
 }
 

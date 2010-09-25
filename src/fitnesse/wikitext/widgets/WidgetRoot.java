@@ -7,6 +7,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WikiWidget;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -255,6 +256,11 @@ public class WidgetRoot extends ParentWidget {
 
   public String asWikiText() throws Exception {
     return childWikiText();
+  }
+
+ public void addChildToFront(WikiWidget widget) {
+   children.addFirst(widget);
+   widget.setParent(this);
   }
 }
 

@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import java.util.regex.Pattern;
-
-import util.RegexTestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
+import util.RegexTestCase;
+
+import java.util.regex.Pattern;
 
 public class PreformattedWidgetTest extends RegexTestCase {
   public void testRegexp() throws Exception {

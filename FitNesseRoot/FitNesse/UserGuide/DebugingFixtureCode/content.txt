@@ -7,11 +7,10 @@ To debug fixture execution when wiki pages are accessible over a local file syst
 Fixture code of a remote FitNesse wiki site can be debugged using the remote debugger to connect to the slim executor or fit client.
 
 To set up debugging for your fixture code:
- 1 Set up the '''REMOTE_DEBUG_COMMAND''' in your wiki.  This command should start the server in debug mode and wait for the debugger to connect before the code is run.  As this command is only used when you start a test in debug mode it is a good idea to specify this define on root page of your wiki.
+ 1 If necessary (it should work out of the box for java and C# slim), set up the '''REMOTE_DEBUG_COMMAND''' and '''REMOTE_DEBUG_RUNNER''' in your wiki.  Together these commands should start the server in debug mode and wait for the debugger to connect before the code is run.  As these variales are only used when you start a test in debug mode it is a good idea to specify this define on root page of your wiki.
  2 When you want to debug a test, start by adding '''?responder=test&remote_debug=true''' to the url for the test.
- 3 After starting the test in FitNesse, start a remote debugging process in your debugging tool which should connect to slim/fit server.  Remember to make sure you are using the right port.  (Port 8000 if you are using the default settings for REMOTE_DEBUG_COMMAND)
+ 3 After starting the test in FitNesse, start a remote debugging process in your debugging tool which should connect to slim/fit server.  Remember to make sure you are using the right port.  (Port 8000 if you are using the default settings for java)
 
-
-
-
-
+!2 Set up a remote debug bookmark in your browser. 
+ 1 Just drag the link below to bookmark toolbar of your favourite browser.  !-<a title="Debug FitNesse" id="debugfitnessetest" href="javascript:(function(){var url = document.location.href + '?responder=test&remote_debug=true'; window.location = url;})();"><div id="Debug fitnesse">Debug FitNesse</div></a>-!
+ 2 Then to use it just go to the page you which to debug and click on the link. 

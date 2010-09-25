@@ -16,7 +16,7 @@ public class DateAlteringClockTest {
   
   @After
   public void restoreDefaultClock() {
-    clock.restoreDefaultClock();
+    Clock.restoreDefaultClock();
   }
   
   @Test
@@ -27,15 +27,7 @@ public class DateAlteringClockTest {
   }
   
   @Test
-  public void restoringDefaultClockShouldUndoRebasing() throws Exception {
-    Date yesterday = ymdDateFormat.parse("2010-06-05");
-    clock = new DateAlteringClock(yesterday);
-    clock.restoreDefaultClock();
-    assertThat(ymdDateFormat.format(new Date(Clock.currentTimeInMillis())), is(not("2010-06-05")));
-  }
-
-  @Test
-  public void currentClockTimeInMillisShouldTickOnAsNormal() throws Exception {
+  public void currentClockTimeInMillisShouldTickOnFromZero() throws Exception {
     Date endOfTheDecade = ymdDateFormat.parse("2010-12-31");
     clock = new DateAlteringClock(endOfTheDecade);
     long before = 0, after = 0;
@@ -45,6 +37,31 @@ public class DateAlteringClockTest {
         before = after;
       }
     }
+    assertTrue(Clock.currentTimeInMillis() - endOfTheDecade.getTime() < 1000);
+  }
+  
+  @Test
+  public void shouldBeAbleToFreezeClockTime() throws Exception {
+    SystemClock systemClock = new SystemClock();
+    long before = 0, after = 0;
+    clock = new DateAlteringClock(systemClock.currentClockDate()).freeze();
+    long frozenTime = Clock.currentTimeInMillis(); 
+    while (after == before) {
+      after = systemClock.currentClockTimeInMillis();
+      if (before == 0) {
+        before = after;
+      }
+    }
+    assertThat(Clock.currentTimeInMillis(), is(frozenTime));
+  }  
+  
+  @Test
+  public void shouldBeAbleToAdvanceClockTimeOnEachQuery() throws Exception {
+    Date startOfTheCentury = ymdDateFormat.parse("2000-01-01");
+    clock = new DateAlteringClock(startOfTheCentury).advanceMillisOnEachQuery();
+    assertThat(Clock.currentTimeInMillis(), is(startOfTheCentury.getTime() + 1));
+    assertThat(Clock.currentTimeInMillis(), is(startOfTheCentury.getTime() + 2));
+    assertThat(Clock.currentTimeInMillis(), is(startOfTheCentury.getTime() + 3));
   }
   
 }

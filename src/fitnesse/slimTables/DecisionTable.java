@@ -120,9 +120,11 @@ public class DecisionTable extends SlimTable {
     }
 
     private void invokeRows() {
+      callUnreportedFunction("beginTable");
       gatherFunctionsAndVariablesFromColumnHeader();
       for (int row = 2; row < table.getRowCount(); row++)
         invokeRow(row);
+      callUnreportedFunction("endTable");
     }
 
     private void invokeRow(int row) {

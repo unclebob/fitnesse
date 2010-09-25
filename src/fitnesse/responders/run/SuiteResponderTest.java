@@ -20,12 +20,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
+import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
 import util.XmlUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 
 public class SuiteResponderTest {
+  private static final String TEST_TIME = "12/5/2008 01:19:00";
   private MockRequest request;
   private SuiteResponder responder;
   private WikiPage root;
@@ -40,6 +45,7 @@ public class SuiteResponderTest {
     "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
     "|string|get string arg?|\n" +
     "|wow|wow|\n";
+  private DateAlteringClock clock;
 
   @Before
   public void setUp() throws Exception {
@@ -61,6 +67,12 @@ public class SuiteResponderTest {
     context = FitNesseUtil.makeTestContext(root);
 
     receiver = new FitSocketReceiver(0, context.socketDealer);
+    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
+  }
+  
+  @After
+  public void restoreDefaultClock() {
+    Clock.restoreDefaultClock();
   }
 
   private WikiPage addTestToSuite(String name, String content) throws Exception {
@@ -79,7 +91,6 @@ public class SuiteResponderTest {
   public void tearDown() throws Exception {
     receiver.close();
     FitNesseUtil.destroyTestContext();
-    XmlFormatter.clearTestTime();
   }
 
   private String runSuite() throws Exception {
@@ -396,7 +407,6 @@ public class SuiteResponderTest {
 
   private File expectedXmlResultsFile() {
     TestSummary counts = new TestSummary(3, 0, 0, 0);
-    XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
@@ -406,7 +416,6 @@ public class SuiteResponderTest {
   @Test
   public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
     TestSummary counts = new TestSummary(2, 0, 0, 0);
-    XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);

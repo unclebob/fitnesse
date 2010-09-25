@@ -32,6 +32,7 @@ import org.w3c.dom.NodeList;
 
 import util.Clock;
 import util.DateAlteringClock;
+import util.DateTimeUtil;
 import util.FileUtil;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
@@ -39,10 +40,14 @@ import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestResponderTest {
+  private static final String TEST_TIME = "12/5/2008 01:19:00";
   private WikiPage root;
   private MockRequest request;
   private TestResponder responder;
@@ -71,25 +76,14 @@ public class TestResponderTest {
     context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
     context.port = receiver.receiveSocket();
-    clock = monotonicIncreasingClock();
-  }
-  
-  private DateAlteringClock monotonicIncreasingClock() {
-    return new DateAlteringClock(Clock.currentDate()) {
-      private long tick = 0;
-      @Override
-      public long currentClockTimeInMillis() {
-        return ++tick;
-      }
-    };
+    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
   @After
   public void tearDown() throws Exception {
     receiver.close();
     FitNesseUtil.destroyTestContext();
-    XmlFormatter.clearTestTime();
-    clock.restoreDefaultClock();
+    Clock.restoreDefaultClock();
   }
 
   @Test
@@ -291,7 +285,6 @@ public class TestResponderTest {
 
 
   private void ensureXmlResultFileDoesNotExist(TestSummary counts) {
-    XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/TestPage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     xmlResultsFile = new File(resultsFileName);
@@ -301,7 +294,7 @@ public class TestResponderTest {
   }
 
   private Document getXmlFromFileAndDeleteFile() throws Exception {
-    assertTrue(xmlResultsFile.exists());
+    assertTrue(xmlResultsFile.getAbsolutePath(), xmlResultsFile.exists());
     FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
     Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
     xmlResultsStream.close();
@@ -597,8 +590,8 @@ public class TestResponderTest {
     }
 
     public void assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect() throws Exception {
-      String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
-      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
+      String instructionContents[] = {"make", "table", "beginTable", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg", "endTable"};
+      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow", "EXCEPTION"};
       assertHeaderOfXmlDocumentsInResponseIsCorrect();
 
       Element result = getElementByTagName(testResultsElement, "result");
@@ -634,10 +627,10 @@ public class TestResponderTest {
       }
 
       checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "right", "ConstructionExpectation", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
-      checkExpectation(instructionList, 3, "decisionTable_0_3", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
-      checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
-      checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
-      checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+      checkExpectation(instructionList, 4, "decisionTable_0_4", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
+      checkExpectation(instructionList, 6, "decisionTable_0_6", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
+      checkExpectation(instructionList, 8, "decisionTable_0_8", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
+      checkExpectation(instructionList, 10, "decisionTable_0_10", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
     }
 
     private String tableElementToString(Element tableElement) {
