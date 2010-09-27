@@ -33,6 +33,15 @@ public class WikiSourcePage implements SourcePage {
         }
     }
 
+    public String getFullPath() {
+        try {
+            return page.getPageCrawler().getFullPath(page).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public String getContent() {
         try {
             return page.getData().getContent();

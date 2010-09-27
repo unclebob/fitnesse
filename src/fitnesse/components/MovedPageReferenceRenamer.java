@@ -2,14 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
 
-public class MovedPageReferenceRenamer extends ReferenceRenamer /* implements WidgetVisitor*/ {
+public class MovedPageReferenceRenamer extends ReferenceRenamer {
   private WikiPage pageToBeMoved;
   private String newParentName;
 
@@ -22,7 +21,7 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer /* implements Wi
     public boolean visit(Symbol node) {
         try {
             if (node.isType(SymbolType.WikiWord)) {
-                wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
+                new WikiWordReference(currentPage, node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
             }
         }
         catch (Exception e) {
@@ -34,25 +33,5 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer /* implements Wi
 
     public boolean visitChildren(Symbol node) {
         return !node.isType(Alias.symbolType);
-    }
-
-    private void wikiWordRenameMovedPageIfReferenced(Symbol wikiWord, WikiPage pageToBeMoved, String newParentName) throws Exception {
-      WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath(pageToBeMoved);
-      pathOfPageToBeMoved.makeAbsolute();
-      String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
-      String reference = getQualifiedWikiWord(wikiWord.getContent());
-      if (refersTo(reference, QualifiedNameOfPageToBeMoved)) {
-        String referenceTail = reference.substring(QualifiedNameOfPageToBeMoved.length());
-        String childPortionOfReference = pageToBeMoved.getName();
-        if (referenceTail.length() > 0)
-          childPortionOfReference += referenceTail;
-        String newQualifiedName;
-        if ("".equals(newParentName))
-          newQualifiedName = "." + childPortionOfReference;
-        else
-          newQualifiedName = "." + newParentName + "." + childPortionOfReference;
-
-        wikiWord.setContent(newQualifiedName);
-      }
     }
 }

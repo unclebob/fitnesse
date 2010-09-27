@@ -12,7 +12,7 @@ public class SymbolProvider {
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider( new SymbolType[] {
             Link.symbolType, new Table(), SymbolType.EndCell,
             new HashTable(),  new HeaderLine(), Literal.symbolType, new Collapsible(),
-            new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(),
+            new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
             new See(), SymbolType.Style, new LastModified(), Image.symbolType,
             new Today(),

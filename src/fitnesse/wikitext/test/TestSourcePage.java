@@ -42,6 +42,9 @@ public class TestSourcePage implements SourcePage {
     public String getName() { return null; }
     public String getFullName() { return null; }
     public String getPath() { return null; }
+
+    public String getFullPath() { return null; }
+
     public String getContent() { return content; }
     public boolean targetExists(String wikiWordPath) { return targetPath != null; }
     public String makeFullPathOfTarget(String wikiWordPath) { return targetPath; }
