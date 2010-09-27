@@ -11,6 +11,7 @@ public class CollapsibleTest {
 
     @Test public void parsesCollapsible() throws Exception {
         ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text]]]");
+        ParserTest.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList]]");
         ParserTest.assertParses("!**\n**!", "SymbolList[Text, CloseCollapsible]");
     }
 
@@ -18,6 +19,10 @@ public class CollapsibleTest {
         Collapsible.resetId();
         ParserTest.assertTranslatesTo("!* Some title\n''content''\n*!",
                 sectionWithClass("collapsable", "Open", "<i>content</i>"));
+
+        Collapsible.resetId();
+        ParserTest.assertTranslatesTo("!* Some title\n\n*!",
+                sectionWithClass("collapsable", "Open", ""));
 
         Collapsible.resetId();
         ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",

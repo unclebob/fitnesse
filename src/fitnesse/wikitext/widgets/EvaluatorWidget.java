@@ -7,6 +7,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
 import util.Expression;
+import util.Maybe;
 
 import java.util.Calendar;
 import java.util.regex.Matcher;

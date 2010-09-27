@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import fitnesse.wiki.WikiPage;
 import util.Maybe;
 
 import java.util.ArrayList;
@@ -11,6 +12,10 @@ public class Parser {
     private static final SymbolType[] emptyTypes = new SymbolType[] {};
     private static final Collection<SymbolType> emptyTypesList = new ArrayList<SymbolType>();
     private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
+
+    public static Parser make(WikiPage page, String input) {
+        return make(new ParsingPage(new WikiSourcePage(page)), input);
+    }
     
     public static Parser make(ParsingPage currentPage, String input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);

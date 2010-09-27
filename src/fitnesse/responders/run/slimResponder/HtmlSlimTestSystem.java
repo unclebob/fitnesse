@@ -2,19 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.slimTables.SlimTable;
-
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slimTables.HtmlTableScanner;
+import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.CollapsableWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
-
-import java.util.List;
+import fitnesse.wikitext.parser.Collapsible;
+import fitnesse.wikitext.parser.Symbol;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
   public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
@@ -22,21 +18,21 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
   }
 
   protected TableScanner scanTheTables(PageData pageData) throws Exception {
-    WidgetRoot root = pageData.getWidgets();
-    WidgetRoot precompiledWidgets = getPrecompiledScenarioWidgets();
-    root.addChildToFront(findCollapsibleWidget(precompiledWidgets.getChildren()));
-    String html = root.render();
+
+    Symbol syntaxTree = pageData.getSyntaxTree();
+    Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
+    syntaxTree.addToFront(findCollapsibleSymbol(preparsedScenarioLibrary));
+    String html = pageData.translateToHtml(syntaxTree);
     return new HtmlTableScanner(html);
   }
 
-  private CollapsableWidget findCollapsibleWidget(List<WikiWidget> widgets) throws Exception {
-    for (WikiWidget widget : widgets) {
-      if (widget instanceof CollapsableWidget)
-        return (CollapsableWidget) widget;
+  private Symbol findCollapsibleSymbol(Symbol syntaxTree) throws Exception {
+    for (Symbol symbol : syntaxTree.getChildren()) {
+      if (symbol.getType() instanceof Collapsible)
+        return symbol;
     }
     throw new Exception("There must be a collapsible widget in here.");
   }
-
 
   @Override
   protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) throws Exception {

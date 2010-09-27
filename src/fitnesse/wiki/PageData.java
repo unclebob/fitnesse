@@ -21,18 +21,10 @@ import java.util.*;
 public class PageData implements Serializable {
 
   private static final long serialVersionUID = 1L;
-/*
-  public static WidgetBuilder classpathWidgetBuilder = new WidgetBuilder(
-      IncludeWidget.class, VariableDefinitionWidget.class,
-      ClasspathWidget.class);
-      */
+
   public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(
       XRefWidget.class);
-/*
-  public static WidgetBuilder variableDefinitionWidgetBuilder = new WidgetBuilder(
-      IncludeWidget.class, PreformattedWidget.class,
-      VariableDefinitionWidget.class);
-*/
+
     private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
         Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
         SymbolType.Newline, Variable.symbolType, SymbolType.Preformat,
@@ -83,13 +75,10 @@ public class PageData implements Serializable {
   private String content;
   private WikiPageProperties properties = new WikiPageProperties();
   private Set<VersionInfo> versions;
-  //private ParentWidget variableRoot;
-  //private List<String> literals;
 
   public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
   public static final String TEST_RUNNER = "TEST_RUNNER";
   public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
-  private WidgetRoot widgetRoot;
 
   private Symbol contentSyntaxTree = null;
   private ParsingPage parsingPage;
@@ -109,15 +98,10 @@ public class PageData implements Serializable {
     this(data.getWikiPage(), data.content);
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
-    //variableRoot = data.variableRoot;
     contentSyntaxTree = data.contentSyntaxTree;
     parsingPage = data.parsingPage;
   }
-/*
-  public String getStringOfAllAttributes() {
-    return properties.toString();
-  }
-*/
+
   public void initializeAttributes() throws Exception {
     properties.set(PropertyEDIT, Boolean.toString(true));
     properties.set(PropertyVERSIONS, Boolean.toString(true));
@@ -211,11 +195,7 @@ public class PageData implements Serializable {
 
   /* this is the public entry to page parse and translate */
   public String getHtml() throws Exception {
-    return processHTMLWidgets(wikiPage);
-  }
-
-  public String getHtml(WikiPage context) throws Exception {
-    return processHTMLWidgets(context);
+      return translateToHtml(getSyntaxTree());
   }
 
   public String getHeaderPageHtml() throws Exception {
@@ -229,7 +209,6 @@ public class PageData implements Serializable {
   }
 
   public String getVariable(String name) throws Exception {
-    //return getInitializedVariableRoot().getVariable(name);
       Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
       if (variable.isNothing()) return null;
       //todo: push this into parser/translator
@@ -254,47 +233,14 @@ public class PageData implements Serializable {
     }
 
   public void addVariable(String name, String value) throws Exception {
-//    getInitializedVariableRoot().addVariable(name, value);
       getParsingPage().putVariable(name, value);
   }
 
-  public void setLiterals(List<String> literals) {
-    //this.literals = literals;
-  }
-/*
-  private ParentWidget getInitializedVariableRoot() throws Exception {
-    if (variableRoot == null) {
-      initializeVariableRoot();
-    }
-    return variableRoot;
-  }
+  public void setLiterals(List<String> literals) {}
 
-  private void initializeVariableRoot() throws Exception {
-    variableRoot = new TextIgnoringWidgetRoot(getContent(), wikiPage, //<<<<<< test execution: get TEST_SYSTEM for all pages
-        literals, variableDefinitionWidgetBuilder
-    );
-    variableRoot.render();
-  }
 
-  private String processHTMLWidgets(String content, WikiPage context) throws Exception {
-    return getWidgets(content, context).render();
-  }
-
-  private WidgetRoot getWidgets(String content, WikiPage context) throws Exception {
-    if(widgetRoot == null)
-      widgetRoot = new WidgetRoot(content, context, WidgetBuilder.htmlWidgetBuilder);
-    return widgetRoot;
-  }
-
-  public WidgetRoot getWidgets() throws Exception {
-    if(widgetRoot == null)
-      widgetRoot = new WidgetRoot(content, wikiPage, WidgetBuilder.htmlWidgetBuilder);
-    return widgetRoot;
-  } */
-
-    private String processHTMLWidgets(WikiPage context) throws Exception {
-        Symbol tree = getSyntaxTree();
-        return new HtmlTranslator(new WikiSourcePage(context), parsingPage).translateTree(tree);
+    public String translateToHtml(Symbol syntaxTree) {
+        return new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
     }
 
   public void setWikiPage(WikiPage page) {

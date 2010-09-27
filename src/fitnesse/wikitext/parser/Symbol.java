@@ -29,6 +29,14 @@ public class Symbol {
     public Symbol childAt(int index) { return getChildren().get(index); }
     public List<Symbol> getChildren() { return children; }
     
+    public Symbol addToFront(Symbol child) {
+        ArrayList<Symbol> newChildren = new ArrayList<Symbol>();
+        newChildren.add(child);
+        newChildren.addAll(children);
+        children = newChildren;
+        return this;
+    }
+
     public Symbol add(Symbol child) {
         children.add(child);
         return this;

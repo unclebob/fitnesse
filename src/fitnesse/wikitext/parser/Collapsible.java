@@ -34,7 +34,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         Symbol titleText = parser.parseToIgnoreFirst(SymbolType.Newline);
         if (parser.atEnd()) return Symbol.nothing;
 
-        Symbol bodyText = parser.parseToIgnoreFirst(SymbolType.CloseCollapsible);
+        Symbol bodyText = parser.parseTo(SymbolType.CloseCollapsible);
         if (parser.atEnd()) return Symbol.nothing;
 
         return new Maybe<Symbol>(current
