@@ -36,7 +36,7 @@ public class HtmlPage extends HtmlTag {
     sidebar = HtmlUtil.makeDivTag("sidebar");
     actions = HtmlUtil.makeDivTag("actions");
     main = HtmlUtil.makeDivTag("main");
-    makeArtNiche();
+    artNiche = makeArtNiche();
 
     mainbar.add(header);
     mainbar.add(main);
@@ -50,9 +50,11 @@ public class HtmlPage extends HtmlTag {
     return body;
   }
 
-  protected void makeArtNiche() {
-    artNiche = HtmlUtil.makeDivTag("art_niche");
-    artNiche.addAttribute("onclick", "document.location='FrontPage'");
+  protected HtmlTag makeArtNiche() {
+    HtmlTag niche = HtmlUtil.makeAnchorTag("art_niche");
+    niche.addAttribute("href", "FrontPage");
+    niche.addAttribute("class", "art_niche");
+    return niche;
   }
 
   protected HtmlTag makeHead() {
