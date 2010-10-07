@@ -28,10 +28,6 @@ ol {
   text-indent: -1.3em;
 }
 
-a:link, a:visited, a:hover, a:active {
-  background: transparent;
-}
-
 a:link {
   color: #2E2EB2;
 }
@@ -250,8 +246,6 @@ div.sidebar {
   margin: 0px;
   padding: 0px 0px 5px 0px;
   position: relative;
-  top: 0px;
-  left: 0px;
   height: 90px;
   border-bottom: solid 1px #984D00;
   background-image: url("/files/images/FitNesseLogo.gif");
@@ -353,9 +347,9 @@ div.virtual-wiki-properties {
   padding: 2px 2px 2px 5px;
 }
 
-.actions a:link, .actions a:visited {
+.actions a, .actions a:visited {
   display: block;
-  margin: 0px;
+  margin: 0 0 .5em 0;
   line-height: 2.2em;
   text-indent: .5em;
   color: black;
@@ -623,10 +617,6 @@ div.edit_options {
 
 div.hints {
   clear: both;
-}
-
-div.nav_break {
-  font-size: .3em;
 }
 
 div.merge_new {
