@@ -52,7 +52,7 @@ public class VersionResponderTest extends RegexTestCase {
     assertDoesntHaveRegexp("Suite button", response.getContent());
     assertDoesntHaveRegexp("Versions button", response.getContent());
 
-    assertHasRegexp("Rollback button", response.getContent());
+    assertHasRegexp(">Rollback</a>", response.getContent());
   }
 
   public void testNameNoAtRootLevel() throws Exception {
