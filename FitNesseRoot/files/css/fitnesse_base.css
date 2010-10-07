@@ -146,6 +146,10 @@ h4 {
   font-style: italic;
 }
 
+fieldset {
+  border: none;
+}
+
 textarea.oldContent {
   width: 100%;
 }
@@ -185,6 +189,29 @@ div.popup_window {
   z-index: 10;
 }
 
+div.popup_window label {
+  float: left;
+  width: 10em;
+  clear: both;
+}
+
+div.popup_window .page_type {
+  float: left;
+  width: 10em;
+}
+
+div.popup_window .page_type label {
+  display: inline;
+  float: none;
+  width: auto;
+  margin-left: .4em;
+}
+
+div.popup_window .buttons {
+  clear: both
+  margin-left: 10em;
+}
+
 div.popup_title {
   position: absolute;
   top: 0px;
@@ -218,7 +245,8 @@ div.sidebar {
   border-right: 1px dotted #C6CCB7;
 }
 
-div.art_niche {
+.art_niche {
+  display: block;
   margin: 0px;
   padding: 0px 0px 5px 0px;
   position: relative;
