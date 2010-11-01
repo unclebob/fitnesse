@@ -15,7 +15,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
 // TODO: Some of this code may now be obsolete, because this responder is no longer used for some
-
 // scenarios (we skip directly to an EditResponder...).
 public class NotFoundResponder implements Responder {
   private String resource;
