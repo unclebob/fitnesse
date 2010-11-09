@@ -12,7 +12,7 @@ public class LineRule implements Rule {
         String level = current.getContent().substring(1,2);
         if (ScanString.isDigits(level)) current.putProperty(Level, level);
 
-        return new Maybe<Symbol>(current.add(parser.parseWithEnds(new SymbolType[] {SymbolType.Newline})));
+        return new Maybe<Symbol>(current.add(parser.parseToEnd(SymbolType.Newline)));
     }
 
 }

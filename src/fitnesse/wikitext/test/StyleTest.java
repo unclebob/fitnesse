@@ -1,8 +1,5 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.html.HtmlElement;
-import fitnesse.wikitext.test.ParserTest;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class StyleTest {
@@ -44,5 +41,10 @@ public class StyleTest {
     @Test public void translatesNestedStyle() {
         ParserTest.assertTranslatesTo("!style_myStyle(!style_otherStyle(stuff))",
                 "<span class=\"myStyle\"><span class=\"otherStyle\">stuff</span></span>");
+    }
+
+    @Test public void translatesOverlappedStyle() {
+        ParserTest.assertTranslatesTo("!style_red(!style_blue{a)}",
+                "!style_red(<span class=\"blue\">a)</span>");
     }
 }

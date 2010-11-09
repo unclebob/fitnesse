@@ -14,7 +14,7 @@ public class Contents extends SymbolType implements Rule, Translation {
     }
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        Symbol body = parser.parseWithEnds(new SymbolType[] {SymbolType.Newline});
+        Symbol body = parser.parseToEnd(SymbolType.Newline);
         for (Symbol option: body.getChildren()) {
             if (option.isType(SymbolType.Whitespace)) continue;
             if (!option.getContent().startsWith("-")) return Symbol.nothing;

@@ -19,7 +19,6 @@ public class TableTest {
         ParserTest.assertTranslatesTo("| a |\n", tableWithCell("a"));
         ParserTest.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
         ParserTest.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
-        ParserTest.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
         ParserTest.assertTranslatesTo("|http://mysite.org|\n",
                 tableWithCell("<a href=\"http://mysite.org\">http://mysite.org</a>"));
         ParserTest.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks"));
@@ -73,8 +72,13 @@ public class TableTest {
     @Test public void hidesFirstRowInCommentTable() {
         ParserTest.assertTranslatesTo("-|a|\n", tableWithCellAndRow("a", "<tr class=\"hidden\">"));
     }
+
     @Test public void combinesLiteralAndCommentOptions() {
         ParserTest.assertTranslatesTo("-!|''<a''|\n", tableWithCellAndRow("''&lt;a''", "<tr class=\"hidden\">"));
+    }
+
+    @Test public void overridesNestedRule() {
+        ParserTest.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''");
     }
 
     private String tableWithCell(String cellContent) {

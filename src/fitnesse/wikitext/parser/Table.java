@@ -37,8 +37,9 @@ public class Table extends SymbolType implements Rule, Translation {
         if (content.indexOf("!") >= 0) {
             return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider);
         }
-        else
-            return parser.parseTo(SymbolType.EndCell);
+        else {
+            return parser.parseTo(SymbolType.EndCell, 1);
+        }
     }
 
     private boolean containsNewLine(Symbol cell) {

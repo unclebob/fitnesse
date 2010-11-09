@@ -1,9 +1,6 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
-
 
 public class LinkTest {
     @Test

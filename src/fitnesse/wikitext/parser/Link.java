@@ -18,7 +18,7 @@ public class Link extends SymbolType implements Rule, Translation {
     }
     
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        Symbol targetList = parser.parseWithEnds(
+        Symbol targetList = parser.parseToEnds(-1,
                 SymbolProvider.linkTargetProvider,
                 new SymbolType[] {SymbolType.Newline, SymbolType.Whitespace});
         return new Maybe<Symbol>(current.add(targetList));
