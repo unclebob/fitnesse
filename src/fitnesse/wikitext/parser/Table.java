@@ -50,35 +50,38 @@ public class Table extends SymbolType implements Rule, Translation {
     }
 
     public String toTarget(Translator translator, Symbol symbol) {
-        HtmlTag table = new HtmlTag("table");
+        HtmlWriter writer = new HtmlWriter();
+        writer.startTag("table");
         if (symbol.hasProperty("class")) {
-            table.addAttribute("class", symbol.getProperty("class"));
+            writer.putAttribute("class", symbol.getProperty("class"));
         }
         else {
-            table.addAttribute("border", "1");
-            table.addAttribute("cellspacing", "0");
+            writer.putAttribute("border", "1");
+            writer.putAttribute("cellspacing", "0");
         }
         int longestRow = longestRow(symbol);
         int rowCount = 0;
         for (Symbol child: symbol.getChildren()) {
             rowCount++;
-            HtmlTag row = new HtmlTag("tr");
+            writer.startTag("tr");
             if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
-                row.addAttribute("class", "hidden");
+                writer.putAttribute("class", "hidden");
             }
-            table.add(row);
             int extraColumnSpan = longestRow - rowLength(child);
             int column = 1;
             for (Symbol grandChild: child.getChildren()) {
                 String body = translator.translate(grandChild);
-                HtmlTag cell = new HtmlTag("td", body.trim());
+                writer.startTag("td");
                 if (extraColumnSpan > 0 && column == rowLength(child))
-                    cell.addAttribute("colspan", Integer.toString(extraColumnSpan + 1));
-                row.add(cell);
+                    writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
+                writer.putText(body.trim());
+                writer.endTag();
                 column++;
             }
+            writer.endTag();
         }
-        return table.html();
+        writer.endTag();
+        return writer.toHtml();
     }
 
     private int longestRow(Symbol table) {
