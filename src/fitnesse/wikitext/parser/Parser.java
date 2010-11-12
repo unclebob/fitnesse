@@ -26,7 +26,7 @@ public class Parser {
     }
 
     public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource, SymbolProvider provider) {
-        return new Parser(null, currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, 0, emptyTypes, emptyTypes, emptyTypesList);
+        return new Parser(null, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), provider, variableSource, 0, emptyTypes, emptyTypes, emptyTypesList);
     }
 
     private ParsingPage currentPage;
@@ -95,7 +95,7 @@ public class Parser {
     }
 
     public Symbol parse(String input) {
-        return new Parser(this, currentPage, new Scanner(new TextMaker(variableSource), input), provider, variableSource, 0, emptyTypes, emptyTypes, emptyTypesList).parse();
+        return new Parser(this, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), provider, variableSource, 0, emptyTypes, emptyTypes, emptyTypesList).parse();
     }
 
     public Symbol parseToIgnoreFirst(SymbolType type) {

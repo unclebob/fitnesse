@@ -2,21 +2,23 @@ package fitnesse.wikitext;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.test.ParserTest;
 import fitnesse.wikitext.test.TestRoot;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 public class PerformanceTest {
     private String tablePageContent = "";
     private String definePageContent = "";
     public PerformanceTest() {
-        for (int i = 0; i < 1000; i++) {
-            tablePageContent += "|aaaaaaaaaa|bbbbbbbbbb|cccccccccc|dddddddddd|eeeeeeeeee|ffffffffff|gggggggggg|hhhhhhhhhh|iiiiiiiiiii|jjjjjjjjjj|kkkkkkkkkk|lllllllllll|mmmmmmmmmm|nnnnnnnnnn|oooooooooo|pppppppppp|qqqqqqqqqq|rrrrrrrrrr|ssssssssss|tttttttttt|uuuuuuuuuu|vvvvvvvvvv|wwwwwwwwww|xxxxxxxxxx|yyyyyyyyyy|zzzzzzzzzz|\n";
-            definePageContent += "!define variable" + i + " {aaaaaaaaaa bbbbbbbbbb cccccccccc dddddddddd eeeeeeeeee ffffffffff gggggggggg hhhhhhhhhh iiiiiiiiii jjjjjjjjjj kkkkkkkkkk llllllllll mmmmmmmmmm nnnnnnnnnn oooooooooo pppppppppp qqqqqqqqqq rrrrrrrrrr ssssssssss tttttttttt uuuuuuuuuu vvvvvvvvvv wwwwwwwwww xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz}\n";
+        StringBuilder table = new StringBuilder();
+        StringBuilder define = new StringBuilder();
+        for (int i = 0; i < 2000; i++) {
+            table.append("|aaaaaaaaaa|bbbbbbbbbb|cccccccccc|dddddddddd|eeeeeeeeee|ffffffffff|gggggggggg|hhhhhhhhhh|iiiiiiiiiii|jjjjjjjjjj|kkkkkkkkkk|lllllllllll|mmmmmmmmmm|nnnnnnnnnn|oooooooooo|pppppppppp|qqqqqqqqqq|rrrrrrrrrr|ssssssssss|tttttttttt|uuuuuuuuuu|vvvvvvvvvv|wwwwwwwwww|xxxxxxxxxx|yyyyyyyyyy|zzzzzzzzzz|\n");
+            define.append("!define variable").append(i).append(" {aaaaaaaaaa bbbbbbbbbb cccccccccc dddddddddd eeeeeeeeee ffffffffff gggggggggg hhhhhhhhhh iiiiiiiiii jjjjjjjjjj kkkkkkkkkk llllllllll mmmmmmmmmm nnnnnnnnnn oooooooooo pppppppppp qqqqqqqqqq rrrrrrrrrr ssssssssss tttttttttt uuuuuuuuuu vvvvvvvvvv wwwwwwwwww xxxxxxxxxx yyyyyyyyyy zzzzzzzzzz}\n");
         }
+        tablePageContent = table.toString();
+        definePageContent = define.toString();
     }
 
     @Test
@@ -36,7 +38,7 @@ public class PerformanceTest {
         Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
         System.out.println(System.currentTimeMillis() - start);
         start = System.currentTimeMillis();
-        String result = new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+        /*String result =*/ new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

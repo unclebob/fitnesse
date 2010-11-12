@@ -4,10 +4,20 @@ import fitnesse.html.HtmlText;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import util.GracefulNamer;
 
-public class WikiWordTranslation implements Translation  {
+public class WikiWord extends SymbolType implements Translation {
+    public static WikiWord symbolType = new WikiWord(null);
+
+    private SourcePage sourcePage;
+
+    public WikiWord(SourcePage sourcePage) {
+        super("WikiWord");
+        htmlTranslation(this);
+        this.sourcePage = sourcePage;
+    }
+
     public String toTarget(Translator translator, Symbol symbol) {
         return buildLink(
-                translator.getPage(),
+                sourcePage,
                 symbol.getContent(),
                 new HtmlText(formatWikiWord(symbol.getContent(), symbol)).html());
     }

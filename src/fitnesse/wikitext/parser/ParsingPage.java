@@ -29,6 +29,7 @@ public class ParsingPage {
     }
 
     public SourcePage getPage() { return page; }
+    public SourcePage getNamedPage() { return namedPage; }
 
     public Maybe<String> getSpecialVariableValue(String key) {
         String value;

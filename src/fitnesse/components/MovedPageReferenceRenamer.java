@@ -7,6 +7,7 @@ import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.Alias;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.parser.SymbolType;
+import fitnesse.wikitext.parser.WikiWord;
 
 public class MovedPageReferenceRenamer extends ReferenceRenamer {
   private WikiPage pageToBeMoved;
@@ -20,7 +21,7 @@ public class MovedPageReferenceRenamer extends ReferenceRenamer {
 
     public boolean visit(Symbol node) {
         try {
-            if (node.isType(SymbolType.WikiWord)) {
+            if (node.isType(WikiWord.symbolType)) {
                 new WikiWordReference(currentPage, node.getContent()).wikiWordRenameMovedPageIfReferenced(node, pageToBeMoved, newParentName);
             }
         }

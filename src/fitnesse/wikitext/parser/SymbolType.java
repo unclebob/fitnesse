@@ -90,8 +90,6 @@ public class SymbolType implements Matchable {
             .htmlTranslation(new ListBuilder("ul"));
     public static final SymbolType Whitespace = new SymbolType("Whitespace")
             .wikiMatcher(new Matcher().whitespace());
-    public static final SymbolType WikiWord = new SymbolType("WikiWord")
-            .htmlTranslation(new WikiWordTranslation());
     
     private String name;
     private ArrayList<Matcher> wikiMatchers =  new ArrayList<Matcher>();
@@ -122,7 +120,7 @@ public class SymbolType implements Matchable {
     @Override public String toString() { return name; }
 
     public boolean matchesFor(SymbolType symbolType) {
-        return this == symbolType;
+        return this.name.equals(symbolType.name);
     }
 
     public SymbolMatch makeMatch(ScanString input) {

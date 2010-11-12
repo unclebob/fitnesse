@@ -22,7 +22,7 @@ public class Symbol {
     }
 
     public SymbolType getType() { return type; }
-    public boolean isType(SymbolType type) { return this.type == type; }
+    public boolean isType(SymbolType type) { return this.type.matchesFor(type); }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 

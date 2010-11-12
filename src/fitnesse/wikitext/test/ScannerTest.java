@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ScannerTest {
     @Test public void copyRestoresState() {
-        Scanner scanner = new Scanner("stuff");
+        Scanner scanner = new Scanner(new TestSourcePage(), "stuff");
         Scanner backup = new Scanner(scanner);
         ParserTest.assertScans("Text=stuff", scanner);
         ParserTest.assertScans("", scanner);

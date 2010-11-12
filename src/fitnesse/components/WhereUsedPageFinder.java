@@ -40,7 +40,7 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
   }
 
     public boolean visit(Symbol node) {
-        if (!node.isType(SymbolType.WikiWord)) return true;
+        if (!node.isType(WikiWord.symbolType)) return true;
         if (hits.contains(currentPage)) return true;
         try {
             WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();

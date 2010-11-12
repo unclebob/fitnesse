@@ -4,10 +4,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
-import fitnesse.wikitext.parser.Alias;
-import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.parser.SymbolType;
-import fitnesse.wikitext.parser.WikiWordPath;
+import fitnesse.wikitext.parser.*;
 
 public class PageReferenceRenamer extends ReferenceRenamer {
   private WikiPage subjectPage;
@@ -21,7 +18,7 @@ public class PageReferenceRenamer extends ReferenceRenamer {
 
     public boolean visit(Symbol node) {
         try {
-            if (node.isType(SymbolType.WikiWord)) {
+            if (node.isType(WikiWord.symbolType)) {
                 new WikiWordReference(currentPage, node.getContent()).wikiWordRenamePageIfReferenced(node, subjectPage, newName);
             }
             else if (node.isType(Alias.symbolType)) {

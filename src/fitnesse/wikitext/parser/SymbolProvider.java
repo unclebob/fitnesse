@@ -5,7 +5,7 @@ import java.util.*;
 public class SymbolProvider {
     public static final SymbolProvider refactoringProvider = new SymbolProvider( new SymbolType[] {
             Alias.symbolType, SymbolType.OpenBracket, SymbolType.CloseBracket, Comment.symbolType, Image.symbolType,
-            Literal.symbolType, SymbolType.Preformat, Link.symbolType, Path.symbolType, SymbolType.WikiWord,
+            Literal.symbolType, SymbolType.Preformat, Link.symbolType, Path.symbolType, WikiWord.symbolType,
             SymbolType.Newline, SymbolType.Whitespace
     });
 
@@ -23,7 +23,7 @@ public class SymbolProvider {
             SymbolType.ClosePreformat, SymbolType.OpenParenthesis, SymbolType.OpenBrace, SymbolType.OpenBracket,
             SymbolType.CloseParenthesis, SymbolType.CloseBrace, SymbolType.ClosePlainTextTable, SymbolType.CloseBracket, SymbolType.CloseLiteral,
             SymbolType.Bold,
-            SymbolType.Italic, SymbolType.Strike, new AnchorReference(), SymbolType.WikiWord, SymbolType.EMail, SymbolType.Text,
+            SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
     
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(

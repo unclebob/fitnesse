@@ -10,12 +10,12 @@ public class ParserTest {
     public static final String newLineRendered = "<br/>";
     
     public static  void assertScans(String input, String expected) {
-        Scanner scanner = new Scanner(input);
+        Scanner scanner = new Scanner(new TestSourcePage(), input);
         assertScans(expected, scanner);
     }
 
     public static  void assertScansTokenType(String input, String expected, boolean found) {
-        Scanner scanner = new Scanner(input);
+        Scanner scanner = new Scanner(new TestSourcePage(), input);
         while (true) {
             scanner.moveNext();
             if (scanner.isEnd()) break;

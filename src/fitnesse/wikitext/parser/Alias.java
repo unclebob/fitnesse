@@ -25,14 +25,14 @@ public class Alias extends SymbolType implements Rule, Translation {
     }
 
     public String toTarget(Translator translator, Symbol symbol) {
-        if (symbol.childAt(0).childAt(0).isType(SymbolType.WikiWord)) return translator.translate(symbol.childAt(0));
+        if (symbol.childAt(0).childAt(0).isType(WikiWord.symbolType)) return translator.translate(symbol.childAt(0));
 
         String linkBody = translator.translate(symbol.childAt(0));
         String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
         Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parse();
 
-        if (linkReference.childAt(0).isType(SymbolType.WikiWord)) {
+        if (linkReference.childAt(0).isType(WikiWord.symbolType)) {
             return new WikiWordBuilder(translator.getPage(), linkReference.childAt(0).getContent(), linkBody)
                     .buildLink(translator.translate(linkReference.childrenAfter(0)), linkBody);
         }

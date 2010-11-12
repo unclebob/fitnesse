@@ -8,16 +8,18 @@ public class TextMaker {
     public static final String eMailPattern = "[\\w-_.]+@[\\w-_.]+\\.[\\w-_.]+";
 
     private VariableSource variableSource;
+    private SourcePage sourcePage;
 
-    public TextMaker(VariableSource variableSource) {
+    public TextMaker(VariableSource variableSource, SourcePage sourcePage) {
         this.variableSource = variableSource;
+        this.sourcePage = sourcePage;
     }
 
     public SymbolMatch make(SymbolProvider provider, String text) {
-        if (provider.matchesFor(SymbolType.WikiWord)) {
+        if (provider.matchesFor(WikiWord.symbolType)) {
             int length = new WikiWordPath().findLength(text);
             if (length > 0) {
-                Symbol wikiWord = new Symbol(SymbolType.WikiWord, text.substring(0, length));
+                Symbol wikiWord = new Symbol(new WikiWord(sourcePage), text.substring(0, length));
                 wikiWord.evaluateVariables(new String[] {WikiWordWidget.REGRACE_LINK}, variableSource);
                 return new SymbolMatch(wikiWord, length);
             }

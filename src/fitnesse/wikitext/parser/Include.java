@@ -24,7 +24,7 @@ public class Include extends SymbolType implements Rule, Translation {
             if (!next.isType(SymbolType.Whitespace)) return Symbol.nothing;
             next = parser.moveNext(1);
         }
-        if (!next.isType(SymbolType.Text) && !next.isType(SymbolType.WikiWord)) return Symbol.nothing;
+        if (!next.isType(SymbolType.Text) && !next.isType(WikiWord.symbolType)) return Symbol.nothing;
 
         current.add(option).add(next);
 

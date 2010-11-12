@@ -14,14 +14,15 @@ public class Scanner {
     private int next;
     private TextMaker textMaker;
 
-    public Scanner(String input) {
+    public Scanner(SourcePage sourcePage, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
         textMaker = new TextMaker(new VariableSource() {
             public Maybe<String> findVariable(String name) {
                 return Maybe.noString;
             }
-        });
+        },
+        sourcePage);
     }
 
     public Scanner(TextMaker textMaker, String input) {

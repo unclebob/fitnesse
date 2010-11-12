@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 public class TextMakerTest {
     private SymbolProvider provider = SymbolProvider.wikiParsingProvider;
     private VariableSource source = new TestVariableSource("x", "y");
+    private SourcePage sourcePage = new TestSourcePage();
 
     @Test
     public void makesText() {
@@ -50,7 +51,7 @@ public class TextMakerTest {
 
     private void assertWikiWord(String input, String wikiWord) {
         SymbolMatch match = makeMatch(input);
-        assertTrue(match.getSymbol().isType(SymbolType.WikiWord));
+        assertTrue(match.getSymbol().isType(WikiWord.symbolType));
         assertEquals(wikiWord, match.getSymbol().getContent());
         assertEquals(wikiWord.length(), match.getMatchLength());
     }
@@ -64,6 +65,6 @@ public class TextMakerTest {
     }
 
     private SymbolMatch makeMatch(String text) {
-        return new TextMaker(source).make(provider, text);
+        return new TextMaker(source, sourcePage).make(provider, text);
     }
 }

@@ -1,6 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import fitnesse.html.HtmlTag;
 import util.Maybe;
 
 public class Table extends SymbolType implements Rule, Translation {
