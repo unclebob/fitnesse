@@ -19,17 +19,28 @@ import fitnesse.FitNesseContext;
 import fitnesseMain.FitNesseMain;
 
 /**
- * Task to run fit tests. This task starts the fit server, runs fitnesse tests and publishes the results. <p/>
+ * Task to run fit tests. This task starts the fit server,
+ * runs fitnesse tests and publishes the results. <p/>
  * <p/>
  * <pre>
  * Usage:
- * &lt;taskdef name=&quot;run-fitnesse-tests&quot; classname=&quot;fitnesse.ant.TestRunnerTask&quot; classpathref=&quot;classpath&quot; /&gt;
+ * &lt;taskdef name=&quot;run-fitnesse-tests&quot;
+ * classname=&quot;fitnesse.ant.TestRunnerTask&quot;
+ * classpathref=&quot;classpath&quot; /&gt;
  * OR
- * &lt;taskdef classpathref=&quot;classpath&quot; resource=&quot;tasks.properties&quot; /&gt;
+ * &lt;taskdef classpathref=&quot;classpath&quot;
+ * resource=&quot;tasks.properties&quot; /&gt;
  * &lt;p/&gt;
- * &lt;run-fitnesse-tests wikidirectoryrootpath=&quot;.&quot; suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot; fitnesseport=&quot;8082&quot; resultsdir=&quot;${results.dir}&quot; resultshtmlpage=&quot;fit-results.html&quot; resultsxmlpage=&quot;fit-results.xml&quot; classpathref=&quot;classpath&quot; /&gt;
+ * &lt;run-fitnesse-tests wikidirectoryrootpath=&quot;.&quot;
+ * suitepage=&quot;FitNesse.SuiteAcceptanceTests&quot;
+ * fitnesseport=&quot;8082&quot; resultsdir=&quot;
+ * ${results.dir}&quot; resultshtmlpage=&quot;
+ * fit-results.html&quot; resultsxmlpage=&quot;
+ * fit-results.xml&quot; classpathref=&quot;
+ * classpath&quot; /&gt;
  * </pre>
  */
+
 public class TestRunnerTask extends Task {
   private String wikiDirectoryRootPath;
   private int fitnessePort = 8082;
