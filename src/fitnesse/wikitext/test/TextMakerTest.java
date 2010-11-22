@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TextMakerTest {
-    private SymbolProvider provider = SymbolProvider.wikiParsingProvider;
     private VariableSource source = new TestVariableSource("x", "y");
     private SourcePage sourcePage = new TestSourcePage();
 
@@ -65,6 +64,6 @@ public class TextMakerTest {
     }
 
     private SymbolMatch makeMatch(String text) {
-        return new TextMaker(source, sourcePage).make(provider, text);
+        return new TextMaker(source, sourcePage).make(new ParseSpecification(), text);
     }
 }

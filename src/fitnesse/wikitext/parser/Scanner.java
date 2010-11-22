@@ -52,11 +52,7 @@ public class Scanner {
     public Symbol makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
-            SymbolMatch match = new SymbolProvider(new SymbolType[] {terminator}).findMatch(input, new MatchableFilter() {
-                public boolean isValid(Matchable candidate) {
-                    return true;
-                }
-            });
+            SymbolMatch match = terminator.makeMatch(input);
             if (match.isMatch()) {
                 Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset() + match.getMatchLength();
@@ -71,24 +67,20 @@ public class Scanner {
     }
 
     public void moveNext() {
-        moveNextIgnoreFirst(new ArrayList<SymbolType>());
+        moveNextIgnoreFirst(new ParseSpecification());
     }
 
-    public void moveNextIgnoreFirst(List<SymbolType> ignoreFirst) {
-        moveNextIgnoreFirst(SymbolProvider.wikiParsingProvider, ignoreFirst);
-    }
-
-    public void moveNextIgnoreFirst(SymbolProvider provider, List<SymbolType> ignoreFirst) {
-        Step step = makeNextStep(provider, ignoreFirst, next);
+    public void moveNextIgnoreFirst(ParseSpecification specification) {
+        Step step = makeNextStep(specification, next);
         next = step.nextPosition;
         currentToken = step.token;
     }
 
-    public List<Symbol> peek(int count, SymbolProvider provider, List<SymbolType> ignoreFirst) {
+    public List<Symbol> peek(int count, ParseSpecification specification) {
         List<Symbol> result = new ArrayList<Symbol>();
         int startPosition = next;
         for (int i = 0; i < count; i++) {
-            Step step = makeNextStep(provider, ignoreFirst, startPosition);
+            Step step = makeNextStep(specification, startPosition);
             result.add(step.token);
             if (input.isEnd()) break;
             startPosition = step.nextPosition;
@@ -96,14 +88,14 @@ public class Scanner {
         return result;
     }
 
-    private Step makeNextStep(SymbolProvider provider, final List<SymbolType> ignoreFirst, final int startPosition) {
+    private Step makeNextStep(final ParseSpecification specification, final int startPosition) {
         input.setOffset(startPosition);
         int newNext = startPosition;
         Symbol matchSymbol = null;
         while (!input.isEnd()) {
-            SymbolMatch match = provider.findMatch(input, new MatchableFilter() {
+            SymbolMatch match = specification.findMatch(input, new MatchableFilter() {
                 public boolean isValid(Matchable candidate) {
-                    return input.getOffset() != startPosition || !contains(ignoreFirst, candidate);
+                    return input.getOffset() != startPosition || !specification.ignores(candidate);
                 }
             });
             if (match.isMatch()) {
@@ -114,7 +106,7 @@ public class Scanner {
             input.moveNext();
         }
         if (input.getOffset() > startPosition) {
-            SymbolMatch match = textMaker.make(provider, input.substringFrom(startPosition));
+            SymbolMatch match = textMaker.make(specification, input.substringFrom(startPosition));
             return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
@@ -131,12 +123,5 @@ public class Scanner {
             this.token = token;
             this.nextPosition = nextPosition;
         }
-    }
-
-    private boolean contains(List<SymbolType> ignoreList, Matchable candidate) {
-        for (SymbolType ignore: ignoreList) {
-            if (candidate.matchesFor(ignore)) return true;
-        }
-        return false;
     }
 }
