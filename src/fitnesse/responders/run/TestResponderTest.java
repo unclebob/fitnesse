@@ -274,7 +274,7 @@ public class TestResponderTest {
   @Test
   public void slimXmlFormat() throws Exception {
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(2, 1, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
@@ -521,7 +521,7 @@ public class TestResponderTest {
 
   @Test
   public void checkHistoryForSimpleSlimTable() throws Exception {
-    ensureXmlResultFileDoesNotExist(new TestSummary(2, 0, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(1, 0, 0, 0));
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
@@ -596,7 +596,7 @@ public class TestResponderTest {
 
       Element result = getElementByTagName(testResultsElement, "result");
       Element counts = getElementByTagName(result, "counts");
-      assertCounts(counts, "2", "1", "0", "0");
+      assertCounts(counts, "1", "1", "0", "0");
 
       String tags = XmlUtil.getTextValue(result, "tags");
       assertEquals("zoo", tags);
@@ -680,7 +680,7 @@ public class TestResponderTest {
 
       Element result = getElementByTagName(testResultsElement, "result");
       Element counts = getElementByTagName(result, "counts");
-      assertCounts(counts, "3", "0", "0", "0");
+      assertCounts(counts, "2", "0", "0", "0");
 
       String runTimeInMillis = XmlUtil.getTextValue(result, "runTimeInMillis");
       assertThat(Long.parseLong(runTimeInMillis), is(not(0L)));

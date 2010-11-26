@@ -354,7 +354,7 @@ public class SuiteResponderTest {
       String pageName = XmlUtil.getTextValue(testResult, "relativePageName");
       assertSubString(pageName + "?pageHistory&resultDate=", XmlUtil.getTextValue(testResult, "pageHistoryLink"));
       if ("SlimTest".equals(pageName)) {
-        assertCounts(testResult, "2", "0", "0", "0");
+        assertCounts(testResult, "1", "0", "0", "0");
       } else if ("TestOne".equals(pageName)) {
         assertCounts(testResult, "1", "0", "0", "0");
       } else {
@@ -415,7 +415,7 @@ public class SuiteResponderTest {
 
   @Test
   public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
-    TestSummary counts = new TestSummary(2, 0, 0, 0);
+    TestSummary counts = new TestSummary(1, 0, 0, 0);
     String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     File xmlResultsFile = new File(resultsFileName);
