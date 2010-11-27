@@ -5,16 +5,15 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public abstract class MethodExecutor {
-
   public MethodExecutor() {
     super();
   }
-  
+
   public abstract MethodExecutionResult execute(String instanceName, String methodName, Object[] args) throws Throwable;
 
   protected Method findMatchingMethod(String methodName, Class<? extends Object> k, int nArgs) {
     Method methods[] = k.getMethods();
-  
+
     for (Method method : methods) {
       boolean hasMatchingName = method.getName().equals(methodName);
       boolean hasMatchingArguments = method.getParameterTypes().length == nArgs;
@@ -35,13 +34,13 @@ public abstract class MethodExecutor {
     return convertToString(retval, retType);
   }
 
-  private Object[] convertArgs(Method method, Object args[]) {
+  protected Object[] convertArgs(Method method, Object args[]) {
     Class<?>[] argumentTypes = method.getParameterTypes();
     Object[] convertedArgs = convertArgs(args, argumentTypes);
     return convertedArgs;
   }
 
-  private Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
+  protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
     Object retval = null;
     try {
       retval = method.invoke(instance, convertedArgs);
@@ -52,26 +51,26 @@ public abstract class MethodExecutor {
   }
 
   @SuppressWarnings("unchecked")
-  private Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
+  protected Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
     Object[] convertedArgs = new Object[args.length];
     for (int i = 0; i < argumentTypes.length; i++) {
       Class<?> argumentType = argumentTypes[i];
       if (argumentType == List.class && args[i] instanceof List) {
         convertedArgs[i] = args[i];
       } else {
-        
+
         Converter converter = ConverterSupport.getConverter(argumentType);
         if (converter != null)
           convertedArgs[i] = converter.fromString((String) args[i]);
         else
           throw new SlimError(String.format("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>",
-              argumentType.getName()));
+            argumentType.getName()));
       }
     }
     return convertedArgs;
   }
 
-  private Object convertToString(Object retval, Class<?> retType) {
+  protected Object convertToString(Object retval, Class<?> retType) {
     Converter converter = ConverterSupport.getConverter(retType);
     if (converter != null)
       return converter.toString(retval);
@@ -83,10 +82,9 @@ public abstract class MethodExecutor {
 
   protected MethodExecutionResult findAndInvoke(String methodName, Object[] args, Object instance) throws Throwable {
     Method method = findMatchingMethod(methodName, instance.getClass(), args.length);
-    if(method != null) {
+    if (method != null) {
       return new MethodExecutionResult(this.invokeMethod(instance, method, args));
     }
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }
-
 }
