@@ -30,6 +30,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import sun.misc.Regexp;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
@@ -511,6 +512,70 @@ public class TestResponderTest {
     assertHasRegexp("Output of SuiteTearDown", errorLogContent);
   }
 
+  @Test
+  public void testSuiteSetUpDoesNotIncludeSetUp() throws Exception {
+    responder.setFastTest(false);
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    crawler.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    String errorLogContent = errorLog.getData().getContent();
+    assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
+    assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
+  }
+  
+  @Test
+  public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
+    responder.setFastTest(false);
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    crawler.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    String errorLogContent = errorLog.getData().getContent();
+    assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
+    assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
+  }
+  
+  private void assertMessageHasJustOneOccurrenceOf(String output, String regexp) {
+    Matcher match = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL).matcher(output);
+    match.find();
+    boolean found = match.find();
+    if (found)
+      fail("The regexp <" + regexp + "> was more than once in: " + output + ".");
+  }
+
+  private void assertMessagesOccurInOrder(String errorLogContent, String... messages) {
+    int previousIndex = 0, currentIndex = 0;
+    String previousMsg = "";
+    for (String msg: messages) {
+      currentIndex = errorLogContent.indexOf(msg);
+      assertTrue(String.format("\"%s\" should occur not before \"%s\", but did in \"%s\"", msg, previousMsg, errorLogContent), currentIndex > previousIndex);
+      previousIndex = currentIndex;
+      previousMsg = msg;
+    }
+  }
 
   private String simpleSlimDecisionTable() {
     return "!define TEST_SYSTEM {slim}\n" +

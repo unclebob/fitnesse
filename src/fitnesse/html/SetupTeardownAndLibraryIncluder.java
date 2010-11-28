@@ -56,10 +56,13 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) throws Exception {
+    String pageName = testPage.getName();
     includeScenarioLibraryBelow(suitePage);
-    includeSetupPages();
+    if (!PageData.SUITE_SETUP_NAME.equals(pageName))
+      includeSetupPages();
     includePageContent();
-    includeTeardownPages();
+    if (!PageData.SUITE_TEARDOWN_NAME.equals(pageName))
+      includeTeardownPages();
     updatePageContent();
   }
 

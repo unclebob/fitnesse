@@ -91,8 +91,10 @@ public class SetupTeardownAndLibraryIncluderTest {
     assertSubString("suiteSetUp", html);
     assertSubString(".SuiteTearDown", html);
     assertSubString("suiteTearDown", html);
+    assertEquals("SetUp occurs more than ocne", html.indexOf(" SetUp"), html.lastIndexOf(" SetUp"));
+    assertEquals("TearDown occurs more than once", html.indexOf(" TearDown"), html.lastIndexOf(" TearDown"));
   }
-
+  
   @Test
   public void includeScenarioLibraryBrother() throws Exception {
     WikiPage slimTestPage = addPage("SlimTest", "!define TEST_SYSTEM {slim}\n");
