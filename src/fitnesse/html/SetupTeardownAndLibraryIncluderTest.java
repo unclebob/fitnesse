@@ -91,7 +91,7 @@ public class SetupTeardownAndLibraryIncluderTest {
     assertSubString("suiteSetUp", html);
     assertSubString(".SuiteTearDown", html);
     assertSubString("suiteTearDown", html);
-    assertEquals("SetUp occurs more than ocne", html.indexOf(" SetUp"), html.lastIndexOf(" SetUp"));
+    assertEquals("SetUp occurs more than once", html.indexOf(" SetUp"), html.lastIndexOf(" SetUp"));
     assertEquals("TearDown occurs more than once", html.indexOf(" TearDown"), html.lastIndexOf(" TearDown"));
   }
   

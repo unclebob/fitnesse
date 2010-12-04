@@ -558,6 +558,31 @@ public class TestResponderTest {
     assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
   }
   
+  @Test
+  public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
+    responder.setFastTest(false);
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    crawler.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    crawler.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    String errorLogContent = errorLog.getData().getContent();
+    assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
+    assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
+  }
+  
   private void assertMessageHasJustOneOccurrenceOf(String output, String regexp) {
     Matcher match = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL).matcher(output);
     match.find();
