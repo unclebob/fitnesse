@@ -15,6 +15,13 @@ public class VariableStore {
     variables.put(name, value);
   }
 
+  public Object getStored(String nameWithDollar) {
+    if (!nameWithDollar.startsWith("$")) {
+      return null;
+    }
+    return variables.get(nameWithDollar.substring(1));
+  }
+  
   public Object[] replaceSymbols(Object[] args) {
     Object result[] = new Object[args.length];
     for (int i = 0; i < args.length; i++)

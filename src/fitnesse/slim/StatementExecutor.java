@@ -81,13 +81,13 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public Object create(String instanceName, String className, Object[] args) {
-    String replacedClassName = variables.replaceSymbolsInString(className);
     try {
-      Object instance = createInstanceOfConstructor(replacedClassName, replaceSymbols(args));
-      if (isLibrary(instanceName)) {
-        libraries.add(new Library(instanceName, instance));
+      if (null != getStoredActor(className)) {
+        addToInstancesOrLibrary(instanceName, getStoredActor(className));
       } else {
-        instances.put(instanceName, instance);
+        String replacedClassName = variables.replaceSymbolsInString(className);
+        Object instance = createInstanceOfConstructor(replacedClassName, replaceSymbols(args));
+        addToInstancesOrLibrary(instanceName, instance);
       }
       return "OK";
     } catch (SlimError e) {
@@ -97,6 +97,22 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (Throwable e) {
       return exceptionToString(e);
     }
+  }
+
+  private void addToInstancesOrLibrary(String instanceName, Object instance) {
+    if (isLibrary(instanceName)) {
+      libraries.add(new Library(instanceName, instance));
+    } else {
+      instances.put(instanceName, instance);
+    }
+  }
+
+  private Object getStoredActor(String className) {
+    Object storedActor = variables.getStored(className);
+    if (storedActor instanceof String) {
+      return null;
+    }
+    return storedActor;
   }
 
   private boolean isLibrary(String instanceName) {
