@@ -120,6 +120,10 @@ td.confirmation-form, th.confirmation-form {
   margin: 0px;
 }
 
+td.numeric, th.numeric {
+  text-align:right;
+}
+
 h1, h2, h3, h4 {
   font-family: Helvetica, sans-serif;
   font-variant: small-caps;

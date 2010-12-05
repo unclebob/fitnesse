@@ -37,18 +37,12 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     super.allTestingComplete(totalTimeMeasurement);
     if (writerFactory != null)
-      writer = writerFactory.getWriter(context, page, getPageCounts(), getSuiteTime());
+      writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("suiteExecutionReport", suiteExecutionReport);
     VelocityEngine velocityEngine = VelocityFactory.getVelocityEngine();
     Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
     template.merge(velocityContext, writer);
     writer.close();
-  }
-
-  private long getSuiteTime() {
-    if (BaseFormatter.testTime != 0)
-      return BaseFormatter.testTime;
-    return suiteTime;
   }
 }

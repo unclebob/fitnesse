@@ -48,7 +48,7 @@
 |ensure|html contains|<a href="/@page?pageHistory">@page</a></td> <td class="@passClass">@passCount</td> <td class="@failClass">@failCount</td>|
 
 !|scenario|assume time is|time|
-|set xml formatter time to|@time|
+|freeze clock at|@time|
 
 !|scenario|with subpage|name|with content|content|
 |create page|$IT.@name|with content|@content|

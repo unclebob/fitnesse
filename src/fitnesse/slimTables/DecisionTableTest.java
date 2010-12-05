@@ -27,7 +27,7 @@ public class DecisionTableTest {
       "|var|func?|\n" +
       "|3|5|\n" +
       "|7|9|\n";
-  public DecisionTable dt;
+  private DecisionTable decisionTable;
   private MockSlimTestContext testContext;
 
   @Before
@@ -38,34 +38,44 @@ public class DecisionTableTest {
   }
 
   private DecisionTable makeDecisionTableAndBuildInstructions(String tableText) throws Exception {
-    dt = makeDecisionTable(tableText);
-    dt.appendInstructions(instructions);
-    return dt;
+    decisionTable = makeDecisionTable(tableText);
+    decisionTable.appendInstructions(instructions);
+    return decisionTable;
   }
 
   private DecisionTable makeDecisionTable(String tableText) throws Exception {
     WikiPageUtil.setPageContents(root, tableText);
     TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
     Table t = ts.getTable(0);
-    DecisionTable dt = new DecisionTable(t, "id", testContext);
-    return dt;
+    return new DecisionTable(t, "id", testContext);
   }
 
   @Test
-  public void badTableHasTwoRows() throws Exception {
-    makeDecisionTableAndBuildInstructions("|x|\n|y|\n");
-    assertTrue(dt.getTable().getCellContents(0, 0).indexOf("Bad table") != -1);
+  public void aDecisionTableWithOnlyTwoRowsIsBad() throws Exception {
+    assertTableIsBad(makeDecisionTableWithTwoRows());
+  }
+
+  private void assertTableIsBad(DecisionTable decisionTable) {
+    assertTrue(firstCellOfTable(decisionTable).contains("Bad table"));
+  }
+
+  private String firstCellOfTable(DecisionTable decisionTable) {
+    return decisionTable.getTable().getCellContents(0, 0);
+  }
+
+  private DecisionTable makeDecisionTableWithTwoRows() throws Exception {
+    return makeDecisionTableAndBuildInstructions("|x|\n|y|\n");
   }
 
   @Test
   public void wrongNumberOfColumns() throws Exception {
-    makeDecisionTableAndBuildInstructions(
+    DecisionTable aDecisionTable = makeDecisionTableAndBuildInstructions(
       "|DT:fixture|argument|\n" +
         "|var|var2|\n" +
         "|3|\n" +
         "|7|9|\n"
     );
-    assertTrue(dt.getTable().getCellContents(0, 0).indexOf("Bad table") != -1);
+    assertTableIsBad(aDecisionTable);
   }
 
   @Test
@@ -84,7 +94,7 @@ public class DecisionTableTest {
     );
     testContext.evaluateExpectations(pseudoResults);
 
-    String colorizedTable = dt.getTable().toString();
+    String colorizedTable = decisionTable.getTable().toString();
     String expectedColorizedTable =
       "[[pass(fixture), argument]]";
     assertEquals(expectedColorizedTable, colorizedTable);
@@ -94,19 +104,27 @@ public class DecisionTableTest {
   @Test
   public void canBuildInstructionsForSimpleDecisionTable() throws Exception {
     makeDecisionTableAndBuildInstructions(simpleDecisionTable);
+    int n = 0;
     List<Object> expectedInstructions = list(
-      list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument"),
-      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "5"), list("7", "9"))),
-      list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
-      list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
-      list("decisionTable_id_4", "call", "decisionTable_id", "execute"),
-      list("decisionTable_id_5", "call", "decisionTable_id", "func"),
-      list("decisionTable_id_6", "call", "decisionTable_id", "reset"),
-      list("decisionTable_id_7", "call", "decisionTable_id", "setVar", "7"),
-      list("decisionTable_id_8", "call", "decisionTable_id", "execute"),
-      list("decisionTable_id_9", "call", "decisionTable_id", "func")
+      list(id(n++), "make", "decisionTable_id", "fixture", "argument"),
+      list(id(n++), "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "5"), list("7", "9"))),
+      list(id(n++), "call", "decisionTable_id", "beginTable"),
+      list(id(n++), "call", "decisionTable_id", "reset"),
+      list(id(n++), "call", "decisionTable_id", "setVar", "3"),
+      list(id(n++), "call", "decisionTable_id", "execute"),
+      list(id(n++), "call", "decisionTable_id", "func"),
+      list(id(n++), "call", "decisionTable_id", "reset"),
+      list(id(n++), "call", "decisionTable_id", "setVar", "7"),
+      list(id(n++), "call", "decisionTable_id", "execute"),
+      list(id(n++), "call", "decisionTable_id", "func"),
+      list(id(n++), "call", "decisionTable_id", "endTable")
+
     );
     assertEquals(expectedInstructions.toString(), instructions.toString());
+  }
+
+  private String id(int n) {
+    return "decisionTable_id_"+n;
   }
 
   @Test
@@ -116,17 +134,20 @@ public class DecisionTableTest {
       "|var|func!|\n" +
       "|3|5|\n" +
       "|7|9|\n");
+    int n=0;
     List<Object> expectedInstructions = list(
-      list("decisionTable_id_0", "make", "decisionTable_id", "fixture", "argument"),
-      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func!"), list("3", "5"), list("7", "9"))),
-      list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
-      list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
-      list("decisionTable_id_4", "call", "decisionTable_id", "execute"),
-      list("decisionTable_id_5", "call", "decisionTable_id", "func"),
-      list("decisionTable_id_6", "call", "decisionTable_id", "reset"),
-      list("decisionTable_id_7", "call", "decisionTable_id", "setVar", "7"),
-      list("decisionTable_id_8", "call", "decisionTable_id", "execute"),
-      list("decisionTable_id_9", "call", "decisionTable_id", "func")
+      list(id(n++), "make", "decisionTable_id", "fixture", "argument"),
+      list(id(n++), "call", "decisionTable_id", "table", list(list("var", "func!"), list("3", "5"), list("7", "9"))),
+      list(id(n++), "call", "decisionTable_id", "beginTable"),
+      list(id(n++), "call", "decisionTable_id", "reset"),
+      list(id(n++), "call", "decisionTable_id", "setVar", "3"),
+      list(id(n++), "call", "decisionTable_id", "execute"),
+      list(id(n++), "call", "decisionTable_id", "func"),
+      list(id(n++), "call", "decisionTable_id", "reset"),
+      list(id(n++), "call", "decisionTable_id", "setVar", "7"),
+      list(id(n++), "call", "decisionTable_id", "execute"),
+      list(id(n++), "call", "decisionTable_id", "func"),
+      list(id(n++), "call", "decisionTable_id", "endTable")
     );
     assertEquals(expectedInstructions.toString(), instructions.toString());
   }
@@ -165,17 +186,20 @@ public class DecisionTableTest {
         "|3|$V=|\n" +
         "|$V|9|\n"
     );
+    int n=0;
     List<Object> expectedInstructions = list(
-      list("decisionTable_id_0", "make", "decisionTable_id", "fixture"),
-      list("decisionTable_id_1", "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "$V="), list("$V", "9"))),
-      list("decisionTable_id_2", "call", "decisionTable_id", "reset"),
-      list("decisionTable_id_3", "call", "decisionTable_id", "setVar", "3"),
-      list("decisionTable_id_4", "call", "decisionTable_id", "execute"),
-      list("decisionTable_id_5", "callAndAssign", "V", "decisionTable_id", "func"),
-      list("decisionTable_id_6", "call", "decisionTable_id", "reset"),
-      list("decisionTable_id_7", "call", "decisionTable_id", "setVar", "$V"),
-      list("decisionTable_id_8", "call", "decisionTable_id", "execute"),
-      list("decisionTable_id_9", "call", "decisionTable_id", "func")
+      list(id(n++), "make", "decisionTable_id", "fixture"),
+      list(id(n++), "call", "decisionTable_id", "table", list(list("var", "func?"), list("3", "$V="), list("$V", "9"))),
+      list(id(n++), "call", "decisionTable_id", "beginTable"),
+      list(id(n++), "call", "decisionTable_id", "reset"),
+      list(id(n++), "call", "decisionTable_id", "setVar", "3"),
+      list(id(n++), "call", "decisionTable_id", "execute"),
+      list(id(n++), "callAndAssign", "V", "decisionTable_id", "func"),
+      list(id(n++), "call", "decisionTable_id", "reset"),
+      list(id(n++), "call", "decisionTable_id", "setVar", "$V"),
+      list(id(n++), "call", "decisionTable_id", "execute"),
+      list(id(n++), "call", "decisionTable_id", "func"),
+      list(id(n++), "call", "decisionTable_id", "endTable")
     );
     assertEquals(expectedInstructions.toString(), instructions.toString());
   }
@@ -183,18 +207,21 @@ public class DecisionTableTest {
   @Test
   public void canEvaluateReturnValuesAndColorizeTable() throws Exception {
     DecisionTable dt = makeDecisionTableAndBuildInstructions(simpleDecisionTable);
+    int n=0;
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("decisionTable_id_0", "OK"),
-        list("decisionTable_id_1", VoidConverter.VOID_TAG), 
-        list("decisionTable_id_2", VoidConverter.VOID_TAG), //reset
-        list("decisionTable_id_3", VoidConverter.VOID_TAG), //set
-        list("decisionTable_id_4", VoidConverter.VOID_TAG), //execute
-        list("decisionTable_id_5", "5"),
-        list("decisionTable_id_6", VoidConverter.VOID_TAG),
-        list("decisionTable_id_7", VoidConverter.VOID_TAG),
-        list("decisionTable_id_8", VoidConverter.VOID_TAG),
-        list("decisionTable_id_9", "5")
+        list(id(n++), "OK"),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG), // beginTable        
+        list(id(n++), VoidConverter.VOID_TAG), //reset
+        list(id(n++), VoidConverter.VOID_TAG), //set
+        list(id(n++), VoidConverter.VOID_TAG), //execute
+        list(id(n++), "5"),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), "5"),
+        list(id(n++), VoidConverter.VOID_TAG) //endTable        
       )
     );
     testContext.evaluateExpectations(pseudoResults);
@@ -213,18 +240,21 @@ public class DecisionTableTest {
   @Test
   public void translatesTestTablesIntoLiteralTables() throws Exception {
     DecisionTable dt = makeDecisionTableAndBuildInstructions("!" + simpleDecisionTable);
+    int n=0;
     Map<String, Object> pseudoResults = SlimClient.resultToMap(
       list(
-        list("decisionTable_id_0", "OK"),
-        list("decisionTable_id_1", VoidConverter.VOID_TAG), 
-        list("decisionTable_id_2", VoidConverter.VOID_TAG), //reset
-        list("decisionTable_id_3", VoidConverter.VOID_TAG), //set
-        list("decisionTable_id_4", VoidConverter.VOID_TAG), //execute
-        list("decisionTable_id_5", "5"),
-        list("decisionTable_id_6", VoidConverter.VOID_TAG),
-        list("decisionTable_id_7", VoidConverter.VOID_TAG),
-        list("decisionTable_id_8", VoidConverter.VOID_TAG),
-        list("decisionTable_id_9", "5")
+        list(id(n++), "OK"),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG), //beginTable
+        list(id(n++), VoidConverter.VOID_TAG), //reset
+        list(id(n++), VoidConverter.VOID_TAG), //set
+        list(id(n++), VoidConverter.VOID_TAG), //execute
+        list(id(n++), "5"),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), VoidConverter.VOID_TAG),
+        list(id(n++), "5"),
+        list(id(n++), VoidConverter.VOID_TAG) //endTable        
       )
     );
     testContext.evaluateExpectations(pseudoResults);
@@ -259,9 +289,9 @@ public class DecisionTableTest {
         "|my var|my func?|\n" +
         "|8|7|\n"
     );
-    List<String> setInstruction = list("decisionTable_id_3", "call", "decisionTable_id", "setMyVar", "8");
-    List<String> callInstruction = list("decisionTable_id_5", "call", "decisionTable_id", "myFunc");
-    assertEquals(setInstruction, instructions.get(3));
-    assertEquals(callInstruction, instructions.get(5));
+    List<String> setInstruction = list("decisionTable_id_4", "call", "decisionTable_id", "setMyVar", "8");
+    List<String> callInstruction = list("decisionTable_id_6", "call", "decisionTable_id", "myFunc");
+    assertEquals(setInstruction, instructions.get(4));
+    assertEquals(callInstruction, instructions.get(6));
   }
 }

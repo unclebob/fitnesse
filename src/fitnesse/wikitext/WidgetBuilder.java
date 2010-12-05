@@ -51,7 +51,8 @@ public class WidgetBuilder {
     VariableDefinitionWidget.class,
     EvaluatorWidget.class,
     VariableWidget.class,
-    HashWidget.class
+    HashWidget.class,
+    HelpWidget.class
   );
 
   public static WidgetBuilder literalVariableEvaluatorWidgetBuilder = new WidgetBuilder(

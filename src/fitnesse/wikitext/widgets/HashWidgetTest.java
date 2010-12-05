@@ -3,12 +3,13 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wikitext.WikiWidget;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.*;
 
 public class HashWidgetTest {
   private final String HTML_FOR_ABCD_HASH = "<table class=\"hash_table\">" +

@@ -15,7 +15,20 @@ import fitnesse.wikitext.widgets.WidgetRoot;
 public class TestSystemTest {
 
   @Test
-  public void testCommandPattern() throws Exception {
+  public void testCommandPatternCSharp() throws Exception {
+    String specifiedPageText = "!define COMMAND_PATTERN {%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p}\n";
+    WikiPage specifiedPage = makeTestPage(specifiedPageText);
+
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage.getData(), false);
+    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", defaultDescriptor2.commandPattern);
+  
+    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(specifiedPage.getData(), true);
+    assertEquals("%m -r fitSharp.Slim.Service.Runner,fitsharp.dll %p", defaultDescriptor3.commandPattern);
+  }
+
+  
+  @Test
+  public void testCommandPatternJava() throws Exception {
 
     String pageText = "!define TEST_SYSTEM {slim}\n";
     WikiPage page = makeTestPage(pageText);
@@ -58,6 +71,34 @@ public class TestSystemTest {
 
     Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage.getData(), false);
     assertEquals("rubyslim.rb", myDescriptor.testRunner);
+  }
+  
+  @Test
+  public void testRunnerCSharp() throws Exception {
+    String specifiedPageText = "!define TEST_RUNNER {..\\fitnesse\\fitsharp\\Runner.exe}";
+    WikiPage specifiedPage = makeTestPage(specifiedPageText);
+
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(specifiedPage.getData(), false);
+    assertEquals("..\\fitnesse\\fitsharp\\Runner.exe", defaultDescriptor2.testRunner);  
+    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(specifiedPage.getData(), true);
+    assertEquals("..\\fitnesse\\fitsharp\\runnerw.exe", defaultDescriptor3.testRunner);
+  }
+
+  @Test
+  public void testRunnerDefault() throws Exception {
+    String pageText = "!define TEST_SYSTEM {slim}\n";
+    WikiPage page = makeTestPage(pageText);
+    
+    Descriptor defaultDescriptor2 = TestSystem.getDescriptor(page.getData(), false);
+    assertEquals("fitnesse.slim.SlimService", defaultDescriptor2.testRunner);  
+    Descriptor defaultDescriptor3 = TestSystem.getDescriptor(page.getData(), true);
+    assertEquals("fitnesse.slim.SlimService", defaultDescriptor3.testRunner);
+
+    String specifiedPageText = "!define REMOTE_DEBUG_RUNNER {Different runner}";
+    WikiPage specifiedPage = makeTestPage(specifiedPageText);
+
+    Descriptor specifiedDescriptor = TestSystem.getDescriptor(specifiedPage.getData(), true);
+    assertEquals("Different runner", specifiedDescriptor.testRunner);  
   }
 
   WikiPage makeTestPage(String pageText) throws Exception {

@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
+
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Test;
@@ -13,7 +15,7 @@ public class ClockTest {
 
   @After
   public void restoreSystemClock() {
-    Clock.instance = new SystemClock();
+    Clock.restoreDefaultClock();
   }
   
   @Test
@@ -30,49 +32,45 @@ public class ClockTest {
   
   @Test
   public void staticTimeMethodShouldDelegateToInstance() throws Exception {
-    @SuppressWarnings("serial")
-    Clock constantTimeClock = new Clock(true) {
+    Clock constantTimeClock = newConstantTimeClock(1, true);
+    assertThat(Clock.currentTimeInMillis(), is(1L));
+  }
+
+  private Clock newConstantTimeClock(final long theConstantTime, final boolean overrideGlobalClock) {
+    return new Clock(overrideGlobalClock) {
       @Override
       public long currentClockTimeInMillis() {
-        return 1;
+        return theConstantTime;
       }
     };
-    assertThat(Clock.currentTimeInMillis(), is(1L));
   }
   
   @Test
-  public void currentClockDateShouldDelegateToCurrentTimeInMillis() throws Exception {
-    @SuppressWarnings("serial")
-    Clock constantTimeClock = new Clock() {
-      @Override
-      public long currentClockTimeInMillis() {
-        return 2;
-      }
-    };
+  public void dateMethodShouldDelegateToCurrentTimeInMillis() throws Exception {
+    Clock constantTimeClock = newConstantTimeClock(2, false);
     assertThat(constantTimeClock.currentClockDate().getTime(), is(2L));
   }
 
   @Test
   public void staticDateMethodShouldDelegateToInstance() throws Exception {
-    @SuppressWarnings("serial")
-    Clock constantTimeClock = new Clock(true) {
-      @Override
-      public long currentClockTimeInMillis() {
-        return 3;
-      }
-    };
+    Clock constantTimeClock = newConstantTimeClock(3, true);
     assertThat(Clock.currentDate().getTime(), is(3L));
   }
   
   @Test
-  public void globalClockShouldDelegateToInstance() throws Exception {
-    @SuppressWarnings("serial")
-    Clock constantTimeClock = new Clock(true) {
-      @Override
-      public long currentClockTimeInMillis() {
-        return 4;
-      }
-    };
-    assertThat(new GlobalClock().currentClockTimeInMillis(), is(4L));
+  public void booleanConstructorArgShouldDetermineWhetherToReplaceGlobalInstance() throws Exception {
+    Clock constantTimeClock = newConstantTimeClock(4, false);
+    assertThat(Clock.instance, is(not(constantTimeClock)));
+    constantTimeClock = newConstantTimeClock(5, true);
+    assertThat(Clock.instance, is(constantTimeClock));
+  }
+
+  @Test
+  public void shouldBeAbleToRestoreDefaultClock() throws Exception {
+    long before = Clock.currentTimeInMillis();
+    Clock clock = newConstantTimeClock(0, true);
+    Clock.restoreDefaultClock();
+    assertThat(Clock.currentTimeInMillis(), is(not(0L)));
+    assertTrue(Clock.currentTimeInMillis() - before < 1000);
   }
 }

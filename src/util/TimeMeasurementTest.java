@@ -6,8 +6,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Calendar;
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,8 +14,13 @@ public class TimeMeasurementTest {
   private Clock mockedClock;
   
   @Before
-  public void mockGlobalClock() {
-    mockedClock = mock(GlobalClock.class);
+  public void mockClock() {
+    mockedClock = mock(SystemClock.class);
+  }
+  
+  @After
+  public void restoreDefaultClock() {
+    Clock.restoreDefaultClock();
   }
   
   @Test
@@ -162,5 +166,23 @@ public class TimeMeasurementTest {
         return millis;
       }
     };
+  }
+  
+  @Test
+  public void alteringGlobalClockShouldNotAffectExistingTimeMeasurement() throws Exception {
+    TimeMeasurement timeMeasurement = new TimeMeasurement();
+    DateAlteringClock globalClock = new DateAlteringClock(Clock.currentDate()).freeze();
+    TimeMeasurement frozentTimeMeasurement = new TimeMeasurement().start();
+    timeMeasurement.start();
+    SystemClock systemClock = new SystemClock();
+    long before = 0, after = 0;
+    while (before == after) {
+      after = systemClock.currentClockTimeInMillis();
+      if (before == 0) {
+        before = after;
+      }
+    }
+    assertThat(frozentTimeMeasurement.elapsed(), is(0L));
+    assertThat(timeMeasurement.elapsed(), is(not(0L)));
   }
 }

@@ -13,8 +13,8 @@ import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
+import fitnesse.wikitext.widgets.WidgetRoot;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -29,17 +29,17 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   public static final String MESSAGE_FAIL = "!fail:";
   public static final SlimTable START_OF_TEST = null;
   public static final SlimTable END_OF_TEST = null;
-  
+
   private CommandRunner slimRunner;
   private String slimCommand;
   private SlimClient slimClient;
-  
+
   protected Map<String, Object> allInstructionResults = new HashMap<String, Object>();
   protected List<SlimTable> allTables = new ArrayList<SlimTable>();
   protected List<Object> allInstructions = new ArrayList<Object>();
   protected List<SlimTable.Expectation> allExpectations = new ArrayList<SlimTable.Expectation>();
 
-  
+
   protected List<Object> instructions;
   private boolean started;
   protected PageData testResults;
@@ -55,7 +55,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
-  
+  private WidgetRoot precompiledScenarioWidgets;
+
+
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
     super(page, listener);
     testSummary = new TestSummary(0, 0, 0, 0);
@@ -118,7 +120,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     int base = getSlimPortBase();
     synchronized (slimSocketOffset) {
       int offset = slimSocketOffset.get();
-      offset = (offset+1)%10;
+      offset = (offset + 1) % 10;
       slimSocketOffset.set(offset);
       return offset + base;
     }
@@ -174,7 +176,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     try {
       SlimService.main(args.trim().split(" "));
       return true;
-    } catch(SocketException e) {
+    } catch (SocketException e) {
       throw e;
     } catch (Exception e) {
       return false;
@@ -241,13 +243,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     tableScanner = scanTheTables(pageData);
     allTables = createSlimTables(tableScanner);
     testResults = pageData;
-    
+
     boolean runAllTablesAtOnce = false;
     String htmlResults = "";
-    if (runAllTablesAtOnce || (allTables.size() == 0) ) {
+    if (runAllTablesAtOnce || (allTables.size() == 0)) {
       htmlResults = processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST);
-    }
-    else {
+    } else {
       List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
       for (int index = 0; index < allTables.size(); index++) {
         SlimTable theTable = allTables.get(index);
@@ -264,9 +265,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   protected abstract TableScanner scanTheTables(PageData pageData) throws Exception;
 
-  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable,  SlimTable nextTable) throws Exception {
+  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws Exception {
     expectations.clear();
-    
+
     testTables = tables;
     instructions = createInstructions(tables);
     if (!exceptions.stopTestCalled()) {
@@ -274,15 +275,15 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
     String html = createHtmlResults(startWithTable, nextTable);
     acceptOutputFirst(html);
-    
+
     // update all lists
     allExpectations.addAll(expectations);
     allInstructions.addAll(instructions);
     allInstructionResults.putAll(instructionResults);
-    
+
     return html;
   }
-  
+
   private List<Object> createInstructions(List<SlimTable> tables) {
     List<Object> instructions = new ArrayList<Object>();
     for (SlimTable table : tables) {
@@ -290,7 +291,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
     return instructions;
   }
-  
+
   private List<SlimTable> createSlimTables(TableScanner tableScanner) {
     List<SlimTable> allTables = new LinkedList<SlimTable>();
     for (Table table : tableScanner) {
@@ -398,7 +399,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     if (isStopTestException) {
       exceptions.setStopTestCalled();
     }
-    
+
     Matcher exceptionMessageMatcher = exceptionMessagePattern.matcher(resultString);
     if (exceptionMessageMatcher.find()) {
       String prefix = (isStopTestException) ? MESSAGE_FAIL : MESSAGE_ERROR;
@@ -436,5 +437,32 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public List<SlimTable.Expectation> getExpectations() {
     return allExpectations;
+  }
+
+
+  public WidgetRoot getPrecompiledScenarioWidgets() throws Exception {
+    if (precompiledScenarioWidgets == null)
+      precompiledScenarioWidgets = new WidgetRoot(getWidgetRootContent(), page);
+    return precompiledScenarioWidgets;
+  }
+
+  private String getWidgetRootContent() throws Exception {
+    String content = "!*> Precompiled Libraries\n\n";
+    content += includeUncleLibraries();
+    content += "*!\n";
+    return content;
+  }
+
+  private String includeUncleLibraries() throws Exception {
+    String content = "";
+    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", page);
+    Collections.reverse(uncles);
+    for (WikiPage uncle : uncles)
+      content += include(page.getPageCrawler().getFullPath(uncle));
+    return content;
+  }
+
+  private String include(WikiPagePath path) {
+    return "!include -c ." + path + "\n";
   }
 }

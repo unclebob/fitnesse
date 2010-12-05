@@ -118,4 +118,24 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     //assert stop button removed
     assertSubString("className = \"fail\"", pageBuffer.toString());
   }
+
+  public void testTimingShouldAppearInSummary() throws Exception {
+    TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
+    TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(600);
+    formatter.writeHead("test");
+    formatter.announceNumberTestsToRun(1);
+    formatter.newTestStarted(page, timeMeasurement.start());
+    formatter.testComplete(page, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
+    formatter.allTestingComplete(totalTimeMeasurement.stop());
+    assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.600 seconds)", pageBuffer.toString());
+  }
+
+  private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {
+    return new TimeMeasurement() {
+      @Override
+      public long elapsed() {
+        return theElapsedTime;
+      }
+    };
+  }
 }

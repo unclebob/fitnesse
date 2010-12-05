@@ -1,0 +1,25 @@
+!1 Payroll Cheque Printing
+
+The system will automatically print payroll cheques:
+ * one cheque per employee, with employee's name, address and salary on the cheque
+ * using the payroll date
+ * the cheque numbers will be unique
+ * starting from the next available cheque number in ascending order
+ * in the alphabetic order based on employee name
+
+!* Payroll context
+!|Payroll date|1/31/2001|
+
+!|Next available cheque number|1000|
+
+!|Employees in the system                                |
+|name        |address                            |salary |
+|Jeff Languid|10 Adamant St; Laurel, MD 20707    |1005.00|
+|Kelp Holland|12B Baker St; Cottonmouth, IL 60066|2000.00|
+
+*!
+
+!|All cheques printed in the payroll run                                           |
+|cheque number|cheque date|payee       |address                            |amount |
+|1000         |1/31/2001  |Jeff Languid|10 Adamant St; Laurel, MD 20707    |1005.00|
+|1001         |1/31/2001  |Kelp Holland|12B Baker St; Cottonmouth, IL 60066|2000.00|

@@ -16,7 +16,8 @@ public class Logger {
   private File directory;
 
   public static SimpleDateFormat makeLogFormat() {
-    //SimpleDateFormat is not thread safe, so we need to create each instance independently.
+    //SimpleDateFormat is not thread safe,
+    // so we need to create each instance independently.
     return new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z");
   }
 

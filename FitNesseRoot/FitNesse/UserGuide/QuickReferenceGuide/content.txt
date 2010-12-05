@@ -215,6 +215,7 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${HDR} Includes & Informational ${HDRend}                                                    |
 |Timestamp                    |${CODE} ${BANG}'''lastmodified'''     ${CODEend}               |
 |Timestamp                    |${CODE} ${BANG}'''today'''            ${CODEend}               |
+|Help text                    |${CODE} ${BANG}'''help'''            ${CODEend}                |
 |Contents List                |${CODE} ${BANG}'''contents'''     ${CODEend}                   |
 |Contents Tree                |${CODE} ${BANG}'''contents -R'''  ${CODEend}                   |
 |Contents Sub-tree            |${CODE} ${BANG}'''contents -R'''${OPT}''nn''${OPTend}${CODEend}|
@@ -235,9 +236,10 @@ ${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}${SPC}''':'''
 |${HDR} Global Variables ${HDRend}                                                                                                                                                                                                                                                                                 |
 |''' NAME '''                          |''' Java Default '''                                                                     |'''!-FitLibrary (Unix) Default-!'''                                                     |''' .NET Default       '''                                                              |
 |${CODE} COMMAND_PATTERN   ${CODEend}  |!- java -cp %p %m -!                                                                     |!- java -cp %p %m -!                                                                    |!- %m %p  -!                                                                            |
-|${CODE} REMOTE_DEBUG_COMMAND${CODEend}|!- java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!|!-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!|!-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!|
+|${CODE} REMOTE_DEBUG_COMMAND${CODEend}|!- REMOTE DEBUG COMMAND, or java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!|!-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!|!-java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m-!|
 |${CODE} PATH_SEPARATOR    ${CODEend}  |${SPC} : ${SPC} ''!-(system-dependent)-!''                                               |${SPC} : ${SPC} ''!-(system-dependent)-!''                                              |${SPC} !-;-! ${SPC}                                                                     |
 |${CODE} TEST_RUNNER       ${CODEend}  |!-fit.FitServer-!                                                                        |!-fitlibrary.suite.FitLibraryServer-!                                                   |!-dotnet\FitServer.exe-!                                                                |
+|${CODE} REMOTE_DEBUG_RUNNER ${CODEend}  |!-TEST_RUNNER -!                                                                       |!-same as for java-!                                                                    |!-dotnet\FitServer.exe-!                                                                |
 
 |''' NAME '''                             |''' Default '''  |''' Values '''                |''' Notes '''                                                                                                                |
 |${CODE} TEST_SYSTEM ${CODEend}           |!c fit           |!c fit&bar;slim               |'' Selects the test system to use for this, and descendant pages.''                                                          |

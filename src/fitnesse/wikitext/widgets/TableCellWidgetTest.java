@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import util.RegexTestCase;
 import fitnesse.wikitext.WikiWidget;
+import util.RegexTestCase;
 
 public class TableCellWidgetTest extends RegexTestCase {
   public TableRowWidget row;

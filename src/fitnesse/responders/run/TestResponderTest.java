@@ -30,8 +30,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import sun.misc.Regexp;
 import util.Clock;
 import util.DateAlteringClock;
+import util.DateTimeUtil;
 import util.FileUtil;
 import static util.RegexTestCase.*;
 import util.XmlUtil;
@@ -39,10 +41,14 @@ import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestResponderTest {
+  private static final String TEST_TIME = "12/5/2008 01:19:00";
   private WikiPage root;
   private MockRequest request;
   private TestResponder responder;
@@ -71,25 +77,14 @@ public class TestResponderTest {
     context = FitNesseUtil.makeTestContext(root);
     receiver = new FitSocketReceiver(0, context.socketDealer);
     context.port = receiver.receiveSocket();
-    clock = monotonicIncreasingClock();
-  }
-  
-  private DateAlteringClock monotonicIncreasingClock() {
-    return new DateAlteringClock(Clock.currentDate()) {
-      private long tick = 0;
-      @Override
-      public long currentClockTimeInMillis() {
-        return ++tick;
-      }
-    };
+    clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
   }
 
   @After
   public void tearDown() throws Exception {
     receiver.close();
     FitNesseUtil.destroyTestContext();
-    XmlFormatter.clearTestTime();
-    clock.restoreDefaultClock();
+    Clock.restoreDefaultClock();
   }
 
   @Test
@@ -280,7 +275,7 @@ public class TestResponderTest {
   @Test
   public void slimXmlFormat() throws Exception {
     request.addInput("format", "xml");
-    ensureXmlResultFileDoesNotExist(new TestSummary(2, 1, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(1, 1, 0, 0));
     doSimpleRunWithTags(slimDecisionTable(), "zoo");
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect();
@@ -291,7 +286,6 @@ public class TestResponderTest {
 
 
   private void ensureXmlResultFileDoesNotExist(TestSummary counts) {
-    XmlFormatter.setTestTime("12/5/2008 01:19:00");
     String resultsFileName = String.format("%s/TestPage/20081205011900_%d_%d_%d_%d.xml",
       context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
     xmlResultsFile = new File(resultsFileName);
@@ -301,7 +295,7 @@ public class TestResponderTest {
   }
 
   private Document getXmlFromFileAndDeleteFile() throws Exception {
-    assertTrue(xmlResultsFile.exists());
+    assertTrue(xmlResultsFile.getAbsolutePath(), xmlResultsFile.exists());
     FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
     Document xmlDoc = XmlUtil.newDocument(xmlResultsStream);
     xmlResultsStream.close();
@@ -518,6 +512,95 @@ public class TestResponderTest {
     assertHasRegexp("Output of SuiteTearDown", errorLogContent);
   }
 
+  @Test
+  public void testSuiteSetUpDoesNotIncludeSetUp() throws Exception {
+    responder.setFastTest(false);
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    crawler.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    String errorLogContent = errorLog.getData().getContent();
+    assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage");
+    assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
+  }
+  
+  @Test
+  public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
+    responder.setFastTest(false);
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    crawler.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    String errorLogContent = errorLog.getData().getContent();
+    assertMessagesOccurInOrder(errorLogContent, "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
+    assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of TearDown");
+  }
+  
+  @Test
+  public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
+    responder.setFastTest(false);
+    WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
+    WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
+    crawler.addPage(suitePage, PathParser.parse("SetUp"), outputWritingTable("Output of SetUp"));
+    crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
+    crawler.addPage(suitePage, PathParser.parse("TearDown"), outputWritingTable("Output of TearDown"));
+
+    WikiPagePath testPagePath = crawler.getFullPath(testPage);
+    String resource = PathParser.render(testPagePath);
+    request.setResource(resource);
+
+    Response response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    results = sender.sentData();
+
+    WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);
+    String errorLogContent = errorLog.getData().getContent();
+    assertMessagesOccurInOrder(errorLogContent, "Output of SuiteSetUp", "Output of SetUp", "Output of TestPage", "Output of TearDown", "Output of SuiteTearDown");
+    assertMessageHasJustOneOccurrenceOf(errorLogContent, "Output of SetUp");
+  }
+  
+  private void assertMessageHasJustOneOccurrenceOf(String output, String regexp) {
+    Matcher match = Pattern.compile(regexp, Pattern.MULTILINE | Pattern.DOTALL).matcher(output);
+    match.find();
+    boolean found = match.find();
+    if (found)
+      fail("The regexp <" + regexp + "> was more than once in: " + output + ".");
+  }
+
+  private void assertMessagesOccurInOrder(String errorLogContent, String... messages) {
+    int previousIndex = 0, currentIndex = 0;
+    String previousMsg = "";
+    for (String msg: messages) {
+      currentIndex = errorLogContent.indexOf(msg);
+      assertTrue(String.format("\"%s\" should occur not before \"%s\", but did in \"%s\"", msg, previousMsg, errorLogContent), currentIndex > previousIndex);
+      previousIndex = currentIndex;
+      previousMsg = msg;
+    }
+  }
 
   private String simpleSlimDecisionTable() {
     return "!define TEST_SYSTEM {slim}\n" +
@@ -528,7 +611,7 @@ public class TestResponderTest {
 
   @Test
   public void checkHistoryForSimpleSlimTable() throws Exception {
-    ensureXmlResultFileDoesNotExist(new TestSummary(2, 0, 0, 0));
+    ensureXmlResultFileDoesNotExist(new TestSummary(1, 0, 0, 0));
     doSimpleRun(simpleSlimDecisionTable());
     Document xmlFromFile = getXmlFromFileAndDeleteFile();
     xmlChecker.assertXmlHeaderIsCorrect(xmlFromFile);
@@ -597,13 +680,13 @@ public class TestResponderTest {
     }
 
     public void assertXmlReportOfSlimDecisionTableWithZooTagIsCorrect() throws Exception {
-      String instructionContents[] = {"make", "table", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg"};
-      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow"};
+      String instructionContents[] = {"make", "table", "beginTable", "reset", "setString", "execute", "getStringArg", "reset", "setString", "execute", "getStringArg", "endTable"};
+      String instructionResults[] = {"OK", "EXCEPTION", "EXCEPTION", "EXCEPTION", "VOID", "VOID", "right", "EXCEPTION", "VOID", "VOID", "wow", "EXCEPTION"};
       assertHeaderOfXmlDocumentsInResponseIsCorrect();
 
       Element result = getElementByTagName(testResultsElement, "result");
       Element counts = getElementByTagName(result, "counts");
-      assertCounts(counts, "2", "1", "0", "0");
+      assertCounts(counts, "1", "1", "0", "0");
 
       String tags = XmlUtil.getTextValue(result, "tags");
       assertEquals("zoo", tags);
@@ -634,10 +717,10 @@ public class TestResponderTest {
       }
 
       checkExpectation(instructionList, 0, "decisionTable_0_0", "0", "0", "right", "ConstructionExpectation", "OK", "DT:fitnesse.slim.test.TestSlim", "pass(DT:fitnesse.slim.test.TestSlim)");
-      checkExpectation(instructionList, 3, "decisionTable_0_3", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
-      checkExpectation(instructionList, 5, "decisionTable_0_5", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
-      checkExpectation(instructionList, 7, "decisionTable_0_7", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
-      checkExpectation(instructionList, 9, "decisionTable_0_9", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
+      checkExpectation(instructionList, 4, "decisionTable_0_4", "0", "2", "ignored", "VoidReturnExpectation", "/__VOID__/", "right", "right");
+      checkExpectation(instructionList, 6, "decisionTable_0_6", "1", "2", "wrong", "ReturnedValueExpectation", "right", "wrong", "[right] fail(expected [wrong])");
+      checkExpectation(instructionList, 8, "decisionTable_0_8", "0", "3", "ignored", "VoidReturnExpectation", "/__VOID__/", "wow", "wow");
+      checkExpectation(instructionList, 10, "decisionTable_0_10", "1", "3", "right", "ReturnedValueExpectation", "wow", "wow", "pass(wow)");
     }
 
     private String tableElementToString(Element tableElement) {
@@ -687,7 +770,7 @@ public class TestResponderTest {
 
       Element result = getElementByTagName(testResultsElement, "result");
       Element counts = getElementByTagName(result, "counts");
-      assertCounts(counts, "3", "0", "0", "0");
+      assertCounts(counts, "2", "0", "0", "0");
 
       String runTimeInMillis = XmlUtil.getTextValue(result, "runTimeInMillis");
       assertThat(Long.parseLong(runTimeInMillis), is(not(0L)));
