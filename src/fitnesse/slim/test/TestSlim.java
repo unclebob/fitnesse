@@ -36,6 +36,16 @@ public class TestSlim implements TestSlimInterface {
     this.constructorArg = constructorArg;
   }
 
+  public TestSlim createTestSlimWithString(String string) {
+    TestSlim testSlim = new TestSlim();
+    testSlim.setString(string);
+    return testSlim;
+  }
+  
+  public String toString() {
+    return "TestSlim: " + constructorArg + ", " + stringArg;
+  }
+  
   public void nilad() {
     niladWasCalled = true;
   }

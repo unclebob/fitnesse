@@ -54,6 +54,10 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public void setVariable(String name, Object value) {
+    variables.setSymbol(name, new MethodExecutionResult(value, Object.class));
+  }
+  
+  private void setVariable(String name, MethodExecutionResult value) {
     variables.setSymbol(name, value);
   }
 
@@ -187,6 +191,16 @@ public class StatementExecutor implements StatementExecutorInterface {
     return results.getFirstResult();
   }
 
+  public Object callAndAssign(String variable, String instanceName, String methodName, Object[] args) {
+    try {
+      MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
+      setVariable(variable, result);
+      return result.returnValue();
+    } catch (Throwable e) {
+      return exceptionToString(e);
+    }
+  }
+
   private Object[] replaceSymbols(Object[] args) {
     return variables.replaceSymbols(args);
   }
@@ -210,4 +224,5 @@ public class StatementExecutor implements StatementExecutorInterface {
   public void reset() {
     stopRequested = false;
   }
+
 }

@@ -195,4 +195,14 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id", "call", "testSlim", "nullString"));
     respondsWith(list(list("id", null)));
   }
+
+  @Test
+  public void fixtureChainingWithAssignmentFromFactory() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "createTestSlimWithString",
+        "test string"));
+    statements.add(list("m2", "make", "chainedTestSlim", "$v"));
+    statements.add(list("id2", "call", "chainedTestSlim", "getStringArg"));
+    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("m2", "OK"),
+        list("id2", "test string")));
+  }
 }

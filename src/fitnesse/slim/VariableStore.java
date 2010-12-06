@@ -8,10 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VariableStore {
-  private Map<String, Object> variables = new HashMap<String, Object>();
+  private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
   private Matcher symbolMatcher;
 
-  public void setSymbol(String name, Object value) {
+  public void setSymbol(String name, MethodExecutionResult value) {
     variables.put(name, value);
   }
 
@@ -19,7 +19,8 @@ public class VariableStore {
     if (!nameWithDollar.startsWith("$")) {
       return null;
     }
-    return variables.get(nameWithDollar.substring(1));
+    String name = nameWithDollar.substring(1);
+    return variables.get(name).getObject();
   }
   
   public Object[] replaceSymbols(Object[] args) {
@@ -71,9 +72,11 @@ public class VariableStore {
 
   private String replaceSymbolInArg(String arg, String symbolName) {
     if (variables.containsKey(symbolName)) {
-      String replacement = (String) variables.get(symbolName);
-      if (replacement == null)
-        replacement = "null";
+      String replacement = "null";
+      Object value = variables.get(symbolName);
+      if (value != null) {
+        replacement = value.toString();
+      }
       arg = arg.substring(0, symbolMatcher.start()) + replacement + arg.substring(symbolMatcher.end());
     }
     return arg;

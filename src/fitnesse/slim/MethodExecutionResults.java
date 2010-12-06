@@ -12,10 +12,6 @@ public class MethodExecutionResults {
     return this;
   }
   
-  public Object returnValue() {
-    return getFirstResult().returnValue();
-  }
-
   public MethodExecutionResult getFirstResult() {
     return results.get(0);
   }

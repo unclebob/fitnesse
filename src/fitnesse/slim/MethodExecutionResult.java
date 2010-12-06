@@ -56,31 +56,12 @@ public class MethodExecutionResult {
     }
   };
 
-  private final Object result;
+  private final Object value;
+  private final Class<?> type;
 
-  private final Object retval;
-
-  MethodExecutionResult(Object retval, Class<?> retType) {
-    this.retval = retval;
-    if (retType == null) {
-      result = null;
-      return;
-    }
-    if (retType == List.class && retval instanceof List) {
-      result = retval;
-    } else {
-      result = convertToString(retval, retType);
-    }
-  }
-
-  private String convertToString(Object retval, Class<?> retType) {
-    Converter converter = ConverterSupport.getConverter(retType);
-    if (converter != null)
-      return converter.toString(retval);
-    if (retval == null)
-      return "null";
-    else
-      return retval.toString();
+  MethodExecutionResult(Object value, Class<?> type) {
+    this.value = value;
+    this.type = type;
   }
 
   public static MethodExecutionResult noMethod(String methodName, Class<?> clazz, int numberOfArgs) {
@@ -96,11 +77,29 @@ public class MethodExecutionResult {
   }
 
   public Object returnValue() {
-    return result;
+    if (type == List.class && value instanceof List) {
+      return value;
+    } else {
+      return toString();
+    }
+  }
+  
+  public String toString() {
+    Converter converter = ConverterSupport.getConverter(type);
+    if (converter != null)
+      return converter.toString(value);
+    if (value == null)
+      return "null";
+    else
+      return value.toString();
   }
 
   public boolean hasMethod() {
     return !(this instanceof NoMethod);
+  }
+
+  public Object getObject() {
+    return value;
   }
 
 }
