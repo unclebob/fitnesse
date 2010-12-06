@@ -167,19 +167,24 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object call(String instanceName, String methodName, Object... args) {
     try {
-      MethodExecutionResults results = new MethodExecutionResults();
-      for (int i = 0; i < executorChain.size(); i++) {
-        MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
-            replaceSymbols(args));
-        if (result.hasResult()) {
-          return result.returnValue();
-        }
-        results.add(result);
-      }
-      return results.returnValue();
+      return getMethodExecutionResult(instanceName, methodName, args).returnValue();
     } catch (Throwable e) {
       return exceptionToString(e);
     }
+  }
+
+  private MethodExecutionResult getMethodExecutionResult(String instanceName, String methodName, Object... args)
+      throws Throwable {
+    MethodExecutionResults results = new MethodExecutionResults();
+    for (int i = 0; i < executorChain.size(); i++) {
+      MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
+          replaceSymbols(args));
+      if (result.hasResult()) {
+        return result;
+      }
+      results.add(result);
+    }
+    return results.getFirstResult();
   }
 
   private Object[] replaceSymbols(Object[] args) {

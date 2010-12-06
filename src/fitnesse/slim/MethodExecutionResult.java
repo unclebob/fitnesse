@@ -1,5 +1,7 @@
 package fitnesse.slim;
 
+import java.util.List;
+
 public class MethodExecutionResult {
   private static class NoMethod extends MethodExecutionResult {
     static final String MESSAGE_NO_METHOD_IN_CLASS = "message:<<NO_METHOD_IN_CLASS %s[%d] %s.>>";
@@ -14,7 +16,7 @@ public class MethodExecutionResult {
     }
 
     public NoMethod(String methodName, Class<?> clazz, int numberOfArgs) {
-      super(null);
+      super(null, null);
       this.methodName = methodName;
       this.clazz = clazz;
       this.numberOfArgs = numberOfArgs;
@@ -22,8 +24,8 @@ public class MethodExecutionResult {
 
     @Override
     public Object returnValue() {
-      throw new SlimError(String.format(MESSAGE_NO_METHOD_IN_CLASS, methodName, numberOfArgs, clazz
-        .getName()));
+      throw new SlimError(String.format(MESSAGE_NO_METHOD_IN_CLASS, methodName, numberOfArgs,
+          clazz.getName()));
     }
 
   }
@@ -33,7 +35,7 @@ public class MethodExecutionResult {
     private final String instanceName;
 
     NoInstance(String instanceName) {
-      super(null);
+      super(null, null);
       this.instanceName = instanceName;
     }
 
@@ -47,7 +49,7 @@ public class MethodExecutionResult {
     }
   }
 
-  public static final MethodExecutionResult NO_METHOD_IN_LIBRARIES = new MethodExecutionResult(null) {
+  public static final MethodExecutionResult NO_METHOD_IN_LIBRARIES = new MethodExecutionResult(null, null) {
     @Override
     public boolean hasResult() {
       return false;
@@ -56,8 +58,29 @@ public class MethodExecutionResult {
 
   private final Object result;
 
-  MethodExecutionResult(Object result) {
-    this.result = result;
+  private final Object retval;
+
+  MethodExecutionResult(Object retval, Class<?> retType) {
+    this.retval = retval;
+    if (retType == null) {
+      result = null;
+      return;
+    }
+    if (retType == List.class && retval instanceof List) {
+      result = retval;
+    } else {
+      result = convertToString(retval, retType);
+    }
+  }
+
+  private String convertToString(Object retval, Class<?> retType) {
+    Converter converter = ConverterSupport.getConverter(retType);
+    if (converter != null)
+      return converter.toString(retval);
+    if (retval == null)
+      return "null";
+    else
+      return retval.toString();
   }
 
   public static MethodExecutionResult noMethod(String methodName, Class<?> clazz, int numberOfArgs) {

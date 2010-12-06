@@ -25,13 +25,11 @@ public abstract class MethodExecutor {
   }
 
   @SuppressWarnings("unchecked")
-  protected Object invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
+  protected MethodExecutionResult invokeMethod(Object instance, Method method, Object[] args) throws Throwable {
     Object convertedArgs[] = convertArgs(method, args);
     Object retval = callMethod(instance, method, convertedArgs);
     Class<?> retType = method.getReturnType();
-    if (retType == List.class && retval instanceof List)
-      return retval;
-    return convertToString(retval, retType);
+    return new MethodExecutionResult(retval, retType);
   }
 
   protected Object[] convertArgs(Method method, Object args[]) {
@@ -70,20 +68,10 @@ public abstract class MethodExecutor {
     return convertedArgs;
   }
 
-  protected Object convertToString(Object retval, Class<?> retType) {
-    Converter converter = ConverterSupport.getConverter(retType);
-    if (converter != null)
-      return converter.toString(retval);
-    if (retval == null)
-      return "null";
-    else
-      return retval.toString();
-  }
-
   protected MethodExecutionResult findAndInvoke(String methodName, Object[] args, Object instance) throws Throwable {
     Method method = findMatchingMethod(methodName, instance.getClass(), args.length);
     if (method != null) {
-      return new MethodExecutionResult(this.invokeMethod(instance, method, args));
+      return this.invokeMethod(instance, method, args);
     }
     return MethodExecutionResult.noMethod(methodName, instance.getClass(), args.length);
   }

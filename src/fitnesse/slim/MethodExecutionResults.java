@@ -13,6 +13,11 @@ public class MethodExecutionResults {
   }
   
   public Object returnValue() {
-    return results.get(0).returnValue();
+    return getFirstResult().returnValue();
   }
+
+  public MethodExecutionResult getFirstResult() {
+    return results.get(0);
+  }
+
 }
