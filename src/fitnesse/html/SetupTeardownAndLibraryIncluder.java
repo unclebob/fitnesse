@@ -56,11 +56,18 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) throws Exception {
+    String pageName = testPage.getName();
     includeScenarioLibraryBelow(suitePage);
-    includeSetupPages();
+    if (!isSuiteSetUpOrTearDownPage(pageName))
+      includeSetupPages();
     includePageContent();
-    includeTeardownPages();
+    if (!isSuiteSetUpOrTearDownPage(pageName))
+      includeTeardownPages();
     updatePageContent();
+  }
+
+  private boolean isSuiteSetUpOrTearDownPage(String pageName) {
+    return PageData.SUITE_SETUP_NAME.equals(pageName) || PageData.SUITE_TEARDOWN_NAME.equals(pageName);
   }
 
   private void includeScenarioLibraryBelow(WikiPage suitePage) throws Exception {

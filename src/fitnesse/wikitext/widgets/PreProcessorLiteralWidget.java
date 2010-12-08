@@ -40,12 +40,11 @@ public class PreProcessorLiteralWidget extends WikiWidget {
       return "!-" + literalToRender + "-!";
   }
 
-  private String htmlify(String targetString) {
-    return replaceNewlinesWithHTMLBreaksIn(escapeIfNeeded(literalText));
-  }
-
-  private String escapeIfNeeded(String targetString) {
-    return escapedLiteral ? Utils.escapeHTML(targetString) : targetString;
+  private String htmlify(String s) {
+    if (escapedLiteral)
+      return replaceNewlinesWithHTMLBreaksIn(Utils.escapeHTML(s));
+    else
+      return s;
   }
 
   private String replaceNewlinesWithHTMLBreaksIn(String targetString) {

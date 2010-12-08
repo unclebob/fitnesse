@@ -247,6 +247,10 @@ public abstract class SlimTable {
 
   protected String pass(String value) {
     testSummary.right = testSummary.getRight() + 1;
+    return passUncounted(value);
+  }
+
+  private String passUncounted(String value) {
     return table.pass(value);
   }
 
@@ -602,7 +606,7 @@ public abstract class SlimTable {
 
     protected String createEvaluationMessage(String actual, String expected) {
       if ("OK".equalsIgnoreCase(actual))
-        return pass(replaceSymbolsWithFullExpansion(expected));
+        return passUncounted(replaceSymbolsWithFullExpansion(expected));
       else
         return "!style_error(Unknown construction message:) " + actual;
     }
