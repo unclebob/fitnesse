@@ -30,7 +30,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import sun.misc.Regexp;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
