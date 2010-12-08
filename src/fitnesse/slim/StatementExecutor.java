@@ -26,6 +26,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   private List<String> paths = new ArrayList<String>();
 
   private boolean stopRequested = false;
+  private String lastActor;
 
   public StatementExecutor() {
     Slim.addConverter(void.class, new VoidConverter());
@@ -107,8 +108,12 @@ public class StatementExecutor implements StatementExecutorInterface {
     if (isLibrary(instanceName)) {
       libraries.add(new Library(instanceName, instance));
     } else {
-      instances.put(instanceName, instance);
+      setInstance(instanceName, instance);
     }
+  }
+
+  public void setInstance(String instanceName, Object instance) {
+    instances.put(instanceName, instance);
   }
 
   private Object getStoredActor(String className) {
@@ -134,8 +139,13 @@ public class StatementExecutor implements StatementExecutorInterface {
     if (constructor == null)
       throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>", className));
 
-    return constructor.newInstance(ConverterSupport.convertArgs(args, constructor
+    Object newInstance = constructor.newInstance(ConverterSupport.convertArgs(args, constructor
         .getParameterTypes()));
+    if (newInstance instanceof StatementExecutorConsumer) {
+      ((StatementExecutorConsumer) newInstance).setStatementExecutor(this);
+    }
+    return newInstance;
+    
   }
 
   private Class<?> searchPathsForClass(String className) {

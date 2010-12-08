@@ -1,0 +1,47 @@
+!|import           |
+|fitnesse.slim.test|
+|fitnesse.slim     |
+
+The fixture chaining with instances allows it to store an object instance in a Slim symbol and to use the instance as the table actor for an arbitrary Slim table.
+Here createTestSlimWithString(string) is a factory method that creates a new !-TestSlim-! instance, sets the given string and returns the object.
+
+!|script             |test slim                         |
+|$TEST_SLIM_INSTANCE=|create test slim with string|Uncle|
+|start               |$TEST_SLIM_INSTANCE               |
+|check               |get string arg              |Uncle|
+
+We can use it for a decision table.
+
+|$TEST_SLIM_INSTANCE|
+|get string arg?    |
+|Uncle              |
+
+The !-fitnesse.slim.SlimHelperLibrary-! is a class that should be used in a library table. It contains methods to get and set the script table actor in the Slim !-StatementExecutor-!.
+
+ * scriptTableActor() returns the current table actor
+ * pushActor() gets the current table actor and pushes it onto a stack
+ * popActor() pops the actor from the stack and sets it in the !-StatementExecutor-!
+
+The pushActor() and popActor() methods can be used to have scenarios that change the current actor, but restore it at the end of the scenario.
+So a scenario can behave more like a sub routine with local scope (but is not limited to it).
+
+!|library         |
+|SlimHelperLibrary|
+
+!|scenario       |do something with |name|and restore old actor|
+|push actor                                                    |
+|start           |test slim                                    |
+|set string      |@name                                        |
+|check           |script table actor|TestSlim: 0, @name        |
+|check           |get string arg    |@name                     |
+|$@name_INSTANCE=|script table actor                           |
+|pop actor                                                     |
+
+!|script          |test slim         |2                    |
+|set string       |Uncle                                   |
+|check            |script table actor|TestSlim: 2, Uncle   |
+|do something with|Bob               |and restore old actor|
+|check            |get string arg    |Uncle                |
+
+!|script|$Bob_INSTANCE     |
+|check  |get string arg|Bob|
