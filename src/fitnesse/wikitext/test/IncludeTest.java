@@ -31,15 +31,30 @@ public class IncludeTest {
         assertContains(result, "page <i>two</i>");
     }
 
-    @Test public void translatesIncludedWithChildReference() throws Exception {
+    @Test public void translatesIncludeWithChildReference() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage currentPage = root.makePage("PageOne", "!include PageTwo");
         WikiPage pageTwo = root.makePage("PageTwo", ">PageTwoChild");
         root.makePage(pageTwo, "PageTwoChild", "stuff");
-
         String result = ParserTest.translateTo(currentPage);
-
         assertContains(result, "PageTwo.PageTwoChild");
+    }
+
+    @Test public void translatesRelativeInclude() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage currentPage = root.makePage("PageOne", "!include >PageOneChild");
+        root.makePage(currentPage, "PageOneChild", "stuff");
+        String result = ParserTest.translateTo(currentPage);
+        assertContains(result, "stuff");
+    }
+
+    @Test public void translatesNestedRelativeInclude() throws Exception {
+        TestRoot root = new TestRoot();
+        WikiPage currentPage = root.makePage("PageOne", "!include >PageOneChild");
+        WikiPage pageOneChild = root.makePage(currentPage, "PageOneChild", "!include >PageOneGrandChild");
+        root.makePage(pageOneChild, "PageOneGrandChild", "stuff");
+        String result = ParserTest.translateTo(currentPage);
+        assertContains(result, "stuff");
     }
 
     @Test public void translatesSetup() throws Exception {

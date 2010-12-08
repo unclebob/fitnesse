@@ -83,7 +83,11 @@ public class Parser {
     }
 
     public Symbol parse(String input) {
-        return new Parser(this, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), variableSource, new ParseSpecification().provider(specification)).parse();
+        return parseWithParent(input, this);
+    }
+
+    public Symbol parseWithParent(String input, Parser parent) {
+        return new Parser(parent, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), variableSource, new ParseSpecification().provider(specification)).parse();
     }
 
     public Symbol parseToIgnoreFirst(SymbolType type) {
@@ -111,13 +115,13 @@ public class Parser {
         return parse(new ParseSpecification().terminator(terminator).priority(priority));
     }
 
-    public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider) {
+    public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider, int priority) {
         SymbolType[] terminators = new SymbolType[] {terminator};
-        return parseToWithSymbols(terminators, provider);
+        return parseToWithSymbols(terminators, provider, priority);
     }
 
-    public Symbol parseToWithSymbols(SymbolType[] terminators, SymbolProvider provider) {
-        ParseSpecification newSpecification = new ParseSpecification().provider(provider);
+    public Symbol parseToWithSymbols(SymbolType[] terminators, SymbolProvider provider, int priority) {
+        ParseSpecification newSpecification = new ParseSpecification().provider(provider).priority(priority);
         for (SymbolType terminator: terminators) newSpecification.terminator(terminator);
         return parse(newSpecification);
     }

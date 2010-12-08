@@ -40,7 +40,7 @@ public class PlainTextTable extends SymbolType implements Rule {
         
         Symbol row = null;
         while (true) {
-            Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes);
+            Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes, 0);
             if (parser.atEnd()) return Symbol.nothing;
             if (parser.getCurrent().isType(SymbolType.ClosePlainTextTable)) return new Maybe<Symbol>(table);
             if (row == null) {

@@ -81,15 +81,27 @@ public class TableTest {
         ParserTest.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''");
     }
 
+    @Test public void translatesNestedLiteralTable() {
+        ParserTest.assertTranslatesTo("|${x}|\n", new TestVariableSource("x", "!|y|\n"), tableWithCell(nestedTableWithCellAndRow("y", "<tr>")));
+    }
+
+    @Test public void translatesLiteralNestedTable() {
+        ParserTest.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", "|y|\n"), tableWithCell("|y|"));
+    }
+
     private String tableWithCell(String cellContent) {
         return tableWithCellAndRow(cellContent, "<tr>");
     }
 
     private String tableWithCellAndRow(String cellContent, String firstRow) {
+        return nestedTableWithCellAndRow(cellContent, firstRow) + HtmlElement.endl;
+    }
+
+    private String nestedTableWithCellAndRow(String cellContent, String firstRow) {
         return "<table border=\"1\" cellspacing=\"0\">"+ HtmlElement.endl +
         "\t" + firstRow + HtmlElement.endl +
         "\t\t<td>" + cellContent + "</td>" + HtmlElement.endl +
         "\t</tr>" + HtmlElement.endl +
-        "</table>"+ HtmlElement.endl;
+        "</table>";
     }
 }

@@ -10,27 +10,28 @@ public class CollapsibleTest {
     }
 
     @Test public void parsesCollapsible() throws Exception {
-        ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text]]]");
-        ParserTest.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList]]");
-        ParserTest.assertParses("!**\n**!", "SymbolList[Text, CloseCollapsible]");
+        ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text, Newline]]]");
+        ParserTest.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Newline]]]");
+        ParserTest.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
+        ParserTest.assertParses("!* title\n!path x\n**!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Path[SymbolList[Text]], Newline]]]");
     }
 
     @Test public void translatesCollapsible() {
         Collapsible.resetId();
         ParserTest.assertTranslatesTo("!* Some title\n''content''\n*!",
-                sectionWithClass("collapsable", "Open", "<i>content</i>"));
+                sectionWithClass("collapsable", "Open", "<i>content</i><br/>"));
 
         Collapsible.resetId();
         ParserTest.assertTranslatesTo("!* Some title\n\n*!",
-                sectionWithClass("collapsable", "Open", ""));
+                sectionWithClass("collapsable", "Open", "<br/>"));
 
         Collapsible.resetId();
         ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",
-                sectionWithClass("hidden", "Closed", " content "));
+                sectionWithClass("hidden", "Closed", " content <br/>"));
 
         Collapsible.resetId();
         ParserTest.assertTranslatesTo("!*< Some title\n content \n*!",
-                "<div class=\"invisible\"> content </div>" + HtmlElement.endl);
+                "<div class=\"invisible\"> content <br/></div>" + HtmlElement.endl);
     }
 
     private String sectionWithClass(String sectionClass, String image, String content) {

@@ -25,7 +25,7 @@ public class Variable extends SymbolType implements Rule, Translation {
             current.add(new Symbol(SymbolType.Meta).add("undefined variable: " + name));
         }
         else {
-            Symbol variableValueSymbol = parser.parse(variableValue.getValue());
+            Symbol variableValueSymbol = parser.parseWithParent(variableValue.getValue(), null);
             current.add(variableValueSymbol);
         }
         

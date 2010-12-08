@@ -34,7 +34,7 @@ public class Table extends SymbolType implements Rule, Translation {
 
     private Symbol parseCell(Parser parser, String content) {
         if (content.indexOf("!") >= 0) {
-            return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider);
+            return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1);
         }
         else {
             return parser.parseTo(SymbolType.EndCell, 1);

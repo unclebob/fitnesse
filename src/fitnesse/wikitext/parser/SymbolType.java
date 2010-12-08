@@ -21,7 +21,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType CloseBracket = new SymbolType("CloseBracket")
             .wikiMatcher(new Matcher().string("]"));
     public static final SymbolType CloseCollapsible = new SymbolType("CloseCollapsible")
-            .wikiMatcher(new Matcher().string("\n").repeat('*').string("!"));
+            .wikiMatcher(new Matcher().startLine().repeat('*').string("!"));
     public static final SymbolType CloseEvaluator = new SymbolType("CloseEvaluator")
             .wikiMatcher(new Matcher().string("=}"));
     public static final SymbolType CloseLiteral = new SymbolType("CloseLiteral")

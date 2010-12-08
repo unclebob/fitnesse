@@ -28,7 +28,7 @@ public class Include extends SymbolType implements Rule, Translation {
 
         current.add(option).add(next);
 
-        Maybe<SourcePage> includedPage = parser.getPage().getPage().findIncludedPage(next.getContent());
+        Maybe<SourcePage> includedPage = parser.getPage().getNamedPage().findIncludedPage(next.getContent());
         if (includedPage.isNothing()) {
             current.add(new Symbol(SymbolType.Meta).add(includedPage.because()));
         }
