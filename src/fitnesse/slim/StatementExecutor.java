@@ -17,6 +17,7 @@ import java.util.*;
 
 public class StatementExecutor implements StatementExecutorInterface {
 
+  private static final String SLIM_HELPER_LIBRARY_INSTANCE_NAME = "SlimHelperLibrary";
   private Map<String, Object> instances = new HashMap<String, Object>();
   private List<Library> libraries = new ArrayList<Library>();
 
@@ -52,6 +53,14 @@ public class StatementExecutor implements StatementExecutorInterface {
     executorChain.add(new FixtureMethodExecutor(instances));
     executorChain.add(new SystemUnderTestMethodExecutor(instances));
     executorChain.add(new LibraryMethodExecutor(libraries));
+    
+    addSlimHelperLibraryToLibraries();
+  }
+
+  private void addSlimHelperLibraryToLibraries() {
+    SlimHelperLibrary slimHelperLibrary = new SlimHelperLibrary();
+    slimHelperLibrary.setStatementExecutor(this);
+    libraries.add(new Library(SLIM_HELPER_LIBRARY_INSTANCE_NAME, slimHelperLibrary));
   }
 
   public void setVariable(String name, Object value) {

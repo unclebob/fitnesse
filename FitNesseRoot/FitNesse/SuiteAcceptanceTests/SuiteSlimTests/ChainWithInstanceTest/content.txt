@@ -1,8 +1,7 @@
 !|import           |
 |fitnesse.slim.test|
-|fitnesse.slim     |
 
-The fixture chaining with instances allows it to store an object instance in a Slim symbol and to use the instance as the table actor for an arbitrary Slim table.
+The fixture chaining with instances allows you to store an object instance in a Slim symbol and to use the instance as the table actor for an arbitrary Slim table.
 Here createTestSlimWithString(string) is a factory method that creates a new !-TestSlim-! instance, sets the given string and returns the object.
 
 !|script             |test slim                         |
@@ -16,7 +15,7 @@ We can use it for a decision table.
 |get string arg?    |
 |Uncle              |
 
-The !-fitnesse.slim.SlimHelperLibrary-! is a class that should be used in a library table. It contains methods to get and set the script table actor in the Slim !-StatementExecutor-!.
+The !-SlimHelperLibrary-! is a class that is automatically available as a library fixture. It contains methods to get and set the script table actor in the Slim !-StatementExecutor-!.
 
  * getFixture() returns the current table actor
  * pushFixture() gets the current table actor and pushes it onto a stack
@@ -24,9 +23,6 @@ The !-fitnesse.slim.SlimHelperLibrary-! is a class that should be used in a libr
 
 The pushFixture() and popFixture() methods can be used to have scenarios that change the current actor, but restore it at the end of the scenario.
 So a scenario can behave more like a sub routine with local scope (but is not limited to it).
-
-!|library         |
-|SlimHelperLibrary|
 
 !|scenario       |do something with|name|and restore old fixture|
 |push fixture                                                   |
