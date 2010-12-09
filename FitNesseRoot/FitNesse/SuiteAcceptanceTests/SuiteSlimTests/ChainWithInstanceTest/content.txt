@@ -18,30 +18,30 @@ We can use it for a decision table.
 
 The !-fitnesse.slim.SlimHelperLibrary-! is a class that should be used in a library table. It contains methods to get and set the script table actor in the Slim !-StatementExecutor-!.
 
- * scriptTableActor() returns the current table actor
- * pushActor() gets the current table actor and pushes it onto a stack
- * popActor() pops the actor from the stack and sets it in the !-StatementExecutor-!
+ * getFixture() returns the current table actor
+ * pushFixture() gets the current table actor and pushes it onto a stack
+ * popFixture() pops the actor from the stack and sets it in the !-StatementExecutor-!
 
-The pushActor() and popActor() methods can be used to have scenarios that change the current actor, but restore it at the end of the scenario.
+The pushFixture() and popFixture() methods can be used to have scenarios that change the current actor, but restore it at the end of the scenario.
 So a scenario can behave more like a sub routine with local scope (but is not limited to it).
 
 !|library         |
 |SlimHelperLibrary|
 
-!|scenario       |do something with |name|and restore old actor|
-|push actor                                                    |
-|start           |test slim                                    |
-|set string      |@name                                        |
-|check           |script table actor|TestSlim: 0, @name        |
-|check           |get string arg    |@name                     |
-|$@name_INSTANCE=|script table actor                           |
-|pop actor                                                     |
+!|scenario       |do something with|name|and restore old fixture|
+|push fixture                                                   |
+|start           |test slim                                     |
+|set string      |@name                                         |
+|check           |get fixture      |TestSlim: 0, @name          |
+|check           |get string arg   |@name                       |
+|$@name_INSTANCE=|get fixture                                   |
+|pop fixture                                                    |
 
-!|script          |test slim         |2                    |
-|set string       |Uncle                                   |
-|check            |script table actor|TestSlim: 2, Uncle   |
-|do something with|Bob               |and restore old actor|
-|check            |get string arg    |Uncle                |
+!|script          |test slim     |2                      |
+|set string       |Uncle                                 |
+|check            |get fixture   |TestSlim: 2, Uncle     |
+|do something with|Bob           |and restore old fixture|
+|check            |get string arg|Uncle                  |
 
 !|script|$Bob_INSTANCE     |
 |check  |get string arg|Bob|

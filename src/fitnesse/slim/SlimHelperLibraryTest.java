@@ -20,28 +20,32 @@ public class SlimHelperLibraryTest {
 
   @Test
   public void testSlimHelperLibraryHasStatementExecutor() throws Exception {
-    Object response = caller.create("x", "fitnesse.slim.SlimHelperLibrary", new Object[0]);
-    assertEquals("OK", response);
-    SlimHelperLibrary x = (SlimHelperLibrary) caller.getInstance("x");
-    assertSame(caller, x.getStatementExecutor());
+    SlimHelperLibrary helperLibrary = makeSlimHelperLibraryWithStatementExecutor();
+    assertSame(caller, helperLibrary.getStatementExecutor());
   }
   
   @Test
-  public void testSlimHelperLibraryCanPushAndPopTableActor() throws Exception {
-    Object response = caller.create("x", "fitnesse.slim.SlimHelperLibrary", new Object[0]);
-    response = caller.create(ACTOR_INSTANCE_NAME, getTestClassName(), new Object[0]);
+  public void testSlimHelperLibraryCanPushAndPopFixture() throws Exception {
+    SlimHelperLibrary helperLibrary = makeSlimHelperLibraryWithStatementExecutor();
+    Object response = caller.create(ACTOR_INSTANCE_NAME, getTestClassName(), new Object[0]);
     Object firstActor = caller.getInstance(ACTOR_INSTANCE_NAME);
-    SlimHelperLibrary helperLibrary = (SlimHelperLibrary) caller.getInstance("x");
 
-    helperLibrary.pushActor();
+    helperLibrary.pushFixture();
     
     response = caller.create(ACTOR_INSTANCE_NAME, getTestClassName(), new Object[] {"1"});
     assertEquals("OK", response);
     assertNotSame(firstActor, caller.getInstance(ACTOR_INSTANCE_NAME));
     
-    helperLibrary.popActor();
+    helperLibrary.popFixture();
     
     assertSame(firstActor, caller.getInstance(ACTOR_INSTANCE_NAME));
+  }
+
+  public SlimHelperLibrary makeSlimHelperLibraryWithStatementExecutor() {
+    Object response = caller.create("x", "fitnesse.slim.SlimHelperLibrary", new Object[0]);
+    assertEquals("OK", response);
+    SlimHelperLibrary helperLibrary = (SlimHelperLibrary) caller.getInstance("x");
+    return helperLibrary;
   }
 
 }
