@@ -66,10 +66,6 @@ public class VariableStore {
     return arg;
   }
 
-  private boolean isDoubleDollar(String arg) {
-    return symbolMatcher.start() > 0 && arg.charAt(symbolMatcher.start() - 1) == '$';
-  }
-
   private String replaceSymbolInArg(String arg, String symbolName) {
     if (variables.containsKey(symbolName)) {
       String replacement = "null";

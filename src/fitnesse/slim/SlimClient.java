@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SlimClient {
-  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.2; 
+  public static double MINIMUM_REQUIRED_SLIM_VERSION = 0.3; 
   private Socket client;
   private StreamReader reader;
   private BufferedWriter writer;
