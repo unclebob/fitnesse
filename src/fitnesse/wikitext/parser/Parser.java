@@ -75,7 +75,7 @@ public class Parser {
         int start = scanner.getOffset();
         scanner.markStart();
         parseTo(terminator);
-        return scanner.substring(start, scanner.getOffset() - 1);
+        return scanner.stringFromStart(start);
     }
 
     public String parseLiteral(SymbolType terminator) {

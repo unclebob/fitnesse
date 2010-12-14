@@ -37,10 +37,14 @@ public class Scanner {
 
     public int getOffset() { return next; }
     public void markStart() { input.markStart(next); }
-    public String substring(int startAt, int endBefore) { return input.rawSubstring(startAt, endBefore); }
+
     public boolean isEnd() { return currentToken == endToken; }
     public boolean isLast() { return input.isEnd(1); }
     public Symbol getCurrent() { return currentToken; }
+
+    public String stringFromStart(int start) {
+        return input.rawSubstring(start, getOffset() - getCurrent().getContent().length());
+    }
 
     public void copy(Scanner other) {
         input = new ScanString(other.input);
