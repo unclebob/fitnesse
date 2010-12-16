@@ -30,7 +30,7 @@ public class Alias extends SymbolType implements Rule, Translation {
         String linkBody = translator.translate(symbol.childAt(0));
         String linkReferenceString = Utils.unescapeHTML(translator.translate(symbol.childAt(1)));
         ParsingPage parsingPage = ((HtmlTranslator)translator).getParsingPage();
-        Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parse();
+        Symbol linkReference = Parser.make(parsingPage, linkReferenceString).parseToIgnoreFirst(Comment.symbolType);
 
         if (linkReference.childAt(0).isType(WikiWord.symbolType)) {
             return new WikiWordBuilder(translator.getPage(), linkReference.childAt(0).getContent(), linkBody)

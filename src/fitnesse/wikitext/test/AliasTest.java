@@ -1,7 +1,6 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class AliasTest {
@@ -22,6 +21,7 @@ public class AliasTest {
     public void translatesAliases() throws Exception {
         TestSourcePage page = new TestSourcePage().withTarget("PageOne");
         ParserTest.assertTranslatesTo(page, "[[tag][link]]", link("tag", "link"));
+        ParserTest.assertTranslatesTo(page, "[[tag][#anchor]]", link("tag", "#anchor"));
         ParserTest.assertTranslatesTo(page, "[[tag][PageOne]]", link("tag", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[''tag''][PageOne]]", link("<i>tag</i>", "PageOne"));
         ParserTest.assertTranslatesTo(page, "[[you're it][PageOne]]", link("you're it", "PageOne"));
