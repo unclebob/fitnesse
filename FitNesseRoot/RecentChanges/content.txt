@@ -1,3 +1,4 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ChainWithInstanceTest||20:40:00 Wed, Dec 08, 2010|
 |JunkPage.DecisionTableComments||14:02:12 Sat, Nov 27, 2010|
 |JunkPage.PointOfSale.CanTotalOrder||13:47:13 Sat, Nov 27, 2010|
 |JunkPage.LiteralPage||21:35:30 Fri, Nov 26, 2010|
@@ -97,4 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LibraryInSetUpSuite.SetUp||24:49:04 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LibraryInSetUpSuite||24:46:51 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.SetUp||24:46:07 Sun, Dec 13, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.PrecedenceSuite||24:31:12 Sun, Dec 13, 2009|

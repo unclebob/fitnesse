@@ -106,8 +106,9 @@ public class Statement {
   }
 
   public Object callAndAssign(StatementExecutorInterface caller) {
-    Object result = callMethodAtIndex(caller, 3);
-    caller.setVariable(getWord(2), result);
-    return result;
+    String instanceName = getWord(3);
+    String methodName = methodNameTranslator.translate(getWord(4));
+    Object[] args = makeArgsArray(5);
+    return caller.callAndAssign(getWord(2), instanceName, methodName, args);
   }
 }

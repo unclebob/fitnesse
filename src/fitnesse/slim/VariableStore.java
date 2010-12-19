@@ -8,13 +8,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VariableStore {
-  private Map<String, Object> variables = new HashMap<String, Object>();
+  private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
   private Matcher symbolMatcher;
 
-  public void setSymbol(String name, Object value) {
+  public void setSymbol(String name, MethodExecutionResult value) {
     variables.put(name, value);
   }
 
+  public Object getStored(String nameWithDollar) {
+    if (!nameWithDollar.startsWith("$")) {
+      return null;
+    }
+    String name = nameWithDollar.substring(1);
+    return variables.get(name).getObject();
+  }
+  
   public Object[] replaceSymbols(Object[] args) {
     Object result[] = new Object[args.length];
     for (int i = 0; i < args.length; i++)
@@ -58,15 +66,13 @@ public class VariableStore {
     return arg;
   }
 
-  private boolean isDoubleDollar(String arg) {
-    return symbolMatcher.start() > 0 && arg.charAt(symbolMatcher.start() - 1) == '$';
-  }
-
   private String replaceSymbolInArg(String arg, String symbolName) {
     if (variables.containsKey(symbolName)) {
-      String replacement = (String) variables.get(symbolName);
-      if (replacement == null)
-        replacement = "null";
+      String replacement = "null";
+      Object value = variables.get(symbolName);
+      if (value != null) {
+        replacement = value.toString();
+      }
       arg = arg.substring(0, symbolMatcher.start()) + replacement + arg.substring(symbolMatcher.end());
     }
     return arg;

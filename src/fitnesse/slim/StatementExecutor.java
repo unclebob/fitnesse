@@ -26,6 +26,7 @@ public class StatementExecutor implements StatementExecutorInterface {
   private List<String> paths = new ArrayList<String>();
 
   private boolean stopRequested = false;
+  private String lastActor;
 
   public StatementExecutor() {
     Slim.addConverter(void.class, new VoidConverter());
@@ -54,6 +55,10 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public void setVariable(String name, Object value) {
+    variables.setSymbol(name, new MethodExecutionResult(value, Object.class));
+  }
+  
+  private void setVariable(String name, MethodExecutionResult value) {
     variables.setSymbol(name, value);
   }
 
@@ -81,13 +86,13 @@ public class StatementExecutor implements StatementExecutorInterface {
   }
 
   public Object create(String instanceName, String className, Object[] args) {
-    String replacedClassName = variables.replaceSymbolsInString(className);
     try {
-      Object instance = createInstanceOfConstructor(replacedClassName, replaceSymbols(args));
-      if (isLibrary(instanceName)) {
-        libraries.add(new Library(instanceName, instance));
+      if (null != getStoredActor(className)) {
+        addToInstancesOrLibrary(instanceName, getStoredActor(className));
       } else {
-        instances.put(instanceName, instance);
+        String replacedClassName = variables.replaceSymbolsInString(className);
+        Object instance = createInstanceOfConstructor(replacedClassName, replaceSymbols(args));
+        addToInstancesOrLibrary(instanceName, instance);
       }
       return "OK";
     } catch (SlimError e) {
@@ -97,6 +102,26 @@ public class StatementExecutor implements StatementExecutorInterface {
     } catch (Throwable e) {
       return exceptionToString(e);
     }
+  }
+
+  private void addToInstancesOrLibrary(String instanceName, Object instance) {
+    if (isLibrary(instanceName)) {
+      libraries.add(new Library(instanceName, instance));
+    } else {
+      setInstance(instanceName, instance);
+    }
+  }
+
+  public void setInstance(String instanceName, Object instance) {
+    instances.put(instanceName, instance);
+  }
+
+  private Object getStoredActor(String className) {
+    Object storedActor = variables.getStored(className);
+    if (storedActor instanceof String) {
+      return null;
+    }
+    return storedActor;
   }
 
   private boolean isLibrary(String instanceName) {
@@ -114,8 +139,13 @@ public class StatementExecutor implements StatementExecutorInterface {
     if (constructor == null)
       throw new SlimError(String.format("message:<<NO_CONSTRUCTOR %s>>", className));
 
-    return constructor.newInstance(ConverterSupport.convertArgs(args, constructor
+    Object newInstance = constructor.newInstance(ConverterSupport.convertArgs(args, constructor
         .getParameterTypes()));
+    if (newInstance instanceof StatementExecutorConsumer) {
+      ((StatementExecutorConsumer) newInstance).setStatementExecutor(this);
+    }
+    return newInstance;
+    
   }
 
   private Class<?> searchPathsForClass(String className) {
@@ -151,16 +181,31 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object call(String instanceName, String methodName, Object... args) {
     try {
-      MethodExecutionResults results = new MethodExecutionResults();
-      for (int i = 0; i < executorChain.size(); i++) {
-        MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
-            replaceSymbols(args));
-        if (result.hasResult()) {
-          return result.returnValue();
-        }
-        results.add(result);
+      return getMethodExecutionResult(instanceName, methodName, args).returnValue();
+    } catch (Throwable e) {
+      return exceptionToString(e);
+    }
+  }
+
+  private MethodExecutionResult getMethodExecutionResult(String instanceName, String methodName, Object... args)
+      throws Throwable {
+    MethodExecutionResults results = new MethodExecutionResults();
+    for (int i = 0; i < executorChain.size(); i++) {
+      MethodExecutionResult result = executorChain.get(i).execute(instanceName, methodName,
+          replaceSymbols(args));
+      if (result.hasResult()) {
+        return result;
       }
-      return results.returnValue();
+      results.add(result);
+    }
+    return results.getFirstResult();
+  }
+
+  public Object callAndAssign(String variable, String instanceName, String methodName, Object[] args) {
+    try {
+      MethodExecutionResult result = getMethodExecutionResult(instanceName, methodName, args);
+      setVariable(variable, result);
+      return result.returnValue();
     } catch (Throwable e) {
       return exceptionToString(e);
     }
@@ -189,4 +234,5 @@ public class StatementExecutor implements StatementExecutorInterface {
   public void reset() {
     stopRequested = false;
   }
+
 }
