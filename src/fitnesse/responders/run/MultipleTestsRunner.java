@@ -8,6 +8,7 @@ import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import util.FileUtil;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
   TimeMeasurement currentTestTime, totalTestTime;
-
+  
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
                              final WikiPage page,
@@ -213,16 +214,22 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testOutputChunk(output);
   }
 
+  public String getLockFileName(WikiPage test) throws Exception {
+	PageData data = test.getData();
+	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME") + ".lock";
+  }
+  
   void startingNewTest(WikiPage test) throws Exception {
     currentTest = test;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
+	FileUtil.createFile(getLockFileName(currentTest), "");
   }
 
   public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
-
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
+	FileUtil.deleteFile(getLockFileName(currentTest));
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
