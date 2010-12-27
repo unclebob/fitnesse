@@ -260,6 +260,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     if (wasNotStopped) {
       testSystemGroup.kill();
     }
+	FileUtil.deleteFile(getLockFileName(currentTest));
   }
 }
 
