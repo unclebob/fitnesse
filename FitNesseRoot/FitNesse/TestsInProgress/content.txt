@@ -1,0 +1,7 @@
+!define TEST_SYSTEM {slim}
+
+!|Import|
+|fitnesse.slim.test|
+
+!|Query:TestsInProgress|
+|Test|

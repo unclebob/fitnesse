@@ -216,7 +216,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   public String getLockFileName(WikiPage test) throws Exception {
 	PageData data = test.getData();
-	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME") + ".lock";
+	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
   }
   
   void startingNewTest(WikiPage test) throws Exception {
