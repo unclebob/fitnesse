@@ -126,6 +126,8 @@ public abstract class BaseWikiPage implements WikiPage {
     PageData pageData = getData();
     List<WikiPageAction> actions = new ArrayList<WikiPageAction>();
     addActionForAttribute("Test", pageData, localPageName, newWindowIfRemote, null, null, actions);
+    addActionForAttribute("Test", pageData, localPageName, newWindowIfRemote, "d", "responder=test&remote_debug=true", actions, "Debug");
+
     addActionForAttribute("Suite", pageData, localPageName, newWindowIfRemote, "", null, actions);
     addActionForAttribute("Edit", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
     addActionForAttribute("Properties", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
@@ -140,11 +142,16 @@ public abstract class BaseWikiPage implements WikiPage {
     return actions;
   }
 
-  private void addActionForAttribute(String attribute, PageData pageData, String pageName, boolean newWindowIfRemote,
-                                     String shortcutKey, String query, List<WikiPageAction> actions) {
+  private void addActionForAttribute(String attribute, PageData pageData, String pageName, boolean newWindowIfRemote, 
+                                     String shortcutKey, String query, List<WikiPageAction> actions, String linkName) {
     if (pageData.hasAttribute(attribute.replaceAll("\\s", ""))) {
-      addAction(attribute, pageName, newWindowIfRemote, shortcutKey, query, actions);
+      addAction(linkName, pageName, newWindowIfRemote, shortcutKey, query, actions);
     }
+  }
+  
+  private void addActionForAttribute(String attribute, PageData pageData, String pageName, boolean newWindowIfRemote, 
+                                     String shortcutKey, String query, List<WikiPageAction> actions) {
+    addActionForAttribute(attribute, pageData, pageName, newWindowIfRemote, shortcutKey, query, actions, attribute);
   }
 
   private void addAction(String linkName, String pageName, boolean newWindowIfRemote, String shortcutKey, String query, List<WikiPageAction> actions) {

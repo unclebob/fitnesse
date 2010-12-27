@@ -85,6 +85,7 @@ public class HtmlUtilTest extends RegexTestCase {
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+    assertSubString("<a href=\"" + pageName + "?responder=test&remote_debug=true\" accesskey=\"d\">Debug</a>", html);
   }
 
   public void testMakeActionsWithSuffixButtonWhenNameEndsWithTest() throws Exception {
@@ -92,6 +93,7 @@ public class HtmlUtilTest extends RegexTestCase {
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
+    assertSubString("<a href=\"" + pageName + "?responder=test&remote_debug=true\" accesskey=\"d\">Debug</a>", html);
   }
 
   public void testMakeActionsWithSuiteButtonWhenNameStartsWithSuite() throws Exception {
