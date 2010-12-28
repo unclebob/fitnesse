@@ -1,4 +1,5 @@
 !define TEST_SYSTEM {slim}
+!define SLIM_PORT (0)
 
 !|Import|
 |fitnesse.slim.test|
