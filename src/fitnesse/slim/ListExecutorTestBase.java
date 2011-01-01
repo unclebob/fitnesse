@@ -225,4 +225,13 @@ public abstract class ListExecutorTestBase {
     respondsWith(list(list("id1", "TestSlim: 0, test string"), list("id2", "false"), list("m2", "OK"), list("id3", "true")));
   }
 
+  @Test
+  public void constructorAcceptsTestSlimFromSymbol() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "createTestSlimWithString",
+        "test string"));
+    statements.add(list("m2", "make", "newTestSlim", testClass, "4", "$v"));
+    statements.add(list("id2", "call", "newTestSlim", "getStringArg"));
+    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("m2", "OK"), list("id2", "test string")));
+  }
+
 }
