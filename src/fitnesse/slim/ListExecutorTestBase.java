@@ -181,7 +181,7 @@ public abstract class ListExecutorTestBase {
   public void passAndReturnListWithVariable() throws Exception {
     statements.add(list("id1", "callAndAssign", "v", "testSlim", "addTo", "3", "4"));
     statements.add(list("id2", "call", "testSlim", "echoList", list("$v")));
-    respondsWith(list(list("id1", "7"), list("id2", list("7"))));
+    respondsWith(list(list("id1", "7"), list("id2", list(7))));
   }
 
   @Test
@@ -205,4 +205,24 @@ public abstract class ListExecutorTestBase {
     respondsWith(list(list("id1", "TestSlim: 0, test string"), list("m2", "OK"),
         list("id2", "test string")));
   }
+
+  @Test
+  public void methodAcceptsTestSlimFromSymbol() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "createTestSlimWithString",
+        "test string"));
+    statements.add(list("id2", "call", "testSlim", "getStringFromOther", "$v"));
+    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("id2", "test string")));
+  }
+
+  @Test
+  public void methodAcceptsObjectFromSymbol() throws Exception {
+    statements.add(list("id1", "callAndAssign", "v", "testSlim", "createTestSlimWithString",
+        "test string"));
+    statements.add(list("id2", "call", "testSlim", "isSame", "$v"));
+    statements.add(list("m2", "make", "chainedTestSlim", "$v"));
+    statements.add(list("id3", "call", "chainedTestSlim", "isSame", "$v"));
+  
+    respondsWith(list(list("id1", "TestSlim: 0, test string"), list("id2", "false"), list("m2", "OK"), list("id3", "true")));
+  }
+
 }

@@ -20,7 +20,11 @@ public class VariableStore {
       return null;
     }
     String name = nameWithDollar.substring(1);
-    return variables.get(name).getObject();
+    MethodExecutionResult storedResult = variables.get(name);
+    if (storedResult == null) {
+      return null;
+    }
+    return storedResult.getObject();
   }
   
   public Object[] replaceSymbols(Object[] args) {
@@ -41,10 +45,13 @@ public class VariableStore {
 
   @SuppressWarnings("unchecked")
   private Object replaceSymbol(Object object) {
-    if (object instanceof List)
-      return (replaceSymbolsInList((List<Object>) object));
-    else
-      return (replaceSymbolsInString((String) object));
+    if (object instanceof List) {
+      return replaceSymbolsInList((List<Object>) object);
+    }
+    if (null != object && null != getStored((String) object)) {
+      return getStored((String) object);
+    }
+    return replaceSymbolsInString((String) object);
   }
 
   public String replaceSymbolsInString(String arg) {

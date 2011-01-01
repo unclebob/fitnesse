@@ -19,24 +19,25 @@ class ConverterSupport {
     return null;
   }
 
-  // todo refactor this mess
-  @SuppressWarnings("unchecked")
   public static Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
     Object[] convertedArgs = new Object[args.length];
     for (int i = 0; i < argumentTypes.length; i++) {
-      Class<?> argumentType = argumentTypes[i];
-      if (argumentType == List.class && args[i] instanceof List) {
-        convertedArgs[i] = args[i];
-      } else {
-        Converter converter = getConverter(argumentType);
-        if (converter != null)
-          convertedArgs[i] = converter.fromString((String) args[i]);
-        else
-          throw new SlimError(String.format("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>",
-              argumentType.getName()));
-      }
+      convertedArgs[i] = convertArg(args[i], argumentTypes[i]);
     }
     return convertedArgs;
+  }
+
+  private static Object convertArg(Object arg, Class<?> argumentType) throws SlimError {
+    if (arg == null || argumentType.isInstance(arg)) {
+      // arg may be a List or an instance that comes from the variable store
+      return arg;
+    }
+    Converter converter = getConverter(argumentType);
+    if (converter != null) {
+      return converter.fromString(arg.toString());
+    }
+    throw new SlimError(String.format("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>",
+        argumentType.getName()));
   }
 
 }

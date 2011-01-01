@@ -212,6 +212,14 @@ public class TestSlim implements TestSlimInterface {
     return null;
   }
 
+  public boolean isSame(Object other) {
+    return this == other;
+  }
+  
+  public String getStringFromOther(TestSlim other) {
+    return other.getStringArg();
+  }
+  
   public Zork oneZork(Zork zork) {
     this.zork = zork;
     return zork;

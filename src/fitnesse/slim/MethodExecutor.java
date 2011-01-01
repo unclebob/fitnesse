@@ -34,8 +34,7 @@ public abstract class MethodExecutor {
 
   protected Object[] convertArgs(Method method, Object args[]) {
     Class<?>[] argumentTypes = method.getParameterTypes();
-    Object[] convertedArgs = convertArgs(args, argumentTypes);
-    return convertedArgs;
+    return ConverterSupport.convertArgs(args, argumentTypes);
   }
 
   protected Object callMethod(Object instance, Method method, Object[] convertedArgs) throws Throwable {
@@ -46,26 +45,6 @@ public abstract class MethodExecutor {
       throw e.getCause();
     }
     return retval;
-  }
-
-  @SuppressWarnings("unchecked")
-  protected Object[] convertArgs(Object[] args, Class<?>[] argumentTypes) {
-    Object[] convertedArgs = new Object[args.length];
-    for (int i = 0; i < argumentTypes.length; i++) {
-      Class<?> argumentType = argumentTypes[i];
-      if (argumentType == List.class && args[i] instanceof List) {
-        convertedArgs[i] = args[i];
-      } else {
-
-        Converter converter = ConverterSupport.getConverter(argumentType);
-        if (converter != null)
-          convertedArgs[i] = converter.fromString((String) args[i]);
-        else
-          throw new SlimError(String.format("message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER %s.>>",
-            argumentType.getName()));
-      }
-    }
-    return convertedArgs;
   }
 
   protected MethodExecutionResult findAndInvoke(String methodName, Object[] args, Object instance) throws Throwable {
