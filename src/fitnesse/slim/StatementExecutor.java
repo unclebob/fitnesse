@@ -96,7 +96,7 @@ public class StatementExecutor implements StatementExecutorInterface {
 
   public Object create(String instanceName, String className, Object[] args) {
     try {
-      if (null != getStoredActor(className)) {
+      if (hasStoredActor(className)) {
         addToInstancesOrLibrary(instanceName, getStoredActor(className));
       } else {
         String replacedClassName = variables.replaceSymbolsInString(className);
@@ -125,12 +125,16 @@ public class StatementExecutor implements StatementExecutorInterface {
     instances.put(instanceName, instance);
   }
 
-  private Object getStoredActor(String className) {
-    Object storedActor = variables.getStored(className);
-    if (storedActor instanceof String) {
-      return null;
+  private boolean hasStoredActor(String nameWithDollar) {
+    if (!variables.containsValueFor(nameWithDollar)) {
+      return false;
     }
-    return storedActor;
+    Object potentialActor = getStoredActor(nameWithDollar);
+    return potentialActor != null && !(potentialActor instanceof String);
+  }
+
+  private Object getStoredActor(String nameWithDollar) {
+    return variables.getStored(nameWithDollar);
   }
 
   private boolean isLibrary(String instanceName) {

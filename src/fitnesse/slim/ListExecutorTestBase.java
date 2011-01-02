@@ -167,7 +167,7 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id1", "make", "nf", "NullFixture"));
     statements.add(list("id2", "callAndAssign", "v", "nf", "getNull"));
     statements.add(list("id3", "call", "testSlim", "echoString", "$v"));
-    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", "null")));
+    respondsWith(list(list("id1", "OK"), list("id2", null), list("id3", null)));
   }
 
   @Test
