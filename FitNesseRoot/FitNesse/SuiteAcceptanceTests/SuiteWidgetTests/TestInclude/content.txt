@@ -34,7 +34,8 @@ The following is a test that demonstrates how this works.
  * Now look at every line on the including page to make sure that the inclusions were done in order.
 #
 |Response Examiner.|
-|type|number|string?|
-|line|1|before|
-|line|8||
-|line|11|after|
+|line|occurs after?|
+|before|true|
+|included|true|
+|after|true|
+

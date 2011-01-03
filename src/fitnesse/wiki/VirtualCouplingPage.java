@@ -61,7 +61,7 @@ public class VirtualCouplingPage implements WikiPage {
     return hostPage.getParentForVariables();
   }
 
-  public String getName() throws Exception {
+  public String getName() {
     return hostPage.getName();
   }
 

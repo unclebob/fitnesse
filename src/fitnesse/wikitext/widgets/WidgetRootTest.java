@@ -4,7 +4,9 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.test.ParserTest;
 import org.junit.Before;
 import org.junit.Test;
 import util.RegexTestCase;
@@ -162,7 +164,10 @@ public class WidgetRootTest {
     WikiPage page = crawler.addPage(rootPage, PathParser.parse("TestPage"), "''italics''\r\n\r'''bold'''\r\n\r");
     PageData data = page.getData();
     String html = data.getHtml();
-    assertEquals("<i>italics</i><br/><b>bold</b><br/>", html);
+    assertEquals("<i>italics</i>"
+            + ParserTest.newLineRendered
+            + "<b>bold</b>" 
+            + ParserTest.newLineRendered , html);
   }
 
   @Test

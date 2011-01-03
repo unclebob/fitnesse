@@ -3,9 +3,8 @@
 package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.AliasLinkWidget;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wiki.WikiWordReference;
+import fitnesse.wikitext.parser.*;
 
 public class PageReferenceRenamer extends ReferenceRenamer {
   private WikiPage subjectPage;
@@ -17,14 +16,26 @@ public class PageReferenceRenamer extends ReferenceRenamer {
     this.newName = newName;
   }
 
-  public void visit(WikiWidget widget) throws Exception {
-  }
+    public boolean visit(Symbol node) {
+        try {
+            if (node.isType(WikiWord.symbolType)) {
+                new WikiWordReference(currentPage, node.getContent()).wikiWordRenamePageIfReferenced(node, subjectPage, newName);
+            }
+            else if (node.isType(Alias.symbolType)) {
+                String aliasReference = node.childAt(1).childAt(0).getContent();
+                if (new WikiWordPath().findLength(aliasReference) > 0) {
+                   new WikiWordReference(currentPage, aliasReference).wikiWordRenamePageIfReferenced(node.childAt(1).childAt(0), subjectPage, newName);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
 
-  public void visit(WikiWordWidget widget) throws Exception {
-    widget.renamePageIfReferenced(subjectPage, newName);
-  }
-
-  public void visit(AliasLinkWidget widget) throws Exception {
-    widget.renamePageIfReferenced(subjectPage, newName);
-  }
+    public boolean visitChildren(Symbol node) {
+        return !node.isType(Alias.symbolType);
+    }
 }
