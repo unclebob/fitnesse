@@ -1,28 +1,27 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.wikitext.parser.SymbolType;
 import org.junit.Test;
 
 public class ImageTest {
     @Test
     public void scansImages() {
-        ParserTest.assertScansTokenType("!img name", "Image", true);
+        ParserTestHelper.assertScansTokenType("!img name", "Image", true);
     }
 
     @Test
     public void parsesImages() throws Exception {
-        ParserTest.assertParses("!img name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTest.assertParses("!img http://name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTest.assertParses("!imgx name", "SymbolList[Text, Whitespace, Text]");
-        ParserTest.assertParses("!img-l name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTest.assertParses("!img-r name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img http://name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!imgx name", "SymbolList[Text, Whitespace, Text]");
+        ParserTestHelper.assertParses("!img-l name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img-r name", "SymbolList[Link[SymbolList[Text]]]");
     }
 
     @Test
     public void translatesImages() {
-        ParserTest.assertTranslatesTo("!img name", "<img src=\"name\"/>");
-        ParserTest.assertTranslatesTo("!img http://name", "<img src=\"http://name\"/>");
-        ParserTest.assertTranslatesTo("!img-l name", "<img src=\"name\" class=\"left\"/>");
-        ParserTest.assertTranslatesTo("!img-r name", "<img src=\"name\" class=\"right\"/>");
+        ParserTestHelper.assertTranslatesTo("!img name", "<img src=\"name\"/>");
+        ParserTestHelper.assertTranslatesTo("!img http://name", "<img src=\"http://name\"/>");
+        ParserTestHelper.assertTranslatesTo("!img-l name", "<img src=\"name\" class=\"left\"/>");
+        ParserTestHelper.assertTranslatesTo("!img-r name", "<img src=\"name\" class=\"right\"/>");
     }
 }

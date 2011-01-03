@@ -6,9 +6,9 @@ import org.junit.Test;
 
 public class HelpTest {
     @Test public void parsesHelp() throws Exception {
-        ParserTest.assertParses("!help", "SymbolList[Help]");
-        ParserTest.assertParses("!help -editable", "SymbolList[Help]");
-        ParserTest.assertParses("!help -garbage", "SymbolList[Help, Whitespace, Text]");
+        ParserTestHelper.assertParses("!help", "SymbolList[Help]");
+        ParserTestHelper.assertParses("!help -editable", "SymbolList[Help]");
+        ParserTestHelper.assertParses("!help -garbage", "SymbolList[Help, Whitespace, Text]");
     }
 
     @Test public void translatesHelp() throws Exception {
@@ -23,6 +23,6 @@ public class HelpTest {
         PageData pageData = pageWithHelp.getData();
         pageData.setAttribute(property, "help me");
         pageWithHelp.commit(pageData);
-        ParserTest.assertTranslatesTo(pageWithHelp, expected);
+        ParserTestHelper.assertTranslatesTo(pageWithHelp, expected);
     }
 }

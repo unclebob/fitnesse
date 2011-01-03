@@ -6,32 +6,32 @@ import org.junit.Test;
 
 public class CollapsibleTest {
     @Test public void scansCollapsible() {
-        ParserTest.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true);
+        ParserTestHelper.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true);
     }
 
     @Test public void parsesCollapsible() throws Exception {
-        ParserTest.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text, Newline]]]");
-        ParserTest.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Newline]]]");
-        ParserTest.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
-        ParserTest.assertParses("!* title\n!path x\n**!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Path[SymbolList[Text]], Newline]]]");
+        ParserTestHelper.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text, Newline]]]");
+        ParserTestHelper.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Newline]]]");
+        ParserTestHelper.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
+        ParserTestHelper.assertParses("!* title\n!path x\n**!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Path[SymbolList[Text]], Newline]]]");
     }
 
     @Test public void translatesCollapsible() {
         Collapsible.resetId();
-        ParserTest.assertTranslatesTo("!* Some title\n''content''\n*!",
-                sectionWithClass("collapsable", "Open", "<i>content</i><br/>"));
+        ParserTestHelper.assertTranslatesTo("!* Some title\n''content''\n*!",
+          sectionWithClass("collapsable", "Open", "<i>content</i><br/>"));
 
         Collapsible.resetId();
-        ParserTest.assertTranslatesTo("!* Some title\n\n*!",
-                sectionWithClass("collapsable", "Open", "<br/>"));
+        ParserTestHelper.assertTranslatesTo("!* Some title\n\n*!",
+          sectionWithClass("collapsable", "Open", "<br/>"));
 
         Collapsible.resetId();
-        ParserTest.assertTranslatesTo("!*> Some title\n content \n*!",
-                sectionWithClass("hidden", "Closed", " content <br/>"));
+        ParserTestHelper.assertTranslatesTo("!*> Some title\n content \n*!",
+          sectionWithClass("hidden", "Closed", " content <br/>"));
 
         Collapsible.resetId();
-        ParserTest.assertTranslatesTo("!*< Some title\n content \n*!",
-                "<div class=\"invisible\"> content <br/></div>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("!*< Some title\n content \n*!",
+          "<div class=\"invisible\"> content <br/></div>" + HtmlElement.endl);
     }
 
     private String sectionWithClass(String sectionClass, String image, String content) {

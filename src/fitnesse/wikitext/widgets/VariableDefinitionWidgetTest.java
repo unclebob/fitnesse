@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Test;
 
 public class VariableDefinitionWidgetTest extends WidgetTestCase {
@@ -126,7 +126,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     PageData data = root.getData();
     String content = "!define SOME_VARIABLE {Variable #1}\n!define ANOTHER_VARIABLE {Variable #2}";
     data.setContent(content);
-    assertSubString("SOME_VARIABLE=Variable #1</span>" + HtmlElement.endl + ParserTest.newLineRendered + "<span", data.getHtml());
+    assertSubString("SOME_VARIABLE=Variable #1</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered + "<span", data.getHtml());
     assertNotSubString("SOME_VARIABLE=Variable #1</span><br/><br/><span", data.getHtml());
   }
 

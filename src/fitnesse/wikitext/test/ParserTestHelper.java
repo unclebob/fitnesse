@@ -6,7 +6,7 @@ import fitnesse.wikitext.parser.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ParserTest {
+public class ParserTestHelper {
     public static final String newLineRendered = "<br/>";
     
     public static  void assertScans(String input, String expected) {

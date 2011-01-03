@@ -6,40 +6,40 @@ import org.junit.Test;
 
 public class ContentsTest {
     @Test public void scansContents() {
-        ParserTest.assertScansTokenType("!contents", "Contents", true);
+        ParserTestHelper.assertScansTokenType("!contents", "Contents", true);
     }
 
     @Test public void parsesContents() throws Exception {
-        ParserTest.assertParses("!contents -f -g", "SymbolList[Contents[Text, Text]]");
-        ParserTest.assertParses("!contents hi", "SymbolList[Text, Whitespace, Text]");
-        ParserTest.assertParses("!contents ]", "SymbolList[Text, Whitespace, CloseBracket]");
+        ParserTestHelper.assertParses("!contents -f -g", "SymbolList[Contents[Text, Text]]");
+        ParserTestHelper.assertParses("!contents hi", "SymbolList[Text, Whitespace, Text]");
+        ParserTestHelper.assertParses("!contents ]", "SymbolList[Text, Whitespace, CloseBracket]");
     }
 
     @Test public void translatesContents() throws Exception {
         WikiPage pageOne = makePages();
-         ParserTest.assertTranslatesTo(pageOne, "!contents",
-                 contentsWithPages("PageThree", "PageTwo", ""));
+         ParserTestHelper.assertTranslatesTo(pageOne, "!contents",
+           contentsWithPages("PageThree", "PageTwo", ""));
      }
 
     @Test public void translatesRecursiveContents() throws Exception {
         WikiPage pageOne = makePages();
-         ParserTest.assertTranslatesTo(pageOne, "!contents -R",
-             contentsWithPages("PageThree", "PageTwo",
-                 nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild</a>",
-                     nestedContents("\t\t\t\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\">PageTwoGrandChild</a>", ""))));
+         ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R",
+           contentsWithPages("PageThree", "PageTwo",
+             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild</a>",
+               nestedContents("\t\t\t\t\t\t\t\t", "3", "<a href=\"PageOne.PageTwo.PageTwoChild.PageTwoGrandChild\">PageTwoGrandChild</a>", ""))));
      }
 
     @Test public void translatesRecursiveContentsToLevel() throws Exception {
         WikiPage pageOne = makePages();
-         ParserTest.assertTranslatesTo(pageOne, "!contents -R2",
-             contentsWithPages("PageThree", "PageTwo",
-                 nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild ...</a>", "")));
+         ParserTestHelper.assertTranslatesTo(pageOne, "!contents -R2",
+           contentsWithPages("PageThree", "PageTwo",
+             nestedContents("\t\t\t\t", "2", "<a href=\"PageOne.PageTwo.PageTwoChild\">PageTwoChild ...</a>", "")));
      }
 
     @Test public void translatesContentsWithInvalidRecursionLimit() throws Exception {
         WikiPage pageOne = makePages();
-         ParserTest.assertTranslatesTo(pageOne, "!contents -Rx",
-                 contentsWithPages("PageThree", "PageTwo", ""));
+         ParserTestHelper.assertTranslatesTo(pageOne, "!contents -Rx",
+           contentsWithPages("PageThree", "PageTwo", ""));
      }
 
     private WikiPage makePages() throws Exception {

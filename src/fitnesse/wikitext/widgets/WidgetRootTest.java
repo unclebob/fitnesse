@@ -4,9 +4,8 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import util.RegexTestCase;
@@ -165,9 +164,9 @@ public class WidgetRootTest {
     PageData data = page.getData();
     String html = data.getHtml();
     assertEquals("<i>italics</i>"
-            + ParserTest.newLineRendered
+            + ParserTestHelper.newLineRendered
             + "<b>bold</b>" 
-            + ParserTest.newLineRendered , html);
+            + ParserTestHelper.newLineRendered , html);
   }
 
   @Test

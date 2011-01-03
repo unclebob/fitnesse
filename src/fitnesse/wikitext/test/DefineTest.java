@@ -1,7 +1,6 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 import org.junit.Test;
@@ -10,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DefineTest {
     @Test public void scansDefine() {
-        ParserTest.assertScansTokenType("!define x {y}", "Define", true);
+        ParserTestHelper.assertScansTokenType("!define x {y}", "Define", true);
     }
 
     @Test public void translatesDefines() throws Exception {
@@ -44,8 +43,8 @@ public class DefineTest {
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne");
-        ParserTest.assertTranslatesTo(pageOne, input,
-                "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo(pageOne, input,
+          "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
     }
 
 }

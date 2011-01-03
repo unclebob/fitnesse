@@ -25,23 +25,23 @@ public class WikiWordTest {
 
     @Test
     public void translatesWikiWords() throws Exception {
-        ParserTest.assertTranslatesTo(pageOne, "PageOne", wikiLink("PageOne", "PageOne"));
-        ParserTest.assertTranslatesTo(pageOneTwo, "PageOne2", wikiLink("PageOne.PageOne2", "PageOne2"));
-        ParserTest.assertTranslatesTo(pageOneThree, ".PageOne", wikiLink("PageOne", ".PageOne"));
-        ParserTest.assertTranslatesTo(pageOne, ">PageOne2", wikiLink("PageOne.PageOne2", "&gt;PageOne2"));
-        ParserTest.assertTranslatesTo(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
+        ParserTestHelper.assertTranslatesTo(pageOne, "PageOne", wikiLink("PageOne", "PageOne"));
+        ParserTestHelper.assertTranslatesTo(pageOneTwo, "PageOne2", wikiLink("PageOne.PageOne2", "PageOne2"));
+        ParserTestHelper.assertTranslatesTo(pageOneThree, ".PageOne", wikiLink("PageOne", ".PageOne"));
+        ParserTestHelper.assertTranslatesTo(pageOne, ">PageOne2", wikiLink("PageOne.PageOne2", "&gt;PageOne2"));
+        ParserTestHelper.assertTranslatesTo(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
     }
     
     @Test
     public void translatesMissingWikiWords() throws Exception {
-        ParserTest.assertTranslatesTo(pageOne, "PageNine",
-                "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
+        ParserTestHelper.assertTranslatesTo(pageOne, "PageNine",
+          "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
     }
 
     @Test
     public void regracesWikiWords() throws Exception {
         root.setPageData(pageOne, "!define " + WikiWordWidget.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWordWidget.REGRACE_LINK + " {false}\n");
-        assertTrue(ParserTest.translateTo(pageOne).indexOf(wikiLink("PageOne", "Page One")) >= 0);
+        assertTrue(ParserTestHelper.translateTo(pageOne).indexOf(wikiLink("PageOne", "Page One")) >= 0);
     }
 
     private String wikiLink(String link, String text) {

@@ -17,7 +17,7 @@ import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Include;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.test.ParserTest;
+import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -480,9 +480,9 @@ public class SlimTestSystemTest {
 
     Symbol includeParent = getCollapsibleSymbol(scenarios);
     assertNotNull(includeParent);
-    assertEquals("Precompiled Libraries", ParserTest.serializeContent(includeParent.childAt(0)));
+    assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
     Symbol childLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
-    assertTrue(ParserTest.serializeContent(childLibraryInclude).contains("child library"));
+    assertTrue(ParserTestHelper.serializeContent(childLibraryInclude).contains("child library"));
   }
 
   @Test
@@ -495,10 +495,10 @@ public class SlimTestSystemTest {
 
     Symbol includeParent = getCollapsibleSymbol(scenarios);
     assertNotNull(includeParent);
-    assertEquals("Precompiled Libraries", ParserTest.serializeContent(includeParent.childAt(0)));
+    assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
     Symbol uncleLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
     assertNotNull(uncleLibraryInclude);
-    assertTrue(ParserTest.serializeContent(uncleLibraryInclude).contains("uncle library"));
+    assertTrue(ParserTestHelper.serializeContent(uncleLibraryInclude).contains("uncle library"));
   }
 
   @Test
