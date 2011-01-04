@@ -92,3 +92,6 @@
 
 !|scenario|the line|after|should come after|before|
 |check|echo int|$@before|< $@after|
+
+!|scenario|pass|
+|check|echo|pass|pass|

@@ -1,3 +1,7 @@
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict||08:35:01 Tue, Jan 04, 2011|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableReturnsNull||08:33:57 Tue, Jan 04, 2011|
+|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BlankCellsInNestedScenariosShouldWork||08:18:36 Tue, Jan 04, 2011|
+|FitNesse.SuiteAcceptanceTests.ScenarioLibrary||08:18:20 Tue, Jan 04, 2011|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ChainWithInstanceTest||20:40:00 Wed, Dec 08, 2010|
 |JunkPage.DecisionTableComments||14:02:12 Sat, Nov 27, 2010|
 |JunkPage.PointOfSale.CanTotalOrder||13:47:13 Sat, Nov 27, 2010|
@@ -94,7 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests||16:52:28 Wed, Dec 09, 2009|
 |FitNesse.UserGuide.SliM.LibraryTable||01:16:31 Sun, Dec 13, 2009|
 |FitNesse.UserGuide.SliM||01:16:04 Sun, Dec 13, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.ScenarioLibrary||24:55:55 Sun, Dec 13, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LibraryInSetUpSuite.SetUp||24:49:04 Sun, Dec 13, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.LibraryInSetUpSuite||24:46:51 Sun, Dec 13, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteSlimTests.LibrarySuite.SetUp||24:46:07 Sun, Dec 13, 2009|
