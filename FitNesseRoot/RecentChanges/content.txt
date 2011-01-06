@@ -1,3 +1,6 @@
+|JunkPage.IncludePage||11:45:34 Thu, Jan 06, 2011|
+|JunkPage.IncludeSetupTeardown||11:44:58 Thu, Jan 06, 2011|
+|FitNesse.UserGuide.QuickReferenceGuide||11:17:28 Thu, Jan 06, 2011|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestTwoIdenticalTablesOnPageDontConflict||08:35:01 Tue, Jan 04, 2011|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableReturnsNull||08:33:57 Tue, Jan 04, 2011|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ScenarioLibraryTestSuite.BlankCellsInNestedScenariosShouldWork||08:18:36 Tue, Jan 04, 2011|
@@ -22,7 +25,6 @@
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.SliM.SlimProtocol||11:18:16 Sun, May 16, 2010|
-|FitNesse.UserGuide.QuickReferenceGuide||11:12:04 Sun, May 16, 2010|
 |JunkPage.SlimVersionTest||11:07:17 Sun, May 16, 2010|
 |JunkPage.ChainTest||10:29:59 Sun, May 16, 2010|
 |JunkPage.ScenarioTest||08:37:14 Fri, Apr 02, 2010|
@@ -96,5 +98,3 @@
 |JunkPage.SeeInNestedSuites.SuiteParentOne.SuiteA||21:26:47 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteAuthenticationTests.SetUp||16:49:36 Sun, Dec 13, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests||16:52:28 Wed, Dec 09, 2009|
-|FitNesse.UserGuide.SliM.LibraryTable||01:16:31 Sun, Dec 13, 2009|
-|FitNesse.UserGuide.SliM||01:16:04 Sun, Dec 13, 2009|
