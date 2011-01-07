@@ -39,7 +39,7 @@ public class HtmlBuilder implements Translation {
         builders.add(new TagBuilder() {
             public void build(Translator translator, Symbol symbol, HtmlTag tag) {
                 tag.addAttribute(name, prefix +
-                        (index < 0 ? symbol.getContent() : translator.translate(symbol.childAt(index))));
+                        (index < 0 ? symbol.getContent() : TranslateChildAt(translator, symbol, index)));
             }
         });
         return this;
@@ -50,10 +50,14 @@ public class HtmlBuilder implements Translation {
     public HtmlBuilder body(final int index, final String prefix) {
         builders.add(new TagBuilder() {
             public void build(Translator translator, Symbol symbol, HtmlTag tag) {
-                tag.add(prefix + translator.translate(symbol.childAt(index)));
+                tag.add(prefix + TranslateChildAt(translator, symbol, index));
             }
         });
         return this;
+    }
+
+    private String TranslateChildAt(Translator translator, Symbol symbol, int index) {
+        return index < 0 ? "" : translator.translate(symbol.childAt(index));
     }
 
     public HtmlBuilder bodyContent() {
