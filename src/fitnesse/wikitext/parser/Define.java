@@ -7,7 +7,7 @@ import java.util.List;
 public class Define extends SymbolType implements Rule, Translation {
     public Define() {
         super("Define");
-        wikiMatcher(new Matcher().startLine().string("!define"));
+        wikiMatcher(new Matcher().startLineOrCell().string("!define"));
         wikiRule(this);
         htmlTranslation(this);
     }
