@@ -20,7 +20,7 @@ public class ListRule implements Rule {
                 list.add(subList.getValue());
             }
             else {
-                Symbol body = parser.parseTo(SymbolType.Newline);
+                Symbol body = makeListBody(parser);
                 if (parser.atEnd()) return Symbol.nothing;
                 list.add(body);
             }
@@ -29,6 +29,13 @@ public class ListRule implements Rule {
             nextSymbol = nextSymbols.get(0);
         }
         return new Maybe<Symbol>(list);
+    }
+
+    private Symbol makeListBody(Parser parser) {
+        while (parser.peek(new SymbolType[] {SymbolType.Whitespace}).size() > 0) {
+            parser.moveNext(1);
+        }
+        return parser.parseTo(SymbolType.Newline);
     }
 
     private int indent(Symbol symbol) {

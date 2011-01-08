@@ -7,6 +7,7 @@ public class ListTest {
     @Test
     public void scansLists() {
         ParserTestHelper.assertScansTokenType(" * item", "UnorderedList", true);
+        ParserTestHelper.assertScansTokenType(" *item", "UnorderedList", true);
         ParserTestHelper.assertScansTokenType("  * item", "UnorderedList", true);
         ParserTestHelper.assertScansTokenType("* item", "UnorderedList", false);
         ParserTestHelper.assertScansTokenType(" 1 item", "OrderedList", true);

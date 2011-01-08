@@ -85,7 +85,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType Text = new SymbolType("Text")
             .htmlTranslation(new TextBuilder());
     public static final SymbolType UnorderedList = new SymbolType("UnorderedList")
-            .wikiMatcher(new Matcher().startLine().whitespace().string("* "))
+            .wikiMatcher(new Matcher().startLine().whitespace().string("*"))
             .wikiRule(new ListRule())
             .htmlTranslation(new ListBuilder("ul"));
     public static final SymbolType Whitespace = new SymbolType("Whitespace")
