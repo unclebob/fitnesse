@@ -35,7 +35,7 @@ public class ListRule implements Rule {
         while (parser.peek(new SymbolType[] {SymbolType.Whitespace}).size() > 0) {
             parser.moveNext(1);
         }
-        return parser.parseTo(SymbolType.Newline);
+        return parser.parseTo(SymbolType.Newline, 1);
     }
 
     private int indent(Symbol symbol) {

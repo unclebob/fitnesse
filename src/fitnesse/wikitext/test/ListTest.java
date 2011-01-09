@@ -21,6 +21,12 @@ public class ListTest {
           list("ul", 0) + listItem("item1", 1) + listItem("item2", 1) + list("/ul", 0));
     }
 
+    @Test
+    public void overridesNestedPairRule() {
+        ParserTestHelper.assertTranslatesTo(" * item--1\n--",
+          list("ul", 0) + listItem("item--1", 1) + list("/ul", 0) + "--");
+    }
+
     private String list(String tag, int level) {
         return indent(level) + "<" + tag  + ">" + HtmlElement.endl;
     }
