@@ -40,8 +40,7 @@ public class ListTest {
     public void translatesNestedLists() {
         ParserTestHelper.assertTranslatesTo(" * item1\n  * item2\n  * item3\n",
           list("ul", 0) +
-            listItem("item1", 1) +
-            listItem(list("ul", 0) + listItem("item2", 1) + listItem("item3", 1) + list("/ul", 0), 1) +
+            listItem("item1" + list("ul", 0) + listItem("item2", 1) + listItem("item3", 1) + list("/ul", 0), 1) +
             list("/ul", 0));
     }
     
