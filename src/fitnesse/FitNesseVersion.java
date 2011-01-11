@@ -6,11 +6,7 @@ public class FitNesseVersion {
   private final String version;
 	
   public FitNesseVersion() {
-<<<<<<< HEAD
-    this("v20101228");
-=======
-    this("v20110106");
->>>>>>> 43c85b5ed8d19670bc67b52ffedeb6444bb41fc3
+    this("v20110111");
   }
 
   public FitNesseVersion(String version) {

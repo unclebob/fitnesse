@@ -216,20 +216,38 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   public String getLockFileName(WikiPage test) throws Exception {
 	PageData data = test.getData();
+	if(data == null) 
+		throw new Exception("PageData is not available");
 	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
+  }
+  
+  void CreateLockFile() {
+	try {
+		FileUtil.createFile(getLockFileName(currentTest), "");
+	}
+	catch (Exception exception) {
+    }	
+  }
+  
+  void DeleteLockFile() {
+	try {
+		FileUtil.deleteFile(getLockFileName(currentTest));
+	}
+	catch (Exception exception) {
+    }	
   }
   
   void startingNewTest(WikiPage test) throws Exception {
     currentTest = test;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
-	FileUtil.createFile(getLockFileName(currentTest), "");
+	CreateLockFile();
   }
-
+  
   public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
-	FileUtil.deleteFile(getLockFileName(currentTest));
+	DeleteLockFile();
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
@@ -260,7 +278,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     if (wasNotStopped) {
       testSystemGroup.kill();
     }
-	FileUtil.deleteFile(getLockFileName(currentTest));
+	DeleteLockFile();
   }
 }
 

@@ -10,8 +10,4 @@ To add your first "page", click the [[Edit][FrontPage?edit]] button and add a [[
 | [[User Guide][FitNesse.UserGuide]]|''Answer the rest of your questions here.''|
 | [[Acceptance Tests][FitNesse.SuiteAcceptanceTests]]|''FitNesse's suite of Acceptance Tests''|
 
-<<<<<<< HEAD
-!note Release v20101228
-=======
-!note Release v20110106
->>>>>>> 43c85b5ed8d19670bc67b52ffedeb6444bb41fc3
+!note Release v20110111
