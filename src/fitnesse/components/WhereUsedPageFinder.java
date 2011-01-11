@@ -1,20 +1,13 @@
 package fitnesse.components;
 
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiWordReference;
+import fitnesse.wikitext.parser.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.AliasLinkWidget;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.PreProcessorLiteralWidget;
-import fitnesse.wikitext.widgets.PreformattedWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
-import fitnesse.wikitext.widgets.WikiWordWidget;
-
-public class WhereUsedPageFinder implements TraversalListener, SearchObserver, WidgetVisitor, PageFinder {
+public class WhereUsedPageFinder implements TraversalListener, SearchObserver, PageFinder, SymbolTreeWalker {
   private WikiPage subjectPage;
   private SearchObserver observer;
   private WikiPage currentPage;
@@ -29,29 +22,15 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, W
   public void hit(WikiPage referencingPage) throws Exception {
   }
 
-  public void visit(WikiWidget widget) throws Exception {
-  }
-
-  public void visit(WikiWordWidget widget) throws Exception {
-    if (hits.contains(currentPage))
-      return;
-    WikiPage referencedPage = widget.getReferencedPage();
-    if (referencedPage != null && referencedPage.equals(subjectPage)) {
-      hits.add(currentPage);
-      observer.hit(currentPage);
-    }
-  }
-
-  public void visit(AliasLinkWidget widget) throws Exception {
-  }
-
-  @SuppressWarnings("unchecked")
   public void processPage(WikiPage currentPage) throws Exception {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();
-    WidgetBuilder referenceWidgetBuilder = new WidgetBuilder(new Class[]{PreProcessorLiteralWidget.class, WikiWordWidget.class, PreformattedWidget.class});
-    ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceWidgetBuilder);
-    widgetRoot.acceptVisitor(this);
+      Symbol syntaxTree = Parser.make(
+              new ParsingPage(new WikiSourcePage(currentPage)),
+              content,
+              SymbolProvider.refactoringProvider)
+              .parse();
+      syntaxTree.walkPreOrder(this);
   }
 
   public List<WikiPage> search(WikiPage page) throws Exception {
@@ -60,4 +39,24 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, W
     return hits;
   }
 
+    public boolean visit(Symbol node) {
+        if (!node.isType(WikiWord.symbolType)) return true;
+        if (hits.contains(currentPage)) return true;
+        try {
+            WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
+            if (referencedPage != null && referencedPage.equals(subjectPage)) {
+              hits.add(currentPage);
+              observer.hit(currentPage);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    public boolean visitChildren(Symbol node) {
+        return true;
+    }
 }

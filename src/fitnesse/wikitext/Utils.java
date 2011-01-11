@@ -13,27 +13,27 @@ public class Utils {
   private static final String[] specialWikiEscapes = new String[]{"&bang;", "&bar;", "&dollar;"};
 
   public static String escapeHTML(String value) {
-    for (int i = 0; i < specialHtmlChars.length; i++)
-      value = value.replaceAll(specialHtmlChars[i], specialHtmlEscapes[i]);
-    return value;
+      return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
   }
 
-  public static String unescapeHTML(String value) {
-    for (int i = 0; i < specialHtmlChars.length; i++)
-      value = value.replaceAll(specialHtmlEscapes[i], specialHtmlChars[i]);
-    return value;
-  }
+    private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
+        String result = value;
+        for (int i = 0; i < originalStrings.length; i++)
+            if (result.contains(originalStrings[i]))
+                result = result.replace(originalStrings[i], replacementStrings[i]);
+        return result;
+    }
+
+    public static String unescapeHTML(String value) {
+        return replaceStrings(value, specialHtmlEscapes, specialHtmlChars);
+    }
 
   public static String unescapeWiki(String value) {
-    for (int i = 0; i < specialWikiChars.length; i++)
-      value = value.replace(specialWikiEscapes[i], specialWikiChars[i]);
-    return value;
+      return replaceStrings(value, specialWikiEscapes, specialWikiChars);
   }
 
   public static String escapeWiki(String value) {
-    for (int i = 0; i < specialWikiChars.length; i++)
-      value = value.replace(specialWikiChars[i], specialWikiEscapes[i]);
-    return value;
+      return replaceStrings(value, specialWikiChars, specialWikiEscapes);
   }
 
   public static String getStackTrace(Throwable e) {

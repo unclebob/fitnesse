@@ -14,16 +14,15 @@ import fitnesse.slimTables.TableScanner;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-import fitnesse.wikitext.WikiWidget;
-import fitnesse.wikitext.widgets.CollapsableWidget;
-import fitnesse.wikitext.widgets.IncludeWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.parser.Collapsible;
+import fitnesse.wikitext.parser.Include;
+import fitnesse.wikitext.parser.Symbol;
+import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -477,14 +476,13 @@ public class SlimTestSystemTest {
     crawler.addPage(suitePage, PathParser.parse("ScenarioLibrary"), "child library");
     SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
 
-    WidgetRoot scenarios = sys.getPrecompiledScenarioWidgets();
+    Symbol scenarios = sys.getPreparsedScenarioLibrary();
 
-    List<WikiWidget> widgetList = scenarios.getChildren();
-    CollapsableWidget includeParent = getCollapsibleWidget(widgetList);
+    Symbol includeParent = getCollapsibleSymbol(scenarios);
     assertNotNull(includeParent);
-    assertEquals(true, includeParent.render().contains("Precompiled Libraries"));
-    IncludeWidget childLibraryInclude = getIncludeWidget(includeParent);
-    assertTrue(childLibraryInclude.render().contains("child library"));
+    assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
+    Symbol childLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
+    assertTrue(ParserTestHelper.serializeContent(childLibraryInclude).contains("child library"));
   }
 
   @Test
@@ -493,15 +491,14 @@ public class SlimTestSystemTest {
     crawler.addPage(root, PathParser.parse("ScenarioLibrary"), "uncle library");
     SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
 
-    WidgetRoot scenarios = sys.getPrecompiledScenarioWidgets();
+    Symbol scenarios = sys.getPreparsedScenarioLibrary();
 
-    List<WikiWidget> widgetList = scenarios.getChildren();
-    CollapsableWidget includeParent = getCollapsibleWidget(widgetList);
+    Symbol includeParent = getCollapsibleSymbol(scenarios);
     assertNotNull(includeParent);
-    assertEquals(true, includeParent.render().contains("Precompiled Libraries"));
-    IncludeWidget uncleLibraryInclude = getIncludeWidget(includeParent);
+    assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
+    Symbol uncleLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
     assertNotNull(uncleLibraryInclude);
-    assertTrue(uncleLibraryInclude.render().contains("uncle library"));
+    assertTrue(ParserTestHelper.serializeContent(uncleLibraryInclude).contains("uncle library"));
   }
 
   @Test
@@ -509,20 +506,20 @@ public class SlimTestSystemTest {
     WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
     SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
 
-    assertSame(sys.getPrecompiledScenarioWidgets(), sys.getPrecompiledScenarioWidgets());
+    assertSame(sys.getPreparsedScenarioLibrary(), sys.getPreparsedScenarioLibrary());
   }
 
-  private IncludeWidget getIncludeWidget(CollapsableWidget collapsableWidget) {
-    for (WikiWidget widget : collapsableWidget.getChildren())
-      if (widget instanceof IncludeWidget)
-        return (IncludeWidget) widget;
+  private Symbol getIncludeSymbol(Symbol collapsibleSymbol) {
+    for (Symbol symbol : collapsibleSymbol.getChildren())
+      if (symbol.getType() instanceof Include)
+        return symbol;
     return null;
   }
 
-  private CollapsableWidget getCollapsibleWidget(List<WikiWidget> widgetList) {
-    for (WikiWidget widget : widgetList) {
-      if (widget instanceof CollapsableWidget)
-        return (CollapsableWidget) widget;
+  private Symbol getCollapsibleSymbol(Symbol syntaxTree) throws Exception {
+    for (Symbol symbol : syntaxTree.getChildren()) {
+      if (symbol.getType() instanceof Collapsible)
+        return symbol;
     }
     return null;
   }

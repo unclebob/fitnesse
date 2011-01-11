@@ -75,9 +75,14 @@ public class FileUtil {
   public static void deleteFile(File file) {
     if (!file.exists())
       return;
-    if (!file.delete())
-      throw new RuntimeException("Could not delete '" + file.getAbsoluteFile() + "'");
-    waitUntilFileDeleted(file);
+    for (int i = 0; i < 10; i++) {
+        if (file.delete()) {
+            waitUntilFileDeleted(file);
+            return;
+        }
+        waitFor(10);
+    }
+    throw new RuntimeException("Could not delete '" + file.getAbsoluteFile() + "'");
   }
 
   private static void waitUntilFileDeleted(File file) {
@@ -87,13 +92,17 @@ public class FileUtil {
         System.out.println("Breaking out of delete wait");
         break;
       }
-      try {
-        Thread.sleep(500);
-      }
-      catch (InterruptedException e) {
-      }
+      waitFor(500);
     }
   }
+    
+    private static void waitFor(int milliseconds) {
+        try {
+          Thread.sleep(milliseconds);
+        }
+        catch (InterruptedException e) {
+        }
+    }
 
   public static String getFileContent(String path) throws Exception {
     File input = new File(path);

@@ -72,7 +72,7 @@ And continue on below to learn more!
 !2 Tutorial: Creating and Organizing Acceptance Tests
 Acceptance tests are what FitNesse is about. Learn why and how to make, run, and organize them.
 |[[Project Death by Requirements][>ProjectDeathByRequirements]]|''Why use automated acceptance tests? What goes wrong when we don't use them?''|
-|[[Test Systems][>TestSystems]]|''Slim and Fit, the two major test systems of FitNesse.''|
+|[[Test Systems][>TestSystems]]|''[[Slim][>SliM]] and [[Fit][>FitFramework]], the two major test systems of FitNesse.''|
 |[[Acceptance Tests][>AcceptanceTests]]|''What are the advantages of FitNesse automated acceptance tests?''|
 |[[Delivering the Right System][>DeliveringTheRightSystem]]|''An intro to how software teams can use FitNesse to build better systems.''|
 |[[Creating Test Tables][>CreatingTestTables]]|''Creating and enabling test tables on FitNesse pages.''|

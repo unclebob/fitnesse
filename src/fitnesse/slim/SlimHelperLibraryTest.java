@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SlimHelperLibraryTest {
+  private static final String SLIM_HELPER_LIBRARY_INSTANCE_NAME = "SlimHelperLibrary";
   private static final String ACTOR_INSTANCE_NAME = "scriptTableActor";
   private StatementExecutorInterface caller;
 
@@ -19,27 +20,30 @@ public class SlimHelperLibraryTest {
   }
 
   @Test
-  public void testSlimHelperLibraryHasStatementExecutor() throws Exception {
-    Object response = caller.create("x", "fitnesse.slim.SlimHelperLibrary", new Object[0]);
-    assertEquals("OK", response);
-    SlimHelperLibrary x = (SlimHelperLibrary) caller.getInstance("x");
-    assertSame(caller, x.getStatementExecutor());
+  public void testSlimHelperLibraryIsStoredInSlimExecutor() throws Exception {
+    Object helperLibrary = caller.getInstance(SLIM_HELPER_LIBRARY_INSTANCE_NAME);
+    assertTrue(helperLibrary instanceof SlimHelperLibrary);
   }
   
   @Test
-  public void testSlimHelperLibraryCanPushAndPopTableActor() throws Exception {
-    Object response = caller.create("x", "fitnesse.slim.SlimHelperLibrary", new Object[0]);
-    response = caller.create(ACTOR_INSTANCE_NAME, getTestClassName(), new Object[0]);
+  public void testSlimHelperLibraryHasStatementExecutor() throws Exception {
+    SlimHelperLibrary helperLibrary = (SlimHelperLibrary) caller.getInstance(SLIM_HELPER_LIBRARY_INSTANCE_NAME);
+    assertSame(caller, helperLibrary.getStatementExecutor());
+  }
+  
+  @Test
+  public void testSlimHelperLibraryCanPushAndPopFixture() throws Exception {
+    SlimHelperLibrary helperLibrary = (SlimHelperLibrary) caller.getInstance(SLIM_HELPER_LIBRARY_INSTANCE_NAME);
+    Object response = caller.create(ACTOR_INSTANCE_NAME, getTestClassName(), new Object[0]);
     Object firstActor = caller.getInstance(ACTOR_INSTANCE_NAME);
-    SlimHelperLibrary helperLibrary = (SlimHelperLibrary) caller.getInstance("x");
 
-    helperLibrary.pushActor();
+    helperLibrary.pushFixture();
     
     response = caller.create(ACTOR_INSTANCE_NAME, getTestClassName(), new Object[] {"1"});
     assertEquals("OK", response);
     assertNotSame(firstActor, caller.getInstance(ACTOR_INSTANCE_NAME));
     
-    helperLibrary.popActor();
+    helperLibrary.popFixture();
     
     assertSame(firstActor, caller.getInstance(ACTOR_INSTANCE_NAME));
   }

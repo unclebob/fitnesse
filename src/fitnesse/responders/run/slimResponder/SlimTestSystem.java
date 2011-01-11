@@ -13,8 +13,12 @@ import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.*;
-import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wiki.PageCrawlerImpl;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.Symbol;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -56,7 +60,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
   protected List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
   private SlimTableFactory slimTableFactory = new SlimTableFactory();
-  private WidgetRoot precompiledScenarioWidgets;
+  private Symbol preparsedScenarioLibrary;
 
 
   public SlimTestSystem(WikiPage page, TestSystemListener listener) {
@@ -454,13 +458,14 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
 
-  public WidgetRoot getPrecompiledScenarioWidgets() throws Exception {
-    if (precompiledScenarioWidgets == null)
-      precompiledScenarioWidgets = new WidgetRoot(getWidgetRootContent(), page);
-    return precompiledScenarioWidgets;
+  public Symbol getPreparsedScenarioLibrary() throws Exception {
+    if (preparsedScenarioLibrary == null) {
+      preparsedScenarioLibrary = Parser.make(page, getScenarioLibraryContent()).parse();
+    }
+    return preparsedScenarioLibrary;
   }
 
-  private String getWidgetRootContent() throws Exception {
+  private String getScenarioLibraryContent() throws Exception {
     String content = "!*> Precompiled Libraries\n\n";
     content += includeUncleLibraries();
     content += "*!\n";

@@ -17,6 +17,7 @@ public class ResponseExaminer extends ColumnFixture {
   public int number;
   private Matcher matcher;
   private int currentLine = 0;
+    private int currentPosition = 0;
 
   public String contents() throws Exception {
     String sentData = FitnesseFixtureContext.sender.sentData();
@@ -33,20 +34,31 @@ public class ResponseExaminer extends ColumnFixture {
     return Utils.escapeHTML(FitnesseFixtureContext.sender.sentData());
   }
 
-  public boolean inOrder() throws Exception {
-    if (line == null) {
+    public boolean inOrder() throws Exception {
+      if (line == null) {
+        return false;
+      }
+      String pageContent = FitnesseFixtureContext.sender.sentData();
+      String[] lines = arrayifyLines(pageContent);
+      for (int i = currentLine; i < lines.length; i++) {
+        if (line.equals(lines[i].trim())) {
+          currentLine = i;
+          return true;
+        }
+      }
       return false;
     }
-    String pageContent = FitnesseFixtureContext.sender.sentData();
-    String[] lines = arrayifyLines(pageContent);
-    for (int i = currentLine; i < lines.length; i++) {
-      if (line.equals(lines[i].trim())) {
-        currentLine = i;
+
+    public boolean occursAfter() throws Exception {
+        if (line == null) {
+            return false;
+        }
+        String pageContent = FitnesseFixtureContext.sender.sentData();
+        int matchPosition = pageContent.indexOf(line, currentPosition);
+        if (matchPosition < 0) return false;
+        currentPosition = matchPosition;
         return true;
-      }
     }
-    return false;
-  }
 
   public int matchCount() throws Exception {
     Pattern p = Pattern.compile(pattern, Pattern.MULTILINE + Pattern.DOTALL);

@@ -18,7 +18,9 @@
 |!define PageNAME {''!-PageName-!''}                                                                             |!define PagePATH {''!-PagePath-!''}                                       |
 |!define LabelNAME {''label-name''}                                                                              |!define AnyPagePATH {''!-AnyPagePath-!''}                                 |
 |!define CODE {!-<font style="font-family:Courier New">-!}                                                       |!define CODEend (${FONTend})                                              |
-|!define HDR {!-<div style="margin-top:.5em;font-family:Tahoma;font-size:14pt;font-weight:bold;color:#602060">-!}|!define HDRend (${TopOfPAGE}${DIVend})                                    |
+
+!define HDR {!-<div style="margin-top:.5em;font-family:Tahoma;font-size:14pt;font-weight:bold;color:#602060">-!}
+!define HDRend (${TopOfPAGE}${DIVend})  
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 !define TOC (|${HDR} Sections ${DIVend}|
 |!c '''[[ ${FitNESSE} Command Line ][#FitNesseCommandLINE]] '''  |

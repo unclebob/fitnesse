@@ -145,7 +145,9 @@ public class WidgetRoot extends ParentWidget {
     String value = null;
     WikiPage page = getWikiPage();
     while (value == null && !page.getPageCrawler().isRoot(page)) {
-      page = page.getParentForVariables(); // follow parents for variables
+      WikiPage parent = page.getParentForVariables(); // follow parents for variables
+        if (parent == page) break;
+        page = parent;
       // Gain access to page data to set parent's literal list
       PageData pageData = page.getData();
       pageData.setLiterals(this.getLiterals());

@@ -36,6 +36,11 @@ public class TestSlim implements TestSlimInterface {
     this.constructorArg = constructorArg;
   }
 
+  public TestSlim(int constructorArg, TestSlim other) {
+    this.constructorArg = constructorArg;
+    stringArg = other.getStringArg();
+  }
+  
   public TestSlim createTestSlimWithString(String string) {
     TestSlim testSlim = new TestSlim();
     testSlim.setString(string);
@@ -212,6 +217,14 @@ public class TestSlim implements TestSlimInterface {
     return null;
   }
 
+  public boolean isSame(Object other) {
+    return this == other;
+  }
+  
+  public String getStringFromOther(TestSlim other) {
+    return other.getStringArg();
+  }
+  
   public Zork oneZork(Zork zork) {
     this.zork = zork;
     return zork;

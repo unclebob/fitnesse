@@ -11,5 +11,7 @@ This test will pass if this bug is fixed.  Otherwise you'll get !style_code(!-f 
 
 |script|
 |f|1||2|
+|pass|
+
 
 

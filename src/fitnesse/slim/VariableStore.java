@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VariableStore {
+  private static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([a-zA-Z]\\w*)");
   private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
   private Matcher symbolMatcher;
 
@@ -16,13 +17,15 @@ public class VariableStore {
   }
 
   public Object getStored(String nameWithDollar) {
-    if (!nameWithDollar.startsWith("$")) {
-      return null;
-    }
     String name = nameWithDollar.substring(1);
     return variables.get(name).getObject();
   }
-  
+
+  public boolean containsValueFor(String nameWithDollar) {
+    return nameWithDollar != null && nameWithDollar.startsWith("$")
+    && variables.containsKey(nameWithDollar.substring(1));
+  }
+
   public Object[] replaceSymbols(Object[] args) {
     Object result[] = new Object[args.length];
     for (int i = 0; i < args.length; i++)
@@ -41,20 +44,22 @@ public class VariableStore {
 
   @SuppressWarnings("unchecked")
   private Object replaceSymbol(Object object) {
-    if (object instanceof List)
-      return (replaceSymbolsInList((List<Object>) object));
-    else
-      return (replaceSymbolsInString((String) object));
+    if (object instanceof List) {
+      return replaceSymbolsInList((List<Object>) object);
+    }
+    if (containsValueFor((String) object)) {
+      return getStored((String) object);
+    }
+    return replaceSymbolsInString((String) object);
   }
 
   public String replaceSymbolsInString(String arg) {
-    Pattern symbolPattern = Pattern.compile("\\$([a-zA-Z]\\w*)");
     int startingPosition = 0;
     while (true) {
       if ("".equals(arg) || null == arg) {
         break;
       }
-      symbolMatcher = symbolPattern.matcher(arg);
+      symbolMatcher = SYMBOL_PATTERN.matcher(arg);
       if (symbolMatcher.find(startingPosition)) {
         String symbolName = symbolMatcher.group(1);
         arg = replaceSymbolInArg(arg, symbolName);
@@ -73,8 +78,10 @@ public class VariableStore {
       if (value != null) {
         replacement = value.toString();
       }
-      arg = arg.substring(0, symbolMatcher.start()) + replacement + arg.substring(symbolMatcher.end());
+      arg = arg.substring(0, symbolMatcher.start()) + replacement
+          + arg.substring(symbolMatcher.end());
     }
     return arg;
   }
+
 }

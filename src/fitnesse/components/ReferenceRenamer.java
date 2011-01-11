@@ -4,21 +4,11 @@ package fitnesse.components;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetVisitor;
-import fitnesse.wikitext.widgets.AliasLinkWidget;
-import fitnesse.wikitext.widgets.ClasspathWidget;
-import fitnesse.wikitext.widgets.CommentWidget;
-import fitnesse.wikitext.widgets.ImageWidget;
-import fitnesse.wikitext.widgets.LinkWidget;
-import fitnesse.wikitext.widgets.LiteralWidget;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.PreformattedWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.parser.*;
 
-public abstract class ReferenceRenamer implements TraversalListener, WidgetVisitor {
+public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeWalker {
   protected WikiPage root;
+    protected WikiPage currentPage;
 
   public ReferenceRenamer(WikiPage root) {
     this.root = root;
@@ -31,26 +21,20 @@ public abstract class ReferenceRenamer implements TraversalListener, WidgetVisit
   public void processPage(WikiPage currentPage) throws Exception {
     PageData data = currentPage.getData();
     String content = data.getContent();
-    ParentWidget widgetRoot = new WidgetRoot(content, currentPage, referenceModifyingWidgetBuilder);
-    widgetRoot.acceptVisitor(this);
 
-    String newContent = widgetRoot.asWikiText();
+      Symbol syntaxTree = Parser.make(
+              new ParsingPage(new WikiSourcePage(currentPage)),
+              content,
+              SymbolProvider.refactoringProvider)
+              .parse();
+      this.currentPage = currentPage;
+      syntaxTree.walkPreOrder(this);
+      String newContent = new WikiTranslator(new WikiSourcePage(currentPage)).translateTree(syntaxTree);
+
     boolean pageHasChanged = !newContent.equals(content);
     if (pageHasChanged) {
       data.setContent(newContent);
       currentPage.commit(data);
     }
   }
-
-  @SuppressWarnings("unchecked")
-  public static WidgetBuilder referenceModifyingWidgetBuilder = new WidgetBuilder(new Class[]{
-      WikiWordWidget.class,
-      LiteralWidget.class,
-      CommentWidget.class,
-      PreformattedWidget.class,
-      LinkWidget.class,
-      ImageWidget.class,
-      AliasLinkWidget.class,
-      ClasspathWidget.class
-  });
 }

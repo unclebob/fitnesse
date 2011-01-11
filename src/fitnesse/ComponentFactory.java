@@ -16,8 +16,8 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetInterceptor;
+import fitnesse.wikitext.parser.SymbolProvider;
+import fitnesse.wikitext.parser.SymbolType;
 
 public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
@@ -26,8 +26,7 @@ public class ComponentFactory {
   public static final String HTML_PAGE_FACTORY = "HtmlPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
-  public static final String WIKI_WIDGETS = "WikiWidgets";
-  public static final String WIKI_WIDGET_INTERCEPTORS = "WikiWidgetInterceptors";
+  public static final String SYMBOL_TYPES = "SymbolTypes";
   public static final String AUTHENTICATOR = "Authenticator";
   public static final String CONTENT_FILTER = "ContentFilter";
   public static final String VERSIONS_CONTROLLER = "VersionsController";
@@ -36,6 +35,7 @@ public class ComponentFactory {
   private final Properties loadedProperties;
   private final String propertiesLocation;
   private boolean propertiesAreLoaded = false;
+  private SymbolProvider symbolProvider;
 
   public ComponentFactory() {
     this(new Properties());
@@ -46,9 +46,14 @@ public class ComponentFactory {
   }
 
   public ComponentFactory(Properties properties) {
+      this(properties, SymbolProvider.wikiParsingProvider);
+  }
+
+  public ComponentFactory(Properties properties, SymbolProvider symbolProvider) {
     this.propertiesLocation = null;
     this.loadedProperties = properties;
     propertiesAreLoaded = true;
+    this.symbolProvider = symbolProvider;
   }
 
   public ComponentFactory(String propertiesLocation, Properties properties) {
@@ -122,7 +127,7 @@ public class ComponentFactory {
         Class<?> pluginClass = Class.forName(responderPlugin);
         loadWikiPageFromPlugin(pluginClass, wikiPageFactory, buffer);
         loadRespondersFromPlugin(pluginClass, responderFactory, buffer);
-        loadWikiWidgetsFromPlugin(pluginClass, WidgetBuilder.htmlWidgetBuilder, buffer);
+        loadSymbolTypesFromPlugin(pluginClass, symbolProvider, buffer);
       }
     }
     return buffer.toString();
@@ -150,11 +155,11 @@ public class ComponentFactory {
     }
   }
 
-  private void loadWikiWidgetsFromPlugin(Class<?> pluginClass, WidgetBuilder widgetBuilder, StringBuffer buffer)
+  private void loadSymbolTypesFromPlugin(Class<?> pluginClass, SymbolProvider symbolProvider, StringBuffer buffer)
     throws IllegalAccessException, InvocationTargetException {
     try {
-      Method method = pluginClass.getMethod("registerWikiWidgets", WidgetBuilder.class);
-      method.invoke(pluginClass, widgetBuilder);
+      Method method = pluginClass.getMethod("registerSymbolTypes", SymbolProvider.class);
+      method.invoke(pluginClass, symbolProvider);
       buffer.append("\t\t").append("widgets:").append(pluginClass.getName()).append(endl);
     } catch (NoSuchMethodException e) {
       // ok, no widgets to register in this plugin
@@ -190,30 +195,15 @@ public class ComponentFactory {
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
-  public String loadWikiWidgets() throws Exception {
+  public String loadSymbolTypes() throws Exception {
     StringBuffer buffer = new StringBuffer();
-    String[] widgetNames = getListFromProperties(WIKI_WIDGETS);
-    if (widgetNames != null) {
-      buffer.append("\tCustom wiki widgets loaded:").append(endl);
-      for (String widgetName : widgetNames) {
-        Class<?> widgetClass = Class.forName(widgetName.trim());
-        WidgetBuilder.htmlWidgetBuilder.addWidgetClass(widgetClass);
-        buffer.append("\t\t").append(widgetClass.getName()).append(endl);
-      }
-    }
-
-    return buffer.toString();
-  }
-
-  public String loadWikiWidgetInterceptors() throws Exception {
-    StringBuffer buffer = new StringBuffer();
-
-    String[] widgetInterceptorList = getListFromProperties(WIKI_WIDGET_INTERCEPTORS);
-    if (widgetInterceptorList != null) {
-      buffer.append("\tCustom wiki widget interceptors loaded:").append(endl);
-      for (String interceptorClass : widgetInterceptorList) {
-        WidgetBuilder.htmlWidgetBuilder.addInterceptor((WidgetInterceptor) Class.forName(interceptorClass).newInstance());
-        buffer.append("\t\t").append(interceptorClass).append(endl);
+    String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
+    if (symbolTypeNames != null) {
+      buffer.append("\tCustom symbol types loaded:").append(endl);
+      for (String symbolTypeName : symbolTypeNames) {
+        Class<?> symbolTypeClass = Class.forName(symbolTypeName.trim());
+        symbolProvider.add((SymbolType)symbolTypeClass.newInstance());
+        buffer.append("\t\t").append(symbolTypeClass.getName()).append(endl);
       }
     }
     return buffer.toString();

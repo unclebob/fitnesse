@@ -26,9 +26,9 @@ public class PageBuilder extends Fixture {
   public void line(String line) {
     if (line.startsWith("\\"))
       line = line.substring(1);
-    line = line.replaceAll("&bar;", "|");
+    line = line.replace("&bar;", "|");
     line = line.replaceAll("&bang;", "!");
-    line = line.replaceAll("&dollar;", "$");
+    line = line.replace("&dollar;", "$");
     writer.println(line);
   }
 
