@@ -8,7 +8,6 @@ import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import util.FileUtil;
 
 import java.util.*;
 
@@ -214,40 +213,15 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testOutputChunk(output);
   }
 
-  public String getLockFileName(WikiPage test) throws Exception {
-	PageData data = test.getData();
-	if(data == null) 
-		throw new Exception("PageData is not available");
-	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
-  }
-  
-  void CreateLockFile() {
-	try {
-		FileUtil.createFile(getLockFileName(currentTest), "");
-	}
-	catch (Exception exception) {
-    }	
-  }
-  
-  void DeleteLockFile() {
-	try {
-		FileUtil.deleteFile(getLockFileName(currentTest));
-	}
-	catch (Exception exception) {
-    }	
-  }
-  
   void startingNewTest(WikiPage test) throws Exception {
     currentTest = test;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
-	CreateLockFile();
   }
   
   public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
-	DeleteLockFile();
   }
 
   public synchronized void exceptionOccurred(Throwable e) {
@@ -278,7 +252,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     if (wasNotStopped) {
       testSystemGroup.kill();
     }
-	DeleteLockFile();
   }
 }
 
