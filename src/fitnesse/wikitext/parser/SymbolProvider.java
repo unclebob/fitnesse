@@ -15,7 +15,7 @@ public class SymbolProvider {
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
             new See(), SymbolType.Style, new LastModified(), Image.symbolType,
-            new Today(),
+            new Today(), SymbolType.Delta, 
             new HorizontalRule(), SymbolType.CloseLiteral, SymbolType.Strike,
             Alias.symbolType, SymbolType.UnorderedList, SymbolType.OrderedList, Comment.symbolType, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,

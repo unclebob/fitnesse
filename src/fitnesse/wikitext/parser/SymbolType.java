@@ -36,6 +36,9 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string(":"));
     public static final SymbolType Comma = new SymbolType("Comma")
             .wikiMatcher(new Matcher().string(","));
+    public static final SymbolType Delta = new SymbolType("Delta")
+            .wikiMatcher(new Matcher().string("+").digits())
+            .wikiMatcher(new Matcher().string("-").digits());
     public static final SymbolType EMail = new SymbolType("EMail")
             .htmlTranslation(new HtmlBuilder("a").bodyContent().attribute("href", -1, "mailto:").inline());
     public static final SymbolType Empty = new SymbolType("Empty");
