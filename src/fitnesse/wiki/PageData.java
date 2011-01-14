@@ -54,7 +54,7 @@ public class PageData implements Serializable {
       PropertyWHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
-      PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH, PropertyPRUNE };
+      PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
 
   public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil
       .combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
