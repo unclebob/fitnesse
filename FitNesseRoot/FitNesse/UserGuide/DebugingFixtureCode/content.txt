@@ -12,5 +12,5 @@ To set up debugging for your fixture code:
  3 After starting the test in FitNesse, start a remote debugging process in your debugging tool which should connect to slim/fit server.  Remember to make sure you are using the right port.  (Port 8000 if you are using the default settings for java)
 
 !2 Set up a remote debug bookmark in your browser. 
- 1 Just drag the link below to bookmark toolbar of your favourite browser.  !-<a title="Debug FitNesse" id="debugfitnessetest" href="javascript:(function(){var url = document.location.href + '?responder=test&remote_debug=true'; window.location = url;})();"><div id="Debug fitnesse">Debug FitNesse</div></a>-!
+ 1 Just drag the link below to bookmark toolbar of your favourite browser.  !-<a title="Debug FitNesse" id="debugfitnessetest" href="javascript:(function(){var url = document.location.pathname + '?responder=test&remote_debug=true'; window.location = url;})();"><div id="Debug fitnesse">Debug FitNesse</div></a>-!
  2 Then to use it just go to the page you which to debug and click on the link. 
