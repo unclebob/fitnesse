@@ -14,7 +14,7 @@ Ensure that the Page type radios are present
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|Page type:|true|
-|contents|<input type="radio" name="PageType" value="Normal" checked="checked"/> - Normal|true|
+|contents|<input type="radio" name="PageType" value="Static" checked="checked"/> - Static|true|
 |contents|<input type="radio" name="PageType" value="Test"/> - Test|true|
 |contents|<input type="radio" name="PageType" value="Suite"/> - Suite|true|
 |contents|<input type="checkbox" name="Prune"/> - Skip|true|

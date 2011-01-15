@@ -1,3 +1,6 @@
+|FitNesse.UserGuide.RestfulServices||21:54:36 Sat, Jan 15, 2011|
+|FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuitePropertiesResponder.TestPropertyCheckboxesArePresent||21:52:25 Sat, Jan 15, 2011|
+|FitNesse.UserGuide.ExternalHtmlPages||21:46:48 Sat, Jan 15, 2011|
 |FitNesse.UserGuide.QuickReferenceGuide||14:03:48 Wed, Sep 22, 2010|
 |FitNesse.UserGuide.DebugingFixtureCode||13:54:37 Wed, Sep 22, 2010|
 |FitNesse.TestClare||17:07:06 Tue, Sep 21, 2010|
@@ -24,7 +27,6 @@
 |JunkPage.UndefinedSymbolTest||18:12:42 Fri, Mar 12, 2010|
 |FitNesse.UserGuide.CommandLineRestCommands||14:46:54 Wed, Mar 10, 2010|
 |JunkPage.SanjeevsHashWidgetIssue||09:02:04 Sun, Mar 07, 2010|
-|FitNesse.UserGuide.RestfulServices||08:33:17 Sun, Mar 07, 2010|
 |JunkPage.VariableOverride.VariableDefault.VariableOverriden||10:43:00 Sat, Mar 06, 2010|
 |JunkPage.VariableOverride.VariableDefault||10:42:16 Sat, Mar 06, 2010|
 |JunkPage.VariableOverride||10:41:11 Sat, Mar 06, 2010|
@@ -96,5 +98,3 @@
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TableTableReturnsNull||23:46:02 Sat, Dec 12, 2009|
 |FitNesse.SuiteAcceptanceTests.SuiteSlimTests.TestSequentialArgumentProcessing||09:02:18 Wed, Dec 09, 2009|
 |FitNesse.UserGuide.PlainTextTable||20:12:13 Tue, Dec 08, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteWidgetTests.SimpleWidgets||19:56:36 Tue, Dec 08, 2009|
-|FitNesse.SuiteAcceptanceTests.SuiteFitDecoratorTests.SetUp||11:30:58 Tue, Dec 08, 2009|

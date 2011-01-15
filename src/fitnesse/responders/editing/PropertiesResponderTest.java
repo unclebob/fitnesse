@@ -264,7 +264,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\" checked=\"checked\"/> - Static", html);
+    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\" checked=\"checked\"/> - Static", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\"/> - Test", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
     assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
@@ -277,7 +277,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\"/> - Static", html);
+    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\"/> - Test", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\" checked=\"checked\"/> - Suite", html);
     assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
@@ -290,7 +290,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\"/> - Static", html);
+    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\" checked=\"checked\"/> - Test", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
     assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
