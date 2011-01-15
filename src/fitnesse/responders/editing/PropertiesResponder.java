@@ -186,7 +186,9 @@ public class PropertiesResponder implements SecureResponder {
     String checkedAttribute = getCheckedAttribute(pageData, attributes);
     for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
-      div.add(makeAttributeRadio(radioGroup, attribute, attribute.equals(checkedAttribute), attribute));
+      String attributeName = NORMAL.toString().equals(attribute) ? "Static" : attribute;
+      div.add(makeAttributeRadio(radioGroup, attribute, attribute
+          .equals(checkedAttribute), attributeName));
     }
     div.add(HtmlUtil.BR);
     div.add(HtmlUtil.BR);
