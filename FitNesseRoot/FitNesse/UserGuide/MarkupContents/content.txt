@@ -20,7 +20,7 @@ To facilitate the verification of test, suite, and symbolic links, the -p option
 | !3 !c + | Test          | The Test property box is checked |
 | !3 !c @ | Imported      | The page is imported from an external source |
 | !3 !c > | Symbolic Link | The page is a symbolic link of the current page |
-| !3 !c - | Pruned        | The Prune property box is checked; this page and all its chidlren are excluded from suite tests |
+| !3 !c - |Skipped        | The skip property box is checked; this page and all its chidlren are excluded from suite tests |
 
 The character set for properties may be changed via the PROPERTY_CHARACTERS variable; this variable is positional in the order specified above.
 

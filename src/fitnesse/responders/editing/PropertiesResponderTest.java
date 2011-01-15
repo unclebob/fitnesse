@@ -314,7 +314,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
     assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
     assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Prune", html);
+    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip (Recursive)", html);
   }
 
   public void testMakeSecurityPropertiesHtml() throws Exception {

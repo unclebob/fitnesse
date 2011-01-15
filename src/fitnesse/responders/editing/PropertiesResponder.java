@@ -173,7 +173,7 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   public HtmlTag makePageTypeRadiosHtml(PageData pageData) throws Exception {
-    return makeAttributeRadiosHtml("Execution: ",
+    return makeAttributeRadiosHtml("Page type: ",
         PAGE_TYPE_ATTRIBUTES, PAGE_TYPE_ATTRIBUTE, pageData);
   }
 
@@ -186,9 +186,7 @@ public class PropertiesResponder implements SecureResponder {
     String checkedAttribute = getCheckedAttribute(pageData, attributes);
     for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
-      String attributeName = NORMAL.toString().equals(attribute) ? "Info" : attribute;
-      div.add(makeAttributeRadio(radioGroup, attribute, attribute
-          .equals(checkedAttribute), attributeName));
+      div.add(makeAttributeRadio(radioGroup, attribute, attribute.equals(checkedAttribute), attribute));
     }
     div.add(HtmlUtil.BR);
     div.add(HtmlUtil.BR);
