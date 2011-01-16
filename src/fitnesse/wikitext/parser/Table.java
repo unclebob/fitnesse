@@ -33,12 +33,9 @@ public class Table extends SymbolType implements Rule, Translation {
     }
 
     private Symbol parseCell(Parser parser, String content) {
-        if (content.indexOf("!") >= 0) {
-            return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1);
-        }
-        else {
-            return parser.parseTo(SymbolType.EndCell, 1);
-        }
+        return (content.indexOf("!") >= 0)
+           ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1)
+           : parser.parseTo(SymbolType.EndCell, 1);
     }
 
     private boolean containsNewLine(Symbol cell) {
@@ -69,11 +66,11 @@ public class Table extends SymbolType implements Rule, Translation {
             int extraColumnSpan = longestRow - rowLength(child);
             int column = 1;
             for (Symbol grandChild: child.getChildren()) {
-                String body = translator.translate(grandChild);
+                String body = translateCellBody(translator, grandChild);
                 writer.startTag("td");
                 if (extraColumnSpan > 0 && column == rowLength(child))
                     writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
-                writer.putText(body.trim());
+                writer.putText(body);
                 writer.endTag();
                 column++;
             }
@@ -81,6 +78,32 @@ public class Table extends SymbolType implements Rule, Translation {
         }
         writer.endTag();
         return writer.toHtml();
+    }
+
+    private String translateCellBody(Translator translator, Symbol cell) {
+        StringBuilder result = new StringBuilder(cell.getContent());
+        for (int i = 0; i < cell.getChildren().size(); i++) {
+            Symbol child = cell.childAt(i);
+            String childTranslation = translator.translate(child);
+            if (!child.isType(Literal.symbolType)) {
+                if (i == 0) childTranslation = trimLeft(childTranslation);
+                if (i == cell.getChildren().size() - 1) childTranslation = trimRight(childTranslation);
+            }
+            result.append(childTranslation);
+        }
+        return result.toString();
+    }
+
+    private String trimLeft(String input) {
+        String result = input;
+        while (result.length() > 0 && Character.isWhitespace(result.charAt(0))) result = result.substring(1);
+        return result;
+    }
+
+    private String trimRight(String input) {
+        String result = input;
+        while (result.length() > 0 && Character.isWhitespace(result.charAt(result.length() - 1))) result = result.substring(0, result.length() - 1);
+        return result;
     }
 
     private int longestRow(Symbol table) {
