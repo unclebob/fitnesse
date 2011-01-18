@@ -33,6 +33,7 @@ import fitnesse.responders.search.*;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
+import fitnesse.responders.testHistory.SuiteOverviewResponder;
 import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
@@ -92,6 +93,7 @@ public class ResponderFactory {
     addResponder("purgeHistory", PurgeHistoryResponder.class);
     addResponder("compareHistory", HistoryComparerResponder.class);
     addResponder("replace", SearchReplaceResponder.class);
+    addResponder("overview", SuiteOverviewResponder.class);
   }
 
   public void addResponder(String key, String responderClassName) throws ClassNotFoundException {
