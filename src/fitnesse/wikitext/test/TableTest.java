@@ -90,6 +90,12 @@ public class TableTest {
         ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", "|y|\n"), tableWithCell("|y|"));
     }
 
+    @Test public void translatesVariableWithWhitespace() {
+        ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", " a "), tableWithCell("a"));
+        ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", "!- a -!"), tableWithCell(" a "));
+        ParserTestHelper.assertTranslatesTo("!|${x}|\n${x}", new TestVariableSource("x", "!- a -!"), tableWithCell(" a ") + " a ");
+    }
+
     private String tableWithCell(String cellContent) {
         return tableWithCellAndRow(cellContent, "<tr>");
     }

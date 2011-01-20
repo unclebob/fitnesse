@@ -81,29 +81,20 @@ public class Table extends SymbolType implements Rule, Translation {
     }
 
     private String translateCellBody(Translator translator, Symbol cell) {
-        StringBuilder result = new StringBuilder(cell.getContent());
-        for (int i = 0; i < cell.getChildren().size(); i++) {
-            Symbol child = cell.childAt(i);
-            String childTranslation = translator.translate(child);
-            if (!child.isType(Literal.symbolType)) {
-                if (i == 0) childTranslation = trimLeft(childTranslation);
-                if (i == cell.getChildren().size() - 1) childTranslation = trimRight(childTranslation);
+        final String literalDelimiter = new String(new char[] {255, 1, 255});
+        cell.walkPreOrder(new SymbolTreeWalker() {
+            public boolean visit(Symbol node) {
+                if (node.isType(Literal.symbolType)) {
+                    node.setContent(literalDelimiter + node.getContent() + literalDelimiter);
+                }
+                return true;
             }
-            result.append(childTranslation);
-        }
-        return result.toString();
-    }
 
-    private String trimLeft(String input) {
-        String result = input;
-        while (result.length() > 0 && Character.isWhitespace(result.charAt(0))) result = result.substring(1);
-        return result;
-    }
-
-    private String trimRight(String input) {
-        String result = input;
-        while (result.length() > 0 && Character.isWhitespace(result.charAt(result.length() - 1))) result = result.substring(0, result.length() - 1);
-        return result;
+            public boolean visitChildren(Symbol node) {
+                return true;
+            }
+        });
+        return translator.translate(cell).trim().replace(literalDelimiter, "");
     }
 
     private int longestRow(Symbol table) {
