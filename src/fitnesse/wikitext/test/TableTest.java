@@ -79,6 +79,7 @@ public class TableTest {
     }
 
     @Test public void overridesNestedRule() {
+        ParserTestHelper.assertTranslatesTo("|''|\n", tableWithCell("''"));
         ParserTestHelper.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''");
     }
 
