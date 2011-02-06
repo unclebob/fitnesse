@@ -15,7 +15,7 @@ public class Variable extends SymbolType implements Rule, Translation {
     
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         String name = parser.parseToAsString(SymbolType.CloseBrace);
-        if (parser.atEnd()) return Symbol.nothing;
+        if (parser.atEnd() || name.length() == 0) return Symbol.nothing;
         if (!ScanString.isVariableName(name)) return Symbol.nothing;
 
         current.add(name);
