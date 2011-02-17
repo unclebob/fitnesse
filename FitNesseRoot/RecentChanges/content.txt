@@ -1,3 +1,4 @@
+|FitNesse.UserGuide.SliM.SlimProtocol||07:04:54 Thu, Feb 17, 2011|
 |JunkPage.IncludePage||11:45:34 Thu, Jan 06, 2011|
 |JunkPage.IncludeSetupTeardown||11:44:58 Thu, Jan 06, 2011|
 |FitNesse.UserGuide.QuickReferenceGuide||11:17:28 Thu, Jan 06, 2011|
@@ -24,7 +25,6 @@
 |FitNesse.UserGuide.ControllingFitnesseFromTheCommandLine||11:11:43 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulServices.RestfulSuiteXmlFormat||11:05:37 Mon, Jun 07, 2010|
 |FitNesse.UserGuide.RestfulTests||11:04:14 Mon, Jun 07, 2010|
-|FitNesse.UserGuide.SliM.SlimProtocol||11:18:16 Sun, May 16, 2010|
 |JunkPage.SlimVersionTest||11:07:17 Sun, May 16, 2010|
 |JunkPage.ChainTest||10:29:59 Sun, May 16, 2010|
 |JunkPage.ScenarioTest||08:37:14 Fri, Apr 02, 2010|
