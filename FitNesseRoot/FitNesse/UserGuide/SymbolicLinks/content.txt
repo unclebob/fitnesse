@@ -16,3 +16,6 @@ Navigate to the page where you'd like to add a symbolic link.  Click the '''Prop
 !3 External SymbolicLinks
 For various reasons, you may want to keep a branch of your FitNesse wiki in a different location on your disk, than the rest of the wiki.  You may link external branches into the main wiki by using SymbolicLinks.  To do so, simply provide the file path to the external FitNesse directory in URL format proceeded with '''file://'''.
  * eg. !-file:///User/MicahMartin/fitnesse/ExternalFitNesseRoot-!
+
+SymbolicLinks can also use environment variables to find a branch to add to your wiki.
+ * eg. !-file://${HOME}/MicahMartin/fitnesse/ExternalFitNesseRoot-!
