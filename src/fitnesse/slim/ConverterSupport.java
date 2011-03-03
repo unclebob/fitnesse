@@ -4,12 +4,13 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.util.List;
 
+import fitnesse.slim.converters.ConverterRegistry;
 import fitnesse.slim.converters.PropertyEditorConverter;
 
 class ConverterSupport {
 
   public static Converter getConverter(Class<?> k) {
-    Converter c = Slim.converters.get(k);
+    Converter c = ConverterRegistry.getConverterForClass(k);
     if (c != null)
       return c;
     PropertyEditor pe = PropertyEditorManager.findEditor(k);
