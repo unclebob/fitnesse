@@ -4,6 +4,7 @@ package fitnesse.responders.editing;
 
 import java.io.File;
 
+import util.EnvironmentVariableTool;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -123,7 +124,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private File createFileFromPath(String linkPath) {
-    String pathToFile = linkPath.substring(7);
+    String pathToFile = EnvironmentVariableTool.replace(linkPath.substring(7));
     return new File(pathToFile);
   }
 

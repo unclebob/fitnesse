@@ -225,7 +225,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
 
-  public synchronized void exceptionOccurred(Throwable e) {
+  public void exceptionOccurred(Throwable e) {
     try {
       resultsListener.errorOccured();
       stop();

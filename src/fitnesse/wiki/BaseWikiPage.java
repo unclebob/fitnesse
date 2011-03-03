@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
+import util.EnvironmentVariableTool;
 import util.FileUtil;
 
 public abstract class BaseWikiPage implements WikiPage {
@@ -69,7 +69,7 @@ public abstract class BaseWikiPage implements WikiPage {
   }
 
   private WikiPage createExternalSymbolicLink(String linkPath, String linkName) throws Exception {
-    String fullPagePath = linkPath.substring(7);
+    String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
     File file = new File(fullPagePath);
     File parentDirectory = file.getParentFile();
     if (parentDirectory.exists()) {
