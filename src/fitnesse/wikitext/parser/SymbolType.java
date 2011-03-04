@@ -72,10 +72,6 @@ public class SymbolType implements Matchable {
             .wikiRule(new ListRule())
             .htmlTranslation(new ListBuilder("ol"));
     public static final SymbolType PlainTextCellSeparator = new SymbolType("PlainTextCellSeparator");
-    public static final SymbolType Preformat = new SymbolType("Preformat")
-            .wikiMatcher(new Matcher().string("{{{"))
-            .wikiRule(new Literal())
-            .htmlTranslation(new HtmlBuilder("pre").bodyContent());
     public static final SymbolType Strike = new SymbolType("Strike")
             .wikiMatcher(new Matcher().string("--"))
             .wikiRule(new EqualPairRule())

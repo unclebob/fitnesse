@@ -27,7 +27,7 @@ public class PageData implements Serializable {
 
     private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[] {
         Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
-        SymbolType.Newline, Variable.symbolType, SymbolType.Preformat,
+        SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
         SymbolType.ClosePreformat, SymbolType.Text
 });
 

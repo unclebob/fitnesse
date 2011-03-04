@@ -107,7 +107,6 @@ public class Symbol {
                 : type == SymbolType.OpenBracket ? SymbolType.CloseBracket
                 : type == SymbolType.OpenParenthesis ? SymbolType.CloseParenthesis
                 : type == Literal.symbolType ? SymbolType.CloseLiteral
-                : type == SymbolType.Preformat ? SymbolType.ClosePreformat
                 : type == Comment.symbolType ? SymbolType.Newline
                 : SymbolType.Empty;
     }
