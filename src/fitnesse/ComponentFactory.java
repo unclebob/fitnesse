@@ -42,7 +42,7 @@ public class ComponentFactory {
   }
 
   public ComponentFactory(String propertiesLocation) {
-    this(propertiesLocation, new Properties());
+    this(propertiesLocation, new Properties(), SymbolProvider.wikiParsingProvider);
   }
 
   public ComponentFactory(Properties properties) {
@@ -56,10 +56,11 @@ public class ComponentFactory {
     this.symbolProvider = symbolProvider;
   }
 
-  public ComponentFactory(String propertiesLocation, Properties properties) {
+  public ComponentFactory(String propertiesLocation, Properties properties, SymbolProvider symbolProvider) {
     this.propertiesLocation = propertiesLocation;
     this.loadedProperties = properties;
     loadProperties(propertiesLocation);
+    this.symbolProvider = symbolProvider;
   }
 
   protected void loadProperties(String propertiesLocation) {
