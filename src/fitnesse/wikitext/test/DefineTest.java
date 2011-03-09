@@ -27,6 +27,7 @@ public class DefineTest {
 
     @Test public void definesValues() throws Exception {
         assertDefinesValue("!define x {y}", "x", "y");
+        assertDefinesValue("|!define x {y}|\n", "x", "y");
         //todo: move to variableTest?
         //assertDefinesValue("!define x {''y''}", "x", "<i>y</i>");
         //assertDefinesValue("!define x {!note y\n}", "x", "<span class=\"note\">y</span><br/>");
