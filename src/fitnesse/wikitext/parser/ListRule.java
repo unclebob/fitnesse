@@ -17,7 +17,7 @@ public class ListRule implements Rule {
             if (indent(nextSymbol) > indent(list)) {
                 Maybe<Symbol> subList = populateList(parser, nextSymbol);
                 if (subList.isNothing()) return Symbol.nothing;
-                list.childAt(0).add(subList.getValue());
+                list.lastChild().add(subList.getValue());
             }
             else {
                 Symbol body = makeListBody(parser);
