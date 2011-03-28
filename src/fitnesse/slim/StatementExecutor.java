@@ -30,24 +30,6 @@ public class StatementExecutor implements StatementExecutorInterface {
   private String lastActor;
 
   public StatementExecutor() {
-    Slim.addConverter(void.class, new VoidConverter());
-    Slim.addConverter(String.class, new StringConverter());
-    Slim.addConverter(int.class, new IntConverter());
-    Slim.addConverter(double.class, new DoubleConverter());
-    Slim.addConverter(Integer.class, new IntConverter());
-    Slim.addConverter(Double.class, new DoubleConverter());
-    Slim.addConverter(char.class, new CharConverter());
-    Slim.addConverter(boolean.class, new BooleanConverter());
-    Slim.addConverter(Boolean.class, new BooleanConverter());
-    Slim.addConverter(Date.class, new DateConverter());
-    Slim.addConverter(List.class, new ListConverter());
-    Slim.addConverter(Integer[].class, new IntegerArrayConverter());
-    Slim.addConverter(int[].class, new IntegerArrayConverter());
-    Slim.addConverter(String[].class, new StringArrayConverter());
-    Slim.addConverter(boolean[].class, new BooleanArrayConverter());
-    Slim.addConverter(Boolean[].class, new BooleanArrayConverter());
-    Slim.addConverter(double[].class, new DoubleArrayConverter());
-    Slim.addConverter(Double[].class, new DoubleArrayConverter());
     PropertyEditorManager.registerEditor(Map.class, MapEditor.class);
 
     executorChain.add(new FixtureMethodExecutor(instances));
