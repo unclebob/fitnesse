@@ -31,7 +31,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private String stopId = null;
   private PageListSetUpTearDownSurrounder surrounder;
   TimeMeasurement currentTestTime, totalTestTime;
-
+  
   public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                              final FitNesseContext fitNesseContext,
                              final WikiPage page,
@@ -218,10 +218,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
   }
-
+  
   public void testComplete(TestSummary testSummary) throws Exception {
     WikiPage testPage = processingQueue.removeFirst();
-
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
 

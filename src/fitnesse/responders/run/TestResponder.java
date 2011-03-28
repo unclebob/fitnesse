@@ -64,6 +64,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
       addHtmlFormatter();
     if (!request.hasInput("nohistory"))
       addTestHistoryFormatter();
+	addTestInProgressFormatter();
     formatters.writeHead(getTitle());
   }
 
@@ -120,6 +121,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
 //    formatters.add(new XmlFormatter(context, page, writerFactory));
     formatters.add(new PageHistoryFormatter(context, page, writerFactory));
+  }
+  
+  protected void addTestInProgressFormatter() throws Exception {
+    formatters.add(new PageInProgressFormatter(page));
   }
 
   protected void sendPreTestNotification() throws Exception {

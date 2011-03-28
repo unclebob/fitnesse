@@ -22,6 +22,7 @@ import fitnesse.wikitext.parser.Symbol;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -119,9 +120,22 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
     return new ExecutionLog(page, slimRunner);
   }
+  
+  public int findFreePort() {
+    int port;
+    try {
+      ServerSocket socket= new ServerSocket(0);
+      port = socket.getLocalPort();
+      socket.close(); 
+    } catch (Exception e) { port = -1; }
+    return port;    
+  } 
 
   public int getNextSlimSocket() {
-    int base = getSlimPortBase();
+	int base = getSlimPortBase();
+	if (base == 0) {
+		return findFreePort();
+	}
     synchronized (slimSocketOffset) {
       int offset = slimSocketOffset.get();
       offset = (offset + 1) % 10;
