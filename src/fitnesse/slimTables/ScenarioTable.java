@@ -187,7 +187,7 @@ public class ScenarioTable extends SlimTable {
 
         if (parameterized) {
             parameterizedName = table.getCellContents(1, 0);
-        } else {
+        } else if (this.inputs.size() > 0) {
             StringBuilder nameBuffer = new StringBuilder();
 
             for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)
@@ -195,6 +195,8 @@ public class ScenarioTable extends SlimTable {
                           .append(" _ ");
 
             parameterizedName = nameBuffer.toString().trim();
+        } else {
+          return null;
         }
 
         return getArgumentsMatchingParameterizedName(parameterizedName,
