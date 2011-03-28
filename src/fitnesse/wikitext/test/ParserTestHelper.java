@@ -113,7 +113,7 @@ public class ParserTestHelper {
         return Parser.make(new ParsingPage(new WikiSourcePage(page)), page.getData().getContent()).parse();
     }
 
-    private static Symbol parse(WikiPage page, String input) {
+    public static Symbol parse(WikiPage page, String input) {
         return Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
     }
 

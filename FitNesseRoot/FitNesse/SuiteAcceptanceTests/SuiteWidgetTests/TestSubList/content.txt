@@ -22,16 +22,13 @@ A list created as follows {{{ * Item one
 #
 !|Response Examiner.|
 |type|pattern|matches?|value|
-|contents|<li>Item One</li>|true||
+|contents|<li>Item One<ul>|true||
 
 !|Response Examiner.|
 |type|number|string?|
 |line|1|<ul>|
-|line|2|<li>Item One</li>|
-|line|3|<li><ul>|
-|line|4|<li>Item Two</li>|
-|line|5|</ul>|
-|line|6|</li>|
-|line|7|</ul>|
-
-
+|line|2|<li>Item One<ul>|
+|line|3|<li>Item Two</li>|
+|line|4|</ul>|
+|line|5|</li>|
+|line|6|</ul>|

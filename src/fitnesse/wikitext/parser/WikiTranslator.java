@@ -12,7 +12,8 @@ public class WikiTranslator extends Translator {
                 .property("image", "left", "!img-l ").property("image", "right", "!img-r ").content().child(0));
         addTranslation(Literal.symbolType, new WikiBuilder().text("!-").content().text("-!"));
         addTranslation(Path.symbolType, new WikiBuilder().text("!path ").child(0));
-        addTranslation(SymbolType.Preformat, new WikiBuilder().text("{{{").content().text("}}}"));
+        addTranslation(Preformat.symbolType, new WikiBuilder().text("{{{").child(0).text("}}}"));
+        addTranslation(Variable.symbolType, new WikiBuilder().text("${").child(0).text("}"));
     }
 
     private static void addTranslation(SymbolType symbolType, Translation translation) {

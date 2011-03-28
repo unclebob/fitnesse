@@ -10,7 +10,7 @@ public class AnchorName extends SymbolType implements Rule {
         super("AnchorName");
         wikiMatcher(new Matcher().string("!anchor"));
         wikiRule(this);
-        htmlTranslation(new HtmlBuilder("a").attribute("name", 0).inline());
+        htmlTranslation(new HtmlBuilder("a").attribute("name", 0).body(-1, " ").inline());
     }
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {

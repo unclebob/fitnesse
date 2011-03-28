@@ -30,6 +30,7 @@ public class EqualPairTest {
     }
 
     @Test public void ignoresAdjacentItalics() {
+        ParserTestHelper.assertTranslatesTo("''", "''");
         ParserTestHelper.assertTranslatesTo("''''", "''''");
     }
 

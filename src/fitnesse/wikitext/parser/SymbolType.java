@@ -36,6 +36,9 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string(":"));
     public static final SymbolType Comma = new SymbolType("Comma")
             .wikiMatcher(new Matcher().string(","));
+    public static final SymbolType Delta = new SymbolType("Delta")
+            .wikiMatcher(new Matcher().string("+").digits())
+            .wikiMatcher(new Matcher().string("-").digits());
     public static final SymbolType EMail = new SymbolType("EMail")
             .htmlTranslation(new HtmlBuilder("a").bodyContent().attribute("href", -1, "mailto:").inline());
     public static final SymbolType Empty = new SymbolType("Empty");
@@ -69,10 +72,6 @@ public class SymbolType implements Matchable {
             .wikiRule(new ListRule())
             .htmlTranslation(new ListBuilder("ol"));
     public static final SymbolType PlainTextCellSeparator = new SymbolType("PlainTextCellSeparator");
-    public static final SymbolType Preformat = new SymbolType("Preformat")
-            .wikiMatcher(new Matcher().string("{{{"))
-            .wikiRule(new Literal())
-            .htmlTranslation(new HtmlBuilder("pre").bodyContent());
     public static final SymbolType Strike = new SymbolType("Strike")
             .wikiMatcher(new Matcher().string("--"))
             .wikiRule(new EqualPairRule())
@@ -85,7 +84,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType Text = new SymbolType("Text")
             .htmlTranslation(new TextBuilder());
     public static final SymbolType UnorderedList = new SymbolType("UnorderedList")
-            .wikiMatcher(new Matcher().startLine().whitespace().string("* "))
+            .wikiMatcher(new Matcher().startLine().whitespace().string("*"))
             .wikiRule(new ListRule())
             .htmlTranslation(new ListBuilder("ul"));
     public static final SymbolType Whitespace = new SymbolType("Whitespace")

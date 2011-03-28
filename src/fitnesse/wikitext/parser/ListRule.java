@@ -17,10 +17,10 @@ public class ListRule implements Rule {
             if (indent(nextSymbol) > indent(list)) {
                 Maybe<Symbol> subList = populateList(parser, nextSymbol);
                 if (subList.isNothing()) return Symbol.nothing;
-                list.add(subList.getValue());
+                list.lastChild().add(subList.getValue());
             }
             else {
-                Symbol body = parser.parseTo(SymbolType.Newline);
+                Symbol body = makeListBody(parser);
                 if (parser.atEnd()) return Symbol.nothing;
                 list.add(body);
             }
@@ -29,6 +29,13 @@ public class ListRule implements Rule {
             nextSymbol = nextSymbols.get(0);
         }
         return new Maybe<Symbol>(list);
+    }
+
+    private Symbol makeListBody(Parser parser) {
+        while (parser.peek(new SymbolType[] {SymbolType.Whitespace}).size() > 0) {
+            parser.moveNext(1);
+        }
+        return parser.parseTo(SymbolType.Newline, 1);
     }
 
     private int indent(Symbol symbol) {

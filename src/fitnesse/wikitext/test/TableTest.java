@@ -17,11 +17,12 @@ public class TableTest {
         ParserTestHelper.assertTranslatesTo("|a|", tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("||\n", tableWithCell(""));
         ParserTestHelper.assertTranslatesTo("| a |\n", tableWithCell("a"));
+        ParserTestHelper.assertTranslatesTo("|!- a -!|\n", tableWithCell(" a "));
         ParserTestHelper.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
         ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
         ParserTestHelper.assertTranslatesTo("|http://mysite.org|\n",
           tableWithCell("<a href=\"http://mysite.org\">http://mysite.org</a>"));
-        ParserTestHelper.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks"));
+        ParserTestHelper.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks\n"));
 
         ParserTestHelper.assertTranslatesTo("|a|b|c|\n|d|e|f|\n",
           "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
@@ -78,6 +79,7 @@ public class TableTest {
     }
 
     @Test public void overridesNestedRule() {
+        ParserTestHelper.assertTranslatesTo("|''|\n", tableWithCell("''"));
         ParserTestHelper.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''");
     }
 
@@ -87,6 +89,12 @@ public class TableTest {
 
     @Test public void translatesLiteralNestedTable() {
         ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", "|y|\n"), tableWithCell("|y|"));
+    }
+
+    @Test public void translatesVariableWithWhitespace() {
+        ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", " a "), tableWithCell("a"));
+        ParserTestHelper.assertTranslatesTo("!|${x}|\n", new TestVariableSource("x", "!- a -!"), tableWithCell(" a "));
+        ParserTestHelper.assertTranslatesTo("!|${x}|\n${x}", new TestVariableSource("x", "!- a -!"), tableWithCell(" a ") + " a ");
     }
 
     private String tableWithCell(String cellContent) {
