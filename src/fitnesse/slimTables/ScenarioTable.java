@@ -168,6 +168,7 @@ public class ScenarioTable extends SlimTable {
             if (getInputs().contains(arg)) {
                 String argument = scenarioArguments.get(arg);
                 script = StringUtil.replaceAll(script, "@" + arg, argument);
+                script = StringUtil.replaceAll(script, "@{" + arg + "}", argument);
             } else {
                 throw new SyntaxError(String.format(
                         "The argument %s is not an input to the scenario.", arg));

@@ -78,8 +78,12 @@ public class FileSystemPage extends CachingPage {
     if (content.endsWith("|")) {
       content += separator;
     }
-
-    content = content.replaceAll("\r\n", separator);
+    
+    //First replace every windows style to unix
+    content = content.replaceAll("\r\n", "\n");
+    //Then do the replace to match the OS.  This works around
+    //a strange behavior on windows.
+    content = content.replaceAll("\n", separator);
 
     String contentPath = getFileSystemPath() + contentFilename;
     final File output = new File(contentPath);
