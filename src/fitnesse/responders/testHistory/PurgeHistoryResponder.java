@@ -80,32 +80,38 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   public void deleteTestHistoryOlderThanDays(int days) throws ParseException {
-    Date purgeOlder = getDateDaysEarlier(days);
+    Date expirationDate = getDateDaysAgo(days);
     File[] files = FileUtil.getDirectoryListing(resultsDirectory);
-    for (File file : files) {
-      deleteFileIfAppropriate(purgeOlder, file);
-    }
+    deleteExpiredFiles(files, expirationDate);
   }
 
-  public Date getDateDaysEarlier(int days) {
+  private void deleteExpiredFiles(File[] files, Date expirationDate) {
+    for (File file : files)
+      deleteIfExpired(file, expirationDate);
+  }
+
+  public Date getDateDaysAgo(int days) {
     long now = todaysDate.getTime();
     long millisecondsPerDay = 1000L * 60L * 60L * 24L;
     Date daysEarlier = new Date(now - (millisecondsPerDay * days));
     return daysEarlier;
   }
 
-  private void deleteFileIfAppropriate(Date purgeOlder, File file) {
+  private void deleteIfExpired(File file, Date expirationDate) {
     if (file.isDirectory()) {
-      File[] files = FileUtil.getDirectoryListing(file);
-      for (File childFile : files)
-        deleteFileIfAppropriate(purgeOlder, childFile);
-      if (file.list().length == 0)
-        FileUtil.deleteFileSystemDirectory(file);
+      deleteDirectoryIfExpired(file, expirationDate);
     } else
-      deleteFileIfItIsTooOld(purgeOlder, file);
+      deleteFileIfExpired(file, expirationDate);
   }
 
-  private void deleteFileIfItIsTooOld(Date purgeOlder, File file) {
+  private void deleteDirectoryIfExpired(File file, Date expirationDate) {
+    File[] files = FileUtil.getDirectoryListing(file);
+    deleteExpiredFiles(files, expirationDate);
+    if (file.list().length == 0)
+      FileUtil.deleteFileSystemDirectory(file);
+  }
+
+  private void deleteFileIfExpired(File file, Date purgeOlder) {
     String name = file.getName();
     Date date = getDateFromPageHistoryFileName(name);
     if (date.getTime() < purgeOlder.getTime())
@@ -113,14 +119,17 @@ public class PurgeHistoryResponder implements SecureResponder {
   }
 
   private Date getDateFromPageHistoryFileName(String name) {
-    Date date;
     try {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
-      date = dateFormat.parse(name.split("_")[0]);
+      return tryExtractDateFromTestHistoryName(name);
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
-    return date;
+  }
+
+  private Date tryExtractDateFromTestHistoryName(String testHistoryName) throws ParseException {
+    SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
+    String dateString = testHistoryName.split("_")[0];
+    return dateFormat.parse(dateString);
   }
 
 
