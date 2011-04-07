@@ -20,7 +20,10 @@ public class Paths {
         public List<String> result = new ArrayList<String>();
 
         public boolean visit(Symbol node) {
-            if (node.isType(Path.symbolType) ) {
+            if (node.getType() instanceof PathsCollector) {
+                result.addAll(((PathsCollector) node.getType()).collectPaths(translator, node));
+            } else if (node.isType(Path.symbolType)) {
+                // backward compatibility with external extensions
                 result.add(translator.translate(node.childAt(0)));
             }
             return true;
