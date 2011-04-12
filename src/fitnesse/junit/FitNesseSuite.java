@@ -79,12 +79,24 @@ public class FitNesseSuite extends ParentRunner<String>{
         public String pathExtension() default "";
       }
       
+    /**
+     * The <code>Port</code> annotation specifies the port used by the FitNesse
+     * server. Default is the standard FitNesse port.
+     */
+       @Retention(RetentionPolicy.RUNTIME)
+       @Target(ElementType.TYPE)
+       public @interface Port {
+         public int value() default 0;
+        public String systemProperty() default "";
+       }
+
   private final Class<?> suiteClass;
   private final String suiteName;
   private String fitNesseDir;
   private String outputDir;
   private String suiteFilter;
   private boolean debugMode = false;
+  private int port = 0;
   public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
     super(suiteClass);
     this.suiteClass = suiteClass;
@@ -93,6 +105,7 @@ public class FitNesseSuite extends ParentRunner<String>{
     this.outputDir=getOutputDir(suiteClass);
     this.suiteFilter=getSuiteFilter(suiteClass);
     this.debugMode=useDebugMode(suiteClass);
+    this.port=getPort(suiteClass);
   }
   
   @Override
@@ -154,6 +167,18 @@ public class FitNesseSuite extends ParentRunner<String>{
     return debugModeAnnotation.value();
   }
 
+  public static int getPort(Class<?> klass) {
+    Port portAnnotation = klass.getAnnotation(Port.class);
+    if (null == portAnnotation) {
+      return 0;
+    }
+    int lport = portAnnotation.value();
+    if (!"".equals(portAnnotation.systemProperty())) {
+      lport = Integer.getInteger(portAnnotation.systemProperty(), lport);
+    }
+    return lport;
+  }
+
   @Override
   public void run(final RunNotifier notifier) { 
       JUnitHelper helper=createJUnitHelper(notifier);
@@ -181,6 +206,7 @@ public class FitNesseSuite extends ParentRunner<String>{
   private JUnitHelper createJUnitHelper(final RunNotifier notifier) {
     JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier,suiteClass));
     jUnitHelper.setDebugMode(debugMode);
+    jUnitHelper.setPort(port);
     return jUnitHelper;
   }
   
