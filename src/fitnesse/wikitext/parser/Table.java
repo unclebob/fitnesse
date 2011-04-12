@@ -33,12 +33,9 @@ public class Table extends SymbolType implements Rule, Translation {
     }
 
     private Symbol parseCell(Parser parser, String content) {
-        if (content.indexOf("!") >= 0) {
-            return parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1);
-        }
-        else {
-            return parser.parseTo(SymbolType.EndCell, 1);
-        }
+        return (content.indexOf("!") >= 0)
+           ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1)
+           : parser.parseTo(SymbolType.EndCell, 1);
     }
 
     private boolean containsNewLine(Symbol cell) {
@@ -69,11 +66,11 @@ public class Table extends SymbolType implements Rule, Translation {
             int extraColumnSpan = longestRow - rowLength(child);
             int column = 1;
             for (Symbol grandChild: child.getChildren()) {
-                String body = translator.translate(grandChild);
+                String body = translateCellBody(translator, grandChild);
                 writer.startTag("td");
                 if (extraColumnSpan > 0 && column == rowLength(child))
                     writer.putAttribute("colspan", Integer.toString(extraColumnSpan + 1));
-                writer.putText(body.trim());
+                writer.putText(body);
                 writer.endTag();
                 column++;
             }
@@ -81,6 +78,23 @@ public class Table extends SymbolType implements Rule, Translation {
         }
         writer.endTag();
         return writer.toHtml();
+    }
+
+    private String translateCellBody(Translator translator, Symbol cell) {
+        final String literalDelimiter = new String(new char[] {255, 1, 255});
+        cell.walkPreOrder(new SymbolTreeWalker() {
+            public boolean visit(Symbol node) {
+                if (node.isType(Literal.symbolType)) {
+                    node.setContent(literalDelimiter + node.getContent() + literalDelimiter);
+                }
+                return true;
+            }
+
+            public boolean visitChildren(Symbol node) {
+                return true;
+            }
+        });
+        return translator.translate(cell).trim().replace(literalDelimiter, "");
     }
 
     private int longestRow(Symbol table) {

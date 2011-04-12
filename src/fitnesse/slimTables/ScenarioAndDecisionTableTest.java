@@ -41,6 +41,35 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     st.appendInstructions(instructions);
     dt.appendInstructions(instructions);
   }
+  
+  @Test
+  public void bracesArountArgumentInTable() throws Exception {
+    makeTables(
+      "!|scenario|echo|user|giving|user_old|\n" +
+        "|check|echo|@{user}|@{user_old}|\n" +
+        "\n" +
+        "!|DT:EchoGiving|\n" +
+        "|user|user_old|\n" +
+        "|7|7|\n"
+    );
+    Map<String, Object> pseudoResults = SlimClient.resultToMap(
+      list(
+        list("decisionTable_did_0/scriptTable_s_id_0", "7")
+      )
+    );
+    evaluateExpectations(pseudoResults);
+
+    String scriptTable = dt.getChild(0).getTable().toString();
+    String expectedScript =
+      "[[scenario, echo, user, giving, user_old], [check, echo, 7, pass(7)]]";
+    assertEquals(expectedScript, scriptTable);
+    String dtHtml = dt.getTable().toString();
+    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
+    assertEquals(1, dt.getTestSummary().getRight());
+    assertEquals(0, dt.getTestSummary().getWrong());
+    assertEquals(0, dt.getTestSummary().getIgnores());
+    assertEquals(0, dt.getTestSummary().getExceptions());
+  }
 
   @Test
   public void oneInput() throws Exception {

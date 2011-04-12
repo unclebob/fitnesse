@@ -27,6 +27,7 @@ public class Symbol {
     public void setContent(String content) { this.content = content; }
 
     public Symbol childAt(int index) { return getChildren().get(index); }
+    public Symbol lastChild() { return childAt(getChildren().size() - 1); }
     public List<Symbol> getChildren() { return children; }
     
     public Symbol addToFront(Symbol child) {
@@ -107,7 +108,6 @@ public class Symbol {
                 : type == SymbolType.OpenBracket ? SymbolType.CloseBracket
                 : type == SymbolType.OpenParenthesis ? SymbolType.CloseParenthesis
                 : type == Literal.symbolType ? SymbolType.CloseLiteral
-                : type == SymbolType.Preformat ? SymbolType.ClosePreformat
                 : type == Comment.symbolType ? SymbolType.Newline
                 : SymbolType.Empty;
     }

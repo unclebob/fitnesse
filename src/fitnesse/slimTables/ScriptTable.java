@@ -92,12 +92,14 @@ public class ScriptTable extends SlimTable {
   }
 
   private boolean invokeParameterizedScenarioIfPossible(int row) {
-    String firstNameCell = table.getCellContents(0, row);
-    for (ScenarioTable scenario : getScenariosWithMostArgumentsFirst()) {
-      String[] arguments = scenario.matchParameters(firstNameCell);
-      if (arguments != null) {
-        scenario.call(arguments, this, row);
-        return true;
+    if (table.getColumnCountInRow(row) == 1){
+      String firstNameCell = table.getCellContents(0, row);
+      for (ScenarioTable scenario : getScenariosWithMostArgumentsFirst()) {
+        String[] arguments = scenario.matchParameters(firstNameCell);
+        if (arguments != null) {
+          scenario.call(arguments, this, row);
+          return true;
+        }
       }
     }
     return false;

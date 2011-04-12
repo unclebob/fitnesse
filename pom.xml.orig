@@ -7,7 +7,11 @@
   <description> The fully integrated standalone wiki, and acceptance
     testing framework. </description>
   <url>http://fitnesse.org</url>
+<<<<<<< HEAD
+  <version>20100922</version>
+=======
   <version>20110406</version>
+>>>>>>> 366dae205e409f4f9450e374b651600ed72cb81c
   <licenses>
     <license>
       <name>GNU Public License, Version 2.0</name>

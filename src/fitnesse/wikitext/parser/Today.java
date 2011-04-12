@@ -37,14 +37,11 @@ public class Today extends SymbolType implements Rule, Translation {
                 current.putProperty(Format, format);
             }
         }
-        lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
+        lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Delta});
         if (lookAhead.size() != 0) {
             String increment = lookAhead.get(1).getContent();
-            if ((increment.startsWith("+") || increment.startsWith("-"))
-                    && ScanString.isDigits(increment.substring(1))) {
-                current.putProperty(Increment, increment);
-                parser.moveNext(2);
-            }
+            current.putProperty(Increment, increment);
+            parser.moveNext(2);
         }
         return new Maybe<Symbol>(current);
     }

@@ -281,4 +281,56 @@ public class ScenarioAndScriptTableTest extends MockSlimTestContext {
       );
     assertEquals(expectedInstructions, instructions);
   }
+  
+  @Test
+  public void doesntMatchScenarioWithNoArgumentsThatSharesFirstWord() throws Exception {
+    WikiPageUtil.setPageContents(root, "" +
+        "!|scenario|login |\n" +
+        "|should not get here|\n" +
+        "\n" +
+        "!|scenario|connect to |name|with password|password|\n" +
+        "|login with username|@name |and Password|@password    |\n" +
+        "\n" +
+        "!|script|\n" +
+        "|connect to  |Bob| with password| xyzzy|\n");
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
+    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
+    script = new ScriptTable(ts.getTable(2), "id", this);
+    st1.appendInstructions(instructions);
+    st2.appendInstructions(instructions);
+    script.appendInstructions(instructions);
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor","loginWithUsernameAndPassword", "Bob", "xyzzy")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+
+  
+  @Test
+  public void dontTryParameterizedForRowWithMultipleCells() throws Exception {
+    WikiPageUtil.setPageContents(root, "" +
+        "!|scenario|login with |name|\n" +
+        "|should not get here|\n" +
+        "\n" +
+        "!|scenario|connect to |name|with password|password|\n" +
+        "|login with username|@name |and Password|@password    |\n" +
+        "\n" +
+        "!|script|\n" +
+        "|connect to  |Bob| with password| xyzzy|\n");
+    TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
+    ScenarioTable st1 = new ScenarioTable(ts.getTable(0), "s1_id", this);
+    ScenarioTable st2 = new ScenarioTable(ts.getTable(1), "s2_id", this);
+    script = new ScriptTable(ts.getTable(2), "id", this);
+    st1.appendInstructions(instructions);
+    st2.appendInstructions(instructions);
+    script.appendInstructions(instructions);
+    List<Object> expectedInstructions =
+      list(
+        list("scriptTable_id_0/scriptTable_s2_id_0", "call", "scriptTableActor","loginWithUsernameAndPassword", "Bob", "xyzzy")
+      );
+    assertEquals(expectedInstructions, instructions);
+  }
+ 
 }

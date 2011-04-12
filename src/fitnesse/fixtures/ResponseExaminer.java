@@ -94,15 +94,20 @@ public class ResponseExaminer extends ColumnFixture {
     if (type.equals("contents")) {
       return FitnesseFixtureContext.page.getData().getHtml();
     } else if (type.equals("line")) {
-      String pageContent = FitnesseFixtureContext.page.getData().getHtml();
-      String lineizedContent = convertBreaksToLineSeparators(pageContent);
-      StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
-      for (int i = number; i != 0; i--)
-        value = tokenizedLines.nextToken();
-      return value.trim();
+      return getLine(number);
     } else {
       throw new Exception("Bad type in ResponseExaminer");
     }
+  }
+
+  private String getLine(int number) throws Exception {
+    String value = null;
+    String pageContent = FitnesseFixtureContext.page.getData().getHtml();
+    String lineizedContent = convertBreaksToLineSeparators(pageContent);
+    StringTokenizer tokenizedLines = tokenizeLines(lineizedContent);
+    for (int i = number; i != 0; i--)
+      value = tokenizedLines.nextToken();
+    return value.trim();
   }
 
   private StringTokenizer tokenizeLines(String lineizedContent) {

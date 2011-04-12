@@ -4,6 +4,8 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class ContentsTest {
     @Test public void scansContents() {
         ParserTestHelper.assertScansTokenType("!contents", "Contents", true);
@@ -18,7 +20,13 @@ public class ContentsTest {
     @Test public void translatesContents() throws Exception {
         WikiPage pageOne = makePages();
          ParserTestHelper.assertTranslatesTo(pageOne, "!contents",
-           contentsWithPages("PageThree", "PageTwo", ""));
+                 contentsWithPages("PageThree", "PageTwo", ""));
+     }
+
+    @Test public void translatesContentsInInclude() throws Exception {
+        WikiPage pageOne = makePages();
+        assertContains(ParserTestHelper.translateTo(pageOne, "!include >PageTwo"),
+                  contentsWithPages("PageThree", "PageTwo", ""));
      }
 
     @Test public void translatesRecursiveContents() throws Exception {
@@ -45,13 +53,12 @@ public class ContentsTest {
     private WikiPage makePages() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage pageOne = root.makePage("PageOne");
-        WikiPage pageTwo = root.makePage(pageOne, "PageTwo");
+        WikiPage pageTwo = root.makePage(pageOne, "PageTwo", "!contents");
         WikiPage pageTwoChild = root.makePage(pageTwo, "PageTwoChild");
         root.makePage(pageTwoChild, "PageTwoGrandChild");
         root.makePage(pageOne, "PageThree");
         return pageOne;
     }
-
 
     private String contentsWithPages(String name1, String name2, String nested) {
         return "<div class=\"toc1\">" + HtmlElement.endl +
@@ -80,5 +87,9 @@ public class ContentsTest {
                 indent + "\t\t</ul>" + HtmlElement.endl +
                 indent + "\t</div>" + HtmlElement.endl +
                 indent + "</div>" + HtmlElement.endl;
+    }
+
+    private void assertContains(String result, String substring) {
+      assertTrue(result, result.indexOf(substring) >= 0);
     }
 }

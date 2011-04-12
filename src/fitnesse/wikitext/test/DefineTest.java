@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class DefineTest {
     @Test public void scansDefine() {
         ParserTestHelper.assertScansTokenType("!define x {y}", "Define", true);
+        ParserTestHelper.assertScansTokenType("|!define x {y}|/n", "Define", true);
     }
 
     @Test public void translatesDefines() throws Exception {
@@ -26,6 +27,7 @@ public class DefineTest {
 
     @Test public void definesValues() throws Exception {
         assertDefinesValue("!define x {y}", "x", "y");
+        assertDefinesValue("|!define x {y}|\n", "x", "y");
         //todo: move to variableTest?
         //assertDefinesValue("!define x {''y''}", "x", "<i>y</i>");
         //assertDefinesValue("!define x {!note y\n}", "x", "<span class=\"note\">y</span><br/>");

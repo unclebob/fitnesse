@@ -63,7 +63,7 @@ public class PurgeHistoryResponderTest {
   public void shouldBeAbleToSubtractDaysFromDates() throws Exception {
     Date date = makeDate("20090616171615");
     responder.setTodaysDate(date);
-    Date resultDate = responder.getDateDaysEarlier(10);
+    Date resultDate = responder.getDateDaysAgo(10);
     Date tenDaysEarlier = makeDate("20090606171615");
     assertEquals(tenDaysEarlier, resultDate);
   }

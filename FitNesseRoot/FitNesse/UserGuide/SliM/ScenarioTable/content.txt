@@ -33,7 +33,8 @@ You can also declare a scenario by embedding underscores within a string.  Each 
 |ensure|content matches|@htmlText|
 |show|content|
 
-The body of the scenario uses the arguments by prefixing them with an '@' sign. The token that follows the '@' ''must be the camel-cased name of the argument.''
+The body of the scenario uses the arguments by prefixing them with an '@' sign. The token that follows the '@' ''must be the camel-cased name of the argument.''  
+Arguments that share a common root string can use optional braces to force the correct evaluation of the full name of the argument.  Thus, if you have arguments ''job'' and ''job code'', you can use @{jobCode} to make sure you get the argument with the longer name.
 
 !4 Invoking a scenario from a DecisionTable
 !|widget renders|
