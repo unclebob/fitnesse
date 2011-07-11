@@ -3,10 +3,9 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Arrays;
 
-public class Path extends SymbolType implements Rule, PathsCollector {
+public class Path extends SymbolType implements Rule, PathsProvider {
     public static final Path symbolType = new Path();
 
     public Path() {
@@ -16,10 +15,8 @@ public class Path extends SymbolType implements Rule, PathsCollector {
         htmlTranslation(new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
     }
 
-    public Collection<String> collectPaths(Translator translator,  Symbol symbol) {
-        List<String> paths = new ArrayList<String>();
-        paths.add(translator.translate(symbol.childAt(0)));
-        return paths;
+    public Collection<String> providePaths(Translator translator, Symbol symbol) {
+        return Arrays.asList(translator.translate(symbol.childAt(0)));
     }
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
