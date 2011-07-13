@@ -47,7 +47,8 @@ public class HistoryComparerTest {
   }
 
   @Test
-  public void shouldBeAbleToHandleANonexistantFile() throws Exception {
+  public void shouldBeAbleToHandleANonexistentFile() throws Exception {
+    //todo this just tests the mock, not the actual comparer.
     String content = comparer.getFileContent("TestFolder/TestFile");
     assertNull(content);
   }

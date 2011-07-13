@@ -50,20 +50,25 @@ public class Statement {
 
   public String toString() {
     StringBuffer result = new StringBuffer();
+    
     result.append("[");
     for (Object word : words) {
       result.append(word);
       result.append(",");
     }
+
     int end = result.length() - 1;
+
     if (result.charAt(end) == ',')
       result.deleteCharAt(end);
+
     result.append("]");
     return result.toString();
   }
 
   public Object execute(StatementExecutorInterface executor) {
     Object retval;
+
     if (operationIs("make"))
       retval = createInstance(executor);
     else if (operationIs("import"))

@@ -43,3 +43,9 @@ public class RefactorPageResponderTest extends RegexTestCase {
     assertSubString("Move Page", content);
   }
 }
+
+
+
+
+
+

@@ -148,6 +148,10 @@ public class TestExecutionReport extends ExecutionReport {
     return assertionCounts;
   }
 
+  public String getContentsOfReport(int reportNumber) {
+    return results.get(reportNumber).getContent();
+  }
+
   public static class TestResult {
     public String right;
     public String wrong;

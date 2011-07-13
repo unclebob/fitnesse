@@ -18,16 +18,20 @@ import static java.lang.Character.toUpperCase;
 import static util.ListUtility.list;
 
 public abstract class SlimTable {
-  protected Table table;
-  private SlimTestContext testContext;
-  protected String id;
   private String tableName;
   private int instructionNumber = 0;
-  protected List<Object> instructions;
-  protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
-  private TestSummary testSummary = new TestSummary();
-  private SlimTable parent = null;
+
   private List<SlimTable> children = new ArrayList<SlimTable>();
+  private SlimTable parent = null;
+
+  private SlimTestContext testContext;
+  private TestSummary testSummary = new TestSummary();
+
+  protected Table table;
+  protected String id;
+  protected List<Object> instructions;
+
+  protected static final Pattern symbolAssignmentPattern = Pattern.compile("\\A\\s*\\$(\\w+)\\s*=\\s*\\Z");
 
   public SlimTable(Table table, String id, SlimTestContext testContext) {
     this.id = id;

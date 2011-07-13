@@ -119,7 +119,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
   protected void addTestHistoryFormatter() throws Exception {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-//    formatters.add(new XmlFormatter(context, page, writerFactory));
     formatters.add(new PageHistoryFormatter(context, page, writerFactory));
   }
   
