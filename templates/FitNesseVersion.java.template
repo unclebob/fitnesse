@@ -24,9 +24,9 @@ public class FitNesseVersion {
   static Long dateVersion(String fullTextVersion) {
     try {
       return Long.parseLong(fullTextVersion.substring(1, Math.min(9, fullTextVersion.length())));
-	} catch (Exception e) {
-	  throw new IllegalArgumentException("Unable to extract date version from " + fullTextVersion);
-	}
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Unable to extract date version from " + fullTextVersion);
+    }
   }
 
   /**
