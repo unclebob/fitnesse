@@ -32,12 +32,12 @@ public class FitNesseVersionTest {
 
   @Test
   public void dateVersionsHandlesVersionsWithExtraSuffixes() throws Exception {
-	assertEquals((Long)20100101L, FitNesseVersion.dateVersion("v20100101-abc-1"));
+    assertEquals((Long)20100101L, FitNesseVersion.dateVersion("v20100101-abc-1"));
   }
 
   @Test
   public void dateVersionsHandlesVersionsWithNoExtraSuffixes() throws Exception {
-	assertEquals((Long)20100101L, FitNesseVersion.dateVersion("v20100101"));
+    assertEquals((Long)20100101L, FitNesseVersion.dateVersion("v20100101"));
   }
 
   @Test
