@@ -55,7 +55,7 @@ public class JavaFormatter extends BaseFormatter {
       File outputFile = new File(outputPath, testName + ".html");
       currentWriter = new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8");
 
-      currentWriter.write("<head><title>");
+      currentWriter.write("<html><head><title>");
       currentWriter.write(testName);
       currentWriter
           .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
