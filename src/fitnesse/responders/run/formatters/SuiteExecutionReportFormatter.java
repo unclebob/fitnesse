@@ -60,6 +60,8 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
     suiteExecutionReport.tallyPageCounts(testSummary);
+	failCount+=testSummary.wrong;
+	failCount+=testSummary.exceptions; 
   }
 
   public List<SuiteExecutionReport.PageHistoryReference> getPageHistoryReferences() {
