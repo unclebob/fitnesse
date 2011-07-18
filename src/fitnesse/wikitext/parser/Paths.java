@@ -20,8 +20,8 @@ public class Paths {
         public List<String> result = new ArrayList<String>();
 
         public boolean visit(Symbol node) {
-            if (node.isType(Path.symbolType) ) {
-                result.add(translator.translate(node.childAt(0)));
+            if (node.getType() instanceof PathsProvider) {
+                result.addAll(((PathsProvider) node.getType()).providePaths(translator, node));
             }
             return true;
         }
