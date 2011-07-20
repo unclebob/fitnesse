@@ -51,6 +51,16 @@ public class FitNesseSuite extends ParentRunner<String>{
      }
 
     /**
+     * The <code>ExcludeSuiteFilter</code> annotation specifies a filter for excluding tests from the Fitnesse suite
+     * to be run, e.g.: slowtests
+     */
+     @Retention(RetentionPolicy.RUNTIME)
+     @Target(ElementType.TYPE)
+     public @interface ExcludeSuiteFilter {
+       public String value();
+     }
+
+    /**
   * The <code>FitnesseDir</code> annotation specifies the absolute or relative
   * path to the directory in which FitNesseRoot can be found
   */
@@ -95,6 +105,7 @@ public class FitNesseSuite extends ParentRunner<String>{
   private String fitNesseDir;
   private String outputDir;
   private String suiteFilter;
+  private String excludeSuiteFilter;
   private boolean debugMode = false;
   private int port = 0;
   public FitNesseSuite(Class<?> suiteClass, RunnerBuilder builder) throws InitializationError {
@@ -104,6 +115,7 @@ public class FitNesseSuite extends ParentRunner<String>{
     this.fitNesseDir=getFitnesseDir(suiteClass);
     this.outputDir=getOutputDir(suiteClass);
     this.suiteFilter=getSuiteFilter(suiteClass);
+    this.excludeSuiteFilter=getExcludeSuiteFilter(suiteClass);
     this.debugMode=useDebugMode(suiteClass);
     this.port=getPort(suiteClass);
   }
@@ -133,6 +145,14 @@ public class FitNesseSuite extends ParentRunner<String>{
       return null;
     }
     return suiteFilterAnnotation.value();
+  }
+  static String getExcludeSuiteFilter(Class<?> klass)
+  throws InitializationError {
+    ExcludeSuiteFilter excludeSuiteFilterAnnotation = klass.getAnnotation(ExcludeSuiteFilter.class);
+    if (excludeSuiteFilterAnnotation == null) {
+      return null;
+    }
+    return excludeSuiteFilterAnnotation.value();
   }
   
   static String getSuiteName(Class<?> klass) throws InitializationError {
@@ -183,7 +203,7 @@ public class FitNesseSuite extends ParentRunner<String>{
   public void run(final RunNotifier notifier) { 
       JUnitHelper helper=createJUnitHelper(notifier);
       try{
-        helper.assertSuitePasses(suiteName, suiteFilter);
+        helper.assertSuitePasses(suiteName, suiteFilter, excludeSuiteFilter);
       }catch(AssertionFailedError e){
         notifier.fireTestFailure(new Failure(Description.createSuiteDescription(suiteClass),e));
       } catch (Exception e) {
