@@ -73,28 +73,32 @@ public class FitClient {
 
   private void listenToFit() {
     try {
-      while (!finishedReading()) {
-        int size;
-        size = FitProtocol.readSize(fitOutput);
-        if (size != 0) {
-          String readValue = fitOutput.read(size);
-          if (fitOutput.byteCount() < size)
-            throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
-          listener.acceptOutputFirst(readValue);
-        } else {
-          Counts counts = FitProtocol.readCounts(fitOutput);
-          TestSummary summary = new TestSummary();
-          summary.right = counts.right;
-          summary.wrong = counts.wrong;
-          summary.ignores = counts.ignores;
-          summary.exceptions = counts.exceptions;
-          listener.testComplete(summary);
-          received++;
-        }
-      }
+      attemptToListenToFit();
     }
     catch (Exception e) {
       exceptionOccurred(e);
+    }
+  }
+
+  private void attemptToListenToFit() throws Exception {
+    while (!finishedReading()) {
+      int size;
+      size = FitProtocol.readSize(fitOutput);
+      if (size != 0) {
+        String readValue = fitOutput.read(size);
+        if (fitOutput.byteCount() < size)
+          throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
+        listener.acceptOutputFirst(readValue);
+      } else {
+        Counts counts = FitProtocol.readCounts(fitOutput);
+        TestSummary summary = new TestSummary();
+        summary.right = counts.right;
+        summary.wrong = counts.wrong;
+        summary.ignores = counts.ignores;
+        summary.exceptions = counts.exceptions;
+        listener.testComplete(summary);
+        received++;
+      }
     }
   }
 

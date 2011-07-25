@@ -12,11 +12,11 @@ import java.net.Socket;
 import java.util.List;
 
 public class SlimServer implements SocketServer {
+  public static final String EXCEPTION_TAG = "__EXCEPTION__:";
+  public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   private StreamReader reader;
   private BufferedWriter writer;
   private ListExecutor executor;
-  public static final String EXCEPTION_TAG = "__EXCEPTION__:";
-  public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
   private boolean verbose;
   private SlimFactory slimFactory;
 
@@ -34,18 +34,6 @@ public class SlimServer implements SocketServer {
       close();
       closeEnclosingServiceInSeperateThread();
     }
-  }
-
-  private void closeEnclosingServiceInSeperateThread() {
-    new Thread(new Runnable() {
-      public void run() {
-        try {
-          SlimService.instance.close();
-        } catch (Exception e) {
-        }
-      }
-    }
-    ).start();
   }
 
   private void tryProcessInstructions(Socket s) throws Exception {
@@ -71,6 +59,13 @@ public class SlimServer implements SocketServer {
     return true;
   }
 
+  private String getInstructionsFromClient() throws Exception {
+    int instructionLength = Integer.parseInt(reader.read(6));
+    reader.read(1);
+    String instructions = reader.read(instructionLength);
+    return instructions;
+  }
+
   private boolean processTheInstructions(String instructions) throws IOException {
     if (instructions.equalsIgnoreCase("bye")) {
       return false;
@@ -79,13 +74,6 @@ public class SlimServer implements SocketServer {
       sendResultsToClient(results);
       return true;
     }
-  }
-
-  private String getInstructionsFromClient() throws Exception {
-    int instructionLength = Integer.parseInt(reader.read(6));
-    reader.read(1);
-    String instructions = reader.read(instructionLength);
-    return instructions;
   }
 
   private List<Object> executeInstructions(String instructions) {
@@ -107,5 +95,17 @@ public class SlimServer implements SocketServer {
     } catch (Exception e) {
 
     }
+  }
+
+  private void closeEnclosingServiceInSeperateThread() {
+    new Thread(new Runnable() {
+      public void run() {
+        try {
+          SlimService.instance.close();
+        } catch (Exception e) {
+        }
+      }
+    }
+    ).start();
   }
 }

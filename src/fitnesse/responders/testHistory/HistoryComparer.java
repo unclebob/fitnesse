@@ -9,70 +9,52 @@ import java.util.ArrayList;
 
 public class HistoryComparer {
   // min for match is .8 content score + .2 topology bonus.
-  public static final double MIN_MATCH_SCORE = .8;
-  public static final double MAX_MATCH_SCORE = 1.2;
+  static final double MIN_MATCH_SCORE = .8;
+  static final double MAX_MATCH_SCORE = 1.2;
+  static ArrayList<String> resultContent;
+
+  private static final String blankTable = "<table><tr><td></td></tr></table>";
+
+  private HtmlTableScanner firstScanner;
+  private HtmlTableScanner secondScanner;
   private TableListComparer comparer;
 
+  String firstFileContent = "";
+  String secondFileContent = "";
 
-  static class MatchedPair {
-    int first;
-    int second;
-    public double matchScore;
+  ArrayList<String> firstTableResults;
+  ArrayList<String> secondTableResults;
 
-    public MatchedPair(Integer first, Integer second, double matchScore) {
-      this.first = first;
-      this.second = second;
-      this.matchScore = matchScore;
-    }
+  ArrayList<MatchedPair> matchedTables;
 
-    @Override
-    public String toString() {
-      return "[first: " + first + ", second: " + second + ", matchScore: " + matchScore +"]";
-    }
-
-    @Override
-    public int hashCode() {
-      return this.first + this.second;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this.equals((MatchedPair)(obj));
-    }
-
-    public boolean equals(MatchedPair match) {
-      return (this.first == match.first && this.second == match.second);
+  public String getFileContent(String filePath) {
+    try {
+      return attemptGetFileContent(filePath);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
-  public String secondFileContent = "";
-  public String firstFileContent = "";
-  public File resultFile;
-  public static ArrayList<String> resultContent;
-  public HtmlTableScanner firstScanner;
-  public HtmlTableScanner secondScanner;
-  public ArrayList<String> firstTableResults;
-  public ArrayList<String> secondTableResults;
-  public ArrayList<MatchedPair> matchedTables;
-  private static final String blankTable = "<table><tr><td></td></tr></table>";
+  private String attemptGetFileContent(String filePath) throws Exception {
+    TestExecutionReport report = readTestExecutionReport(filePath);
+    if (!exactlyOneReport(report))
+      return null;
+    return report.getContentsOfReport(0);
+  }
 
-  public String getFileContent(String filePath) {
-    TestExecutionReport report;
-    try {
-      report = new TestExecutionReport().read(new File(filePath));
-      if (report.getResults().size() != 1)
-        return null;
-      return report.getResults().get(0).getContent();
-    } catch (Exception e) {
-      throw new RuntimeException();
-    }
+  private TestExecutionReport readTestExecutionReport(String filePath) throws Exception {
+    return new TestExecutionReport().read(new File(filePath));
+  }
+
+  private boolean exactlyOneReport(TestExecutionReport report) {
+    return report.getResults().size() == 1;
   }
 
   public double findScoreByFirstTableIndex(int firstIndex) {
-    for (MatchedPair match : matchedTables) {
+    for (MatchedPair match : matchedTables)
       if (match.first == firstIndex)
         return match.matchScore;
-    }
+
     return 0.0;
   }
 
@@ -82,18 +64,28 @@ public class HistoryComparer {
   }
 
   public boolean allTablesMatch() {
-      if(matchedTables == null||matchedTables.size() == 0 || firstTableResults == null || firstTableResults.size() == 0)
+    return matchesAreNotNull()
+        && thereAreEnoughMatches()
+        && allMatchScoresAreHigh();
+  }
+
+
+  private boolean matchesAreNotNull() {
+    return matchedTables != null && firstTableResults != null;
+  }
+
+  private boolean thereAreEnoughMatches() {
+    return matchedTables.size() != 0 && matchedTables.size() == firstTableResults.size();
+  }
+
+  private boolean allMatchScoresAreHigh() {
+    for (MatchedPair match : matchedTables) {
+      if (match.matchScore < (MAX_MATCH_SCORE - .01))
         return false;
-     if(matchedTables.size()== firstTableResults.size()){
-       for (MatchedPair match :matchedTables){
-         if(match.matchScore < (MAX_MATCH_SCORE -.01))
-           return false;
-       }
-       return true;
-     }
-     return false;
-   }
-  
+    }
+    return true;
+  }
+
   public boolean compare(String firstFilePath, String secondFilePath) throws Exception {
     if (firstFilePath.equals(secondFilePath))
       return false;
@@ -206,7 +198,7 @@ public class HistoryComparer {
   }
 
   private boolean tablesDontMatchAndArentBlank(int tableIndex) {
-    return  !thereIsAMatchForTableWithIndex(tableIndex)&& firstAndSecondTableAreNotBlank(tableIndex);
+    return !thereIsAMatchForTableWithIndex(tableIndex) && firstAndSecondTableAreNotBlank(tableIndex);
   }
 
   private boolean thereIsAMatchForTableWithIndex(int tableIndex) {
@@ -262,5 +254,31 @@ public class HistoryComparer {
     return resultContent;
   }
 
+  static class MatchedPair {
+    int first;
+    int second;
+    public double matchScore;
 
+    public MatchedPair(Integer first, Integer second, double matchScore) {
+      this.first = first;
+      this.second = second;
+      this.matchScore = matchScore;
+    }
+
+    public String toString() {
+      return "[first: " + first + ", second: " + second + ", matchScore: " + matchScore + "]";
+    }
+
+    public int hashCode() {
+      return this.first + this.second;
+    }
+
+    public boolean equals(Object obj) {
+      return this.equals((MatchedPair) (obj));
+    }
+
+    public boolean equals(MatchedPair match) {
+      return (this.first == match.first && this.second == match.second);
+    }
+  }
 }
