@@ -61,13 +61,18 @@ public abstract class Binding {
       String simpleName = GracefulNamer.disgrace(name).toLowerCase();
       field = findField(fixture, simpleName);
     } else {
+      Matcher matcher = fieldPattern.matcher(name);
+      matcher.find();
+      String fieldName = matcher.group(1);
+      Class clazz = fixture.getTargetClass();
       try {
-        Matcher matcher = fieldPattern.matcher(name);
-        matcher.find();
-        String fieldName = matcher.group(1);
-        field = fixture.getTargetClass().getField(fieldName);
+        field = clazz.getField(fieldName);
       }
       catch (NoSuchFieldException e) {
+        try {
+          field = clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e2) {
+        }
       }
     }
 
@@ -110,7 +115,7 @@ public abstract class Binding {
   }
 
   private static Field findField(Fixture fixture, String simpleName) {
-    Field[] fields = fixture.getTargetClass().getFields();
+    Field[] fields = fixture.getTargetClass().getDeclaredFields();
     Field field = null;
     for (int i = 0; i < fields.length; i++) {
       Field possibleField = fields[i];

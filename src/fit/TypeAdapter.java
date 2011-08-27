@@ -36,6 +36,7 @@ public class TypeAdapter {
     TypeAdapter a = on(fixture, field.getType());
     a.target = fixture;
     a.field = field;
+    a.field.setAccessible(true);
     return a;
   }
 
