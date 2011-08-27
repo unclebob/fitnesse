@@ -36,12 +36,18 @@ public class BindingTest extends RegexTestCase {
     assertEquals(Binding.SaveBinding.class, Binding.create(fixture, "=privateIntField").getClass());
   }
 
-  public static class TestFixture extends Fixture {
+  public static class TestFixture extends ParentTestFixture { }
+
+  public static class ParentTestFixture extends Fixture {
     public int intField = 0;
     private int privateIntField = 0;
 
     public int intMethod() {
       return intField;
+    }
+
+    public int getPrivateIntField() {
+      return privateIntField;
     }
 
     public Integer integerField = new Integer(42);
@@ -73,10 +79,10 @@ public class BindingTest extends RegexTestCase {
   public void testPrivateSetBinding() throws Throwable {
     Binding binding = Binding.create(fixture, "privateIntField");
     binding.doCell(fixture, cell1);
-    assertEquals(123, fixture.privateIntField);
+    assertEquals(123, fixture.getPrivateIntField());
 
     binding.doCell(fixture, cell2);
-    assertEquals(321, fixture.privateIntField);
+    assertEquals(321, fixture.getPrivateIntField());
   }
 
   public void testQueryBindingWithBlankCell() throws Throwable {
@@ -127,7 +133,7 @@ public class BindingTest extends RegexTestCase {
     Binding binding = Binding.create(fixture, "privateIntField=");
     Fixture.setSymbol("123", "999");
     binding.doCell(fixture, cell1);
-    assertEquals(999, fixture.privateIntField);
+    assertEquals(999, fixture.getPrivateIntField());
 
     binding.doCell(fixture, cell3);
     assertSubString("No such symbol: abc", cell3.text());
