@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import util.GracefulNamer;
 import fit.exception.FitFailureException;
 import fit.exception.NoSuchFieldFitFailureException;
@@ -70,7 +71,7 @@ public abstract class Binding {
       }
       catch (NoSuchFieldException e) {
         try {
-          field = clazz.getDeclaredField(fieldName);
+          field = getField(clazz, fieldName);
         } catch (NoSuchFieldException e2) {
         }
       }
@@ -79,6 +80,19 @@ public abstract class Binding {
     if (field == null)
       throw new NoSuchFieldFitFailureException(name);
     return TypeAdapter.on(fixture, field);
+  }
+
+  private static Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
+    try {
+      return clazz.getDeclaredField(fieldName);
+    } catch (NoSuchFieldException e) {
+      Class superClass = clazz.getSuperclass();
+      if (superClass == null) {
+        throw e;
+      } else {
+        return getField(superClass, fieldName);
+      }
+    }
   }
 
   private static TypeAdapter makeAdapterForMethod(String name, Fixture fixture, Matcher matcher) {
@@ -115,7 +129,7 @@ public abstract class Binding {
   }
 
   private static Field findField(Fixture fixture, String simpleName) {
-    Field[] fields = fixture.getTargetClass().getDeclaredFields();
+    Field[] fields = getAllDeclaredFields(fixture.getTargetClass());
     Field field = null;
     for (int i = 0; i < fields.length; i++) {
       Field possibleField = fields[i];
@@ -125,6 +139,14 @@ public abstract class Binding {
       }
     }
     return field;
+  }
+
+  private static Field[] getAllDeclaredFields(Class clazz){
+    if (clazz.getSuperclass() != null) {
+      return (Field[]) ArrayUtils.addAll(getAllDeclaredFields(clazz.getSuperclass()), clazz.getDeclaredFields());
+    } else {
+      return clazz.getDeclaredFields();
+    }
   }
 
   private static Method findMethod(Fixture fixture, String simpleName) {
