@@ -2,43 +2,61 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class HtmlTagTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class HtmlTagTest {
   public static String endl = HtmlElement.endl;
   private HtmlTag tag;
 
+  @Before
   public void setUp() throws Exception {
-    tag = new HtmlTag("sillytag");
+    tag = new HtmlTag("aTag");
   }
 
-  public void tearDown() throws Exception {
-  }
-
+  @Test
   public void testEmpty() throws Exception {
-    assertEquals("<sillytag/>" + endl, tag.html());
+    assertEquals("<aTag/>" + endl, tag.html());
   }
 
+  @Test
+  public void givenNonNullHead_HeadIsPrepended() throws Exception {
+    tag.head = "head";
+    assertEquals("head<aTag/>" + endl, tag.html());
+  }
+
+  @Test
+  public void givenNonNullTail_TailIsAppended() throws Exception {
+    tag.tail = "tail";
+    assertEquals("<aTag/>tail\n", tag.html());
+  }
+
+  @Test
   public void testWithText() throws Exception {
     tag.add("some text");
-    assertEquals("<sillytag>some text</sillytag>" + endl, tag.html());
+    assertEquals("<aTag>some text</aTag>" + endl, tag.html());
   }
 
+  @Test
   public void testEmbeddedTag() throws Exception {
     tag.add(new HtmlTag("innertag"));
 
-    String expected = "<sillytag>" + endl +
+    String expected = "<aTag>" + endl +
       "\t<innertag/>" + endl +
-      "</sillytag>" + endl;
+      "</aTag>" + endl;
 
     assertEquals(expected, tag.html());
   }
 
+  @Test
   public void testAttribute() throws Exception {
     tag.addAttribute("key", "value");
-    assertEquals("<sillytag key=\"value\"/>" + endl, tag.html());
+    assertEquals("<aTag key=\"value\"/>" + endl, tag.html());
   }
 
+  @Test
   public void testCombination() throws Exception {
     tag.addAttribute("mykey", "myValue");
     HtmlTag inner = new HtmlTag("inner");
@@ -47,44 +65,55 @@ public class HtmlTagTest extends TestCase {
     inner.add(new HtmlTag("aftertext"));
     tag.add(inner);
 
-    String expected = "<sillytag mykey=\"myValue\">" + endl +
+    String expected = "<aTag mykey=\"myValue\">" + endl +
       "\t<inner>" + endl +
       "\t\t<beforetext/>" + endl +
       "inner text" + endl +
       "\t\t<aftertext/>" + endl +
       "\t</inner>" + endl +
-      "</sillytag>" + endl;
+      "</aTag>" + endl;
 
     assertEquals(expected, tag.html());
   }
 
+  @Test
   public void testNoEndTabWithoutChildrenTags() throws Exception {
     HtmlTag subtag = new HtmlTag("subtag");
     subtag.add("content");
     tag.add(subtag);
 
-    String expected = "<sillytag>" + endl +
+    String expected = "<aTag>" + endl +
       "\t<subtag>content</subtag>" + endl +
-      "</sillytag>" + endl;
+      "</aTag>" + endl;
 
     assertEquals(expected, tag.html());
   }
 
+  @Test
+  public void whenInline_noLineBreaksOrTabsAreGeneratedForChildren() throws Exception {
+    HtmlTag subtag = new HtmlTag("child");
+    subtag.add("content");
+    tag.add(subtag);
+    assertEquals("<aTag>\t<child>content</child>\n</aTag>", tag.htmlInline());
+  }
+
+  @Test
   public void testTwoChildren() throws Exception {
     tag.add(new HtmlTag("tag1"));
     tag.add(new HtmlTag("tag2"));
 
-    String expected = "<sillytag>" + endl +
+    String expected = "<aTag>" + endl +
       "\t<tag1/>" + endl +
       "\t<tag2/>" + endl +
-      "</sillytag>" + endl;
+      "</aTag>" + endl;
 
     assertEquals(expected, tag.html());
   }
 
+  @Test
   public void testUse() throws Exception {
     tag.add("original");
     tag.use("new");
-    assertEquals("<sillytag>new</sillytag>" + endl, tag.html());
+    assertEquals("<aTag>new</aTag>" + endl, tag.html());
   }
 }
