@@ -2,18 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import fitnesse.responders.run.HtmlFormatterClient;
+
 public class HtmlComment extends HtmlTag {
   public String comment;
 
   public HtmlComment(String comment) {
-    super("commant");
+    super("comment");
     this.comment = comment;
   }
 
   public String html(int depth) {
-    StringBuffer buffer = new StringBuffer();
-    addTabs(depth, buffer);
-    buffer.append("<!--").append(comment).append("-->").append(endl);
-    return buffer.toString();
+    return makeIndent(depth) + "<!--"+ comment+"-->"+endl;
   }
+
 }
