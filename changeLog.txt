@@ -1,3 +1,12 @@
+20110923 Dan Rollo
+ maven pom.xml cleanups:
+ * Remove unneeded default <groupId> tags.
+ * Add plugin <version> tags.
+ * Add explicit, platform independent UTF-8 file encoding via property: project.build.sourceEncoding
+ * Remove dependency on obsolete fitlibrary (the required classes are already in the source tree).
+ * Replace <system> dependency on json with the latest published json artifact.
+ * Remove unneeded ${basedir} from <sourceDirectory> tag value.
+
 20081128 UB
  * Added &debug flag to TestResponder url.  This forces the test to run ''inside'' the fitnesse process.  If you are running fitnesse in a debugger, you can breakpoint your fixtures.
  * Symbols can be java properties or environment variables.  Symbols first, env variables second, java properties third.
