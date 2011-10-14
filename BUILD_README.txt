@@ -23,7 +23,7 @@ invocation of Fit servers written in Ruby, C++, and .NET. These tests are not ru
 ant test-related targets. When using an IDE, make sure it does not invoke these tests when running the 
 "normal" tests under the "src" directory.
 
-Direct any questions to the FitNesse yahoo group or to fitnesse@objectmentor.com.
+Direct any questions to the FitNesse yahoo group or to unclebob@cleancoder.com.
 
 Note: Working with Eclipse and IntelliJ
 
