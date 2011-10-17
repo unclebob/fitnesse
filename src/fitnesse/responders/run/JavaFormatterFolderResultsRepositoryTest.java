@@ -21,7 +21,7 @@ import org.xml.sax.InputSource;
 
 import fitnesse.responders.run.JavaFormatter.FolderResultsRepository;
 
-public class JavaFormatterIntegrationTest {
+public class JavaFormatterFolderResultsRepositoryTest {
  
   private static final String TEST_NAME = "testName";
 
