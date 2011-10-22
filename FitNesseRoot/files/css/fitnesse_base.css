@@ -697,3 +697,66 @@ table.dirListing {
 .fit_grey {
   color: #808080;
 }
+
+.passed_tests,
+.unrun_tests,
+.failed_tests {
+  background-repeat: no-repeat;
+  padding-left: 22px;
+  margin: 0px 4px;
+}
+
+.passed_tests {
+  background-image: url('../images/pass.png');
+}
+
+.unrun_tests {
+  background-image: url('../images/unrun.png');	
+}
+
+.failed_tests {
+  background-image: url('../images/fail.png');	
+}
+
+.completion_folder{
+  margin: 2px 5px;
+}
+
+.completion_test{
+  margin: 0px 25px;
+}
+
+a.fail,
+.fail {
+  background-color: #ffcbd0;
+}
+
+.unrun,
+a.unrun
+{
+  background-color: #fff3b4;
+}
+
+.overview_part {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 1.4em;
+}
+
+.overview_bar {
+	border: 1px solid black;
+	height: 1.4em;
+	margin: 0 -.5px;
+}
+
+.overview_results table td {
+	border : none;
+	background-position: 1px;
+}
+
+.overview_results table {
+	border : 1px solid black;
+	margin : 10px 0px;
+	padding : 10px;
+}

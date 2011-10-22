@@ -12,5 +12,16 @@ To set up debugging for your fixture code:
  3 After starting the test in FitNesse, start a remote debugging process in your debugging tool which should connect to slim/fit server.  Remember to make sure you are using the right port.  (Port 8000 if you are using the default settings for java)
 
 !2 Set up a remote debug bookmark in your browser. 
- 1 Just drag the link below to bookmark toolbar of your favourite browser.  !-<a title="Debug FitNesse" id="debugfitnessetest" href="javascript:(function(){var url = document.location.href + '?responder=test&remote_debug=true'; window.location = url;})();"><div id="Debug fitnesse">Debug FitNesse</div></a>-!
+ 1 Just drag the link below to bookmark toolbar of your favourite browser.  !-<a title="Debug FitNesse" id="debugfitnessetest" href="javascript:(function(){var url = document.location.pathname + '?responder=test&remote_debug=true'; window.location = url;})();"><div id="Debug fitnesse">Debug FitNesse</div></a>-!
  2 Then to use it just go to the page you which to debug and click on the link. 
+
+!2 Alternative way to debug when using Slim
+For.NET it was found to be easier to debug starting the slim runner with the debugger attached and then getting fitnesse to connect to this started instance.  
+
+To do it this way:
+1. Make sure !define MANUALLY_START_TEST_RUNNER_ON_DEBUG=true is set on the page you want to debug running
+2. Start the runner, on the default slim port.   To find out what this is try ${SLIM_PORT} on your page. 
+3. Start fitnesse.   It should automatically connect to the runner you started. 
+
+One thing to note is that when fitnesse finishes the page it will automatically close down the runner.   So you will need to start the slim runner each time you go to debug. 
+

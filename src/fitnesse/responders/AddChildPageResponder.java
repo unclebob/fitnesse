@@ -72,11 +72,12 @@ public class AddChildPageResponder implements SecureResponder {
 
   private void setTestAndSuiteAttributes(WikiPage childPage) throws Exception {
     PageData childPageData = childPage.getData();
-    if (pageType.equals("Normal")) {
+    if (pageType.equals(PageType.STATIC.toString())) {
       childPageData.getProperties().remove("Test");
       childPageData.getProperties().remove("Suite");
     } else if ("Test".equals(pageType) || "Suite".equals(pageType))
       childPageData.setAttribute(pageType);
+    
     childPage.commit(childPageData);
   }
 

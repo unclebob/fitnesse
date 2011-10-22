@@ -55,7 +55,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     removePageProperty(page, TEST.toString());
     assertFalse(searcher.pageMatches(page));
 
-    searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(NORMAL, SUITE), attributes);
+    searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(STATIC, SUITE), attributes);
 
     attributes.put(TEST.toString(), false);
     assertTrue(searcher.pageMatches(page));
@@ -109,7 +109,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
     attributes.put("SetUp", false);
 
-    List<PageType> pageTypes = Arrays.asList(TEST, NORMAL, SUITE);
+    List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     setPageProperty(page, TEST.toString(), "true");
     assertTrue(searcher.pageMatches(page));
@@ -132,7 +132,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
     attributes.put("SetUp", true);
 
-    List<PageType> pageTypes = Arrays.asList(TEST, NORMAL, SUITE);
+    List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     setPageProperty(page, TEST.toString(), "true");
     assertFalse(searcher.pageMatches(page));
@@ -155,7 +155,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
     attributes.put("TearDown", false);
 
-    List<PageType> pageTypes = Arrays.asList(SUITE, TEST, NORMAL);
+    List<PageType> pageTypes = Arrays.asList(SUITE, TEST, STATIC);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     setPageProperty(page, TEST.toString(), "true");
     assertTrue(searcher.pageMatches(page));
@@ -178,7 +178,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     Map<String, Boolean> attributes = new HashMap<String, Boolean>();
     attributes.put("TearDown", true);
 
-    List<PageType> pageTypes = Arrays.asList(TEST, NORMAL, SUITE);
+    List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     setPageProperty(page, TEST.toString(), "true");
     assertFalse(searcher.pageMatches(page));
@@ -263,7 +263,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     attributes.put("TearDown", true);
 
     setPageProperty(page, TEST.toString(), "true");
-    searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(NORMAL), attributes);
+    searcher = generateSearcherByPageTypesAndSearchAttributes(Arrays.asList(STATIC), attributes);
     assertFalse(searcher.pageMatches(page));
 
     page = crawler.addPage(root, PathParser.parse("SetUp"));
@@ -286,7 +286,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     attributes.put("SetUp", false);
     attributes.put("TearDown", true);
 
-    List<PageType> pageTypes = Arrays.asList(TEST, NORMAL, SUITE);
+    List<PageType> pageTypes = Arrays.asList(TEST, STATIC, SUITE);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     setPageProperty(page, TEST.toString(), "true");
     assertFalse(searcher.pageMatches(page));
@@ -311,7 +311,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     attributes.put("SetUp", true);
     attributes.put("TearDown", false);
 
-    List<PageType> pageTypes = Arrays.asList(NORMAL);
+    List<PageType> pageTypes = Arrays.asList(STATIC);
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);
     setPageProperty(page, TEST.toString(), "true");
     assertFalse(searcher.pageMatches(page));
@@ -335,7 +335,7 @@ public class AttributeWikiPageFinderTest implements SearchObserver {
     attributes.put("SetUp", false);
     attributes.put("TearDown", false);
 
-    List<PageType> pageTypes = Arrays.asList(TEST, SUITE, NORMAL);
+    List<PageType> pageTypes = Arrays.asList(TEST, SUITE, STATIC);
 
     setPageProperty(page, TEST.toString(), "true");
     searcher = generateSearcherByPageTypesAndSearchAttributes(pageTypes, attributes);

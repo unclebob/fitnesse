@@ -16,6 +16,7 @@ public class TestSystemGroup {
   private TestSystemListener testSystemListener;
   private CompositeExecutionLog log;
   private boolean fastTest = false;
+  private boolean manualStart = false;
 
   public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) throws Exception {
     this.context = context;
@@ -44,6 +45,10 @@ public class TestSystemGroup {
     this.fastTest = fastTest;
   }
 
+  public void setManualStart(boolean manualStart) {
+    this.manualStart = manualStart;
+  }
+  
   public boolean isSuccessfullyStarted() {
     for (TestSystem testSystem : testSystems.values())
       if (testSystem.isSuccessfullyStarted() == false)
@@ -56,6 +61,7 @@ public class TestSystemGroup {
     if (!testSystems.containsKey(descriptor)) {
       testSystem = makeTestSystem(descriptor);
       testSystem.setFastTest(fastTest);
+      testSystem.setManualStart(manualStart);
       testSystems.put(descriptor, testSystem);
       log.add(descriptor.testSystemName, testSystem.getExecutionLog(classPath, descriptor));
       testSystem.start();

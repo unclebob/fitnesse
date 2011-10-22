@@ -23,6 +23,7 @@ The first cell of a slim table tells you what kind of table it is. Here are the 
 |[[Comment][>CommentTable]]|A table that does nothing.|
 |[[Scenario Table][>ScenarioTable]]|A table that can be called from other tables.|
 |[[Library Table][>LibraryTable]]|A table that installs fixtures available for all test pages|
+|[[Define Table Type][>DefineTableType]]|A helper table that defines the default table type for named fixtures.|
 
 !4 Data Types.
 The data in your tables is all Strings.  However your fixtures don't want to be constrained to Strings.  So Slim comes with several standard data type converters that will automatically convert the strings in the tables into the data types expected by your fixtures.

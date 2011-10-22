@@ -46,7 +46,7 @@ public class PageData implements Serializable {
   public static final String PropertySUITES = "Suites";
 
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
-  public static final String[] PAGE_TYPE_ATTRIBUTES = { NORMAL.toString(),
+  public static final String[] PAGE_TYPE_ATTRIBUTES = { STATIC.toString(),
       TEST.toString(), SUITE.toString() };
 
   public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
@@ -54,7 +54,7 @@ public class PageData implements Serializable {
       PropertyWHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
-      PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH, PropertyPRUNE };
+      PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
 
   public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil
       .combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
@@ -128,7 +128,7 @@ public class PageData implements Serializable {
 
     PageType pageType = PageType.getPageTypeForPageName(pageName);
 
-    if (NORMAL.equals(pageType))
+    if (STATIC.equals(pageType))
       return;
 
     properties.set(pageType.toString(), Boolean.toString(true));
