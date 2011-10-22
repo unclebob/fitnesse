@@ -43,6 +43,7 @@ public class SavePropertiesResponder implements SecureResponder {
     List<String> attrs = new LinkedList<String>();
     attrs.addAll(Arrays.asList(PageData.NON_SECURITY_ATTRIBUTES));
     attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
+    attrs.add(PageData.PropertyPRUNE);
 
     for (Iterator<String> i = attrs.iterator(); i.hasNext();) {
       String attribute = i.next();

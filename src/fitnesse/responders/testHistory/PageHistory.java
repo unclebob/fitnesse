@@ -10,9 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PageHistory {
-  private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
-  public static final String TEST_FILE_FORMAT = "\\A\\d{14}_\\d+_\\d+_\\d+_\\d+(.xml)*\\Z";
+public class PageHistory extends PageHistoryReader{
   private int failures = 0;
   private int passes = 0;
   private Date minDate = null;
@@ -26,28 +24,11 @@ public class PageHistory {
   public PageHistory(File pageDirectory) {
     fullPageName = pageDirectory.getName();
     try {
-      compileHistoryFromPageDirectory(pageDirectory);
+      readHistoryFromPageDirectory(pageDirectory);
+      compileBarGraph();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private void compileHistoryFromPageDirectory(File pageDirectory) throws ParseException {
-    File[] resultDir = FileUtil.getDirectoryListing(pageDirectory);
-
-    for (File file : resultDir)
-      if (fileIsNotADirectoryAndIsValid(file))
-        compileResultFileIntoHistory(file);
-    compileBarGraph();
-  }
-
-  private boolean fileIsNotADirectoryAndIsValid(File file) {
-    if(file.isDirectory())
-      return false;
-    if(!matchesPageHistoryFileFormat(file.getName()))
-      return false;
-    return true;
-
   }
 
   private void compileBarGraph() {
@@ -73,18 +54,18 @@ public class PageHistory {
     };
   }
 
-  private void compileResultFileIntoHistory(File file) throws ParseException {
-    TestResultRecord record = buildTestResultRecord(file);
+  void processTestFile(TestResultRecord record) throws ParseException {
     Date date = record.getDate();
     addTestResult(record, date);
     countResult(record);
     setMinMaxDate(date);
     setMaxAssertions(record);
-    pageFiles.put(date, file);
+    pageFiles.put(date, record.getFile());
   }
 
   private void addTestResult(TestResultRecord record, Date date) {
     Date keyDate = trimMilliseconds(date);
+
     testResultMap.put(date, record);
   }
 
@@ -106,18 +87,6 @@ public class PageHistory {
     maxAssertions = Math.max(maxAssertions, assertions);
   }
 
-  private TestResultRecord buildTestResultRecord(File file) throws ParseException {
-    String parts[] = file.getName().split("_|\\.");
-    Date date = dateFormat.parse(parts[0]);
-    TestResultRecord testResultRecord = new TestResultRecord(
-      file,
-      date,
-      Integer.parseInt(parts[1]),
-      Integer.parseInt(parts[2]),
-      Integer.parseInt(parts[3]),
-      Integer.parseInt(parts[4]));
-    return testResultRecord;
-  }
 
   private void setMinMaxDate(Date date) {
     if (minDate == null)
@@ -192,42 +161,11 @@ public class PageHistory {
     return fullPageName;
   }
 
-  public static boolean matchesPageHistoryFileFormat(String pageHistoryFileName) {
-    return pageHistoryFileName.matches(TEST_FILE_FORMAT);
-  }
-
-  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
-    return String.format("%s/%s/%s",
-      context.getTestHistoryDirectory(),
-      page.getPageCrawler().getFullPath(page).toString(),
-      TestHistory.makeResultFileName(counts, time));
-  }
-
   public Date getLatestDate() {
     Set<Date> dateSet = testResultMap.keySet();
     List<Date> dates = new ArrayList<Date>(dateSet);
     Collections.sort(dates);
     return dates.get(dates.size()-1);
-  }
-
-
-  public static class TestResultRecord extends TestSummary {
-    private File file;
-    private Date date;
-
-    TestResultRecord(File file, Date date, int right, int wrong, int ignores, int exceptions) {
-      super(right, wrong, ignores, exceptions);
-      this.file = file;
-      this.date = date;
-    }
-
-    public Date getDate() {
-      return date;
-    }
-
-    public File getFile() {
-      return file;
-    }
   }
 
   public static String formatDate(String format, Date date) {

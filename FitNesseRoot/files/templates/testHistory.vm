@@ -3,6 +3,12 @@
 #set($noHistory = true)
 <table style="border:none;background:none">
   <tr>
+    <td style="border:none; width:400px">
+      <form action="" method="get">
+        <input type="hidden" value="overview" name="responder"/>
+        <input type="submit" VALUE="View as Overview"/>
+      </form>
+    </td>
     <td style="border:none">
       <form action="" method="get">
         <input type="hidden" value="purgeHistory" name="responder"/>

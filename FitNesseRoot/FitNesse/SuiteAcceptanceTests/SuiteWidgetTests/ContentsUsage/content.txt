@@ -7,5 +7,5 @@ Use !contents to list all or some of the child pages of the current page along w
     -g   ...show graceful names in the list--define REGRACE_TOC {true} for global;
     -h   ...show help property text--define HELP_TOC {true} for global;
     -p   ...show property suffixes--define PROPERTY_TOC {true} for global;
-              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>), Pruned(-)
+              defaults:  Suite(*), Test(+), Imported(@), Symbolic(>), Skip(-)
               define PROPERTY_CHARACTERS {*+@>-} to change.}}}

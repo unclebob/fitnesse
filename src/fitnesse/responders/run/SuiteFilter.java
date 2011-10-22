@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 
 import util.StringUtil;
 
+import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -27,12 +28,41 @@ public class SuiteFilter {
   
   public static SuiteFilter MATCH_ALL = new SuiteFilter(null, null, null);
 
-  
   SuiteFilter(String matchingTags, String mustNotMatchTags, String startWithTest) {
     this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
     
     matchTags = new SuiteTagMatcher(matchingTags, true);
     notMatchTags = new SuiteTagMatcher(mustNotMatchTags, false);
+  }
+
+  public SuiteFilter(Request request, String suitePath) {
+    this(getSuiteTagFilter(request), 
+        getNotSuiteFilter(request),
+        getSuiteFirstTest(request, suitePath));
+  }
+  
+  private static String getSuiteTagFilter(Request request) {
+    return request != null ? (String) request.getInput("suiteFilter") : null;
+  }
+
+  private static String getNotSuiteFilter(Request request) {
+    return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
+  }
+
+
+  private static String getSuiteFirstTest(Request request, String suiteName) {
+    String startTest = null;
+    if (request != null) {
+      startTest = (String) request.getInput("firstTest");
+    }
+
+    if (startTest != null) {
+      if (startTest.indexOf(suiteName) != 0) {
+        startTest = suiteName + "." + startTest;
+      }
+    }
+
+    return startTest;
   }
   
   public boolean isMatchingTest(WikiPage testPage) throws Exception {

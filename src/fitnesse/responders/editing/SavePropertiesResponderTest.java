@@ -45,6 +45,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     request.addInput("Properties", "on");
     request.addInput("Search", "on");
     request.addInput("RecentChanges", "on");
+    request.addInput(PageData.PropertyPRUNE,"on");
     request.addInput(PageData.PropertySECURE_READ, "on");
     request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://www.fitnesse.org");
     request.addInput("Suites", "Suite A, Suite B");
@@ -113,6 +114,7 @@ public class SavePropertiesResponderTest extends RegexTestCase {
     assertTrue(data.hasAttribute("RecentChanges"));
     assertTrue(data.hasAttribute(PageData.PropertySECURE_READ));
     assertFalse(data.hasAttribute(PageData.PropertySECURE_WRITE));
+    assertTrue(data.hasAttribute(PageData.PropertyPRUNE));
     assertEquals("Suite A, Suite B", data.getAttribute(PageData.PropertySUITES));
     assertEquals("Help text literal", data.getAttribute(PageData.PropertyHELP));
 
