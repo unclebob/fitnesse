@@ -14,9 +14,10 @@ Ensure that the Page type radios are present
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|Page type:|true|
-|contents|<input type="radio" name="PageType" value="Normal" checked="checked"/> - Normal|true|
+|contents|<input type="radio" name="PageType" value="Static" checked="checked"/> - Static|true|
 |contents|<input type="radio" name="PageType" value="Test"/> - Test|true|
 |contents|<input type="radio" name="PageType" value="Suite"/> - Suite|true|
+|contents|<input type="checkbox" name="Prune"/> - Skip|true|
 
 Ensure that the Action links are present
 !|Response Examiner.|
@@ -35,7 +36,6 @@ Ensure that the Navigation links are present
 |contents|<input type="checkbox" name="Files" checked="true"/> - Files|true|
 |contents|<input type="checkbox" name="RecentChanges" checked="true"/> - RecentChanges|true|
 |contents|<input type="checkbox" name="Search" checked="true"/> - Search|true|
-|contents|<input type="checkbox" name="Prune"/> - Prune|true|
 
 Ensure that the Security links are present
 !|Response Examiner.|
