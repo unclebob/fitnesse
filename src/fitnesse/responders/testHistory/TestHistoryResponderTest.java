@@ -144,7 +144,7 @@ public class TestHistoryResponderTest {
     assertEquals(date, pageHistory.getMinDate());
     assertEquals(date, pageHistory.getMaxDate());
     assertEquals(1, pageHistory.size());
-    TestResultRecord testSummary = pageHistory.get(date);
+    PageHistory.TestResultRecord testSummary = pageHistory.get(date);
     assertEquals(date, testSummary.getDate());
     assertEquals(new TestSummary(1, 2, 3, 4), testSummary);
   }

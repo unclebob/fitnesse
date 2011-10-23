@@ -52,7 +52,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   public void testResponseWithNoMatchesWillReturnEmptyPageList()
   throws Exception {
     MockRequest request = setupRequest();
-    request.addInput(PAGE_TYPE_ATTRIBUTE, "Suite,Static");
+    request.addInput(PAGE_TYPE_ATTRIBUTE, "Suite,Normal");
 
     String content = invokeResponder(request);
 
@@ -123,8 +123,8 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   @Test
   public void testGetPageTypesFromInput() {
     assertPageTypesMatch(TEST);
-    assertPageTypesMatch(TEST, STATIC);
-    assertPageTypesMatch(TEST, SUITE, STATIC);
+    assertPageTypesMatch(TEST, NORMAL);
+    assertPageTypesMatch(TEST, SUITE, NORMAL);
     //    assertPageTypesMatch("");
   }
 
@@ -218,7 +218,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
   public void testFindJustObsoletePages() throws Exception {
     MockRequest request = setupRequestForObsoletePage();
-    request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite,Static");
+    request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite,Normal");
     request.addInput(SPECIAL, "obsolete");
 
     String content = invokeResponder(request);

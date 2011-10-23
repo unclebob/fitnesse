@@ -101,17 +101,17 @@ public class PropertiesResponder implements SecureResponder {
     return page.html();
   }
 
-  private HtmlTag makeAttributeCheckbox(String attribute, String displayString, PageData pageData)
+  private HtmlTag makeAttributeCheckbox(String attribute, PageData pageData)
       throws Exception {
-    HtmlTag checkbox = makeCheckbox(attribute, displayString);
+    HtmlTag checkbox = makeCheckbox(attribute);
     if (pageData.hasAttribute(attribute))
       checkbox.addAttribute("checked", "true");
     return checkbox;
   }
 
-  private HtmlTag makeCheckbox(String attribute, String displayString) {
+  private HtmlTag makeCheckbox(String attribute) {
     HtmlTag checkbox = HtmlUtil.makeInputTag("checkbox", attribute);
-    checkbox.tail = " - " + displayString;
+    checkbox.tail = " - " + attribute;
     return checkbox;
   }
 
@@ -187,13 +187,10 @@ public class PropertiesResponder implements SecureResponder {
     for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
       div.add(makeAttributeRadio(radioGroup, attribute, attribute
-          .equals(checkedAttribute), attribute));
+          .equals(checkedAttribute)));
     }
     div.add(HtmlUtil.BR);
     div.add(HtmlUtil.BR);
-    
-    div.add(makeAttributeCheckbox(PropertyPRUNE, "Skip (Recursive)", pageData));
-    
     return div;
   }
 
@@ -207,17 +204,17 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private HtmlTag makeAttributeRadio(String group, String attribute,
-      boolean checked, String guiName) throws Exception {
-    HtmlTag radioButton = makeRadioButton(group, attribute, guiName);
+      boolean checked) throws Exception {
+    HtmlTag radioButton = makeRadioButton(group, attribute);
     if (checked)
       radioButton.addAttribute("checked", "checked");
     return radioButton;
   }
 
-  private HtmlTag makeRadioButton(String group, String attribute, String guiName) {
+  private HtmlTag makeRadioButton(String group, String attribute) {
     HtmlTag checkbox = HtmlUtil.makeInputTag("radio", group);
     checkbox.addAttribute("value", attribute);
-    checkbox.tail = " - " + guiName;
+    checkbox.tail = " - " + attribute;
     return checkbox;
   }
 
@@ -445,7 +442,7 @@ public class PropertiesResponder implements SecureResponder {
     div.add(label);
     for (String attribute : attributes) {
       div.add(HtmlUtil.BR);
-      div.add(makeAttributeCheckbox(attribute, attribute, pageData));
+      div.add(makeAttributeCheckbox(attribute, pageData));
     }
     div.add(HtmlUtil.BR);
     div.add(HtmlUtil.BR);

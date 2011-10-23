@@ -120,11 +120,6 @@ public class MergeResponder implements Responder {
       if (request.hasInput(attribute))
         buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
     }
-    
-    String attribute = PageData.PropertyPRUNE;
-    if (request.hasInput(attribute))
-      buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
-    
     return buffer.toString();
   }
 }

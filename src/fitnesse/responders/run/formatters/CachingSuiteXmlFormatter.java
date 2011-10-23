@@ -6,7 +6,6 @@ import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.responders.testHistory.TestResultRecord;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -59,7 +58,7 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     PageHistory pageHistory = testHistory.getPageHistory(reference.getPageName());
     Date date;
     date = new Date(reference.getTime());
-    TestResultRecord record = pageHistory.get(date);
+    PageHistory.TestResultRecord record = pageHistory.get(date);
     return makeTestExecutionReport().read(record.getFile());
   }
 

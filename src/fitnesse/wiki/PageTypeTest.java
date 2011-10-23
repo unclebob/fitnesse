@@ -17,7 +17,7 @@ public class PageTypeTest {
   public void fromString() {
     assertEquals(SUITE, PageType.fromString("Suite"));
     assertEquals(TEST, PageType.fromString(TEST.toString()));
-    assertEquals(STATIC, PageType.fromString("Static"));
+    assertEquals(NORMAL, PageType.fromString("Normal"));
 
     try {
       PageType.fromString("unknown");
@@ -64,7 +64,7 @@ public class PageTypeTest {
   @Test
   public void fromNormalWikiPage() throws Exception {
     WikiPage page = createDefaultPage();
-    assertEquals(STATIC, PageType.fromWikiPage(page));
+    assertEquals(NORMAL, PageType.fromWikiPage(page));
   }
 
   private Collection<Object[]> pageTypeFromPageNameData() {
@@ -79,15 +79,15 @@ public class PageTypeTest {
     addTestData(values, TEST, "ExamplePage");
     addTestData(values, TEST, "PageExample");
 
-    addTestData(values, STATIC, "NormalPage");
+    addTestData(values, NORMAL, "NormalPage");
 
-    addTestData(values, STATIC, "SuiteSetUp");
-    addTestData(values, STATIC, "SetUp");
+    addTestData(values, NORMAL, "SuiteSetUp");
+    addTestData(values, NORMAL, "SetUp");
 
-    addTestData(values, STATIC, "SuiteTearDown");
-    addTestData(values, STATIC, "TearDown");
+    addTestData(values, NORMAL, "SuiteTearDown");
+    addTestData(values, NORMAL, "TearDown");
 
-    addTestData(values, STATIC, "ExamplesNormal");
+    addTestData(values, NORMAL, "ExamplesNormal");
 
     return values;
   }

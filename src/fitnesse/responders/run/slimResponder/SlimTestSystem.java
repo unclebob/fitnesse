@@ -115,11 +115,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     if (fastTest) {
       slimRunner = new MockCommandRunner();
       createSlimService(slimArguments);
-    } if (manualStart) {
-      slimSocket = getSlimPortBase();
-      slimRunner = new MockCommandRunner();
-    }
-    else {
+    } else {
       slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
     }
     return new ExecutionLog(page, slimRunner);
@@ -184,7 +180,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   public void bye() throws Exception {
     slimClient.sendBye();
-    if (!fastTest && !manualStart)
+    if (!fastTest)
       slimRunner.join();
   }
 

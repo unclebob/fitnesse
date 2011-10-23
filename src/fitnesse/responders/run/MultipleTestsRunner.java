@@ -11,8 +11,6 @@ import fitnesse.wiki.WikiPage;
 
 import java.util.*;
 
-import junit.extensions.TestDecorator;
-
 import util.TimeMeasurement;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
@@ -77,7 +75,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
     }
     testSystemGroup.setFastTest(isFastTest);
-    testSystemGroup.setManualStart(useManualStartForTestSystem());
 
     resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
@@ -86,19 +83,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       executePagesInTestSystem(descriptor, pagesByTestSystem);
     }
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
-  }
-  
-  private boolean useManualStartForTestSystem() {
-    if (isRemoteDebug) {
-      try {
-        String useManualStart = page.getData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
-        if (useManualStart != null && useManualStart.toLowerCase().equals("true")) {
-          return true;
-        }
-      } 
-      catch (Exception e) {}
-    }
-    return false;
   }
 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
