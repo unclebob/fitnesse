@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import util.GracefulNamer;
 import fit.exception.FitFailureException;
 import fit.exception.NoSuchFieldFitFailureException;
@@ -61,19 +62,37 @@ public abstract class Binding {
       String simpleName = GracefulNamer.disgrace(name).toLowerCase();
       field = findField(fixture, simpleName);
     } else {
+      Matcher matcher = fieldPattern.matcher(name);
+      matcher.find();
+      String fieldName = matcher.group(1);
+      Class clazz = fixture.getTargetClass();
       try {
-        Matcher matcher = fieldPattern.matcher(name);
-        matcher.find();
-        String fieldName = matcher.group(1);
-        field = fixture.getTargetClass().getField(fieldName);
+        field = clazz.getField(fieldName);
       }
       catch (NoSuchFieldException e) {
+        try {
+          field = getField(clazz, fieldName);
+        } catch (NoSuchFieldException e2) {
+        }
       }
     }
 
     if (field == null)
       throw new NoSuchFieldFitFailureException(name);
     return TypeAdapter.on(fixture, field);
+  }
+
+  private static Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
+    try {
+      return clazz.getDeclaredField(fieldName);
+    } catch (NoSuchFieldException e) {
+      Class superClass = clazz.getSuperclass();
+      if (superClass == null) {
+        throw e;
+      } else {
+        return getField(superClass, fieldName);
+      }
+    }
   }
 
   private static TypeAdapter makeAdapterForMethod(String name, Fixture fixture, Matcher matcher) {
@@ -110,7 +129,7 @@ public abstract class Binding {
   }
 
   private static Field findField(Fixture fixture, String simpleName) {
-    Field[] fields = fixture.getTargetClass().getFields();
+    Field[] fields = getAllDeclaredFields(fixture.getTargetClass());
     Field field = null;
     for (int i = 0; i < fields.length; i++) {
       Field possibleField = fields[i];
@@ -120,6 +139,14 @@ public abstract class Binding {
       }
     }
     return field;
+  }
+
+  private static Field[] getAllDeclaredFields(Class clazz){
+    if (clazz.getSuperclass() != null) {
+      return (Field[]) ArrayUtils.addAll(getAllDeclaredFields(clazz.getSuperclass()), clazz.getDeclaredFields());
+    } else {
+      return clazz.getDeclaredFields();
+    }
   }
 
   private static Method findMethod(Fixture fixture, String simpleName) {

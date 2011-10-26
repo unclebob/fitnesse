@@ -31,13 +31,23 @@ public class BindingTest extends RegexTestCase {
     assertEquals(Binding.RecallBinding.class, Binding.create(fixture, "intField=").getClass());
     assertEquals(Binding.SaveBinding.class, Binding.create(fixture, "=intMethod()").getClass());
     assertEquals(Binding.SaveBinding.class, Binding.create(fixture, "=intField").getClass());
+    assertEquals(Binding.SetBinding.class, Binding.create(fixture, "privateIntField").getClass());
+    assertEquals(Binding.RecallBinding.class, Binding.create(fixture, "privateIntField=").getClass());
+    assertEquals(Binding.SaveBinding.class, Binding.create(fixture, "=privateIntField").getClass());
   }
 
-  public static class TestFixture extends Fixture {
+  public static class TestFixture extends ParentTestFixture { }
+
+  public static class ParentTestFixture extends Fixture {
     public int intField = 0;
+    private int privateIntField = 0;
 
     public int intMethod() {
       return intField;
+    }
+
+    public int getPrivateIntField() {
+      return privateIntField;
     }
 
     public Integer integerField = new Integer(42);
@@ -66,8 +76,23 @@ public class BindingTest extends RegexTestCase {
     assertEquals(321, fixture.intField);
   }
 
+  public void testPrivateSetBinding() throws Throwable {
+    Binding binding = Binding.create(fixture, "privateIntField");
+    binding.doCell(fixture, cell1);
+    assertEquals(123, fixture.getPrivateIntField());
+
+    binding.doCell(fixture, cell2);
+    assertEquals(321, fixture.getPrivateIntField());
+  }
+
   public void testQueryBindingWithBlankCell() throws Throwable {
     Binding binding = Binding.create(fixture, "intField");
+    binding.doCell(fixture, cell4);
+    assertSubString("0", cell4.text());
+  }
+
+  public void testPrivateQueryBindingWithBlankCell() throws Throwable {
+    Binding binding = Binding.create(fixture, "privateIntField");
     binding.doCell(fixture, cell4);
     assertSubString("0", cell4.text());
   }
@@ -104,6 +129,16 @@ public class BindingTest extends RegexTestCase {
     assertSubString("No such symbol: abc", cell3.text());
   }
 
+  public void testPrivateRecallBinding() throws Throwable {
+    Binding binding = Binding.create(fixture, "privateIntField=");
+    Fixture.setSymbol("123", "999");
+    binding.doCell(fixture, cell1);
+    assertEquals(999, fixture.getPrivateIntField());
+
+    binding.doCell(fixture, cell3);
+    assertSubString("No such symbol: abc", cell3.text());
+  }
+
   // -AcD- Found this while testing with nulls
   public void testRecallBindingWithNull() throws Throwable {
     Binding binding = Binding.create(fixture, "integerField=");
@@ -114,6 +149,13 @@ public class BindingTest extends RegexTestCase {
 
   public void testRecallBindingSymbolTableText() throws Throwable {
     Binding binding = Binding.create(fixture, "intField=");
+    Fixture.setSymbol("123", "999");
+    binding.doCell(fixture, cell1);
+    assertEquals("123  = 999", cell1.text());
+  }
+
+    public void testPrivateRecallBindingSymbolTableText() throws Throwable {
+    Binding binding = Binding.create(fixture, "privateIntField=");
     Fixture.setSymbol("123", "999");
     binding.doCell(fixture, cell1);
     assertEquals("123  = 999", cell1.text());
@@ -135,6 +177,18 @@ public class BindingTest extends RegexTestCase {
     checkForFieldBinding("intfield", false);
     checkForFieldBinding("Intfield", false);
     checkForFieldBinding("IntField", false);
+  }
+
+  public void testUseOfGracefulNamingForPrivateFields() throws Throwable {
+    checkForPrivateFieldBinding("privateIntField", true);
+    checkForPrivateFieldBinding("private int Field", true);
+    checkForPrivateFieldBinding("private Int field", true);
+    checkForPrivateFieldBinding("private int field", true);
+    checkForPrivateFieldBinding("private Int Field", true);
+    checkForPrivateFieldBinding("privateintfield", false);
+    checkForPrivateFieldBinding("PrivateIntfield", false);
+    checkForPrivateFieldBinding("privateintField", false);
+    checkForPrivateFieldBinding("PrivateIntField", false);
   }
 
   private void checkForMethodBinding(String name, boolean expected) throws Throwable {
@@ -163,5 +217,19 @@ public class BindingTest extends RegexTestCase {
     assertTrue("field was found", expected);
     assertTrue(binding instanceof Binding.SetBinding);
     assertEquals("intField", binding.adapter.field.getName());
+  }
+
+  private void checkForPrivateFieldBinding(String name, boolean expected) throws Throwable {
+    Binding binding = null;
+    try {
+      binding = Binding.create(fixture, name);
+    }
+    catch (NoSuchFieldFitFailureException e) {
+      assertFalse("field not found", expected);
+      return;
+    }
+    assertTrue("field was found", expected);
+    assertTrue(binding instanceof Binding.SetBinding);
+    assertEquals("privateIntField", binding.adapter.field.getName());
   }
 }

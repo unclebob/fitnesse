@@ -80,7 +80,7 @@ public class HtmlTag extends HtmlElement {
   protected String makeIndent(int depth) {
     String indent = "";
     for (int i = 0; i < depth; i++)
-      indent+='\t';
+      indent += '\t';
     return indent;
   }
 
@@ -96,6 +96,9 @@ public class HtmlTag extends HtmlElement {
 
   private class HtmlFormatter {
     private int depth;
+    private boolean childTagWasMade;
+    private boolean lastMadeChildWasNotTag;
+    private boolean firstElement;
 
     public HtmlFormatter(int depth) {
       this.depth = depth;
@@ -124,27 +127,45 @@ public class HtmlTag extends HtmlElement {
     private String makeChildren() {
       String children = "";
       if (hasChildren()) {
-        boolean addedTag = false;
-        boolean lastAddedWasNonTag = false;
-        int i1 = 0;
-        for (HtmlElement element : childTags) {
-          if (element instanceof HtmlTag) {
-            if ((i1 == 0 || lastAddedWasNonTag) && !isInline)
-              children += endl;
-            children += ((HtmlTag) element).html(depth + 1);
-            addedTag = true;
-            lastAddedWasNonTag = false;
-          } else {
-            children += element.html();
-            lastAddedWasNonTag = true;
-          }
-          i1++;
-        }
-
-        boolean tagWasAdded = addedTag;
-        if (tagWasAdded && !isInline) children += makeTabs();
+        children = makeChildrenWithoutTrailingIndent();
+        if (childTagWasMade && !isInline) children += makeTabs();
       }
       return children;
+    }
+
+    private String makeChildrenWithoutTrailingIndent() {
+      String children = "";
+      childTagWasMade = false;
+      lastMadeChildWasNotTag = false;
+      firstElement = true;
+      for (HtmlElement element : childTags) {
+        children += makeChildFromElement(element);
+        firstElement = false;
+      }
+      return children;
+    }
+
+    private String makeChildFromElement(HtmlElement element) {
+      boolean childIsTag = element instanceof HtmlTag;
+      String child = childIsTag ?
+        makeChildFromTag((HtmlTag) element) :
+        element.html();
+
+      prepareForNextElement(childIsTag);
+      return child;
+    }
+
+    private void prepareForNextElement(boolean childIsTag) {
+      childTagWasMade |= childIsTag;
+      lastMadeChildWasNotTag = !childIsTag;
+    }
+
+    private String makeChildFromTag(HtmlTag element) {
+      return (childShouldStartWithNewLine() ? endl : "") + ((HtmlTag) element).html(depth + 1);
+    }
+
+    private boolean childShouldStartWithNewLine() {
+      return (firstElement || lastMadeChildWasNotTag) && !isInline;
     }
 
     private String makeTagEnd() {

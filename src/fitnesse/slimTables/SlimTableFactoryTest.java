@@ -57,4 +57,43 @@ public class SlimTableFactoryTest {
         + " but was " + slimTable.getClass();
     assertThat(message, slimTable, instanceOf(expectedClass));
   }
+  
+  @Test
+  public void checkTableTypeDefineUsedForTable() {
+    assertThatTableTypeImportWorks("My query table", "Query", "My query Table", QueryTable.class);
+    
+    assertThatTableTypeImportWorks("Graceful Difference 1", "Query", "GracefulDifference1", QueryTable.class); 
+    assertThatTableTypeImportWorks("GracefulDifference2", "Query", "Graceful Difference 2", QueryTable.class); 
+
+    assertThatTableTypeImportWorks("A Table table", "Table", "A Table table", TableTable.class); 
+
+    assertThatTableTypeImportWorks("As is allowed", "as Table", "As is allowed", TableTable.class); 
+    assertThatTableTypeImportWorks("Colon is okay too", "as:Table", "Colon is okay too", TableTable.class);
+
+    assertThatTableTypeImportWorks("", "", "This should be default", DecisionTable.class); 
+  }
+
+  @Test
+  public void checkTableTypeDefinesIgnoredIfDifferentSpecified() {
+    assertThatTableTypeImportWorks("OverrideTable", "as Table", "dt: Override Table", DecisionTable.class);
+    
+    assertThatTableTypeImportWorks("MakeQuery", "as Table", "query: Make Query", QueryTable.class); 
+  }
+
+  
+  private void assertThatTableTypeImportWorks(String importName, String importTypedescription, String tableName,
+      Class tableClass) {
+    addTableTypeImport(importName, importTypedescription);
+    assertThatTableTypeCreateSlimTableType(tableName, tableClass);
+  }
+
+  private void addTableTypeImport(String tablename, String type) {
+    when(table.getCellContents(0, 0)).thenReturn("Define Table Type");
+    when(table.getCellContents(0, 1)).thenReturn(tablename);
+    when(table.getCellContents(1, 1)).thenReturn(type);
+    when(table.getRowCount()).thenReturn(2);
+    when(table.getColumnCountInRow(0)).thenReturn(1);
+    when(table.getColumnCountInRow(1)).thenReturn(2);
+    slimTableFactory.makeSlimTable(table, "0", new MockSlimTestContext());
+  }
 }

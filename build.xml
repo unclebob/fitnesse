@@ -107,12 +107,17 @@
 		<copy file="extra/ant/tasks.properties" todir="classes" />
 	</target>
 
-	<target name="stamp-version">
+	<target name="set-version-if-not-manualy-set" unless="version">
+		<tstamp />
+		<property name="version" value="${DSTAMP}" />
+	</target>
+
+	<target name="stamp-version" depends="set-version-if-not-manualy-set" >
+    <echo message="Stamping fitnesse with version ${version}" />
 		<delete file="pom.xml" />
 		<delete file="src/fitnesse/FitNesseVersion.java" />
 		<delete file="FitNesseRoot/FrontPage/content.txt" />
-		<tstamp />
-		<filter token="version" value="${DSTAMP}" />
+		<filter token="version" value="${version}" />
 		<copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml" />
 		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
 		<copy filtering="true" file="templates/FrontPage.content.txt.template" tofile="FitNesseRoot/FrontPage/content.txt" />

@@ -94,10 +94,10 @@ public class AddChildPageResponderTest {
   }
 
   @Test
-  public void withDefaultPageTypeAndPageNameForNormalThenNoAttributeShouldBeSet() throws Exception {
-    request.addInput("name", "NormalPage");
+  public void withDefaultPageTypeAndPageNameForStaticThenNoAttributeShouldBeSet() throws Exception {
+    request.addInput("name", "StaticPage");
     responder.makeResponse(context, request);
-    getChildPage("NormalPage");
+    getChildPage("StaticPage");
     assertFalse(isSuite());
     assertFalse(isTest());
   }
@@ -125,9 +125,9 @@ public class AddChildPageResponderTest {
   }
 
   @Test
-  public void correctAttributeWhenNameHasTestButAttributeIsNormal() throws Exception {
+  public void correctAttributeWhenNameHasTestButAttributeIsStatic() throws Exception {
     request.addInput("name", "TestChildPage");
-    request.addInput("pageType", "Normal");
+    request.addInput("pageType", "Static");
     responder.makeResponse(context, request);
     getChildPage("TestChildPage");
     assertFalse(isTest());

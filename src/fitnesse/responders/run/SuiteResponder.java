@@ -39,36 +39,11 @@ public class SuiteResponder extends TestResponder {
   }
 
   protected void performExecution() throws Exception {
-    SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
+    SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath(page).toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
     runner.setDebug(isRemoteDebug());
     runner.setFastTest(isFastTest());
     runner.executeTestPages();
-  }
-
-  private String getSuiteTagFilter() {
-    return request != null ? (String) request.getInput("suiteFilter") : null;
-  }
-
-  private String getNotSuiteFilter() {
-    return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
-  }
-
-
-  private String getSuiteFirstTest() throws Exception {
-    String startTest = null;
-    if (request != null) {
-      startTest = (String) request.getInput("firstTest");
-    }
-
-    if (startTest != null) {
-      String suiteName = page.getPageCrawler().getFullPath(page).toString();
-      if (startTest.indexOf(suiteName) != 0) {
-        startTest = suiteName + "." + startTest;
-      }
-    }
-
-    return startTest;
   }
 }

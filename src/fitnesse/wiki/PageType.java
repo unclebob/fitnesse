@@ -19,7 +19,7 @@ public enum PageType {
               .startsWith("Examples")) || pageName.endsWith("Example");
     }
   },
-  NORMAL("Normal") {
+  STATIC("Static") {
     public boolean validForPageName(String pageName) {
       return true;
     }
@@ -46,7 +46,7 @@ public enum PageType {
       return TEST;
     }
 
-    return NORMAL;
+    return STATIC;
   }
 
   public static PageType getPageTypeForPageName(String pageName) {
@@ -54,7 +54,7 @@ public enum PageType {
       if (type.validForPageName(pageName))
         return type;
     }
-    return NORMAL;
+    return STATIC;
   }
 
   private String description;

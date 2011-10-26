@@ -18,6 +18,7 @@ import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.responders.testHistory.TestResultRecord;
 import fitnesse.testutil.FitNesseUtil;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
@@ -120,7 +121,7 @@ public class CachingSuiteXmlFormatterTest {
   public void formatterShouldReturnTestResultsGivenAPageHistoryReference() throws Exception {
     TestHistory testHistory = mock(TestHistory.class);
     PageHistory pageHistory = mock(PageHistory.class);
-    PageHistory.TestResultRecord expectedRecord = mock(PageHistory.TestResultRecord.class);
+    TestResultRecord expectedRecord = mock(TestResultRecord.class);
     File file = mock(File.class);
     final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
     CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage, null) {

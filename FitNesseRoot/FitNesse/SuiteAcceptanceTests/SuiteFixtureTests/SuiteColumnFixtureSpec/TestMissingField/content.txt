@@ -9,6 +9,7 @@
 |enter|attributes|Test=true|
 |enter|line|!-!path ./classes-!|
 |enter|line|!-!path ./fitnesse.jar-!|
+|enter|line|!-!path ./lib/*.jar-!|
 |enter|line|!-|Import|-!|
 |enter|line|!-|fitnesse.fixtures|-!|
 |enter|line||

@@ -29,9 +29,8 @@ public class AddChildPageResponder implements SecureResponder {
       return notFoundResponse(context, request);
     else if (nameIsInvalid(childName))
       return errorResponse(context, request);
-    else {
-      return createChildPageAndMakeResponse(request);
-    }
+
+    return createChildPageAndMakeResponse(request);
   }
 
   private void parseRequest(FitNesseContext context, Request request) throws Exception {
@@ -72,7 +71,7 @@ public class AddChildPageResponder implements SecureResponder {
 
   private void setTestAndSuiteAttributes(WikiPage childPage) throws Exception {
     PageData childPageData = childPage.getData();
-    if (pageType.equals("Normal")) {
+    if (pageType.equals("Static")) {
       childPageData.getProperties().remove("Test");
       childPageData.getProperties().remove("Suite");
     } else if ("Test".equals(pageType) || "Suite".equals(pageType))

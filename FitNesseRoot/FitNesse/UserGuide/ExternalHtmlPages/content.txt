@@ -4,7 +4,7 @@ To include a folder of HTML files in the !-FitNesse-! wiki, simply place the fol
 
 Here's an example:
 
- * We create a normal wiki page called !-MyExternalPages-! and put the !contents widget in it.  This creates a folder called !-MyExternalPages-! with some wiki files in it (content.txt, properties.xml and maybe some zip files).
+ * We create a static wiki page called !-MyExternalPages-! and put the !contents widget in it.  This creates a folder called !-MyExternalPages-! with some wiki files in it (content.txt, properties.xml and maybe some zip files).
  *  We create a folder called !-HtmlPages-! as a sub-folder of !-MyExternalPages-! and create several HTML files in !-HTMLPages-!: !-TestA.html-!, !-TestB.html-! and !-TestC.html-!.
  * !-FitNesse-! now shows a page called !-HtmlPages-! as a child of !-MyExternalPages-! and three child pages of !-HtmlPages-! called !-TestA-!, !-TestB-! and !-TestC-!.
 

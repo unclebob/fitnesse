@@ -264,9 +264,10 @@ public class PropertiesResponderTest extends RegexTestCase {
     String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\" checked=\"checked\"/> - Normal", html);
+    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\" checked=\"checked\"/> - Static", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\"/> - Test", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
+    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
   }
 
   public void testPageTypePropertiesSuiteHtml() throws Exception {
@@ -276,9 +277,10 @@ public class PropertiesResponderTest extends RegexTestCase {
     String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\"/> - Normal", html);
+    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\"/> - Test", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\" checked=\"checked\"/> - Suite", html);
+    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
   }
 
   public void testPageTypePropertiesTestHtml() throws Exception {
@@ -288,11 +290,23 @@ public class PropertiesResponderTest extends RegexTestCase {
     String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\"/> - Normal", html);
+    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\" checked=\"checked\"/> - Test", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
+    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
   }
 
+  public void testPageTypePropertiesSkippedHtml() throws Exception {
+    WikiPage page = root.addChildPage("SomePage");
+    PageData data = page.getData();
+    data.setAttribute("Prune");
+    String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
+    assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
+    assertSubString("Page type:", html);
+    assertSubString("<input type=\"checkbox\" name=\"Prune\" checked=\"true\"/> - Skip", html);
+  }
+
+  
   public void testActionPropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
@@ -314,7 +328,6 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
     assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
     assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Prune", html);
   }
 
   public void testMakeSecurityPropertiesHtml() throws Exception {

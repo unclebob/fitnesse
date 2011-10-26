@@ -68,7 +68,7 @@ public class PageHistoryResponder implements SecureResponder {
     } else {
       resultDate = dateFormat.parse(date);
     }
-    PageHistory.TestResultRecord testResultRecord = pageHistory.get(resultDate);
+    TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {
       return makeTestExecutionReportResponse(request, resultDate, testResultRecord);
     } catch (Exception e) {
@@ -80,7 +80,7 @@ public class PageHistoryResponder implements SecureResponder {
     return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
   }
 
-  private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
+  private Response makeTestExecutionReportResponse(Request request, Date resultDate, TestResultRecord testResultRecord) throws Exception {
     if (formatIsXML(request))
       return generateXMLResponse(testResultRecord.getFile());
     ExecutionReport report;
