@@ -30,7 +30,7 @@ public class HtmlTagTest {
   @Test
   public void givenNonNullTail_TailIsAppended() throws Exception {
     tag.tail = "tail";
-    assertEquals("<aTag/>tail\n", tag.html());
+    assertEquals("<aTag/>tail" +endl, tag.html());
   }
 
   @Test
@@ -94,7 +94,7 @@ public class HtmlTagTest {
     HtmlTag subtag = new HtmlTag("child");
     subtag.add("content");
     tag.add(subtag);
-    assertEquals("<aTag>\t<child>content</child>\n</aTag>", tag.htmlInline());
+    assertEquals("<aTag>\t<child>content</child>" + endl + "</aTag>", tag.htmlInline());
   }
 
   @Test
@@ -120,6 +120,6 @@ public class HtmlTagTest {
   @Test
   public void comment() throws Exception {
     HtmlComment comment = new HtmlComment("the comment");
-    assertEquals("<!--the comment-->\n", comment.html());
+    assertEquals("<!--the comment-->" +endl, comment.html());
   }
 }
