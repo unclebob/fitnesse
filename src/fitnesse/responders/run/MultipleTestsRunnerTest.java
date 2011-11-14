@@ -62,17 +62,17 @@ public class MultipleTestsRunnerTest {
     WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = runner.makeMapOfPagesByTestSystem();
+    Map<TestSystem.Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
 
     TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData(), false);
     TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData(), false);
-    List<WikiPage> fitList = map.get(fitDescriptor);
-    List<WikiPage> slimList = map.get(slimDescriptor);
+    List<TestPage> fitList = map.get(fitDescriptor);
+    List<TestPage> slimList = map.get(slimDescriptor);
 
     assertEquals(1, fitList.size());
     assertEquals(1, slimList.size());
-    assertEquals(testPage, fitList.get(0));
-    assertEquals(slimPage, slimList.get(0));
+    assertEquals(testPage, fitList.get(0).getSourcePage());
+    assertEquals(slimPage, slimList.get(0).getSourcePage());
   }
   
   @Test
@@ -88,23 +88,23 @@ public class MultipleTestsRunnerTest {
     testPages.add(tearDown);
 
     MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, suite, null);
-    Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = runner.makeMapOfPagesByTestSystem();
+    Map<TestSystem.Descriptor, LinkedList<TestPage>> map = runner.makeMapOfPagesByTestSystem();
     TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData(), false);
     TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData(), false);
 
-    List<WikiPage> fitList = map.get(fitDescriptor);
-    List<WikiPage> slimList = map.get(slimDescriptor);
+    List<TestPage> fitList = map.get(fitDescriptor);
+    List<TestPage> slimList = map.get(slimDescriptor);
 
     assertEquals(3, fitList.size());
     assertEquals(3, slimList.size());
 
-    assertEquals(setUp, fitList.get(0));
-    assertEquals(testPage, fitList.get(1));
-    assertEquals(tearDown, fitList.get(2));
+    assertEquals(setUp, fitList.get(0).getSourcePage());
+    assertEquals(testPage, fitList.get(1).getSourcePage());
+    assertEquals(tearDown, fitList.get(2).getSourcePage());
 
-    assertEquals(setUp, slimList.get(0));
-    assertEquals(slimPage, slimList.get(1));
-    assertEquals(tearDown, slimList.get(2));
+    assertEquals(setUp, slimList.get(0).getSourcePage());
+    assertEquals(slimPage, slimList.get(1).getSourcePage());
+    assertEquals(tearDown, slimList.get(2).getSourcePage());
   }
 
   
@@ -132,7 +132,7 @@ public class MultipleTestsRunnerTest {
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
     
-    runner.startingNewTest(page);
+    runner.startingNewTest(new TestPage(page));
     verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
     assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
   }
@@ -154,11 +154,11 @@ public class MultipleTestsRunnerTest {
     ResultsListener resultsListener = mock(ResultsListener.class);
     
     MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
-    runner.addToProcessingQueue(page);
+    runner.addToProcessingQueue(new TestPage(page));
     
     TestSummary testSummary = mock(TestSummary.class);
     
-    runner.startingNewTest(page);
+    runner.startingNewTest(new TestPage(page));
     runner.testComplete(testSummary);
     verify(resultsListener).testComplete(same(page), same(testSummary), same(runner.currentTestTime));
     assertThat(runner.currentTestTime, isAStoppedTimeMeasurement());

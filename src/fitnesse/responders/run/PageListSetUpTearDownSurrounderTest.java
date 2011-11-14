@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class PageListSetUpTearDownSurrounderTest {
   private WikiPage root;
@@ -36,33 +36,36 @@ public class PageListSetUpTearDownSurrounderTest {
     WikiPage setUp2 = crawler.addPage(slimPage, PathParser.parse("SuiteSetUp"));
     WikiPage tearDown2 = crawler.addPage(slimPage, PathParser.parse("SuiteTearDown"));
 
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+    ArrayList<TestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
 
     assertEquals(6, testPages.size());
 
-    int testPageIndex = testPages.indexOf(testPage);
-    assertTrue(testPageIndex != -1);
-    assertSame(setUp, testPages.get(testPageIndex-1));
-    assertSame(tearDown, testPages.get(testPageIndex+1));
-
-    int slimPageIndex = testPages.indexOf(slimPage);
-    assertTrue(slimPageIndex != -1);
-    assertSame(setUp2, testPages.get(slimPageIndex-1));
-    assertSame(tearDown2, testPages.get(slimPageIndex+1));
+    assertSame(setUp2, testPages.get(0).getSourcePage());
+    assertSame(slimPage, testPages.get(1).getSourcePage());
+    assertSame(tearDown2, testPages.get(2).getSourcePage());
+    assertSame(setUp, testPages.get(3).getSourcePage());
+    assertSame(testPage, testPages.get(4).getSourcePage());
+    assertSame(tearDown, testPages.get(5).getSourcePage());
   }
+
+    private ArrayList<TestPage> MakeTestPageList() throws Exception {
+        SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
+        ArrayList<TestPage> testPages = new ArrayList<TestPage>();
+        for (WikiPage page : finder.getAllPagesToRunForThisSuite()) testPages.add(new TestPage(page));
+        return testPages;
+    }
 
   @Test
   public void testSetUpAndTearDown() throws Exception {
     WikiPage setUp = crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite set up");
     WikiPage tearDown = crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite tear down");
 
-    SuiteContentsFinder finder = new SuiteContentsFinder(suite, null, root);
-    List<WikiPage> testPages = finder.getAllPagesToRunForThisSuite();
+    ArrayList<TestPage> testPages = MakeTestPageList();
     surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(testPages);
     assertEquals(3, testPages.size());
-    assertSame(setUp, testPages.get(0));
-    assertSame(tearDown, testPages.get(2));
+    assertSame(setUp, testPages.get(0).getSourcePage());
+    assertSame(testPage, testPages.get(1).getSourcePage());
+    assertSame(tearDown, testPages.get(2).getSourcePage());
   }
 }

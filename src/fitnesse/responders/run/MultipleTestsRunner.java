@@ -11,8 +11,6 @@ import fitnesse.wiki.WikiPage;
 
 import java.util.*;
 
-import junit.extensions.TestDecorator;
-
 import util.TimeMeasurement;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
@@ -24,8 +22,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private boolean isFastTest = false;
   private boolean isRemoteDebug = false;
 
-  private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
-  private WikiPage currentTest = null;
+  private LinkedList<TestPage> processingQueue = new LinkedList<TestPage>();
+  private TestPage currentTest = null;
 
   private TestSystemGroup testSystemGroup = null;
   private TestSystem currentTestSystem = null;
@@ -94,19 +92,21 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         String useManualStart = page.getData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
         return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
       } 
-      catch (Exception e) {}
+      catch (Exception e) {
+          throw new RuntimeException(e);
+      }
     }
     return false;
   }
 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
                                         PagesByTestSystem pagesByTestSystem) throws Exception {
-    List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
+    List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
 
     startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
   }
 
-  private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<WikiPage> testSystemPages) throws Exception {
+  private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws Exception {
     TestSystem testSystem = null;
     synchronized (this) {
       if (!isStopped) {
@@ -132,8 +132,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
   }
 
-  private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
-    for (WikiPage testPage : pagesInTestSystem) {
+  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
+    for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       PageData pageData = testPage.getData();
       SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(pageData, page);
@@ -141,7 +141,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
   }
 
-  void addToProcessingQueue(WikiPage testPage) {
+  void addToProcessingQueue(TestPage testPage) {
     processingQueue.addLast(testPage);
   }
 
@@ -165,15 +165,16 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return pagesByTestSystem;
   }
 
-  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage testPage) throws Exception {
+  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) throws Exception {
+    TestPage testPage = new TestPage(wikiPage);
     Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), isRemoteDebug);
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 
-  private LinkedList<WikiPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, Descriptor descriptor) {
-    LinkedList<WikiPage> pagesForTestSystem;
+  private LinkedList<TestPage> getOrMakeListWithinMap(PagesByTestSystem pagesByTestSystem, Descriptor descriptor) {
+    LinkedList<TestPage> pagesForTestSystem;
     if (!pagesByTestSystem.containsKey(descriptor)) {
-      pagesForTestSystem = new LinkedList<WikiPage>();
+      pagesForTestSystem = new LinkedList<TestPage>();
       pagesByTestSystem.put(descriptor, pagesForTestSystem);
     } else {
       pagesForTestSystem = pagesByTestSystem.get(descriptor);
@@ -184,7 +185,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws Exception {
     if (testPagesToRun.size() == 0)
       return pagesByTestSystem;
-    for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values())
+    for (LinkedList<TestPage> pagesForTestSystem : pagesByTestSystem.values())
       surrounder.surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(pagesForTestSystem);
 
     return pagesByTestSystem;
@@ -192,7 +193,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
     int tests = 0;
-    for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
+    for (LinkedList<TestPage> listOfPagesToRun : pagesByTestSystem.values()) {
       tests += listOfPagesToRun.size();
     }
     resultsListener.announceNumberTestsToRun(tests);
@@ -219,7 +220,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   public void acceptOutputFirst(String output) throws Exception {
-    WikiPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
+    TestPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
       startingNewTest(firstInQueue);
@@ -227,15 +228,15 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testOutputChunk(output);
   }
 
-  void startingNewTest(WikiPage test) throws Exception {
+  void startingNewTest(TestPage test) throws Exception {
     currentTest = test;
     currentTestTime = new TimeMeasurement().start();
-    resultsListener.newTestStarted(currentTest, currentTestTime);
+    resultsListener.newTestStarted(currentTest.getSourcePage(), currentTestTime);
   }
   
   public void testComplete(TestSummary testSummary) throws Exception {
-    WikiPage testPage = processingQueue.removeFirst();
-    resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
+    TestPage testPage = processingQueue.removeFirst();
+    resultsListener.testComplete(testPage.getSourcePage(), testSummary, currentTestTime.stop());
   }
 
   public void exceptionOccurred(Throwable e) {
@@ -269,6 +270,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 }
 
-class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<WikiPage>> {
+class PagesByTestSystem extends HashMap<TestSystem.Descriptor, LinkedList<TestPage>> {
   private static final long serialVersionUID = 1L;
 }

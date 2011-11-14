@@ -124,7 +124,7 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includeScenarioLibrariesIfAppropriate(LibraryFilter libraryFilter) throws Exception {
-    if (isSlim(testPage))
+    if (isSlim(pageData))
       includeScenarioLibrariesIfAny(libraryFilter);
   }
 
@@ -145,8 +145,8 @@ public class SetupTeardownAndLibraryIncluder {
     return filteredList;
   }
 
-  private boolean isSlim(WikiPage page) throws Exception {
-    String testSystem = page.getData().getVariable("TEST_SYSTEM");
+  private boolean isSlim(PageData pageData) throws Exception {
+    String testSystem = pageData.getVariable("TEST_SYSTEM");
     boolean isSlim = "slim".equalsIgnoreCase(testSystem);
     return isSlim;
   }
