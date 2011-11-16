@@ -10,13 +10,27 @@ import java.util.TimeZone;
 
 public abstract class Response {
     public enum Format {
-    XML, HTML, TEXT, JAVA
+    XML("text/xml"),
+    HTML(DEFAULT_CONTENT_TYPE),
+    TEXT("text/text"),
+    JSON("text/json"),
+    JAVA("java");
+    
+    private final String contentType;
+    
+    private Format(String contentType) {
+      this.contentType = contentType;
+    }
+    
+    public String getContentType() {
+      return contentType;
+    }
+    
   }
 
   public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
 
   protected static final String CRLF = "\r\n";
-  private Format format;
 
   public static SimpleDateFormat makeStandardHttpDateFormat() {
     // SimpleDateFormat is not thread safe, so we need to create each
@@ -31,23 +45,20 @@ public abstract class Response {
   private String contentType = DEFAULT_CONTENT_TYPE;
 
   public Response(String formatString) {
-    if (formatString == null)
-      formatString = "html";
-    if (formatString.equalsIgnoreCase("html")) {
+    Format format;
+    
+    if ("html".equalsIgnoreCase(formatString)) {
       format = Format.HTML;
-      setContentType(DEFAULT_CONTENT_TYPE);
-    } else if (formatString.equalsIgnoreCase("xml")) {
+    } else if ("xml".equalsIgnoreCase(formatString)) {
       format = Format.XML;
-      setContentType("text/xml");
-    } else if (formatString.equalsIgnoreCase("text")) {
+    } else if ("text".equalsIgnoreCase(formatString)) {
       format = Format.TEXT;
-      setContentType("text/text");
-    } else if (formatString.equalsIgnoreCase("java")){
+    } else if ("java".equalsIgnoreCase(formatString)){
       format = Format.JAVA;
-      setContentType("java");    
     } else {
       format = Format.HTML;
     }
+    setContentType(format.getContentType());
   }
 
   public Response(String format, int status) {
@@ -56,18 +67,18 @@ public abstract class Response {
   }
 
   public boolean isXmlFormat() {
-    return format == Format.XML;
+    return Format.XML.contentType.equals(contentType);
   }
 
   public boolean isHtmlFormat() {
-    return format == Format.HTML;
+    return Format.HTML.contentType.equals(contentType);
   }
 
   public boolean isTextFormat() {
-    return format == Format.TEXT;
+    return Format.TEXT.contentType.equals(contentType);
   }
   public boolean isJavaFormat(){
-    return format == Format.JAVA;
+    return Format.JAVA.contentType.equals(contentType);
   }
 
   public abstract void readyToSend(ResponseSender sender) throws Exception;
@@ -86,7 +97,7 @@ public abstract class Response {
 
   public String makeHttpHeaders() {
     StringBuffer text = new StringBuffer();
-    if (format != Format.TEXT) {
+    if (!Format.TEXT.contentType.equals(contentType)) {
       text.append("HTTP/1.1 ").append(status).append(" ").append(
         getReasonPhrase()).append(CRLF);
       makeHeaders(text);
@@ -101,6 +112,10 @@ public abstract class Response {
 
   public void setContentType(String type) {
     contentType = type;
+  }
+
+  public void setContentType(Format format) {
+    contentType = format.getContentType();
   }
 
   public void redirect(String location) {
