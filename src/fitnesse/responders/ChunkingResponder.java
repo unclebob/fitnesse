@@ -92,17 +92,7 @@ public abstract class ChunkingResponder implements Responder {
 
   protected class RespondingRunnable implements Runnable {
     public void run() {
-      while (!response.isReadyToSend()) {
-        try {
-          synchronized (response) {
-            response.notifyAll();
-            response.wait();
-          }
-        }
-        catch (InterruptedException e) {
-          //ok
-        }
-      }
+      response.waitForReadyToSend();
       startSending();
     }
   }
