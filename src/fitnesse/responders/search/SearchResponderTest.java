@@ -91,8 +91,4 @@ public class SearchResponderTest extends RegexTestCase {
     assertSubString("Content Search Results", title);
   }
 
-  public void testJavascriptDateFormatRegex() {
-    assertEquals("/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/", SearchResponder.getDateFormatJavascriptRegex());
-  }
-
 }

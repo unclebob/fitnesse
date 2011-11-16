@@ -79,10 +79,6 @@ public abstract class ResultResponder extends ChunkingResponder implements
     return writer.toString();
   }
 
-  public static String getDateFormatJavascriptRegex() {
-    return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
-  }
-
   public void hit(WikiPage page) throws Exception {
     hits++;
     response.add(createSearchResultsEntry(page));
