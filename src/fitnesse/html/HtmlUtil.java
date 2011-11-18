@@ -202,7 +202,6 @@ public class HtmlUtil {
 
   private static void addLinkToActions(TagGroup actions, WikiPageAction action) {
     actions.add(makeAction(action));
-    //actions.add(makeNavBreak());
   }
 
   public static HtmlTag makeAction(WikiPageAction action) {
