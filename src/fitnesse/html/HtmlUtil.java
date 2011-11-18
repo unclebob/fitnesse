@@ -217,18 +217,8 @@ public class HtmlUtil {
     linkTag.addAttribute("accesskey", action.getShortcutKey());
     linkTag.add(action.getLinkName());
 
-//    TagGroup group = new TagGroup();
-//    group.add(new HtmlComment(action.getLinkName() + " button"));
-//    group.add(linkTag);
     return linkTag;
   }
-
-//  public static HtmlTag makeNavBreak() {
-//    HtmlTag navBreak = new HtmlTag("div");
-//    navBreak.addAttribute("class", "nav_break");
-//    navBreak.add("&nbsp;");
-//    return navBreak;
-//  }
 
   public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
