@@ -1,0 +1,34 @@
+<form method="post" action="$action" name="f">
+ <input type="hidden" name="responder" value="saveData"/>
+ <input type="hidden" name="editTime" value="$editTime"/>
+ <input type="hidden" name="ticketId" value="$ticketId"/>
+#if($!redirect)
+ <input type="hidden" name="redirect" value="$redirect"/>
+#end
+ <textarea class="pageContent no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
+ <div class="edit_buttons">
+  <input type="submit" accesskey="s" tabindex="2" value="Save" name="save"/>
+  <script type="text/javascript" src="/files/javascript/SpreadsheetTranslator.js"></script>
+  <script type="text/javascript" src="/files/javascript/spreadsheetSupport.js"></script>
+  <input type="button" title="This function will convert the text from spreadsheet format to FitNesse format." onclick="SelectionSpreadsheetToWiki(document.f.pageContent)" value="Spreadsheet to FitNesse"/>&nbsp;<input type="button" onclick="SelectionWikiToSpreadsheet(document.f.pageContent)" value="FitNesse to Spreadsheet"/>
+  <script type="text/javascript" src="/files/javascript/WikiFormatter.js"></script>
+  <script type="text/javascript" src="/files/javascript/wikiFormatterSupport.js"></script>
+i <input type="button" title="Formats the wiki text" onclick="FormatWiki(document.f.pageContent)" value="Format" accesskey="f"/>
+  <script type="text/javascript" src="/files/javascript/fitnesse.js"></script>
+ </div>
+
+ <div class="edit_options">
+  <script type="text/javascript" src="/files/javascript/textareaWrapSupport.js"></script>
+  <input type="checkbox" title="Turns on/off wrapping" onclick="toggleWrap(this)" accesskey="w"/><span>wrap</span>
+ </div>
+
+ <div class="hints"><br>Hints:
+  <ul>
+   <li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the "Save" button!</li>
+   <li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>
+  </ul>
+ </div>
+</form>
+<script type="text/javascript">
+ document.f.pageContent.focus();
+</script>
