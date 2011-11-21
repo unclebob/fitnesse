@@ -15,11 +15,11 @@ public interface ResultsListener {
 
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception;
 
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception;
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception;
 
   public void testOutputChunk(String output) throws Exception;
 
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception;
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception;
   
   public void errorOccured();
 }

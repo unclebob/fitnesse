@@ -1,16 +1,12 @@
 package fitnesse.junit;
 
+import fitnesse.responders.run.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import util.TimeMeasurement;
 
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.ResultsListener;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class JUnitRunNotifierResultsListener implements ResultsListener {
@@ -35,12 +31,12 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
     notifier.fireTestStarted(descriptionFor(test));
   }
 
-  private Description descriptionFor(WikiPage test) throws Exception {
-    return Description.createTestDescription(mainClass, new WikiPagePath(test).toString());
+  private Description descriptionFor(TestPage test) throws Exception {
+    return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
   }
 
   @Override
@@ -49,7 +45,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
       notifier.fireTestFinished(descriptionFor(test));
     } else {

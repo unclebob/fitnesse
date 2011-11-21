@@ -3,7 +3,6 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.PagesByTestSystem;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import static org.mockito.Mockito.*;
@@ -11,8 +10,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
-import org.mockito.internal.matchers.InstanceOf;
 
 import static util.RegexTestCase.assertSubString;
 import util.TimeMeasurement;
@@ -126,13 +123,13 @@ public class MultipleTestsRunnerTest {
   @Test
   public void startingNewTestShouldStartTimeMeasurementAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = mock(WikiPage.class);
+    TestPage page = new TestPage(mock(WikiPage.class));
     FitNesseContext fitNesseContext = mock(FitNesseContext.class);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page.getSourcePage(), resultsListener);
     
-    runner.startingNewTest(new TestPage(page));
+    runner.startingNewTest(page);
     verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
     assertThat(runner.currentTestTime, isAStartedTimeMeasurement());
   }
@@ -149,16 +146,16 @@ public class MultipleTestsRunnerTest {
   @Test
   public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
     List<WikiPage> testPagesToRun = mock(List.class);
-    WikiPage page = mock(WikiPage.class);
+    TestPage page = new TestPage(mock(WikiPage.class));
     FitNesseContext fitNesseContext = mock(FitNesseContext.class);
     ResultsListener resultsListener = mock(ResultsListener.class);
     
-    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page, resultsListener);
-    runner.addToProcessingQueue(new TestPage(page));
+    MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext, page.getSourcePage(), resultsListener);
+    runner.addToProcessingQueue(page);
     
     TestSummary testSummary = mock(TestSummary.class);
     
-    runner.startingNewTest(new TestPage(page));
+    runner.startingNewTest(page);
     runner.testComplete(testSummary);
     verify(resultsListener).testComplete(same(page), same(testSummary), same(runner.currentTestTime));
     assertThat(runner.currentTestTime, isAStoppedTimeMeasurement());

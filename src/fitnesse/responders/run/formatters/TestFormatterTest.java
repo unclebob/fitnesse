@@ -3,6 +3,7 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
@@ -66,14 +67,14 @@ public class TestFormatterTest {
     });
   }
 
-  private WikiPageDummy page;
+  private TestPage page;
   private TestSummary right;
   private TestSummary wrong;
   private TestSummary exception;
 
   @Before
   public void setUp() throws Exception {
-    page = new WikiPageDummy("page", "content");
+    page = new TestPage(new WikiPageDummy("page", "content"));
     right = new TestSummary(1, 0, 0, 0);
     wrong = new TestSummary(0, 1, 0, 0);
     exception = new TestSummary(0, 0, 0, 1);

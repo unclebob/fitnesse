@@ -2,10 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.SuiteExecutionReport;
+import fitnesse.responders.run.*;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PathParser;
 
@@ -37,8 +34,8 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
-    String pageName = PathParser.render(test.getPageCrawler().getFullPath(test));
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+    String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath(test.getSourcePage()));
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt(), timeMeasurement.elapsed());
   }
 
@@ -55,7 +52,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);

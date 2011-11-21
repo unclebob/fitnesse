@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,9 +60,9 @@ public class SetupTeardownAndLibraryIncluderTest {
   public void includeSetupsAndTeardownsAndLibrariesBelowASuite()
     throws Exception {
     WikiPage suitePage = testPage;
-    PageData data = subTestPage.getData();
-    SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(data, suitePage);
-    String html = data.getHtml();
+    TestPage testPage = new TestPage(subTestPage);
+    SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, suitePage);
+    String html = testPage.getDecoratedData().getHtml();
     assertSubString(".SetUp", html);
     assertSubString("setup", html);
     assertSubString(".TearDown", html);

@@ -5,10 +5,7 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.VelocityFactory;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.run.*;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
@@ -42,7 +39,7 @@ public class XmlFormatter extends BaseFormatter {
   }
   
   @Override
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
     currentTestStartTime = timeMeasurement.startedAt();
     appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
   }
@@ -58,7 +55,7 @@ public class XmlFormatter extends BaseFormatter {
   }
   
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
     throws Exception {
     super.testComplete(test, testSummary, timeMeasurement);
     processTestResults(test.getName(), testSummary, timeMeasurement);

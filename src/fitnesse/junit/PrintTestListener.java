@@ -1,11 +1,7 @@
 package fitnesse.junit;
 
+import fitnesse.responders.run.*;
 import util.TimeMeasurement;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.ResultsListener;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class PrintTestListener implements ResultsListener {
@@ -23,7 +19,7 @@ public class PrintTestListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
   }
 
   @Override
@@ -32,8 +28,8 @@ public class PrintTestListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
-    System.out.println(new WikiPagePath(test).toString() + " r " + testSummary.right + " w "
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    System.out.println(new WikiPagePath(test.getSourcePage()).toString() + " r " + testSummary.right + " w "
         + testSummary.wrong + " " + testSummary.exceptions 
         + " " + timeMeasurement.elapsedSeconds() + " seconds");
   }

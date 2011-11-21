@@ -3,6 +3,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
@@ -14,17 +15,17 @@ import util.TimeMeasurement;
 public class TestHtmlFormatterTest extends RegexTestCase {
   private BaseFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
-  private WikiPage page;
+  private TestPage page;
   private WikiPage root;
   private FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
-    page = root.addChildPage("NewPage");
+    page = new TestPage(root.addChildPage("NewPage"));
     page.getData().setContent("page content here");
     context = new FitNesseContext();
 
-    formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
+    formatter = new TestHtmlFormatter(context, page.getSourcePage(), new HtmlPageFactory()) {
       @Override
       protected void writeData(String output) throws Exception {
         pageBuffer.append(output);

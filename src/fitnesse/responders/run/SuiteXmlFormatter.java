@@ -23,10 +23,10 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
+  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
       throws Exception {
     PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
+    String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
     if ("".equals(relativeName))
       relativeName = String.format("(%s)", testPage.getName());
     processTestResults(relativeName, testSummary, timeMeasurement);

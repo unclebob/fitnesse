@@ -1,5 +1,6 @@
 package fitnesse.responders.run.formatters;
 
+import fitnesse.responders.run.TestPage;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class CachingSuiteXmlFormatterTest {
   private FitNesseContext context;
   private WikiPage root;
   private TestSummary testSummary;
-  private WikiPage testPage;
+  private TestPage testPage;
   private long testTime;
 
   @Before
@@ -41,7 +42,7 @@ public class CachingSuiteXmlFormatterTest {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     testSummary = new TestSummary(1,2,3,4);
-    testPage = root.addChildPage("TestPage");
+    testPage = new TestPage(root.addChildPage("TestPage"));
     formatter = new CachingSuiteXmlFormatter(context,root, null);
     testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
   }
@@ -124,7 +125,7 @@ public class CachingSuiteXmlFormatterTest {
     TestResultRecord expectedRecord = mock(TestResultRecord.class);
     File file = mock(File.class);
     final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
-    CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage, null) {
+    CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage.getSourcePage(), null) {
       @Override
       TestExecutionReport makeTestExecutionReport() {
         return expectedReport;

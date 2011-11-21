@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.*;
 
 import java.util.Collections;
@@ -9,9 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SetupTeardownAndLibraryIncluder {
-  private PageData pageData;
+  private TestPage testPage;
   private boolean isSuite;
-  private WikiPage testPage;
   private StringBuffer newPageContent;
   private PageCrawler pageCrawler;
 
@@ -22,30 +22,28 @@ public class SetupTeardownAndLibraryIncluder {
 
   public static void includeInto(PageData pageData, boolean isSuite)
     throws Exception {
-    new SetupTeardownAndLibraryIncluder(pageData).includeInto(isSuite);
+    TestPage testPage = new TestPage(pageData);
+    new SetupTeardownAndLibraryIncluder(testPage).includeInto(isSuite);
+    pageData.setContent(testPage.getDecoratedData().getContent());
   }
 
-  public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(PageData pageData, WikiPage suitePage) throws Exception {
-    new SetupTeardownAndLibraryIncluder(pageData).includeSetupsTeardownsAndLibrariesBelowTheSuite(suitePage);
+  public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(TestPage testPage, WikiPage suitePage) throws Exception {
+    new SetupTeardownAndLibraryIncluder(testPage).includeSetupsTeardownsAndLibrariesBelowTheSuite(suitePage);
   }
 
 
-  private SetupTeardownAndLibraryIncluder(PageData pageData) {
-    this.pageData = pageData;
-    testPage = pageData.getWikiPage();
-    pageCrawler = testPage.getPageCrawler();
+  private SetupTeardownAndLibraryIncluder(TestPage testPage) {
+    this.testPage = testPage;
+    pageCrawler = testPage.getSourcePage().getPageCrawler();
     newPageContent = new StringBuffer();
   }
 
   private void includeInto(boolean isSuite) throws Exception {
     this.isSuite = isSuite;
-    if (isTestPage())
+    if (testPage.isTestPage())
       includeSetupTeardownAndLibraryPages();
   }
 
-  private boolean isTestPage() throws Exception {
-    return pageData.hasAttribute("Test");
-  }
 
   private void includeSetupTeardownAndLibraryPages() throws Exception {
     includeScenarioLibraries();
@@ -94,7 +92,7 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includePageContent() throws Exception {
-    newPageContent.append(pageData.getContent());
+    newPageContent.append(testPage.getData().getContent());
   }
 
   private void includeTeardownPages() throws Exception {
@@ -112,7 +110,7 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void updatePageContent() throws Exception {
-    pageData.setContent(newPageContent.toString());
+    testPage.decorate(newPageContent.toString());
   }
 
   private void include(String pageName, String arg) throws Exception {
@@ -124,12 +122,12 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private void includeScenarioLibrariesIfAppropriate(LibraryFilter libraryFilter) throws Exception {
-    if (isSlim(pageData))
+    if (testPage.isSlim())
       includeScenarioLibrariesIfAny(libraryFilter);
   }
 
   private void includeScenarioLibrariesIfAny(LibraryFilter libraryFilter) throws Exception {
-    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", testPage);
+    List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", testPage.getSourcePage());
 
     List<WikiPage> filteredUncles = filter(uncles, libraryFilter);
     if (filteredUncles.size() > 0)
@@ -143,12 +141,6 @@ public class SetupTeardownAndLibraryIncluder {
         filteredList.add(widget);
     }
     return filteredList;
-  }
-
-  private boolean isSlim(PageData pageData) throws Exception {
-    String testSystem = pageData.getVariable("TEST_SYSTEM");
-    boolean isSlim = "slim".equalsIgnoreCase(testSystem);
-    return isSlim;
   }
 
   private void includeScenarioLibraries(List<WikiPage> uncles) throws Exception {
@@ -166,7 +158,7 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private WikiPage findInheritedPage(String pageName) throws Exception {
-    return PageCrawlerImpl.getClosestInheritedPage(pageName, testPage);
+    return PageCrawlerImpl.getClosestInheritedPage(pageName, testPage.getSourcePage());
   }
 
   private String getPathNameForPage(WikiPage page) throws Exception {

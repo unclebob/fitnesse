@@ -4,13 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import fitnesse.responders.run.*;
 import util.TimeMeasurement;
 
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.ResultsListener;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class JUnitXMLTestListener implements ResultsListener {
@@ -61,7 +57,7 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
   }
 
   @Override
@@ -70,8 +66,8 @@ public class JUnitXMLTestListener implements ResultsListener {
   }
 
   @Override
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
-    recordTestResult(new WikiPagePath(test).toString(), testSummary, timeMeasurement.elapsed());
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    recordTestResult(new WikiPagePath(test.getSourcePage()).toString(), testSummary, timeMeasurement.elapsed());
   }
 
   @Override

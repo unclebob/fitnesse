@@ -2,6 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
+import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -22,7 +23,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
     if (suiteTime == 0)
       suiteTime = timeMeasurement.startedAt();
     super.newTestStarted(test, timeMeasurement);

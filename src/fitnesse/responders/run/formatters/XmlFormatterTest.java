@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import fitnesse.responders.run.TestPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,11 +54,11 @@ public class XmlFormatterTest {
   @Test
   public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiPageDummy page = new WikiPageDummy("name", "content");
+    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
     page.getData().setAttribute(PageData.PropertySUITES, "tag1");
     WriterFactory writerFactory = mock(WriterFactory.class);
     final TestResult testResult = new TestResult();
-    XmlFormatter formatter = new XmlFormatter(context , page, writerFactory) {
+    XmlFormatter formatter = new XmlFormatter(context , page.getSourcePage(), writerFactory) {
       @Override
       protected TestResult newTestResult() {
         return testResult;

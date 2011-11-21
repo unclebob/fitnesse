@@ -135,10 +135,10 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
-      PageData pageData = testPage.getData();
-      SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(pageData, page);
-      testSystem.runTestsAndGenerateHtml(pageData);
+      SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
+      testSystem.runTestsAndGenerateHtml(testPage.getDecoratedData());
     }
+      System.out.println("all tests run");
   }
 
   void addToProcessingQueue(TestPage testPage) {
@@ -231,12 +231,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   void startingNewTest(TestPage test) throws Exception {
     currentTest = test;
     currentTestTime = new TimeMeasurement().start();
-    resultsListener.newTestStarted(currentTest.getSourcePage(), currentTestTime);
+    resultsListener.newTestStarted(currentTest, currentTestTime);
   }
   
   public void testComplete(TestSummary testSummary) throws Exception {
     TestPage testPage = processingQueue.removeFirst();
-    resultsListener.testComplete(testPage.getSourcePage(), testSummary, currentTestTime.stop());
+    resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
 
   public void exceptionOccurred(Throwable e) {

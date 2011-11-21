@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import fitnesse.responders.run.TestPage;
 import org.junit.Test;
 
 import util.TimeMeasurement;
@@ -20,8 +21,8 @@ public class SuiteExecutionReportFormatterTest {
   @Test
   public void testCompleteShouldSetRunTimeForCurrentReference() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiPage page = new WikiPageDummy("name", "content");
-    SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
+    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
     
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when(timeMeasurement.startedAt()).thenReturn(65L);
@@ -58,8 +59,8 @@ public class SuiteExecutionReportFormatterTest {
   @Test
   public void testCompleteShouldSetFailedCount() throws Exception {
     FitNesseContext context = mock(FitNesseContext.class);
-    WikiPage page = new WikiPageDummy("name", "content");
-    SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
+    TestPage page = new TestPage(new WikiPageDummy("name", "content"));
+    SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page.getSourcePage());
     
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     when(timeMeasurement.startedAt()).thenReturn(65L);

@@ -2,6 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.testutil.FitNesseUtil;
@@ -25,7 +26,7 @@ public class SuiteHistoryFormatterTest {
   private SuiteHistoryFormatter formatter;
   private WikiPage root;
   private FitNesseContext context;
-  private WikiPage testPage;
+  private TestPage testPage;
   private StringWriter writer;
   private long testTime;
   private WikiPage suitePage;
@@ -35,7 +36,7 @@ public class SuiteHistoryFormatterTest {
     root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
     suitePage = root.addChildPage("SuitePage");
-    testPage = suitePage.addChildPage("TestPage");
+    testPage = new TestPage(suitePage.addChildPage("TestPage"));
     writer = new StringWriter();
     formatter = new SuiteHistoryFormatter(context, suitePage, writer);
     testTime = DateTimeUtil.getTimeFromString("12/5/1952 1:19:00");

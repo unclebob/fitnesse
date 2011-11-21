@@ -1,5 +1,6 @@
 package fitnesse.responders.run.formatters;
 
+import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
@@ -50,7 +51,7 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
-  public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters)
       formatter.newTestStarted(test, timeMeasurement);
   }
@@ -60,7 +61,7 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testOutputChunk(output);
   }
 
-  public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters)
       formatter.testComplete(test, testSummary, timeMeasurement);
   }
@@ -72,8 +73,10 @@ public class CompositeFormatter extends BaseFormatter {
 
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
-    for (BaseFormatter formatter : formatters)
+    for (BaseFormatter formatter : formatters) {
+        System.out.println("allTestingComplete " + formatter.getClass().getName());
       formatter.allTestingComplete(totalTimeMeasurement);
+    }
   }
 
   public int getErrorCount() {

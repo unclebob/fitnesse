@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
 
+import fitnesse.responders.run.TestPage;
 import org.junit.Test;
 
 import util.TimeMeasurement;
@@ -18,7 +19,7 @@ public class TestTextFormatterTest {
 
   @Test
   public void testCompleteShouldAddPageAndSummaryAndTimingToResponse() throws Exception {
-    WikiPage page = new WikiPageDummy("page", "content");
+    TestPage page = new TestPage(new WikiPageDummy("page", "content"));
     TestSummary summary = new TestSummary(1, 2, 3, 4);
     TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
     String startTime = "11:12:13";
