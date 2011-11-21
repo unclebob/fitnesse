@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import org.apache.velocity.VelocityContext;
+
+import fitnesse.VelocityFactory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageAction;
 
@@ -102,83 +105,30 @@ public class HtmlUtil {
     return link;
   }
 
-  public static TagGroup makeBreadCrumbsWithCurrentPageLinked(String path)
-    throws Exception {
-    return makeBreadCrumbsWithCurrentPageLinked(path, ".");
+  public static String makeBreadCrumbsWithCurrentPageLinked(String path) throws Exception {
+    return makeBreadCrumbsWithCurrentPage(path, ".", true, null);
   }
 
-  public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(String trail)
-    throws Exception {
-    return makeBreadCrumbsWithCurrentPageNotLinked(trail, ".");
+  public static String makeBreadCrumbsWithCurrentPageNotLinked(String trail) throws Exception {
+    return makeBreadCrumbsWithCurrentPage(trail, ".", false, null);
   }
 
-  public static TagGroup makeBreadCrumbsWithCurrentPageLinked(
-    String path,
-    String separator
-  ) throws Exception {
-    TagGroup tagGroup = new TagGroup();
-    String[] crumbs = path.split("[" + separator + "]");
-    String trail = makeAllButLastCrumb(crumbs, separator, tagGroup);
-    tagGroup.add(getLastCrumbAsLink(crumbs, trail));
-    return tagGroup;
-  }
-
-  public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(
-    String path,
-    String separator
-  ) throws Exception {
-    TagGroup tagGroup = new TagGroup();
-    String[] crumbs = path.split("[" + separator + "]");
-    makeAllButLastCrumb(crumbs, separator, tagGroup);
-    tagGroup.add(getLastCrumbAsText(crumbs));
-    return tagGroup;
-  }
-
-  private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail)
-    throws Exception {
-    String crumb = getLastCrumb(crumbs);
-    HtmlTag link = makeLink("/" + trail + crumb, crumb);
-    link.head = HtmlUtil.BR.html();
-    link.addAttribute("class", "page_title");
-    return link;
-  }
-
-  private static String getLastCrumb(String[] crumbs) {
-    String crumb = "";
-    if (crumbs.length > 0)
-      crumb = crumbs[crumbs.length - 1];
-    return crumb;
-  }
-
-  private static HtmlTag getLastCrumbAsText(String[] crumbs) throws Exception {
-    String crumb = getLastCrumb(crumbs);
-    HtmlTag thisPage = new HtmlTag("span", crumb);
-    thisPage.addAttribute("class", "page_title");
-    thisPage.head = HtmlUtil.BR.html();
-    return thisPage;
-  }
-
-  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) throws Exception {
+  public static String makeBreadCrumbsWithPageType(String trail, String type) throws Exception {
     return makeBreadCrumbsWithPageType(trail, ".", type);
   }
 
-  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {
-    TagGroup group = makeBreadCrumbsWithCurrentPageLinked(trail, separator);
-    group.add(HtmlUtil.BR);
-    group.add(HtmlUtil.makeSpanTag("page_type", type));
-    return group;
+  public static String makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {
+    return makeBreadCrumbsWithCurrentPage(trail, separator, true, type);
   }
 
-  private static String makeAllButLastCrumb(String[] crumbs, String separator, TagGroup group) {
-    String trail = "";
-    for (int i = 0; i < crumbs.length - 1; i++) {
-      String crumb = crumbs[i];
-      HtmlTag link = makeLink("/" + trail + crumb, crumb);
-      link.tail = separator;
-      trail = trail + crumb + separator;
-      group.add(link);
-    }
-    return trail;
+  private static String makeBreadCrumbsWithCurrentPage(String path, String separator, boolean pageTitleAsLink, String type)
+    throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    String[] crumbs = path.split("[" + separator + "]");
+    velocityContext.put("crumbs", crumbs);
+    velocityContext.put("pageTitleAsLink", pageTitleAsLink);
+    velocityContext.put("pageType", type);
+    return VelocityFactory.translateTemplate(velocityContext, "header.vm");
   }
 
   public static HtmlTag makeActions(List<WikiPageAction> actions) throws Exception {

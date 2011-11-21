@@ -89,13 +89,13 @@ public class EditResponder implements SecureResponder {
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.title.use(title + resource + ":");
     
-    html.header.use(makeHeader(resource, title));
+    html.header.add(makeHeader(resource, title));
     html.main.add(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
     
     return html.html();
   }
 
-  private HtmlTag makeHeader(String resource, String title) throws Exception {
+  private String makeHeader(String resource, String title) throws Exception {
     return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
   }
 

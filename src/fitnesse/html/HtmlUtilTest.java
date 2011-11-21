@@ -17,24 +17,24 @@ public class HtmlUtilTest extends RegexTestCase {
 
   public void testBreadCrumbsWithCurrentPageLinked() throws Exception {
     String trail = "1.2.3.4";
-    HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(trail);
+    String breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(trail);
     String expected = getBreadCrumbsWithLastOneLinked();
-    assertEquals(expected, breadcrumbs.html());
+    assertEquals(expected, breadcrumbs);
   }
 
   public void testBreadCrumbsWithCurrentPageNotLinked() throws Exception {
     String trail = "1.2.3.4";
-    HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(trail);
+    String breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(trail);
     String expected = getBreadCrumbsWithLastOneNotLinked();
-    assertEquals(expected, breadcrumbs.html());
+    assertEquals(expected, breadcrumbs);
   }
 
   public void testBreadCrumbsWithPageType() throws Exception {
     String trail = "1.2.3.4";
-    HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithPageType(trail, "Some Type");
+    String breadcrumbs = HtmlUtil.makeBreadCrumbsWithPageType(trail, "Some Type");
     String expected = getBreadCrumbsWithLastOneLinked() +
       "<br/><span class=\"page_type\">Some Type</span>" + endl;
-    assertEquals(expected, breadcrumbs.html());
+    assertEquals(expected, breadcrumbs);
   }
 
   private String getBreadCrumbsWithLastOneLinked() {
