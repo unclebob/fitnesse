@@ -105,6 +105,11 @@
 	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
 		<javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" source="1.6" target="1.6" />
 		<copy file="extra/ant/tasks.properties" todir="classes" />
+		<copy todir="classes">
+			<fileset dir="src">
+				<include name="**/*.vm" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="set-version-if-not-manualy-set" unless="version">
