@@ -4,9 +4,15 @@ package fitnesse.html;
 
 import org.apache.velocity.VelocityContext;
 
+import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageAction;
+import fitnesse.wiki.WikiPageActions;
+import fitnesse.wiki.WikiPagePath;
 
 import java.util.List;
 
@@ -131,30 +137,26 @@ public class HtmlUtil {
     return VelocityFactory.translateTemplate(velocityContext, "header.vm");
   }
 
-  public static HtmlTag makeActions(List<WikiPageAction> actions) throws Exception {
-    TagGroup actionsGroup = new TagGroup();
-
-    for (WikiPageAction action : actions) {
-      if (action.getPageName() == null)
-        addBreakToActions(actionsGroup, action);
-      else
-        addLinkToActions(actionsGroup, action);
+  public static String makeSidebar(WikiPage wikiPage) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    WikiPageActions actions = new WikiPageActions(wikiPage.getData());
+    WikiPagePath localPagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
+    String localPageName = PathParser.render(localPagePath);
+    String localOrRemotePageName = localPageName;
+    boolean newWindowIfRemote = wikiPage.isOpenInNewWindow();
+    
+    if (wikiPage instanceof ProxyPage) {
+      ProxyPage proxyPage = (ProxyPage) wikiPage;
+      localOrRemotePageName = proxyPage.getThisPageUrl();
     }
-    return actionsGroup;
+
+    velocityContext.put("actions", actions);
+    velocityContext.put("localPath", localPageName);
+    velocityContext.put("localOrRemotePath", localOrRemotePageName);
+    velocityContext.put("openInNewWindow", newWindowIfRemote);
+    return VelocityFactory.translateTemplate(velocityContext, "sidebar.vm");
   }
   
-  private static void addBreakToActions(TagGroup actions, WikiPageAction action) {
-    final HtmlTag tag = new HtmlTag("div");
-    tag.addAttribute("class", "main");
-    tag.add(action.getLinkName());
-    actions.add(tag);
-    }
-
-  private static void addLinkToActions(TagGroup actions, WikiPageAction action) {
-    actions.add(makeAction(action));
-    //actions.add(makeNavBreak());
-  }
-
   public static HtmlTag makeAction(WikiPageAction action) {
     String href = action.getPageName();
     if (action.getQuery() != null && action.getQuery().length() > 0)

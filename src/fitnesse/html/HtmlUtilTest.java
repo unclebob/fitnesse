@@ -3,6 +3,9 @@
 package fitnesse.html;
 
 import util.RegexTestCase;
+import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
+import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
@@ -13,6 +16,9 @@ public class HtmlUtilTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
+    FitNesseContext context = new FitNesseContext(root);
+    VelocityFactory.makeVelocityFactory(context);
+
   }
 
   public void testBreadCrumbsWithCurrentPageLinked() throws Exception {
@@ -98,19 +104,19 @@ public class HtmlUtilTest extends RegexTestCase {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\">Suite</a>", html);
   }
 
   public void testMakeActionsWithSuiteButtonWhenNameEndsWithSuite() throws Exception {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\">Suite</a>", html);
   }
 
   private String getActionsHtml(String pageName) throws Exception {
     root.addChildPage(pageName);
-    return HtmlUtil.makeActions(root.getChildPage(pageName).getActions()).html();
+    return HtmlUtil.makeSidebar(root.getChildPage(pageName));
   }
 
   private void verifyDefaultLinks(String html, String pageName) {
@@ -121,7 +127,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
     assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
     assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);
-    assertSubString("<a href=\".FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
+    assertSubString("<a href=\"FitNesse.UserGuide\">User Guide</a>", html);
   }
 
   public void testMakeReplaceElementScript() throws Exception {

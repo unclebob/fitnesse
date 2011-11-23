@@ -83,8 +83,9 @@ public class WikiPageResponder implements SecureResponder {
     String fullPathName = PathParser.render(fullPath);
     html.title.use(fullPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
+    // TODO move this to menu
     html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
-    html.actions.use(HtmlUtil.makeActions(page.getActions()));
+    html.actions.use(HtmlUtil.makeSidebar(page));
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     html.main.use(generateHtml(pageData));
     VelocityContext velocityContext = new VelocityContext();
