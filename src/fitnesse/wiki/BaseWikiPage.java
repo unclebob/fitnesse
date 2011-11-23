@@ -113,11 +113,12 @@ public abstract class BaseWikiPage implements WikiPage {
     WikiPagePath localPagePath = getPageCrawler().getFullPath(this);
     String localPageName = PathParser.render(localPagePath);
     String localOrRemotePageName = localPageName;
-    boolean newWindowIfRemote = false;
+    boolean newWindowIfRemote = isOpenInNewWindow();
+    
+    // TODO -AJM- Wow! Smell!! How can you check if you're of some subclass type? (ethically)
     if (this instanceof ProxyPage) {
       ProxyPage proxyPage = (ProxyPage) this;
       localOrRemotePageName = proxyPage.getThisPageUrl();
-      newWindowIfRemote = true;
     }
     return makeActions(localPageName, localOrRemotePageName, newWindowIfRemote);
   }
@@ -157,6 +158,10 @@ public abstract class BaseWikiPage implements WikiPage {
     actions.add(link);
   }
 
+  public boolean isOpenInNewWindow() {
+    return false;
+  }
+  
   public String toString() {
     return this.getClass().getName() + ": " + name;
   }
