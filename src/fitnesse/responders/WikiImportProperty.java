@@ -97,7 +97,7 @@ public class WikiImportProperty extends WikiPageProperty {
 
   public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) throws Exception {
     if (isImported(pageData)) {
-      html.body.addAttribute("class", "imported");
+      html.setBodyClass("imported");
       WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
       String localPageName = PathParser.render(localPagePath);
       html.actions.add(makeEditLocallyLink(localPageName));
@@ -105,7 +105,7 @@ public class WikiImportProperty extends WikiPageProperty {
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
       html.actions.add(makeEditRemotelyLink(remoteInput, importProperty.getSourceUrl()));
     } else if (page instanceof ProxyPage)
-      html.body.addAttribute("class", "virtual");
+      html.setBodyClass("virtual");
   }
 
   private static HtmlTag makeEditRemotelyLink(String remoteInput, String pageName) {

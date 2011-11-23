@@ -10,4 +10,5 @@ public class HtmlPageFactory {
   public String toString() {
     return getClass().getName();
   }
+
 }

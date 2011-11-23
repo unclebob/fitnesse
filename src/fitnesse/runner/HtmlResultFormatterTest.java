@@ -26,7 +26,7 @@ public class HtmlResultFormatterTest extends RegexTestCase {
     assertSubString("href=\"/files/css/fitnesse_print.css\"", html);
     assertNotSubString("href=\"/files/css/fitnesse.css\"", html);
     assertSubString("Command Line Test Results", html);
-    assertSubString(HtmlResultFormatter.scriptContent, html);
+    assertSubString(HtmlResultPage.scriptContent, html);
     assertSubString("<body onload=\"localizeInPageLinks()\"", html);
   }
 

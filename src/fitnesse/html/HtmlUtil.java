@@ -34,7 +34,7 @@ public class HtmlUtil {
   }
 
   public static void addTitles(HtmlPage page, String title) {
-    page.title.use(title);
+    page.setTitle(title);
     HtmlTag span = new HtmlTag("span");
     span.addAttribute("class", "page_title");
     span.add(title);

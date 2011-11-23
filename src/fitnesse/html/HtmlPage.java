@@ -6,23 +6,27 @@ public class HtmlPage extends HtmlTag {
   public static final String DTD = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"; // TR/html4/strict.DTD
   public static final String BreakPoint = "<!--BREAKPOINT-->";
 
-  public HtmlTag head;
-  public HtmlTag title;
-  public HtmlTag body;
+  private HtmlTag head;
+  private HtmlTag body;
+  private HtmlTag title;
+  private HtmlTag sidebar;
+  private HtmlTag mainbar;
+  
   public HtmlTag header;
-  public HtmlTag sidebar;
-  public HtmlTag mainbar;
-  public HtmlTag artNiche;
   public HtmlTag actions;
   public HtmlTag main;
+
   public String preDivision;
   public String postDivision;
 
   protected HtmlPage() {
     super("html");
 
-    add(makeHead());
-    add(makeBody());
+    title = makeTitle();
+    head = makeHead();
+    body = makeBody();
+    add(head);
+    add(body);
   }
 
   public String html() {
@@ -30,13 +34,13 @@ public class HtmlPage extends HtmlTag {
   }
 
   protected HtmlTag makeBody() {
-    body = new HtmlTag("body");
+    HtmlTag body = new HtmlTag("body");
     mainbar = HtmlUtil.makeDivTag("mainbar");
     header = HtmlUtil.makeDivTag("header");
     sidebar = HtmlUtil.makeDivTag("sidebar");
     actions = HtmlUtil.makeDivTag("actions");
     main = HtmlUtil.makeDivTag("main");
-    artNiche = makeArtNiche();
+    HtmlTag artNiche = makeArtNiche();
 
     mainbar.add(header);
     mainbar.add(main);
@@ -58,16 +62,24 @@ public class HtmlPage extends HtmlTag {
   }
 
   protected HtmlTag makeHead() {
-    head = new HtmlTag("head");
-    title = new HtmlTag("title");
-    title.add("FitNesse");
-    head.add(title);
+    HtmlTag head = new HtmlTag("head");
+    head.add(titleTag());
     head.add(makeCssLink("/files/css/fitnesse.css", "screen"));
     head.add(makeCssLink("/files/css/fitnesse_print.css", "print"));
     head.add(HtmlUtil.makeJavascriptLink("/files/javascript/fitnesse.js"));
     return head;
   }
 
+  private HtmlTag makeTitle() {
+    HtmlTag title = new HtmlTag("title");
+    title.add("FitNesse");
+    return title;
+  }
+
+  protected HtmlTag titleTag() {
+    return title;
+  }
+  
   public HtmlTag makeCssLink(String link, String media) {
     HtmlTag css = new HtmlTag("link");
     css.addAttribute("rel", "stylesheet");
@@ -77,10 +89,18 @@ public class HtmlPage extends HtmlTag {
     return css;
   }
 
+  public void setTitle(String title) {
+    this.title.use(title);
+  }
+  
   public void divide() throws Exception {
     String html = html();
     int breakIndex = html.indexOf(BreakPoint);
     preDivision = html.substring(0, breakIndex);
     postDivision = html.substring(breakIndex + BreakPoint.length());
+  }
+
+  public void setBodyClass(String clazz) {
+    body.addAttribute("class", clazz);
   }
 }

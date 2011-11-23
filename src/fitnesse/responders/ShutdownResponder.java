@@ -19,7 +19,7 @@ public class ShutdownResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage html = context.htmlPageFactory.newPage();
-    html.title.use("Shutdown");
+    html.setTitle("Shutdown");
     html.header.use(HtmlUtil.makeSpanTag("page_title", "Shutdown"));
 
     HtmlTag content = HtmlUtil.makeDivTag("centered");

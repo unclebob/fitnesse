@@ -92,7 +92,7 @@ public class PropertiesResponder implements SecureResponder {
 
   private String makeHtml(FitNesseContext context) throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
-    page.title.use("Properties: " + resource);
+    page.setTitle("Properties: " + resource);
     page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource,
         "Page Properties"));
     page.main.use(makeLastModifiedTag());

@@ -81,7 +81,7 @@ public class WikiPageResponder implements SecureResponder {
     HtmlPage html = context.htmlPageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
     String fullPathName = PathParser.render(fullPath);
-    html.title.use(fullPathName);
+    html.setTitle(fullPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
     // TODO move this to menu
     html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");

@@ -29,6 +29,7 @@ public class TestResultFormattingResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     init(context, request);
 
+    System.out.println("TestResultFormattingResponder");
     String results = (String) request.getInput("results");
     byte[] bytes = results.getBytes("UTF-8");
     processResults(new ByteArrayInputStream(bytes));

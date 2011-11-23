@@ -127,7 +127,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     WikiPagePath fullPath = pageCrawler.getFullPath(getPage());
     String fullPathName = PathParser.render(fullPath);
     HtmlPage html = pageFactory.newPage();
-    html.title.use(pageType + ": " + fullPathName);
+    html.setTitle(pageType + ": " + fullPathName);
     html.header.use(HtmlUtil
       .makeBreadCrumbsWithPageType(fullPathName, pageType));
     html.header.add(String.format("&nbsp;<a style=\"font-size:small;\" href=\"%s?pageHistory\"> [history]</a>",fullPathName));

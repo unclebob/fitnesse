@@ -219,7 +219,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     if (isUpdate)
       title += " Update";
     String localPathName = PathParser.render(path);
-    html.title.use(title + ": " + localPathName);
+    html.setTitle(title + ": " + localPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(localPathName, title));
     html.main.add(HtmlPage.BreakPoint);
     html.divide();

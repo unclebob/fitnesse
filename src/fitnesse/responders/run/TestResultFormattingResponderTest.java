@@ -10,6 +10,7 @@ import util.RegexTestCase;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -39,6 +40,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     result2 = new PageResult("Result2Title", new TestSummary(4, 3, 2, 1), "result2 data");
 
     context = new FitNesseContext();
+    VelocityFactory.makeVelocityFactory(context);
   }
 
   public void testOneResult() throws Exception {

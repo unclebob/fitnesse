@@ -46,7 +46,7 @@ public class VersionSelectionResponder implements SecureResponder {
 
   public String makeHtml(FitNesseContext context) throws Exception {
     HtmlPage html = context.htmlPageFactory.newPage();
-    html.title.use("Version Selection: " + resource);
+    html.setTitle("Version Selection: " + resource);
     html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version Selection"));
     html.main.use(makeRightColumn());
     return html.html();

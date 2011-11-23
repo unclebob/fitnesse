@@ -44,7 +44,7 @@ public class VersionResponder implements SecureResponder {
 
   private HtmlPage makeHtml(String name, PageData pageData, FitNesseContext context) throws Exception {
     HtmlPage html = context.htmlPageFactory.newPage();
-    html.title.use("Version " + version + ": " + name);
+    html.setTitle("Version " + version + ": " + name);
     html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version " + version));
     html.actions.use(makeRollbackLink(name));
     html.main.use(HtmlUtil.makeNormalWikiPageContent(pageData));

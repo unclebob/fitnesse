@@ -87,7 +87,7 @@ public class EditResponder implements SecureResponder {
     throws Exception {
     HtmlPage html = context.htmlPageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
-    html.title.use(title + resource + ":");
+    html.setTitle(title + resource + ":");
     
     html.header.add(makeHeader(resource, title));
     html.main.add(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));

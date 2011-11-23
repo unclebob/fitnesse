@@ -53,7 +53,7 @@ public class DirectoryResponder implements SecureResponder {
 
   private String makeDirectoryListingPage() throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
-    page.title.use("Files: " + resource);
+    page.setTitle("Files: " + resource);
     page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
     page.actions.use(makeFrontPageLink());
     page.main.use(makeRightColumn());
