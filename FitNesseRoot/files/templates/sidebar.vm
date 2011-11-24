@@ -1,5 +1,5 @@
 <!-- <a name="art_niche" href="FrontPage" class="art_niche"> </a> -->
-<div class="actions">
+<!-- <div class="actions"> -->
  #if( $actions.suitePage )
  <a href="$localPath?suite">Suite</a>
  #end
@@ -42,4 +42,4 @@
  #if( $actions.withTestHistory )
  <a href="?testHistory">Test History</a>
  #end
-</div>
+<!-- </div> -->
