@@ -3,6 +3,8 @@ package fitnesse.wiki;
 public class WikiPageActions {
 
   private PageData data;
+  private boolean addChild;
+  private boolean pageHistory;
 
   public WikiPageActions(PageData data) {
     super();
@@ -61,7 +63,26 @@ public class WikiPageActions {
     return true;
   }
 
+  public boolean isWithAddChild() {
+    return addChild;
+  }
+  
+  public WikiPageActions withAddChild() {
+    addChild = true;
+    return this;
+  }
+
+  public boolean isWithPageHistory() {
+    return pageHistory;
+  }
+  
+  public WikiPageActions withPageHistory() {
+    pageHistory = true;
+    return this;
+  }
+
   private boolean hasAction(String action) {
     return data.hasAttribute(action);
   }
+
 }

@@ -12,6 +12,9 @@
  #if( $actions.withProperties )
  <a href="$localOrRemotePath?properties" accesskey="p">Properties</a>
  #end
+ #if( $actions.withAddChild )
+ <a onclick="popup('addChildPopup')">New Page</a>
+ #end
  #if( $actions.withRefactor )
  <a href="$localOrRemotePath?refactor" accesskey="r">Refactor</a>
  #end
@@ -32,6 +35,9 @@
  #end
  #if( $actions.withUserGuide )
  <a href="FitNesse.UserGuide">User Guide</a>
+ #end
+ #if( $actions.withPageHistory )
+ <a href="$localPath?pageHistory">Page History</a>
  #end
  #if( $actions.withTestHistory )
  <a href="?testHistory">Test History</a>

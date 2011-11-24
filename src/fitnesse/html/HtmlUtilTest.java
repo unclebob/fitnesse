@@ -8,6 +8,7 @@ import fitnesse.VelocityFactory;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
 
 public class HtmlUtilTest extends RegexTestCase {
   private static final String endl = HtmlElement.endl;
@@ -116,7 +117,7 @@ public class HtmlUtilTest extends RegexTestCase {
 
   private String getActionsHtml(String pageName) throws Exception {
     root.addChildPage(pageName);
-    return HtmlUtil.makeSidebar(root.getChildPage(pageName));
+    return HtmlUtil.makeSidebar(root.getChildPage(pageName), new WikiPageActions(root.getChildPage(pageName).getData()));
   }
 
   private void verifyDefaultLinks(String html, String pageName) {

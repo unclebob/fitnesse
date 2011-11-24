@@ -137,9 +137,8 @@ public class HtmlUtil {
     return VelocityFactory.translateTemplate(velocityContext, "header.vm");
   }
 
-  public static String makeSidebar(WikiPage wikiPage) throws Exception {
+  public static String makeSidebar(WikiPage wikiPage, WikiPageActions actions) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
-    WikiPageActions actions = new WikiPageActions(wikiPage.getData());
     WikiPagePath localPagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
     String localPageName = PathParser.render(localPagePath);
     String localOrRemotePageName = localPageName;

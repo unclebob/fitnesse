@@ -21,6 +21,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualEnabledPageCrawler;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 
 public class WikiPageResponder implements SecureResponder {
@@ -84,8 +85,7 @@ public class WikiPageResponder implements SecureResponder {
     html.setTitle(fullPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
     // TODO move this to menu
-    html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
-    html.actions.use(HtmlUtil.makeSidebar(page));
+    html.actions.use(HtmlUtil.makeSidebar(page, new WikiPageActions(page.getData()).withAddChild()));
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     html.main.use(generateHtml(pageData));
     VelocityContext velocityContext = new VelocityContext();

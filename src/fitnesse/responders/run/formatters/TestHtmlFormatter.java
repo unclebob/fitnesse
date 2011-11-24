@@ -130,9 +130,8 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     html.setTitle(pageType + ": " + fullPathName);
     html.header.use(HtmlUtil
       .makeBreadCrumbsWithPageType(fullPathName, pageType));
-    html.header.add(String.format("&nbsp;<a style=\"font-size:small;\" href=\"%s?pageHistory\"> [history]</a>",fullPathName));
     PageData data = getPage().getData();
-    html.actions.use(HtmlUtil.makeSidebar(getPage()));
+    html.actions.use(HtmlUtil.makeSidebar(getPage(), new WikiPageActions(getPage().getData()).withPageHistory()));
     WikiImportProperty.handleImportProperties(html, getPage(), data);
     return html;
   }
