@@ -18,6 +18,7 @@ import fitnesse.runner.HtmlResultFormatter;
 import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
 import fitnesse.runner.XmlResultFormatter;
+import fitnesse.testutil.FitNesseUtil;
 
 public class TestResultFormattingResponderTest extends RegexTestCase {
   private PipedOutputStream output;
@@ -39,8 +40,7 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     result1 = new PageResult("Result1Title", new TestSummary(1, 2, 3, 4), "result1 data");
     result2 = new PageResult("Result2Title", new TestSummary(4, 3, 2, 1), "result2 data");
 
-    context = new FitNesseContext();
-    VelocityFactory.makeVelocityFactory(context);
+    context = FitNesseUtil.makeTestContext(null);
   }
 
   public void testOneResult() throws Exception {
