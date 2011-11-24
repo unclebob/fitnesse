@@ -4,6 +4,8 @@ package fitnesse.runner;
 
 import java.io.InputStream;
 
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -92,66 +94,24 @@ public class HtmlResultFormatter implements ResultFormatter {
 
 class HtmlResultPage extends HtmlPage {
 
-  private HtmlTag base;
+  private String baseUri;
   
   protected HtmlResultPage() {
-    super();
+    super("htmlresultskeleton.vm");
   }
 
   @Override
-  protected HtmlTag makeHead() {
-    HtmlTag head = new HtmlTag("head");
-    head.use(makeBaseTag());
-    head.add(makeContentTypeMetaTag());
-    head.add(titleTag());
-    head.add(makeCssLink("/files/css/fitnesse_print.css", "screen"));
-
-    HtmlTag script = new HtmlTag("script", scriptContent);
-    script.addAttribute("language", "javascript");
-    head.add(script);
-
-    return head;
-  }
-
-  private HtmlTag makeContentTypeMetaTag() {
-    HtmlTag meta = new HtmlTag("meta");
-    meta.addAttribute("http-equiv", "Content-Type");
-    meta.addAttribute("content", "text/html; charset=utf-8");
-    return meta;
-  }
-
-  private HtmlTag makeBaseTag() {
-    base = new HtmlTag("base");
-    return base;
-  }
-
-  @Override
-  protected HtmlTag makeBody() {
-    HtmlTag body = super.makeBody();
-    body.addAttribute("onload", "localizeInPageLinks()");
-    return body;
+  protected VelocityContext makeVelocityContext() {
+    VelocityContext velocityContext = super.makeVelocityContext();
+    velocityContext.put("baseUri", baseUri);
+    return velocityContext;
   }
   
   public void setHost(String host) {
     StringBuffer href = new StringBuffer("http://");
     href.append(host);
     href.append("/");
-    base.addAttribute("href", href.toString());
+    baseUri = href.toString();
   }
-
-  public static final String scriptContent = "\n" +
-      "function localizeInPageLinks()\n" +
-      "{\n" +
-      "\tvar base = document.getElementsByTagName('base')[0].href;\n" +
-      "\tvar inPageBase = base + \"#\";\n" +
-      "\tvar baseLength = inPageBase.length\n" +
-      "\tvar aTags = document.getElementsByTagName('a');\n" +
-      "\tfor(var i=0; i < aTags.length; i++)\n" +
-      "\t{\n" +
-      "\t\tvar tag = aTags[i];\n" +
-      "\t\tif(tag.href && tag.href.substring(0, baseLength) == inPageBase)\n" +
-      "\t\t\ttag.href = location.href + '#' + tag.href.substring(baseLength);\n" +
-      "\t}\n" +
-      "}\n";
 
 }

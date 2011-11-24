@@ -5,6 +5,7 @@ package fitnesse.html;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -17,9 +18,7 @@ public class HtmlUtilTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    FitNesseContext context = new FitNesseContext(root);
-    VelocityFactory.makeVelocityFactory(context);
-
+    FitNesseUtil.makeTestContext(root);
   }
 
   public void testBreadCrumbsWithCurrentPageLinked() throws Exception {

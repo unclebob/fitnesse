@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+ <head>
+  <title>$pageTitle</title>
+  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
+  <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="sidebar">
+   <a name="art_niche" href="FrontPage" class="art_niche"> </a>
+
+    $!actionsSection
+
+  </div>
+  <div class="mainbar">
+
+    $!headerSection
+
+    ## parse Html tree
+    $!mainSection
+
+  </div>
+ </body>
+</html>

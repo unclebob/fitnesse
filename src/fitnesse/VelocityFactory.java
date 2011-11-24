@@ -27,7 +27,7 @@ public class VelocityFactory {
   }
 
 
-  public static String translateTemplate(VelocityContext velocityContext, String templateFileName) throws Exception {
+  public static String translateTemplate(VelocityContext velocityContext, String templateFileName) {
     Template template = instance.getVelocityEngine().getTemplate(templateFileName);
     StringWriter writer = new StringWriter();
     template.merge(velocityContext, writer);

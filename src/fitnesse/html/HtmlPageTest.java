@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import fitnesse.testutil.FitNesseUtil;
 import util.RegexTestCase;
 
 public class HtmlPageTest extends RegexTestCase {
@@ -9,7 +10,8 @@ public class HtmlPageTest extends RegexTestCase {
   private String html;
 
   public void setUp() throws Exception {
-    page = new HtmlPage();
+    FitNesseUtil.makeTestContext(null);
+    page = new HtmlPage("skeleton.vm");
     html = page.html();
   }
 

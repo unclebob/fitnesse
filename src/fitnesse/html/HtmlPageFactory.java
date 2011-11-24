@@ -4,7 +4,7 @@ package fitnesse.html;
 
 public class HtmlPageFactory {
   public HtmlPage newPage() {
-    return new HtmlPage();
+    return new HtmlPage("skeleton.vm");
   }
 
   public String toString() {
