@@ -1,6 +1,6 @@
 package fitnesse.wiki;
 
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.parser.WikiWordPath;
 import util.DiskFileSystem;
 import util.FileSystem;
 
@@ -52,11 +52,11 @@ public class PageRepository {
             String childPath = parent.getFileSystemPath() + "/" + child;
             if (child.endsWith(".html")) {
                 children.add(new ExternalTestPage(childPath,
-                        WikiWordWidget.makeWikiWord(child.replace(".html", "")), parent, fileSystem));
+                        WikiWordPath.makeWikiWord(child.replace(".html", "")), parent, fileSystem));
             }
             else if (hasHtmlChild(childPath)) {
                 children.add(new ExternalSuitePage(childPath,
-                        WikiWordWidget.makeWikiWord(child), parent, fileSystem));
+                        WikiWordPath.makeWikiWord(child), parent, fileSystem));
             }
         }
         return children;

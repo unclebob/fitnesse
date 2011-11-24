@@ -1,7 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.parser.WikiWordPath;
 import util.FileUtil;
 
 import java.io.File;
@@ -20,7 +20,7 @@ public class TestHistory {
   }
 
   private boolean isValidFile(File file) {
-    return file.isDirectory() && file.list().length > 0 && WikiWordWidget.isWikiWord(file.getName());
+    return file.isDirectory() && file.list().length > 0 && WikiWordPath.isWikiWord(file.getName());
   }
 
   public Set<String> getPageNames() {

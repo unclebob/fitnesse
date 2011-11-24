@@ -3,6 +3,8 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 public class See extends SymbolType implements Rule {
+    public static final See symbolType = new See();
+
     public See() {
         super("See");
         wikiMatcher(new Matcher().string("!see").whitespace());

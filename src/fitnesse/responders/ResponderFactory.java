@@ -39,7 +39,7 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.parser.WikiWordPath;
 
 public class ResponderFactory {
   private final String rootPath;
@@ -129,7 +129,7 @@ public class ResponderFactory {
         responder = new WikiPageResponder();
       else if (resource.startsWith("files/") || resource.equals("files"))
         responder = FileResponder.makeResponder(request, rootPath);
-      else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource))
+      else if (WikiWordPath.isWikiWord(resource) || "root".equals(resource))
         responder = new WikiPageResponder();
       else
         responder = new NotFoundResponder();

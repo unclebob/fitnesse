@@ -74,7 +74,6 @@ public class CompositeFormatter extends BaseFormatter {
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     for (BaseFormatter formatter : formatters) {
-        System.out.println("allTestingComplete " + formatter.getClass().getName());
       formatter.allTestingComplete(totalTimeMeasurement);
     }
   }

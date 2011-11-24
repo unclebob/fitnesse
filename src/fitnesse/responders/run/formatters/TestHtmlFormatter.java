@@ -140,13 +140,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
     super.allTestingComplete(totalTimeMeasurement);
-      System.out.println("removeStopTestLink");
     removeStopTestLink();
-      System.out.println("publishAndAddLog");
     publishAndAddLog();
-      System.out.println("finishWritingOutput");
     finishWritingOutput();
-      System.out.println("close");
     close();
   }
 
@@ -164,7 +160,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
   protected void publishAndAddLog() throws Exception {
     if (log != null) {
-        System.out.println("publish " + log.getClass().getName());
       log.publish();
       writeData(executionStatus(log));
     }
@@ -183,7 +178,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   public String executionStatus(CompositeExecutionLog logs) throws Exception {
-      System.out.println("executionStatus");
     return logs.executionStatusHtml();
   }
 

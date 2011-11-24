@@ -12,7 +12,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.parser.WikiWordPath;
 
 // TODO: Some of this code may now be obsolete, because this responder is no longer used for some
 // scenarios (we skip directly to an EditResponder...).
@@ -37,7 +37,7 @@ public class NotFoundResponder implements Responder {
   private String makeRightColumn(String name) throws Exception {
     StringBuffer buffer = new StringBuffer();
     buffer.append("The requested resource: <i>" + name + "</i> was not found.");
-    if (Pattern.matches(WikiWordWidget.REGEXP, name)) {
+    if (WikiWordPath.isWikiWord(name)) {
       makeCreateThisPageWithButton(name, buffer);
     }
     return buffer.toString();

@@ -25,8 +25,6 @@ import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetInterceptor;
-import fitnesse.wikitext.WikiWidget;
 
 public class ComponentFactoryTest extends RegexTestCase {
   private Properties testProperties;
@@ -46,7 +44,6 @@ public class ComponentFactoryTest extends RegexTestCase {
     FileOutputStream out = new FileOutputStream(file);
     out.write("".getBytes());
     out.close();
-    TestWidgetInterceptor.widgetsIntercepted.clear();
   }
 
   public void testRootPageCreation() throws Exception {
@@ -133,14 +130,6 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertSubString(Today.class.getName(), output);
 
     assertMatch("!today", true);
-  }
-
-  public static class TestWidgetInterceptor implements WidgetInterceptor {
-    public static List<Class<?>> widgetsIntercepted = new ArrayList<Class<?>>();
-
-    public void intercept(WikiWidget widget) {
-      widgetsIntercepted.add(widget.getClass());
-    }
   }
 
   public void testAuthenticatorDefaultCreation() throws Exception {

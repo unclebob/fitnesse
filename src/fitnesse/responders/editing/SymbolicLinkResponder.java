@@ -4,6 +4,7 @@ package fitnesse.responders.editing;
 
 import java.io.File;
 
+import fitnesse.wikitext.parser.WikiWordBuilder;
 import util.EnvironmentVariableTool;
 import util.StringUtil;
 import fitnesse.FitNesseContext;
@@ -22,7 +23,6 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 import fitnesse.wikitext.Utils;
-import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class SymbolicLinkResponder implements Responder {
   private Response response;
@@ -89,7 +89,6 @@ public class SymbolicLinkResponder implements Responder {
   private void addSymbolicLink(Request request, WikiPage page) throws Exception {
     String linkName = StringUtil.trimNonNullString((String) request.getInput("linkName"));
     String linkPath = StringUtil.trimNonNullString((String) request.getInput("linkPath"));
-
     if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
       String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +
         "<br/> The canonical file system path used was <b>" + createFileFromPath(linkPath).getCanonicalPath() + ".</b>" +
@@ -133,7 +132,7 @@ public class SymbolicLinkResponder implements Responder {
   }
 
   private boolean isInternalPageThatDoesntExist(String linkPath) throws Exception {
-    String expandedPath = WikiWordWidget.expandPrefix(page, linkPath);
+    String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
     return !crawler.pageExists(start, path);

@@ -5,7 +5,6 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
-import fitnesse.wikitext.widgets.TOCWidget;
 import util.GracefulNamer;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class ContentsItemBuilder {
                 listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
             }
             else if (getRecursionLimit() > 0){
-                childItem.add(contents.getVariable(TOCWidget.MORE_SUFFIX_TOC, TOCWidget.MORE_SUFFIX_DEFAULT));
+                childItem.add(contents.getVariable(Contents.MORE_SUFFIX_TOC, Contents.MORE_SUFFIX_DEFAULT));
             }
         }
         return listItem;
@@ -64,7 +63,7 @@ public class ContentsItemBuilder {
         result.addAttribute("href", buildReference(page));
         String help = page.getProperty(PageData.PropertyHELP);
         if (help.length() > 0) {
-            if (hasOption("-h", TOCWidget.HELP_TOC)) {
+            if (hasOption("-h", Contents.HELP_TOC)) {
                 result.tail = HtmlUtil.makeSpanTag("pageHelp", ": " + help).htmlInline();
             }
             else {
@@ -77,17 +76,17 @@ public class ContentsItemBuilder {
     private String buildBody(SourcePage page) {
         String itemText = page.getName();
 
-        if (hasOption("-g", TOCWidget.REGRACE_TOC)) {
+        if (hasOption("-g", Contents.REGRACE_TOC)) {
             //todo: DRY? see wikiwordbuilder
             itemText = GracefulNamer.regrace(itemText);
         }
 
-        if (hasOption("-p", TOCWidget.PROPERTY_TOC)) {
+        if (hasOption("-p", Contents.PROPERTY_TOC)) {
             String properties = getBooleanProperties(page);
             if (properties.length() > 0) itemText += " " + properties;
         }
 
-        if (hasOption("-f", TOCWidget.FILTER_TOC)) {
+        if (hasOption("-f", Contents.FILTER_TOC)) {
             String filters = page.getProperty(PageData.PropertySUITES);
             if (filters.length() > 0) itemText += " (" + filters + ")";
         }

@@ -4,7 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.parser.WikiWordPath;
 import util.Clock;
 import util.DiskFileSystem;
 import util.FileSystem;
@@ -176,7 +176,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   private boolean fileIsValid(final String filename, final File dir) {
-    if (WikiWordWidget.isWikiWord(filename)) {
+    if (WikiWordPath.isWikiWord(filename)) {
       final File f = new File(dir, filename);
       if (f.isDirectory()) {
         return true;

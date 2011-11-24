@@ -10,7 +10,6 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.WidgetRoot;
 
 public class TestSystemTest {
 

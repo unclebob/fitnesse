@@ -2,6 +2,12 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlText;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import util.StringUtil;
+
+import java.util.Arrays;
 
 public class WikiWordBuilder {
     private SourcePage currentPage;
@@ -12,6 +18,27 @@ public class WikiWordBuilder {
         this.currentPage = currentPage;
         this.pagePath = pagePath;
         this.linkBody = linkBody;
+    }
+
+    public static String expandPrefix(WikiPage wikiPage, String theWord) throws Exception {
+      PageCrawler crawler = wikiPage.getPageCrawler();
+      if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
+        String prefix = wikiPage.getName();
+        return String.format("%s.%s", prefix, theWord.substring(1));
+      } else if (theWord.charAt(0) == '<') {
+        String undecoratedPath = theWord.substring(1);
+        String[] pathElements = undecoratedPath.split("\\.");
+        String target = pathElements[0];
+        //todo rcm, this loop is duplicated in PageCrawlerImpl.getSiblingPage
+        for (WikiPage current = wikiPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
+          if (current.getName().equals(target)) {
+            pathElements[0] = PathParser.render(crawler.getFullPath(current));
+            return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+          }
+        }
+        return "." + undecoratedPath;
+      }
+      return theWord;
     }
 
     public String buildLink(String pageSuffix, String originalName) {
