@@ -68,7 +68,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType OpenParenthesis = new SymbolType("OpenParenthesis")
             .wikiMatcher(new Matcher().string("("));
     public static final SymbolType OrderedList = new SymbolType("OrderedList")
-            .wikiMatcher(new Matcher().startLine().whitespace().digit().string(" "))
+            .wikiMatcher(new Matcher().startLine().whitespace().listDigit().string(" "))
             .wikiRule(new ListRule())
             .htmlTranslation(new ListBuilder("ol"));
     public static final SymbolType PlainTextCellSeparator = new SymbolType("PlainTextCellSeparator");

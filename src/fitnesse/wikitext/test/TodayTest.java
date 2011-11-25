@@ -22,6 +22,7 @@ public class TodayTest {
     public void translatesWithDayIncrements() {
         SystemTimeKeeper.instance = new TestTimeKeeper(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime());
         ParserTestHelper.assertTranslatesTo("!today +5", "09 Mar, 2002");
+        ParserTestHelper.assertTranslatesTo("!today +10", "14 Mar, 2002");
         ParserTestHelper.assertTranslatesTo("!today -5", "27 Feb, 2002");
         ParserTestHelper.assertTranslatesTo("!today -5.", "27 Feb, 2002.");
     }
