@@ -1,4 +1,3 @@
-
 #set( $link = "" )
 #foreach( $crumb in $crumbs )
 #if( $foreach.hasNext() )
