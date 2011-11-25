@@ -13,14 +13,14 @@ public class VirtualWikiWidget extends WikiWidget {
 
   public String url;
 
-  public VirtualWikiWidget(ParentWidget parent, String text) throws Exception {
+  public VirtualWikiWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find())
       url = match.group(1);
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("");
     html.append("<span class=\"meta\">");
     html.append("!virtualwiki has been deprecated.  Use the Properties button instead.");

@@ -14,7 +14,7 @@ public class HashWidget extends ParentWidget {
   private static final Pattern pair = Pattern.compile("([^,:\\s]+)\\s*:\\s*([^,:\\s]+)\\s*,?\\s*");
 
 
-  public HashWidget(ParentWidget parent, String text) throws Exception {
+  public HashWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     match.find();
@@ -31,7 +31,7 @@ public class HashWidget extends ParentWidget {
     keys.add(key);
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<table class=\"hash_table\">");
     for (int i=0; i<keys.size(); i++) {
       String key = keys.get(i);

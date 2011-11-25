@@ -3,16 +3,16 @@
 package fitnesse.wikitext.widgets;
 
 public class BlankParentWidget extends ParentWidget {
-  public BlankParentWidget(ParentWidget parent, String text) throws Exception {
+  public BlankParentWidget(ParentWidget parent, String text) {
     super(parent);
     addChildWidgets(text);
   }
 
-  public String render() throws Exception {
+  public String render() {
     return "";
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "";
   }
 }

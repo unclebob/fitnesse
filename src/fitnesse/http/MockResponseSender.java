@@ -5,6 +5,7 @@ package fitnesse.http;
 import fitnesse.testutil.MockSocket;
 import util.ConcurrentBoolean;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.net.Socket;
@@ -18,13 +19,13 @@ public class MockResponseSender implements ResponseSender {
     closed = new ConcurrentBoolean();
   }
 
-  public void send(byte[] bytes) throws Exception {
+  public void send(byte[] bytes) throws IOException {
     //Todo Timing Problem -- Figure out why this is necessary.  
     for (int i = 0; i < 1000; i++) Thread.yield();
     socket.getOutputStream().write(bytes);
   }
 
-  public void close() throws Exception {
+  public void close() {
     closed.set(true);
   }
 

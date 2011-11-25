@@ -25,7 +25,7 @@ public class TextWidget extends WikiWidget implements WidgetWithTextArgument {
     text = newText;
   }
 
-  public String render() throws Exception {
+  public String render() {
     String html = getText();
     if (parent.doEscaping())
       html = Utils.escapeHTML(html);
@@ -40,7 +40,7 @@ public class TextWidget extends WikiWidget implements WidgetWithTextArgument {
     return super.toString() + " : " + getText();
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return text;
   }
 

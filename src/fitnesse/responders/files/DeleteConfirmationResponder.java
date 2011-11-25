@@ -15,6 +15,7 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.PathParser;
 
 public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;

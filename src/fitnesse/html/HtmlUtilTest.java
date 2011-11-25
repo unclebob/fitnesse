@@ -64,16 +64,6 @@ public class HtmlUtilTest extends RegexTestCase {
     assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
   }
 
-  public void testMakeBreadCrumbsWithCurrentPageLinkedWithEmptyArray() throws Exception {
-    try {
-      HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(".");
-      HtmlUtil.makeBreadCrumbsWithCurrentPageLinked("");
-    }
-    catch (Exception e) {
-      fail("should not throw exception");
-    }
-  }
-
   public void testMakeDefaultActions() throws Exception {
     String pageName = "SomePage";
     String html = getActionsHtml(pageName);

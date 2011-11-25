@@ -9,14 +9,14 @@ public class CenterWidget extends ParentWidget {
   public static final String REGEXP = "^![cC] [^\n]*\n?";
   private static final Pattern pattern = Pattern.compile("^![cC] (.*)");
 
-  public CenterWidget(ParentWidget parent, String text) throws Exception {
+  public CenterWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find())
       addChildWidgets(match.group(1));
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<div class=\"centered\">");
     html.append(childHtml()).append("</div>");
     return html.toString();

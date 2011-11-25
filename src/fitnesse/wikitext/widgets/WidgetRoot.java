@@ -34,7 +34,7 @@ public class WidgetRoot extends ParentWidget {
   }
 
   //Constructor for IncludeWidget support (alias locale & scope)
-  public WidgetRoot(WikiPage aliasPage, ParentWidget imposterWidget) throws Exception {
+  public WidgetRoot(WikiPage aliasPage, ParentWidget imposterWidget) {
     super(imposterWidget, /*is alias=*/ true);
     WidgetRoot aliasRoot = imposterWidget.getRoot();
 
@@ -55,19 +55,19 @@ public class WidgetRoot extends ParentWidget {
     return isGatheringInfo;
   }
 
-  public WidgetRoot(WikiPage page) throws Exception {
+  public WidgetRoot(WikiPage page) {
     this("", page, WidgetBuilder.htmlWidgetBuilder);
   }
 
-  public WidgetRoot(String value, WikiPage page) throws Exception {
+  public WidgetRoot(String value, WikiPage page) {
     this(value, page, WidgetBuilder.htmlWidgetBuilder);
   }
 
-  public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws Exception {
+  public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) {
     this(value, page, builder, false);
   }
 
-  public WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) throws Exception {
+  public WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) {
     super(null);
     this.page = page;
     this.builder = builder;
@@ -76,15 +76,15 @@ public class WidgetRoot extends ParentWidget {
       buildWidgets(value);
   }
 
-  public WidgetRoot(PagePointer pagePointer) throws Exception {
+  public WidgetRoot(PagePointer pagePointer) {
     this("", pagePointer, WidgetBuilder.htmlWidgetBuilder);
   }
 
-  public WidgetRoot(String value, PagePointer pagePointer) throws Exception {
+  public WidgetRoot(String value, PagePointer pagePointer) {
     this(value, pagePointer, WidgetBuilder.htmlWidgetBuilder);
   }
 
-  public WidgetRoot(String value, PagePointer pagePointer, WidgetBuilder builder) throws Exception {
+  public WidgetRoot(String value, PagePointer pagePointer, WidgetBuilder builder) {
     super(null);
     this.page = pagePointer.getPage();
     this.builder = builder;
@@ -96,17 +96,17 @@ public class WidgetRoot extends ParentWidget {
     return builder;
   }
 
-  protected void buildWidgets(String value) throws Exception {
+  protected void buildWidgets(String value) {
     String strippedText = stripTrailingWhiteSpaceInLines(value);
     String nonLiteralContent = processLiterals(strippedText);
     addChildWidgets(nonLiteralContent);
   }
 
-  public String render() throws Exception {
+  public String render() {
     return childHtml();
   }
 
-  public String getVariable(String key) throws Exception {
+  public String getVariable(String key) {
     String value = getValueOfVariableFromAllPossibleSources(key);
     if (value != null) {
       value = replaceAllKnownVariables(value);
@@ -117,7 +117,7 @@ public class WidgetRoot extends ParentWidget {
     return value;
   }
 
-  private String replaceAllKnownVariables(String value) throws Exception {
+  private String replaceAllKnownVariables(String value) {
     int pos = 0;
     while ((pos = includesVariableAt(value, pos)) != -1) {
       value = replaceVariable(value, pos);
@@ -126,7 +126,7 @@ public class WidgetRoot extends ParentWidget {
     return value;
   }
 
-  private String getValueOfVariableFromAllPossibleSources(String key) throws Exception {
+  private String getValueOfVariableFromAllPossibleSources(String key) {
     String value = getSpecialVariableValue(key);
     if (value == null)
       value = variables.get(key);
@@ -141,7 +141,7 @@ public class WidgetRoot extends ParentWidget {
     return value;
   }
 
-  private String getVariableFromParentPages(String key) throws Exception {
+  private String getVariableFromParentPages(String key) {
     String value = null;
     WikiPage page = getWikiPage();
     while (value == null && !page.getPageCrawler().isRoot(page)) {
@@ -156,7 +156,7 @@ public class WidgetRoot extends ParentWidget {
     return value;
   }
 
-  private String getSpecialVariableValue(String key) throws Exception {
+  private String getSpecialVariableValue(String key) {
     String value = null;
     if (key.equals("PAGE_NAME"))
       value = page.getName();
@@ -169,7 +169,7 @@ public class WidgetRoot extends ParentWidget {
     return value;
   }
 
-  private String getVariableFromIncludingPage(String key) throws Exception {
+  private String getVariableFromIncludingPage(String key) {
     String value = null;
     if (includingPagePropertyMap.containsKey(key)) {
       String newKey = includingPagePropertyMap.get(key);
@@ -201,7 +201,7 @@ public class WidgetRoot extends ParentWidget {
   // Nested tables cannot be expanded in place due to ambiguities, and
   // newlines internal to table cells wreak havoc on table recognition.
   //
-  public String replaceVariable(String string, int pos) throws Exception {
+  public String replaceVariable(String string, int pos) {
     Matcher matcher = VariableWidget.pattern.matcher(string);
     if (matcher.find(pos)) {
       String name = matcher.group(1);
@@ -254,7 +254,7 @@ public class WidgetRoot extends ParentWidget {
     this.literals = literals;
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return childWikiText();
   }
 

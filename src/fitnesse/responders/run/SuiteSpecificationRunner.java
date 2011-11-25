@@ -115,7 +115,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     for (WikiPage hit : testPageList) {
       if (hit == page)
         return;

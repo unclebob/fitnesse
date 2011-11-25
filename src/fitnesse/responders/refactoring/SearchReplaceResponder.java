@@ -29,12 +29,12 @@ public class SearchReplaceResponder extends ResultResponder {
     return (String) request.getInput("searchString");
   }
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     observer.hit(page);
     super.hit(page);
   }
 
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     super.startSearching();
     String searchString = getSearchString();
     String replacementString = getReplacementString();

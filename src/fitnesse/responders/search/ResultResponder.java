@@ -83,12 +83,12 @@ public abstract class ResultResponder extends ChunkingResponder implements
     return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
   }
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     hits++;
     response.add(createSearchResultsEntry(page));
   }
 
-  private String createSearchResultsEntry(WikiPage result) throws Exception {
+  private String createSearchResultsEntry(WikiPage result) {
     VelocityContext velocityContext = new VelocityContext();
 
     StringWriter writer = new StringWriter();
@@ -113,7 +113,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   protected abstract String getPageFooterInfo(int hits) throws Exception;
 
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     hits = 0;
   }
 

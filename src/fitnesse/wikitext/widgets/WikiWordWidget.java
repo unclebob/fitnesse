@@ -33,13 +33,13 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
 
   public WikiPage parentPage;
 
-  public WikiWordWidget(ParentWidget parent, String text) throws Exception {
+  public WikiWordWidget(ParentWidget parent, String text) {
     super(parent, text);
     WikiPage wikiPage = getWikiPage();
     parentPage = wikiPage.getParent();
   }
 
-  public String render() throws Exception {
+  public String render() {
     WikiPagePath pathOfWikiWord = PathParser.parse(getWikiWord());
     WikiPagePath fullPathOfWikiWord = parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord);
     String qualifiedName = PathParser.render(fullPathOfWikiWord);
@@ -69,20 +69,20 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     return isDoingIt;
   }
 
-  private String makeLinkToExistingWikiPage(String qualifiedName, WikiPage wikiPage) throws Exception {
+  private String makeLinkToExistingWikiPage(String qualifiedName, WikiPage wikiPage) {
     HtmlTag link = HtmlUtil.makeLink(qualifiedName, Utils.escapeHTML(regrace(getText())));
     addHelpText(link, wikiPage);
     return link.htmlInline();
   }
 
-  private void addHelpText(HtmlTag link, WikiPage wikiPage) throws Exception {
+  private void addHelpText(HtmlTag link, WikiPage wikiPage) {
     String helpText = wikiPage.getHelpText();
     if (helpText != null) link.addAttribute("title", helpText);
   }
 
   // If pageToRename is referenced somewhere in this wiki word (could be a parent, etc.),
   // rename it to newName.
-  public void renamePageIfReferenced(WikiPage pageToRename, String newName) throws Exception {
+  public void renamePageIfReferenced(WikiPage pageToRename, String newName) {
     String fullPathToReferent = getQualifiedWikiWord();
     WikiPagePath pathToPageBeingRenamed = pageToRename.getPageCrawler().getFullPath(pageToRename);
     pathToPageBeingRenamed.makeAbsolute();
@@ -98,7 +98,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     }
   }
 
-  public void renameMovedPageIfReferenced(WikiPage pageToBeMoved, String newParentName) throws Exception {
+  public void renameMovedPageIfReferenced(WikiPage pageToBeMoved, String newParentName) {
     WikiPagePath pathOfPageToBeMoved = pageToBeMoved.getPageCrawler().getFullPath(pageToBeMoved);
     pathOfPageToBeMoved.makeAbsolute();
     String QualifiedNameOfPageToBeMoved = PathParser.render(pathOfPageToBeMoved);
@@ -118,7 +118,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     }
   }
 
-  public String makeRenamedRelativeReference(WikiPagePath renamedPathToReferent) throws Exception {
+  public String makeRenamedRelativeReference(WikiPagePath renamedPathToReferent) {
     String rawReference = getText();
     WikiPagePath parentPath = parentPage.getPageCrawler().getFullPath(parentPage);
     parentPath.makeAbsolute();
@@ -164,7 +164,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     return false;
   }
 
-  private String getQualifiedWikiWord() throws Exception {
+  private String getQualifiedWikiWord() {
     String pathName = expandPrefix(getText());
     WikiPagePath expandedPath = PathParser.parse(pathName);
     if (expandedPath == null)
@@ -184,7 +184,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     return newQualifiedName;
   }
 
-  String getWikiWord() throws Exception {
+  String getWikiWord() {
     return expandPrefix(getText());
   }
 
@@ -192,12 +192,12 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     return Pattern.matches(REGEXP, word);
   }
 
-  protected String expandPrefix(String theWord) throws Exception {
+  protected String expandPrefix(String theWord) {
     WikiPage wikiPage = getWikiPage();
     return expandPrefix(wikiPage, theWord);
   }
 
-  public static String expandPrefix(WikiPage wikiPage, String theWord) throws Exception {
+  public static String expandPrefix(WikiPage wikiPage, String theWord) {
     PageCrawler crawler = wikiPage.getPageCrawler();
     if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
       String prefix = wikiPage.getName();
@@ -218,12 +218,12 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     return theWord;
   }
 
-  public WikiPage getReferencedPage() throws Exception {
+  public WikiPage getReferencedPage() {
     String theWord = getWikiWord();
     return parentPage.getPageCrawler().getPage(parentPage, PathParser.parse(theWord));
   }
 
-  public void acceptVisitor(WidgetVisitor visitor) throws Exception {
+  public void acceptVisitor(WidgetVisitor visitor) {
     visitor.visit(this);
   }
 

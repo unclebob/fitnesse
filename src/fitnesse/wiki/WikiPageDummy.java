@@ -20,7 +20,7 @@ public class WikiPageDummy implements WikiPage {
 
   public static final int daysTillVersionsExpire = 14;
 
-  public WikiPageDummy(String name, String content) throws Exception {
+  public WikiPageDummy(String name, String content) {
     this.name = name;
     pageData = new PageData(this, content);
   }
@@ -47,7 +47,7 @@ public class WikiPageDummy implements WikiPage {
     parentForVariables = parent;
   }
 
-  public WikiPage getParentForVariables() throws Exception {
+  public WikiPage getParentForVariables() {
     return parentForVariables == null ? this : parentForVariables;
   }
 
@@ -55,11 +55,11 @@ public class WikiPageDummy implements WikiPage {
     this.parent = this.parentForVariables = parent;
   }
 
-  public PageData getData() throws Exception {
+  public PageData getData() {
     return pageData;
   }
 
-  public VersionInfo commit(PageData data) throws Exception {
+  public VersionInfo commit(PageData data) {
     pageData = data;
     return new VersionInfo("mockVersionName", "mockAuthor", Clock.currentDate());
   }
@@ -72,34 +72,34 @@ public class WikiPageDummy implements WikiPage {
     return 0;
   }
 
-  public PageData getDataVersion(String versionName) throws Exception {
+  public PageData getDataVersion(String versionName) {
     return null;
   }
 
-  public void removeChildPage(String name) throws Exception {
+  public void removeChildPage(String name) {
   }
 
   public PageCrawler getPageCrawler() {
     return new PageCrawlerImpl();
   }
 
-  public WikiPage getHeaderPage() throws Exception {
+  public WikiPage getHeaderPage() {
     return null;
   }
 
-  public WikiPage getFooterPage() throws Exception {
+  public WikiPage getFooterPage() {
     return null;
   }
 
-  public WikiPage addChildPage(String name) throws Exception {
+  public WikiPage addChildPage(String name) {
     return null;
   }
 
-  public boolean hasChildPage(String name) throws Exception {
+  public boolean hasChildPage(String name) {
     return false;
   }
 
-  public WikiPage getChildPage(String name) throws Exception {
+  public WikiPage getChildPage(String name) {
     return null;
   }
 
@@ -111,11 +111,11 @@ public class WikiPageDummy implements WikiPage {
     return null;
   }
 
-  public String getHelpText() throws Exception {
+  public String getHelpText() {
     return "Dummy help text";
   }
 
-  public List<WikiPageAction> getActions() throws Exception {
+  public List<WikiPageAction> getActions() {
     return null;
   }
 }

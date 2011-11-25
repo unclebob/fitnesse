@@ -12,14 +12,14 @@ public class TableRowWidget extends ParentWidget {
   private boolean isLiteral;
   private boolean isCommentRow = false;
 
-  public TableRowWidget(StandardTableWidget parentTable, String text, boolean isLiteral) throws Exception {
+  public TableRowWidget(StandardTableWidget parentTable, String text, boolean isLiteral) {
     super(parentTable);
     this.parentTable = parentTable;
     this.isLiteral = isLiteral;
     addCells(text);
   }
 
-  public TableRowWidget(PlainTextTableWidget tableWidget, String[] cells) throws Exception {
+  public TableRowWidget(PlainTextTableWidget tableWidget, String[] cells) {
     super(tableWidget);
     this.parentTable = tableWidget;
     tableWidget.maximizeColumns(cells.length);
@@ -36,7 +36,7 @@ public class TableRowWidget extends ParentWidget {
     return parentTable;
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer(getRowStartTag());
     html.append(childHtml()).append("</tr>\n");
     return html.toString();
@@ -50,7 +50,7 @@ public class TableRowWidget extends ParentWidget {
     }
   }
   
-  public void addCells(String text) throws Exception {
+  public void addCells(String text) {
     Matcher match = pattern.matcher(text);
     if (match.find()) {
       new TableCellWidget(this, match.group(1), isLiteral);

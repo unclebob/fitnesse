@@ -11,6 +11,8 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.FitNesseContext;
 
 public class HtmlResultFormatter implements ResultFormatter {
@@ -49,7 +51,7 @@ public class HtmlResultFormatter implements ResultFormatter {
     return formatter;
   }
   
-  private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
+  private void createPage(HtmlPageFactory pageFactory, String rootPath) {
     htmlPage = pageFactory.newPage();
     htmlPage.head.use(makeBaseTag());
     htmlPage.head.add(makeContentTypeMetaTag());

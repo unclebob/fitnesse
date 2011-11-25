@@ -17,7 +17,7 @@ public class VariableDefinitionWidget extends ParentWidget {
   public String value;
   public String bracket;
 
-  public VariableDefinitionWidget(ParentWidget parent, String text) throws Exception {
+  public VariableDefinitionWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
@@ -27,12 +27,12 @@ public class VariableDefinitionWidget extends ParentWidget {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     this.parent.addVariable(name, value);
     return HtmlUtil.metaText("variable defined: " + name + "=" + value);
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     String text = "!define " + name + " ";
     if (bracket.equals("{"))
       text += "{" + value + "}";

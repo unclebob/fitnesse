@@ -44,7 +44,7 @@ public class CollapsableWidget extends ParentWidget {
     super(parent);
   }
 
-  public CollapsableWidget(ParentWidget parent, String text) throws Exception {
+  public CollapsableWidget(ParentWidget parent, String text) {
     this(parent);
     showEditCommand = false;  // hack. only set false here.
     Matcher match = pattern.matcher(text);
@@ -58,7 +58,7 @@ public class CollapsableWidget extends ParentWidget {
   }
 
   //!include: Refactored to use dual-scope constructor
-  public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass, boolean collapsed) throws Exception {
+  public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass, boolean collapsed) {
     this(parent);
     init(title, body, this); //!include: dual-scope
     this.cssClass = cssClass;
@@ -67,7 +67,7 @@ public class CollapsableWidget extends ParentWidget {
 
   //!include: New constructor with dual scope: title & body.
   public CollapsableWidget(ParentWidget parent, ParentWidget includeParent,
-                           String title, String body, String cssClass, boolean collapsed) throws Exception {
+                           String title, String body, String cssClass, boolean collapsed) {
     this(parent);
     init(title, body, includeParent);
     this.cssClass = cssClass;
@@ -75,7 +75,7 @@ public class CollapsableWidget extends ParentWidget {
   }
 
   //!include: Refactored for 3rd arg
-  private void init(String title, String body, ParentWidget parent) throws Exception {
+  private void init(String title, String body, ParentWidget parent) {
     titleWidget = new BlankParentWidget(parent, "!meta " + title + " " + makeEditLinks(title));
     addChildWidgets(body);
   }
@@ -116,7 +116,7 @@ public class CollapsableWidget extends ParentWidget {
     return "";
   }
 
-  public String render() throws Exception {
+  public String render() {
     HtmlElement titleElement = new RawHtml("&nbsp;" + titleWidget.childHtml());
     HtmlElement bodyElement = new RawHtml(childHtml());
     HtmlElement html = makeCollapsableSection(titleElement, bodyElement);
@@ -174,7 +174,7 @@ public class CollapsableWidget extends ParentWidget {
       return collapsableClosedImg;
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "";
   }
 }

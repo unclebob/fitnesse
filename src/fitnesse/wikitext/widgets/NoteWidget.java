@@ -9,14 +9,14 @@ public class NoteWidget extends ParentWidget {
   public static final String REGEXP = "^!note [^\r\n]*";
   private static final Pattern pattern = Pattern.compile("^!note (.*)");
 
-  public NoteWidget(ParentWidget parent, String text) throws Exception {
+  public NoteWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find())
       addChildWidgets(match.group(1));
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<span class=\"note\">");
     html.append(childHtml()).append("</span>");
     return html.toString();

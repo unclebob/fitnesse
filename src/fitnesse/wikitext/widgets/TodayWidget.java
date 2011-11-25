@@ -21,7 +21,7 @@ public class TodayWidget extends ParentWidget {
 
   public static Calendar todayForTest = null;
 
-  public TodayWidget(ParentWidget parent, String text) throws Exception {
+  public TodayWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = PATTERN.matcher(text);
     if (!match.find()) {
@@ -44,7 +44,7 @@ public class TodayWidget extends ParentWidget {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     Calendar cal = todayForTest != null ? todayForTest : GregorianCalendar.getInstance();
     cal.add(Calendar.DAY_OF_MONTH, dayDiff);
 

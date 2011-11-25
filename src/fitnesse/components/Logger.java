@@ -6,6 +6,7 @@ package fitnesse.components;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,7 +56,7 @@ public class Logger {
     return name.toString();
   }
 
-  public void log(LogData data) throws Exception {
+  public void log(LogData data) {
     if (needNewFile(data.time))
       openNewFile(data);
     writer.println(formatLogLine(data));
@@ -73,13 +74,20 @@ public class Logger {
 
   }
 
-  private void openNewFile(LogData data) throws FileNotFoundException {
+  private void openNewFile(LogData data) {
     if (writer != null)
       writer.close();
     currentFileCreationDate = data.time;
     String filename = makeLogFileName(data.time);
     File file = new File(directory, filename);
-    FileOutputStream outputStream = new FileOutputStream(file);
+    OutputStream outputStream;
+    try {
+      outputStream = new FileOutputStream(file);
+    } catch (FileNotFoundException e) {
+      System.err.println("Unable to open log file. falling back to stderr");
+      e.printStackTrace(System.err);
+      outputStream = System.err;
+    }
     writer = new PrintWriter(outputStream);
   }
 

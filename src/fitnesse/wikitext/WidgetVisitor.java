@@ -6,9 +6,9 @@ import fitnesse.wikitext.widgets.AliasLinkWidget;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public interface WidgetVisitor {
-  public void visit(WikiWidget widget) throws Exception;
+  public void visit(WikiWidget widget);
 
-  public void visit(WikiWordWidget widget) throws Exception;
+  public void visit(WikiWordWidget widget);
 
-  public void visit(AliasLinkWidget widget) throws Exception;
+  public void visit(AliasLinkWidget widget);
 }

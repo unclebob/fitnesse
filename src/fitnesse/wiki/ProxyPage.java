@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,7 +27,7 @@ public class ProxyPage extends CachingPage implements Serializable {
   public ResponseParser parser;
   private long lastLoadChildrenTime = 0;
 
-  public ProxyPage(WikiPage original) throws Exception {
+  public ProxyPage(WikiPage original) {
     super(original.getName(), null);
     realPath = original.getPageCrawler().getFullPath(original);
 
@@ -37,20 +39,25 @@ public class ProxyPage extends CachingPage implements Serializable {
     }
   }
 
-  protected ProxyPage(String name, WikiPage parent) throws Exception {
+  protected ProxyPage(String name, WikiPage parent) {
     super(name, parent);
   }
 
-  public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path) throws Exception {
+  public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path) {
     super(name, parent);
     this.host = host;
     hostPort = port;
     realPath = path;
   }
 
-  public static ProxyPage retrievePage(String urlString) throws Exception {
+  public static ProxyPage retrievePage(String urlString) {
     retrievalCount++;
-    URL url = new URL(urlString + "?responder=proxy&type=bones");
+    URL url;
+    try {
+      url = new URL(urlString + "?responder=proxy&type=bones");
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
     ProxyPage page = (ProxyPage) getObjectFromUrl(url);
     page.setTransientValues(url.getHost(), Clock.currentTimeInMillis());
     int port = url.getPort();
@@ -59,12 +66,12 @@ public class ProxyPage extends CachingPage implements Serializable {
     return page;
   }
 
-  protected WikiPage createChildPage(String name) throws Exception {
+  protected WikiPage createChildPage(String name) {
     WikiPagePath childPath = realPath.copy().addNameToEnd(name);
     return new ProxyPage(name, this, host, getHostPort(), childPath);
   }
 
-  protected void loadChildren() throws Exception {
+  protected void loadChildren() {
     if (cacheTime <= (Clock.currentTimeInMillis() - lastLoadChildrenTime)) {
       ProxyPage page = retrievePage(getThisPageUrl());
       children.clear();
@@ -85,7 +92,7 @@ public class ProxyPage extends CachingPage implements Serializable {
     return url.toString();
   }
 
-  public boolean hasChildPage(String pageName) throws Exception {
+  public boolean hasChildPage(String pageName) {
     if (children.containsKey(pageName))
       return true;
     else {
@@ -119,23 +126,28 @@ public class ProxyPage extends CachingPage implements Serializable {
     return hostPort;
   }
 
-  public PageData getMeat() throws Exception {
+  public PageData getMeat() {
     return getMeat(null);
   }
 
-  public PageData getMeat(String versionName) throws Exception {
+  public PageData getMeat(String versionName) {
     StringBuffer urlString = new StringBuffer(getThisPageUrl());
     urlString.append("?responder=proxy&type=meat");
     if (versionName != null)
       urlString.append("&version=").append(versionName);
-    URL url = new URL(urlString.toString());
+    URL url;
+    try {
+      url = new URL(urlString.toString());
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
     PageData data = (PageData) getObjectFromUrl(url);
     if (data != null)
       data.setWikiPage(this);
     return data;
   }
 
-  private static Object getObjectFromUrl(URL url) throws Exception {
+  private static Object getObjectFromUrl(URL url) {
     Object obj;
     InputStream is = null;
     ObjectInputStream ois = null;
@@ -144,19 +156,27 @@ public class ProxyPage extends CachingPage implements Serializable {
       ois = new ObjectInputStream(is);
       obj = ois.readObject();
       return obj;
+    } catch (IOException e) {
+      throw new RuntimeException("An error occured reading data from " + url, e);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException("An error occured reading data from " + url, e);
     } finally {
+      try {
       if (is != null)
         is.close();
       if (ois != null)
         ois.close();
+      } catch (IOException e) {
+        
+      }
     }
   }
 
-  protected PageData makePageData() throws Exception {
+  protected PageData makePageData() {
     return getMeat();
   }
 
-  public PageData getDataVersion(String versionName) throws Exception {
+  public PageData getDataVersion(String versionName) {
     PageData data = getMeat(versionName);
     if (data == null)
       throw new NoSuchVersionException("There is no version '" + versionName + "'");
@@ -165,10 +185,10 @@ public class ProxyPage extends CachingPage implements Serializable {
 
   //TODO-MdM these are not needed
   // We expect this to go away when we do the checkout model
-  protected VersionInfo makeVersion() throws Exception {
+  protected VersionInfo makeVersion() {
     return null;
   }
 
-  protected void doCommit(PageData data) throws Exception {
+  protected void doCommit(PageData data) {
   }
 }

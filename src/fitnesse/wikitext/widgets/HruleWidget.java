@@ -25,7 +25,7 @@ public class HruleWidget extends WikiWidget {
     return extraDashes;
   }
 
-  public String render() throws Exception {
+  public String render() {
     HtmlTag hr = new HtmlTag("hr");
     if (extraDashes > 0)
       hr.addAttribute("size", hrSize(extraDashes));

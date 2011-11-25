@@ -28,9 +28,9 @@ public abstract class WikiWidget {
       this.parent.addChild(this);
   }
 
-  public abstract String render() throws Exception;
+  public abstract String render();
 
-  public void acceptVisitor(WidgetVisitor visitor) throws Exception {
+  public void acceptVisitor(WidgetVisitor visitor) {
     visitor.visit(this);
   }
 
@@ -38,7 +38,7 @@ public abstract class WikiWidget {
     return parent.getWikiPage();
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return getClass().toString() + ".asWikiText()";
   }
 

@@ -3,5 +3,5 @@
 package fitnesse.wikitext.widgets;
 
 public interface WidgetWithTextArgument {
-  String getText() throws Exception;
+  String getText();
 }

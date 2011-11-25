@@ -95,7 +95,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     super.startSearching();
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);

@@ -11,12 +11,12 @@ public class LinkWidget extends ParentWidget {
   public static final String REGEXP = "https?://[^\\s]+[^\\s.)]+";
   private static final Pattern pattern = Pattern.compile("https?://([^/\\s]*)(\\S*)?");
 
-  public LinkWidget(ParentWidget parent, String text) throws Exception {
+  public LinkWidget(ParentWidget parent, String text) {
     super(parent);
     addChildWidgets(text);
   }
 
-  public String render() throws Exception {
+  public String render() {
     String linkText = childHtml();
     String usableURL = makeUrlUsable(linkText);
     StringBuffer html = new StringBuffer("<a href=\"");
@@ -45,7 +45,7 @@ public class LinkWidget extends ParentWidget {
     return WidgetBuilder.variableEvaluatorWidgetBuilder;
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return childWikiText();
   }
 }

@@ -62,7 +62,7 @@ public abstract class ParentWidget extends WikiWidget {
     return (currentChild < numberOfChildren());
   }
 
-  public String childHtml() throws Exception {
+  public String childHtml() {
     currentChild = 0;
     StringBuffer html = new StringBuffer();
     while (hasNextChild()) {
@@ -73,7 +73,7 @@ public abstract class ParentWidget extends WikiWidget {
     return html.toString();
   }
 
-  public String childWikiText() throws Exception {
+  public String childWikiText() {
     currentChild = 0;
     StringBuffer wikiText = new StringBuffer();
     while (hasNextChild()) {
@@ -96,11 +96,11 @@ public abstract class ParentWidget extends WikiWidget {
     parent.addVariable(key, value);
   }
 
-  public String getVariable(String key) throws Exception {
+  public String getVariable(String key) {
     return parent.getVariable(key);
   }
 
-  public void addChildWidgets(String value) throws Exception {
+  public void addChildWidgets(String value) {
     getBuilder().addChildWidgets(value, this);
   }
 
@@ -116,7 +116,7 @@ public abstract class ParentWidget extends WikiWidget {
     return (children.size() == 1 && (children.get(0) instanceof TextWidget));
   }
 
-  public void acceptVisitor(WidgetVisitor visitor) throws Exception {
+  public void acceptVisitor(WidgetVisitor visitor) {
     visitor.visit(this);
     currentChild = 0;
     while (hasNextChild()) {
@@ -125,7 +125,7 @@ public abstract class ParentWidget extends WikiWidget {
     }
   }
 
-  public String processLiterals(String value) throws Exception {
+  public String processLiterals(String value) {
     return new LiteralProcessingWidgetRoot(this, value).childHtml();
   }
 
@@ -134,7 +134,7 @@ public abstract class ParentWidget extends WikiWidget {
     new Class[]{PreProcessorLiteralWidget.class}
   );
 
-  protected String expandVariables(String content) throws Exception {
+  protected String expandVariables(String content) {
     return (new VariableExpandingWidgetRoot(this, content)).childHtml();
   }
 
@@ -143,13 +143,13 @@ public abstract class ParentWidget extends WikiWidget {
   }
 
   public static class LiteralProcessingWidgetRoot extends ParentWidget {
-    public LiteralProcessingWidgetRoot(ParentWidget parent, String content) throws Exception {
+    public LiteralProcessingWidgetRoot(ParentWidget parent, String content) {
       super(parent);
       if (content != null)
         addChildWidgets(content);
     }
 
-    public String childHtml() throws Exception {
+    public String childHtml() {
       StringBuffer html = new StringBuffer();
       while (hasNextChild()) {
         WikiWidget child = nextChild();
@@ -172,7 +172,7 @@ public abstract class ParentWidget extends WikiWidget {
       return false;
     }
 
-    public String render() throws Exception {
+    public String render() {
       return "";
     }
 

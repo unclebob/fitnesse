@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import java.util.List;
+
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageAction;
-
-import java.util.List;
 
 public class HtmlUtil {
   public static final String BRtag = "<br/>";
@@ -114,8 +114,7 @@ public class HtmlUtil {
 
   public static TagGroup makeBreadCrumbsWithCurrentPageLinked(
     String path,
-    String separator
-  ) throws Exception {
+    String separator) {
     TagGroup tagGroup = new TagGroup();
     String[] crumbs = path.split("[" + separator + "]");
     String trail = makeAllButLastCrumb(crumbs, separator, tagGroup);
@@ -134,8 +133,7 @@ public class HtmlUtil {
     return tagGroup;
   }
 
-  private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail)
-    throws Exception {
+  private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail) {
     String crumb = getLastCrumb(crumbs);
     HtmlTag link = makeLink("/" + trail + crumb, crumb);
     link.head = HtmlUtil.BR.html();
@@ -158,11 +156,11 @@ public class HtmlUtil {
     return thisPage;
   }
 
-  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) throws Exception {
+  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) {
     return makeBreadCrumbsWithPageType(trail, ".", type);
   }
 
-  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {
+  public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) {
     TagGroup group = makeBreadCrumbsWithCurrentPageLinked(trail, separator);
     group.add(HtmlUtil.BR);
     group.add(HtmlUtil.makeSpanTag("page_type", type));
@@ -181,7 +179,7 @@ public class HtmlUtil {
     return trail;
   }
 
-  public static HtmlTag makeActions(List<WikiPageAction> actions) throws Exception {
+  public static HtmlTag makeActions(List<WikiPageAction> actions) {
     TagGroup actionsGroup = new TagGroup();
 
     for (WikiPageAction action : actions) {
@@ -230,12 +228,12 @@ public class HtmlUtil {
     return navBreak;
   }
 
-  public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
+  public static String makeNormalWikiPageContent(PageData pageData) {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     return makePageHtmlWithHeaderAndFooter(pageData);
   }
 
-  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) throws Exception {
+  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(pageData.getHeaderPageHtml());
     buffer.append(pageData.getHtml());

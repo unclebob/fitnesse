@@ -19,7 +19,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     return columns;
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     StringBuffer wikiText = new StringBuffer();
     if (isCommentTable) {
       wikiText.append("-");
@@ -30,7 +30,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     return wikiText.toString();
   }
 
-  private void appendTableWikiText(StringBuffer wikiText) throws Exception {
+  private void appendTableWikiText(StringBuffer wikiText) {
     for (WikiWidget rowWidget : getChildren()) {
       TableRowWidget row = (TableRowWidget) rowWidget;
       wikiText.append("|");
@@ -39,7 +39,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     }
   }
 
-  private void appendRowWikiText(StringBuffer wikiText, TableRowWidget row) throws Exception {
+  private void appendRowWikiText(StringBuffer wikiText, TableRowWidget row) {
     for (WikiWidget cellWidget : row.getChildren()) {
       TableCellWidget cell = (TableCellWidget) cellWidget;
       appendCellWikiText(wikiText, cell);
@@ -47,12 +47,12 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     }
   }
 
-  private void appendCellWikiText(StringBuffer wikiText, TableCellWidget cell) throws Exception {
+  private void appendCellWikiText(StringBuffer wikiText, TableCellWidget cell) {
     for (WikiWidget contentWidget : cell.getChildren())
       wikiText.append(contentWidget.asWikiText());
   }
 
-  public StandardTableWidget(ParentWidget parent, String text) throws Exception {
+  public StandardTableWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
@@ -71,14 +71,14 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<table border=\"1\" cellspacing=\"0\">\n");
     html.append(childHtml()).append("</table>\n");
 
     return html.toString();
   }
 
-  private void addRows(String text, boolean markAsCommentRow) throws Exception {
+  private void addRows(String text, boolean markAsCommentRow) {
     Matcher match = pattern.matcher(text);
     if (match.find()) {
       addRow(match.group(3), markAsCommentRow);
@@ -86,7 +86,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     }
   }
 
-  private void addRow(String wikiTextRow, boolean markAsCommentRow) throws Exception {
+  private void addRow(String wikiTextRow, boolean markAsCommentRow) {
     TableRowWidget rowWidget = new TableRowWidget(this, wikiTextRow, isLiteralTable);
     if (markAsCommentRow) {
       rowWidget.markAsCommentRow();

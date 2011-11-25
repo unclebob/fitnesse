@@ -12,7 +12,7 @@ public class ListWidget extends ParentWidget {
   private boolean ordered = false;
   private int level;
 
-  public ListWidget(ParentWidget parent, String text) throws Exception {
+  public ListWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
@@ -28,7 +28,7 @@ public class ListWidget extends ParentWidget {
     ordered = !("*".equals(match.group(2)));
   }
 
-  private String buildList(String text) throws Exception {
+  private String buildList(String text) {
     if (text == null)
       return null;
     Matcher match = pattern.matcher(text);
@@ -86,7 +86,7 @@ public class ListWidget extends ParentWidget {
     return level;
   }
 
-  public String render() throws Exception {
+  public String render() {
     String tagValue = ordered ? "ol" : "ul";
     StringBuffer html = new StringBuffer();
     //appendTabs(html);

@@ -5,6 +5,7 @@ package fitnesse.responders;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.List;
@@ -230,7 +231,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     return root.getPageCrawler();
   }
 
-  private void addRowToResponse(String status) throws Exception {
+  private void addRowToResponse(String status) {
     HtmlTag tag = alternatingRow();
     String relativePathName = PathParser.render(importer.getRelativePath());
     String localPathName = PathParser.render(importer.getLocalPath());
@@ -280,11 +281,11 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     response.add(html.html());
   }
 
-  public void pageImported(WikiPage localPage) throws Exception {
+  public void pageImported(WikiPage localPage) {
     addRowToResponse("");
   }
 
-  public void pageImportError(WikiPage localPage, Exception e) throws Exception {
+  public void pageImportError(WikiPage localPage, Exception e) {
     addRowToResponse(e.toString());
   }
 

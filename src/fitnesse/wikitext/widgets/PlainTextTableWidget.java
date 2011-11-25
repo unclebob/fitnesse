@@ -13,7 +13,7 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
   private String body;
   private int columnCount;
 
-  public PlainTextTableWidget(ParentWidget parent, String text) throws Exception {
+  public PlainTextTableWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
@@ -30,7 +30,7 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
     }
   }
 
-  private TableRowWidget addRow(String row) throws Exception {
+  private TableRowWidget addRow(String row) {
     return new TableRowWidget(this, parseToCells(row));
   }
 
@@ -41,19 +41,19 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
       return row.split(delimiter);
   }
 
-  private void addHiddenRow(String rowString) throws Exception {
+  private void addHiddenRow(String rowString) {
     TableRowWidget row = addRow(rowString);
     row.setCommentRow(true);
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<table class=\"plain_text_table\">");
     html.append(childHtml()).append("</table>");
 
     return html.toString();
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "![" + childWikiText() + "]!";
   }
 

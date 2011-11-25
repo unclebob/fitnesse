@@ -36,7 +36,7 @@ public enum PageType {
 
   }
 
-  public static PageType fromWikiPage(WikiPage page) throws Exception {
+  public static PageType fromWikiPage(WikiPage page) {
     PageData data = page.getData();
     if (data.hasAttribute("Suite")) {
       return SUITE;

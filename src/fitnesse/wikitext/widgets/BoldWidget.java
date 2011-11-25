@@ -11,14 +11,14 @@ public class BoldWidget extends ParentWidget {
     Pattern.MULTILINE + Pattern.DOTALL
   );
 
-  public BoldWidget(ParentWidget parent, String text) throws Exception {
+  public BoldWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     match.find();
     addChildWidgets(match.group(1));
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<b>");
     html.append(childHtml()).append("</b>");
     return html.toString();

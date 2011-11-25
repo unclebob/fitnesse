@@ -5,13 +5,13 @@ package fitnesse.wikitext.widgets;
 public class ListItemWidget extends ParentWidget {
   private int level;
 
-  public ListItemWidget(ParentWidget parent, String text, int level) throws Exception {
+  public ListItemWidget(ParentWidget parent, String text, int level) {
     super(parent);
     this.level = level;
     addChildWidgets(text);
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer();
     for (int i = 0; i < level; i++)
       html.append("\t");

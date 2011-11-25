@@ -54,7 +54,7 @@ public class WikiSourcePageTest {
             this.mockVirtualPage = mockVirtualPage;
         }
 
-        public List<WikiPage> getChildren() throws Exception {
+        public List<WikiPage> getChildren() {
           return mockVirtualPage.getChildren();
         }
     }

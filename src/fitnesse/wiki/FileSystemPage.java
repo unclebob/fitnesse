@@ -24,7 +24,7 @@ public class FileSystemPage extends CachingPage {
   private final VersionsController versionsController;
   private CmSystem cmSystem = new CmSystem();
 
-  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) throws Exception {
+  public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) {
     super(name, null);
     this.path = path;
 
@@ -32,24 +32,24 @@ public class FileSystemPage extends CachingPage {
     createDirectoryIfNewPage(fileSystem);
   }
 
-  public FileSystemPage(final String path, final String name) throws Exception {
+  public FileSystemPage(final String path, final String name) {
     this(path, name, new DiskFileSystem(), new ComponentFactory());
   }
 
-    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) throws Exception {
+    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) {
         super(name, parent);
         path = parent.getFileSystemPath();
         versionsController = parent.versionsController;
         createDirectoryIfNewPage(fileSystem);
     }
 
-  private VersionsController createVersionsController(ComponentFactory factory) throws Exception {
+  private VersionsController createVersionsController(ComponentFactory factory) {
     return (VersionsController) factory.createComponent(ComponentFactory.VERSIONS_CONTROLLER,
       ZipFileVersionsController.class);
   }
 
   @Override
-  public void removeChildPage(final String name) throws Exception {
+  public void removeChildPage(final String name) {
     super.removeChildPage(name);
     String pathToDelete = getFileSystemPath() + "/" + name;
     final File fileToBeDeleted = new File(pathToDelete);
@@ -59,7 +59,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   @Override
-  public boolean hasChildPage(final String pageName) throws Exception {
+  public boolean hasChildPage(final String pageName) {
     final File f = new File(getFileSystemPath() + "/" + pageName);
     if (f.exists()) {
       addChildPage(pageName);
@@ -68,7 +68,7 @@ public class FileSystemPage extends CachingPage {
     return false;
   }
 
-  protected synchronized void saveContent(String content) throws Exception {
+  protected synchronized void saveContent(String content) {
     if (content == null) {
       return;
     }
@@ -93,16 +93,20 @@ public class FileSystemPage extends CachingPage {
         cmSystem.edit(contentPath);
       writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
       writer.write(content);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Can not decode file " + output, e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     } finally {
       if (writer != null) {
-        writer.close();
+        FileUtil.close(writer);
         cmSystem.update(contentPath);
       }
     }
   }
 
   protected synchronized void saveAttributes(final WikiPageProperties attributes)
-    throws Exception {
+    {
     OutputStream output = null;
     String propertiesFilePath = "<unknown>";
     try {
@@ -115,13 +119,11 @@ public class FileSystemPage extends CachingPage {
       removeAlwaysChangingProperties(propertiesToSave);
       propertiesToSave.save(output);
     } catch (final Exception e) {
-      System.err.println("Failed to save properties file: \""
-        + propertiesFilePath + "\" (exception: " + e + ").");
-      e.printStackTrace();
-      throw e;
+      throw new RuntimeException("Failed to save properties file: \""
+        + propertiesFilePath + "\" (exception: " + e + ").", e);
     } finally {
       if (output != null) {
-        output.close();
+        FileUtil.close(output);
         cmSystem.update(propertiesFilePath);
       }
     }
@@ -132,24 +134,28 @@ public class FileSystemPage extends CachingPage {
   }
 
   @Override
-  protected WikiPage createChildPage(final String name) throws Exception {
+  protected WikiPage createChildPage(final String name) {
     //return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
     return new PageRepository().makeChildPage(name, this);
   }
 
-  private void loadContent(final PageData data) throws Exception {
+  private void loadContent(final PageData data) {
     String content = "";
     final String name = getFileSystemPath() + contentFilename;
     final File input = new File(name);
-    if (input.exists()) {
-      final byte[] bytes = readContentBytes(input);
-      content = new String(bytes, "UTF-8");
+    try {
+      if (input.exists()) {
+        final byte[] bytes = readContentBytes(input);
+        content = new String(bytes, "UTF-8");
+      }
+      data.setContent(content);
+    } catch (IOException e) {
+      throw new RuntimeException("Error while loading content", e);
     }
-    data.setContent(content);
   }
 
   @Override
-  protected void loadChildren() throws Exception {
+  protected void loadChildren() {
     final File thisDir = new File(getFileSystemPath());
     if (thisDir.exists()) {
       final String[] subFiles = thisDir.list();
@@ -197,7 +203,7 @@ public class FileSystemPage extends CachingPage {
     return new File(getFileSystemPath()).getAbsolutePath();
   }
 
-  private void loadAttributes(final PageData data) throws Exception {
+  private void loadAttributes(final PageData data) {
     final File file = new File(getFileSystemPath() + propertiesFilename);
     if (file.exists()) {
       try {
@@ -210,7 +216,7 @@ public class FileSystemPage extends CachingPage {
     }
   }
 
-  private long getLastModifiedTime() throws Exception {
+  private long getLastModifiedTime() {
     long lastModifiedTime = 0;
 
     final File file = new File(getFileSystemPath() + contentFilename);
@@ -223,7 +229,7 @@ public class FileSystemPage extends CachingPage {
   }
 
   private void attemptToReadPropertiesFile(File file, PageData data,
-                                           long lastModifiedTime) throws Exception {
+                                           long lastModifiedTime) throws FileNotFoundException {
     InputStream input = null;
     try {
       final WikiPageProperties props = new WikiPageProperties();
@@ -233,19 +239,19 @@ public class FileSystemPage extends CachingPage {
       data.setProperties(props);
     } finally {
       if (input != null)
-        input.close();
+        FileUtil.close(input);
     }
   }
 
   @Override
-  public void doCommit(final PageData data) throws Exception {
+  public void doCommit(final PageData data) {
     saveContent(data.getContent());
     saveAttributes(data.getProperties());
     this.versionsController.prune(this);
   }
 
   @Override
-  protected PageData makePageData() throws Exception {
+  protected PageData makePageData() {
     final PageData pagedata = new PageData(this);
     loadContent(pagedata);
     loadAttributes(pagedata);
@@ -253,29 +259,33 @@ public class FileSystemPage extends CachingPage {
     return pagedata;
   }
 
-  public PageData getDataVersion(final String versionName) throws Exception {
+  public PageData getDataVersion(final String versionName) {
     return this.versionsController.getRevisionData(this, versionName);
   }
 
-  private void createDirectoryIfNewPage(FileSystem fileSystem) throws Exception {
+  private void createDirectoryIfNewPage(FileSystem fileSystem) {
     String pagePath = getFileSystemPath();
     if (!fileSystem.exists(pagePath)) {
-      fileSystem.makeDirectory(pagePath);
+      try {
+        fileSystem.makeDirectory(pagePath);
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to create directory for new page", e);
+      }
       cmSystem.update(pagePath);
     }
   }
 
   @Override
-  protected VersionInfo makeVersion() throws Exception {
+  protected VersionInfo makeVersion() {
     final PageData data = getData();
     return makeVersion(data);
   }
 
-  protected VersionInfo makeVersion(final PageData data) throws Exception {
+  protected VersionInfo makeVersion(final PageData data) {
     return this.versionsController.makeVersion(this, data);
   }
 
-  protected void removeVersion(final String versionName) throws Exception {
+  protected void removeVersion(final String versionName) {
     this.versionsController.removeVersion(this, versionName);
   }
 
@@ -289,24 +299,24 @@ public class FileSystemPage extends CachingPage {
   }
 
   class CmSystem {
-    public void update(String fileName) throws Exception {
+    public void update(String fileName) {
       invokeCmMethod("cmUpdate", fileName);
     }
 
 
-    public void edit(String fileName) throws Exception {
+    public void edit(String fileName) {
       invokeCmMethod("cmEdit", fileName);
     }
 
-    public void delete(String fileToBeDeleted) throws Exception {
+    public void delete(String fileToBeDeleted) {
       invokeCmMethod("cmDelete", fileToBeDeleted);
     }
 
-    public void preDelete(String fileToBeDeleted) throws Exception {
+    public void preDelete(String fileToBeDeleted) {
       invokeCmMethod("cmPreDelete", fileToBeDeleted);
     }
 
-    private void invokeCmMethod(String method, String newPagePath) throws Exception {
+    private void invokeCmMethod(String method, String newPagePath) {
       if (getCmSystemClassName() != null) {
         try {
           Class<?> cmSystem = Class.forName(getCmSystemClassName());
@@ -319,7 +329,7 @@ public class FileSystemPage extends CachingPage {
       }
     }
 
-    private String getCmSystemClassName() throws Exception {
+    private String getCmSystemClassName() {
       String cmSystemVariable = getCmSystemVariable();
       if (cmSystemVariable == null)
         return null;
@@ -330,7 +340,7 @@ public class FileSystemPage extends CachingPage {
       return cmSystemClassName;
     }
 
-    private String getCmSystemVariable() throws Exception {
+    private String getCmSystemVariable() {
       return getData().getVariable("CM_SYSTEM");
     }
   }

@@ -24,11 +24,11 @@ public class LastModifiedWidget extends WikiWidget {
     return new SimpleDateFormat("MMM dd, yyyy");
   }
 
-  public LastModifiedWidget(ParentWidget parent, String text) throws Exception {
+  public LastModifiedWidget(ParentWidget parent, String text) {
     super(parent);
   }
 
-  public String render() throws Exception {
+  public String render() {
     PageData data = getWikiPage().getData();
     String formattedDate = formatDate(data.getProperties().getLastModificationTime());
     String user = data.getAttribute(PageData.LAST_MODIFYING_USER);

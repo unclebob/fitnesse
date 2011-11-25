@@ -22,7 +22,7 @@ public class AnchorMarkerWidget extends WikiWidget {
       anchorName = match.group(1);
   }
 
-  public String render() throws Exception {
+  public String render() {
     return HtmlUtil.makeLink("#" + anchorName, ".#" + anchorName).html();
   }
 }

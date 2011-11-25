@@ -11,21 +11,21 @@ public class PreformattedWidget extends ParentWidget {
   public static final String REGEXP = "\\{\\{\\{.+?\\}\\}\\}";
   private static final Pattern pattern = Pattern.compile("\\{{3}(.+?)\\}{3}", Pattern.DOTALL);
 
-  public PreformattedWidget(ParentWidget parent, String text) throws Exception {
+  public PreformattedWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find())
       addChildWidgets(match.group(1));
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<pre>");
     html.append(childHtml()).append("</pre>");
 
     return html.toString();
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "{{{" + childWikiText() + "}}}";
   }
 

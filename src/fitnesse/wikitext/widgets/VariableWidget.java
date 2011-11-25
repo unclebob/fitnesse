@@ -25,13 +25,13 @@ public class VariableWidget extends ParentWidget {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     if (!rendered)
       doRender();
     return renderedText;
   }
 
-  private void doRender() throws Exception {
+  private void doRender() {
     String value = parent.getVariable(name);
     if (value != null) {
       addChildWidgets(value);
@@ -41,11 +41,11 @@ public class VariableWidget extends ParentWidget {
     rendered = true;
   }
 
-  private String makeUndefinedVariableExpression(String name) throws Exception {
+  private String makeUndefinedVariableExpression(String name) {
     return HtmlUtil.metaText("undefined variable: " + name);
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "${" + name + "}";
   }
 }

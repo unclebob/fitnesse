@@ -9,7 +9,7 @@ public class ItalicWidget extends ParentWidget {
   public static final String REGEXP = "''.+?''";
   private static final Pattern pattern = Pattern.compile("''(.+?)''", Pattern.MULTILINE + Pattern.DOTALL);
 
-  public ItalicWidget(ParentWidget parent, String text) throws Exception {
+  public ItalicWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find())
@@ -18,7 +18,7 @@ public class ItalicWidget extends ParentWidget {
       System.err.println("ItalicWidget: match was not found");
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<i>");
     html.append(childHtml()).append("</i>");
 

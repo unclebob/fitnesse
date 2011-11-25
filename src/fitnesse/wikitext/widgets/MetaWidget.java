@@ -13,23 +13,23 @@ public class MetaWidget extends ParentWidget {
 
   private String content;
 
-  public MetaWidget(ParentWidget parent, String text) throws Exception {
+  public MetaWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find())
       setContent(match.group(1));
   }
 
-  private void setContent(String content) throws Exception {
+  private void setContent(String content) {
     this.content = content;
     addChildWidgets(this.content);
   }
 
-  public String render() throws Exception {
+  public String render() {
     return HtmlUtil.metaText(childHtml());
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "!meta " + content;
   }
 }

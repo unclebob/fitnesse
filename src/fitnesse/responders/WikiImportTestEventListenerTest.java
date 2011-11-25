@@ -141,7 +141,7 @@ public class WikiImportTestEventListenerTest {
       response = new ChunkedResponse("html");
     }
 
-    public void addToResponse(String output) throws Exception {
+    public void addToResponse(String output) {
       AddMessage(output);
     }
 
@@ -155,7 +155,7 @@ public class WikiImportTestEventListenerTest {
       response = new ChunkedResponse("html");
     }
 
-    public void addToResponse(String output) throws Exception {
+    public void addToResponse(String output) {
       AddMessage(output);
     }
   }

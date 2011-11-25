@@ -30,12 +30,12 @@ public class EvaluatorWidget extends ParentWidget {
     if (match.find()) name = match.group(1);
   }
 
-  public String render() throws Exception {
+  public String render() {
     if (!rendered) doRender();
     return renderedText;
   }
 
-  private void doRender() throws Exception {
+  private void doRender() {
     parseOutFormat(expandVariables(name));
     if (renderedText.length() > 0) {
         evaluateAndFormat();

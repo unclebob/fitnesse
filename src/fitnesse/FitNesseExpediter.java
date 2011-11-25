@@ -64,16 +64,17 @@ public class FitNesseExpediter implements ResponseSender {
     return requestParsingTimeLimit;
   }
 
-  public void send(byte[] bytes) throws Exception {
+  public void send(byte[] bytes) {
     try {
       output.write(bytes);
       output.flush();
     }
     catch (IOException stopButtonPressed_probably) {
+      // TODO: Log this
     }
   }
 
-  public void close() throws Exception {
+  public void close() {
     try {
       log(socket, request, response);
       socket.close();
@@ -205,7 +206,7 @@ public class FitNesseExpediter implements ResponseSender {
     return data;
   }
 
-  public void log(Socket s, Request request, Response response) throws Exception {
+  public void log(Socket s, Request request, Response response) {
     if (context.logger != null)
       context.logger.log(makeLogData(s, request, response));
   }

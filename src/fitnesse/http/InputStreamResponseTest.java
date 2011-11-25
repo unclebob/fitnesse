@@ -92,13 +92,13 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     testFileOutput.close();
   }
 
-  public void send(byte[] bytes) throws Exception {
+  public void send(byte[] bytes) throws IOException {
     if (bytesSent < 500)
       output.write(bytes);
     bytesSent += bytes.length;
   }
 
-  public void close() throws Exception {
+  public void close() {
     closed = true;
   }
 

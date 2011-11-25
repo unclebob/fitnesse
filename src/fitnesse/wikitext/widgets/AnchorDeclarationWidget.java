@@ -23,7 +23,7 @@ public class AnchorDeclarationWidget extends WikiWidget {
       anchorName = match.group(1);
   }
 
-  public String render() throws Exception {
+  public String render() {
     return HtmlUtil.makeAnchorTag(anchorName).html();
   }
 }

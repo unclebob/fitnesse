@@ -40,9 +40,9 @@ public abstract class BaseWikiPage implements WikiPage {
     return parentForVariables == null ? this : parentForVariables;
   }
 
-  protected abstract List<WikiPage> getNormalChildren() throws Exception;
+  protected abstract List<WikiPage> getNormalChildren();
 
-  public List<WikiPage> getChildren() throws Exception {
+  public List<WikiPage> getChildren() {
     List<WikiPage> children = getNormalChildren();
     WikiPageProperties props = getData().getProperties();
     WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
@@ -56,7 +56,7 @@ public abstract class BaseWikiPage implements WikiPage {
     return children;
   }
 
-  private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) throws Exception {
+  private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) {
     if (symLinkProperty == null)
       return null;
     String linkPath = symLinkProperty.get(linkName);
@@ -68,7 +68,7 @@ public abstract class BaseWikiPage implements WikiPage {
       return createInternalSymbolicPage(linkPath, linkName);
   }
 
-  private WikiPage createExternalSymbolicLink(String linkPath, String linkName) throws Exception {
+  private WikiPage createExternalSymbolicLink(String linkPath, String linkName) {
     String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
     File file = new File(fullPagePath);
     File parentDirectory = file.getParentFile();
@@ -83,7 +83,7 @@ public abstract class BaseWikiPage implements WikiPage {
     return null;
   }
 
-  protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws Exception {
+  protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) {
     WikiPagePath path = PathParser.parse(linkPath);
     WikiPage start = (path.isRelativePath()) ? getParent() : this;  //TODO -AcD- a better way?
     WikiPage page = getPageCrawler().getPage(start, path);
@@ -92,20 +92,20 @@ public abstract class BaseWikiPage implements WikiPage {
     return page;
   }
 
-  protected abstract WikiPage getNormalChildPage(String name) throws Exception;
+  protected abstract WikiPage getNormalChildPage(String name);
 
-  public WikiPage getChildPage(String name) throws Exception {
+  public WikiPage getChildPage(String name) {
     WikiPage page = getNormalChildPage(name);
     if (page == null)
       page = createSymbolicPage(getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
     return page;
   }
 
-  public WikiPage getHeaderPage() throws Exception {
+  public WikiPage getHeaderPage() {
     return PageCrawlerImpl.getClosestInheritedPage("PageHeader", this);
   }
 
-  public WikiPage getFooterPage() throws Exception {
+  public WikiPage getFooterPage() {
     return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
   }
 
@@ -193,7 +193,7 @@ public abstract class BaseWikiPage implements WikiPage {
     }
   }
 
-  public String getHelpText() throws Exception {
+  public String getHelpText() {
     String helpText = getData().getAttribute(PageData.PropertyHELP);
     return ((helpText == null) || (helpText.length() == 0)) ? null : helpText;
   }

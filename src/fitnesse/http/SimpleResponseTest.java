@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
 import java.net.Socket;
 
 import util.RegexTestCase;
@@ -10,7 +11,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
   private String text;
   private boolean closed = false;
 
-  public void send(byte[] bytes) throws Exception {
+  public void send(byte[] bytes) throws IOException {
     text = new String(bytes, "UTF-8");
   }
 

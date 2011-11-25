@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wikitext.WidgetBuilder;
 
 public class VariableExpandingWidgetRoot extends ParentWidget {
-  public VariableExpandingWidgetRoot(ParentWidget parent, String content) throws Exception {
+  public VariableExpandingWidgetRoot(ParentWidget parent, String content) {
     super(parent);
     if (content != null) addChildWidgets(content);
   }
@@ -18,7 +18,7 @@ public class VariableExpandingWidgetRoot extends ParentWidget {
     return false;
   }
 
-  public String render() throws Exception {
+  public String render() {
     return "";
   }
 

@@ -27,7 +27,7 @@ public class WidgetVisitorTest extends TestCase implements WidgetVisitor {
     visits.add(widget);
   }
 
-  public void visit(AliasLinkWidget widget) throws Exception {
+  public void visit(AliasLinkWidget widget) {
   }
 
   public void setUp() throws Exception {

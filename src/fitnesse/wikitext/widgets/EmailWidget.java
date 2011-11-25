@@ -17,7 +17,7 @@ public class EmailWidget extends WikiWidget {
     emailAddress = text;
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<a href=\"mailto:");
     html.append(emailAddress);
     html.append("\">");

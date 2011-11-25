@@ -95,7 +95,7 @@ public class TOCWidget extends WikiWidget {
     return isVarHelpShown || isHelpShown;
   }
 
-  public String render() throws Exception {
+  public String render() {
     WikiPage page = getWikiPage();
     initVarFlags(page);
     initMoreSuffix(page);
@@ -104,14 +104,14 @@ public class TOCWidget extends WikiWidget {
     return buildContentsDiv(page, 1).html();
   }
 
-  private void initVarFlags(WikiPage page) throws Exception {
+  private void initVarFlags(WikiPage page) {
     isVarGraceful = "true".equals(parent.getVariable(REGRACE_TOC));
     isVarPropertied = "true".equals(parent.getVariable(PROPERTY_TOC));
     isVarFiltered = "true".equals(parent.getVariable(FILTER_TOC));
     isVarHelpShown = "true".equals(parent.getVariable(HELP_TOC));
   }
 
-  private void initMoreSuffix(WikiPage page) throws Exception {
+  private void initMoreSuffix(WikiPage page) {
     String moreSuffixEnv = parent.getVariable(MORE_SUFFIX_TOC);
     moreSuffix = (moreSuffixEnv != null) ? moreSuffixEnv : MORE_SUFFIX_DEFAULT;
   }
@@ -132,20 +132,20 @@ public class TOCWidget extends WikiWidget {
     propertyCharacters = propChars.toString();
   }
 
-  private void initHelpTextPrefix(WikiPage page) throws Exception {
+  private void initHelpTextPrefix(WikiPage page) {
     String helpPrefixEnv = parent.getVariable(HELP_PREFIX_TOC);
     helpTextPrefix = (helpPrefixEnv != null) ? helpPrefixEnv : HELP_PREFIX_DEFAULT;
   }
 
   private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth)
-    throws Exception {
+    {
     HtmlTag div = makeDivTag(currentDepth);
     div.add(buildList(wikiPage, currentDepth));
     return div;
   }
 
   private HtmlTag buildList(WikiPage wikiPage, int currentDepth)
-    throws Exception {
+    {
     HtmlTag contentsDiv = null;
     if (currentDepth == 1) {
       contentsDiv = HtmlUtil.makeDivTag("contents");
@@ -166,7 +166,7 @@ public class TOCWidget extends WikiWidget {
     return (depthLimit > 0) && (currentDepth > depthLimit);
   }
 
-  private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) throws Exception {
+  private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) {
     HtmlTag listItem = new HtmlTag("li");
     HtmlTag link = HtmlUtil.makeLink(getHref(wikiPage), getLinkText(wikiPage));
 
@@ -184,14 +184,14 @@ public class TOCWidget extends WikiWidget {
     return listItem;
   }
 
-  private String getHref(WikiPage wikiPage) throws Exception {
+  private String getHref(WikiPage wikiPage) {
     String href = null;
     WikiPagePath wikiPagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
     href = PathParser.render(wikiPagePath);
     return href;
   }
 
-  private void addHelpText(HtmlTag link, WikiPage wikiPage) throws Exception {
+  private void addHelpText(HtmlTag link, WikiPage wikiPage) {
     String helpText = wikiPage.getHelpText();
     if (helpText != null) {
       if (isHelpAppended())
@@ -201,7 +201,7 @@ public class TOCWidget extends WikiWidget {
     }
   }
 
-  private HtmlElement getLinkText(WikiPage wikiPage) throws Exception {
+  private HtmlElement getLinkText(WikiPage wikiPage) {
     String name = regrace(wikiPage.getName()),
       props = getProperties(wikiPage),
       filters = getFilters(wikiPage);
@@ -212,7 +212,7 @@ public class TOCWidget extends WikiWidget {
       return new RawHtml(name + props + filters);
   }
 
-  private String getProperties(WikiPage wikiPage) throws Exception {
+  private String getProperties(WikiPage wikiPage) {
     StringBuffer propText = new StringBuffer();
     if (isPropertyAppended()) {
       PageData data = wikiPage.getData();
@@ -229,7 +229,7 @@ public class TOCWidget extends WikiWidget {
     return (propText.length() > 0) ? " " + propText.toString() : "";
   }
 
-  private boolean isSymbolic(WikiPage page) throws Exception {
+  private boolean isSymbolic(WikiPage page) {
     boolean isSym = false;
     WikiPageProperties props = page.getParent().getData().getProperties();
 
@@ -241,7 +241,7 @@ public class TOCWidget extends WikiWidget {
     return isSym;
   }
 
-  private String getFilters(WikiPage wikiPage) throws Exception {
+  private String getFilters(WikiPage wikiPage) {
     String filters = "";
 
     if (isFiltersAppended()) {
@@ -255,7 +255,7 @@ public class TOCWidget extends WikiWidget {
     return (filters.length() > 0) ? " (" + filters + ")" : "";
   }
 
-  private List<WikiPage> buildListOfChildPages(WikiPage wikiPage) throws Exception {
+  private List<WikiPage> buildListOfChildPages(WikiPage wikiPage) {
     List<WikiPage> childPageList = new ArrayList<WikiPage>(wikiPage.getChildren());
     if (wikiPage.hasExtension(VirtualCouplingExtension.NAME)) {
       VirtualCouplingExtension extension = (VirtualCouplingExtension) wikiPage.getExtension(VirtualCouplingExtension.NAME);

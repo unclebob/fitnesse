@@ -11,7 +11,7 @@ public class TableCellWidget extends ParentWidget {
   private TableRowWidget parentRow = null;
   private boolean isLiteral;
 
-  public TableCellWidget(TableRowWidget parentRow, String text, boolean isLiteral) throws Exception {
+  public TableCellWidget(TableRowWidget parentRow, String text, boolean isLiteral) {
     super(parentRow);
     this.parentRow = parentRow;
     this.isLiteral = isLiteral;
@@ -23,11 +23,11 @@ public class TableCellWidget extends ParentWidget {
     return text.trim();
   }
 
-  public String render() throws Exception {
+  public String render() {
     return makeCellTag();
   }
 
-  private String makeCellTag() throws Exception {
+  private String makeCellTag() {
     HtmlTag cellTag = new HtmlTag("td");
     if (computeColSpan().length() > 0) {
       cellTag.addAttribute("colspan", computeColSpan());

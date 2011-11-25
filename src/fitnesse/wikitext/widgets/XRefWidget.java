@@ -12,7 +12,7 @@ public class XRefWidget extends ParentWidget implements WidgetWithTextArgument {
   private static final Pattern pattern = Pattern.compile("^!see (.*)");
   private String pageName;
 
-  public XRefWidget(ParentWidget parent, String text) throws Exception {
+  public XRefWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
@@ -21,11 +21,11 @@ public class XRefWidget extends ParentWidget implements WidgetWithTextArgument {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     return HtmlUtil.metaText("<b>See: " + childHtml() + "</b>");
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "!see " + pageName;
   }
 

@@ -20,11 +20,11 @@ public class LiteralWidget extends WikiWidget {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     return parent.getLiteral(literalNumber);
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     return "!-" + parent.getLiteral(literalNumber) + "-!";
   }
 }

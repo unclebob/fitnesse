@@ -29,11 +29,11 @@ public class PreProcessorLiteralWidget extends WikiWidget {
     }
   }
 
-  public String render() throws Exception {
+  public String render() {
     return "!lit?" + literalNumber + "?";
   }
 
-  public String asWikiText() throws Exception {
+  public String asWikiText() {
     if (escapedLiteral)
       return "!<" + literalText + ">!";
     else

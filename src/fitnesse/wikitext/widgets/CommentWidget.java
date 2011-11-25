@@ -9,7 +9,7 @@ public class CommentWidget extends TextWidget {
     super(parent, text);
   }
 
-  public String render() throws Exception {
+  public String render() {
     return "";
   }
 }

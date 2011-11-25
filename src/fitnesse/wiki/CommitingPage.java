@@ -9,11 +9,11 @@ public abstract class CommitingPage extends ExtendableWikiPage {
     super(name, parent);
   }
 
-  protected abstract VersionInfo makeVersion() throws Exception;
+  protected abstract VersionInfo makeVersion();
 
-  protected abstract void doCommit(PageData data) throws Exception;
+  protected abstract void doCommit(PageData data);
 
-  public VersionInfo commit(PageData data) throws Exception {
+  public VersionInfo commit(PageData data) {
     VersionInfo previousVersion = makeVersion();
     doCommit(data);
     return previousVersion;

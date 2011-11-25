@@ -4,6 +4,8 @@ package fitnesse.http;
 
 import util.ConcurrentBoolean;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public class ChunkedResponse extends Response {
@@ -40,23 +42,31 @@ public class ChunkedResponse extends Response {
     return Integer.toHexString(value);
   }
 
-  public void add(String text) throws Exception {
+  public void add(String text) {
     if (text != null)
-      add(getEncodedBytes(text));
+      try {
+        add(getEncodedBytes(text));
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException("Unable to encode bytes", e);
+      }
   }
 
-  public void add(byte[] bytes) throws Exception {
+  public void add(byte[] bytes) {
     if (bytes == null || bytes.length == 0)
       return;
-    if (dontChunk) {
-      sender.send(bytes);
-    } else {
-      String sizeLine = asHex(bytes.length) + CRLF;
-      ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
-      chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
-      sender.send(chunk.array());
+    try {
+      if (dontChunk) {
+        sender.send(bytes);
+      } else {
+        String sizeLine = asHex(bytes.length) + CRLF;
+        ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
+        chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
+        sender.send(chunk.array());
+      }
+      bytesSent += bytes.length;
+    } catch (IOException e) {
+      throw new RuntimeException("Error while sending data", e);
     }
-    bytesSent += bytes.length;
   }
 
   public void addTrailingHeader(String key, String value) throws Exception {

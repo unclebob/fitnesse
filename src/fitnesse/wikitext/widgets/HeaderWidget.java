@@ -11,7 +11,7 @@ public class HeaderWidget extends ParentWidget {
 
   private int size = 3;
 
-  public HeaderWidget(ParentWidget parent, String text) throws Exception {
+  public HeaderWidget(ParentWidget parent, String text) {
     super(parent);
     Matcher match = pattern.matcher(text);
     if (match.find()) {
@@ -24,7 +24,7 @@ public class HeaderWidget extends ParentWidget {
     return size;
   }
 
-  public String render() throws Exception {
+  public String render() {
     StringBuffer html = new StringBuffer("<h");
     html.append(size).append(">").append(childHtml());
     html.append("</h").append(size).append(">");
