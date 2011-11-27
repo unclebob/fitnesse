@@ -17,8 +17,9 @@ public class HtmlPage {
   private VelocityContext velocityContext;
   
   private String templateFileName;
-  private String pageTitle = "FitNesse";
+  private String title = "FitNesse";
   private String bodyClass;
+  private String mainTemplate;
   
   public HtmlTag header;
   public WikiPageActions actions;
@@ -38,14 +39,22 @@ public class HtmlPage {
   }
 
   protected VelocityContext updateVelocityContext() throws Exception {
-    velocityContext.put("pageTitle", pageTitle);
+    velocityContext.put("title", title);
     velocityContext.put("bodyClass", bodyClass);
     makeSidebarSection();
     velocityContext.put("headerSection", header.html());
-    velocityContext.put("mainSection", main.html());
+    if (mainTemplate != null) {
+      velocityContext.put("mainTemplate", mainTemplate);
+    } else {
+      velocityContext.put("mainSection", main.html());
+    }
     return velocityContext;
   }
 
+  public void setMainTemplate(String templateName) {
+    this.mainTemplate = templateName;
+  }
+  
   public void put(String key, Object value) {
     velocityContext.put(key, value);
   }
@@ -57,7 +66,7 @@ public class HtmlPage {
 
 
   public void setTitle(String title) {
-    this.pageTitle = title;
+    this.title = title;
   }
   
   public void divide() throws Exception {
@@ -79,5 +88,5 @@ public class HtmlPage {
       velocityContext.put("openInNewWindow", actions.isNewWindowIfRemote());
     }
   }
-  
+
 }
