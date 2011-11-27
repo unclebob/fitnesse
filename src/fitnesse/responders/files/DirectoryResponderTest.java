@@ -8,6 +8,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 
 public class DirectoryResponderTest extends RegexTestCase {
   MockRequest request;
@@ -16,7 +17,7 @@ public class DirectoryResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext(null);
     context.rootPagePath = SampleFileUtility.base;
     SampleFileUtility.makeSampleFiles();
   }
@@ -57,16 +58,6 @@ public class DirectoryResponderTest extends RegexTestCase {
     Response response = responder.makeResponse(context, request);
     assertEquals(303, response.getStatus());
     assertEquals("/files/testDir/", response.getHeader("Location"));
-  }
-
-  public void testFrontPageSidebarButtonPresent() throws Exception {
-    request.setResource("files/testDir/");
-    Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
-    response = (SimpleResponse) responder.makeResponse(context, request);
-
-    assertHasRegexp("<div class=\"sidebar\">", response.getContent());
-    assertHasRegexp("<div class=\"actions\">", response.getContent());
-    assertHasRegexp("<a href=\"/FrontPage\" accesskey=\"f\">FrontPage</a>", response.getContent());
   }
 
   public void testSizeString() throws Exception {

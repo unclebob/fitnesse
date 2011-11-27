@@ -5,16 +5,23 @@ package fitnesse.html;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.VelocityFactory;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
+import fitnesse.wiki.WikiPagePath;
 
 public class HtmlPage {
   public static final String BreakPoint = "<!--BREAKPOINT-->";
 
+  private VelocityContext velocityContext;
+  
   private String templateFileName;
   private String pageTitle = "FitNesse";
   private String bodyClass;
   
   public HtmlTag header;
-  public HtmlTag actions;
+  public WikiPageActions actions;
   public HtmlTag main;
 
   public String preDivision;
@@ -23,27 +30,29 @@ public class HtmlPage {
   protected HtmlPage(String templateFileName) {
     super();
     
+    velocityContext =  new VelocityContext();
     this.templateFileName = templateFileName;
     
     main = HtmlUtil.makeDivTag("main");
     header = HtmlUtil.makeDivTag("header");
-    actions = HtmlUtil.makeDivTag("actions");
   }
 
-  protected VelocityContext makeVelocityContext() {
-    VelocityContext velocityContext = new VelocityContext();
-    
+  protected VelocityContext updateVelocityContext() throws Exception {
     velocityContext.put("pageTitle", pageTitle);
     velocityContext.put("bodyClass", bodyClass);
+    makeSidebarSection();
     velocityContext.put("headerSection", header.html());
     velocityContext.put("mainSection", main.html());
-    velocityContext.put("actionsSection", actions.html());
     return velocityContext;
   }
 
-  public String html() {
-    VelocityContext velocityContext = makeVelocityContext();
-    return VelocityFactory.translateTemplate(velocityContext, templateFileName);
+  public void put(String key, Object value) {
+    velocityContext.put(key, value);
+  }
+  
+  public String html() throws Exception {
+    VelocityContext context = updateVelocityContext();
+    return VelocityFactory.translateTemplate(context, templateFileName);
   }
 
 
@@ -61,4 +70,14 @@ public class HtmlPage {
   public void setBodyClass(String clazz) {
     bodyClass = clazz;
   }
+  
+  public void makeSidebarSection() throws Exception {
+    velocityContext.put("actions", actions);
+    if (actions != null) {
+      velocityContext.put("localPath", actions.getLocalPageName());
+      velocityContext.put("localOrRemotePath", actions.getLocalOrRemotePageName());
+      velocityContext.put("openInNewWindow", actions.isNewWindowIfRemote());
+    }
+  }
+  
 }

@@ -1,14 +1,17 @@
 package fitnesse.wiki;
 
+
+// Work in progress, WikiPage, versions, directory should each have specific actions instances.
 public class WikiPageActions {
 
-  private PageData data;
-  private boolean addChild;
-  private boolean pageHistory;
+  private WikiPage page;
+  private boolean addChild; // normal wiki page
+  private boolean pageHistory; // test results
+  private boolean rollback; // versions
 
-  public WikiPageActions(PageData data) {
+  public WikiPageActions(WikiPage page) {
     super();
-    this.data = data;
+    this.page = page;
   }
   
   public boolean isTestPage() {
@@ -56,11 +59,11 @@ public class WikiPageActions {
   }
 
   public boolean isWithUserGuide() {
-    return true;
+    return page != null;
   }
   
   public boolean isWithTestHistory() {
-    return true;
+    return page != null;
   }
 
   public boolean isWithAddChild() {
@@ -81,8 +84,62 @@ public class WikiPageActions {
     return this;
   }
 
-  private boolean hasAction(String action) {
-    return data.hasAttribute(action);
+  public WikiPageActions withRollback() {
+    this.rollback = true;
+    return this;
   }
 
+  public boolean isWithRollback() {
+    return rollback;
+  }
+  
+  public boolean isWithEditLocally() {
+    PageData data = getData();
+    return !rollback && data != null && WikiImportProperty.isImported(data);
+  }
+
+  public boolean isWithEditRemotely() {
+    PageData data = getData();
+    return !rollback && data != null && WikiImportProperty.isImported(data);
+  }
+  
+  private boolean hasAction(String action) {
+    PageData data = getData();
+    return !rollback && data != null && data.hasAttribute(action);
+  }
+
+  private PageData getData() {
+    if (page != null) {
+      try {
+        return page.getData();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return null;
+  }
+  
+  public String getLocalPageName() throws Exception {
+    if (page != null) {
+      WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
+      return PathParser.render(localPagePath);
+    }
+    return null;
+  }
+
+  public String getLocalOrRemotePageName() throws Exception {
+    String localOrRemotePageName = getLocalPageName();
+    
+    if (page instanceof ProxyPage) {
+      localOrRemotePageName = ((ProxyPage) page).getThisPageUrl();
+    }
+    return localOrRemotePageName;
+  }
+  
+  public boolean isNewWindowIfRemote() {
+    if (page != null) {
+      return page.isOpenInNewWindow();
+    }
+    return false;
+  }
 }

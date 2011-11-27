@@ -6,13 +6,10 @@
   <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
   <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
  </head>
- <body>
-  <div class="sidebar">
-   <a name="art_niche" href="FrontPage" class="art_niche"> </a>
+ <body#if( $bodyClass ) class="$bodyClass"#end>
 
-    $!actionsSection
+  #parse( "sidebar.vm" )
 
-  </div>
   <div class="mainbar">
 
     $!headerSection

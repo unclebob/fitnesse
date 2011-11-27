@@ -6,7 +6,6 @@ import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.*;
-import fitnesse.responders.WikiImportProperty;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
@@ -131,7 +130,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     html.header.use(HtmlUtil
       .makeBreadCrumbsWithPageType(fullPathName, pageType));
     PageData data = getPage().getData();
-    html.actions.use(HtmlUtil.makeSidebar(getPage(), new WikiPageActions(getPage().getData()).withPageHistory()));
+    html.actions = new WikiPageActions(getPage()).withPageHistory();
     WikiImportProperty.handleImportProperties(html, getPage(), data);
     return html;
   }

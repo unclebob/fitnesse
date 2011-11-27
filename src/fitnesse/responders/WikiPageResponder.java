@@ -20,6 +20,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
@@ -85,7 +86,7 @@ public class WikiPageResponder implements SecureResponder {
     html.setTitle(fullPathName);
     html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
     // TODO move this to menu
-    html.actions.use(HtmlUtil.makeSidebar(page, new WikiPageActions(page.getData()).withAddChild()));
+    html.actions = new WikiPageActions(page).withAddChild();
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     html.main.use(generateHtml(pageData));
     VelocityContext velocityContext = new VelocityContext();

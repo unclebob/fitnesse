@@ -137,40 +137,6 @@ public class HtmlUtil {
     return VelocityFactory.translateTemplate(velocityContext, "header.vm");
   }
 
-  public static String makeSidebar(WikiPage wikiPage, WikiPageActions actions) throws Exception {
-    VelocityContext velocityContext = new VelocityContext();
-    WikiPagePath localPagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
-    String localPageName = PathParser.render(localPagePath);
-    String localOrRemotePageName = localPageName;
-    boolean newWindowIfRemote = wikiPage.isOpenInNewWindow();
-    
-    if (wikiPage instanceof ProxyPage) {
-      ProxyPage proxyPage = (ProxyPage) wikiPage;
-      localOrRemotePageName = proxyPage.getThisPageUrl();
-    }
-
-    velocityContext.put("actions", actions);
-    velocityContext.put("localPath", localPageName);
-    velocityContext.put("localOrRemotePath", localOrRemotePageName);
-    velocityContext.put("openInNewWindow", newWindowIfRemote);
-    return VelocityFactory.translateTemplate(velocityContext, "sidebar.vm");
-  }
-  
-  public static HtmlTag makeAction(WikiPageAction action) {
-    String href = action.getPageName();
-    if (action.getQuery() != null && action.getQuery().length() > 0)
-      href = href + "?" + action.getQuery();
-
-    HtmlTag linkTag = new HtmlTag("a");
-    linkTag.addAttribute("href", href);
-    if (action.isNewWindow())
-      linkTag.addAttribute("target", "newWindow");
-    linkTag.addAttribute("accesskey", action.getShortcutKey());
-    linkTag.add(action.getLinkName());
-
-    return linkTag;
-  }
-
   public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     return makePageHtmlWithHeaderAndFooter(pageData);

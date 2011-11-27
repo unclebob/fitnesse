@@ -101,8 +101,8 @@ class HtmlResultPage extends HtmlPage {
   }
 
   @Override
-  protected VelocityContext makeVelocityContext() {
-    VelocityContext velocityContext = super.makeVelocityContext();
+  protected VelocityContext updateVelocityContext() throws Exception {
+    VelocityContext velocityContext = super.updateVelocityContext();
     velocityContext.put("baseUri", baseUri);
     return velocityContext;
   }

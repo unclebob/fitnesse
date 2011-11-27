@@ -8,6 +8,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPageProperties;
 
 public class ImportAndViewResponderTest extends TestCase {
