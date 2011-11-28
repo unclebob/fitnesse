@@ -133,6 +133,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   protected void performExecution() throws Exception {
+    System.out.println("..perform execution");
     List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
     MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
@@ -141,8 +142,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     if (isEmpty(page))
       formatters.addMessageForBlankHtml();
-
+    System.out.println("..executing");
     runner.executeTestPages();
+    System.out.println("..done executing");
   }
 
   private boolean isEmpty(WikiPage page) throws Exception {
