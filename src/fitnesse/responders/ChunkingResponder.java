@@ -67,6 +67,8 @@ public abstract class ChunkingResponder implements Responder {
       doSending();
     }
     catch (SocketException e) {
+      System.out.println("Socket Exception at: " + System.currentTimeMillis());
+      e.printStackTrace();
       // normal. someone stopped the request.
     }
     catch (Exception e) {
