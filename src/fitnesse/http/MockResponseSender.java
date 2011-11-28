@@ -19,8 +19,6 @@ public class MockResponseSender implements ResponseSender {
   }
 
   public void send(byte[] bytes) throws Exception {
-    //Todo Timing Problem -- Figure out why this is necessary.  
-//    for (int i = 0; i < 1000; i++) Thread.yield();
     socket.getOutputStream().write(bytes);
   }
 
@@ -41,8 +39,6 @@ public class MockResponseSender implements ResponseSender {
     waitForClose(20000);
   }
 
-  // Utility method that returns when this.closed is true. Throws an exception
-  // if the timeout is reached.
   public void waitForClose(long timeoutMillis) throws Exception {
     if (!closed.waitFor(true, timeoutMillis))
       throw new Exception("MockResponseSender could not be closed");
