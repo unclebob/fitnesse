@@ -12,11 +12,7 @@
 
   <div class="mainbar">
 
-    #if( $pageTitle )
-     #parse( "pageTitle.vm" )
-    #else
-     $!headerSection
-    #end
+    #parse( "pageTitle.vm" )
     
     ## parse Html tree
     #if( $mainTemplate )

@@ -109,20 +109,6 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {
-    return makeBreadCrumbsWithCurrentPage(trail, separator, true, type);
-  }
-
-  private static String makeBreadCrumbsWithCurrentPage(String path, String separator, boolean pageTitleAsLink, String type)
-    throws Exception {
-    VelocityContext velocityContext = new VelocityContext();
-    String[] crumbs = path.split("[" + separator + "]");
-    velocityContext.put("crumbs", crumbs);
-    velocityContext.put("pageTitleAsLink", pageTitleAsLink);
-    velocityContext.put("pageType", type);
-    return VelocityFactory.translateTemplate(velocityContext, "header.vm");
-  }
-
   public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     return makePageHtmlWithHeaderAndFooter(pageData);

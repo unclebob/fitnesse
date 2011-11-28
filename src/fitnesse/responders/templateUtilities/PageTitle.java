@@ -44,6 +44,27 @@ public class PageTitle {
     this.setPageType(pageType);
   }
 
+  public PageTitle(String path, String separator) {
+    String[] crumbs = path.split(separator);
+    String crumb;
+    String trail = "";
+    for (int i = 0; i < crumbs.length - 1; i++) {
+      crumb = crumbs[i];
+      breadCrumbs.add(new BreadCrumb(crumb, trail + crumb));
+      trail = trail + crumb + separator;
+    }
+    if (crumbs.length > 0) {
+      crumb = crumbs[crumbs.length - 1];
+      title = crumb;
+      link = trail + crumb;
+    }
+  }
+
+  public PageTitle(String pageType, String path, String separator) {
+    this(path, separator);
+    this.setPageType(pageType);
+  }
+
   public PageTitle notLinked() {
     link = null;
     return this;

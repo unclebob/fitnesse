@@ -15,6 +15,7 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 
 public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;
@@ -31,7 +32,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
   private String makeDirectoryListingPage(String filename, FitNesseContext context) throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Delete File(s): ");
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource + filename, "/", "Delete File"));
+    page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
     page.main.use(makeConfirmationHTML(filename, context));
 
     return page.html();

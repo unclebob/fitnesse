@@ -23,7 +23,6 @@ public class HtmlPage {
   private String mainTemplate;
   private PageTitle pageTitle;
   
-  public HtmlTag header;
   public WikiPageActions actions;
   public HtmlTag main;
 
@@ -37,18 +36,13 @@ public class HtmlPage {
     this.templateFileName = templateFileName;
     
     main = HtmlUtil.makeDivTag("main");
-    header = HtmlUtil.makeDivTag("header");
   }
 
   protected VelocityContext updateVelocityContext() throws Exception {
     velocityContext.put("title", title);
     velocityContext.put("bodyClass", bodyClass);
     makeSidebarSection();
-    if (pageTitle != null) {
-      velocityContext.put("pageTitle", pageTitle);
-    } else {
-      velocityContext.put("headerSection", header.html());
-    }
+    velocityContext.put("pageTitle", pageTitle);
 
     if (mainTemplate != null) {
       velocityContext.put("mainTemplate", mainTemplate);

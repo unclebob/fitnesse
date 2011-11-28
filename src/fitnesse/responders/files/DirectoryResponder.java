@@ -8,6 +8,7 @@ import java.util.Date;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.WikiPageAction;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -54,7 +55,8 @@ public class DirectoryResponder implements SecureResponder {
   private String makeDirectoryListingPage() throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Files: " + resource);
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
+    //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
+    page.setPageTitle(new PageTitle("Files Section", resource, "/"));
     page.main.use(makeRightColumn());
 
     return page.html();

@@ -12,6 +12,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 
 public class RenameFileConfirmationResponder implements SecureResponder {
   private String resource;
@@ -27,7 +28,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
   private String makePageContent(String filename, FitNesseContext context) throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Rename " + filename);
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource + filename, "/", "Rename File"));
+    page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
     page.main.use(makeRenameFormHTML(filename));
 
     return page.html();
