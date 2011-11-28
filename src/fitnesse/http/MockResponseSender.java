@@ -45,8 +45,7 @@ public class MockResponseSender implements ResponseSender {
   // if the timeout is reached.
   public void waitForClose(long timeoutMillis) throws Exception {
     if (!closed.waitFor(true, timeoutMillis))
-      System.out.println("MockResponseSender could not be closed");
-      //throw new Exception("MockResponseSender could not be closed");
+      throw new Exception("MockResponseSender could not be closed");
   }
 
   public boolean isClosed() {

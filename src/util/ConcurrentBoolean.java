@@ -35,5 +35,5 @@ public class ConcurrentBoolean {
         return (value == newValue);
     }
 
-    private boolean value;
+    private volatile boolean value;
 }
