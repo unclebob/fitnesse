@@ -39,11 +39,11 @@ public class MockSocket extends Socket {
     this.output = output;
   }
 
-  public InputStream getInputStream() {
+  public synchronized InputStream getInputStream() {
     return input;
   }
 
-  public OutputStream getOutputStream() {
+  public synchronized OutputStream getOutputStream() {
     return output;
   }
 
