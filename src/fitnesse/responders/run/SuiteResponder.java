@@ -39,11 +39,14 @@ public class SuiteResponder extends TestResponder {
   }
 
   protected void performExecution() throws Exception {
+    System.out.println("..suite perform execution");
     SuiteFilter filter = new SuiteFilter(request, page.getPageCrawler().getFullPath(page).toString());
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
     runner.setDebug(isRemoteDebug());
     runner.setFastTest(isFastTest());
+    System.out.println("..suite executing");
     runner.executeTestPages();
+    System.out.println("..suite done executing");
   }
 }
