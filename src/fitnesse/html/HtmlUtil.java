@@ -6,6 +6,7 @@ import org.apache.velocity.VelocityContext;
 
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
@@ -35,10 +36,7 @@ public class HtmlUtil {
 
   public static void addTitles(HtmlPage page, String title) {
     page.setTitle(title);
-    HtmlTag span = new HtmlTag("span");
-    span.addAttribute("class", "page_title");
-    span.add(title);
-    page.header.use(span);
+    page.setPageTitle(new PageTitle(title));
   }
 
   public static HtmlTag makeBold(String content) {
@@ -109,18 +107,6 @@ public class HtmlUtil {
     link.addAttribute("href", href);
     link.add(content);
     return link;
-  }
-
-  public static String makeBreadCrumbsWithCurrentPageLinked(String path) throws Exception {
-    return makeBreadCrumbsWithCurrentPage(path, ".", true, null);
-  }
-
-  public static String makeBreadCrumbsWithCurrentPageNotLinked(String trail) throws Exception {
-    return makeBreadCrumbsWithCurrentPage(trail, ".", false, null);
-  }
-
-  public static String makeBreadCrumbsWithPageType(String trail, String type) throws Exception {
-    return makeBreadCrumbsWithPageType(trail, ".", type);
   }
 
   public static String makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {

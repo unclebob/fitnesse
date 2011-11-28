@@ -9,6 +9,7 @@ import fitnesse.html.*;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {
@@ -127,8 +128,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     String fullPathName = PathParser.render(fullPath);
     HtmlPage html = pageFactory.newPage();
     html.setTitle(pageType + ": " + fullPathName);
-    html.header.use(HtmlUtil
-      .makeBreadCrumbsWithPageType(fullPathName, pageType));
+    html.setPageTitle(new PageTitle(pageType, fullPath));
     PageData data = getPage().getData();
     html.actions = new WikiPageActions(getPage()).withPageHistory();
     WikiImportProperty.handleImportProperties(html, getPage(), data);

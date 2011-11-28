@@ -12,51 +12,12 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
 
 public class HtmlUtilTest extends RegexTestCase {
-  private static final String endl = HtmlElement.endl;
 
   private WikiPage root;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
-  }
-
-  public void testBreadCrumbsWithCurrentPageLinked() throws Exception {
-    String trail = "1.2.3.4";
-    String breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(trail);
-    String expected = getBreadCrumbsWithLastOneLinked();
-    assertEquals(expected, breadcrumbs);
-  }
-
-  public void testBreadCrumbsWithCurrentPageNotLinked() throws Exception {
-    String trail = "1.2.3.4";
-    String breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(trail);
-    String expected = getBreadCrumbsWithLastOneNotLinked();
-    assertEquals(expected, breadcrumbs);
-  }
-
-  public void testBreadCrumbsWithPageType() throws Exception {
-    String trail = "1.2.3.4";
-    String breadcrumbs = HtmlUtil.makeBreadCrumbsWithPageType(trail, "Some Type");
-    String expected = getBreadCrumbsWithLastOneLinked() +
-      "<br/><span class=\"page_type\">Some Type</span>" + endl;
-    assertEquals(expected, breadcrumbs);
-  }
-
-  private String getBreadCrumbsWithLastOneLinked() {
-    return getFirstThreeBreadCrumbs() +
-      "<br/><a href=\"/1.2.3.4\" class=\"page_title\">4</a>" + endl;
-  }
-
-  private String getBreadCrumbsWithLastOneNotLinked() {
-    return getFirstThreeBreadCrumbs() +
-      "<br/><span class=\"page_title\">4</span>" + endl;
-  }
-
-  private String getFirstThreeBreadCrumbs() {
-    return "<a href=\"/1\">1</a>." + endl +
-      "<a href=\"/1.2\">2</a>." + endl +
-      "<a href=\"/1.2.3\">3</a>." + endl;
   }
 
   public void testMakeFormTag() throws Exception {
@@ -68,16 +29,6 @@ public class HtmlUtilTest extends RegexTestCase {
   public void testMakeDivTag() throws Exception {
     String expected = "<div class=\"myClass\"></div>" + HtmlElement.endl;
     assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
-  }
-
-  public void testMakeBreadCrumbsWithCurrentPageLinkedWithEmptyArray() throws Exception {
-    try {
-      HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(".");
-      HtmlUtil.makeBreadCrumbsWithCurrentPageLinked("");
-    }
-    catch (Exception e) {
-      fail("should not throw exception");
-    }
   }
 
   public void testMakeDefaultActions() throws Exception {
@@ -104,14 +55,14 @@ public class HtmlUtilTest extends RegexTestCase {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
   }
 
   public void testMakeActionsWithSuiteButtonWhenNameEndsWithSuite() throws Exception {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
-    assertSubString("<a href=\"" + pageName + "?suite\">Suite</a>", html);
+    assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
   }
 
   private String getActionsHtml(String pageName) throws Exception {
@@ -129,7 +80,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
     assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
     assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);
-    assertSubString("<a href=\"FitNesse.UserGuide\">User Guide</a>", html);
+    assertSubString("<a href=\".FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
   }
 
   public void testMakeReplaceElementScript() throws Exception {

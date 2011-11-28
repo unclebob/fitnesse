@@ -14,6 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 public class VersionResponder implements SecureResponder {
@@ -45,7 +46,7 @@ public class VersionResponder implements SecureResponder {
     PageData pageData = page.getDataVersion(version);
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version " + version));
+    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource)));
     // TODO: subclass actions for specific rollback behaviour.
     html.actions = new WikiPageActions(page).withRollback();
     html.put("rollbackVersion", version);

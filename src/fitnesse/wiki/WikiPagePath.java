@@ -33,7 +33,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
   }
 
   @SuppressWarnings("unchecked")
-  protected WikiPagePath clone() {
+  public WikiPagePath clone() {
     WikiPagePath clone = new WikiPagePath();
     clone.names = (LinkedList<String>) names.clone();
     clone.mode = mode;

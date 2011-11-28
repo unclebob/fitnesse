@@ -13,6 +13,8 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PathParser;
 import fitnesse.FitNesseContext;
 
 public class HtmlResultFormatter implements ResultFormatter {
@@ -58,7 +60,7 @@ public class HtmlResultFormatter implements ResultFormatter {
     htmlPage.setTitle(rootPath);
     htmlPage.setHost(host);
 
-    htmlPage.header.use(HtmlUtil.makeBreadCrumbsWithPageType(rootPath, "Command Line Test Results"));
+    htmlPage.setPageTitle(new PageTitle("Command Line Test Results", PathParser.parse(rootPath)));
   }
 
   public void acceptResult(PageResult result) throws Exception {

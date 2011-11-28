@@ -13,6 +13,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -20,7 +21,7 @@ public class ShutdownResponder implements SecureResponder {
 
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Shutdown");
-    html.header.use(HtmlUtil.makeSpanTag("page_title", "Shutdown"));
+    html.setPageTitle(new PageTitle("Shutdown"));
 
     HtmlTag content = HtmlUtil.makeDivTag("centered");
     content.add(new HtmlTag("h3", "FitNesse is shutting down..."));

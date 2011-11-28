@@ -11,6 +11,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 import java.util.*;
@@ -47,7 +48,7 @@ public class VersionSelectionResponder implements SecureResponder {
   public String makeHtml(FitNesseContext context) throws Exception {
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version Selection"));
+    html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource)));
     html.main.use(makeRightColumn());
     return html.html();
   }

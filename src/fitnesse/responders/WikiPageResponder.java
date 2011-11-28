@@ -16,6 +16,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -84,7 +85,7 @@ public class WikiPageResponder implements SecureResponder {
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
     String fullPathName = PathParser.render(fullPath);
     html.setTitle(fullPathName);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
+    html.setPageTitle(new PageTitle(fullPath).notLinked());
     // TODO move this to menu
     html.actions = new WikiPageActions(page).withAddChild();
     SetupTeardownAndLibraryIncluder.includeInto(pageData);

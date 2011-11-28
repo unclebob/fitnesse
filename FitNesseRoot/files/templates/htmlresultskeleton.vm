@@ -23,17 +23,23 @@ function localizeInPageLinks()
  </head>
  <body onload="localizeInPageLinks()">
 
-  <div class="sidebar">
-   <a name="art_niche" href="FrontPage" class="art_niche"> </a>
-   <div class="actions"></div>
-  </div>
+  #parse( "sidebar.vm" )
 
   <div class="mainbar">
-   <div class="header">
-    $!headerSection
-   </div>
-   <div class="main">
-    $!mainSection
+
+    #if( $pageTitle )
+     #parse( "pageTitle.vm" )
+    #else
+     $!headerSection
+    #end
+    
+    ## parse Html tree
+    #if( $mainTemplate )
+     #parse( $mainTemplate )
+    #else
+     $!mainSection
+    #end
+    
 <!--
  Do Dynamic stuff in here
 
@@ -43,7 +49,6 @@ function localizeInPageLinks()
 </div>
 <script>document.getElementById("test-summary").innerHTML = "<strong>Test Pages:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions ";document.getElementById("test-summary").className = "error";</script>
  -->
-   </div>
   </div>
  </body>
 </html>

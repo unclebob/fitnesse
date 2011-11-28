@@ -11,6 +11,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -44,7 +45,7 @@ public class MergeResponder implements Responder {
   private String makePageHtml(FitNesseContext context) throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Merge " + resource);
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Merge Changes"));
+    page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
     page.main.use(makeRightColumn());
     return page.html();
   }

@@ -14,6 +14,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -53,7 +54,7 @@ public class SaveResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Edit " + resource);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Banned Content"));
+    html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
     html.main.use(new HtmlTag("h3", "The content you're trying to save has been " +
       "banned from this site.  Your changes will not be saved!"));
     response.setContent(html.html());

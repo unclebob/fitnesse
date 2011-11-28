@@ -17,6 +17,7 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 
@@ -31,7 +32,7 @@ public class EditResponder implements SecureResponder {
   protected WikiPage root;
   protected PageData pageData;
   protected Request request;
-
+  
   public EditResponder() {
   }
 
@@ -89,14 +90,10 @@ public class EditResponder implements SecureResponder {
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.setTitle(title + resource + ":");
     
-    html.header.add(makeHeader(resource, title));
+    html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource)));
     html.main.add(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
     
     return html.html();
-  }
-
-  private String makeHeader(String resource, String title) throws Exception {
-    return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
   }
 
   private String makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception {

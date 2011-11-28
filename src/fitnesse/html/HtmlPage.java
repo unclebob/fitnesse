@@ -5,6 +5,7 @@ package fitnesse.html;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.VelocityFactory;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
@@ -20,6 +21,7 @@ public class HtmlPage {
   private String title = "FitNesse";
   private String bodyClass;
   private String mainTemplate;
+  private PageTitle pageTitle;
   
   public HtmlTag header;
   public WikiPageActions actions;
@@ -42,7 +44,12 @@ public class HtmlPage {
     velocityContext.put("title", title);
     velocityContext.put("bodyClass", bodyClass);
     makeSidebarSection();
-    velocityContext.put("headerSection", header.html());
+    if (pageTitle != null) {
+      velocityContext.put("pageTitle", pageTitle);
+    } else {
+      velocityContext.put("headerSection", header.html());
+    }
+
     if (mainTemplate != null) {
       velocityContext.put("mainTemplate", mainTemplate);
     } else {
@@ -68,7 +75,11 @@ public class HtmlPage {
   public void setTitle(String title) {
     this.title = title;
   }
-  
+
+  public void setPageTitle(PageTitle pageTitle) {
+    this.pageTitle = pageTitle;
+  }
+
   public void divide() throws Exception {
     String html = html();
     int breakIndex = html.indexOf(BreakPoint);

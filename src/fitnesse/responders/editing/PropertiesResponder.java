@@ -24,6 +24,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.MockingPageCrawler;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -40,13 +41,14 @@ public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
   public PageData pageData;
   private String resource;
+  private WikiPagePath path;
   private SimpleResponse response;
 
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
     response = new SimpleResponse();
     resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
+    path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
     if (!crawler.pageExists(context.root, path))
       crawler.setDeadEndStrategy(new MockingPageCrawler());
@@ -93,8 +95,7 @@ public class PropertiesResponder implements SecureResponder {
   private String makeHtml(FitNesseContext context) throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Properties: " + resource);
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource,
-        "Page Properties"));
+    page.setPageTitle(new PageTitle("Page Properties", path));
     page.main.use(makeLastModifiedTag());
     page.main.add(makeFormSections());
 
