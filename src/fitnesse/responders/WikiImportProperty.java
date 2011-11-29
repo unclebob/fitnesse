@@ -96,13 +96,11 @@ public class WikiImportProperty extends WikiPageProperty {
   }
 
   public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) throws Exception {
-    html.actions.add(HtmlUtil.makeNavBreak());
     if (isImported(pageData)) {
       html.body.addAttribute("class", "imported");
       WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
       String localPageName = PathParser.render(localPagePath);
       html.actions.add(makeEditLocallyLink(localPageName));
-      html.actions.add(HtmlUtil.makeNavBreak());
       String remoteInput = makeRemoteEditQueryParameters();
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
       html.actions.add(makeEditRemotelyLink(remoteInput, importProperty.getSourceUrl()));

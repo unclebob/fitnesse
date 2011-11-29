@@ -202,7 +202,6 @@ public class HtmlUtil {
 
   private static void addLinkToActions(TagGroup actions, WikiPageAction action) {
     actions.add(makeAction(action));
-    actions.add(makeNavBreak());
   }
 
   public static HtmlTag makeAction(WikiPageAction action) {
@@ -217,17 +216,7 @@ public class HtmlUtil {
     linkTag.addAttribute("accesskey", action.getShortcutKey());
     linkTag.add(action.getLinkName());
 
-    TagGroup group = new TagGroup();
-    group.add(new HtmlComment(action.getLinkName() + " button"));
-    group.add(linkTag);
-    return group;
-  }
-
-  public static HtmlTag makeNavBreak() {
-    HtmlTag navBreak = new HtmlTag("div");
-    navBreak.addAttribute("class", "nav_break");
-    navBreak.add("&nbsp;");
-    return navBreak;
+    return linkTag;
   }
 
   public static String makeNormalWikiPageContent(PageData pageData) throws Exception {

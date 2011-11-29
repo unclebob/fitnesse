@@ -51,7 +51,7 @@ public class HtmlPageTest extends RegexTestCase {
 
   public void testSidebar() throws Exception {
     assertSubString("<div class=\"sidebar", html);
-    assertSubString("<div class=\"art_niche", html);
+    assertSubString("<a name=\"art_niche", html);
     assertSubString("<div class=\"actions", html);
   }
 

@@ -3,35 +3,26 @@
   <div class="popup_content">
     <form action="$full_path" method="get">
       <input type="hidden" name="responder" value="addChild"/>
-      <table style="white-space:normal" border="0" cellspacing="0" width="100%" height="100%">
-        <tr>
-          <td>
-            <input type="radio" name="pageType" value="Normal"/>Static<br/>
-            <input type="radio" name="pageType" value="Test"/>Test<br/>
-            <input type="radio" name="pageType" value="Suite"/>Suite<br/>
-            <input type="radio" name="pageType" value="Default" checked="checked"/>Default<br/>
-          </td>
-          <td>
-            <table border="0" cellspacing="0" width="100%">
-              <tr>
-                <td><label for="childName">Name</label></td>
-                <td><input size="50" id="childName" type="text" name="name"/></td>
-              </tr>
-              <tr>
-                <td><label for="childContent">Content</label></td>
-                <td><input size="50" id="childContent" type="text" name="content" value="!contents"/></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <input TYPE="button" VALUE="Cancel" onClick="popdown('addChildPopup')"/>
-            <input value="Add" type="submit"/>
-          </td>
-        </tr>
-      </table>
+
+      <fieldset class="page_type">
+        <input type="radio" name="pageType" value="Normal" id="pt-normal"/><label for="pt-normal">Normal</label><br/>
+        <input type="radio" name="pageType" value="Test" id="pt-test"/><label for="pt-test">Test</label><br/>
+        <input type="radio" name="pageType" value="Suite" id="pt-suite"/><label for="pt-suite">Suite</label><br/>
+        <input type="radio" name="pageType" value="Default" id="pt-default" checked="checked"/><label for="pt-default">Default</label><br/>
+      </fieldset>
+
+      <fieldset>
+        <label for="childName">Name</label>
+        <input size="50" id="childName" type="text" name="name"/>
+
+        <label for="childContent">Content</label>
+        <input size="50" id="childContent" type="text" name="content" value="!contents"/>
+      </fieldset>
+
+      <fieldset class="buttons">
+        <input type="button" VALUE="Cancel" onclick="popdown('addChildPopup')"/>
+        <input value="Add" type="submit"/>
+      </fieldset>
     </form>
   </div>
 </div>
