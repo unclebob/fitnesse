@@ -83,7 +83,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
-//      System.out.println("......do some tests.");
+      System.out.println("......do some tests.");
       executePagesInTestSystem(descriptor, pagesByTestSystem);
     }
     System.out.println("......testing complete");
