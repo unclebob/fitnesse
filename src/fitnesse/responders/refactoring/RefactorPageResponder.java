@@ -12,6 +12,8 @@ import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -23,20 +25,18 @@ public class RefactorPageResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     String resource = request.getResource();
 
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
+    HtmlPage page = context.htmlPageFactory.newPage();
 
     Template template = VelocityFactory.getVelocityEngine().getTemplate("refactorForm.vm");
 
-    velocityContext.put("pageTitle", new PageTitle("Refactor", PathParser.parse(resource)));
-    velocityContext.put("refactoredRootPage", resource);
-    velocityContext.put("request", request);
-
-    template.merge(velocityContext, writer);
+    page.setMainTemplate("refactorForm.vm");
+    page.setTitle("Refactor: " + resource);
+    page.setPageTitle(new PageTitle("Refactor", PathParser.parse(resource)));
+    page.put("refactoredRootPage", resource);
+    page.put("request", request);
 
     SimpleResponse response = new SimpleResponse();
-    response.setContent(writer.toString());
+    response.setContent(page.html());
     return response;
   }
 
