@@ -53,8 +53,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   public void executeTestPages() {
     try {
+      System.out.println("....executeTestPages");
       internalExecuteTestPages();
+      System.out.println("....allTestingComplete");
       allTestingComplete();
+      System.out.println("....executeTestPages done.");
     }
     catch (Exception exception) {
       //hoped to write exceptions to log file but will take some work.
