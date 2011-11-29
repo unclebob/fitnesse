@@ -1,5 +1,4 @@
-#set ($page_title = "Suite Execution Report")
-#parse("pageHead.vm")
+<div class="main">
 #if($suiteExecutionReport)
 <h1>$suiteExecutionReport.getRootPath()</h1>
 <table border="1" cellspacing="0">
@@ -63,4 +62,4 @@
   #end
 </table>
 #end
-  #parse("pageFooter.vm")
+</div>
