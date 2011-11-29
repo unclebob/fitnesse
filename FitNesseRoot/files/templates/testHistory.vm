@@ -1,5 +1,4 @@
-#set ($page_title="Test History")
-#parse("pageHead.vm")
+<div class="main">
 #set($noHistory = true)
 <table style="border:none;background:none">
   <tr>
@@ -77,4 +76,4 @@
 
 </table>
 #if ($noHistory)No History#end
-#parse("pageFooter.vm")
+</div>

@@ -5,8 +5,10 @@ import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPage;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.PageTitle;
 import org.apache.velocity.VelocityContext;
@@ -14,30 +16,43 @@ import org.apache.velocity.VelocityContext;
 import java.io.File;
 
 public class TestHistoryResponder implements SecureResponder {
-  private File resultsDirectory;
-  private boolean generateNullResponseForTest;
 
+  private FitNesseContext context;
+  
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    if (resultsDirectory == null)
-      resultsDirectory = context.getTestHistoryDirectory();
-    SimpleResponse response = new SimpleResponse();
-    if (!generateNullResponseForTest) {
-      TestHistory history = new TestHistory();
-      String pageName = request.getResource();
-      history.readPageHistoryDirectory(resultsDirectory, pageName);
-      VelocityContext velocityContext = new VelocityContext();
-      velocityContext.put("pageTitle", new PageTitle(makePageTitle(pageName)));
-      velocityContext.put("testHistory", history);
-      String velocityTemplate = "testHistory.vm";
-      if (formatIsXML(request)) {
-        response.setContentType("text/xml");
-        velocityTemplate = "testHistoryXML.vm";
-      }
-      response.setContent(VelocityFactory.translateTemplate(velocityContext, velocityTemplate));
+    this.context = context;
+    File resultsDirectory = context.getTestHistoryDirectory();
+    String pageName = request.getResource();
+    TestHistory testHistory = new TestHistory();
+    testHistory.readPageHistoryDirectory(resultsDirectory, pageName);
+
+    if (formatIsXML(request)) {
+      return makeTestHistoryXmlResponse(testHistory);
+    } else {
+      return makeTestHistoryResponse(testHistory, pageName);
     }
+  }
+
+  private Response makeTestHistoryResponse(TestHistory testHistory, String pageName) throws Exception {
+    HtmlPage page = context.htmlPageFactory.newPage();
+    page.setTitle("Test History");
+    page.setPageTitle(new PageTitle(makePageTitle(pageName)));
+    page.put("testHistory", testHistory);
+    page.setMainTemplate("testHistory.vm");
+    SimpleResponse response = new SimpleResponse();
+    response.setContent(page.html());
     return response;
   }
 
+  private Response makeTestHistoryXmlResponse(TestHistory history) throws Exception {
+    SimpleResponse response = new SimpleResponse();
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("testHistory", history);
+    response.setContentType(Format.XML);
+    response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistoryXML.vm"));
+    return response;
+  }
+  
   private String makePageTitle(String pageName) {
     return "".equals(pageName) ?
       "Test History" :
@@ -46,18 +61,6 @@ public class TestHistoryResponder implements SecureResponder {
 
   private boolean formatIsXML(Request request) {
     return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
-  }
-
-  public void setResultsDirectory(File resultsDirectory) {
-    this.resultsDirectory = resultsDirectory;
-  }
-
-  public File getResultsDirectory() {
-    return resultsDirectory;
-  }
-
-  public void generateNullResponseForTest() {
-    generateNullResponseForTest = true;
   }
 
   public SecureOperation getSecureOperation() {
