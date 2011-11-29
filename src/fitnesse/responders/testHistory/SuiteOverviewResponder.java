@@ -25,10 +25,14 @@ import fitnesse.responders.run.SuiteFilter;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 
 public class SuiteOverviewResponder implements Responder {
 
+  private FitNesseContext context;
+  
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.context = context;
     WikiPage root = context.root;
     WikiPage page = root.getPageCrawler().getPage(root, PathParser.parse(request.getResource()));
     
@@ -40,21 +44,22 @@ public class SuiteOverviewResponder implements Responder {
     treeview.findLatestResults(context.getTestHistoryDirectory());
     treeview.countResults();
     
-    SimpleResponse response = new SimpleResponse(400);
-    
-    VelocityContext velocityContext = new VelocityContext();
-    velocityContext.put("treeRoot", treeview.getTreeRoot());
-    PageTitle title = new PageTitle("Suite Overview", PathParser.parse(request.getResource()));
-    velocityContext.put("pageTitle", title);
-    
-    
-    
-    String velocityTemplate = "suiteOverview.vm";
-    Template template = VelocityFactory.getVelocityEngine().getTemplate(velocityTemplate);
-    StringWriter writer = new StringWriter();
-    template.merge(velocityContext, writer);
-    response.setContent(writer.toString());
+    WikiPagePath path = PathParser.parse(request.getResource());
+    SimpleResponse response = makeResponse(treeview, path);
     return response;
 
+  }
+
+  private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path) throws Exception {
+    SimpleResponse response = new SimpleResponse();
+    
+    HtmlPage page = context.htmlPageFactory.newPage();
+    page.setTitle("Suite Overview");
+    page.setPageTitle(new PageTitle("Suite Overview", path));
+    page.put("treeRoot", treeview.getTreeRoot());
+    
+    page.setMainTemplate("suiteOverview.vm");
+    response.setContent(page.html());
+    return response;
   }
 }

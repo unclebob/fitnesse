@@ -1,6 +1,4 @@
-#set ($page_title="Suite Overview")
-#parse("pageHead.vm")
-
+<div class="main">
 #if($treeRoot)
 	#set ($branch=$treeRoot)
 	#if ($branch.branches.size()==1)
@@ -59,4 +57,4 @@
   <h2>Sorry no information: $pageTitle.Title</h2>
 #end
 
-#parse("pageFooter.vm")
+</div>
