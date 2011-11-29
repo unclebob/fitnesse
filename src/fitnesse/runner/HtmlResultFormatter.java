@@ -24,7 +24,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   private FitNesseContext context;
   private String host;
   private String rootPath;
-  private HtmlResultPage htmlPage;
+  private HtmlPage htmlPage;
 
   public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws Exception {
     this.context = context;
@@ -55,12 +55,19 @@ public class HtmlResultFormatter implements ResultFormatter {
   }
   
   private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
-    htmlPage = new HtmlResultPage();
+    htmlPage = context.htmlPageFactory.newPage();
 
     htmlPage.setTitle(rootPath);
-    htmlPage.setHost(host);
+    htmlPage.put("baseUri", baseUri(host));
 
     htmlPage.setPageTitle(new PageTitle("Command Line Test Results", PathParser.parse(rootPath)));
+  }
+
+  public String baseUri(String host) {
+    StringBuffer href = new StringBuffer("http://");
+    href.append(host);
+    href.append("/");
+    return href.toString();
   }
 
   public void acceptResult(PageResult result) throws Exception {
@@ -90,30 +97,6 @@ public class HtmlResultFormatter implements ResultFormatter {
   public InputStream getResultStream() throws Exception {
     close();
     return buffer.getInputStream();
-  }
-
-}
-
-class HtmlResultPage extends HtmlPage {
-
-  private String baseUri;
-  
-  protected HtmlResultPage() {
-    super("htmlresultskeleton.vm");
-  }
-
-  @Override
-  protected VelocityContext updateVelocityContext() throws Exception {
-    VelocityContext velocityContext = super.updateVelocityContext();
-    velocityContext.put("baseUri", baseUri);
-    return velocityContext;
-  }
-  
-  public void setHost(String host) {
-    StringBuffer href = new StringBuffer("http://");
-    href.append(host);
-    href.append("/");
-    baseUri = href.toString();
   }
 
 }

@@ -54,6 +54,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     startSearching();
 
+    response.add(createSearchResultsFooter());
     response.add(htmlPage.postDivision);
 
     response.closeAll();
@@ -64,6 +65,20 @@ public abstract class ResultResponder extends ChunkingResponder implements
     response.add(createSearchResultsEntry(page));
   }
 
+  private String createSearchResultsFooter() throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+
+    StringWriter writer = new StringWriter();
+
+    Template template = VelocityFactory.getVelocityEngine().getTemplate(
+      "searchResultsFooter.vm");
+    velocityContext.put("hits", hits);
+
+    template.merge(velocityContext, writer);
+
+    return writer.toString();
+  }
+  
   private String createSearchResultsEntry(WikiPage result) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
 
