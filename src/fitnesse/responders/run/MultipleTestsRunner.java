@@ -73,9 +73,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void internalExecuteTestPages() throws Exception {
+    System.out.println("......internalExecuteTestPages");
     synchronized (this) {
+      System.out.println("......synchronized");
       testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
       stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
+      System.out.println("......unsynchronized");
     }
     testSystemGroup.setFastTest(isFastTest);
     testSystemGroup.setManualStart(useManualStartForTestSystem());
@@ -83,10 +86,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
     PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();
     announceTotalTestsToRun(pagesByTestSystem);
+    System.out.println("......about to start testing");
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
+      System.out.println("......do some tests.");
       executePagesInTestSystem(descriptor, pagesByTestSystem);
     }
+    System.out.println("......testing complete");
     fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+    System.out.println("......internalExecuteTestPages complete");
   }
   
   private boolean useManualStartForTestSystem() {

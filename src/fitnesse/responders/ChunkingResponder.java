@@ -94,11 +94,8 @@ public abstract class ChunkingResponder implements Responder {
 
   protected class RespondingRunnable implements Runnable {
     public void run() {
-      System.out.println("\nWaiting for ready to send at: " + System.currentTimeMillis());
       response.waitForReadyToSend();
-      System.out.println("Ready to send at: " + System.currentTimeMillis());
       startSending();
-      System.out.println("Done sending at: " + System.currentTimeMillis());
 
     }
   }
