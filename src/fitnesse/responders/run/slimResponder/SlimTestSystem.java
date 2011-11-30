@@ -115,31 +115,33 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     if (fastTest) {
       slimRunner = new MockCommandRunner();
       createSlimService(slimArguments);
-    } if (manualStart) {
+    }
+    if (manualStart) {
       slimSocket = getSlimPortBase();
       slimRunner = new MockCommandRunner();
-    }
-    else {
+    } else {
       slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
     }
     return new ExecutionLog(page, slimRunner);
   }
-  
+
   public int findFreePort() {
     int port;
     try {
-      ServerSocket socket= new ServerSocket(0);
+      ServerSocket socket = new ServerSocket(0);
       port = socket.getLocalPort();
-      socket.close(); 
-    } catch (Exception e) { port = -1; }
-    return port;    
-  } 
+      socket.close();
+    } catch (Exception e) {
+      port = -1;
+    }
+    return port;
+  }
 
   public int getNextSlimSocket() {
-	int base = getSlimPortBase();
-	if (base == 0) {
-		return findFreePort();
-	}
+    int base = getSlimPortBase();
+    if (base == 0) {
+      return findFreePort();
+    }
     synchronized (slimSocketOffset) {
       int offset = slimSocketOffset.get();
       offset = (offset + 1) % 10;
@@ -183,11 +185,21 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public void bye() throws Exception {
+    System.out.println("..........sending bye()");
     slimClient.sendBye();
-    if (!fastTest && !manualStart)
+    System.out.println("..........bye sent.");
+    System.out.println("..........fastTest = " + fastTest);
+    System.out.println("..........manualStart = " + manualStart);
+    if (!fastTest && !manualStart) {
+      System.out.println("..........about to join");
       slimRunner.join();
-    if (fastTest)
+      System.out.println("..........joined");
+    }
+    if (fastTest) {
+      System.out.println("..........about to kill");
       slimRunner.kill();
+      System.out.println("..........killed");
+    }
   }
 
   //For testing only.  Makes responder faster.
