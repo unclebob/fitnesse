@@ -84,6 +84,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
       System.out.println("......do some tests.");
+      Thread.sleep(50);
       executePagesInTestSystem(descriptor, pagesByTestSystem);
     }
     System.out.println("......testing complete");
