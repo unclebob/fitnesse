@@ -84,7 +84,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     announceTotalTestsToRun(pagesByTestSystem);
     for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
       System.out.println("......do some tests.");
-      Thread.sleep(50);
       executePagesInTestSystem(descriptor, pagesByTestSystem);
     }
     System.out.println("......testing complete");
@@ -113,28 +112,44 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws Exception {
     TestSystem testSystem = null;
+    System.out.println("........startTestSystemAndExecutePages");
     synchronized (this) {
+      System.out.println("........inside first sync");
       if (!isStopped) {
+        System.out.println("........starting test system");
         currentTestSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
         testSystem = currentTestSystem;
+        System.out.println("........test system started");
         resultsListener.testSystemStarted(testSystem, descriptor.testSystemName, descriptor.testRunner);
+        System.out.println("........listener informed");
+      } else {
+        System.out.println("........STOPPED");
       }
     }
     if (testSystem != null) {
       if (testSystem.isSuccessfullyStarted()) {
+        System.out.println("........about to execute test system pages");
         executeTestSystemPages(testSystemPages, testSystem);
+        System.out.println("........waiting for test system to send results");
         waitForTestSystemToSendResults();
+        System.out.println("........results sent");
       } else {
-        throw new Exception("Test system not started");
+        throw new Exception("........Test system not started");
       }
 
+      System.out.println("........about to say goodbye to test system");
       synchronized (this) {
         if (!isStopped) {
+          System.out.println("........say bye bye");
           testSystem.bye();
+          System.out.println("........said bye bye");
         }
         currentTestSystem = null;
       }
+    } else {
+      System.out.println("........NULL!");
     }
+    System.out.println("........startTestSystemAndExecutePage done.");
   }
 
   private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
