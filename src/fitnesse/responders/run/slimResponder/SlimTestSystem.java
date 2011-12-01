@@ -116,7 +116,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       slimRunner = new MockCommandRunner();
       createSlimService(slimArguments);
     }
-    if (manualStart) {
+    else if (manualStart) {
       slimSocket = getSlimPortBase();
       slimRunner = new MockCommandRunner();
     } else {
