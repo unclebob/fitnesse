@@ -76,7 +76,6 @@ public class CommandRunner {
  }
 
  public void join() throws Exception {
-   Thread.sleep(500); //todo (fiddle) wait for process to start.
    process.waitFor();
    timeMeasurement.stop();
    exitCode = process.exitValue();
