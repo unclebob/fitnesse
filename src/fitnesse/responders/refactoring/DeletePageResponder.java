@@ -61,49 +61,18 @@ public class DeletePageResponder implements SecureResponder {
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/"));
-    html.main.use(makeMainContent(root, qualifiedPageName));
+    makeMainContent(html, root, qualifiedPageName);
+    html.setMainTemplate("deletePage.vm");
     return html.html();
   }
 
-  private String makeMainContent(final WikiPage root, final String qualifiedPageName) throws Exception {
+  private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) throws Exception {
     WikiPagePath path = PathParser.parse(qualifiedPageName);
     WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
     List<WikiPage> children = pageToDelete.getChildren();
-    boolean addSubPageWarning = true;
-    if (children == null || children.isEmpty()) {
-      addSubPageWarning = false;
-    }
 
-    HtmlTag divTag = HtmlUtil.makeDivTag("centered");
-    divTag.add(makeHeadingTag(addSubPageWarning, qualifiedPageName));
-    divTag.add(HtmlUtil.BR);
-    divTag.add(new RawHtml("<center><table class = \"confirmation-form\"><tr><td class = \"confirmation-form\">"));
-    HtmlTag deletePageYesForm = HtmlUtil.makeFormTag("POST", qualifiedPageName + "?responder=deletePage&confirmed=yes", "deletePageYesForm");
-    HtmlTag submitYesButton = HtmlUtil.makeInputTag("submit", "deletePageYesSubmit", "Yes");
-    deletePageYesForm.add(submitYesButton);
-    divTag.add(deletePageYesForm.html());
-
-    divTag.add(new RawHtml("</td><td class = \"confirmation-form\">"));
-
-    HtmlTag deletePageNoForm = HtmlUtil.makeFormTag("POST", qualifiedPageName, "deletePageNoForm");
-    HtmlTag submitNoButton = HtmlUtil.makeInputTag("submit", "deletePageYesSubmit", "No");
-    deletePageNoForm.add(submitNoButton);
-    divTag.add(deletePageNoForm.html());
-
-    divTag.add(new RawHtml("</tr></table></center>"));
-    divTag.add(HtmlUtil.BR);
-
-    return divTag.html();
-  }
-
-  private HtmlTag makeHeadingTag(final boolean addSubPageWarning, final String qualifiedPageName) {
-    HtmlTag h3Tag = new HtmlTag("H3");
-    if (addSubPageWarning) {
-      h3Tag.add("Warning, this page contains one or more subpages.");
-      h3Tag.add(HtmlUtil.BR);
-    }
-    h3Tag.add("Are you sure you want to delete " + qualifiedPageName + "?");
-    return h3Tag;
+    html.put("deleteSubPages", children == null || children.isEmpty());
+    html.put("pageName", qualifiedPageName);
   }
 
   public SecureOperation getSecureOperation() {
