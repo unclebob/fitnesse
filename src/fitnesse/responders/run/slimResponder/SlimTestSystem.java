@@ -185,20 +185,20 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   public void bye() throws Exception {
-    System.out.println("..........sending bye()");
+//    System.out.println("..........sending bye()");
     slimClient.sendBye();
-    System.out.println("..........bye sent.");
-    System.out.println("..........fastTest = " + fastTest);
-    System.out.println("..........manualStart = " + manualStart);
+//    System.out.println("..........bye sent.");
+//    System.out.println("..........fastTest = " + fastTest);
+//    System.out.println("..........manualStart = " + manualStart);
     if (!fastTest && !manualStart) {
-      System.out.println("..........about to join");
+//      System.out.println("..........about to join");
       slimRunner.join();
-      System.out.println("..........joined");
+//      System.out.println("..........joined");
     }
     if (fastTest) {
-      System.out.println("..........about to kill");
+//      System.out.println("..........about to kill");
       slimRunner.kill();
-      System.out.println("..........killed");
+//      System.out.println("..........killed");
     }
   }
 
