@@ -33,53 +33,25 @@ public class DeleteConfirmationResponder implements SecureResponder {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Delete File(s): ");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
-    page.main.use(makeConfirmationHTML(filename, context));
-
+    makeConfirmationHTML(page, filename, context);
+    page.setMainTemplate("deleteConfirmation.vm");
+        
     return page.html();
   }
 
-  private HtmlTag makeConfirmationHTML(String filename, FitNesseContext context) throws Exception {
+  private void makeConfirmationHTML(HtmlPage page, String filename, FitNesseContext context) throws Exception {
     String pathname = context.rootPagePath + "/" + resource + filename;
     File file = new File(pathname);
     boolean isDir = file.isDirectory();
 
-    TagGroup group = new TagGroup();
-    group.add(messageText(filename, isDir, file));
-
-    group.add(HtmlUtil.BR);
-    group.add(HtmlUtil.BR);
-    group.add(HtmlUtil.BR);
-    group.add(makeYesForm(filename));
-    group.add(makeNoForm());
-    group.add(HtmlUtil.NBSP);
-    group.add(HtmlUtil.NBSP);
-    return group;
-  }
-
-  private String messageText(String filename, boolean dir, File file) {
-    String message = "Are you sure you would like to delete <b>" + filename + "</b> ";
-    if (dir)
-      message += " and all " + file.listFiles().length + " files inside";
-
-    return message + "?";
-  }
-
-  private HtmlTag makeNoForm() {
-    HtmlTag noForm = HtmlUtil.makeFormTag("get", "/" + resource);
-    HtmlTag noButton = HtmlUtil.makeInputTag("submit", "", "No");
-    noButton.addAttribute("accesskey", "n");
-    noForm.add(noButton);
-    return noForm;
-  }
-
-  private HtmlTag makeYesForm(String filename) {
-    HtmlTag yesForm = HtmlUtil.makeFormTag("get", "/" + resource);
-    HtmlTag yesButton = HtmlUtil.makeInputTag("submit", "", "Yes");
-    yesButton.addAttribute("accesskey", "y");
-    yesForm.add(yesButton);
-    yesForm.add(HtmlUtil.makeInputTag("hidden", "responder", "deleteFile"));
-    yesForm.add(HtmlUtil.makeInputTag("hidden", "filename", filename));
-    return yesForm;
+    page.put("filename", filename);
+    page.put("isDir", isDir);
+    if (isDir) {
+      page.put("nFiles", file.listFiles().length);
+    }
+//    page.put("path", resource);
+//    makeYesForm(filename);
+//    makeNoForm();
   }
 
   public SecureOperation getSecureOperation() {
