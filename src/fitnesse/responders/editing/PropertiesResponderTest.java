@@ -18,8 +18,11 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
+import fitnesse.testutil.FitNesseUtil;
 
 public class PropertiesResponderTest extends RegexTestCase {
+  private FitNesseContext context;
+
   private WikiPage root;
 
   private PageCrawler crawler;
@@ -33,6 +36,8 @@ public class PropertiesResponderTest extends RegexTestCase {
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     crawler = root.getPageCrawler();
+    context = FitNesseUtil.makeTestContext(root);
+    request = new MockRequest();
   }
 
   public void testResponse() throws Exception {
@@ -48,7 +53,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     request.setResource("PageOne");
 
     Responder responder = new PropertiesResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals("max-age=0", response.getHeader("Cache-Control"));
 
     String content = response.getContent();
@@ -86,7 +91,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     request.addInput("format", "json");
 
     Responder responder = new PropertiesResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     assertEquals("text/json", response.getContentType());
     String jsonText = response.getContent();
     JSONObject jsonObject = new JSONObject(jsonText);
@@ -126,7 +131,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     page.commit(data);
 
     request.setResource("SomePage");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     content = response.getContent();
 
     assertSubString("Last modified by Bill", content);
@@ -142,7 +147,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     request = new MockRequest();
     request.setResource(page.getName());
     responder = new PropertiesResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     content = response.getContent();
     return page;
   }
@@ -159,7 +164,7 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   private void checkUpdateForm() {
     assertSubString("<form", content);
-    assertSubString("action=\"SomePage#end\"", content);
+    assertSubString("action=\"\"", content);
     assertSubString("<input", content);
     assertSubString("type=\"hidden\"", content);
     assertSubString("name=\"responder\"", content);
@@ -170,7 +175,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
     property.setRoot(true);
     testWikiImportUpdateWith(property);
-    assertSubString(" imports its subpages from ", content);
+    assertSubString("imports its subpages from", content);
     assertSubString("value=\"Update Subpages\"", content);
 
     assertSubString("Automatically update imported content when executing tests", content);
@@ -178,7 +183,7 @@ public class PropertiesResponderTest extends RegexTestCase {
 
   public void testWikiImportUpdateNonroot() throws Exception {
     testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
-    assertSubString(" imports its content and subpages from ", content);
+    assertSubString("imports its content and subpages from", content);
     assertSubString("value=\"Update Content and Subpages\"", content);
 
     assertSubString("Automatically update imported content when executing tests", content);
@@ -228,7 +233,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertSubString("<td>InternalAbsPage</td>", content);
     assertSubString("<input type=\"text\" name=\"InternalAbsPage\"", content);
     assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
-    assertMatches("<a href=\".*\">&nbsp;Rename:</a>", content);
+    assertMatches("<a href=\".*\">Rename:</a>", content);
 
     assertSubString("<td>InternalRelPage</td>", content);
     assertSubString("<input type=\"text\" name=\"InternalRelPage\"", content);
@@ -238,7 +243,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     assertSubString("<input type=\"text\" name=\"InternalSubPage\"", content);
     assertSubString("<a href=\".SomePage.SomeChild\">&gt;SomeChild</a>", content);
 
-    assertSubString("<td>file://some/page</td>", content);
+    assertHasRegexp("<td>\\W*file://some/page\\W*</td>", content);
   }
 
   public void testSymbolicLinkListingForBackwardPath() throws Exception {
@@ -261,7 +266,8 @@ public class PropertiesResponderTest extends RegexTestCase {
   public void testPageTypePropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
-    String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\" checked=\"checked\"/> - Static", html);
@@ -274,7 +280,11 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     data.setAttribute("Suite");
-    String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
+    page.commit(data);
+    assertSame(page, context.root.getPageCrawler().getPage(context.root, PathParser.parse(".SomePage")));
+    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
@@ -287,7 +297,10 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     data.setAttribute("Test");
-    String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
+    page.commit(data);
+    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
     assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
@@ -300,7 +313,10 @@ public class PropertiesResponderTest extends RegexTestCase {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
     data.setAttribute("Prune");
-    String html = new PropertiesResponder().makePageTypeRadiosHtml(data).html();
+    page.commit(data);
+    request.setResource(page.getPageCrawler().getFullPath(page).toString());
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
     assertSubString("<input type=\"checkbox\" name=\"Prune\" checked=\"true\"/> - Skip", html);
@@ -310,7 +326,8 @@ public class PropertiesResponderTest extends RegexTestCase {
   public void testActionPropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
-    String html = new PropertiesResponder().makeTestActionCheckboxesHtml(data).html();
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 180px;\">Actions:", html);
     assertSubString("Actions:", html);
     assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
@@ -323,7 +340,8 @@ public class PropertiesResponderTest extends RegexTestCase {
   public void testMakeNavigationPropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
-    String html = new PropertiesResponder().makeNavigationCheckboxesHtml(data).html();
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 180px;\">Navigation:", html);
     assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
     assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
@@ -333,7 +351,8 @@ public class PropertiesResponderTest extends RegexTestCase {
   public void testMakeSecurityPropertiesHtml() throws Exception {
     WikiPage page = root.addChildPage("SomePage");
     PageData data = page.getData();
-    String html = new PropertiesResponder().makeSecurityCheckboxesHtml(data).html();
+    SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
+    String html = response.getContent();
     assertSubString("<div style=\"float: left; width: 180px;\">Security:", html);
     assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
     assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);
