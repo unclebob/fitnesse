@@ -12,7 +12,7 @@ When we look at the properties page we'll see the Unlink link.
 !|Response Examiner.|
 |type  |pattern|matches?|
 |contents|SymLink|true|
-|contents|<a href="LinkingPage\?responder=symlink&removal=SymLink">Unlink&nbsp;</a>|true|
+|contents|<a href="\?responder=symlink&removal=SymLink">Unlink</a>|true|
 
 Now click the '''remove''' link.
 !|Response Requester.|
