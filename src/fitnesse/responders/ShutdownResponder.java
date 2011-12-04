@@ -23,10 +23,7 @@ public class ShutdownResponder implements SecureResponder {
     html.setTitle("Shutdown");
     html.setPageTitle(new PageTitle("Shutdown"));
 
-    HtmlTag content = HtmlUtil.makeDivTag("centered");
-    content.add(new HtmlTag("h3", "FitNesse is shutting down..."));
-
-    html.main.use(content);
+    html.main.use("<div class=\"centered\"><h3>FitNesse is shutting down...</h3></div>");
     response.setContent(html.html());
 
     final FitNesse fitnesseInstance = context.fitnesse;
