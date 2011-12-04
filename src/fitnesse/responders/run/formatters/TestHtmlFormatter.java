@@ -39,7 +39,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   @Override
   public void writeHead(String pageType) throws Exception {
     htmlPage = buildHtml(pageType);
-    htmlPage.main.use(HtmlPage.BreakPoint);
+    htmlPage.setMainContent(HtmlPage.BreakPoint);
     htmlPage.divide();
     writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
   }

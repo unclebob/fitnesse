@@ -89,14 +89,20 @@ public class WikiPageResponder implements SecureResponder {
     // TODO move this to menu
     html.actions = new WikiPageActions(page).withAddChild();
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    html.main.use(generateHtml(pageData));
+
+    String childPopupHtml = makeAddChildPopup(page, fullPathName);
+
+    html.setMainContent(generateHtml(pageData) + childPopupHtml);
+    handleSpecialProperties(html, page);
+    return html.html();
+  }
+
+  private String makeAddChildPopup(WikiPage page, String fullPathName) {
     VelocityContext velocityContext = new VelocityContext();
 
     velocityContext.put("page_name", page.getName());
     velocityContext.put("full_path", fullPathName);
-    html.main.add(VelocityFactory.translateTemplate(velocityContext, "addChildPagePopup.vm"));
-    handleSpecialProperties(html, page);
-    return html.html();
+    return VelocityFactory.translateTemplate(velocityContext, "addChildPagePopup.vm");
   }
 
   /* hook for subclasses */

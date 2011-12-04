@@ -91,7 +91,7 @@ public class EditResponder implements SecureResponder {
     html.setTitle(title + resource + ":");
     
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource)));
-    html.main.add(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
+    html.setMainContent(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
     
     return html.html();
   }

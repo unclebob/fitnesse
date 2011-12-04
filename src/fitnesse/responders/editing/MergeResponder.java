@@ -46,7 +46,7 @@ public class MergeResponder implements Responder {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Merge " + resource);
     page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
-    page.main.use(makeRightColumn());
+    page.setMainContent(makeRightColumn());
     return page.html();
   }
 

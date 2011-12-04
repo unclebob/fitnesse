@@ -57,7 +57,7 @@ public class DirectoryResponder implements SecureResponder {
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
     page.setPageTitle(new PageTitle("Files Section", resource, "/"));
-    page.main.use(makeRightColumn());
+    page.setMainContent(makeRightColumn());
 
     return page.html();
   }

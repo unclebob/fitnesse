@@ -28,9 +28,9 @@ public class ErrorResponder implements Responder {
     HtmlPage html = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(html, "Error Occured");
     if (exception != null)
-      html.main.add("<pre>" + makeExceptionString(exception) + "</pre>");
+      html.setMainContent(new HtmlTag("pre", makeExceptionString(exception)).html());
     if (message != null)
-      html.main.add(makeErrorMessage());
+      html.setMainContent(makeErrorMessage());
     response.setContent(html.html());
 
     return response;
@@ -46,9 +46,9 @@ public class ErrorResponder implements Responder {
     return buffer.toString();
   }
 
-  public HtmlTag makeErrorMessage() {
+  public String makeErrorMessage() {
     HtmlTag tag = HtmlUtil.makeDivTag("centered");
     tag.add(message);
-    return tag;
+    return tag.html();
   }
 }

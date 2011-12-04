@@ -20,11 +20,11 @@ public class HtmlPage {
   private String templateFileName;
   private String title = "FitNesse";
   private String bodyClass;
-  private String mainTemplate;
   private PageTitle pageTitle;
+  private String mainTemplate;
+  private String mainContent;
   
   public WikiPageActions actions;
-  public HtmlTag main;
 
   public String preDivision;
   public String postDivision;
@@ -34,8 +34,6 @@ public class HtmlPage {
     
     velocityContext =  new VelocityContext();
     this.templateFileName = templateFileName;
-    
-    main = HtmlUtil.makeDivTag("main");
   }
 
   protected VelocityContext updateVelocityContext() throws Exception {
@@ -47,13 +45,17 @@ public class HtmlPage {
     if (mainTemplate != null) {
       velocityContext.put("mainTemplate", mainTemplate);
     } else {
-      velocityContext.put("mainSection", main.html());
+      velocityContext.put("mainContent", mainContent);
     }
     return velocityContext;
   }
 
   public void setMainTemplate(String templateName) {
     this.mainTemplate = templateName;
+  }
+  
+  public void setMainContent(String mainContent) {
+    this.mainContent = mainContent;
   }
   
   public void put(String key, Object value) {

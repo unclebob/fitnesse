@@ -14,14 +14,16 @@
 
   <div class="mainbar">
 
-    #parse( "pageTitle.vm" )
+   #parse( "pageTitle.vm" )
     
-    ## parse Html tree
-    #if( $mainTemplate )
-     #parse( $mainTemplate )
-    #else
-     $!mainSection
-    #end
+   ## parse Html tree
+   #if( $mainTemplate )
+    #parse( $mainTemplate )
+   #else
+   <div class="main">
+    $!mainContent
+   </div>
+   #end
     
   </div>
  </body>
