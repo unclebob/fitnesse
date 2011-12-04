@@ -18,35 +18,18 @@ public class RenameFileConfirmationResponder implements SecureResponder {
   private String resource;
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
-    response.setContent(makePageContent(filename, context));
-    return response;
-  }
-
-  private String makePageContent(String filename, FitNesseContext context) throws Exception {
+    
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Rename " + filename);
     page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
-    page.main.use(makeRenameFormHTML(filename));
+    page.setMainTemplate("renameFileConfirmation.vm");
+    page.put("filename", filename);
 
-    return page.html();
-  }
-
-  private HtmlTag makeRenameFormHTML(String filename) throws Exception {
-    HtmlTag form = HtmlUtil.makeFormTag("get", "/" + resource);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "renameFile"));
-
-    form.add("Rename " + HtmlUtil.makeBold(filename).html() + " to ");
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.makeInputTag("text", "newName", filename));
-    form.add(HtmlUtil.makeInputTag("submit", "renameFile", "Rename"));
-    form.add(HtmlUtil.makeInputTag("hidden", "filename", filename));
-
-    return form;
+    SimpleResponse response = new SimpleResponse();
+    response.setContent(page.html());
+    return response;
   }
 
   public SecureOperation getSecureOperation() {
