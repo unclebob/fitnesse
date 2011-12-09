@@ -1,4 +1,4 @@
-addEvent(window, "load", function() {
+$(function() {
     TracWysiwyg.tracPaths = { base: ".", stylesheets: [] };
     var options = TracWysiwyg.getOptions();
     var instance = new TracWysiwyg(document.getElementById("textarea"), options);
@@ -1216,6 +1216,6 @@ addEvent(window, "load", function() {
     button.innerHTML = "run &#187;";
     button.style.textDecoration = "underline";
     document.body.appendChild(button);
-    addEvent(button, "click", run);
+    $(button).click(run);
     button.focus();
 });

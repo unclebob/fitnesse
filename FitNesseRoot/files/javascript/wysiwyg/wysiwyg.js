@@ -232,7 +232,7 @@ TracWysiwyg.prototype.setupFormEvent = function() {
             TracWysiwyg.stopEvent(event || window.event);
         }
     }
-    addEvent(this.textarea.form, "submit", listener);
+    $(this.textarea.form).submit(listener);
 };
 
 TracWysiwyg.prototype.createEditable = function(d, textarea, textareaResizable) {
@@ -265,7 +265,7 @@ TracWysiwyg.prototype.createEditable = function(d, textarea, textareaResizable) 
         if (/^[0-9]+$/.exec(dimension.width)) {
             grip.style.width = dimension.width + "px";
         }
-        addEvent(grip, "mousedown", beginDrag);
+        $(grip).mousedown(beginDrag);
         wrapper.appendChild(grip);
         var resizable = d.createElement("div");
         resizable.className = "trac-resizable";
@@ -283,10 +283,10 @@ TracWysiwyg.prototype.createEditable = function(d, textarea, textareaResizable) 
         offset = frame.height - event.pageY;
         contentDocument = self.contentDocument;
         frame.blur();
-        addEvent(d, "mousemove", dragging);
-        addEvent(d, "mouseup", endDrag);
-        addEvent(contentDocument, "mousemove", draggingForFrame);
-        addEvent(contentDocument, "mouseup", endDrag);
+        $(d).mousemove(dragging);
+        $(d).mouseup(endDrag);
+        $(contentDocument).mousemove(draggingForFrame);
+        $(contentDocument).mouseup(endDrag);
     }
 
     var topPageY = 0, framePageY = 0;
@@ -428,7 +428,7 @@ TracWysiwyg.prototype.createTableMenu = function(d) {
 TracWysiwyg.prototype.setupMenuEvents = function() {
     function addToolbarEvent(element, self, args) {
         var method = args.shift();
-        addEvent(element, "click", function(event) {
+        $(element).click(function(event) {
             var w = self.contentWindow;
             TracWysiwyg.stopEvent(event || w.event);
             var keepMenus = false, exception;
@@ -655,7 +655,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             }
         }
     }
-    addEvent(d, window.opera ? "keypress" : "keydown", listenerKeydown);
+    $(d).keydown(listenerKeydown);
 
     function listenerKeypress(event) {
         event = event || self.contentWindow.event;
@@ -685,7 +685,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             return;
         }
     }
-    addEvent(d, "keypress", listenerKeypress);
+    $(d).keypress(listenerKeypress);
 
     function listenerKeyup(event) {
         var keyCode = event.keyCode;
@@ -699,18 +699,18 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         }
         self.selectionChanged();
     }
-    addEvent(d, "keyup", listenerKeyup);
+    $(d).keyup(listenerKeyup);
 
     function listenerMouseup(event) {
         self.selectionChanged();
     }
-    addEvent(d, "mouseup", listenerMouseup);
+    $(d).mouseup(listenerMouseup);
 
     function listenerClick(event) {
         self.hideAllMenus();
         self.selectionChanged();
     }
-    addEvent(d, "click", listenerClick);
+    $(d).click(listenerClick);
 };
 
 TracWysiwyg.prototype.loadWysiwygDocument = function() {
@@ -773,12 +773,12 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
         switch (button.type) {
         case "checkbox":
             var listener = this.listenerToggleAutolink(button);
-            addEvent(button, "click", listener);
-            addEvent(button, "keypress", listener);
+            $(button).click(listener);
+            $(button).keypress(listener);
             this.autolinkButton = button;
             break;
         case "radio":
-            addEvent(button, "click", this.listenerToggleEditor(button.value));
+            $(button).click(this.listenerToggleEditor(button.value));
             break;
         }
     }
@@ -791,10 +791,10 @@ TracWysiwyg.prototype.setupSyncTextAreaHeight = function() {
 
     var editrows = document.getElementById("editrows");
     if (editrows) {
-        addEvent(editrows, "change", changeHeight);
+        $(editrows).change(changeHeight);
     }
     if (this.textareaResizable) {
-        addEvent(this.textarea.nextSibling, "mousedown", beginDrag);
+        $(this.textarea.nextSibling).mousedown(beginDrag);
     }
 
     function changeHeight() {
@@ -805,8 +805,8 @@ TracWysiwyg.prototype.setupSyncTextAreaHeight = function() {
     }
 
     function beginDrag(event) {
-        addEvent(d, "mousemove", changeHeight);
-        addEvent(d, "mouseup", endDrag);
+        $(d).mousemove(changeHeight);
+        $(d).mouseup(endDrag);
     }
 
     function endDrag(event) {
@@ -921,7 +921,7 @@ TracWysiwyg.prototype.detectTracLink = function(event) {
         case 0x0d:  // ENTER
             if (event.shiftKey) {
                 if (window.opera || !anonymous.addEventListener) {
-                    this.insertHTML(html + "<br>");
+                    this.insertHTML(html + "<br/>");
                     if (window.opera) {
                         anchor = this.contentDocument.getElementById(id);
                         node = anchor.parentNode;
@@ -3068,7 +3068,7 @@ if (window.getSelection) {
                         }
                     }
                     this.selectRange(parent, offset, parent, offset);
-                    this.insertHTML('<p><br></p>');
+                    this.insertHTML('<p><br/></p>');
                     TracWysiwyg.stopEvent(event);
                 }
             }
@@ -3076,7 +3076,7 @@ if (window.getSelection) {
     };
     TracWysiwyg.prototype.tableHTML = function(id, row, col) {
         var html = this._tableHTML(row, col);
-        return html.replace(/<td><\/td>/g, '<td><br></td>').replace(/<td>/, '<td id="' + id + '">');
+        return html.replace(/<td><\/td>/g, '<td><br/></td>').replace(/<td>/, '<td id="' + id + '">');
     };
     TracWysiwyg.prototype.insertTableCell = function(row, index) {
         var cell = row.insertCell(index);
@@ -3088,7 +3088,7 @@ if (window.getSelection) {
     };
     if (window.opera) {
         TracWysiwyg.prototype.insertLineBreak = function() {
-            this.execCommand("inserthtml", "<br>");
+            this.execCommand("inserthtml", "<br/>");
         };
         TracWysiwyg.prototype.insertLineBreakOnShiftEnter = null;
     }
@@ -3268,7 +3268,7 @@ else if (document.selection) {
     TracWysiwyg.prototype.isBogusLineBreak = function(node) { return false };
     TracWysiwyg.prototype.insertParagraphOnEnter = null;
     TracWysiwyg.prototype.insertLineBreak = function() {
-        this.insertHTML("<br>");
+        this.insertHTML("<br/>");
     };
     TracWysiwyg.prototype.insertLineBreakOnShiftEnter = null;
     TracWysiwyg.prototype.tableHTML = function(id, row, col) {
