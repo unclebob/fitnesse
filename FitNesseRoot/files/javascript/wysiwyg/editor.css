@@ -1,0 +1,6 @@
+pre.wiki {
+    overflow: visible !important;
+    word-wrap: break-word !important;
+    white-space: -moz-pre-wrap !important;
+    white-space: pre-wrap !important;
+}
