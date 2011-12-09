@@ -70,8 +70,8 @@ $(function() {
         var br = function() { return element("br") };
         var a = function(link, label) {
             var attrs = {
-                href: "#data-tracwysiwyg-link=" + encodeURIComponent(link),
-                title: link, "data-tracwysiwyg-link": link, onclick: "return false;" };
+                href: "#data-wysiwyg-link=" + encodeURIComponent(link),
+                title: link, "data-wysiwyg-link": link, onclick: "return false;" };
             return element("a", attrs, label || link);
         };
 
@@ -383,7 +383,9 @@ $(function() {
             var dom = fragment(
                 element("p",
                     a("wiki:CamelCase", "CamelCase"),
-                    " ", element("tt", "CamelCase"), " FooBarA FOo FoobarA OneÅngström Oneångström setTextColor"));
+                    " ", element("tt", "CamelCase"), " ",
+                    a("wiki:FooBarA", "FooBarA"), " FOo ", 
+		    a("wiki:FooBarA", "FoobarA"), " OneÅngström Oneångström setTextColor"));
             generate.call(this, dom, 
                 "CamelCase !-CamelCase-! FooBarA FOo FoobarA OneÅngström Oneångström setTextColor");
         });

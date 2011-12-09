@@ -1378,18 +1378,10 @@ TracWysiwyg.prototype.selectionChanged = function() {
     // cf. WikiSystem.XML_NAME, http://www.w3.org/TR/REC-xml/#id
     var _xmlName = "[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD](?:[-:_.A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*[-_A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])?"
     var _quotedString = "'[^']+'|" + '"[^"]+"';
-    var _changesetId = "(?:\\d+|[a-fA-F\\d]{6,})";
-    var _ticketLink = "#\\d+";
-    var _reportLink = "\\{\\d+\\}";
     var _changesetPath = "/[^\\]]*";
-    var _changesetLinkBracket = "\\[" + _changesetId + "(?:" + _changesetPath + ")?\\]";
-    var _changesetLinkRev = "r" + _changesetId + "\\b(?!:" + _changesetId + ")";
-    var _logLinkBracket = "\\[" + _changesetId + "[-:]" + _changesetId + "(?:" + _changesetPath + ")?\\]";
-    var _logLinkRev = "r" + _changesetId + "[-:]" + _changesetId + "\\b";
-    var _tracLink = _linkScheme + ":(?:" + _quotedString
-        + "|[a-zA-Z0-9/?!#@](?:(?:\\|(?=[^| \\t\\r\\f\\v])|[^|<> \\t\\r\\f\\v])*[a-zA-Z0-9/=])?)";
-    var _wikiPageName = "[A-Z][a-z]+(?:[A-Z][a-z]*[a-z/])+(?:#[\\w:][-\\w\\d.:]*)?"
-        + "(?=:(?:$|[ \\t\\r\\f\\v])|[^:a-zA-Z]|[ \\t\\r\\f\\v]|$)";
+    //var _wikiPageName = "[A-Z][a-z]+(?:[A-Z][a-z]*[a-z/])+(?:#[\\w:][-\\w\\d.:]*)?"
+    //    + "(?=:(?:$|[ \\t\\r\\f\\v])|[^:a-zA-Z]|[ \\t\\r\\f\\v]|$)";
+    var _wikiPageName = "[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+";
     var wikiInlineRules = [];
     //wikiInlineRules.push("![-<](?:#" + _xmlName + ")?[->]!");	// comment
     wikiInlineRules.push("'''''");        // 1. bolditalic -> badly supported by FitNesse parser
@@ -1415,56 +1407,34 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiRules.push("^[ \\t\\r\\f\\v]+(?:\\{\\{\\{.*?\\}\\}\\})+::(?:[ \\t\\r\\f\\v]+|$)");
     wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");    // -5. leading space
     wikiRules.push("(?:\\|)+[ \\t\\r\\f\\v]*\\\\?$");      // -6. closing table row
-    wikiRules.push("(?:\\|)+");                  // -7. cell
+    wikiRules.push("!?(?:\\|)+");                  // -7. cell
 
     // Add rule for tables:
     // | text | text | -> table
     // !| text | text | -> escaped table
 
     var domToWikiInlineRules = wikiInlineRules.slice(0);
-    domToWikiInlineRules.push("(?:\\|)+");     // cell
-
-    var wikiSyntaxRules = [];
-    wikiSyntaxRules.push(_ticketLink);
-    wikiSyntaxRules.push(_reportLink);
-    wikiSyntaxRules.push(_changesetLinkBracket);
-    wikiSyntaxRules.push(_changesetLinkRev);
-    wikiSyntaxRules.push(_logLinkBracket);
-    wikiSyntaxRules.push(_logLinkRev);
+    //domToWikiInlineRules.push("(?:\\|)+");     // cell
 
     var wikiDetectTracLinkRules = [];
-    wikiDetectTracLinkRules.push(_ticketLink);
-    wikiDetectTracLinkRules.push(_reportLink);
-    wikiDetectTracLinkRules.push(_changesetLinkBracket);
-    wikiDetectTracLinkRules.push("\\b" + _changesetLinkRev);
-    wikiDetectTracLinkRules.push(_logLinkBracket);
-    wikiDetectTracLinkRules.push("\\b" + _logLinkRev);
-    wikiDetectTracLinkRules.push(_tracLink);
     wikiDetectTracLinkRules.push("\\b" + _wikiPageName);
 
     var domToWikiInlinePattern = new RegExp("(?:" + domToWikiInlineRules.join("|") + ")", "g");
     var wikiRulesPattern = new RegExp("(?:(" + wikiRules.join(")|(") + "))", "g");
-    var wikiSyntaxPattern = new RegExp("^(?:" + wikiSyntaxRules.join("|") + ")$");
-    var wikiSyntaxLogPattern = new RegExp("^[\\[r]" + _changesetId + "[-:]");
     var wikiDetectTracLinkPattern = new RegExp("(?:" + wikiDetectTracLinkRules.join("|") + ")", "g");
 
     TracWysiwyg.prototype._linkScheme = _linkScheme;
     TracWysiwyg.prototype._quotedString = _quotedString;
-    TracWysiwyg.prototype._changesetId = _changesetId;
-    TracWysiwyg.prototype._tracLink = _tracLink;
     TracWysiwyg.prototype._wikiPageName = _wikiPageName;
     TracWysiwyg.prototype.wikiInlineRules = wikiInlineRules;
     TracWysiwyg.prototype.wikiToDomInlineRules = wikiToDomInlineRules;
     TracWysiwyg.prototype.xmlNamePattern = new RegExp("^" + _xmlName + "$");
     TracWysiwyg.prototype.domToWikiInlinePattern = domToWikiInlinePattern;
     TracWysiwyg.prototype.wikiRulesPattern = wikiRulesPattern;
-    TracWysiwyg.prototype.wikiSyntaxPattern = wikiSyntaxPattern;
-    TracWysiwyg.prototype.wikiSyntaxLogPattern = wikiSyntaxLogPattern;
     TracWysiwyg.prototype.wikiDetectTracLinkPattern = wikiDetectTracLinkPattern;
 })();
 
 TracWysiwyg.prototype.normalizeTracLink = function(link) {
-    link = this.convertWikiSyntax(link);
     if (/^[\/.#]/.test(link)) {
         link = encode(link);
     }
@@ -1480,27 +1450,6 @@ TracWysiwyg.prototype.normalizeTracLink = function(link) {
         }
         else {
             link = 'wiki:"' + link.replace(/"/g, "%22") + '"';
-        }
-    }
-    return link;
-};
-
-TracWysiwyg.prototype.convertWikiSyntax = function(link) {
-    var match = this.wikiSyntaxPattern.exec(link);
-    if (match) {
-        switch (match[0].charCodeAt(0)) {
-        case 0x7b:  // "{"
-            link = "report:" + link.slice(1, -1);
-            break;
-        case 0x5b:  // "["
-            link = (this.wikiSyntaxLogPattern.test(link) ? "log:@" : "changeset:") + link.slice(1, -1);
-            break;
-        case 0x23:  // #
-            link = "ticket:" + link.substring(1);
-            break;
-        case 0x72:  // r
-            link = (this.wikiSyntaxLogPattern.test(link) ? "log:@" : "changeset:") + link.substring(1);
-            break;
         }
     }
     return link;
@@ -1772,18 +1721,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
     function handleWikiPageName(name, label) {
         createAnchor("wiki:" + name, label || name);
-    }
-
-    function handleTracOtherLinks(value) {
-        createAnchor(self.convertWikiSyntax(value), value);
-    }
-
-    function handleTracTicketLink(value) {
-        if (!/^&/.test(value)) {
-            handleTracOtherLinks(value);
-            return true;
-        }
-        return false;
     }
 
     function handleWikiAnchor(text) {
@@ -2367,8 +2304,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     var wikiBlockTags = this.wikiBlockTags;
     var xmlNamePattern = this.xmlNamePattern;
     var domToWikiInlinePattern = this.domToWikiInlinePattern;
-    var wikiSyntaxPattern = this.wikiSyntaxPattern;
-    var tracLinkPattern = new RegExp("^" + this._tracLink + "$");
     var wikiPageNamePattern = new RegExp("^" + this._wikiPageName + "$");
     var decorationTokenPattern = /^(?:'''|'')$/;
 
@@ -2383,13 +2318,13 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     var openBracket = false;
 
     function escapeText(s) {
-        var match = /^!?\[\[(.+)\]\]$/.exec(s);
-        if (match) {
-            return match[1].toLowerCase() != "br" ? s : "!" + s;
-        }
-        if (/^&#\d+/.test(s)) {
-            return s;
-        }
+//        var match = /^!?\[\[(.+)\]\]$/.exec(s);
+//        if (match) {
+//            return match[1].toLowerCase() != "br" ? s : "!" + s;
+//        }
+//        if (/^&#\d+/.test(s)) {
+//            return s;
+//        }
         return "!-" + s + "-!";
     }
 
@@ -2565,20 +2500,10 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 link = "wiki:" + label;
                 traclink = "[wiki:" + label + "]";
             }
-            else if (wikiSyntaxPattern.test(label)) {
-                text = label;
-                link = self.convertWikiSyntax(label);
-            }
-            else if (tracLinkPattern.test(label)) {
-                text = link = label;
-            }
         }
         else {
             if (link == label) {
                 if (bracket) {
-                    text = label;
-                }
-                else if (tracLinkPattern.test(label)) {
                     text = label;
                 }
             }
@@ -2678,9 +2603,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                     if (value) {
                         var length = _texts.length;
                         var prev = length > 0 ? _texts[length - 1] : null;
-                        if (prev && prev["wysiwyg-traclink"] && tracLinkPattern.test(prev + value.substring(0, 1))) {
-                            _texts[length - 1] = prev["wysiwyg-traclink"];
-                        }
                         _texts.push(value);
                     }
                 }
