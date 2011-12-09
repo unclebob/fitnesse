@@ -19,7 +19,7 @@ iframe.wysiwyg:focus {
     border: solid #d7d7d7;
     border-width: 1px 1px 1px 0;
     height: 18px;
-    width: 400px;
+    width: 382px;
     float: left;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -28,6 +28,8 @@ iframe.wysiwyg:focus {
     list-style-type: none;
     margin: 0px;
     padding: 0px;
+    text-indent: 0;
+    font-size: .9em;
 }
 .wysiwyg-toolbar li {
     float: left;

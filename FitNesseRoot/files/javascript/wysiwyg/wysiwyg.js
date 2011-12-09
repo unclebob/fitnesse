@@ -1,4 +1,5 @@
 var TracWysiwyg = function(textarea, options) {
+console.log("Creating new wysiwig area");
     var self = this;
     var editorMode = TracWysiwyg.getEditorMode();
 
@@ -79,6 +80,7 @@ var TracWysiwyg = function(textarea, options) {
         body.insertBefore(this.menus[i], body.firstChild);
     }
     var element = wikitextToolbar || textareaResizable || textarea;
+console.log("Insering edit buttons");
     element.parentNode.insertBefore(this.toggleEditorButtons, element);
     element.parentNode.insertBefore(this.wysiwygToolbar, element);
 
@@ -355,7 +357,6 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
         '</a></li>',
         '<li title="Bold (Ctrl+B)"><a id="wt-strong" href="#"></a></li>',
         '<li title="Italic (Ctrl+I)"><a id="wt-em" href="#"></a></li>',
-        '<li title="Underline (Ctrl+U)"><a id="wt-underline" href="#"></a></li>',
         '<li title="Monospace"><a id="wt-monospace" href="#"></a></li>',
         '<li><a id="wt-decorationmenu" href="#"></a></li>',
         '<li title="Remove format"><a id="wt-remove" href="#"></a></li>',
@@ -3663,7 +3664,7 @@ TracWysiwyg.findInstance = function(textarea) {
 
 TracWysiwyg.getTracPaths = function() {
     var stylesheets = [];
-    var paths = { stylesheets: stylesheets };
+    var paths = { stylesheets: stylesheets, base: '/' };
 
     var d = document;
     var head = d.getElementsByTagName("head")[0];

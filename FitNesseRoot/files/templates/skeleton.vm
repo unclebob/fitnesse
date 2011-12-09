@@ -5,8 +5,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>$title</title>
   <link rel="stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="/files/javascript/wysiwyg/wysiwyg.css" media="screen"/>
+  <link rel="wysiwyg.base" href="/"/>
+  <link rel="wysiwyg.stylesheet" type="text/css" href="/files/javascript/wysiwyg/editor.css" media="screen"/>
   <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
+  <script src="/files/javascript/jquery-1.7.1.min.js" type="text/javascript"></script>
   <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
+  <script src="/files/javascript/wysiwyg/wysiwyg.js" type="text/javascript"></script>
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end>
 

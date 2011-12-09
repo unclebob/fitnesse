@@ -5,7 +5,7 @@
 #if($!redirect)
  <input type="hidden" name="redirect" value="$redirect"/>
 #end
- <textarea class="pageContent no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
+ <textarea id="textarea" class="wikitext pageContent no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
 
  <div class="edit_buttons">
 
@@ -27,5 +27,12 @@
  </div>
 </form>
 <script type="text/javascript">
- document.f.pageContent.focus();
+ $(function() {
+console.log("Onload!");
+  document.f.pageContent.focus();
+
+  //var options = TracWysiwyg.getOptions();
+  //var instance = new TracWysiwyg(document.getElementById("textarea"), options);
+  setTimeout(TracWysiwyg.initialize, 10);
+ });
 </script>

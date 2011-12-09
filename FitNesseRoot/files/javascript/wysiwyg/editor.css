@@ -1,6 +1,14 @@
+body {
+ background-color: white;
+}
+
+td {
+ border: 1px solid gray;
+}
+
 pre.wiki {
-    overflow: visible !important;
-    word-wrap: break-word !important;
-    white-space: -moz-pre-wrap !important;
-    white-space: pre-wrap !important;
+ overflow: visible !important;
+ word-wrap: break-word !important;
+ white-space: -moz-pre-wrap !important;
+ white-space: pre-wrap !important;
 }
