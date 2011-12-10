@@ -391,123 +391,6 @@ $(function() {
                 "CamelCase !-CamelCase-! FooBarA FOo FoobarA OneÅngström Oneångström setTextColor");
         });
 
-        unit.add("token + br", function() {
-            var dom = fragment(
-                element("p", "head ", a("http://localhost/", "http://localhost/"), element("br"), "tail"),
-                element("p", "head http://localhost/", element("br"), "tail"),
-                element("p", "head ", a("wiki:TracLinks", "TracLinks"), element("br"), "tail"),
-                element("p",
-                    "head ", a("http://localhost/", "http://localhost/"), " ",
-                    a("wiki:TracLinks", "wiki:TracLinks"),
-                    element("br"),
-                    "tail"),
-                element("p", "head http://localhost/ wiki:TracLinks", element("br"), "tail"));
-            generateWikitext.call(this, dom, [
-                "head http://localhost/ [[BR]]tail",
-                "",
-                "head !http://localhost/ [[BR]]tail",
-                "",
-                "head TracLinks[[BR]]tail",
-                "",
-                "head http://localhost/ wiki:TracLinks [[BR]]tail",
-                "",
-                "head !http://localhost/ !wiki:TracLinks [[BR]]tail" ].join("\n"));
-        });
-
-        if (window.getSelection) {
-            unit.add("block + br", function() {
-                function br() { return element("br"); }
-                var wikitext = [
-                    "text, br",
-                    "",
-                    "text'', br[[BR]]''",
-                    "",
-                    "|| 1,1[[BR]] || || 1,3 ||",
-                    "|| || 2,2[[BR]][[BR]] ||",
-                    "",
-                    " * list, br[[BR]]",
-                    " * list, br",
-                    " * ",
-                    "",
-                    "text, br[[BR]]" ].join("\n")
-                generateWikitext.call(this,
-                    fragment(
-                        element("p", "text, br", br()),
-                        element("p", "text", element("i", ", br", br()), br()),
-                        element("table", { "class": "wiki" },
-                            element("tbody",
-                                element("tr",
-                                    element("td", "1,1", br(), br()),
-                                    element("td", br()),
-                                    element("td", "1,3", br())),
-                                element("tr",
-                                    element("td", br()),
-                                    element("td", "2,2", br(), br(), br())))),
-                        element("ul",
-                            element("li", "list, br", br(), br()),
-                            element("li", "list, br", br()),
-                            element("li")),
-                        element("p", "text, br", br(), br())),
-                    wikitext);
-                generateFragment.call(this,
-                    fragment(
-                        element("p", "text, br"),
-                        element("p", "text", element("i", ", br", br()), br()),
-                        element("table", { "class": "wiki" },
-                            element("tbody",
-                                element("tr",
-                                    element("td", "1,1", br(), br()),
-                                    element("td", br()),
-                                    element("td", "1,3")),
-                                element("tr",
-                                    element("td", br()),
-                                    element("td", "2,2", br(), br(), br())))),
-                        element("ul",
-                            element("li", "list, br", br(), br()),
-                            element("li", "list, br"),
-                            element("li", br())),
-                        element("p", "text, br", br(), br())),
-                    wikitext);
-            });
-        }
-        else {
-            unit.add("block + br", function() {
-                function br() { return element("br"); }
-                var wikitext = [
-                    "text, br",
-                    "",
-                    "text'', br[[BR]]''",
-                    "",
-                    "|| 1,1[[BR]] || || 1,3 ||",
-                    "|| || 2,2[[BR]][[BR]] ||",
-                    "",
-                    " * list, br[[BR]]",
-                    " * list, br",
-                    " * ",
-                    "",
-                    "text, br[[BR]]" ].join("\n")
-                generate.call(this,
-                    fragment(
-                        element("p", "text, br"),
-                        element("p", "text", element("i", ", br", br())),
-                        element("table", { "class": "wiki" },
-                            element("tbody",
-                                element("tr",
-                                    element("td", "1,1", br()),
-                                    element("td"),
-                                    element("td", "1,3")),
-                                element("tr",
-                                    element("td"),
-                                    element("td", "2,2", br(), br())))),
-                        element("ul",
-                            element("li", "list, br", br()),
-                            element("li", "list, br"),
-                            element("li")),
-                        element("p", "text, br", br())),
-                    wikitext);
-            });
-        }
-
         unit.add("citation", function() {
             var dom = fragment(
                 element("blockquote", { "class": "citation" },
@@ -930,7 +813,7 @@ $(function() {
         unit.add("table", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
-                element("table", { "class": "wiki" },
+                element("table",
                     element("tbody",
                         element("tr", element("td", "1.1"), element("td", "1.2")),
                         element("tr", element("td", "2.1")),
@@ -947,10 +830,21 @@ $(function() {
                 "Paragraph" ].join("\n"));
         });
 
+        unit.add("escaped table", function() {
+            var dom = fragment(
+                element("table", { "class": "escaped" },
+                    element("tbody",
+                        element("tr", element("td", "table"), element("td", element("tt", "escaped"))),
+                        element("tr", element("td", "''not italic''"), element("td", "'''not bold'''")))));
+            generateFragment.call(this, dom, [
+                "!|table|!-escaped-!|",
+                "|''not italic''|'''not bold'''|" ].join("\n"));
+        });
+
         unit.add("table 2", function() {
              var dom = fragment(
                 element("p", "Paragraph"),
-                element("table", { "class": "wiki" },
+                element("table",
                     element("tbody",
                         element("tr", element("td", " 1.1 "), element("td", " 1.2 ")),
                         element("tr", element("td", " 2.1 ")),
@@ -971,10 +865,10 @@ $(function() {
 
         unit.add("table + rule", function() {
             var dom = fragment(
-                element("table", { "class": "wiki" },
+                element("table",
                     element("tbody", element("tr", element("td", " 1st ")))),
                 element("p", element("b", "bold")),
-                element("table", { "class": "wiki" },
+                element("table",
                     element("tbody", element("tr", element("td", " 2nd ")))),
                 element("p", element("tt", "'''normal")));
             generate.call(this, dom, [
@@ -989,7 +883,7 @@ $(function() {
 
         unit.add("table [ paragraph, ul ]", function() {
             var dom = fragment(
-                element("table", { "class": "wiki" },
+                element("table",
                     element("tbody",
                         element("tr",
                             element("td", element("p", "1.1")),
@@ -999,18 +893,16 @@ $(function() {
                                     element("li", "item 2")))),
                         element("tr",
                             element("td",
-                                element("p", "2.1"),
-                                element("ul",
-                                    element("li", "item 3"),
-                                    element("li", "item 4")))))));
+                                element("p", "2.1* item 3 * item 4")
+                                    )))));
             generateWikitext.call(this, dom, [
-                "| 1.1 | * item 1[[BR]] * item 2 |",
-                "| 2.1[[BR]][[BR]] * item 3[[BR]] * item 4 |" ].join("\n"));
+                "| 1.1 | * item 1\n * item 2 |",
+                "| 2.1* item 3 * item 4 |" ].join("\n"));
         });
 
         unit.add("table with incomplete markups", function() {
             var dom = fragment(
-                element("table", { "class": "wiki" },
+                element("table",
                     element("tbody",
                         element("tr",
                             element("td", " ", element("b", element("i", "' "))),
@@ -1048,7 +940,7 @@ $(function() {
                 '</tbody></table>',
                 '' ].join("\n");
             generateWikitext.call(this, dom, [
-                "| a[[BR]][[BR]]b | b |",
+                "| a\n\nb | b |",
                 "| c | d |" ].join("\n"));
         });
 
@@ -1062,10 +954,8 @@ $(function() {
                 element("h5", "Heading", br(), "5"),
                 element("h6", "Heading", br(), "6"),
                 element("p",
-                    "var TracWysiwyg = function(textarea) {", br(),
-                    "...", br(),
-                    "}"),
-                element("blockquote", { "class": "citation" }, element("p", "citation", br(), "continued")),
+                    "var TracWysiwyg = function(textarea) {", " ... ", "}"),
+                element("blockquote", { "class": "citation" }, element("p", "citation continued")),
                 element("blockquote", element("p", "quote", br(), "continued")),
                 element("ul",
                     element("li", "item 1", br(), "continued"),
@@ -1086,78 +976,18 @@ $(function() {
                 "!4 Heading 4",
                 "!5 Heading 5",
                 "!6 Heading 6",
-                "var TracWysiwyg = function(textarea) {",
-                "...",
-                "}",
+                "var TracWysiwyg = function(textarea) { ... }",
                 "",
-                "> citation",
-                "> continued",
+                "> citation continued",
                 "",
-                "  quote",
-                "  continued",
+                "  quote continued",
                 "",
-                " * item 1",
-                "   continued",
-                "   1. item",
-                "     1.1",
+                " * item 1 continued",
+                "   1. item 1.1",
                 "",
-                " def to_s( ):: dt",
-                "    dd",
+                " def to_s( ):: dt dd",
                 "",
-                "| cell[[BR]]1 |= cell[[BR]]2 =|" ].join("\n"), wikitext);
-        });
-
-        unit.add("escape newlines", function() {
-            var dom = fragment(
-                element("h1", "header"),
-                element("blockquote", { "class": "citation" },
-                    element("p",
-                        br(),
-                        "preserve", br(),
-                        "newlines", br(),
-                        br(),
-                        element("i", "(since 0.11)"), br(),
-                        br(),
-                        br())),
-                element("p",
-                    "Whether Wiki formatter should respect the new lines present", br(),
-                    "in the Wiki text. If set to ", element("b", "default"), ", this is equivalent to", br(),
-                    element("i", "yes"), " for new environments but keeps the old behavior for", br(),
-                    "upgraded environments (i.e. 'no')."),
-                element("p", "must_preserve_newlines"),
-                element("ul",
-                    element("li", "first", br(), "word"),
-                    element("li", "second", br(), "word")),
-                element("dl",
-                    element("dt", "trac"),
-                    element("dd", "trac.edgewall.org", br(), "trac-hacks.org")),
-                element("table", { "class": "wiki" },
-                    element("tbody",
-                        element("tr",
-                            element("td", "cell", br(), "cell")))));
-            generate.call(this, dom, [
-                "!1 header",
-                "> ",
-                "> preserve",
-                "> newlines",
-                "> ",
-                "> ''(since 0.11)''",
-                "> ",
-                "> ",
-                "",
-                "Whether Wiki formatter should respect the new lines present",
-                "in the Wiki text. If set to '''default''', this is equivalent to",
-                "''yes'' for new environments but keeps the old behavior for",
-                "upgraded environments (i.e. 'no').",
-                "",
-                "must_preserve_newlines",
-                "",
-                " * first[[BR]]word",
-                " * second[[BR]]word",
-                "",
-                " trac:: trac.edgewall.org[[BR]]trac-hacks.org",
-                "",
-                "|| cell[[BR]]cell ||" ].join("\n"), { escapeNewlines: true });
+                "| cell 1 | cell 2 |" ].join("\n"), wikitext);
         });
 
         unit.add("selectRange", function() {
