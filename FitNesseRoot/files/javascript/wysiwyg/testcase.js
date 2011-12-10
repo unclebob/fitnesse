@@ -163,6 +163,7 @@ $(function() {
             var wikitext = [
                 "`abc`",
                 "",
+                "",
                 "{{{",
                 "{{{code-block",
                 "}}}" ].join("\n");

@@ -2318,20 +2318,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     var openBracket = false;
 
     function escapeText(s) {
-//        var match = /^!?\[\[(.+)\]\]$/.exec(s);
-//        if (match) {
-//            return match[1].toLowerCase() != "br" ? s : "!" + s;
-//        }
-//        if (/^&#\d+/.test(s)) {
-//            return s;
-//        }
         return "!-" + s + "-!";
-    }
-
-    function isTailEscape() {
-        var t = texts;
-        var length = t.length;
-        return length > 0 ? /-!$/.test(t.slice(-2)) : false;
     }
 
     function tokenFromSpan(node) {
@@ -2373,7 +2360,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
         return hash;
     }
 
-    function pushTextWithDecorations(text, node, traclink) {
+    function pushTextWithDecorations(text, node) {
         var _texts = texts;
         var _decorationTokenPattern = decorationTokenPattern;
         var decorationsHash = nodeDecorations(node);
@@ -2412,19 +2399,8 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
         if (decorations.length > 0) {
             _texts.push.apply(_texts, decorations);
         }
-        if (traclink) {
-            if (_texts.length > 0 && /[\w.+-]$/.test(_texts[_texts.length - 1])) {
-                _texts.push(traclink);
-            }
-            else {
-                text = new String(text);
-                text["wysiwyg-traclink"] = traclink;
-                _texts.push(text);
-            }
-        }
-        else {
-            _texts.push(text);
-        }
+        _texts.push(text);
+
         if (decorations.length > 0) {
             decorations.reverse();
             _texts.push.apply(_texts, decorations);
@@ -2493,12 +2469,10 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             return;
         }
         var text = null;
-        var traclink = null;
         if (autolink == "true") {
             if (wikiPageNamePattern.test(label)) {
                 text = label;
                 link = "wiki:" + label;
-                traclink = "[wiki:" + label + "]";
             }
         }
         else {
@@ -2514,44 +2488,17 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 if (label == match[2]) {
                     if (match[1] == "wiki" && wikiPageNamePattern.test(match[2])) {
                         text = match[2];
-                        traclink = "[wiki:" + text + "]";
                     }
                     else {
                         text = "[" + link + "]";
                     }
                 }
-                else {
-                    var usingLabel = false;
-                    switch (match[1]) {
-                    case "changeset":
-                        usingLabel = label == "[" + match[2] + "]" || /^\d+$/.test(match[2]) && label == "r" + match[2];
-                        break;
-                    case "log":
-                        usingLabel = label == "[" + match[3] + "]" || label == "r" + match[3];
-                        break;
-                    case "report":
-                        usingLabel = label == "{" + match[2] + "}";
-                        break;
-                    case "ticket":
-                        usingLabel = label == "#" + match[2];
-                        break;
-                    }
-                    if (usingLabel) {
-                        text = label;
-                    }
-                }
             }
-        }
-        if (isTailEscape()) {
-            texts.push(" ");
         }
         if (text === null) {
             text = tracLinkText(link, label);
         }
-        if (!traclink && /^[\w.+-]/.test(text)) {
-            traclink = tracLinkText(link, label);
-        }
-        pushTextWithDecorations(text, node, traclink);
+        pushTextWithDecorations(text, node);
     }
 
     function string(source, times) {
@@ -2575,9 +2522,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 _texts.push("\n");
             }
             if (token !== true) {
-                if (name in wikiInlineTags && isTailEscape()) {
-                    _texts.push(" ");
-                }
                 pushToken(token);
             }
             openBracket = false;
@@ -2720,9 +2664,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 }
                 break;
             case "pre":
-                _texts.push(
-                    /^(?:li|dd)$/i.test(node.parentNode.tagName) || self.isInlineNode(node.previousSibling)
-                    ? "\n{{{\n" : "{{{\n");
+                _texts.push("\n{{{\n");
                 inCodeBlock = true;
                 break;
             case "blockquote":
@@ -2772,11 +2714,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 var value = getTextContent(node);
                 var text;
                 if (value) {
-                    if (isTailEscape()) {
-                        _texts.push(" ");
-                    } else {
-			text = "!-" + value + "-!";
-                    }
+	            text = "!-" + value + "-!";
                     pushTextWithDecorations(text, node);
                 }
                 break;
@@ -2789,9 +2727,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 else {
                     var token = tokenFromSpan(node);
                     if (token !== undefined) {
-                        if (name in wikiInlineTags && isTailEscape()) {
-                            _texts.push(" ");
-                        }
                         pushToken(token);
                     }
                 }
@@ -2820,9 +2755,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             // nothing to do
         }
         else if (token !== undefined) {
-            if (name in wikiInlineTags && isTailEscape()) {
-                _texts.push(" ");
-            }
             pushToken(token);
         }
         else {
@@ -2877,9 +2809,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             case "span":
                 var token = tokenFromSpan(node);
                 if (token !== undefined) {
-                    if (name in wikiInlineTags && isTailEscape()) {
-                        _texts.push(" ");
-                    }
                     _texts.push(token);
                 }
                 break;
