@@ -1,3 +1,15 @@
+/****
+
+ TODO: implement
+
+ - escaped table
+ - WikiPageLink
+ - Comment (^#.*)
+ - Collapsible (^!\*+ title ... \n ... \n ^\*+!$
+ - !contents ?
+
+ ****/
+ 
 var TracWysiwyg = function(textarea, options) {
 console.log("Creating new wysiwig area");
     var self = this;
@@ -1402,20 +1414,13 @@ TracWysiwyg.prototype.selectionChanged = function() {
                                             // -4. definition
     wikiRules.push("^[ \\t\\r\\f\\v]+(?:\\{\\{\\{.*?\\}\\}\\})+::(?:[ \\t\\r\\f\\v]+|$)");
     wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");    // -5. leading space
-    wikiRules.push("(?:\\|)+[ \\t\\r\\f\\v]*\\\\?$");      // -6. closing table row
-    wikiRules.push("!?(?:\\|)+");                  // -7. cell
-
-    // Add rule for tables:
-    // | text | text | -> table
-    // !| text | text | -> escaped table
-
-    var domToWikiInlineRules = wikiInlineRules.slice(0);
-    //domToWikiInlineRules.push("(?:\\|)+");     // cell
+    wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");      // -6. closing table row
+    wikiRules.push("!?(?:\\|)");                  // -7. cell
 
     var wikiDetectTracLinkRules = [];
     wikiDetectTracLinkRules.push("\\b" + _wikiPageName);
 
-    var domToWikiInlinePattern = new RegExp("(?:" + domToWikiInlineRules.join("|") + ")", "g");
+    var domToWikiInlinePattern = new RegExp("(?:" + wikiInlineRules.join("|") + ")", "g");
     var wikiRulesPattern = new RegExp("(?:(" + wikiRules.join(")|(") + "))", "g");
     var wikiDetectTracLinkPattern = new RegExp("(?:" + wikiDetectTracLinkRules.join("|") + ")", "g");
 
@@ -1977,7 +1982,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         if (inTable) {
             var target = getSelfOrAncestor(holder, "table");
             holder = target.parentNode;
-            inTable = inTableRow = false;
+            inTable = inEscapedTable = inTableRow = false;
         }
     }
 
@@ -2105,80 +2110,85 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             prevIndex = wikiRulesPattern.lastIndex;
             var matchText = match[0];
 
-            if (!/^#/.test(matchText)) {    // start '' -> escaped
-                switch (matchNumber) {
-                case 1:     // bolditalic
-                    handleInline("bolditalic");
-                    continue;
-                case 2:     // bold
-                    handleInline("bold");
-                    continue;
-                case 3:     // italic
-                    handleInline("italic");
-                    continue;
-                case 4:     // strike
-                    handleInline("strike");
-                    continue;
-                case 5:     // code block
-                    handleInlineCode(matchText, 3);
-                    continue;
-                case 6:     // escaped
-                    handleInlineCode(matchText, 2);
-                    continue;
-                case 7:    // WikiPageName
-                    handleWikiPageName(matchText);
-                    continue;
-                case 1001:  // escaping double escape
-                    break;
-                case -1:    // citation
-                    if (escapeNewlines && inParagraph) {
-                        holder.appendChild(contentDocument.createElement("br"));
-                    }
-                    handleCitation(matchText);
-                    if (escapeNewlines) {
-                        openParagraph();
-                    }
-                    continue;
-                case -2:    // header
-                    currentHeader = handleHeader(matchText);
-                    if (currentHeader) {
-                        line = line.replace(/(?:[ \t\r\f\v]+#[^ \t\r\f\v]+)?[ \t\r\f\v]*$/, "");
-                        var m = /^\s*!([1-6])[ \t\r\f\v]+/.exec(line);
-                        wikiRulesPattern.lastIndex = prevIndex = m[0].length;
-                        continue;
-                    }
-                    break;
-                case -3:    // list
-                    handleList(matchText)
-                    continue;
-                case -4:    // definition
-                    handleDefinition(matchText);
-                    continue;
-                case -5:    // leading space
-                    if (listDepth.length == 0 && !inDefList) {
-                        handleIndent(matchText);
-                        continue;
-                    }
-                    if (!this.isInlineNode(holder.lastChild)) {
-                        continue;
-                    }
-                    matchText = matchText.replace(/^\s+/, " ");
-                    break;
-                case -6:    // closing table row
-                    if (inTable) {
-                        handleTableCell(-1);
-                        continue;
-                    }
-                    break;
-                case -7:    // cell
-                    if (quoteDepth.length > 0 && match.index == 0) {
-                        closeToFragment();
-                    }
-                    wikiRulesPattern.lastIndex = prevIndex;
- 
-                    handleTableCell(inTableRow ? 0 : 1);
+            switch (matchNumber) {
+            case 1:     // bolditalic
+                if (inEscapedTable) { break; }
+                handleInline("bolditalic");
+                continue;
+            case 2:     // bold
+                if (inEscapedTable) { break; }
+                handleInline("bold");
+                continue;
+            case 3:     // italic
+                if (inEscapedTable) { break; }
+                handleInline("italic");
+                continue;
+            case 4:     // strike
+                if (inEscapedTable) { break; }
+                handleInline("strike");
+                continue;
+            case 5:     // code block
+                if (inEscapedTable) { break; }
+                handleInlineCode(matchText, 3);
+                continue;
+            case 6:     // escaped
+                handleInlineCode(matchText, 2);
+                continue;
+            case 7:    // WikiPageName
+                if (inEscapedTable) { break; }
+                handleWikiPageName(matchText);
+                continue;
+            case -1:    // citation
+                if (escapeNewlines && inParagraph) {
+                    holder.appendChild(contentDocument.createElement("br"));
+                }
+                handleCitation(matchText);
+                if (escapeNewlines) {
+                    openParagraph();
+                }
+                continue;
+            case -2:    // header
+                currentHeader = handleHeader(matchText);
+                if (currentHeader) {
+                    line = line.replace(/(?:[ \t\r\f\v]+#[^ \t\r\f\v]+)?[ \t\r\f\v]*$/, "");
+                    var m = /^\s*!([1-6])[ \t\r\f\v]+/.exec(line);
+                    wikiRulesPattern.lastIndex = prevIndex = m[0].length;
                     continue;
                 }
+                break;
+            case -3:    // list
+                handleList(matchText)
+                continue;
+            case -4:    // definition
+                handleDefinition(matchText);
+                continue;
+            case -5:    // leading space
+                if (listDepth.length == 0 && !inDefList) {
+                    handleIndent(matchText);
+                    continue;
+                }
+                if (!this.isInlineNode(holder.lastChild)) {
+                    continue;
+                }
+                matchText = matchText.replace(/^\s+/, " ");
+                break;
+            case -6:    // closing table row
+                if (inTable) {
+                    handleTableCell(-1);
+                    continue;
+                }
+                break;
+            case -7:    // cell
+                if (quoteDepth.length > 0 && match.index == 0) {
+                    closeToFragment();
+                }
+                wikiRulesPattern.lastIndex = prevIndex;
+                if (!inTable) {
+                    inEscapedTable = /^!/.test(matchText);
+                }
+
+                handleTableCell(inTableRow ? 0 : 1, inEscapedTable);
+                continue;
             }
 
             if (matchText) {
@@ -2481,6 +2491,9 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             if (token !== true) {
                 pushToken(token);
             }
+            if (name == 'table' && node.className == 'escaped') {
+                _texts.push("!");
+            }
             openBracket = false;
         }
         else {
@@ -2587,6 +2600,10 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                     quoteCitation = (node.className == "citation");
                 }
                 break;
+            case "table":
+                if (node.className == 'escaped') {
+                    _texts.push("!");
+                }
             case "th":
             case "td":
                 skipNode = node;

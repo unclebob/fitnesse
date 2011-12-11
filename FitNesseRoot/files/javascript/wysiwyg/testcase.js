@@ -834,11 +834,11 @@ $(function() {
             var dom = fragment(
                 element("table", { "class": "escaped" },
                     element("tbody",
-                        element("tr", element("td", "table"), element("td", element("tt", "escaped"))),
-                        element("tr", element("td", "''not italic''"), element("td", "'''not bold'''")))));
-            generateFragment.call(this, dom, [
-                "!|table|!-escaped-!|",
-                "|''not italic''|'''not bold'''|" ].join("\n"));
+                        element("tr", element("td", " table "), element("td", " ", element("tt", "escaped"), " ")),
+                        element("tr", element("td", " ''not italic'' "), element("td", " '''not bold''' ")))));
+            generate.call(this, dom, [
+                "!| table | !-escaped-! |",
+                "| ''not italic'' | '''not bold''' |" ].join("\n"));
         });
 
         unit.add("table 2", function() {
