@@ -1265,8 +1265,7 @@ TracWysiwyg.prototype.createLink = function() {
             }
         }
         if (!currLink) {
-            currLink = anchor.getAttribute("data-wysiwyg-link") || attrs["data-wysiwyg-link"]
-                || anchor.href;
+            currLink = anchor.href;
         }
     }
     else {
@@ -1303,10 +1302,8 @@ TracWysiwyg.prototype.createAnchor = function(link, label, attrs) {
         href[name] = value;
         anchor.setAttribute(name, value);
     }
-    href["data-wysiwyg-link"] = link;
-    anchor.href = TracWysiwyg.serializeToHref(href);
+    anchor.href = link;
     anchor.title = link;
-    anchor.setAttribute("data-wysiwyg-link", link);
     anchor.setAttribute("onclick", "return false;");
     anchor.appendChild(d.createTextNode(label));
     return anchor;
@@ -1391,9 +1388,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     var _xmlName = "[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD](?:[-:_.A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*[-_A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])?"
     var _quotedString = "'[^']+'|" + '"[^"]+"';
     var _changesetPath = "/[^\\]]*";
-    //var _wikiPageName = "[A-Z][a-z]+(?:[A-Z][a-z]*[a-z/])+(?:#[\\w:][-\\w\\d.:]*)?"
-    //    + "(?=:(?:$|[ \\t\\r\\f\\v])|[^:a-zA-Z]|[ \\t\\r\\f\\v]|$)";
-    var _wikiPageName = "[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+";
+    var _wikiPageName = "(?:\\B[\\.<>]|\\b)[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+(?:\\.[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+)*";
     var wikiInlineRules = [];
     //wikiInlineRules.push("![-<](?:#" + _xmlName + ")?[->]!");	// comment
     wikiInlineRules.push("'''''");        // 1. bolditalic -> badly supported by FitNesse parser
@@ -1403,7 +1398,8 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
     wikiInlineRules.push("!-.*?-!");        // 6. escaped
                                             // 7. WikiPageName
-    wikiInlineRules.push("(?:\\b)" + _wikiPageName);
+    //wikiInlineRules.push("(?:\\B[\\.<>]|\\b)" + _wikiPageName);
+    wikiInlineRules.push(_wikiPageName);
 
     var wikiRules = wikiInlineRules.slice(0);
     wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");    // -1. citation
@@ -1418,7 +1414,8 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiRules.push("!?(?:\\|)");                  // -7. cell
 
     var wikiDetectTracLinkRules = [];
-    wikiDetectTracLinkRules.push("\\b" + _wikiPageName);
+    //wikiDetectTracLinkRules.push("(?:\\B[\\.<>]|\\b)" + _wikiPageName);
+    wikiDetectTracLinkRules.push(_wikiPageName);
 
     var domToWikiInlinePattern = new RegExp("(?:" + wikiInlineRules.join("|") + ")", "g");
     var wikiRulesPattern = new RegExp("(?:(" + wikiRules.join(")|(") + "))", "g");
@@ -1436,7 +1433,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
 
 TracWysiwyg.prototype.normalizeTracLink = function(link) {
     if (/^[\/.#]/.test(link)) {
-        link = encode(link);
+        link = encodeURIComponent(link);
     }
     if (!/^[\w.+-]+:/.test(link)) {
         link = "wiki:" + link;
@@ -2136,6 +2133,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 continue;
             case 7:    // WikiPageName
                 if (inEscapedTable) { break; }
+                console.log('Wiki page name', matchText);
                 handleWikiPageName(matchText);
                 continue;
             case -1:    // citation
@@ -2422,14 +2420,9 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     }
 
     function pushAnchor(node, bracket) {
-        var link = node.getAttribute("data-wysiwyg-link");
+        var link = node.href
         var autolink = node.getAttribute("data-wysiwyg-autolink");
         var attrs;
-        if (link === null) {
-            attrs = TracWysiwyg.unserializeFromHref(node.href);
-            link = attrs["data-wysiwyg-link"];
-            autolink = attrs["data-wysiwyg-autolink"];
-        }
         link = (link || node.href).replace(/^\s+|\s+$/g, "");
         var label = getTextContent(node).replace(/^\s+|\s+$/g, "");
         if (!label) {
@@ -2509,7 +2502,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                             value = value.replace(/[ \t\r\n\f\v]+$/g, "");
                         }
                         value = value.replace(/\r?\n/g, " ");
-                        //if (!formatCodeBlock) {
+                        //if (!formatCodeBlock && !inEscapedTable) {
                         //    value = value.replace(domToWikiInlinePattern, escapeText);
                         //}
                         openBracket = /<$/.test(value);
@@ -3603,16 +3596,6 @@ TracWysiwyg.getSelfOrAncestor = function(element, name) {
         }
     }
     return null;
-};
-
-TracWysiwyg.serializeToHref = function(attrs) {
-    var texts = [];
-    for (var name in attrs) {
-        if (/^data(?:-|$)/.exec(name)) {
-            texts.push(encodeURIComponent(name) + "=" + encodeURIComponent(attrs[name]));
-        }
-    }
-    return "#" + texts.join("&");
 };
 
 TracWysiwyg.unserializeFromHref = function(href, name) {
