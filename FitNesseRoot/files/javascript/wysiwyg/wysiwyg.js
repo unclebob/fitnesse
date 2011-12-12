@@ -2,10 +2,8 @@
 
  TODO: implement
 
- - escaped table
- - WikiPageLink
  - Comment (^#.*)
- - Collapsible (^!\*+ title ... \n ... \n ^\*+!$
+ - Collapsible (^!\*+ title ... \n ... \n ^\*+!$ -> change to div.
  - !contents ?
 
  ****/
@@ -1390,31 +1388,35 @@ TracWysiwyg.prototype.selectionChanged = function() {
     var _changesetPath = "/[^\\]]*";
     var _wikiPageName = "(?:\\B[\\.<>]|\\b)[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+(?:\\.[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+)*";
     var wikiInlineRules = [];
-    //wikiInlineRules.push("![-<](?:#" + _xmlName + ")?[->]!");	// comment
-    wikiInlineRules.push("'''''");        // 1. bolditalic -> badly supported by FitNesse parser
-    wikiInlineRules.push("'''");          // 2. bold
-    wikiInlineRules.push("''");           // 3. italic
-    wikiInlineRules.push("--");           // 4. strike
+    wikiInlineRules.push("'''''");                  // 1. bolditalic -> badly supported by FitNesse parser
+    wikiInlineRules.push("'''");                    // 2. bold
+    wikiInlineRules.push("''");                     // 3. italic
+    wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
-    wikiInlineRules.push("!-.*?-!");        // 6. escaped
-                                            // 7. WikiPageName
-    //wikiInlineRules.push("(?:\\B[\\.<>]|\\b)" + _wikiPageName);
-    wikiInlineRules.push(_wikiPageName);
+    wikiInlineRules.push("!-.*?-!");                // 6. escaped
+    wikiInlineRules.push(_wikiPageName);            // 7. WikiPageName
 
     var wikiRules = wikiInlineRules.slice(0);
-    wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");    // -1. citation
-                                            // -2. header
+    // -1. citation
+    wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");
+    // -2. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
-                                            // -3. list
+    // -3. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
-                                            // -4. definition
+    // -4. definition
     wikiRules.push("^[ \\t\\r\\f\\v]+(?:\\{\\{\\{.*?\\}\\}\\})+::(?:[ \\t\\r\\f\\v]+|$)");
-    wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");    // -5. leading space
-    wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");      // -6. closing table row
-    wikiRules.push("!?(?:\\|)");                  // -7. cell
+    // -5. leading space
+    wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
+    // -6. closing table row
+    wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
+    // -7. cell
+    wikiRules.push("!?(?:\\|)");
+    // -8: open collapsible section
+    wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
+    // -9: close collapsible section
+    wikiRules.push("^\\*+!$");
 
     var wikiDetectTracLinkRules = [];
-    //wikiDetectTracLinkRules.push("(?:\\B[\\.<>]|\\b)" + _wikiPageName);
     wikiDetectTracLinkRules.push(_wikiPageName);
 
     var domToWikiInlinePattern = new RegExp("(?:" + wikiInlineRules.join("|") + ")", "g");
@@ -1517,8 +1519,8 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var listDepth = [];
     var decorationStatus;
     var decorationStack;
-    var inCodeBlock, inParagraph, inDefList, inTable, inEscapedTable, inTableRow;
-    inCodeBlock = inParagraph = inDefList = inTable = inEscapedTable = inTableRow = false;
+    var inCodeBlock, inCollapsibleBlock, inParagraph, inDefList, inTable, inEscapedTable, inTableRow;
+    inCodeBlock = inCollapsibleBlock = inParagraph = inDefList = inTable = inEscapedTable = inTableRow = false;
 
     function handleCodeBlock(line) {
         if (/^ *\{\{\{ *$/.test(line)) {
@@ -1614,6 +1616,38 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             var target = getSelfOrAncestor(holder, currentHeader);
             holder = target.parentNode;
             currentHeader = null;
+        }
+    }
+
+    function handleCollapsibleBlock(value) {
+        closeToFragment("fieldset");
+        inCollapsibleBlock++;
+        console.log("create Collapsible section:", value);
+        var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
+        var fieldset = contentDocument.createElement("fieldset");
+        var title = contentDocument.createElement("legend");
+        fieldset.appendChild(title);
+        title.appendChild(contentDocument.createTextNode(m[2]));
+        switch (m[1]) {
+        case "<": // Hidden
+            fieldset.className = "hidden";
+            break;
+        case ">": // Collapsed
+            fieldset.className = "collapsed";
+            break;
+        }
+        holder.appendChild(fieldset);
+        holder = fieldset;
+        openParagraph();
+    }
+
+    function closeCollapsibleBlock() {
+        console.log("close Collapsible section:", matchText, inCollapsibleBlock);
+        if (inCollapsibleBlock) {
+            closeParagraph();
+            inCollapsibleBlock--;
+            var target = getSelfOrAncestor(holder, "fieldset");
+            holder = target.parentNode;
         }
     }
 
@@ -1994,7 +2028,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 holder = element;
                 return;
             }
-            var method;
+            var method = null;
             switch (tag) {
             case "p":
                 method = closeParagraph;
@@ -2050,7 +2084,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             fragment.appendChild(contentDocument.createElement("hr"));
             continue;
         }
-        if (line.length == 0) {
+        if (line.length == 0 && !inCollapsibleBlock) {
             closeToFragment();
             continue;
         }
@@ -2077,10 +2111,11 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
             if ((prevIndex == 0 && text || match && match.index == 0 && matchNumber > 0)
                 && (!inParagraph || quoteDepth.length > 0)
-                && (!inDefList || !/^ /.test(line)))
-            {
+                && (!inDefList || !/^ /.test(line))
+                && (!inCollapsibleBlock)) {
                 closeToFragment();
             }
+
             if (text || match && matchNumber > 0) {
                 if (inParagraph && (prevIndex == 0 || quoteDepth.length > 0)) {
                     if (escapeNewlines) {
@@ -2133,7 +2168,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 continue;
             case 7:    // WikiPageName
                 if (inEscapedTable) { break; }
-                console.log('Wiki page name', matchText);
                 handleWikiPageName(matchText);
                 continue;
             case -1:    // citation
@@ -2187,6 +2221,12 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
                 handleTableCell(inTableRow ? 0 : 1, inEscapedTable);
                 continue;
+            case -8: // collapsible section
+                handleCollapsibleBlock(matchText);
+                continue;
+            case -9: // close collapsible section
+                closeCollapsibleBlock();
+                continue;
             }
 
             if (matchText) {
@@ -2228,7 +2268,8 @@ TracWysiwyg.prototype.wikiOpenTokens = {
     "dt": " ",
     "dd": " ",
     "table": true,
-    "tbody": true };
+    "tbody": true,
+    "fieldset": "!***", "legend": true };
 
 TracWysiwyg.prototype.wikiCloseTokens = {
     "#text": true,
@@ -2244,7 +2285,8 @@ TracWysiwyg.prototype.wikiCloseTokens = {
     "dd": "\n",
     "tbody": true,
     "tr": "|\n",
-    "td": true, "th": true };
+    "td": true, "th": true,
+    "fieldset": "*!\n", "legend": "\n" };
 
 TracWysiwyg.prototype.wikiBlockTags = {
     "h1": true, "h2": true, "h3": true, "h4": true, "h5": true, "h6": true,
@@ -2484,8 +2526,20 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             if (token !== true) {
                 pushToken(token);
             }
-            if (name == 'table' && node.className == 'escaped') {
+            if (name == "table" && node.className == "escaped") {
                 _texts.push("!");
+            }
+            if (name == "fieldset") {
+                switch(node.className) {
+                case "collapsed":
+                    _texts.push("> ");
+                    break;
+                case "hidden":
+                    _texts.push("< ");
+                    break;
+                default:
+                    _texts.push(" ");
+                }
             }
             openBracket = false;
         }

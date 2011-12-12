@@ -353,7 +353,7 @@ $(function() {
         });
 
         unit.add("! bold italic", function() {
-	    var dom = element("p", element("b", element("i", "bold",
+            var dom = element("p", element("b", element("i", "bold",
                               element("tt", "'''''"), " italic")), ".");
             var wikitext = "'''''bold!-'''''-! italic'''''.";
             generate.call(this, dom, wikitext);
@@ -386,12 +386,12 @@ $(function() {
                     a("wiki:CamelCase", "CamelCase"),
                     " ", element("tt", "CamelCase"), " ",
                     a("wiki:FooBarA", "FooBarA"), " FOo ", 
-		    a("wiki:FoobarA", "FoobarA"), " ",
-		    a("wiki:<ParentLink", "<ParentLink"), " ",
-		    a("wiki:>ChildLink", ">ChildLink"), " ",
-		    a("wiki:.AbsoluteLink", ".AbsoluteLink"), " ",
-		    a("wiki:.AbsoluteLink.WikiPage", ".AbsoluteLink.WikiPage"),
-		    " OneÅngström Oneångström setTextColor"));
+                    a("wiki:FoobarA", "FoobarA"), " ",
+                    a("wiki:<ParentLink", "<ParentLink"), " ",
+                    a("wiki:>ChildLink", ">ChildLink"), " ",
+                    a("wiki:.AbsoluteLink", ".AbsoluteLink"), " ",
+                    a("wiki:.AbsoluteLink.WikiPage", ".AbsoluteLink.WikiPage"),
+                    " OneÅngström Oneångström setTextColor"));
             generateFragment.call(this, dom, 
                 "CamelCase !-CamelCase-! FooBarA FOo FoobarA <ParentLink >ChildLink .AbsoluteLink .AbsoluteLink.WikiPage OneÅngström Oneångström setTextColor");
         });
@@ -1047,6 +1047,63 @@ $(function() {
             assertRangeText(" fox jumps over t", paragraph1, 3, paragraph1.childNodes[4], 2);
         });
 
+        unit.add("Collapsible area", function() {
+            var dom = fragment(
+                element("fieldset",
+                    element("legend", "EXPANDED"),
+                    element("p", " Expanded content")),
+                element("fieldset", { "class": "collapsed" },
+                    element("legend", "COLLAPSED"),
+                    element("p", " Collapsed content")),
+                element("fieldset", { "class": "hidden" },
+                    element("legend", "HIDDEN"),
+                    element("p", " Hidden content")));
+            generate.call(this, dom, [
+                "!*** EXPANDED",
+                "Expanded content",
+                "",
+                "*!",
+                "!***> COLLAPSED",
+                "Collapsed content",
+                "",
+                "*!",
+                "!***< HIDDEN",
+                "Hidden content",
+                "",
+                "*!"].join("\n"));
+        });
+
+        unit.add("Nested collapsible area", function() {
+            var dom = fragment(
+                element("p", "Paragraph"),
+                element("fieldset",
+                    element("legend", "outer"),
+                    element("p", " Text"),
+                    element("fieldset",
+                        element("legend", "inner"),
+                        element("p", " More text")
+                    )));
+            generateFragment.call(this, dom, [
+                "Paragraph",
+                "!*** outer",
+                "Text",
+                "!*** inner",
+                "More text",
+                "*!",
+                "*!"].join("\n"));
+            generateWikitext.call(this, dom, [
+                "Paragraph",
+                "",
+                "!*** outer",
+                "Text",
+                "",
+                "!*** inner",
+                "More text",
+                "",
+                "*!",
+                "*!"].join("\n"));
+        });
+
         unit.run();
     }
 
@@ -1057,3 +1114,4 @@ $(function() {
     $(button).click(run);
     button.focus();
 });
+// vim:et:ai:sw=4

@@ -2,8 +2,9 @@ body {
  background-color: white;
 }
 
-td {
- border: 1px solid gray;
+p {
+ margin-top: 0.5em;
+ margin-bottom: 0.5em;
 }
 
 pre.wiki {
@@ -12,3 +13,26 @@ pre.wiki {
  white-space: -moz-pre-wrap !important;
  white-space: pre-wrap !important;
 }
+
+fieldset {
+ padding: 0.5em;
+ margin: 0 1em 0 1em;
+}
+
+legend {
+  padding-left: 16px;
+}
+
+fieldset.hidden legend:before {
+  content: "< ";
+}
+
+fieldset.collapsed legend:before {
+  content: "> ";
+}
+
+
+td {
+ border: 1px solid gray;
+}
+
