@@ -1388,6 +1388,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     var _quotedString = "'[^']+'|" + '"[^"]+"';
     var _changesetPath = "/[^\\]]*";
     var _wikiPageName = "(?:\\B[\\.<>]|\\b)[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+(?:\\.[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+)*";
+    var _wikiTextLink = "\\[\\[(?:.*?)\\]\\[(?:.*?)\\]\\]";
     var wikiInlineRules = [];
     wikiInlineRules.push("'''''");                  // 1. bolditalic -> badly supported by FitNesse parser
     wikiInlineRules.push("'''");                    // 2. bold
@@ -1395,7 +1396,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
     wikiInlineRules.push("!-.*?-!");                // 6. escaped
-    wikiInlineRules.push("\\[\\[.*?\\]\\[" + _wikiPageName + "\\]\\]")	// 7. Wiki link
+    wikiInlineRules.push(_wikiTextLink)				// 7. Wiki link
     wikiInlineRules.push(_wikiPageName);            // 8. WikiPageName
 
     var wikiRules = wikiInlineRules.slice(0);
@@ -1418,7 +1419,10 @@ TracWysiwyg.prototype.selectionChanged = function() {
     // -9: close collapsible section
     wikiRules.push("^\\*+!$");
 
+    // TODO could be removed?
     var wikiDetectTracLinkRules = [];
+    wikiDetectTracLinkRules.push(_wikiPageName);
+
 
     var domToWikiInlinePattern = new RegExp("(?:" + wikiInlineRules.join("|") + ")", "g");
     var wikiRulesPattern = new RegExp("(?:(" + wikiRules.join(")|(") + "))", "g");
@@ -1509,7 +1513,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var _quotedString = this._quotedString;
     var wikiInlineRulesCount = this.wikiInlineRules.length;
     var wikiRulesPattern = new RegExp(this.wikiRulesPattern.source, "g");
-
+    
     var self = this;
     var fragment = contentDocument.createDocumentFragment();
     var holder = fragment;
@@ -1739,6 +1743,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         + "(?:\\s+(.*))?\\]");*/
         
     //TODO I'm sure this RegExp can be more 1337 (use _quotedString?)
+    // compared to wikiTextLink it needs extra ()'s around the groups, why??
     handleTracLinks.pattern = new RegExp("\\["
     	+ "\\[((?:.*?))\\]"
     	+ "\\[((?:.*?))\\]"
@@ -2177,7 +2182,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 continue;
         	case 7:		// Wiki link
                 if (inEscapedTable) { break; }
-        		console.log("wiki link!");
+        		console.log("wiki link! " + matchText);
         		handleTracLinks(matchText);
         		continue;
             case 8:		// WikiPageName
@@ -2463,16 +2468,20 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     }
 
     function tracLinkText(link, label) {
+    	// escapes everything up until the first slash
+        var linkWithoutServerAndPath = link.replace(/.*\//g, "");
+    
+    
         if (!/\]/.test(label) && !/^[\"\']/.test(label)) {
-            return "[" + link + " " + label + "]";
+            return "[[" + label + "][" + linkWithoutServerAndPath + "]]";
         }
         if (!/\"/.test(label)) {
-            return "[" + link + ' "' + label + '"]';
+            return "[[" + label + ']["' + linkWithoutServerAndPath + '"]]';
         }
         if (!/\'/.test(label)) {
-            return "[" + link + " '" + label + "']";
+            return "[[" + label + "]['" + linkWithoutServerAndPath + "']]";
         }
-        return "[" + link + ' "' + label.replace(/"+/g, "") + '"]';
+        return "[[" + label.replace(/"+/g, "") + ' ]["' + linkWithoutServerAndPath + '"]]';
     }
 
     function pushAnchor(node, bracket) {
