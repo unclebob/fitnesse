@@ -395,6 +395,19 @@ $(function() {
             generateFragment.call(this, dom, 
                 "CamelCase !-CamelCase-! FooBarA FOo FoobarA <ParentLink >ChildLink .AbsoluteLink .AbsoluteLink.WikiPage OneÅngström Oneångström setTextColor");
         });
+        
+        unit.add("links", function() {
+        	var dom = fragment(
+        		element("p",
+        			a("TestPage", "label"),
+        			a("TestPage", "läbel"),
+        			a("TestPage", "TestPage")
+        		));
+        		
+        		generateFragment.call(this, dom, "[[label][TestPage]]"
+        			+ "[[läbel][TestPage]]"
+        			+ "[[TestPage][TestPage]]");
+        });
 
         unit.add("citation", function() {
             var dom = fragment(

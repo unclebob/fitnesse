@@ -1395,7 +1395,8 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
     wikiInlineRules.push("!-.*?-!");                // 6. escaped
-    wikiInlineRules.push(_wikiPageName);            // 7. WikiPageName
+    wikiInlineRules.push("\\[\\[.*?\\]\\[" + _wikiPageName + "\\]\\]")	// 7. Wiki link
+    wikiInlineRules.push(_wikiPageName);            // 8. WikiPageName
 
     var wikiRules = wikiInlineRules.slice(0);
     // -1. citation
@@ -1418,7 +1419,6 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiRules.push("^\\*+!$");
 
     var wikiDetectTracLinkRules = [];
-    wikiDetectTracLinkRules.push(_wikiPageName);
 
     var domToWikiInlinePattern = new RegExp("(?:" + wikiInlineRules.join("|") + ")", "g");
     var wikiRulesPattern = new RegExp("(?:(" + wikiRules.join(")|(") + "))", "g");
@@ -1720,21 +1720,29 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
     function handleTracLinks(value) {
         var match = handleTracLinks.pattern.exec(value);
+        
         if (match) {
-            var link = match[1];
-            if (!/^(?:[\w.+-]+:|[\/.#].*)/.test(link)) {
-                link = "wiki:" + link;
-            }
-            var text = (match[2] || match[1].replace(/^[\w.+-]+:/, "")).replace(/^(["'])(.*)\1$/g, "$2");
+            var link = match[2];
+            
+            // some unknown sanitizing going on...
+            var text = (match[1] || match[2].replace(/^[\w.+-]+:/, "")).replace(/^(["'])(.*)\1$/g, "$2");
+            
             createAnchor(link, text);
         }
         else {
             holder.appendChild(contentDocument.createTextNode(value));
         }
     }
+    /* old regexp for the 'real' trac links
     handleTracLinks.pattern = new RegExp("\\["
         + "((?:" + _linkScheme + ":)?(?:" + _quotedString + "|[^\\]\\s]+))"
-        + "(?:\\s+(.*))?\\]");
+        + "(?:\\s+(.*))?\\]");*/
+        
+    //TODO I'm sure this RegExp can be more 1337 (use _quotedString?)
+    handleTracLinks.pattern = new RegExp("\\["
+    	+ "\\[((?:.*?))\\]"
+    	+ "\\[((?:.*?))\\]"
+    	+ "\\]");
 
     function handleTracWikiLink(value) {
         createAnchor(value, value);
@@ -2167,7 +2175,12 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case 6:     // escaped
                 handleInlineCode(matchText, 2);
                 continue;
-            case 7:    // WikiPageName
+        	case 7:		// Wiki link
+                if (inEscapedTable) { break; }
+        		console.log("wiki link!");
+        		handleTracLinks(matchText);
+        		continue;
+            case 8:		// WikiPageName
                 if (inEscapedTable) { break; }
                 handleWikiPageName(matchText);
                 continue;
