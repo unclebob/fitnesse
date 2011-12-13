@@ -144,6 +144,7 @@ TracWysiwyg.prototype.initializeEditor = function(d) {
     for (var i = 0; i < length; i++) {
         html.push('<link rel="stylesheet" href="' + stylesheets[i] + '" type="text/css" />');
     }
+
     html.push('<title></title>', '</head>', '<body></body>', '</html>');
 
     var first = !window.opera && d.addEventListener ? true : false;

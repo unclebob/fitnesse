@@ -31,6 +31,12 @@ fieldset.collapsed legend:before {
   content: "> ";
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 1px;
+  /* Fitnesse replaces newlines by <br />, but wysiwig doesn't */
+  margin: 10px 0px !important;
+}
 
 td {
  border: 1px solid gray;
