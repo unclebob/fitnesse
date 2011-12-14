@@ -2021,6 +2021,17 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     function closeTable() {
         if (inTable) {
             var target = getSelfOrAncestor(holder, "table");
+
+            // Spanning columns fitnesse style.
+            var maxCells = Math.max.apply(Math, $.map($('tr', target), function(e) {
+                return $('td', e).size();
+            }));
+            $('tr', target).each(function() {
+                var s = $('td', this).size();
+                if (s < maxCells) {
+                    $('td:last', this).attr('colspan', maxCells - s + 1);
+                }
+            });
             holder = target.parentNode;
             inTable = inEscapedTable = inTableRow = false;
         }
