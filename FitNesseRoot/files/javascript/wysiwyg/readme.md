@@ -16,8 +16,7 @@ Both the 'before' and the 'after' text will be rendered as normal text.
 In wysiwyg editor, the {{{ and }}} need to be 'alone', as such:
 
 	before
-	{{{
-	import fit.ColumnFixture;
+	{{{import fit.ColumnFixture;
 
 	public class AddRemovePlayerFixture extends ColumnFixture {
 	  public String playerName;
