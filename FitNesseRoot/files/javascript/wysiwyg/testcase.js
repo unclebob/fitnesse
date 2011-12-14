@@ -70,8 +70,10 @@ $(function() {
         var br = function() { return element("br") };
         var a = function(link, label) {
             var attrs = {
-                href: link, //encodeURIComponent(link),
-                title: link, onclick: "return false;" };
+                href: link,
+                title: link,
+                'data-wysiwyg-link': link,
+                onclick: "return false;" };
             return element("a", attrs, label || link);
         };
 
@@ -383,14 +385,14 @@ $(function() {
         unit.add("WikiPageName", function() {
             var dom = fragment(
                 element("p",
-                    a("wiki:CamelCase", "CamelCase"),
+                    a("CamelCase", "CamelCase"),
                     " ", element("tt", "CamelCase"), " ",
-                    a("wiki:FooBarA", "FooBarA"), " FOo ", 
-                    a("wiki:FoobarA", "FoobarA"), " ",
-                    a("wiki:<ParentLink", "<ParentLink"), " ",
-                    a("wiki:>ChildLink", ">ChildLink"), " ",
-                    a("wiki:.AbsoluteLink", ".AbsoluteLink"), " ",
-                    a("wiki:.AbsoluteLink.WikiPage", ".AbsoluteLink.WikiPage"),
+                    a("FooBarA", "FooBarA"), " FOo ",
+                    a("FoobarA", "FoobarA"), " ",
+                    a("<ParentLink", "<ParentLink"), " ",
+                    a(">ChildLink", ">ChildLink"), " ",
+                    a(".AbsoluteLink", ".AbsoluteLink"), " ",
+                    a(".AbsoluteLink.WikiPage", ".AbsoluteLink.WikiPage"),
                     " OneÅngström Oneångström setTextColor"));
             generateFragment.call(this, dom, 
                 "CamelCase !-CamelCase-! FooBarA FOo FoobarA <ParentLink >ChildLink .AbsoluteLink .AbsoluteLink.WikiPage OneÅngström Oneångström setTextColor");
@@ -404,13 +406,15 @@ $(function() {
         			a("TestPage", "TestPage"),
         			a("FrontPage?edit", "Edit"),
         			" button and add a ",
-        			a("FitNesse.UserGuide.WikiWord", "!-WikiWord-!")
+        			a("FitNesse.UserGuide.WikiWord", "!-WikiWord-!"),
+        			a("http://external.link/bladieblah", "bla")
         		));
         		
         	var wikitext = "[[label][TestPage]]"
         		+ "[[läbel][TestPage]]"
         		+ "[[TestPage][TestPage]]"
-        		+ "[[Edit][FrontPage?edit]] button and add a [[!-WikiWord-!][FitNesse.UserGuide.WikiWord]]";
+        		+ "[[Edit][FrontPage?edit]] button and add a [[!-WikiWord-!][FitNesse.UserGuide.WikiWord]]"
+        		+ "[[bla][http://external.link/bladieblah]]";
         	
         	// should go both ways (wiki2html and html2wiki)
         	generateWikitext.call(this, dom, wikitext);
@@ -456,14 +460,14 @@ $(function() {
                 element("h3", element("b", "Heading"), " ", element("i", "3")),
                 element("h4", { id: "アンカー-4" },
                     "Heading 4 with ",
-                    a("wiki:WikiStart", "WikiStart")),
+                    a("WikiStart", "WikiStart")),
                 element("h5", "Heading 5"),
                 element("h6", { id: "anchor-6" }, "Heading 6"));
             generate.call(this, dom, [
                 "!1 Heading 1",
                 "!2 Heading 2 #anchor-2",
                 "!3 '''Heading''' ''3''",
-                "!4 Heading 4 with WikiStart #アンカー-4",
+                "!4 Heading 4 with [[WikiStart][WikiStart]] #アンカー-4",
                 "!5 Heading 5",
                 "!6 Heading 6 #anchor-6" ].join("\n"));
         });
@@ -475,7 +479,7 @@ $(function() {
                 element("h3", element("b", "Heading"), " ", element("i", "3")),
                 element("h4", { id: "アンカー-4" },
                     "Heading 4 with ",
-                    a("wiki:WikiStart", "WikiStart")),
+                    a("WikiStart", "WikiStart")),
                 element("h5", "Heading 5"),
                 element("h6", { id: "anchor-6" }, "Heading 6"));
             generateFragment.call(this, dom, [

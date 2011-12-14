@@ -1248,12 +1248,8 @@ TracWysiwyg.prototype.createLink = function() {
     var expand = anchor || TracWysiwyg.getSelfOrAncestor(focus, "tt");
     var currLink;
     if (anchor) {
-        var attrs;
         var autolink = anchor.getAttribute("data-wysiwyg-autolink");
-        if (autolink === null) {
-            attrs = TracWysiwyg.unserializeFromHref(anchor.href);
-            autolink = attrs["data-wysiwyg-autolink"];
-        }
+
         if (autolink == "true") {
             var pattern = this.wikiDetectTracLinkPattern;
             pattern.lastIndex = 0;
@@ -1264,7 +1260,7 @@ TracWysiwyg.prototype.createLink = function() {
             }
         }
         if (!currLink) {
-            currLink = anchor.href;
+            currLink = anchor.getAttribute("data-wysiwyg-link") || anchor.href;
         }
     }
     else {
@@ -1274,7 +1270,7 @@ TracWysiwyg.prototype.createLink = function() {
         this.selectNodeContents(expand);
     }
     var text = this.getSelectionText() || "";
-    var newLink = (prompt(text ? "Enter TracLink:" : "Insert TracLink:", currLink) || "").replace(/^\s+|\s+$/g, "");
+    var newLink = (prompt(text ? "Enter link:" : "Insert link:", currLink) || "").replace(/^\s+|\s+$/g, "");
     if (newLink && newLink != currLink) {
         text = text || newLink;
         newLink = this.normalizeTracLink(newLink);
@@ -1295,14 +1291,13 @@ TracWysiwyg.prototype.createLink = function() {
 TracWysiwyg.prototype.createAnchor = function(link, label, attrs) {
     var d = this.contentDocument;
     var anchor = d.createElement("a");
-    var href = {};
     for (var name in attrs) {
         var value = attrs[name];
-        href[name] = value;
         anchor.setAttribute(name, value);
     }
     anchor.href = link;
     anchor.title = link;
+    anchor.setAttribute("data-wysiwyg-link", link);
     anchor.setAttribute("onclick", "return false;");
     anchor.appendChild(d.createTextNode(label));
     return anchor;
@@ -1443,17 +1438,17 @@ TracWysiwyg.prototype.normalizeTracLink = function(link) {
         link = encodeURIComponent(link);
     }
     if (!/^[\w.+-]+:/.test(link)) {
-        link = "wiki:" + link;
+        link = link;
     }
-    if (/^wiki:[^\"\']/.test(link) && /\s/.test(link)) {
+    if (/^[^\"\']/.test(link) && /\s/.test(link)) {
         if (link.indexOf('"') === -1) {
-            link = 'wiki:"' + link + '"';
+            link = '"' + link + '"';
         }
         else if (link.indexOf("'") === -1) {
-            link = "wiki:'" + link + "'";
+            link = "'" + link + "'";
         }
         else {
-            link = 'wiki:"' + link.replace(/"/g, "%22") + '"';
+            link = '"' + link.replace(/"/g, "%22") + '"';
         }
     }
     return link;
@@ -1764,7 +1759,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function handleWikiPageName(name, label) {
-        createAnchor("wiki:" + name, label || name);
+        createAnchor(name, label || name);
     }
 
     function handleWikiAnchor(text) {
@@ -2468,26 +2463,22 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     }
 
     function tracLinkText(link, label) {
-    	// escapes everything up until the first slash
-        var linkWithoutServerAndPath = link.replace(/.*\//g, "");
-    
-    
         if (!/\]/.test(label) && !/^[\"\']/.test(label)) {
-            return "[[" + label + "][" + linkWithoutServerAndPath + "]]";
+            return "[[" + label + "][" + link + "]]";
         }
         if (!/\"/.test(label)) {
-            return "[[" + label + ']["' + linkWithoutServerAndPath + '"]]';
+            return "[[" + label + ']["' + link + '"]]';
         }
         if (!/\'/.test(label)) {
-            return "[[" + label + "]['" + linkWithoutServerAndPath + "']]";
+            return "[[" + label + "]['" + link + "']]";
         }
-        return "[[" + label.replace(/"+/g, "") + ' ]["' + linkWithoutServerAndPath + '"]]';
+        return "[[" + label.replace(/"+/g, "") + ' ]["' + link + '"]]';
     }
 
     function pushAnchor(node, bracket) {
-        var link = node.href
+        var link = node.getAttribute("data-wysiwyg-link");
         var autolink = node.getAttribute("data-wysiwyg-autolink");
-        var attrs;
+
         link = (link || node.href).replace(/^\s+|\s+$/g, "");
         var label = getTextContent(node).replace(/^\s+|\s+$/g, "");
         if (!label) {
@@ -2497,7 +2488,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
         if (autolink == "true") {
             if (wikiPageNamePattern.test(label)) {
                 text = label;
-                link = "wiki:" + label;
+                link = label;
             }
         }
         else {
@@ -2508,6 +2499,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             }
         }
         if (!text) {
+            // TODO this chould be simplified to just the else now I think (Vincent)
             var match = /^([\w.+-]+):(@?(.*))$/.exec(link);
             if (match) {
                 if (label == match[2]) {
@@ -3675,7 +3667,7 @@ TracWysiwyg.getSelfOrAncestor = function(element, name) {
     return null;
 };
 
-TracWysiwyg.unserializeFromHref = function(href, name) {
+/*TracWysiwyg.unserializeFromHref = function(href, name) {
     var attrs = {};
     if (href.indexOf("#") !== -1) {
         var pieces = href.replace(/^[^#]*#/, '').split(/&/g);
@@ -3686,7 +3678,7 @@ TracWysiwyg.unserializeFromHref = function(href, name) {
         }
     }
     return name ? attrs[name] : attrs;
-};
+};*/
 
 TracWysiwyg.getTextContent = (function() {
     var anonymous = document.createElement("div");
