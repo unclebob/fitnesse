@@ -1427,7 +1427,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     // -3. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
     // -4. definition
-    wikiRules.push("^[ \\t\\r\\f\\v]+(?:\\{\\{\\{.*?\\}\\}\\})+::(?:[ \\t\\r\\f\\v]+|$)");
+    wikiRules.push("^!define\\s+\\w+\\s+[{\\[(].*?[}\\])]\\s*$");
     // -5. leading space
     wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
     // -6. closing table row
@@ -1929,13 +1929,14 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             inDefList = true;
         }
 
-        var match = /^ +(.*?)\s*::/.exec(value);
+        var match = /^!define\s+(\w+)\s+[{\[(](.*?)[}\])]\s*$/.exec(value);
         var dt = d.createElement("dt");
         var oneliner = self.wikitextToOnelinerFragment(match[1], d, self.options);
-        dt.appendChild(oneliner);
+        dt.appendChild(d.createTextNode(match[1]));
         dl.appendChild(dt);
 
         var dd = d.createElement("dd");
+        dd.appendChild(d.createTextNode(match[2]));
         dl.appendChild(dd);
         holder = dd;
     }
@@ -2314,8 +2315,8 @@ TracWysiwyg.prototype.wikiOpenTokens = {
     "del": "--", "strike": "--",
     "hr": "----\n",
     "dl": true,
-    "dt": " ",
-    "dd": " ",
+    "dt": "!define ",
+    "dd": " {",
     "table": true,
     "tbody": true,
     "fieldset": "!***", "legend": true };
@@ -2330,8 +2331,8 @@ TracWysiwyg.prototype.wikiCloseTokens = {
     "br": true,
     "hr": true,
     "dl": "\n",
-    "dt": "::",
-    "dd": "\n",
+    "dt": true,
+    "dd": "}\n",
     "tbody": true,
     "tr": "|\n",
     "td": true, "th": true,

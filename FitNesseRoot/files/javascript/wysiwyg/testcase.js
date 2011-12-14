@@ -821,6 +821,36 @@ $(function() {
                 ' 1. item 3' ].join("\n"));
         });
 
+        unit.add("definition", function() {
+            var dom = fragment(
+                element("p", "Paragraph"),
+                element("dl",
+                    element("dt", "Key1"),
+                    element("dd", "Val1"),
+                    element("dt", "Key2"),
+                    element("dd", "Val2 and more")),
+                element("dl",
+                    element("dt", "Key3"),
+                    element("dd", "Val3")),
+                element("p", "Paragraph"));
+            generateFragment.call(this, dom, [
+                "Paragraph",
+                "!define Key1 {Val1}",
+                "!define Key2 {Val2 and more}",
+                "",
+                "!define Key3 {Val3}",
+                "Paragraph" ].join("\n"));
+            generate.call(this, dom, [
+                "Paragraph",
+                "",
+                "!define Key1 {Val1}",
+                "!define Key2 {Val2 and more}",
+                "",
+                "!define Key3 {Val3}",
+                "",
+                "Paragraph" ].join("\n"));
+        });
+
         unit.add("blockquote", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
@@ -1005,8 +1035,8 @@ $(function() {
                     element("li", "item 1", br(), "continued"),
                     element("ol", element("li", "item", br(), "1.1"))),
                 element("dl",
-                    element("dt", "def to_s(", br(), ")"),
-                    element("dd", "dt", br(), "dd")),
+                    element("dt", "def"),
+                    element("dd", "dt dd")),
                 element("table",
                     element("tbody",
                         element("tr",
@@ -1029,7 +1059,7 @@ $(function() {
                 " * item 1 continued",
                 "   1. item 1.1",
                 "",
-                " def to_s( ):: dt dd",
+                "!define def {dt dd}",
                 "",
                 "| cell 1 | cell 2 |" ].join("\n"), wikitext);
         });
