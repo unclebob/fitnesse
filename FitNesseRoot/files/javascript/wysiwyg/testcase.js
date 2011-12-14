@@ -203,6 +203,20 @@ $(function() {
                 "Second paragraph continued..." ].join("\n"));
         });
 
+        unit.add("wiki macros", function() {
+            var dom = fragment(
+                element("table", element("tbody",
+                    element("tr", element("td", "!c !2 Contents")),
+                    element("tr", element("td", "!contents -g")))),
+                element("p", "!path fitnesse.jar", br(), "!path classes"));
+            generateFragment.call(this, dom, [
+                "|!c !2 Contents|",
+                "|!contents -g|",
+                "",
+                "!path fitnesse.jar",
+                "!path classes" ].join("\n"));
+        });
+
         unit.add("hr", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
