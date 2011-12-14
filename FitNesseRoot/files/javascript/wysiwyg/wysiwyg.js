@@ -2125,18 +2125,15 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 closeToFragment();
             }
 
+
             if (text || match && matchNumber > 0) {
                 if (inParagraph && (prevIndex == 0 || quoteDepth.length > 0)) {
-                /*
-                    if (escapeNewlines) {
-                        if (quoteDepth.length == 0) {
-                            holder.appendChild(contentDocument.createElement("br"));
-                        }
+                    if (inParagraph && /^!/.test(line)) {
+                        holder.appendChild(contentDocument.createElement("br"));
                     }
                     else {
-                */
                         text = text ? (" " + text) : "";
-                //    }
+                    }
                 }
                 if (!inTable && quoteDepth.length > 0 || holder == fragment) {
                     if (!inParagraph) {
