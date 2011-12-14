@@ -60,7 +60,8 @@ iframe.wysiwyg:focus {
     line-height: 1.2;
     padding-left: 2px;
     padding-right: 2px;
-    background-image: url(../common/desc.png);
+    background-image: url(desc.png);
+    /* changed path for fitnesse background-image: url(../common/desc.png);  */
     background-position: right bottom;
 }
 .wysiwyg-toolbar li a#wt-style span {
@@ -97,7 +98,8 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar li a#wt-tablemenu
 {
     width: 10px;
-    background-image: url(../common/desc.png);
+    /* changed path for fitnesse background-image: url(../common/desc.png); */
+    background-image: url(desc.png);
     background-position: center bottom;
 }
 
@@ -122,6 +124,7 @@ iframe.wysiwyg:focus {
 }
 .wysiwyg-menu ul, .wysiwyg-menu li {
     list-style-type: none;
+    text-indent: 0em;
     margin: 0px;
     padding: 0px;
 }
