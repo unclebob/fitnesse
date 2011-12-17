@@ -694,6 +694,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             switch (modifier) {
             case 0:
                 self.detectTracLink(event);
+                break;
             case 0x20000000:    // Shift
             	self.showAutoCompleteOnShiftSpace(event);
             	// prevent space from being entered in table
