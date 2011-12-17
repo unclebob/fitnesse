@@ -45,6 +45,7 @@ console.log("Creating new wysiwig area");
     this.initializeEditor(this.contentDocument);
     this.wysiwygToolbar = this.createWysiwygToolbar(document);
     this.styleMenu = this.createStyleMenu(document);
+    this.dialogWindow = this.createDialogWindow(document);
     this.decorationMenu = this.createDecorationMenu(document);
     this.tableMenu = this.createTableMenu(document);
     this.menus = [ this.styleMenu, this.decorationMenu, this.tableMenu ];
@@ -93,6 +94,7 @@ console.log("Creating new wysiwig area");
 console.log("Insering edit buttons");
     element.parentNode.insertBefore(this.toggleEditorButtons, element);
     element.parentNode.insertBefore(this.wysiwygToolbar, element);
+    element.parentNode.insertBefore(this.dialogWindow, element);
 
     function lazySetup() {
         if (self.contentDocument.body) {
@@ -388,6 +390,20 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
     return div;
 };
 
+TracWysiwyg.prototype.createDialogWindow = function(d) {
+	var html = [
+		'<p>Autocomplete for Fitnesse commands</p>'+
+		'<input id="autocomplete" type="text" />' ];
+  		
+  	var dialog = d.createElement("div")
+  	dialog.id = "dialog";
+  	dialog.style.display = "none";
+  	dialog.title = 'Autocomplete dialog';
+  	dialog.innerHTML = html.join("");
+  	
+  	return dialog;
+};
+
 TracWysiwyg.prototype.createStyleMenu = function(d) {
     var html = [
         '<p><a id="wt-paragraph" href="#">Normal</a></p>',
@@ -675,7 +691,15 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0);
         switch (event.charCode || event.keyCode) {
         case 0x20:  // SPACE
-            self.detectTracLink(event);
+            switch (modifier) {
+            case 0:
+                self.detectTracLink(event);
+            case 0x20000000:    // Shift
+            	self.showAutoCompleteOnShiftSpace(event);
+            	// prevent space from being entered in table
+            	TracWysiwyg.stopEvent(event);
+                break;
+            }            
             return;
         case 0x3e:  // ">"
             self.detectTracLink(event);
@@ -2922,6 +2946,46 @@ if (window.getSelection) {
     TracWysiwyg.prototype.getFocusNode = function() {
         return this.contentWindow.getSelection().focusNode;
     };
+    TracWysiwyg.prototype.showAutoCompleteOnShiftSpace = function(event) {
+		var tdElement = TracWysiwyg.getSelfOrAncestor(this.getSelectionRange().startContainer, "td");
+		var self = this;
+		
+		// autocomplete only applicable on td
+		if (tdElement) {
+			var seleniumCommands = ["waitForTextPresent", "clickAndWait"];
+			
+			var elementOffset = $(tdElement).offset();
+			var elementWidth = $(tdElement).width();
+			var elementHeight = $(tdElement).height();
+			
+			var dialogX = elementOffset.left + (elementWidth / 2);
+			var dialogY = elementOffset.top + (elementHeight / 2);
+			
+			
+			$("#dialog").dialog({ position: [dialogX, dialogY] });
+			//attach autocomplete
+			$("#autocomplete").autocomplete({
+	
+				//define callback to format results
+				source: function (request, response) {
+					response(seleniumCommands);	
+				},
+	
+				//define select handler
+				select: function(event, ui) {
+					self.insertHTML(ui.item.value);
+					$("#dialog").dialog("close");
+				},
+	
+				//define select handler
+				change: function() {
+					console.log('change');
+					//prevent 'to' field being updated and correct position
+					$("#autocomplete").val("").css("top", 2);
+				}
+			});		
+		}
+	};     
     if (window.opera) {
         TracWysiwyg.prototype.insertLineBreak = function() {
             this.execCommand("inserthtml", "<br/>");

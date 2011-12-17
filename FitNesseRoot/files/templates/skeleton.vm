@@ -11,10 +11,12 @@
   <link rel="wysiwyg.base" href="/"/>
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/javascript/wysiwyg/editor.css" media="screen"/>
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="/files/javascript/jquery-ui.css" media="screen"/>
   <!-- end WYSIWYG specifics -->
 
   <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
   <script src="/files/javascript/jquery-1.7.1.min.js" type="text/javascript"></script>
+  <script src="/files/javascript/jquery-ui-1.8.16.custom.js" type="text/javascript"></script>
   <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
   <script src="/files/javascript/wysiwyg/wysiwyg.js" type="text/javascript"></script>
  </head>
