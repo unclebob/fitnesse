@@ -28,10 +28,33 @@ The property provided should be a comma separated list of key:value pairs, where
 ''motivation:'' Custom security scheme.
 The class provided must extend the fitnesse.authentication.Authenticator class.  The class will be instantiated and asked ''isAuthenticated(String username, String password)'' when ever authentication is required.  See SecurityDescription for more information on security.
 
-!3 !-WikiWidgets-!
-''required property:'' '''!-WikiWidgets-! = <class name>[,<class name]'''
+!3 !-Symbol Types-!
+''required property:'' '''!-SymbolTypes-! = <class name>[,<class name]'''
 ''motivation:'' Custom look-n-feel, or custom functionality hook.
-The classes supplied must extend ''!-fitnesse.wikitext.WikiWidget-!''.  In addition, custom !-WikiWidget-! must have a public static field of type String and named REGEXP.  The value of REGEXP should be a regular expresion that matches your custom widget.  REGEXP '''cannot''' contain any groups.
+
+The plug-in class must extend ''!-fitnesse.wikitext.SymbolType-!''. A plug-in class can specify up to four pieces of information for the parser.
+
+The first is a name, specified in the super constructor. The name is just used for error reporting and debugging and so it can be any descriptive string.
+
+The second is the wikiMatcher. This is an object that knows how to identify the symbol type in the source string. The Matcher class provides a lot of common matching behavior, so you can look at the Matcher source to find matching behavior.
+
+The third is the wikiRule, which not all symbol types require. This is an object that implements a grammar production rule if our symbol type is composed of other symbol types (a non-terminal, in grammar-speak). A symbol type that is a terminal doesn't need a production rule. Look at the fitnesse.wikitext.parser package to see examples of how production rule classes are written.
+
+The fourth is the htmlTranslation. This is an object that renders the symbol type as a string in the HTML output. We can implement the Translation interface and specify this as our translation object. The toTarget method renders our output.
+
+Example: {{{
+public class PiSymbolType extends SymbolType implements Translation {
+    public PiSymbolType () {
+        super("Pi");
+        wikiMatcher(new Matcher().string("!pi"));
+        htmlTranslation(this);
+    }
+
+    public String toTarget(Translator translator, Symbol symbol) {
+        return Double.toString(Math.PI);
+    }
+}
+}}}
 
 !3 !-Content Filter-!
 ''required property:'' '''!-ContentFilter-! = <class name>'''

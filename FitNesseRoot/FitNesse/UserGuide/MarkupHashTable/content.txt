@@ -14,12 +14,11 @@ The key name must be plain text, but the value can be any reasonable wiki constr
 !3 Syntax issues.
 
  * A colon, comma and closing brace simply cannot be placed in either the name or the value.  
- * The comma is optional.  This is valid: !-!{name:bob dob:19521205}-!
  * The hash widget can be written on many lines as follows: 
 {{{
      !{
-     Name:Bob
-     Address:There
+     Name:Bob,
+     Address:There,
      Time:Now
      }! }}}
 !3 CSS
