@@ -18,7 +18,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
             current.add(row);
             for (int i = 0; i < 2; i++) {
                 Symbol cell = parser.parseToIgnoreFirst(terminators);
-                if (parser.atEnd()) return Symbol.nothing;
+                if (parser.atEnd() || cell.getChildren().size() == 0) return Symbol.nothing;
                 row.add(cell);
             }
             if (parser.getCurrent().isType(SymbolType.CloseBrace)) break;
