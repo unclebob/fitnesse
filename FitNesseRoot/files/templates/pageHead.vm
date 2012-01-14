@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
   <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
 </head>
-<body#if($load_actions) onload="$load_actions"#end>
+<body>
 
 <div class="sidebar">
   <div class="art_niche" onclick="document.location='FrontPage'"></div>

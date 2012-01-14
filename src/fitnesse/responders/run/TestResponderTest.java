@@ -211,7 +211,7 @@ public class TestResponderTest {
   public void pageHistoryLinkIsIncluded() throws Exception {
     doSimpleRun(passFixtureTable());
     assertSubString("href=\"TestPage?pageHistory\">", results);
-    assertSubString("[history]", results);
+    assertSubString("Page History", results);
   }
 
   @Test

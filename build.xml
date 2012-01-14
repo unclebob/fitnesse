@@ -42,7 +42,7 @@
 
 			<zipfileset src="lib/htmlparser.jar" />
 			<zipfileset src="lib/json.jar" />
-			<zipfileset src="lib/velocity-1.6.2-dep.jar" />
+			<zipfileset src="lib/velocity-1.7-dep.jar" />
 
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />
@@ -105,6 +105,11 @@
 	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
 		<javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" source="1.6" target="1.6" />
 		<copy file="extra/ant/tasks.properties" todir="classes" />
+		<copy todir="classes">
+			<fileset dir="src">
+				<include name="**/*.vm" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="set-version-if-not-manualy-set" unless="version">

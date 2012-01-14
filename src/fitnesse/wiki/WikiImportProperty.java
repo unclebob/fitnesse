@@ -1,19 +1,12 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders;
+package fitnesse.wiki;
 
 import java.util.Date;
 
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperty;
-import fitnesse.wiki.WikiPageAction;
 
 public class WikiImportProperty extends WikiPageProperty {
   private static final long serialVersionUID = 1L;
@@ -96,30 +89,12 @@ public class WikiImportProperty extends WikiPageProperty {
   }
 
   public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) throws Exception {
-    html.actions.add(HtmlUtil.makeNavBreak());
     if (isImported(pageData)) {
-      html.body.addAttribute("class", "imported");
-      WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
-      String localPageName = PathParser.render(localPagePath);
-      html.actions.add(makeEditLocallyLink(localPageName));
-      html.actions.add(HtmlUtil.makeNavBreak());
-      String remoteInput = makeRemoteEditQueryParameters();
+      html.setBodyClass("imported");
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());
-      html.actions.add(makeEditRemotelyLink(remoteInput, importProperty.getSourceUrl()));
+      html.put("sourceUrl", importProperty.getSourceUrl());
     } else if (page instanceof ProxyPage)
-      html.body.addAttribute("class", "virtual");
-  }
-
-  private static HtmlTag makeEditRemotelyLink(String remoteInput, String pageName) {
-    WikiPageAction action = new WikiPageAction(pageName, "Edit Remotely");
-    action.setQuery(remoteInput);
-    return HtmlUtil.makeAction(action);
-  }
-
-  private static HtmlTag makeEditLocallyLink(String localPageName) {
-    WikiPageAction action = new WikiPageAction(localPageName, "Edit Locally");
-    action.setQuery("edit");
-    return HtmlUtil.makeAction(action);
+      html.setBodyClass("virtual");
   }
 
   public static String makeRemoteEditQueryParameters() {

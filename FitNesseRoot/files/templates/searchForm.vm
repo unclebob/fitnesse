@@ -1,6 +1,4 @@
-#set ($page_title="Search Form")
-#set ($load_actions="document.forms[0].searchString.focus()")
-#parse("pageHead.vm")
+<div class="main">
 				<form action="search" method="post">
 					<input type="hidden" name="responder" value="search"/>
 Search String:
@@ -106,4 +104,7 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 						</div>
 					</div>
 				</form>
-#parse("pageFooter.vm")
+<script type="text/javascript">
+ document.forms[0].searchString.focus();
+</script>
+</div>

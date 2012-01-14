@@ -13,6 +13,8 @@ import org.apache.velocity.VelocityContext;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -24,7 +26,6 @@ public class HistoryComparerResponder implements Responder {
   public HistoryComparer comparer;
   private SimpleDateFormat dateFormat = new SimpleDateFormat(
       TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
-  private VelocityContext velocityContext;
   private String firstFileName = "";
   private String secondFileName = "";
   private String firstFilePath;
@@ -63,7 +64,7 @@ public class HistoryComparerResponder implements Responder {
   private Response makeResponseFromComparison(FitNesseContext context,
       Request request) throws Exception {
     if (comparer.compare(firstFilePath, secondFilePath))
-      return makeValidResponse();
+      return makeValidResponse(request);
     else {
       String message = String.format("These files could not be compared."
           + "  They might be suites, or something else might be wrong.");
@@ -79,8 +80,6 @@ public class HistoryComparerResponder implements Responder {
   private void initializeReponseComponents(Request request) throws IOException {
     if (comparer == null)
       comparer = new HistoryComparer();
-    velocityContext = new VelocityContext();
-    velocityContext.put("pageTitle", makePageTitle(request.getResource()));
   }
 
   private String composeFileName(Request request, String fileName) {
@@ -117,30 +116,25 @@ public class HistoryComparerResponder implements Responder {
     return false;
   }
 
-  private Response makeValidResponse() throws Exception {
+  private Response makeValidResponse(Request request) throws Exception {
     count = 0;
+    HtmlPage page = context.htmlPageFactory.newPage();
+    page.setTitle("History Comparison");
+    page.setPageTitle(makePageTitle(request.getResource()));
     if (!testing) {
-      velocityContext.put("firstFileName", dateFormat.parse(firstFileName));
-      velocityContext.put("secondFileName", dateFormat.parse(secondFileName));
-      velocityContext.put("completeMatch", comparer.allTablesMatch());
-      velocityContext.put("comparer", comparer);
+      page.put("firstFileName", dateFormat.parse(firstFileName));
+      page.put("secondFileName", dateFormat.parse(secondFileName));
+      page.put("completeMatch", comparer.allTablesMatch());
+      page.put("comparer", comparer);
     }
-    velocityContext.put("resultContent", comparer.getResultContent());
-    velocityContext.put("firstTables", comparer.firstTableResults);
-    velocityContext.put("secondTables", comparer.secondTableResults);
-    velocityContext.put("count", count);
-    String velocityTemplate = "compareHistory.vm";
-    Template template = VelocityFactory.getVelocityEngine().getTemplate(
-        velocityTemplate);
-    return makeResponseFromTemplate(template);
+    page.put("resultContent", comparer.getResultContent());
+    page.put("firstTables", comparer.firstTableResults);
+    page.put("secondTables", comparer.secondTableResults);
+    page.put("count", count);
+    page.setMainTemplate("compareHistory.vm");
 
-  }
-
-  private Response makeResponseFromTemplate(Template template) throws Exception {
-    StringWriter writer = new StringWriter();
     SimpleResponse response = new SimpleResponse();
-    template.merge(velocityContext, writer);
-    response.setContent(writer.toString());
+    response.setContent(page.html());
     return response;
   }
 

@@ -6,10 +6,10 @@ import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.html.*;
-import fitnesse.responders.WikiImportProperty;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {
@@ -39,7 +39,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   @Override
   public void writeHead(String pageType) throws Exception {
     htmlPage = buildHtml(pageType);
-    htmlPage.main.use(HtmlPage.BreakPoint);
+    htmlPage.setMainContent(HtmlPage.BreakPoint);
     htmlPage.divide();
     writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
   }
@@ -127,12 +127,10 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     WikiPagePath fullPath = pageCrawler.getFullPath(getPage());
     String fullPathName = PathParser.render(fullPath);
     HtmlPage html = pageFactory.newPage();
-    html.title.use(pageType + ": " + fullPathName);
-    html.header.use(HtmlUtil
-      .makeBreadCrumbsWithPageType(fullPathName, pageType));
-    html.header.add(String.format("&nbsp;<a style=\"font-size:small;\" href=\"%s?pageHistory\"> [history]</a>",fullPathName));
+    html.setTitle(pageType + ": " + fullPathName);
+    html.setPageTitle(new PageTitle(pageType, fullPath));
     PageData data = getPage().getData();
-    html.actions.use(HtmlUtil.makeActions(getPage().getActions()));
+    html.actions = new WikiPageActions(getPage()).withPageHistory();
     WikiImportProperty.handleImportProperties(html, getPage(), data);
     return html;
   }

@@ -44,7 +44,7 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
   public String getHelpText() throws Exception;
 
-  public List<WikiPageAction> getActions() throws Exception;
+  public boolean isOpenInNewWindow();
 }
 
 

@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders;
+package fitnesse.wiki;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,15 +13,8 @@ import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.WikiPageResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.BaseWikiPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtensionTest;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperty;
 
 public class WikiImportPropertyTest extends RegexTestCase {
   private WikiImportProperty property;
@@ -165,13 +158,15 @@ public class WikiImportPropertyTest extends RegexTestCase {
     page.commit(data);
     content = getContentAfterSpecialImportHandling();
 
+    assertTrue(WikiImportProperty.isImported(data));
     assertSubString("<a href=\"SamplePage?edit\" accesskey=\"e\">Edit Locally</a>", content);
-    assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\" accesskey=\"e\">Edit Remotely</a>", content);
+    assertSubString("<a href=\"blah?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView\">Edit Remotely</a>", content);
   }
 
   private String getContentAfterSpecialImportHandling() throws Exception {
     HtmlPage html = new HtmlPageFactory().newPage();
     WikiImportProperty.handleImportProperties(html, page, page.getData());
+    html.actions = new WikiPageActions(page);
     return html.html();
   }
 

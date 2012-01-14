@@ -4,6 +4,8 @@ package fitnesse.runner;
 
 import java.io.InputStream;
 
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -11,6 +13,8 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PathParser;
 import fitnesse.FitNesseContext;
 
 public class HtmlResultFormatter implements ResultFormatter {
@@ -32,6 +36,7 @@ public class HtmlResultFormatter implements ResultFormatter {
     createPage(context.htmlPageFactory, rootPath);
     suiteFormatter = createCustomFormatter();
     suiteFormatter.writeHead(null);
+    System.out.println("Built HtmlResultFormatter for " + rootPath);
   }
 
   private SuiteHtmlFormatter createCustomFormatter() throws Exception {
@@ -50,35 +55,19 @@ public class HtmlResultFormatter implements ResultFormatter {
   }
   
   private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
-    htmlPage = pageFactory.newPage();
-    htmlPage.head.use(makeBaseTag());
-    htmlPage.head.add(makeContentTypeMetaTag());
-    htmlPage.title.use(rootPath);
-    htmlPage.head.add(htmlPage.title);
-    htmlPage.head.add(htmlPage.makeCssLink("/files/css/fitnesse_print.css", "screen"));
+    htmlPage = context.htmlPageFactory.newPage();
 
-    HtmlTag script = new HtmlTag("script", scriptContent);
-    script.addAttribute("language", "javascript");
-    htmlPage.head.add(script);
-    htmlPage.body.addAttribute("onload", "localizeInPageLinks()");
+    htmlPage.setTitle(rootPath);
+    htmlPage.put("baseUri", baseUri(host));
 
-    htmlPage.header.use(HtmlUtil.makeBreadCrumbsWithPageType(rootPath, "Command Line Test Results"));
+    htmlPage.setPageTitle(new PageTitle("Command Line Test Results", PathParser.parse(rootPath)));
   }
 
-  private HtmlTag makeContentTypeMetaTag() {
-    HtmlTag meta = new HtmlTag("meta");
-    meta.addAttribute("http-equiv", "Content-Type");
-    meta.addAttribute("content", "text/html; charset=utf-8");
-    return meta;
-  }
-
-  private HtmlTag makeBaseTag() {
-    HtmlTag base = new HtmlTag("base");
+  public String baseUri(String host) {
     StringBuffer href = new StringBuffer("http://");
     href.append(host);
     href.append("/");
-    base.addAttribute("href", href.toString());
-    return base;
+    return href.toString();
   }
 
   public void acceptResult(PageResult result) throws Exception {
@@ -110,18 +99,4 @@ public class HtmlResultFormatter implements ResultFormatter {
     return buffer.getInputStream();
   }
 
-  public static final String scriptContent = "\n" +
-    "function localizeInPageLinks()\n" +
-    "{\n" +
-    "\tvar base = document.getElementsByTagName('base')[0].href;\n" +
-    "\tvar inPageBase = base + \"#\";\n" +
-    "\tvar baseLength = inPageBase.length\n" +
-    "\tvar aTags = document.getElementsByTagName('a');\n" +
-    "\tfor(var i=0; i < aTags.length; i++)\n" +
-    "\t{\n" +
-    "\t\tvar tag = aTags[i];\n" +
-    "\t\tif(tag.href && tag.href.substring(0, baseLength) == inPageBase)\n" +
-    "\t\t\ttag.href = location.href + '#' + tag.href.substring(baseLength);\n" +
-    "\t}\n" +
-    "}\n";
 }

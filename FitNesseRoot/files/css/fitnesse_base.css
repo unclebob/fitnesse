@@ -28,10 +28,6 @@ ol {
   text-indent: -1.3em;
 }
 
-a:link, a:visited, a:hover, a:active {
-  background: transparent;
-}
-
 a:link {
   color: #2E2EB2;
 }
@@ -146,6 +142,10 @@ h4 {
   font-style: italic;
 }
 
+fieldset {
+  border: none;
+}
+
 textarea.oldContent {
   width: 100%;
 }
@@ -185,6 +185,29 @@ div.popup_window {
   z-index: 10;
 }
 
+div.popup_window label {
+  float: left;
+  width: 10em;
+  clear: both;
+}
+
+div.popup_window .page_type {
+  float: left;
+  width: 10em;
+}
+
+div.popup_window .page_type label {
+  display: inline;
+  float: none;
+  width: auto;
+  margin-left: .4em;
+}
+
+div.popup_window .buttons {
+  clear: both
+  margin-left: 10em;
+}
+
 div.popup_title {
   position: absolute;
   top: 0px;
@@ -218,15 +241,14 @@ div.sidebar {
   border-right: 1px dotted #C6CCB7;
 }
 
-div.art_niche {
+.art_niche {
+  display: block;
   margin: 0px;
   padding: 0px 0px 5px 0px;
   position: relative;
-  top: 0px;
-  left: 0px;
   height: 90px;
   border-bottom: solid 1px #984D00;
-  background-image: url("/files/images/FitNesseLogo.gif");
+  background-image: url("/files/images/FitNesseLogo.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -325,9 +347,9 @@ div.virtual-wiki-properties {
   padding: 2px 2px 2px 5px;
 }
 
-.actions a:link, .actions a:visited {
+.actions a, .actions a:visited {
   display: block;
-  margin: 0px;
+  margin: 0 0 .5em 0;
   line-height: 2.2em;
   text-indent: .5em;
   color: black;
@@ -595,10 +617,6 @@ div.edit_options {
 
 div.hints {
   clear: both;
-}
-
-div.nav_break {
-  font-size: .3em;
 }
 
 div.merge_new {

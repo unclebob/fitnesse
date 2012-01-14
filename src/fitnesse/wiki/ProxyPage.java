@@ -163,6 +163,10 @@ public class ProxyPage extends CachingPage implements Serializable {
     return data;
   }
 
+  public boolean isOpenInNewWindow() {
+    return true;
+  }
+
   //TODO-MdM these are not needed
   // We expect this to go away when we do the checkout model
   protected VersionInfo makeVersion() throws Exception {

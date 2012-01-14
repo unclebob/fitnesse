@@ -6,6 +6,7 @@ import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestEventListener;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 
 public class WikiImportTestEventListener implements TestEventListener {

@@ -2,9 +2,9 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.WikiImportProperty;
 import util.GracefulNamer;
 
 import java.util.ArrayList;

@@ -1,0 +1,31 @@
+<form method="post" action="$action" name="f">
+ <input type="hidden" name="responder" value="saveData"/>
+ <input type="hidden" name="editTime" value="$editTime"/>
+ <input type="hidden" name="ticketId" value="$ticketId"/>
+#if($!redirect)
+ <input type="hidden" name="redirect" value="$redirect"/>
+#end
+ <textarea class="pageContent no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
+
+ <div class="edit_buttons">
+
+  <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
+  <script src="/files/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
+  <script src="/files/javascript/spreadsheetSupport.js" type="text/javascript"></script>
+  <script src="/files/javascript/WikiFormatter.js" type="text/javascript"></script>
+  <script src="/files/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
+ </div>
+ <div class="edit_options">
+  <script src="/files/javascript/textareaWrapSupport.js" type="text/javascript"></script>
+ </div>
+
+ <div class="hints"><br>Hints:
+  <ul>
+   <li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the "Save" button!</li>
+   <li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>
+  </ul>
+ </div>
+</form>
+<script type="text/javascript">
+ document.f.pageContent.focus();
+</script>

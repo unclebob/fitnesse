@@ -1,5 +1,4 @@
-#set ($page_title="Refactor: $pageTitle.link")
-#parse("pageHead.vm")
+<div class="main">
 				<h2>Replace</h2>
 				<form action="$refactoredRootPage" method="post">
 					<input type="hidden" name="responder" value="replace"/>
@@ -39,3 +38,4 @@ New Location:
  - Find all references to this page and change them accordingly (May take several minutes)<br/>
 					<input type="submit" name="" value="Move Page"/>
 				</form>
+</div>

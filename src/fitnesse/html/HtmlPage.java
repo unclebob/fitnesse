@@ -2,77 +2,78 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-public class HtmlPage extends HtmlTag {
-  public static final String DTD = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"; // TR/html4/strict.DTD
+import org.apache.velocity.VelocityContext;
+
+import fitnesse.VelocityFactory;
+import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.ProxyPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
+import fitnesse.wiki.WikiPagePath;
+
+public class HtmlPage {
   public static final String BreakPoint = "<!--BREAKPOINT-->";
 
-  public HtmlTag head;
-  public HtmlTag title;
-  public HtmlTag body;
-  public HtmlTag header;
-  public HtmlTag sidebar;
-  public HtmlTag mainbar;
-  public HtmlTag artNiche;
-  public HtmlTag actions;
-  public HtmlTag main;
+  private VelocityContext velocityContext;
+  
+  private String templateFileName;
+  private String title = "FitNesse";
+  private String bodyClass;
+  private PageTitle pageTitle;
+  private String mainTemplate;
+  private String mainContent;
+  
+  public WikiPageActions actions;
+
   public String preDivision;
   public String postDivision;
 
-  protected HtmlPage() {
-    super("html");
-
-    add(makeHead());
-    add(makeBody());
+  protected HtmlPage(String templateFileName) {
+    super();
+    
+    velocityContext =  new VelocityContext();
+    this.templateFileName = templateFileName;
   }
 
-  public String html() {
-    return DTD + endl + super.html();
+  protected VelocityContext updateVelocityContext() throws Exception {
+    velocityContext.put("title", title);
+    velocityContext.put("bodyClass", bodyClass);
+    makeSidebarSection();
+    velocityContext.put("pageTitle", pageTitle);
+
+    if (mainTemplate != null) {
+      velocityContext.put("mainTemplate", mainTemplate);
+    } else {
+      velocityContext.put("mainContent", mainContent);
+    }
+    return velocityContext;
   }
 
-  protected HtmlTag makeBody() {
-    body = new HtmlTag("body");
-    mainbar = HtmlUtil.makeDivTag("mainbar");
-    header = HtmlUtil.makeDivTag("header");
-    sidebar = HtmlUtil.makeDivTag("sidebar");
-    actions = HtmlUtil.makeDivTag("actions");
-    main = HtmlUtil.makeDivTag("main");
-    makeArtNiche();
-
-    mainbar.add(header);
-    mainbar.add(main);
-
-    sidebar.add(artNiche);
-    sidebar.add(actions);
-
-    body.add(sidebar);
-    body.add(mainbar);
-
-    return body;
+  public void setMainTemplate(String templateName) {
+    this.mainTemplate = templateName;
+  }
+  
+  public void setMainContent(String mainContent) {
+    this.mainContent = mainContent;
+  }
+  
+  public void put(String key, Object value) {
+    velocityContext.put(key, value);
+  }
+  
+  public String html() throws Exception {
+    VelocityContext context = updateVelocityContext();
+    return VelocityFactory.translateTemplate(context, templateFileName);
   }
 
-  protected void makeArtNiche() {
-    artNiche = HtmlUtil.makeDivTag("art_niche");
-    artNiche.addAttribute("onclick", "document.location='FrontPage'");
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
-  protected HtmlTag makeHead() {
-    head = new HtmlTag("head");
-    title = new HtmlTag("title");
-    title.add("FitNesse");
-    head.add(title);
-    head.add(makeCssLink("/files/css/fitnesse.css", "screen"));
-    head.add(makeCssLink("/files/css/fitnesse_print.css", "print"));
-    head.add(HtmlUtil.makeJavascriptLink("/files/javascript/fitnesse.js"));
-    return head;
-  }
-
-  public HtmlTag makeCssLink(String link, String media) {
-    HtmlTag css = new HtmlTag("link");
-    css.addAttribute("rel", "stylesheet");
-    css.addAttribute("type", "text/css");
-    css.addAttribute("href", link);
-    css.addAttribute("media", media);
-    return css;
+  public void setPageTitle(PageTitle pageTitle) {
+    this.pageTitle = pageTitle;
   }
 
   public void divide() throws Exception {
@@ -81,4 +82,18 @@ public class HtmlPage extends HtmlTag {
     preDivision = html.substring(0, breakIndex);
     postDivision = html.substring(breakIndex + BreakPoint.length());
   }
+
+  public void setBodyClass(String clazz) {
+    bodyClass = clazz;
+  }
+  
+  public void makeSidebarSection() throws Exception {
+    velocityContext.put("actions", actions);
+    if (actions != null) {
+      velocityContext.put("localPath", actions.getLocalPageName());
+      velocityContext.put("localOrRemotePath", actions.getLocalOrRemotePageName());
+      velocityContext.put("openInNewWindow", actions.isNewWindowIfRemote());
+    }
+  }
+
 }

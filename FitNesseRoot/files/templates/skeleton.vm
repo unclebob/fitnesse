@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+ <head>
+  #if( $baseUri )<base href="$baseUri"/>#end
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>$title</title>
+  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="/files/css/fitnesse_print.css" media="print"/>
+  <script src="/files/javascript/fitnesse.js" type="text/javascript"></script>
+ </head>
+ <body#if( $bodyClass ) class="$bodyClass"#end>
+
+  #parse( "sidebar.vm" )
+
+  <div class="mainbar">
+
+   #parse( "pageTitle.vm" )
+    
+   ## parse Html tree
+   #if( $mainTemplate )
+    #parse( $mainTemplate )
+   #else
+   <div class="main">
+    $!mainContent
+   </div>
+   #end
+    
+  </div>
+ </body>
+</html>

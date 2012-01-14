@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -14,6 +17,7 @@ import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 
@@ -28,7 +32,7 @@ public class EditResponder implements SecureResponder {
   protected WikiPage root;
   protected PageData pageData;
   protected Request request;
-
+  
   public EditResponder() {
   }
 
@@ -84,107 +88,32 @@ public class EditResponder implements SecureResponder {
     throws Exception {
     HtmlPage html = context.htmlPageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
-    html.title.use(title + resource + ":");
+    html.setTitle(title + resource + ":");
     
-    html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
-    HtmlTag header = makeHeader(resource, title);
-    html.header.use(header);
-    html.main.use(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
-
+    html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource)));
+    html.setMainContent(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
+    
     return html.html();
   }
 
-  private HtmlTag makeHeader(String resource, String title) throws Exception {
-    return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
-  }
-
-  private HtmlTag makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception {
-    HtmlTag form = new HtmlTag("form");
-    form.addAttribute("name", "f");
-    form.addAttribute("action", resource);
-    form.addAttribute("method", "post");
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-    form.add(HtmlUtil.makeInputTag("hidden", TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
-    form.add(HtmlUtil.makeInputTag("hidden", TICKET_ID, String.valueOf((SaveRecorder.newTicket()))));
+  private String makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
+    velocityContext.put("action", resource);
+    velocityContext.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));
+    velocityContext.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
+    
     if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
       String redirectUrl = request.getHeader("Referer").toString();
       int questionMarkIndex = redirectUrl.indexOf("?");
       if (questionMarkIndex > 0)
         redirectUrl = redirectUrl.substring(0, questionMarkIndex);
       redirectUrl += "?" + request.getInput("redirectAction").toString();
-      form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
+      velocityContext.put("redirect", redirectUrl);
     }
 
-    form.add(createTextarea(firstTimeForNewPage, defaultNewPageContent));
-    form.add(createButtons());
-    form.add(createOptions());
-    form.add("<div class=\"hints\"><br />Hints:\n<ul>" +
-      "<li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the \"Save\" button!</li>\n" +
-      "<li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>\n" +
-      "</ul></div>");
+    velocityContext.put("pageContent", Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
 
-    TagGroup group = new TagGroup();
-    group.add(form);
-
-    return group;
-  }
-
-  private HtmlTag createOptions() throws Exception {
-    HtmlTag options = HtmlUtil.makeDivTag("edit_options");
-    options.add(makeScriptOptions());
-    return options;
-  }
-
-  private HtmlTag makeScriptOptions() {
-    TagGroup scripts = new TagGroup();
-
-    includeJavaScriptFile("/files/javascript/textareaWrapSupport.js", scripts);
-
-    return scripts;
-  }
-
-  private HtmlTag createButtons() throws Exception {
-    HtmlTag buttons = HtmlUtil.makeDivTag("edit_buttons");
-    buttons.add(makeSaveButton());
-    buttons.add(makeScriptButtons());
-    return buttons;
-  }
-
-  private HtmlTag makeScriptButtons() {
-    TagGroup scripts = new TagGroup();
-
-    includeJavaScriptFile("/files/javascript/SpreadsheetTranslator.js", scripts);
-    includeJavaScriptFile("/files/javascript/spreadsheetSupport.js", scripts);
-    includeJavaScriptFile("/files/javascript/WikiFormatter.js", scripts);
-    includeJavaScriptFile("/files/javascript/wikiFormatterSupport.js", scripts);
-    includeJavaScriptFile("/files/javascript/fitnesse.js", scripts);
-    
-    return scripts;
-  }
-
-  protected void includeJavaScriptFile(String jsFile, TagGroup scripts) {
-    HtmlTag scriptTag = HtmlUtil.makeJavascriptLink(jsFile);
-    scripts.add(scriptTag);
-  }
-
-  protected HtmlTag makeSaveButton() {
-    HtmlTag saveButton = HtmlUtil.makeInputTag("submit", "save", "Save");
-    saveButton.addAttribute("tabindex", "2");
-    saveButton.addAttribute("accesskey", "s");
-    return saveButton;
-  }
-
-  private HtmlTag createTextarea(boolean firstTimeForNewPage, String defaultNewPageContent) {
-    HtmlTag textarea = new HtmlTag("textarea");
-    textarea.addAttribute("class", CONTENT_INPUT_NAME + " no_wrap");
-    textarea.addAttribute("wrap", "off");
-    textarea.addAttribute("name", CONTENT_INPUT_NAME);
-    textarea.addAttribute("id", CONTENT_INPUT_ID);
-    textarea.addAttribute("rows", "30");
-    textarea.addAttribute("cols", "70");
-    textarea.addAttribute("tabindex", "1");
-    textarea.add(Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
-    return textarea;
+    return VelocityFactory.translateTemplate(velocityContext, "editPage.vm");
   }
 
   public SecureOperation getSecureOperation() {
