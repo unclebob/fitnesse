@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static util.ListUtility.list;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +104,33 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id", "call", "testSlim", "returnString"));
     respondsWith(list(list("id", "string")));
   }
+
+  @Test
+  public void oneFunctionCallVerbose() throws Exception {
+    executor.setVerbose();
+    PrintStream oldOut = System.out;
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(os));
+
+    statements.add(list("id", "call", "testSlim", "returnString"));
+    executor.execute(statements);
+
+    System.setOut(oldOut);
+    assertEquals("!1 Instructions\n" +
+      "[i1, import, fitnesse.slim.test]\n" +
+      "\n" +
+      "[i1, OK]\n" +
+      "------\n" +
+      "[m1, make, testSlim, TestSlim]\n" +
+      "\n" +
+      "[m1, OK]\n" +
+      "------\n" +
+      "[id, call, testSlim, returnString]\n" +
+      "\n" +
+      "[id, string]\n" +
+      "------\n", os.toString());
+  }
+
 
   @Test
   public void oneFunctionCallWithBlankArgument() throws Exception {

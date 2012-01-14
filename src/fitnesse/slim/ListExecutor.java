@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import util.ListUtility;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import util.ListUtility;
 
 /**
  * executes a list of SLIM statements, and returns a list of return values.
@@ -24,26 +24,58 @@ public class ListExecutor {
     this.executor = slimFactory.getStatementExecutor();
     this.methodNameTranslator = slimFactory.getMethodNameTranslator();
   }
-  
-  public List<Object> execute(List<Object> statements) {
-    String message = "!1 Instructions";
-    verboseMessage(message);
 
-    List<Object> result = new ArrayList<Object>();
-    for (Object statement : statements) {
-      List<Object> statementList = ListUtility.uncheckedCast(Object.class, statement);
+  protected void setVerbose() {
+    verbose = true;
+  }
+
+  private class Executive {
+    public void prepareToExecute() { }
+
+    public List<Object> executeStatements(List<Object> statements) {
+      List<Object> result = new ArrayList<Object>();
+      for (Object statement : statements)
+        if (!executor.stopHasBeenRequested())
+          result.add(executeStatement(statement));
+      return result;
+    }
+
+    public Object executeStatement(Object statement) {
+      return new Statement(asStatementList(statement), methodNameTranslator).execute(executor);
+    }
+
+    public void finalizeExecution() {
+      if (executor.stopHasBeenRequested())
+        executor.reset();
+    }
+  }
+
+  private class LoggingExecutive extends Executive {
+    public void prepareToExecute() {
+      verboseMessage("!1 Instructions");
+    }
+
+    public Object executeStatement(Object statement) {
+      List<Object> statementList = asStatementList(statement);
       verboseMessage(statementList + "\n");
-      Object retVal = new Statement(statementList, methodNameTranslator).execute(executor);
+      Object retVal = super.executeStatement(statement);
       verboseMessage(retVal);
       verboseMessage("------");
-      result.add(retVal);
-      
-      if (executor.stopHasBeenRequested()) {
-        executor.reset();
-        return result;
-      }
+      return retVal;
     }
+  }
+
+  public List<Object> execute(List<Object> statements) {
+    Executive e = verbose ? new LoggingExecutive() : new Executive();
+    e.prepareToExecute();
+    List<Object> result = e.executeStatements(statements);
+    e.finalizeExecution();
     return result;
+  }
+
+
+  private List<Object> asStatementList(Object statement) {
+    return ListUtility.uncheckedCast(Object.class, statement);
   }
 
   private void verboseMessage(Object message) {

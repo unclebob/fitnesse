@@ -322,14 +322,18 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private List<SlimTable> createSlimTables(TableScanner tableScanner) {
     List<SlimTable> allTables = new LinkedList<SlimTable>();
-    for (Table table : tableScanner) {
-      String tableId = "" + allTables.size();
-      SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, this);
-      if (slimTable != null) {
-        allTables.add(slimTable);
-      }
-    }
+    for (Table table : tableScanner)
+      createSlimTable(allTables, table);
+   
     return allTables;
+  }
+
+  private void createSlimTable(List<SlimTable> allTables, Table table) {
+    String tableId = "" + allTables.size();
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, this);
+    if (slimTable != null) {
+      allTables.add(slimTable);
+    }
   }
 
   static String translateExceptionMessage(String exceptionMessage) {
