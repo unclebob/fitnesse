@@ -14,6 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 public class VersionResponder implements SecureResponder {
@@ -31,10 +32,9 @@ public class VersionResponder implements SecureResponder {
     WikiPage page = pageCrawler.getPage(context.root, path);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
-    PageData pageData = page.getDataVersion(version);
 
     String fullPathName = PathParser.render(pageCrawler.getFullPath(page));
-    HtmlPage html = makeHtml(fullPathName, pageData, context);
+    HtmlPage html = makeHtml(fullPathName, page, context);
 
     SimpleResponse response = new SimpleResponse();
     response.setContent(html.html());
@@ -42,20 +42,16 @@ public class VersionResponder implements SecureResponder {
     return response;
   }
 
-  private HtmlPage makeHtml(String name, PageData pageData, FitNesseContext context) throws Exception {
+  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) throws Exception {
+    PageData pageData = page.getDataVersion(version);
     HtmlPage html = context.htmlPageFactory.newPage();
-    html.title.use("Version " + version + ": " + name);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version " + version));
-    html.actions.use(makeRollbackLink(name));
-    html.main.use(HtmlUtil.makeNormalWikiPageContent(pageData));
+    html.setTitle("Version " + version + ": " + name);
+    html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource)));
+    // TODO: subclass actions for specific rollback behaviour.
+    html.actions = new WikiPageActions(page).withRollback();
+    html.put("rollbackVersion", version);
+    html.setMainContent(HtmlUtil.makeNormalWikiPageContent(pageData));
     return html;
-  }
-
-  private HtmlTag makeRollbackLink(String name) {
-    WikiPageAction action = new WikiPageAction(name, "Rollback");
-    action.setQuery("responder=rollback&version=" + version);
-    action.setShortcutKey("");
-    return HtmlUtil.makeAction(action);
   }
 
   public SecureOperation getSecureOperation() {

@@ -6,6 +6,7 @@ import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -22,7 +23,7 @@ public abstract class ResponderTestCase extends RegexTestCase {
     crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = responderInstance();
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   // Return an instance of the Responder being tested.

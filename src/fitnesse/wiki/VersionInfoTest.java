@@ -4,9 +4,12 @@ package fitnesse.wiki;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
+
+import fitnesse.responders.versions.VersionSelectionResponder;
 
 import junit.framework.TestCase;
 
@@ -74,5 +77,23 @@ public class VersionInfoTest extends TestCase {
     VersionInfo version = new VersionInfo(versionName);
     assertEquals(author, version.getAuthor());
   }
+
+  public void testConvertVersionNameToAge() throws Exception {
+    Date now = new GregorianCalendar(2003, 0, 1, 00, 00, 01).getTime();
+    Date tenSeconds = new GregorianCalendar(2003, 0, 1, 00, 00, 11).getTime();
+    Date twoMinutes = new GregorianCalendar(2003, 0, 1, 00, 02, 01).getTime();
+    Date fiftyNineSecs = new GregorianCalendar(2003, 0, 1, 00, 01, 00).getTime();
+    Date oneHour = new GregorianCalendar(2003, 0, 1, 01, 00, 01).getTime();
+    Date fiveDays = new GregorianCalendar(2003, 0, 6, 00, 00, 01).getTime();
+    Date years = new GregorianCalendar(2024, 0, 1, 00, 00, 01).getTime();
+
+    assertEquals("10 seconds", VersionInfo.howLongAgoString(now, tenSeconds));
+    assertEquals("2 minutes", VersionInfo.howLongAgoString(now, twoMinutes));
+    assertEquals("59 seconds", VersionInfo.howLongAgoString(now, fiftyNineSecs));
+    assertEquals("1 hour", VersionInfo.howLongAgoString(now, oneHour));
+    assertEquals("5 days", VersionInfo.howLongAgoString(now, fiveDays));
+    assertEquals("21 years", VersionInfo.howLongAgoString(now, years));
+  }
+
 
 }

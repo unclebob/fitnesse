@@ -7,6 +7,8 @@ import static fitnesse.wiki.PageData.*;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -28,20 +30,18 @@ public class SearchFormResponder implements Responder {
 
     VelocityContext velocityContext = new VelocityContext();
 
-    StringWriter writer = new StringWriter();
+    HtmlPage html = context.htmlPageFactory.newPage();
+    html.setMainTemplate("searchForm.vm");
+    html.setTitle("Search Form");
+    html.setPageTitle(new PageTitle("Search Form"));
+    html.put("pageTypeAttributes", PageType.values());
+    html.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
+    html.put("securityAttributes", SECURITY_ATTRIBUTES);
+    html.put("specialAttributes", SPECIAL_ATTRIBUTES);
+    html.put("searchedRootPage", request.getResource());
+    html.put("request", request);
 
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("searchForm.vm");
-
-    velocityContext.put("pageTitle", new PageTitle("Search Form"));
-    velocityContext.put("pageTypeAttributes", PageType.values());
-    velocityContext.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
-    velocityContext.put("securityAttributes", SECURITY_ATTRIBUTES);
-    velocityContext.put("specialAttributes", SPECIAL_ATTRIBUTES);
-    velocityContext.put("searchedRootPage", request.getResource());
-    velocityContext.put("request", request);
-
-    template.merge(velocityContext, writer);
-    response.setContent(writer.toString());
+    response.setContent(html.html());
 
     return response;
   }

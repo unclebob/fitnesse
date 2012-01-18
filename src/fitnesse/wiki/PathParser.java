@@ -20,7 +20,7 @@ public class PathParser {
     path = new WikiPagePath();
     if (pathName.equals("")) {
       return path;
-    } else if (pathName.equals("root") || pathName.equals(PATH_SEPARATOR)) {
+    } else if (pathName.equals("root") || pathName.equals(PATH_SEPARATOR) || pathName.equals("/")) {
       path.makeAbsolute();
       return path;
     } else {

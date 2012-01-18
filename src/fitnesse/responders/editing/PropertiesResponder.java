@@ -6,6 +6,8 @@ import static fitnesse.wiki.PageData.*;
 import static fitnesse.wiki.PageType.*;
 
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.json.JSONObject;
 
@@ -24,12 +26,13 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.WikiImportProperty;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.MockingPageCrawler;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.SymbolicPage;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
@@ -40,13 +43,15 @@ public class PropertiesResponder implements SecureResponder {
   private WikiPage page;
   public PageData pageData;
   private String resource;
+  private WikiPagePath path;
   private SimpleResponse response;
+  private HtmlPage html;
 
   public Response makeResponse(FitNesseContext context, Request request)
       throws Exception {
     response = new SimpleResponse();
     resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
+    path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
     if (!crawler.pageExists(context.root, path))
       crawler.setDeadEndStrategy(new MockingPageCrawler());
@@ -91,14 +96,15 @@ public class PropertiesResponder implements SecureResponder {
   }
 
   private String makeHtml(FitNesseContext context) throws Exception {
-    HtmlPage page = context.htmlPageFactory.newPage();
-    page.title.use("Properties: " + resource);
-    page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource,
-        "Page Properties"));
-    page.main.use(makeLastModifiedTag());
-    page.main.add(makeFormSections());
+    html = context.htmlPageFactory.newPage();
+    html.setTitle("Properties: " + resource);
+    html.setPageTitle(new PageTitle("Page Properties", path));
+    html.put("pageData", pageData);
+    html.setMainTemplate("properties.vm");
+    makeLastModifiedTag();
+    makeFormSections();
 
-    return page.html();
+    return html.html();
   }
 
   private HtmlTag makeAttributeCheckbox(String attribute, String displayString, PageData pageData)
@@ -115,86 +121,41 @@ public class PropertiesResponder implements SecureResponder {
     return checkbox;
   }
 
-  private HtmlTag makeLastModifiedTag() throws Exception {
-    HtmlTag tag = HtmlUtil.makeDivTag("right");
+  private void makeLastModifiedTag() throws Exception {
     String username = pageData.getAttribute(LAST_MODIFYING_USER);
     if (username == null || "".equals(username))
-      tag.use("Last modified anonymously");
+      html.put("lastModified", "Last modified anonymously");
     else
-      tag.use("Last modified by " + username);
-    return tag;
+      html.put("lastModified", "Last modified by " + username);
   }
 
-  private HtmlTag makeFormSections() throws Exception {
-    TagGroup html = new TagGroup();
-    html.add(makePropertiesForm());
+  private void makeFormSections() throws Exception {
+    makePropertiesForm();
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData
         .getProperties());
     if (importProperty != null)
-      html.add(makeImportUpdateForm(importProperty));
+      makeImportUpdateForm(importProperty);
     else
-      html.add(makeImportForm());
+      makeImportForm();
 
-    html.add(makeSymbolicLinkSection());
-
-    return html;
+    makeSymbolicLinkSection();
   }
 
-  private HtmlTag makePropertiesForm() throws Exception {
-    HtmlTag form = HtmlUtil.makeFormTag("post", resource);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveProperties"));
-
-    HtmlTag trisection = new HtmlTag("div");
-    trisection.addAttribute("style", "width:100%");
-    HtmlTag checkBoxesSection = new HtmlTag("div");
-    checkBoxesSection.addAttribute("class", "properties");
-    checkBoxesSection.add(makePageTypeRadiosHtml(pageData));
-    checkBoxesSection.add(makeTestActionCheckboxesHtml(pageData));
-    checkBoxesSection.add(makeNavigationCheckboxesHtml(pageData));
-    checkBoxesSection.add(makeSecurityCheckboxesHtml(pageData));
-    HtmlTag virtualWikiSection = new HtmlTag("div");
-    virtualWikiSection.addAttribute("class", "virtual-wiki-properties");
-    virtualWikiSection.add(makeVirtualWikiHtml());
-    virtualWikiSection.add(makeTagsHtml(pageData));
-    virtualWikiSection.add(makeHelpTextHtml(pageData));
-    trisection.add(checkBoxesSection);
-    trisection.add(virtualWikiSection);
-    form.add(trisection);
-
-    HtmlTag buttonSection = new HtmlTag("div");
-    buttonSection.add(HtmlUtil.BR);
-    HtmlTag saveButton = HtmlUtil.makeInputTag("submit", "Save",
-        "Save Properties");
-    saveButton.addAttribute("accesskey", "s");
-    buttonSection.add(saveButton);
-    form.add(buttonSection);
-    return form;
+  private void makePropertiesForm() throws Exception {
+    makePageTypeRadiosHtml(pageData);
+    makeTestActionCheckboxesHtml(pageData);
+    makeNavigationCheckboxesHtml(pageData);
+    makeSecurityCheckboxesHtml(pageData);
+    makeVirtualWikiHtml();
+    makeTagsHtml(pageData);
+    makeHelpTextHtml(pageData);
   }
 
-  public HtmlTag makePageTypeRadiosHtml(PageData pageData) throws Exception {
-    return makeAttributeRadiosHtml("Page type: ",
-        PAGE_TYPE_ATTRIBUTES, PAGE_TYPE_ATTRIBUTE, pageData);
-  }
-
-  private HtmlTag makeAttributeRadiosHtml(String label, String[] attributes,
-      String radioGroup, PageData pageData) throws Exception {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; width: 150px;");
-
-    div.add(label);
-    String checkedAttribute = getCheckedAttribute(pageData, attributes);
-    for (String attribute : attributes) {
-      div.add(HtmlUtil.BR);
-      div.add(makeAttributeRadio(radioGroup, attribute, attribute
-          .equals(checkedAttribute), attribute));
-    }
-    div.add(HtmlUtil.BR);
-    div.add(HtmlUtil.BR);
-    
-    div.add(makeAttributeCheckbox(PropertyPRUNE, "Skip (Recursive)", pageData));
-    
-    return div;
+  public void makePageTypeRadiosHtml(PageData pageData) throws Exception {
+    html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+    String pt = getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES);
+    html.put("selectedPageType", getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES));
   }
 
   private String getCheckedAttribute(PageData pageData, String[] attributes)
@@ -206,151 +167,43 @@ public class PropertiesResponder implements SecureResponder {
     return attributes[0];
   }
 
-  private HtmlTag makeAttributeRadio(String group, String attribute,
-      boolean checked, String guiName) throws Exception {
-    HtmlTag radioButton = makeRadioButton(group, attribute, guiName);
-    if (checked)
-      radioButton.addAttribute("checked", "checked");
-    return radioButton;
+  private void makeVirtualWikiHtml() throws Exception {
+    html.put("virtualWikiValue", getVirtualWikiValue(pageData));
   }
 
-  private HtmlTag makeRadioButton(String group, String attribute, String guiName) {
-    HtmlTag checkbox = HtmlUtil.makeInputTag("radio", group);
-    checkbox.addAttribute("value", attribute);
-    checkbox.tail = " - " + guiName;
-    return checkbox;
+  private void makeImportForm() {
+    html.put("makeImportForm", true);
+    html.put("autoUpdate", true);
   }
 
-  private HtmlTag makeVirtualWikiHtml() throws Exception {
-    HtmlTag virtualWiki = new HtmlTag("div");
-    virtualWiki.addAttribute("style", "float: left; width: 450px;");
-    virtualWiki.add("VirtualWiki URL: ");
-    HtmlTag deprecated = new HtmlTag("span", "(DEPRECATED)");
-    deprecated.addAttribute("style", "color: #FF0000;");
-    virtualWiki.add(deprecated);
-    virtualWiki.add(HtmlUtil.BR);
-    HtmlTag vwInput = HtmlUtil.makeInputTag("text", "VirtualWiki",
-        getVirtualWikiValue(pageData));
-    vwInput.addAttribute("size", "40");
-    virtualWiki.add(vwInput);
-    virtualWiki.add(HtmlUtil.NBSP);
-    virtualWiki.add(HtmlUtil.NBSP);
-    return virtualWiki;
-  }
-
-  private HtmlTag makeImportForm() {
-    HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
-    form.add(HtmlUtil.HR);
-    form.add("Wiki Import.  Supply the URL for the wiki you'd like to import.");
-    form.add(HtmlUtil.BR);
-    form.add("Remote Wiki URL:");
-    HtmlTag remoteUrlField = HtmlUtil.makeInputTag("text", "remoteUrl");
-    remoteUrlField.addAttribute("size", "70");
-    form.add(remoteUrlField);
-    form.add(HtmlUtil.BR);
-    HtmlTag autoUpdateCheckBox = HtmlUtil.makeInputTag("checkbox",
-        "autoUpdate", "checked");
-    autoUpdateCheckBox.addAttribute("checked", "true");
-    form.add(autoUpdateCheckBox);
-    form.add("- Automatically update imported content when executing tests");
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
-    form.add(HtmlUtil.makeInputTag("submit", "save", "Import"));
-    return form;
-  }
-
-  private HtmlTag makeImportUpdateForm(WikiImportProperty importProps)
-      throws Exception {
-    HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
-
-    form.add(HtmlUtil.HR);
-    form.add(new HtmlTag("b", "Wiki Import Update"));
-    form.add(HtmlUtil.BR);
-    String buttonMessage;
-    form.add(HtmlUtil.makeLink(page.getName(), page.getName()));
+  private void makeImportUpdateForm(WikiImportProperty importProps) {
     if (importProps.isRoot()) {
-      form.add(" imports its subpages from ");
-      buttonMessage = "Update Subpages";
+      html.put("makeImportRootForm", true);
     } else {
-      form.add(" imports its content and subpages from ");
-      buttonMessage = "Update Content and Subpages";
+      html.put("makeImportSubpageForm", true);
     }
-    form.add(HtmlUtil.makeLink(importProps.getSourceUrl(), importProps
-        .getSourceUrl()));
-    form.add(".");
-    form.add(HtmlUtil.BR);
-    HtmlTag autoUpdateCheckBox = HtmlUtil
-        .makeInputTag("checkbox", "autoUpdate");
     if (importProps.isAutoUpdate())
-      autoUpdateCheckBox.addAttribute("checked", "true");
-    form.add(autoUpdateCheckBox);
-
-    form.add("- Automatically update imported content when executing tests");
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
-    form.add(HtmlUtil.makeInputTag("submit", "save", buttonMessage));
-
-    return form;
+      html.put("autoUpdate", true);
+    html.put("sourceUrl", importProps.getSourceUrl());
   }
 
-  private HtmlTag makeSymbolicLinkSection() throws Exception {
-    HtmlTag form = HtmlUtil.makeFormTag("get", resource, "symbolics");
-    form.add(HtmlUtil.HR);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "symlink"));
-    form.add(new HtmlTag("strong", "Symbolic Links"));
-
-    HtmlTableListingBuilder table = new HtmlTableListingBuilder();
-    table.getTable().addAttribute("style", "width:80%");
-    table.addRow(new HtmlElement[] { new HtmlTag("strong", "Name"),
-        new HtmlTag("strong", "Path to Page"), new HtmlTag("strong", "Actions")
-    // , new HtmlTag("strong", "New Name")
-        });
-    addSymbolicLinkRows(table);
-    addFormRow(table);
-    form.add(table.getTable());
-
-    return form;
-  }
-
-  private void addFormRow(HtmlTableListingBuilder table) throws Exception {
-    HtmlTag nameInput = HtmlUtil.makeInputTag("text", "linkName");
-    nameInput.addAttribute("size", "16%");
-    HtmlTag pathInput = HtmlUtil.makeInputTag("text", "linkPath");
-    pathInput.addAttribute("size", "60%");
-    HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "submit",
-        "Create/Replace");
-    submitButton.addAttribute("style", "width:8em");
-    table.addRow(new HtmlElement[] { nameInput, pathInput, submitButton });
-  }
-
-  private void addSymbolicLinkRows(HtmlTableListingBuilder table)
-      throws Exception {
+  private void makeSymbolicLinkSection() throws Exception {
     WikiPageProperty symLinksProperty = pageData.getProperties().getProperty(
         SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty == null)
       return;
+    List<Symlink> symlinks = new ArrayList<Symlink>();
     Set<String> symbolicLinkNames = symLinksProperty.keySet();
-    for (String linkName : symbolicLinkNames) {
-      HtmlElement nameItem = new RawHtml(linkName);
-      HtmlElement pathItem = makeHtmlForSymbolicPath(symLinksProperty, linkName);
-      // ---Unlink---
-      HtmlTag actionItems = HtmlUtil.makeLink(resource
-          + "?responder=symlink&removal=" + linkName, "Unlink&nbsp;");
-      // ---Rename---
-      String callScript = "javascript:symbolicLinkRename('" + linkName + "','"
-          + resource + "');";
-      actionItems.tail = HtmlUtil.makeLink(callScript, "&nbsp;Rename:").html(); // ..."linked list"
+    for (String name : symbolicLinkNames) {
+      String link = symLinksProperty.get(name);
 
-      HtmlTag newNameInput = HtmlUtil.makeInputTag("text", linkName);
-      newNameInput.addAttribute("size", "16%");
-      table.addRow(new HtmlElement[] { nameItem, pathItem, actionItems,
-          newNameInput });
+      String path = makePathForSymbolicLink(link);
+      symlinks.add(new Symlink(name, Utils.escapeHTML(link), path));
     }
+    html.put("symlinks", symlinks);
   }
 
-  private HtmlElement makeHtmlForSymbolicPath(
-      WikiPageProperty symLinksProperty, String linkName) throws Exception {
-    String linkPath = symLinksProperty.get(linkName);
+  private String makePathForSymbolicLink(String linkPath) throws Exception {
     WikiPagePath wikiPagePath = PathParser.parse(linkPath);
 
     if (wikiPagePath != null) {
@@ -367,9 +220,9 @@ public class PropertiesResponder implements SecureResponder {
         fullPath.makeAbsolute();
       } else
         fullPath = new WikiPagePath();
-      return HtmlUtil.makeLink(fullPath.toString(), Utils.escapeHTML(linkPath));
-    } else
-      return new RawHtml(linkPath);
+      return fullPath.toString();
+    }
+    return null;
   }
 
   public static String getVirtualWikiValue(PageData data) throws Exception {
@@ -384,21 +237,16 @@ public class PropertiesResponder implements SecureResponder {
     return new SecureReadOperation();
   }
 
-  public HtmlTag makeTestActionCheckboxesHtml(PageData pageData)
-      throws Exception {
-    return makeAttributeCheckboxesHtml("Actions:", ACTION_ATTRIBUTES,
-        pageData);
+  public void makeTestActionCheckboxesHtml(PageData pageData) {
+    html.put("actionTypes", ACTION_ATTRIBUTES);
   }
 
-  public HtmlElement makeNavigationCheckboxesHtml(PageData pageData)
-      throws Exception {
-    return makeAttributeCheckboxesHtml("Navigation:",
-        NAVIGATION_ATTRIBUTES, pageData);
+  public void makeNavigationCheckboxesHtml(PageData pageData) {
+    html.put("navigationTypes", NAVIGATION_ATTRIBUTES);
   }
 
-  public HtmlTag makeSecurityCheckboxesHtml(PageData pageData) throws Exception {
-    return makeAttributeCheckboxesHtml("Security:",
-        SECURITY_ATTRIBUTES, pageData);
+  public void makeSecurityCheckboxesHtml(PageData pageData) throws Exception {
+    html.put("securityTypes", SECURITY_ATTRIBUTES);
   }
 
   public HtmlTag makeTagsHtml(PageData pageData) throws Exception {
@@ -437,19 +285,27 @@ public class PropertiesResponder implements SecureResponder {
     return div;
   }
 
-  private HtmlTag makeAttributeCheckboxesHtml(String label,
-      String[] attributes, PageData pageData) throws Exception {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; width: 180px;");
 
-    div.add(label);
-    for (String attribute : attributes) {
-      div.add(HtmlUtil.BR);
-      div.add(makeAttributeCheckbox(attribute, attribute, pageData));
+  public static class Symlink {
+
+    private String name, link, path;
+
+    Symlink(String name, String link, String path) {
+      this.name = name;
+      this.link = link;
+      this.path = path;
     }
-    div.add(HtmlUtil.BR);
-    div.add(HtmlUtil.BR);
-    return div;
-  }
 
+    public String getName() {
+      return name;
+    }
+
+    public String getLink() {
+      return link;
+    }
+    
+    public String getPath() {
+      return path;
+    }
+  }
 }

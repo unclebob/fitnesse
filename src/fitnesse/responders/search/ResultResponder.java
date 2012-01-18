@@ -7,6 +7,7 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SearchObserver;
+import fitnesse.html.HtmlPage;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
@@ -26,12 +27,42 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   protected void doSending() throws Exception {
-    response.add(createSearchResultsHeader());
+    HtmlPage htmlPage = context.htmlPageFactory.newPage();
+    htmlPage.setTitle(getTitle());
+    htmlPage.setPageTitle(new PageTitle(getTitle()) {
+      public String getTitle() {
+        return "search";
+      }
+
+      public String getLink() {
+        return "search";
+      }
+    });
+    htmlPage.setMainTemplate("searchResults.vm");
+
+    if (page == null)
+      page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
+    if (request.getQueryString() == null || request.getQueryString().equals(""))
+      htmlPage.put("request", request.getBody());
+    else
+      htmlPage.put("request", request.getQueryString());
+    htmlPage.put("page", page);
+    
+    htmlPage.divide();
+
+    response.add(htmlPage.preDivision);
 
     startSearching();
 
     response.add(createSearchResultsFooter());
+    response.add(htmlPage.postDivision);
+
     response.closeAll();
+  }
+
+  public void hit(WikiPage page) throws Exception {
+    hits++;
+    response.add(createSearchResultsEntry(page));
   }
 
   private String createSearchResultsFooter() throws Exception {
@@ -41,53 +72,13 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     Template template = VelocityFactory.getVelocityEngine().getTemplate(
       "searchResultsFooter.vm");
-    if (page == null)
-      page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
     velocityContext.put("hits", hits);
-    if (request.getQueryString() == null || request.getQueryString().equals(""))
-      velocityContext.put("request", request.getBody());
-    else
-      velocityContext.put("request", request.getQueryString());
-    velocityContext.put("page", page);
 
     template.merge(velocityContext, writer);
 
     return writer.toString();
   }
-
-  private String createSearchResultsHeader() throws Exception {
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = VelocityFactory.getVelocityEngine().getTemplate(
-      "searchResultsHeader.vm");
-
-    velocityContext.put("page_title", getTitle());
-    velocityContext.put("pageTitle", new PageTitle(getTitle()) {
-      public String getTitle() {
-        return "search";
-      }
-
-      public String getLink() {
-        return "search";
-      }
-    });
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
-  }
-
-  public static String getDateFormatJavascriptRegex() {
-    return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
-  }
-
-  public void hit(WikiPage page) throws Exception {
-    hits++;
-    response.add(createSearchResultsEntry(page));
-  }
-
+  
   private String createSearchResultsEntry(WikiPage result) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
 
@@ -95,6 +86,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     Template template = VelocityFactory.getVelocityEngine().getTemplate("searchResultsEntry.vm");
 
+    velocityContext.put("hits", hits);
     velocityContext.put("resultsRow", getRow());
     velocityContext.put("result", result);
 

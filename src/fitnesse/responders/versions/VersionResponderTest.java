@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -21,6 +22,7 @@ public class VersionResponderTest extends RegexTestCase {
 
   private void makeTestResponse(String pageName) throws Exception {
     root = InMemoryPage.makeRoot("RooT");
+    FitNesseContext context = FitNesseUtil.makeTestContext(root);
     page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
     PageData data = page.getData();
     data.setContent("new stuff");
@@ -32,7 +34,7 @@ public class VersionResponderTest extends RegexTestCase {
     request.addInput("version", oldVersion);
 
     Responder responder = new VersionResponder();
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    response = (SimpleResponse) responder.makeResponse(context, request);
   }
 
   public void testVersionName() throws Exception {
@@ -52,7 +54,7 @@ public class VersionResponderTest extends RegexTestCase {
     assertDoesntHaveRegexp("Suite button", response.getContent());
     assertDoesntHaveRegexp("Versions button", response.getContent());
 
-    assertHasRegexp("Rollback button", response.getContent());
+    assertHasRegexp(">Rollback</a>", response.getContent());
   }
 
   public void testNameNoAtRootLevel() throws Exception {

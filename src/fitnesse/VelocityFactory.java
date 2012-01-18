@@ -27,7 +27,7 @@ public class VelocityFactory {
   }
 
 
-  public static String translateTemplate(VelocityContext velocityContext, String templateFileName) throws Exception {
+  public static String translateTemplate(VelocityContext velocityContext, String templateFileName) {
     Template template = instance.getVelocityEngine().getTemplate(templateFileName);
     StringWriter writer = new StringWriter();
     template.merge(velocityContext, writer);
@@ -37,8 +37,18 @@ public class VelocityFactory {
   public static VelocityEngine getVelocityEngine() {
     if (instance.velocityEngine == null) {
       instance.velocityEngine = new VelocityEngine();
+      instance.velocityEngine.setProperty(VelocityEngine.RESOURCE_LOADER, "file,classpath");
       String templatePath = String.format("%s/%s/files/templates", instance.rootPath, instance.rootDirectoryName);
       instance.velocityEngine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, templatePath);
+
+//      instance.velocityEngine.setProperty(
+//            "file." + VelocityEngine.RESOURCE_LOADER + ".class",
+//            FileResourceLoader.class.getName());
+
+      instance.velocityEngine.setProperty(
+            "classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
+            org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader.class.getName());
+
       try {
         instance.velocityEngine.init();
       } catch (Exception e) {

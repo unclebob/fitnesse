@@ -5,8 +5,11 @@ import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.ExecutionReport;
@@ -30,7 +33,7 @@ public class PageHistoryResponder implements SecureResponder {
   private TestHistory history;
   private String pageName;
   private PageHistory pageHistory;
-  private VelocityContext velocityContext;
+  private HtmlPage page;
   private FitNesseContext context;
   private PageTitle pageTitle;
 
@@ -40,20 +43,31 @@ public class PageHistoryResponder implements SecureResponder {
 
     if (request.hasInput("resultDate")) {
       return tryToMakeTestExecutionReport(request);
+    } else if (formatIsXML(request)) {
+      return makePageHistoryXmlResponse(request);
     } else {
       return makePageHistoryResponse(request);
     }
   }
 
   private Response makePageHistoryResponse(Request request) throws Exception {
+    page.setTitle("Page History");
+    page.put("pageHistory", pageHistory);
+    page.setMainTemplate("pageHistory.vm");
+    return makeResponse();
+  }
+  
+  private Response makePageHistoryXmlResponse(Request request) throws Exception {
+    VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
-    String velocityTemplate = "pageHistory.vm";
-    if (formatIsXML(request)) {
-      response.setContentType("text/xml");
-      velocityTemplate = "pageHistoryXML.vm";
-    }
-    Template template = VelocityFactory.getVelocityEngine().getTemplate(velocityTemplate);
-    return makeResponseFromTemplate(template);
+    Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
+
+    StringWriter writer = new StringWriter();
+    template.merge(velocityContext, writer);
+
+    response.setContentType("text/xml");
+    response.setContent(writer.toString());
+    return response;
   }
 
   private boolean formatIsXML(Request request) {
@@ -98,27 +112,28 @@ public class PageHistoryResponder implements SecureResponder {
   }
 
   private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {
-    velocityContext.put("suiteExecutionReport", report);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("suiteExecutionReport.vm");
-    return makeResponseFromTemplate(template);
+    page.setTitle("Suite Execution Report");
+    page.put("suiteExecutionReport", report);
+    page.setMainTemplate("suiteExecutionReport.vm");
+    return makeResponse();
   }
 
   private Response generateHtmlTestExecutionResponse(TestExecutionReport report) throws Exception {
-    velocityContext.put("testExecutionReport", report);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("testExecutionReport.vm");
-    return makeResponseFromTemplate(template);
+    page.setTitle("Test Execution Report");
+    page.put("testExecutionReport", report);
+    page.setMainTemplate("testExecutionReport.vm");
+    return makeResponse();
   }
 
   private Response generateXMLResponse(File file) throws Exception {
     response.setContent(FileUtil.getFileContent(file));
-    response.setContentType("text/xml");
+    response.setContentType(Format.XML);
     return response;
   }
 
-  private Response makeResponseFromTemplate(Template template) throws Exception {
+  private Response makeResponse() throws Exception {
     StringWriter writer = new StringWriter();
-    template.merge(velocityContext, writer);
-    response.setContent(writer.toString());
+    response.setContent(page.html());
     return response;
   }
 
@@ -130,13 +145,9 @@ public class PageHistoryResponder implements SecureResponder {
     pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
-    velocityContext = new VelocityContext();
-    pageTitle = makePageTitle(request.getResource());
-    velocityContext.put("pageTitle", pageTitle);
-  }
-
-  private PageTitle makePageTitle(String resource) {
-    return new PageTitle("Test History", PathParser.parse(resource));
+    page = context.htmlPageFactory.newPage();
+    pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()));
+    page.setPageTitle(pageTitle);
   }
 
   public void setResultsDirectory(File resultsDirectory) {

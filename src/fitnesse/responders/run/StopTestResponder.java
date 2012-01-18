@@ -29,7 +29,7 @@ public class StopTestResponder extends BasicResponder {
   private String html(FitNesseContext context) throws Exception {
     HtmlPage page = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(page, "Stopping tests");
-    page.main.use(getDetails(context));
+    page.setMainContent(getDetails(context));
     return page.html();
   }
   

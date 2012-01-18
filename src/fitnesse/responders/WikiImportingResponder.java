@@ -17,9 +17,11 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.TagGroup;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
@@ -132,6 +134,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     head.add(HtmlUtil.BR);
     head.add("Destination wiki: ");
     String pageName = PathParser.render(path);
+    System.out.println("PageName: " + pageName);
     head.add(HtmlUtil.makeLink(pageName, pageName));
 
     head.add(HtmlUtil.BR);
@@ -219,9 +222,9 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     if (isUpdate)
       title += " Update";
     String localPathName = PathParser.render(path);
-    html.title.use(title + ": " + localPathName);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(localPathName, title));
-    html.main.add(HtmlPage.BreakPoint);
+    html.setTitle(title + ": " + localPathName);
+    html.setPageTitle(new PageTitle(title, path));
+    html.setMainContent(HtmlPage.BreakPoint);
     html.divide();
     return html;
   }

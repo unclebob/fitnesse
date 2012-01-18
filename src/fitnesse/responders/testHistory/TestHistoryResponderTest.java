@@ -33,14 +33,13 @@ public class TestHistoryResponderTest {
 
   @Before
   public void setup() throws Exception {
-    resultsDirectory = new File("testHistoryDirectory");
-    removeResultsDirectory();
-    resultsDirectory.mkdir();
-    history = new TestHistory();
-    responder = new TestHistoryResponder();
-    responder.setResultsDirectory(resultsDirectory);
     WikiPage root = InMemoryPage.makeRoot("RooT");
     context = FitNesseUtil.makeTestContext(root);
+    resultsDirectory = context.getTestHistoryDirectory();
+    removeResultsDirectory();
+    resultsDirectory.mkdirs();
+    history = new TestHistory();
+    responder = new TestHistoryResponder();
   }
 
   private void makeResponse() throws Exception {
@@ -253,21 +252,6 @@ public class TestHistoryResponderTest {
     assertEquals(dateFormat.parse("20090531010203"), barGraph.getEndingDate());
     assertEquals("+-------------------", barGraph.testString());
 
-  }
-
-  @Test
-  public void responderShouldDefaultToContextDirectory() throws Exception {
-    responder.setResultsDirectory(null);
-    responder.generateNullResponseForTest();
-    makeResponse();
-    assertEquals(context.getTestHistoryDirectory().getPath(), responder.getResultsDirectory().getPath());
-  }
-
-  @Test
-  public void responseShouldBeOfTypeTextHtml() throws Exception {
-    responder.generateNullResponseForTest();
-    makeResponse();
-    assertEquals("text/html; charset=utf-8", response.getContentType());
   }
 
   @Test

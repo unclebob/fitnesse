@@ -7,13 +7,16 @@ import java.io.InputStream;
 import util.RegexTestCase;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
+import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
 
 public class HtmlResultFormatterTest extends RegexTestCase {
   private HtmlResultFormatter formatter;
 
   public void setUp() throws Exception {
-    formatter = new HtmlResultFormatter(new FitNesseContext(), "somehost.com:8080", "FitNesse");
+    FitNesseContext context = FitNesseUtil.makeTestContext(null);
+    formatter = new HtmlResultFormatter(context, "somehost.com:8080", "FitNesse");
   }
 
   public void testIsValidHtml() throws Exception {
@@ -24,10 +27,7 @@ public class HtmlResultFormatterTest extends RegexTestCase {
     assertSubString("<base href=\"http://somehost.com:8080/\"", html);
     assertSubString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>", html);
     assertSubString("href=\"/files/css/fitnesse_print.css\"", html);
-    assertNotSubString("href=\"/files/css/fitnesse.css\"", html);
     assertSubString("Command Line Test Results", html);
-    assertSubString(HtmlResultFormatter.scriptContent, html);
-    assertSubString("<body onload=\"localizeInPageLinks()\"", html);
   }
 
   public void testUsage() throws Exception {

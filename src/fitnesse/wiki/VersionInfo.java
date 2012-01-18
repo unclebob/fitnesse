@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,10 +64,38 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     return name;
   }
 
+  public String getAge() {
+    Date now = new GregorianCalendar().getTime();
+    return howLongAgoString(now, getCreationTime());
+  }
+  
   public static String getVersionNumber(String complexName) {
     Matcher match = COMPEX_NAME_PATTERN.matcher(complexName);
     match.find();
     return match.group(2);
+  }
+
+  public static String howLongAgoString(Date now, Date then) {
+    long time = Math.abs(now.getTime() - then.getTime()) / 1000;
+
+    if (time < 60)
+      return pluralize(time, "second");
+    else if (time < 3600)
+      return pluralize(time / 60, "minute");
+    else if (time < 86400)
+      return pluralize(time / (3600), "hour");
+    else if (time < 31536000)
+      return pluralize(time / (86400), "day");
+    else
+      return pluralize(time / (31536000), "year");
+  }
+
+  private static String pluralize(long time, String unit) {
+    String age = time + " " + unit;
+    if (time > 1)
+      age = age + "s";
+
+    return age;
   }
 
   public int compareTo(VersionInfo o) {

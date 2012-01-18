@@ -16,11 +16,14 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualEnabledPageCrawler;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 
 public class WikiPageResponder implements SecureResponder {
@@ -81,19 +84,25 @@ public class WikiPageResponder implements SecureResponder {
     HtmlPage html = context.htmlPageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
     String fullPathName = PathParser.render(fullPath);
-    html.title.use(fullPathName);
-    html.header.use(HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(fullPathName));
-    html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
-    html.actions.use(HtmlUtil.makeActions(page.getActions()));
+    html.setTitle(fullPathName);
+    html.setPageTitle(new PageTitle(fullPath).notLinked());
+    // TODO move this to menu
+    html.actions = new WikiPageActions(page).withAddChild();
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    html.main.use(generateHtml(pageData));
+
+    String childPopupHtml = makeAddChildPopup(page, fullPathName);
+
+    html.setMainContent(generateHtml(pageData) + childPopupHtml);
+    handleSpecialProperties(html, page);
+    return html.html();
+  }
+
+  private String makeAddChildPopup(WikiPage page, String fullPathName) {
     VelocityContext velocityContext = new VelocityContext();
 
     velocityContext.put("page_name", page.getName());
     velocityContext.put("full_path", fullPathName);
-    html.main.add(VelocityFactory.translateTemplate(velocityContext, "addChildPagePopup.vm"));
-    handleSpecialProperties(html, page);
-    return html.html();
+    return VelocityFactory.translateTemplate(velocityContext, "addChildPagePopup.vm");
   }
 
   /* hook for subclasses */

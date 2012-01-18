@@ -69,4 +69,19 @@ public class PageTitleTest {
     assertEquals("ParentPage", crumb.getLink());
     assertEquals("type", pt.getPageType());    
   }
+  
+  @Test
+  public void pageTitleWithFileSeparator() {
+    PageTitle pt = new PageTitle("type", "files/templates/main.html", "/");
+    assertEquals("main.html", pt.getTitle());
+    assertEquals("files/templates/main.html", pt.getLink());
+    assertEquals(2, pt.getBreadCrumbs().size());
+    PageTitle.BreadCrumb crumb = pt.getBreadCrumbs().get(0);
+    assertEquals("files", crumb.getName());
+    assertEquals("files", crumb.getLink());
+    crumb = pt.getBreadCrumbs().get(1);
+    assertEquals("templates", crumb.getName());
+    assertEquals("files/templates", crumb.getLink());
+    assertEquals("type", pt.getPageType());    
+  }
 }

@@ -11,6 +11,7 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;

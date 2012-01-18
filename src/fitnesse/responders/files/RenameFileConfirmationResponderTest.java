@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 
 public class RenameFileConfirmationResponderTest extends RegexTestCase {
   MockRequest request;
@@ -17,7 +18,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     request = new MockRequest();
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext(null);
     context.rootPagePath = SampleFileUtility.base;
     SampleFileUtility.makeSampleFiles();
   }

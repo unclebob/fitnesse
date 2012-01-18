@@ -15,6 +15,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VirtualCouplingExtensionTest;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import util.RegexTestCase;
 
@@ -61,18 +62,18 @@ public class WikiPageResponderTest extends RegexTestCase {
     }
 
     SimpleResponse response = requestPage("NormalPage");
-    assertSubString("<!--Edit button-->", response.getContent());
-    assertSubString("<!--Search button-->", response.getContent());
-    assertSubString("<!--Versions button-->", response.getContent());
-    assertNotSubString("<!--Suite button-->", response.getContent());
-    assertNotSubString("<!--Test button-->", response.getContent());
+    assertSubString(">Edit</a>", response.getContent());
+    assertSubString(">Search</a>", response.getContent());
+    assertSubString(">Versions</a>", response.getContent());
+    assertNotSubString(">Suite</a>", response.getContent());
+    assertNotSubString(">Test</a>", response.getContent());
 
     response = requestPage("NoButtonPage");
-    assertNotSubString("<!--Edit button-->", response.getContent());
-    assertNotSubString("<!--Search button-->", response.getContent());
-    assertNotSubString("<!--Versions button-->", response.getContent());
-    assertNotSubString("<!--Suite button-->", response.getContent());
-    assertNotSubString("<!--Test button-->", response.getContent());
+    assertNotSubString(">Edit</a>", response.getContent());
+    assertNotSubString(">Search</a>", response.getContent());
+    assertNotSubString(">Versions</a>", response.getContent());
+    assertNotSubString(">Suite</a>", response.getContent());
+    assertNotSubString(">Test</a>", response.getContent());
   }
 
   public void testHeadersAndFooters() throws Exception {
