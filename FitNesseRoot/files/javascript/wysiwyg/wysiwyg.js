@@ -1458,7 +1458,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     // -3. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
     // -4. definition
-    wikiRules.push("^!define\\s+\\w+\\s+[{\\[(].*?[}\\])]\\s*$");
+    wikiRules.push("^xxxxx!define\\s+\\w+\\s+[{\\[(].*?[}\\])]\\s*$");
     // -5. leading space
     wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
     // -6. closing table row
@@ -1651,7 +1651,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function handleHeader(line) {
-        var match = /^\s*!([1-6])[ \t\r\f\v]+.*?(?:#([^ \t\r\f\v]+))?[ \t\r\f\v]*$/.exec(line);
+        var match = /^\s*!([1-6])[ \t\r\f\v]+/.exec(line);
         if (!match) {
             return null;
         }
@@ -1659,9 +1659,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         closeToFragment();
         var tag = "h" + match[1];
         var element = contentDocument.createElement(tag);
-        if (match[2]) {
-            element.id = match[2];
-        }
         fragment.appendChild(element);
         holder = element;
         return tag;
@@ -2263,7 +2260,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case -2:    // header
                 currentHeader = handleHeader(matchText);
                 if (currentHeader) {
-                    line = line.replace(/(?:[ \t\r\f\v]+#[^ \t\r\f\v]+)?[ \t\r\f\v]*$/, "");
                     var m = /^\s*!([1-6])[ \t\r\f\v]+/.exec(line);
                     wikiRulesPattern.lastIndex = prevIndex = m[0].length;
                     continue;
@@ -2272,7 +2268,9 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case -3:    // list
                 handleList(matchText)
                 continue;
-            case -4:    // definition
+            case -4:    // definition (leading "!")
+
+                // TODO: read rest of line as def. break.
                 handleDefinition(matchText);
                 continue;
             case -5:    // leading space
