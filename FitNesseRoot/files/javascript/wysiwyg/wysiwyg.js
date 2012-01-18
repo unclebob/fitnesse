@@ -439,10 +439,13 @@ TracWysiwyg.prototype.createDecorationMenu = function(d) {
 TracWysiwyg.prototype.createTableMenu = function(d) {
     var html = [
         '<ul class="menu">',
+        '<li><a id="wt-insert-cell-before" href="#">Insert cell before</a></li>',
+        '<li><a id="wt-insert-cell-after" href="#">Insert cell after</a></li>',
         '<li><a id="wt-insert-row-before" href="#">Insert row before</a></li>',
         '<li><a id="wt-insert-row-after" href="#">Insert row after</a></li>',
         '<li><a id="wt-insert-col-before" href="#">Insert column before</a></li>',
         '<li><a id="wt-insert-col-after" href="#">Insert column after</a></li>',
+        '<li><a id="wt-delete-cell" href="#">Delete cell</a></li>',
         '<li><a id="wt-delete-row" href="#">Delete row</a></li>',
         '<li><a id="wt-delete-col" href="#">Delete column</a></li>',
         '</ul>' ];
@@ -499,10 +502,13 @@ TracWysiwyg.prototype.setupMenuEvents = function() {
         case "indent":      return [ self.indent ];
         case "table":       return [ self.insertTable ];
         case "tablemenu":   return [ self.toggleMenu, self.tableMenu, element ];
+        case "insert-cell-before":   return [ self.insertTableCell_, false ];
+        case "insert-cell-after":    return [ self.insertTableCell_, true ];
         case "insert-row-before":   return [ self.insertTableRow, false ];
         case "insert-row-after":    return [ self.insertTableRow, true ];
         case "insert-col-before":   return [ self.insertTableColumn, false ];
         case "insert-col-after":    return [ self.insertTableColumn, true ];
+        case "delete-cell":  return [ self.deleteTableCell ];
         case "delete-row":  return [ self.deleteTableRow ];
         case "delete-col":  return [ self.deleteTableColumn ];
         case "code":        return [ self.formatCodeBlock ];
@@ -1064,6 +1070,20 @@ TracWysiwyg.prototype._getFocusForTable = function() {
     return hash;
 };
 
+TracWysiwyg.prototype.insertTableCell_ = function(after) {
+    var focus = this._getFocusForTable();
+    if (focus.table && focus.cell) {
+        var row = focus.table.rows[focus.row.rowIndex];
+        var cellIndex = focus.cell.cellIndex + (after ? 1 : 0);
+        console.log(row, cellIndex, $(focus.cell).attr('colspan'));
+        var colspan = $(focus.cell).attr('colspan');
+        if (colspan > 1) {
+            $(focus.cell).attr('colspan', colspan - 1);
+        }
+        this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
+    }
+};
+
 TracWysiwyg.prototype.insertTableRow = function(after) {
     var focus = this._getFocusForTable();
     if (focus.table && focus.row) {
@@ -1086,6 +1106,17 @@ TracWysiwyg.prototype.insertTableColumn = function(after) {
         for (var i = 0; i < length; i++) {
             var row = rows[i];
             this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
+        }
+    }
+};
+
+TracWysiwyg.prototype.deleteTableCell = function() {
+    var focus = this._getFocusForTable();
+    if (focus.table && focus.cell) {
+        var row = focus.table.rows[focus.row.rowIndex];
+        var cellIndex = focus.cell.cellIndex;
+        if (cellIndex < row.cells.length) {
+            row.deleteCell(cellIndex);
         }
     }
 };
