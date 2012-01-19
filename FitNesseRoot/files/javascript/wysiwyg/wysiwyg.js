@@ -9,7 +9,6 @@
  ****/
  
 var TracWysiwyg = function(textarea, options) {
-console.log("Creating new wysiwig area");
     var self = this;
     var editorMode = TracWysiwyg.getEditorMode();
 
@@ -91,7 +90,6 @@ console.log("Creating new wysiwig area");
         body.insertBefore(this.menus[i], body.firstChild);
     }
     var element = wikitextToolbar || textareaResizable || textarea;
-console.log("Insering edit buttons");
     element.parentNode.insertBefore(this.toggleEditorButtons, element);
     element.parentNode.insertBefore(this.wysiwygToolbar, element);
     element.parentNode.insertBefore(this.dialogWindow, element);
@@ -732,7 +730,6 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
 
     function listenerKeyup(event) {
         var keyCode = event.keyCode;
-        console.log("up key");
         if (ime) {
             switch (keyCode) {
             case 0x20:  // SPACE
@@ -1077,7 +1074,6 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
     if (focus.table && focus.cell) {
         var row = focus.table.rows[focus.row.rowIndex];
         var cellIndex = focus.cell.cellIndex + (after ? 1 : 0);
-        console.log(row, cellIndex, $(focus.cell).attr('colspan'));
         var colspan = $(focus.cell).attr('colspan');
         if (colspan > 1) {
             $(focus.cell).attr('colspan', colspan - 1);
@@ -1688,7 +1684,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     function handleCollapsibleBlock(value) {
         closeToFragment("fieldset");
         inCollapsibleBlock++;
-        console.log("create Collapsible section:", value);
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
         var fieldset = contentDocument.createElement("fieldset");
         var title = contentDocument.createElement("legend");
@@ -1708,7 +1703,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function closeCollapsibleBlock() {
-        console.log("close Collapsible section:", matchText, inCollapsibleBlock);
         if (inCollapsibleBlock) {
             closeParagraph();
             inCollapsibleBlock--;
@@ -2219,7 +2213,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 continue;
         	case 7:		// Wiki link
                 if (inEscapedTable) { break; }
-        		console.log("wiki link! " + matchText);
         		handleTracLinks(matchText);
         		continue;
             case 8:		// WikiPageName
@@ -3004,7 +2997,6 @@ if (window.getSelection) {
 	
 				//define select handler
 				change: function() {
-					console.log('change');
 					//prevent 'to' field being updated and correct position
 					$("#autocomplete").val("").css("top", 2);
 				}
