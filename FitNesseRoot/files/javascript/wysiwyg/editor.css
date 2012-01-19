@@ -7,6 +7,10 @@ p {
  margin-bottom: 0.5em;
 }
 
+p.meta {
+ margin: 0;
+}
+
 pre.wiki {
  overflow: visible !important;
  word-wrap: break-word !important;
@@ -41,4 +45,3 @@ table {
 td {
  border: 1px solid gray;
 }
-

@@ -732,6 +732,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
 
     function listenerKeyup(event) {
         var keyCode = event.keyCode;
+        console.log("up key");
         if (ime) {
             switch (keyCode) {
             case 0x20:  // SPACE
@@ -740,6 +741,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             }
             ime = false;
         }
+        self.updateElementClassName();
         self.selectionChanged();
     }
     $(d).keyup(listenerKeyup);
@@ -1458,7 +1460,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     // -3. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
     // -4. definition
-    wikiRules.push("^xxxxx!define\\s+\\w+\\s+[{\\[(].*?[}\\])]\\s*$");
+    wikiRules.push("^![a-z].*$");
     // -5. leading space
     wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
     // -6. closing table row
@@ -1575,8 +1577,8 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var listDepth = [];
     var decorationStatus;
     var decorationStack;
-    var inCodeBlock, inCollapsibleBlock, inParagraph, inDefList, inTable, inEscapedTable, inTableRow;
-    inCodeBlock = inCollapsibleBlock = inParagraph = inDefList = inTable = inEscapedTable = inTableRow = false;
+    var inCodeBlock, inCollapsibleBlock, inParagraph, inTable, inEscapedTable, inTableRow;
+    inCodeBlock = inCollapsibleBlock = inParagraph = inTable = inEscapedTable = inTableRow = false;
 
     function handleCodeBlock(line) {
         if (/^ *\{\{\{ *$/.test(line)) {
@@ -1670,6 +1672,17 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             holder = target.parentNode;
             currentHeader = null;
         }
+    }
+
+    function handleDefinition(line) {
+
+        closeToFragment();
+
+        var element = contentDocument.createElement('p');
+        element.className = 'meta';
+        fragment.appendChild(element);
+        element.appendChild(contentDocument.createTextNode(line));
+
     }
 
     function handleCollapsibleBlock(value) {
@@ -1943,40 +1956,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         listDepth.pop();
     }
 
-    function handleDefinition(value) {
-        var d = contentDocument;
-        var h = holder;
-        var dl = null;
-        if (inDefList) {
-            dl = getSelfOrAncestor(h, "dl");
-        }
-        else {
-            closeParagraph();
-            dl = d.createElement("dl");
-            fragment.appendChild(dl);
-            inDefList = true;
-        }
-
-        var match = /^!define\s+(\w+)\s+[{\[(](.*?)[}\])]\s*$/.exec(value);
-        var dt = d.createElement("dt");
-        var oneliner = self.wikitextToOnelinerFragment(match[1], d, self.options);
-        dt.appendChild(d.createTextNode(match[1]));
-        dl.appendChild(dt);
-
-        var dd = d.createElement("dd");
-        dd.appendChild(d.createTextNode(match[2]));
-        dl.appendChild(dd);
-        holder = dd;
-    }
-
-    function closeDefList() {
-        var element = getSelfOrAncestor(holder, "dl");
-        if (element) {
-            holder = element.parentNode;
-        }
-        inDefList = false;
-    }
-
     function handleIndent(value) {
         var depth = value.length;
         var last = quoteDepth.length - 1;
@@ -2185,7 +2164,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
             if ((prevIndex == 0 && text || match && match.index == 0 && matchNumber > 0)
                 && (!inParagraph || quoteDepth.length > 0)
-                && (!inDefList || !/^ /.test(line))
                 && (!inCollapsibleBlock)) {
                 closeToFragment();
             }
@@ -2269,12 +2247,11 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 handleList(matchText)
                 continue;
             case -4:    // definition (leading "!")
-
-                // TODO: read rest of line as def. break.
                 handleDefinition(matchText);
-                continue;
+                matchText = "";
+                break;
             case -5:    // leading space
-                if (listDepth.length == 0 && !inDefList) {
+                if (listDepth.length == 0) {
                     handleIndent(matchText);
                     continue;
                 }
@@ -2309,7 +2286,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             }
 
             if (matchText) {
-                if (listDepth.length == 0 && !currentHeader && !inDefList && !inTable) {
+                if (listDepth.length == 0 && !currentHeader && !inTable) {
                     openParagraph();
                 }
                 holder.appendChild(contentDocument.createTextNode(matchText));
@@ -2799,7 +2776,11 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
         else {
             switch (name) {
             case "p":
-                _texts.push(quoteDepth == 0 ? "\n\n" : "\n");
+                if (node.className == 'meta') {
+                    _texts.push("\n");
+                } else {
+                    _texts.push(quoteDepth == 0 ? "\n\n" : "\n");
+                }
                 break;
             case "li":
                 if (node.getElementsByTagName("li").length == 0) {
@@ -2976,6 +2957,19 @@ if (window.getSelection) {
     };
     TracWysiwyg.prototype.getFocusNode = function() {
         return this.contentWindow.getSelection().focusNode;
+    };
+    TracWysiwyg.prototype.updateElementClassName = function() {
+        var getSelfOrAncestor = TracWysiwyg.getSelfOrAncestor;
+        var p = getSelfOrAncestor(this.getSelectionRange().startContainer, "p");
+        if (p) {
+            if (/^![a-z]/.test(p.innerHTML)) {
+                if (p.className != 'meta') {
+                    p.className = 'meta';
+                }
+            } else {
+                p.className = '';
+            }
+        }
     };
     TracWysiwyg.prototype.showAutoCompleteOnShiftSpace = function(event) {
 		var tdElement = TracWysiwyg.getSelfOrAncestor(this.getSelectionRange().startContainer, "td");
