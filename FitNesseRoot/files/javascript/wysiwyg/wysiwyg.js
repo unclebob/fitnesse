@@ -1504,17 +1504,17 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -3. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
-    // -4. definition (not used)
-    //wikiRules.push("^![a-z].*$");
+    // -4. definition and comment
+    wikiRules.push("^(?:![a-z]|#).*$");
     // -5. leading space
-    //wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
-    // -4. closing table row
+    wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
+    // -6. closing table row
     wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
-    // -5. cell
+    // -7. cell
     wikiRules.push("!?(?:\\|)");
-    // -6: open collapsible section
+    // -8: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
-    // -7: close collapsible section
+    // -9: close collapsible section
     wikiRules.push("^\\*+!$");
 
     // TODO could be removed?
@@ -1622,8 +1622,8 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var listDepth = [];
     var decorationStatus;
     var decorationStack;
-    var inCodeBlock, inCollapsibleBlock, inParagraph, inTable, inEscapedTable, inTableRow;
-    inCodeBlock = inCollapsibleBlock = inParagraph = inTable = inEscapedTable = inTableRow = false;
+    var inCodeBlock, inCollapsibleBlock, inParagraph, inDefinition, inTable, inEscapedTable, inTableRow;
+    inCodeBlock = inCollapsibleBlock = inParagraph = inDefinition = inTable = inEscapedTable = inTableRow = false;
 
     function handleCodeBlock(line) {
         if (/^ *\{\{\{ *$/.test(line)) {
@@ -1720,14 +1720,13 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function handleDefinition(line) {
-
         closeToFragment();
+        openParagraph();
+        inDefinition = true;
+    }
 
-        var element = contentDocument.createElement('p');
-        element.className = 'meta';
-        fragment.appendChild(element);
-        element.appendChild(contentDocument.createTextNode(line));
-
+    function closeDefinition() {
+        closeParagraph();
     }
 
     function handleCollapsibleBlock(value) {
@@ -2040,6 +2039,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             }
             holder = target.parentNode;
             inParagraph = false;
+            inDefinition = false;
         }
     }
 
@@ -2289,27 +2289,26 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case -3:    // list
                 handleList(matchText)
                 continue;
-//            case -4:    // definition (leading "!")
-//                handleDefinition(matchText);
-//                matchText = "";
-//                break;
-//            case -5:    // leading space
-//                if (listDepth.length == 0) {
-//                    handleIndent(matchText);
-//                    continue;
-//                }
-//                if (!this.isInlineNode(holder.lastChild)) {
-//                    continue;
-//                }
-//                matchText = matchText.replace(/^\s+/, " ");
-//                break;
-            case -4:    // closing table row
+            case -4:    // definition (leading "!")
+                handleDefinition(matchText);
+                break;
+            case -5:    // leading space
+                if (listDepth.length == 0) {
+                    handleIndent(matchText);
+                    continue;
+                }
+                if (!this.isInlineNode(holder.lastChild)) {
+                    continue;
+                }
+                matchText = matchText.replace(/^\s+/, " ");
+                break;
+            case -6:    // closing table row
                 if (inTable) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
-            case -5:    // cell
+            case -7:    // cell
                 if (quoteDepth.length > 0 && match.index == 0) {
                     closeToFragment();
                 }
@@ -2320,10 +2319,10 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
                 handleTableCell(inTableRow ? 0 : 1, inEscapedTable);
                 continue;
-            case -6: // collapsible section
+            case -8: // collapsible section
                 handleCollapsibleBlock(matchText);
                 continue;
-            case -7: // close collapsible section
+            case -9: // close collapsible section
                 closeCollapsibleBlock();
                 continue;
             }
@@ -2340,6 +2339,9 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
         if (currentHeader) {
             closeHeader();
+        }
+        if (inDefinition) {
+            closeDefinition();
         }
         if (inTable) {
             handleTableCell(-1);
@@ -3014,7 +3016,7 @@ if (window.getSelection) {
                     p.className = 'comment';
                 }
             } else {
-                p.className = '';
+                $(p).removeClass();
             }
         }
     };

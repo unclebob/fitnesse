@@ -208,7 +208,8 @@ $(function() {
                 element("table", element("tbody",
                     element("tr", element("td", "!c !2 Contents")),
                     element("tr", element("td", "!contents -g")))),
-                element("p", "!path fitnesse.jar", br(), "!path classes"));
+                element("p", { 'class': 'meta' }, "!path fitnesse.jar"),
+                element("p", { 'class': 'meta' }, "!path classes"));
             generateFragment.call(this, dom, [
                 "|!c !2 Contents|",
                 "|!contents -g|",
@@ -470,39 +471,35 @@ $(function() {
         unit.add("header", function() {
             var dom = fragment(
                 element("h1", "Heading 1"),
-                element("h2", { id: "anchor-2" }, "Heading 2"),
+                element("h2", "Heading 2"),
                 element("h3", element("b", "Heading"), " ", element("i", "3")),
-                element("h4", { id: "アンカー-4" },
-                    "Heading 4 with ",
-                    a("WikiStart", "WikiStart")),
+                element("h4", "Heading 4 with ", a("WikiStart", "WikiStart")),
                 element("h5", "Heading 5"),
-                element("h6", { id: "anchor-6" }, "Heading 6"));
+                element("h6", "Heading 6"));
             generate.call(this, dom, [
                 "!1 Heading 1",
-                "!2 Heading 2 #anchor-2",
+                "!2 Heading 2",
                 "!3 '''Heading''' ''3''",
-                "!4 Heading 4 with [[WikiStart][WikiStart]] #アンカー-4",
+                "!4 Heading 4 with [[WikiStart][WikiStart]]",
                 "!5 Heading 5",
-                "!6 Heading 6 #anchor-6" ].join("\n"));
+                "!6 Heading 6" ].join("\n"));
         });
 
         unit.add("header 2", function() {
             var dom = fragment(
-                element("h1", "Heading 1"),
-                element("h2", { id: "anchor-2" }, "Heading 2"),
-                element("h3", element("b", "Heading"), " ", element("i", "3")),
-                element("h4", { id: "アンカー-4" },
-                    "Heading 4 with ",
-                    a("WikiStart", "WikiStart")),
-                element("h5", "Heading 5"),
-                element("h6", { id: "anchor-6" }, "Heading 6"));
+                element("h1", "Heading 1  "),
+                element("h2", "Heading 2"),
+                element("h3", element("b", "Heading"), " ", element("i", "3"), "    "),
+                element("h4", "Heading 4 with ", a("WikiStart", "WikiStart"), "    "),
+                element("h5", "Heading 5      "),
+                element("h6", "Heading 6 "));
             generateFragment.call(this, dom, [
                 "!1 Heading 1  ",
-                "!2 Heading 2    #anchor-2",
+                "!2 Heading 2",
                 "!3 '''Heading''' ''3''    ",
-                "!4 Heading 4 with WikiStart      #アンカー-4",
+                "!4 Heading 4 with WikiStart    ",
                 "!5 Heading 5      ",
-                "!6 Heading 6        #anchor-6" ].join("\n"));
+                "!6 Heading 6 " ].join("\n"));
         });
 
         unit.add("list", function() {
@@ -824,14 +821,9 @@ $(function() {
         unit.add("definition", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
-                element("dl",
-                    element("dt", "Key1"),
-                    element("dd", "Val1"),
-                    element("dt", "Key2"),
-                    element("dd", "Val2 and more")),
-                element("dl",
-                    element("dt", "Key3"),
-                    element("dd", "Val3")),
+                element("p", { 'class': 'meta' }, "!define Key1 {Val1}"),
+                element("p", { 'class': 'meta' }, "!define Key2 {Val2 and more}"),
+                element("p", { 'class': 'meta' }, "!define Key3 {Val3}"),
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
@@ -845,9 +837,36 @@ $(function() {
                 "",
                 "!define Key1 {Val1}",
                 "!define Key2 {Val2 and more}",
-                "",
+                //"",
                 "!define Key3 {Val3}",
+                //"",
+                "Paragraph" ].join("\n"));
+        });
+
+        unit.add("comment", function() {
+            var dom = fragment(
+                element("p", "Paragraph"),
+                element("p", { 'class': 'comment' }, "# comment goes here"),
+                element("p", { 'class': 'comment' }, "# second comment"),
+                element("p", " #Not a comment"),
+                element("p", { 'class': 'comment' }, "# third comment"),
+                element("p", "Paragraph"));
+            generateFragment.call(this, dom, [
+                "Paragraph",
+                "# comment goed here",
+                "# second comment",
                 "",
+                " #Not a comment",
+                "# third comment",
+                "Paragraph" ].join("\n"));
+            generate.call(this, dom, [
+                "Paragraph",
+                "",
+                "# comment goed here",
+                "# second comment",
+                "",
+                " #Not a comment",
+                "# third comment",
                 "Paragraph" ].join("\n"));
         });
 
