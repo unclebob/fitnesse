@@ -738,7 +738,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             }
             ime = false;
         }
-        self.updateElementClassName();
+        self.updateElementClassName(self.getSelectionRange().startContainer);
         self.selectionChanged();
     }
     $(d).keyup(listenerKeyup);
@@ -1455,17 +1455,17 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
     // -3. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
-    // -4. definition
-    wikiRules.push("^![a-z].*$");
+    // -4. definition (not used)
+    //wikiRules.push("^![a-z].*$");
     // -5. leading space
-    wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
-    // -6. closing table row
+    //wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
+    // -4. closing table row
     wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
-    // -7. cell
+    // -5. cell
     wikiRules.push("!?(?:\\|)");
-    // -8: open collapsible section
+    // -6: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
-    // -9: close collapsible section
+    // -7: close collapsible section
     wikiRules.push("^\\*+!$");
 
     // TODO could be removed?
@@ -1987,6 +1987,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             if (target != fragment) {
                 target = getSelfOrAncestor(target, "p");
                 self.appendBogusLineBreak(target);
+                self.updateElementClassName(target);
             }
             holder = target.parentNode;
             inParagraph = false;
@@ -2239,27 +2240,27 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case -3:    // list
                 handleList(matchText)
                 continue;
-            case -4:    // definition (leading "!")
-                handleDefinition(matchText);
-                matchText = "";
-                break;
-            case -5:    // leading space
-                if (listDepth.length == 0) {
-                    handleIndent(matchText);
-                    continue;
-                }
-                if (!this.isInlineNode(holder.lastChild)) {
-                    continue;
-                }
-                matchText = matchText.replace(/^\s+/, " ");
-                break;
-            case -6:    // closing table row
+//            case -4:    // definition (leading "!")
+//                handleDefinition(matchText);
+//                matchText = "";
+//                break;
+//            case -5:    // leading space
+//                if (listDepth.length == 0) {
+//                    handleIndent(matchText);
+//                    continue;
+//                }
+//                if (!this.isInlineNode(holder.lastChild)) {
+//                    continue;
+//                }
+//                matchText = matchText.replace(/^\s+/, " ");
+//                break;
+            case -4:    // closing table row
                 if (inTable) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
-            case -7:    // cell
+            case -5:    // cell
                 if (quoteDepth.length > 0 && match.index == 0) {
                     closeToFragment();
                 }
@@ -2270,10 +2271,10 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
                 handleTableCell(inTableRow ? 0 : 1, inEscapedTable);
                 continue;
-            case -8: // collapsible section
+            case -6: // collapsible section
                 handleCollapsibleBlock(matchText);
                 continue;
-            case -9: // close collapsible section
+            case -7: // close collapsible section
                 closeCollapsibleBlock();
                 continue;
             }
@@ -2951,13 +2952,17 @@ if (window.getSelection) {
     TracWysiwyg.prototype.getFocusNode = function() {
         return this.contentWindow.getSelection().focusNode;
     };
-    TracWysiwyg.prototype.updateElementClassName = function() {
+    TracWysiwyg.prototype.updateElementClassName = function(element) {
         var getSelfOrAncestor = TracWysiwyg.getSelfOrAncestor;
-        var p = getSelfOrAncestor(this.getSelectionRange().startContainer, "p");
+        var p = getSelfOrAncestor(element, "p");
         if (p) {
             if (/^![a-z]/.test(p.innerHTML)) {
                 if (p.className != 'meta') {
                     p.className = 'meta';
+                }
+            } else if (/^#/.test(p.innerHTML)) {
+                if (p.className != 'comment') {
+                    p.className = 'comment';
                 }
             } else {
                 p.className = '';
