@@ -9,8 +9,8 @@
   <!-- WYSIWYG specifics -->
   <link rel="stylesheet" type="text/css" href="/files/javascript/wysiwyg/wysiwyg.css" media="screen"/>
   <link rel="wysiwyg.base" href="/"/>
-  <link rel="wysiwyg.stylesheet" type="text/css" href="/files/javascript/wysiwyg/editor.css" media="screen"/>
   <link rel="wysiwyg.stylesheet" type="text/css" href="/files/css/fitnesse.css" media="screen"/>
+  <link rel="wysiwyg.stylesheet" type="text/css" href="/files/javascript/wysiwyg/editor.css" media="screen"/>
   <link rel="stylesheet" type="text/css" href="/files/javascript/jquery-ui.css" media="screen"/>
   <!-- end WYSIWYG specifics -->
 
