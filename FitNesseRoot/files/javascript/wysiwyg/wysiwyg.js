@@ -13,6 +13,7 @@ var TracWysiwyg = function(textarea, options) {
     var editorMode = TracWysiwyg.getEditorMode();
 
     this.autolink = true;
+    this.wrapTextarea = false;
     this.textarea = textarea;
     this.options = options = options || {};
     var wikitextToolbar = null;
@@ -51,6 +52,7 @@ var TracWysiwyg = function(textarea, options) {
     this.toolbarButtons = this.setupMenuEvents();
     this.toggleEditorButtons = null;
     this.autolinkButton = null;
+    this.wrapTextareaButton = null;
     this.savedWysiwygHTML = null;
 
     this.setupToggleEditorButtons();
@@ -68,6 +70,7 @@ var TracWysiwyg = function(textarea, options) {
             left: "-9999px", top: TracWysiwyg.elementPosition(textareaResizable || textarea).top + "px" });
         TracWysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
         TracWysiwyg.setStyle(this.autolinkButton.parentNode, { display: "none" });
+        TracWysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "" });
         textarea.setAttribute("tabIndex", "");
         frame.setAttribute("tabIndex", "-1");
         break;
@@ -80,6 +83,7 @@ var TracWysiwyg = function(textarea, options) {
         TracWysiwyg.setStyle(resizable || frame, styleStatic);
         TracWysiwyg.setStyle(this.wysiwygToolbar, styleStatic);
         TracWysiwyg.setStyle(this.autolinkButton.parentNode, { display: "" });
+        TracWysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "none" });
         textarea.setAttribute("tabIndex", "-1");
         frame.setAttribute("tabIndex", "");
         break;
@@ -111,6 +115,7 @@ var TracWysiwyg = function(textarea, options) {
                 }
                 (self.resizable || self.frame).style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.autolinkButton.parentNode.style.display = "none";
+                self.wrapTextareaButton.parentNode.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
             }
@@ -174,6 +179,37 @@ TracWysiwyg.prototype.listenerToggleAutolink = function(input) {
     };
 };
 
+TracWysiwyg.prototype.toggleWrapTextarea = function() {
+    this.wrapTextarea = !this.wrapTextarea;
+    this.wrapTextareaButton.checked = this.wrapTextarea;
+};
+
+TracWysiwyg.prototype.listenerToggleWrapTextarea = function(input) {
+    var self = this;
+
+    function setWrap(wrap) {
+        if (self.textarea.wrap) {
+            self.textarea.wrap = wrap ? 'soft' : 'off';
+        } else { // wrap attribute not supported - try Mozilla workaround
+            self.textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
+            var newarea= self.textarea.cloneNode(true);
+            newarea.value= self.textarea.value;
+            self.textarea.parentNode.replaceChild(newarea, self.textarea);
+            self.textarea = newarea;
+        }
+        if (wrap) {
+           $(self.textarea).removeClass('no_wrap');
+        } else {
+            $(self.textarea).addClass('no_wrap');
+        }
+    }
+    
+    return function(event) {
+        self.wrapTextarea = input.checked;
+        setWrap(input.checked);
+    };
+};
+
 TracWysiwyg.prototype.listenerToggleEditor = function(type) {
     var self = this;
 
@@ -193,6 +229,7 @@ TracWysiwyg.prototype.listenerToggleEditor = function(type) {
                 (self.resizable || self.frame).style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.frame.setAttribute("tabIndex", "-1");
                 self.autolinkButton.parentNode.style.display = "none";
+                self.wrapTextareaButton.parentNode.style.display = "";
                 TracWysiwyg.setEditorMode(type);
             }
             self.focusTextarea();
@@ -217,6 +254,7 @@ TracWysiwyg.prototype.listenerToggleEditor = function(type) {
                 frame.style.position = self.wysiwygToolbar.style.position = "static";
                 self.frame.setAttribute("tabIndex", "");
                 self.autolinkButton.parentNode.style.display = "";
+                self.wrapTextareaButton.parentNode.style.display = "none";
                 TracWysiwyg.setEditorMode(type);
             }
             self.focusWysiwyg();
@@ -796,6 +834,9 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
         + '<label for="editor-autolink-@" title="Links as you type (Ctrl-L)">'
         + '<input type="checkbox" id="editor-autolink-@" checked="checked" />'
         + 'autolink </label>'
+        + '<label for="editor-wrap-@" title="Turns on/off wrapping">'
+        + '<input type="checkbox" id="editor-wrap-@" />'
+        + 'wrap </label>'
         + '<label for="editor-wysiwyg-@">'
         + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
         + (mode == "wysiwyg" ? 'checked="checked"' : '') + ' />'
@@ -812,14 +853,22 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
     var buttons = div.getElementsByTagName("input");
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        switch (button.type) {
-        case "checkbox":
+        var token = button.id.replace(/[0-9]+$/, "@");
+        switch (token) {
+        case 'editor-autolink-@':
             var listener = this.listenerToggleAutolink(button);
             $(button).click(listener);
             $(button).keypress(listener);
             this.autolinkButton = button;
             break;
-        case "radio":
+        case "editor-wrap-@":
+            var listener = this.listenerToggleWrapTextarea(button);
+            $(button).click(listener);
+            $(button).keypress(listener);
+            this.wrapTextareaButton = button;
+            break;
+        case "editor-wysiwyg-@":
+        case "editor-textarea-@":
             $(button).click(this.listenerToggleEditor(button.value));
             break;
         }

@@ -15,9 +15,6 @@
   <script src="/files/javascript/WikiFormatter.js" type="text/javascript"></script>
   <script src="/files/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
  </div>
- <div class="edit_options">
-  <script src="/files/javascript/textareaWrapSupport.js" type="text/javascript"></script>
- </div>
 
  <div class="hints"><br>Hints:
   <ul>
