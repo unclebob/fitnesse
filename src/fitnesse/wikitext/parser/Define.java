@@ -15,21 +15,23 @@ public class Define extends SymbolType implements Rule, Translation {
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         if (!parser.isMoveNext(SymbolType.Whitespace)) return Symbol.nothing;
 
-        String name = parser.parseToAsString(SymbolType.Whitespace);
-        if (parser.atEnd()) return Symbol.nothing;
-        if (!ScanString.isVariableName(name)) return Symbol.nothing;
+        Maybe<String> name = parser.parseToAsString(SymbolType.Whitespace);
+        if (name.isNothing()) return Symbol.nothing;
+        String variableName = name.getValue();
+        if (!ScanString.isVariableName(variableName)) return Symbol.nothing;
 
         Symbol next = parser.moveNext(1);
         SymbolType close = next.closeType();
         if (close == SymbolType.Empty) return Symbol.nothing;
 
-        String valueString = parser.parseToAsString(close);
-        if (parser.atEnd()) return Symbol.nothing;
-        parser.getPage().putVariable(name, valueString);
+        Maybe<String> valueString = parser.parseToAsString(close);
+        if (valueString.isNothing()) return Symbol.nothing;
+        String variableValue = valueString.getValue();
+        parser.getPage().putVariable(variableName, variableValue);
 
         return new Maybe<Symbol>(current
-                .add(name)
-                .add(valueString));
+                .add(variableName)
+                .add(variableValue));
     }
 
     public String toTarget(Translator translator, Symbol symbol) {

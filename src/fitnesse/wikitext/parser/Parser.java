@@ -71,10 +71,11 @@ public class Parser {
         return lookAhead;
     }
 
-    public String parseToAsString(SymbolType terminator) {
+    public Maybe<String> parseToAsString(SymbolType terminator) {
         int start = scanner.getOffset();
         scanner.markStart();
         parseTo(terminator);
+        if (atEnd() || !getCurrent().isType(terminator)) return Maybe.noString;
         return scanner.stringFromStart(start);
     }
 

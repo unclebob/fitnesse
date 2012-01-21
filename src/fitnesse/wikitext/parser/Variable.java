@@ -14,15 +14,16 @@ public class Variable extends SymbolType implements Rule, Translation {
     }
     
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        String name = parser.parseToAsString(SymbolType.CloseBrace);
-        if (parser.atEnd() || name.length() == 0) return Symbol.nothing;
-        if (!ScanString.isVariableName(name)) return Symbol.nothing;
+        Maybe<String> name = parser.parseToAsString(SymbolType.CloseBrace);
+        if (name.isNothing() || name.getValue().length() == 0) return Symbol.nothing;
+        String variableName = name.getValue();
+        if (!ScanString.isVariableName(variableName)) return Symbol.nothing;
 
-        current.add(name);
+        current.add(variableName);
 
-        Maybe<String> variableValue = parser.getVariableSource().findVariable(name);
+        Maybe<String> variableValue = parser.getVariableSource().findVariable(variableName);
         if (variableValue.isNothing()) {
-            current.add(new Symbol(SymbolType.Meta).add("undefined variable: " + name));
+            current.add(new Symbol(SymbolType.Meta).add("undefined variable: " + variableName));
         }
         else {
             Symbol variableValueSymbol = parser.parseWithParent(variableValue.getValue(), null);
