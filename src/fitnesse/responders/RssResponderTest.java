@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
@@ -106,16 +105,14 @@ public class RssResponderTest extends ResponderTestCase {
     SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
     String inDate = oldFormat.format(Clock.currentDate());
     String outDate = newFormat.format(Clock.currentDate());
-    RssResponder responder = new RssResponder();
-    String convertedDate = responder.convertDateFormat(inDate);
+    String convertedDate = RssResponder.RecentChangesPageEntry.convertDateFormat(inDate);
     assertEquals(convertedDate, outDate);
   }
 
   public void testBadDateFormat() throws Exception {
     SimpleDateFormat oldFormat = new SimpleDateFormat("h:mm:ss a EEE MMM dd, yyyy");
     String inDate = oldFormat.format(Clock.currentDate());
-    RssResponder responder = new RssResponder();
-    String convertedDate = responder.convertDateFormat(inDate);
+    String convertedDate = RssResponder.RecentChangesPageEntry.convertDateFormat(inDate);
     assertEquals(convertedDate, inDate);
   }
 
@@ -139,7 +136,6 @@ public class RssResponderTest extends ResponderTestCase {
   private NodeList getReportedItems(String recentChangesContent) throws Exception {
     crawler.addPage(root, PathParser.parse("RecentChanges"), recentChangesContent);
     buildRssChannel();
-    NodeList items = channelElement.getElementsByTagName("item");
-    return items;
+    return channelElement.getElementsByTagName("item");
   }
 }
