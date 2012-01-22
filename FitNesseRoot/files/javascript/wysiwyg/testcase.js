@@ -222,22 +222,18 @@ $(function() {
             var dom = fragment(
                 element("p", "Paragraph"),
                 element("hr"),
-                element("ul",
-                    element("li", "item 1"),
-                    element("ol", element("li", "item 1.1"))),
+                element("p", "Another paragraph"),
                 element("hr"));
             generateFragment.call(this, dom, [
                 "Paragraph",
                 "----",
-                " * item 1",
-                "   1. item 1.1",
+                "Another paragraph",
                 "----" ].join("\n"));
             generate.call(this, dom, [
                 "Paragraph",
                 "",
                 "----",
-                " * item 1",
-                "   1. item 1.1",
+                "Another paragraph",
                 "",
                 "----" ].join("\n"));
         });
@@ -434,38 +430,6 @@ $(function() {
         	// should go both ways (wiki2html and html2wiki)
         	generateWikitext.call(this, dom, wikitext);
         	generateFragment.call(this, dom, wikitext);
-        });
-
-        unit.add("citation", function() {
-            var dom = fragment(
-                element("blockquote", { "class": "citation" },
-                    element("p", "This is the quoted text continued"),
-                    element("blockquote", { "class": "citation" },
-                        element("p", "a nested quote"),
-                        element("blockquote", { "class": "citation" },
-                            element("p", "a nested-nested quote")))),
-                element("p", "A comment on the above"),
-                element("blockquote", { "class": "citation" },
-                    element("blockquote", { "class": "citation" },
-                        element("p", "start 2nd level")),
-                    element("p", "first level")));
-            generateFragment.call(this, dom, [
-                "> This is the quoted text",
-                "> continued",
-                "> > a nested quote",
-                "> > > a nested-nested quote",
-                "A comment on the above",
-                "> > start 2nd level",
-                ">first level" ].join("\n"));
-            generate.call(this, dom, [
-                "> This is the quoted text continued",
-                "> > a nested quote",
-                "> > > a nested-nested quote",
-                "",
-                "A comment on the above",
-                "",
-                "> > start 2nd level",
-                "> first level" ].join("\n"));
         });
 
         unit.add("header", function() {
@@ -784,40 +748,6 @@ $(function() {
                 " 1. item 1" ].join("\n"));
         });
 
-        unit.add("list + citation", function() {
-            var dom = fragment(
-                element('ol', element('li', 'item 1')),
-                element('blockquote', { 'class': 'citation' }, element("p", "citation 1")),
-                element('ul',
-                    element('li', 'item 2'),
-                    element("ol",
-                        element('li', 'item 2.1'),
-                        element('li', 'item 2.2'))),
-                element('blockquote', { 'class': 'citation' }, element("p", "citation 2 citation 3")),
-                element('ol', element('li', 'item 3')));
-            generateFragment.call(this, dom, [
-                ' 1. item 1',
-                '> citation 1',
-                ' * item 2',
-                '   1. item 2.1',
-                '   1. item 2.2',
-                '> citation 2',
-                '> citation 3',
-                ' 1. item 3' ].join("\n"));
-            generateWikitext.call(this, dom, [
-                ' 1. item 1',
-                '',
-                '> citation 1',
-                '',
-                ' * item 2',
-                '   1. item 2.1',
-                '   1. item 2.2',
-                '',
-                '> citation 2 citation 3',
-                '',
-                ' 1. item 3' ].join("\n"));
-        });
-
         unit.add("definition", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
@@ -853,52 +783,22 @@ $(function() {
                 element("p", "Paragraph"));
             generateFragment.call(this, dom, [
                 "Paragraph",
-                "# comment goed here",
+                "# comment goes here",
                 "# second comment",
                 "",
                 " #Not a comment",
                 "# third comment",
                 "Paragraph" ].join("\n"));
-            generate.call(this, dom, [
+            generateWikitext.call(this, dom, [
                 "Paragraph",
                 "",
-                "# comment goed here",
+                "# comment goes here",
+                "",
                 "# second comment",
                 "",
-                " #Not a comment",
-                "# third comment",
-                "Paragraph" ].join("\n"));
-        });
-
-        unit.add("blockquote", function() {
-            var dom = fragment(
-                element("p", "Paragraph"),
-                element("blockquote",
-                    element("p", "blockquote 1 cont. 1"),
-                    element("blockquote",
-                        element("p", "blockquote 1.1"),
-                        element("blockquote", element("p", "blockquote 1.1.1 cont. 1.1.1")),
-                        element("p", "blockquote 1.2")),
-                    element("p", "blockquote 2")),
-                element("p", "Paragraph"));
-            generateFragment.call(this, dom, [
-                "Paragraph",
-                "  blockquote 1",
-                "  cont. 1",
-                "    blockquote 1.1",
-                "      blockquote 1.1.1",
-                "      cont. 1.1.1",
-                "     blockquote 1.2",
-                "    blockquote 2",
-                "Paragraph" ].join("\n"));
-            generate.call(this, dom, [
-                "Paragraph",
+                "#Not a comment",
                 "",
-                "  blockquote 1 cont. 1",
-                "    blockquote 1.1",
-                "      blockquote 1.1.1 cont. 1.1.1",
-                "    blockquote 1.2",
-                "  blockquote 2",
+                "# third comment",
                 "",
                 "Paragraph" ].join("\n"));
         });
@@ -1048,14 +948,12 @@ $(function() {
                 element("h6", "Heading", br(), "6"),
                 element("p",
                     "var TracWysiwyg = function(textarea) {", " ... ", "}"),
-                element("blockquote", { "class": "citation" }, element("p", "citation continued")),
-                element("blockquote", element("p", "quote", br(), "continued")),
+                element("p", "> citation continued"),
+                element("p", "quote continued"),
                 element("ul",
                     element("li", "item 1", br(), "continued"),
                     element("ol", element("li", "item", br(), "1.1"))),
-                element("dl",
-                    element("dt", "def"),
-                    element("dd", "dt dd")),
+                element("p", { 'class': 'meta' }, "!define def {dt dd}"),
                 element("table",
                     element("tbody",
                         element("tr",
@@ -1073,13 +971,12 @@ $(function() {
                 "",
                 "> citation continued",
                 "",
-                "  quote continued",
+                "quote continued",
                 "",
                 " * item 1 continued",
                 "   1. item 1.1",
                 "",
                 "!define def {dt dd}",
-                "",
                 "| cell 1 | cell 2 |" ].join("\n"), wikitext);
         });
 

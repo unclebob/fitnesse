@@ -1499,22 +1499,22 @@ TracWysiwyg.prototype.selectionChanged = function() {
 
     var wikiRules = wikiInlineRules.slice(0);
     // -1. citation
-    wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");
-    // -2. header
+    //wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");
+    // -1. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
-    // -3. list
+    // -2. list
     wikiRules.push("^[ \\t\\r\\f\\v]*(?:[-*]|[0-9]+\\.|[a-zA-Z]\\.|[ivxIVX]{1,5}\\.) ");
-    // -4. definition and comment
+    // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#).*$");
     // -5. leading space
-    wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
-    // -6. closing table row
+    //wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
+    // -4. closing table row
     wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
-    // -7. cell
+    // -5. cell
     wikiRules.push("!?(?:\\|)");
-    // -8: open collapsible section
+    // -6: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
-    // -9: close collapsible section
+    // -7: close collapsible section
     wikiRules.push("^\\*+!$");
 
     // TODO could be removed?
@@ -1618,8 +1618,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var lines = wikitext.split("\n");
     var codeText = null;
     var currentHeader = null;
-    // TODO: remove
-    var quoteDepth = [];
     var listDepth = [];
     var decorationStatus;
     var decorationStack;
@@ -1654,51 +1652,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         else {
             codeText.push(line);
         }
-    }
-
-    // TODO: remove
-    function handleCitation(value) {
-        var quote = /^(?: *>)+/.exec(value)[0];
-        var depth = quote.replace(/ +/g, "").length;
-
-        if (depth > quoteDepth.length) {
-            closeToFragment("blockquote");
-            while (depth > quoteDepth.length) {
-                openQuote((new RegExp("^(?: *>){" + (quoteDepth.length + 1) + "}")).exec(quote)[0].length, true);
-            }
-        }
-        else if (depth == quoteDepth.length) {
-            // nothing to do
-        }
-        else {
-            closeParagraph();
-            while (depth < quoteDepth.length) {
-                closeQuote();
-            }
-        }
-    }
-
-    // TODO: remove
-    function openQuote(length, citation) {
-        var target = holder;
-        if (target != fragment) {
-            target = getSelfOrAncestor(target, "blockquote");
-        }
-
-        var element = contentDocument.createElement("blockquote");
-        if (citation) {
-            element.className = "citation";
-        }
-        (target || fragment).appendChild(element);
-        holder = element;
-        quoteDepth.push(length);
-    }
-
-    // TODO: remove
-    function closeQuote() {
-        var target = getSelfOrAncestor(holder, "blockquote");
-        holder = target.parentNode;
-        quoteDepth.pop();
     }
 
     function handleHeader(line) {
@@ -2002,29 +1955,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         listDepth.pop();
     }
 
-    // TODO: remove
-    function handleIndent(value) {
-        var depth = value.length;
-        var last = quoteDepth.length - 1;
-
-        if (depth > (last >= 0 ? quoteDepth[last] : 0)) {
-            closeParagraph();
-            closeTable();
-            openQuote(depth, false);
-        }
-        else {
-            while (quoteDepth.length > 0) {
-                if (depth >= quoteDepth[last]) {
-                    break;
-                }
-                closeToFragment("blockquote");
-                closeQuote();
-                last = quoteDepth.length - 1;
-            }
-            quoteDepth[last] = depth;
-        }
-    }
-
     function openParagraph() {
         if (!inParagraph) {
             var element = contentDocument.createElement("p");
@@ -2138,9 +2068,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case "li": case "ul": case "ol":
                 method = closeList;
                 break;
-            case "blockquote":
-                method = closeQuote;
-                break;
             case "td": case "tr": case "tbody": case "table":
                 method = closeTable;
                 break;
@@ -2198,41 +2125,35 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             var match = wikiRulesPattern.exec(line);
             var matchNumber = null;
             var text = null;
+
+            // Deal with unmatched text
             if (match) {
                 matchNumber = getMatchNumber(match);
                 if (prevIndex < match.index) {
                     text = line.substring(prevIndex, match.index);
                 }
-            }
-            else {
+            } else {
                 text = line.substring(prevIndex);
             }
 
             if ((prevIndex == 0 && text || match && match.index == 0 && matchNumber > 0)
-                && (!inParagraph || quoteDepth.length > 0)
-                && (!inCollapsibleBlock)) {
+                && !inParagraph && !inCollapsibleBlock) {
                 closeToFragment();
             }
 
 
             if (text || match && matchNumber > 0) {
-                if (inParagraph && (prevIndex == 0 || quoteDepth.length > 0)) {
-                    if (inParagraph && /^!/.test(line)) {
-                        holder.appendChild(contentDocument.createElement("br"));
-                    }
-                    else {
-                        text = text ? (" " + text) : "";
-                    }
+                if (inParagraph && (prevIndex == 0)) {
+                    text = text ? (" " + text) : "";
                 }
-                if (!inTable && quoteDepth.length > 0 || holder == fragment) {
-                    if (!inParagraph) {
-                        openParagraph();
-                    }
+                if (!inTable && !currentHeader || holder == fragment) {
+                    openParagraph();
                 }
                 if (text) {
                     holder.appendChild(contentDocument.createTextNode(text));
                 }
             }
+
             if (!match) {
                 break;
             }
@@ -2271,17 +2192,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 if (inEscapedTable) { break; }
                 handleWikiPageName(matchText);
                 continue;
-            // TODO: remove
-            case -1:    // citation
-                if (escapeNewlines && inParagraph) {
-                    holder.appendChild(contentDocument.createElement("br"));
-                }
-                handleCitation(matchText);
-                if (escapeNewlines) {
-                    openParagraph();
-                }
-                continue;
-            case -2:    // header
+            case -1:    // header
                 currentHeader = handleHeader(matchText);
                 if (currentHeader) {
                     var m = /^\s*!([1-6])[ \t\r\f\v]+/.exec(line);
@@ -2289,31 +2200,20 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                     continue;
                 }
                 break;
-            case -3:    // list
+            case -2:    // list
                 handleList(matchText)
                 continue;
-            case -4:    // definition (leading "!")
+            case -3:    // definition (leading "!")
                 handleDefinition(matchText);
                 break;
-            // TODO: remove
-            case -5:    // leading space
-                if (listDepth.length == 0) {
-                    handleIndent(matchText);
-                    continue;
-                }
-                if (!this.isInlineNode(holder.lastChild)) {
-                    continue;
-                }
-                matchText = matchText.replace(/^\s+/, " ");
-                break;
-            case -6:    // closing table row
+            case -4:    // closing table row
                 if (inTable) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
-            case -7:    // cell
-                if (quoteDepth.length > 0 && match.index == 0) {
+            case -5:    // cell
+                if (!inTable && match.index == 0) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
@@ -2323,10 +2223,10 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
                 handleTableCell(inTableRow ? 0 : 1, inEscapedTable);
                 continue;
-            case -8: // collapsible section
+            case -6: // collapsible section
                 handleCollapsibleBlock(matchText);
                 continue;
-            case -9: // close collapsible section
+            case -7: // close collapsible section
                 closeCollapsibleBlock();
                 continue;
             }
@@ -2417,7 +2317,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     var stack = [];
     var last = root;
     var listDepth = 0;
-    var quoteDepth = 0;
     var quoteCitation = false;
     var inCodeBlock = false;
     var skipNode = null;
@@ -2669,10 +2568,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 }
                 break;
             case "p":
-                if (quoteDepth > 0) {
-                    _texts.push(string(quoteCitation ? "> " : "  ", quoteDepth));
-                }
-                else if (!/[^ \t\r\n\f\v]/.test(getTextContent(node))) {
+                if (!/[^ \t\r\n\f\v]/.test(getTextContent(node))) {
                     skipNode = node;
                 }
                 break;
@@ -2738,16 +2634,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 _texts.push("\n{{{\n");
                 inCodeBlock = true;
                 break;
-            // TODO: remove
-            case "blockquote":
-                if (self.isInlineNode(node.previousSibling)) {
-                    _texts.push("\n");
-                }
-                quoteDepth++;
-                if (quoteDepth == 1) {
-                    quoteCitation = (node.className == "citation");
-                }
-                break;
             case "table":
                 if (node.className == 'escaped') {
                     _texts.push("!");
@@ -2765,9 +2651,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 }
                 break;
             case "tr":
-                if (quoteDepth > 0) {
-                    _texts.push(string(quoteCitation ? ">" : "  ", quoteDepth));
-                }
                 break;
             case "tt":
                 skipNode = node;
@@ -2823,7 +2706,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 if (node.className == 'meta') {
                     _texts.push("\n");
                 } else {
-                    _texts.push(quoteDepth == 0 ? "\n\n" : "\n");
+                    _texts.push("\n\n");
                 }
                 break;
             case "li":
@@ -2864,13 +2747,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 _texts.push(text);
                 inCodeBlock = false;
                 break;
-            // TODO: remove
-            case "blockquote":
-                quoteDepth--;
-                if (quoteDepth == 0) {
-                    _texts.push("\n");
-                }
-                break;
             case "span":
                 var token = tokenFromSpan(node);
                 if (token !== undefined) {
@@ -2878,9 +2754,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 }
                 break;
             case "table":
-                if (quoteDepth == 0) {
-                    _texts.push("\n");
-                }
+                _texts.push("\n");
                 break;
             }
         }
