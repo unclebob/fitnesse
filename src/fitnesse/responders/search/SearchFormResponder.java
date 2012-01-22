@@ -28,8 +28,6 @@ public class SearchFormResponder implements Responder {
   throws Exception {
     SimpleResponse response = new SimpleResponse();
 
-    VelocityContext velocityContext = new VelocityContext();
-
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setMainTemplate("searchForm.vm");
     html.setTitle("Search Form");

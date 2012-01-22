@@ -49,9 +49,6 @@ public class DeleteConfirmationResponder implements SecureResponder {
     if (isDir) {
       page.put("nFiles", file.listFiles().length);
     }
-//    page.put("path", resource);
-//    makeYesForm(filename);
-//    makeNoForm();
   }
 
   public SecureOperation getSecureOperation() {
