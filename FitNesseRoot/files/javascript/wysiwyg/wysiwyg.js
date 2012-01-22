@@ -1618,6 +1618,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var lines = wikitext.split("\n");
     var codeText = null;
     var currentHeader = null;
+    // TODO: remove
     var quoteDepth = [];
     var listDepth = [];
     var decorationStatus;
@@ -1655,6 +1656,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         }
     }
 
+    // TODO: remove
     function handleCitation(value) {
         var quote = /^(?: *>)+/.exec(value)[0];
         var depth = quote.replace(/ +/g, "").length;
@@ -1676,6 +1678,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         }
     }
 
+    // TODO: remove
     function openQuote(length, citation) {
         var target = holder;
         if (target != fragment) {
@@ -1691,6 +1694,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         quoteDepth.push(length);
     }
 
+    // TODO: remove
     function closeQuote() {
         var target = getSelfOrAncestor(holder, "blockquote");
         holder = target.parentNode;
@@ -1998,6 +2002,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         listDepth.pop();
     }
 
+    // TODO: remove
     function handleIndent(value) {
         var depth = value.length;
         var last = quoteDepth.length - 1;
@@ -2133,9 +2138,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case "li": case "ul": case "ol":
                 method = closeList;
                 break;
-            case "dd":
-                method = closeDefList;
-                break;
             case "blockquote":
                 method = closeQuote;
                 break;
@@ -2269,6 +2271,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 if (inEscapedTable) { break; }
                 handleWikiPageName(matchText);
                 continue;
+            // TODO: remove
             case -1:    // citation
                 if (escapeNewlines && inParagraph) {
                     holder.appendChild(contentDocument.createElement("br"));
@@ -2292,6 +2295,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case -4:    // definition (leading "!")
                 handleDefinition(matchText);
                 break;
+            // TODO: remove
             case -5:    // leading space
                 if (listDepth.length == 0) {
                     handleIndent(matchText);
@@ -2365,9 +2369,6 @@ TracWysiwyg.prototype.wikiOpenTokens = {
     "i": "''", "em": "''",
     "del": "--", "strike": "--",
     "hr": "----\n",
-    "dl": true,
-    "dt": "!define ",
-    "dd": " {",
     "table": true,
     "tbody": true,
     "fieldset": "!***", "legend": true };
@@ -2381,9 +2382,6 @@ TracWysiwyg.prototype.wikiCloseTokens = {
     "del": "--", "strike": "--",
     "br": true,
     "hr": true,
-    "dl": "\n",
-    "dt": true,
-    "dd": "}\n",
     "tbody": true,
     "tr": "|\n",
     "td": true, "th": true,
@@ -2391,7 +2389,7 @@ TracWysiwyg.prototype.wikiCloseTokens = {
 
 TracWysiwyg.prototype.wikiBlockTags = {
     "h1": true, "h2": true, "h3": true, "h4": true, "h5": true, "h6": true,
-    "table": true, "dl": true, "hr": true };
+    "table": true, "hr": true };
 
 TracWysiwyg.prototype.wikiInlineTags = {
     "a": true, "tt": true, "b": true, "strong": true, "i": true, "em": true,
@@ -2740,6 +2738,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 _texts.push("\n{{{\n");
                 inCodeBlock = true;
                 break;
+            // TODO: remove
             case "blockquote":
                 if (self.isInlineNode(node.previousSibling)) {
                     _texts.push("\n");
@@ -2865,6 +2864,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 _texts.push(text);
                 inCodeBlock = false;
                 break;
+            // TODO: remove
             case "blockquote":
                 quoteDepth--;
                 if (quoteDepth == 0) {
