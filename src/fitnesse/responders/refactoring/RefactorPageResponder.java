@@ -27,8 +27,6 @@ public class RefactorPageResponder implements SecureResponder {
 
     HtmlPage page = context.htmlPageFactory.newPage();
 
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("refactorForm.vm");
-
     page.setMainTemplate("refactorForm.vm");
     page.setTitle("Refactor: " + resource);
     page.setPageTitle(new PageTitle("Refactor", PathParser.parse(resource)));
