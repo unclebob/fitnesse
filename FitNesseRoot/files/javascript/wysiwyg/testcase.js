@@ -466,288 +466,6 @@ $(function() {
                 "!6 Heading 6 " ].join("\n"));
         });
 
-        unit.add("list", function() {
-            var dom = fragment(
-                element("p", "Paragraph"),
-                element("ul",
-                    element("li", "foo bar boo baz"),
-                    element("ul", element("li", "Subitem Subitem line 2")),
-                    element("li", "item 2 item 2 line 2")),
-                element("p", "Paragraph"));
-            generateFragment.call(this, dom, [
-                "Paragraph",
-                " * foo bar",
-                "   boo baz",
-                "   * Subitem",
-                "     Subitem line 2",
-                " * item 2",
-                "   item 2 line 2",
-                "Paragraph" ].join("\n"));
-            generate.call(this, dom, [
-                "Paragraph",
-                "",
-                " * foo bar boo baz",
-                "   * Subitem Subitem line 2",
-                " * item 2 item 2 line 2",
-                "",
-                "Paragraph" ].join("\n"));
-        });
-
-        unit.add("list 2", function() {
-            var dom = fragment(
-                element("ul",
-                    element("li", "foo bar boo baz"),
-                    element("ul",
-                        element("li", "Subitem 1"),
-                        element("ul",
-                            element("li", "nested item 1"),
-                            element("li", "nested item 2 nested item 2 continued")),
-                        element("li", "Subitem 2 subitem 2 continued"),
-                        element("li", "Subitem 3 subitem 3 continued")),
-                    element("li", "item 2 item 2 line 2")),
-                element("p", "Paragraph"));
-            generateFragment.call(this, dom, [
-                "    * foo bar",
-                "      boo baz",
-                "           * Subitem 1",
-                "             - nested item 1",
-                "             - nested item 2",
-                "             nested item 2 continued",
-                "            * Subitem 2",
-                "             subitem 2 continued",
-                "            * Subitem 3",
-                "            subitem 3 continued",
-                "    * item 2",
-                "     item 2 line 2",
-                "Paragraph" ].join("\n"));
-            generate.call(this, dom, [
-                " * foo bar boo baz",
-                "   * Subitem 1",
-                "     * nested item 1",
-                "     * nested item 2 nested item 2 continued",
-                "   * Subitem 2 subitem 2 continued",
-                "   * Subitem 3 subitem 3 continued",
-                " * item 2 item 2 line 2",
-                "",
-                "Paragraph" ].join("\n"));
-        });
-
-        unit.add("ordered list", function() {
-            var dom = fragment(
-                element("p", "Paragraph"),
-                element("ol",
-                    element("li", "item 1"),
-                    element("ol", { "class": "arabiczero" },
-                        element("li", "item 1.1"),
-                        element("li", "item 1.2"),
-                        element("ol", { "class": "loweralpha" },
-                            element("li", "item 1.2.a"),
-                            element("li", "item 1.2.b")),
-                        element("li", "item 1.3"),
-                        element("ol", { "class": "loweralpha" },
-                            element("li", "item 1.3.a"),
-                            element("li", "item 1.3.b")),
-                        element("li", "item 1.4"),
-                        element("ol", { "class": "upperalpha" },
-                            element("li", "item 1.4.A"),
-                            element("li", "item 1.4.B"),
-                            element("li", "item 1.4.C")),
-                        element("li", "item 1.5"),
-                        element("ol", { "class": "upperalpha" },
-                            element("li", "item 1.5.A")),
-                        element("li", "item 1.6"),
-                        element("ol", { "class": "lowerroman" },
-                            element("li", "item 1.6.i"),
-                            element("li", "item 1.6.ii")),
-                        element("li", "item 1.7"),
-                        element("ol", { "class": "upperroman" },
-                            element("li", "item 1.7.I"),
-                            element("li", "item 1.7.II")))),
-                element("p", "Paragraph"));
-            generateFragment.call(this, dom, [
-                "Paragraph",
-                " 1. item 1",
-                "   0. item 1.1",
-                "   2. item 1.2",
-                "     a. item 1.2.a",
-                "     z. item 1.2.b",
-                "   a. item 1.3",
-                "     b. item 1.3.a",
-                "     y. item 1.3.b",
-                "   Z. item 1.4",
-                "     A. item 1.4.A",
-                "     z. item 1.4.B",
-                "     z. item 1.4.C",
-                "   ii. item 1.5",
-                "     C. item 1.5.A",
-                "   XVI. item 1.6",
-                "     i. item 1.6.i",
-                "     x. item 1.6.ii",
-                "   0. item 1.7",
-                "     I. item 1.7.I",
-                "     III. item 1.7.II",
-                "Paragraph" ].join("\n"));
-            generate.call(this, dom, [
-                "Paragraph",
-                "",
-                " 1. item 1",
-                "   0. item 1.1",
-                "   0. item 1.2",
-                "     a. item 1.2.a",
-                "     a. item 1.2.b",
-                "   0. item 1.3",
-                "     a. item 1.3.a",
-                "     a. item 1.3.b",
-                "   0. item 1.4",
-                "     A. item 1.4.A",
-                "     A. item 1.4.B",
-                "     A. item 1.4.C",
-                "   0. item 1.5",
-                "     A. item 1.5.A",
-                "   0. item 1.6",
-                "     i. item 1.6.i",
-                "     i. item 1.6.ii",
-                "   0. item 1.7",
-                "     I. item 1.7.I",
-                "     I. item 1.7.II",
-                "",
-                "Paragraph" ].join("\n"));
-        });
-
-        unit.add("list + ordered list", function() {
-            var dom = fragment(
-                element("ul",
-                    element("li", "Item 1"),
-                    element("ul", element("li", "Item 1.1")),
-                    element("li", "Item 2")),
-                element("ol",
-                    element("li", "Item 1"),
-                    element("ol", { "class": "loweralpha" },
-                        element("li", "Item 1.a"),
-                        element("li", "Item 1.b"),
-                        element("ol", { "class": "lowerroman" },
-                            element("li", "Item 1.b.i"),
-                            element("li", "Item 1.b.ii"))),
-                    element("li", "Item 2")),
-                element("p", "And numbered lists can also be given an explicit number:"),
-                element("ol", { start: 3 }, element("li", "Item 3")));
-            generateFragment.call(this, dom, [
-                " * Item 1",
-                "   * Item 1.1",
-                " * Item 2",
-                " 1. Item 1",
-                "   a. Item 1.a",
-                "   a. Item 1.b",
-                "      i. Item 1.b.i",
-                "      i. Item 1.b.ii",
-                " 1. Item 2",
-                "And numbered lists can also be given an explicit number:",
-                " 3. Item 3" ].join("\n"));
-            generate.call(this, dom, [
-                " * Item 1",
-                "   * Item 1.1",
-                " * Item 2",
-                "",
-                " 1. Item 1",
-                "   a. Item 1.a",
-                "   a. Item 1.b",
-                "     i. Item 1.b.i",
-                "     i. Item 1.b.ii",
-                " 1. Item 2",
-                "",
-                "And numbered lists can also be given an explicit number:",
-                "",
-                " 3. Item 3" ].join("\n"));
-        });
-
-        unit.add("list at beginning of line", function() {
-            var dom = fragment(
-                element("ul",
-                    element("li", "item 1"),
-                    element("li", "item 2"),
-                    element("ul", element("li", "sub 2.1"), element("li", "sub 2.2"))),
-                element("ol", { "class": "loweralpha" },
-                    element("li", "item A"), element("li", "item B")),
-                element("p", "Paragraph"));
-            generateFragment.call(this, dom, [
-                "- item 1",
-                "- item 2",
-                "  - sub 2.1",
-                "  - sub 2.2",
-                "a. item A",
-                "b. item B",
-                "Paragraph" ].join("\n"));
-            generate.call(this, dom, [
-                " * item 1",
-                " * item 2",
-                "   * sub 2.1",
-                "   * sub 2.2",
-                "",
-                " a. item A",
-                " a. item B",
-                "",
-                "Paragraph" ].join("\n"));
-        });
-
-        unit.add("list + code block", function() {
-            var dom = fragment(
-                element("p", "Paragraph"),
-                element("ul",
-                    element("li",
-                        "item 1",
-                        element("pre", { "class": "wiki" }, "code")),
-                    element("ul",
-                        element("li",
-                            "item 1.1",
-                            element("pre", { "class": "wiki" }, "code"),
-                            "cont.",
-                            element("pre", { "class": "wiki" }, "code"))),
-                    element("li",
-                        "item 2",
-                        element("pre", { "class": "wiki" }, "code"))),
-                element("ol", element("li", "item 1")));
-            generateFragment.call(this, dom, [
-                "Paragraph",
-                " * item 1",
-                "{{{",
-                "code",
-                "}}}",
-                "   * item 1.1",
-                "{{{",
-                "code",
-                "}}}",
-                "     cont.",
-                "{{{",
-                "code",
-                "}}}",
-                " * item 2",
-                "{{{",
-                "code",
-                "}}}",
-                " 1. item 1" ].join("\n"));
-            generate.call(this, dom, [
-                "Paragraph",
-                "",
-                " * item 1",
-                "{{{",
-                "code",
-                "}}}",
-                "   * item 1.1",
-                "{{{",
-                "code",
-                "}}}",
-                "     cont.",
-                "{{{",
-                "code",
-                "}}}",
-                " * item 2",
-                "{{{",
-                "code",
-                "}}}",
-                "",
-                " 1. item 1" ].join("\n"));
-        });
-
         unit.add("definition", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
@@ -874,22 +592,19 @@ $(function() {
                 "!-'''normal-!" ].join("\n"));
         });
 
-        unit.add("table [ paragraph, ul ]", function() {
+        unit.add("table [ paragraph ]", function() {
             var dom = fragment(
                 element("table",
                     element("tbody",
                         element("tr",
                             element("td", element("p", "1.1")),
-                            element("td",
-                                element("ul",
-                                    element("li", "item 1"),
-                                    element("li", "item 2")))),
+                            element("td", element("p", ""))),
                         element("tr",
                             element("td",
                                 element("p", "2.1* item 3 * item 4")
                                     )))));
             generateWikitext.call(this, dom, [
-                "| 1.1 | * item 1\n * item 2 |",
+                "| 1.1 | |",
                 "| 2.1* item 3 * item 4 |" ].join("\n"));
         });
 
@@ -950,9 +665,6 @@ $(function() {
                     "var TracWysiwyg = function(textarea) {", " ... ", "}"),
                 element("p", "> citation continued"),
                 element("p", "quote continued"),
-                element("ul",
-                    element("li", "item 1", br(), "continued"),
-                    element("ol", element("li", "item", br(), "1.1"))),
                 element("p", { 'class': 'meta' }, "!define def {dt dd}"),
                 element("table",
                     element("tbody",
@@ -972,9 +684,6 @@ $(function() {
                 "> citation continued",
                 "",
                 "quote continued",
-                "",
-                " * item 1 continued",
-                "   1. item 1.1",
                 "",
                 "!define def {dt dd}",
                 "| cell 1 | cell 2 |" ].join("\n"), wikitext);
