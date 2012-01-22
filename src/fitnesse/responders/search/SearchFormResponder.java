@@ -27,8 +27,6 @@ public class SearchFormResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
-    VelocityContext velocityContext = new VelocityContext();
-
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setMainTemplate("searchForm.vm");
     html.setTitle("Search Form");

@@ -165,12 +165,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return fastTest;
   }
 
-  public void addToResponse(byte[] output) {
-    if (!isClosed()) {
-      response.add(output);
-    }
-  }
-
   public void addToResponse(String output) {
     if (!isClosed()) {
       response.add(output);

@@ -23,7 +23,6 @@ import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
-  public static final String CONTENT_INPUT_ID = "pageContentId";
   public static final String TIME_STAMP = "editTime";
   public static final String TICKET_ID = "ticketId";
 
@@ -77,10 +76,6 @@ public class EditResponder implements SecureResponder {
 
   protected String createPageContent() {
     return pageData.getContent();
-  }
-
-  public String makeHtml(String resource, FitNesseContext context) {
-    return doMakeHtml(resource, context, false);
   }
 
   private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage) {
