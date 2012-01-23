@@ -50,7 +50,7 @@ public class SuiteOverviewResponder implements Responder {
 
   }
 
-  private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path) throws Exception {
+  private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path) {
     SimpleResponse response = new SimpleResponse();
     
     HtmlPage page = context.htmlPageFactory.newPage();

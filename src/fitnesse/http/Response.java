@@ -144,8 +144,12 @@ public abstract class Response {
     return headers.get(key);
   }
 
-  public byte[] getEncodedBytes(String value) throws UnsupportedEncodingException {
-    return value.getBytes("UTF-8");
+  public byte[] getEncodedBytes(String value) {
+    try {
+      return value.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Unable to encode data", e);
+    }
   }
 
   void makeHeaders(StringBuffer text) {

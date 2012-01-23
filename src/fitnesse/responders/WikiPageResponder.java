@@ -69,7 +69,7 @@ public class WikiPageResponder implements SecureResponder {
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context) throws Exception {
+  private SimpleResponse makePageResponse(FitNesseContext context) {
       pageTitle = PathParser.render(crawler.getFullPath(page));
       String html = makeHtml(context);
 
@@ -79,7 +79,7 @@ public class WikiPageResponder implements SecureResponder {
       return response;
   }
 
-  public String makeHtml(FitNesseContext context) throws Exception {
+  public String makeHtml(FitNesseContext context) {
     WikiPage page = pageData.getWikiPage();
     HtmlPage html = context.htmlPageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
@@ -106,11 +106,11 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   /* hook for subclasses */
-  protected String generateHtml(PageData pageData) throws Exception {
+  protected String generateHtml(PageData pageData) {
     return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
   }
 
-  private void handleSpecialProperties(HtmlPage html, WikiPage page) throws Exception {
+  private void handleSpecialProperties(HtmlPage html, WikiPage page) {
     WikiImportProperty.handleImportProperties(html, page, pageData);
   }
 

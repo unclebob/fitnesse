@@ -22,6 +22,7 @@ import org.apache.velocity.VelocityContext;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class PageHistoryResponder implements SecureResponder {
     return makeResponse();
   }
   
-  private Response makePageHistoryXmlResponse(Request request) throws Exception {
+  private Response makePageHistoryXmlResponse(Request request) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
     Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
@@ -125,13 +126,17 @@ public class PageHistoryResponder implements SecureResponder {
     return makeResponse();
   }
 
-  private Response generateXMLResponse(File file) throws Exception {
-    response.setContent(FileUtil.getFileContent(file));
+  private Response generateXMLResponse(File file) {
+    try {
+      response.setContent(FileUtil.getFileContent(file));
+    } catch (IOException e) {
+      response.setContent("Error: Unable to read file '" + file.getName() + "'\n");
+    }
     response.setContentType(Format.XML);
     return response;
   }
 
-  private Response makeResponse() throws Exception {
+  private Response makeResponse() {
     StringWriter writer = new StringWriter();
     response.setContent(page.html());
     return response;

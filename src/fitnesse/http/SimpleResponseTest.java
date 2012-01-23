@@ -34,7 +34,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
   public void tearDown() throws Exception {
   }
 
-  public void testSimpleResponse() throws Exception {
+  public void testSimpleResponse() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("some content");
     response.readyToSend(this);
@@ -59,7 +59,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
     assertHasRegexp("Location: some url\r\n", text);
   }
 
-  public void testUnicodeCharacters() throws Exception {
+  public void testUnicodeCharacters() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("\uba80\uba81\uba82\uba83");
     response.readyToSend(this);

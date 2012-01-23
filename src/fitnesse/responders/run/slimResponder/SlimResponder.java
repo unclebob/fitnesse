@@ -23,17 +23,22 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
   SlimTestSystem testSystem;
 
 
-  protected String generateHtml(PageData pageData) throws Exception {
+  protected String generateHtml(PageData pageData) {
     testSystem = getTestSystem(pageData);
-    String classPath = new ClassPathBuilder().getClasspath(page);
-    TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
-    descriptor.testRunner = "fitnesse.slim.SlimService";
-    log = testSystem.getExecutionLog(classPath, descriptor);
-    testSystem.start();
-    testSystem.setFastTest(fastTest);
-    String html = testSystem.runTestsAndGenerateHtml(pageData);
-    testSystem.bye();
-    Thread.sleep(20);
+    String html = null;
+    try {
+      String classPath = new ClassPathBuilder().getClasspath(page);
+      TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
+      descriptor.testRunner = "fitnesse.slim.SlimService";
+      log = testSystem.getExecutionLog(classPath, descriptor);
+      testSystem.start();
+      testSystem.setFastTest(fastTest);
+      html = testSystem.runTestsAndGenerateHtml(pageData);
+      testSystem.bye();
+      Thread.sleep(20);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
     return html;
   }
 

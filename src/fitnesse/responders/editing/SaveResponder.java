@@ -50,7 +50,7 @@ public class SaveResponder implements SecureResponder {
     }
   }
 
-  private Response makeBannedContentResponse(FitNesseContext context, String resource) throws Exception {
+  private Response makeBannedContentResponse(FitNesseContext context, String resource) {
     SimpleResponse response = new SimpleResponse();
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Edit " + resource);

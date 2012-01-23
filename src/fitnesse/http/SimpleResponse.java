@@ -26,7 +26,7 @@ public class SimpleResponse extends Response {
     }
   }
 
-  public void setContent(String value) throws Exception {
+  public void setContent(String value) {
     content = getEncodedBytes(value);
   }
 

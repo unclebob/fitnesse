@@ -44,11 +44,7 @@ public class ChunkedResponse extends Response {
 
   public void add(String text) {
     if (text != null)
-      try {
-        add(getEncodedBytes(text));
-      } catch (UnsupportedEncodingException e) {
-        throw new RuntimeException("Unable to encode bytes", e);
-      }
+      add(getEncodedBytes(text));
   }
 
   public void add(byte[] bytes) {

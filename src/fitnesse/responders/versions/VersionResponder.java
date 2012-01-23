@@ -21,7 +21,7 @@ public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     version = (String) request.getInput("version");
     if (version == null)
@@ -42,7 +42,7 @@ public class VersionResponder implements SecureResponder {
     return response;
   }
 
-  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) throws Exception {
+  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
     PageData pageData = page.getDataVersion(version);
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);

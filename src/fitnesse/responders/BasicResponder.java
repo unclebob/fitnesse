@@ -15,7 +15,7 @@ public abstract class BasicResponder implements SecureResponder {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
-  protected Response responseWith(String content) throws Exception {
+  protected Response responseWith(String content) {
     SimpleResponse response = new SimpleResponse();
     response.setContentType(getContentType());
     response.setContent(content);
