@@ -19,7 +19,7 @@ public class ListExecutor {
     this(false, slimFactory);
   }
 
-  protected ListExecutor(boolean verbose, SlimFactory slimFactory) throws Exception {
+  protected ListExecutor(boolean verbose, SlimFactory slimFactory) {
     this.verbose = verbose;
     this.executor = slimFactory.getStatementExecutor();
     this.methodNameTranslator = slimFactory.getMethodNameTranslator();

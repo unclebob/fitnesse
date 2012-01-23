@@ -175,7 +175,7 @@ public class CommandRunner {
     try {
       thread.join();
     } catch (InterruptedException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
   }
 
