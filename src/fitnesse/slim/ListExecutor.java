@@ -15,7 +15,7 @@ public class ListExecutor {
   private NameTranslator methodNameTranslator;
   private boolean verbose;
 
-  public ListExecutor(SlimFactory slimFactory) throws Exception {
+  public ListExecutor(SlimFactory slimFactory) {
     this(false, slimFactory);
   }
 

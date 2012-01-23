@@ -13,7 +13,7 @@ public class SlimService extends SocketService {
   public static boolean verbose;
   public static int port;
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws IOException {
     if (parseCommandLine(args)) {
       startWithFactory(args, new JavaSlimFactory());
     } else {
