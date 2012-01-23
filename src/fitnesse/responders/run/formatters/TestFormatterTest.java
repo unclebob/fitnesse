@@ -52,7 +52,7 @@ public class TestFormatterTest {
     };
     TestHtmlFormatter testHtmlFormatter = new TestHtmlFormatter(context, page, mock(HtmlPageFactory.class)) {
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) {
       }
     };
     PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, page, writerFactory) {

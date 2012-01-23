@@ -4,6 +4,8 @@ package fitnesse.http;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import util.StreamReader;
@@ -16,15 +18,21 @@ public class InputStreamResponse extends Response {
     super("html");
   }
 
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void readyToSend(ResponseSender sender) {
     try {
       addStandardHeaders();
       sender.send(makeHttpHeaders().getBytes());
       while (!reader.isEof())
         sender.send(reader.readBytes(1000));
+    } catch (IOException e) {
+      throw new RuntimeException("Error while sending data", e);
     } finally {
-      reader.close();
-      sender.close();
+      try {
+        reader.close();
+        sender.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Error while closing streams", e);
+      }
     }
   }
 
@@ -41,7 +49,7 @@ public class InputStreamResponse extends Response {
     contentSize = size;
   }
 
-  public void setBody(File file) throws Exception {
+  public void setBody(File file) throws FileNotFoundException {
     FileInputStream input = new FileInputStream(file);
     int size = (int) file.length();
     setBody(input, size);

@@ -26,7 +26,7 @@ public class TitleWikiPageFinderTest implements SearchObserver {
   private PageCrawler crawler;
   private TitleWikiPageFinder searcher;
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     hits.add(page);
   }
 

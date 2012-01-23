@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
@@ -34,10 +36,10 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     super(context, null);
   }
 
-  protected abstract void writeData(String output) throws Exception;
+  protected abstract void writeData(String output) throws IOException;
 
   @Override
-  public void writeHead(String pageType) throws Exception {
+  public void writeHead(String pageType) throws IOException {
     htmlPage = buildHtml(pageType);
     htmlPage.setMainContent(HtmlPage.BreakPoint);
     htmlPage.divide();
@@ -122,7 +124,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     writeData(script.html());
   }
 
-  protected HtmlPage buildHtml(String pageType) throws Exception {
+  protected HtmlPage buildHtml(String pageType) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     WikiPagePath fullPath = pageCrawler.getFullPath(getPage());
     String fullPathName = PathParser.render(fullPath);
@@ -189,7 +191,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return summaryContent;
   }
 
-  public String testSummary() throws Exception {
+  public String testSummary() {
     String summaryContent = (wasInterupted) ? TESTING_INTERUPTED : "";
     summaryContent += makeSummaryContent();
     HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
@@ -218,7 +220,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return assertionCounts;
   }
 
-  public HtmlPage getHtmlPage() throws Exception {
+  public HtmlPage getHtmlPage() {
     if (htmlPage != null) {
       return htmlPage;
     }

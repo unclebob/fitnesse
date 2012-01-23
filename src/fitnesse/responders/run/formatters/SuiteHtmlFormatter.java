@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
@@ -182,13 +184,13 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     return testPagesSummary + super.makeSummaryContent();
   }
 
-  public void finishWritingOutput() throws Exception {
+  public void finishWritingOutput() throws IOException {
     writeData(testSummary());
     writeData(getHtmlPage().postDivision);
   }
 
   @Override
-  public void writeHead(String pageType) throws Exception {
+  public void writeHead(String pageType) throws IOException {
     super.writeHead(pageType);
 
     HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");

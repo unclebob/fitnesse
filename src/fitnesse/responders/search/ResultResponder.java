@@ -26,7 +26,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     return root.getPageCrawler();
   }
 
-  protected void doSending() throws Exception {
+  protected void doSending() {
     HtmlPage htmlPage = context.htmlPageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(new PageTitle(getTitle()) {
@@ -60,12 +60,12 @@ public abstract class ResultResponder extends ChunkingResponder implements
     response.closeAll();
   }
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     hits++;
     response.add(createSearchResultsEntry(page));
   }
 
-  private String createSearchResultsFooter() throws Exception {
+  private String createSearchResultsFooter() {
     VelocityContext velocityContext = new VelocityContext();
 
     StringWriter writer = new StringWriter();
@@ -79,7 +79,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     return writer.toString();
   }
   
-  private String createSearchResultsEntry(WikiPage result) throws Exception {
+  private String createSearchResultsEntry(WikiPage result) {
     VelocityContext velocityContext = new VelocityContext();
 
     StringWriter writer = new StringWriter();
@@ -101,11 +101,11 @@ public abstract class ResultResponder extends ChunkingResponder implements
     return (nextRow++ % 2) + 1;
   }
 
-  protected abstract String getTitle() throws Exception;
+  protected abstract String getTitle() ;
 
-  protected abstract String getPageFooterInfo(int hits) throws Exception;
+  protected abstract String getPageFooterInfo(int hits) ;
 
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     hits = 0;
   }
 

@@ -5,6 +5,7 @@ package fitnesse.testutil;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -19,14 +20,18 @@ public class MockSocket extends Socket {
   private String host;
   private boolean closed;
 
-  public MockSocket() throws Exception {
-    PipedInputStream serverInput = new PipedInputStream();
-    @SuppressWarnings("unused")
-    PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
-    PipedInputStream clientInput = new PipedInputStream();
-    PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
-    input = serverInput;
-    output = serverOutput;
+  public MockSocket() {
+    try {
+      PipedInputStream serverInput = new PipedInputStream();
+      @SuppressWarnings("unused")
+      PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
+      PipedInputStream clientInput = new PipedInputStream();
+      PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
+      input = serverInput;
+      output = serverOutput;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public MockSocket(String input) {
@@ -62,10 +67,14 @@ public class MockSocket extends Socket {
     return closed;
   }
 
-  public String getOutput() throws Exception {
-    if (output instanceof ByteArrayOutputStream)
-      return ((ByteArrayOutputStream) output).toString("UTF-8");
-    else
+  public String getOutput() {
+    if (output instanceof ByteArrayOutputStream) {
+      try {
+        return ((ByteArrayOutputStream) output).toString("UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException(e);
+      }
+    } else
       return "";
   }
 

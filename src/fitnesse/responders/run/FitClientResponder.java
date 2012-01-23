@@ -39,21 +39,25 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     return new PuppetResponse(this);
   }
 
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void readyToSend(ResponseSender sender) {
     Socket socket = sender.getSocket();
     WikiPagePath pagePath = PathParser.parse(resource);
-    if (!crawler.pageExists(context.root, pagePath))
-      FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
-    else {
-      page = crawler.getPage(context.root, pagePath);
-      PageData data = page.getData();
+    try {
+      if (!crawler.pageExists(context.root, pagePath))
+	      FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
+      else {
+	      page = crawler.getPage(context.root, pagePath);
+	      PageData data = page.getData();
 
-      if (data.hasAttribute("Suite"))
-        handleSuitePage(socket, page, context.root);
-      else if (data.hasAttribute("Test"))
-        handleTestPage(socket, data);
-      else
-        FitProtocol.writeData(notATestMessage(), socket.getOutputStream());
+      	if (data.hasAttribute("Suite"))
+      	  handleSuitePage(socket, page, context.root);
+      	else if (data.hasAttribute("Test"))
+      	  handleTestPage(socket, data);
+      	else
+      	  FitProtocol.writeData(notATestMessage(), socket.getOutputStream());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
     sender.close();
   }

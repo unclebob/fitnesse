@@ -11,7 +11,7 @@ public class PagePointer {
     this.path = path;
   }
 
-  public WikiPage getPage() throws Exception {
+  public WikiPage getPage() {
     return root.getPageCrawler().getPage(root, path);
   }
 }

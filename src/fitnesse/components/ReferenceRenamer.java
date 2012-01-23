@@ -18,7 +18,7 @@ public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeW
     root.getPageCrawler().traverse(root, this);
   }
 
-  public void processPage(WikiPage currentPage) throws Exception {
+  public void processPage(WikiPage currentPage) {
     PageData data = currentPage.getData();
     String content = data.getContent();
 

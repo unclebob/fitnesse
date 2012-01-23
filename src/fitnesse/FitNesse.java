@@ -7,6 +7,7 @@ import fitnesse.socketservice.SocketService;
 import fitnesse.testutil.MockSocket;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
@@ -71,7 +72,7 @@ public class FitNesse {
     return false;
   }
 
-  public void stop() throws Exception {
+  public void stop() throws IOException {
     if (theService != null) {
       theService.close();
       theService = null;

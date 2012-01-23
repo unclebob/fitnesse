@@ -109,12 +109,12 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
+  public static String makeNormalWikiPageContent(PageData pageData) {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
     return makePageHtmlWithHeaderAndFooter(pageData);
   }
 
-  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) throws Exception {
+  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(pageData.getHeaderPageHtml());
     buffer.append(pageData.getHtml());

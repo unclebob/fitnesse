@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class WikiSourcePageTest {
 
     @Test
-    public void getsChildren() throws Exception {
+    public void getsChildren() {
         TestRoot root = new TestRoot();
         WikiPage page = root.makePage("PageOne");
         root.makePage(page, "PageTwo");
@@ -29,7 +29,7 @@ public class WikiSourcePageTest {
     }
 
     @Test
-    public void getsVirtualChildren() throws Exception {
+    public void getsVirtualChildren() {
         TestRoot root = new TestRoot();
         WikiPage page = root.makePage("PageOne");
         root.makePage(page, "PageTwo");
@@ -54,19 +54,19 @@ public class WikiSourcePageTest {
             this.mockVirtualPage = mockVirtualPage;
         }
 
-        public List<WikiPage> getChildren() throws Exception {
+        public List<WikiPage> getChildren() {
           return mockVirtualPage.getChildren();
         }
     }
 
     @Test
-    public void getsUrlForPage() throws Exception {
+    public void getsUrlForPage() {
         WikiPage test = new TestRoot().makePage("MyPage");
         assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
     }
 
     @Test
-    public void getsUrlForProxyPage() throws Exception {
+    public void getsUrlForProxyPage() {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"));
         assertEquals("http://host:9999/RealPage.WikiPath", new WikiSourcePage(virtualPage).makeUrl("WikiPath"));

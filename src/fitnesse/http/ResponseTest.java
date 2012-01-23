@@ -60,7 +60,7 @@ public class ResponseTest {
       super(formatString);
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
+    public void readyToSend(ResponseSender sender) {
     }
 
     protected void addSpecificHeaders() {

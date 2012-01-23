@@ -104,16 +104,16 @@ public class FileUtil {
         }
     }
 
-  public static String getFileContent(String path) throws Exception {
+  public static String getFileContent(String path) throws IOException {
     File input = new File(path);
     return getFileContent(input);
   }
 
-  public static String getFileContent(File input) throws Exception {
+  public static String getFileContent(File input) throws IOException {
     return new String(getFileBytes(input));
   }
 
-  public static byte[] getFileBytes(File input) throws Exception {
+  public static byte[] getFileBytes(File input) throws IOException {
     long size = input.length();
     FileInputStream stream = null;
     try {
@@ -219,4 +219,35 @@ public class FileUtil {
     method.setAccessible(true);
     method.invoke(sysloader, new Object[]{u});
   }
+
+  public static void close(Writer writer) {
+    if (writer != null) {
+      try {
+        writer.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close writer", e);
+      }
+    }
+  }
+
+  public static void close(OutputStream output) {
+    if (output != null) {
+      try {
+        output.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close outputstream", e);
+      }
+    }
+  }
+
+  public static void close(InputStream input) {
+    if (input != null) {
+      try {
+        input.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close inputstream", e);
+      }
+    }
+  }
+
 }

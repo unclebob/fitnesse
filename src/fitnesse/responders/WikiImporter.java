@@ -137,7 +137,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
       configureAutoUpdateSetting(importProps, data, page);
   }
 
-  private WikiPagePath relativePath(WikiPage childPage) throws Exception {
+  private WikiPagePath relativePath(WikiPage childPage) {
     return crawler.getFullPath(childPage).subtractFromFront(contextPath);
   }
 
@@ -239,7 +239,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return importCount;
   }
 
-  public void parseUrl(String urlString) throws Exception {
+  public void parseUrl(String urlString) throws MalformedURLException {
     URL url;
     try {
       url = new URL(urlString);
@@ -276,7 +276,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return orphans;
   }
 
-  public void processPage(WikiPage page) throws Exception {
+  public void processPage(WikiPage page) {
     WikiPagePath relativePath = relativePath(page);
     pageCatalog.add(relativePath);
   }

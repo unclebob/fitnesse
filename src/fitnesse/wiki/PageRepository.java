@@ -18,7 +18,7 @@ public class PageRepository {
         this.fileSystem = fileSystem;
     }
 
-    public WikiPage makeChildPage(String name, FileSystemPage parent) throws Exception {
+    public WikiPage makeChildPage(String name, FileSystemPage parent) {
       String path = parent.getFileSystemPath() + "/" + name;
       if (hasContentChild(path)) {
           return new FileSystemPage(name, parent, fileSystem);
@@ -46,7 +46,7 @@ public class PageRepository {
         return false;
     }
 
-    public List<WikiPage> findChildren(ExternalSuitePage parent) throws Exception {
+    public List<WikiPage> findChildren(ExternalSuitePage parent) {
         List<WikiPage> children = new ArrayList<WikiPage>();
         for (String child: fileSystem.list(parent.getFileSystemPath())) {
             String childPath = parent.getFileSystemPath() + "/" + child;

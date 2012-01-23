@@ -36,7 +36,7 @@ public class HtmlPage {
     this.templateFileName = templateFileName;
   }
 
-  protected VelocityContext updateVelocityContext() throws Exception {
+  protected VelocityContext updateVelocityContext() {
     velocityContext.put("title", title);
     velocityContext.put("bodyClass", bodyClass);
     makeSidebarSection();
@@ -62,7 +62,7 @@ public class HtmlPage {
     velocityContext.put(key, value);
   }
   
-  public String html() throws Exception {
+  public String html() {
     VelocityContext context = updateVelocityContext();
     return VelocityFactory.translateTemplate(context, templateFileName);
   }
@@ -76,7 +76,7 @@ public class HtmlPage {
     this.pageTitle = pageTitle;
   }
 
-  public void divide() throws Exception {
+  public void divide() {
     String html = html();
     int breakIndex = html.indexOf(BreakPoint);
     preDivision = html.substring(0, breakIndex);
@@ -87,7 +87,7 @@ public class HtmlPage {
     bodyClass = clazz;
   }
   
-  public void makeSidebarSection() throws Exception {
+  public void makeSidebarSection() {
     velocityContext.put("actions", actions);
     if (actions != null) {
       velocityContext.put("localPath", actions.getLocalPageName());

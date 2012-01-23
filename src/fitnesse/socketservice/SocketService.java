@@ -28,12 +28,16 @@ public class SocketService {
     serviceThread.start();
   }
 
-  public void close() throws Exception {
+  public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;
     serverSocket.close();
-    serviceThread.join();
-    waitForServerThreads();
+    try {
+      serviceThread.join();
+      waitForServerThreads();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   private void waitForServiceThreadToStart() {

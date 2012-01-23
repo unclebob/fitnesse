@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class SimpleResponse extends Response {
@@ -16,10 +17,13 @@ public class SimpleResponse extends Response {
   }
 
   @Override
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void readyToSend(ResponseSender sender) {
     byte[] bytes = getBytes();
-    sender.send(bytes);
-    sender.close();
+    try {
+      sender.send(bytes);
+    } finally {
+      sender.close();
+    }
   }
 
   public void setContent(String value) throws Exception {

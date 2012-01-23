@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
 import util.RegexTestCase;
@@ -10,15 +12,19 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
   private String text;
   private boolean closed = false;
 
-  public void send(byte[] bytes) throws Exception {
-    text = new String(bytes, "UTF-8");
+  public void send(byte[] bytes) {
+    try {
+      text = new String(bytes, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void close() {
     closed = true;
   }
 
-  public Socket getSocket() throws Exception {
+  public Socket getSocket() {
     return null;
   }
 

@@ -8,43 +8,43 @@ import java.util.List;
 
 
 public interface WikiPage extends Serializable, Comparable<Object> {
-  public WikiPage getParent() throws Exception;
+  WikiPage getParent();
 
-  public WikiPage getParentForVariables() throws Exception;
+  WikiPage getParentForVariables();
 
-  public void setParentForVariables(WikiPage parent);
+  void setParentForVariables(WikiPage parent);
 
-  public WikiPage addChildPage(String name) throws Exception;
+  WikiPage addChildPage(String name);
 
-  public boolean hasChildPage(String name) throws Exception;
+  boolean hasChildPage(String name);
 
-  public WikiPage getChildPage(String name) throws Exception;
+  WikiPage getChildPage(String name);
 
-  public void removeChildPage(String name) throws Exception;
+  void removeChildPage(String name);
 
-  public List<WikiPage> getChildren() throws Exception;
+  List<WikiPage> getChildren();
 
-  public String getName();
+  String getName();
 
-  public PageData getData() throws Exception;
+  PageData getData();
 
-  public PageData getDataVersion(String versionName) throws Exception;
+  PageData getDataVersion(String versionName);
 
-  public VersionInfo commit(PageData data) throws Exception;
+  VersionInfo commit(PageData data);
 
-  public PageCrawler getPageCrawler();
+  PageCrawler getPageCrawler();
 
-  public WikiPage getHeaderPage() throws Exception;
+  WikiPage getHeaderPage();
 
-  public WikiPage getFooterPage() throws Exception;
+  WikiPage getFooterPage();
   //TODO Delete these method alone with ProxyPage when the time is right.
-  public boolean hasExtension(String extensionName);
+  boolean hasExtension(String extensionName);
 
-  public Extension getExtension(String extensionName);
+  Extension getExtension(String extensionName);
 
-  public String getHelpText() throws Exception;
+  String getHelpText();
 
-  public boolean isOpenInNewWindow();
+  boolean isOpenInNewWindow();
 }
 
 

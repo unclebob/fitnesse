@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.velocity.VelocityContext;
@@ -26,7 +27,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   private String rootPath;
   private HtmlPage htmlPage;
 
-  public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws Exception {
+  public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws IOException {
     this.context = context;
     this.host = host;
     this.rootPath = rootPath;
@@ -39,22 +40,22 @@ public class HtmlResultFormatter implements ResultFormatter {
     System.out.println("Built HtmlResultFormatter for " + rootPath);
   }
 
-  private SuiteHtmlFormatter createCustomFormatter() throws Exception {
+  private SuiteHtmlFormatter createCustomFormatter() {
     SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context) {
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) throws IOException {
         buffer.append(output);
       }
       
       @Override
-      protected HtmlPage buildHtml(String pageType) throws Exception {
+      protected HtmlPage buildHtml(String pageType) {
         return htmlPage;
       }
     };
     return formatter;
   }
   
-  private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
+  private void createPage(HtmlPageFactory pageFactory, String rootPath) {
     htmlPage = context.htmlPageFactory.newPage();
 
     htmlPage.setTitle(rootPath);

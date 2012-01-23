@@ -8,19 +8,19 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 
 public class WhereUsedResponder extends ResultResponder {
-  protected String getPageFooterInfo(int hits) throws Exception {
+  protected String getPageFooterInfo(int hits) {
     //return HtmlUtil.makeLink(getRenderedPath(), page.getName()).html() + " is used in " + hits + " page(s).";
     HtmlTag tag = HtmlUtil.makeLink(getRenderedPath(), page.getName());
     tag.tail = " is used in " + hits + " page(s).";
     return tag.html().replaceAll(HtmlElement.endl, "");
   }
 
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     super.startSearching();
     new WhereUsedPageFinder(page, this).search(root);
   }
 
-  protected String getTitle() throws Exception {
+  protected String getTitle() {
     return "Where Used Results";
   }
 

@@ -51,10 +51,10 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
     }
   }
 
-  public void pageImported(WikiPage localPage) throws Exception {
+  public void pageImported(WikiPage localPage) {
   }
 
-  public void pageImportError(WikiPage localPage, Exception e) throws Exception {
+  public void pageImportError(WikiPage localPage, Exception e) {
     e.printStackTrace();
   }
 

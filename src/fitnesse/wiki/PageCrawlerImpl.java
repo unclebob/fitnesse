@@ -14,7 +14,7 @@ public class PageCrawlerImpl implements PageCrawler {
   protected PageCrawlerImpl() {
   }
 
-  public WikiPage getPage(WikiPage context, WikiPagePath path) throws Exception {
+  public WikiPage getPage(WikiPage context, WikiPagePath path) {
     if (path == null)
       return null;
 
@@ -45,7 +45,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return path.isAbsolute() && path.isEmpty();
   }
 
-  protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest) throws Exception {
+  protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest) {
     rest.addNameToFront(first);
     if (deadEndStrategy != null)
       return deadEndStrategy.getPageAfterDeadEnd(context, rest, this);
@@ -57,11 +57,11 @@ public class PageCrawlerImpl implements PageCrawler {
     deadEndStrategy = strategy;
   }
 
-  public boolean pageExists(WikiPage context, WikiPagePath path) throws Exception {
+  public boolean pageExists(WikiPage context, WikiPagePath path) {
     return getPage(context, path) != null;
   }
 
-  public WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) throws Exception {
+  public WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) {
     WikiPagePath fullPathOfChild;
     if (childPath.isAbsolute())
       fullPathOfChild = childPath.relativePath();
@@ -72,11 +72,11 @@ public class PageCrawlerImpl implements PageCrawler {
     return fullPathOfChild;
   }
 
-  public WikiPagePath getFullPath(WikiPage page) throws Exception {
+  public WikiPagePath getFullPath(WikiPage page) {
     return new WikiPagePath(page);
   }
 
-  public WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws Exception {
+  public WikiPage addPage(WikiPage context, WikiPagePath path, String content) {
     WikiPage page = addPage(context, path);
     if (page != null) {
       PageData data = new PageData(page);
@@ -86,11 +86,11 @@ public class PageCrawlerImpl implements PageCrawler {
     return page;
   }
 
-  public WikiPage addPage(WikiPage context, WikiPagePath path) throws Exception {
+  public WikiPage addPage(WikiPage context, WikiPagePath path) {
     return getOrMakePage(context, path.getNames());
   }
 
-  private WikiPage getOrMakePage(WikiPage context, List<?> namePieces) throws Exception {
+  private WikiPage getOrMakePage(WikiPage context, List<?> namePieces) {
     String first = (String) namePieces.get(0);
     List<?> rest = namePieces.subList(1, namePieces.size());
     WikiPage current;
@@ -103,7 +103,7 @@ public class PageCrawlerImpl implements PageCrawler {
     return getOrMakePage(current, rest);
   }
 
-  public String getRelativeName(WikiPage base, WikiPage page) throws Exception {
+  public String getRelativeName(WikiPage base, WikiPage page) {
     StringBuffer qualName = new StringBuffer();
     for (WikiPage p = page; !isRoot(p) && p != base; p = p.getParent()) {
       if (p != page)
@@ -114,7 +114,7 @@ public class PageCrawlerImpl implements PageCrawler {
   }
 
   //TODO this doesn't belong here
-  public static WikiPage getClosestInheritedPage(String pageName, WikiPage context) throws Exception {
+  public static WikiPage getClosestInheritedPage(String pageName, WikiPage context) {
     List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(context);
     for (WikiPage ancestor : ancestors) {
       WikiPage namedPage = ancestor.getChildPage(pageName);
@@ -124,19 +124,19 @@ public class PageCrawlerImpl implements PageCrawler {
     return null;
   }
 
-  public boolean isRoot(WikiPage page) throws Exception {
+  public boolean isRoot(WikiPage page) {
     WikiPage parent = page.getParent();
     return parent == null || parent == page;
   }
 
-  public WikiPage getRoot(WikiPage page) throws Exception {
+  public WikiPage getRoot(WikiPage page) {
     if (isRoot(page))
       return page;
     else
       return getRoot(page.getParent());
   }
 
-  public void traverse(WikiPage context, TraversalListener listener) throws Exception {
+  public void traverse(WikiPage context, TraversalListener listener) {
     if (context.getClass() == SymbolicPage.class)
       return;
     //TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.
@@ -154,7 +154,7 @@ public class PageCrawlerImpl implements PageCrawler {
      It was a gross error to have the whole wiki know that references
      were relative to the parent instead of the page.
      */
-  public WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception {
+  public WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) {
     PageCrawler crawler = page.getPageCrawler();
     if (pathRelativeToSibling.isSubPagePath()) {
       WikiPagePath relativePath = new WikiPagePath(pathRelativeToSibling);
@@ -174,14 +174,14 @@ public class PageCrawlerImpl implements PageCrawler {
     }
   }
 
-    public WikiPage findAncestorWithName(WikiPage page, String name) throws Exception {
+    public WikiPage findAncestorWithName(WikiPage page, String name) {
         for (WikiPage current = page.getParent(); !isRoot(current); current = current.getParent()) {
           if (current.getName().equals(name)) return current;
         }
         return null;
     }
 
-  public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) throws Exception {
+  public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) {
     List<WikiPage> uncles = new ArrayList<WikiPage>();
     List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(nephew);
     for (WikiPage ancestor : ancestors) {
