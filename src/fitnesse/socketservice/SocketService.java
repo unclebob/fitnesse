@@ -15,7 +15,7 @@ public class SocketService {
   private SocketServer server = null;
   private LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan=false;
-  public SocketService(int port, SocketServer server) throws Exception {
+  public SocketService(int port, SocketServer server) throws IOException {
     this.server = server;
     serverSocket = new ServerSocket(port);
     serviceThread = new Thread(

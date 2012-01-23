@@ -23,7 +23,7 @@ public class SlimClient {
   private String hostName;
   private int port;
 
-  public void close() throws Exception {
+  public void close() throws IOException {
     reader.close();
     writer.close();
     client.close();
@@ -63,7 +63,7 @@ public class SlimClient {
     return slimServerVersionMessage.startsWith("Slim -- V");
   }
 
-  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws Exception {
+  public Map<String, Object> invokeAndGetResponse(List<Object> statements) throws IOException {
     if (statements.size() == 0)
       return new HashMap<String, Object>();
     String instructions = ListSerializer.serialize(statements);

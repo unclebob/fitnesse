@@ -9,6 +9,7 @@ import fitnesse.responders.run.SocketSeeker;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.MockCommandRunner;
 
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
@@ -30,12 +31,16 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     this(listener, command, port, null, dealer, fastTest);
   }
 
-  public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest)
-    throws Exception {
+  public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) {
     super(listener);
     this.fastTest = fastTest;
     ticketNumber = dealer.seekingSocket(this);
-    String hostName = java.net.InetAddress.getLocalHost().getHostName();
+    String hostName;
+    try {
+      hostName = java.net.InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
     String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
     String commandLine = command + SPACE + fitArguments;
     if (fastTest) {
@@ -54,7 +59,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
   }
 
   //For testing only.  Makes responder faster.
-  void createFitServer(String args) throws Exception {
+  void createFitServer(String args) {
     final String fitArgs = args;
     Runnable fastFitServerRunnable = new Runnable() {
       public void run() {
@@ -70,7 +75,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     fastFitServer.start();
   }
 
-  private boolean tryCreateFitServer(String args) throws Exception {
+  private boolean tryCreateFitServer(String args) {
     try {
       FitServer.main(args.trim().split(" "));
       return true;
@@ -120,7 +125,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
   }
 
-  public void join() throws Exception {
+  public void join() {
     try {
       if (fastTest) {
         fastFitServer.join();
@@ -136,7 +141,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
   }
 
-  public void kill() throws Exception {
+  public void kill() {
     super.kill();
     killVigilantThreads();
     commandRunner.kill();

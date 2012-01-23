@@ -8,6 +8,7 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import util.TimeMeasurement;
@@ -22,24 +23,24 @@ public class TestTextFormatter extends BaseFormatter {
   public void writeHead(String pageType) throws Exception {
   }
 
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     response.add(String.format("\nStarting Test System: %s using %s.\n", testSystemName, testRunner));
   }
 
-  public void newTestStarted(TestPage page, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage page, TimeMeasurement timeMeasurement) {
   }
 
-  private String getPath(WikiPage page) throws Exception {
+  private String getPath(WikiPage page) {
     return PathParser.render(page.getPageCrawler().getFullPath(page));
   }
 
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) {
   }
 
-  public void testComplete(TestPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage page, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(page, summary, timeMeasurement);
     String timeString = new SimpleDateFormat("HH:mm:ss").format(timeMeasurement.startedAtDate());
     response.add(String.format("%s %s R:%-4d W:%-4d I:%-4d E:%-4d %s\t(%s)\t%.03f seconds\n",
@@ -57,7 +58,7 @@ public class TestTextFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     super.allTestingComplete(totalTimeMeasurement);
     response.add(String.format("--------\n%d Tests,\t%d Failures\t%.03f seconds.\n", testCount, failCount, totalTimeMeasurement.elapsedSeconds()));
   }

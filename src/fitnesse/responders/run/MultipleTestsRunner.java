@@ -9,6 +9,7 @@ import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.*;
 
 import util.TimeMeasurement;
@@ -88,13 +89,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   
   private boolean useManualStartForTestSystem() {
     if (isRemoteDebug) {
-      try {
-        String useManualStart = page.getData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
-        return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
-      } 
-      catch (Exception e) {
-          throw new RuntimeException(e);
-      }
+      String useManualStart = page.getData().getVariable("MANUALLY_START_TEST_RUNNER_ON_DEBUG");
+      return (useManualStart != null && useManualStart.toLowerCase().equals("true"));
     }
     return false;
   }
@@ -219,7 +215,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     classPathElements.addAll(pathElements);
   }
 
-  public void acceptOutputFirst(String output) throws Exception {
+  public void acceptOutputFirst(String output) throws IOException {
     TestPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
     boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
     if (isNewTest) {
@@ -228,13 +224,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     resultsListener.testOutputChunk(output);
   }
 
-  void startingNewTest(TestPage test) throws Exception {
+  void startingNewTest(TestPage test) throws IOException {
     currentTest = test;
     currentTestTime = new TimeMeasurement().start();
     resultsListener.newTestStarted(currentTest, currentTestTime);
   }
   
-  public void testComplete(TestSummary testSummary) throws Exception {
+  public void testComplete(TestSummary testSummary) throws IOException {
     TestPage testPage = processingQueue.removeFirst();
     resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
   }
@@ -255,7 +251,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return !isStopped;
   }
 
-  public void stop() throws Exception {
+  public void stop() throws IOException {
     boolean wasNotStopped = isNotStopped();
     synchronized (this) {
       isStopped = true;

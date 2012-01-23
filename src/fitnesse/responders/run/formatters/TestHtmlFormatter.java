@@ -36,7 +36,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     super(context, null);
   }
 
-  protected abstract void writeData(String output) throws IOException;
+  protected abstract void writeData(String output);
 
   @Override
   public void writeHead(String pageType) throws IOException {
@@ -53,7 +53,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return testSummaryDiv;
   }
 
-  protected void updateSummaryDiv(String html) throws Exception {
+  protected void updateSummaryDiv(String html) {
     writeData(HtmlUtil.makeReplaceElementScript("test-summary", html).html());
   }
 
@@ -62,30 +62,28 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     writeData(getPage().getData().getHeaderPageHtml());
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-    throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 
   @Override
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) throws IOException {
     writeData(output);
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
-    throws Exception {
+  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(testPage, testSummary, timeMeasurement);
     latestTestTime = timeMeasurement;
     
     processTestResults(getRelativeName(testPage), testSummary);
   }
 
-  protected String getRelativeName(TestPage testPage) throws Exception {
+  protected String getRelativeName(TestPage testPage) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
     if ("".equals(relativeName)) {
@@ -94,17 +92,17 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     return relativeName;
   }
 
-  public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
+  public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
     getAssertionCounts().add(testSummary);
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     this.log = log;
     addStopLink(stopResponderId);
   }
 
-  private void addStopLink(String stopResponderId) throws Exception {
+  private void addStopLink(String stopResponderId) {
     String link = "?responder=stoptest&id=" + stopResponderId;
 
     HtmlTag status = new HtmlTag("div");
@@ -119,7 +117,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     writeData(status.html());
   }
 
-  private void removeStopTestLink() throws Exception {
+  private void removeStopTestLink() {
     HtmlTag script = HtmlUtil.makeReplaceElementScript("stop-test", "");
     writeData(script.html());
   }
@@ -138,7 +136,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     super.allTestingComplete(totalTimeMeasurement);
     removeStopTestLink();
     publishAndAddLog();
@@ -146,10 +144,10 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     close();
   }
 
-  protected void close() throws Exception {
+  protected void close() {
   }
 
-  protected void finishWritingOutput() throws Exception {
+  protected void finishWritingOutput() throws IOException {
     writeData(testSummary());
     writeData("<br/><div class=\"footer\">\n");
     writeData(getPage().getData().getFooterPageHtml());
@@ -158,7 +156,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
       writeData(htmlPage.postDivision);
   }
 
-  protected void publishAndAddLog() throws Exception {
+  protected void publishAndAddLog() throws IOException {
     if (log != null) {
       log.publish();
       writeData(executionStatus(log));
@@ -177,7 +175,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
       return "pass";
   }
 
-  public String executionStatus(CompositeExecutionLog logs) throws Exception {
+  public String executionStatus(CompositeExecutionLog logs) {
     return logs.executionStatusHtml();
   }
 

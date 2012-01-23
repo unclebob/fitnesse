@@ -212,7 +212,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
-    public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
+    public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();

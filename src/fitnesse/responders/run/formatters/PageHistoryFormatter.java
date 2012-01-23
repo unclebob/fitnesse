@@ -1,5 +1,7 @@
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
@@ -15,7 +17,7 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage testedPage, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage testedPage, TimeMeasurement timeMeasurement) {
     testResponse = new TestExecutionReport();
     writeHead(testedPage.getSourcePage());
     historyPage = testedPage.getSourcePage();
@@ -23,13 +25,13 @@ public class PageHistoryFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(test, testSummary, timeMeasurement);
     writeResults();
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
     setTotalRunTimeOnReport(totalTimeMeasurement);
   }
 

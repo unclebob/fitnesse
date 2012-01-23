@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,13 +30,7 @@ public class TestSystemGroup {
     return log;
   }
 
-  public void bye() throws Exception {
-    for (TestSystem testSystem : testSystems.values()) {
-      testSystem.bye();
-    }
-  }
-
-  public void kill() throws Exception {
+  public void kill() throws IOException {
     for (TestSystem testSystem : testSystems.values()) {
       testSystem.kill();
     }

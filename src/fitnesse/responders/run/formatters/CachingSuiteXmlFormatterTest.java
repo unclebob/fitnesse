@@ -81,7 +81,7 @@ public class CachingSuiteXmlFormatterTest {
   private CachingSuiteXmlFormatter newNonWritingCachingSuiteXmlFormatter() throws Exception {
     return new CachingSuiteXmlFormatter(context,root, null) {
       @Override
-      protected void writeOutSuiteXML() throws Exception {
+      protected void writeOutSuiteXML() {
       }
     };
   }

@@ -18,16 +18,16 @@ public class ClassPathBuilder extends InheritedItemBuilder {
   private StringBuffer pathsString;
   private Set<String> addedPaths;
 
-  public String getClasspath(WikiPage page) throws Exception {
+  public String getClasspath(WikiPage page){
     List<String> paths = getInheritedPathElements(page, new HashSet<WikiPage>());
     return createClassPathString(paths, getPathSeparator(page));
   }
 
-  public String getPathSeparator(WikiPage page) throws Exception {
+  public String getPathSeparator(WikiPage page) {
     return TestSystem.getPathSeparator(page.getData());
   }
 
-  public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) throws Exception {
+  public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) {
     return getInheritedItems(page, visitedPages);
   }
 
@@ -127,7 +127,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
       pathsString.append(separator);
   }
 
-  protected List<String> getItemsFromPage(WikiPage page) throws Exception {
+  protected List<String> getItemsFromPage(WikiPage page) {
     return page.getData().getClasspaths();
   }
 }

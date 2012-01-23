@@ -32,7 +32,7 @@ public class CompositeExecutionLog {
     logs.put(testSystemName, executionLog);
   }
 
-  public void publish() throws Exception {
+  public void publish() {
     String content = buildLogContent();
 
     WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
@@ -41,7 +41,7 @@ public class CompositeExecutionLog {
     errorLogPage.commit(data);
   }
 
-  private String buildLogContent() throws Exception {
+  private String buildLogContent() {
     StringBuffer logContent = new StringBuffer();
     for (String testSystemName : logs.keySet()) {
       logContent.append(String.format("!3 !-%s-!\n", testSystemName));
@@ -50,7 +50,7 @@ public class CompositeExecutionLog {
     return logContent.toString();
   }
 
-  public String executionStatusHtml() throws Exception {
+  public String executionStatusHtml() {
     for (ExecutionLog log : logs.values())
       if (log.exceptionCount() != 0)
         return ExecutionLog.makeExecutionStatusLink(errorLogPageName, ExecutionStatus.ERROR);

@@ -43,8 +43,12 @@ public class HtmlResultFormatter implements ResultFormatter {
   private SuiteHtmlFormatter createCustomFormatter() {
     SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context) {
       @Override
-      protected void writeData(String output) throws IOException {
-        buffer.append(output);
+      protected void writeData(String output) {
+        try {
+          buffer.append(output);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
       
       @Override

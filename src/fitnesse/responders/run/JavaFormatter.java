@@ -108,7 +108,7 @@ public class JavaFormatter extends BaseFormatter {
 
   }
 
-  public String getFullPath(final WikiPage wikiPage) throws Exception {
+  public String getFullPath(final WikiPage wikiPage) {
     return new WikiPagePath(wikiPage).toString();
   }
 
@@ -116,18 +116,17 @@ public class JavaFormatter extends BaseFormatter {
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
     if (listener != null)
       listener.newTestStarted(test, timeMeasurement);
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
-      throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     String fullPath = getFullPath(test.getSourcePage());
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -143,13 +142,12 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) throws IOException {
     resultsRepository.write(output);
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-      throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 
   private ResultsRepository resultsRepository;
@@ -185,7 +183,7 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
     if (listener != null)

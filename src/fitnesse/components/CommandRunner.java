@@ -40,7 +40,7 @@ public class CommandRunner {
     this.environmentVariables = environmentVariables;
   }
 
-  public void asynchronousStart() throws Exception {
+  public void asynchronousStart() throws IOException {
     Runtime rt = Runtime.getRuntime();
     timeMeasurement.start();
     String[] environmentVariables = determineEnvironment();
@@ -73,19 +73,23 @@ public class CommandRunner {
     join();
   }
 
-  public void join() throws Exception {
+  public void join() {
     waitForDeathOf(process);
     timeMeasurement.stop();
     exitCode = process.exitValue();
   }
 
-  private void waitForDeathOf(Process process) throws Exception {
+  private void waitForDeathOf(Process process) {
     int timeStep = 100;
-    for (int maxDelay = 2000; maxDelay > 0; maxDelay -= timeStep) {
-      if (isDead(process)) {
-        return;
+    try {
+      for (int maxDelay = 2000; maxDelay > 0; maxDelay -= timeStep) {
+        if (isDead(process)) {
+          return;
+        }
+        Thread.sleep(timeStep);
       }
-      Thread.sleep(timeStep);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
     System.err.println("Could not detect death of command line test runner.");
   }
@@ -99,7 +103,7 @@ public class CommandRunner {
     }
   }
 
-  public void kill() throws Exception {
+  public void kill() {
     if (process != null) {
       process.destroy();
       join();
@@ -150,7 +154,7 @@ public class CommandRunner {
     return timeMeasurement.elapsed();
   }
 
-  protected void sendInput() throws Exception {
+  protected void sendInput() {
     Thread thread = new Thread() {
       public void run() {
         try {
@@ -168,8 +172,11 @@ public class CommandRunner {
       }
     };
     thread.start();
-    thread.join();
-
+    try {
+      thread.join();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void readOutput(InputStream input, StringBuffer buffer) {

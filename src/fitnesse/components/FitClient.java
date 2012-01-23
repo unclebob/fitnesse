@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -24,11 +25,11 @@ public class FitClient {
   protected volatile boolean killed = false;
   protected Thread fitListeningThread;
 
-  public FitClient(TestSystemListener listener) throws Exception {
+  public FitClient(TestSystemListener listener) {
     this.listener = listener;
   }
 
-  public void acceptSocket(Socket socket) throws Exception {
+  public void acceptSocket(Socket socket) throws IOException, InterruptedException {
     checkForPulse();
     fitSocket = socket;
     fitInput = fitSocket.getOutputStream();
@@ -39,24 +40,28 @@ public class FitClient {
     fitListeningThread.start();
   }
 
-  public void send(String data) throws Exception {
+  public void send(String data) throws IOException, InterruptedException {
     checkForPulse();
     FitProtocol.writeData(data, fitInput);
     sent++;
   }
 
-  public void done() throws Exception {
+  public void done() throws IOException, InterruptedException {
     checkForPulse();
     FitProtocol.writeSize(0, fitInput);
     isDoneSending = true;
   }
 
-  public void join() throws Exception {
+  public void join() {
     if (fitListeningThread != null)
-      fitListeningThread.join();
+      try {
+        fitListeningThread.join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
   }
 
-  public void kill() throws Exception {
+  public void kill() {
     killed = true;
     if (fitListeningThread != null)
       fitListeningThread.interrupt();
