@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +18,13 @@ public class UpdaterImplementation extends UpdaterBase {
   private ArrayList<String> updateList = new ArrayList<String>();
   private String fitNesseVersion = FitNesse.VERSION.toString();
 
-  public UpdaterImplementation(FitNesseContext context) throws Exception {
+  public UpdaterImplementation(FitNesseContext context) throws IOException {
     super(context);
     createUpdateAndDoNotCopyOverLists();
     updates = makeAllUpdates();
   }
 
-  private Update[] makeAllUpdates() throws Exception {
+  private Update[] makeAllUpdates() {
     List<Update> updates = new ArrayList<Update>();
     addAllFilesToBeReplaced(updates);
     addAllFilesThatShouldNotBeCopiedOver(updates);
@@ -31,7 +32,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
-  private void addAllFilesThatShouldNotBeCopiedOver(List<Update> updates) throws Exception {
+  private void addAllFilesThatShouldNotBeCopiedOver(List<Update> updates) {
     for (String nonCopyableFile : updateDoNotCopyOver) {
       String path = getCorrectPathForTheDestination(nonCopyableFile);
       String source = getCorrectPathFromJar(nonCopyableFile);
@@ -39,7 +40,7 @@ public class UpdaterImplementation extends UpdaterBase {
     }
   }
 
-  private void addAllFilesToBeReplaced(List<Update> updates) throws Exception {
+  private void addAllFilesToBeReplaced(List<Update> updates) {
     for (String updateableFile : updateList) {
       String path = getCorrectPathForTheDestination(updateableFile);
       String source = getCorrectPathFromJar(updateableFile);
@@ -74,7 +75,7 @@ public class UpdaterImplementation extends UpdaterBase {
     }
   }
 
-  public void getUpdateFilesFromJarFile() throws Exception {
+  public void getUpdateFilesFromJarFile() throws IOException {
     Update update = new FileUpdate(context.rootPagePath, "Resources/updateList", ".");
     update.doUpdate();
     update = new FileUpdate(this.context.rootPagePath, "Resources/updateDoNotCopyOverList", ".");
@@ -93,7 +94,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
-  private void parseTheFileContentToAList(File updateFileList, ArrayList<String> list) throws Exception {
+  private void parseTheFileContentToAList(File updateFileList, ArrayList<String> list) throws IOException {
     String content = FileUtil.getFileContent(updateFileList);
     String[] filePaths = content.split("\n");
     for (String path : filePaths)
@@ -101,7 +102,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
   }
 
-  public void update() throws Exception {
+  public void update() throws IOException {
     if (shouldUpdate()) {
       System.err.println("Unpacking new version of FitNesse resources.  Please be patient.");
       super.update();

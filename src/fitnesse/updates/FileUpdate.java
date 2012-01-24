@@ -3,7 +3,9 @@
 package fitnesse.updates;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -17,7 +19,7 @@ public class FileUpdate implements Update {
   protected String rootDir;
   protected String filename;
 
-  public FileUpdate(String rootDirectory, String source, String destination) throws Exception {
+  public FileUpdate(String rootDirectory, String source, String destination) {
     this.destination = destination;
     this.source = source;
     rootDir = rootDirectory;
@@ -26,7 +28,7 @@ public class FileUpdate implements Update {
     filename = new File(source).getName();
   }
 
-  public void doUpdate() throws Exception {
+  public void doUpdate() throws IOException {
     makeSureDirectoriesExist();
     copyResource();
   }
@@ -43,7 +45,7 @@ public class FileUpdate implements Update {
     }
   }
 
-  private void copyResource() throws Exception {
+  private void copyResource() throws IOException {
     URL url = getResource(source);
     if (url != null) {
       InputStream input = null;
@@ -62,7 +64,7 @@ public class FileUpdate implements Update {
           output.close();
       }
     } else
-      throw new Exception("Could not load resource: " + source);
+      throw new FileNotFoundException("Could not load resource: " + source);
   }
 
   protected URL getResource(String resource) {
@@ -81,7 +83,7 @@ public class FileUpdate implements Update {
     return "FileUpdate(" + filename + ")";
   }
 
-  public boolean shouldBeApplied() throws Exception {
+  public boolean shouldBeApplied() throws IOException {
     return !destinationFile().exists();
   }
 }
