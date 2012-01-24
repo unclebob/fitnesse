@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import org.w3c.dom.Attr;
@@ -21,11 +23,11 @@ public class XmlWriter {
   private Writer writer;
   private boolean isNewLine;
 
-  public XmlWriter(OutputStream os) throws Exception {
+  public XmlWriter(OutputStream os) throws IOException {
     writer = new OutputStreamWriter(os, "UTF-8");
   }
 
-  public void write(Document doc) throws Exception {
+  public void write(Document doc) throws IOException {
     write("<?xml version=\"1.0\"?>");
     write(endl);
     write(doc.getDocumentElement(), 0);
@@ -35,7 +37,7 @@ public class XmlWriter {
     write(nodes, 0);
   }
 
-  public void write(Element element, int tabs) throws Exception {
+  public void write(Element element, int tabs) throws IOException {
     if (!isNewLine)
       write(endl);
     if (!element.hasChildNodes()) {
@@ -65,24 +67,24 @@ public class XmlWriter {
     return attributeString.toString();
   }
 
-  private void write(NodeList nodes, int tabs) throws Exception {
+  private void write(NodeList nodes, int tabs) throws IOException {
     for (int i = 0; i < nodes.getLength(); i++) {
       Node node = nodes.item(i);
       write(node, tabs);
     }
   }
 
-  private void writeText(Text text) throws Exception {
+  private void writeText(Text text) throws IOException {
     String nodeValue = text.getNodeValue();
     write(nodeValue.trim());
   }
 
-  private void writeCdata(CDATASection cData) throws Exception {
+  private void writeCdata(CDATASection cData) throws IOException {
     String cDataText = "<![CDATA[" + cData.getNodeValue() + "]]>";
     write(cDataText);
   }
 
-  private void write(Node node, int tabs) throws Exception {
+  private void write(Node node, int tabs) throws IOException {
     if (node instanceof Element)
       write((Element) node, tabs);
     else if (node instanceof CDATASection)
@@ -90,15 +92,15 @@ public class XmlWriter {
     else if (node instanceof Text)
       writeText((Text) node);
     else
-      throw new Exception("XmlWriter: unsupported node type: " + node.getClass());
+      throw new IOException("XmlWriter: unsupported node type: " + node.getClass());
   }
 
-  private void writeTabs(int tabs) throws Exception {
+  private void writeTabs(int tabs) throws IOException {
     for (int i = 0; i < tabs; i++)
       write("\t");
   }
 
-  private void write(String value) throws Exception {
+  private void write(String value) throws IOException {
     if (value == null || "".equals(value)) {
       return;
     }
@@ -106,11 +108,11 @@ public class XmlWriter {
     writer.write(value);
   }
 
-  public void flush() throws Exception {
+  public void flush() throws IOException {
     writer.flush();
   }
 
-  public void close() throws Exception {
+  public void close() throws IOException {
     writer.close();
   }
 }

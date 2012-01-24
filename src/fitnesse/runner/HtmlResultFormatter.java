@@ -75,31 +75,31 @@ public class HtmlResultFormatter implements ResultFormatter {
     return href.toString();
   }
 
-  public void acceptResult(PageResult result) throws Exception {
+  public void acceptResult(PageResult result) throws IOException {
     String relativePageName = result.title();
     suiteFormatter.announceStartNewTest(relativePageName, rootPath + "." + relativePageName);
     suiteFormatter.testOutputChunk(result.content());
     suiteFormatter.processTestResults(relativePageName, result.testSummary());
   }
 
-  public void acceptFinalCount(TestSummary testSummary) throws Exception {
+  public void acceptFinalCount(TestSummary testSummary) throws IOException {
     suiteFormatter.testSummary();
     suiteFormatter.finishWritingOutput();
   }
 
-  private void close() throws Exception {
+  private void close() throws IOException {
     if (!closed) {
       suiteFormatter.finishWritingOutput();
       closed = true;
     }
   }
 
-  public int getByteCount() throws Exception {
+  public int getByteCount() throws IOException {
     close();
     return buffer.getSize();
   }
 
-  public InputStream getResultStream() throws Exception {
+  public InputStream getResultStream() throws IOException {
     close();
     return buffer.getInputStream();
   }
