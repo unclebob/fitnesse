@@ -3,8 +3,10 @@ package fitnesse.responders.testHistory;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.slimTables.HtmlTableScanner;
 import org.htmlparser.util.ParserException;
+import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class HistoryComparer {
@@ -27,22 +29,18 @@ public class HistoryComparer {
 
   ArrayList<MatchedPair> matchedTables;
 
-  public String getFileContent(String filePath) {
-    try {
-      return attemptGetFileContent(filePath);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+  public String getFileContent(String filePath) throws IOException, SAXException {
+    return attemptGetFileContent(filePath);
   }
 
-  private String attemptGetFileContent(String filePath) throws Exception {
+  private String attemptGetFileContent(String filePath) throws IOException, SAXException {
     TestExecutionReport report = readTestExecutionReport(filePath);
     if (!exactlyOneReport(report))
       return null;
     return report.getContentsOfReport(0);
   }
 
-  private TestExecutionReport readTestExecutionReport(String filePath) throws Exception {
+  private TestExecutionReport readTestExecutionReport(String filePath) throws IOException, SAXException {
     return new TestExecutionReport().read(new File(filePath));
   }
 
@@ -86,7 +84,7 @@ public class HistoryComparer {
     return true;
   }
 
-  public boolean compare(String firstFilePath, String secondFilePath) throws Exception {
+  public boolean compare(String firstFilePath, String secondFilePath) throws ParserException, IOException, SAXException {
     if (firstFilePath.equals(secondFilePath))
       return false;
     initializeFileContents(firstFilePath, secondFilePath);
@@ -243,7 +241,7 @@ public class HistoryComparer {
     }
   }
 
-  private void initializeFileContents(String firstFilePath, String secondFilePath) throws ParserException {
+  private void initializeFileContents(String firstFilePath, String secondFilePath) throws ParserException, IOException, SAXException {
     String content = getFileContent(firstFilePath);
     firstFileContent = content == null ? "" : content;
     content = getFileContent(secondFilePath);

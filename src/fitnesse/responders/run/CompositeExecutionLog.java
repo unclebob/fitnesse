@@ -18,7 +18,7 @@ public class CompositeExecutionLog {
   private PageCrawler crawler;
   private WikiPage root;
 
-  public CompositeExecutionLog(WikiPage testPage) throws Exception {
+  public CompositeExecutionLog(WikiPage testPage) {
     crawler = testPage.getPageCrawler();
     root = crawler.getRoot(testPage);
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());

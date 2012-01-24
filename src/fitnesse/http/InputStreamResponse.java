@@ -18,21 +18,15 @@ public class InputStreamResponse extends Response {
     super("html");
   }
 
-  public void readyToSend(ResponseSender sender) {
+  public void readyToSend(ResponseSender sender) throws IOException {
     try {
       addStandardHeaders();
       sender.send(makeHttpHeaders().getBytes());
       while (!reader.isEof())
         sender.send(reader.readBytes(1000));
-    } catch (IOException e) {
-      throw new RuntimeException("Error while sending data", e);
     } finally {
-      try {
-        reader.close();
-        sender.close();
-      } catch (IOException e) {
-        throw new RuntimeException("Error while closing streams", e);
-      }
+      reader.close();
+      sender.close();
     }
   }
 
@@ -50,7 +44,8 @@ public class InputStreamResponse extends Response {
   }
 
   public void setBody(File file) throws FileNotFoundException {
-    FileInputStream input = new FileInputStream(file);
+    FileInputStream input;
+    input = new FileInputStream(file);
     int size = (int) file.length();
     setBody(input, size);
   }

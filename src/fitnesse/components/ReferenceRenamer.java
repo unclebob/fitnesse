@@ -14,7 +14,7 @@ public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeW
     this.root = root;
   }
 
-  public void renameReferences() throws Exception {
+  public void renameReferences() {
     root.getPageCrawler().traverse(root, this);
   }
 

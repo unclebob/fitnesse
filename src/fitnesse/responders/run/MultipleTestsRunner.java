@@ -64,13 +64,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
   }
 
-  void allTestingComplete() throws Exception {
+  void allTestingComplete() throws IOException {
     TimeMeasurement completionTimeMeasurement = new TimeMeasurement().start();
     resultsListener.allTestingComplete(totalTestTime.stop());
     completionTimeMeasurement.stop(); // a non-trivial amount of time elapses here
   }
 
-  private void internalExecuteTestPages() throws Exception {
+  private void internalExecuteTestPages() throws IOException, InterruptedException {
     synchronized (this) {
       testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
       stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
@@ -96,13 +96,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
-                                        PagesByTestSystem pagesByTestSystem) throws Exception {
+                                        PagesByTestSystem pagesByTestSystem) throws IOException, InterruptedException {
     List<TestPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
 
     startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
   }
 
-  private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws Exception {
+  private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<TestPage> testSystemPages) throws IOException, InterruptedException {
     TestSystem testSystem = null;
     synchronized (this) {
       if (!isStopped) {
@@ -129,7 +129,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
   }
 
-  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
+  private void executeTestSystemPages(List<TestPage> pagesInTestSystem, TestSystem testSystem) throws IOException, InterruptedException {
     for (TestPage testPage : pagesInTestSystem) {
       addToProcessingQueue(testPage);
       SetupTeardownAndLibraryIncluder.includeSetupsTeardownsAndLibrariesBelowTheSuite(testPage, page);
@@ -146,11 +146,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
       Thread.sleep(50);
   }
 
-  PagesByTestSystem makeMapOfPagesByTestSystem() throws Exception {
+  PagesByTestSystem makeMapOfPagesByTestSystem() {
     return addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
   }
 
-  private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() throws Exception {
+  private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() {
     PagesByTestSystem pagesByTestSystem = new PagesByTestSystem();
 
     for (WikiPage testPage : testPagesToRun) {
@@ -161,7 +161,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return pagesByTestSystem;
   }
 
-  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) throws Exception {
+  private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     TestPage testPage = new TestPage(wikiPage);
     Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), isRemoteDebug);
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
@@ -178,7 +178,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     return pagesForTestSystem;
   }
 
-  private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws Exception {
+  private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) {
     if (testPagesToRun.size() == 0)
       return pagesByTestSystem;
     for (LinkedList<TestPage> pagesForTestSystem : pagesByTestSystem.values())
@@ -196,7 +196,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     totalTestTime = new TimeMeasurement().start();
   }
 
-  public String buildClassPath() throws Exception {
+  public String buildClassPath() {
     final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
     final String pathSeparator = classPathBuilder.getPathSeparator(page);
     List<String> classPathElements = new ArrayList<String>();
@@ -210,7 +210,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
   }
 
   private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
-    throws Exception {
+    {
     List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
     classPathElements.addAll(pathElements);
   }

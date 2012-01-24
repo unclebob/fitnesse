@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.IOException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -14,6 +16,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -31,7 +34,7 @@ public class SaveResponder implements SecureResponder {
   private PageData data;
   private long editTimeStamp;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
@@ -46,7 +49,7 @@ public class SaveResponder implements SecureResponder {
       if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
         return makeBannedContentResponse(context, resource);
       else
-        return saveEdits(request, page);
+        return saveEdits(context, request, page);
     }
   }
 
@@ -61,7 +64,7 @@ public class SaveResponder implements SecureResponder {
     return response;
   }
 
-  private Response saveEdits(Request request, WikiPage page) throws Exception {
+  private Response saveEdits(FitNesseContext context, Request request, WikiPage page) {
     Response response = new SimpleResponse();
     setData();
     VersionInfo commitRecord = page.commit(data);
@@ -76,7 +79,7 @@ public class SaveResponder implements SecureResponder {
     return response;
   }
 
-  private boolean editsNeedMerge() throws Exception {
+  private boolean editsNeedMerge() {
     return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
   }
 
@@ -95,7 +98,7 @@ public class SaveResponder implements SecureResponder {
     return editTimeStamp;
   }
 
-  private WikiPage getPage(String resource, FitNesseContext context) throws Exception {
+  private WikiPage getPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPage page = pageCrawler.getPage(context.root, path);
@@ -104,7 +107,7 @@ public class SaveResponder implements SecureResponder {
     return page;
   }
 
-  private void setData() throws Exception {
+  private void setData() {
     data.setContent(savedContent);
     SaveRecorder.pageSaved(data, ticketId);
     if (user != null)

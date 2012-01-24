@@ -3,6 +3,8 @@
 package fitnesse.responders.files;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -26,7 +28,7 @@ public class FileResponder implements Responder {
   public Date lastModifiedDate;
   public String lastModifiedDateString;
 
-  public static Responder makeResponder(Request request, String rootPath) throws Exception {
+  public static Responder makeResponder(Request request, String rootPath) {
     String resource = request.getResource();
 
     if (fileNameHasSpaces(resource))
@@ -47,7 +49,7 @@ public class FileResponder implements Responder {
     this.requestedFile = requestedFile;
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws FileNotFoundException {
     InputStreamResponse response = new InputStreamResponse();
     determineLastModifiedInfo();
 
@@ -65,8 +67,12 @@ public class FileResponder implements Responder {
     return resource.indexOf("%20") != 0;
   }
 
-  public static String restoreRealSpacesInFileName(String resource) throws Exception {
-    return URLDecoder.decode(resource, "UTF-8");
+  static String restoreRealSpacesInFileName(String resource) {
+    try {
+      return URLDecoder.decode(resource, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   String getResource() {

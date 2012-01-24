@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import java.util.Date;
 
 public interface XmlizerPageHandler {
-  void enterChildPage(WikiPage newPage, Date lastModified) throws Exception;
+  void enterChildPage(WikiPage newPage, Date lastModified);
 
   void exitPage();
 }

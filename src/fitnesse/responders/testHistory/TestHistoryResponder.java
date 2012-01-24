@@ -19,7 +19,7 @@ public class TestHistoryResponder implements SecureResponder {
 
   private FitNesseContext context;
   
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     File resultsDirectory = context.getTestHistoryDirectory();
     String pageName = request.getResource();

@@ -3,6 +3,7 @@
 package fitnesse.responders.editing;
 
 import java.io.File;
+import java.io.IOException;
 
 import fitnesse.wikitext.parser.WikiWordBuilder;
 import util.EnvironmentVariableTool;
@@ -31,7 +32,7 @@ public class SymbolicLinkResponder implements Responder {
   private FitNesseContext context;
   private WikiPage page;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     resource = request.getResource();
     this.context = context;
     crawler = context.root.getPageCrawler();
@@ -54,7 +55,7 @@ public class SymbolicLinkResponder implements Responder {
     response.redirect(resource + "?properties");
   }
 
-  private void removeSymbolicLink(Request request, WikiPage page) throws Exception {
+  private void removeSymbolicLink(Request request, WikiPage page) {
     String linkToRemove = (String) request.getInput("removal");
 
     PageData data = page.getData();
@@ -67,7 +68,7 @@ public class SymbolicLinkResponder implements Responder {
     setRedirect(resource);
   }
 
-  private void  renameSymbolicLink(Request request, WikiPage page) throws Exception {
+  private void  renameSymbolicLink(Request request, WikiPage page) {
     String linkToRename = (String) request.getInput("rename"),
       newName = (String) request.getInput("newname");
 
@@ -86,7 +87,7 @@ public class SymbolicLinkResponder implements Responder {
     }
   }
 
-  private void addSymbolicLink(Request request, WikiPage page) throws Exception {
+  private void addSymbolicLink(Request request, WikiPage page) throws IOException {
     String linkName = StringUtil.trimNonNullString((String) request.getInput("linkName"));
     String linkPath = StringUtil.trimNonNullString((String) request.getInput("linkPath"));
     if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
@@ -111,7 +112,7 @@ public class SymbolicLinkResponder implements Responder {
     }
   }
 
-  private boolean isValidDirectoryPath(String linkPath) throws Exception {
+  private boolean isValidDirectoryPath(String linkPath) {
     File file = createFileFromPath(linkPath);
 
     if (file.exists())
@@ -131,7 +132,7 @@ public class SymbolicLinkResponder implements Responder {
     return linkPath.startsWith("file://");
   }
 
-  private boolean isInternalPageThatDoesntExist(String linkPath) throws Exception {
+  private boolean isInternalPageThatDoesntExist(String linkPath) {
     String expandedPath = WikiWordBuilder.expandPrefix(page, linkPath);
     WikiPagePath path = PathParser.parse(expandedPath);
     WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?

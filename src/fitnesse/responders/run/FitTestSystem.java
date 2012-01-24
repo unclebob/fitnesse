@@ -32,7 +32,7 @@ public class FitTestSystem extends TestSystem {
    client.join();
  }
 
- public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
+ public String runTestsAndGenerateHtml(PageData pageData) throws IOException, InterruptedException {
    String html = pageData.getHtml();
    if (html.length() == 0)
      client.send(emptyPageContent);
@@ -49,7 +49,7 @@ public class FitTestSystem extends TestSystem {
    client.kill();
  }
 
- public void start() throws Exception {
+ public void start() {
    client.start();
  }
 }

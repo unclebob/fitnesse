@@ -236,7 +236,7 @@ public class PageXmlizerTest extends RegexTestCase {
     WikiPage pageTwo = root.addChildPage("PageTwo");
 
     xmlizer.addPageCondition(new XmlizePageCondition() {
-      public boolean canBeXmlized(WikiPage page) throws Exception {
+      public boolean canBeXmlized(WikiPage page) {
         return !page.getName().equals("PageTwo");
       }
     });

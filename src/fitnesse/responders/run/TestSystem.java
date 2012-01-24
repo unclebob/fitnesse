@@ -6,6 +6,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -29,12 +30,12 @@ public abstract class TestSystem implements TestSystemListener {
     this.testSystemListener = testSystemListener;
   }
 
-  public ExecutionLog getExecutionLog(String classPath, TestSystem.Descriptor descriptor) {
+  public ExecutionLog getExecutionLog(String classPath, TestSystem.Descriptor descriptor) throws SocketException {
     log = createExecutionLog(classPath, descriptor);
     return log;
   }
 
-  protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor);
+  protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException;
 
   protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) {
     String commandPattern = descriptor.commandPattern;
@@ -84,7 +85,7 @@ public abstract class TestSystem implements TestSystemListener {
     this.manualStart = manualStart;
   }
 
-  public static String getTestSystemName(PageData data) throws Exception {
+  public static String getTestSystemName(PageData data) {
     String testSystemName = getTestSystem(data);
     String testRunner = getTestRunnerNormal(data);
     return String.format("%s:%s", testSystemName, testRunner);
@@ -123,7 +124,7 @@ public abstract class TestSystem implements TestSystemListener {
     testSystemListener.exceptionOccurred(e);
   }
 
-  public abstract void start() throws Exception;
+  public abstract void start() throws IOException;
 
   private static String getTestRunner(PageData pageData, boolean isRemoteDebug) {
     if (isRemoteDebug)
@@ -165,7 +166,7 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract void kill() throws IOException;
 
-  public abstract String runTestsAndGenerateHtml(PageData pageData) throws Exception;
+  public abstract String runTestsAndGenerateHtml(PageData pageData) throws IOException, InterruptedException;
 
   public static Descriptor getDescriptor(PageData data, boolean isRemoteDebug) {
     String testSystemName = getTestSystem(data);

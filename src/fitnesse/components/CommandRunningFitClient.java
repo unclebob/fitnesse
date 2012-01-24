@@ -9,6 +9,7 @@ import fitnesse.responders.run.SocketSeeker;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.MockCommandRunner;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Map;
 
@@ -84,7 +85,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
   }
 
-  public void start() throws Exception {
+  public void start() {
     try {
       commandRunner.asynchronousStart();
       if (!fastTest) {
@@ -100,7 +101,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
   }
 
-  public void acceptSocketFrom(SocketDoner donor) throws Exception {
+  public void acceptSocketFrom(SocketDoner donor) throws IOException, InterruptedException {
     this.donor = donor;
     acceptSocket(donor.donateSocket());
     connectionEstablished = true;

@@ -9,6 +9,7 @@ import javax.swing.text.DateFormatter;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.htmlparser.util.ParserException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -20,6 +21,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.responders.run.SuiteFilter;
 import fitnesse.responders.templateUtilities.PageTitle;
@@ -31,7 +33,7 @@ public class SuiteOverviewResponder implements Responder {
 
   private FitNesseContext context;
   
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws ParserException {
     this.context = context;
     WikiPage root = context.root;
     WikiPage page = root.getPageCrawler().getPage(root, PathParser.parse(request.getResource()));
@@ -40,6 +42,7 @@ public class SuiteOverviewResponder implements Responder {
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
     
     List<WikiPage> pagelist = suiteTestFinder.makePageList();
+
     SuiteOverviewTree treeview = new SuiteOverviewTree(pagelist);
     treeview.findLatestResults(context.getTestHistoryDirectory());
     treeview.countResults();

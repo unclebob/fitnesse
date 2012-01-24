@@ -23,7 +23,7 @@ public class ResponseRequester extends ColumnFixture {
 
   protected MockRequest request;
 
-  public boolean valid() throws Exception {
+  public boolean valid() {
     return status() == 200;
   }
 
@@ -44,7 +44,7 @@ public class ResponseRequester extends ColumnFixture {
     FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
   }
 
-  public int status() throws Exception {
+  public int status() {
     int status = FitnesseFixtureContext.response.getStatus();
     return status;
   }

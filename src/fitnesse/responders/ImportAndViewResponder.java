@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.net.MalformedURLException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -14,7 +16,7 @@ import fitnesse.wiki.*;
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
   private WikiPage page;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws MalformedURLException {
     String resource = request.getResource();
 
     if ("".equals(resource))
@@ -31,14 +33,14 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
     return response;
   }
 
-  protected void loadPage(String resource, FitNesseContext context) throws Exception {
+  protected void loadPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler crawler = context.root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     page = crawler.getPage(context.root, path);
   }
 
-  protected void loadPageData() throws Exception {
+  protected void loadPageData() throws MalformedURLException {
     PageData pageData = page.getData();
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());

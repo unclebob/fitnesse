@@ -11,6 +11,8 @@ import java.util.Set;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.htmlparser.util.ParserException;
+import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -45,8 +47,7 @@ public class HistoryComparerResponder implements Responder {
     comparer = new HistoryComparer();
   }
 
-  public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     initializeReponseComponents(request);
     if (!getFileNameFromRequest(request))
@@ -64,7 +65,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeResponseFromComparison(FitNesseContext context,
-      Request request) throws Exception {
+      Request request) throws ParserException, IOException, SAXException {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse(request);
     else {
@@ -79,7 +80,7 @@ public class HistoryComparerResponder implements Responder {
         || ((new File(secondFilePath)).exists());
   }
 
-  private void initializeReponseComponents(Request request) throws IOException {
+  private void initializeReponseComponents(Request request) {
     if (comparer == null)
       comparer = new HistoryComparer();
   }
@@ -154,7 +155,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeErrorResponse(FitNesseContext context, Request request,
-      String message) throws Exception {
+      String message) {
     return new ErrorResponder(message).makeResponse(context, request);
   }
 }

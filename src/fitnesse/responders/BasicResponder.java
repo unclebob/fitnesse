@@ -11,7 +11,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public abstract class BasicResponder implements SecureResponder {
-  protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
+  protected Response pageNotFoundResponse(FitNesseContext context, Request request) {
     return new NotFoundResponder().makeResponse(context, request);
   }
 

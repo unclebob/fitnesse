@@ -148,8 +148,6 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
         try {
           client.start();
         }
-        catch (InterruptedException ie) {
-        }
         catch (Exception e) {
           e.printStackTrace();
         }

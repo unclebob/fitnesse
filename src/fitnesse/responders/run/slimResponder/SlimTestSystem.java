@@ -107,7 +107,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return slimFlags;
   }
 
-  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) {
+  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException {
     String slimFlags = getSlimFlags();
     slimSocket = getNextSlimSocket();
     String slimArguments = String.format("%s %d", slimFlags, slimSocket);
@@ -196,7 +196,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
   //For testing only.  Makes responder faster.
-  void createSlimService(String args) {
+  void createSlimService(String args) throws SocketException {
     while (!tryCreateSlimService(args))
       try {
         Thread.sleep(10);
@@ -205,12 +205,12 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
       }
   }
 
-  private boolean tryCreateSlimService(String args) {
+  private boolean tryCreateSlimService(String args) throws SocketException {
     try {
       SlimService.main(args.trim().split(" "));
       return true;
     } catch (SocketException e) {
-      throw new RuntimeException(e);
+      throw e;
     } catch (Exception e) {
       return false;
     }

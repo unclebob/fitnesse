@@ -20,7 +20,7 @@ public class WikiWordBuilder {
         this.linkBody = linkBody;
     }
 
-    public static String expandPrefix(WikiPage wikiPage, String theWord) throws Exception {
+    public static String expandPrefix(WikiPage wikiPage, String theWord) {
       PageCrawler crawler = wikiPage.getPageCrawler();
       if (theWord.charAt(0) == '^' || theWord.charAt(0) == '>') {
         String prefix = wikiPage.getName();

@@ -29,13 +29,13 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
                                                                                               
-  public void findPageMatches() throws Exception {
+  public void findPageMatches() {
     SuiteSpecificationMatchFinder finder = new SuiteSpecificationMatchFinder(titleRegEx, contentRegEx, this);
     finder.search(searchRoot);
   }
 
 
-  public boolean getPageListFromPageContent(String pageContent) throws Exception {
+  public boolean getPageListFromPageContent(String pageContent) throws ParserException {
     HtmlTableScanner scanner = new HtmlTableScanner(pageContent);
     for (int tableIndex = 0; tableIndex < scanner.getTableCount(); tableIndex++) {
       Table table = scanner.getTable(tableIndex);
@@ -45,7 +45,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
     return true;
   }
 
-  private boolean getPageListFromTable(Table table) throws Exception {
+  private boolean getPageListFromTable(Table table) {
     if (!getImportantTableInformation(table))
       return false;
     findPageMatches();
@@ -54,7 +54,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
     return true;
   }
 
-  public boolean getImportantTableInformation(Table table) throws Exception {
+  public boolean getImportantTableInformation(Table table) {
     if (!isASuiteSpecificationsTable(table))
       return false;
     for (int rowIndex = 0; rowIndex < table.getRowCount(); rowIndex++)
@@ -62,7 +62,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
     return true;
   }
 
-  private void getImportantRowInformation(Table table, int rowIndex) throws Exception {
+  private void getImportantRowInformation(Table table, int rowIndex) {
     String cellContent = table.getCellContents(0, rowIndex);
     if (isPageRootRow(cellContent))
       getSearchRoot(table, rowIndex);
@@ -76,7 +76,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
     return cellContent != null && cellContent.equals("Page");
   }
 
-  private void getSearchRoot(Table table, int rowIndex) throws Exception {
+  private void getSearchRoot(Table table, int rowIndex) {
     if (table.getCellContents(1, rowIndex) != null) {
       String searchRootPath = table.getCellContents(1, rowIndex);
       searchRoot = crawler.getPage(root, PathParser.parse(searchRootPath));

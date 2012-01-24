@@ -41,7 +41,7 @@ public class WikiPageResponder implements SecureResponder {
     pageData = page.getData();
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     loadPage(request.getResource(), context);
     if (page == null)
       return notFoundResponse(context, request);
@@ -49,7 +49,7 @@ public class WikiPageResponder implements SecureResponder {
       return makePageResponse(context);
   }
 
-  protected void loadPage(String pageName, FitNesseContext context) throws Exception {
+  protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
     crawler = context.root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -58,7 +58,7 @@ public class WikiPageResponder implements SecureResponder {
       pageData = page.getData();
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
+  private Response notFoundResponse(FitNesseContext context, Request request) {
     if (dontCreateNonExistentPage(request))
       return new NotFoundResponder().makeResponse(context, request);
     return new EditResponder().makeResponseForNonExistentPage(context, request);

@@ -29,7 +29,7 @@ public class PacketResponder implements SecureResponder {
   List<JSONObject> tables = new ArrayList<JSONObject>();
   private String jsonpFunction;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     jsonpFunction = (String) request.getInput("jsonp");
     String pageName = request.getResource();

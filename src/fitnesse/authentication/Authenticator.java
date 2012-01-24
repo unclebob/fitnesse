@@ -10,7 +10,7 @@ public abstract class Authenticator {
   public Authenticator() {
   }
 
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
     request.getCredentials();
     String username = request.getAuthorizationUsername();
     String password = request.getAuthorizationPassword();
@@ -45,7 +45,7 @@ public abstract class Authenticator {
     return (privilegedResponder instanceof SecureResponder);
   }
 
-  public abstract boolean isAuthenticated(String username, String password) throws Exception;
+  public abstract boolean isAuthenticated(String username, String password);
 
   public String toString() {
     return getClass().getName();

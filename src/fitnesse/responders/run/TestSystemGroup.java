@@ -19,14 +19,14 @@ public class TestSystemGroup {
   private boolean fastTest = false;
   private boolean manualStart = false;
 
-  public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) throws Exception {
+  public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) {
     this.context = context;
     this.page = page;
     this.testSystemListener = listener;
     log = new CompositeExecutionLog(page);
   }
 
-  public CompositeExecutionLog getExecutionLog() throws Exception {
+  public CompositeExecutionLog getExecutionLog() {
     return log;
   }
 
@@ -51,7 +51,7 @@ public class TestSystemGroup {
     return true;
   }
 
-  TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws Exception {
+  TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws IOException {
     TestSystem testSystem = null;
     if (!testSystems.containsKey(descriptor)) {
       testSystem = makeTestSystem(descriptor);
@@ -64,7 +64,7 @@ public class TestSystemGroup {
     return testSystem;
   }
 
-  private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) throws Exception {
+  private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) {
     if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
       return new HtmlSlimTestSystem(page, testSystemListener);
     else

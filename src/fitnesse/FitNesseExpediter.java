@@ -42,7 +42,7 @@ public class FitNesseExpediter implements ResponseSender {
     requestParsingTimeLimit = 10000;
   }
 
-  public void start() throws Exception {
+  public void start() {
     try {
       Request request = makeRequest();
       makeResponse(request);
@@ -93,11 +93,11 @@ public class FitNesseExpediter implements ResponseSender {
     return request;
   }
 
-  public void sendResponse() throws Exception {
+  public void sendResponse() throws IOException {
     response.readyToSend(this);
   }
 
-  private Response makeResponse(Request request) throws Exception {
+  private Response makeResponse(Request request) throws SocketException {
     try {
       Thread parseThread = createParsingThread(request);
       parseThread.start();
@@ -107,7 +107,7 @@ public class FitNesseExpediter implements ResponseSender {
         response = createGoodResponse(request);
     }
     catch (SocketException se) {
-      throw (se);
+      throw se;
     }
     catch (Exception e) {
       response = new ErrorResponder(e).makeResponse(context, request);
@@ -185,13 +185,8 @@ public class FitNesseExpediter implements ResponseSender {
   }
 
   private void reportError(Exception e) {
-    try {
-      response = new ErrorResponder(e).makeResponse(context, request);
-      hasError = true;
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
+    response = new ErrorResponder(e).makeResponse(context, request);
+    hasError = true;
   }
 
   public static LogData makeLogData(Socket socket, Request request, Response response) {

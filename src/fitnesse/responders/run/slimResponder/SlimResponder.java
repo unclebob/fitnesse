@@ -32,8 +32,8 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     String classPath = new ClassPathBuilder().getClasspath(page);
     TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
     descriptor.testRunner = "fitnesse.slim.SlimService";
-    log = testSystem.getExecutionLog(classPath, descriptor);
     try {
+      log = testSystem.getExecutionLog(classPath, descriptor);
       testSystem.start();
       testSystem.setFastTest(fastTest);
       html = testSystem.runTestsAndGenerateHtml(pageData);

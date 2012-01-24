@@ -48,8 +48,7 @@ public class PropertiesResponder implements SecureResponder {
   private SimpleResponse response;
   private HtmlPage html;
 
-  public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     resource = request.getResource();
     path = PathParser.parse(resource);

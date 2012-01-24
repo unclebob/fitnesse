@@ -16,7 +16,7 @@ import fitnesse.http.SimpleResponse;
 public class DeleteFileResponder implements SecureResponder {
   public String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     Response response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");

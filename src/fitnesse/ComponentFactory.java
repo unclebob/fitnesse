@@ -104,7 +104,7 @@ public class ComponentFactory {
     return null;
   }
 
-  public Object createComponent(String componentType) throws Exception {
+  public Object createComponent(String componentType) {
     return createComponent(componentType, null);
   }
 
@@ -118,7 +118,7 @@ public class ComponentFactory {
     return buffer.toString();
   }
 
-  public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) throws Exception {
+  public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) {
     HtmlPageFactory htmlPageFactory = (HtmlPageFactory) createComponent(HTML_PAGE_FACTORY);
     return htmlPageFactory == null ? defaultPageFactory : htmlPageFactory;
   }

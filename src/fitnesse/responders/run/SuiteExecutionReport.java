@@ -76,7 +76,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     template.merge(velocityContext, writer);
   }
 
-  protected void unpackResults(Element testResults) throws Exception {
+  protected void unpackResults(Element testResults) {
     NodeList references = testResults.getElementsByTagName("pageHistoryReference");
     for (int referenceIndex = 0;referenceIndex < references.getLength();referenceIndex++){
       Element refElement = (Element) references.item(referenceIndex);
@@ -93,7 +93,7 @@ public class SuiteExecutionReport extends ExecutionReport {
     }
   }
 
-  protected long getRunTimeInMillisOrZeroIfNotPresent(Element refElement) throws Exception {
+  protected long getRunTimeInMillisOrZeroIfNotPresent(Element refElement) {
     String textValue = XmlUtil.getTextValue(refElement, "runTimeInMillis");
     return textValue == null ? 0 : Long.parseLong(textValue);
   }

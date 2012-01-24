@@ -36,12 +36,12 @@ public class EditResponder implements SecureResponder {
   public EditResponder() {
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     boolean nonExistent = request.hasInput("nonExistent");
     return doMakeResponse(context, request, nonExistent);
   }
 
-  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) {
     return doMakeResponse(context, request, true);
   }
 

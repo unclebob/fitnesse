@@ -126,11 +126,11 @@ public class FileUtil {
     }
   }
 
-  public static LinkedList<String> getFileLines(String filename) throws Exception {
+  public static LinkedList<String> getFileLines(String filename) throws IOException {
     return getFileLines(new File(filename));
   }
 
-  public static LinkedList<String> getFileLines(File file) throws Exception {
+  public static LinkedList<String> getFileLines(File file) throws IOException {
     LinkedList<String> lines = new LinkedList<String>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line;
@@ -141,11 +141,11 @@ public class FileUtil {
     return lines;
   }
 
-  public static void writeLinesToFile(String filename, List<?> lines) throws Exception {
+  public static void writeLinesToFile(String filename, List<?> lines) throws FileNotFoundException {
     writeLinesToFile(new File(filename), lines);
   }
 
-  public static void writeLinesToFile(File file, List<?> lines) throws Exception {
+  public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
     PrintStream output = new PrintStream(new FileOutputStream(file));
     for (Iterator<?> iterator = lines.iterator(); iterator.hasNext();) {
       String line = (String) iterator.next();
@@ -154,7 +154,7 @@ public class FileUtil {
     output.close();
   }
 
-  public static void copyBytes(InputStream input, OutputStream output) throws Exception {
+  public static void copyBytes(InputStream input, OutputStream output) throws IOException {
     StreamReader reader = new StreamReader(input);
     while (!reader.isEof())
       output.write(reader.readBytes(1000));

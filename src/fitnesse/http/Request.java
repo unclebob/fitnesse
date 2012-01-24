@@ -285,12 +285,16 @@ public class Request {
     return hasBeenParsed;
   }
 
-  public String getUserpass(String headerValue) throws Exception {
+  public String getUserpass(String headerValue) {
     String encodedUserpass = headerValue.substring(6);
-    return Base64.decode(encodedUserpass);
+    try {
+      return Base64.decode(encodedUserpass);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public void getCredentials() throws Exception {
+  public void getCredentials() {
     if (authorizationUsername != null)
       return;
     if (hasHeader("Authorization")) {

@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
+
+import org.htmlparser.util.ParserException;
 
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
@@ -29,7 +32,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
   private boolean shouldIncludePaths;
   private String suiteFilter;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     crawler = context.root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -62,7 +65,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     sender.close();
   }
 
-  private void handleTestPage(Socket socket, PageData data) throws Exception {
+  private void handleTestPage(Socket socket, PageData data) throws IOException, InterruptedException {
     FitClient client = startClient(socket);
 
     if (shouldIncludePaths) {
@@ -74,7 +77,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     closeClient(client);
   }
 
-  private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws Exception {
+  private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws IOException, InterruptedException, ParserException {
     FitClient client = startClient(socket);
     SuiteFilter filter = new SuiteFilter(suiteFilter, null, null);
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
@@ -93,7 +96,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     closeClient(client);
   }
 
-  private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws Exception {
+  private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws IOException, InterruptedException {
     String pageName = crawler.getRelativeName(page, data.getWikiPage());
     SetupTeardownAndLibraryIncluder.includeInto(data, includeSuiteSetup);
     String testableHtml = data.getHtml();
@@ -101,12 +104,12 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     client.send(sendableHtml);
   }
 
-  private void closeClient(FitClient client) throws Exception {
+  private void closeClient(FitClient client) throws IOException, InterruptedException {
     client.done();
     client.join();
   }
 
-  private FitClient startClient(Socket socket) throws Exception {
+  private FitClient startClient(Socket socket) throws IOException, InterruptedException {
     FitClient client = new FitClient(this);
     client.acceptSocket(socket);
     return client;

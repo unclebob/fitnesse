@@ -39,7 +39,7 @@ public class MockResponseSender implements ResponseSender {
     return socket.getOutput();
   }
 
-  public void doSending(Response response) {
+  public void doSending(Response response) throws IOException {
     response.readyToSend(this);
     waitForClose(20000);
   }
@@ -58,7 +58,7 @@ public class MockResponseSender implements ResponseSender {
       socket = new MockSocket(new PipedInputStream(), out);
     }
 
-    public void doSending(Response response) {
+    public void doSending(Response response) throws IOException {
       response.readyToSend(this);
       while (!closed.isTrue())
         try {

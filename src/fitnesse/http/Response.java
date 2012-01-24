@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public abstract class Response {
     return Format.JAVA.contentType.equals(contentType);
   }
 
-  public abstract void readyToSend(ResponseSender sender);
+  public abstract void readyToSend(ResponseSender sender) throws IOException;
 
   protected abstract void addSpecificHeaders();
 
@@ -145,6 +146,7 @@ public abstract class Response {
   }
 
   public byte[] getEncodedBytes(String value) {
+    // TODO: -AJM- Defer encoding to the latest responsible moment
     try {
       return value.getBytes("UTF-8");
     } catch (UnsupportedEncodingException e) {
