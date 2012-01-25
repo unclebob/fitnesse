@@ -3,7 +3,7 @@
 package fitnesse.http;
 
 public class MockRequest extends Request {
-  private Exception parseException = null;
+  private RuntimeException parseException = null;
 
   public MockRequest() {
     super.setResource("");
@@ -34,7 +34,7 @@ public class MockRequest extends Request {
     headers.put(key.toLowerCase(), value);
   }
 
-  public void throwExceptionOnParse(Exception e) {
+  public void throwExceptionOnParse(RuntimeException e) {
     parseException = e;
   }
 
@@ -47,7 +47,7 @@ public class MockRequest extends Request {
 
   }
 
-  public void parse() throws Exception {
+  public void parse() {
     if (parseException != null) {
       throw parseException;
     }

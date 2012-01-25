@@ -33,8 +33,7 @@ public class FitNesseExpediter implements ResponseSender {
   private long requestParsingDeadline;
   private volatile boolean hasError;
 
-  public FitNesseExpediter(Socket s,
-                           FitNesseContext context) throws Exception {
+  public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
     this.context = context;
     socket = s;
     input = s.getInputStream();
@@ -88,7 +87,7 @@ public class FitNesseExpediter implements ResponseSender {
     return socket;
   }
 
-  public Request makeRequest() throws Exception {
+  public Request makeRequest() {
     request = new Request(input);
     return request;
   }

@@ -50,18 +50,22 @@ public class Request {
   protected Request() {
   }
 
-  public Request(InputStream input) throws Exception {
+  public Request(InputStream input) {
     this.input = new StreamReader(new BufferedInputStream(input));
   }
 
-  public void parse() throws Exception {
-    readAndParseRequestLine();
-    headers = parseHeaders(input);
-    parseEntityBody();
+  public void parse() throws HttpException {
+    try {
+      readAndParseRequestLine();
+      headers = parseHeaders(input);
+      parseEntityBody();
+    } catch (IOException e) {
+      throw new HttpException("Unable to process request: " + e.getMessage());
+    }
     hasBeenParsed = true;
   }
 
-  private void readAndParseRequestLine() throws Exception {
+  private void readAndParseRequestLine() throws IOException, HttpException {
     requestLine = input.readLine();
     Matcher match = requestLinePattern.matcher(requestLine);
     checkRequestLine(match);
@@ -69,8 +73,7 @@ public class Request {
     parseRequestUri(requestURI);
   }
 
-  private Map<String, Object> parseHeaders(StreamReader reader)
-  throws Exception {
+  private Map<String, Object> parseHeaders(StreamReader reader) throws IOException {
     HashMap<String, Object> headers = new HashMap<String, Object>();
     String line = reader.readLine();
     while (!"".equals(line)) {
@@ -85,7 +88,7 @@ public class Request {
     return headers;
   }
 
-  private void parseEntityBody() throws Exception {
+  private void parseEntityBody() throws IOException {
     if (hasHeader("Content-Length")) {
       String contentType = (String) getHeader("Content-Type");
       if (contentType != null && contentType.startsWith("multipart/form-data")) {
@@ -103,7 +106,7 @@ public class Request {
     return Integer.parseInt((String) getHeader("Content-Length"));
   }
 
-  private void parseMultiPartContent(String boundary) throws Exception {
+  private void parseMultiPartContent(String boundary) throws IOException {
     boundary = "--" + boundary;
 
     int numberOfBytesToRead = getContentLength();
@@ -134,7 +137,7 @@ public class Request {
   }
 
   private Object createUploadedFile(Map<String, Object> headers,
-      StreamReader reader, String boundary) throws Exception {
+      StreamReader reader, String boundary) throws IOException {
     String filename = (String) headers.get("filename");
     String contentType = (String) headers.get("content-type");
     File tempFile = File.createTempFile("FitNesse", ".uploadedFile");
