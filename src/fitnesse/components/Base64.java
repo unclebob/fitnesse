@@ -46,7 +46,7 @@ public class Base64 {
     return decoding;
   }
 
-  public static String encode(String value) throws Exception {
+  public static String encode(String value) {
     return new String(encode(value.getBytes()));
   }
 

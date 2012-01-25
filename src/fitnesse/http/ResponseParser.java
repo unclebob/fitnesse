@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -21,7 +22,7 @@ public class ResponseParser {
   private static final Pattern statusLinePattern = Pattern.compile("HTTP/\\d.\\d (\\d\\d\\d) ");
   private static final Pattern headerPattern = Pattern.compile("([^:]*): (.*)");
 
-  public ResponseParser(InputStream input) throws Exception {
+  public ResponseParser(InputStream input) throws IOException {
     this.input = new StreamReader(input);
     parseStatusLine();
     parseHeaders();
@@ -37,17 +38,17 @@ public class ResponseParser {
     return encoding != null && "chunked".equals(encoding.toLowerCase());
   }
 
-  private void parseStatusLine() throws Exception {
+  private void parseStatusLine() throws IOException {
     String statusLine = input.readLine();
     Matcher match = statusLinePattern.matcher(statusLine);
     if (match.find()) {
       String status = match.group(1);
       this.status = Integer.parseInt(status);
     } else
-      throw new Exception("Could not parse Response");
+      throw new IOException("Could not parse Response");
   }
 
-  private void parseHeaders() throws Exception {
+  private void parseHeaders() throws IOException {
     String line = input.readLine();
     while (!"".equals(line)) {
       Matcher match = headerPattern.matcher(line);
@@ -60,7 +61,7 @@ public class ResponseParser {
     }
   }
 
-  private void parseBody() throws Exception {
+  private void parseBody() throws IOException {
     String lengthHeader = "Content-Length";
     if (hasHeader(lengthHeader)) {
       int bytesToRead = Integer.parseInt(getHeader(lengthHeader));
@@ -68,7 +69,7 @@ public class ResponseParser {
     }
   }
 
-  private void parseChunks() throws Exception {
+  private void parseChunks() throws IOException {
     StringBuffer bodyBuffer = new StringBuffer();
     int chunkSize = readChunkSize();
     while (chunkSize != 0) {
@@ -80,12 +81,12 @@ public class ResponseParser {
 
   }
 
-  private int readChunkSize() throws Exception {
+  private int readChunkSize() throws IOException {
     String sizeLine = input.readLine();
     return Integer.parseInt(sizeLine, 16);
   }
 
-  private void readCRLF() throws Exception {
+  private void readCRLF() throws IOException {
     input.read(2);
   }
 
@@ -119,7 +120,7 @@ public class ResponseParser {
     return buffer.toString();
   }
 
-  public static ResponseParser performHttpRequest(String hostname, int hostPort, RequestBuilder builder) throws Exception {
+  public static ResponseParser performHttpRequest(String hostname, int hostPort, RequestBuilder builder) throws IOException {
     Socket socket = new Socket(hostname, hostPort);
     OutputStream socketOut = socket.getOutputStream();
     InputStream socketIn = socket.getInputStream();

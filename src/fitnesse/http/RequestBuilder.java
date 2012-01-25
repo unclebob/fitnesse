@@ -4,8 +4,10 @@ package fitnesse.http;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -50,7 +52,7 @@ public class RequestBuilder {
     return output.toString();
   }
 
-  private String buildRequestLine() throws Exception {
+  private String buildRequestLine() throws UnsupportedEncodingException {
     StringBuffer text = new StringBuffer();
     text.append(method).append(" ").append(resource);
     if (isGet()) {
@@ -66,7 +68,7 @@ public class RequestBuilder {
     return method.equals("GET");
   }
 
-  public void send(OutputStream output) throws Exception {
+  public void send(OutputStream output) throws IOException {
     output.write(buildRequestLine().getBytes("UTF-8"));
     output.write(ENDL);
     buildBody();
@@ -75,7 +77,7 @@ public class RequestBuilder {
     sendBody(output);
   }
 
-  private void sendHeaders(OutputStream output) throws Exception {
+  private void sendHeaders(OutputStream output) throws IOException {
     addHostHeader();
     for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext();) {
       String key = iterator.next();
@@ -84,7 +86,7 @@ public class RequestBuilder {
     }
   }
 
-  private void buildBody() throws Exception {
+  private void buildBody() throws IOException {
     if (!isMultipart) {
       byte[] bytes = inputString().getBytes("UTF-8");
       bodyParts.add(new ByteArrayInputStream(bytes));
@@ -119,13 +121,13 @@ public class RequestBuilder {
     addHeader("Content-Length", bodyLength + "");
   }
 
-  private void addBodyPart(String input) throws Exception {
+  private void addBodyPart(String input) throws UnsupportedEncodingException {
     byte[] bytes = input.toString().getBytes("UTF-8");
     bodyParts.add(new ByteArrayInputStream(bytes));
     bodyLength += bytes.length;
   }
 
-  private void sendBody(OutputStream output) throws Exception {
+  private void sendBody(OutputStream output) throws IOException {
     for (Iterator<InputStream> iterator = bodyParts.iterator(); iterator.hasNext();) {
       InputStream input = iterator.next();
 
@@ -144,11 +146,11 @@ public class RequestBuilder {
       addHeader("Host", "");
   }
 
-  public void addInput(String key, Object value) throws Exception {
+  public void addInput(String key, Object value) {
     inputs.put(key, value);
   }
 
-  public String inputString() throws Exception {
+  public String inputString() throws UnsupportedEncodingException {
     StringBuffer buffer = new StringBuffer();
     boolean first = true;
     for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext();) {
@@ -162,7 +164,7 @@ public class RequestBuilder {
     return buffer.toString();
   }
 
-  public void addCredentials(String username, String password) throws Exception {
+  public void addCredentials(String username, String password) {
     String rawUserpass = username + ":" + password;
     String userpass = Base64.encode(rawUserpass);
     addHeader("Authorization", "Basic " + userpass);
@@ -180,12 +182,12 @@ public class RequestBuilder {
     return boundary;
   }
 
-  public void addInputAsPart(String name, Object content) throws Exception {
+  public void addInputAsPart(String name, Object content) {
     multipart();
     addInput(name, content);
   }
 
-  public void addInputAsPart(String name, InputStream input, int size, String contentType) throws Exception {
+  public void addInputAsPart(String name, InputStream input, int size, String contentType) {
     addInputAsPart(name, new InputStreamPart(input, size, contentType));
   }
 

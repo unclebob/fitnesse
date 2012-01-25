@@ -49,11 +49,7 @@ public class VelocityFactory {
             "classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
             org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader.class.getName());
 
-      try {
-        instance.velocityEngine.init();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+      instance.velocityEngine.init();
     }
     return instance.velocityEngine;
   }
