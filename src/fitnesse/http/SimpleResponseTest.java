@@ -9,15 +9,17 @@ import java.net.Socket;
 import util.RegexTestCase;
 
 public class SimpleResponseTest extends RegexTestCase implements ResponseSender {
+  private StringBuffer buffer;
   private String text;
   private boolean closed = false;
 
   public void send(byte[] bytes) {
     try {
-      text = new String(bytes, "UTF-8");
+      buffer.append(new String(bytes, "UTF-8"));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
+    text = buffer.toString();
   }
 
   public void close() {
@@ -29,6 +31,8 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
   }
 
   public void setUp() throws Exception {
+    buffer = new StringBuffer();
+    text = null;
   }
 
   public void tearDown() throws Exception {

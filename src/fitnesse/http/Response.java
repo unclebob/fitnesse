@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TimeZone;
 
 public abstract class Response {
@@ -85,8 +87,6 @@ public abstract class Response {
 
   public abstract void readyToSend(ResponseSender sender) throws IOException;
 
-  protected abstract void addSpecificHeaders();
-
   public abstract int getContentSize();
 
   public int getStatus() {
@@ -155,17 +155,13 @@ public abstract class Response {
   }
 
   void makeHeaders(StringBuffer text) {
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator
-      .hasNext();) {
-      String key = iterator.next();
-      String value = headers.get(key);
-      text.append(key).append(": ").append(value).append(CRLF);
+    for (Entry<String, String> entry: headers.entrySet()) {
+      text.append(entry.getKey()).append(": ").append(entry.getValue()).append(CRLF);
     }
   }
 
   protected void addStandardHeaders() {
     addHeader("Content-Type", getContentType());
-    addSpecificHeaders();
   }
 
   protected String getReasonPhrase() {

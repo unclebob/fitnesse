@@ -63,9 +63,6 @@ public class ResponseTest {
     public void readyToSend(ResponseSender sender) {
     }
 
-    protected void addSpecificHeaders() {
-    }
-
     public int getContentSize() {
       return 0;
     }

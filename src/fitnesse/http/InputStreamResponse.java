@@ -30,7 +30,9 @@ public class InputStreamResponse extends Response {
     }
   }
 
-  protected void addSpecificHeaders() {
+  @Override
+  protected void addStandardHeaders() {
+    super.addStandardHeaders();
     addHeader("Content-Length", getContentSize() + "");
   }
 

@@ -33,7 +33,9 @@ public class ChunkedResponse extends Response {
 
   public boolean isReadyToSend() { return isReadyToSend.isTrue(); }
 
-  protected void addSpecificHeaders() {
+  @Override
+  protected void addStandardHeaders() {
+    super.addStandardHeaders();
     if (!dontChunk)
       addHeader("Transfer-Encoding", "chunked");
   }
