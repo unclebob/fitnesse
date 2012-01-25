@@ -91,10 +91,10 @@ public class WikiImportTestEventListener implements TestEventListener {
       data.setContent(wikiPage.getData().getContent());
     }
 
-    public void pageImported(WikiPage localPage) throws Exception {
+    public void pageImported(WikiPage localPage) {
     }
 
-    public void pageImportError(WikiPage localPage, Exception e) throws Exception {
+    public void pageImportError(WikiPage localPage, Exception e) {
       errorOccured = true;
       System.out.println("Exception while importing \"local page\": " + localPage.getName() + ", exception: " + e.getMessage());
       if (e.getCause() != null)

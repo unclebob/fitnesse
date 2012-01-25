@@ -13,7 +13,7 @@ import fitnesse.wiki.WikiPagePath;
 public abstract class BasicWikiPageResponder extends BasicResponder {
   protected Request request;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.request = request;
     WikiPage requestedPage = getRequestedPage(request, context);
 
@@ -26,11 +26,11 @@ public abstract class BasicWikiPageResponder extends BasicResponder {
     return response;
   }
 
-  private WikiPage getRequestedPage(Request request, FitNesseContext context) throws Exception {
+  private WikiPage getRequestedPage(Request request, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(request.getResource());
     WikiPage requestedPage = context.root.getPageCrawler().getPage(context.root, path);
     return requestedPage;
   }
 
-  protected abstract String contentFrom(WikiPage requestedPage) throws Exception;
+  protected abstract String contentFrom(WikiPage requestedPage);
 }

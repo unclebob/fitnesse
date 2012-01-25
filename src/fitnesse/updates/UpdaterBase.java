@@ -20,7 +20,7 @@ public class UpdaterBase implements Updater {
   public Properties rootProperties;
   public Update[] updates;  
 
-  public UpdaterBase(FitNesseContext context) throws Exception {
+  public UpdaterBase(FitNesseContext context) throws IOException {
     this.context = context;
     rootProperties = loadProperties();
   }
@@ -29,7 +29,7 @@ public class UpdaterBase implements Updater {
     return rootProperties;
   }
 
-  public Properties loadProperties() throws Exception {
+  public Properties loadProperties() throws IOException {
     Properties properties = new Properties();
     File propFile = getPropertiesFile();
     if (propFile.exists()) {
@@ -45,19 +45,19 @@ public class UpdaterBase implements Updater {
     return properties;
   }
 
-  private File getPropertiesFile() throws Exception {
+  private File getPropertiesFile() {
     String filename = context.rootPagePath + "/properties";
     return new File(filename);
   }
 
-  public void saveProperties() throws Exception {
+  public void saveProperties() throws IOException {
     OutputStream os = null;
     File propFile = null;
     try {
       propFile = getPropertiesFile();
       os = new FileOutputStream(propFile);
       writeProperties(os);
-    } catch (Exception e) {
+    } catch (IOException e) {
       String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
       System.err.println("Filed to save properties file: \"" + fileName + "\". (exception: " + e + ")");
       throw e;
@@ -85,7 +85,7 @@ public class UpdaterBase implements Updater {
     awriter.flush();
   }
 
-  public void update() throws Exception {
+  public void update() throws IOException {
     Update[] updates = getUpdates();
     for (int i = 0; i < updates.length; i++) {
       Update update = updates[i];
@@ -95,7 +95,7 @@ public class UpdaterBase implements Updater {
     saveProperties();
   }
 
-  private void performUpdate(Update update) throws Exception {
+  private void performUpdate(Update update) {
     try {
       print(update.getMessage());
       update.doUpdate();
@@ -105,7 +105,7 @@ public class UpdaterBase implements Updater {
     }
   }
 
-  private Update[] getUpdates() throws Exception {
+  private Update[] getUpdates() {
     return updates;
   }
 

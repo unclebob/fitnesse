@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import java.io.IOException;
+
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
@@ -18,7 +20,7 @@ public class FitNesseUtil {
   public static FitNesseContext context;
   public static final String URL = "http://localhost:" + port + "/";
 
-  public static void startFitnesse(WikiPage root) throws Exception {
+  public static void startFitnesse(WikiPage root) {
     context = makeTestContext(root);
     context.responderFactory = new ResponderFactory(context.rootPagePath);
     context.port = port;
@@ -30,17 +32,17 @@ public class FitNesseUtil {
     instance.start();
   }
 
-  public static void stopFitnesse() throws Exception {
+  public static void stopFitnesse() throws IOException {
     instance.stop();
     FileUtil.deleteFileSystemDirectory("TestDir");
   }
 
-  public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
+  public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) {
     VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
     ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
   }
 
-  public static FitNesseContext makeTestContext(WikiPage root) throws Exception {
+  public static FitNesseContext makeTestContext(WikiPage root) {
     FitNesseContext context = new FitNesseContext(root);
     context.rootDirectoryName = "TestDir";
     context.setRootPagePath();

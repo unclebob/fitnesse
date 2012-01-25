@@ -24,8 +24,7 @@ public class SearchFormResponder implements Responder {
     PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED, PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
   public static final String[] SPECIAL_ATTRIBUTES = { "obsolete", "SetUp", "TearDown" };
 
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
     VelocityContext velocityContext = new VelocityContext();

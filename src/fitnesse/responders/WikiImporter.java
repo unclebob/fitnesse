@@ -98,7 +98,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     pageCatalog.remove(relativePathOfContext);
   }
 
-  public void enterChildPage(WikiPage childPage, Date lastModified) throws Exception {
+  public void enterChildPage(WikiPage childPage, Date lastModified) {
     if (pageCatalog != null) {
       pageCatalog.remove(relativePath(childPage));
     }
@@ -121,7 +121,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
       importRemotePageContent(childPage);
   }
 
-  private void configureAutoUpdateSetting(WikiImportProperty importProps, PageData data, WikiPage childPage) throws Exception {
+  private void configureAutoUpdateSetting(WikiImportProperty importProps, PageData data, WikiPage childPage) {
     if (importProps.isAutoUpdate() != autoUpdateSetting) {
       importProps.setAutoUpdate(autoUpdateSetting);
       importProps.addTo(data.getProperties());
@@ -137,11 +137,11 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
       configureAutoUpdateSetting(importProps, data, page);
   }
 
-  private WikiPagePath relativePath(WikiPage childPage) throws Exception {
+  private WikiPagePath relativePath(WikiPage childPage) {
     return crawler.getFullPath(childPage).subtractFromFront(contextPath);
   }
 
-  protected void importRemotePageContent(WikiPage localPage) throws Exception {
+  protected void importRemotePageContent(WikiPage localPage) {
     try {
       Document doc = getXmlDocument("data");
       PageData remoteData = new PageXmlizer().deXmlizeData(doc);
@@ -239,7 +239,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return importCount;
   }
 
-  public void parseUrl(String urlString) throws Exception {
+  public void parseUrl(String urlString) throws MalformedURLException {
     URL url;
     try {
       url = new URL(urlString);
@@ -276,7 +276,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return orphans;
   }
 
-  public void processPage(WikiPage page) throws Exception {
+  public void processPage(WikiPage page) {
     WikiPagePath relativePath = relativePath(page);
     pageCatalog.add(relativePath);
   }
@@ -302,7 +302,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     }
   }
 
-  public static class AuthenticationRequiredException extends Exception {
+  public static class AuthenticationRequiredException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public AuthenticationRequiredException(String message) {

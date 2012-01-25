@@ -23,17 +23,17 @@ public abstract class PageMovementResponder implements SecureResponder {
   protected WikiPage newParentPage;
   protected WikiPagePath newParentPath;
 
-  protected abstract boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception;
+  protected abstract boolean getAndValidateNewParentPage(FitNesseContext context, Request request);
 
-  protected abstract boolean getAndValidateRefactoringParameters(Request request) throws Exception;
+  protected abstract boolean getAndValidateRefactoringParameters(Request request);
 
-  protected abstract ReferenceRenamer getReferenceRenamer(FitNesseContext context) throws Exception;
+  protected abstract ReferenceRenamer getReferenceRenamer(FitNesseContext context);
 
-  protected abstract String getNewPageName() throws Exception;
+  protected abstract String getNewPageName();
 
-  protected abstract String getErrorMessageHeader() throws Exception;
+  protected abstract String getErrorMessageHeader();
 
-  protected abstract void execute() throws Exception;
+  protected abstract void execute();
 
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     if (!getAndValidateRefactoredPage(context, request)) {
@@ -63,7 +63,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     return response;
   }
 
-  protected boolean getAndValidateRefactoredPage(FitNesseContext context, Request request) throws Exception {
+  protected boolean getAndValidateRefactoredPage(FitNesseContext context, Request request) {
     PageCrawler crawler = context.root.getPageCrawler();
 
     oldNameOfPageToBeMoved = request.getResource();
@@ -73,19 +73,19 @@ public abstract class PageMovementResponder implements SecureResponder {
     return (oldRefactoredPage != null);
   }
 
-  private Responder makeErrorMessageResponder(String message) throws Exception {
+  private Responder makeErrorMessageResponder(String message) {
     return new ErrorResponder(getErrorMessageHeader() + "<br/>" + message);
   }
 
-  private boolean targetPageExists() throws Exception {
+  private boolean targetPageExists() {
     return newParentPage.hasChildPage(getNewPageName());
   }
 
-  protected String makeLink(String page) throws Exception {
+  protected String makeLink(String page) {
     return HtmlUtil.makeLink(page, page).html();
   }
 
-  protected String createRedirectionUrl(WikiPage newParent, String newName) throws Exception {
+  protected String createRedirectionUrl(WikiPage newParent, String newName) {
     PageCrawler crawler = newParent.getPageCrawler();
     if(crawler.isRoot(newParent)) {
       return newName;
@@ -93,7 +93,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     return PathParser.render(crawler.getFullPath(newParent).addNameToEnd(newName));
   }
 
-  protected void movePage(WikiPage movedPage, WikiPage targetPage) throws Exception {
+  protected void movePage(WikiPage movedPage, WikiPage targetPage) {
     PageData pageData = movedPage.getData();
 
     targetPage.commit(pageData);
@@ -104,7 +104,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     parentOfMovedPage.removeChildPage(movedPage.getName());
   }
 
-  protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) throws Exception {
+  protected void moveChildren(WikiPage movedPage, WikiPage newParentPage) {
     List<WikiPage> children = movedPage.getChildren();
     for (WikiPage page : children) {
       movePage(page, newParentPage.addChildPage(page.getName()));

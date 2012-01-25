@@ -14,15 +14,15 @@ public abstract class WikiPageFinder implements TraversalListener, PageFinder {
     this.observer = observer;
   }
 
-  protected abstract boolean pageMatches(WikiPage page) throws Exception;
+  protected abstract boolean pageMatches(WikiPage page);
 
-  public void processPage(WikiPage page) throws Exception {
+  public void processPage(WikiPage page) {
     if (pageMatches(page)) {
       observer.hit(page);
     }
   }
 
-  public List<WikiPage> search(WikiPage page) throws Exception {
+  public List<WikiPage> search(WikiPage page) {
     hits = new ArrayList<WikiPage>();
     page.getPageCrawler().traverse(page, this);
     return hits;

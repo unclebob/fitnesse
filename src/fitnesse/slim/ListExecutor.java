@@ -15,11 +15,11 @@ public class ListExecutor {
   private NameTranslator methodNameTranslator;
   private boolean verbose;
 
-  public ListExecutor(SlimFactory slimFactory) throws Exception {
+  public ListExecutor(SlimFactory slimFactory) {
     this(false, slimFactory);
   }
 
-  protected ListExecutor(boolean verbose, SlimFactory slimFactory) throws Exception {
+  protected ListExecutor(boolean verbose, SlimFactory slimFactory) {
     this.verbose = verbose;
     this.executor = slimFactory.getStatementExecutor();
     this.methodNameTranslator = slimFactory.getMethodNameTranslator();

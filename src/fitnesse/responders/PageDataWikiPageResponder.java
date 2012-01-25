@@ -7,8 +7,7 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 
 public class PageDataWikiPageResponder extends BasicWikiPageResponder {
-  protected String contentFrom(WikiPage requestedPage)
-    throws Exception {
+  protected String contentFrom(WikiPage requestedPage) {
     return requestedPage.getData().getContent();
   }
 

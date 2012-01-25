@@ -10,7 +10,7 @@ public abstract class Jsr223Bridge {
 
   private ScriptEngine engine;
 
-  public abstract Object getStatementExecutor() throws Exception;
+  public abstract Object getStatementExecutor();
 
   public abstract Object invokeMethod(Object thiz, String name, Object... args)
       throws Exception;

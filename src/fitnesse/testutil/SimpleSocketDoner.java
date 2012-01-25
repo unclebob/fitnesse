@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import java.io.IOException;
 import java.net.Socket;
 
 import fitnesse.responders.run.SocketDoner;
@@ -22,8 +23,12 @@ public class SimpleSocketDoner implements SocketDoner {
     return socket;
   }
 
-  public void finishedWithSocket() throws Exception {
+  public void finishedWithSocket() {
     finished = true;
-    socket.close();
+    try {
+      socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

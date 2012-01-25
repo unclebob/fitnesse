@@ -6,29 +6,29 @@ import fitnesse.components.TraversalListener;
 
 //TODO after extracting the WikiPageModel... rethink this class.  Lots of these methods might be able to go back into WikiPAge.
 public interface PageCrawler {
-  WikiPage getPage(WikiPage context, WikiPagePath path) throws Exception;
+  WikiPage getPage(WikiPage context, WikiPagePath path);
 
   void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);
 
-  boolean pageExists(WikiPage context, WikiPagePath path) throws Exception;
+  boolean pageExists(WikiPage context, WikiPagePath path);
 
-  WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) throws Exception;
+  WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath);
 
-  WikiPagePath getFullPath(WikiPage page) throws Exception;
+  WikiPagePath getFullPath(WikiPage page);
 
-  WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws Exception;
+  WikiPage addPage(WikiPage context, WikiPagePath path, String content);
 
-  WikiPage addPage(WikiPage context, WikiPagePath path) throws Exception;
+  WikiPage addPage(WikiPage context, WikiPagePath path);
 
-  String getRelativeName(WikiPage base, WikiPage page) throws Exception;
+  String getRelativeName(WikiPage base, WikiPage page);
 
-  boolean isRoot(WikiPage page) throws Exception;
+  boolean isRoot(WikiPage page);
 
-  WikiPage getRoot(WikiPage page) throws Exception;
+  WikiPage getRoot(WikiPage page);
 
-  void traverse(WikiPage root, TraversalListener pageCrawlerTest) throws Exception;
+  void traverse(WikiPage root, TraversalListener pageCrawlerTest);
 
-  WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
+  WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling);
 
-  WikiPage findAncestorWithName(WikiPage page, String name) throws Exception;
+  WikiPage findAncestorWithName(WikiPage page, String name);
 }

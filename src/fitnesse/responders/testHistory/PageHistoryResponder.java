@@ -22,7 +22,9 @@ import org.apache.velocity.VelocityContext;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,7 +39,7 @@ public class PageHistoryResponder implements SecureResponder {
   private FitNesseContext context;
   private PageTitle pageTitle;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     prepareResponse(request);
 
@@ -50,14 +52,14 @@ public class PageHistoryResponder implements SecureResponder {
     }
   }
 
-  private Response makePageHistoryResponse(Request request) throws Exception {
+  private Response makePageHistoryResponse(Request request) {
     page.setTitle("Page History");
     page.put("pageHistory", pageHistory);
     page.setMainTemplate("pageHistory.vm");
     return makeResponse();
   }
   
-  private Response makePageHistoryXmlResponse(Request request) throws Exception {
+  private Response makePageHistoryXmlResponse(Request request) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
     Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
@@ -74,13 +76,17 @@ public class PageHistoryResponder implements SecureResponder {
     return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
   }
 
-  private Response tryToMakeTestExecutionReport(Request request) throws Exception {
+  private Response tryToMakeTestExecutionReport(Request request) {
     Date resultDate;
     String date = (String) request.getInput("resultDate");
     if ("latest".equals(date)) {
       resultDate = pageHistory.getLatestDate();
     } else {
-      resultDate = dateFormat.parse(date);
+      try {
+        resultDate = dateFormat.parse(date);
+      } catch (ParseException e) {
+        throw new RuntimeException("Invalid date format provided", e);
+      }
     }
     TestResultRecord testResultRecord = pageHistory.get(resultDate);
     try {
@@ -90,7 +96,7 @@ public class PageHistoryResponder implements SecureResponder {
     }
   }
 
-  private Response makeCorruptFileResponse(Request request) throws Exception {
+  private Response makeCorruptFileResponse(Request request) {
     return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
   }
 
@@ -125,13 +131,17 @@ public class PageHistoryResponder implements SecureResponder {
     return makeResponse();
   }
 
-  private Response generateXMLResponse(File file) throws Exception {
-    response.setContent(FileUtil.getFileContent(file));
+  private Response generateXMLResponse(File file) {
+    try {
+      response.setContent(FileUtil.getFileContent(file));
+    } catch (IOException e) {
+      response.setContent("Error: Unable to read file '" + file.getName() + "'\n");
+    }
     response.setContentType(Format.XML);
     return response;
   }
 
-  private Response makeResponse() throws Exception {
+  private Response makeResponse() {
     StringWriter writer = new StringWriter();
     response.setContent(page.html());
     return response;

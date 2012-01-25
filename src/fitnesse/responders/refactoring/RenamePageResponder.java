@@ -14,26 +14,25 @@ public class RenamePageResponder extends PageMovementResponder {
   private String newName;
 
   @Override
-  protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {
+  protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) {
     newParentPath = PathParser.parse(oldNameOfPageToBeMoved).parentPath();
     newParentPage = oldRefactoredPage.getParent();
     return (newParentPage != null);
   }
 
   @Override
-  protected boolean getAndValidateRefactoringParameters(Request request) throws Exception {
+  protected boolean getAndValidateRefactoringParameters(Request request) {
     newName = (String) request.getInput("newName");
     return (newName != null && WikiWordPath.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
   }
 
   @Override
-  protected ReferenceRenamer getReferenceRenamer(FitNesseContext context)
-  throws Exception {
+  protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
     return new PageReferenceRenamer(context.root, oldRefactoredPage, getNewPageName());
   }
 
   @Override
-  protected void execute() throws Exception {
+  protected void execute() {
     WikiPage parentOfPageToRename = oldRefactoredPage.getParent();
 
     WikiPage renamedPage = parentOfPageToRename.addChildPage(newName);
@@ -42,12 +41,12 @@ public class RenamePageResponder extends PageMovementResponder {
   }
 
   @Override
-  protected String getNewPageName() throws Exception {
+  protected String getNewPageName() {
     return newName;
   }
 
   @Override
-  protected String getErrorMessageHeader() throws Exception {
+  protected String getErrorMessageHeader() {
     return "Cannot rename " + makeLink(oldNameOfPageToBeMoved) + " to " + newName;
   }
 }

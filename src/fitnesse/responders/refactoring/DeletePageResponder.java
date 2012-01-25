@@ -21,7 +21,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class DeletePageResponder implements SecureResponder {
-  public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
+  
+  public Response makeResponse(final FitNesseContext context, final Request request) {
     SimpleResponse response = new SimpleResponse();
     String qualifiedPageName = request.getResource();
     WikiPagePath path = PathParser.parse(qualifiedPageName);
@@ -57,7 +58,7 @@ public class DeletePageResponder implements SecureResponder {
     }
   }
 
-  private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) throws Exception {
+  private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/"));
@@ -66,7 +67,7 @@ public class DeletePageResponder implements SecureResponder {
     return html.html();
   }
 
-  private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) throws Exception {
+  private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) {
     WikiPagePath path = PathParser.parse(qualifiedPageName);
     WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
     List<WikiPage> children = pageToDelete.getChildren();

@@ -85,17 +85,17 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  protected String getPageFooterInfo(int hits) throws Exception {
+  protected String getPageFooterInfo(int hits) {
     return "Found " + hits + " results for your search.";
   }
 
   @Override
-  protected String getTitle() throws Exception {
+  protected String getTitle() {
     return "Search Page Properties Results";
   }
 
   @Override
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     super.startSearching();
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);

@@ -12,11 +12,11 @@ public class SearchReplaceResponder extends ResultResponder {
   private PageFinder finder;
   private SearchObserver observer;
 
-  protected String getPageFooterInfo(int hits) throws Exception {
+  protected String getPageFooterInfo(int hits) {
     return String.format("Replaced %d matches for your search.", hits);
   }
 
-  protected String getTitle() throws Exception {
+  protected String getTitle() {
     return String.format("Replacing matching content \"%s\" with content \"%s\"",
         getSearchString(), getReplacementString());
   }
@@ -29,12 +29,12 @@ public class SearchReplaceResponder extends ResultResponder {
     return (String) request.getInput("searchString");
   }
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     observer.hit(page);
     super.hit(page);
   }
 
-  protected void startSearching() throws Exception {
+  protected void startSearching() {
     super.startSearching();
     String searchString = getSearchString();
     String replacementString = getReplacementString();

@@ -35,7 +35,7 @@ public class DirectoryResponder implements SecureResponder {
     requestedDirectory = requestedFile;
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
 
     SimpleResponse simpleResponse = new SimpleResponse();
@@ -52,7 +52,7 @@ public class DirectoryResponder implements SecureResponder {
     response.redirect(resource + "/");
   }
 
-  private String makeDirectoryListingPage() throws Exception {
+  private String makeDirectoryListingPage() {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
@@ -62,7 +62,7 @@ public class DirectoryResponder implements SecureResponder {
     return page.html();
   }
 
-  private String makeRightColumn() throws Exception {
+  private String makeRightColumn() {
     TagGroup html = new TagGroup();
     html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));
     html.add(HtmlUtil.HR.html());
@@ -71,7 +71,7 @@ public class DirectoryResponder implements SecureResponder {
     return html.html();
   }
 
-  private HtmlTag addFiles(File[] files) throws Exception {
+  private HtmlTag addFiles(File[] files) {
     HtmlTableListingBuilder table = new HtmlTableListingBuilder();
     makeHeadingRow(table);
     addFileRows(files, table);
@@ -79,7 +79,7 @@ public class DirectoryResponder implements SecureResponder {
     return table.getTable();
   }
 
-  private void addFileRows(File[] files, HtmlTableListingBuilder table) throws Exception {
+  private void addFileRows(File[] files, HtmlTableListingBuilder table) {
     for (File file : files) {
       HtmlTag nameItem = makeLinkToFile(file);
       HtmlElement sizeItem = new RawHtml(getSizeString(file));
@@ -92,7 +92,7 @@ public class DirectoryResponder implements SecureResponder {
     }
   }
 
-  private void makeHeadingRow(HtmlTableListingBuilder table) throws Exception {
+  private void makeHeadingRow(HtmlTableListingBuilder table) {
     HtmlTag nameHeading = HtmlUtil.makeSpanTag("caps", "Name");
     HtmlTag sizeHeading = HtmlUtil.makeSpanTag("caps", "Size");
     HtmlTag dateHeading = HtmlUtil.makeSpanTag("caps", "Date");
@@ -100,11 +100,11 @@ public class DirectoryResponder implements SecureResponder {
     table.addRow(new HtmlTag[]{nameHeading, sizeHeading, dateHeading, actionHeading});
   }
 
-  private HtmlTag makeDeleteButton(String filename) throws Exception {
+  private HtmlTag makeDeleteButton(String filename) {
     return HtmlUtil.makeLink("?responder=deleteConfirmation&filename=" + filename, "Delete");
   }
 
-  private HtmlTag makeRenameButton(String filename) throws Exception {
+  private HtmlTag makeRenameButton(String filename) {
     return HtmlUtil.makeLink("?responder=renameConfirmation&filename=" + filename, "Rename");
   }
 
@@ -122,7 +122,7 @@ public class DirectoryResponder implements SecureResponder {
       return HtmlUtil.makeLink(href, file.getName());
   }
 
-  private HtmlTag makeUploadForm() throws Exception {
+  private HtmlTag makeUploadForm() {
     HtmlTag uploadForm = HtmlUtil.makeFormTag("post", "/" + resource);
     uploadForm.addAttribute("enctype", "multipart/form-data");
     uploadForm.addAttribute("class", "left");
@@ -136,7 +136,7 @@ public class DirectoryResponder implements SecureResponder {
     return uploadForm;
   }
 
-  private HtmlTag makeDirectoryForm() throws Exception {
+  private HtmlTag makeDirectoryForm() {
     HtmlTag dirForm = HtmlUtil.makeFormTag("get", "/" + resource);
     dirForm.addAttribute("class", "right");
     dirForm.add(HtmlUtil.makeInputTag("hidden", "responder", "createDir"));

@@ -21,7 +21,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements SearchObse
   private List<WikiPage> hits = new ArrayList<WikiPage>();
   private PageCrawler crawler;
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     hits.add(page);
   }
 

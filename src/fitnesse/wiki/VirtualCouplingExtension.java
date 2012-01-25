@@ -16,7 +16,7 @@ public class VirtualCouplingExtension implements Extension {
     return NAME;
   }
 
-  public VirtualCouplingExtension(WikiPage page) throws Exception {
+  public VirtualCouplingExtension(WikiPage page) {
     hostPage = page;
     resetVirtualCoupling();
   }
@@ -25,22 +25,22 @@ public class VirtualCouplingExtension implements Extension {
     virtualCoupling = coupling;
   }
 
-  public void resetVirtualCoupling() throws Exception {
+  public void resetVirtualCoupling() {
     virtualCoupling = new NullVirtualCouplingPage(hostPage);
   }
 
-  public WikiPage getVirtualCoupling() throws Exception {
+  public WikiPage getVirtualCoupling() {
     detectAndLoadVirtualChildren();
     return virtualCoupling;
   }
 
-  protected void detectAndLoadVirtualChildren() throws Exception {
+  protected void detectAndLoadVirtualChildren() {
     PageData data = hostPage.getData();
     if (data.hasAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE))
       loadVirtualChildren(data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));
   }
 
-  public void loadVirtualChildren(String url) throws Exception {
+  public void loadVirtualChildren(String url) {
     try {
       ProxyPage proxy = ProxyPage.retrievePage(url);
       virtualCoupling = new VirtualCouplingPage(hostPage, proxy);

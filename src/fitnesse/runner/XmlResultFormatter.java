@@ -3,6 +3,7 @@
 package fitnesse.runner;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.w3c.dom.Document;
@@ -19,13 +20,13 @@ public class XmlResultFormatter implements ResultFormatter {
   private boolean closed = false;
   private byte[] tailBytes;
 
-  public XmlResultFormatter(String host, String rootPath) throws Exception {
+  public XmlResultFormatter(String host, String rootPath) throws IOException {
     buffer = new ContentBuffer(".xml");
     createDocument(host, rootPath);
     writeDocumentHeader();
   }
 
-  private void writeDocumentHeader() throws Exception {
+  private void writeDocumentHeader() throws IOException {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     XmlWriter writer = new XmlWriter(output);
     writer.write(document);
@@ -38,7 +39,7 @@ public class XmlResultFormatter implements ResultFormatter {
     buffer.append(head);
   }
 
-  private void createDocument(String host, String rootPath) throws Exception {
+  private void createDocument(String host, String rootPath) {
     document = XmlUtil.newDocument();
     Element root = document.createElement("testResults");
     document.appendChild(root);
@@ -46,7 +47,7 @@ public class XmlResultFormatter implements ResultFormatter {
     XmlUtil.addTextNode(document, root, "rootPath", rootPath);
   }
 
-  public void acceptResult(PageResult result) throws Exception {
+  public void acceptResult(PageResult result) throws IOException {
     Element resultElement = document.createElement("result");
     XmlUtil.addTextNode(document, resultElement, "relativePageName", result.title());
     XmlUtil.addCdataNode(document, resultElement, "content", result.content());
@@ -54,29 +55,29 @@ public class XmlResultFormatter implements ResultFormatter {
     writeElement(resultElement);
   }
 
-  public void acceptFinalCount(TestSummary testSummary) throws Exception {
+  public void acceptFinalCount(TestSummary testSummary) throws IOException {
     Element countsElement = makeCountsElement("finalCounts", testSummary);
     writeElement(countsElement);
   }
 
-  public int getByteCount() throws Exception {
+  public int getByteCount() throws IOException {
     close();
     return buffer.getSize();
   }
 
-  public InputStream getResultStream() throws Exception {
+  public InputStream getResultStream() throws IOException {
     close();
     return buffer.getInputStream();
   }
 
-  private void close() throws Exception {
+  private void close() throws IOException {
     if (!closed) {
       buffer.append(tailBytes);
       closed = true;
     }
   }
 
-  private void writeElement(Element resultElement) throws Exception {
+  private void writeElement(Element resultElement) throws IOException {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     XmlWriter writer = new XmlWriter(output);
     writer.write(resultElement, 1);

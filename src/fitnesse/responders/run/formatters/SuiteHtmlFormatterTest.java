@@ -21,12 +21,12 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     htmlPage = new HtmlPageFactory().newPage();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
-      protected HtmlPage buildHtml(String pageType) throws Exception {
+      protected HtmlPage buildHtml(String pageType) {
         return htmlPage;
       }
       
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) {
         pageBuffer.append(output);
       }
     };

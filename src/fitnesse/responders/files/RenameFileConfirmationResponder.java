@@ -17,7 +17,7 @@ import fitnesse.responders.templateUtilities.PageTitle;
 public class RenameFileConfirmationResponder implements SecureResponder {
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
     

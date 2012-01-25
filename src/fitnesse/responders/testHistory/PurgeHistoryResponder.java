@@ -21,7 +21,7 @@ public class PurgeHistoryResponder implements SecureResponder {
   private Date todaysDate;
 
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     initializeResponder(context);
     if (hasValidInputs(request)) {
       purgeHistory(request);
@@ -37,13 +37,13 @@ public class PurgeHistoryResponder implements SecureResponder {
     todaysDate = Clock.currentDate();
   }
 
-  private SimpleResponse makeValidResponse() throws Exception {
+  private SimpleResponse makeValidResponse() {
     SimpleResponse response = new SimpleResponse();
     response.redirect("?testHistory");
     return response;
   }
 
-  private void purgeHistory(Request request) throws ParseException {
+  private void purgeHistory(Request request) {
     int days = getDaysInput(request);
     deleteTestHistoryOlderThanDays(days);
   }
@@ -67,7 +67,7 @@ public class PurgeHistoryResponder implements SecureResponder {
 
   }
 
-  private Response makeErrorResponse(FitNesseContext context, Request request) throws Exception {
+  private Response makeErrorResponse(FitNesseContext context, Request request) {
     return new ErrorResponder("Invalid Amount Of Days").makeResponse(context, request);
   }
 
@@ -79,7 +79,7 @@ public class PurgeHistoryResponder implements SecureResponder {
     todaysDate = date;
   }
 
-  public void deleteTestHistoryOlderThanDays(int days) throws ParseException {
+  public void deleteTestHistoryOlderThanDays(int days) {
     Date expirationDate = getDateDaysAgo(days);
     File[] files = FileUtil.getDirectoryListing(resultsDirectory);
     deleteExpiredFiles(files, expirationDate);

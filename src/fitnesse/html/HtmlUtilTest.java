@@ -15,57 +15,57 @@ public class HtmlUtilTest extends RegexTestCase {
 
   private WikiPage root;
 
-  public void setUp() throws Exception {
+  public void setUp() {
     root = InMemoryPage.makeRoot("root");
     FitNesseUtil.makeTestContext(root);
   }
 
-  public void testMakeFormTag() throws Exception {
+  public void testMakeFormTag() {
     HtmlTag formTag = HtmlUtil.makeFormTag("method", "action");
     assertSubString("method", formTag.getAttribute("method"));
     assertSubString("action", formTag.getAttribute("action"));
   }
 
-  public void testMakeDivTag() throws Exception {
+  public void testMakeDivTag() {
     String expected = "<div class=\"myClass\"></div>" + HtmlElement.endl;
     assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
   }
 
-  public void testMakeDefaultActions() throws Exception {
+  public void testMakeDefaultActions() {
     String pageName = "SomePage";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, "SomePage");
   }
 
-  public void testMakeActionsWithTestButtonWhenNameStartsWithTest() throws Exception {
+  public void testMakeActionsWithTestButtonWhenNameStartsWithTest() {
     String pageName = "TestSomething";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
-  public void testMakeActionsWithSuffixButtonWhenNameEndsWithTest() throws Exception {
+  public void testMakeActionsWithSuffixButtonWhenNameEndsWithTest() {
     String pageName = "SomethingTest";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
   }
 
-  public void testMakeActionsWithSuiteButtonWhenNameStartsWithSuite() throws Exception {
+  public void testMakeActionsWithSuiteButtonWhenNameStartsWithSuite() {
     String pageName = "SuiteNothings";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
   }
 
-  public void testMakeActionsWithSuiteButtonWhenNameEndsWithSuite() throws Exception {
+  public void testMakeActionsWithSuiteButtonWhenNameEndsWithSuite() {
     String pageName = "NothingsSuite";
     String html = getActionsHtml(pageName);
     verifyDefaultLinks(html, pageName);
     assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
   }
 
-  private String getActionsHtml(String pageName) throws Exception {
+  private String getActionsHtml(String pageName) {
     root.addChildPage(pageName);
     HtmlPage htmlPage = new HtmlPageFactory().newPage();
     htmlPage.actions = new WikiPageActions(root.getChildPage(pageName));
@@ -83,7 +83,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\".FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
   }
 
-  public void testMakeReplaceElementScript() throws Exception {
+  public void testMakeReplaceElementScript() {
     String newText = "<p>My string has \"quotes\" and \r \n</p>";
     HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element-name", newText);
     String expected = "<script>document.getElementById(\"element-name\").innerHTML = " +
@@ -91,7 +91,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString(expected, scriptTag.html());
   }
   
-  public void testMakeAppendElementScript() throws Exception {
+  public void testMakeAppendElementScript() {
     String appendText = "<p>My string has \"quotes\" and \r \n</p>";
     HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);
     String expected1 = "<script>var existingContent = document.getElementById(\"element-name\").innerHTML;"; 
@@ -103,7 +103,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString(expected3, scriptTag.html());
   }
   
-  public void testMakeSilentLink() throws Exception {
+  public void testMakeSilentLink() {
     HtmlTag tag = HtmlUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
     assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());
   }

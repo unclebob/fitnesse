@@ -47,16 +47,16 @@ public class TestFormatterTest {
     TestTextFormatter testTextFormatter = new TestTextFormatter(response);
     XmlFormatter xmlFormatter = new XmlFormatter(context, page, writerFactory) {
       @Override
-      protected void writeResults() throws Exception {
+      protected void writeResults() {
       }
     };
     TestHtmlFormatter testHtmlFormatter = new TestHtmlFormatter(context, page, mock(HtmlPageFactory.class)) {
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) {
       }
     };
     PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, page, writerFactory) {
-      protected void writeResults() throws Exception {
+      protected void writeResults() {
       };
     };
     return Arrays.asList(new Object[][]{

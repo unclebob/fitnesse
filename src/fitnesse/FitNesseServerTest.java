@@ -99,7 +99,7 @@ public class FitNesseServerTest extends RegexTestCase {
     assertHasRegexp("file2 content", output);
   }
 
-  public void testLoggingDataCreation() throws Exception {
+  public void testLoggingDataCreation() {
     MockRequest request = new MockRequest();
     SimpleResponse response = new SimpleResponse(200);
     MockSocket socket = new MockSocket("something");

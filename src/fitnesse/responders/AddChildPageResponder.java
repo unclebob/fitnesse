@@ -23,7 +23,7 @@ public class AddChildPageResponder implements SecureResponder {
     return new SecureWriteOperation();
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     parseRequest(context, request);
     if (currentPage == null)
       return notFoundResponse(context, request);
@@ -33,7 +33,7 @@ public class AddChildPageResponder implements SecureResponder {
     return createChildPageAndMakeResponse(request);
   }
 
-  private void parseRequest(FitNesseContext context, Request request) throws Exception {
+  private void parseRequest(FitNesseContext context, Request request) {
     childName = (String) request.getInput("name");
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
@@ -48,7 +48,7 @@ public class AddChildPageResponder implements SecureResponder {
       pageType = "Default";
   }
 
-  private Response createChildPageAndMakeResponse(Request request) throws Exception {
+  private Response createChildPageAndMakeResponse(Request request) {
     createChildPage(request);
     SimpleResponse response = new SimpleResponse();
     WikiPagePath fullPathOfCurrentPage = crawler.getFullPath(currentPage);
@@ -64,12 +64,12 @@ public class AddChildPageResponder implements SecureResponder {
     return false;
   }
 
-  private void createChildPage(Request request) throws Exception {
+  private void createChildPage(Request request) {
     WikiPage childPage = crawler.addPage(currentPage, childPath, childContent);
     setTestAndSuiteAttributes(childPage);
   }
 
-  private void setTestAndSuiteAttributes(WikiPage childPage) throws Exception {
+  private void setTestAndSuiteAttributes(WikiPage childPage) {
     PageData childPageData = childPage.getData();
     if (pageType.equals("Static")) {
       childPageData.getProperties().remove("Test");
@@ -79,11 +79,11 @@ public class AddChildPageResponder implements SecureResponder {
     childPage.commit(childPageData);
   }
 
-  private Response errorResponse(FitNesseContext context, Request request) throws Exception {
+  private Response errorResponse(FitNesseContext context, Request request) {
     return new ErrorResponder("Invalid Child Name").makeResponse(context, request);
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
+  private Response notFoundResponse(FitNesseContext context, Request request) {
     return new NotFoundResponder().makeResponse(context, request);
   }
 }

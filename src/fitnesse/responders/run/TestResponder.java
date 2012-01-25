@@ -110,7 +110,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   void addHtmlFormatter() throws Exception {
     BaseFormatter formatter = new TestHtmlFormatter(context, page, context.htmlPageFactory) {
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) {
         addToResponse(output);
       }
     };
@@ -165,13 +165,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     return fastTest;
   }
 
-  public void addToResponse(byte[] output) throws Exception {
+  public void addToResponse(byte[] output) {
     if (!isClosed()) {
       response.add(output);
     }
   }
 
-  public void addToResponse(String output) throws Exception {
+  public void addToResponse(String output) {
     if (!isClosed()) {
       response.add(output);
     }
@@ -212,7 +212,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
   public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
-    public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
+    public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
       File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
       File resultDirectory = new File(resultPath.getParent());
       resultDirectory.mkdirs();

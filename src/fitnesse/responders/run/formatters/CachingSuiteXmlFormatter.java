@@ -14,6 +14,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 
@@ -42,12 +43,12 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     super.allTestingComplete(totalTimeMeasurement);
     writeOutSuiteXML();
   }
 
-  protected void writeOutSuiteXML() throws Exception {
+  protected void writeOutSuiteXML() throws IOException {
     testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
     velocityContext.put("formatter", this);
     Template template = velocityEngine.getTemplate("suiteXML.vm");

@@ -3,6 +3,7 @@
 package fitnesse.runner;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,12 +15,12 @@ public class MockResultFormatter implements ResultFormatter {
   public TestSummary finalSummary;
   public StringBuffer output = new StringBuffer("Mock Results:\n");
 
-  public void acceptResult(PageResult result) throws Exception {
+  public void acceptResult(PageResult result) {
     results.add(result);
     output.append(result.toString());
   }
 
-  public void acceptFinalCount(TestSummary testSummary) throws Exception {
+  public void acceptFinalCount(TestSummary testSummary) {
     finalSummary = testSummary;
     output.append("Finals Counts: " + testSummary.toString());
   }
@@ -28,7 +29,7 @@ public class MockResultFormatter implements ResultFormatter {
     return output.toString().getBytes().length;
   }
 
-  public InputStream getResultStream() throws Exception {
+  public InputStream getResultStream() {
     return new ByteArrayInputStream(output.toString().getBytes());
   }
 

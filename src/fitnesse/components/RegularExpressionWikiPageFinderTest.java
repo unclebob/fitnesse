@@ -28,7 +28,7 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
   List<WikiPage> foundPages = new ArrayList<WikiPage>();
   private WikiPageFinder pageFinder;
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     foundPages.add(page);
   }
 

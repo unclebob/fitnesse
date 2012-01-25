@@ -18,11 +18,11 @@ public class ContentBuffer {
   private boolean opened;
   private int size = 0;
 
-  public ContentBuffer() throws Exception {
+  public ContentBuffer() throws IOException {
     this(".tmp");
   }
 
-  public ContentBuffer(String ext) throws Exception {
+  public ContentBuffer(String ext) throws IOException {
     tempFile = File.createTempFile("FitNesse-", ext);
   }
 
@@ -33,7 +33,7 @@ public class ContentBuffer {
     }
   }
 
-  public ContentBuffer append(String value) throws Exception {
+  public ContentBuffer append(String value) throws IOException {
     byte[] bytes = value.getBytes("UTF-8");
     return append(bytes);
   }
@@ -45,24 +45,24 @@ public class ContentBuffer {
     return this;
   }
 
-  private void close() throws Exception {
+  private void close() throws IOException {
     if (opened) {
       outputStream.close();
       opened = false;
     }
   }
 
-  public String getContent() throws Exception {
+  public String getContent() throws IOException {
     close();
     return FileUtil.getFileContent(tempFile);
   }
 
-  public int getSize() throws Exception {
-    close();
+  public int getSize() {
+    //close();
     return size;
   }
 
-  public InputStream getInputStream() throws Exception {
+  public InputStream getInputStream() throws IOException {
     close();
     return new FileInputStream(tempFile) {
       public void close() throws IOException {
@@ -75,12 +75,12 @@ public class ContentBuffer {
     };
   }
 
-  public InputStream getNonDeleteingInputStream() throws Exception {
+  public InputStream getNonDeleteingInputStream() throws IOException {
     close();
     return new FileInputStream(tempFile);
   }
 
-  public OutputStream getOutputStream() throws Exception {
+  public OutputStream getOutputStream() {
     return outputStream;
   }
 

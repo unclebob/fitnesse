@@ -60,10 +60,7 @@ public class ResponseTest {
       super(formatString);
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
-    }
-
-    protected void addSpecificHeaders() {
+    public void readyToSend(ResponseSender sender) {
     }
 
     public int getContentSize() {

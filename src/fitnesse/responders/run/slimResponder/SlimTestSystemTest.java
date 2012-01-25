@@ -525,10 +525,10 @@ public class SlimTestSystemTest {
   }
 
   private static class DummyListener implements TestSystemListener {
-    public void acceptOutputFirst(String output) throws Exception {
+    public void acceptOutputFirst(String output) {
     }
 
-    public void testComplete(TestSummary testSummary) throws Exception {
+    public void testComplete(TestSummary testSummary) {
     }
 
     public void exceptionOccurred(Throwable e) {

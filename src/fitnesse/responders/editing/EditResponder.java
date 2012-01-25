@@ -36,17 +36,16 @@ public class EditResponder implements SecureResponder {
   public EditResponder() {
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     boolean nonExistent = request.hasInput("nonExistent");
     return doMakeResponse(context, request, nonExistent);
   }
 
-  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) {
     return doMakeResponse(context, request, true);
   }
 
-  protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage)
-    throws Exception {
+  protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage) {
     initializeResponder(context.root, request);
 
     SimpleResponse response = new SimpleResponse();
@@ -76,16 +75,15 @@ public class EditResponder implements SecureResponder {
     this.request = request;
   }
 
-  protected String createPageContent() throws Exception {
+  protected String createPageContent() {
     return pageData.getContent();
   }
 
-  public String makeHtml(String resource, FitNesseContext context) throws Exception {
+  public String makeHtml(String resource, FitNesseContext context) {
     return doMakeHtml(resource, context, false);
   }
 
-  private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage)
-    throws Exception {
+  private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage) {
     HtmlPage html = context.htmlPageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.setTitle(title + resource + ":");
@@ -96,7 +94,7 @@ public class EditResponder implements SecureResponder {
     return html.html();
   }
 
-  private String makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception {
+  private String makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("action", resource);
     velocityContext.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));

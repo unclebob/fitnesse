@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import fitnesse.html.HtmlPage;
@@ -79,16 +80,20 @@ public class WikiImportProperty extends WikiPageProperty {
     set("LastRemoteModification", getTimeFormat().format(date));
   }
 
-  public Date getLastRemoteModificationTime() throws Exception {
+  public Date getLastRemoteModificationTime() {
     Date date = new Date(0);
     String strValue = get("LastRemoteModification");
-    if (strValue != null)
-      date = getTimeFormat().parse(strValue);
-
+    if (strValue != null) {
+      try {
+        date = getTimeFormat().parse(strValue);
+      } catch (ParseException e) {
+        date = new Date(0);
+      }
+    }
     return date;
   }
 
-  public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) throws Exception {
+  public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) {
     if (isImported(pageData)) {
       html.setBodyClass("imported");
       WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData.getProperties());

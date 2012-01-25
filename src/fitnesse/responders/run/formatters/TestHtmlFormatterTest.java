@@ -27,7 +27,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
 
     formatter = new TestHtmlFormatter(context, page.getSourcePage(), new HtmlPageFactory()) {
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) {
         pageBuffer.append(output);
       }
     };
