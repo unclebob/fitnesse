@@ -1,10 +1,7 @@
 /****
 
- TODO: implement
-
- - Comment (^#.*)
+ TODO:
  - Collapsible (^!\*+ title ... \n ... \n ^\*+!$ -> change to div.
- - !contents ?
 
  ****/
  
@@ -402,7 +399,6 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
         '<span class="wysiwyg-menu-heading5">Header 5</span>',
         '<span class="wysiwyg-menu-heading6">Header 6</span>',
         '<span class="wysiwyg-menu-code">Code block</span>',
-        '<span class="wysiwyg-menu-quote">Quote</span>',
         '</a></li>',
         '<li title="Bold (Ctrl+B)"><a id="wt-strong" href="#"></a></li>',
         '<li title="Italic (Ctrl+I)"><a id="wt-em" href="#"></a></li>',
@@ -411,8 +407,6 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
         '<li title="Remove format"><a id="wt-remove" href="#"></a></li>',
         '<li title="Link"><a id="wt-link" href="#"></a></li>',
         '<li title="Unlink"><a id="wt-unlink" href="#"></a></li>',
-        '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
-        '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '<li><a id="wt-tablemenu" href="#"></a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"></a></li>',
@@ -447,8 +441,7 @@ TracWysiwyg.prototype.createStyleMenu = function(d) {
         '<h4><a id="wt-heading4" href="#">Header 4</a></h4>',
         '<h5><a id="wt-heading5" href="#">Header 5</a></h5>',
         '<h6><a id="wt-heading6" href="#">Header 6</a></h6>',
-        '<pre class="wiki"><a id="wt-code" href="#">Code block</a></pre>',
-        '<blockquote class="citation"><a id="wt-quote" href="#">Quote</a></blockquote>' ];
+        '<pre class="wiki"><a id="wt-code" href="#">Code block</a></pre>' ];
     var menu = d.createElement("div");
     menu.className = "wysiwyg-menu";
     TracWysiwyg.setStyle(menu, { position: "absolute", left: "-1000px", top: "-1000px", zIndex: 1000 });
@@ -530,8 +523,6 @@ TracWysiwyg.prototype.setupMenuEvents = function() {
         case "heading6":    return [ self.formatHeaderBlock, "h6" ];
         case "link":        return [ self.createLink ];
         case "unlink":      return [ self.execCommand, "unlink" ];
-        case "outdent":     return [ self.outdent ];
-        case "indent":      return [ self.indent ];
         case "table":       return [ self.insertTable ];
         case "tablemenu":   return [ self.toggleMenu, self.tableMenu, element ];
         case "insert-cell-before":   return [ self.insertTableCell_, false ];
@@ -544,7 +535,6 @@ TracWysiwyg.prototype.setupMenuEvents = function() {
         case "delete-row":  return [ self.deleteTableRow ];
         case "delete-col":  return [ self.deleteTableColumn ];
         case "code":        return [ self.formatCodeBlock ];
-        case "quote":       return [ self.formatQuoteBlock ];
         case "hr":          return [ self.insertHorizontalRule ];
         case "br":          return [ self.insertLineBreak ];
         }
@@ -1064,20 +1054,6 @@ TracWysiwyg.prototype.insertUnorderedList = function() {
     this.selectionChanged();
 };
 
-TracWysiwyg.prototype.outdent = function() {
-    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
-        return;
-    }
-    this.execCommand("outdent");
-};
-
-TracWysiwyg.prototype.indent = function() {
-    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
-        return;
-    }
-    this.execCommand("indent");
-};
-
 TracWysiwyg.prototype.insertTable = function() {
     if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
         return;
@@ -1272,51 +1248,6 @@ TracWysiwyg.prototype.formatCodeBlock = function() {
     if (text) {
         pre.appendChild(d.createTextNode(text));
     }
-
-    this.insertHTML(anonymous.innerHTML);
-    this.selectionChanged();
-};
-
-TracWysiwyg.prototype.formatQuoteBlock = function() {
-    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
-        return;
-    }
-    var d = this.contentDocument;
-    var anonymous = d.createElement("div");
-
-    var container = d.createElement("blockquote");
-    container.className = "citation";
-    var fragment = this.getSelectionFragment();
-    var childNodes = fragment.childNodes;
-    for (var i = childNodes.length - 1; i >= 0; i--) {
-        var child = childNodes[i];
-        var text = null;
-        switch (child.nodeType) {
-        case 1:
-            if (child.tagName.toLowerCase() != "blockquote" || child.className != "citation") {
-                text = TracWysiwyg.getTextContent(child);
-            }
-            break;
-        case 3:
-            text = child.nodeValue;
-            break;
-        default:
-            continue;
-        }
-        if (text !== null) {
-            if (!text) {
-                continue;
-            }
-            var tmp = d.createElement("p");
-            tmp.appendChild(d.createTextNode(text));
-            child = tmp;
-        }
-        container.insertBefore(child, container.firstChild);
-    }
-    if (container.childNodes.length == 0) {
-        container.appendChild(d.createElement("p"));
-    }
-    anonymous.appendChild(container);
 
     this.insertHTML(anonymous.innerHTML);
     this.selectionChanged();
@@ -1668,13 +1599,13 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function handleCollapsibleBlock(value) {
-        closeToFragment("fieldset");
+        //closeToFragment("fieldset");
         inCollapsibleBlock++;
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
         var fieldset = contentDocument.createElement("fieldset");
         var title = contentDocument.createElement("legend");
         fieldset.appendChild(title);
-        title.appendChild(contentDocument.createTextNode(m[2]));
+        title.appendChild(contentDocument.createTextNode(m[2] || unescape("title")));
         switch (m[1]) {
         case "<": // Hidden
             fieldset.className = "hidden";
@@ -1690,9 +1621,9 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
     function closeCollapsibleBlock() {
         if (inCollapsibleBlock) {
-            closeParagraph();
             inCollapsibleBlock--;
-            var target = getSelfOrAncestor(holder, "fieldset");
+            var target = closeToFragment("fieldset");
+            if (target)
             holder = target.parentNode;
         }
     }
@@ -3351,6 +3282,7 @@ TracWysiwyg.getEditorMode = function() {
             }
             break;
         }
+        // TODO: do same for wrap option.
     }
 
     TracWysiwyg.editorMode = mode || "textarea";
@@ -3521,7 +3453,6 @@ TracWysiwyg.initialize = function() {
             editors.push(TracWysiwyg.newInstance(textarea, options));
         }
     }
-    console.log("editors:", editors);
     return editors;
 };
 
