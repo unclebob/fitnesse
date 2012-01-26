@@ -3514,12 +3514,15 @@ TracWysiwyg.initialize = function() {
     }
     var options = TracWysiwyg.getOptions();
     var textareas = document.getElementsByTagName("textarea");
+    var editors = [];
     for (var i = 0; i < textareas.length; i++) {
         var textarea = textareas[i];
         if (/\bwikitext\b/.test(textarea.className || "")) {
-            TracWysiwyg.newInstance(textarea, options);
+            editors.push(TracWysiwyg.newInstance(textarea, options));
         }
     }
+    console.log("editors:", editors);
+    return editors;
 };
 
 // vim:et:ai:ts=4

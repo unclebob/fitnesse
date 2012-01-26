@@ -607,14 +607,6 @@ table {
 
 **********/
 
-div.edit_buttons {
-  float: left;
-}
-
-div.hints {
-  clear: both;
-}
-
 div.merge_new {
   float: left;
   font-size: 1.4em;
