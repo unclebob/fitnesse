@@ -9,7 +9,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 
 public class DefaultResponder extends BasicResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     String content = prepareResponseDocument(context).html();
     return responseWith(content);
   }

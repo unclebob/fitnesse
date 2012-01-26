@@ -5,6 +5,7 @@ package fitnesse.http;
 import fitnesse.testutil.MockSocket;
 import util.ConcurrentBoolean;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.net.Socket;
@@ -18,30 +19,34 @@ public class MockResponseSender implements ResponseSender {
     closed = new ConcurrentBoolean();
   }
 
-  public void send(byte[] bytes) throws Exception {
-    socket.getOutputStream().write(bytes);
+  public void send(byte[] bytes) {
+    try {
+      socket.getOutputStream().write(bytes);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public void close() throws Exception {
+  public void close() {
     closed.set(true);
   }
 
-  public Socket getSocket() throws Exception {
+  public Socket getSocket() {
     return socket;
   }
 
-  public String sentData() throws Exception {
+  public String sentData() {
     return socket.getOutput();
   }
 
-  public void doSending(Response response) throws Exception {
+  public void doSending(Response response) throws IOException {
     response.readyToSend(this);
     waitForClose(20000);
   }
 
-  public void waitForClose(long timeoutMillis) throws Exception {
+  public void waitForClose(long timeoutMillis) {
     if (!closed.waitFor(true, timeoutMillis))
-      throw new Exception("MockResponseSender could not be closed");
+      throw new RuntimeException("MockResponseSender could not be closed");
   }
 
   public boolean isClosed() {
@@ -53,10 +58,14 @@ public class MockResponseSender implements ResponseSender {
       socket = new MockSocket(new PipedInputStream(), out);
     }
 
-    public void doSending(Response response) throws Exception {
+    public void doSending(Response response) throws IOException {
       response.readyToSend(this);
       while (!closed.isTrue())
-        Thread.sleep(1000);
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          // silently ignore
+        }
     }
   }
 }

@@ -25,23 +25,23 @@ public class NullFormatter extends BaseFormatter {
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
   }
 
   @Override
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
   }
 
   @Override

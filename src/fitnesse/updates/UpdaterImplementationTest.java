@@ -176,11 +176,11 @@ public class UpdaterImplementationTest {
       return "test";
     }
 
-    public boolean shouldBeApplied() throws Exception {
+    public boolean shouldBeApplied() {
       return true;
     }
 
-    public void doUpdate() throws Exception {
+    public void doUpdate() {
       updateDone = true;
     }
   }

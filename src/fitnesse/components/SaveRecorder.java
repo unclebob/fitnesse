@@ -16,7 +16,7 @@ public class SaveRecorder {
   private static Map<String, Long> ticketRegistry = new HashMap<String, Long>();
   private static Map<String, Long> saveTime = new HashMap<String, Long>();
 
-  public static long pageSaved(PageData data, long ticketNumber) throws Exception {
+  public static long pageSaved(PageData data, long ticketNumber) {
     long timeStamp = timeStamp();
     WikiPage page = data.getWikiPage();
     String name = page.getPageCrawler().getFullPath(page).toString();
@@ -25,7 +25,7 @@ public class SaveRecorder {
     return timeStamp;
   }
 
-  public static boolean changesShouldBeMerged(long thisEditTime, long ticket, PageData data) throws Exception {
+  public static boolean changesShouldBeMerged(long thisEditTime, long ticket, PageData data) {
     return new MergeDeterminer(thisEditTime, ticket, data).shouldMerge();
   }
 
@@ -49,7 +49,7 @@ public class SaveRecorder {
     private WikiPage page;
     private String fullPageName;
 
-    public MergeDeterminer(long thisEditTime, long ticket, PageData data) throws Exception {
+    public MergeDeterminer(long thisEditTime, long ticket, PageData data) {
       this.thisEditTime = thisEditTime;
       this.ticket = ticket;
       page = data.getWikiPage();

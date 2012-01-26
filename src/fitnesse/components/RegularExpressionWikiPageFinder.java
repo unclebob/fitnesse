@@ -21,7 +21,7 @@ public class RegularExpressionWikiPageFinder extends WikiPageFinder {
     this.regularExpression = Pattern.compile(regularExpression);
   }
 
-  protected boolean pageMatches(WikiPage page) throws Exception {
+  protected boolean pageMatches(WikiPage page) {
     String pageContent = page.getData().getContent();
 
     Matcher matcher = regularExpression.matcher(pageContent);

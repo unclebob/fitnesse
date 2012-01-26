@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.velocity.VelocityContext;
@@ -26,7 +27,7 @@ public class HtmlResultFormatter implements ResultFormatter {
   private String rootPath;
   private HtmlPage htmlPage;
 
-  public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws Exception {
+  public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws IOException {
     this.context = context;
     this.host = host;
     this.rootPath = rootPath;
@@ -39,22 +40,26 @@ public class HtmlResultFormatter implements ResultFormatter {
     System.out.println("Built HtmlResultFormatter for " + rootPath);
   }
 
-  private SuiteHtmlFormatter createCustomFormatter() throws Exception {
+  private SuiteHtmlFormatter createCustomFormatter() {
     SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context) {
       @Override
-      protected void writeData(String output) throws Exception {
-        buffer.append(output);
+      protected void writeData(String output) {
+        try {
+          buffer.append(output);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
       
       @Override
-      protected HtmlPage buildHtml(String pageType) throws Exception {
+      protected HtmlPage buildHtml(String pageType) {
         return htmlPage;
       }
     };
     return formatter;
   }
   
-  private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
+  private void createPage(HtmlPageFactory pageFactory, String rootPath) {
     htmlPage = context.htmlPageFactory.newPage();
 
     htmlPage.setTitle(rootPath);
@@ -70,31 +75,31 @@ public class HtmlResultFormatter implements ResultFormatter {
     return href.toString();
   }
 
-  public void acceptResult(PageResult result) throws Exception {
+  public void acceptResult(PageResult result) throws IOException {
     String relativePageName = result.title();
     suiteFormatter.announceStartNewTest(relativePageName, rootPath + "." + relativePageName);
     suiteFormatter.testOutputChunk(result.content());
     suiteFormatter.processTestResults(relativePageName, result.testSummary());
   }
 
-  public void acceptFinalCount(TestSummary testSummary) throws Exception {
+  public void acceptFinalCount(TestSummary testSummary) throws IOException {
     suiteFormatter.testSummary();
     suiteFormatter.finishWritingOutput();
   }
 
-  private void close() throws Exception {
+  private void close() throws IOException {
     if (!closed) {
       suiteFormatter.finishWritingOutput();
       closed = true;
     }
   }
 
-  public int getByteCount() throws Exception {
+  public int getByteCount() throws IOException {
     close();
     return buffer.getSize();
   }
 
-  public InputStream getResultStream() throws Exception {
+  public InputStream getResultStream() throws IOException {
     close();
     return buffer.getInputStream();
   }

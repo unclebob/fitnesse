@@ -15,9 +15,9 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
     this.contentRegEx = contentRegEx;
   }
 
-  protected boolean pageMatches(WikiPage page) throws Exception {
+  protected boolean pageMatches(WikiPage page) {
     if(!nullOrEmpty(titleRegEx)&&!nullOrEmpty(contentRegEx))
-       return patternMatches(titleRegEx, page.getName())&&patternMatches(contentRegEx,page.getData().getContent());
+       return patternMatches(titleRegEx, page.getName()) && patternMatches(contentRegEx,page.getData().getContent());
     else{
     if (patternMatches(titleRegEx, page.getName()))
       return true;
@@ -28,7 +28,7 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
     }
   }
 
-  private boolean patternMatches(String regEx, String subject) throws Exception {
+  private boolean patternMatches(String regEx, String subject) {
     if (!nullOrEmpty(regEx)){
       Pattern pattern = Pattern.compile(regEx, Pattern.DOTALL);
       Matcher matcher = pattern.matcher(subject);

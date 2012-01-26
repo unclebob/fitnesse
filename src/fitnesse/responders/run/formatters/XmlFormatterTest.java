@@ -97,7 +97,7 @@ public class XmlFormatterTest {
     WriterFactory writerFactory = mock(WriterFactory.class);
     XmlFormatter formatter = new XmlFormatter(context , page, writerFactory) {
       @Override
-      protected void writeResults() throws Exception {
+      protected void writeResults() {
       }
     };
 

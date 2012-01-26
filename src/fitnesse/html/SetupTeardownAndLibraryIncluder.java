@@ -16,18 +16,17 @@ public class SetupTeardownAndLibraryIncluder {
   private PageCrawler pageCrawler;
 
 
-  public static void includeInto(PageData pageData) throws Exception {
+  public static void includeInto(PageData pageData) {
     includeInto(pageData, false);
   }
 
-  public static void includeInto(PageData pageData, boolean isSuite)
-    throws Exception {
+  public static void includeInto(PageData pageData, boolean isSuite) {
     TestPage testPage = new TestPage(pageData);
     new SetupTeardownAndLibraryIncluder(testPage).includeInto(isSuite);
     pageData.setContent(testPage.getDecoratedData().getContent());
   }
 
-  public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(TestPage testPage, WikiPage suitePage) throws Exception {
+  public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(TestPage testPage, WikiPage suitePage) {
     new SetupTeardownAndLibraryIncluder(testPage).includeSetupsTeardownsAndLibrariesBelowTheSuite(suitePage);
   }
 
@@ -38,14 +37,14 @@ public class SetupTeardownAndLibraryIncluder {
     newPageContent = new StringBuffer();
   }
 
-  private void includeInto(boolean isSuite) throws Exception {
+  private void includeInto(boolean isSuite) {
     this.isSuite = isSuite;
     if (testPage.isTestPage())
       includeSetupTeardownAndLibraryPages();
   }
 
 
-  private void includeSetupTeardownAndLibraryPages() throws Exception {
+  private void includeSetupTeardownAndLibraryPages() {
     includeScenarioLibraries();
     includeSetupPages();
     includePageContent();
@@ -53,7 +52,7 @@ public class SetupTeardownAndLibraryIncluder {
     updatePageContent();
   }
 
-  private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) throws Exception {
+  private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) {
     String pageName = testPage.getName();
     includeScenarioLibraryBelow(suitePage);
     if (!isSuiteSetUpOrTearDownPage(pageName))
@@ -68,52 +67,52 @@ public class SetupTeardownAndLibraryIncluder {
     return PageData.SUITE_SETUP_NAME.equals(pageName) || PageData.SUITE_TEARDOWN_NAME.equals(pageName);
   }
 
-  private void includeScenarioLibraryBelow(WikiPage suitePage) throws Exception {
+  private void includeScenarioLibraryBelow(WikiPage suitePage) {
     includeScenarioLibrariesIfAppropriate(new BelowSuiteLibraryFilter(suitePage));
   }
 
-  private void includeScenarioLibraries() throws Exception {
+  private void includeScenarioLibraries() {
     includeScenarioLibrariesIfAppropriate(AllLibrariesFilter.instance);
 
   }
 
-  private void includeSetupPages() throws Exception {
+  private void includeSetupPages() {
     if (isSuite)
       includeSuiteSetupPage();
     includeSetupPage();
   }
 
-  private void includeSuiteSetupPage() throws Exception {
+  private void includeSuiteSetupPage() {
     include(PageData.SUITE_SETUP_NAME, "-setup");
   }
 
-  private void includeSetupPage() throws Exception {
+  private void includeSetupPage() {
     include("SetUp", "-setup");
   }
 
-  private void includePageContent() throws Exception {
+  private void includePageContent() {
     newPageContent.append(testPage.getData().getContent());
   }
 
-  private void includeTeardownPages() throws Exception {
+  private void includeTeardownPages() {
     includeTeardownPage();
     if (isSuite)
       includeSuiteTeardownPage();
   }
 
-  private void includeTeardownPage() throws Exception {
+  private void includeTeardownPage() {
     include("TearDown", "-teardown");
   }
 
-  private void includeSuiteTeardownPage() throws Exception {
+  private void includeSuiteTeardownPage() {
     include(PageData.SUITE_TEARDOWN_NAME, "-teardown");
   }
 
-  private void updatePageContent() throws Exception {
+  private void updatePageContent() {
     testPage.decorate(newPageContent.toString());
   }
 
-  private void include(String pageName, String arg) throws Exception {
+  private void include(String pageName, String arg) {
     WikiPage inheritedPage = findInheritedPage(pageName);
     if (inheritedPage != null) {
       String pagePathName = getPathNameForPage(inheritedPage);
@@ -121,12 +120,12 @@ public class SetupTeardownAndLibraryIncluder {
     }
   }
 
-  private void includeScenarioLibrariesIfAppropriate(LibraryFilter libraryFilter) throws Exception {
+  private void includeScenarioLibrariesIfAppropriate(LibraryFilter libraryFilter) {
     if (testPage.isSlim())
       includeScenarioLibrariesIfAny(libraryFilter);
   }
 
-  private void includeScenarioLibrariesIfAny(LibraryFilter libraryFilter) throws Exception {
+  private void includeScenarioLibrariesIfAny(LibraryFilter libraryFilter) {
     List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", testPage.getSourcePage());
 
     List<WikiPage> filteredUncles = filter(uncles, libraryFilter);
@@ -134,7 +133,7 @@ public class SetupTeardownAndLibraryIncluder {
       includeScenarioLibraries(filteredUncles);
   }
 
-  private List<WikiPage> filter(List<WikiPage> widgets, LibraryFilter filter) throws Exception {
+  private List<WikiPage> filter(List<WikiPage> widgets, LibraryFilter filter) {
     List<WikiPage> filteredList = new LinkedList<WikiPage>();
     for (WikiPage widget : widgets) {
       if (filter.canUse(widget))
@@ -143,7 +142,7 @@ public class SetupTeardownAndLibraryIncluder {
     return filteredList;
   }
 
-  private void includeScenarioLibraries(List<WikiPage> uncles) throws Exception {
+  private void includeScenarioLibraries(List<WikiPage> uncles) {
     Collections.reverse(uncles);
     newPageContent.append("!*> Scenario Libraries\n");
     for (WikiPage uncle : uncles)
@@ -151,17 +150,17 @@ public class SetupTeardownAndLibraryIncluder {
     newPageContent.append("*!\n");
   }
 
-  private void includeScenarioLibrary(WikiPage uncle) throws Exception {
+  private void includeScenarioLibrary(WikiPage uncle) {
     newPageContent.append("!include -c .");
     newPageContent.append(PathParser.render(pageCrawler.getFullPath(uncle)));
     newPageContent.append("\n");
   }
 
-  private WikiPage findInheritedPage(String pageName) throws Exception {
+  private WikiPage findInheritedPage(String pageName) {
     return PageCrawlerImpl.getClosestInheritedPage(pageName, testPage.getSourcePage());
   }
 
-  private String getPathNameForPage(WikiPage page) throws Exception {
+  private String getPathNameForPage(WikiPage page) {
     WikiPagePath pagePath = pageCrawler.getFullPath(page);
     return PathParser.render(pagePath);
   }
@@ -176,7 +175,7 @@ public class SetupTeardownAndLibraryIncluder {
   }
 
   private static interface LibraryFilter {
-    boolean canUse(WikiPage libraryPage) throws Exception;
+    boolean canUse(WikiPage libraryPage);
   }
 
   private static class AllLibrariesFilter implements LibraryFilter {
@@ -191,12 +190,12 @@ public class SetupTeardownAndLibraryIncluder {
   private class BelowSuiteLibraryFilter implements LibraryFilter {
     private int minimumPathLength;
 
-    public BelowSuiteLibraryFilter(WikiPage suitePage) throws Exception {
+    public BelowSuiteLibraryFilter(WikiPage suitePage) {
       minimumPathLength = suitePage.getPageCrawler().getFullPath(suitePage).addNameToEnd("ScenarioLibrary").toString().length();
     }
 
     @Override
-    public boolean canUse(WikiPage libraryPage) throws Exception {
+    public boolean canUse(WikiPage libraryPage) {
       return libraryPage.getPageCrawler().getFullPath(libraryPage).toString().length() > minimumPathLength;
     }
   }

@@ -19,7 +19,7 @@ import fitnesse.wikitext.parser.WikiWordPath;
 public class NotFoundResponder implements Responder {
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(404);
     resource = request.getResource();
 
@@ -27,14 +27,14 @@ public class NotFoundResponder implements Responder {
     return response;
   }
 
-  private String makeHtml(FitNesseContext context) throws Exception {
+  private String makeHtml(FitNesseContext context) {
     HtmlPage page = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(page, "Not Found:" + resource);
     page.setMainContent(makeRightColumn(resource));
     return page.html();
   }
 
-  private String makeRightColumn(String name) throws Exception {
+  private String makeRightColumn(String name) {
     StringBuffer buffer = new StringBuffer();
     buffer.append("The requested resource: <i>" + name + "</i> was not found.");
     if (WikiWordPath.isWikiWord(name)) {
@@ -43,8 +43,7 @@ public class NotFoundResponder implements Responder {
     return buffer.toString();
   }
 
-  private void makeCreateThisPageWithButton(String name, StringBuffer buffer)
-    throws Exception {
+  private void makeCreateThisPageWithButton(String name, StringBuffer buffer) {
     HtmlTag createPageForm = HtmlUtil.makeFormTag("POST", name + "?edit", "createPageForm");
     HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "createPageSubmit", "Create This Page");
     submitButton.addAttribute("accesskey", "c");

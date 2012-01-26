@@ -15,7 +15,7 @@ public class SocketService {
   private SocketServer server = null;
   private LinkedList<Thread> threads = new LinkedList<Thread>();
   private volatile boolean everRan=false;
-  public SocketService(int port, SocketServer server) throws Exception {
+  public SocketService(int port, SocketServer server) throws IOException {
     this.server = server;
     serverSocket = new ServerSocket(port);
     serviceThread = new Thread(
@@ -28,12 +28,16 @@ public class SocketService {
     serviceThread.start();
   }
 
-  public void close() throws Exception {
+  public void close() throws IOException {
     waitForServiceThreadToStart();
     running = false;
     serverSocket.close();
-    serviceThread.join();
-    waitForServerThreads();
+    try {
+      serviceThread.join();
+      waitForServerThreads();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   private void waitForServiceThreadToStart() {

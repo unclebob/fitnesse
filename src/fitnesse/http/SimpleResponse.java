@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import util.StringUtil;
 
 public class SimpleResponse extends Response {
   private byte[] content = new byte[0];
@@ -16,13 +19,17 @@ public class SimpleResponse extends Response {
   }
 
   @Override
-  public void readyToSend(ResponseSender sender) throws Exception {
-    byte[] bytes = getBytes();
-    sender.send(bytes);
-    sender.close();
+  public void readyToSend(ResponseSender sender) {
+    addStandardHeaders();
+    try {
+      sender.send(makeHttpHeaders().getBytes());
+      sender.send(content);
+    } finally {
+      sender.close();
+    }
   }
 
-  public void setContent(String value) throws Exception {
+  public void setContent(String value) {
     content = getEncodedBytes(value);
   }
 
@@ -44,26 +51,14 @@ public class SimpleResponse extends Response {
     return content;
   }
 
-  public String getText() {
-    return new String(getBytes());
-  }
-
-  public byte[] getBytes() {
-    addStandardHeaders();
-    byte[] headerBytes = makeHttpHeaders().getBytes();
-    ByteBuffer bytes = ByteBuffer.allocate(headerBytes.length
-        + getContentSize());
-    bytes.put(headerBytes).put(content);
-    return bytes.array();
-  }
-
   @Override
   public int getContentSize() {
     return content.length;
   }
 
   @Override
-  protected void addSpecificHeaders() {
+  protected void addStandardHeaders() {
+    super.addStandardHeaders();
     addHeader("Content-Length", String.valueOf(getContentSize()));
   }
 }

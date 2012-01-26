@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import org.htmlparser.util.ParserException;
+
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.SlimTable;
@@ -17,25 +19,29 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     super(page, listener);
   }
 
-  protected TableScanner scanTheTables(PageData pageData) throws Exception {
+  protected TableScanner scanTheTables(PageData pageData) {
 
     Symbol syntaxTree = pageData.getSyntaxTree();
     Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
     syntaxTree.addToFront(findCollapsibleSymbol(preparsedScenarioLibrary));
     String html = pageData.translateToHtml(syntaxTree);
-    return new HtmlTableScanner(html);
+    try {
+      return new HtmlTableScanner(html);
+    } catch (ParserException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  private Symbol findCollapsibleSymbol(Symbol syntaxTree) throws Exception {
+  private Symbol findCollapsibleSymbol(Symbol syntaxTree) {
     for (Symbol symbol : syntaxTree.getChildren()) {
       if (symbol.getType() instanceof Collapsible)
         return symbol;
     }
-    throw new Exception("There must be a collapsible widget in here.");
+    throw new RuntimeException("There must be a collapsible widget in here.");
   }
 
   @Override
-  protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) throws Exception {
+  protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) {
     replaceExceptionsWithLinks();
     evaluateTables();
     String exceptionsString = exceptions.toHtml();

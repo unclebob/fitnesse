@@ -8,17 +8,17 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class ReplacingFileUpdate extends FileUpdate {
-  public ReplacingFileUpdate(String rootDirectory, String source, String destination) throws Exception {
+  public ReplacingFileUpdate(String rootDirectory, String source, String destination) {
     super(rootDirectory, source, destination);
   }
 
-  public void doUpdate() throws Exception {
+  public void doUpdate() throws IOException {
     if (destinationFile().exists())
       destinationFile().delete();
     super.doUpdate();
   }
 
-  public boolean shouldBeApplied() throws Exception {
+  public boolean shouldBeApplied() throws IOException {
     if (super.shouldBeApplied())
       return true;
     else {

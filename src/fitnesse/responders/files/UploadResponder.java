@@ -7,6 +7,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.regex.Matcher;
@@ -21,13 +22,14 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
+import fitnesse.responders.ErrorResponder;
 
 public class UploadResponder implements SecureResponder {
   private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
 
   private String rootPath;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     rootPath = context.rootPagePath;
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource().replace("%20", " ");
@@ -41,7 +43,7 @@ public class UploadResponder implements SecureResponder {
     return response;
   }
 
-  public void writeFile(File file, UploadedFile uploadedFile) throws Exception {
+  public void writeFile(File file, UploadedFile uploadedFile) throws IOException {
     boolean renamed = uploadedFile.getFile().renameTo(file);
     if (!renamed) {
       InputStream input = null;

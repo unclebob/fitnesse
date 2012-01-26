@@ -16,7 +16,7 @@ public class ContentReplacingSearchObserver implements SearchObserver {
     this.replacement = replacement;
   }
 
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     PageData pageData = page.getData();
     String replacedContent = searchPattern.matcher(pageData.getContent()).replaceAll(replacement);
 

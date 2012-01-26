@@ -92,17 +92,21 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     testFileOutput.close();
   }
 
-  public void send(byte[] bytes) throws Exception {
+  public void send(byte[] bytes) {
     if (bytesSent < 500)
-      output.write(bytes);
+      try {
+        output.write(bytes);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     bytesSent += bytes.length;
   }
 
-  public void close() throws Exception {
+  public void close() {
     closed = true;
   }
 
-  public Socket getSocket() throws Exception //TODO-MdM maybe get rid of this method.
+  public Socket getSocket() //TODO-MdM maybe get rid of this method.
   {
     return null;
   }

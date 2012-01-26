@@ -19,7 +19,7 @@ public class TestHistoryResponder implements SecureResponder {
 
   private FitNesseContext context;
   
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     File resultsDirectory = context.getTestHistoryDirectory();
     String pageName = request.getResource();
@@ -33,7 +33,7 @@ public class TestHistoryResponder implements SecureResponder {
     }
   }
 
-  private Response makeTestHistoryResponse(TestHistory testHistory, String pageName) throws Exception {
+  private Response makeTestHistoryResponse(TestHistory testHistory, String pageName) {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Test History");
     page.setPageTitle(new PageTitle(makePageTitle(pageName)));
@@ -44,7 +44,7 @@ public class TestHistoryResponder implements SecureResponder {
     return response;
   }
 
-  private Response makeTestHistoryXmlResponse(TestHistory history) throws Exception {
+  private Response makeTestHistoryXmlResponse(TestHistory history) {
     SimpleResponse response = new SimpleResponse();
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("testHistory", history);

@@ -44,7 +44,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     return (WikiPagePath) clone();
   }
 
-  public WikiPagePath(WikiPage page) throws Exception {
+  public WikiPagePath(WikiPage page) {
     PageCrawler crawler = page.getPageCrawler();
     while (!crawler.isRoot(page)) {
       names.addFirst(page.getName());

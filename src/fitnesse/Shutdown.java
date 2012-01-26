@@ -4,6 +4,8 @@
 
 package fitnesse;
 
+import java.io.IOException;
+
 import util.CommandLine;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
@@ -35,13 +37,13 @@ public class Shutdown {
     }
   }
 
-  public ResponseParser buildAndSendRequest() throws Exception {
+  public ResponseParser buildAndSendRequest() throws IOException {
     RequestBuilder request = buildRequest();
     ResponseParser response = ResponseParser.performHttpRequest(hostname, port, request);
     return response;
   }
 
-  public RequestBuilder buildRequest() throws Exception {
+  public RequestBuilder buildRequest() {
     RequestBuilder request = new RequestBuilder("/?responder=shutdown");
     if (username != null)
       request.addCredentials(username, password);

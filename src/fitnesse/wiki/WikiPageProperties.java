@@ -5,6 +5,7 @@ package fitnesse.wiki;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -30,33 +31,38 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
   public static final String VIRTUAL_WIKI_ATTRIBUTE = "VirtualWiki";
   private Map<?, ?> symbolicLinks;
 
-  public WikiPageProperties() throws Exception {
+  public WikiPageProperties() {
     symbolicLinks = new HashMap<Object, Object>();
   }
 
-  public WikiPageProperties(InputStream inputStream) throws Exception {
+  public WikiPageProperties(InputStream inputStream) {
     this();
     loadFromXmlStream(inputStream);
   }
 
-  public WikiPageProperties(Element rootElement) throws Exception {
+  public WikiPageProperties(Element rootElement) {
     this();
     loadFromRootElement(rootElement);
   }
 
-  public WikiPageProperties(WikiPageProperties that) throws Exception {
+  public WikiPageProperties(WikiPageProperties that) {
     if (that != null && that.children != null)
       children = new HashMap<String, WikiPageProperty>(that.children);
     symbolicLinks = new HashMap<Object, Object>(that.symbolicLinks);
   }
 
-  public void loadFromXmlStream(InputStream inputStream) throws Exception {
-    Document document = XmlUtil.newDocument(inputStream);
+  public void loadFromXmlStream(InputStream inputStream) {
+    Document document;
+    try {
+      document = XmlUtil.newDocument(inputStream);
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to parse XML from stream", e);
+    }
     Element root = document.getDocumentElement();
     loadFromRootElement(root);
   }
 
-  public void loadFromRootElement(Element root) throws Exception {
+  public void loadFromRootElement(Element root) {
     NodeList nodes = root.getChildNodes();
     for (int i = 0; i < nodes.getLength(); i++) {
       Node node = nodes.item(i);
@@ -145,12 +151,16 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
     return s.toString();
   }
 
-  public Date getLastModificationTime() throws Exception {
+  public Date getLastModificationTime() {
     String dateStr = get(PageData.PropertyLAST_MODIFIED);
     if (dateStr == null)
       return Clock.currentDate();
     else
-      return getTimeFormat().parse(dateStr);
+      try {
+        return getTimeFormat().parse(dateStr);
+      } catch (ParseException e) {
+        throw new RuntimeException("Unable to parse date '" + dateStr + "'", e);
+      }
   }
 
   public void setLastModificationTime(Date date) {

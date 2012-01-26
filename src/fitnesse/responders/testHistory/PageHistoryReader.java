@@ -61,7 +61,7 @@ public class PageHistoryReader {
     return testResultRecord;
   }
  
-  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
+  public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
     return String.format("%s/%s/%s",
       context.getTestHistoryDirectory(),
       page.getPageCrawler().getFullPath(page).toString(),

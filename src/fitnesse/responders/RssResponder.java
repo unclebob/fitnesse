@@ -16,6 +16,8 @@ import util.XmlUtil;
 import util.XmlWriter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
@@ -26,37 +28,36 @@ public class RssResponder implements SecureResponder {
   private String resource;
   private WikiPage contextPage;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     Document rssDocument = buildRssHeader();
     XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
 
     contextPage = getContextPage(request, context);
     WikiPage recentChangesPage = context.root.getChildPage("RecentChanges");
+
     buildItemReportIfRecentChangesExists(recentChangesPage, rssDocument, request.getResource());
-    SimpleResponse response = responseFrom(rssDocument);
-    return response;
+    return responseFrom(rssDocument);
   }
 
-  private WikiPage getContextPage(Request request, FitNesseContext context)
-    throws Exception {
+  private WikiPage getContextPage(Request request, FitNesseContext context) {
     resource = request.getResource();
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPagePath resourcePath = PathParser.parse(resource);
     return pageCrawler.getPage(context.root, resourcePath);
   }
 
-  protected void buildItemReportIfRecentChangesExists(WikiPage recentChangesPage, Document rssDocument, String resource) throws Exception {
+  protected void buildItemReportIfRecentChangesExists(WikiPage recentChangesPage, Document rssDocument, String resource) throws UnknownHostException {
     if (recentChangesPage != null)
       buildItemReport(recentChangesPage, resource, rssDocument);
   }
 
-  private void buildItemReport(WikiPage recentChangesPage, String resource, Document rssDocument) throws Exception {
+  private void buildItemReport(WikiPage recentChangesPage, String resource, Document rssDocument) throws UnknownHostException {
     String[] lines = convertPageToArrayOfLines(recentChangesPage);
     for (String line : lines)
       reportRecentChangeItem(line, resource, rssDocument);
   }
 
-  private void reportRecentChangeItem(String line, String resource, Document rssDocument) throws Exception {
+  private void reportRecentChangeItem(String line, String resource, Document rssDocument) throws UnknownHostException {
     String[] fields = convertTableLineToStrings(line);
     String path = fields[1];
     String author = fields[2];
@@ -71,7 +72,7 @@ public class RssResponder implements SecureResponder {
     return line.split("\\|");
   }
 
-  protected String[] convertPageToArrayOfLines(WikiPage page) throws Exception {
+  protected String[] convertPageToArrayOfLines(WikiPage page) {
     PageData data = page.getData();
     String recentChanges = data.getContent();
     String[] lines = recentChanges.split("\n");
@@ -83,7 +84,7 @@ public class RssResponder implements SecureResponder {
     return !blank || title.startsWith(resource);
   }
 
-  private void buildItem(Document rssDocument, String title, String author, String pubDate) throws Exception {
+  private void buildItem(Document rssDocument, String title, String author, String pubDate) throws UnknownHostException {
     Element itemElement1 = rssDocument.createElement("item");
     makeNodes(rssDocument, itemElement1, title, author, pubDate);
     buildLink(rssDocument, itemElement1, title);
@@ -100,7 +101,7 @@ public class RssResponder implements SecureResponder {
     XmlUtil.addTextNode(rssDocument, itemElement1, "pubDate", pubDate);
   }
 
-  protected void buildLink(Document rssDocument, Element itemElement1, String pageName) throws Exception {
+  protected void buildLink(Document rssDocument, Element itemElement1, String pageName) throws UnknownHostException {
     String hostName = java.net.InetAddress.getLocalHost().getHostName();
     String prefix = "http://" + hostName + "/";
     if (contextPage != null) {
@@ -126,7 +127,7 @@ public class RssResponder implements SecureResponder {
     return string != null && string.length() > 0;
   }
 
-  private SimpleResponse responseFrom(Document rssDocument) throws Exception {
+  private SimpleResponse responseFrom(Document rssDocument) throws IOException {
     byte[] bytes = toByteArray(rssDocument);
     SimpleResponse response = new SimpleResponse();
     response.setContent(bytes);
@@ -134,7 +135,7 @@ public class RssResponder implements SecureResponder {
     return response;
   }
 
-  private byte[] toByteArray(Document rssDocument) throws Exception {
+  private byte[] toByteArray(Document rssDocument) throws IOException {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     XmlWriter writer = new XmlWriter(os);
     writer.write(rssDocument);
@@ -143,7 +144,7 @@ public class RssResponder implements SecureResponder {
     return bytes;
   }
 
-  private Document buildRssHeader() throws Exception {
+  private Document buildRssHeader() {
     Document rssDocument = XmlUtil.newDocument();
     Element rssDocumentElement = rssDocument.createElement("rss");
     rssDocument.appendChild(rssDocumentElement);

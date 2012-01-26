@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -20,7 +21,7 @@ public class PageXmlizer {
   private static SimpleDateFormat dateFormat = WikiPageProperty.getTimeFormat();
   private LinkedList<XmlizePageCondition> pageConditions = new LinkedList<XmlizePageCondition>();
 
-  public Document xmlize(WikiPage page) throws Exception {
+  public Document xmlize(WikiPage page) {
     Document document = XmlUtil.newDocument();
     Element pageElement = createXmlFromPage(document, page);
     document.appendChild(pageElement);
@@ -28,17 +29,17 @@ public class PageXmlizer {
     return document;
   }
 
-  public void deXmlize(Document doc, WikiPage context, XmlizerPageHandler handler) throws Exception {
+  public void deXmlize(Document doc, WikiPage context, XmlizerPageHandler handler) {
     Element pageElement = doc.getDocumentElement();
     addChildFromXml(pageElement, context, handler);
   }
 
-  public void deXmlizeSkippingRootLevel(Document document, WikiPage context, XmlizerPageHandler handler) throws Exception {
+  public void deXmlizeSkippingRootLevel(Document document, WikiPage context, XmlizerPageHandler handler) {
     Element pageElement = document.getDocumentElement();
     addChildrenFromXml(pageElement, context, handler);
   }
 
-  public Document xmlize(PageData data) throws Exception {
+  public Document xmlize(PageData data) {
     Document document = XmlUtil.newDocument();
     Element dataElement = document.createElement("data");
     XmlUtil.addCdataNode(document, dataElement, "content", data.getContent());
@@ -51,7 +52,7 @@ public class PageXmlizer {
     return document;
   }
 
-  public PageData deXmlizeData(Document document) throws Exception {
+  public PageData deXmlizeData(Document document) {
     PageData data = new PageData(new WikiPageDummy());
     Element dataElement = document.getDocumentElement();
 
@@ -65,12 +66,12 @@ public class PageXmlizer {
     return data;
   }
 
-  private void addPageXmlToElement(Document document, Element context, WikiPage page) throws Exception {
+  private void addPageXmlToElement(Document document, Element context, WikiPage page) {
     if (pageMeetsConditions(page))
       context.appendChild(createXmlFromPage(document, page));
   }
 
-  private boolean pageMeetsConditions(WikiPage page) throws Exception {
+  private boolean pageMeetsConditions(WikiPage page) {
     for (Iterator<XmlizePageCondition> iterator = pageConditions.iterator(); iterator.hasNext();) {
       XmlizePageCondition xmlizePageCondition = iterator.next();
       if (!xmlizePageCondition.canBeXmlized(page))
@@ -79,7 +80,7 @@ public class PageXmlizer {
     return true;
   }
 
-  private Element createXmlFromPage(Document document, WikiPage page) throws Exception {
+  private Element createXmlFromPage(Document document, WikiPage page) {
     Element pageElement = document.createElement("page");
     XmlUtil.addTextNode(document, pageElement, "name", page.getName());
     addLastModifiedTag(page, document, pageElement);
@@ -89,13 +90,13 @@ public class PageXmlizer {
     return pageElement;
   }
 
-  private void addLastModifiedTag(WikiPage page, Document document, Element pageElement) throws Exception {
+  private void addLastModifiedTag(WikiPage page, Document document, Element pageElement) {
     Date lastModificationTime = page.getData().getProperties().getLastModificationTime();
     String lastModifiedTimeString = dateFormat.format(lastModificationTime);
     XmlUtil.addTextNode(document, pageElement, "lastModified", lastModifiedTimeString);
   }
 
-  private void addXmlFromChildren(WikiPage page, Document document, Element pageElement) throws Exception {
+  private void addXmlFromChildren(WikiPage page, Document document, Element pageElement) {
     Element childrenElement = document.createElement("children");
     List<WikiPage> children = page.getChildren();
     Collections.sort(children);
@@ -107,11 +108,16 @@ public class PageXmlizer {
     pageElement.appendChild(childrenElement);
   }
 
-  private void addChildFromXml(Element pageElement, WikiPage context, XmlizerPageHandler handler) throws Exception {
+  private void addChildFromXml(Element pageElement, WikiPage context, XmlizerPageHandler handler) {
     String name = XmlUtil.getTextValue(pageElement, "name");
     String modifiedDateString = XmlUtil.getTextValue(pageElement, "lastModified");
 
-    Date modifiedDate = modifiedDateString == null ? new Date(0) : dateFormat.parse(modifiedDateString);
+    Date modifiedDate;
+    try {
+      modifiedDate = modifiedDateString == null ? new Date(0) : dateFormat.parse(modifiedDateString);
+    } catch (ParseException e) {
+      modifiedDate = new Date(0);
+    }
 
     WikiPage childPage = context.getChildPage(name);
     if (childPage == null)
@@ -121,7 +127,7 @@ public class PageXmlizer {
     handler.exitPage();
   }
 
-  private void addChildrenFromXml(Element pageElement, WikiPage contextPage, XmlizerPageHandler handler) throws Exception {
+  private void addChildrenFromXml(Element pageElement, WikiPage contextPage, XmlizerPageHandler handler) {
     Element childrenElement = XmlUtil.getLocalElementByTagName(pageElement, "children");
     NodeList childNodes = childrenElement.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {

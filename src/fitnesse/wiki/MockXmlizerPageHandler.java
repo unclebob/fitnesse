@@ -11,7 +11,7 @@ public class MockXmlizerPageHandler implements XmlizerPageHandler {
   public List<Date> modDates = new LinkedList<Date>();
   public int exits = 0;
 
-  public void enterChildPage(WikiPage newPage, Date lastModified) throws Exception {
+  public void enterChildPage(WikiPage newPage, Date lastModified) {
     handledPages.add(newPage.getName());
     modDates.add(lastModified);
   }

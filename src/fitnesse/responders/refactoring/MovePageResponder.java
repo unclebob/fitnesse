@@ -18,7 +18,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
   private String newParentName;
 
   @Override
-  protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {
+  protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) {
     PageCrawler crawler = context.root.getPageCrawler();
 
     newParentName = getNameofNewParent(request);
@@ -40,7 +40,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
   }
 
   @Override
-  protected boolean getAndValidateRefactoringParameters(Request request) throws Exception {
+  protected boolean getAndValidateRefactoringParameters(Request request) {
     PageCrawler crawler = oldRefactoredPage.getPageCrawler();
 
     WikiPagePath pageToBeMovedPath = crawler.getFullPath(oldRefactoredPage);
@@ -51,33 +51,33 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     !pageIsAncestorOfNewParent(pageToBeMovedPath, newParentPath);
   }
 
-  private boolean selfPage(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception {
+  private boolean selfPage(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) {
     WikiPagePath originalParentPath = pageToBeMovedPath.parentPath();
     return originalParentPath.equals(newParentPath);
   }
 
-  boolean pageIsAncestorOfNewParent(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) throws Exception {
+  boolean pageIsAncestorOfNewParent(WikiPagePath pageToBeMovedPath, WikiPagePath newParentPath) {
     return newParentPath.startsWith(pageToBeMovedPath);
   }
 
   @Override
-  protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) throws Exception {
+  protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) {
     return new MovedPageReferenceRenamer(context.root, oldRefactoredPage, newParentName);
   }
 
   @Override
-  protected void execute() throws Exception {
+  protected void execute() {
     final WikiPage newPage = newParentPage.addChildPage(getNewPageName());
     movePage(oldRefactoredPage, newPage);
   }
 
   @Override
-  protected String getNewPageName() throws Exception {
+  protected String getNewPageName() {
     return oldRefactoredPage.getName();
   }
 
   @Override
-  protected String getErrorMessageHeader() throws Exception {
+  protected String getErrorMessageHeader() {
     return "Cannot move " + makeLink(oldNameOfPageToBeMoved) + " below " + newParentName;
   }
 

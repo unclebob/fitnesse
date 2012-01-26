@@ -71,7 +71,7 @@ public class SuiteSpecificationMatchFinderTest implements SearchObserver {
     finder.search(root);
     assertPagesFound("TestPageOne", "ChildPage");
   }
-  public void hit(WikiPage page) throws Exception {
+  public void hit(WikiPage page) {
     hits.add(page);
   }
 

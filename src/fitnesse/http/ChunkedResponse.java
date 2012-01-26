@@ -4,6 +4,8 @@ package fitnesse.http;
 
 import util.ConcurrentBoolean;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public class ChunkedResponse extends Response {
@@ -18,10 +20,10 @@ public class ChunkedResponse extends Response {
       dontChunk = true;
   }
 
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void readyToSend(ResponseSender sender) {
     this.sender = sender;
     addStandardHeaders();
-    sender.send(makeHttpHeaders().getBytes());
+    send(makeHttpHeaders().getBytes());
     isReadyToSend.set(true);
   }
 
@@ -31,7 +33,9 @@ public class ChunkedResponse extends Response {
 
   public boolean isReadyToSend() { return isReadyToSend.isTrue(); }
 
-  protected void addSpecificHeaders() {
+  @Override
+  protected void addStandardHeaders() {
+    super.addStandardHeaders();
     if (!dontChunk)
       addHeader("Transfer-Encoding", "chunked");
   }
@@ -40,43 +44,47 @@ public class ChunkedResponse extends Response {
     return Integer.toHexString(value);
   }
 
-  public void add(String text) throws Exception {
+  public void add(String text) {
     if (text != null)
       add(getEncodedBytes(text));
   }
 
-  public void add(byte[] bytes) throws Exception {
+  public void add(byte[] bytes) {
     if (bytes == null || bytes.length == 0)
       return;
     if (dontChunk) {
-      sender.send(bytes);
+      send(bytes);
     } else {
       String sizeLine = asHex(bytes.length) + CRLF;
       ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
       chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
-      sender.send(chunk.array());
+      send(chunk.array());
     }
     bytesSent += bytes.length;
   }
 
-  public void addTrailingHeader(String key, String value) throws Exception {
+  public void addTrailingHeader(String key, String value) {
     String header = key + ": " + value + CRLF;
-    sender.send(header.getBytes());
+    send(header.getBytes());
   }
 
-  public void closeChunks() throws Exception {
-    sender.send(("0" + CRLF).getBytes());
+  public void closeChunks() {
+    send(("0" + CRLF).getBytes());
   }
 
-  public void closeTrailer() throws Exception {
-    sender.send(CRLF.getBytes());
+  public void closeTrailer() {
+    send(CRLF.getBytes());
   }
 
-  public void close() throws Exception {
+  private void send(byte[] bytes) {
+    sender.send(bytes);
+  }
+
+  public void close() {
     sender.close();
   }
 
-  public void closeAll() throws Exception {
+  public void closeAll() {
     closeChunks();
     closeTrailer();
     close();

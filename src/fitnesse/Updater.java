@@ -1,5 +1,7 @@
 package fitnesse;
 
+import java.io.IOException;
+
 public interface Updater {
-  void update() throws Exception;
+  void update() throws IOException;
 }

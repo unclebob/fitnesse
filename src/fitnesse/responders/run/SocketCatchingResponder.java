@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
 import java.net.Socket;
 
 import fit.FitProtocol;
@@ -18,23 +19,27 @@ public class SocketCatchingResponder implements Responder, SocketDoner, Response
   private ResponseSender sender;
   private PuppetResponse response;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     dealer = context.socketDealer;
     ticketNumber = Integer.parseInt(request.getInput("ticket").toString());
     response = new PuppetResponse(this);
     return response;
   }
 
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void readyToSend(ResponseSender sender) {
     socket = sender.getSocket();
     this.sender = sender;
-    if (dealer.isWaiting(ticketNumber))
-      dealer.dealSocketTo(ticketNumber, this);
-    else {
-      String errorMessage = "There are no clients waiting for a socket with ticketNumber " + ticketNumber;
-      FitProtocol.writeData(errorMessage, socket.getOutputStream());
-      response.setStatus(404);
-      sender.close();
+    try {
+      if (dealer.isWaiting(ticketNumber))
+        dealer.dealSocketTo(ticketNumber, this);
+      else {
+      	String errorMessage = "There are no clients waiting for a socket with ticketNumber " + ticketNumber;
+      	FitProtocol.writeData(errorMessage, socket.getOutputStream());
+      	response.setStatus(404);
+      	sender.close();
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -42,7 +47,7 @@ public class SocketCatchingResponder implements Responder, SocketDoner, Response
     return socket;
   }
 
-  public void finishedWithSocket() throws Exception {
+  public void finishedWithSocket() {
     sender.close();
   }
 }

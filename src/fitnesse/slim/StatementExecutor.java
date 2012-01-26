@@ -8,6 +8,7 @@ import java.beans.PropertyEditorManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -128,7 +129,7 @@ public class StatementExecutor implements StatementExecutorInterface {
         "message:<<COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]>>", className, args.length)));
   }
 
-  private Object createInstanceOfConstructor(String className, Object[] args) throws Exception {
+  private Object createInstanceOfConstructor(String className, Object[] args) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
     Class<?> k = searchPathsForClass(className);
     Constructor<?> constructor = getConstructor(k.getConstructors(), args);
     if (constructor == null)

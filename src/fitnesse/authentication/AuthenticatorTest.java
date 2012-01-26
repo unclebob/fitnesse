@@ -28,17 +28,16 @@ public class AuthenticatorTest extends TestCase {
       return new AlwaysSecureOperation();
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(FitNesseContext context, Request request) {
       return null;
     }
 
-    protected void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved, String newParentName)
-        throws Exception {
+    protected void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved, String newParentName) {
     }
   }
   
 
-  public void setUp() throws Exception {
+  public void setUp() {
     root = InMemoryPage.makeRoot("RooT");
     WikiPage frontpage = root.addChildPage("FrontPage");
     makeReadSecure(frontpage);
@@ -50,27 +49,27 @@ public class AuthenticatorTest extends TestCase {
     context = new FitNesseContext(root);
   }
 
-  private void makeReadSecure(WikiPage frontpage) throws Exception {
+  private void makeReadSecure(WikiPage frontpage) {
     PageData data = frontpage.getData();
     data.setAttribute(PageData.PropertySECURE_READ);
     frontpage.commit(data);
   }
 
-  public void tearDown() throws Exception {
+  public void tearDown() {
   }
 
-  public void testNotAuthenticated() throws Exception {
+  public void testNotAuthenticated() {
     makeResponder();
     assertEquals(UnauthorizedResponder.class, responderType);
   }
 
-  public void testAuthenticated() throws Exception {
+  public void testAuthenticated() {
     authenticator.authenticated = true;
     makeResponder();
     assertEquals(DummySecureResponder.class, responderType);
   }
 
-  private void makeResponder() throws Exception {
+  private void makeResponder() {
     responder = authenticator.authenticate(context, request, privilegedResponder);
     responderType = responder.getClass();
   }

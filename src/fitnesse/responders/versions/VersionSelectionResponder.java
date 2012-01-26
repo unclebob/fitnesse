@@ -23,7 +23,7 @@ public class VersionSelectionResponder implements SecureResponder {
   private PageData pageData;
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);

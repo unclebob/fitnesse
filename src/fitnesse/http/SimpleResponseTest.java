@@ -2,33 +2,43 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
 import util.RegexTestCase;
 
 public class SimpleResponseTest extends RegexTestCase implements ResponseSender {
+  private StringBuffer buffer;
   private String text;
   private boolean closed = false;
 
-  public void send(byte[] bytes) throws Exception {
-    text = new String(bytes, "UTF-8");
+  public void send(byte[] bytes) {
+    try {
+      buffer.append(new String(bytes, "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+    text = buffer.toString();
   }
 
   public void close() {
     closed = true;
   }
 
-  public Socket getSocket() throws Exception {
+  public Socket getSocket() {
     return null;
   }
 
   public void setUp() throws Exception {
+    buffer = new StringBuffer();
+    text = null;
   }
 
   public void tearDown() throws Exception {
   }
 
-  public void testSimpleResponse() throws Exception {
+  public void testSimpleResponse() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("some content");
     response.readyToSend(this);
@@ -53,7 +63,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
     assertHasRegexp("Location: some url\r\n", text);
   }
 
-  public void testUnicodeCharacters() throws Exception {
+  public void testUnicodeCharacters() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("\uba80\uba81\uba82\uba83");
     response.readyToSend(this);

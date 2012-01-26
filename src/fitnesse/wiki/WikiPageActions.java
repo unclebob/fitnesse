@@ -119,7 +119,7 @@ public class WikiPageActions {
     return null;
   }
   
-  public String getLocalPageName() throws Exception {
+  public String getLocalPageName() {
     if (page != null) {
       WikiPagePath localPagePath = page.getPageCrawler().getFullPath(page);
       return PathParser.render(localPagePath);
@@ -127,7 +127,7 @@ public class WikiPageActions {
     return null;
   }
 
-  public String getLocalOrRemotePageName() throws Exception {
+  public String getLocalOrRemotePageName() {
     String localOrRemotePageName = getLocalPageName();
     
     if (page instanceof ProxyPage) {

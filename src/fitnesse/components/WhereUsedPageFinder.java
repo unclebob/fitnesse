@@ -19,10 +19,10 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
     this.observer = observer;
   }
 
-  public void hit(WikiPage referencingPage) throws Exception {
+  public void hit(WikiPage referencingPage) {
   }
 
-  public void processPage(WikiPage currentPage) throws Exception {
+  public void processPage(WikiPage currentPage) {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();
       Symbol syntaxTree = Parser.make(
@@ -33,7 +33,7 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
       syntaxTree.walkPreOrder(this);
   }
 
-  public List<WikiPage> search(WikiPage page) throws Exception {
+  public List<WikiPage> search(WikiPage page) {
     hits.clear();
     subjectPage.getPageCrawler().traverse(page, this);
     return hits;

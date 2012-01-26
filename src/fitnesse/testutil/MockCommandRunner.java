@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import java.io.IOException;
+
 import fitnesse.components.CommandRunner;
 
 public class MockCommandRunner extends CommandRunner {
@@ -14,16 +16,16 @@ public class MockCommandRunner extends CommandRunner {
     this.exitCode = exitCode;
   }
 
-  public void run() throws Exception {
+  public void run() {
   }
 
-  public void join() throws Exception {
+  public void join() {
   }
 
-  public void kill() throws Exception {
+  public void kill() {
   }
 
-  public void asynchronousStart() throws Exception {
+  public void asynchronousStart() throws IOException {
   }
 
   public void setOutput(String output) {

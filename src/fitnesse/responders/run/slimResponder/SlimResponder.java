@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import java.io.IOException;
+
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
@@ -23,17 +25,24 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
   SlimTestSystem testSystem;
 
 
-  protected String generateHtml(PageData pageData) throws Exception {
+  protected String generateHtml(PageData pageData) {
     testSystem = getTestSystem(pageData);
+    String html = null;
+
     String classPath = new ClassPathBuilder().getClasspath(page);
     TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
     descriptor.testRunner = "fitnesse.slim.SlimService";
-    log = testSystem.getExecutionLog(classPath, descriptor);
-    testSystem.start();
-    testSystem.setFastTest(fastTest);
-    String html = testSystem.runTestsAndGenerateHtml(pageData);
-    testSystem.bye();
-    Thread.sleep(20);
+    try {
+      log = testSystem.getExecutionLog(classPath, descriptor);
+      testSystem.start();
+      testSystem.setFastTest(fastTest);
+      html = testSystem.runTestsAndGenerateHtml(pageData);
+      testSystem.bye();
+    } catch (IOException e) {
+      html = "Could not execute tests: " + e.getMessage();
+      e.printStackTrace();
+    }
+    
     return html;
   }
 
@@ -59,10 +68,10 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     this.fastTest = fastTest;
   }
 
-  public void acceptOutputFirst(String output) throws Exception {
+  public void acceptOutputFirst(String output) {
   }
 
-  public void testComplete(TestSummary testSummary) throws Exception {
+  public void testComplete(TestSummary testSummary)  {
   }
 
   public void exceptionOccurred(Throwable e) {

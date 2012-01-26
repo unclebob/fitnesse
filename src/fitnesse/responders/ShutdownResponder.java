@@ -16,7 +16,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage html = context.htmlPageFactory.newPage();

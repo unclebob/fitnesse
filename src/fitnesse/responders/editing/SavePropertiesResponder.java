@@ -11,16 +11,18 @@ import fitnesse.components.RecentChanges;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SavePropertiesResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
@@ -37,7 +39,7 @@ public class SavePropertiesResponder implements SecureResponder {
     return response;
   }
 
-  private void saveAttributes(Request request, PageData data) throws Exception {
+  private void saveAttributes(Request request, PageData data) {
     setPageTypeAttribute(request, data);
 
     List<String> attrs = new LinkedList<String>();
@@ -74,8 +76,7 @@ public class SavePropertiesResponder implements SecureResponder {
     data.setAttribute(PageData.PropertyHELP, helpText);
   }
 
-  private void setPageTypeAttribute(Request request, PageData data)
-  throws Exception {
+  private void setPageTypeAttribute(Request request, PageData data) {
     String pageType = getPageType(request);
 
     if (pageType == null)

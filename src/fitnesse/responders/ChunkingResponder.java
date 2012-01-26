@@ -23,7 +23,7 @@ public abstract class ChunkingResponder implements Responder {
   protected FitNesseContext context;
   private boolean dontChunk = false;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     this.request = request;
     this.root = context.root;
@@ -45,7 +45,7 @@ public abstract class ChunkingResponder implements Responder {
     dontChunk = true;
   }
 
-  private void getRequestedPage(Request request) throws Exception {
+  private void getRequestedPage(Request request) {
     path = PathParser.parse(request.getResource());
     page = getPageCrawler().getPage(root, path);
   }
@@ -54,7 +54,7 @@ public abstract class ChunkingResponder implements Responder {
     return root.getPageCrawler();
   }
 
-  private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
+  private Response pageNotFoundResponse(FitNesseContext context, Request request) {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
