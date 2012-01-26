@@ -831,11 +831,11 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
         + '<label for="editor-wysiwyg-@">'
         + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
         + (mode == "wysiwyg" ? 'checked="checked"' : '') + ' />'
-        + 'wysiwyg</label> '
+        + 'rich text</label> '
         + '<label for="editor-textarea-@">'
         + '<input type="radio" name="__EDITOR__@" value="textarea" id="editor-textarea-@" '
         + (mode == "textarea" ? 'checked="checked"' : '') + ' />'
-        + 'textarea</label> '
+        + 'wiki format</label> '
         + '&nbsp; ';
     div.className = "editor-toggle";
     div.innerHTML = html.replace(/@/g, ++TracWysiwyg.count);
