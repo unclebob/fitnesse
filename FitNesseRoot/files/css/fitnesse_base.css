@@ -142,10 +142,6 @@ h4 {
   font-style: italic;
 }
 
-fieldset {
-  border: none;
-}
-
 textarea.oldContent {
   width: 100%;
 }
