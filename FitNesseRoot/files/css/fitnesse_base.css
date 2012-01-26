@@ -142,10 +142,6 @@ h4 {
   font-style: italic;
 }
 
-textarea.oldContent {
-  width: 100%;
-}
-
 textarea.pageContent {
   font-family: monaco, 'Lucida Sans Typewriter', monospace;
   font-size: 12px;
@@ -762,3 +758,9 @@ a.unrun
 	margin : 10px 0px;
 	padding : 10px;
 }
+
+.wysiwyg {
+ padding: 5px;
+ background-color: white;
+}
+

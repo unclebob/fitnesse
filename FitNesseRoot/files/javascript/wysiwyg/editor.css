@@ -23,22 +23,29 @@ pre.wiki {
  white-space: pre-wrap !important;
 }
 
-fieldset {
- padding: 0.5em;
- margin: 0 1em 0 1em;
+div.collapsable {
+ border: 1pt dotted #BF8660;
+ margin: 0.5em;
+ padding-left: 15px;
+ background: url(/files/images/collapsableOpen.gif) left top no-repeat #F9F9F9;
+ background-position: 3px 3px;
 }
 
-legend {
-  padding-left: 16px;
+div.collapsable>p:first-child {
+/* like .meta */
+ color: #BF8660;
+ font-style: italic;
 }
 
-fieldset.hidden legend:before {
+/*
+div.hidden legend:before {
   content: "< ";
 }
 
-fieldset.collapsed legend:before {
+div.collapsed legend:before {
   content: "> ";
 }
+*/
 
 table {
   border-collapse: collapse;

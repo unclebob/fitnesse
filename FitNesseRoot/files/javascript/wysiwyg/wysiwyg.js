@@ -1,8 +1,14 @@
 /****
 
  TODO:
- - Collapsible (^!\*+ title ... \n ... \n ^\*+!$ -> change to div.
-
+ - Menu button for creating a Collapsable area (containing selected text?)
+ - Menu for removing Collapsible area. Text is added in parent node
+ - Allow for toggle default (open/closed/hidden)
+ - Edit icons
+ - When adding/removing cell, make sure colspan of the other rows is correct
+ - Do inline escaping in links
+ - Test copy/paste in rich text editor
+ - How to make editing tables simpler in the editor? It's the core of the system basically (tables).
  ****/
  
 var TracWysiwyg = function(textarea, options) {
@@ -1599,32 +1605,31 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function handleCollapsibleBlock(value) {
-        //closeToFragment("fieldset");
         inCollapsibleBlock++;
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
-        var fieldset = contentDocument.createElement("fieldset");
-        var title = contentDocument.createElement("legend");
-        fieldset.appendChild(title);
+        var collapsible = contentDocument.createElement("div");
+        var title = contentDocument.createElement("p");
+        $(collapsible).addClass("collapsable");
+        collapsible.appendChild(title);
         title.appendChild(contentDocument.createTextNode(m[2] || unescape("title")));
         switch (m[1]) {
         case "<": // Hidden
-            fieldset.className = "hidden";
+            $(collapsible).addClass("hidden");
             break;
         case ">": // Collapsed
-            fieldset.className = "collapsed";
+            $(collapsible).addClass("collapsed");
             break;
         }
-        holder.appendChild(fieldset);
-        holder = fieldset;
+        holder.appendChild(collapsible);
+        holder = collapsible;
         openParagraph();
     }
 
     function closeCollapsibleBlock() {
         if (inCollapsibleBlock) {
             inCollapsibleBlock--;
-            var target = closeToFragment("fieldset");
-            if (target)
-            holder = target.parentNode;
+            closeToFragment("div");
+            holder = holder.parentNode;
         }
     }
 
@@ -1779,7 +1784,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         var h, table, tbody;
 
         if (!inTable) {
-            closeToFragment("blockquote");
             h = holder;
             table = d.createElement("table");
             if (escaped) table.className = "escaped";
@@ -1846,9 +1850,10 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function closeToFragment(stopTag) {
+        // Note: we're not exceeding collapsable section boundries
         var element = holder;
         var _fragment = fragment;
-        stopTag = stopTag ? stopTag.toLowerCase() : null;
+        stopTag = stopTag ? stopTag.toLowerCase() : "div";
 
         while (element != _fragment) {
             var tag = element.tagName.toLowerCase();
@@ -2061,7 +2066,7 @@ TracWysiwyg.prototype.wikiOpenTokens = {
     "hr": "----\n",
     "table": true,
     "tbody": true,
-    "fieldset": "!***", "legend": true };
+    "div": "!***" };
 
 TracWysiwyg.prototype.wikiCloseTokens = {
     "#text": true,
@@ -2075,7 +2080,7 @@ TracWysiwyg.prototype.wikiCloseTokens = {
     "tbody": true,
     "tr": "|\n",
     "td": true, "th": true,
-    "fieldset": "*!\n", "legend": "\n" };
+    "div": "*!\n" };
 
 TracWysiwyg.prototype.wikiBlockTags = {
     "h1": true, "h2": true, "h3": true, "h4": true, "h5": true, "h6": true,
@@ -2313,18 +2318,15 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             if (token !== true) {
                 pushToken(token);
             }
-            if (name == "table" && node.className == "escaped") {
+            if (name == "table" && $(node).hasClass("escaped")) {
                 _texts.push("!");
             }
-            if (name == "fieldset") {
-                switch(node.className) {
-                case "collapsed":
+            if (name == "div" && $(node).hasClass("collapsable")) {
+                if ($(node).hasClass("collapsed")) {
                     _texts.push("> ");
-                    break;
-                case "hidden":
+                } else if ($(node).hasClass("hidden")) {
                     _texts.push("< ");
-                    break;
-                default:
+                } else {
                     _texts.push(" ");
                 }
             }
@@ -2455,7 +2457,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
         else {
             switch (name) {
             case "p":
-                if (node.className == 'meta') {
+                if ($(node).hasClass('meta')) {
                     _texts.push("\n");
                 } else {
                     _texts.push("\n\n");
