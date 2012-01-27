@@ -1416,8 +1416,9 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiInlineRules.push("--");                     // 4. strike
     wikiInlineRules.push("\\{\\{\\{.*?\\}\\}\\}");  // 5. code block -> keep for simplicity
     wikiInlineRules.push("!-.*?-!");                // 6. escaped
-    wikiInlineRules.push(_wikiTextLink)				// 7. Wiki link
-    wikiInlineRules.push(_wikiPageName);            // 8. WikiPageName
+    wikiInlineRules.push("!<.*?>!");                // 7. escaped (html encoded)
+    wikiInlineRules.push(_wikiTextLink)				// 8. Wiki link
+    wikiInlineRules.push(_wikiPageName);            // 9. WikiPageName
 
     var wikiRules = wikiInlineRules.slice(0);
     // -1. header
@@ -1524,7 +1525,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var _linkScheme = this._linkScheme;
     var _quotedString = this._quotedString;
     var wikiInlineRulesCount = this.wikiInlineRules.length;
-    var wikiRulesPattern = new RegExp(this.wikiRulesPattern.source, "g");
     
     var self = this;
     var fragment = contentDocument.createDocumentFragment();
@@ -1689,6 +1689,18 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         handleOpenInlineCode(name);
     }
 
+
+    /* handle !- .. -! */
+    function handleEscapedCode(value, length) {
+        var d = contentDocument;
+        var element = d.createElement("ins");
+
+        value = value.slice(2, -2);
+        if (value.length > 0) {
+            holder.appendChild(element);
+            element.innerHTML = value;
+        }
+    }
 
     function handleInlineCode(value, length) {
         var d = contentDocument;
@@ -1903,28 +1915,10 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         return null;
     }
 
-    for (var indexLines = 0; indexLines < lines.length; indexLines++) {
-        var line = lines[indexLines].replace(/\r$/, "");
-        if (inCodeBlock || /^ *\{\{\{ *$/.test(line)) {
-            handleCodeBlock(line);
-            continue;
-        }
-        if (/^----/.test(line)) {
-            closeToFragment();
-            fragment.appendChild(contentDocument.createElement("hr"));
-            continue;
-        }
-        if (line.length == 0 && !inCollapsibleBlock) {
-            closeToFragment();
-            continue;
-        }
-        line = line.replace(/\t/g, "        ");
-        line = line.replace(/\u00a0/g, " ");
-
+    function handleLine(line) {
+        var wikiRulesPattern = new RegExp(self.wikiRulesPattern.source, "g");
         wikiRulesPattern.lastIndex = 0;
         var prevIndex = wikiRulesPattern.lastIndex;
-        decorationStatus = {};
-        decorationStack = [];
         for ( ; ; ) {
             var match = wikiRulesPattern.exec(line);
             var matchNumber = null;
@@ -1986,13 +1980,16 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 handleInlineCode(matchText, 3);
                 continue;
             case 6:     // escaped
+                handleEscapedCode(matchText, 2);
+                continue;
+            case 7:     // escaped (html encoded)
                 handleInlineCode(matchText, 2);
                 continue;
-        	case 7:		// Wiki link
+            case 8:		// Wiki link
                 if (inEscapedTable) { break; }
-        		handleTracLinks(matchText);
-        		continue;
-            case 8:		// WikiPageName
+                handleTracLinks(matchText);
+                continue;
+            case 9:		// WikiPageName
                 if (inEscapedTable) { break; }
                 handleWikiPageName(matchText);
                 continue;
@@ -2039,8 +2036,30 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 holder.appendChild(contentDocument.createTextNode(matchText));
             }
         }
+    }
 
-        // End of line actions:
+    for (var indexLines = 0; indexLines < lines.length; indexLines++) {
+        var line = lines[indexLines].replace(/\r$/, "");
+        if (inCodeBlock || /^ *\{\{\{ *$/.test(line)) {
+            handleCodeBlock(line);
+            continue;
+        }
+        if (/^----/.test(line)) {
+            closeToFragment();
+            fragment.appendChild(contentDocument.createElement("hr"));
+            continue;
+        }
+        if (line.length == 0 && !inCollapsibleBlock) {
+            closeToFragment();
+            continue;
+        }
+        line = line.replace(/\t/g, "        ");
+        line = line.replace(/\u00a0/g, " ");
+
+        decorationStatus = {};
+        decorationStack = [];
+
+        handleLine(line);
 
         if (currentHeader) {
             closeHeader();
@@ -2078,6 +2097,7 @@ TracWysiwyg.prototype.wikiCloseTokens = {
     "#text": true,
     "a": true,
     "tt": true,
+    "ins": true,
     "b": "'''", "strong": "'''",
     "i": "''", "em": "''",
     "del": "--", "strike": "--",
@@ -2093,7 +2113,7 @@ TracWysiwyg.prototype.wikiBlockTags = {
     "table": true, "hr": true };
 
 TracWysiwyg.prototype.wikiInlineTags = {
-    "a": true, "tt": true, "b": true, "strong": true, "i": true, "em": true,
+    "a": true, "tt": true, "ins": true, "b": true, "strong": true, "i": true, "em": true,
     "u": true, "del": true, "strike": true, "sub": true, "sup": true,
     "br": true, "span": true };
 
@@ -2417,7 +2437,16 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 var value = getTextContent(node);
                 var text;
                 if (value) {
-	            text = "!-" + value + "-!";
+                    text = "!<" + value + ">!";
+                    pushTextWithDecorations(text, node);
+                }
+                break;
+            case "ins":
+                skipNode = node;
+                var value = node.innerHTML;
+                var text;
+                if (value) {
+                    text = "!-" + value + "-!";
                     pushTextWithDecorations(text, node);
                 }
                 break;
