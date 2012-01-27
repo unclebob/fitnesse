@@ -772,6 +772,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         self.selectionChanged();
     }
     $(d).click(listenerClick);
+
 };
 
 TracWysiwyg.prototype.loadWysiwygDocument = function() {
@@ -1600,6 +1601,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
     function handleCollapsibleBlock(value) {
         inCollapsibleBlock++;
+        closeParagraph();
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
         var collapsible = contentDocument.createElement("div");
         var title = contentDocument.createElement("p");
@@ -1627,40 +1629,8 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         }
     }
 
-    function handleInline(name) {
-        if (name == "bolditalic") {
-            if (decorationStatus.italic) {
-                handleInline("italic");
-                handleInline("bold");
-            }
-            else {
-                handleInline("bold");
-                handleInline("italic");
-            }
-            return;
-        }
-
+    function handleOpenInlineCode(name) {
         var d = contentDocument;
-        if (decorationStatus[name]) {
-            var tagNames = [];
-            for (var index = decorationStack.length - 1; index >= 0; index--) {
-                var tagName = holder.tagName;
-                holder = holder.parentNode;
-                if (decorationStack[index] == name) {
-                    break;
-                }
-                tagNames.push(tagName);
-            }
-            decorationStack.splice(index, 1);
-            decorationStatus[name] = false;
-            while (tagNames.length > 0) {
-                var element = d.createElement(tagNames.pop());
-                holder.appendChild(element);
-                holder = element;
-            }
-            return;
-        }
-
         var tagName;
         switch (name) {
         case "bold":        tagName = "b";      break;
@@ -1677,6 +1647,48 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         decorationStatus[name] = true;
         decorationStack.push(name);
     }
+
+
+    function handleCloseInlineCode(name) {
+        var d = contentDocument;
+        var tagNames = [];
+        for (var index = decorationStack.length - 1; index >= 0; index--) {
+            var tagName = holder.tagName;
+            holder = holder.parentNode;
+            if (decorationStack[index] == name) {
+                break;
+            }
+            tagNames.push(tagName);
+        }
+        decorationStack.splice(index, 1);
+        decorationStatus[name] = false;
+        while (tagNames.length > 0) {
+            var element = d.createElement(tagNames.pop());
+            holder.appendChild(element);
+            holder = element;
+        }
+    }
+
+    function handleInline(name) {
+        if (name == "bolditalic") {
+            if (decorationStatus.italic) {
+                handleInline("italic");
+                handleInline("bold");
+            }
+            else {
+                handleInline("bold");
+                handleInline("italic");
+            }
+            return;
+        }
+
+        if (decorationStatus[name]) {
+            handleCloseInlineCode(name);
+            return;
+        }
+        handleOpenInlineCode(name);
+    }
+
 
     function handleInlineCode(value, length) {
         var d = contentDocument;

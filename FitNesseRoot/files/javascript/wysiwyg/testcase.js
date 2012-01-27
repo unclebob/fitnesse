@@ -622,7 +622,7 @@ $(function() {
         });
 
         unit.add("table from word", function() {
-            var dom = element("div");
+            var dom = element("body");
             dom.innerHTML = [
                 '',
                 '<table class="MsoTableGrid" style="border: medium none ; border-collapse: collapse;" border="1" cellpadding="0" cellspacing="0">',
@@ -743,25 +743,28 @@ $(function() {
 
         unit.add("Collapsible area", function() {
             var dom = fragment(
-                element("fieldset",
-                    element("legend", "EXPANDED"),
+                element("div", { "class": "collapsable" },
+                    element("p", "EXPANDED"),
                     element("p", " Expanded content")),
-                element("fieldset", { "class": "collapsed" },
-                    element("legend", "COLLAPSED"),
+                element("div", { "class": "collapsable collapsed" },
+                    element("p", "COLLAPSED"),
                     element("p", " Collapsed content")),
-                element("fieldset", { "class": "hidden" },
-                    element("legend", "HIDDEN"),
+                element("div", { "class": "collapsable hidden" },
+                    element("p", "HIDDEN"),
                     element("p", " Hidden content")));
             generate.call(this, dom, [
                 "!*** EXPANDED",
+                "",
                 "Expanded content",
                 "",
                 "*!",
                 "!***> COLLAPSED",
+                "",
                 "Collapsed content",
                 "",
                 "*!",
                 "!***< HIDDEN",
+                "",
                 "Hidden content",
                 "",
                 "*!"].join("\n"));
@@ -770,11 +773,11 @@ $(function() {
         unit.add("Nested collapsible area", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
-                element("fieldset",
-                    element("legend", "outer"),
+                element("div", { "class": "collapsable" },
+                    element("p", "outer"),
                     element("p", " Text"),
-                    element("fieldset",
-                        element("legend", "inner"),
+                    element("div", { "class": "collapsable" },
+                        element("p", "inner"),
                         element("p", " More text")
                     )));
             generateFragment.call(this, dom, [
@@ -789,9 +792,11 @@ $(function() {
                 "Paragraph",
                 "",
                 "!*** outer",
+                "",
                 "Text",
                 "",
                 "!*** inner",
+                "",
                 "More text",
                 "",
                 "*!",
