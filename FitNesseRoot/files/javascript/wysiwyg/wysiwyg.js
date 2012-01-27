@@ -2,7 +2,7 @@
 
  TODO:
  - Menu button for creating a Collapsable area (containing selected text?)
- - Menu for removing Collapsible area. Text is added in parent node
+ - Menu for removing Collapsible area. Text is added in parent node.
  - Allow for toggle default (open/closed/hidden)
  - Edit icons
  - When adding/removing cell, make sure colspan of the other rows is correct
@@ -831,7 +831,7 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
         + '<label for="editor-textarea-@">'
         + '<input type="radio" name="__EDITOR__@" value="textarea" id="editor-textarea-@" '
         + (mode == "textarea" ? 'checked="checked"' : '') + ' />'
-        + 'wiki format</label> '
+        + 'plain text</label> '
         + '&nbsp; ';
     div.className = "editor-toggle";
     div.innerHTML = html.replace(/@/g, ++TracWysiwyg.count);
