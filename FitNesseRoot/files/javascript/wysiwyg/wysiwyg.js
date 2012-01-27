@@ -9,6 +9,8 @@
  - Do inline escaping in links
  - Test copy/paste in rich text editor
  - How to make editing tables simpler in the editor? It's the core of the system basically (tables).
+ - Figure out a way (menu button?) to handle escaping text (!-..-!, !<..>!)
+
  ****/
  
 var TracWysiwyg = function(textarea, options) {
@@ -21,17 +23,6 @@ var TracWysiwyg = function(textarea, options) {
     this.options = options = options || {};
     var wikitextToolbar = null;
     var textareaResizable = null;
-    if (/\btrac-resizable\b/i.test(textarea.className)) {
-        var tmp = textarea.parentNode;
-        tmp = tmp && tmp.parentNode;
-        if (tmp && /\btrac-resizable\b/i.test(tmp.className)) {
-            wikitextToolbar = tmp.previousSibling;
-            textareaResizable = tmp;
-        }
-    }
-    else {
-        wikitextToolbar = textarea.previousSibling;
-    }
     if (wikitextToolbar && (wikitextToolbar.nodeType != 1 || wikitextToolbar.className != "wikitoolbar")) {
         wikitextToolbar = null;
     }
@@ -168,6 +159,9 @@ TracWysiwyg.prototype.initializeEditor = function(d) {
             this.contentDocument = this.contentWindow.document;
         }
     }
+    // disable firefox table resizing
+    d.execCommand("enableObjectResizing", false, "false");
+    d.execCommand("enableInlineTableEditing", false, "false");
 };
 
 TracWysiwyg.prototype.toggleAutolink = function() {
