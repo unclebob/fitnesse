@@ -526,7 +526,6 @@ TracWysiwyg.prototype.setupMenuEvents = function() {
         case "heading6":    return [ self.formatHeaderBlock, "h6" ];
         case "link":        return [ self.createLink ];
         case "unlink":      return [ self.execCommand, "unlink" ];
-        case "ol":          return [ self.insertOrderedList ];
         case "ul":          return [ self.insertUnorderedList ];
         case "outdent":     return [ self.outdent ];
         case "indent":      return [ self.indent ];
@@ -1048,14 +1047,6 @@ TracWysiwyg.prototype.formatHeaderBlock = function(name) {
         return;
     }
     this.execCommand("formatblock", "<" + name + ">");
-    this.selectionChanged();
-};
-
-TracWysiwyg.prototype.insertOrderedList = function() {
-    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
-        return;
-    }
-    this.execCommand("insertorderedlist");
     this.selectionChanged();
 };
 
