@@ -639,7 +639,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
     var w = this.contentWindow;
     var ime = false;
 
-    function listenerKeydown(event) {
+    $(d).keydown(function(event) {
         var method = null;
         var args = null;
         event = event || self.contentWindow.event;
@@ -710,16 +710,9 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             method.apply(self, args);
             self.selectionChanged();
         }
-        else if (keyCode) {
-            var focus = self.getFocusNode();
-            if (!getSelfOrAncestor(focus, /^(?:p|li|h[1-6]|t[dh]|d[td]|pre|blockquote)$/)) {
-                self.execCommand("formatblock", "<p>");
-            }
-        }
-    }
-    $(d).keydown(listenerKeydown);
+    });
 
-    function listenerKeypress(event) {
+    $(d).keypress(function(event) {
         event = event || self.contentWindow.event;
         var modifier = (event.ctrlKey ? 0x40000000 : 0)
             | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0);
@@ -755,10 +748,9 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             }
             return;
         }
-    }
-    $(d).keypress(listenerKeypress);
+    });
 
-    function listenerKeyup(event) {
+    $(d).keyup(function(event) {
         var keyCode = event.keyCode;
         if (ime) {
             switch (keyCode) {
@@ -770,19 +762,16 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         }
         self.updateElementClassName(self.getSelectionRange().startContainer);
         self.selectionChanged();
-    }
-    $(d).keyup(listenerKeyup);
+    });
 
-    function listenerMouseup(event) {
+    $(d).mouseup(function(event) {
         self.selectionChanged();
-    }
-    $(d).mouseup(listenerMouseup);
+    });
 
-    function listenerClick(event) {
+    $(d).click(function(event) {
         self.hideAllMenus();
         self.selectionChanged();
-    }
-    $(d).click(listenerClick);
+    });
 
 };
 
