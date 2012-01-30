@@ -1629,17 +1629,21 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         closeParagraph();
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
         var collapsible = contentDocument.createElement("div");
-        var title = contentDocument.createElement("p");
         $(collapsible).addClass("collapsable");
-        collapsible.appendChild(title);
-        title.appendChild(contentDocument.createTextNode(m[2] || unescape("title")));
-        switch (m[1]) {
-        case "<": // Hidden
-            $(collapsible).addClass("hidden");
-            break;
-        case ">": // Collapsed
-            $(collapsible).addClass("collapsed");
-            break;
+        if (m) {
+            if (m[2]) {
+                var title = contentDocument.createElement("p");
+                collapsible.appendChild(title);
+                title.appendChild(contentDocument.createTextNode(m[2] || ""));
+            }
+            switch (m[1]) {
+            case "<": // Hidden
+                $(collapsible).addClass("hidden");
+                break;
+            case ">": // Collapsed
+                $(collapsible).addClass("collapsed");
+                break;
+            }
         }
         holder.appendChild(collapsible);
         holder = collapsible;

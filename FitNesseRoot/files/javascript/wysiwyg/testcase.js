@@ -933,6 +933,35 @@ $(function() {
         unit.add("Collapsible area", function() {
             var dom = fragment(
                 element("div", { "class": "collapsable" },
+                    element("p", "My content")));
+            generateFragment.call(this, dom, [
+                "!*",
+                "My content",
+                "*!"].join("\n"));
+             generateWikitext.call(this, dom, [
+                "!*** My content",
+                "",
+                "*!"].join("\n"));
+        });
+
+        unit.add("Collapsible area with only title", function() {
+            dom = fragment(
+                element("div", { "class": "collapsable" },
+                    element("p", "My content"),
+                    element("p", br())));
+             generateFragment.call(this, dom, [
+                "!* My content",
+                "",
+                "*!"].join("\n"));
+             generateWikitext.call(this, dom, [
+                "!*** My content",
+                "",
+                "*!"].join("\n"));
+        });
+
+        unit.add("Collapsible area styles", function() {
+            var dom = fragment(
+                element("div", { "class": "collapsable" },
                     element("p", "EXPANDED"),
                     element("p", "Expanded content")),
                 element("div", { "class": "collapsable collapsed" },
