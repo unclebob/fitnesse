@@ -31,21 +31,19 @@ div.collapsable {
  background-position: 3px 3px;
 }
 
+div.collapsable.collapsed {
+ background: url(/files/images/collapsableClosed.gif) left top no-repeat #F9F9F9;
+}
+
+div.collapsable.hidden {
+ background: url(/files/images/collapsableHidden.png) left top no-repeat #F9F9F9;
+}
+
 div.collapsable>p:first-child {
 /* like .meta */
  color: #BF8660;
  font-style: italic;
 }
-
-/*
-div.hidden legend:before {
-  content: "< ";
-}
-
-div.collapsed legend:before {
-  content: "> ";
-}
-*/
 
 table {
   border-collapse: collapse;
