@@ -1620,7 +1620,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         closeParagraph();
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
         var collapsible = contentDocument.createElement("div");
-        $(collapsible).addClass("collapsable");
         if (m) {
             if (m[2]) {
                 var title = contentDocument.createElement("p");
@@ -1636,6 +1635,23 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 break;
             }
         }
+
+        // Generic event handling
+        $(collapsible).addClass("collapsable").click(function(event) {
+            var x = event.pageX - this.offsetLeft;
+            var y = event.pageY - this.offsetTop;
+            if (x < 15 && y < 15) {
+                var e = $(this);
+                if (e.hasClass('collapsed')) {
+                    e.removeClass('collapsed').addClass('hidden');
+                } else if (e.hasClass('hidden')) {
+                    e.removeClass('hidden');
+                } else {
+                    e.addClass('collapsed');
+                }
+                event.stopPropagation();
+            }
+        });
         holder.appendChild(collapsible);
         holder = collapsible;
         openParagraph();
@@ -3458,7 +3474,6 @@ TracWysiwyg.getEditorMode = function() {
             }
             break;
         }
-        // TODO: do same for wrap option.
     }
 
     TracWysiwyg.editorMode = mode || "textarea";

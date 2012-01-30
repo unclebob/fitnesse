@@ -28,15 +28,17 @@ div.collapsable {
  margin: 0.5em;
  padding-left: 15px;
  background: url(/files/images/collapsableOpen.gif) left top no-repeat #F9F9F9;
- background-position: 3px 3px;
+ background-position: 2px 2px;
 }
 
 div.collapsable.collapsed {
  background: url(/files/images/collapsableClosed.gif) left top no-repeat #F9F9F9;
+ background-position: 2px 2px;
 }
 
 div.collapsable.hidden {
  background: url(/files/images/collapsableHidden.png) left top no-repeat #F9F9F9;
+ background-position: 2px 2px;
 }
 
 div.collapsable>p:first-child {
