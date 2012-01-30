@@ -406,6 +406,10 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
         '<li title="Remove format"><a id="wt-remove" href="#"></a></li>',
         '<li title="Link"><a id="wt-link" href="#"></a></li>',
         '<li title="Unlink"><a id="wt-unlink" href="#"></a></li>',
+        '<li title="Ordered list"><a id="wt-ol" href="#"></a></li>',
+        '<li title="List"><a id="wt-ul" href="#"></a></li>',
+        '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
+        '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '<li><a id="wt-tablemenu" href="#"></a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"></a></li>',
@@ -522,6 +526,10 @@ TracWysiwyg.prototype.setupMenuEvents = function() {
         case "heading6":    return [ self.formatHeaderBlock, "h6" ];
         case "link":        return [ self.createLink ];
         case "unlink":      return [ self.execCommand, "unlink" ];
+        case "ol":          return [ self.insertOrderedList ];
+        case "ul":          return [ self.insertUnorderedList ];
+        case "outdent":     return [ self.outdent ];
+        case "indent":      return [ self.indent ];
         case "table":       return [ self.insertTable ];
         case "tablemenu":   return [ self.toggleMenu, self.tableMenu, element ];
         case "insert-cell-before":   return [ self.insertTableCell_, false ];
@@ -641,9 +649,14 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         case 0x09:  // TAB
             var range = self.getSelectionRange();
             var stop = false;
-            var element = getSelfOrAncestor(range.startContainer, /^(?:pre|table)$/);
+            var element = getSelfOrAncestor(range.startContainer, /^(?:li|pre|table)$/);
             if (element) {
                 switch (element.tagName.toLowerCase()) {
+                case "li":
+                    self.execCommand(event.shiftKey ? "outdent" : "indent");
+                    self.selectionChanged();
+                    stop = true;
+                    break;
                 case "pre":
                     self.insertHTML("\t");
                     stop = true;
@@ -700,7 +713,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         }
         else if (keyCode) {
             var focus = self.getFocusNode();
-            if (!getSelfOrAncestor(focus, /^(?:p|h[1-6]|t[dh]|pre)$/)) {
+            if (!getSelfOrAncestor(focus, /^(?:p|li|h[1-6]|t[dh]|d[td]|pre|blockquote)$/)) {
                 self.execCommand("formatblock", "<p>");
             }
         }
@@ -1350,13 +1363,14 @@ TracWysiwyg.prototype.selectionChanged = function() {
         strong: false, em: false, underline: false, strike: false, sub: false,
         sup: false, monospace: false, paragraph: false, heading1: false,
         heading2: false, heading3: false, heading4: false, heading5: false,
-        heading6: false, link: false, outdent: false,
+        heading6: false, link: false, ol: false, ul: false, outdent: false,
         indent: false, table: false, code: false, quote: false, hr: false,
         br: false };
     var tagNameToKey = {
         b: "strong", i: "em", u: "underline", del: "strike", tt: "monospace",
         p: "paragraph", h1: "heading1", h2: "heading2", h3: "heading3",
-        h4: "heading4", h5: "heading5", h6: "heading6", a: "link", pre: "code" };
+        h4: "heading4", h5: "heading5", h6: "heading6", a: "link", pre: "code",
+        blockquote: "quote" };
     var position = this.getSelectionPosition();
 
     var node;
@@ -1421,17 +1435,23 @@ TracWysiwyg.prototype.selectionChanged = function() {
     wikiInlineRules.push(_wikiPageName);            // 9. WikiPageName
 
     var wikiRules = wikiInlineRules.slice(0);
+    // -1. citation
+    //wikiRules.push("^(?: *>)+[ \\t\\r\\f\\v]*");
     // -1. header
     wikiRules.push("^[ \\t\\r\\f\\v]*![1-6][ \\t\\r\\f\\v]+.*?(?:#" + _xmlName + ")?[ \\t\\r\\f\\v]*$");
-    // -2. definition and comment
+    // -2. list
+    wikiRules.push("^[ \\t\\r\\f\\v]+\\*[ \\t\\r\\f\\v]");
+    // -3. definition and comment
     wikiRules.push("^(?:![a-z]|#).*$");
-    // -3. closing table row
+    // -5. leading space
+    //wikiRules.push("^[ \\t\\r\\f\\v]+(?=[^ \\t\\r\\f\\v])");
+    // -4. closing table row
     wikiRules.push("(?:\\|)[ \\t\\r\\f\\v]*$");
-    // -4. cell
+    // -5. cell
     wikiRules.push("!?(?:\\|)");
-    // -5: open collapsible section
+    // -6: open collapsible section
     wikiRules.push("^!\\*+[<>]?(?:[ \\t\\r\\f\\v]*|[ \\t\\r\\f\\v]+.*)$");
-    // -6: close collapsible section
+    // -7: close collapsible section
     wikiRules.push("^\\*+!$");
 
     // TODO could be removed?
@@ -1488,7 +1508,9 @@ TracWysiwyg.prototype.isInlineNode = function(node) {
 
 (function() {
     var blocks = {
-        p: true, div: true,
+        p: true, blockquote: true, div: true,
+        li: true, ul: true, ol: true,
+        dl: true, dt: true, dd: true,
         h1: true, h2: true, h3: true, h4: true, h5: true, h6: true,
         table: true, thead: true, tbody: true, tr: true, td: true, th: true };
 
@@ -1532,6 +1554,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var lines = wikitext.split("\n");
     var codeText = null;
     var currentHeader = null;
+    var listDepth = [];
     var decorationStatus;
     var decorationStack;
     var inCodeBlock, inCollapsibleBlock;
@@ -1781,6 +1804,85 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         holder.appendChild(element);
     }
 
+    function handleList(value) {
+        var match = /^(\s+)\*\s/.exec(value);
+        var className, depth, start;
+        if (!match) {
+            holder.appendChild(contentDocument.createTextNode(value));
+            return;
+        }
+
+        depth = match[1].length;
+
+        var last = listDepth.length - 1;
+        if (depth > (last >= 0 ? listDepth[last] : -1)) {
+            closeToFragment("li");
+            openList("ul", className, start, depth);
+        }
+        else {
+            var container, list;
+            if (listDepth.length > 1 && depth < listDepth[last]) {
+                do {
+                    if (depth >= listDepth[last]) {
+                        break;
+                    }
+                    closeList();
+                    last = listDepth.length - 1;
+                } while (listDepth.length > 1);
+                container = holder;
+            }
+            else {
+                list = getSelfOrAncestor(holder, "li");
+                self.appendBogusLineBreak(list);
+                container = list.parentNode;
+            }
+            var tmp = contentDocument.createElement("li");
+            container.appendChild(tmp);
+            holder = tmp;
+            listDepth[last] = depth;
+        }
+    }
+
+    function openList(tag, className, start, depth) {
+        var d = contentDocument;
+        var h = holder;
+
+        var container = d.createElement(tag);
+        if (className) {
+            container.className = className;
+        }
+        if (start) {
+            container.setAttribute("start", start);
+        }
+        var list = d.createElement("li");
+        container.appendChild(list);
+
+        var target;
+        if (h == fragment) {
+            target = fragment;
+        }
+        else {
+            target = getSelfOrAncestor(h, "li");
+            target = target ? target.parentNode : h;
+        }
+        target.appendChild(container);
+        holder = list;
+        listDepth.push(depth);
+    }
+
+    function closeList() {
+        var h = holder;
+        var target = getSelfOrAncestor(h, "li");
+        if (target) {
+            self.appendBogusLineBreak(target);
+            holder = target.parentNode.parentNode;
+        }
+        else {
+            holder = h.parentNode;
+        }
+        listDepth.pop();
+    }
+
     function openParagraph() {
         if (!inParagraph()) {
             var element = contentDocument.createElement("p");
@@ -1883,6 +1985,9 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             case "p":
                 method = closeParagraph;
                 break;
+            case "li": case "ul": case "ol":
+                method = closeList;
+                break;
             case "td": case "tr": case "tbody": case "table":
                 method = closeTable;
                 break;
@@ -1943,7 +2048,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 if (inParagraph() && (prevIndex == 0)) {
                     text = text ? ((holder.hasChildNodes() ? " " : "") + text) : "";
                 }
-                if (!inTable() && !currentHeader || holder == fragment) {
+                if (listDepth.length == 0 && !inTable() && !currentHeader || holder == fragment) {
                     openParagraph();
                 }
                 if (text) {
@@ -2000,32 +2105,35 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                     continue;
                 }
                 break;
-            case -2:    // definition (leading "!")
+            case -2:    // list
+                handleList(matchText)
+                continue;
+            case -3:    // definition (leading "!")
                 handleDefinition(matchText);
                 break;
-            case -3:    // closing table row
+            case -4:    // closing table row
                 if (inTable()) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
-            case -4:    // cell
+            case -5:    // cell
                 if (!inTable() && match.index == 0) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
                 handleTableCell(inTableRow() ? 0 : 1, /^!/.test(matchText));
                 continue;
-            case -5: // collapsible section
+            case -6: // collapsible section
                 handleCollapsibleBlock(matchText);
                 continue;
-            case -6: // close collapsible section
+            case -7: // close collapsible section
                 closeCollapsibleBlock();
                 continue;
             }
 
             if (matchText) {
-                if (!currentHeader && !inTable() && !inAnchor()) {
+                if (listDepth.length == 0 && !currentHeader && !inTable() && !inAnchor()) {
                     openParagraph();
                 }
                 holder.appendChild(contentDocument.createTextNode(matchText));
@@ -2135,6 +2243,8 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     var texts = [];
     var stack = [];
     var last = root;
+    var listDepth = 0;
+    var quoteCitation = false;
     var inCodeBlock = false;
     var skipNode = null;
 
@@ -2365,6 +2475,42 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 skipNode = node;
                 pushAnchor(node);
                 break;
+            case "li":
+                _texts.push(" " + string("  ", listDepth - 1));
+                var container = node.parentNode;
+                if ((container.tagName || "").toLowerCase() == "ol") {
+                    var start = container.getAttribute("start") || "";
+                    if (start != "1" && /^(?:[0-9]+|[a-zA-Z]|[ivxIVX]{1,5})$/.test(start)) {
+                        _texts.push(start, ". ");
+                    }
+                    else {
+                        switch (container.className) {
+                        case "arabiczero":  _texts.push("0. "); break;
+                        case "lowerroman":  _texts.push("i. "); break;
+                        case "upperroman":  _texts.push("I. "); break;
+                        case "loweralpha":  _texts.push("a. "); break;
+                        case "upperalpha":  _texts.push("A. "); break;
+                        default:            _texts.push("1. "); break;
+                        }
+                    }
+                }
+                else {
+                    _texts.push("* ");
+                }
+                break;
+            case "ul": case "ol":
+                if (listDepth == 0) {
+                    if (self.isInlineNode(node.previousSibling)) {
+                        _texts.push("\n");
+                    }
+                }
+                else if (listDepth > 0) {
+                    if (node.parentNode.tagName.toLowerCase() == "li") {
+                        _texts.push("\n");
+                    }
+                }
+                listDepth++;
+                break;
             case "br":
                 if (!self.isBogusLineBreak(node)) {
                     var value = null;
@@ -2462,8 +2608,42 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                     _texts.push("\n\n");
                 }
                 break;
+            case "li":
+                if (node.getElementsByTagName("li").length == 0) {
+                    _texts.push("\n");
+                }
+                break;
+            case "ul": case "ol":
+                listDepth--;
+                if (listDepth == 0) {
+                    _texts.push("\n");
+                }
+                break;
             case "pre":
-                _texts.push("\n}}}\n");
+                var text;
+                var parentNode = node.parentNode;
+                if (parentNode && /^(?:li|dd)$/i.test(parentNode.tagName)) {
+                    var nextSibling = node.nextSibling;
+                    if (!nextSibling) {
+                        text = "\n}}}";
+                    }
+                    else if (nextSibling.nodeType != 1) {
+                        text = "\n}}}\n";
+                    }
+                    else if (nextSibling.tagName.toLowerCase() == "pre") {
+                        text = "\n}}}";
+                    }
+                    else {
+                        text = "\n}}}\n";
+                    }
+                    if (text.slice(-1) == "\n") {
+                        text += listDepth > 0 ? " " + string("  ", listDepth) : "    ";
+                    }
+                }
+                else {
+                    text = "\n}}}\n";
+                }
+                _texts.push(text);
                 inCodeBlock = false;
                 break;
             case "span":

@@ -480,6 +480,151 @@ $(function() {
                 "!6 Heading 6 " ].join("\n"));
         });
 
+        unit.add("list", function() {
+            var dom = fragment(
+                element("p", "Paragraph"),
+                element("ul",
+                    element("li", "foo bar"),
+                    element("ul", element("li", "Subitem")),
+                    element("li", "item 2")),
+                element("p", "Paragraph"));
+            generateFragment.call(this, dom, [
+                "Paragraph",
+                " * foo bar",
+                "   * Subitem",
+                " * item 2",
+                "Paragraph" ].join("\n"));
+            generate.call(this, dom, [
+                "Paragraph",
+                "",
+                " * foo bar",
+                "   * Subitem",
+                " * item 2",
+                "",
+                "Paragraph" ].join("\n"));
+        });
+
+        unit.add("list 2", function() {
+            var dom = fragment(
+                element("ul",
+                    element("li", "foo bar"),
+                    element("ul",
+                        element("li", "Subitem 1"),
+                        element("ul",
+                            element("li", "nested item 1"),
+                            element("li", "nested item 2")),
+                        element("li", "Subitem 2"),
+                        element("li", "Subitem 3")),
+                    element("li", "item 2")),
+                element("p", "Paragraph"));
+            generateFragment.call(this, dom, [
+                "    * foo bar",
+                "           * Subitem 1",
+                "             * nested item 1",
+                "             * nested item 2",
+                "            * Subitem 2",
+                "            * Subitem 3",
+                "    * item 2",
+                "Paragraph" ].join("\n"));
+            generate.call(this, dom, [
+                " * foo bar",
+                "   * Subitem 1",
+                "     * nested item 1",
+                "     * nested item 2",
+                "   * Subitem 2",
+                "   * Subitem 3",
+                " * item 2",
+                "",
+                "Paragraph" ].join("\n"));
+        });
+
+        unit.add("list 3", function() {
+            var dom = fragment(
+                element("ul",
+                    element("li", "Item 1"),
+                    element("ul", element("li", "Item 1.1")),
+                    element("li", "Item 2")),
+                element("p", "And numbered lists can also be given an explicit number"));
+            generateFragment.call(this, dom, [
+                " * Item 1",
+                "   * Item 1.1",
+                " * Item 2",
+                "And numbered lists can also be given an explicit number" ].join("\n"));
+            generate.call(this, dom, [
+                " * Item 1",
+                "   * Item 1.1",
+                " * Item 2",
+                "",
+                "And numbered lists can also be given an explicit number" ].join("\n"));
+        });
+
+        unit.add("list at beginning of line", function() {
+            var dom = fragment(
+                element("p", "- item 1 - item 2   - sub 2.1   - sub 2.2 a. item A b. item B Paragraph"));
+            generateFragment.call(this, dom, [
+                "- item 1",
+                "- item 2",
+                "  - sub 2.1",
+                "  - sub 2.2",
+                "a. item A",
+                "b. item B",
+                "Paragraph" ].join("\n"));
+            generate.call(this, dom,
+                "- item 1 - item 2   - sub 2.1   - sub 2.2 a. item A b. item B Paragraph");
+        });
+
+        unit.add("list + code block", function() {
+            var dom = fragment(
+                element("p", "Paragraph"),
+                element("ul",
+                    element("li",
+                        "item 1",
+                        element("pre", { "class": "wiki" }, "code")),
+                    element("ul",
+                        element("li",
+                            "item 1.1",
+                            element("pre", { "class": "wiki" }, "code"),
+                            element("pre", { "class": "wiki" }, "code"))),
+                    element("li",
+                        "item 2",
+                        element("pre", { "class": "wiki" }, "code"))));
+            generateFragment.call(this, dom, [
+                "Paragraph",
+                " * item 1",
+                "{{{",
+                "code",
+                "}}}",
+                "   * item 1.1",
+                "{{{",
+                "code",
+                "}}}",
+                "{{{",
+                "code",
+                "}}}",
+                " * item 2",
+                "{{{",
+                "code",
+                "}}}" ].join("\n"));
+            generate.call(this, dom, [
+                "Paragraph",
+                "",
+                " * item 1",
+                "{{{",
+                "code",
+                "}}}",
+                "   * item 1.1",
+                "{{{",
+                "code",
+                "}}}",
+                "{{{",
+                "code",
+                "}}}",
+                " * item 2",
+                "{{{",
+                "code",
+                "}}}" ].join("\n"));
+        });
+
         unit.add("definition", function() {
             var dom = fragment(
                 element("p", "Paragraph"),
@@ -606,19 +751,22 @@ $(function() {
                 "!-'''normal-!" ].join("\n"));
         });
 
-        unit.add("table [ paragraph ]", function() {
+        unit.add("table [ paragraph, ul ]", function() {
             var dom = fragment(
                 element("table",
                     element("tbody",
                         element("tr",
                             element("td", element("p", "1.1")),
-                            element("td", element("p", ""))),
+                            element("td",
+                                element("ul",
+                                    element("li", "item 1"),
+                                    element("li", "item 2")))),
                         element("tr",
                             element("td",
                                 element("p", "2.1* item 3 * item 4")
                                     )))));
             generateWikitext.call(this, dom, [
-                "| 1.1 | |",
+                "| 1.1 | * item 1\n * item 2 |",
                 "| 2.1* item 3 * item 4 |" ].join("\n"));
         });
 
@@ -700,6 +848,9 @@ $(function() {
                     "var TracWysiwyg = function(textarea) {", " ... ", "}"),
                 element("p", "> citation continued"),
                 element("p", "quote continued"),
+                element("ul",
+                    element("li", "item 1", br(), "continued"),
+                    element("ol", element("li", "item", br(), "1.1"))),
                 element("p", { 'class': 'meta' }, "!define def {dt dd}"),
                 element("table",
                     element("tbody",
@@ -719,6 +870,9 @@ $(function() {
                 "> citation continued",
                 "",
                 "quote continued",
+                "",
+                " * item 1 continued",
+                "   1. item 1.1",
                 "",
                 "!define def {dt dd}",
                 "| cell 1 | cell 2 |" ].join("\n"), wikitext);
