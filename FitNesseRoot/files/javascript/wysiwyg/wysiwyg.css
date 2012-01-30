@@ -77,12 +77,12 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar li.wysiwyg-menu-heading5  a#wt-style span.wysiwyg-menu-heading5  { display: inline; }
 .wysiwyg-toolbar li.wysiwyg-menu-heading6  a#wt-style span.wysiwyg-menu-heading6  { display: inline; }
 .wysiwyg-toolbar li.wysiwyg-menu-code      a#wt-style span.wysiwyg-menu-code      { display: inline; }
-.wysiwyg-toolbar li.wysiwyg-menu-quote     a#wt-style span.wysiwyg-menu-quote     { display: inline; }
 
 .wysiwyg-toolbar li a#wt-em        { background-position: 0 0; }
 .wysiwyg-toolbar li a#wt-strong    { background-position: 0 -16px; }
 .wysiwyg-toolbar li a#wt-underline { background-position: 0 -32px; }
 .wysiwyg-toolbar li a#wt-monospace { background-position: 0 -160px; }
+.wysiwyg-toolbar li a#wt-strike    { background-position: 0 -48px; }
 .wysiwyg-toolbar li a#wt-link      { background-position: 0 -96px; }
 .wysiwyg-toolbar li a#wt-unlink    { background-position: 0 -112px; }
 .wysiwyg-toolbar li a#wt-ol        { background-position: 0 -176px; }

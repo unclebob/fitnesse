@@ -3,10 +3,8 @@
  TODO:
  - Menu button for creating a Collapsable area (containing selected text?)
  - Menu for removing Collapsible area. Text is added in parent node.
- - Allow for toggle default (open/closed/hidden)
  - Edit icons
  - When adding/removing cell, make sure colspan of the other rows is correct
- - Test copy/paste in rich text editor
  - How to make editing tables simpler in the editor? It's the core of the system basically (tables).
  - Figure out a way (menu button?) to handle escaping text (!-..-!, !<..>!)
 
@@ -401,17 +399,18 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
         '</a></li>',
         '<li title="Bold (Ctrl+B)"><a id="wt-strong" href="#"></a></li>',
         '<li title="Italic (Ctrl+I)"><a id="wt-em" href="#"></a></li>',
+        '<li title="Strike through"><a id="wt-strike" href="#"></a></li>',
         '<li title="Monospace"><a id="wt-monospace" href="#"></a></li>',
-        '<li><a id="wt-decorationmenu" href="#"></a></li>',
         '<li title="Remove format"><a id="wt-remove" href="#"></a></li>',
         '<li title="Link"><a id="wt-link" href="#"></a></li>',
         '<li title="Unlink"><a id="wt-unlink" href="#"></a></li>',
-        '<li title="Ordered list"><a id="wt-ol" href="#"></a></li>',
         '<li title="List"><a id="wt-ul" href="#"></a></li>',
         '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
         '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '<li><a id="wt-tablemenu" href="#"></a></li>',
+        '<li title="Collapsable section"><a id="wt-collapsable" href="#">C</a></li>',
+        '<li title="Remove collapsable section"><a id="wt-remove-collapsable" href="#">X</a></li>',
         '<li title="Horizontal rule"><a id="wt-hr" href="#"></a></li>',
         '<li title="Line break (Shift+Enter)"><a id="wt-br" href="#"></a></li>',
         '</ul>' ];
@@ -422,6 +421,7 @@ TracWysiwyg.prototype.createWysiwygToolbar = function(d) {
 };
 
 TracWysiwyg.prototype.createDialogWindow = function(d) {
+    // TODO: Use dropdown, initiate from outer window.
 	var html = [
 		'<p>Autocomplete for Fitnesse commands</p>'+
 		'<input id="autocomplete" type="text" />' ];
@@ -455,9 +455,11 @@ TracWysiwyg.prototype.createStyleMenu = function(d) {
 TracWysiwyg.prototype.createDecorationMenu = function(d) {
     var html = [
         '<ul class="menu">',
+        /*
         '<li><a id="wt-strike" href="#">Strike through</a></li>',
         '<li><a id="wt-sup" href="#">Superscript</a></li>',
         '<li><a id="wt-sub" href="#">Subscript</a></li>',
+        */
         '</ul>' ];
     var menu = d.createElement("div");
     menu.className = "wysiwyg-menu";
@@ -1660,7 +1662,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         switch (name) {
         case "bold":        tagName = "b";      break;
         case "italic":      tagName = "i";      break;
-        case "strike":      tagName = "del";    break;
+        case "strike":      tagName = "strike";    break;
         }
 
         if (holder == fragment) {
