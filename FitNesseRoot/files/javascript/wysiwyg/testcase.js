@@ -124,14 +124,14 @@ $(function() {
                 '</td></tr></tbody></table>',
                 '<p>',
                 'Note that more complex tables can be created using',
-                '<a class="wiki" href="/practice/wiki/WikiRestructuredText#BiggerReSTExample">reStructuredText</a>.',
+                '<a class="wiki" href="/practice/wiki/WikiRestructuredText#BiggerReSTExample">re<em>Structured</em>Text</a>.',
                 '</p>' ].join("");
             var expected = [
                 'h2', '#text', 'p', '#text', 'pre', '#text', 'p', '#text',
                 'table', 'tbody',
                 'tr', 'td', '#text', 'td', '#text', 'td', '#text',
                 'tr', 'td', '#text', 'td', '#text', 'td', '#text',
-                'p', '#text', 'a', '#text', '#text',
+                'p', '#text', 'a', '#text', 'em', '#text', '#text', '#text',
                 '(null)'].join(" ");
             doTreeWalk.call(this, expected, dom);
         });
@@ -201,6 +201,13 @@ $(function() {
                 "Paragraph continued...",
                 "",
                 "Second paragraph continued..." ].join("\n"));
+        });
+
+        unit.add("link with markup", function() {
+            var dom = fragment(
+                element("p", a("LinkPage", element("i", "label"))));
+            generateFragment.call(this, dom,
+                "[[''label''][LinkPage]]");
         });
 
         unit.add("wiki macros", function() {
@@ -424,7 +431,7 @@ $(function() {
         			a("TestPage", "TestPage"),
         			a("FrontPage?edit", "Edit"),
         			" button and add a ",
-        			a("FitNesse.UserGuide.WikiWord", "!-WikiWord-!"),
+        			a("FitNesse.UserGuide.WikiWord", element("ins", "WikiWord")),
         			a("http://external.link/bladieblah", "bla")
         		));
         		
@@ -435,8 +442,8 @@ $(function() {
         		+ "[[bla][http://external.link/bladieblah]]";
         	
         	// should go both ways (wiki2html and html2wiki)
-        	generateWikitext.call(this, dom, wikitext);
-        	generateFragment.call(this, dom, wikitext);
+        	generate.call(this, dom, wikitext);
+        	//generateFragment.call(this, dom, wikitext);
         });
 
         unit.add("header", function() {
@@ -628,6 +635,27 @@ $(function() {
             generateFragment.call(this, dom, "| '''''' | '''bold''' |");
         });
 
+        unit.add("table with links", function() {
+            var dom = fragment(
+                element("table",
+                    element("tbody",
+                        element("tr",
+                            element("td", { 'colspan': '2' }, " ", element("b", "To Learn More..."), " ")),
+                        element("tr",
+                            element("td", " ", a("FitNesse.UserGuide.OneMinuteDescription", "A One-Minute Description"), " "),
+                            element("td", " ", element("i", "What is ", a("FitNesse.FitNesse", "FitNesse"), "? Start here."), " ")),
+                        element("tr",
+                            element("td", " ", a("FitNesse.UserGuide.TwoMinuteExample", "A Two-Minute Example"), " "),
+                            element("td", " ", element("i", "A brief example. Read this one next."), " "))
+                            )));
+            generate.call(this, dom, [
+                "| '''To Learn More...''' |",
+                "| [[A One-Minute Description][FitNesse.UserGuide.OneMinuteDescription]] | ''What is [[FitNesse][FitNesse.FitNesse]]? Start here.'' |",
+                "| [[A Two-Minute Example][FitNesse.UserGuide.TwoMinuteExample]] | ''A brief example. Read this one next.'' |" ].join("\n"));
+        });
+
+
+
         unit.add("table from word", function() {
             var dom = element("body");
             dom.innerHTML = [
@@ -752,13 +780,13 @@ $(function() {
             var dom = fragment(
                 element("div", { "class": "collapsable" },
                     element("p", "EXPANDED"),
-                    element("p", " Expanded content")),
+                    element("p", "Expanded content")),
                 element("div", { "class": "collapsable collapsed" },
                     element("p", "COLLAPSED"),
-                    element("p", " Collapsed content")),
+                    element("p", "Collapsed content")),
                 element("div", { "class": "collapsable hidden" },
                     element("p", "HIDDEN"),
-                    element("p", " Hidden content")));
+                    element("p", "Hidden content")));
             generate.call(this, dom, [
                 "!*** EXPANDED",
                 "",
@@ -782,10 +810,10 @@ $(function() {
                 element("p", "Paragraph"),
                 element("div", { "class": "collapsable" },
                     element("p", "outer"),
-                    element("p", " Text"),
+                    element("p", "Text"),
                     element("div", { "class": "collapsable" },
                         element("p", "inner"),
-                        element("p", " More text")
+                        element("p", "More text")
                     )));
             generateFragment.call(this, dom, [
                 "Paragraph",

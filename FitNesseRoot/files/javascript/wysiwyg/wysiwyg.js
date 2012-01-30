@@ -6,7 +6,6 @@
  - Allow for toggle default (open/closed/hidden)
  - Edit icons
  - When adding/removing cell, make sure colspan of the other rows is correct
- - Do inline escaping in links
  - Test copy/paste in rich text editor
  - How to make editing tables simpler in the editor? It's the core of the system basically (tables).
  - Figure out a way (menu button?) to handle escaping text (!-..-!, !<..>!)
@@ -1325,7 +1324,8 @@ TracWysiwyg.prototype.createAnchor = function(link, label, attrs) {
     anchor.title = link;
     anchor.setAttribute("data-wysiwyg-link", link);
     anchor.setAttribute("onclick", "return false;");
-    anchor.appendChild(d.createTextNode(label));
+    if (label)
+        anchor.appendChild(d.createTextNode(label));
     return anchor;
 };
 TracWysiwyg.prototype.collectChildNodes = function(dest, source) {
@@ -1534,8 +1534,15 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     var currentHeader = null;
     var decorationStatus;
     var decorationStack;
-    var inCodeBlock, inCollapsibleBlock, inParagraph, inDefinition, inTable, inEscapedTable, inTableRow;
-    inCodeBlock = inCollapsibleBlock = inParagraph = inDefinition = inTable = inEscapedTable = inTableRow = false;
+    var inCodeBlock, inCollapsibleBlock;
+    inCodeBlock = inCollapsibleBlock = false;
+
+    function inParagraph() { return getSelfOrAncestor(holder, "p"); }
+    function inDefinition() { return getSelfOrAncestor(holder, "p.meta, p.comment"); }
+    function inTable() { return getSelfOrAncestor(holder, "table"); }
+    function inEscapedTable() { return getSelfOrAncestor(holder, "table.escaped"); }
+    function inTableRow() { return getSelfOrAncestor(holder, "tr"); }
+    function inAnchor() { return getSelfOrAncestor(holder, "a"); }
 
     function handleCodeBlock(line) {
         if (/^ *\{\{\{ *$/.test(line)) {
@@ -1592,11 +1599,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     function handleDefinition(line) {
         closeToFragment();
         openParagraph();
-        inDefinition = true;
-    }
-
-    function closeDefinition() {
-        closeParagraph();
     }
 
     function handleCollapsibleBlock(value) {
@@ -1715,6 +1717,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     function createAnchor(link, label) {
         var anchor = self.createAnchor(link, label);
         holder.appendChild(anchor);
+        return anchor;
     }
 
     function handleTracLinks(value) {
@@ -1723,10 +1726,10 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         if (match) {
             var link = match[2];
             
-            // some unknown sanitizing going on...
-            var text = (match[1] || match[2].replace(/^[\w.+-]+:/, "")).replace(/^(["'])(.*)\1$/g, "$2");
-            
-            createAnchor(link, text);
+            var anchor = createAnchor(link);
+            holder = anchor;
+            handleLine(match[1]);
+            holder = anchor.parentNode;
         }
         else {
             holder.appendChild(contentDocument.createTextNode(value));
@@ -1759,7 +1762,11 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function handleWikiPageName(name, label) {
-        createAnchor(name, label || name);
+        if (!inAnchor()) {
+            createAnchor(name, label || name);
+        } else {
+            holder.appendChild(contentDocument.createTextNode(label || name));
+        }
     }
 
     function handleWikiAnchor(text) {
@@ -1775,16 +1782,15 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function openParagraph() {
-        if (!inParagraph) {
+        if (!inParagraph()) {
             var element = contentDocument.createElement("p");
             holder.appendChild(element);
             holder = element;
-            inParagraph = true;
         }
     }
 
     function closeParagraph() {
-        if (inParagraph) {
+        if (inParagraph()) {
             var target = holder;
             if (target != fragment) {
                 target = getSelfOrAncestor(target, "p");
@@ -1792,8 +1798,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 self.updateElementClassName(target);
             }
             holder = target.parentNode;
-            inParagraph = false;
-            inDefinition = false;
         }
     }
 
@@ -1801,22 +1805,20 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         var d = contentDocument;
         var h, table, tbody;
 
-        if (!inTable) {
+        if (!inTable()) {
             h = holder;
             table = d.createElement("table");
             if (escaped) table.className = "escaped";
             tbody = d.createElement("tbody");
             table.appendChild(tbody);
             h.appendChild(table);
-            inTable = true;
-            inTableRow = false;
         }
         else {
             h = holder;
             tbody = getSelfOrAncestor(h, "tbody");
         }
 
-        if (inTableRow) {
+        if (inTableRow()) {
             var cell = getSelfOrAncestor(h, "td");
             if (cell) {
                 self.appendBogusLineBreak(cell);
@@ -1828,16 +1830,14 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         case 1:
             row = d.createElement("tr");
             tbody.appendChild(row);
-            inTableRow = true;
             break;
         case 0:
             row = getSelfOrAncestor(h, "tr");
             break;
         case -1:
-            if (inTableRow) {
+            if (inTableRow()) {
                 var target = getSelfOrAncestor(h, "tr");
                 holder = target.parentNode;
-                inTableRow = false;
             }
             return;
         }
@@ -1849,7 +1849,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     }
 
     function closeTable() {
-        if (inTable) {
+        if (inTable()) {
             var target = getSelfOrAncestor(holder, "table");
 
             // Spanning columns fitnesse style.
@@ -1863,7 +1863,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 }
             });
             holder = target.parentNode;
-            inTable = inEscapedTable = inTableRow = false;
         }
     }
 
@@ -1935,16 +1934,16 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             }
 
             if ((prevIndex == 0 && text || match && match.index == 0 && matchNumber > 0)
-                && !inParagraph && !inCollapsibleBlock) {
+                && !inParagraph() && !inAnchor() && !inCollapsibleBlock && !currentHeader) {
                 closeToFragment();
             }
 
 
             if (text || match && matchNumber > 0) {
-                if (inParagraph && (prevIndex == 0)) {
-                    text = text ? (" " + text) : "";
+                if (inParagraph() && (prevIndex == 0)) {
+                    text = text ? ((holder.hasChildNodes() ? " " : "") + text) : "";
                 }
-                if (!inTable && !currentHeader || holder == fragment) {
+                if (!inTable() && !currentHeader || holder == fragment) {
                     openParagraph();
                 }
                 if (text) {
@@ -1960,23 +1959,23 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
 
             switch (matchNumber) {
             case 1:     // bolditalic
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleInline("bolditalic");
                 continue;
             case 2:     // bold
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleInline("bold");
                 continue;
             case 3:     // italic
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleInline("italic");
                 continue;
             case 4:     // strike
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleInline("strike");
                 continue;
             case 5:     // code block
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleInlineCode(matchText, 3);
                 continue;
             case 6:     // escaped
@@ -1986,11 +1985,11 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 handleInlineCode(matchText, 2);
                 continue;
             case 8:		// Wiki link
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleTracLinks(matchText);
                 continue;
             case 9:		// WikiPageName
-                if (inEscapedTable) { break; }
+                if (inEscapedTable()) { break; }
                 handleWikiPageName(matchText);
                 continue;
             case -1:    // header
@@ -2005,21 +2004,17 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 handleDefinition(matchText);
                 break;
             case -3:    // closing table row
-                if (inTable) {
+                if (inTable()) {
                     handleTableCell(-1);
                     continue;
                 }
                 break;
             case -4:    // cell
-                if (!inTable && match.index == 0) {
+                if (!inTable() && match.index == 0) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
-                if (!inTable) {
-                    inEscapedTable = /^!/.test(matchText);
-                }
-
-                handleTableCell(inTableRow ? 0 : 1, inEscapedTable);
+                handleTableCell(inTableRow() ? 0 : 1, /^!/.test(matchText));
                 continue;
             case -5: // collapsible section
                 handleCollapsibleBlock(matchText);
@@ -2030,10 +2025,16 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             }
 
             if (matchText) {
-                if (!currentHeader && !inTable) {
+                if (!currentHeader && !inTable() && !inAnchor()) {
                     openParagraph();
                 }
                 holder.appendChild(contentDocument.createTextNode(matchText));
+            }
+        }
+        if (inParagraph()) {
+            self.updateElementClassName(holder);
+            if (inDefinition()) {
+                closeParagraph();
             }
         }
     }
@@ -2064,10 +2065,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         if (currentHeader) {
             closeHeader();
         }
-        if (inDefinition) {
-            closeDefinition();
-        }
-        if (inTable) {
+        if (inTable()) {
             handleTableCell(-1);
         }
     }
@@ -2139,7 +2137,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     var last = root;
     var inCodeBlock = false;
     var skipNode = null;
-    var openBracket = false;
 
     function escapeText(s) {
         return "!-" + s + "-!";
@@ -2283,7 +2280,9 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
         var autolink = node.getAttribute("data-wysiwyg-autolink");
 
         link = (link || node.href).replace(/^\s+|\s+$/g, "");
-        var label = getTextContent(node).replace(/^\s+|\s+$/g, "");
+        // Obtain label as text content. Allow to render special attributes
+        //var label = getTextContent(node).replace(/^\s+|\s+$/g, "");
+        var label = self.domToWikitext(node, options);
         if (!label) {
             return;
         }
@@ -2292,27 +2291,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             if (wikiPageNamePattern.test(label)) {
                 text = label;
                 link = label;
-            }
-        }
-        else {
-            if (link == label) {
-                if (bracket) {
-                    text = label;
-                }
-            }
-        }
-        if (!text) {
-            // TODO this chould be simplified to just the else now I think (Vincent)
-            var match = /^([\w.+-]+):(@?(.*))$/.exec(link);
-            if (match) {
-                if (label == match[2]) {
-                    if (match[1] == "wiki" && wikiPageNamePattern.test(match[2])) {
-                        text = match[2];
-                    }
-                    else {
-                        text = "[" + link + "]";
-                    }
-                }
             }
         }
         if (text === null) {
@@ -2356,7 +2334,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                     _texts.push(" ");
                 }
             }
-            openBracket = false;
         }
         else {
             switch (name) {
@@ -2371,10 +2348,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                             value = value.replace(/[ \t\r\n\f\v]+$/g, "");
                         }
                         value = value.replace(/\r?\n/g, " ");
-                        //if (!formatCodeBlock && !inEscapedTable) {
-                        //    value = value.replace(domToWikiInlinePattern, escapeText);
-                        //}
-                        openBracket = /<$/.test(value);
                     }
                     if (value) {
                         var length = _texts.length;
@@ -2390,13 +2363,7 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 break;
             case "a":
                 skipNode = node;
-                var bracket = false;
-                if (openBracket) {
-                    var nextSibling = node.nextSibling;
-                    bracket = nextSibling && nextSibling.nodeType == 3 && /^>/.test(nextSibling.nodeValue);
-                    openBracket = false;
-                }
-                pushAnchor(node, bracket);
+                pushAnchor(node);
                 break;
             case "br":
                 if (!self.isBogusLineBreak(node)) {
@@ -2467,9 +2434,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             case "style":
                 skipNode = node;
                 break;
-            }
-            if (name != "#text") {
-                openBracket = false;
             }
         }
     }
@@ -3410,38 +3374,7 @@ TracWysiwyg.elementPosition = function(element) {
 };
 
 TracWysiwyg.getSelfOrAncestor = function(element, name) {
-    var target = element;
-    var d = element.ownerDocument;
-    if (name instanceof RegExp) {
-        while (target && target != d) {
-            switch (target.nodeType) {
-            case 1: // element
-                if (name.test(target.tagName.toLowerCase())) {
-                    return target;
-                }
-                break;
-            case 11: // fragment
-                return null;
-            }
-            target = target.parentNode;
-        }
-    }
-    else {
-        name = name.toLowerCase();
-        while (target && target != d) {
-            switch (target.nodeType) {
-            case 1: // element
-                if (target.tagName.toLowerCase() == name) {
-                    return target;
-                }
-                break;
-            case 11: // fragment
-                return null;
-            }
-            target = target.parentNode;
-        }
-    }
-    return null;
+    return $(element).parents().andSelf().filter(name).get(0);
 };
 
 /*TracWysiwyg.unserializeFromHref = function(href, name) {
