@@ -675,7 +675,9 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         case 220: // |
             var range = self.getSelectionRange();
             var element = getSelfOrAncestor(range.startContainer, "table");
-            if (element && getSelfOrAncestor(range.endContainer, "table") == element) {
+            if (element &&
+                    getSelfOrAncestor(range.endContainer, "table") == element &&
+                    !getSelfOrAncestor(range.endContainer, /^(?:ins|tt)/)) {
                 if (event.ctrlKey) {
                     self.deleteTableCell();
                 } else {
