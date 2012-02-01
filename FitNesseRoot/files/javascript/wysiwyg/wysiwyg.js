@@ -20,6 +20,7 @@ var TracWysiwyg = function(textarea, options) {
     this.options = options = options || {};
     var wikitextToolbar = null;
     var textareaResizable = null;
+    wikitextToolbar = textarea.previousSibling;
     if (wikitextToolbar && (wikitextToolbar.nodeType != 1 || wikitextToolbar.className != "wikitoolbar")) {
         wikitextToolbar = null;
     }
@@ -1077,6 +1078,7 @@ TracWysiwyg.prototype._getFocusForTable = function() {
     hash.cell = hash.node ? TracWysiwyg.getSelfOrAncestor(hash.node, /^t[dh]$/) : null;
     hash.row = hash.cell ? TracWysiwyg.getSelfOrAncestor(hash.cell, "tr") : null;
     hash.table = hash.row ? TracWysiwyg.getSelfOrAncestor(hash.row, "table") : null;
+
     return hash;
 };
 
@@ -1095,6 +1097,7 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
 
 TracWysiwyg.prototype.insertTableRow = function(after) {
     var focus = this._getFocusForTable();
+    console.log('insert table row', focus);
     if (focus.table && focus.row) {
         var d = this.contentDocument;
         var cells = focus.row.getElementsByTagName("td");
@@ -1351,8 +1354,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
     var tagNameToKey = {
         b: "strong", i: "em", u: "underline", del: "strike", tt: "monospace",
         p: "paragraph", h1: "heading1", h2: "heading2", h3: "heading3",
-        h4: "heading4", h5: "heading5", h6: "heading6", a: "link", pre: "code",
-        blockquote: "quote" };
+        h4: "heading4", h5: "heading5", h6: "heading6", a: "link", pre: "code" };
     var position = this.getSelectionPosition();
 
     var node;
@@ -1456,6 +1458,7 @@ TracWysiwyg.prototype.selectionChanged = function() {
 })();
 
 TracWysiwyg.prototype.normalizeTracLink = function(link) {
+    console.log('Have link:', link);
     if (/^[\/.#]/.test(link)) {
         link = encodeURIComponent(link);
     }
@@ -1543,9 +1546,9 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     inCodeBlock = inCollapsibleBlock = false;
 
     function inParagraph() { return getSelfOrAncestor(holder, "p"); }
-    function inDefinition() { return getSelfOrAncestor(holder, "p.meta, p.comment"); }
+    function inDefinition() { return $(holder).parents().andSelf().filter("p.meta, p.comment").get(0); }
     function inTable() { return getSelfOrAncestor(holder, "table"); }
-    function inEscapedTable() { return getSelfOrAncestor(holder, "table.escaped"); }
+    function inEscapedTable() { return $(holder).parents().andSelf().filter("table.escaped").get(0); }
     function inTableRow() { return getSelfOrAncestor(holder, "tr"); }
     function inAnchor() { return getSelfOrAncestor(holder, "a"); }
 
@@ -3555,7 +3558,38 @@ TracWysiwyg.elementPosition = function(element) {
 };
 
 TracWysiwyg.getSelfOrAncestor = function(element, name) {
-    return $(element).parents().andSelf().filter(name).get(0);
+    var target = element;
+    var d = element.ownerDocument;
+    if (name instanceof RegExp) {
+        while (target && target != d) {
+            switch (target.nodeType) {
+            case 1: // element
+                if (name.test(target.tagName.toLowerCase())) {
+                    return target;
+                }
+                break;
+            case 11: // fragment
+                return null;
+            }
+            target = target.parentNode;
+        }
+    }
+    else {
+        name = name.toLowerCase();
+        while (target && target != d) {
+            switch (target.nodeType) {
+            case 1: // element
+                if (target.tagName.toLowerCase() == name) {
+                    return target;
+                }
+                break;
+            case 11: // fragment
+                return null;
+            }
+            target = target.parentNode;
+        }
+    }
+    return null;
 };
 
 /*TracWysiwyg.unserializeFromHref = function(href, name) {
