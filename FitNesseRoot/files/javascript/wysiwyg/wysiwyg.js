@@ -3,10 +3,7 @@
  TODO:
  - Menu button for creating a Collapsable area (containing selected text?)
  - Menu for removing Collapsible area. Text is added in parent node.
- - Edit icons
- - When adding/removing cell, make sure colspan of the other rows is correct
- - How to make editing tables simpler in the editor? It's the core of the system basically (tables).
- - Figure out a way (menu button?) to handle escaping text (!-..-!, !<..>!)
+ - Edit icons, fix table edit icons.
  ****/
  
 var TracWysiwyg = function(textarea, options) {
@@ -675,6 +672,18 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
                 TracWysiwyg.stopEvent(event);
             }
             return;
+        case 220: // |
+            var range = self.getSelectionRange();
+            var element = getSelfOrAncestor(range.startContainer, "table");
+            if (element && getSelfOrAncestor(range.endContainer, "table") == element) {
+                if (event.ctrlKey) {
+                    self.deleteTableCell();
+                } else {
+                    self.insertTableCell_(true);
+                }
+                TracWysiwyg.stopEvent(event);
+            }
+            return;
         case 0xe5:
             ime = true;
             break;
@@ -722,7 +731,6 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         case 0x20:  // SPACE
             switch (modifier) {
             case 0:
-                console.log("space on keypress");
                 self.detectTracLink(event);
                 break;
             case 0x20000000:    // Shift
@@ -741,7 +749,6 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             case 0:
                 var focus = self._getFocusForTable();
                 if (focus.table && focus.cell) {
-                    console.log(event, focus.cell, focus.row);
                     var row = self.insertTableRow(true);
                     TracWysiwyg.stopEvent(event);
                 } else if (self.insertParagraphOnEnter) {
@@ -763,7 +770,6 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         if (ime) {
             switch (keyCode) {
             case 0x20:  // SPACE
-                console.log("space on keyup");
                 self.detectTracLink(event);
                 break;
             }
@@ -1093,10 +1099,7 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
     if (focus.table && focus.cell) {
         var row = focus.table.rows[focus.row.rowIndex];
         var cellIndex = focus.cell.cellIndex + (after ? 1 : 0);
-        var colspan = $(focus.cell).attr('colspan');
-        if (colspan > 1) {
-            $(focus.cell).attr('colspan', colspan - 1);
-        }
+        $(focus.cell).removeAttr('colspan');
         var cell = this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
         this.spanTableColumns(focus.table);
         this.selectNodeContents(cell);
