@@ -1090,7 +1090,11 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
         if (colspan > 1) {
             $(focus.cell).attr('colspan', colspan - 1);
         }
-        this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
+        var cell = this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
+        this.spanTableColumns(focus.table);
+        this.selectNodeContents(cell);
+        //this.moveFocusInTable(after);
+        window.focus(cell);
     }
 };
 
@@ -1128,6 +1132,7 @@ TracWysiwyg.prototype.deleteTableCell = function() {
         if (cellIndex < row.cells.length) {
             row.deleteCell(cellIndex);
         }
+        this.spanTableColumns(focus.table);
     }
 };
 
@@ -1135,6 +1140,7 @@ TracWysiwyg.prototype.deleteTableRow = function() {
     var focus = this._getFocusForTable();
     if (focus.table && focus.row) {
         focus.table.deleteRow(focus.row.rowIndex);
+        this.spanTableColumns(focus.table);
     }
 };
 
@@ -1152,6 +1158,20 @@ TracWysiwyg.prototype.deleteTableColumn = function() {
         }
     }
 };
+
+
+TracWysiwyg.prototype.spanTableColumns = function(table) {
+    // Spanning columns fitnesse style.
+    var maxCells = Math.max.apply(Math, $.map($('tr', table), function(e) {
+        return $('td', e).size();
+    }));
+    $('tr', table).each(function() {
+        var s = $('td', this).size();
+        if (s < maxCells) {
+            $('td:last', this).attr('colspan', maxCells - s + 1);
+        }
+    });
+}
 
 TracWysiwyg.prototype.moveFocusInTable = function(forward) {
     var getSelfOrAncestor = TracWysiwyg.getSelfOrAncestor;
@@ -1955,16 +1975,7 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         if (inTable()) {
             var target = getSelfOrAncestor(holder, "table");
 
-            // Spanning columns fitnesse style.
-            var maxCells = Math.max.apply(Math, $.map($('tr', target), function(e) {
-                return $('td', e).size();
-            }));
-            $('tr', target).each(function() {
-                var s = $('td', this).size();
-                if (s < maxCells) {
-                    $('td:last', this).attr('colspan', maxCells - s + 1);
-                }
-            });
+            self.spanTableColumns(target)
             holder = target.parentNode;
         }
     }
