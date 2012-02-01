@@ -7,7 +7,6 @@
  - When adding/removing cell, make sure colspan of the other rows is correct
  - How to make editing tables simpler in the editor? It's the core of the system basically (tables).
  - Figure out a way (menu button?) to handle escaping text (!-..-!, !<..>!)
-
  ****/
  
 var TracWysiwyg = function(textarea, options) {
@@ -616,13 +615,13 @@ TracWysiwyg.prototype.execDecorate = function(name) {
 
 TracWysiwyg.prototype.execDecorateMonospace = function() {
     var html = this.getSelectionHTML();
-    var removePattern = /<tt.*?>|<\/tt>/gi;
-    if (/^<tt.*?>/i.test(html) && /<\/tt>$/i.test(html)) {
+    var removePattern = /<ins.*?>|<\/ins>/gi;
+    if (/^<ins.*?>/i.test(html) && /<\/ins>$/i.test(html)) {
         html = html.replace(removePattern, "");
     }
     else {
         var id = this.generateDomId();
-        html = '<tt id="' + id + '">' + html.replace(removePattern, "") + "</tt>";
+        html = '<ins id="' + id + '">' + html.replace(removePattern, "") + "</ins>";
     }
     this.insertHTML(html);
     var node = this.contentDocument.getElementById(id);
@@ -1097,7 +1096,6 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
 
 TracWysiwyg.prototype.insertTableRow = function(after) {
     var focus = this._getFocusForTable();
-    console.log('insert table row', focus);
     if (focus.table && focus.row) {
         var d = this.contentDocument;
         var cells = focus.row.getElementsByTagName("td");
@@ -1404,7 +1402,6 @@ TracWysiwyg.prototype.selectionChanged = function() {
     // cf. WikiSystem.XML_NAME, http://www.w3.org/TR/REC-xml/#id
     var _xmlName = "[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD](?:[-:_.A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*[-_A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])?"
     var _quotedString = "'[^']+'|" + '"[^"]+"';
-    var _changesetPath = "/[^\\]]*";
     var _wikiPageName = "(?:\\B[\\.<>]|\\b)[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+(?:\\.[A-Z][a-z]+(?:[A-Z][a-z0-9]*)+)*";
     var _wikiTextLink = "\\[\\[(?:.*?)\\]\\[(?:.*?)\\]\\]";
     var wikiInlineRules = [];
@@ -1458,7 +1455,6 @@ TracWysiwyg.prototype.selectionChanged = function() {
 })();
 
 TracWysiwyg.prototype.normalizeTracLink = function(link) {
-    console.log('Have link:', link);
     if (/^[\/.#]/.test(link)) {
         link = encodeURIComponent(link);
     }

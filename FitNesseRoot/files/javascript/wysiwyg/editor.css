@@ -16,6 +16,11 @@ p.comment {
  font-style: italic;
 }
 
+ins { /* used for escaping !-..-! */
+    font-family: monospace;
+    font-size: 16px;
+    text-decoration: none;
+}
 pre.wiki {
  overflow: visible !important;
  word-wrap: break-word !important;
