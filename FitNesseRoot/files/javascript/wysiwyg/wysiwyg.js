@@ -722,6 +722,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         case 0x20:  // SPACE
             switch (modifier) {
             case 0:
+                console.log("space on keypress");
                 self.detectTracLink(event);
                 break;
             case 0x20000000:    // Shift
@@ -738,7 +739,12 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             self.detectTracLink(event);
             switch (modifier) {
             case 0:
-                if (self.insertParagraphOnEnter) {
+                var focus = self._getFocusForTable();
+                if (focus.table && focus.cell) {
+                    console.log(event, focus.cell, focus.row);
+                    var row = self.insertTableRow(true);
+                    TracWysiwyg.stopEvent(event);
+                } else if (self.insertParagraphOnEnter) {
                     self.insertParagraphOnEnter(event);
                 }
                 break;
@@ -757,6 +763,7 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         if (ime) {
             switch (keyCode) {
             case 0x20:  // SPACE
+                console.log("space on keyup");
                 self.detectTracLink(event);
                 break;
             }
@@ -1093,7 +1100,7 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
         var cell = this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
         this.spanTableColumns(focus.table);
         this.selectNodeContents(cell);
-        //this.moveFocusInTable(after);
+        this.selectionChanged();
         window.focus(cell);
     }
 };
@@ -1104,9 +1111,13 @@ TracWysiwyg.prototype.insertTableRow = function(after) {
         var d = this.contentDocument;
         var cells = focus.row.getElementsByTagName("td");
         var row = focus.table.insertRow(focus.row.rowIndex + (after ? 1 : 0));
+        var cell;
         for (var j = 0; j < cells.length; j++) {
-            this.insertTableCell(row, 0);
+            cell = this.insertTableCell(row, 0);
         }
+        this.selectNodeContents(cell);
+        this.selectionChanged();
+        return row;
     }
 };
 
