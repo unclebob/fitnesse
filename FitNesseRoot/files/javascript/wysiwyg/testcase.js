@@ -290,7 +290,7 @@ $(function() {
                 wikitext);
         });
         unit.add("strike-through", function() {
-            var dom = element("p", element("del", "strike-through"));
+            var dom = element("p", element("strike", "strike-through"));
             var wikitext = "--strike-through--";
             generate.call(this, dom, wikitext);
         });
@@ -341,7 +341,7 @@ $(function() {
                 "normal",
                 element("b", "bold",
                     element("i", "italic",
-                        element("del", "strike-through")),
+                        element("strike", "strike-through")),
                     "sub"),
                 ".");
             var wikitext = "normal'''bold''italic--strike-through--''sub'''.";
@@ -396,7 +396,7 @@ $(function() {
             generate.call(this, dom, wikitext);
         });
         unit.add("! strike-through", function() {
-            var dom = element("p", element("del", "strike", element("ins", "--"), "through"), ".");
+            var dom = element("p", element("strike", "strike", element("ins", "--"), "through"), ".");
             var wikitext = "--strike!----!through--.";
             generate.call(this, dom, wikitext);
         });
@@ -964,10 +964,10 @@ $(function() {
                 element("div", { "class": "collapsable" },
                     element("p", "EXPANDED"),
                     element("p", "Expanded content")),
-                element("div", { "class": "collapsable collapsed" },
+                element("div", { "class": "collapsed collapsable" },
                     element("p", "COLLAPSED"),
                     element("p", "Collapsed content")),
-                element("div", { "class": "collapsable hidden" },
+                element("div", { "class": "hidden collapsable" },
                     element("p", "HIDDEN"),
                     element("p", "Hidden content")));
             generate.call(this, dom, [
