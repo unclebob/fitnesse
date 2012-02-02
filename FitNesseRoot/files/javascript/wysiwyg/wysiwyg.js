@@ -1122,6 +1122,7 @@ TracWysiwyg.prototype.insertTableRow = function(after) {
         for (var j = 0; j < cells.length; j++) {
             cell = this.insertTableCell(row, 0);
         }
+        this.spanTableColumns(focus.table);
         this.selectNodeContents(cell);
         this.selectionChanged();
         cell.focus();
@@ -1182,7 +1183,9 @@ TracWysiwyg.prototype.deleteTableColumn = function() {
 TracWysiwyg.prototype.spanTableColumns = function(table) {
     // Spanning columns fitnesse style.
     var maxCells = Math.max.apply(Math, $.map($('tr', table), function(e) {
-        return $('td', e).size();
+        var tds = $('td', e);
+        tds.removeAttr('colspan');
+        return tds.size();
     }));
     $('tr', table).each(function() {
         var s = $('td', this).size();
