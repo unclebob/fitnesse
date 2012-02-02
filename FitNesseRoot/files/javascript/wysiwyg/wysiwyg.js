@@ -672,20 +672,6 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
                 TracWysiwyg.stopEvent(event);
             }
             return;
-        case 220: // |
-            var range = self.getSelectionRange();
-            var element = getSelfOrAncestor(range.startContainer, "table");
-            if (element &&
-                    getSelfOrAncestor(range.endContainer, "table") == element &&
-                    !getSelfOrAncestor(range.endContainer, /^(?:ins|tt)/)) {
-                if (event.ctrlKey) {
-                    self.deleteTableCell();
-                } else {
-                    self.insertTableCell_(true);
-                }
-                TracWysiwyg.stopEvent(event);
-            }
-            return;
         case 0xe5:
             ime = true;
             break;
@@ -764,6 +750,21 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
                 break;
             }
             return;
+        case 0x7c: // "|"
+        case 28: // ctrl-"|"
+            var range = self.getSelectionRange();
+            var element = getSelfOrAncestor(range.startContainer, "table");
+            if (element &&
+                    getSelfOrAncestor(range.endContainer, "table") == element &&
+                    !getSelfOrAncestor(range.endContainer, /^(?:ins|tt)/)) {
+                if (event.ctrlKey) {
+                    self.deleteTableCell();
+                } else {
+                    self.insertTableCell_(true);
+                }
+                TracWysiwyg.stopEvent(event);
+            }
+            return;
         }
     });
 
@@ -777,7 +778,8 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             }
             ime = false;
         }
-        self.updateElementClassName(self.getSelectionRange().startContainer);
+        if (self.getSelectionRange())
+            self.updateElementClassName(self.getSelectionRange().startContainer);
         self.selectionChanged();
     });
 
@@ -1106,7 +1108,7 @@ TracWysiwyg.prototype.insertTableCell_ = function(after) {
         this.spanTableColumns(focus.table);
         this.selectNodeContents(cell);
         this.selectionChanged();
-        window.focus(cell);
+        cell.focus();
     }
 };
 
@@ -1122,6 +1124,7 @@ TracWysiwyg.prototype.insertTableRow = function(after) {
         }
         this.selectNodeContents(cell);
         this.selectionChanged();
+        cell.focus();
         return row;
     }
 };
@@ -1688,6 +1691,8 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
             inCollapsibleBlock--;
             closeToFragment("div");
             holder = holder.parentNode;
+            // Ensure the user can always edit below the block
+            openParagraph();
         }
     }
 
