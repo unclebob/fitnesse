@@ -88,7 +88,7 @@ public class WikiPageResponder implements SecureResponder {
     html.setPageTitle(new PageTitle(fullPath).notLinked());
     // TODO move this to menu
     html.actions = new WikiPageActions(page).withAddChild();
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
+    SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
     String childPopupHtml = makeAddChildPopup(page, fullPathName);
 
