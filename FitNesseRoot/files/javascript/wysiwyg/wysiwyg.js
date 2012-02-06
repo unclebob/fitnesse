@@ -1,4 +1,5 @@
 /****
+ vim:sw=4:et:ai
 
  TODO:
  - Menu button for creating a Collapsable area (containing selected text?)
@@ -542,6 +543,8 @@ TracWysiwyg.prototype.setupMenuEvents = function() {
         case "code":        return [ self.formatCodeBlock ];
         case "hr":          return [ self.insertHorizontalRule ];
         case "br":          return [ self.insertLineBreak ];
+        case "collapsable": return [ self.insertCollapsableSection ];
+        case "remove-collapsable": return [ self.deleteCollapsableSection ];
         }
         return null;
     }
@@ -709,6 +712,13 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
             method.apply(self, args);
             self.selectionChanged();
         }
+        else if (keyCode) {
+            var focus = self.getFocusNode();
+            if (!getSelfOrAncestor(focus, /^(?:p|li|h[1-6]|t[dh]|d[td]|pre|blockquote)$/)) {
+                self.execCommand("formatblock", "<p>");
+            }
+        }
+    
     });
 
     $(d).keypress(function(event) {
@@ -1299,6 +1309,20 @@ TracWysiwyg.prototype.insertHorizontalRule = function() {
         this.insertHTML("<hr />");
     }
     this.selectionChanged();
+};
+
+TracWysiwyg.prototype.insertCollapsableSection = function() {
+    var range = this.getSelectionRange();
+    var fragment = this.getSelectionFragment();
+    console.log(fragment);
+
+    console.log(range.startContainer, range.endContainer, fragment);
+    //var c = "<div class='collapsable'>" + (html ? html : "<p>collapsable</p>") + "</div>";
+    //this.insertHTML(c);
+//    var node = this.contentDocument.getElementById(id);
+//    if (node) {
+//        this.selectNode(node);
+//    }
 };
 
 TracWysiwyg.prototype.createLink = function() {
@@ -2232,8 +2256,7 @@ TracWysiwyg.prototype.wikiOpenTokens = {
     "del": "--", "strike": "--",
     "hr": "----\n",
     "table": true,
-    "tbody": true,
-    "div": "!***" };
+    "tbody": true };
 
 TracWysiwyg.prototype.wikiCloseTokens = {
     "#text": true,
@@ -2247,8 +2270,7 @@ TracWysiwyg.prototype.wikiCloseTokens = {
     "hr": true,
     "tbody": true,
     "tr": "|\n",
-    "td": true, "th": true,
-    "div": "*!\n" };
+    "td": true, "th": true };
 
 TracWysiwyg.prototype.wikiBlockTags = {
     "h1": true, "h2": true, "h3": true, "h4": true, "h5": true, "h6": true,
@@ -2471,15 +2493,6 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
             if (name == "table" && $(node).hasClass("escaped")) {
                 _texts.push("!");
             }
-            if (name == "div" && $(node).hasClass("collapsable")) {
-                if ($(node).hasClass("collapsed")) {
-                    _texts.push("> ");
-                } else if ($(node).hasClass("hidden")) {
-                    _texts.push("< ");
-                } else {
-                    _texts.push(" ");
-                }
-            }
         }
         else {
             switch (name) {
@@ -2612,6 +2625,18 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                     }
                 }
                 break;
+            case "div":
+                if ($(node).hasClass("collapsable")) {
+                    _texts.push("!***");
+                    if ($(node).hasClass("collapsed")) {
+                        _texts.push("> ");
+                    } else if ($(node).hasClass("hidden")) {
+                        _texts.push("< ");
+                    } else {
+                        _texts.push(" ");
+                    }
+                }
+                break;
             case "script":
             case "style":
                 skipNode = node;
@@ -2686,6 +2711,11 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
                 var token = tokenFromSpan(node);
                 if (token !== undefined) {
                     _texts.push(token);
+                }
+                break;
+            case "div":
+                if ($(node).hasClass("collapsable")) {
+                    _texts.push("*!\n");
                 }
                 break;
             case "table":
