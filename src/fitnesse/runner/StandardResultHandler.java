@@ -16,7 +16,7 @@ public class StandardResultHandler implements ResultHandler {
     this.output = output;
   }
 
-  public void acceptResult(PageResult result) throws Exception {
+  public void acceptResult(PageResult result) {
     TestSummary testSummary = result.testSummary();
     pageCounts.tallyPageCounts(testSummary);
     for (int i = 0; i < testSummary.getRight(); i++)
@@ -37,7 +37,7 @@ public class StandardResultHandler implements ResultHandler {
     return description;
   }
 
-  public void acceptFinalCount(TestSummary testSummary) throws Exception {
+  public void acceptFinalCount(TestSummary testSummary) {
     output.println();
     output.println("Test Pages: " + pageCounts);
     output.println("Assertions: " + testSummary);
@@ -47,7 +47,7 @@ public class StandardResultHandler implements ResultHandler {
     return 0;
   }
 
-  public InputStream getResultStream() throws Exception {
+  public InputStream getResultStream() {
     return null;
   }
 }

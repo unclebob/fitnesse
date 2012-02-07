@@ -14,11 +14,11 @@ public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeW
     this.root = root;
   }
 
-  public void renameReferences() throws Exception {
+  public void renameReferences() {
     root.getPageCrawler().traverse(root, this);
   }
 
-  public void processPage(WikiPage currentPage) throws Exception {
+  public void processPage(WikiPage currentPage) {
     PageData data = currentPage.getData();
     String content = data.getContent();
 

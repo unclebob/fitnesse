@@ -7,7 +7,7 @@ public abstract class Jsr223StatementExecutor implements StatementExecutorInterf
   protected Jsr223Bridge bridge;
   private Object statementExecutorProxy;
   
-  public Jsr223StatementExecutor(Jsr223Bridge bridge) throws Exception
+  public Jsr223StatementExecutor(Jsr223Bridge bridge)
   {
     this.bridge = bridge;
     statementExecutorProxy = bridge.getStatementExecutor();

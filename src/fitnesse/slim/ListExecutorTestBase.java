@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.slim.converters.VoidConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -116,19 +117,19 @@ public abstract class ListExecutorTestBase {
     executor.execute(statements);
 
     System.setOut(oldOut);
-    assertEquals("!1 Instructions\n" +
+    assertEquals("!1 Instructions" + HtmlUtil.ENDL +
       "[i1, import, fitnesse.slim.test]\n" +
-      "\n" +
-      "[i1, OK]\n" +
-      "------\n" +
+      HtmlUtil.ENDL +
+      "[i1, OK]" + HtmlUtil.ENDL +
+      "------" + HtmlUtil.ENDL +
       "[m1, make, testSlim, TestSlim]\n" +
-      "\n" +
-      "[m1, OK]\n" +
-      "------\n" +
+      HtmlUtil.ENDL +
+      "[m1, OK]" + HtmlUtil.ENDL +
+      "------" + HtmlUtil.ENDL +
       "[id, call, testSlim, returnString]\n" +
-      "\n" +
-      "[id, string]\n" +
-      "------\n", os.toString());
+      HtmlUtil.ENDL +
+      "[id, string]" + HtmlUtil.ENDL +
+      "------" + HtmlUtil.ENDL, os.toString());
   }
 
 

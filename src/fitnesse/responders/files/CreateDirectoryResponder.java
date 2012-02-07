@@ -13,7 +13,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public class CreateDirectoryResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
     String resource = request.getResource();

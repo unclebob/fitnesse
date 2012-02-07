@@ -36,6 +36,18 @@ public class DefineTest {
         //assertDefinesValue("!define z {y}\n!define x {''${z}''}", "x", "<i>y</i>");
     }
 
+    @Test public void definesTable() throws Exception {
+        assertTranslatesDefine("!define x {|a|b|c|}", "x=|a|b|c|");
+    }
+
+    @Test public void definesTwoTables() throws Exception {
+        WikiPage pageOne = new TestRoot().makePage("PageOne");
+        ParserTestHelper.assertTranslatesTo(pageOne,
+                "!define x {|a|b|c|}\n!define y {|d|e|f|}",
+                MakeDefinition("x=|a|b|c|") + HtmlElement.endl + "<br/>"
+                + MakeDefinition("y=|d|e|f|")+ HtmlElement.endl);
+    }
+
     private void assertDefinesValue(String input, String name, String definedValue) throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne", input);
         ParsingPage page = new ParsingPage(new WikiSourcePage(pageOne));
@@ -45,8 +57,11 @@ public class DefineTest {
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne");
-        ParserTestHelper.assertTranslatesTo(pageOne, input,
-          "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo(pageOne, input, MakeDefinition(definition) + HtmlElement.endl);
+    }
+
+    private String MakeDefinition(String definition) {
+        return "<span class=\"meta\">variable defined: " + definition + "</span>";
     }
 
 }

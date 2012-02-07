@@ -10,6 +10,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.io.Writer;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
@@ -23,7 +24,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
     if (suiteTime == 0)
       suiteTime = timeMeasurement.startedAt();
     super.newTestStarted(test, timeMeasurement);
@@ -35,7 +36,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     super.allTestingComplete(totalTimeMeasurement);
     if (writerFactory != null)
       writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);

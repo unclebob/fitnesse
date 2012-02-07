@@ -41,7 +41,7 @@ public class WikiPageResponder implements SecureResponder {
     pageData = page.getData();
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     loadPage(request.getResource(), context);
     if (page == null)
       return notFoundResponse(context, request);
@@ -49,7 +49,7 @@ public class WikiPageResponder implements SecureResponder {
       return makePageResponse(context);
   }
 
-  protected void loadPage(String pageName, FitNesseContext context) throws Exception {
+  protected void loadPage(String pageName, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(pageName);
     crawler = context.root.getPageCrawler();
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -58,7 +58,7 @@ public class WikiPageResponder implements SecureResponder {
       pageData = page.getData();
   }
 
-  private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
+  private Response notFoundResponse(FitNesseContext context, Request request) {
     if (dontCreateNonExistentPage(request))
       return new NotFoundResponder().makeResponse(context, request);
     return new EditResponder().makeResponseForNonExistentPage(context, request);
@@ -69,7 +69,7 @@ public class WikiPageResponder implements SecureResponder {
     return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
   }
 
-  private SimpleResponse makePageResponse(FitNesseContext context) throws Exception {
+  private SimpleResponse makePageResponse(FitNesseContext context) {
       pageTitle = PathParser.render(crawler.getFullPath(page));
       String html = makeHtml(context);
 
@@ -79,7 +79,7 @@ public class WikiPageResponder implements SecureResponder {
       return response;
   }
 
-  public String makeHtml(FitNesseContext context) throws Exception {
+  public String makeHtml(FitNesseContext context) {
     WikiPage page = pageData.getWikiPage();
     HtmlPage html = context.htmlPageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
@@ -88,7 +88,7 @@ public class WikiPageResponder implements SecureResponder {
     html.setPageTitle(new PageTitle(fullPath).notLinked());
     // TODO move this to menu
     html.actions = new WikiPageActions(page).withAddChild();
-    SetupTeardownAndLibraryIncluder.includeInto(pageData);
+    SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
     String childPopupHtml = makeAddChildPopup(page, fullPathName);
 
@@ -106,11 +106,11 @@ public class WikiPageResponder implements SecureResponder {
   }
 
   /* hook for subclasses */
-  protected String generateHtml(PageData pageData) throws Exception {
+  protected String generateHtml(PageData pageData) {
     return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
   }
 
-  private void handleSpecialProperties(HtmlPage html, WikiPage page) throws Exception {
+  private void handleSpecialProperties(HtmlPage html, WikiPage page) {
     WikiImportProperty.handleImportProperties(html, page, pageData);
   }
 

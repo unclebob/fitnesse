@@ -27,12 +27,12 @@ import fitnesse.wiki.XmlizePageCondition;
 
 public class SerializedPageResponder implements SecureResponder {
   private XmlizePageCondition xmlizePageCondition = new XmlizePageCondition() {
-    public boolean canBeXmlized(WikiPage page) throws Exception {
+    public boolean canBeXmlized(WikiPage page) {
       return !(page instanceof SymbolicPage);
     }
   };
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws IOException {
     WikiPage page = getRequestedPage(request, context);
     if (page == null)
       return new NotFoundResponder().makeResponse(context, request);
@@ -54,7 +54,7 @@ public class SerializedPageResponder implements SecureResponder {
     }
   }
 
-  private SimpleResponse makeResponseWithxml(Document doc) throws Exception {
+  private SimpleResponse makeResponseWithxml(Document doc) throws IOException {
     //TODO MdM Shoudl probably use a StreamedResponse
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     XmlWriter xmlWriter = new XmlWriter(output);
@@ -67,7 +67,7 @@ public class SerializedPageResponder implements SecureResponder {
     return response;
   }
 
-  private Object getObjectToSerialize(Request request, WikiPage page) throws Exception {
+  private Object getObjectToSerialize(Request request, WikiPage page) {
     Object object;
     if ("bones".equals(request.getInput("type")))
       object = new ProxyPage(page);
@@ -79,11 +79,11 @@ public class SerializedPageResponder implements SecureResponder {
 
       object = data;
     } else
-      throw new Exception("Improper use of proxy retrieval");
+      throw new RuntimeException("Improper use of proxy retrieval");
     return object;
   }
 
-  private WikiPage getRequestedPage(Request request, FitNesseContext context) throws Exception {
+  private WikiPage getRequestedPage(Request request, FitNesseContext context) {
     String resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);
     WikiPage page = context.root.getPageCrawler().getPage(context.root, path);

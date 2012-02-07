@@ -7,6 +7,7 @@ import fitnesse.socketservice.SocketService;
 import fitnesse.testutil.MockSocket;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
@@ -71,7 +72,7 @@ public class FitNesse {
     return false;
   }
 
-  public void stop() throws Exception {
+  public void stop() throws IOException {
     if (theService != null) {
       theService.close();
       theService = null;
@@ -83,7 +84,7 @@ public class FitNesse {
     establishDirectory(context.rootPagePath + "/files");
   }
 
-  public void applyUpdates() throws Exception {
+  public void applyUpdates() throws IOException{
     if (updater != null)
       updater.update();
   }
@@ -97,7 +98,7 @@ public class FitNesse {
     return context;
   }
 
-  public void executeSingleCommand(String command, OutputStream out) throws Exception  {
+  public void executeSingleCommand(String command, OutputStream out) throws Exception {
     Request request = new MockRequestBuilder(command).build();
     FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);
     Response response = expediter.createGoodResponse(request);

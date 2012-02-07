@@ -160,7 +160,7 @@ public class PageCrawlerTest implements TraversalListener {
     assertTrue(traversedPages.contains("ChildOne"));
   }
 
-  public void processPage(WikiPage page) throws Exception {
+  public void processPage(WikiPage page) {
     traversedPages.add(page.getName());
   }
 

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
@@ -37,7 +39,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     super(context);
   }
 
-  public String getTestSystemHeader(String testSystemName) throws Exception {
+  public String getTestSystemHeader(String testSystemName) {
     String tag = String.format("<h3>%s</h3>\n", testSystemName);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript("test_summaries", tag);
     return insertScript.html();
@@ -49,7 +51,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     totalTests = (testsToRun != 0) ? testsToRun : 1;
   }
 
-  public void announceStartNewTest(String relativeName, String fullPathName) throws Exception {
+  public void announceStartNewTest(String relativeName, String fullPathName) {
     currentTest++;
     maybeWriteTestOutputDiv();
     maybeWriteTestSystem();
@@ -57,8 +59,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     writeTestOuputDiv(relativeName, fullPathName);
   }
 
-  private void writeTestOuputDiv(String relativeName, String fullPathName)
-    throws Exception {
+  private void writeTestOuputDiv(String relativeName, String fullPathName) {
     HtmlTag pageNameBar = HtmlUtil.makeDivTag("test_output_name");
     HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
     anchor.addAttribute("id", relativeName + currentTest);
@@ -74,7 +75,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     writeData("<div class=\"alternating_block_" + cssSuffix + "\">");
   }
 
-  private void maybeWriteTestOutputDiv() throws Exception {
+  private void maybeWriteTestOutputDiv() {
     if (!printedTestOutput) {
       HtmlTag outputTitle = new HtmlTag("h2", "Test Output");
       outputTitle.addAttribute("class", "centered");
@@ -83,7 +84,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     }
   }
 
-  private void maybeWriteTestSystem() throws Exception {
+  private void maybeWriteTestSystem() {
     if (testSystemFullName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
       systemTitle.addAttribute("class", "centered");
@@ -94,7 +95,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void newTestStarted(TestPage newTest, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage newTest, TimeMeasurement timeMeasurement) {
     String relativeName = getRelativeName(newTest);
     
     PageCrawler pageCrawler = getPage().getPageCrawler();
@@ -104,7 +105,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     announceStartNewTest(relativeName, fullPathName);
   }
 
-  private String getProgressHtml() throws Exception {
+  private String getProgressHtml() {
     float percentFinished = (currentTest - 1) * 1000 / totalTests;
     percentFinished = percentFinished / 10;
 
@@ -122,7 +123,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
+  public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
     finishOutputForTest();
 
     getAssertionCounts().add(testSummary);
@@ -149,12 +150,12 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     return pageCounts;
   }
 
-  private void finishOutputForTest() throws Exception {
+  private void finishOutputForTest() {
     writeData("</div>" + HtmlTag.endl);
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     latestTestTime = totalTimeMeasurement;
     super.allTestingComplete(totalTimeMeasurement);
   }
@@ -167,8 +168,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-    throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     testSystemFullName = (testSystemName + ":" + testRunner).replaceAll("\\\\", "/");
     String tag = String.format("<h3>%s</h3>\n", testSystemFullName);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
@@ -182,13 +182,13 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     return testPagesSummary + super.makeSummaryContent();
   }
 
-  public void finishWritingOutput() throws Exception {
+  public void finishWritingOutput() throws IOException {
     writeData(testSummary());
     writeData(getHtmlPage().postDivision);
   }
 
   @Override
-  public void writeHead(String pageType) throws Exception {
+  public void writeHead(String pageType) throws IOException {
     super.writeHead(pageType);
 
     HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");

@@ -19,11 +19,10 @@ import java.util.*;
 public class VersionSelectionResponder implements SecureResponder {
   private WikiPage page;
   private List<VersionInfo> versions;
-  private List<String> ageStrings;
   private PageData pageData;
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     WikiPagePath path = PathParser.parse(resource);

@@ -17,7 +17,7 @@ public class AndPageFinder implements CompositePageFinder {
     delegates.add(finder);
   }
 
-  public List<WikiPage> search(WikiPage page) throws Exception {
+  public List<WikiPage> search(WikiPage page) {
     List<WikiPage> results = null;
     for (PageFinder pageFinder: delegates) {
       if (results == null) {

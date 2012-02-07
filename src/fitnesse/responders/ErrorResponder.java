@@ -23,7 +23,7 @@ public class ErrorResponder implements Responder {
     this.message = message;
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(400);
     HtmlPage html = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(html, "Error Occured");

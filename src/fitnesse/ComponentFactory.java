@@ -85,26 +85,30 @@ public class ComponentFactory {
     return getProperties().getProperty(propertyName);
   }
 
-  public Object createComponent(String componentType, Class<?> defaultComponent) throws Exception {
+  public Object createComponent(String componentType, Class<?> defaultComponent) {
     String componentClassName = loadedProperties.getProperty(componentType);
     Class<?> componentClass;
-    if (componentClassName != null)
-      componentClass = Class.forName(componentClassName);
-    else
-      componentClass = defaultComponent;
-
-    if (componentClass != null) {
-      Constructor<?> constructor = componentClass.getConstructor(Properties.class);
-      return constructor.newInstance(loadedProperties);
+    try {
+      if (componentClassName != null)
+        componentClass = Class.forName(componentClassName);
+      else
+        componentClass = defaultComponent;
+  
+      if (componentClass != null) {
+        Constructor<?> constructor = componentClass.getConstructor(Properties.class);
+        return constructor.newInstance(loadedProperties);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to instantiate component for type " + componentType, e);
     }
     return null;
   }
 
-  public Object createComponent(String componentType) throws Exception {
+  public Object createComponent(String componentType) {
     return createComponent(componentType, null);
   }
 
-  public String loadWikiPage(WikiPageFactory factory) throws Exception {
+  public String loadWikiPage(WikiPageFactory factory) throws ClassNotFoundException {
     StringBuffer buffer = new StringBuffer();
     String rootPageClassName = loadedProperties.getProperty(WIKI_PAGE_CLASS);
     if (rootPageClassName != null) {
@@ -114,12 +118,12 @@ public class ComponentFactory {
     return buffer.toString();
   }
 
-  public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) throws Exception {
+  public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) {
     HtmlPageFactory htmlPageFactory = (HtmlPageFactory) createComponent(HTML_PAGE_FACTORY);
     return htmlPageFactory == null ? defaultPageFactory : htmlPageFactory;
   }
 
-  public String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory) throws Exception {
+  public String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
     StringBuffer buffer = new StringBuffer();
     String[] responderPlugins = getListFromProperties(PLUGINS);
     if (responderPlugins != null) {
@@ -167,7 +171,7 @@ public class ComponentFactory {
     }
   }
 
-  public String loadResponders(ResponderFactory responderFactory) throws Exception {
+  public String loadResponders(ResponderFactory responderFactory) throws ClassNotFoundException {
     StringBuffer buffer = new StringBuffer();
     String[] responderList = getListFromProperties(RESPONDERS);
     if (responderList != null) {
@@ -191,12 +195,12 @@ public class ComponentFactory {
       return value.split(",");
   }
 
-  public Authenticator getAuthenticator(Authenticator defaultAuthenticator) throws Exception {
+  public Authenticator getAuthenticator(Authenticator defaultAuthenticator) {
     Authenticator authenticator = (Authenticator) createComponent(AUTHENTICATOR);
     return authenticator == null ? defaultAuthenticator : authenticator;
   }
 
-  public String loadSymbolTypes() throws Exception {
+  public String loadSymbolTypes() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     StringBuffer buffer = new StringBuffer();
     String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
     if (symbolTypeNames != null) {
@@ -210,7 +214,7 @@ public class ComponentFactory {
     return buffer.toString();
   }
 
-  public String loadContentFilter() throws Exception {
+  public String loadContentFilter() {
     ContentFilter filter = (ContentFilter) createComponent(CONTENT_FILTER);
     if (filter != null) {
       SaveResponder.contentFilter = filter;
@@ -219,7 +223,7 @@ public class ComponentFactory {
     return "";
   }
 
-  public VersionsController loadVersionsController() throws Exception {
+  public VersionsController loadVersionsController() {
     VersionsController versionsController = (VersionsController) createComponent(VERSIONS_CONTROLLER);
     if (versionsController == null) {
       versionsController = new ZipFileVersionsController();

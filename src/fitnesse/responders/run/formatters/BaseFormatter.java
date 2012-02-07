@@ -1,5 +1,7 @@
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.*;
 import fitnesse.wiki.WikiPage;
@@ -37,7 +39,7 @@ public abstract class BaseFormatter implements ResultsListener {
   }
   
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     finalErrorCount = failCount;
   }
   
@@ -46,7 +48,7 @@ public abstract class BaseFormatter implements ResultsListener {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
     testCount++;
     if (summary.wrong > 0) {
       failCount++;

@@ -22,12 +22,10 @@ import fitnesse.wiki.PathParser;
 
 public class RefactorPageResponder implements SecureResponder {
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
 
     HtmlPage page = context.htmlPageFactory.newPage();
-
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("refactorForm.vm");
 
     page.setMainTemplate("refactorForm.vm");
     page.setTitle("Refactor: " + resource);

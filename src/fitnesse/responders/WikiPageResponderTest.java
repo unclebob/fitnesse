@@ -83,6 +83,8 @@ public class WikiPageResponderTest extends RegexTestCase {
     crawler.addPage(root, PathParser.parse("PageFooter"), "footer");
     crawler.addPage(root, PathParser.parse("SetUp"), "setup");
     crawler.addPage(root, PathParser.parse("TearDown"), "teardown");
+    crawler.addPage(root, PathParser.parse("SuiteSetUp"), "suite setup");
+    crawler.addPage(root, PathParser.parse("SuiteTearDown"), "suite teardown");
 
     SimpleResponse response = requestPage("NormalPage");
     String content = response.getContent();
@@ -91,6 +93,8 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertHasRegexp("footer", content);
     assertDoesntHaveRegexp("setup", content);
     assertDoesntHaveRegexp("teardown", content);
+    assertDoesntHaveRegexp("suite setup", content);
+    assertDoesntHaveRegexp("suite teardown", content);
 
     response = requestPage("TestPage");
     content = response.getContent();
@@ -99,6 +103,8 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertHasRegexp("footer", content);
     assertHasRegexp("setup", content);
     assertHasRegexp("teardown", content);
+    assertHasRegexp("suite setup", content);
+    assertHasRegexp("suite teardown", content);
   }
 
   private SimpleResponse requestPage(String name) throws Exception {

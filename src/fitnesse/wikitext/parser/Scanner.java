@@ -42,8 +42,11 @@ public class Scanner {
     public boolean isLast() { return input.isEnd(1); }
     public Symbol getCurrent() { return currentToken; }
 
-    public String stringFromStart(int start) {
-        return input.rawSubstring(start, getOffset() - getCurrent().getContent().length());
+    public Maybe<String> stringFromStart(int start) {
+        int end = getOffset() - getCurrent().getContent().length();
+        return start <= end
+            ? new Maybe<String>(input.rawSubstring(start, end))
+            : Maybe.noString;
     }
 
     public void copy(Scanner other) {

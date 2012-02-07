@@ -13,7 +13,7 @@ public class PuppetResponse extends Response {
     this.puppeteer = puppeteer;
   }
 
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void readyToSend(ResponseSender sender) {
     puppeteer.readyToSend(sender);
   }
 

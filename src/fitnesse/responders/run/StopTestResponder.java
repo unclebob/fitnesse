@@ -14,7 +14,7 @@ public class StopTestResponder extends BasicResponder {
 
   String testId = null;
   
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     
     if (request.hasInput("id")) {
@@ -26,7 +26,7 @@ public class StopTestResponder extends BasicResponder {
     return response;
   }
 
-  private String html(FitNesseContext context) throws Exception {
+  private String html(FitNesseContext context) {
     HtmlPage page = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(page, "Stopping tests");
     page.setMainContent(getDetails(context));

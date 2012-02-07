@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import util.StreamReader;
@@ -13,6 +14,7 @@ import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.runner.HtmlResultFormatter;
 import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
@@ -36,11 +38,10 @@ public class TestResultFormattingResponder implements Responder {
 
     InputStreamResponse response = new InputStreamResponse();
     response.setBody(formatter.getResultStream(), formatter.getByteCount());
-
     return response;
   }
 
-  public void init(FitNesseContext context, Request request) throws Exception {
+  public void init(FitNesseContext context, Request request) throws IOException {
     this.context = context;
     baseUrl = (String) request.getHeader("Host");
     rootPath = (String) request.getResource();
@@ -65,7 +66,7 @@ public class TestResultFormattingResponder implements Responder {
     formatter.acceptFinalCount(testSummary);
   }
 
-  public ResultFormatter makeFormatter(Request request) throws Exception {
+  public ResultFormatter makeFormatter(Request request) throws IOException {
     String format = (String) request.getInput("format");
     if (format != null) {
       if ("html".equals(format))

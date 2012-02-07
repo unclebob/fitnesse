@@ -9,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
 import org.junit.After;
@@ -21,15 +23,19 @@ public class ChunkedResponseTest implements ResponseSender {
 
   public StringBuffer buffer;
 
-  public void send(byte[] bytes) throws Exception {
-    buffer.append(new String(bytes, "UTF-8"));
+  public void send(byte[] bytes) {
+    try {
+      buffer.append(new String(bytes, "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Error in encoding", e);
+    }
   }
 
   public void close() {
     closed = true;
   }
 
-  public Socket getSocket() throws Exception {
+  public Socket getSocket() {
     return null;
   }
 

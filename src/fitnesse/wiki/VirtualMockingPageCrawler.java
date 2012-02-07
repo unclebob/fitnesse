@@ -4,7 +4,7 @@ package fitnesse.wiki;
 
 // TODO rename me
 public class VirtualMockingPageCrawler extends VirtualEnabledPageCrawler {
-  public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws Exception {
+  public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) {
     WikiPage page = super.getPageAfterDeadEnd(context, restOfPath, crawler);
     if (page == null)
       page = MockingPageCrawler.createMockPage(restOfPath.last(), context);

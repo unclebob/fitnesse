@@ -4,11 +4,11 @@ package fitnesse.wiki;
 
 //TODO rename me
 public class MockingPageCrawler implements PageCrawlerDeadEndStrategy {
-  public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws Exception {
+  public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) {
     return createMockPage(restOfPath.last(), context);
   }
 
-  public static WikiPage createMockPage(String pageName, WikiPage context) throws Exception {
+  public static WikiPage createMockPage(String pageName, WikiPage context) {
     WikiPageDummy pageDummy = new WikiPageDummy(pageName, "");
     pageDummy.setParent(context);
     return pageDummy;

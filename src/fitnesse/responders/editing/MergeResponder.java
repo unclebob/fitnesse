@@ -29,7 +29,7 @@ public class MergeResponder implements Responder {
     this.request = request;
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     resource = this.request.getResource();
     WikiPagePath path = PathParser.parse(resource);
@@ -42,7 +42,7 @@ public class MergeResponder implements Responder {
     return response;
   }
 
-  private String makePageHtml(FitNesseContext context) throws Exception {
+  private String makePageHtml(FitNesseContext context) {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Merge " + resource);
     page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
@@ -50,7 +50,7 @@ public class MergeResponder implements Responder {
     return page.html();
   }
 
-  private String makeRightColumn() throws Exception {
+  private String makeRightColumn() {
     HtmlTag form = HtmlUtil.makeFormTag("post", resource);
     form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
     form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));

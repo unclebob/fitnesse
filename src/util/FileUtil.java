@@ -104,16 +104,16 @@ public class FileUtil {
         }
     }
 
-  public static String getFileContent(String path) throws Exception {
+  public static String getFileContent(String path) throws IOException {
     File input = new File(path);
     return getFileContent(input);
   }
 
-  public static String getFileContent(File input) throws Exception {
+  public static String getFileContent(File input) throws IOException {
     return new String(getFileBytes(input));
   }
 
-  public static byte[] getFileBytes(File input) throws Exception {
+  public static byte[] getFileBytes(File input) throws IOException {
     long size = input.length();
     FileInputStream stream = null;
     try {
@@ -126,11 +126,11 @@ public class FileUtil {
     }
   }
 
-  public static LinkedList<String> getFileLines(String filename) throws Exception {
+  public static LinkedList<String> getFileLines(String filename) throws IOException {
     return getFileLines(new File(filename));
   }
 
-  public static LinkedList<String> getFileLines(File file) throws Exception {
+  public static LinkedList<String> getFileLines(File file) throws IOException {
     LinkedList<String> lines = new LinkedList<String>();
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line;
@@ -141,11 +141,11 @@ public class FileUtil {
     return lines;
   }
 
-  public static void writeLinesToFile(String filename, List<?> lines) throws Exception {
+  public static void writeLinesToFile(String filename, List<?> lines) throws FileNotFoundException {
     writeLinesToFile(new File(filename), lines);
   }
 
-  public static void writeLinesToFile(File file, List<?> lines) throws Exception {
+  public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
     PrintStream output = new PrintStream(new FileOutputStream(file));
     for (Iterator<?> iterator = lines.iterator(); iterator.hasNext();) {
       String line = (String) iterator.next();
@@ -154,7 +154,7 @@ public class FileUtil {
     output.close();
   }
 
-  public static void copyBytes(InputStream input, OutputStream output) throws Exception {
+  public static void copyBytes(InputStream input, OutputStream output) throws IOException {
     StreamReader reader = new StreamReader(input);
     while (!reader.isEof())
       output.write(reader.readBytes(1000));
@@ -219,4 +219,35 @@ public class FileUtil {
     method.setAccessible(true);
     method.invoke(sysloader, new Object[]{u});
   }
+
+  public static void close(Writer writer) {
+    if (writer != null) {
+      try {
+        writer.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close writer", e);
+      }
+    }
+  }
+
+  public static void close(OutputStream output) {
+    if (output != null) {
+      try {
+        output.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close outputstream", e);
+      }
+    }
+  }
+
+  public static void close(InputStream input) {
+    if (input != null) {
+      try {
+        input.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Unable to close inputstream", e);
+      }
+    }
+  }
+
 }

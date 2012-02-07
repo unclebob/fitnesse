@@ -36,14 +36,14 @@ public class SlimServer implements SocketServer {
     }
   }
 
-  private void tryProcessInstructions(Socket s) throws Exception {
+  private void tryProcessInstructions(Socket s) throws IOException {
     initialize(s);
     boolean more = true;
     while (more)
       more = processOneSetOfInstructions();
   }
 
-  private void initialize(Socket s) throws Exception {
+  private void initialize(Socket s) throws IOException {
     executor = slimFactory.getListExecutor(verbose);
     reader = new StreamReader(s.getInputStream());
     writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
@@ -51,7 +51,7 @@ public class SlimServer implements SocketServer {
     writer.flush();
   }
 
-  private boolean processOneSetOfInstructions() throws Exception {
+  private boolean processOneSetOfInstructions() throws IOException {
     String instructions = getInstructionsFromClient();
     if (instructions != null) {
       return processTheInstructions(instructions);
@@ -59,7 +59,7 @@ public class SlimServer implements SocketServer {
     return true;
   }
 
-  private String getInstructionsFromClient() throws Exception {
+  private String getInstructionsFromClient() throws IOException {
     int instructionLength = Integer.parseInt(reader.read(6));
     reader.read(1);
     String instructions = reader.read(instructionLength);

@@ -1,5 +1,7 @@
 package fitnesse.responders.run;
 
+import java.io.IOException;
+
 import util.TimeMeasurement;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -10,11 +12,11 @@ public class SuiteXmlFormatter extends XmlFormatter {
 
   private TestSummary xmlPageCounts = new TestSummary();
 
-  public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterFactory writerSource) throws Exception {
+  public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterFactory writerSource) {
     super(context, page, writerSource);
   }
 
-  private void addFinalCounts() throws Exception {
+  private void addFinalCounts() {
     testResponse.finalCounts = new TestSummary();
     finalSummary.right = testResponse.finalCounts.right = xmlPageCounts.getRight();
     finalSummary.wrong = testResponse.finalCounts.wrong = xmlPageCounts.getWrong();
@@ -23,8 +25,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
-      throws Exception {
+  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     PageCrawler pageCrawler = getPage().getPageCrawler();
     String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
     if ("".equals(relativeName))
@@ -35,7 +36,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     addFinalCounts();
     super.allTestingComplete(totalTimeMeasurement);
   }

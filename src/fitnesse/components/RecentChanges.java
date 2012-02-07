@@ -3,6 +3,7 @@
 package fitnesse.components;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,22 +29,27 @@ public class RecentChanges {
     return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
   }
 
-  public static void updateRecentChanges(PageData pageData) throws Exception {
+  public static void updateRecentChanges(PageData pageData) {
     createRecentChangesIfNecessary(pageData);
     addCurrentPageToRecentChanges(pageData);
   }
 
-  public static List<String> getRecentChangesLines(PageData recentChangesdata) throws Exception {
+  public static List<String> getRecentChangesLines(PageData recentChangesdata) {
     String content = recentChangesdata.getContent();
     BufferedReader reader = new BufferedReader(new StringReader(content));
     List<String> lines = new ArrayList<String>();
     String line = null;
-    while ((line = reader.readLine()) != null)
-      lines.add(line);
+    try {
+      while ((line = reader.readLine()) != null)
+        lines.add(line);
+    } catch (IOException e) {
+      // TODO: -AJM- It's only the recent changes file. Should we throw an error or just log to the console?
+      throw new RuntimeException("Unable to read recent changes", e);
+    }
     return lines;
   }
 
-  private static void addCurrentPageToRecentChanges(PageData data) throws Exception {
+  private static void addCurrentPageToRecentChanges(PageData data) {
     WikiPage recentChanges = data.getWikiPage().getPageCrawler().getRoot(data.getWikiPage()).getChildPage(RECENT_CHANGES);
     String resource = resource(data);
     PageData recentChangesdata = recentChanges.getData();
@@ -56,20 +62,20 @@ public class RecentChanges {
     recentChanges.commit(recentChangesdata);
   }
 
-  private static String resource(PageData data) throws Exception {
+  private static String resource(PageData data) {
     WikiPagePath fullPath = data.getWikiPage().getPageCrawler().getFullPath(data.getWikiPage());
     String resource = PathParser.render(fullPath);
     return resource;
   }
 
-  private static void createRecentChangesIfNecessary(PageData data) throws Exception {
+  private static void createRecentChangesIfNecessary(PageData data) {
     PageCrawler crawler = data.getWikiPage().getPageCrawler();
     WikiPage root = crawler.getRoot(data.getWikiPage());
     if (!root.hasChildPage(RECENT_CHANGES))
       crawler.addPage(root, PathParser.parse(RECENT_CHANGES), "");
   }
 
-  private static String makeRecentChangesLine(PageData data) throws Exception {
+  private static String makeRecentChangesLine(PageData data) {
     String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
     if (user == null)
       user = "";

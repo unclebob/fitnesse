@@ -110,7 +110,7 @@ public class ExecutionReportTest {
   private ExecutionReport executionReportWithVersion(final String theVersion) {
     return new ExecutionReport() {
       @Override
-      protected void unpackResults(Element testResults) throws Exception {
+      protected void unpackResults(Element testResults) {
       }
       @Override
       public String getVersion() {
