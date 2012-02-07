@@ -1312,13 +1312,32 @@ TracWysiwyg.prototype.insertHorizontalRule = function() {
 };
 
 TracWysiwyg.prototype.insertCollapsableSection = function() {
+    var self = this;
     var range = this.getSelectionRange();
-    var fragment = this.getSelectionFragment();
-    console.log(fragment);
+    var html = this.getSelectionHTML();
 
-    console.log(range.startContainer, range.endContainer, fragment);
-    //var c = "<div class='collapsable'>" + (html ? html : "<p>collapsable</p>") + "</div>";
-    //this.insertHTML(c);
+    console.log(range.startContainer, range.endContainer);
+    var collapsable = this.createCollapsableSection();
+
+    function tagsToFragment(node) {
+        var close = open = '';
+        while (node.parentNode && node !== self.contentDocument.body &&
+                (node.nodeType != 1 || node.tagName != "DIV")) {
+            if (node.nodeType == 1) {
+                var tagName = node.tagName.toLowerCase();
+                close += "</" + tagName + ">";
+                open = "<" + tagName + ">" + open;
+            }
+            node = node.parentNode;
+        }
+        return [ close, open ];
+    }
+
+    var start = tagsToFragment(range.startContainer);
+    var end = tagsToFragment(range.endContainer);
+    console.log(start, end);
+
+    this.insertHTML(start[0] + "<div class='collapsable'>" + start[1] + (html ? html : "<p>edit me</p>") + end[0] + "</div>" + end[1]);
 //    var node = this.contentDocument.getElementById(id);
 //    if (node) {
 //        this.selectNode(node);
@@ -1390,6 +1409,31 @@ TracWysiwyg.prototype.createAnchor = function(link, label, attrs) {
         anchor.appendChild(d.createTextNode(label));
     return anchor;
 };
+
+TracWysiwyg.prototype.createCollapsableSection = function() {
+    var collapsible = this.contentDocument.createElement("div");
+
+    $(collapsible).addClass("collapsable")
+    // TODO: Make live event
+    // Generic event handling
+    $(this.contentDocument.body).on('click', function(event) {
+        var x = event.pageX - this.offsetLeft;
+        var y = event.pageY - this.offsetTop;
+        if (x < 15 && y < 15) {
+            var e = $(this);
+            if (e.hasClass('collapsed')) {
+                e.removeClass('collapsed').addClass('hidden');
+            } else if (e.hasClass('hidden')) {
+                e.removeClass('hidden');
+            } else {
+                e.addClass('collapsed');
+            }
+            event.stopPropagation();
+        }
+    });
+    return collapsible;
+}
+
 TracWysiwyg.prototype.collectChildNodes = function(dest, source) {
     var childNodes = source.childNodes;
     for (var i = childNodes.length - 1; i >= 0; i--) {
@@ -1674,8 +1718,9 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
     function handleCollapsibleBlock(value) {
         inCollapsibleBlock++;
         closeParagraph();
+        var collapsible = self.createCollapsableSection();
+
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
-        var collapsible = contentDocument.createElement("div");
         if (m) {
             if (m[2]) {
                 var title = contentDocument.createElement("p");
@@ -1691,23 +1736,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 break;
             }
         }
-
-        // Generic event handling
-        $(collapsible).addClass("collapsable").click(function(event) {
-            var x = event.pageX - this.offsetLeft;
-            var y = event.pageY - this.offsetTop;
-            if (x < 15 && y < 15) {
-                var e = $(this);
-                if (e.hasClass('collapsed')) {
-                    e.removeClass('collapsed').addClass('hidden');
-                } else if (e.hasClass('hidden')) {
-                    e.removeClass('hidden');
-                } else {
-                    e.addClass('collapsed');
-                }
-                event.stopPropagation();
-            }
-        });
         holder.appendChild(collapsible);
         holder = collapsible;
         openParagraph();
@@ -2775,6 +2803,24 @@ TracWysiwyg.prototype.domToWikitext = function(root, options) {
     return texts.join("").replace(/^(?: *\n)+|(?: *\n)+$/g, "");
 };
 
+TracWysiwyg.prototype.updateElementClassName = function(element) {
+    var getSelfOrAncestor = TracWysiwyg.getSelfOrAncestor;
+    var p = getSelfOrAncestor(element, "p");
+    if (p) {
+        if (/^![a-z]/.test(p.innerHTML)) {
+            if (p.className != 'meta') {
+                p.className = 'meta';
+            }
+        } else if (/^#/.test(p.innerHTML)) {
+            if (p.className != 'comment') {
+                p.className = 'comment';
+            }
+        } else {
+            $(p).removeClass();
+        }
+    }
+};
+
 if (window.getSelection) {
     TracWysiwyg.prototype.appendBogusLineBreak = function(element) {
         var wikiInlineTags = this.wikiInlineTags;
@@ -2841,23 +2887,6 @@ if (window.getSelection) {
     };
     TracWysiwyg.prototype.getFocusNode = function() {
         return this.contentWindow.getSelection().focusNode;
-    };
-    TracWysiwyg.prototype.updateElementClassName = function(element) {
-        var getSelfOrAncestor = TracWysiwyg.getSelfOrAncestor;
-        var p = getSelfOrAncestor(element, "p");
-        if (p) {
-            if (/^![a-z]/.test(p.innerHTML)) {
-                if (p.className != 'meta') {
-                    p.className = 'meta';
-                }
-            } else if (/^#/.test(p.innerHTML)) {
-                if (p.className != 'comment') {
-                    p.className = 'comment';
-                }
-            } else {
-                $(p).removeClass();
-            }
-        }
     };
     TracWysiwyg.prototype.showAutoCompleteOnShiftSpace = function(event) {
 		var tdElement = TracWysiwyg.getSelfOrAncestor(this.getSelectionRange().startContainer, "td");

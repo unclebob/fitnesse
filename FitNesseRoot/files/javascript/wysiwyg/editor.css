@@ -34,6 +34,7 @@ div.collapsable {
  padding-left: 15px;
  background: url(/files/images/collapsableOpen.gif) left top no-repeat #F9F9F9;
  background-position: 2px 2px;
+ min-height: 1em;
 }
 
 div.collapsable.collapsed {
