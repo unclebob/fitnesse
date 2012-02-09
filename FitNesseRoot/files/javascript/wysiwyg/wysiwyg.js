@@ -10,7 +10,6 @@ var TracWysiwyg = function(textarea, options) {
     var self = this;
     var editorMode = TracWysiwyg.getEditorMode();
 
-    this.autolink = true;
     this.wrapTextarea = false;
     this.textarea = textarea;
     this.options = options = options || {};
@@ -39,7 +38,6 @@ var TracWysiwyg = function(textarea, options) {
     this.menus = [ this.styleMenu, this.decorationMenu, this.tableMenu ];
     this.toolbarButtons = this.setupMenuEvents();
     this.toggleEditorButtons = null;
-    this.autolinkButton = null;
     this.wrapTextareaButton = null;
     this.savedWysiwygHTML = null;
 
@@ -57,7 +55,6 @@ var TracWysiwyg = function(textarea, options) {
         TracWysiwyg.setStyle(resizable || frame, { position: "absolute",
             left: "-9999px", top: TracWysiwyg.elementPosition(textareaResizable || textarea).top + "px" });
         TracWysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
-        TracWysiwyg.setStyle(this.autolinkButton.parentNode, { display: "none" });
         TracWysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "" });
         textarea.setAttribute("tabIndex", "");
         frame.setAttribute("tabIndex", "-1");
@@ -70,7 +67,6 @@ var TracWysiwyg = function(textarea, options) {
         }
         TracWysiwyg.setStyle(resizable || frame, styleStatic);
         TracWysiwyg.setStyle(this.wysiwygToolbar, styleStatic);
-        TracWysiwyg.setStyle(this.autolinkButton.parentNode, { display: "" });
         TracWysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "none" });
         textarea.setAttribute("tabIndex", "-1");
         frame.setAttribute("tabIndex", "");
@@ -102,7 +98,6 @@ var TracWysiwyg = function(textarea, options) {
                     self.wikitextToolbar.style.position = "static";
                 }
                 (self.resizable || self.frame).style.position = self.wysiwygToolbar.style.position = "absolute";
-                self.autolinkButton.parentNode.style.display = "none";
                 self.wrapTextareaButton.parentNode.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
@@ -158,18 +153,6 @@ TracWysiwyg.prototype.initializeEditor = function(d) {
     d.execCommand("enableInlineTableEditing", false, "false");
 };
 
-TracWysiwyg.prototype.toggleAutolink = function() {
-    this.autolink = !this.autolink;
-    this.autolinkButton.checked = this.autolink;
-};
-
-TracWysiwyg.prototype.listenerToggleAutolink = function(input) {
-    var self = this;
-    return function(event) {
-        self.autolink = input.checked;
-    };
-};
-
 TracWysiwyg.prototype.toggleWrapTextarea = function() {
     this.wrapTextarea = !this.wrapTextarea;
     this.wrapTextareaButton.checked = this.wrapTextarea;
@@ -219,7 +202,6 @@ TracWysiwyg.prototype.listenerToggleEditor = function(type) {
                 self.syncTextAreaHeight();
                 (self.resizable || self.frame).style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.frame.setAttribute("tabIndex", "-1");
-                self.autolinkButton.parentNode.style.display = "none";
                 self.wrapTextareaButton.parentNode.style.display = "";
                 TracWysiwyg.setEditorMode(type);
             }
@@ -244,7 +226,6 @@ TracWysiwyg.prototype.listenerToggleEditor = function(type) {
                 }
                 frame.style.position = self.wysiwygToolbar.style.position = "static";
                 self.frame.setAttribute("tabIndex", "");
-                self.autolinkButton.parentNode.style.display = "";
                 self.wrapTextareaButton.parentNode.style.display = "none";
                 TracWysiwyg.setEditorMode(type);
             }
@@ -860,9 +841,6 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
     var div = document.createElement("div");
     var mode = TracWysiwyg.editorMode;
     var html = ''
-        + '<label for="editor-autolink-@" title="Links as you type (Ctrl-L)">'
-        + '<input type="checkbox" id="editor-autolink-@" checked="checked" />'
-        + 'autolink </label>'
         + '<label for="editor-wrap-@" title="Turns on/off wrapping">'
         + '<input type="checkbox" id="editor-wrap-@" />'
         + 'wrap </label>'
@@ -884,12 +862,6 @@ TracWysiwyg.prototype.setupToggleEditorButtons = function() {
         var button = buttons[i];
         var token = button.id.replace(/[0-9]+$/, "@");
         switch (token) {
-        case 'editor-autolink-@':
-            var listener = this.listenerToggleAutolink(button);
-            $(button).click(listener);
-            $(button).keypress(listener);
-            this.autolinkButton = button;
-            break;
         case "editor-wrap-@":
             var listener = this.listenerToggleWrapTextarea(button);
             $(button).click(listener);
@@ -947,10 +919,8 @@ TracWysiwyg.prototype.syncTextAreaHeight = function() {
         frame.height = height;
     }
 };
-TracWysiwyg.prototype.detectTracLink = function(event) {
-    if (!this.autolink) {
-        return;
-    }
+
+Wysiwyg.prototype.detectLink = function(event) {
     var range = this.getSelectionRange();
     var node = range.startContainer;
     if (!node || !range.collapsed) {
