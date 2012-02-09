@@ -1,8 +1,10 @@
 /****
  vim:sw=4:et:ai
 
+ Wysiwyg editor for FitNesse, based on the Trac Wysiwyg editor written by
+ OpenGroove and Ciklone, BSD licensed.
+
  TODO:
- - Edit icons, fix table edit icons.
  - paragraph "| foo |" should convert into a table.
  ****/
  
