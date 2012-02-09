@@ -14,15 +14,13 @@ var Wysiwyg = function(textarea, options) {
     this.textarea = textarea;
     this.options = options = options || {};
     var wikitextToolbar = null;
-    var textareaResizable = null;
     wikitextToolbar = textarea.previousSibling;
     if (wikitextToolbar && (wikitextToolbar.nodeType != 1 || wikitextToolbar.className != "wikitoolbar")) {
         wikitextToolbar = null;
     }
-    this.textareaResizable = textareaResizable;
     this.wikitextToolbar = wikitextToolbar;
 
-    this.createEditable(document, textarea, textareaResizable);
+    this.createEditable(document, textarea);
     var frame = this.frame;
     var resizable = this.resizable;
 
@@ -48,20 +46,20 @@ var Wysiwyg = function(textarea, options) {
     var styleAbsolute = { position: "absolute", left: "-9999px", top: "-9999px" };
     switch (editorMode) {
     case "textarea":
-        Wysiwyg.setStyle(textareaResizable || textarea, styleStatic);
+        Wysiwyg.setStyle(textarea, styleStatic);
         if (wikitextToolbar) {
             Wysiwyg.setStyle(wikitextToolbar, styleStatic);
         }
         Wysiwyg.setStyle(resizable || frame, { position: "absolute",
-            left: "-9999px", top: Wysiwyg.elementPosition(textareaResizable || textarea).top + "px" });
+            left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
         Wysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
         Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "" });
         textarea.setAttribute("tabIndex", "");
         frame.setAttribute("tabIndex", "-1");
         break;
     case "wysiwyg":
-        Wysiwyg.setStyle(textareaResizable || textarea, { position: "absolute",
-            left: "-9999px", top: Wysiwyg.elementPosition(textareaResizable || textarea).top + "px" });
+        Wysiwyg.setStyle(textarea, { position: "absolute",
+            left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
         if (wikitextToolbar) {
             Wysiwyg.setStyle(wikitextToolbar, styleAbsolute);
         }
@@ -77,7 +75,7 @@ var Wysiwyg = function(textarea, options) {
     for (var i = 0; i < this.menus.length; i++) {
         body.insertBefore(this.menus[i], body.firstChild);
     }
-    var element = wikitextToolbar || textareaResizable || textarea;
+    var element = wikitextToolbar || textarea;
     element.parentNode.insertBefore(this.toggleEditorButtons, element);
     element.parentNode.insertBefore(this.wysiwygToolbar, element);
     element.parentNode.insertBefore(this.dialogWindow, element);
@@ -93,7 +91,7 @@ var Wysiwyg = function(textarea, options) {
             self.setupEditorEvents();
             self.setupFormEvent();
             if (exception) {
-                (self.textareaResizable || self.textarea).style.position = "static";
+                self.textarea.style.position = "static";
                 if (self.wikitextToolbar) {
                     self.wikitextToolbar.style.position = "static";
                 }
@@ -189,7 +187,7 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
     switch (type) {
     case "textarea":
         return function(event) {
-            var textarea = self.textareaResizable || self.textarea;
+            var textarea = self.textarea;
             if (textarea.style.position == "absolute") {
                 self.hideAllMenus();
                 self.loadTracWikiText();
@@ -218,7 +216,7 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
                     alert("Failed to activate the wysiwyg editor.");
                     throw e;
                 }
-                (self.textareaResizable || self.textarea).style.position = "absolute";
+                self.textarea.style.position = "absolute";
                 self.textarea.setAttribute("tabIndex", "-1");
                 if (self.wikitextToolbar) {
                     self.wikitextToolbar.style.position = "absolute";
@@ -241,7 +239,7 @@ Wysiwyg.prototype.setupFormEvent = function() {
     var self = this;
 
     function listener(event) {
-        var textarea = self.textareaResizable || self.textarea;
+        var textarea = self.textarea;
         try {
             if (textarea.style.position == "absolute") {
                 var body = self.contentDocument.body;
@@ -257,7 +255,7 @@ Wysiwyg.prototype.setupFormEvent = function() {
     $(this.textarea.form).submit(listener);
 };
 
-Wysiwyg.prototype.createEditable = function(d, textarea, textareaResizable) {
+Wysiwyg.prototype.createEditable = function(d, textarea) {
     var self = this;
     var getStyle = Wysiwyg.getStyle;
     var dimension = getDimension(textarea);
@@ -278,59 +276,7 @@ Wysiwyg.prototype.createEditable = function(d, textarea, textareaResizable) {
         + '</iframe>';
     var frame = this.frame = wrapper.firstChild;
 
-    if (textareaResizable) {
-        var offset = null;
-        var offsetFrame = null;
-        var contentDocument = null;
-        var grip = d.createElement("div");
-        grip.className = "trac-grip";
-        if (/^[0-9]+$/.exec(dimension.width)) {
-            grip.style.width = dimension.width + "px";
-        }
-        $(grip).mousedown(beginDrag);
-        wrapper.appendChild(grip);
-        var resizable = d.createElement("div");
-        resizable.className = "trac-resizable";
-        resizable.appendChild(wrapper);
-        grip.style.marginLeft = (frame.offsetLeft - grip.offsetLeft) + 'px';
-        grip.style.marginRight = (grip.offsetWidth - frame.offsetWidth) +'px';
-        this.resizable = resizable;
-        textareaResizable.parentNode.insertBefore(resizable, textareaResizable.nextSibling);
-    }
-    else {
-        textarea.parentNode.insertBefore(frame, textarea.nextSibling);
-    }
-
-    function beginDrag(event) {
-        offset = frame.height - event.pageY;
-        contentDocument = self.contentDocument;
-        frame.blur();
-        $(d).mousemove(dragging);
-        $(d).mouseup(endDrag);
-        $(contentDocument).mousemove(draggingForFrame);
-        $(contentDocument).mouseup(endDrag);
-    }
-
-    var topPageY = 0, framePageY = 0;
-    function dragging(event) {
-        var height = Math.max(32, offset + event.pageY);
-        textarea.style.height = height + "px";
-        frame.height = height;
-    }
-
-    function draggingForFrame(event) {
-        var height = Math.max(32, event.clientY);
-        textarea.style.height = height + "px";
-        frame.height = height;
-    }
-
-    function endDrag(event) {
-        self.focusWysiwyg();
-        Wysiwyg.removeEvent(d, "mousemove", dragging);
-        Wysiwyg.removeEvent(d, "mouseup", endDrag);
-        Wysiwyg.removeEvent(contentDocument, "mousemove", draggingForFrame);
-        Wysiwyg.removeEvent(contentDocument, "mouseup", endDrag);
-    }
+    textarea.parentNode.insertBefore(frame, textarea.nextSibling);
 
     function getDimension(textarea) {
         var width = textarea.offsetWidth;
@@ -350,9 +296,6 @@ Wysiwyg.prototype.createEditable = function(d, textarea, textareaResizable) {
         if (dimension.width && dimension.height) {
             self.frame.width = dimension.width;
             self.frame.height = dimension.height;
-            if (textareaResizable) {
-                grip.style.width = /^[0-9]+$/.exec(dimension.width) ? dimension.width + "px" : dimension.width;
-            }
             return;
         }
         setTimeout(lazy, 100);
@@ -884,25 +827,12 @@ Wysiwyg.prototype.setupSyncTextAreaHeight = function() {
     if (editrows) {
         $(editrows).change(changeHeight);
     }
-    if (this.textareaResizable) {
-        $(this.textarea.nextSibling).mousedown(beginDrag);
-    }
 
     function changeHeight() {
         if (timer !== null) {
             clearTimeout(timer);
         }
         setTimeout(sync, 10);
-    }
-
-    function beginDrag(event) {
-        $(d).mousemove(changeHeight);
-        $(d).mouseup(endDrag);
-    }
-
-    function endDrag(event) {
-        Wysiwyg.removeEvent(d, "mousemove", changeHeight);
-        Wysiwyg.removeEvent(d, "mouseup", endDrag);
     }
 
     function sync() {
