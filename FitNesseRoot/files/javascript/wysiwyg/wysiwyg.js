@@ -31,9 +31,8 @@ var Wysiwyg = function(textarea, options) {
     this.wysiwygToolbar = this.createWysiwygToolbar(document);
     this.styleMenu = this.createStyleMenu(document);
     this.dialogWindow = this.createDialogWindow(document);
-    this.decorationMenu = this.createDecorationMenu(document);
     this.tableMenu = this.createTableMenu(document);
-    this.menus = [ this.styleMenu, this.decorationMenu, this.tableMenu ];
+    this.menus = [ this.styleMenu, this.tableMenu ];
     this.toolbarButtons = this.setupMenuEvents();
     this.toggleEditorButtons = null;
     this.wrapTextareaButton = null;
@@ -372,22 +371,6 @@ Wysiwyg.prototype.createStyleMenu = function(d) {
     return menu;
 };
 
-Wysiwyg.prototype.createDecorationMenu = function(d) {
-    var html = [
-        '<ul class="menu">',
-        /*
-        '<li><a id="wt-strike" href="#">Strike through</a></li>',
-        '<li><a id="wt-sup" href="#">Superscript</a></li>',
-        '<li><a id="wt-sub" href="#">Subscript</a></li>',
-        */
-        '</ul>' ];
-    var menu = d.createElement("div");
-    menu.className = "wysiwyg-menu";
-    Wysiwyg.setStyle(menu, { position: "absolute", left: "-1000px", top: "-1000px", zIndex: 1000 });
-    menu.innerHTML = html.join("").replace(/ href="#">/g, ' href="#" onmousedown="return false" tabindex="-1">');
-    return menu;
-};
-
 Wysiwyg.prototype.createTableMenu = function(d) {
     var html = [
         '<ul class="menu">',
@@ -437,7 +420,6 @@ Wysiwyg.prototype.setupMenuEvents = function() {
         case "sub":         return [ self.execDecorate, "subscript" ];
         case "sup":         return [ self.execDecorate, "superscript" ];
         case "monospace":   return [ self.execDecorate, "monospace" ];
-        case "decorationmenu":  return [ self.toggleMenu, self.decorationMenu, element ];
         case "remove":      return [ self.execCommand, "removeformat" ];
         case "paragraph":   return [ self.formatParagraph ];
         case "heading1":    return [ self.formatHeaderBlock, "h1" ];
