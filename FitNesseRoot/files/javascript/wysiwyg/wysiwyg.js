@@ -5,6 +5,7 @@
  - Menu button for creating a Collapsable area (containing selected text?)
  - Menu for removing Collapsible area. Text is added in parent node.
  - Edit icons, fix table edit icons.
+ - paragraph "| foo |" should convert into a table.
  ****/
  
 var TracWysiwyg = function(textarea, options) {
@@ -1316,9 +1317,6 @@ TracWysiwyg.prototype.insertCollapsableSection = function() {
     var range = this.getSelectionRange();
     var html = this.getSelectionHTML();
 
-    console.log(range.startContainer, range.endContainer);
-    var collapsable = this.createCollapsableSection();
-
     function tagsToFragment(node) {
         var close = open = '';
         while (node.parentNode && node !== self.contentDocument.body &&
@@ -1335,13 +1333,24 @@ TracWysiwyg.prototype.insertCollapsableSection = function() {
 
     var start = tagsToFragment(range.startContainer);
     var end = tagsToFragment(range.endContainer);
-    console.log(start, end);
 
-    this.insertHTML(start[0] + "<div class='collapsable'>" + start[1] + (html ? html : "<p>edit me</p>") + end[0] + "</div>" + end[1]);
-//    var node = this.contentDocument.getElementById(id);
-//    if (node) {
-//        this.selectNode(node);
-//    }
+    var id = this.generateDomId();
+
+    this.insertHTML(start[0] + "<div class='collapsable' id='" + id + "'>" + start[1] + (html ? html : "<p>edit me</p>") + end[0] + "</div>" + end[1]);
+    var node = this.contentDocument.getElementById(id);
+    if (node) {
+        this.selectNode(node.firstChild);
+    }
+};
+
+TracWysiwyg.prototype.deleteCollapsableSection = function() {
+    var pos = this.getSelectionPosition();
+    var startCol = $(pos.start).parents("div.collapsable")[0];
+    var endCol = $(pos.end).parents("div.collapsable")[0];
+    if (startCol === endCol) {
+        $(startCol).before($(startCol).children());
+        $(startCol).remove();
+    }
 };
 
 TracWysiwyg.prototype.createLink = function() {
