@@ -1730,12 +1730,14 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
         closeParagraph();
         var collapsible = self.createCollapsableSection();
 
+        holder.appendChild(collapsible);
+        holder = collapsible;
+
         var m = /^!\*+([<>])?\s+(.*)$/.exec(value);
         if (m) {
             if (m[2]) {
-                var title = contentDocument.createElement("p");
-                collapsible.appendChild(title);
-                title.appendChild(contentDocument.createTextNode(m[2] || ""));
+                handleLine(m[2] || "");
+                closeParagraph();
             }
             switch (m[1]) {
             case "<": // Hidden
@@ -1746,8 +1748,6 @@ TracWysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, o
                 break;
             }
         }
-        holder.appendChild(collapsible);
-        holder = collapsible;
         openParagraph();
     }
 
