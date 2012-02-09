@@ -933,7 +933,8 @@ $(function() {
         unit.add("Collapsible area", function() {
             var dom = fragment(
                 element("div", { "class": "collapsable" },
-                    element("p", "My content")));
+                    element("p", "My content")),
+                element("p", br()));
             generateFragment.call(this, dom, [
                 "!*",
                 "My content",
@@ -948,7 +949,8 @@ $(function() {
             dom = fragment(
                 element("div", { "class": "collapsable" },
                     element("p", "My content"),
-                    element("p", br())));
+                    element("p", br())),
+                element("p", br()));
              generateFragment.call(this, dom, [
                 "!* My content",
                 "",
@@ -964,12 +966,15 @@ $(function() {
                 element("div", { "class": "collapsable" },
                     element("p", "EXPANDED"),
                     element("p", "Expanded content")),
-                element("div", { "class": "collapsed collapsable" },
+                element("p", br()),
+                element("div", { "class": "collapsable collapsed" },
                     element("p", "COLLAPSED"),
                     element("p", "Collapsed content")),
-                element("div", { "class": "hidden collapsable" },
+                element("p", br()),
+                element("div", { "class": "collapsable hidden" },
                     element("p", "HIDDEN"),
-                    element("p", "Hidden content")));
+                    element("p", "Hidden content")),
+                element("p", br()));
             generate.call(this, dom, [
                 "!*** EXPANDED",
                 "",
@@ -997,7 +1002,9 @@ $(function() {
                     element("div", { "class": "collapsable" },
                         element("p", "inner"),
                         element("p", "More text")
-                    )));
+                    ),
+                    element("p", br())),
+                element("p", br()));
             generateFragment.call(this, dom, [
                 "Paragraph",
                 "!*** outer",
