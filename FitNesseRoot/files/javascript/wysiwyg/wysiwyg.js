@@ -803,6 +803,25 @@ TracWysiwyg.prototype.setupEditorEvents = function() {
         self.selectionChanged();
     });
 
+    $(d).on('click', 'div.collapsable', function(event) {
+        var x = event.pageX - this.offsetLeft;
+        var y = event.pageY - this.offsetTop;
+        if (x < 15 && y < 15) {
+            var e = $(this);
+            if (e.hasClass('collapsed')) {
+                e.removeClass('collapsed').addClass('hidden');
+            } else if (e.hasClass('hidden')) {
+                e.removeClass('hidden');
+            } else {
+                e.addClass('collapsed');
+            }
+            event.stopPropagation();
+        }
+    });
+
+    $(d).on('click', 'a', function(event) {
+        return false;
+    });
 };
 
 TracWysiwyg.prototype.loadWysiwygDocument = function() {
@@ -1413,7 +1432,6 @@ TracWysiwyg.prototype.createAnchor = function(link, label, attrs) {
     anchor.href = link;
     anchor.title = link;
     anchor.setAttribute("data-wysiwyg-link", link);
-    anchor.setAttribute("onclick", "return false;");
     if (label)
         anchor.appendChild(d.createTextNode(label));
     return anchor;
@@ -1423,23 +1441,6 @@ TracWysiwyg.prototype.createCollapsableSection = function() {
     var collapsible = this.contentDocument.createElement("div");
 
     $(collapsible).addClass("collapsable")
-    // TODO: Make live event
-    // Generic event handling
-    $(this.contentDocument.body).on('click', function(event) {
-        var x = event.pageX - this.offsetLeft;
-        var y = event.pageY - this.offsetTop;
-        if (x < 15 && y < 15) {
-            var e = $(this);
-            if (e.hasClass('collapsed')) {
-                e.removeClass('collapsed').addClass('hidden');
-            } else if (e.hasClass('hidden')) {
-                e.removeClass('hidden');
-            } else {
-                e.addClass('collapsed');
-            }
-            event.stopPropagation();
-        }
-    });
     return collapsible;
 }
 
