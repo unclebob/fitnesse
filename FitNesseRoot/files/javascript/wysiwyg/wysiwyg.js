@@ -2,8 +2,6 @@
  vim:sw=4:et:ai
 
  TODO:
- - Menu button for creating a Collapsable area (containing selected text?)
- - Menu for removing Collapsible area. Text is added in parent node.
  - Edit icons, fix table edit icons.
  - paragraph "| foo |" should convert into a table.
  ****/
@@ -1183,6 +1181,8 @@ TracWysiwyg.prototype.deleteTableCell = function() {
             row.deleteCell(cellIndex);
         }
         this.spanTableColumns(focus.table);
+        //this.selectNode(row.cells[cellIndex < row.cells.length ? cellIndex : row.cells.length - 1].firstChild);
+        this.moveFocusInTable(false);
     }
 };
 
