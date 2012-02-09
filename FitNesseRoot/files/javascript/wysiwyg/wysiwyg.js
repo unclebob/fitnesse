@@ -3501,19 +3501,6 @@ Wysiwyg.getSelfOrAncestor = function(element, name) {
     return null;
 };
 
-/*Wysiwyg.unserializeFromHref = function(href, name) {
-    var attrs = {};
-    if (href.indexOf("#") !== -1) {
-        var pieces = href.replace(/^[^#]*#/, '').split(/&/g);
-        var length = pieces.length;
-        for (var i = 0; i < length; i++) {
-            var pair = pieces[i].split(/=/g, 2);
-            attrs[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
-        }
-    }
-    return name ? attrs[name] : attrs;
-};*/
-
 Wysiwyg.getTextContent = (function() {
     var anonymous = document.createElement("div");
     if (typeof anonymous.textContent != "undefined") {
