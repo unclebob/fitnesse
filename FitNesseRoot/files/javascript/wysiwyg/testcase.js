@@ -72,8 +72,7 @@ $(function() {
             var attrs = {
                 href: link,
                 title: link,
-                'data-wysiwyg-link': link,
-                onclick: "return false;" };
+                'data-wysiwyg-link': link };
             return element("a", attrs, label || link);
         };
 
