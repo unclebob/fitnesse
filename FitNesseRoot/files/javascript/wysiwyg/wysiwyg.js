@@ -22,7 +22,6 @@ var Wysiwyg = function(textarea, options) {
 
     this.createEditable(document, textarea);
     var frame = this.frame;
-    var resizable = this.resizable;
 
     this.contentWindow = frame.contentWindow;
     this.contentDocument = this.contentWindow.document;
@@ -49,7 +48,7 @@ var Wysiwyg = function(textarea, options) {
         if (wikitextToolbar) {
             Wysiwyg.setStyle(wikitextToolbar, styleStatic);
         }
-        Wysiwyg.setStyle(resizable || frame, { position: "absolute",
+        Wysiwyg.setStyle(frame, { position: "absolute",
             left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
         Wysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
         Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "" });
@@ -62,7 +61,7 @@ var Wysiwyg = function(textarea, options) {
         if (wikitextToolbar) {
             Wysiwyg.setStyle(wikitextToolbar, styleAbsolute);
         }
-        Wysiwyg.setStyle(resizable || frame, styleStatic);
+        Wysiwyg.setStyle(frame, styleStatic);
         Wysiwyg.setStyle(this.wysiwygToolbar, styleStatic);
         Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "none" });
         textarea.setAttribute("tabIndex", "-1");
@@ -94,7 +93,7 @@ var Wysiwyg = function(textarea, options) {
                 if (self.wikitextToolbar) {
                     self.wikitextToolbar.style.position = "static";
                 }
-                (self.resizable || self.frame).style.position = self.wysiwygToolbar.style.position = "absolute";
+                self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.wrapTextareaButton.parentNode.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
@@ -196,7 +195,7 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
                     self.wikitextToolbar.style.position = "static";
                 }
                 self.syncTextAreaHeight();
-                (self.resizable || self.frame).style.position = self.wysiwygToolbar.style.position = "absolute";
+                self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.frame.setAttribute("tabIndex", "-1");
                 self.wrapTextareaButton.parentNode.style.display = "";
                 Wysiwyg.setEditorMode(type);
@@ -205,7 +204,7 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
         };
     case "wysiwyg":
         return function(event) {
-            var frame = self.resizable || self.frame;
+            var frame = self.frame;
             if (frame.style.position == "absolute") {
                 try {
                     self.loadWysiwygDocument();
