@@ -186,7 +186,7 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
             var textarea = self.textarea;
             if (textarea.style.position == "absolute") {
                 self.hideAllMenus();
-                self.loadTracWikiText();
+                self.loadWikiText();
                 textarea.style.position = "static";
                 self.textarea.setAttribute("tabIndex", "");
                 if (self.wikitextToolbar) {
@@ -613,16 +613,13 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0);
         switch (event.charCode || event.keyCode) {
         case 0x20:  // SPACE
-            switch (modifier) {
-            case 0:
-                self.detectTracLink(event);
-                break;
+            self.detectLink(event);
             return;
         case 0x3e:  // ">"
-            self.detectTracLink(event);
+            self.detectLink(event);
             return;
         case 0x0d:  // ENTER
-            self.detectTracLink(event);
+            self.detectLink(event);
             switch (modifier) {
             case 0:
                 var focus = self._getFocusForTable();
@@ -663,7 +660,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
         if (ime) {
             switch (keyCode) {
             case 0x20:  // SPACE
-                self.detectTracLink(event);
+                self.detectLink(event);
                 break;
             }
             ime = false;
@@ -728,7 +725,7 @@ Wysiwyg.prototype.focusWysiwyg = function() {
     setTimeout(lazy, 10);
 };
 
-Wysiwyg.prototype.loadTracWikiText = function() {
+Wysiwyg.prototype.loadWikiText = function() {
     this.textarea.value = this.domToWikitext(this.contentDocument.body, this.options);
     this.savedWysiwygHTML = null;
 };
@@ -807,7 +804,7 @@ Wysiwyg.prototype.syncTextAreaHeight = function() {
     }
 };
 
-Wysiwyg.prototype.detectTracLink = function(event) {
+Wysiwyg.prototype.detectLink = function(event) {
     var range = this.getSelectionRange();
     var node = range.startContainer;
     if (!node || !range.collapsed) {
@@ -856,7 +853,7 @@ Wysiwyg.prototype.detectTracLink = function(event) {
         return;
     }
 
-    var pattern = this.wikiDetectTracLinkPattern;
+    var pattern = this.wikiDetectLinkPattern;
     pattern.lastIndex = /[^ \t\r\n\f\v]*$/.exec(text).index;
     var match, tmp;
     for (tmp = pattern.exec(text); tmp; tmp = pattern.exec(text)) {
@@ -867,7 +864,7 @@ Wysiwyg.prototype.detectTracLink = function(event) {
     }
 
     var label = match[0];
-    var link = this.normalizeTracLink(label);
+    var link = this.normalizeLink(label);
     var id = this.generateDomId();
     var anchor = this.createAnchor(link, label, { id: id, "data-wysiwyg-autolink": "true" });
     var anonymous = this.contentDocument.createElement("div");
@@ -1242,12 +1239,12 @@ Wysiwyg.prototype.createLink = function() {
         var autolink = anchor.getAttribute("data-wysiwyg-autolink");
 
         if (autolink == "true") {
-            var pattern = this.wikiDetectTracLinkPattern;
+            var pattern = this.wikiDetectLinkPattern;
             pattern.lastIndex = 0;
             var label = Wysiwyg.getTextContent(anchor);
             var match = pattern.exec(label);
             if (match && match.index == 0 && match[0].length == label.length) {
-                currLink = this.normalizeTracLink(label);
+                currLink = this.normalizeLink(label);
             }
         }
         if (!currLink) {
@@ -1264,7 +1261,7 @@ Wysiwyg.prototype.createLink = function() {
     var newLink = (prompt(text ? "Enter link:" : "Insert link:", currLink) || "").replace(/^\s+|\s+$/g, "");
     if (newLink && newLink != currLink) {
         text = text || newLink;
-        newLink = this.normalizeTracLink(newLink);
+        newLink = this.normalizeLink(newLink);
         var id = this.generateDomId();
         var d = this.contentDocument;
         var anonymous = d.createElement("div");
@@ -1413,13 +1410,12 @@ Wysiwyg.prototype.selectionChanged = function() {
     wikiRules.push("^\\*+!$");
 
     // TODO could be removed?
-    var wikiDetectTracLinkRules = [];
-    wikiDetectTracLinkRules.push(_wikiPageName);
+    var wikiDetectLinkRules = [ _wikiPageName ];
 
 
     var domToWikiInlinePattern = new RegExp("(?:" + wikiInlineRules.join("|") + ")", "g");
     var wikiRulesPattern = new RegExp("(?:(" + wikiRules.join(")|(") + "))", "g");
-    var wikiDetectTracLinkPattern = new RegExp("(?:" + wikiDetectTracLinkRules.join("|") + ")", "g");
+    var wikiDetectLinkPattern = new RegExp("(?:" + wikiDetectLinkRules.join("|") + ")", "g");
 
     Wysiwyg.prototype._linkScheme = _linkScheme;
     Wysiwyg.prototype._quotedString = _quotedString;
@@ -1428,10 +1424,10 @@ Wysiwyg.prototype.selectionChanged = function() {
     Wysiwyg.prototype.xmlNamePattern = new RegExp("^" + _xmlName + "$");
     Wysiwyg.prototype.domToWikiInlinePattern = domToWikiInlinePattern;
     Wysiwyg.prototype.wikiRulesPattern = wikiRulesPattern;
-    Wysiwyg.prototype.wikiDetectTracLinkPattern = wikiDetectTracLinkPattern;
+    Wysiwyg.prototype.wikiDetectLinkPattern = wikiDetectLinkPattern;
 })();
 
-Wysiwyg.prototype.normalizeTracLink = function(link) {
+Wysiwyg.prototype.normalizeLink = function(link) {
     if (/^[\/.#]/.test(link)) {
         link = encodeURIComponent(link);
     }
@@ -1707,8 +1703,8 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         return anchor;
     }
 
-    function handleTracLinks(value) {
-        var match = handleTracLinks.pattern.exec(value);
+    function handleLinks(value) {
+        var match = handleLinks.pattern.exec(value);
         
         if (match) {
             var link = match[2];
@@ -1723,12 +1719,12 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         }
     }
     
-    handleTracLinks.pattern = new RegExp("\\["
+    handleLinks.pattern = new RegExp("\\["
     	+ "\\[(.*)\\]"
     	+ "\\[(.*)\\]"
     	+ "\\]");
 
-    function handleTracWikiLink(value) {
+    function handleWikiLink(value) {
         createAnchor(value, value);
     }
 
@@ -2040,7 +2036,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
                 continue;
             case 8:		// Wiki link
                 if (inEscapedTable()) { break; }
-                handleTracLinks(matchText);
+                handleLinks(matchText);
                 continue;
             case 9:		// WikiPageName
                 if (inEscapedTable()) { break; }
