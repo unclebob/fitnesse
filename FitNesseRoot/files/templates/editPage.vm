@@ -36,7 +36,7 @@
       }
     };
 
-    var editors = TracWysiwyg.initialize();
+    var editors = Wysiwyg.initialize();
     toggle_edit_buttons(editors[0].activeEditor());
     $('#editor-wysiwyg-1,#editor-textarea-1').click(function() {
       toggle_edit_buttons($(this).val());

@@ -1,11 +1,11 @@
-TracWysiwyg.TestUnit = function() {
+Wysiwyg.TestUnit = function() {
     this.cases = {};
     this.assertCounts = {};
     this.current = null;
 };
 
 (function() {
-    var prototype = TracWysiwyg.TestUnit.prototype;
+    var prototype = Wysiwyg.TestUnit.prototype;
 
     prototype.inspect = function(value) {
         var type = typeof value;

@@ -1,7 +1,7 @@
 $(function() {
-    TracWysiwyg.tracPaths = { base: ".", stylesheets: [] };
-    var options = TracWysiwyg.getOptions();
-    var instance = new TracWysiwyg(document.getElementById("textarea"), options);
+    Wysiwyg.paths = { base: ".", stylesheets: [] };
+    var options = Wysiwyg.getOptions();
+    var instance = new Wysiwyg(document.getElementById("textarea"), options);
     var contentDocument = instance.contentDocument;
 
     var d = document;
@@ -64,7 +64,7 @@ $(function() {
     }
 
     function run() {
-        var unit = new TracWysiwyg.TestUnit();
+        var unit = new Wysiwyg.TestUnit();
         var fragment = unit.fragment;
         var element = unit.element;
         var br = function() { return element("br") };
@@ -844,7 +844,7 @@ $(function() {
                 element("h5", "Heading", br(), "5"),
                 element("h6", "Heading", br(), "6"),
                 element("p",
-                    "var TracWysiwyg = function(textarea) {", " ... ", "}"),
+                    "var Wysiwyg = function(textarea) {", " ... ", "}"),
                 element("p", "> citation continued"),
                 element("p", "quote continued"),
                 element("ul",
@@ -864,7 +864,7 @@ $(function() {
                 "!4 Heading 4",
                 "!5 Heading 5",
                 "!6 Heading 6",
-                "var TracWysiwyg = function(textarea) { ... }",
+                "var Wysiwyg = function(textarea) { ... }",
                 "",
                 "> citation continued",
                 "",
