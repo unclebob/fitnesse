@@ -10,6 +10,7 @@ import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
+import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
@@ -75,8 +76,9 @@ public class FitNesseMain {
     fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
     System.out.println("-----Command Complete-----");
     fitnesse.stop();
-    if (shouldExitAfterSingleCommand())
+    if (shouldExitAfterSingleCommand()) {
       System.exit(TestTextFormatter.finalErrorCount);
+    }
   }
 
   private static boolean shouldExitAfterSingleCommand() {

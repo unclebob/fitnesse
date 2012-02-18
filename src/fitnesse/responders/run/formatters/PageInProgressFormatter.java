@@ -7,6 +7,8 @@ import fitnesse.responders.run.TestSummary;
 import util.TimeMeasurement;
 import util.FileUtil;
 
+import java.io.IOException;
+
 public class PageInProgressFormatter extends NullFormatter {
 
   public PageInProgressFormatter(final WikiPage page) {
@@ -26,6 +28,11 @@ public class PageInProgressFormatter extends NullFormatter {
   @Override
   public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
 	FileUtil.deleteFile(getLockFileName(test));
+  }
+
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+    //ignore.
   }
 }
 

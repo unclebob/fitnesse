@@ -1,1 +1,2 @@
-Suite setup goes here
+|script|fitnesse.fixtures.Pass|
+|ok|

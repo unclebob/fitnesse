@@ -23,6 +23,5 @@ Now lets look at the form.
 
 !|Response Examiner|
 |type|pattern|matches?|
-|contents|<form .* action="ImportingPage#end"|true|
 |contents|<input .* name="remoteUrl"|false|
-|contents|<input .* value="Update Subpages"|true|
+|contents|<input .* type="submit" .* value="Update Subpages"|true|

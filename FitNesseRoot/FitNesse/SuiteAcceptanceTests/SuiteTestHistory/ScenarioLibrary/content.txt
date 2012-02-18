@@ -18,10 +18,11 @@
 |ensure|content contains|<span class="page_title">@title</span>|
 
 !|scenario|the page title should be a link to|page|with value|value|
-|ensure|content contains|<span class="page_title"><a href="/@page">@value</a></span>|
+|ensure|content contains|<a href="/@page" class="page_title">@value</a>|
+
 
 !|scenario|the bread crumb|crumb|should be a link to|page|
-|ensure|content contains|<a class="bread_crumb" href="/@page">@crumb</a>.|
+|ensure|content contains|<a href="/@page">@crumb</a>.|
 
 !|scenario|The page history bar for|date|should have a|id|with class|class|and value|value|
 |$date=|page history date signature of|@date|
@@ -55,4 +56,3 @@
 
 !|scenario|run suite|name|
 |check|request page|@name?suite|200|
-

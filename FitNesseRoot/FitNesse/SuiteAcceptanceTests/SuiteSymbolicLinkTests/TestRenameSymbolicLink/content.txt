@@ -17,9 +17,9 @@ When we look at the properties page we'll see the rename link.
 |uri   |status?|
 |LinkingPage?properties|200|
 !|Response Examiner.|
-|type  |pattern|matches?|
-|contents|SymLink|true|
-|contents|<a href="javascript:symbolicLinkRename\(.*\);">&nbsp;Rename:</a>|true|
+|type  |pattern|matches?|contents?|
+|contents|SymLink|true||
+|contents|<a href="javascript:symbolicLinkRename\(.*\);">Rename:</a>|true||
 
 Now click the '''Rename''' link.
 !|Response Requester.|

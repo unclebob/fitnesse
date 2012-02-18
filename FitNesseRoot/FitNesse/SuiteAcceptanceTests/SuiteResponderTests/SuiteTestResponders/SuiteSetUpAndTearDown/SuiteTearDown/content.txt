@@ -1,1 +1,2 @@
-Suite tear down goes here
+|script|fitnesse.fixtures.Pass|
+|ok|

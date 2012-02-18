@@ -8,5 +8,9 @@
 |the page title should be a link to|SuitePage.TestPage|with value|TestPage|
 |the bread crumb|SuitePage|should be a link to|SuitePage|
 
+|Response Examiner|
+|wrapped html?|
+||
+
 
 

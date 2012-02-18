@@ -2,7 +2,6 @@
 
 Is located at http://-host-/...?searchForm
 
-
 Load the search form page
 |Response Requester.|
 |uri   |status?|
@@ -15,7 +14,7 @@ Make sure where on the right page and that the form has all the proper text.
 
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|onload="document.forms\[0\].searchString.focus\(\)"|true|
+|contents|document\.forms\[0\].searchString.focus\(\)|true|
 |contents|Search String:|true|
 |contents|Search Titles!|true|
 |contents|Search Content!|true|
