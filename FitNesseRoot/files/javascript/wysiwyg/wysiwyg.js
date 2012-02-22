@@ -528,6 +528,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
     var d = this.contentDocument;
     var w = this.contentWindow;
     var ime = false;
+    var inPasteAction = false;
 
     $(d).keydown(function(event) {
         var method = null;
@@ -600,7 +601,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             method.apply(self, args);
             self.selectionChanged();
         }
-        else if (keyCode) {
+        else if (keyCode && !inPasteAction) {
             var focus = self.getFocusNode();
             if (!getSelfOrAncestor(focus, /^(?:p|li|h[1-6]|t[dh]|d[td]|pre|blockquote)$/)) {
                 self.execCommand("formatblock", "<p>");
@@ -699,6 +700,67 @@ Wysiwyg.prototype.setupEditorEvents = function() {
 
     $(d).on('click', 'a', function(event) {
         return false;
+    });
+
+    /* Pasting data is forced in a specific div: pasteddata. In there, the
+     * raw data is collected and fed to the wikiToDom parser.
+     */
+    $(d).on('paste', 'body', function(event) {
+        // Clone state is change in Firefox, need to extract the fields
+        var position = self.getSelectionRange();
+        position = {
+            sameContainer: position.startContainer === position.endContainer,
+            atStart: position.startOffset == 0,
+            atEnd: position.endOffset == position.endContainer.length
+        };
+        var html = "<div id='pasteddata'><br id='pasteddata-remove-me'/></div>";
+        self.insertHTML(html);
+        var pastedDataBlock = d.getElementById('pasteddata');
+        self.selectNode(pastedDataBlock.firstChild);
+        inPasteAction = true;
+
+        // Post processing:
+        setTimeout(function () {
+            inPasteAction = false;
+            // convert nested .pasteddata divs to br's (safari/chrome)
+            $('div', pastedDataBlock).each(function(i, elem) {
+                if (!/^\s*$/.test($(this).text())) {
+                    $(this).before(this.childNodes);
+                    $(this).before('<br/>');
+                }
+                $(this).remove();
+            });
+            var lines = $(pastedDataBlock).html().split(/<br\/?>/);
+
+            if (position.sameContainer && lines.length == 1) {
+                // paste data without markup.
+                if (!position.atStart) {
+                    var prev = $(pastedDataBlock).prev();
+                    $(prev).append($(pastedDataBlock).text());
+                    $(pastedDataBlock).remove();
+                    if (!position.atEnd) {
+                        var next = $(prev).next();
+
+                        var c = $(next).contents();
+                        for (var i = 0; i < c.length; i++) {
+                            $(c[i]).appendTo(prev);
+                        }
+                        $(next).remove();
+                    }
+                } else if (!position.atEnd) {
+                    var next = $(pastedDataBlock).next();
+                    $(next).prepend($(pastedDataBlock).text());
+                    $(pastedDataBlock).remove();
+                }
+            } else {
+                var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
+                var c = $(fragment).children();
+                for (var i = 0; i < c.length; i++) {
+                    $(pastedDataBlock).before(c[i]);
+                }
+                $(pastedDataBlock).remove();
+            }
+        }, 20);
     });
 };
 
@@ -3324,7 +3386,6 @@ Wysiwyg.findInstance = function(textarea) {
 
 Wysiwyg.getStylePaths = function() {
     var stylesheets = [];
-    console.log("get stye");
     var paths = { stylesheets: stylesheets, base: '/' };
 
     var d = document;
@@ -3520,7 +3581,6 @@ Wysiwyg.initialize = function() {
     if ("replace".replace(/[a-e]/g, function(m) { return "*" }) != "r*pl***") {
         return;
     }
-    console.log("Init");
     if (typeof document.designMode == "undefined") {
         return;
     }
