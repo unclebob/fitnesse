@@ -1,56 +1,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.fitnesse</groupId>
   <artifactId>fitnesse</artifactId>
   <name>fitnesse</name>
-  <description> The fully integrated standalone wiki, and acceptance
-    testing framework. </description>
+  <version>20120223-SNAPSHOT</version>
   <url>http://fitnesse.org</url>
-  <version>20120218</version>
+  <description>
+    The fully integrated standalone wiki, and acceptance testing framework.
+  </description>
   <licenses>
     <license>
-      <name>GNU Public License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <name>Common Public License version 1.0</name>
+      <url>http://www.opensource.org/licenses/cpl1.0</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/unclebob/fitnesse.git</connection>
+    <developerConnection>scm:git:git@github.com:unclebob/fitnesse.git</developerConnection>
+    <url>scm:git:http://github.com/unclebob/fitnesse</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
-      <optional>true</optional>
+      <!-- <optional>true</optional> -->
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <version>1.7</version>
-      <optional>true</optional>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.htmlparser</groupId>
       <artifactId>htmlparser</artifactId>
       <version>1.6</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>2.4</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.tmatesoft</groupId>
-      <artifactId>svn</artifactId>
-      <version>1.1.0</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant</artifactId>
-      <version>1.7.1</version>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.velocity</groupId>
@@ -62,19 +59,66 @@
       <artifactId>json</artifactId>
       <version>20090211</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.7.1</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
+
   <build>
-    <sourceDirectory>${basedir}/src</sourceDirectory>
-    <outputDirectory>classes</outputDirectory>
-    <testOutputDirectory>classes</testOutputDirectory>
+    <sourceDirectory>${project.basedir}/src</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src</testSourceDirectory>
+    <!-- Same as original ant setting: -->
+    <outputDirectory>${project.basedir}/classes</outputDirectory>
+    <resources>
+    </resources>
+
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-		<version>2.3.2</version>
+       	<version>2.3.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <configuration>
+              <excludes>
+                <exclude>**/*Test.java</exclude>
+                <exclude>**/*TestBase.java</exclude>
+                <exclude>**/*TestCase.java</exclude>
+                <exclude>**/TestCaseHelper.java</exclude>
+                <exclude>**/*TestHelper.java</exclude>
+                <exclude>**/TestSuiteMaker.java</exclude>
+                <exclude>**/*TestSupport.java</exclude>
+                <exclude>fitnesse/junit/*.java</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <configuration>
+              <excludes>
+                <exclude>**</exclude>
+              </excludes>
+              <includes>
+                <include>**/*Test.java</include>
+                <include>**/*TestBase.java</include>
+                <include>**/*TestCase.java</include>
+                <include>**/TestCaseHelper.java</include>
+                <include>**/*TestHelper.java</include>
+                <include>**/TestSuiteMaker.java</include>
+                <include>**/*TestSupport.java</include>
+                <include>fitnesse/junit/*.java</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -82,6 +126,7 @@
         <configuration>
           <includes>
             <include>**/*Test.java</include>
+            <include>**/*TestCase.java</include>
           </includes>
         </configuration>
       </plugin>
@@ -96,6 +141,62 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>fitnesse-resources</id>
+            <phase>compile</phase>
+            <configuration>
+              <target>
+                <property name="classes" value="${project.build.outputDirectory}" />
+
+                <!-- from ant compile target: -->
+                <copy file="extra/ant/tasks.properties" todir="${classes}" />
+
+                <ant antfile="build.xml" target="createUpdateLists" />
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>jar-with-dependencies</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.2.1</version>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <archive>
+                <manifest>
+                  <mainClass>fitnesseMain.FitNesseMain</mainClass>
+                </manifest>
+              </archive>
+            </configuration>
+            <executions>
+              <execution>
+                <id>make-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
