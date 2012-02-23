@@ -11,7 +11,7 @@
   <groupId>org.fitnesse</groupId>
   <artifactId>fitnesse</artifactId>
   <name>fitnesse</name>
-  <version>20120223</version>
+  <version>20120223-SNAPSHOT</version>
   <url>http://fitnesse.org</url>
   <description>
     The fully integrated standalone wiki, and acceptance testing framework.
@@ -146,7 +146,7 @@
         <version>1.6</version>
         <executions>
           <execution>
-            <id>default-resources</id>
+            <id>fitnesse-resources</id>
             <phase>compile</phase>
             <configuration>
               <target>
@@ -166,4 +166,37 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>jar-with-dependencies</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.2.1</version>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <archive>
+                <manifest>
+                  <mainClass>fitnesseMain.FitNesseMain</mainClass>
+                </manifest>
+              </archive>
+            </configuration>
+            <executions>
+              <execution>
+                <id>make-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
