@@ -8,6 +8,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -21,6 +22,7 @@ public class EditResponderTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
+    FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new EditResponder();
@@ -41,6 +43,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"responder\"", body);
     assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
+    assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
     assertSubString("type=\"submit\"", body);
     assertSubString(String.format("textarea class=\"%s no_wrap\" wrap=\"off\"", EditResponder.CONTENT_INPUT_NAME), body);
   }

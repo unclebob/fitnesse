@@ -25,6 +25,7 @@ public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
   public static final String TIME_STAMP = "editTime";
   public static final String TICKET_ID = "ticketId";
+  public static final String HELP_TEXT = "helpText";
 
   protected String content;
   protected WikiPage page;
@@ -104,6 +105,7 @@ public class EditResponder implements SecureResponder {
       velocityContext.put("redirect", redirectUrl);
     }
 
+    velocityContext.put("helpText", pageData.getAttribute("Help"));
     velocityContext.put("pageContent", Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
 
     return VelocityFactory.translateTemplate(velocityContext, "editPage.vm");
