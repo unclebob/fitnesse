@@ -17,18 +17,7 @@ public class DefaultResponder extends BasicResponder {
   private HtmlPage prepareResponseDocument(FitNesseContext context) {
     HtmlPage responseDocument = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(responseDocument, "Default Responder");
-    responseDocument.setMainContent(content());
+    responseDocument.setMainTemplate("defaultPage.vm");
     return responseDocument;
   }
-
-  private String content() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("This is the DefaultResponder page.<br/>");
-    buffer.append("Because you can see this page something has gone wrong.<br/>");
-    buffer.append("If you continue to get this page, please let us know how.<br/>");
-    buffer.append("Thanks,<br/>");
-    buffer.append("<ul><li><a href=\"mailto:unclebob@objectmentor.com\">The FitNesse development team.</a></ul>");
-    return buffer.toString();
-  }
-
 }

@@ -49,7 +49,6 @@ public class WikiPageResponderTest extends RegexTestCase {
     assertSubString("href=\"ChildPage?whereUsed\"", body);
     assertSubString("ChildPage</span>", body);
     assertSubString("Cache-Control: max-age=0", response.makeHttpHeaders());
-    assertSubString("<div id=\"addChildPopup\" class=\"popup_window\"", body);
   }
 
   public void testAttributeButtons() throws Exception {

@@ -27,15 +27,30 @@ public class ErrorResponder implements Responder {
     SimpleResponse response = new SimpleResponse(400);
     HtmlPage html = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(html, "Error Occured");
+    html.setMainTemplate("render.vm");
     if (exception != null)
-      html.setMainContent(new HtmlTag("pre", makeExceptionString(exception)).html());
+      html.put("content", new ExceptionRenderer());
     if (message != null)
-      html.setMainContent(makeErrorMessage());
+      html.put("content", new ErrorRenderer());
     response.setContent(html.html());
 
     return response;
   }
 
+  public class ExceptionRenderer {
+    public String render() {
+      return new HtmlTag("pre", makeExceptionString(exception)).html();
+    }
+  }
+  
+  public class ErrorRenderer {
+    public String render() {
+      HtmlTag tag = HtmlUtil.makeDivTag("centered");
+      tag.add(message);
+      return tag.html();
+    }
+  }
+  
   public static String makeExceptionString(Throwable e) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(e.toString()).append("\n");
@@ -44,11 +59,5 @@ public class ErrorResponder implements Responder {
       buffer.append("\t" + stackTreace[i]).append("\n");
 
     return buffer.toString();
-  }
-
-  public String makeErrorMessage() {
-    HtmlTag tag = HtmlUtil.makeDivTag("centered");
-    tag.add(message);
-    return tag.html();
   }
 }

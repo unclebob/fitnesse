@@ -52,7 +52,7 @@ public class HtmlPageTest extends RegexTestCase {
     assertSubString("<div class=\"mainbar\"", html);
     String mainHtml = page.html();
     assertSubString("<div class=\"header", mainHtml);
-    assertSubString("<div class=\"main\"", mainHtml);
+    assertSubString("<div class=\"mainbar\"", mainHtml);
   }
 
   public void testSidebar() throws Exception {

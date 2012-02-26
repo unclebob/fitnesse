@@ -16,13 +16,8 @@
 
    #parse( "pageTitle.vm" )
     
-   ## parse Html tree
    #if( $mainTemplate )
     #parse( $mainTemplate )
-   #else
-   <div class="main">
-    $!mainContent
-   </div>
    #end
     
   </div>

@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -22,6 +23,7 @@ public class MergeResponderTest extends RegexTestCase {
     request.setResource("SimplePage");
     request.addInput(EditResponder.TIME_STAMP, "");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
+    FitNesseUtil.makeTestContext();
   }
 
   public void tearDown() throws Exception {
