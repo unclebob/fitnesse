@@ -61,8 +61,7 @@ public class SaveResponder implements SecureResponder {
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Edit " + resource);
     html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
-    html.setMainContent("<h3>The content you're trying to save has been " +
-      "banned from this site.  Your changes will not be saved!</h3>");
+    html.setMainTemplate("bannedPage.vm");
     response.setContent(html.html());
     return response;
   }

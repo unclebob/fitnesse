@@ -1,7 +1,8 @@
 <form method="post" action="$action" name="f">
- <input type="hidden" name="responder" value="saveData"/>
+#if($!editTime)
  <input type="hidden" name="editTime" value="$editTime"/>
  <input type="hidden" name="ticketId" value="$ticketId"/>
+#end
 #if($!redirect)
  <input type="hidden" name="redirect" value="$redirect"/>
 #end
@@ -39,5 +40,9 @@
  </div>
 </form>
 <script type="text/javascript">
+#if($!isNewPage)
+ document.f.pageName.focus();
+#else
  document.f.pageContent.focus();
+#end
 </script>

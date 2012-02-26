@@ -66,7 +66,7 @@ public class HtmlPageTest extends RegexTestCase {
   }
 
   public void testDivide() throws Exception {
-    page.setMainContent(HtmlPage.BreakPoint);
+    page.setMainTemplate("breakpoint.vm");
     page.divide();
     assertNotSubString("</html>", page.preDivision);
     assertSubString("</html>", page.postDivision);

@@ -35,21 +35,19 @@ public class NewPageResponder implements Responder {
     html.setTitle("New page:");
 
     html.setPageTitle(new PageTitle("New Page", PathParser.parse(request.getResource())));
-    html.setMainContent(makeEditForm(context, request));
-
+    html.setMainTemplate("editPage.vm");
+    makeEditForm(html, context, request);
+    
     return html.html();
   }
 
-  private String makeEditForm(FitNesseContext context, Request request) {
-    VelocityContext velocityContext = new VelocityContext();
-    velocityContext.put("action", request.getResource());
+  private void makeEditForm(HtmlPage html, FitNesseContext context, Request request) {
+    html.put("action", request.getResource());
 
-    velocityContext.put("isNewPage", true);
-    velocityContext.put("helpText", "");
-    velocityContext.put("pageContent", context.defaultNewPageContent);
-    velocityContext.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
-
-    return VelocityFactory.translateTemplate(velocityContext, "editPage.vm");
+    html.put("isNewPage", true);
+    html.put("helpText", "");
+    html.put("pageContent", context.defaultNewPageContent);
+    html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
   }
 
   public SecureOperation getSecureOperation() {
