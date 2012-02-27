@@ -30,27 +30,9 @@ public class NotFoundResponder implements Responder {
   private String makeHtml(FitNesseContext context) {
     HtmlPage page = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(page, "Not Found:" + resource);
-    page.setMainContent(makeRightColumn(resource));
+    page.put("name", resource);
+    page.put("shouldCreate", WikiWordPath.isWikiWord(resource));
+    page.setMainTemplate("notFoundPage.vm");
     return page.html();
   }
-
-  private String makeRightColumn(String name) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("The requested resource: <i>" + name + "</i> was not found.");
-    if (WikiWordPath.isWikiWord(name)) {
-      makeCreateThisPageWithButton(name, buffer);
-    }
-    return buffer.toString();
-  }
-
-  private void makeCreateThisPageWithButton(String name, StringBuffer buffer) {
-    HtmlTag createPageForm = HtmlUtil.makeFormTag("POST", name + "?edit", "createPageForm");
-    HtmlTag submitButton = HtmlUtil.makeInputTag("submit", "createPageSubmit", "Create This Page");
-    submitButton.addAttribute("accesskey", "c");
-    createPageForm.add(submitButton);
-    buffer.append(HtmlUtil.BR);
-    buffer.append(HtmlUtil.BR);
-    buffer.append(createPageForm.html());
-  }
-
 }

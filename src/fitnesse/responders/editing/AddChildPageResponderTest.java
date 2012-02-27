@@ -1,9 +1,10 @@
-package fitnesse.responders;
+package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ public class AddChildPageResponderTest {
   private String childName;
   private String childContent;
   private String pagetype;
+  private String helpText;
   private MockRequest request;
   private FitNesseContext context;
   private Responder responder;
@@ -25,17 +27,20 @@ public class AddChildPageResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
+    
     crawler = root.getPageCrawler();
     crawler.addPage(root, PathParser.parse("TestPage"));
     childName = "ChildPage";
     childContent = "child content";
+    helpText = "help text";
     pagetype = "";
     request = new MockRequest();
     request.setResource("TestPage");
-    request.addInput("name", childName);
-    request.addInput("content", childContent);
+    request.addInput("pageName", childName);
+    request.addInput("pageContent", childContent);
     request.addInput("pageType", pagetype);
-    context = new FitNesseContext(root);
+    request.addInput("helpText", helpText);
+    context = FitNesseUtil.makeTestContext(root);
     responder = new AddChildPageResponder();
     path = PathParser.parse("TestPage.ChildPage");
   }
@@ -54,11 +59,12 @@ public class AddChildPageResponderTest {
     assertTrue(crawler.getPage(root, path) == null);
     responder.makeResponse(context, request);
     assertTrue(crawler.getPage(root, path) != null);
+    assertEquals("help text", crawler.getPage(root, path).getData().getAttribute("Help"));
   }
 
   @Test
   public void noPageIsMadeIfNameIsNull() throws Exception {
-    request.addInput("name", "");
+    request.addInput("pageName", "");
     assertTrue(crawler.getPage(root, path) == null);
     responder.makeResponse(context, request);
     assertTrue(crawler.getPage(root, path) == null);
@@ -87,15 +93,15 @@ public class AddChildPageResponderTest {
   private MockRequest makeInvalidRequest(String name) {
     MockRequest request = new MockRequest();
     request.setResource("TestPage");
-    request.addInput("name", name);
-    request.addInput("content", "hello");
+    request.addInput("pageName", name);
+    request.addInput("pageContent", "hello");
     request.addInput("pageType", "");
     return request;
   }
 
   @Test
   public void withDefaultPageTypeAndPageNameForStaticThenNoAttributeShouldBeSet() throws Exception {
-    request.addInput("name", "StaticPage");
+    request.addInput("pageName", "StaticPage");
     responder.makeResponse(context, request);
     getChildPage("StaticPage");
     assertFalse(isSuite());
@@ -104,7 +110,7 @@ public class AddChildPageResponderTest {
 
   @Test
   public void withDefaultPageTypeAndPageNameForTestTheTestAttributeShouldBeSet() throws Exception {
-    request.addInput("name", "TestPage");
+    request.addInput("pageName", "TestPage");
     responder.makeResponse(context, request);
     getChildPage("TestPage");
     assertFalse(isSuite());
@@ -113,7 +119,7 @@ public class AddChildPageResponderTest {
 
   @Test
   public void withDefaultPageTypeAndPageNameForSuiteTheSuiteAttributeShouldBeSet() throws Exception {
-    request.addInput("name", "SuitePage");
+    request.addInput("pageName", "SuitePage");
     responder.makeResponse(context, request);
     getChildPage("SuitePage");
     assertTrue(isSuite());
@@ -126,7 +132,7 @@ public class AddChildPageResponderTest {
 
   @Test
   public void correctAttributeWhenNameHasTestButAttributeIsStatic() throws Exception {
-    request.addInput("name", "TestChildPage");
+    request.addInput("pageName", "TestChildPage");
     request.addInput("pageType", "Static");
     responder.makeResponse(context, request);
     getChildPage("TestChildPage");

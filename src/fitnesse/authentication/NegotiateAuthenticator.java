@@ -120,9 +120,9 @@ public class NegotiateAuthenticator extends Authenticator {
       HtmlPage html = context.htmlPageFactory.newPage();
       HtmlUtil.addTitles(html, "Negotiated authentication required");
       if (request == null)
-        html.setMainContent("This request requires authentication");
+        html.setMainTemplate("authRequired.vm");
       else
-        html.setMainContent("Your client failed to complete required authentication");
+        html.setMainTemplate("authFailed.vm");
       response.setContent(html.html());
       return response;
     }

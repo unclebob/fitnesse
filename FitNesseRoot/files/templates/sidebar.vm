@@ -16,7 +16,7 @@
   <a href="$localOrRemotePath?properties" accesskey="p">Properties</a>
   #end
   #if( $actions.withAddChild )
-  <a onclick="popup('addChildPopup')">New Page</a>
+  <a href="$localOrRemotePath?new" accesskey="n">New Page</a>
   #end
   #if( $actions.withRefactor )
   <a href="$localOrRemotePath?refactor" accesskey="r">Refactor</a>

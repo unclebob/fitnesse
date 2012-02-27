@@ -47,6 +47,7 @@ public class WikiSourcePageTest {
         assertTrue(names.contains("PageThree"));
     }
 
+    @SuppressWarnings("serial")
     private class MockVirtualCouplingPage extends VirtualCouplingPage {
         private WikiPage mockVirtualPage;
         public MockVirtualCouplingPage(WikiPage mockVirtualPage) {
