@@ -1,5 +1,5 @@
 <div class="sidebar">
- <a name="art_niche" href="FrontPage" class="art_niche"> </a>
+ <a name="art_niche" href="/FrontPage" class="art_niche"> </a>
  <div class="actions">
   #if( $!actions )
 
