@@ -5,7 +5,19 @@
 #if($!redirect)
  <input type="hidden" name="redirect" value="$redirect"/>
 #end
- <textarea class="pageContent no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
+#if($!isNewPage)
+ <input type="hidden" name="responder" value="addChild"/>
+ <Label for="pagename">Page name:</label> <input type="text" id="pagename" name="pageName" value="" /> <br/>
+ #foreach( $pageType in $pageTypes )
+  <input type="radio" name="pageType" value="$pageType"/> $pageType
+ #end
+ <input type="radio" name="pageType" value="Default" checked="checked" /> Default <br/>
+#else
+ <input type="hidden" name="responder" value="saveData"/>
+#end
+ <Label for="helptext">Help text:</label> <input type="text" id="helptext" name="helpText" value="$!helpText" />
+ 
+ <textarea class="pageContent no_wrap" wrap="off" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
 
  <div class="edit_buttons">
 
