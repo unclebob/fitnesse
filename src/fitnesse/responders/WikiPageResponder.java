@@ -27,19 +27,11 @@ import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 
 public class WikiPageResponder implements SecureResponder {
-  protected WikiPage page;
-  protected PageData pageData;
-  protected String pageTitle;
-  protected Request request;
-  protected PageCrawler crawler;
-
-  public WikiPageResponder() {
-  }
-
-  public WikiPageResponder(WikiPage page) throws Exception {
-    this.page = page;
-    pageData = page.getData();
-  }
+  private WikiPage page;
+  private PageData pageData;
+  private String pageTitle;
+  private Request request;
+  private PageCrawler crawler;
 
   public Response makeResponse(FitNesseContext context, Request request) {
     loadPage(request.getResource(), context);
@@ -90,24 +82,11 @@ public class WikiPageResponder implements SecureResponder {
     html.actions = new WikiPageActions(page).withAddChild();
     SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
-    String childPopupHtml = makeAddChildPopup(page, fullPathName);
-
-    html.setMainContent(generateHtml(pageData) + childPopupHtml);
+    html.setMainTemplate("render.vm");
+    html.put("content", new WikiPageRenderer());
+    
     handleSpecialProperties(html, page);
     return html.html();
-  }
-
-  private String makeAddChildPopup(WikiPage page, String fullPathName) {
-    VelocityContext velocityContext = new VelocityContext();
-
-    velocityContext.put("page_name", page.getName());
-    velocityContext.put("full_path", fullPathName);
-    return VelocityFactory.translateTemplate(velocityContext, "addChildPagePopup.vm");
-  }
-
-  /* hook for subclasses */
-  protected String generateHtml(PageData pageData) {
-    return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
   }
 
   private void handleSpecialProperties(HtmlPage html, WikiPage page) {
@@ -116,5 +95,11 @@ public class WikiPageResponder implements SecureResponder {
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
+  }
+  
+  public class WikiPageRenderer {
+    public String render() {
+        return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
+    }
   }
 }

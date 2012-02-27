@@ -14,4 +14,4 @@
 |add child page|@page|of type|@type|containing|@content|to parent page|@parentPage|should return|303|
 
 !|scenario|add child page|page|of type|type|containing|content|to parent page|parent page|should return|return code|
-|check|request page|@parentPage?addChild&name=@page&content=@content&pageType=@type|@returnCode|
+|check|request page|@parentPage?addChild&pageName=@page&pageContent=@content&pageType=@type|@returnCode|

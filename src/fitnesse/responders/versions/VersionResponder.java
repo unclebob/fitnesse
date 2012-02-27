@@ -50,11 +50,25 @@ public class VersionResponder implements SecureResponder {
     // TODO: subclass actions for specific rollback behaviour.
     html.actions = new WikiPageActions(page).withRollback();
     html.put("rollbackVersion", version);
-    html.setMainContent(HtmlUtil.makeNormalWikiPageContent(pageData));
+    html.setMainTemplate("render.vm");
+    html.put("content", new VersionRenderer(pageData));
     return html;
   }
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
+  }
+  
+  public class VersionRenderer {
+    private PageData pageData;
+    
+    public VersionRenderer(PageData pageData) {
+      super();
+      this.pageData = pageData;
+    }
+
+    public String render() {
+      return HtmlUtil.makeNormalWikiPageContent(pageData);
+    }
   }
 }

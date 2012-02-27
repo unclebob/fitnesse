@@ -225,7 +225,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     String localPathName = PathParser.render(path);
     html.setTitle(title + ": " + localPathName);
     html.setPageTitle(new PageTitle(title, path));
-    html.setMainContent(HtmlPage.BreakPoint);
+    html.setMainTemplate("breakpoint.vm");
     html.divide();
     return html;
   }

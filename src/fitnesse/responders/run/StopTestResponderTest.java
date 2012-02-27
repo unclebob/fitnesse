@@ -12,6 +12,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.InMemoryPage;
 
@@ -27,7 +28,7 @@ public class StopTestResponderTest {
   public void setUp() throws Exception {
 
     request = new MockRequest();
-    context = new FitNesseContext(InMemoryPage.makeRoot("RooT"));
+    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
   }
   
   @Test

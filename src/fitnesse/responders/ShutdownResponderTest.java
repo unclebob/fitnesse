@@ -17,7 +17,7 @@ public class ShutdownResponderTest extends TestCase {
   private boolean doneShuttingDown;
 
   protected void setUp() throws Exception {
-    context = new FitNesseContext();
+    context = FitNesseUtil.makeTestContext();
     context.port = FitNesseUtil.port;
     fitnesse = new FitNesse(context);
     fitnesse.start();

@@ -59,9 +59,4 @@ public class DirectoryResponderTest extends RegexTestCase {
     assertEquals(303, response.getStatus());
     assertEquals("/files/testDir/", response.getHeader("Location"));
   }
-
-  public void testSizeString() throws Exception {
-    assertEquals("", DirectoryResponder.getSizeString(SampleFileUtility.testDir));
-    assertEquals("13 bytes", DirectoryResponder.getSizeString(SampleFileUtility.testFile1));
-  }
 }

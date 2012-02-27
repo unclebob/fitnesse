@@ -1,4 +1,4 @@
-package fitnesse.responders;
+package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
@@ -7,6 +7,8 @@ import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.WikiWordPath;
 
@@ -18,6 +20,7 @@ public class AddChildPageResponder implements SecureResponder {
   private WikiPagePath childPath;
   private String childContent;
   private String pageType;
+  private String helpText;
     
   public SecureOperation getSecureOperation() {
     return new SecureWriteOperation();
@@ -34,14 +37,15 @@ public class AddChildPageResponder implements SecureResponder {
   }
 
   private void parseRequest(FitNesseContext context, Request request) {
-    childName = (String) request.getInput("name");
+    childName = (String) request.getInput("pageName");
     childName = childName == null ? "null" : childName;
     childPath = PathParser.parse(childName);
     currentPagePath = PathParser.parse(request.getResource());
     crawler = context.root.getPageCrawler();
     currentPage = crawler.getPage(context.root, currentPagePath);
-    childContent = (String) request.getInput("content");
+    childContent = (String) request.getInput("pageContent");
     pageType = (String) request.getInput("pageType");
+    helpText = (String) request.getInput("helpText");
     if (childContent == null)
       childContent = "!contents\n";
     if (pageType == null)
@@ -66,16 +70,18 @@ public class AddChildPageResponder implements SecureResponder {
 
   private void createChildPage(Request request) {
     WikiPage childPage = crawler.addPage(currentPage, childPath, childContent);
-    setTestAndSuiteAttributes(childPage);
+    setAttributes(childPage);
+    
   }
 
-  private void setTestAndSuiteAttributes(WikiPage childPage) {
+  private void setAttributes(WikiPage childPage) {
     PageData childPageData = childPage.getData();
     if (pageType.equals("Static")) {
       childPageData.getProperties().remove("Test");
       childPageData.getProperties().remove("Suite");
     } else if ("Test".equals(pageType) || "Suite".equals(pageType))
       childPageData.setAttribute(pageType);
+    childPageData.setAttribute("Help", helpText);
     childPage.commit(childPageData);
   }
 

@@ -8,6 +8,7 @@ import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
@@ -42,6 +43,10 @@ public class FitNesseUtil {
     ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
   }
 
+  public static FitNesseContext makeTestContext() {
+    return makeTestContext(InMemoryPage.makeRoot("root"));
+  }
+  
   public static FitNesseContext makeTestContext(WikiPage root) {
     FitNesseContext context = new FitNesseContext(root);
     context.rootDirectoryName = "TestDir";

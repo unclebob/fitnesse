@@ -46,86 +46,89 @@ public class MergeResponder implements Responder {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Merge " + resource);
     page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
-    page.setMainContent(makeRightColumn());
+    page.setMainTemplate("render.vm");
+    page.put("content", new MergeRenderer());
     return page.html();
   }
 
-  private String makeRightColumn() {
-    HtmlTag form = HtmlUtil.makeFormTag("post", resource);
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-    form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
-    form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TICKET_ID, String.valueOf(SaveRecorder.newTicket())));
-    HtmlTag title = HtmlUtil.makeDivTag("centered");
-    title.use("This page has been recently modified.  You may want to merge existing page content into your changes.");
-    form.add(title);
-    form.add(makeMergeNewDivTag());
-    form.add(makeMergeOldDivTag());
-    form.add(addHiddenAttributes());
-    return form.html();
-  }
-
-  private HtmlTag makeMergeOldDivTag() {
-    HtmlTag mergeOld = HtmlUtil.makeDivTag("merge_old");
-    mergeOld.add("Existing Content (read only)");
-    mergeOld.add(HtmlUtil.BR);
-    mergeOld.add(makeOldContentTextArea());
-
-    return mergeOld;
-  }
-
-  private HtmlTag makeOldContentTextArea() {
-    HtmlTag oldContentTextArea = new HtmlTag("textarea");
-    oldContentTextArea.addAttribute("class", OLD_CONTENT_INPUT_NAME);
-    oldContentTextArea.addAttribute("name", OLD_CONTENT_INPUT_NAME);
-    oldContentTextArea.addAttribute("rows", "25");
-    oldContentTextArea.addAttribute("cols", "50");
-    oldContentTextArea.addAttribute("readonly", "readonly");
-    oldContentTextArea.add(Utils.escapeHTML(existingContent));
-    return oldContentTextArea;
-  }
-
-  private HtmlTag makeMergeNewDivTag() {
-    HtmlTag mergeNew = HtmlUtil.makeDivTag("merge_new");
-    mergeNew.add("Your Changes");
-    mergeNew.add(HtmlUtil.BR);
-    mergeNew.add(makeContentTextArea());
-    mergeNew.add(makeInputTagWithAccessKey());
-    return mergeNew;
-  }
-
-  private HtmlTag makeInputTagWithAccessKey() {
-    HtmlTag input = HtmlUtil.makeInputTag("submit", "submit", "Save");
-    input.addAttribute("accesskey", "s");
-    return input;
-  }
-
-  private HtmlTag makeContentTextArea() {
-    HtmlTag contentTextArea = new HtmlTag("textarea");
-    contentTextArea.addAttribute("name", EditResponder.CONTENT_INPUT_NAME);
-    contentTextArea.addAttribute("rows", "25");
-    contentTextArea.addAttribute("cols", "50");
-    contentTextArea.add(newContent);
-    return contentTextArea;
-  }
-
-  private String addHiddenAttributes() {
-    StringBuffer buffer = new StringBuffer();
-    if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
-      String pageType = (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
-      buffer.append("<input type=\"hidden\" name=\""
-          + PageData.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
-          + "\" checked=\"checked\">");
+  public class MergeRenderer {
+    public String render() {
+      HtmlTag form = HtmlUtil.makeFormTag("post", resource);
+      form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
+      form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
+      form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TICKET_ID, String.valueOf(SaveRecorder.newTicket())));
+      HtmlTag title = HtmlUtil.makeDivTag("centered");
+      title.use("This page has been recently modified.  You may want to merge existing page content into your changes.");
+      form.add(title);
+      form.add(makeMergeNewDivTag());
+      form.add(makeMergeOldDivTag());
+      form.add(addHiddenAttributes());
+      return form.html();
     }
-    for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
-      String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
+  
+    private HtmlTag makeMergeOldDivTag() {
+      HtmlTag mergeOld = HtmlUtil.makeDivTag("merge_old");
+      mergeOld.add("Existing Content (read only)");
+      mergeOld.add(HtmlUtil.BR);
+      mergeOld.add(makeOldContentTextArea());
+  
+      return mergeOld;
+    }
+  
+    private HtmlTag makeOldContentTextArea() {
+      HtmlTag oldContentTextArea = new HtmlTag("textarea");
+      oldContentTextArea.addAttribute("class", OLD_CONTENT_INPUT_NAME);
+      oldContentTextArea.addAttribute("name", OLD_CONTENT_INPUT_NAME);
+      oldContentTextArea.addAttribute("rows", "25");
+      oldContentTextArea.addAttribute("cols", "50");
+      oldContentTextArea.addAttribute("readonly", "readonly");
+      oldContentTextArea.add(Utils.escapeHTML(existingContent));
+      return oldContentTextArea;
+    }
+  
+    private HtmlTag makeMergeNewDivTag() {
+      HtmlTag mergeNew = HtmlUtil.makeDivTag("merge_new");
+      mergeNew.add("Your Changes");
+      mergeNew.add(HtmlUtil.BR);
+      mergeNew.add(makeContentTextArea());
+      mergeNew.add(makeInputTagWithAccessKey());
+      return mergeNew;
+    }
+  
+    private HtmlTag makeInputTagWithAccessKey() {
+      HtmlTag input = HtmlUtil.makeInputTag("submit", "submit", "Save");
+      input.addAttribute("accesskey", "s");
+      return input;
+    }
+  
+    private HtmlTag makeContentTextArea() {
+      HtmlTag contentTextArea = new HtmlTag("textarea");
+      contentTextArea.addAttribute("name", EditResponder.CONTENT_INPUT_NAME);
+      contentTextArea.addAttribute("rows", "25");
+      contentTextArea.addAttribute("cols", "50");
+      contentTextArea.add(newContent);
+      return contentTextArea;
+    }
+  
+    private String addHiddenAttributes() {
+      StringBuffer buffer = new StringBuffer();
+      if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
+        String pageType = (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
+        buffer.append("<input type=\"hidden\" name=\""
+            + PageData.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
+            + "\" checked=\"checked\">");
+      }
+      for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
+        String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
+        if (request.hasInput(attribute))
+          buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
+      }
+      
+      String attribute = PageData.PropertyPRUNE;
       if (request.hasInput(attribute))
         buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
+      
+      return buffer.toString();
     }
-    
-    String attribute = PageData.PropertyPRUNE;
-    if (request.hasInput(attribute))
-      buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
-    
-    return buffer.toString();
   }
 }

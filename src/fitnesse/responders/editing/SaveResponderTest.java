@@ -10,11 +10,14 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+
+import org.apache.tools.ant.PropertyHelper;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
@@ -29,6 +32,7 @@ public class SaveResponderTest {
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
+    FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     request = new MockRequest();
     responder = new SaveResponder();
@@ -60,6 +64,7 @@ public class SaveResponderTest {
     request.setResource(pageName);
     request.addInput(EditResponder.TIME_STAMP, "12345");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
+    request.addInput(EditResponder.HELP_TEXT, "some help");
     request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
   }
 
@@ -97,12 +102,14 @@ public class SaveResponderTest {
   public void testCanCreatePageWithoutTicketIdAndEditTime() throws Exception {
     request.setResource("ChildPageTwo");
     request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
+    request.addInput(EditResponder.HELP_TEXT, "some help");
 
     responder.makeResponse(new FitNesseContext(root), request);
 
     assertEquals(true, root.hasChildPage("ChildPageTwo"));
     String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
     assertEquals("some new content", newContent);
+    assertEquals("some help", root.getChildPage("ChildPageTwo").getData().getAttribute("Help"));
     assertTrue("RecentChanges should exist", root.hasChildPage("RecentChanges"));
     checkRecentChanges(root, "ChildPageTwo");
   }

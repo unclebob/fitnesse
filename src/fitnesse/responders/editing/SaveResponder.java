@@ -31,6 +31,7 @@ public class SaveResponder implements SecureResponder {
   private String user;
   private long ticketId;
   private String savedContent;
+  private String helpText;
   private PageData data;
   private long editTimeStamp;
 
@@ -46,6 +47,8 @@ public class SaveResponder implements SecureResponder {
       return new MergeResponder(request).makeResponse(context, request);
     else {
       savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
+      helpText = (String) request.getInput("helpText");
+
       if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
         return makeBannedContentResponse(context, resource);
       else
@@ -58,8 +61,7 @@ public class SaveResponder implements SecureResponder {
     HtmlPage html = context.htmlPageFactory.newPage();
     html.setTitle("Edit " + resource);
     html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
-    html.setMainContent("<h3>The content you're trying to save has been " +
-      "banned from this site.  Your changes will not be saved!</h3>");
+    html.setMainTemplate("bannedPage.vm");
     response.setContent(html.html());
     return response;
   }
@@ -109,6 +111,8 @@ public class SaveResponder implements SecureResponder {
 
   private void setData() {
     data.setContent(savedContent);
+    data.setAttribute(PageData.PropertyHELP, helpText);
+    data.setAttribute(PageData.PropertyHELP, helpText);
     SaveRecorder.pageSaved(data, ticketId);
     if (user != null)
       data.setAttribute(PageData.LAST_MODIFYING_USER, user);
