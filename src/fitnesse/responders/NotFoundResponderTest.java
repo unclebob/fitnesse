@@ -5,18 +5,28 @@ package fitnesse.responders;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
 public class NotFoundResponderTest extends RegexTestCase {
+  
+  private FitNesseContext context;
+
+  public void setUp() {
+    context = FitNesseUtil.makeTestContext();
+    context.htmlPageFactory = new HtmlPageFactory();
+  }
+  
   public void testResponse() throws Exception {
     MockRequest request = new MockRequest();
     request.setResource("some page");
 
     Responder responder = new NotFoundResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
     assertEquals(404, response.getStatus());
 

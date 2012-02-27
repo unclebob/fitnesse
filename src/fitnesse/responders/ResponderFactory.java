@@ -10,7 +10,9 @@ import java.util.Map;
 import util.StringUtil;
 import fitnesse.Responder;
 import fitnesse.http.Request;
+import fitnesse.responders.editing.AddChildPageResponder;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.editing.NewPageResponder;
 import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.responders.editing.SavePropertiesResponder;
 import fitnesse.responders.editing.SaveResponder;
@@ -48,6 +50,7 @@ public class ResponderFactory {
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
     responderMap = new HashMap<String, Class<?>>();
+    addResponder("new", NewPageResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);

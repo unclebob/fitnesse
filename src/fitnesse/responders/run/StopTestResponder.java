@@ -29,19 +29,10 @@ public class StopTestResponder extends BasicResponder {
   private String html(FitNesseContext context) {
     HtmlPage page = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(page, "Stopping tests");
-    page.setMainContent(getDetails(context));
+    page.put("testId", testId);
+    page.put("runningTestingTracker", context.runningTestingTracker);
+    page.setMainTemplate("stopTestPage.vm");
     return page.html();
   }
   
-   public String getDetails(FitNesseContext context) {
-     String details = "";
-     if (testId != null) {
-       details = "Attempting to stop single test or suite..." + HtmlUtil.BRtag;
-       details += context.runningTestingTracker.stopProcess(testId);
-     } else {
-       details = "Attempting to stop all running test processes..." + HtmlUtil.BRtag;
-       details += context.runningTestingTracker.stopAllProcesses();
-     }
-     return details;
-  }
 }

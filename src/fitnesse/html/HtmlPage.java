@@ -22,7 +22,6 @@ public class HtmlPage {
   private String bodyClass;
   private PageTitle pageTitle;
   private String mainTemplate;
-  private String mainContent;
   
   public WikiPageActions actions;
 
@@ -42,20 +41,12 @@ public class HtmlPage {
     makeSidebarSection();
     velocityContext.put("pageTitle", pageTitle);
 
-    if (mainTemplate != null) {
-      velocityContext.put("mainTemplate", mainTemplate);
-    } else {
-      velocityContext.put("mainContent", mainContent);
-    }
+    velocityContext.put("mainTemplate", mainTemplate);
     return velocityContext;
   }
 
   public void setMainTemplate(String templateName) {
     this.mainTemplate = templateName;
-  }
-  
-  public void setMainContent(String mainContent) {
-    this.mainContent = mainContent;
   }
   
   public void put(String key, Object value) {

@@ -41,7 +41,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   @Override
   public void writeHead(String pageType) throws IOException {
     htmlPage = buildHtml(pageType);
-    htmlPage.setMainContent(HtmlPage.BreakPoint);
+    htmlPage.setMainTemplate("breakpoint.vm");
     htmlPage.divide();
     writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
   }

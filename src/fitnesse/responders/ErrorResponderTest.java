@@ -7,8 +7,13 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 
 public class ErrorResponderTest extends RegexTestCase {
+  
+  public void setUp() {
+    FitNesseUtil.makeTestContext();
+  }
   public void testResponse() throws Exception {
     Responder responder = new ErrorResponder(new Exception("some error message"));
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
