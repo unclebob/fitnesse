@@ -14,7 +14,7 @@
 	<property name="results.dir" location="test-results" />
 
 	<path id="classpath">
-		<pathelement path="classes" />
+		<pathelement path="${classes}" />
 		<fileset dir="lib">
 			<include name="*.jar" />
 			<exclude name="dummy.jar" />
@@ -31,14 +31,14 @@
 		<mkdir dir="dist" />
 		<delete file="dist/fitnesse.jar" />
 
-		<jar jarfile="dist/fitnesse.jar" basedir="classes">
+		<jar jarfile="dist/fitnesse.jar" basedir="${classes}">
 			<include name="**/*.class" />
 			<exclude name="**/*Test.class" />
 			<exclude name="**/*TestSuite.class" />
 			<include name="Resources/**" />
 			<include name="tasks.properties" />
 
-			<fileset dir="classes" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
+			<fileset dir="${classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
 			<zipfileset src="lib/htmlparser.jar" />
 			<zipfileset src="lib/json.jar" />
@@ -49,12 +49,12 @@
 				<attribute name="Main-Class" value="fitnesseMain.FitNesseMain" />
 			</manifest>
 		</jar>
-		<delete dir="classes/Resources" />
+		<delete dir="${classes}/Resources" />
 	</target>
 
 	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
-		<java classpath="classes" classname="fitnesse.updates.UpdateFileList" failonerror="true">
-			<arg value="-baseDirectory:classes/Resources" />
+		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
+			<arg value="-baseDirectory:${classes}/Resources" />
 			<arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css" />
 			<arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
@@ -69,7 +69,7 @@
 			<arg value="FitNesseRoot/PageFooter" />
 			<arg value="FitNesseRoot/PageHeader" />
 		</java>
-		<copy todir="classes/Resources">
+		<copy todir="${classes}/Resources">
 			<fileset dir=".">
 				<include name="updateList" />
 				<include name="updateDoNotCopyOverList" />
@@ -78,9 +78,9 @@
 	</target>
 
 	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<delete dir="classes/Resources" />
-		<mkdir dir="classes/Resources" />
-		<copy todir="classes/Resources/FitNesseRoot/files">
+		<delete dir="${classes}/Resources" />
+		<mkdir dir="${classes}/Resources" />
+		<copy todir="${classes}/Resources/FitNesseRoot/files">
 			<fileset dir="FitNesseRoot/files">
 				<include name="images/**" />
 				<include name="css/*.css" />
@@ -91,7 +91,7 @@
 				<exclude name="**/unused/**" />
 			</fileset>
 		</copy>
-		<copy todir="classes/Resources/FitNesseRoot">
+		<copy todir="${classes}/Resources/FitNesseRoot">
 			<fileset dir="FitNesseRoot">
 				<include name="FitNesse/**" />
 				<include name="FrontPage/**" />
@@ -103,9 +103,9 @@
 	</target>
 
 	<target name="compile" depends="init, stamp-version" description="compile the source (make)">
-		<javac srcdir="src" destdir="classes" classpathref="classpath" debug="true" source="1.6" target="1.6" />
-		<copy file="extra/ant/tasks.properties" todir="classes" />
-		<copy todir="classes">
+		<javac srcdir="src" destdir="${classes}" classpathref="classpath" debug="true" source="1.6" target="1.6" />
+		<copy file="extra/ant/tasks.properties" todir="${classes}" />
+		<copy todir="${classes}">
 			<fileset dir="src">
 				<include name="**/*.vm" />
 			</fileset>
@@ -129,8 +129,8 @@
 	</target>
 
 	<target name="clean" description="delete everything in the classes directory">
-		<delete dir="classes" />
-		<mkdir dir="classes" />
+		<delete dir="${classes}" />
+		<mkdir dir="${classes}" />
 		<delete dir="test-results" />
 	</target>
 
@@ -153,7 +153,7 @@
 	</target>
 
 	<target name="init">
-		<mkdir dir="classes" />
+		<mkdir dir="${classes}" />
 		<mkdir dir="test-results" />
 	</target>
 
