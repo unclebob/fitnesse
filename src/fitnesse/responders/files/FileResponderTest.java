@@ -24,6 +24,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 
 public class FileResponderTest {
   MockRequest request;
@@ -42,6 +43,7 @@ public class FileResponderTest {
     SampleFileUtility.makeSampleFiles();
     response = null;
     saveLocale = Locale.getDefault();
+    FitNesseUtil.makeTestContext();
   }
 
   @After
@@ -132,5 +134,16 @@ public class FileResponderTest {
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     response = responder.makeResponse(context, request);
     assertEquals("text/css", response.getContentType());
+  }
+  
+  @Test
+  public void testNavigationBackToFrontPage() throws Exception {
+    request.setResource("files/");
+    DirectoryResponder responder = (DirectoryResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    response = responder.makeResponse(context, request);
+    response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    assertSubString("<a name=\"art_niche\" href=\"/FrontPage\"", sender.sentData());
   }
 }
