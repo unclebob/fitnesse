@@ -41,7 +41,7 @@ public class ResponseExaminer extends ColumnFixture {
       String pageContent = FitnesseFixtureContext.sender.sentData();
       String[] lines = arrayifyLines(pageContent);
       for (int i = currentLine; i < lines.length; i++) {
-        if (line.equals(lines[i].trim())) {
+        if (line.trim().equals(lines[i].trim())) {
           currentLine = i;
           return true;
         }
