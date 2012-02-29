@@ -11,7 +11,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageAction;
 import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 

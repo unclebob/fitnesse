@@ -114,10 +114,6 @@ public class WikiPageDummy implements WikiPage {
   public String getHelpText() {
     return "Dummy help text";
   }
-
-  public List<WikiPageAction> getActions() {
-    return null;
-  }
   
   public boolean isOpenInNewWindow() {
     return false;
