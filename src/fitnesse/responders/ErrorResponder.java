@@ -27,30 +27,17 @@ public class ErrorResponder implements Responder {
     SimpleResponse response = new SimpleResponse(400);
     HtmlPage html = context.htmlPageFactory.newPage();
     HtmlUtil.addTitles(html, "Error Occured");
-    html.setMainTemplate("render.vm");
+    html.setMainTemplate("error.vm");
+    html.put("exception", exception);
     if (exception != null)
-      html.put("content", new ExceptionRenderer());
+      html.put("exception", exception);
     if (message != null)
-      html.put("content", new ErrorRenderer());
+      html.put("message", message);
     response.setContent(html.html());
 
     return response;
   }
 
-  public class ExceptionRenderer {
-    public String render() {
-      return new HtmlTag("pre", makeExceptionString(exception)).html();
-    }
-  }
-  
-  public class ErrorRenderer {
-    public String render() {
-      HtmlTag tag = HtmlUtil.makeDivTag("centered");
-      tag.add(message);
-      return tag.html();
-    }
-  }
-  
   public static String makeExceptionString(Throwable e) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(e.toString()).append("\n");
