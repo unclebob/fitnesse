@@ -3,11 +3,12 @@ package fitnesse.authentication;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
+
 import org.ietf.jgss.*;
 
 import java.util.Properties;

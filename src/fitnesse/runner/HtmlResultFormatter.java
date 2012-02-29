@@ -8,12 +8,12 @@ import java.io.InputStream;
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.components.ContentBuffer;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.FitNesseContext;

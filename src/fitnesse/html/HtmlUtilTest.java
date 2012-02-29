@@ -5,6 +5,8 @@ package fitnesse.html;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;

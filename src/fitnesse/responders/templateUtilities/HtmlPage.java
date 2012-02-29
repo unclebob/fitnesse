@@ -1,11 +1,10 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.html;
+package fitnesse.responders.templateUtilities;
 
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.VelocityFactory;
-import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;

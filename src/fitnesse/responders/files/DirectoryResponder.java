@@ -10,12 +10,12 @@ import java.util.List;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTableListingBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;

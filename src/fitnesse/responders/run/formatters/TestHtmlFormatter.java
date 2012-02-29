@@ -11,6 +11,8 @@ import fitnesse.html.*;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 

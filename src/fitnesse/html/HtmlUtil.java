@@ -6,6 +6,7 @@ import org.apache.velocity.VelocityContext;
 
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;

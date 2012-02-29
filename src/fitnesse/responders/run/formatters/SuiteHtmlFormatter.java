@@ -9,7 +9,7 @@ import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
-import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PageCrawler;

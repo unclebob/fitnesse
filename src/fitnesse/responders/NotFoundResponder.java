@@ -6,12 +6,12 @@ import java.util.regex.Pattern;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.wikitext.parser.WikiWordPath;
 
 // TODO: Some of this code may now be obsolete, because this responder is no longer used for some

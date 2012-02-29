@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -14,6 +13,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
