@@ -41,8 +41,8 @@ public class DirectoryResponderTest extends RegexTestCase {
     Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
     response = (SimpleResponse) responder.makeResponse(context, request);
 
-    assertHasRegexp("upload form", response.getContent());
-    assertHasRegexp("create directory form", response.getContent());
+    assertHasRegexp("Upload", response.getContent());
+    assertHasRegexp("Create", response.getContent());
   }
 
   public void testHtml() throws Exception {
