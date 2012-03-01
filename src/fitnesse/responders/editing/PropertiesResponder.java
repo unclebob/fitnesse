@@ -106,7 +106,7 @@ public class PropertiesResponder implements SecureResponder {
     html.setTitle("Properties: " + resource);
     html.setPageTitle(new PageTitle("Page Properties", path));
     html.put("pageData", pageData);
-    html.setMainTemplate("properties.vm");
+    html.setMainTemplate("propertiesPage");
     makeLastModifiedTag();
     makeFormSections();
 
