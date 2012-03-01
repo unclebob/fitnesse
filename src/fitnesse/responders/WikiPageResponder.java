@@ -82,9 +82,10 @@ public class WikiPageResponder implements SecureResponder {
     html.actions = new WikiPageActions(page).withAddChild();
     SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
-    html.setMainTemplate("render.vm");
+    html.setMainTemplate("wikiPage");
+    html.setFooterTemplate("wikiFooter");
     html.put("content", new WikiPageRenderer());
-    
+    html.put("footerContent", new WikiPageFooterRenderer());
     handleSpecialProperties(html, page);
     return html.html();
   }
@@ -99,7 +100,14 @@ public class WikiPageResponder implements SecureResponder {
   
   public class WikiPageRenderer {
     public String render() {
-        return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
+        return HtmlUtil.makePageHtml(pageData);
     }
   }
+
+  public class WikiPageFooterRenderer {
+    public String render() {
+        return HtmlUtil.makePageFooterHtml(pageData);
+    }
+  }
+
 }

@@ -49,7 +49,7 @@ public class MergeResponder implements Responder {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Merge " + resource);
     page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
-    page.setMainTemplate("mergePage.vm");
+    page.setMainTemplate("mergePage");
     page.put("editTime", SaveRecorder.timeStamp());
     page.put("ticketId", SaveRecorder.newTicket());
     page.put("oldContent", Utils.escapeHTML(existingContent));

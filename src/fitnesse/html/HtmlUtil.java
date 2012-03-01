@@ -111,17 +111,18 @@ public class HtmlUtil {
 
   public static String makeNormalWikiPageContent(PageData pageData) {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    return makePageHtmlWithHeaderAndFooter(pageData);
+    return makePageHtml(pageData);
   }
 
-  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) {
+  public static String makePageHtml(PageData pageData) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(pageData.getHeaderPageHtml());
     buffer.append(pageData.getHtml());
-    buffer.append("<br/><div class=\"footer\">\n");
-    buffer.append(pageData.getFooterPageHtml());
-    buffer.append("</div>\n");
     return buffer.toString();
+  }
+
+  public static String makePageFooterHtml(PageData pageData) {
+    return pageData.getFooterPageHtml();
   }
 
   public static String metaText(String text) {

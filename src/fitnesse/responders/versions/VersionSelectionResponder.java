@@ -38,7 +38,7 @@ public class VersionSelectionResponder implements SecureResponder {
     html.setTitle("Version Selection: " + resource);
     html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource)));
     html.put("versions", versions);
-    html.setMainTemplate("versionSelection.vm");
+    html.setMainTemplate("versionSelection");
 
     response.setContent(html.html());
 
