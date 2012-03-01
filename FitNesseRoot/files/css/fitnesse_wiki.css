@@ -1,12 +1,5 @@
 /* Wiki styling */
 
-article .footer {
-  margin: 0px;
-  padding: 5px; /* Use same color as border color for div.header. */
-  border-top: 1px solid #984D00;
-  font-size: 80%;
-  text-align: center;
-}
 
 article .centered {
   margin: 5px;

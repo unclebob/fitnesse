@@ -35,7 +35,7 @@ public class NewPageResponder implements Responder {
     html.setTitle("New page:");
 
     html.setPageTitle(new PageTitle("New Page", PathParser.parse(request.getResource())));
-    html.setMainTemplate("editPage.vm");
+    html.setMainTemplate("editPage");
     makeEditForm(html, context, request);
     
     return html.html();

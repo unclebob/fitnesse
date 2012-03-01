@@ -96,5 +96,75 @@ nav li:hover ul {
 
 article {
  //clear: both;
- margin: 0.5em;
+ padding: 0.5em;
 }
+
+textarea {
+	display: block;
+}
+
+fieldset {
+	border: none;
+	padding: 0;
+	margin: 2px;
+}
+
+footer {
+  margin: 0;
+  padding: 0.5em; /* Use same color as border color for div.header. */
+  border-top: 1px solid #984D00;
+  font-size: 80%;
+  text-align: center;
+}
+
+/** Edit page **/
+.editPage label {
+	width: 5em;
+	float: left;
+}
+.editPage #pagename, .editPage #helptext {
+	width: 55em;
+}
+.editPage fieldset {
+	margin-left: 5em;
+}
+.editPage textarea {
+	width: 100%;
+	height: 32em;
+}
+
+.editPage .edit_options {
+	float: right;
+}
+
+/** Properties page */
+.propertiesPage form {
+ padding-bottom: 1em;
+ border-bottom: 1px solid #984D00;
+}
+
+.propertiesPage label {
+	display: inline-block;
+	width: 8em;
+}
+
+.propertiesPage input[type=submit] {
+ display: block;
+ margin-top: 1em;
+}
+
+#virtual-wiki-properties {
+ margin-top: 1em;
+}
+
+.propertiesPage #wiki-import label {
+	display: inline;
+	width: auto;
+}
+
+#symbolics {
+ border-bottom: none;
+}
+.dirListing tbody tr:nth-child(odd) {background: #FFFFFF}
+.dirListing tbody tr:nth-child(even) {background: #EFEFEF}
+
