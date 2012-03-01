@@ -1,0 +1,90 @@
+body {
+	padding: 0;
+	margin: 0;
+	background-color: #fafafe;
+}
+
+header {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	padding: 8px;
+	height: 90px;
+	background-color: #d9dfc9;
+	border-bottom: 1px solid gray;
+}
+
+#art_niche {
+	float: left;
+	padding: 0 50px 0 22px;
+}
+
+header ul {
+	list-style: none;
+}
+
+header li {
+	display: inline-block;
+}
+
+nav {
+	position: fixed;
+	left: 0;
+	top: 108px;
+	width: 150px;
+	bottom: 0;
+	background-color: #d9dfc9;
+}
+
+nav ul {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+nav .label {
+	display: none;
+}
+
+nav li {
+	list-style: none;
+	margin: 4px 12px;
+}
+
+nav li a, nav li a:visited {
+	display: block;
+	padding: 6px 4px;
+	border: 1px solid gray;
+	width: 120px;
+	text-decoration: none;
+	color: black;
+	background-color: #eee;
+}
+
+nav li a:hover {
+	background-color: #f8f8f8;
+}
+
+nav li#tools {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+
+article {
+	margin: 120px 24px 24px 170px;
+}
+
+.virtual {
+  background-image: url("/files/images/virtualPage.jpg");
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+.imported {
+  background-image: url("/files/images/importedPage.jpg");
+  background-position: center top;
+  background-repeat: no-repeat;
+}

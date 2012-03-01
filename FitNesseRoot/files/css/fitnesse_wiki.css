@@ -1,0 +1,77 @@
+/* Wiki styling */
+
+article .footer {
+  margin: 0px;
+  padding: 5px; /* Use same color as border color for div.header. */
+  border-top: 1px solid #984D00;
+  font-size: 80%;
+  text-align: center;
+}
+
+article .centered {
+  margin: 5px;
+  text-align: center;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.code {
+  font-family: courier, 'Lucida Sans Typewriter', monospace;
+  font-size: 16px;
+  color: #004000;
+  font-weight: bold;
+}
+
+td, th {
+    border: thin solid #777777;
+    padding: 5px;
+}
+
+table {
+    border: thin solid #777777;
+}
+
+.meta {
+  color: #BF8660;
+  font-style: italic;
+}
+
+.included, .setup, .teardown, .collapse_rim {
+  background: #F9F9F9;
+  margin: 5px 0px 5px 0px;
+  padding: 2px 2px 2px 2px;
+  border: 1px dotted #909090;
+}
+
+.setup, .teardown {
+  background: #FFFFF0;
+  border-color: #FF8000;
+}
+
+.included {
+  background: #F9F9FF;
+  border-color: #2E2EB2;
+}
+
+.collapse_rim {
+  border-color: #BF8660;
+}
+
+div.collapsable {
+  margin: 0px 0px 0px 15px;
+  display: block;
+}
+
+div.collapsable-contents {
+  margin: 0px 0px 0px 15px;
+  display: block;
+}
+
+div.invisible {
+  line-height: 0px;
+  margin: 0px 0px 0px 0px;
+  display: none;
+  visibility: hidden;
+}

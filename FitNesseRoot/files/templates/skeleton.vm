@@ -10,16 +10,21 @@
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end>
 
-  #parse( "sidebar.vm" )
-
-  <div class="mainbar">
-
-   #parse( "pageTitle.vm" )
+  <header>
+   #parse( $headerTemplate )
+  </header>
+  
+  <nav>
+   #parse( $navTemplate )
+  </nav>
+  
+  <article>
+   #parse( $mainTemplate )
+  </article>
+  
+  <footer>
+   #parse( $footerTemplate )
+  </footer>
     
-   #if( $mainTemplate )
-    #parse( $mainTemplate )
-   #end
-    
-  </div>
  </body>
 </html>

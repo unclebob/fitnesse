@@ -1,0 +1,100 @@
+body {
+ padding: 0;
+ margin: 0 auto;
+ width: 50em;
+}
+
+header {
+ padding: 8px;
+ height: 90px;
+ border-bottom: 1px solid #984D00;
+}
+
+#art_niche {
+ float: left;
+ padding: 0 16px;
+}
+
+header ul {
+ list-style: none;
+ margin: 0;
+}
+
+header li {
+ display: inline-block;
+}
+
+header h1 {
+ margin: 20px 0;
+}
+
+nav {
+ float:right;
+}
+
+nav ul li {
+ display: block;
+ float: left;
+ list-style: none;
+ margin-right: 0.5em;
+ z-index: 99;
+}
+
+nav a, nav a:active, nav a:visited {
+ white-space:nowrap;
+ text-decoration: none;
+ color: black;
+ padding: 0.5em 3em;
+ background-color: #ddd;
+ border-radius: 0.25em;
+ border: 1pt solid black;
+}
+
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br, br+br {
+ display: none;
+}
+
+nav ul ul {
+ background: #ddd; /* Adding a background makes the dropdown work properly in IE7+. */
+ position: absolute;
+ display: none;
+ border: 1pt solid black;
+ z-index: 999;
+ width: 7.81em;
+ margin: 0.5em 0 0 0;
+ padding: .25em;
+ border-radius: 0.25em;
+}
+
+nav hr {
+ border: 1px solid black;
+ margin: 0;
+ 
+}
+
+nav ul ul li {
+ float: none;
+ display: block;
+ line-height: 1.5em;
+ margin: 0;
+}
+
+nav ul ul li a, nav ul ul li a:active {
+ display: block;
+ border-radius: 0px;
+ padding: 0 0 0 8px;
+ height: 1.5em;
+ border: none;
+}
+nav ul ul li a:active {
+ background-color: #eee;
+}
+
+nav li:hover ul {
+	display: block;
+}
+
+article {
+ //clear: both;
+ margin: 0.5em;
+}
