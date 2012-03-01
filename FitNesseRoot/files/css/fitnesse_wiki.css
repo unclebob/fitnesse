@@ -17,14 +17,6 @@ article .centered {
   font-weight: bold;
 }
 
-td, th {
-    border: thin solid #777777;
-    padding: 5px;
-}
-
-table {
-    border: thin solid #777777;
-}
 
 .meta {
   color: #BF8660;
