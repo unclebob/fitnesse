@@ -11,13 +11,13 @@
  #end
  
  <p>This page has been recently modified.  You may want to merge existing page content into your changes.</p>
- <div class="merge_new">
+ <fieldset id="merge-new">
   <label for="newContent">Your Changes</label>
-  <textarea id="newContent" name="pageContent" rows="25" cols="50">$newContent</textarea>
- </div>
- <div class="merge_old">
+  <textarea id="newContent" name="pageContent">$newContent</textarea>
+ </fieldset>
+ <fieldset id="merge-old">
   <label for="oldContent">Existing Content (read only)</label>
-  <textarea id="oldContent" name="oldContent" rows="25" cols="50" readonly="readonly">$oldContent</textarea>
- </div>
+  <textarea id="oldContent" name="oldContent" readonly="readonly">$oldContent</textarea>
+ </fieldset>
  <input type="submit" name="submit" value="Save" accesskey="s"/>
 </form>
