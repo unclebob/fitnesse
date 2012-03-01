@@ -1,4 +1,4 @@
-#macro( checked $attr )#if( $pageData.hasAttribute($attr) ) checked="true"#end#end
+#macro( checked $attr )#if( $pageData.hasAttribute($attr) ) checked="checked"#end#end
 #macro( value $prop ) value="$!{pageData.getAttribute( $prop )}"#end
  <p>$lastModified</p>
  <form method="post">

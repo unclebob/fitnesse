@@ -21,7 +21,8 @@ import java.io.StringWriter;
 
 public class SearchFormResponder implements Responder {
   public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
-    PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED, PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
+    PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED };
+  public static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
   public static final String[] SPECIAL_ATTRIBUTES = { "obsolete", "SetUp", "TearDown" };
 
   public Response makeResponse(FitNesseContext context, Request request) {
@@ -33,6 +34,7 @@ public class SearchFormResponder implements Responder {
     html.setPageTitle(new PageTitle("Search Form"));
     html.put("pageTypeAttributes", PageType.values());
     html.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
+    html.put("navigationAttributes", SEARCH_NAVIGATION_ATTRIBUTES);
     html.put("securityAttributes", SECURITY_ATTRIBUTES);
     html.put("specialAttributes", SPECIAL_ATTRIBUTES);
     html.put("searchedRootPage", request.getResource());
