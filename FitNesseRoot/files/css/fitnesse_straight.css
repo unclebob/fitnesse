@@ -11,7 +11,7 @@ table {
 
 td, th {
     border: thin solid #777777;
-    padding: 5px;
+    padding: 0.25em 0.5em;
 }
 
 header {
@@ -51,7 +51,6 @@ nav ul li {
 }
 
 nav a, nav a:active, nav a:visited {
- white-space:nowrap;
  text-decoration: none;
  color: black;
  padding: 0.5em 3em;
@@ -60,7 +59,7 @@ nav a, nav a:active, nav a:visited {
  border: 1pt solid black;
 }
 
-h1+br, h2+br, h3+br, h4+br, h5+br, h6+br, br+br {
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
  display: none;
 }
 
