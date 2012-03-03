@@ -75,7 +75,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
       Map<String, Boolean> attributes) {
     String requested = (String) request.getInput(inputAttributeName);
     if (requested == null) {
-      requested = "";
+      requested = IGNORED;
     }
     if (!IGNORED.equals(requested)) {
       for (String searchAttribute : attributeList) {

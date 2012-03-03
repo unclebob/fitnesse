@@ -29,7 +29,7 @@ public class SearchFormResponder implements Responder {
     SimpleResponse response = new SimpleResponse();
 
     HtmlPage html = context.htmlPageFactory.newPage();
-    html.setMainTemplate("searchForm.vm");
+    html.setMainTemplate("searchForm");
     html.setTitle("Search Form");
     html.setPageTitle(new PageTitle("Search Form"));
     html.put("pageTypeAttributes", PageType.values());

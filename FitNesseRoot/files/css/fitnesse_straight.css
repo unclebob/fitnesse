@@ -154,18 +154,22 @@ footer {
 	float: right;
 }
 
-/** Properties page **/
-.propertiesPage form {
+/** Properties page / Search form **/
+.propertiesPage form, .searchForm form {
  padding-bottom: 1em;
  border-bottom: 1px solid #984D00;
 }
 
-.propertiesPage label {
+.propertiesPage label, .searchForm label {
 	display: inline-block;
 	width: 8em;
 }
 
-.propertiesPage input[type=submit] {
+.propertiesPage .properties fieldset, .searchForm .properties fieldset {
+	margin-top: 1em;
+}
+
+.propertiesPage input[type=submit], .searchForm input[type=submit] {
  display: block;
  margin-top: 1em;
 }
@@ -179,9 +183,10 @@ footer {
 	width: auto;
 }
 
-#symbolics {
+#symbolics, .searchForm .properties {
  border-bottom: none;
 }
+
 
 /** Merge page **/
 .mergePage #merge-new,
