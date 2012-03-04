@@ -118,7 +118,7 @@ fieldset {
 	margin: 2px;
 }
 
-footer {
+.wikiPage footer {
   margin: 0;
   padding: 0.5em; /* Use same color as border color for div.header. */
   border-top: 1px solid #984D00;
@@ -129,6 +129,7 @@ footer {
 .dirListing tbody tr:nth-child(odd) {
  background: #fff
 }
+
 .dirListing tbody tr:nth-child(even) {
  background: #efefef
 }
@@ -154,7 +155,7 @@ footer {
 }
 
 /** Properties page / Search form **/
-.propertiesPage form, .searchForm form {
+.propertiesPage form, .searchForm form, .refactorForm form {
  padding-bottom: 1em;
  border-bottom: 1px solid #984D00;
 }
@@ -182,11 +183,6 @@ footer {
 	width: auto;
 }
 
-#symbolics, .searchForm .properties {
- border-bottom: none;
-}
-
-
 /** Merge page **/
 .mergePage #merge-new,
 .mergePage #merge-old {
@@ -205,10 +201,6 @@ footer {
 }
 
 /** Delete page confirmation dialog **/
-.deletePage form {
-	display: inline;
-}
-
 
 .warning {
 	color: maroon;
