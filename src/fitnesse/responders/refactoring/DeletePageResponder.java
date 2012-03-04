@@ -33,7 +33,7 @@ public class DeletePageResponder implements SecureResponder {
     }
 
     String confirmedString = (String) request.getInput("confirmed");
-    if (!"yes".equals(confirmedString)) {
+    if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
       return response;
     }
@@ -63,7 +63,7 @@ public class DeletePageResponder implements SecureResponder {
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/"));
     makeMainContent(html, root, qualifiedPageName);
-    html.setMainTemplate("deletePage.vm");
+    html.setMainTemplate("deletePage");
     return html.html();
   }
 
@@ -72,7 +72,7 @@ public class DeletePageResponder implements SecureResponder {
     WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
     List<WikiPage> children = pageToDelete.getChildren();
 
-    html.put("deleteSubPages", children == null || children.isEmpty());
+    html.put("deleteSubPages", children != null && !children.isEmpty());
     html.put("pageName", qualifiedPageName);
   }
 

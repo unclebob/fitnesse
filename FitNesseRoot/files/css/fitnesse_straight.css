@@ -204,3 +204,14 @@ footer {
  background-color: #efefef;
 }
 
+/** Delete page confirmation dialog **/
+.deletePage form {
+	display: inline;
+}
+
+
+.warning {
+	color: maroon;
+}
+
+}
