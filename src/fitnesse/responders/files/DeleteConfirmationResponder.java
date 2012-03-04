@@ -24,18 +24,19 @@ public class DeleteConfirmationResponder implements SecureResponder {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
-    response.setContent(makeDirectoryListingPage(filename, context));
+    response.setContent(makeDirectoryListingPage(resource, filename, context));
     response.setLastModifiedHeader("Delete");
     return response;
   }
 
-  private String makeDirectoryListingPage(String filename, FitNesseContext context) {
+  private String makeDirectoryListingPage(String pageName, String filename, FitNesseContext context) {
     HtmlPage page = context.htmlPageFactory.newPage();
-    page.setTitle("Delete File(s): ");
+    page.setTitle("Delete File(s)");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
+    page.put("pageName", "/" + pageName);
     makeConfirmationHTML(page, filename, context);
-    page.setMainTemplate("deleteConfirmation.vm");
-        
+    page.setMainTemplate("deleteConfirmation");
+
     return page.html();
   }
 
