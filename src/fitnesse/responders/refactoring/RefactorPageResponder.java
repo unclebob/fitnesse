@@ -27,12 +27,12 @@ public class RefactorPageResponder implements SecureResponder {
 
     HtmlPage page = context.htmlPageFactory.newPage();
 
-    page.setMainTemplate("refactorForm.vm");
+    page.setMainTemplate("refactorForm");
     page.setTitle("Refactor: " + resource);
     page.setPageTitle(new PageTitle("Refactor", PathParser.parse(resource)));
     page.put("refactoredRootPage", resource);
     page.put("request", request);
-
+    page.put("type", request.getInput("type"));
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
     return response;
