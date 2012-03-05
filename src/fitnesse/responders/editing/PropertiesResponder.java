@@ -153,8 +153,6 @@ public class PropertiesResponder implements SecureResponder {
     makeNavigationCheckboxesHtml(pageData);
     makeSecurityCheckboxesHtml(pageData);
     makeVirtualWikiHtml();
-    makeTagsHtml(pageData);
-    makeHelpTextHtml(pageData);
   }
 
   public void makePageTypeRadiosHtml(PageData pageData) {
@@ -251,42 +249,6 @@ public class PropertiesResponder implements SecureResponder {
 
   public void makeSecurityCheckboxesHtml(PageData pageData) {
     html.put("securityTypes", SECURITY_ATTRIBUTES);
-  }
-
-  public HtmlTag makeTagsHtml(PageData pageData) {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; padding-right: 5px");
-
-    div.add(makeInputField("Tags:", PropertySUITES, PropertySUITES,
-        40, pageData));
-    return div;
-  }
-
-  public HtmlTag makeHelpTextHtml(PageData pageData) {
-    return makeInputField("Help Text:", PropertyHELP, "HelpText", 90,
-        pageData);
-  }
-
-  public HtmlTag makeInputField(String label, String propertyName,
-      String fieldId, int size, PageData pageData) {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left;");
-    div.add(label);
-
-    String textValue = "";
-    WikiPageProperty theProp = pageData.getProperties().getProperty(
-        propertyName);
-    if (theProp != null) {
-      String propValue = theProp.getValue();
-      if (propValue != null)
-        textValue = propValue;
-    }
-
-    div.add(HtmlUtil.BR);
-    HtmlTag input = HtmlUtil.makeInputTag("text", fieldId, textValue);
-    input.addAttribute("size", Integer.toString(size));
-    div.add(input);
-    return div;
   }
 
 
