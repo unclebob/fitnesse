@@ -231,7 +231,7 @@ public class TestResponderTest {
   @Test
   public void testResultsIncludeActions() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<div class=\"actions\">", results);
+    assertSubString("<nav>", results);
   }
 
   @Test

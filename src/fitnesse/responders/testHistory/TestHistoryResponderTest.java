@@ -281,7 +281,7 @@ public class TestHistoryResponderTest {
     assertHasRegexp("SomePage", response.getContent());
     assertHasRegexp("<td class=\"pass\">1</td>", response.getContent());
     assertHasRegexp("<td class=\"fail\">1</td>", response.getContent());
-    assertHasRegexp("<td>19 Apr, 09 12:31</td>", response.getContent());
+    assertHasRegexp("<td>19 Apr 09, 12:31</td>", response.getContent());
     assertHasRegexp("<td class=\"pass\">.*\\+.*</td>", response.getContent());
     assertHasRegexp("<td class=\"fail\">.*-.*</td>", response.getContent());
     assertDoesntHaveRegexp("No History", response.getContent());

@@ -31,7 +31,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
     getContentForSimpleRename();
 
     assertSubString("renameFile", content);
-    assertSubString("Rename File", content);
+    assertSubString("Rename", content);
     assertSubString("Rename <b>MyFile.txt</b>", content);
   }
 

@@ -45,24 +45,18 @@ public class HtmlPageTest extends RegexTestCase {
   }
 
   public void testIncludesHeading() throws Exception {
-    assertSubString("<div class=\"header\"", html);
+    assertSubString("<header>", html);
   }
 
   public void testMainBar() throws Exception {
-    assertSubString("<div class=\"mainbar\"", html);
+    assertSubString("<article>", html);
     String mainHtml = page.html();
-    assertSubString("<div class=\"header", mainHtml);
-    assertSubString("<div class=\"mainbar\"", mainHtml);
+    assertSubString("<header>", mainHtml);
+    assertSubString("<article>", mainHtml);
   }
 
   public void testSidebar() throws Exception {
-    assertSubString("<div class=\"sidebar", html);
-    assertSubString("<a name=\"art_niche", html);
-    assertSubString("<div class=\"actions", html);
-  }
-
-  public void testMain() throws Exception {
-    assertSubString("<div class=\"main", html);
+    assertSubString("<nav>", html);
   }
 
   public void testDivide() throws Exception {
@@ -78,41 +72,27 @@ public class HtmlPageTest extends RegexTestCase {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle(PathParser.parse(trail)));
     String breadcrumbs = page.html();
-    String expected = getBreadCrumbsWithLastOneLinked();
-    assertSubString(expected, breadcrumbs);
+    assertSubString("<a href=\"/TstPg1\">TstPg1</a>", breadcrumbs);
+    assertSubString("<a href=\"/TstPg1.TstPg2\">TstPg2</a>", breadcrumbs);
+    assertSubString("<a href=\"/TstPg1.TstPg2.TstPg3\">TstPg3</a>", breadcrumbs);
+    assertSubString("<a href=\"/TstPg1.TstPg2.TstPg3.TstPg4\">TstPg4</a>", breadcrumbs);
   }
 
   public void testBreadCrumbsWithCurrentPageNotLinked() throws Exception {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle(PathParser.parse(trail)).notLinked());
     String breadcrumbs = page.html();
-    String expected = getBreadCrumbsWithLastOneNotLinked();
-    assertSubString(expected, breadcrumbs);
+    assertSubString("<a href=\"/TstPg1\">TstPg1</a>", breadcrumbs);
+    assertSubString("<a href=\"/TstPg1.TstPg2\">TstPg2</a>", breadcrumbs);
+    assertSubString("<a href=\"/TstPg1.TstPg2.TstPg3\">TstPg3</a>", breadcrumbs);
+    assertHasRegexp("<h1>\\s*TstPg4\\s*</h1>", breadcrumbs);
   }
 
   public void testBreadCrumbsWithPageType() throws Exception {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle("Some Type", PathParser.parse(trail)));
     String breadcrumbs = page.html();
-    String expected = getBreadCrumbsWithLastOneLinked() +
-      "<br/><span class=\"page_type\">Some Type</span>" + endl;
-    assertSubString(expected, breadcrumbs);
-  }
-
-  private String getBreadCrumbsWithLastOneLinked() {
-    return getFirstThreeBreadCrumbs() +
-      "<br/><a href=\"/TstPg1.TstPg2.TstPg3.TstPg4\" class=\"page_title\">TstPg4</a>" + endl;
-  }
-
-  private String getBreadCrumbsWithLastOneNotLinked() {
-    return getFirstThreeBreadCrumbs() +
-      "<br/><span class=\"page_title\">TstPg4</span>" + endl;
-  }
-
-  private String getFirstThreeBreadCrumbs() {
-    return "<a href=\"/TstPg1\">TstPg1</a>." + endl +
-      "<a href=\"/TstPg1.TstPg2\">TstPg2</a>." + endl +
-      "<a href=\"/TstPg1.TstPg2.TstPg3\">TstPg3</a>." + endl;
+    assertSubString("<a href=\"/TstPg1.TstPg2.TstPg3.TstPg4\">TstPg4</a>", breadcrumbs);
   }
 
 

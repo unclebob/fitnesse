@@ -144,6 +144,6 @@ public class FileResponderTest {
     response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
-    assertSubString("<a name=\"art_niche\" href=\"/FrontPage\"", sender.sentData());
+    assertSubString("<a href=\"/FrontPage\" id=\"art_niche\" ", sender.sentData());
   }
 }

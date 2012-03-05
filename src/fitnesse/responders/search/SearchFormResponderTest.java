@@ -47,8 +47,8 @@ public class SearchFormResponderTest {
   @Test
   public void testForTwoSearchTypes() throws Exception {
     assertSubString("type=\"submit\"", content);
-    assertSubString("value=\"Search Titles!\"", content);
-    assertSubString("value=\"Search Content!\"", content);
+    assertSubString("value=\"Search Titles\"", content);
+    assertSubString("value=\"Search Content\"", content);
   }
 
   @Test
@@ -57,11 +57,7 @@ public class SearchFormResponderTest {
     assertHasRegexp("<input.*name=\"responder\".*value=\"executeSearchProperties\"", content);
 
     for (String attributeName : SEARCH_ACTION_ATTRIBUTES) {
-      assertAttributeOptionCreated(content, attributeName);
+      assertSubString(attributeName, content);
     }
-  }
-
-  private void assertAttributeOptionCreated(String content, String attributeName) {
-    assertSubString("<option>" + attributeName, content);
   }
 }

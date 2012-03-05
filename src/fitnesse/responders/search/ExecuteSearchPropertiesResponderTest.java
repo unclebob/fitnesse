@@ -116,7 +116,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private void assertOutputHasRow(String content, String title, String tagName) {
-    assertHasRegexp("<table.*<tr.*<td.*<" + tagName + ">" + title + "</"
+    assertHasRegexp("<table.*<tr.*<t[dh].*<" + tagName + ">" + title + "</"
         + tagName.split(" ")[0] + ">", content);
   }
 

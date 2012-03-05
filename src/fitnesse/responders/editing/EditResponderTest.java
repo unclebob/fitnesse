@@ -45,7 +45,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
     assertSubString("type=\"submit\"", body);
-    assertSubString(String.format("textarea class=\"%s no_wrap\" wrap=\"off\"", EditResponder.CONTENT_INPUT_NAME), body);
+    assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
   }
 
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
