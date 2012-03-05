@@ -1,44 +1,36 @@
 <div class="main">
 #set($noHistory = true)
-<table style="border:none;background:none">
-  <tr>
-    <td style="border:none; width:400px">
-      <form action="" method="get">
-        <input type="hidden" value="overview" name="responder"/>
-        <input type="submit" VALUE="View as Overview"/>
-      </form>
-    </td>
-    <td style="border:none">
-      <form action="" method="get">
-        <input type="hidden" value="purgeHistory" name="responder"/>
-        <input type="hidden" value="30" name="days"/>
-        <input type="submit" VALUE="Purge >30days"/>
-      </form>
-    </td>
-    <td style="border:none">
-      <form action="" method="get">
-        <input type="hidden" value="purgeHistory" name="responder"/>
-        <input type="hidden" value="7" name="days"/>
-        <input type="submit" VALUE="Purge >7days"/>
-      </form>
-    </td>
-    <td style="border:none">
-      <form action="" method="get">
-        <input type="hidden" value="purgeHistory" name="responder"/>
-        <input type="hidden" value="0" name="days"/>
-        <input type="submit" VALUE="Purge All"/>
-      </form>
-    </td>
-  </tr>
-</table>
+<form action="" method="get">
+ <input type="hidden" value="overview" name="responder"/>
+ <input type="submit" VALUE="View as Overview"/>
+</form>
+
+<form action="" method="get">
+ <input type="hidden" value="purgeHistory" name="responder"/>
+ <input type="hidden" value="30" name="days"/>
+ <input type="submit" VALUE="Purge >30days"/>
+</form>
+
+<form action="" method="get">
+ <input type="hidden" value="purgeHistory" name="responder"/>
+ <input type="hidden" value="7" name="days"/>
+ <input type="submit" VALUE="Purge >7days"/>
+</form>
+
+<form action="" method="get">
+ <input type="hidden" value="purgeHistory" name="responder"/>
+ <input type="hidden" value="0" name="days"/>
+ <input type="submit" VALUE="Purge All"/>
+</form>
+
 <table>
-  <tr>
-    <th>Page</th>
-    <th>Pass</th>
-    <th>Fail</th>
-    <th>Latest</th>
-    <th colspan="20">Last 20 Results</th>
-  </tr>
+ <tr>
+  <th>Page</th>
+  <th>Pass</th>
+  <th>Fail</th>
+  <th>Latest</th>
+  <th colspan="20">Last 20 Results</th>
+ </tr>
   #foreach ($page in $testHistory.pageNames)
   #set ($pageHistory = $testHistory.getPageHistory($page))
   #if($pageHistory)
@@ -58,15 +50,14 @@
     <td><a href="/$page?pageHistory">$page</a></td>
     <td class="$passClass">$pageHistory.passes</td>
     <td class="$failClass">$pageHistory.failures</td>
-    <td>$barGraph.formatEndingDate("dd MMM, yy HH:mm")</td>
+    <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
     #foreach($passFail in $barGraph.passFailArray())
     #if($passFail.Pass)
 
-    <td class="pass"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">+</a></td>
+    <td class="pass"><a href="$page?pageHistory&resultDate=$passFail.Date">+</a></td>
     #else
 
-    <td class="fail"><a style="text-decoration:none" href="$page?pageHistory&resultDate=$passFail.Date">-</a></td>
-    </td>
+    <td class="fail"><a href="$page?pageHistory&resultDate=$passFail.Date">-</a></td>
     #end
     #end
 

@@ -38,7 +38,7 @@ public class TestHistoryResponder implements SecureResponder {
     page.setTitle("Test History");
     page.setPageTitle(new PageTitle(makePageTitle(pageName)));
     page.put("testHistory", testHistory);
-    page.setMainTemplate("testHistory.vm");
+    page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
     return response;

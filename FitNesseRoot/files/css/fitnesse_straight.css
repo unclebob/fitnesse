@@ -104,7 +104,7 @@ nav li:hover ul {
 }
 
 article {
- //clear: both;
+ clear: both;
  padding: 0.5em;
 }
 
@@ -206,4 +206,20 @@ fieldset {
 	color: maroon;
 }
 
+/** Test history **/
+.testHistory td a {
+	text-decoration: none;
+}
+
+/** Test result **/
+.pass {
+	background-color: lightgreen;
+}
+
+.fail {
+	background-color: red;
+}
+
+.ignore {
+	background-color: lightgray;
 }

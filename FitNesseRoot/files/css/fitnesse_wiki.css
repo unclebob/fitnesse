@@ -44,6 +44,10 @@ article .centered {
   border-color: #BF8660;
 }
 
+.collapse_rim .hidden {
+  display: none;
+}
+
 div.collapsable {
   margin: 0px 0px 0px 15px;
   display: block;
