@@ -14,7 +14,7 @@
  * Examine the requested page to be sure the link to itself is displayed.
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<span class="page_title">TopLevelPage</span>|true|
+|contents|<h1>TopLevelPage</h1>|true|
 
 !3 A second level page - the top level should link up, the current page should not link.
  * Create a top level page
@@ -31,7 +31,7 @@
 !|Response Examiner.|
 |type|pattern|matches?|
 |contents|<a href="/TopLevelPage">TopLevelPage</a>.|true|
-|contents|<span class="page_title">SecondLevelPage</span>|true|
+|contents|<h1>SecondLevelPage</h1>|true|
 
 !3 A second level page - the top four levels should link up, the current page should not link.
  * Create a fifth level page
@@ -47,8 +47,8 @@
  * Examine the requested page to be sure the link to itself is displayed.
 !|Response Examiner.|
 |line|inOrder?|
-|<a href="/TopLevelPage">TopLevelPage</a>.|true|
-|<a href="/TopLevelPage.SecondLevelPage">SecondLevelPage</a>.|true|
-|<a href="/TopLevelPage.SecondLevelPage.ThirdLevelPage">ThirdLevelPage</a>.|true|
-|<a href="/TopLevelPage.SecondLevelPage.ThirdLevelPage.FourthLevelPage">FourthLevelPage</a>.|true|
-|<br/><span class="page_title">FifthLevelPage</span>|true|
+|<li><a href="/TopLevelPage">TopLevelPage</a></li>|true|
+|<li><a href="/TopLevelPage.SecondLevelPage">SecondLevelPage</a></li>|true|
+|<li><a href="/TopLevelPage.SecondLevelPage.ThirdLevelPage">ThirdLevelPage</a></li>|true|
+|<li><a href="/TopLevelPage.SecondLevelPage.ThirdLevelPage.FourthLevelPage">FourthLevelPage</a></li>|true|
+|<h1>FifthLevelPage</h1>|true|

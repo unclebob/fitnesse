@@ -19,7 +19,7 @@ When we look at the properties page we'll see the rename link.
 !|Response Examiner.|
 |type  |pattern|matches?|contents?|
 |contents|SymLink|true||
-|contents|<a href="javascript:symbolicLinkRename\(.*\);">Rename:</a>|true||
+|contents|<a href="javascript:symbolicLinkRename\(.*\);">Rename</a>|true||
 
 Now click the '''Rename''' link.
 !|Response Requester.|

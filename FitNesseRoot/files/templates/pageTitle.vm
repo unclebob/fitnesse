@@ -5,12 +5,6 @@
  <li><a href="/$breadCrumb.Link">$breadCrumb.Name</a></li>
 #end
 </ul>
-<h1>
-#if($pageTitle.Link)
- <a href="/$pageTitle.Link">$pageTitle.Title</a>
-#else
- $pageTitle.Title
-#end
-</h1>
+<h1>#if($pageTitle.Link)<a href="/$pageTitle.Link">$pageTitle.Title</a>#else$pageTitle.Title#end</h1>
 
 ##if($pageTitle.PageType)<br/><span class="page_type">$pageTitle.PageType</span>#end

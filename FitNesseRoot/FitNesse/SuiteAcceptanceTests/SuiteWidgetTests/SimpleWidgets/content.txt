@@ -19,7 +19,7 @@
 |!- !-This is literal text-!-!                      |This is literal text                                                                       |simple literal                                                          |
 |!- !-This is ''literal'' text-! -!                 |!-This is ''literal'' text-!                                                               |literal text with markup                                                |
 |!-This is normal, ''italic'', and '''bold''' text-!|This is normal, <i>italic</i>, and <b>bold</b> text                                        |Mixed Italic and Bold                                                   |
-|!-!note hello-!                                    |<span class="note">hello</span><br/>                                                                                                                                |
+|!-!note hello-!                                    |<span class="note">hello</span>                                                                                                                               |
 |!-{{{prefomatted text}}}-!                         |<pre>prefomatted text</pre>                                                                                                                                         |
 |!-''x''-!                                          |<i>x</i>                                                                                   |''David Hookers bug.  Single character italics didn't parse correctly.''|
 |!---strike---!                                     |<span class="strike">strike</span>                                                                                                                                  |

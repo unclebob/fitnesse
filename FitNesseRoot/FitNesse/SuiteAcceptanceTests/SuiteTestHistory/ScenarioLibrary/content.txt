@@ -15,14 +15,14 @@
 |check|count of tag|TD|with id|element|and with class|@class|below tag|TR|with id prefix|pageHistoryRow_$date|@number|
 
 !|scenario|the page title should be|title|
-|ensure|content contains|<span class="page_title">@title</span>|
+|ensure|content contains|<h1>@title</h1>|
 
 !|scenario|the page title should be a link to|page|with value|value|
-|ensure|content contains|<a href="/@page" class="page_title">@value</a>|
+|ensure|content contains|<h1><a href="/@page">@value</a></h1>|
 
 
 !|scenario|the bread crumb|crumb|should be a link to|page|
-|ensure|content contains|<a href="/@page">@crumb</a>.|
+|ensure|content contains|<a href="/@page">@crumb</a>|
 
 !|scenario|The page history bar for|date|should have a|id|with class|class|and value|value|
 |$date=|page history date signature of|@date|
@@ -40,10 +40,10 @@
 |ensure|content contains|<a href="$TESTPAGE?pageHistory&resultDate=@resultDate">@date</a>|
 
 !|scenario|the top level history line for|page|should have a|class|link with|sign|to result|resultDate|
-|ensure|content contains|<td class="@class"><a style="text-decoration:none" href="@page?pageHistory&resultDate=@resultDate">@sign</a></td>|
+|ensure|content contains|<td class="@class"><a href="@page?pageHistory&resultDate=@resultDate">@sign</a></td>|
 
 !|scenario|the top level history line for|page|should not have a link to|resultDate|
-|reject|content contains|<a style="text-decoration:none" href="@page?pageHistory&resultDate=@resultDate">|
+|reject|content contains|<a href="@page?pageHistory&resultDate=@resultDate">|
 
 !|scenario|class for pass fail in top level history line|page||pass class||pass count||fail class||fail count|
 |ensure|html contains|<a href="/@page?pageHistory">@page</a></td> <td class="@passClass">@passCount</td> <td class="@failClass">@failCount</td>|
