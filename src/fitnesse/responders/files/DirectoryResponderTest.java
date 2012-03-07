@@ -31,8 +31,8 @@ public class DirectoryResponderTest extends RegexTestCase {
     Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
     response = (SimpleResponse) responder.makeResponse(context, request);
     assertHasRegexp("testDir", response.getContent());
-    assertHasRegexp("testFile2</a>", response.getContent());
-    assertHasRegexp("testFile3</a>", response.getContent());
+    assertHasRegexp("testFile2", response.getContent());
+    assertHasRegexp("testFile3", response.getContent());
     assertHasRegexp("<a href=\"/", response.getContent());
   }
 
