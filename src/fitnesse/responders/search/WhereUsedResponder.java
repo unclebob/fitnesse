@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import fitnesse.components.SearchObserver;
 import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
@@ -15,9 +16,9 @@ public class WhereUsedResponder extends ResultResponder {
     return tag.html().replaceAll(HtmlElement.endl, "");
   }
 
-  protected void startSearching() {
-    super.startSearching();
-    new WhereUsedPageFinder(page, this).search(root);
+  @Override
+  protected void startSearching(SearchObserver observer) {
+    new WhereUsedPageFinder(page, observer).search(root);
   }
 
   protected String getTitle() {

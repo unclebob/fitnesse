@@ -6,7 +6,10 @@ import util.ConcurrentBoolean;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 
 public class ChunkedResponse extends Response {
   private ResponseSender sender;
@@ -100,5 +103,31 @@ public class ChunkedResponse extends Response {
 
   public boolean isChunkingTurnedOff() {
     return dontChunk;
+  }
+
+  public Writer getWriter() {
+    return new  Writer() {
+  
+      @Override
+      public void close() throws IOException {
+        //sender.close();
+      }
+  
+      @Override
+      public void flush() throws IOException {
+        //sender.flush(); -- flush is done on sender.send (in FitNesseExpediter at least)
+      }
+  
+      @Override
+      public void write(String str) throws IOException {
+        // TODO Auto-generated method stub
+        add(str);
+      }
+      
+      @Override
+      public void write(char[] cbuf, int off, int len) throws IOException {
+        write(new String(cbuf, off, len));
+      }
+    };
   }
 }

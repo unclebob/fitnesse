@@ -7,6 +7,7 @@ import static java.util.regex.Pattern.*;
 import java.util.regex.Pattern;
 
 import fitnesse.components.RegularExpressionWikiPageFinder;
+import fitnesse.components.SearchObserver;
 import fitnesse.components.TitleWikiPageFinder;
 
 public class SearchResponder extends ResultResponder {
@@ -17,9 +18,8 @@ public class SearchResponder extends ResultResponder {
 
   private String getSearchType() {
     String searchType = (String) request.getInput("searchType");
-    searchType = searchType.toLowerCase();
 
-    if (searchType.indexOf("title") != -1)
+    if (searchType == null || searchType.toLowerCase().indexOf("title") != -1)
       return "Title";
     else
       return "Content";
@@ -33,16 +33,16 @@ public class SearchResponder extends ResultResponder {
     return getSearchType() + " Search Results for '" + getSearchString() + "'";
   }
 
-  protected void startSearching() {
-    super.startSearching();
+  @Override
+  protected void startSearching(SearchObserver observer) {
     String searchString = getSearchString();
     if (!"".equals(searchString)) {
       String searchType = getSearchType();
       if ("Title".equals(searchType))
-        new TitleWikiPageFinder(searchString, this).search(root);
+        new TitleWikiPageFinder(searchString, observer).search(root);
       else {
         Pattern regularExpression = Pattern.compile(searchString, CASE_INSENSITIVE + LITERAL);
-        new RegularExpressionWikiPageFinder(regularExpression, this).search(root);
+        new RegularExpressionWikiPageFinder(regularExpression, observer).search(root);
       }
     }
   }

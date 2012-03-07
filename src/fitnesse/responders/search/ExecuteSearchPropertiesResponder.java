@@ -12,6 +12,7 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.components.PageFinder;
+import fitnesse.components.SearchObserver;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
@@ -95,8 +96,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  protected void startSearching() {
-    super.startSearching();
+  protected void startSearching(SearchObserver observer) {
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String suites = getSuitesFromInput(request);
@@ -106,7 +106,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
       return;
     }
 
-    PageFinder finder = new AttributeWikiPageFinder(this, pageTypes,
+    PageFinder finder = new AttributeWikiPageFinder(observer, pageTypes,
         attributes, suites);
     finder.search(page);
   }

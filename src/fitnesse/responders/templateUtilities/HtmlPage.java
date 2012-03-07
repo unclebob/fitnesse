@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.templateUtilities;
 
+import java.io.Writer;
+
 import org.apache.velocity.VelocityContext;
 
 import fitnesse.VelocityFactory;
@@ -80,6 +82,11 @@ public class HtmlPage {
   public String html() {
     VelocityContext context = updateVelocityContext();
     return VelocityFactory.translateTemplate(context, templateFileName);
+  }
+
+  public void render(Writer writer) {
+    VelocityContext context = updateVelocityContext();
+    VelocityFactory.translateTemplate(context, templateFileName, writer);
   }
 
 

@@ -5,6 +5,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.Template;
 
 import java.io.StringWriter;
+import java.io.Writer;
 
 public class VelocityFactory {
   private VelocityEngine velocityEngine = null;
@@ -28,10 +29,14 @@ public class VelocityFactory {
 
 
   public static String translateTemplate(VelocityContext velocityContext, String templateFileName) {
-    Template template = instance.getVelocityEngine().getTemplate(templateFileName);
     StringWriter writer = new StringWriter();
-    template.merge(velocityContext, writer);
+    translateTemplate(velocityContext, templateFileName, writer);
     return writer.toString();
+  }
+
+  public static void translateTemplate(VelocityContext velocityContext, String templateFileName, Writer writer) {
+    Template template = instance.getVelocityEngine().getTemplate(templateFileName);
+    template.merge(velocityContext, writer);
   }
 
   public static VelocityEngine getVelocityEngine() {

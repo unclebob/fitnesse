@@ -49,7 +49,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     this.suites = suites;
   }
 
-  public AttributeWikiPageFinder(ExecuteSearchPropertiesResponder observer,
+  public AttributeWikiPageFinder(SearchObserver observer,
       List<PageType> pageTypes, Map<String, Boolean> attributes, String suites) {
     this(observer, pageTypes, attributes, splitSuitesIntoArray(suites));
   }

@@ -7,10 +7,11 @@ import fitnesse.components.SearchObserver;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
-public class SearchReplaceResponder extends ResultResponder {
+public class SearchReplaceResponder extends ResultResponder implements SearchObserver {
 
   private PageFinder finder;
-  private SearchObserver observer;
+  private SearchObserver contentReplaceObserver;
+  private SearchObserver webOutputObserver;
 
   protected String getPageFooterInfo(int hits) {
     return String.format("Replaced %d matches for your search.", hits);
@@ -30,12 +31,13 @@ public class SearchReplaceResponder extends ResultResponder {
   }
 
   public void hit(WikiPage page) {
-    observer.hit(page);
-    super.hit(page);
+    contentReplaceObserver.hit(page);
+    webOutputObserver.hit(page);
   }
 
-  protected void startSearching() {
-    super.startSearching();
+  @Override
+  protected void startSearching(SearchObserver observer) {
+    webOutputObserver = observer;
     String searchString = getSearchString();
     String replacementString = getReplacementString();
 

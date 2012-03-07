@@ -17,10 +17,14 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public abstract class ResultResponder extends ChunkingResponder implements
-  SearchObserver, SecureResponder {
-  private int hits;
+  SecureResponder {
+  private BlockingQueue queue = new ArrayBlockingQueue<WikiPage>(64);
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
@@ -38,7 +42,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
         return "search";
       }
     });
-    htmlPage.setMainTemplate("searchResults.vm");
+    htmlPage.setMainTemplate("searchResults");
 
     if (page == null)
       page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
@@ -47,69 +51,75 @@ public abstract class ResultResponder extends ChunkingResponder implements
     else
       htmlPage.put("request", request.getQueryString());
     htmlPage.put("page", page);
+
+    htmlPage.put("searchIterator", new SearchIterator(this));
+
+    htmlPage.render(response.getWriter());
     
-    htmlPage.divide();
-
-    response.add(htmlPage.preDivision);
-
-    startSearching();
-
-    response.add(createSearchResultsFooter());
-    response.add(htmlPage.postDivision);
-
     response.closeAll();
-  }
-
-  public void hit(WikiPage page) {
-    hits++;
-    response.add(createSearchResultsEntry(page));
-  }
-
-  private String createSearchResultsFooter() {
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = VelocityFactory.getVelocityEngine().getTemplate(
-      "searchResultsFooter.vm");
-    velocityContext.put("hits", hits);
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
-  }
-  
-  private String createSearchResultsEntry(WikiPage result) {
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("searchResultsEntry.vm");
-
-    velocityContext.put("hits", hits);
-    velocityContext.put("resultsRow", getRow());
-    velocityContext.put("result", result);
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
-  }
-
-  private int nextRow = 0;
-
-  private int getRow() {
-    return (nextRow++ % 2) + 1;
   }
 
   protected abstract String getTitle() ;
 
   protected abstract String getPageFooterInfo(int hits) ;
 
-  protected void startSearching() {
-    hits = 0;
+  protected void startSearching(SearchObserver observer) {
   }
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
+  }
+  
+  public static class SearchIterator implements Iterator, SearchObserver {
+    private BlockingQueue<WikiPage> queue = new ArrayBlockingQueue<WikiPage>(5);
+    private Thread searchThread;
+    private WikiPage fetchedPage;
+    
+    public SearchIterator(final ResultResponder resultResponder) {
+      searchThread = new Thread(new Runnable() {
+        
+        @Override
+        public void run() {
+          resultResponder.startSearching(SearchIterator.this);
+        }
+      });
+      searchThread.start();
+    }
+    
+    @Override
+    public boolean hasNext() {
+      while (fetchedPage == null && searchThread.isAlive()) {
+        try {
+          fetchedPage = queue.poll(500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      return fetchedPage != null;
+    }
+
+    @Override
+    public Object next() {
+      try {
+        return fetchedPage;
+      } finally {
+        fetchedPage = null;
+      }
+    }
+
+    @Override
+    public void remove() {
+      // Ignore
+    }
+
+    @Override
+    public void hit(WikiPage page) {
+      try {
+        queue.put(page);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    
   }
 }
