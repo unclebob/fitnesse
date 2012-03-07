@@ -2,15 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
@@ -46,89 +49,30 @@ public class MergeResponder implements Responder {
     HtmlPage page = context.htmlPageFactory.newPage();
     page.setTitle("Merge " + resource);
     page.setPageTitle(new PageTitle("Merge Changes", PathParser.parse(resource)));
-    page.setMainTemplate("render.vm");
-    page.put("content", new MergeRenderer());
+    page.setMainTemplate("mergePage.vm");
+    page.put("editTime", SaveRecorder.timeStamp());
+    page.put("ticketId", SaveRecorder.newTicket());
+    page.put("oldContent", Utils.escapeHTML(existingContent));
+    page.put("newContent", newContent);
+    addHiddenAttributes(page);
     return page.html();
   }
 
-  public class MergeRenderer {
-    public String render() {
-      HtmlTag form = HtmlUtil.makeFormTag("post", resource);
-      form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-      form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
-      form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TICKET_ID, String.valueOf(SaveRecorder.newTicket())));
-      HtmlTag title = HtmlUtil.makeDivTag("centered");
-      title.use("This page has been recently modified.  You may want to merge existing page content into your changes.");
-      form.add(title);
-      form.add(makeMergeNewDivTag());
-      form.add(makeMergeOldDivTag());
-      form.add(addHiddenAttributes());
-      return form.html();
+
+  private void addHiddenAttributes(HtmlPage page) {
+    if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
+      page.put("pageType", request.getInput(PageData.PAGE_TYPE_ATTRIBUTE));
     }
-  
-    private HtmlTag makeMergeOldDivTag() {
-      HtmlTag mergeOld = HtmlUtil.makeDivTag("merge_old");
-      mergeOld.add("Existing Content (read only)");
-      mergeOld.add(HtmlUtil.BR);
-      mergeOld.add(makeOldContentTextArea());
-  
-      return mergeOld;
-    }
-  
-    private HtmlTag makeOldContentTextArea() {
-      HtmlTag oldContentTextArea = new HtmlTag("textarea");
-      oldContentTextArea.addAttribute("class", OLD_CONTENT_INPUT_NAME);
-      oldContentTextArea.addAttribute("name", OLD_CONTENT_INPUT_NAME);
-      oldContentTextArea.addAttribute("rows", "25");
-      oldContentTextArea.addAttribute("cols", "50");
-      oldContentTextArea.addAttribute("readonly", "readonly");
-      oldContentTextArea.add(Utils.escapeHTML(existingContent));
-      return oldContentTextArea;
-    }
-  
-    private HtmlTag makeMergeNewDivTag() {
-      HtmlTag mergeNew = HtmlUtil.makeDivTag("merge_new");
-      mergeNew.add("Your Changes");
-      mergeNew.add(HtmlUtil.BR);
-      mergeNew.add(makeContentTextArea());
-      mergeNew.add(makeInputTagWithAccessKey());
-      return mergeNew;
-    }
-  
-    private HtmlTag makeInputTagWithAccessKey() {
-      HtmlTag input = HtmlUtil.makeInputTag("submit", "submit", "Save");
-      input.addAttribute("accesskey", "s");
-      return input;
-    }
-  
-    private HtmlTag makeContentTextArea() {
-      HtmlTag contentTextArea = new HtmlTag("textarea");
-      contentTextArea.addAttribute("name", EditResponder.CONTENT_INPUT_NAME);
-      contentTextArea.addAttribute("rows", "25");
-      contentTextArea.addAttribute("cols", "50");
-      contentTextArea.add(newContent);
-      return contentTextArea;
-    }
-  
-    private String addHiddenAttributes() {
-      StringBuffer buffer = new StringBuffer();
-      if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
-        String pageType = (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
-        buffer.append("<input type=\"hidden\" name=\""
-            + PageData.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
-            + "\" checked=\"checked\">");
-      }
-      for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
-        String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
-        if (request.hasInput(attribute))
-          buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
-      }
-      
-      String attribute = PageData.PropertyPRUNE;
+    
+    List<String> attributes = new ArrayList<String>();
+    for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
+      String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
       if (request.hasInput(attribute))
-        buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
-      
-      return buffer.toString();
+        attributes.add(attribute);
     }
+    if (request.hasInput(PageData.PropertyPRUNE))
+      attributes.add(PageData.PropertyPRUNE);
+    
+    page.put("attributes", attributes);
   }
 }

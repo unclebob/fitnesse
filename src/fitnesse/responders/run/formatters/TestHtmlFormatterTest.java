@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.TestPage;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import util.RegexTestCase;
 import util.TimeMeasurement;
 

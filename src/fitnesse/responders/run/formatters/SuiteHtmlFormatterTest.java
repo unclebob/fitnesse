@@ -5,10 +5,10 @@ package fitnesse.responders.run.formatters;
 import fitnesse.responders.run.TestPage;
 import util.RegexTestCase;
 import util.TimeMeasurement;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.wiki.WikiPageDummy;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {

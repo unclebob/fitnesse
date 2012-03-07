@@ -10,10 +10,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;

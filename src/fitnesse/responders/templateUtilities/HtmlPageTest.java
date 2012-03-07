@@ -1,8 +1,8 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.html;
+package fitnesse.responders.templateUtilities;
 
-import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.html.HtmlElement;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
 import util.RegexTestCase;
