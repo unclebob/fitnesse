@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 public class ChunkedResponse extends Response {
   private ResponseSender sender;
   private int bytesSent = 0;
-  private boolean isReadyToSend = false;
+  private volatile boolean isReadyToSend = false;
   private boolean dontChunk = false;
 
   public ChunkedResponse(String format) {
@@ -19,7 +19,7 @@ public class ChunkedResponse extends Response {
   public void readyToSend(ResponseSender sender) {
     this.sender = sender;
     addStandardHeaders();
-    sender.send(makeHttpHeaders().getBytes());
+    send(makeHttpHeaders().getBytes());
     setReadyToSend(true);
     synchronized (this) {
       notifyAll();
@@ -27,7 +27,7 @@ public class ChunkedResponse extends Response {
     }
   }
 
-  public synchronized boolean isReadyToSend() {
+  public boolean isReadyToSend() {
     return isReadyToSend;
   }
 
@@ -92,7 +92,7 @@ public class ChunkedResponse extends Response {
     return bytesSent;
   }
 
-  private synchronized void setReadyToSend(boolean isReadyToSend) {
+  private void setReadyToSend(boolean isReadyToSend) {
     this.isReadyToSend = isReadyToSend;
   }
 
