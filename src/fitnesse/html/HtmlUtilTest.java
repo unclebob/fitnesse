@@ -4,11 +4,9 @@ package fitnesse.html;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
@@ -16,10 +14,11 @@ import fitnesse.wiki.WikiPageActions;
 public class HtmlUtilTest extends RegexTestCase {
 
   private WikiPage root;
+  private FitNesseContext context;
 
   public void setUp() {
     root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   public void testMakeFormTag() {
@@ -69,7 +68,7 @@ public class HtmlUtilTest extends RegexTestCase {
 
   private String getActionsHtml(String pageName) {
     root.addChildPage(pageName);
-    HtmlPage htmlPage = new HtmlPageFactory().newPage();
+    HtmlPage htmlPage = context.htmlPageFactory.newPage();
     htmlPage.actions = new WikiPageActions(root.getChildPage(pageName));
     return htmlPage.html();
   }

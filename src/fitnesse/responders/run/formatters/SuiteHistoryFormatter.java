@@ -1,17 +1,16 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
-import fitnesse.responders.run.TestPage;
-import fitnesse.wiki.WikiPage;
+import java.io.IOException;
+import java.io.Writer;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
-
-import java.io.IOException;
-import java.io.Writer;
+import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestPage;
+import fitnesse.wiki.WikiPage;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
   private Writer writer;
@@ -42,7 +41,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
       writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("suiteExecutionReport", suiteExecutionReport);
-    VelocityEngine velocityEngine = VelocityFactory.getVelocityEngine();
+    VelocityEngine velocityEngine = context.htmlPageFactory.getVelocityEngine();
     Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
     template.merge(velocityContext, writer);
     writer.close();

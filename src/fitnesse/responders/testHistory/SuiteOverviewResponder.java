@@ -1,26 +1,14 @@
 package fitnesse.responders.testHistory;
 
-import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.swing.text.DateFormatter;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.htmlparser.util.ParserException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
-import fitnesse.authentication.SecureOperation;
-import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.run.SuiteContentsFinder;
 import fitnesse.responders.run.SuiteFilter;
 import fitnesse.responders.templateUtilities.HtmlPage;

@@ -70,7 +70,7 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   public void testDefaultHtmlPageFactory() throws Exception {
-    HtmlPageFactory pageFactory = factory.getHtmlPageFactory(new HtmlPageFactory());
+    HtmlPageFactory pageFactory = factory.getHtmlPageFactory(new HtmlPageFactory(null));
     assertNotNull(pageFactory);
     assertEquals(HtmlPageFactory.class, pageFactory.getClass());
   }
@@ -171,7 +171,9 @@ public class ComponentFactoryTest extends RegexTestCase {
   }
 
   public static class TestPageFactory extends HtmlPageFactory {
+    
     public TestPageFactory(Properties p) {
+      super(null);
       p.propertyNames();
     }
   }

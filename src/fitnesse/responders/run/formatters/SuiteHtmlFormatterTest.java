@@ -18,7 +18,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     FitNesseContext context = new FitNesseContext();
-    htmlPage = new HtmlPageFactory().newPage();
+    htmlPage = context.htmlPageFactory.newPage();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
       protected HtmlPage buildHtml(String pageType) {

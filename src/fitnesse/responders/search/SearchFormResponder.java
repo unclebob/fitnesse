@@ -2,22 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static fitnesse.wiki.PageData.*;
-
+import static fitnesse.wiki.PageData.PropertyEDIT;
+import static fitnesse.wiki.PageData.PropertyFILES;
+import static fitnesse.wiki.PageData.PropertyPROPERTIES;
+import static fitnesse.wiki.PageData.PropertyRECENT_CHANGES;
+import static fitnesse.wiki.PageData.PropertyREFACTOR;
+import static fitnesse.wiki.PageData.PropertySEARCH;
+import static fitnesse.wiki.PageData.PropertyVERSIONS;
+import static fitnesse.wiki.PageData.PropertyWHERE_USED;
+import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageType;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import java.io.StringWriter;
 
 public class SearchFormResponder implements Responder {
   public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,

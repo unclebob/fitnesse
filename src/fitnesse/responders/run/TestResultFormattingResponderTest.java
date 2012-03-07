@@ -10,7 +10,6 @@ import util.RegexTestCase;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;

@@ -1,7 +1,17 @@
 package fitnesse.responders.testHistory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import util.FileUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -14,19 +24,8 @@ import fitnesse.responders.run.ExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import util.FileUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
@@ -62,7 +61,7 @@ public class PageHistoryResponder implements SecureResponder {
   private Response makePageHistoryXmlResponse(Request request) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
+    Template template = context.htmlPageFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
 
     StringWriter writer = new StringWriter();
     template.merge(velocityContext, writer);

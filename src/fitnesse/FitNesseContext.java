@@ -26,7 +26,7 @@ public class FitNesseContext {
   public SocketDealer socketDealer = new SocketDealer();
   public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
   public Authenticator authenticator = new PromiscuousAuthenticator();
-  public HtmlPageFactory htmlPageFactory = new HtmlPageFactory();
+  public HtmlPageFactory htmlPageFactory = new HtmlPageFactory(this);
   public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;

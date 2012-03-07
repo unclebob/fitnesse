@@ -1,7 +1,10 @@
 package fitnesse.responders.testHistory;
 
+import java.io.File;
+
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -11,9 +14,6 @@ import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import org.apache.velocity.VelocityContext;
-
-import java.io.File;
 
 public class TestHistoryResponder implements SecureResponder {
 
@@ -49,7 +49,7 @@ public class TestHistoryResponder implements SecureResponder {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("testHistory", history);
     response.setContentType(Format.XML);
-    response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistoryXML.vm"));
+    response.setContent(context.htmlPageFactory.render(velocityContext, "testHistoryXML.vm"));
     return response;
   }
   

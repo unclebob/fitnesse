@@ -1,14 +1,15 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
-import fitnesse.responders.run.TestExecutionReport.TestResult;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.StringWriter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
@@ -18,9 +19,10 @@ import org.w3c.dom.Text;
 
 import util.DateTimeUtil;
 import util.TimeMeasurement;
-
-import java.io.StringWriter;
-import java.util.Date;
+import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 
 public class ExecutionReportTest {
   private WikiPage root;
@@ -40,7 +42,7 @@ public class ExecutionReportTest {
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(42));
 
     StringWriter writer = new StringWriter();
-    original.toXml(writer, VelocityFactory.getVelocityEngine());
+    original.toXml(writer, context.htmlPageFactory.getVelocityEngine());
     ExecutionReport report = ExecutionReport.makeReport(writer.toString());
     assertTrue(report instanceof TestExecutionReport);
     assertEquals(original, report);
@@ -69,7 +71,7 @@ public class ExecutionReportTest {
     reference.getTestSummary().wrong = 99;
     original.addPageHistoryReference(reference);
     StringWriter writer = new StringWriter();
-    original.toXml(writer, VelocityFactory.getVelocityEngine());
+    original.toXml(writer, context.htmlPageFactory.getVelocityEngine());
     ExecutionReport report = ExecutionReport.makeReport(writer.toString());
     assertTrue(report instanceof SuiteExecutionReport);
     assertEquals(original, report);

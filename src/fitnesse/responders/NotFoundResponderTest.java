@@ -18,7 +18,6 @@ public class NotFoundResponderTest extends RegexTestCase {
 
   public void setUp() {
     context = FitNesseUtil.makeTestContext();
-    context.htmlPageFactory = new HtmlPageFactory();
   }
   
   public void testResponse() throws Exception {

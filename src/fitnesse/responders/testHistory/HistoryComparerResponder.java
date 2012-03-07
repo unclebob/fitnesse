@@ -2,27 +2,22 @@ package fitnesse.responders.testHistory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.htmlparser.util.ParserException;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 

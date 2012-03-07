@@ -7,7 +7,6 @@ import java.io.InputStream;
 import util.RegexTestCase;
 import util.StreamReader;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
 

@@ -164,7 +164,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
   }
 
   private String getContentAfterSpecialImportHandling() throws Exception {
-    HtmlPage html = new HtmlPageFactory().newPage();
+    HtmlPage html = new HtmlPageFactory(FitNesseUtil.makeTestContext()).newPage();
     WikiImportProperty.handleImportProperties(html, page, page.getData());
     html.actions = new WikiPageActions(page);
     return html.html();

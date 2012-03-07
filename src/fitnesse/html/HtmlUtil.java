@@ -2,20 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import org.apache.velocity.VelocityContext;
-
-import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
-
-import java.util.List;
 
 public class HtmlUtil {
   public static final String BRtag = "<br/>";

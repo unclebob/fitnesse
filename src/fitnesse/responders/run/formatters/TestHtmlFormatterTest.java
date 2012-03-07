@@ -25,7 +25,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     page.getData().setContent("page content here");
     context = new FitNesseContext();
 
-    formatter = new TestHtmlFormatter(context, page.getSourcePage(), new HtmlPageFactory()) {
+    formatter = new TestHtmlFormatter(context, page.getSourcePage(), context.htmlPageFactory) {
       @Override
       protected void writeData(String output) {
         pageBuffer.append(output);

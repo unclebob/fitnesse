@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.templateUtilities;
 
+import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlElement;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PathParser;
@@ -13,9 +14,11 @@ public class HtmlPageTest extends RegexTestCase {
   private HtmlPage page;
   private String html;
 
+  private FitNesseContext context;
+
   public void setUp() throws Exception {
-    FitNesseUtil.makeTestContext(null);
-    page = new HtmlPage("skeleton.vm");
+    context = FitNesseUtil.makeTestContext(null);
+    page = new HtmlPage(context.htmlPageFactory.getVelocityEngine(), "skeleton.vm");
     html = page.html();
   }
 

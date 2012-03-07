@@ -41,7 +41,7 @@ public class SearchReplaceResponder extends ResultResponder implements SearchObs
     String searchString = getSearchString();
     String replacementString = getReplacementString();
 
-    observer = new ContentReplacingSearchObserver(searchString, replacementString);
+    contentReplaceObserver = new ContentReplacingSearchObserver(searchString, replacementString);
     finder = new RegularExpressionWikiPageFinder(searchString, this);
     finder.search(page);
   }

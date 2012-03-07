@@ -1,17 +1,12 @@
 package fitnesse.responders.search;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.io.StringWriter;
-import java.io.Writer;
-
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.runtime.RuntimeInstance;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.VelocityFactory;
+import fitnesse.FitNesseContext;
 import fitnesse.components.SearchObserver;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
@@ -22,24 +17,25 @@ import fitnesse.wiki.WikiPage;
 public class ResultDirectiveTest {
 
   private WikiPage root;
+  private FitNesseContext context;
   
   @Before
   public void setUp() {
     root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
-    VelocityFactory.getVelocityEngine().loadDirective(ResultDirective.class.getName());
+    context = FitNesseUtil.makeTestContext(root);
+    context.htmlPageFactory.getVelocityEngine().loadDirective(ResultDirective.class.getName());
   }
   
   @Test
   public void testRender() {
     
-    VelocityContext context = new VelocityContext();
+    VelocityContext velocityContext = new VelocityContext();
     
-    context.put("resultResponder", new MockResultResponder());
+    velocityContext.put("resultResponder", new MockResultResponder());
     
-    String tmpl = VelocityFactory.translateTemplate(context, "searchResults.vm");
+    String tmpl = context.htmlPageFactory.render(velocityContext, "searchResults.vm");
     
-    assertEquals("\n\n test\n lorem ipsu...", tmpl);
+    assertTrue(tmpl.contains("<a href=\"PageOne\">PageOne</a>"));
   }
 
   public static class MockResultResponder extends ResultResponder {

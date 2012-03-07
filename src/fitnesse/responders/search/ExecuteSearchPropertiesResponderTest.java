@@ -73,7 +73,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
     content = invokeResponder(request);
 
-    assertHasRegexp("Found 1 result for your search", content);
+    assertHasRegexp("result for your search", content);
     String[] titles1 = { "Page", TEST.toString(), "Tags", "PageOne" };
     assertOutputHasRowWithLink(content, titles1);
     assertOutputHasRowWithLabels("filter1,filter2");
@@ -116,7 +116,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
   }
 
   private void assertOutputHasRow(String content, String title, String tagName) {
-    assertHasRegexp("<table.*<tr.*<t[dh].*<" + tagName + ">" + title + "</"
+    assertHasRegexp("<table.*<tr.*<t[dh].*<" + tagName + ".*>.*" + title + ".*</"
         + tagName.split(" ")[0] + ">", content);
   }
 
@@ -177,7 +177,7 @@ public class ExecuteSearchPropertiesResponderTest extends RegexTestCase {
 
     content = invokeResponder(request);
 
-    assertHasRegexp("Found 1 result for your search", content);
+    assertHasRegexp("result for your search", content);
     String[] titles1 = { "Page", TEST.toString(), "Tags", "PageOne" };
     assertOutputHasRowWithLink(content, titles1);
     assertOutputHasRowWithLabels(content, "filter1,filter2");

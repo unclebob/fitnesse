@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.templateUtilities;
 
+import java.io.StringWriter;
 import java.io.Writer;
 
+import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeInstance;
 
-import fitnesse.VelocityFactory;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
 
 public class HtmlPage {
   public static final String BreakPoint = "<!--BREAKPOINT-->";
@@ -19,6 +18,7 @@ public class HtmlPage {
   private static final String NAV_TEMPLATE = "sidebar.vm";
   private static final String TITLE = "FitNesse";
 
+  private VelocityEngine velocityEngine;
   private VelocityContext velocityContext;
   
   private String templateFileName;
@@ -28,12 +28,14 @@ public class HtmlPage {
   public String preDivision;
   public String postDivision;
 
-  protected HtmlPage(String templateFileName) {
+  protected HtmlPage(VelocityEngine velocityEngine, String templateFileName) {
     super();
     
-    velocityContext =  new VelocityContext();
+    this.velocityEngine = velocityEngine;
     this.templateFileName = templateFileName;
-    
+
+    velocityContext =  new VelocityContext();
+
     setHeaderTemplate(HEADER_TEMPLATE);
     setNavTemplate(NAV_TEMPLATE);
     setTitle("FitNesse");
@@ -80,13 +82,15 @@ public class HtmlPage {
   }
   
   public String html() {
-    VelocityContext context = updateVelocityContext();
-    return VelocityFactory.translateTemplate(context, templateFileName);
+    StringWriter writer = new StringWriter();
+    render(writer);
+    return writer.toString();
   }
 
   public void render(Writer writer) {
     VelocityContext context = updateVelocityContext();
-    VelocityFactory.translateTemplate(context, templateFileName, writer);
+    Template template = velocityEngine.getTemplate(templateFileName);
+    template.merge(velocityContext, writer);
   }
 
 
