@@ -54,7 +54,7 @@ public class VelocityFactory {
             "classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
             org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader.class.getName());
 
-      instance.velocityEngine.init();
+      instance.velocityEngine.init(templatePath + "/velocity.properties");
     }
     return instance.velocityEngine;
   }

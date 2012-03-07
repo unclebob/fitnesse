@@ -22,10 +22,12 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
     text = buffer.toString();
   }
 
+  @Override
   public void close() {
     closed = true;
   }
 
+  @Override
   public Socket getSocket() {
     return null;
   }

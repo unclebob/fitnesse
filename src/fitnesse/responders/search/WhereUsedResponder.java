@@ -9,12 +9,6 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 
 public class WhereUsedResponder extends ResultResponder {
-  protected String getPageFooterInfo(int hits) {
-    //return HtmlUtil.makeLink(getRenderedPath(), page.getName()).html() + " is used in " + hits + " page(s).";
-    HtmlTag tag = HtmlUtil.makeLink(getRenderedPath(), page.getName());
-    tag.tail = " is used in " + hits + " page(s).";
-    return tag.html().replaceAll(HtmlElement.endl, "");
-  }
 
   @Override
   protected void startSearching(SearchObserver observer) {

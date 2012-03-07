@@ -27,10 +27,12 @@ public class MockResponseSender implements ResponseSender {
     }
   }
 
+  @Override
   public void close() {
     closed.set(true);
   }
 
+  @Override
   public Socket getSocket() {
     return socket;
   }

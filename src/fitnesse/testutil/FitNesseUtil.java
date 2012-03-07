@@ -52,7 +52,7 @@ public class FitNesseUtil {
     context.rootDirectoryName = "TestDir";
     context.setRootPagePath();
     VelocityFactory.makeVelocityFactory(context);
-    VelocityEngine engine = new VelocityEngine();
+    VelocityEngine engine = new VelocityEngine("FitNesseRoot/files/templates/velocity.properties");
     engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
     VelocityFactory.setVelocityEngine(engine);
     return context;

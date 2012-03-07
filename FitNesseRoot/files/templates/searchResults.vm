@@ -19,7 +19,7 @@
  <tbody> 
 
  #set( $hits = 0 )
- #foreach( $result in $searchIterator )
+ #resultDirective( $resultResponder )
   <tr>
    <td>
    #if($result.getData().hasAttribute("Suite"))

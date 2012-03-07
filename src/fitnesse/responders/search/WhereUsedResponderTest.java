@@ -39,9 +39,9 @@ public class WhereUsedResponderTest extends RegexTestCase {
     String content = sender.sentData();
     assertEquals(200, response.getStatus());
     assertHasRegexp("Where Used", content);
-    assertHasRegexp(">PageOne<", content);
-    assertHasRegexp(">PageTwo<", content);
-    assertHasRegexp(">PageTwo\\.ChildPage<", content);
+    assertHasRegexp("PageOne", content);
+    assertHasRegexp("PageTwo", content);
+    assertHasRegexp("PageTwo\\.ChildPage", content);
   }
 }
 

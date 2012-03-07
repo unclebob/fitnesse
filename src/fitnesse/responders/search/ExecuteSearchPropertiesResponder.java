@@ -86,11 +86,6 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  protected String getPageFooterInfo(int hits) {
-    return "Found " + hits + " results for your search.";
-  }
-
-  @Override
   protected String getTitle() {
     return "Search Page Properties Results";
   }

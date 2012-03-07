@@ -23,6 +23,7 @@ public class ChunkedResponseTest implements ResponseSender {
 
   public StringBuffer buffer;
 
+  @Override
   public void send(byte[] bytes) {
     try {
       buffer.append(new String(bytes, "UTF-8"));
@@ -31,10 +32,12 @@ public class ChunkedResponseTest implements ResponseSender {
     }
   }
 
+  @Override
   public void close() {
     closed = true;
   }
 
+  @Override
   public Socket getSocket() {
     return null;
   }
@@ -161,4 +164,5 @@ public class ChunkedResponseTest implements ResponseSender {
 
     assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
   }
+
 }

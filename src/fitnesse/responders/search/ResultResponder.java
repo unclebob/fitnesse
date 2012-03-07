@@ -52,7 +52,9 @@ public abstract class ResultResponder extends ChunkingResponder implements
       htmlPage.put("request", request.getQueryString());
     htmlPage.put("page", page);
 
-    htmlPage.put("searchIterator", new SearchIterator(this));
+    htmlPage.put("resultResponder", this);
+    
+    // TODO: use Directive -- htmlPage.put("searchIterator", new SearchIterator(this));
 
     htmlPage.render(response.getWriter());
     
@@ -61,65 +63,12 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   protected abstract String getTitle() ;
 
-  protected abstract String getPageFooterInfo(int hits) ;
-
-  protected void startSearching(SearchObserver observer) {
-  }
+  protected abstract void startSearching(SearchObserver observer);
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
   
-  public static class SearchIterator implements Iterator, SearchObserver {
-    private BlockingQueue<WikiPage> queue = new ArrayBlockingQueue<WikiPage>(5);
-    private Thread searchThread;
-    private WikiPage fetchedPage;
-    
-    public SearchIterator(final ResultResponder resultResponder) {
-      searchThread = new Thread(new Runnable() {
-        
-        @Override
-        public void run() {
-          resultResponder.startSearching(SearchIterator.this);
-        }
-      });
-      searchThread.start();
-    }
-    
-    @Override
-    public boolean hasNext() {
-      while (fetchedPage == null && searchThread.isAlive()) {
-        try {
-          fetchedPage = queue.poll(500, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }
-      }
-      return fetchedPage != null;
-    }
-
-    @Override
-    public Object next() {
-      try {
-        return fetchedPage;
-      } finally {
-        fetchedPage = null;
-      }
-    }
-
-    @Override
-    public void remove() {
-      // Ignore
-    }
-
-    @Override
-    public void hit(WikiPage page) {
-      try {
-        queue.put(page);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-    }
-    
-  }
 }
+
+

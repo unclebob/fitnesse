@@ -115,12 +115,11 @@ public class ChunkedResponse extends Response {
   
       @Override
       public void flush() throws IOException {
-        //sender.flush(); -- flush is done on sender.send (in FitNesseExpediter at least)
+        // sender.flush(); -- flush is done on write
       }
   
       @Override
       public void write(String str) throws IOException {
-        // TODO Auto-generated method stub
         add(str);
       }
       
