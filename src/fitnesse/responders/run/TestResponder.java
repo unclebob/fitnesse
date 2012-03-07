@@ -25,7 +25,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected PageData data;
   protected CompositeFormatter formatters;
-  private volatile boolean isClosed = false;
+  private boolean isClosed = false;
 
   private boolean fastTest = false;
   private boolean remoteDebug = false;
