@@ -44,7 +44,7 @@ public class VersionResponder implements SecureResponder {
 
   private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
     PageData pageData = page.getDataVersion(version);
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
     html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource)));
     // TODO: subclass actions for specific rollback behaviour.

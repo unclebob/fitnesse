@@ -4,6 +4,7 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
@@ -12,12 +13,11 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {
-  private HtmlPageFactory pageFactory;
+  private PageFactory pageFactory;
   private TestSummary assertionCounts = new TestSummary();
   private CompositeExecutionLog log = null;
   private HtmlPage htmlPage = null;
@@ -27,7 +27,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
   public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
-                           final HtmlPageFactory pageFactory) throws Exception {
+                           final PageFactory pageFactory) throws Exception {
     super(context, page);
     this.pageFactory = pageFactory;
   }

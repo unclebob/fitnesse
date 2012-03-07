@@ -41,7 +41,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
       writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("suiteExecutionReport", suiteExecutionReport);
-    VelocityEngine velocityEngine = context.htmlPageFactory.getVelocityEngine();
+    VelocityEngine velocityEngine = context.pageFactory.getVelocityEngine();
     Template template = velocityEngine.getTemplate("suiteHistoryXML.vm");
     template.merge(velocityContext, writer);
     writer.close();

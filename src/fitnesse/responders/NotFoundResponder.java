@@ -28,7 +28,7 @@ public class NotFoundResponder implements Responder {
   }
 
   private String makeHtml(FitNesseContext context) {
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     HtmlUtil.addTitles(page, "Not Found:" + resource);
     page.put("name", resource);
     page.put("shouldCreate", WikiWordPath.isWikiWord(resource));

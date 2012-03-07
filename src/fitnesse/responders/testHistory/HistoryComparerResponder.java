@@ -116,7 +116,7 @@ public class HistoryComparerResponder implements Responder {
 
   private Response makeValidResponse(Request request) {
     count = 0;
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("History Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
     if (!testing) {

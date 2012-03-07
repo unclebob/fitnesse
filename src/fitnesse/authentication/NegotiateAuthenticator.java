@@ -118,7 +118,7 @@ public class NegotiateAuthenticator extends Authenticator {
     public Response makeResponse(FitNesseContext context, Request request) {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
-      HtmlPage html = context.htmlPageFactory.newPage();
+      HtmlPage html = context.pageFactory.newPage();
       HtmlUtil.addTitles(html, "Negotiated authentication required");
       if (request == null)
         html.setMainTemplate("authRequired.vm");

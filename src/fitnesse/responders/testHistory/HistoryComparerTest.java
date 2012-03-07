@@ -303,7 +303,7 @@ public class HistoryComparerTest {
     result.relativePageName = "testPageOne";
     report.results.add(result);
     Writer writer = new StringWriter();
-    VelocityEngine engine = context.htmlPageFactory.getVelocityEngine();
+    VelocityEngine engine = context.pageFactory.getVelocityEngine();
     report.toXml(writer, engine);
     return writer.toString();
   }

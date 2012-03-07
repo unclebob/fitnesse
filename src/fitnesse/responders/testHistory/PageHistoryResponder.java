@@ -61,7 +61,7 @@ public class PageHistoryResponder implements SecureResponder {
   private Response makePageHistoryXmlResponse(Request request) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
-    Template template = context.htmlPageFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
+    Template template = context.pageFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
 
     StringWriter writer = new StringWriter();
     template.merge(velocityContext, writer);
@@ -154,7 +154,7 @@ public class PageHistoryResponder implements SecureResponder {
     pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
-    page = context.htmlPageFactory.newPage();
+    page = context.pageFactory.newPage();
     pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()));
     page.setPageTitle(pageTitle);
   }

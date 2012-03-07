@@ -40,7 +40,7 @@ public class TestExecutionReportTest {
 
   private String reportToXml(TestExecutionReport report) throws Exception {
     StringWriter writer = new StringWriter();
-    report.toXml(writer, context.htmlPageFactory.getVelocityEngine());
+    report.toXml(writer, context.pageFactory.getVelocityEngine());
     writer.close();
     return writer.toString();
   }

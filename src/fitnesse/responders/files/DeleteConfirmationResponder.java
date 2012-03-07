@@ -30,7 +30,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
   }
 
   private String makeDirectoryListingPage(String pageName, String filename, FitNesseContext context) {
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Delete File(s)");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
     page.put("pageName", "/" + pageName);

@@ -25,7 +25,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
   }
 
   protected void doSending() {
-    HtmlPage htmlPage = context.htmlPageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(new PageTitle(getTitle()) {
       public String getTitle() {

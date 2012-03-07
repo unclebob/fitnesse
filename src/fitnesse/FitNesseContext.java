@@ -5,10 +5,10 @@ package fitnesse;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;
@@ -26,7 +26,7 @@ public class FitNesseContext {
   public SocketDealer socketDealer = new SocketDealer();
   public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
   public Authenticator authenticator = new PromiscuousAuthenticator();
-  public HtmlPageFactory htmlPageFactory = new HtmlPageFactory(this);
+  public PageFactory pageFactory = new PageFactory(this);
   public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
   public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
   public static FitNesseContext globalContext;
@@ -50,7 +50,7 @@ public class FitNesseContext {
     buffer.append("\t").append("root page:         ").append(root).append(endl);
     buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
     buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
-    buffer.append("\t").append("html page factory: ").append(htmlPageFactory).append(endl);
+    buffer.append("\t").append("page factory:      ").append(pageFactory).append(endl);
 
     return buffer.toString();
   }

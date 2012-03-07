@@ -4,12 +4,12 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PageCrawler;
@@ -31,7 +31,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private int totalTests = 1;
 
 
-  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, HtmlPageFactory pageFactory) throws Exception {
+  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, PageFactory pageFactory) throws Exception {
     super(context, page, pageFactory);
   }
 

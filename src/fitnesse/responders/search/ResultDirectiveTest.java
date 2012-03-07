@@ -23,7 +23,7 @@ public class ResultDirectiveTest {
   public void setUp() {
     root = InMemoryPage.makeRoot("root");
     context = FitNesseUtil.makeTestContext(root);
-    context.htmlPageFactory.getVelocityEngine().loadDirective(ResultDirective.class.getName());
+    context.pageFactory.getVelocityEngine().loadDirective(ResultDirective.class.getName());
   }
   
   @Test
@@ -33,7 +33,7 @@ public class ResultDirectiveTest {
     
     velocityContext.put("resultResponder", new MockResultResponder());
     
-    String tmpl = context.htmlPageFactory.render(velocityContext, "searchResults.vm");
+    String tmpl = context.pageFactory.render(velocityContext, "searchResults.vm");
     
     assertTrue(tmpl.contains("<a href=\"PageOne\">PageOne</a>"));
   }

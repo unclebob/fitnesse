@@ -18,7 +18,7 @@ public class UnauthorizedResponder implements Responder {
     SimpleResponse response = new SimpleResponse(401);
     response.addHeader("WWW-Authenticate", "Basic realm=\"FitNesse\"");
 
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     HtmlUtil.addTitles(page, "401 Unauthorized");
     page.put("resource", request.getResource());
     page.setMainTemplate("unauthorized.vm");

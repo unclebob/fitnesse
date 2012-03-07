@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.templateUtilities;
+package fitnesse.responders;
 
 import java.io.File;
 import java.io.FileReader;
@@ -16,13 +16,14 @@ import org.apache.velocity.runtime.RuntimeInstance;
 
 import fitnesse.FitNesseContext;
 import fitnesse.responders.search.ResultDirective;
+import fitnesse.responders.templateUtilities.HtmlPage;
 
-public class HtmlPageFactory {
+public class PageFactory {
   
   private static VelocityEngine velocityEngine = null;
   private FitNesseContext context;
 
-  public HtmlPageFactory(FitNesseContext context) {
+  public PageFactory(FitNesseContext context) {
     super();
     this.context = context;
   }

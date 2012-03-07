@@ -48,7 +48,7 @@ public class FitNesseUtil {
   public static FitNesseContext makeTestContext(WikiPage root) {
     FitNesseContext context = new FitNesseContext(root);
     // Ensure Velocity is configured with the default root directory name (FitNesseRoot)
-    context.htmlPageFactory.getVelocityEngine();
+    context.pageFactory.getVelocityEngine();
     context.rootDirectoryName = "TestDir";
     context.setRootPagePath();
     return context;

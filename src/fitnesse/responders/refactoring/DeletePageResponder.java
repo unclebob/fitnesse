@@ -59,7 +59,7 @@ public class DeletePageResponder implements SecureResponder {
   }
 
   private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/"));
     makeMainContent(html, root, qualifiedPageName);

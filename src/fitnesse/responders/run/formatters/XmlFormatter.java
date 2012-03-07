@@ -127,7 +127,7 @@ public class XmlFormatter extends BaseFormatter {
   protected void writeResults(Writer writer) throws IOException {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = context.htmlPageFactory.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = context.pageFactory.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, writer);
     writer.close();
   }

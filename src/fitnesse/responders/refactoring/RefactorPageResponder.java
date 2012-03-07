@@ -18,7 +18,7 @@ public class RefactorPageResponder implements SecureResponder {
   public Response makeResponse(FitNesseContext context, Request request) {
     String resource = request.getResource();
 
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
 
     page.setMainTemplate("refactorForm");
     page.setTitle("Refactor: " + resource);

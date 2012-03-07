@@ -24,7 +24,7 @@ public class SuiteResponder extends TestResponder {
   }
 
   void addHtmlFormatter() throws Exception {
-    BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
+    BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.pageFactory) {
       protected void writeData(String output) {
         addToResponse(output);
       }

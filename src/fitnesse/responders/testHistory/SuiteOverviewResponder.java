@@ -44,7 +44,7 @@ public class SuiteOverviewResponder implements Responder {
   private SimpleResponse makeResponse(SuiteOverviewTree treeview, WikiPagePath path) {
     SimpleResponse response = new SimpleResponse();
     
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Suite Overview");
     page.setPageTitle(new PageTitle("Suite Overview", path));
     page.put("treeRoot", treeview.getTreeRoot());

@@ -29,7 +29,7 @@ public class SearchFormResponder implements Responder {
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setMainTemplate("searchForm");
     html.setTitle("Search Form");
     html.setPageTitle(new PageTitle("Search Form"));

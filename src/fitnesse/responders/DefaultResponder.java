@@ -15,7 +15,7 @@ public class DefaultResponder extends BasicResponder {
   }
 
   private HtmlPage prepareResponseDocument(FitNesseContext context) {
-    HtmlPage responseDocument = context.htmlPageFactory.newPage();
+    HtmlPage responseDocument = context.pageFactory.newPage();
     HtmlUtil.addTitles(responseDocument, "Default Responder");
     responseDocument.setMainTemplate("defaultPage.vm");
     return responseDocument;

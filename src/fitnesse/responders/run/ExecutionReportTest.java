@@ -42,7 +42,7 @@ public class ExecutionReportTest {
     original.setTotalRunTimeInMillis(totalTimeMeasurementWithElapsedMillis(42));
 
     StringWriter writer = new StringWriter();
-    original.toXml(writer, context.htmlPageFactory.getVelocityEngine());
+    original.toXml(writer, context.pageFactory.getVelocityEngine());
     ExecutionReport report = ExecutionReport.makeReport(writer.toString());
     assertTrue(report instanceof TestExecutionReport);
     assertEquals(original, report);
@@ -71,7 +71,7 @@ public class ExecutionReportTest {
     reference.getTestSummary().wrong = 99;
     original.addPageHistoryReference(reference);
     StringWriter writer = new StringWriter();
-    original.toXml(writer, context.htmlPageFactory.getVelocityEngine());
+    original.toXml(writer, context.pageFactory.getVelocityEngine());
     ExecutionReport report = ExecutionReport.makeReport(writer.toString());
     assertTrue(report instanceof SuiteExecutionReport);
     assertEquals(original, report);

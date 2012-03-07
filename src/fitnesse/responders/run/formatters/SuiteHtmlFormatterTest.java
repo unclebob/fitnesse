@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import util.RegexTestCase;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.wiki.WikiPageDummy;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
@@ -18,7 +18,7 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     FitNesseContext context = new FitNesseContext();
-    htmlPage = context.htmlPageFactory.newPage();
+    htmlPage = context.pageFactory.newPage();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
       protected HtmlPage buildHtml(String pageType) {

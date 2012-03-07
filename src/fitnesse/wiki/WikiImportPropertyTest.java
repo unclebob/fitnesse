@@ -11,9 +11,9 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
 
 public class WikiImportPropertyTest extends RegexTestCase {
@@ -164,7 +164,7 @@ public class WikiImportPropertyTest extends RegexTestCase {
   }
 
   private String getContentAfterSpecialImportHandling() throws Exception {
-    HtmlPage html = new HtmlPageFactory(FitNesseUtil.makeTestContext()).newPage();
+    HtmlPage html = new PageFactory(FitNesseUtil.makeTestContext()).newPage();
     WikiImportProperty.handleImportProperties(html, page, page.getData());
     html.actions = new WikiPageActions(page);
     return html.html();

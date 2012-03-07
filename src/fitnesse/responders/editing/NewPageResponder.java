@@ -22,7 +22,7 @@ public class NewPageResponder implements Responder {
   }
 
   private String doMakeHtml(FitNesseContext context, Request request) {
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("New page:");
 
     html.setPageTitle(new PageTitle("New Page", PathParser.parse(request.getResource())));

@@ -34,7 +34,7 @@ public class TestHistoryResponder implements SecureResponder {
   }
 
   private Response makeTestHistoryResponse(TestHistory testHistory, String pageName) {
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Test History");
     page.setPageTitle(new PageTitle(makePageTitle(pageName)));
     page.put("testHistory", testHistory);
@@ -49,7 +49,7 @@ public class TestHistoryResponder implements SecureResponder {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("testHistory", history);
     response.setContentType(Format.XML);
-    response.setContent(context.htmlPageFactory.render(velocityContext, "testHistoryXML.vm"));
+    response.setContent(context.pageFactory.render(velocityContext, "testHistoryXML.vm"));
     return response;
   }
   

@@ -28,7 +28,7 @@ public class HtmlPage {
   public String preDivision;
   public String postDivision;
 
-  protected HtmlPage(VelocityEngine velocityEngine, String templateFileName) {
+  public HtmlPage(VelocityEngine velocityEngine, String templateFileName) {
     super();
     
     this.velocityEngine = velocityEngine;

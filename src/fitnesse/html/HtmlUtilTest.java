@@ -4,8 +4,8 @@ package fitnesse.html;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -68,7 +68,7 @@ public class HtmlUtilTest extends RegexTestCase {
 
   private String getActionsHtml(String pageName) {
     root.addChildPage(pageName);
-    HtmlPage htmlPage = context.htmlPageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.actions = new WikiPageActions(root.getChildPage(pageName));
     return htmlPage.html();
   }

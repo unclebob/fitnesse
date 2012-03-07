@@ -10,10 +10,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 import fitnesse.authentication.Authenticator;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -23,7 +23,6 @@ public class ComponentFactory {
   private final String endl = System.getProperty("line.separator");
   public static final String PROPERTIES_FILE = "plugins.properties";
   public static final String WIKI_PAGE_CLASS = "WikiPage";
-  public static final String HTML_PAGE_FACTORY = "HtmlPageFactory";
   public static final String PLUGINS = "Plugins";
   public static final String RESPONDERS = "Responders";
   public static final String SYMBOL_TYPES = "SymbolTypes";
@@ -116,11 +115,6 @@ public class ComponentFactory {
       buffer.append("\tCustom wiki page plugin loaded: ").append(rootPageClassName).append(endl);
     }
     return buffer.toString();
-  }
-
-  public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) {
-    HtmlPageFactory htmlPageFactory = (HtmlPageFactory) createComponent(HTML_PAGE_FACTORY);
-    return htmlPageFactory == null ? defaultPageFactory : htmlPageFactory;
   }
 
   public String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
