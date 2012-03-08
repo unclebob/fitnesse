@@ -7,14 +7,14 @@ import fitnesse.wikitext.parser.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhereUsedPageFinder implements TraversalListener, SearchObserver, PageFinder, SymbolTreeWalker {
+public class WhereUsedPageFinder implements TraversalListener, PageFinder, SymbolTreeWalker {
   private WikiPage subjectPage;
-  private SearchObserver observer;
+  private TraversalListener observer;
   private WikiPage currentPage;
 
   private List<WikiPage> hits = new ArrayList<WikiPage>();
 
-  public WhereUsedPageFinder(WikiPage subjectPage, SearchObserver observer) {
+  public WhereUsedPageFinder(WikiPage subjectPage, TraversalListener observer) {
     this.subjectPage = subjectPage;
     this.observer = observer;
   }
@@ -46,7 +46,7 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
             WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
             if (referencedPage != null && referencedPage.equals(subjectPage)) {
               hits.add(currentPage);
-              observer.hit(currentPage);
+              observer.processPage(currentPage);
             }
         }
         catch (Exception e) {

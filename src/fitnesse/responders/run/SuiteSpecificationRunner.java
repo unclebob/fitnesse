@@ -1,7 +1,7 @@
 package fitnesse.responders.run;
 
-import fitnesse.components.SearchObserver;
 import fitnesse.components.SuiteSpecificationMatchFinder;
+import fitnesse.components.TraversalListener;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageCrawler;
@@ -11,7 +11,7 @@ import org.htmlparser.util.ParserException;
 
 import java.util.LinkedList;
 
-public class SuiteSpecificationRunner implements SearchObserver {
+public class SuiteSpecificationRunner implements TraversalListener {
   public String titleRegEx;
   public String contentRegEx;
   public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
@@ -115,7 +115,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
 
-  public void hit(WikiPage page) {
+  public void processPage(WikiPage page) {
     for (WikiPage hit : testPageList) {
       if (hit == page)
         return;

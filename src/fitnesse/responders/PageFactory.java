@@ -15,8 +15,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeInstance;
 
 import fitnesse.FitNesseContext;
-import fitnesse.responders.search.ResultDirective;
 import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.TraverseDirective;
 
 public class PageFactory {
   
@@ -64,7 +64,7 @@ public class PageFactory {
       velocityEngine.init(properties);
       
       // TODO: Add traverse directive
-      velocityEngine.loadDirective(ResultDirective.class.getName());
+      velocityEngine.loadDirective(TraverseDirective.class.getName());
     }
     return velocityEngine;
   }

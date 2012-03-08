@@ -2,16 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
 import fitnesse.components.WhereUsedPageFinder;
-import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
 
 public class WhereUsedResponder extends ResultResponder {
 
   @Override
-  protected void startSearching(SearchObserver observer) {
+  public void traverse(TraversalListener observer) {
     new WhereUsedPageFinder(page, observer).search(root);
   }
 

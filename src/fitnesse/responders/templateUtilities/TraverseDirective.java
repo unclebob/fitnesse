@@ -1,4 +1,4 @@
-package fitnesse.responders.search;
+package fitnesse.responders.templateUtilities;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -15,19 +15,21 @@ import org.apache.velocity.runtime.log.Log;
 import org.apache.velocity.runtime.parser.node.ASTBlock;
 import org.apache.velocity.runtime.parser.node.Node;
 
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
+import fitnesse.components.Traverser;
+import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
-public class ResultDirective extends Directive implements SearchObserver {
+public class TraverseDirective extends Directive implements TraversalListener {
 
     private Log log;
     private InternalContextAdapter context;
     private Node node;
     private Writer writer;
-    private ResultResponder resultResponder;
+    private Traverser traverser;
 
     public String getName() {
-        return "resultDirective";
+        return "traverse";
     }
 
     public int getType() {
@@ -45,10 +47,10 @@ public class ResultDirective extends Directive implements SearchObserver {
 
       this.context = context;
       this.writer = writer;
-      this.resultResponder = (ResultResponder) node.jjtGetChild(0).value(context);
+      this.traverser = (Traverser) node.jjtGetChild(0).value(context);
       this.node = node.jjtGetChild(1);
       
-      resultResponder.startSearching(this);
+      traverser.traverse(this);
       
       return true;
     }
@@ -80,7 +82,7 @@ public class ResultDirective extends Directive implements SearchObserver {
     }
 
     @Override
-    public void hit(WikiPage page) {
+    public void processPage(WikiPage page) {
 
       context.put("result", page);
       try {

@@ -11,12 +11,12 @@ public class RegularExpressionWikiPageFinder extends WikiPageFinder {
 
   private Pattern regularExpression;
 
-  public RegularExpressionWikiPageFinder(Pattern regularExpression, SearchObserver observer) {
+  public RegularExpressionWikiPageFinder(Pattern regularExpression, TraversalListener observer) {
     super(observer);
     this.regularExpression = regularExpression;
   }
 
-  public RegularExpressionWikiPageFinder(String regularExpression, SearchObserver observer) {
+  public RegularExpressionWikiPageFinder(String regularExpression, TraversalListener observer) {
     super(observer);
     this.regularExpression = Pattern.compile(regularExpression);
   }

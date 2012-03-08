@@ -1,7 +1,11 @@
 package fitnesse.responders.search;
 
-import static fitnesse.responders.search.SearchFormResponder.*;
-import static fitnesse.wiki.PageData.*;
+import static fitnesse.responders.search.SearchFormResponder.SEARCH_ACTION_ATTRIBUTES;
+import static fitnesse.responders.search.SearchFormResponder.SPECIAL_ATTRIBUTES;
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
+import static fitnesse.wiki.PageData.PropertyPRUNE;
+import static fitnesse.wiki.PageData.PropertySUITES;
+import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,7 +16,7 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.components.PageFinder;
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
@@ -91,7 +95,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
   }
 
   @Override
-  protected void startSearching(SearchObserver observer) {
+  public void traverse(TraversalListener observer) {
     List<PageType> pageTypes = getPageTypesFromInput(request);
     Map<String, Boolean> attributes = getAttributesFromInput(request);
     String suites = getSuitesFromInput(request);

@@ -3,15 +3,15 @@ package fitnesse.responders.refactoring;
 import fitnesse.components.ContentReplacingSearchObserver;
 import fitnesse.components.PageFinder;
 import fitnesse.components.RegularExpressionWikiPageFinder;
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
-public class SearchReplaceResponder extends ResultResponder implements SearchObserver {
+public class SearchReplaceResponder extends ResultResponder implements TraversalListener {
 
   private PageFinder finder;
-  private SearchObserver contentReplaceObserver;
-  private SearchObserver webOutputObserver;
+  private TraversalListener contentReplaceObserver;
+  private TraversalListener webOutputObserver;
 
   protected String getPageFooterInfo(int hits) {
     return String.format("Replaced %d matches for your search.", hits);
@@ -30,13 +30,13 @@ public class SearchReplaceResponder extends ResultResponder implements SearchObs
     return (String) request.getInput("searchString");
   }
 
-  public void hit(WikiPage page) {
-    contentReplaceObserver.hit(page);
-    webOutputObserver.hit(page);
+  public void processPage(WikiPage page) {
+    contentReplaceObserver.processPage(page);
+    webOutputObserver.processPage(page);
   }
 
   @Override
-  protected void startSearching(SearchObserver observer) {
+  public void traverse(TraversalListener observer) {
     webOutputObserver = observer;
     String searchString = getSearchString();
     String replacementString = getReplacementString();

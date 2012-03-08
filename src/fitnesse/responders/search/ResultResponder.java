@@ -8,7 +8,8 @@ import java.util.concurrent.BlockingQueue;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
+import fitnesse.components.Traverser;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
@@ -17,7 +18,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 public abstract class ResultResponder extends ChunkingResponder implements
-  SecureResponder {
+  SecureResponder, Traverser {
   private BlockingQueue queue = new ArrayBlockingQueue<WikiPage>(64);
 
   protected PageCrawler getPageCrawler() {
@@ -57,7 +58,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
   protected abstract String getTitle() ;
 
-  protected abstract void startSearching(SearchObserver observer);
+  public abstract void traverse(TraversalListener observer);
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();

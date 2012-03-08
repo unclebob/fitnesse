@@ -2,13 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.LITERAL;
 
 import java.util.regex.Pattern;
 
 import fitnesse.components.RegularExpressionWikiPageFinder;
-import fitnesse.components.SearchObserver;
 import fitnesse.components.TitleWikiPageFinder;
+import fitnesse.components.TraversalListener;
 
 public class SearchResponder extends ResultResponder {
 
@@ -34,7 +35,7 @@ public class SearchResponder extends ResultResponder {
   }
 
   @Override
-  protected void startSearching(SearchObserver observer) {
+  public void traverse(TraversalListener observer) {
     String searchString = getSearchString();
     if (!"".equals(searchString)) {
       String searchType = getSearchType();

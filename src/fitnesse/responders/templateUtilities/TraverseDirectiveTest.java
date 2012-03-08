@@ -1,4 +1,4 @@
-package fitnesse.responders.search;
+package fitnesse.responders.templateUtilities;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,14 +7,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
+import fitnesse.components.Traverser;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-public class ResultDirectiveTest {
+public class TraverseDirectiveTest {
 
   private WikiPage root;
   private FitNesseContext context;
@@ -23,7 +24,7 @@ public class ResultDirectiveTest {
   public void setUp() {
     root = InMemoryPage.makeRoot("root");
     context = FitNesseUtil.makeTestContext(root);
-    context.pageFactory.getVelocityEngine().loadDirective(ResultDirective.class.getName());
+    context.pageFactory.getVelocityEngine().loadDirective(TraverseDirective.class.getName());
   }
   
   @Test
@@ -31,27 +32,22 @@ public class ResultDirectiveTest {
     
     VelocityContext velocityContext = new VelocityContext();
     
-    velocityContext.put("resultResponder", new MockResultResponder());
+    velocityContext.put("resultResponder", new MockTraverser());
     
     String tmpl = context.pageFactory.render(velocityContext, "searchResults.vm");
     
     assertTrue(tmpl.contains("<a href=\"PageOne\">PageOne</a>"));
   }
 
-  public static class MockResultResponder extends ResultResponder {
+  public static class MockTraverser implements Traverser {
 
     @Override
-    protected String getTitle() {
-      return "mock-title";
-    }
-
-    @Override
-    protected void startSearching(SearchObserver observer) {
+    public void traverse(TraversalListener observer) {
       WikiPage root = InMemoryPage.makeRoot("root");
       PageCrawler crawler = root.getPageCrawler();
-      observer.hit(crawler.addPage(root, PathParser.parse("PageOne"), "PageOne"));
-      observer.hit(crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
-      observer.hit(crawler.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));
+      observer.processPage(crawler.addPage(root, PathParser.parse("PageOne"), "PageOne"));
+      observer.processPage(crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
+      observer.processPage(crawler.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));
     }
   }
 }
