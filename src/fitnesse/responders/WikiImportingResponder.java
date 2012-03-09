@@ -13,6 +13,8 @@ import java.util.List;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
+import fitnesse.components.TraversalListener;
+import fitnesse.components.Traverser;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.TagGroup;
@@ -26,13 +28,14 @@ import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient {
+public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient, Traverser {
   private int alternation = 0;
   private boolean isUpdate;
   private boolean isNonRoot;
   public PageData data;
 
   private WikiImporter importer = new WikiImporter();
+  private TraversalListener traversalListener;
 
   public void setImporter(WikiImporter importer) {
     this.importer = importer;
@@ -40,18 +43,24 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 
   protected void doSending() throws Exception {
     data = page.getData();
-    HtmlPage html = makeHtml();
-    response.add(html.preDivision);
 
+    initializeImporter();
+    HtmlPage htmlPage = makeHtml();
+
+    htmlPage.render(response.getWriter());
+    
+    response.closeAll();
+  }
+  
+  @Override
+  public void traverse(TraversalListener traversalListener) {
+    this.traversalListener = traversalListener;
     try {
-      initializeImporter();
-      addHeadContent();
-      if (isNonRoot)
+      if (isNonRoot) {
         importer.importRemotePageContent(page);
-
+      }
+      
       importer.importWiki(page);
-
-      addTailContent();
 
       if (!isUpdate) {
         WikiImportProperty importProperty = new WikiImportProperty(importer.remoteUrl());
@@ -62,20 +71,18 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
       }
     }
     catch (MalformedURLException e) {
-      writeErrorMessage(e);
+      traversalListener.process(new ImportError("ERROR", e.getMessage(), e));
     }
     catch (FileNotFoundException e) {
-      writeErrorMessage("The remote resource, " + importer.remoteUrl() + ", was not found.");
+      traversalListener.process(new ImportError("ERROR", "The remote resource, " + importer.remoteUrl() + ", was not found."));
     }
     catch (WikiImporter.AuthenticationRequiredException e) {
-      writeAuthenticationForm(e.getMessage());
+      traversalListener.process(new ImportError("AUTH", e.getMessage()));
     }
     catch (Exception e) {
-      writeErrorMessage(e);
+      traversalListener.process(new ImportError("ERROR", e.getMessage(), e));
     }
 
-    response.add(html.postDivision);
-    response.closeAll();
   }
 
   public void initializeImporter() throws Exception {
@@ -106,116 +113,6 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     return remoteWikiUrl;
   }
 
-  private void writeErrorMessage(String message) throws Exception {
-    HtmlTag alert = HtmlUtil.makeDivTag("centered");
-    alert.add(new HtmlTag("h2", "Import Failure"));
-    alert.add(message);
-    response.add(alert.html());
-  }
-
-  private void writeErrorMessage(Exception e) throws Exception {
-    writeErrorMessage(e.getMessage());
-    HtmlTag pre = new HtmlTag("pre");
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    PrintStream printStream = new PrintStream(output);
-    e.printStackTrace(printStream);
-    printStream.flush();
-    pre.add(new String(output.toByteArray()));
-    response.add(pre.html());
-  }
-
-  private void addHeadContent() throws Exception {
-    TagGroup head = new TagGroup();
-    if (isUpdate)
-      head.add("Updating imported wiki.");
-    else
-      head.add("Importing wiki.");
-    head.add(" This may take a few moments.");
-    head.add(HtmlUtil.BR);
-    head.add(HtmlUtil.BR);
-    head.add("Destination wiki: ");
-    String pageName = PathParser.render(path);
-    System.out.println("PageName: " + pageName);
-    head.add(HtmlUtil.makeLink(pageName, pageName));
-
-    head.add(HtmlUtil.BR);
-    head.add("Source wiki: ");
-    String remoteWikiUrl = importer.remoteUrl();
-    head.add(HtmlUtil.makeLink(remoteWikiUrl, remoteWikiUrl));
-
-    head.add(HtmlUtil.BR);
-    head.add(HtmlUtil.BR);
-    head.add("Imported pages:");
-    head.add(HtmlUtil.HR);
-    response.add(head.html());
-  }
-
-  private void addTailContent() throws Exception {
-    TagGroup tail = makeTailHtml(importer);
-    response.add(tail.html());
-  }
-
-  public TagGroup makeTailHtml(WikiImporter importer) throws Exception {
-    TagGroup tail = new TagGroup();
-    tail.add("<a name=\"end\"><hr></a>");
-    tail.add(HtmlUtil.makeBold("Import complete. "));
-
-    addUnmodifiedCount(importer, tail);
-    tail.add(HtmlUtil.BR);
-    addImportedPageCount(importer, tail);
-    addOrphanedPageSection(importer, tail);
-    addAutoUpdateMessage(importer, tail);
-
-    return tail;
-  }
-
-  private void addAutoUpdateMessage(WikiImporter importer, TagGroup tail) {
-    tail.add(HtmlUtil.BR);
-    String message = "Automatic Update turned " + (importer.getAutoUpdateSetting() ? "ON" : "OFF");
-    tail.add(message);
-  }
-
-  private void addUnmodifiedCount(WikiImporter importer, TagGroup tail) {
-    if (importer.getUnmodifiedCount() != 0) {
-      tail.add(HtmlUtil.BR);
-      if (importer.getUnmodifiedCount() == 1)
-        tail.add("1 page was unmodified.");
-      else
-        tail.add(importer.getUnmodifiedCount() + " pages were unmodified.");
-    }
-  }
-
-  private void addImportedPageCount(WikiImporter importer, TagGroup tail) {
-    if (importer.getImportCount() == 1)
-      tail.add("1 page was imported.");
-    else
-      tail.add(importer.getImportCount() + " pages were imported.");
-  }
-
-  private void addOrphanedPageSection(WikiImporter importer, TagGroup tail) {
-    List<WikiPagePath> orphans = importer.getOrphans();
-    if (orphans.size() > 0) {
-      tail.add(HtmlUtil.BR);
-      if (orphans.size() == 1)
-        tail.add("1 orphaned page was found and has been removed.");
-      else
-        tail.add(orphans.size() + " orphaned pages were found and have been removed.");
-      tail.add(" This may occur when a remote page is deleted, moved, or renamed.");
-      tail.add(HtmlUtil.BR);
-      tail.add(HtmlUtil.BR);
-      tail.add("Orphans:");
-      tail.add(HtmlUtil.HR);
-
-      for (Iterator<WikiPagePath> iterator = orphans.iterator(); iterator.hasNext();) {
-        WikiPagePath path = iterator.next();
-        HtmlTag row = alternatingRow();
-        row.add(PathParser.render(path));
-        tail.add(row);
-      }
-      tail.add(HtmlUtil.HR);
-    }
-  }
-
   private HtmlPage makeHtml() throws Exception {
     HtmlPage html = context.pageFactory.newPage();
     html = context.pageFactory.newPage();
@@ -225,31 +122,20 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     String localPathName = PathParser.render(path);
     html.setTitle(title + ": " + localPathName);
     html.setPageTitle(new PageTitle(title, path));
-    html.setMainTemplate("breakpoint.vm");
-    html.divide();
+    html.setMainTemplate("wikiImportingPage");
+    html.put("isUpdate", isUpdate);
+    String pageName = PathParser.render(path);
+    html.put("pageName", pageName);
+    String remoteWikiUrl = importer.remoteUrl();
+    html.put("remoteUrl", remoteWikiUrl);
+    html.put("importer", importer);
+    html.put("PathParser", PathParser.class);
+    html.put("importTraverser", this);
     return html;
   }
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
-  }
-
-  private void addRowToResponse(String status) {
-    HtmlTag tag = alternatingRow();
-    String relativePathName = PathParser.render(importer.getRelativePath());
-    String localPathName = PathParser.render(importer.getLocalPath());
-    tag.add(HtmlUtil.makeLink(localPathName, relativePathName));
-    tag.add(" " + status);
-    response.add(tag.html());
-  }
-
-  private HtmlTag alternatingRow() {
-    return HtmlUtil.makeDivTag("alternating_row_" + alternate());
-  }
-
-  private int alternate() {
-    alternation = alternation % 2 + 1;
-    return alternation;
   }
 
   public void setResponse(ChunkedResponse response) {
@@ -260,39 +146,46 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     return new SecureWriteOperation();
   }
 
-  private void writeAuthenticationForm(String resource) throws Exception {
-    HtmlTag html = HtmlUtil.makeDivTag("centered");
-    html.add(new HtmlTag("h3", "The wiki at " + resource + " requires authentication."));
-    html.add(HtmlUtil.BR);
-
-    HtmlTag form = new HtmlTag("form");
-    form.addAttribute("action", request.getResource());
-    form.addAttribute("method", "post");
-    form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
-    if (request.hasInput("remoteUrl"))
-      form.add(HtmlUtil.makeInputTag("hidden", "remoteUrl", (String) request.getInput("remoteUrl")));
-
-    form.add("remote username: ");
-    form.add(HtmlUtil.makeInputTag("text", "remoteUsername"));
-    form.add(HtmlUtil.BR);
-    form.add("remote password: ");
-    form.add(HtmlUtil.makeInputTag("password", "remotePassword"));
-    form.add(HtmlUtil.BR);
-    form.add(HtmlUtil.makeInputTag("submit", "submit", "Authenticate and Continue Import"));
-
-    html.add(form);
-    response.add(html.html());
-  }
-
+  // Callback from importer
   public void pageImported(WikiPage localPage) {
-    addRowToResponse("");
+    traversalListener.process(localPage);
   }
 
+  // Callback from importer
   public void pageImportError(WikiPage localPage, Exception e) {
-    addRowToResponse(e.toString());
+    traversalListener.process(new ImportError("PAGEERROR", e.getMessage(), e));
   }
 
   public WikiImporter getImporter() {
     return importer;
+  }
+
+  public static class ImportError {
+    private String message;
+    private String type;
+    private Exception exception;
+    
+    public ImportError(String type, String message) {
+      this(type, message, null);
+    }
+
+    public ImportError(String type, String message, Exception exception) {
+      super();
+      this.type = type;
+      this.message = message;
+      this.exception = exception;
+    }
+
+    public String getType() {
+      return type;
+    }
+    
+    public String getMessage() {
+      return message;
+    }
+    
+    public Exception getException() {
+      return exception;
+    }
   }
 }
