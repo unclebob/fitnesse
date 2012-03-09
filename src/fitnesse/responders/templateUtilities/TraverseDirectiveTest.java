@@ -45,9 +45,9 @@ public class TraverseDirectiveTest {
     public void traverse(TraversalListener observer) {
       WikiPage root = InMemoryPage.makeRoot("root");
       PageCrawler crawler = root.getPageCrawler();
-      observer.processPage(crawler.addPage(root, PathParser.parse("PageOne"), "PageOne"));
-      observer.processPage(crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
-      observer.processPage(crawler.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));
+      observer.process(crawler.addPage(root, PathParser.parse("PageOne"), "PageOne"));
+      observer.process(crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne"));
+      observer.process(crawler.addPage(root, PathParser.parse("ChildPage"), ".PageOne"));
     }
   }
 }

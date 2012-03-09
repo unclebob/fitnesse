@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-public class ContentReplacingSearchObserver implements TraversalListener {
+public class ContentReplacingSearchObserver implements TraversalListener<WikiPage> {
 
   private Pattern searchPattern;
 
@@ -16,7 +16,7 @@ public class ContentReplacingSearchObserver implements TraversalListener {
     this.replacement = replacement;
   }
 
-  public void processPage(WikiPage page) {
+  public void process(WikiPage page) {
     PageData pageData = page.getData();
     String replacedContent = searchPattern.matcher(pageData.getContent()).replaceAll(replacement);
 

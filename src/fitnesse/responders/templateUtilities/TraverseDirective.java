@@ -20,7 +20,7 @@ import fitnesse.components.Traverser;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
-public class TraverseDirective extends Directive implements TraversalListener {
+public class TraverseDirective extends Directive implements TraversalListener<Object> {
 
     private Log log;
     private InternalContextAdapter context;
@@ -28,10 +28,12 @@ public class TraverseDirective extends Directive implements TraversalListener {
     private Writer writer;
     private Traverser traverser;
 
+    @Override
     public String getName() {
         return "traverse";
     }
 
+    @Override
     public int getType() {
         return BLOCK;
     }
@@ -55,34 +57,8 @@ public class TraverseDirective extends Directive implements TraversalListener {
       return true;
     }
 
-    //does actual truncating (taken directly from DisplayTools)
-    public String truncate(String truncateMe, int maxLength, String suffix,
-            boolean truncateAtWord) {
-        if (truncateMe == null || maxLength <= 0) {
-            return null;
-        }
-
-        if (truncateMe.length() <= maxLength) {
-            return truncateMe;
-        }
-        if (suffix == null || maxLength - suffix.length() <= 0) {
-            // either no need or no room for suffix
-            return truncateMe.substring(0, maxLength);
-        }
-        if (truncateAtWord) {
-            // find the latest space within maxLength
-            int lastSpace = truncateMe.substring(0, maxLength - suffix.length() + 1).lastIndexOf(" ");
-            if (lastSpace > suffix.length()) {
-                return truncateMe.substring(0, lastSpace) + suffix;
-            }
-        }
-        // truncate to exact character and append suffix
-        return truncateMe.substring(0, maxLength - suffix.length()) + suffix;
-
-    }
-
     @Override
-    public void processPage(WikiPage page) {
+    public void process(Object page) {
 
       context.put("result", page);
       try {

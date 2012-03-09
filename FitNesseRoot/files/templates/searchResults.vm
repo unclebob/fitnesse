@@ -19,7 +19,7 @@
  <tbody> 
 
  #set( $hits = 0 )
- #resultDirective( $resultResponder )
+ #traverse( $resultResponder )
   <tr>
    <td>
    #if($result.getData().hasAttribute("Suite"))

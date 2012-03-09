@@ -11,7 +11,7 @@ import org.htmlparser.util.ParserException;
 
 import java.util.LinkedList;
 
-public class SuiteSpecificationRunner implements TraversalListener {
+public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   public String titleRegEx;
   public String contentRegEx;
   public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
@@ -115,7 +115,7 @@ public class SuiteSpecificationRunner implements TraversalListener {
   }
 
 
-  public void processPage(WikiPage page) {
+  public void process(WikiPage page) {
     for (WikiPage hit : testPageList) {
       if (hit == page)
         return;

@@ -5,7 +5,7 @@ import fitnesse.wiki.WikiPage;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class WikiPageFinder implements TraversalListener, PageFinder {
+public abstract class WikiPageFinder implements TraversalListener<WikiPage>, PageFinder {
 
   protected List<WikiPage> hits;
   protected TraversalListener observer;
@@ -16,9 +16,9 @@ public abstract class WikiPageFinder implements TraversalListener, PageFinder {
 
   protected abstract boolean pageMatches(WikiPage page);
 
-  public void processPage(WikiPage page) {
+  public void process(WikiPage page) {
     if (pageMatches(page)) {
-      observer.processPage(page);
+      observer.process(page);
     }
   }
 

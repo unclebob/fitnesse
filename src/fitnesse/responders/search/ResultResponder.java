@@ -49,8 +49,6 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     htmlPage.put("resultResponder", this);
     
-    // TODO: use Directive -- htmlPage.put("searchIterator", new SearchIterator(this));
-
     htmlPage.render(response.getWriter());
     
     response.closeAll();

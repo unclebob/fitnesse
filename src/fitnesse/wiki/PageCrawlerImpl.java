@@ -140,7 +140,7 @@ public class PageCrawlerImpl implements PageCrawler {
     if (context.getClass() == SymbolicPage.class)
       return;
     //TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.
-    listener.processPage(context);
+    listener.process(context);
     List<?> children = context.getChildren();
     for (Iterator<?> iterator = children.iterator(); iterator.hasNext();) {
       WikiPage wikiPage = (WikiPage) iterator.next();

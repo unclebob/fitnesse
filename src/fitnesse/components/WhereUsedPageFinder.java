@@ -7,7 +7,7 @@ import fitnesse.wikitext.parser.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhereUsedPageFinder implements TraversalListener, PageFinder, SymbolTreeWalker {
+public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
   private WikiPage subjectPage;
   private TraversalListener observer;
   private WikiPage currentPage;
@@ -22,7 +22,7 @@ public class WhereUsedPageFinder implements TraversalListener, PageFinder, Symbo
   public void hit(WikiPage referencingPage) {
   }
 
-  public void processPage(WikiPage currentPage) {
+  public void process(WikiPage currentPage) {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();
       Symbol syntaxTree = Parser.make(
@@ -46,7 +46,7 @@ public class WhereUsedPageFinder implements TraversalListener, PageFinder, Symbo
             WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
             if (referencedPage != null && referencedPage.equals(subjectPage)) {
               hits.add(currentPage);
-              observer.processPage(currentPage);
+              observer.process(currentPage);
             }
         }
         catch (Exception e) {

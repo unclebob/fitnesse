@@ -1,7 +1,7 @@
 package fitnesse.components;
 
-public interface Traverser {
+public interface Traverser<T> {
 
-  void traverse(TraversalListener traversalListener);
+  void traverse(TraversalListener<T> traversalListener);
 
 }

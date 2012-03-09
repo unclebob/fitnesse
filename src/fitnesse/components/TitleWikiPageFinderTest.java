@@ -18,7 +18,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 
-public class TitleWikiPageFinderTest implements TraversalListener {
+public class TitleWikiPageFinderTest implements TraversalListener<WikiPage> {
   WikiPage root;
   private WikiPage pageTwo;
 
@@ -26,7 +26,7 @@ public class TitleWikiPageFinderTest implements TraversalListener {
   private PageCrawler crawler;
   private TitleWikiPageFinder searcher;
 
-  public void processPage(WikiPage page) {
+  public void process(WikiPage page) {
     hits.add(page);
   }
 

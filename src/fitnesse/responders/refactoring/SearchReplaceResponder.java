@@ -7,7 +7,7 @@ import fitnesse.components.TraversalListener;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
-public class SearchReplaceResponder extends ResultResponder implements TraversalListener {
+public class SearchReplaceResponder extends ResultResponder implements TraversalListener<WikiPage> {
 
   private PageFinder finder;
   private TraversalListener contentReplaceObserver;
@@ -30,9 +30,9 @@ public class SearchReplaceResponder extends ResultResponder implements Traversal
     return (String) request.getInput("searchString");
   }
 
-  public void processPage(WikiPage page) {
-    contentReplaceObserver.processPage(page);
-    webOutputObserver.processPage(page);
+  public void process(WikiPage page) {
+    contentReplaceObserver.process(page);
+    webOutputObserver.process(page);
   }
 
   @Override
