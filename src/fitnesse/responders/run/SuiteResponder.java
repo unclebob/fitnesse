@@ -16,14 +16,14 @@ public class SuiteResponder extends TestResponder {
     includeHtml |= request.hasInput("includehtml");
   }
 
-  void addXmlFormatter() throws Exception {
+  void addXmlFormatter() {
     CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
     if (includeHtml)
       xmlFormatter.includeHtml();
     formatters.add(xmlFormatter);
   }
 
-  void addHtmlFormatter() throws Exception {
+  void addHtmlFormatter() {
     BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.pageFactory) {
       protected void writeData(String output) {
         addToResponse(output);
@@ -32,7 +32,7 @@ public class SuiteResponder extends TestResponder {
     formatters.add(formatter);
   }
 
-  protected void addTestHistoryFormatter() throws Exception {
+  protected void addTestHistoryFormatter() {
     HistoryWriterFactory source = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, source));
     formatters.add(new SuiteHistoryFormatter(context, page, source));

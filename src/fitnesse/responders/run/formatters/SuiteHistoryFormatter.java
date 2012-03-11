@@ -29,7 +29,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     super.newTestStarted(test, timeMeasurement);
   }
 
-  public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) throws Exception {
+  public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) {
     super(context, page);
     writerFactory = source;
   }

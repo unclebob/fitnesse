@@ -40,11 +40,16 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     checkArguments();
     data = page.getData();
 
-    createFormatterAndWriteHead();
+    createFormatters();
+    
+    formatters.writeHead(getTitle());
+
     sendPreTestNotification();
+    
     performExecution();
 
     int exitCode = formatters.getErrorCount();
+    
     closeHtmlResponse(exitCode);
   }
 
@@ -53,7 +58,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     remoteDebug |= request.hasInput("remote_debug");
   }
 
-  protected void createFormatterAndWriteHead() throws Exception {
+  protected void createFormatters() {
     if (response.isXmlFormat())
       addXmlFormatter();
     else if (response.isTextFormat())
@@ -65,14 +70,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     if (!request.hasInput("nohistory"))
       addTestHistoryFormatter();
 	addTestInProgressFormatter();
-    formatters.writeHead(getTitle());
   }
 
   String getTitle() {
     return "Test Results";
   }
 
-  void addXmlFormatter() throws Exception {
+  void addXmlFormatter() {
     XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
         return makeResponseWriter();
@@ -84,7 +88,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   void addTextFormatter() {
     formatters.add(new TestTextFormatter(response));
   }
-  void addJavaFormatter() throws Exception{
+  void addJavaFormatter() {
     formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
   }
   protected Writer makeResponseWriter() {
@@ -107,7 +111,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   }
 
 
-  void addHtmlFormatter() throws Exception {
+  void addHtmlFormatter() {
     BaseFormatter formatter = new TestHtmlFormatter(context, page, context.pageFactory) {
       @Override
       protected void writeData(String output) {
@@ -117,12 +121,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     formatters.add(formatter);
   }
 
-  protected void addTestHistoryFormatter() throws Exception {
+  protected void addTestHistoryFormatter() {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, writerFactory));
   }
   
-  protected void addTestInProgressFormatter() throws Exception {
+  protected void addTestInProgressFormatter() {
     formatters.add(new PageInProgressFormatter(page));
   }
 

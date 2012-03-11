@@ -27,7 +27,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
   public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
-                           final PageFactory pageFactory) throws Exception {
+                           final PageFactory pageFactory) {
     super(context, page);
     this.pageFactory = pageFactory;
   }
@@ -43,16 +43,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   @Override
   public void writeHead(String pageType) throws IOException {
     htmlPage = buildHtml(pageType);
-    htmlPage.setMainTemplate("breakpoint.vm");
+    htmlPage.setMainTemplate("testPage");
     htmlPage.divide();
-    writeData(htmlPage.preDivision + makeSummaryPlaceHolder().html());
-  }
-
-  private HtmlTag makeSummaryPlaceHolder() {
-    HtmlTag testSummaryDiv = new HtmlTag("div", "Running Tests ...");
-    testSummaryDiv.addAttribute("id", "test-summary");
-
-    return testSummaryDiv;
+    writeData(htmlPage.preDivision);
   }
 
   protected void updateSummaryDiv(String html) {

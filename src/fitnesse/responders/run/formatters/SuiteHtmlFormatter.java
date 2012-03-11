@@ -31,7 +31,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private int totalTests = 1;
 
 
-  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, PageFactory pageFactory) throws Exception {
+  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, PageFactory pageFactory) {
     super(context, page, pageFactory);
   }
 
