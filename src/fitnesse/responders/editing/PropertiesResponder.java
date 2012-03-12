@@ -113,19 +113,6 @@ public class PropertiesResponder implements SecureResponder {
     return html.html();
   }
 
-  private HtmlTag makeAttributeCheckbox(String attribute, String displayString, PageData pageData) {
-    HtmlTag checkbox = makeCheckbox(attribute, displayString);
-    if (pageData.hasAttribute(attribute))
-      checkbox.addAttribute("checked", "true");
-    return checkbox;
-  }
-
-  private HtmlTag makeCheckbox(String attribute, String displayString) {
-    HtmlTag checkbox = HtmlUtil.makeInputTag("checkbox", attribute);
-    checkbox.tail = " - " + displayString;
-    return checkbox;
-  }
-
   private void makeLastModifiedTag() {
     String username = pageData.getAttribute(LAST_MODIFYING_USER);
     if (username == null || "".equals(username))

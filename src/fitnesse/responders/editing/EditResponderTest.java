@@ -78,8 +78,7 @@ public class EditResponderTest extends RegexTestCase {
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
-    HtmlTag redirectInputTag = HtmlUtil.makeInputTag("hidden", "redirect", "http://fitnesse.org:8080/SomePage?boom");
-    assertSubString(redirectInputTag.html(), body);
+    assertSubString("name=\"redirect\" value=\"http://fitnesse.org:8080/SomePage?boom\"", body);
   }
 
   public void testPasteFromExcelExists() throws Exception {

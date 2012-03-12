@@ -21,12 +21,6 @@ public class HtmlUtilTest extends RegexTestCase {
     context = FitNesseUtil.makeTestContext(root);
   }
 
-  public void testMakeFormTag() {
-    HtmlTag formTag = HtmlUtil.makeFormTag("method", "action");
-    assertSubString("method", formTag.getAttribute("method"));
-    assertSubString("action", formTag.getAttribute("action"));
-  }
-
   public void testMakeDivTag() {
     String expected = "<div class=\"myClass\"></div>" + HtmlElement.endl;
     assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());

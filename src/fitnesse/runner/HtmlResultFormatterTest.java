@@ -20,7 +20,7 @@ public class HtmlResultFormatterTest extends RegexTestCase {
 
   public void testIsValidHtml() throws Exception {
     String html = getHtml().trim();
-    assertTrue(html.startsWith("<!DOCTYPE HTML"));
+    assertTrue(html.startsWith("<!DOCTYPE html>"));
     assertTrue(html.endsWith("</html>"));
 
     assertSubString("<base href=\"http://somehost.com:8080/\"", html);

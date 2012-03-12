@@ -34,57 +34,11 @@ public class HtmlUtil {
     return bold;
   }
 
-  public static HtmlTag makeItalic(String content) {
-    HtmlTag italic = new HtmlTag("i");
-    italic.add(content);
-    return italic;
-  }
-
   public static HtmlTag makeSpanTag(String spanClass, String content) {
     HtmlTag span = new HtmlTag("span");
     span.addAttribute("class", spanClass);
     span.add(content);
     return span;
-  }
-
-  public static HtmlTag makeFormTag(String method, String action) {
-    return makeFormTag(method, action, null);
-  }
-
-  public static HtmlTag makeFormTag(String method, String action, String name) {
-    HtmlTag formTag = new HtmlTag("form");
-    formTag.addAttribute("method", method);
-    formTag.addAttribute("action", action);
-    if (name != null)
-      formTag.addAttribute("name", name);
-    return formTag;
-  }
-
-  public static HtmlTag makeAnchorTag(String name) {
-    HtmlTag anchorTag = new HtmlTag("a", " ");
-    anchorTag.addAttribute("name", name);
-    return anchorTag;
-  }
-
-  public static HtmlTag makeInputTag(String type, String name, String value) {
-    HtmlTag input = makeInputTag(type, name);
-    input.addAttribute("value", value);
-    return input;
-  }
-
-  public static HtmlTag makeInputTag(String type, String name) {
-    HtmlTag input = new HtmlTag("input");
-    input.addAttribute("type", type);
-    input.addAttribute("name", name);
-    return input;
-  }
-
-  public static HtmlTag makeOptionTag(String value, String text) {
-    HtmlTag option = new HtmlTag("option");
-    option.addAttribute("value", value);
-    option.add(text);
-
-    return option;
   }
 
   public static HtmlTag makeLink(String href, String text) {
