@@ -8,6 +8,8 @@ import static util.RegexTestCase.assertSubString;
 import org.junit.Before;
 import org.junit.Test;
 
+import fitnesse.FitNesseContext;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -18,19 +20,21 @@ public class CompositeExecutionLogTest {
   private MockCommandRunner runner;
   private CompositeExecutionLog log;
   private WikiPage root;
+  private FitNesseContext context;
 
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     testPage = root.addChildPage("TestPage");
+    context = FitNesseUtil.makeTestContext(root);
     runner = new MockCommandRunner("some command", 123);
     log = new CompositeExecutionLog(testPage);
   }
 
   @Test
   public void publish() throws Exception {
-    log.add("testSystem1", new ExecutionLog(testPage, runner));
-    log.add("testSystem2", new ExecutionLog(testPage, runner));
+    log.add("testSystem1", new ExecutionLog(testPage, runner, context.pageFactory));
+    log.add("testSystem2", new ExecutionLog(testPage, runner, context.pageFactory));
     log.publish();
     WikiPage errorLogPage = root.getChildPage(ErrorLogName);
     assertNotNull(errorLogPage);

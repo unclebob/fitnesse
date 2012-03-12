@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
@@ -168,12 +169,12 @@ public abstract class TestSystem implements TestSystemListener {
 
   public abstract String runTestsAndGenerateHtml(PageData pageData) throws IOException, InterruptedException;
 
-  public static Descriptor getDescriptor(PageData data, boolean isRemoteDebug) {
+  public static Descriptor getDescriptor(PageData data, PageFactory pageFactory, boolean isRemoteDebug) {
     String testSystemName = getTestSystem(data);
     String testRunner = getTestRunner(data, isRemoteDebug);
     String commandPattern = getCommandPattern(data, isRemoteDebug);
     String pathSeparator = getPathSeparator(data);
-    return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator);
+    return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator, pageFactory);
   }
 
   protected Map<String, String> createClasspathEnvironment(String classPath) {
@@ -186,16 +187,18 @@ public abstract class TestSystem implements TestSystemListener {
   }
 
   public static class Descriptor {
-    public String testSystemName;
-    public String testRunner;
-    public String commandPattern;
-    public String pathSeparator;
+    public final String testSystemName;
+    public final String testRunner;
+    public final String commandPattern;
+    public final String pathSeparator;
+    public final PageFactory pageFactory;
 
-    public Descriptor(String testSystemName, String testRunner, String commandPattern, String pathSeparator) {
+    Descriptor(String testSystemName, String testRunner, String commandPattern, String pathSeparator, PageFactory pageFactory) {
       this.testSystemName = testSystemName;
       this.testRunner = testRunner;
       this.commandPattern = commandPattern;
       this.pathSeparator = pathSeparator;
+      this.pageFactory = pageFactory;
     }
 
     public int hashCode() {

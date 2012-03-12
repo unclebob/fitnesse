@@ -64,7 +64,8 @@ public class SlimTestSystemTest {
     request = new MockRequest();
     responder = getSlimResponder();
     responder.setFastTest(true);
-    testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
+    // Enforce the test runner here, to make sure we're talking to the right system
+    testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!define TEST_RUNNER {fitnesse.slim.SlimService}\n!path classes");
     SlimTestSystem.clearSlimPortOffset();
   }
 
