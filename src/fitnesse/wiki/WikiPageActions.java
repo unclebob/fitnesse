@@ -7,7 +7,6 @@ public class WikiPageActions {
   private WikiPage page;
   private boolean addChild; // normal wiki page
   private boolean pageHistory; // test results
-  private boolean rollback; // versions
 
   public WikiPageActions(WikiPage page) {
     super();
@@ -84,28 +83,14 @@ public class WikiPageActions {
     return this;
   }
 
-  public WikiPageActions withRollback() {
-    this.rollback = true;
-    return this;
+  public boolean isImported() {
+    PageData data = getData();
+    return data != null && WikiImportProperty.isImported(data);
   }
 
-  public boolean isWithRollback() {
-    return rollback;
-  }
-  
-  public boolean isWithEditLocally() {
-    PageData data = getData();
-    return !rollback && data != null && WikiImportProperty.isImported(data);
-  }
-
-  public boolean isWithEditRemotely() {
-    PageData data = getData();
-    return !rollback && data != null && WikiImportProperty.isImported(data);
-  }
-  
   private boolean hasAction(String action) {
     PageData data = getData();
-    return !rollback && data != null && data.hasAttribute(action);
+    return data != null && data.hasAttribute(action);
   }
 
   private PageData getData() {

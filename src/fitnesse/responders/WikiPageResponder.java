@@ -76,7 +76,8 @@ public class WikiPageResponder implements SecureResponder {
     html.setTitle(fullPathName);
     html.setPageTitle(new PageTitle(fullPath).notLinked());
     // TODO move this to menu
-    html.actions = new WikiPageActions(page).withAddChild();
+    html.setNavTemplate("wikiNav.vm");
+    html.put("actions", new WikiPageActions(page).withAddChild());
     SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
     html.setMainTemplate("wikiPage");

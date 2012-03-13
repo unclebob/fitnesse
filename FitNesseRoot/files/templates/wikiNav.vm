@@ -1,4 +1,6 @@
-#if( $!actions )
+#set( $localPath = $actions.localPageName )
+#set( $localOrRemotePath = $actions.localOrRemotePageName )
+#set( $openInNewWindow = $actions.newWindowIfRemote )
 <ul>
  #if( $actions.suitePage )
  <li><a href="$localPath?suite" accesskey="">Suite</a></li>
@@ -9,14 +11,10 @@
  #if( $actions.withEdit )
  <li><a href="$localOrRemotePath?edit" accesskey="e">Edit</a></li>
  #end
- ## versionResponder:
- #if( $actions.withRollback )
-  <li ><a href="$localPath?responder=rollback&version=$rollbackVersion">Rollback</a></li>
- #end
- #if( $actions.withEditLocally )
+ #if( $actions.withEdit && $actions.imported )
  <li><a href="$localPath?edit" accesskey="e">Edit Locally</a></li>
  #end
- #if( $actions.withEditRemotely )
+ #if( $actions.withEdit && $actions.imported )
  <li><a href="$sourceUrl?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView">Edit Remotely</a></li>
  #end
  <li id="tools"><a href="#" class="label">Tools</a>
@@ -73,4 +71,3 @@
   #end
   </ul>
 </ul>
-#end

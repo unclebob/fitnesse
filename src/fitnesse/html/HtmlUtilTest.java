@@ -63,7 +63,8 @@ public class HtmlUtilTest extends RegexTestCase {
   private String getActionsHtml(String pageName) {
     root.addChildPage(pageName);
     HtmlPage htmlPage = context.pageFactory.newPage();
-    htmlPage.actions = new WikiPageActions(root.getChildPage(pageName));
+    htmlPage.setNavTemplate("wikiNav.vm");
+    htmlPage.put("actions", new WikiPageActions(root.getChildPage(pageName)));
     return htmlPage.html();
   }
 

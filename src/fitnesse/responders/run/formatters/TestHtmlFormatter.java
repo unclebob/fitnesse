@@ -125,7 +125,8 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     html.setTitle(pageType + ": " + fullPathName);
     html.setPageTitle(new PageTitle(pageType, fullPath));
     PageData data = getPage().getData();
-    html.actions = new WikiPageActions(getPage()).withPageHistory();
+    html.setNavTemplate("wikiNav.vm");
+    html.put("actions", new WikiPageActions(getPage()).withPageHistory());
     WikiImportProperty.handleImportProperties(html, getPage(), data);
     return html;
   }

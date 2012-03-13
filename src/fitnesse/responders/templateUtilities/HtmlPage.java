@@ -15,7 +15,6 @@ import fitnesse.wiki.WikiPageActions;
 public class HtmlPage {
   public static final String BreakPoint = "<!--BREAKPOINT-->";
   private static final String HEADER_TEMPLATE = "pageTitle.vm";
-  private static final String NAV_TEMPLATE = "sidebar.vm";
   private static final String TITLE = "FitNesse";
 
   private VelocityEngine velocityEngine;
@@ -23,8 +22,6 @@ public class HtmlPage {
   
   private String templateFileName;
   
-  public WikiPageActions actions;
-
   public String preDivision;
   public String postDivision;
 
@@ -37,14 +34,7 @@ public class HtmlPage {
     velocityContext =  new VelocityContext();
 
     setHeaderTemplate(HEADER_TEMPLATE);
-    setNavTemplate(NAV_TEMPLATE);
     setTitle("FitNesse");
-  }
-
-  protected VelocityContext updateVelocityContext() {
-    makeSidebarSection();
-
-    return velocityContext;
   }
 
   public void setHeaderTemplate(String headerTemplate) {
@@ -88,7 +78,6 @@ public class HtmlPage {
   }
 
   public void render(Writer writer) {
-    VelocityContext context = updateVelocityContext();
     Template template = velocityEngine.getTemplate(templateFileName);
     template.merge(velocityContext, writer);
   }
@@ -112,14 +101,4 @@ public class HtmlPage {
   public void setBodyClass(String bodyClass) {
     velocityContext.put("bodyClass", bodyClass);
   }
-  
-  public void makeSidebarSection() {
-    velocityContext.put("actions", actions);
-    if (actions != null) {
-      velocityContext.put("localPath", actions.getLocalPageName());
-      velocityContext.put("localOrRemotePath", actions.getLocalOrRemotePageName());
-      velocityContext.put("openInNewWindow", actions.isNewWindowIfRemote());
-    }
-  }
-
 }

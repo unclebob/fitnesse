@@ -48,8 +48,9 @@ public class VersionResponder implements SecureResponder {
     html.setTitle("Version " + version + ": " + name);
     html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource)));
     // TODO: subclass actions for specific rollback behaviour.
-    html.actions = new WikiPageActions(page).withRollback();
+    html.setNavTemplate("versionNav.vm");
     html.put("rollbackVersion", version);
+    html.put("localPath", name);
     html.setMainTemplate("wikiPage");
     html.put("content", new VersionRenderer(pageData));
     return html;
