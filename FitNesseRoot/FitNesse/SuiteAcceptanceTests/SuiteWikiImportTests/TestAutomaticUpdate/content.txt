@@ -17,7 +17,7 @@ This !-ImportingPage-! will now import the !-ImportingRoot-! page created above.
 '''Auto Update is turned one'''
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&autoUpdate=0&remoteUrl=http://localhost:${INTERNAL_PORT}/ImportedRoot|true|
+|ImportingPage?responder=import&autoUpdate=0&remoteUrl=http://localhost:${INTERNAL_PORT}/ImportedRoot&nochunk=true|true|
 
 We see all 3 pages imported.
 !|Response Examiner|

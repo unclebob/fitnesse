@@ -16,7 +16,7 @@ Create an importing page.
 This !-ImportingPage-! will now import the !-ImportingRoot-! page created above.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:${INTERNAL_PORT}/ImportedRoot|true|
+|ImportingPage?responder=import&remoteUrl=http://localhost:${INTERNAL_PORT}/ImportedRoot&nochunk=true|true|
 
 We see all 3 pages imported.
 !|Response Examiner|
@@ -31,7 +31,7 @@ Now delete one of the pages from the imported root.
 Importing again will shows only that that orphaned pages have been removed.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import|true|
+|ImportingPage?responder=import&nochunk=true|true|
 
 !|Response Examiner|
 |type|pattern|matches?|contents?|
