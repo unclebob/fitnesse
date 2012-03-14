@@ -10,6 +10,10 @@ article .centered {
   text-decoration: line-through;
 }
 
+.italic {
+	font-style:italic;
+}
+
 .code {
   font-family: courier, 'Lucida Sans Typewriter', monospace;
   font-size: 16px;
@@ -21,6 +25,10 @@ article .centered {
 .meta {
   color: #BF8660;
   font-style: italic;
+}
+
+.note {
+	 font-size: 85%;
 }
 
 .included, .setup, .teardown, .collapse_rim {

@@ -1,12 +1,18 @@
 body {
+ font:normal 80% Verdana, Helvetica, Arial, sans-serif;
  padding: 0;
  margin: 0 auto;
- width: 50em;
+ width: 70em;
+}
+
+header, footer, article, section, aside, nav {
+    display:block;
 }
 
 table {
-    border: thin solid #777777;
-    border-collapse:collapse;
+ width:100%;
+ border: 1px solid #EEEEEE;
+ border-collapse:collapse;
 }
 
 td, th {
@@ -14,10 +20,13 @@ td, th {
     padding: 0.25em 0.5em;
 }
 
+article table tr:first-child {
+    font-weight: bold;
+}
+
 header {
  padding: 8px;
  height: 90px;
- border-bottom: 1px solid #984D00;
 }
 
 #art_niche {
@@ -45,37 +54,65 @@ header li {
 }
 
 header h1 {
+ font: bold 2em;
+ margin: 20px 0;
+ font-weight: normal;
+ letter-spacing: 0.08em;
  margin: 20px 0;
 }
 
+header a, header a:active, header a:visited {
+ color:#800000
+}
+
+header a:hover {
+ text-decoration:none;
+ color:#880000
+}
+
 nav {
- float:right;
+ font-size: 0.9em;
+ border-bottom: 1px solid #800000;
+}
+
+nav ul {
+ float: right;
+ margin-top: -2.5em;
 }
 
 nav ul li {
  display: block;
  float: left;
  list-style: none;
- margin-right: 0.5em;
+ text-align:center;
  z-index: 99;
 }
 
 nav a, nav a:active, nav a:visited {
+ color: #000000;
+ white-space:nowrap;
  text-decoration: none;
+ width: 5em;
+ height:1.5em;
  color: black;
+ margin-right: 0.5em; 
  padding: 0.5em 3em;
- background-color: #ddd;
+ background-color: #eeeeee;
  border-radius: 0.25em;
- border: 1pt solid black;
+ border: 1pt solid #aaaaaa;
+}
+
+nav a:hover, nav a:active  {
+ background-color: white;
 }
 
 nav ul ul {
- background: #ddd; /* Adding a background makes the dropdown work properly in IE7+. */
+ background: #eeeeee; /* Adding a background makes the dropdown work properly in IE7+. */
  position: absolute;
  display: none;
- border: 1pt solid black;
+ border: 1pt solid #aaaaaa;
  z-index: 999;
- width: 7.81em;
+ width: 10em;
  margin: 0.5em 0 0 0;
  padding: .25em;
  border-radius: 0.25em;
@@ -92,19 +129,26 @@ nav ul ul li {
  display: block;
  line-height: 1.5em;
  margin: 0;
+ text-align: left;
 }
 
 nav ul ul li.divider {
- border-top: solid black 2px;
+ border-top: 1px solid #999999;
 }
 
 nav ul ul li a, nav ul ul li a:active {
  display: block;
  border-radius: 0px;
- padding: 0 0 0 8px;
+ padding: 0.5em;
  height: 1.5em;
  border: none;
 }
+
+nav ul ul li a:hover {
+ background-color: white;
+ width:9em;
+}
+
 nav ul ul li a:active {
  background-color: #eee;
 }
@@ -114,10 +158,27 @@ nav li:hover ul {
 }
 
 article {
- clear: both;
  padding: 0.5em;
 }
 
+footer {
+  margin: 0;
+  padding: 0.5em; /* Use same color as border color for div.header. */
+  border-top: 1px solid #800000;
+  font-size: 80%;
+  text-align: center;
+}
+
+footer a, header a:active, header a:visited {
+	color:#800000;
+}
+
+footer a:hover {
+	text-decoration:none;
+	color:#880000;
+}
+
+/** Page content (article) styles **/
 h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
  display: none;
 }
@@ -132,12 +193,16 @@ fieldset {
 	margin: 2px;
 }
 
-.wikiPage footer {
-  margin: 0;
-  padding: 0.5em; /* Use same color as border color for div.header. */
-  border-top: 1px solid #984D00;
-  font-size: 80%;
-  text-align: center;
+article h1 {
+  font: bold 1.5em;
+}
+
+article a, header a:active, header a:visited {
+	color:#800000;
+}
+article a:hover {
+	text-decoration:none;
+	color:#880000;
 }
 
 .dirListing tbody tr:nth-child(odd) {
@@ -150,8 +215,9 @@ fieldset {
 
 /** Edit page **/
 .editPage label {
-	width: 5em;
+	width: 7em;
 	float: left;
+	clear: both;s
 }
 .editPage #pagename, .editPage #helptext {
 	width: 55em;
