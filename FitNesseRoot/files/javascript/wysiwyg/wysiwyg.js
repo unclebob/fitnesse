@@ -301,6 +301,7 @@ Wysiwyg.prototype.createEditable = function(d, textarea) {
 };
 
 Wysiwyg.prototype.createWysiwygToolbar = function(d) {
+    var divider = '<li class="divider"></li>';
     var html = [
         '<ul>',
         '<li class="wysiwyg-menu-style" title="Style">',
@@ -318,19 +319,24 @@ Wysiwyg.prototype.createWysiwygToolbar = function(d) {
         '<li title="Bold (Ctrl+B)"><a id="wt-strong" href="#"></a></li>',
         '<li title="Italic (Ctrl+I)"><a id="wt-em" href="#"></a></li>',
         '<li title="Strike through"><a id="wt-strike" href="#"></a></li>',
-        '<li title="Monospace"><a id="wt-monospace" href="#"></a></li>',
+        '<li title="Escape"><a id="wt-escape" href="#"></a></li>',
         '<li title="Remove format"><a id="wt-remove" href="#"></a></li>',
+        divider,
         '<li title="Link"><a id="wt-link" href="#"></a></li>',
         '<li title="Unlink"><a id="wt-unlink" href="#"></a></li>',
+        divider,
         '<li title="List"><a id="wt-ul" href="#"></a></li>',
-        '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
-        '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
+        //'<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
+        //'<li title="Indent"><a id="wt-indent" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '<li><a id="wt-tablemenu" href="#"></a></li>',
-        '<li title="Collapsable section"><a id="wt-collapsable" href="#">C</a></li>',
-        '<li title="Remove collapsable section"><a id="wt-remove-collapsable" href="#">X</a></li>',
+        divider,
+        '<li title="Collapsable section (default closed)"><a id="wt-collapsable-closed" href="#"></a></li>',
+        '<li title="Collapsable section (default open)"><a id="wt-collapsable-open" href="#"></a></li>',
+        '<li title="Collapsable section (hidden)"><a id="wt-collapsable-hidden" href="#"></a></li>',
+        '<li title="Remove collapsable section"><a id="wt-remove-collapsable" href="#"></a></li>',
+        divider,
         '<li title="Horizontal rule"><a id="wt-hr" href="#"></a></li>',
-        '<li title="Line break (Shift+Enter)"><a id="wt-br" href="#"></a></li>',
         '</ul>' ];
     var div = d.createElement("div");
     div.className = "wysiwyg-toolbar";
@@ -403,7 +409,7 @@ Wysiwyg.prototype.setupMenuEvents = function() {
         case "strike":      return [ self.execDecorate, "strikethrough" ];
         case "sub":         return [ self.execDecorate, "subscript" ];
         case "sup":         return [ self.execDecorate, "superscript" ];
-        case "monospace":   return [ self.execDecorate, "monospace" ];
+        case "escape":      return [ self.execDecorate, "escape" ];
         case "remove":      return [ self.execCommand, "removeformat" ];
         case "paragraph":   return [ self.formatParagraph ];
         case "heading1":    return [ self.formatHeaderBlock, "h1" ];
@@ -431,7 +437,9 @@ Wysiwyg.prototype.setupMenuEvents = function() {
         case "code":        return [ self.formatCodeBlock ];
         case "hr":          return [ self.insertHorizontalRule ];
         case "br":          return [ self.insertLineBreak ];
-        case "collapsable": return [ self.insertCollapsableSection ];
+        case "collapsable-closed": return [ self.insertCollapsableSection, "collapsed" ];
+        case "collapsable-open": return [ self.insertCollapsableSection ];
+        case "collapsable-hidden": return [ self.insertCollapsableSection, "hidden" ];
         case "remove-collapsable": return [ self.deleteCollapsableSection ];
         }
         return null;
@@ -492,7 +500,7 @@ Wysiwyg.prototype.execDecorate = function(name) {
     ancestor.end = getSelfOrAncestor(position.end, /^(?:a|tt)$/);
     this.expandSelectionToElement(ancestor);
 
-    if (name != "monospace") {
+    if (name != "escape") {
         this.execCommand(name);
     }
     else {
@@ -1249,7 +1257,7 @@ Wysiwyg.prototype.insertHorizontalRule = function() {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.insertCollapsableSection = function() {
+Wysiwyg.prototype.insertCollapsableSection = function(mode) {
     var self = this;
     var range = this.getSelectionRange();
     var html = this.getSelectionHTML();
@@ -1272,8 +1280,9 @@ Wysiwyg.prototype.insertCollapsableSection = function() {
     var end = tagsToFragment(range.endContainer);
 
     var id = this.generateDomId();
-
-    this.insertHTML(start[0] + "<div class='collapsable' id='" + id + "'>" + start[1] + (html ? html : "<p>edit me</p>") + end[0] + "</div>" + end[1]);
+    var classes = "";
+    if (mode) { classes = " " + mode; }
+    this.insertHTML(start[0] + "<div class='collapsable" + classes + "' id='" + id + "'>" + start[1] + (html ? html : "<p>edit me</p>") + end[0] + "</div>" + end[1]);
     var node = this.contentDocument.getElementById(id);
     if (node) {
         this.selectNode(node.firstChild);
