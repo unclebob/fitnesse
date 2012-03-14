@@ -22,16 +22,26 @@ header {
 
 #art_niche {
  float: left;
- padding: 0 16px;
+ margin-right: 1em;
+ background-image: url("../images/FitNesseLogo.png");
+ width: 90px;
+ height: 90px;
+}
+
+#art_niche span {
+	display: none;
 }
 
 header ul {
  list-style: none;
  margin: 0;
+ padding: 0;
+ float: left;
 }
 
 header li {
  display: inline-block;
+ margin-right: 1em;
 }
 
 header h1 {
@@ -59,10 +69,6 @@ nav a, nav a:active, nav a:visited {
  border: 1pt solid black;
 }
 
-h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
- display: none;
-}
-
 nav ul ul {
  background: #ddd; /* Adding a background makes the dropdown work properly in IE7+. */
  position: absolute;
@@ -88,6 +94,10 @@ nav ul ul li {
  margin: 0;
 }
 
+nav ul ul li.divider {
+ border-top: solid black 2px;
+}
+
 nav ul ul li a, nav ul ul li a:active {
  display: block;
  border-radius: 0px;
@@ -106,6 +116,10 @@ nav li:hover ul {
 article {
  clear: both;
  padding: 0.5em;
+}
+
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
+ display: none;
 }
 
 textarea {

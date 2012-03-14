@@ -1,4 +1,4 @@
-<a href="/FrontPage" id="art_niche"><img src="/files/images/FitNesseLogo.png" alt="FitNesse" /></a>
+<a href="/FrontPage" id="art_niche"><span>FitNesse</span></a>
 
 <ul>
 #foreach($breadCrumb in $pageTitle.BreadCrumbs)

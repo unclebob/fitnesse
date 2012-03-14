@@ -10,6 +10,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
 
 public class NewPageResponder implements Responder {
@@ -38,7 +39,14 @@ public class NewPageResponder implements Responder {
     html.put("isNewPage", true);
     html.put("helpText", "");
     html.put("pageContent", context.defaultNewPageContent);
-    html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+    if (request.hasInput("pageType")) {
+      String pageType = (String) request.getInput("pageType");
+      // Validate page type:
+      PageType.fromString(pageType);
+      html.put("pageType", pageType);
+    } else {
+      html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+    }
   }
 
   public SecureOperation getSecureOperation() {

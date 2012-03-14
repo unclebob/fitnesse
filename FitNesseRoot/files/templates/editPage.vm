@@ -9,12 +9,16 @@
 #if($!isNewPage)
  <input type="hidden" name="responder" value="addChild"/>
  <Label for="pagename">Page name:</label> <input type="text" id="pagename" name="pageName" value="" />
+ #if( $!pageType )
+ <input type="hidden" name="pageType" value="$pageType"/>
+ #else
  <fieldset>
   #foreach( $pageType in $pageTypes )
   <input type="radio" name="pageType" value="$pageType"/> $pageType
   #end
   <input type="radio" name="pageType" value="Default" checked="checked" /> Default <br/>
  </fieldset>
+ #end
 #else
  <input type="hidden" name="responder" value="saveData"/>
 #end

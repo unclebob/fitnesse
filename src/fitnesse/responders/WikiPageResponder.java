@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -75,9 +76,11 @@ public class WikiPageResponder implements SecureResponder {
     String fullPathName = PathParser.render(fullPath);
     html.setTitle(fullPathName);
     html.setPageTitle(new PageTitle(fullPath).notLinked());
-    // TODO move this to menu
+    
     html.setNavTemplate("wikiNav.vm");
     html.put("actions", new WikiPageActions(page).withAddChild());
+    html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+
     SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
     html.setMainTemplate("wikiPage");

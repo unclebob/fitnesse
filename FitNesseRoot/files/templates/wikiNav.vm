@@ -17,57 +17,56 @@
  #if( $actions.withEdit && $actions.imported )
  <li><a href="$sourceUrl?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView">Edit Remotely</a></li>
  #end
- <li id="tools"><a href="#" class="label">Tools</a>
+ 
+ #if( $actions.withAddChild )
+ <li id="add"><a href="#" class="label">Add</a>
   <ul>
-  #if( $actions.withAddChild )
-   <li><a href="$localOrRemotePath?new" accesskey="n">New Page</a></li>
+  #foreach( $pageType in $pageTypes )
+   <li><a href="$localOrRemotePath?new&pageType=$pageType">$pageType page</a></li>
   #end
+  </ul>
+ </li>
+ #end
+ 
+ <li id="tools"><a href="#" class="label">Tools</a>
+  #set( $nav_newsection = 0 )
+  #macro( group $n )#if( $nav_newsection != 0 && $nav_newsection != $n ) class="divider"#end#set( $nav_newsection = $n )#end
+  <ul>
   #if( $actions.withProperties )
-   <li><a href="$localOrRemotePath?properties" accesskey="p">Properties</a></li>
+   <li#group(1)><a href="$localOrRemotePath?properties" accesskey="p">Properties</a></li>
   #end
   #if( $actions.withWhereUsed )
-   <li><a href="$localOrRemotePath?whereUsed" accesskey="w">Where Used</a></li>
+   <li#group(1)><a href="$localOrRemotePath?whereUsed" accesskey="w">Where Used</a></li>
   #end
   #if( $actions.withVersions )
-   <li><a href="$localOrRemotePath?versions" accesskey="v">Versions</a></li>
+   <li#group(1)><a href="$localOrRemotePath?versions" accesskey="v">Versions</a></li>
   #end
-  <li><hr/></li>
+  
   #if( $actions.withRefactor )
-   <li><a href="$localOrRemotePath?refactor" accesskey="r">Refactor</a></li>
+   <li#group(2)><a href="$localOrRemotePath?refactor&type=rename">Rename</a></li>
+   <li><a href="$localOrRemotePath?refactor&type=move">Move</a></li>
+   <li><a href="$localOrRemotePath?refactor&type=replace">Replace</a></li>
+   <li><a href="$localOrRemotePath?refactor&type=delete">Delete</a></li>
   #end
-#*  #if( $actions.withRefactor )
-   <li><a href="$localOrRemotePath?refactor" accesskey="r">Rename</a></li>
-  #end
-  #if( $actions.withRefactor )
-   <li><a href="$localOrRemotePath?refactor" accesskey="r">Move</a></li>
-  #end
-  #if( $actions.withRefactor )
-   <li><a href="$localOrRemotePath?refactor" accesskey="r">Replace</a></li>
-  #end
-  #if( $actions.withRefactor )
-   <li><a href="$localOrRemotePath?refactor" accesskey="r">Delete</a></li>
-  #end
-  *#
-  <li><hr/></li>
   #if( $actions.withFiles )
-   <li><a href="/files" accesskey="f">Files</a></li>
+   <li #group(3)><a href="/files" accesskey="f">Files</a></li>
   #end
   #if( $actions.withSearch )
-   <li><a href="?searchForm" accesskey="s">Search</a></li>
+   <li#group(3)><a href="?searchForm" accesskey="s">Search</a></li>
   #end
   #if( $actions.withRecentChanges )
-   <li><a href="/RecentChanges" accesskey="">Recent Changes</a></li>
+   <li#group(3)><a href="/RecentChanges" accesskey="">Recent Changes</a></li>
   #end
-  <li><hr/></li>
+
   #if( $actions.withPageHistory )
-   <li><a href="$localPath?pageHistory">Page History</a></li>
+   <li#group(4)><a href="$localPath?pageHistory">Page History</a></li>
   #end
   #if( $actions.withTestHistory )
-   <li><a href="?testHistory">Test History</a></li>
+   <li#group(4)><a href="?testHistory">Test History</a></li>
   #end
-  <li><hr/></li>
+
   #if( $actions.withUserGuide )
-   <li><a href=".FitNesse.UserGuide" accesskey="">User Guide</a></li>
+   <li#group(5)><a href=".FitNesse.UserGuide" accesskey="">User Guide</a></li>
   #end
   </ul>
 </ul>
