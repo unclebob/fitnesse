@@ -203,7 +203,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   public void addMessageForBlankHtml() throws Exception {
     TagGroup html = new TagGroup();
     HtmlTag h2 = new HtmlTag("h2");
-    h2.addAttribute("class", "centered");
     h2.add("Oops!  Did you forget to add to some content to this ?");
     html.add(h2.html());
     html.add(HtmlUtil.HR.html());

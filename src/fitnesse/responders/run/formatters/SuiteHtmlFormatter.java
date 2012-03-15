@@ -78,7 +78,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private void maybeWriteTestOutputDiv() {
     if (!printedTestOutput) {
       HtmlTag outputTitle = new HtmlTag("h2", "Test Output");
-      outputTitle.addAttribute("class", "centered");
       writeData(outputTitle.html());
       printedTestOutput = true;
     }
@@ -87,7 +86,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private void maybeWriteTestSystem() {
     if (testSystemFullName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
-      systemTitle.addAttribute("class", "centered");
       writeData(systemTitle.html());
       // once we write it out we don't need it any more
       testSystemFullName = null;
@@ -192,7 +190,6 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     super.writeHead(pageType);
 
     HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");
-    outputTitle.addAttribute("class", "centered");
 
     HtmlTag summariesDiv = HtmlUtil.makeDivTag(TEST_SUMMARIES_ID);
     summariesDiv.addAttribute("id", TEST_SUMMARIES_ID);

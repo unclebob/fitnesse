@@ -75,8 +75,8 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.finishWritingOutput();
 
     String results = pageBuffer.toString();    
-    assertSubString("<h2 class=\"centered\">Test Output</h2>", results);
-    assertSubString("<h2 class=\"centered\">Test System: Slim:very.slim</h2>", results);
+    assertSubString("<h2>Test Output</h2>", results);
+    assertSubString("<h2>Test System: Slim:very.slim</h2>", results);
 
     assertSubString("<div class=\"test_output_name\">", results);
     assertSubString("<a href=\"FullName\" id=\"RelativeName1\" class=\"test_name\">RelativeName</a>", results);
