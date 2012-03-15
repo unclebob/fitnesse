@@ -72,7 +72,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"" + pageName + "?edit\" accesskey=\"e\">Edit</a>", html);
     assertSubString("<a href=\"" + pageName + "?versions\" accesskey=\"v\">Versions</a>", html);
     assertSubString("<a href=\"" + pageName + "?properties\" accesskey=\"p\">Properties</a>", html);
-    assertSubString("<a href=\"" + pageName + "?refactor\" accesskey=\"r\">Refactor</a>", html);
+    assertSubString("<a href=\"" + pageName + "?refactor&amp;type=rename\">Rename</a>", html);
     assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
     assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
     assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);

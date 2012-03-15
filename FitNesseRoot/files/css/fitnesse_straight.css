@@ -303,3 +303,9 @@ article a:hover {
 .ignore {
 	background-color: lightgray;
 }
+
+#test-summary, #progressBar {
+ padding: 0.5em;
+}
+	
+}
