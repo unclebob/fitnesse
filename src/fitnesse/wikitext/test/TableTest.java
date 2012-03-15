@@ -19,7 +19,7 @@ public class TableTest {
         ParserTestHelper.assertTranslatesTo("| a |\n", tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("|!- a -!|\n", tableWithCell(" a "));
         ParserTestHelper.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
-        ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
+        ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<center>a</center>"));
         ParserTestHelper.assertTranslatesTo("|http://mysite.org|\n",
           tableWithCell("<a href=\"http://mysite.org\">http://mysite.org</a>"));
         ParserTestHelper.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks\n"));
