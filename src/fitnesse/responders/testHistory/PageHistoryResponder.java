@@ -54,20 +54,16 @@ public class PageHistoryResponder implements SecureResponder {
   private Response makePageHistoryResponse(Request request) {
     page.setTitle("Page History");
     page.put("pageHistory", pageHistory);
-    page.setMainTemplate("pageHistory.vm");
+    page.setMainTemplate("pageHistory");
     return makeResponse();
   }
   
   private Response makePageHistoryXmlResponse(Request request) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
-    Template template = context.pageFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
-
-    StringWriter writer = new StringWriter();
-    template.merge(velocityContext, writer);
 
     response.setContentType("text/xml");
-    response.setContent(writer.toString());
+    response.setContent(context.pageFactory.render(velocityContext, "pageHistoryXML.vm"));
     return response;
   }
 
@@ -119,14 +115,14 @@ public class PageHistoryResponder implements SecureResponder {
   private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {
     page.setTitle("Suite Execution Report");
     page.put("suiteExecutionReport", report);
-    page.setMainTemplate("suiteExecutionReport.vm");
+    page.setMainTemplate("suiteExecutionReport");
     return makeResponse();
   }
 
   private Response generateHtmlTestExecutionResponse(TestExecutionReport report) throws Exception {
     page.setTitle("Test Execution Report");
     page.put("testExecutionReport", report);
-    page.setMainTemplate("testExecutionReport.vm");
+    page.setMainTemplate("testExecutionReport");
     return makeResponse();
   }
 
