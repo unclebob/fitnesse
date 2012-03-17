@@ -3,7 +3,6 @@
 package fitnesse.http;
 
 import fitnesse.testutil.MockSocket;
-import util.ConcurrentBoolean;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,11 +11,11 @@ import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;
-  protected ConcurrentBoolean closed;
+  protected volatile boolean closed = false;
 
   public MockResponseSender() {
     socket = new MockSocket("Mock");
-    closed = new ConcurrentBoolean();
+    closed = false;
   }
 
   public void send(byte[] bytes) {
@@ -28,7 +27,10 @@ public class MockResponseSender implements ResponseSender {
   }
 
   public void close() {
-    closed.set(true);
+    closed = true;
+    synchronized (this) {
+      notifyAll();
+    }
   }
 
   public Socket getSocket() {
@@ -44,13 +46,26 @@ public class MockResponseSender implements ResponseSender {
     waitForClose(20000);
   }
 
+  // Utility method that returns when this.closed is true. Throws an exception
+  // if the timeout is reached.
   public void waitForClose(long timeoutMillis) {
-    if (!closed.waitFor(true, timeoutMillis))
+    synchronized (this) {
+      while (!closed && timeoutMillis > 0) {
+        try {
+          wait(100);
+        } catch (InterruptedException e) {
+          // Fall through. Log?
+          e.printStackTrace();
+        }
+        timeoutMillis -= 100;
+      }
+    }
+    if (!closed)
       throw new RuntimeException("MockResponseSender could not be closed");
   }
 
   public boolean isClosed() {
-    return closed.isTrue();
+    return closed;
   }
 
   public static class OutputStreamSender extends MockResponseSender {
@@ -60,12 +75,12 @@ public class MockResponseSender implements ResponseSender {
 
     public void doSending(Response response) throws IOException {
       response.readyToSend(this);
-      while (!closed.isTrue())
-        try {
+      try {
+        while (!closed)
           Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          // silently ignore
-        }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

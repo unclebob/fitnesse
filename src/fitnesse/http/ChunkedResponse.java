@@ -2,16 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.ConcurrentBoolean;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 public class ChunkedResponse extends Response {
   private ResponseSender sender;
   private int bytesSent = 0;
-  private ConcurrentBoolean isReadyToSend = new ConcurrentBoolean();
+  private volatile boolean isReadyToSend = false;
   private boolean dontChunk = false;
 
   public ChunkedResponse(String format) {
@@ -24,14 +20,16 @@ public class ChunkedResponse extends Response {
     this.sender = sender;
     addStandardHeaders();
     send(makeHttpHeaders().getBytes());
-    isReadyToSend.set(true);
+    setReadyToSend(true);
+    synchronized (this) {
+      notifyAll();
+      Thread.yield();
+    }
   }
 
-  public void waitForReadyToSend() {
-    isReadyToSend.waitFor(true);
+  public boolean isReadyToSend() {
+    return isReadyToSend;
   }
-
-  public boolean isReadyToSend() { return isReadyToSend.isTrue(); }
 
   @Override
   protected void addStandardHeaders() {
@@ -92,6 +90,10 @@ public class ChunkedResponse extends Response {
 
   public int getContentSize() {
     return bytesSent;
+  }
+
+  private void setReadyToSend(boolean isReadyToSend) {
+    this.isReadyToSend = isReadyToSend;
   }
 
   public void turnOffChunking() {
