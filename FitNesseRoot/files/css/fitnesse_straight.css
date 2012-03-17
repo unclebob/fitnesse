@@ -20,10 +20,6 @@ td, th {
     padding: 0.25em 0.5em;
 }
 
-article table tr:first-child {
-    font-weight: bold;
-}
-
 header {
  padding: 8px;
  height: 90px;
@@ -205,6 +201,14 @@ article a:hover {
 	color:#880000;
 }
 
+th {
+	text-align: left;
+}
+
+article th, article td {
+	 white-space:nowrap;
+}
+
 .dirListing tbody tr:nth-child(odd) {
  background: #fff
 }
@@ -307,5 +311,7 @@ article a:hover {
 #test-summary, #progressBar {
  padding: 0.5em;
 }
-	
+
+#test_summaries h2, #test_summaries h3 {
+	text-align: center;
 }
