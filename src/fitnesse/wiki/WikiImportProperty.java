@@ -5,9 +5,9 @@ package fitnesse.wiki;
 import java.text.ParseException;
 import java.util.Date;
 
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.responders.templateUtilities.HtmlPage;
 
 public class WikiImportProperty extends WikiPageProperty {
   private static final long serialVersionUID = 1L;

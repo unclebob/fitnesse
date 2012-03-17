@@ -681,6 +681,9 @@ table.dirListing {
   padding: 1px 3px 1px 3px;
 }
 
+.dirListing tbody tr:nth-child(odd) {background: #FFFFFF}
+.dirListing tbody tr:nth-child(even) {background: #EFEFEF}
+
 /**********
 
  Used in FIT and the summary bar

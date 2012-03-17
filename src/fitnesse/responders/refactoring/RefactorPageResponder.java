@@ -12,11 +12,11 @@ import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 

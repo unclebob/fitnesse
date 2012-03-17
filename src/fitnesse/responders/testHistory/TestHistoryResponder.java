@@ -5,11 +5,11 @@ import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import org.apache.velocity.VelocityContext;
 

@@ -9,11 +9,11 @@ import util.Clock;
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.WikiPageResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
 
 public class WikiImportPropertyTest extends RegexTestCase {

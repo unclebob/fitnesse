@@ -103,10 +103,6 @@ public class VirtualCouplingPage implements WikiPage {
     return "Virtual coupling help text";
   }
 
-  public List<WikiPageAction> getActions() {
-    return null;
-  }
-  
   public boolean isOpenInNewWindow() {
     return false;
   }

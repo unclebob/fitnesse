@@ -1,0 +1,6 @@
+#if( $!message )
+ <center>$message</center>
+#end
+#if( $!exception )
+<pre>$exception</pre>
+#end

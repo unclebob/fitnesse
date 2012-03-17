@@ -3,12 +3,12 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.BasicResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
 
 public class StopTestResponder extends BasicResponder {
 
