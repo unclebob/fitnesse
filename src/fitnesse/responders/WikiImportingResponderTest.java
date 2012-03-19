@@ -6,6 +6,7 @@ import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -36,7 +37,7 @@ public class WikiImportingResponderTest extends RegexTestCase {
   private void createResponder() throws Exception {
     responder = new WikiImportingResponder();
     responder.path = new WikiPagePath();
-    ChunkedResponse response = new ChunkedResponse("html");
+    ChunkedResponse response = new ChunkedResponse("html", new MockChunkedDataProvider());
     response.readyToSend(new MockResponseSender());
     responder.setResponse(response);
     responder.getImporter().setDeleteOrphanOption(false);
