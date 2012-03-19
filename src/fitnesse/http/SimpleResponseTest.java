@@ -41,7 +41,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
   public void testSimpleResponse() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("some content");
-    response.readyToSend(this);
+    response.sendTo(this);
     assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));
     assertHasRegexp("Content-Length: 12", text);
     assertHasRegexp("Content-Type: text/html", text);
@@ -51,14 +51,14 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
 
   public void testPageNotFound() throws Exception {
     SimpleResponse response = new SimpleResponse(404);
-    response.readyToSend(this);
+    response.sendTo(this);
     assertHasRegexp("404 Not Found", text);
   }
 
   public void testRedirect() throws Exception {
     SimpleResponse response = new SimpleResponse();
     response.redirect("some url");
-    response.readyToSend(this);
+    response.sendTo(this);
     assertEquals(303, response.getStatus());
     assertHasRegexp("Location: some url\r\n", text);
   }
@@ -66,7 +66,7 @@ public class SimpleResponseTest extends RegexTestCase implements ResponseSender 
   public void testUnicodeCharacters() {
     SimpleResponse response = new SimpleResponse();
     response.setContent("\uba80\uba81\uba82\uba83");
-    response.readyToSend(this);
+    response.sendTo(this);
 
     assertSubString("\uba80\uba81\uba82\uba83", text);
   }

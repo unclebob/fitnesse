@@ -18,7 +18,7 @@ public class InputStreamResponse extends Response {
     super("html");
   }
 
-  public void readyToSend(ResponseSender sender) throws IOException {
+  public void sendTo(ResponseSender sender) throws IOException {
     try {
       addStandardHeaders();
       sender.send(makeHttpHeaders().getBytes());

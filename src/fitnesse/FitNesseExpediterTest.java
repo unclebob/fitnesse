@@ -52,7 +52,7 @@ public class FitNesseExpediterTest extends RegexTestCase {
       MockRequest request = new MockRequest();
       Response response = expediter.createGoodResponse(request);
       socket.close();
-      response.readyToSend(expediter);
+      response.sendTo(expediter);
     }
     catch (IOException e) {
       fail("no IOException should be thrown");

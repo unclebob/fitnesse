@@ -60,7 +60,7 @@ public class ResponseTest {
       super(formatString);
     }
 
-    public void readyToSend(ResponseSender sender) {
+    public void sendTo(ResponseSender sender) {
     }
 
     public int getContentSize() {

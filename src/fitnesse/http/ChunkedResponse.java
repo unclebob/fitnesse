@@ -17,10 +17,10 @@ public class ChunkedResponse extends Response {
       dontChunk = true;
   }
 
-  public void readyToSend(ResponseSender sender) {
+  public void sendTo(ResponseSender sender) {
     this.sender = sender;
     addStandardHeaders();
-    send(makeHttpHeaders().getBytes());
+    sender.send(makeHttpHeaders().getBytes());
     chunckedDataProvider.startSending();
   }
 
@@ -44,31 +44,27 @@ public class ChunkedResponse extends Response {
     if (bytes == null || bytes.length == 0)
       return;
     if (dontChunk) {
-      send(bytes);
+      sender.send(bytes);
     } else {
       String sizeLine = asHex(bytes.length) + CRLF;
       ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
       chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
-      send(chunk.array());
+      sender.send(chunk.array());
     }
     bytesSent += bytes.length;
   }
 
   public void addTrailingHeader(String key, String value) {
     String header = key + ": " + value + CRLF;
-    send(header.getBytes());
+    sender.send(header.getBytes());
   }
 
   public void closeChunks() {
-    send(("0" + CRLF).getBytes());
+    sender.send(("0" + CRLF).getBytes());
   }
 
   public void closeTrailer() {
-    send(CRLF.getBytes());
-  }
-
-  private void send(byte[] bytes) {
-    sender.send(bytes);
+    sender.send(CRLF.getBytes());
   }
 
   public void close() {

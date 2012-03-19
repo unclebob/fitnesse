@@ -38,7 +38,7 @@ public class MockResponseSender implements ResponseSender {
   }
 
   public void doSending(Response response) throws IOException {
-    response.readyToSend(this);
+    response.sendTo(this);
     assert closed == true;
   }
 
@@ -52,7 +52,7 @@ public class MockResponseSender implements ResponseSender {
     }
 
     public void doSending(Response response) throws IOException {
-      response.readyToSend(this);
+      response.sendTo(this);
       assert closed == true;
     }
   }

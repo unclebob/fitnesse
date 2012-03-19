@@ -48,7 +48,7 @@ public class FileResponderTest {
 
   @After
   public void tearDown() throws Exception {
-    if (response != null) response.readyToSend(new MockResponseSender());
+    if (response != null) response.sendTo(new MockResponseSender());
     SampleFileUtility.deleteSampleFiles();
     Locale.setDefault(saveLocale);
   }

@@ -85,7 +85,7 @@ public abstract class Response {
     return Format.JAVA.contentType.equals(contentType);
   }
 
-  public abstract void readyToSend(ResponseSender sender) throws IOException;
+  public abstract void sendTo(ResponseSender sender) throws IOException;
 
   public abstract int getContentSize();
 
