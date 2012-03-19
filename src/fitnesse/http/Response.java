@@ -13,9 +13,9 @@ import java.util.Set;
 import java.util.TimeZone;
 
 public abstract class Response {
-    public enum Format {
+  public enum Format {
     XML("text/xml"),
-    HTML(DEFAULT_CONTENT_TYPE),
+    HTML("text/html; charset=utf-8"),
     TEXT("text/text"),
     JSON("text/json"),
     JAVA("java");
@@ -32,8 +32,6 @@ public abstract class Response {
     
   }
 
-  public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
-
   protected static final String CRLF = "\r\n";
 
   public static SimpleDateFormat makeStandardHttpDateFormat() {
@@ -46,7 +44,7 @@ public abstract class Response {
 
   private int status = 200;
   private HashMap<String, String> headers = new HashMap<String, String>(17);
-  private String contentType = DEFAULT_CONTENT_TYPE;
+  private String contentType = Format.HTML.contentType;
 
   public Response(String formatString) {
     Format format;
@@ -81,6 +79,7 @@ public abstract class Response {
   public boolean isTextFormat() {
     return Format.TEXT.contentType.equals(contentType);
   }
+  
   public boolean isJavaFormat(){
     return Format.JAVA.contentType.equals(contentType);
   }
