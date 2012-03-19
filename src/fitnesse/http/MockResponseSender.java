@@ -2,21 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.testutil.MockSocket;
-import util.ConcurrentBoolean;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.net.Socket;
 
+import fitnesse.testutil.MockSocket;
+
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;
-  protected ConcurrentBoolean closed;
+  protected boolean closed;
 
   public MockResponseSender() {
     socket = new MockSocket("Mock");
-    closed = new ConcurrentBoolean();
   }
 
   public void send(byte[] bytes) {
@@ -28,7 +26,7 @@ public class MockResponseSender implements ResponseSender {
   }
 
   public void close() {
-    closed.set(true);
+    closed = true;
   }
 
   public Socket getSocket() {
@@ -41,16 +39,11 @@ public class MockResponseSender implements ResponseSender {
 
   public void doSending(Response response) throws IOException {
     response.readyToSend(this);
-    waitForClose(20000);
-  }
-
-  public void waitForClose(long timeoutMillis) {
-    if (!closed.waitFor(true, timeoutMillis))
-      throw new RuntimeException("MockResponseSender could not be closed");
+    assert closed == true;
   }
 
   public boolean isClosed() {
-    return closed.isTrue();
+    return closed;
   }
 
   public static class OutputStreamSender extends MockResponseSender {
@@ -60,12 +53,7 @@ public class MockResponseSender implements ResponseSender {
 
     public void doSending(Response response) throws IOException {
       response.readyToSend(this);
-      while (!closed.isTrue())
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          // silently ignore
-        }
+      assert closed == true;
     }
   }
 }

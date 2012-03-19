@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import util.StandardOutAndErrorRecorder;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
@@ -139,7 +140,7 @@ public class WikiImportTestEventListenerTest {
 
   private class MockTestResponder extends TestResponder {
     private MockTestResponder() {
-      response = new ChunkedResponse("html");
+      response = new ChunkedResponse("html", new MockChunkedDataProvider());
     }
 
     public void addToResponse(String output) {
@@ -147,13 +148,13 @@ public class WikiImportTestEventListenerTest {
     }
 
     public void setXmlFormat() {
-      response = new ChunkedResponse("xml");  
+      response = new ChunkedResponse("xml", new MockChunkedDataProvider());  
     }
   }
 
   private class MockSuiteResponder extends SuiteResponder {
     private MockSuiteResponder() {
-      response = new ChunkedResponse("html");
+      response = new ChunkedResponse("html", new MockChunkedDataProvider());
     }
 
     public void addToResponse(String output) {

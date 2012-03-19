@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.http.ChunkedDataProvider;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -14,7 +15,7 @@ import fitnesse.wiki.WikiPagePath;
 
 import java.net.SocketException;
 
-public abstract class ChunkingResponder implements Responder {
+public abstract class ChunkingResponder implements Responder, ChunkedDataProvider {
   protected WikiPage root;
   public WikiPage page;
   protected WikiPagePath path;
@@ -28,15 +29,13 @@ public abstract class ChunkingResponder implements Responder {
     this.request = request;
     this.root = context.root;
     String format = (String) request.getInput("format");
-    response = new ChunkedResponse(format);
+    response = new ChunkedResponse(format, this);
+    
     if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
       response.turnOffChunking();
     getRequestedPage(request);
     if (page == null && shouldRespondWith404())
       return pageNotFoundResponse(context, request);
-
-    Thread respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
-    respondingThread.start();
 
     return response;
   }
@@ -62,7 +61,7 @@ public abstract class ChunkingResponder implements Responder {
     return true;
   }
 
-  private void startSending() {
+  public void startSending() {
     try {
       doSending();
     }
@@ -92,13 +91,6 @@ public abstract class ChunkingResponder implements Responder {
       return request.getResource();
   }
 
-  protected class RespondingRunnable implements Runnable {
-    public void run() {
-      response.waitForReadyToSend();
-      startSending();
-
-    }
-  }
 
   public void setRequest(Request request) {
     this.request = request;
