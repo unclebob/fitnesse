@@ -44,7 +44,7 @@ public class ChunkedResponseTest implements ResponseSender {
     buffer = new StringBuffer();
 
     response = new ChunkedResponse("html", new MockChunkedDataProvider());
-    response.readyToSend(this);
+    response.sendTo(this);
   }
 
   @After
@@ -63,7 +63,7 @@ public class ChunkedResponseTest implements ResponseSender {
   @Test
   public void xmlHeaders() throws Exception {
     response = new ChunkedResponse("xml", new MockChunkedDataProvider());
-    response.readyToSend(this);
+    response.sendTo(this);
     String text = buffer.toString();
     assertHasRegexp("Transfer-Encoding: chunked", text);
     assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));

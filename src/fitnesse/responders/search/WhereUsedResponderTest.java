@@ -33,7 +33,7 @@ public class WhereUsedResponderTest extends RegexTestCase {
 
     Response response = responder.makeResponse(new FitNesseContext(root), request);
     MockResponseSender sender = new MockResponseSender();
-    response.readyToSend(sender);
+    response.sendTo(sender);
 
     String content = sender.sentData();
     assertEquals(200, response.getStatus());

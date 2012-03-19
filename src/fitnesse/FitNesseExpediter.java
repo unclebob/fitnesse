@@ -93,7 +93,7 @@ public class FitNesseExpediter implements ResponseSender {
   }
 
   public void sendResponse() throws IOException {
-    response.readyToSend(this);
+    response.sendTo(this);
   }
 
   private Response makeResponse(Request request) throws SocketException {

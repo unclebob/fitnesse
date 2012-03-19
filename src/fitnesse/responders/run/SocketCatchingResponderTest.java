@@ -34,7 +34,7 @@ public class SocketCatchingResponderTest extends RegexTestCase {
     int ticket = dealer.seekingSocket(seeker);
     request.addInput("ticket", ticket + "");
     Response response = responder.makeResponse(context, request);
-    response.readyToSend(sender);
+    response.sendTo(sender);
 
     assertEquals("", sender.sentData());
   }
@@ -42,7 +42,7 @@ public class SocketCatchingResponderTest extends RegexTestCase {
   public void testMissingSeeker() throws Exception {
     request.addInput("ticket", "123");
     Response response = responder.makeResponse(context, request);
-    response.readyToSend(sender);
+    response.sendTo(sender);
 
     assertHasRegexp("There are no clients waiting for a socket with ticketNumber 123", sender.sentData());
     assertTrue(sender.isClosed());

@@ -19,7 +19,7 @@ public class SimpleResponse extends Response {
   }
 
   @Override
-  public void readyToSend(ResponseSender sender) {
+  public void sendTo(ResponseSender sender) {
     addStandardHeaders();
     try {
       sender.send(makeHttpHeaders().getBytes());
