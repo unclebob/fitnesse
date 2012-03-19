@@ -16,44 +16,18 @@ import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
-public abstract class TestHtmlFormatter extends BaseFormatter {
-  private PageFactory pageFactory;
-  private TestSummary assertionCounts = new TestSummary();
+public abstract class TestHtmlFormatter extends BaseHtmlFormatter {
   private CompositeExecutionLog log = null;
-  private HtmlPage htmlPage = null;
-  private boolean wasInterupted = false;
   protected TimeMeasurement latestTestTime;
 
-  private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
-
-  public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
-                           final PageFactory pageFactory) {
+  public TestHtmlFormatter(FitNesseContext context, final WikiPage page) {
     super(context, page);
-    this.pageFactory = pageFactory;
   }
 
   //special constructor for TestRunner.  Used only for formatting.
   //todo this is nasty coupling. 
   public TestHtmlFormatter(FitNesseContext context) {
     super(context, null);
-  }
-
-  protected abstract void writeData(String output);
-
-  @Override
-  public void writeHead(String pageType) throws IOException {
-    htmlPage = buildHtml(pageType);
-    htmlPage.setMainTemplate("testPage");
-    htmlPage.divide();
-    writeData(htmlPage.preDivision);
-  }
-
-  protected void updateSummaryDiv(String html) {
-    writeData(HtmlUtil.makeReplaceElementScript("test-summary", html).html());
-  }
-
-  protected String testPageSummary() {
-    return "";
   }
 
   @Override
@@ -66,25 +40,11 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testOutputChunk(String output) throws IOException {
-    writeData(output);
-  }
-
-  @Override
   public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     super.testComplete(testPage, testSummary, timeMeasurement);
     latestTestTime = timeMeasurement;
     
     processTestResults(getRelativeName(testPage), testSummary);
-  }
-
-  protected String getRelativeName(TestPage testPage) {
-    PageCrawler pageCrawler = getPage().getPageCrawler();
-    String relativeName = pageCrawler.getRelativeName(getPage(), testPage.getSourcePage());
-    if ("".equals(relativeName)) {
-      relativeName = String.format("(%s)", testPage.getName());
-    }
-    return relativeName;
   }
 
   public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
@@ -97,38 +57,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     addStopLink(stopResponderId);
   }
 
-  private void addStopLink(String stopResponderId) {
-    String link = "?responder=stoptest&id=" + stopResponderId;
-
-    HtmlTag status = new HtmlTag("div");
-    status.addAttribute("id", "stop-test");
-    HtmlTag image = new HtmlTag("img");
-    image.addAttribute("src", "/files/images/stop.gif");
-
-    status.add(HtmlUtil.makeSilentLink(link, image));
-    status.add(HtmlUtil.BR);
-
-    status.add(HtmlUtil.makeSilentLink(link, new RawHtml("Stop Test")));
-    writeData(status.html());
-  }
-
-  private void removeStopTestLink() {
-    HtmlTag script = HtmlUtil.makeReplaceElementScript("stop-test", "");
-    writeData(script.html());
-  }
-
-  protected HtmlPage buildHtml(String pageType) {
-    PageCrawler pageCrawler = getPage().getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(getPage());
-    String fullPathName = PathParser.render(fullPath);
-    HtmlPage html = pageFactory.newPage();
-    html.setTitle(pageType + ": " + fullPathName);
-    html.setPageTitle(new PageTitle(pageType, fullPath));
-    PageData data = getPage().getData();
-    html.setNavTemplate("wikiNav.vm");
-    html.put("actions", new WikiPageActions(getPage()).withPageHistory());
-    WikiImportProperty.handleImportProperties(html, getPage(), data);
-    return html;
+  @Override
+  public void testOutputChunk(String output) throws IOException {
+    writeData(output);
   }
 
   @Override
@@ -140,16 +71,10 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     close();
   }
 
-  protected void close() {
-  }
-
+  @Override
   protected void finishWritingOutput() throws IOException {
     writeData(testSummary());
-    writeData("<br/><div class=\"footer\">\n");
-    writeData(getPage().getData().getFooterPageHtml());
-    writeData("</div>\n");    
-    if (htmlPage != null)
-      writeData(htmlPage.postDivision);
+    super.finishWritingOutput();
   }
 
   protected void publishAndAddLog() throws IOException {
@@ -159,39 +84,14 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     }
   }
 
-  protected String cssClassFor(TestSummary testSummary) {
-    if (testSummary.getWrong() > 0 || wasInterupted)
-      return "fail";
-    else if (testSummary.getExceptions() > 0
-      || testSummary.getRight() + testSummary.getIgnores() == 0)
-      return "error";
-    else if (testSummary.getIgnores() > 0 && testSummary.getRight() == 0)
-      return "ignore";
-    else
-      return "pass";
-  }
-
-  public String executionStatus(CompositeExecutionLog logs) {
-    return logs.executionStatusHtml();
-  }
-
   protected String makeSummaryContent() {
     String summaryContent;
     if (latestTestTime != null) {
-      summaryContent = String.format("%s<strong>Assertions:</strong> %s (%.03f seconds)", testPageSummary(), assertionCounts, latestTestTime.elapsedSeconds());
+      summaryContent = String.format("<strong>Assertions:</strong> %s (%.03f seconds)", getAssertionCounts(), latestTestTime.elapsedSeconds());
     } else {
-      summaryContent = String.format("%s<strong>Assertions:</strong> %s ", testPageSummary(), assertionCounts);
+      summaryContent = String.format("<strong>Assertions:</strong> %s ", getAssertionCounts());
     }
     return summaryContent;
-  }
-
-  public String testSummary() {
-    String summaryContent = (wasInterupted) ? TESTING_INTERUPTED : "";
-    summaryContent += makeSummaryContent();
-    HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
-    script.add("document.getElementById(\"test-summary\").className = \""
-      + cssClassFor(assertionCounts) + "\";");
-    return script.html();
   }
 
   @Override
@@ -209,20 +109,8 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     writeData(html.html());
   }
 
-  public TestSummary getAssertionCounts() {
-    return assertionCounts;
-  }
-
-  public HtmlPage getHtmlPage() {
-    if (htmlPage != null) {
-      return htmlPage;
-    }
-    return buildHtml("");
-  }
-
   @Override
   public void errorOccured() {
-    wasInterupted = true;
     latestTestTime = null;
     super.errorOccured();
   }

@@ -25,7 +25,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     page.getData().setContent("page content here");
     context = new FitNesseContext();
 
-    formatter = new TestHtmlFormatter(context, page.getSourcePage(), context.pageFactory) {
+    formatter = new TestHtmlFormatter(context, page.getSourcePage()) {
       @Override
       protected void writeData(String output) {
         pageBuffer.append(output);
@@ -76,7 +76,7 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
-    assertSubString("<div id=\"execution-status\">", pageBuffer.toString());
+    assertSubString("Tests Executed OK", pageBuffer.toString());
   }
 
   public void testTail() throws Exception {
@@ -100,10 +100,10 @@ public class TestHtmlFormatterTest extends RegexTestCase {
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
-    //assert stop button added
-    assertSubString("<a href=\"#\" onclick=\"doSilentRequest('?responder=stoptest&id=2')\">", pageBuffer.toString());
+    //assert stop button added - double escaped, since it's in javascript
+    assertSubString("<a href=\\\"#\\\" onclick=\\\"doSilentRequest('?responder=stoptest&id=2')\\\" class=\\\"stop\\\">", pageBuffer.toString());
     //assert stop button removed
-    assertSubString("document.getElementById(\"stop-test\").innerHTML = \"\"", pageBuffer.toString());
+    assertSubString("document.getElementById(\"test-action\").innerHTML = \"\"", pageBuffer.toString());
   }
 
   public void testIncompleteMessageAfterException() throws Exception {

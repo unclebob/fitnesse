@@ -315,3 +315,27 @@ article th, article td {
 #test_summaries h2, #test-summaries h3 {
 	text-align: center;
 }
+
+#test-action a {
+    background-position: center top;
+    background-repeat: no-repeat;
+    float: right;
+    padding-top: 65px;
+}
+
+#test-action .stop {
+    background-image: url("/files/images/stop.gif");
+}
+
+
+#test-action .ok {
+    background-image: url("/files/images/executionStatus/ok.gif");
+}
+
+#test-action .capture {
+    background-image: url("/files/images/executionStatus/output.gif");
+}
+
+#test-action .error {
+    background-image: url("/files/images/executionStatus/error.gif");
+}

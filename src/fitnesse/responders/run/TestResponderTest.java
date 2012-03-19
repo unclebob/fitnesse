@@ -246,7 +246,7 @@ public class TestResponderTest {
   @Test
   public void testExecutionStatusAppears() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertHasRegexp("<div id=\"execution-status\">.*?</div>", results);
+    assertHasRegexp("Tests Executed OK", results);
   }
 
   @Test
@@ -340,14 +340,14 @@ public class TestResponderTest {
   }
 
   private String getExecutionStatusMessage() throws Exception {
-    Pattern pattern = Pattern.compile("<div id=\"execution-status\">.*?<a href=\"ErrorLogs\\.[^\"]*\">([^<>]*?)</a>.*?</div>", Pattern.DOTALL);
+    Pattern pattern = Pattern.compile("<a href=\"ErrorLogs\\.[^>]*>([^<>]*?)</a>", Pattern.DOTALL | Pattern.MULTILINE);
     Matcher matcher = pattern.matcher(results);
     matcher.find();
     return matcher.group(1);
   }
 
-  private String getExecutionStatusIconFilename() {
-    Pattern pattern = Pattern.compile("<div id=\"execution-status\">.*?<img.*?src=\"(?:[^/]*/)*([^/]*\\.gif)\".*?/>.*?</div>", Pattern.DOTALL);
+  private String getExecutionStatusStyle() {
+    Pattern pattern = Pattern.compile("<a.*?href=\"ErrorLogs\\..*?class=\"(.*?)\".*?>", Pattern.DOTALL | Pattern.MULTILINE);
     Matcher matcher = pattern.matcher(results);
     matcher.find();
     return matcher.group(1);
@@ -357,7 +357,7 @@ public class TestResponderTest {
   public void testExecutionStatusOk() throws Exception {
     doSimpleRun(passFixtureTable());
     assertEquals("Tests Executed OK", getExecutionStatusMessage());
-    assertEquals("ok.gif", getExecutionStatusIconFilename());
+    assertEquals("ok", getExecutionStatusStyle());
   }
 
   @Test
@@ -366,7 +366,7 @@ public class TestResponderTest {
     request.addInput("debug", "");
     doSimpleRun(passFixtureTable());
     assertEquals("Tests Executed OK", getExecutionStatusMessage());
-    assertEquals("ok.gif", getExecutionStatusIconFilename());
+    assertEquals("ok", getExecutionStatusStyle());
     assertTrue("should be fast test", responder.isFastTest());
   }
 
@@ -375,7 +375,7 @@ public class TestResponderTest {
     responder.setFastTest(false);
     doSimpleRun(outputWritingTable("blah"));
     assertEquals("Output Captured", getExecutionStatusMessage());
-    assertEquals("output.gif", getExecutionStatusIconFilename());
+    assertEquals("output", getExecutionStatusStyle());
   }
 
   @Test
@@ -383,7 +383,7 @@ public class TestResponderTest {
     responder.setFastTest(false);
     doSimpleRun(crashFixtureTable());
     assertEquals("Errors Occurred", getExecutionStatusMessage());
-    assertEquals("error.gif", getExecutionStatusIconFilename());
+    assertEquals("error", getExecutionStatusStyle());
   }
 
   @Test

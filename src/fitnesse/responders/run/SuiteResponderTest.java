@@ -205,7 +205,7 @@ public class SuiteResponderTest {
   @Test
   public void testExecutionStatusAppears() throws Exception {
     String results = runSuite();
-    assertHasRegexp(divWithIdAndContent("execution-status", ".*?"), results);
+    assertHasRegexp("Tests Executed OK", results);
   }
 
   @Test

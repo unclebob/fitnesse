@@ -14,7 +14,10 @@ import util.Clock;
 
 import fitnesse.components.CommandRunner;
 import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlText;
 import fitnesse.html.HtmlUtil;
+import fitnesse.html.RawHtml;
+import fitnesse.html.TagGroup;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.PageFactory;
 import fitnesse.wiki.PageCrawler;
@@ -97,32 +100,10 @@ public class ExecutionLog {
     return runner.wroteToErrorStream() || runner.wroteToOutputStream();
   }
 
-  public String executionStatusHtml() throws Exception {
-    String linkHref = getErrorLogPageName();
-    return executionStatusHtml(linkHref);
-  }
-
-  private String executionStatusHtml(String linkHref) {
-    ExecutionStatus executionStatus;
-
-    if (exceptionCount() > 0)
-      executionStatus = ExecutionStatus.ERROR;
-    else if (hasCapturedOutput())
-      executionStatus = ExecutionStatus.OUTPUT;
-    else
-      executionStatus = ExecutionStatus.OK;
-
-    return makeExecutionStatusLink(linkHref, executionStatus);
-  }
 
   public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) {
-    HtmlTag status = new HtmlTag("div");
-    status.addAttribute("id", "execution-status");
-    HtmlTag image = new HtmlTag("img");
-    image.addAttribute("src", "/files/images/executionStatus/" + executionStatus.getIconFilename());
-    status.add(HtmlUtil.makeLink(linkHref, image.html()));
-    status.add(HtmlUtil.BR);
-    status.add(HtmlUtil.makeLink(linkHref, executionStatus.getMessage()));
+    HtmlTag status = HtmlUtil.makeLink(linkHref, executionStatus.getMessage());
+    status.addAttribute("class", executionStatus.getStyle());
     return status.html();
   }
 

@@ -18,28 +18,27 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
-  private static final String cssSuffix1 = "1";
-  private static final String cssSuffix2 = "2";
-
+public abstract class SuiteHtmlFormatter extends BaseHtmlFormatter {
   private TestSummary pageCounts = new TestSummary();
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
-  private String cssSuffix = cssSuffix1;
   private int currentTest = 0;
   private String testSystemFullName = null;
   private boolean printedTestOutput = false;
   private int totalTests = 1;
+  private TimeMeasurement latestTestTime;
+  private CompositeExecutionLog log;
 
 
-  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, PageFactory pageFactory) {
-    super(context, page, pageFactory);
+  public SuiteHtmlFormatter(FitNesseContext context, WikiPage page) {
+    super(context, page);
   }
 
   public SuiteHtmlFormatter(FitNesseContext context) {
-    super(context);
+    super(context, null);
   }
 
+  
   public String getTestSystemHeader(String testSystemName) {
     String tag = String.format("<h3>%s</h3>\n", testSystemName);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript("test_summaries", tag);
@@ -54,9 +53,10 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
   public void announceStartNewTest(String relativeName, String fullPathName) {
     currentTest++;
+    updateSummaryDiv(getProgressHtml());
+
     maybeWriteTestOutputDiv();
     maybeWriteTestSystem();
-    updateSummaryDiv(getProgressHtml());
     writeTestOuputDiv(relativeName, fullPathName);
   }
 
@@ -73,7 +73,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     pageNameBar.add(topLink);
     writeData(pageNameBar.html());
 
-    writeData("<div class=\"alternating_block_" + cssSuffix + "\">");
+    writeData("<div class=\"alternating_block\">");
   }
 
   private void maybeWriteTestOutputDiv() {
@@ -83,7 +83,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
       printedTestOutput = true;
     }
   }
-
+  
   private void maybeWriteTestSystem() {
     if (testSystemFullName != null) {
       HtmlTag systemTitle = new HtmlTag("h2", String.format("Test System: %s", testSystemFullName));
@@ -92,6 +92,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
       testSystemFullName = null;
     }
   }
+
 
   @Override
   public void newTestStarted(TestPage newTest, TimeMeasurement timeMeasurement) {
@@ -121,14 +122,12 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     return progressDiv.html();
   }
 
-  @Override
   public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
     finishOutputForTest();
 
     getAssertionCounts().add(testSummary);
 
-    switchCssSuffix();
-    HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row_" + cssSuffix);
+    HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row");
 
     mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(testSummary), testSummary.toString()));
 
@@ -145,25 +144,51 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     writeData(insertScript.html());
   }
 
-  protected TestSummary getFinalSummary() {
-    return pageCounts;
-  }
-
   private void finishOutputForTest() {
     writeData("</div>" + HtmlTag.endl);
   }
-
+  
+  @Override
+  public void writeHead(String pageType) throws IOException {
+    super.writeHead(pageType);
+    writeTestSummaries();
+  }
+  
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     latestTestTime = totalTimeMeasurement;
+    removeStopTestLink();
+    publishAndAddLog();
+    finishWritingOutput();
+    close();
+
     super.allTestingComplete(totalTimeMeasurement);
   }
 
-  private void switchCssSuffix() {
-    if (cssSuffix1.equals(cssSuffix))
-      cssSuffix = cssSuffix2;
-    else
-      cssSuffix = cssSuffix1;
+  protected void publishAndAddLog() throws IOException {
+    if (log != null) {
+      log.publish();
+      writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
+    }
+  }
+
+  @Override
+  public void testOutputChunk(String output) throws IOException {
+    writeData(output);
+  }
+
+  @Override
+  public void testComplete(TestPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
+    super.testComplete(testPage, testSummary, timeMeasurement);
+    latestTestTime = timeMeasurement;
+
+    processTestResults(getRelativeName(testPage), testSummary);
+  }
+
+  @Override
+  public void errorOccured() {
+    latestTestTime = null;
+    super.errorOccured();
   }
 
   @Override
@@ -175,23 +200,26 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
 
   }
 
-  @Override
   protected String makeSummaryContent() {
-    String testPagesSummary = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    return testPagesSummary + super.makeSummaryContent();
+    String summaryContent = "<strong>Test Pages:</strong> " + pageCounts.toString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    if (latestTestTime != null) {
+      summaryContent += String.format("<strong>Assertions:</strong> %s (%.03f seconds)", getAssertionCounts(), latestTestTime.elapsedSeconds());
+    } else {
+      summaryContent += String.format("<strong>Assertions:</strong> %s ", getAssertionCounts());
+    }
+    return summaryContent;
   }
 
+  @Override
   public void finishWritingOutput() throws IOException {
     writeData(testSummary());
-    writeData(getHtmlPage().postDivision);
+    super.finishWritingOutput();
   }
   
   @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-    // TODO Auto-generated method stub
-    super.setExecutionLogAndTrackingId(stopResponderId, log);
-
-    writeTestSummaries();
+    this.log = log;
+    addStopLink(stopResponderId);
   }
 
   private void writeTestSummaries() {
