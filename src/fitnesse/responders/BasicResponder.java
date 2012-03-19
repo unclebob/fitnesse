@@ -23,7 +23,7 @@ public abstract class BasicResponder implements SecureResponder {
   }
 
   protected String getContentType() {
-    return Response.DEFAULT_CONTENT_TYPE;
+    return Response.Format.HTML.getContentType();
   }
 
   public SecureOperation getSecureOperation() {
