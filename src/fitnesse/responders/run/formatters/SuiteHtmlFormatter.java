@@ -8,6 +8,7 @@ import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.html.HtmlTag;
@@ -22,7 +23,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
   private static final String cssSuffix2 = "2";
 
   private TestSummary pageCounts = new TestSummary();
-  private static final String TEST_SUMMARIES_ID = "test_summaries";
+  private static final String TEST_SUMMARIES_ID = "test-summaries";
 
   private String cssSuffix = cssSuffix1;
   private int currentTest = 0;
@@ -184,11 +185,16 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     writeData(testSummary());
     writeData(getHtmlPage().postDivision);
   }
-
+  
   @Override
-  public void writeHead(String pageType) throws IOException {
-    super.writeHead(pageType);
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
+    // TODO Auto-generated method stub
+    super.setExecutionLogAndTrackingId(stopResponderId, log);
 
+    writeTestSummaries();
+  }
+
+  private void writeTestSummaries() {
     HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");
 
     HtmlTag summariesDiv = HtmlUtil.makeDivTag(TEST_SUMMARIES_ID);

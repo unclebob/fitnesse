@@ -312,6 +312,6 @@ article th, article td {
  padding: 0.5em;
 }
 
-#test_summaries h2, #test_summaries h3 {
+#test_summaries h2, #test-summaries h3 {
 	text-align: center;
 }
