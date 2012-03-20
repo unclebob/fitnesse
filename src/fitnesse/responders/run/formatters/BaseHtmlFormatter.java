@@ -22,13 +22,15 @@ import fitnesse.wiki.WikiPagePath;
 
 public abstract class BaseHtmlFormatter extends BaseFormatter {
 
-  private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>";
+  public static final String BREAKPOINT = "<!--BREAKPOINT-->";
+  private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>";
 
   private boolean wasInterupted = false;
   private TestSummary assertionCounts = new TestSummary();
 
-  private HtmlPage htmlPage;
-
+  private String preDivisionHtml;
+  private String postDivisionHtml;
+  
   protected BaseHtmlFormatter() {
     super();
   }
@@ -81,10 +83,10 @@ public abstract class BaseHtmlFormatter extends BaseFormatter {
 
   @Override
   public void writeHead(String pageType) throws IOException {
-    htmlPage = buildHtml(pageType);
+    HtmlPage htmlPage = buildHtml(pageType);
     htmlPage.setMainTemplate("testPage");
-    htmlPage.divide();
-    writeData(htmlPage.preDivision);
+    divide(htmlPage);
+    writeData(preDivisionHtml);
   }
 
   protected HtmlPage buildHtml(String pageType) {
@@ -101,6 +103,14 @@ public abstract class BaseHtmlFormatter extends BaseFormatter {
 
     WikiImportProperty.handleImportProperties(html, getPage(), getPage().getData());
     return html;
+  }
+
+  // Divide the HTML based on a "magic" phrase, until we have something better
+  private void divide(HtmlPage htmlPage) {
+    String html = htmlPage.html();
+    int breakIndex = html.indexOf(BREAKPOINT);
+    preDivisionHtml = html.substring(0, breakIndex);
+    postDivisionHtml = html.substring(breakIndex + BREAKPOINT.length());
   }
 
   public class WikiPageFooterRenderer {
@@ -135,7 +145,7 @@ public abstract class BaseHtmlFormatter extends BaseFormatter {
   protected abstract String makeSummaryContent();
 
   protected void finishWritingOutput() throws IOException {
-    writeData(htmlPage.postDivision);
+    writeData(postDivisionHtml);
   }
 
   protected void close() {

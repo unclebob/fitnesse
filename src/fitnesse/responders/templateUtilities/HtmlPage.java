@@ -13,7 +13,6 @@ import org.apache.velocity.runtime.RuntimeInstance;
 import fitnesse.wiki.WikiPageActions;
 
 public class HtmlPage {
-  public static final String BreakPoint = "<!--BREAKPOINT-->";
   private static final String HEADER_TEMPLATE = "pageTitle.vm";
   private static final String TITLE = "FitNesse";
 
@@ -22,9 +21,6 @@ public class HtmlPage {
   
   private String templateFileName;
   
-  public String preDivision;
-  public String postDivision;
-
   public HtmlPage(VelocityEngine velocityEngine, String templateFileName) {
     super();
     
@@ -89,13 +85,6 @@ public class HtmlPage {
 
   public void setPageTitle(PageTitle pageTitle) {
     velocityContext.put("pageTitle", pageTitle);
-  }
-
-  public void divide() {
-    String html = html();
-    int breakIndex = html.indexOf(BreakPoint);
-    preDivision = html.substring(0, breakIndex);
-    postDivision = html.substring(breakIndex + BreakPoint.length());
   }
 
   public void setBodyClass(String bodyClass) {

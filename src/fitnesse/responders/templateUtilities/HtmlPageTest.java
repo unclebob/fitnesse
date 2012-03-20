@@ -62,15 +62,6 @@ public class HtmlPageTest extends RegexTestCase {
     assertSubString("<nav>", html);
   }
 
-  public void testDivide() throws Exception {
-    page.setMainTemplate("breakpoint.vm");
-    page.divide();
-    assertNotSubString("</html>", page.preDivision);
-    assertSubString("</html>", page.postDivision);
-    assertNotSubString(HtmlPage.BreakPoint, page.preDivision);
-    assertNotSubString(HtmlPage.BreakPoint, page.postDivision);
-  }
-  
   public void testBreadCrumbsWithCurrentPageLinked() throws Exception {
     String trail = "TstPg1.TstPg2.TstPg3.TstPg4";
     page.setPageTitle(new PageTitle(PathParser.parse(trail)));
