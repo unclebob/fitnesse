@@ -27,7 +27,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private boolean printedTestOutput = false;
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
-  private CompositeExecutionLog log;
   private String testSummariesId = TEST_SUMMARIES_ID;
 
 
@@ -158,13 +157,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     super.allTestingComplete(totalTimeMeasurement);
   }
 
-  protected void publishAndAddLog() throws IOException {
-    if (log != null) {
-      log.publish();
-      writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
-    }
-  }
-
   @Override
   public void testOutputChunk(String output) throws IOException {
     writeData(output);
@@ -210,12 +202,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     super.finishWritingOutput();
   }
   
-  @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-    this.log = log;
-    addStopLink(stopResponderId);
-  }
-
 }
 
 

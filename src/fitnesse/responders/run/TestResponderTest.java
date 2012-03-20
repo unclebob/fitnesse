@@ -339,25 +339,11 @@ public class TestResponderTest {
     assertTrue(results.indexOf("1 Tests,\t1 Failures") != -1);
   }
 
-  private String getExecutionStatusMessage() throws Exception {
-    Pattern pattern = Pattern.compile("<a href=\"ErrorLogs\\.[^>]*>([^<>]*?)</a>", Pattern.DOTALL | Pattern.MULTILINE);
-    Matcher matcher = pattern.matcher(results);
-    matcher.find();
-    return matcher.group(1);
-  }
-
-  private String getExecutionStatusStyle() {
-    Pattern pattern = Pattern.compile("<a.*?href=\"ErrorLogs\\..*?class=\"(.*?)\".*?>", Pattern.DOTALL | Pattern.MULTILINE);
-    Matcher matcher = pattern.matcher(results);
-    matcher.find();
-    return matcher.group(1);
-  }
-
   @Test
   public void testExecutionStatusOk() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertEquals("Tests Executed OK", getExecutionStatusMessage());
-    assertEquals("ok", getExecutionStatusStyle());
+    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains("\\\"ok\\\""));
   }
 
   @Test
@@ -365,8 +351,8 @@ public class TestResponderTest {
     responder.setFastTest(false);
     request.addInput("debug", "");
     doSimpleRun(passFixtureTable());
-    assertEquals("Tests Executed OK", getExecutionStatusMessage());
-    assertEquals("ok", getExecutionStatusStyle());
+    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains("\\\"ok\\\""));
     assertTrue("should be fast test", responder.isFastTest());
   }
 
@@ -374,23 +360,23 @@ public class TestResponderTest {
   public void testExecutionStatusOutputCaptured() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(outputWritingTable("blah"));
-    assertEquals("Output Captured", getExecutionStatusMessage());
-    assertEquals("output", getExecutionStatusStyle());
+    assertTrue(results.contains(">Output Captured<"));
+    assertTrue(results.contains("\\\"output\\\""));
   }
 
   @Test
   public void testExecutionStatusError() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(crashFixtureTable());
-    assertEquals("Errors Occurred", getExecutionStatusMessage());
-    assertEquals("error", getExecutionStatusStyle());
+    assertTrue(results.contains(">Errors Occurred<"));
+    assertTrue(results.contains("\\\"error\\\""));
   }
 
   @Test
   public void testExecutionStatusErrorHasPriority() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
-    assertEquals("Errors Occurred", getExecutionStatusMessage());
+    assertTrue(results.contains(">Errors Occurred<"));
   }
 
   @Test
@@ -501,7 +487,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    assertEquals("Output Captured", getExecutionStatusMessage());
+    assertTrue(results.contains(">Output Captured<"));
     assertHasRegexp("ErrorLog", results);
 
     WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);

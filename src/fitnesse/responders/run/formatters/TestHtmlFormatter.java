@@ -17,7 +17,6 @@ import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
 public abstract class TestHtmlFormatter extends InteractiveFormatter {
-  private CompositeExecutionLog log = null;
   protected TimeMeasurement latestTestTime;
 
   public TestHtmlFormatter(FitNesseContext context, final WikiPage page) {
@@ -57,12 +56,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
-    this.log = log;
-    addStopLink(stopResponderId);
-  }
-
-  @Override
   public void testOutputChunk(String output) throws IOException {
     writeData(output);
   }
@@ -80,13 +73,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   protected void finishWritingOutput() throws IOException {
     writeData(testSummary());
     super.finishWritingOutput();
-  }
-
-  protected void publishAndAddLog() throws IOException {
-    if (log != null) {
-      log.publish();
-      writeData(executionStatus(log));
-    }
   }
 
   protected String makeSummaryContent() {

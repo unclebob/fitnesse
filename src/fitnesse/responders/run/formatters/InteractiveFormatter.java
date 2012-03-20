@@ -30,6 +30,7 @@ public abstract class InteractiveFormatter extends BaseFormatter {
 
   private String preDivisionHtml;
   private String postDivisionHtml;
+  private CompositeExecutionLog log;
   
   protected InteractiveFormatter() {
     super();
@@ -153,6 +154,19 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   protected void close() {
   }
   
+  @Override
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
+    this.log = log;
+    addStopLink(stopResponderId);
+  }
+
+  protected void publishAndAddLog() throws IOException {
+    if (log != null) {
+      log.publish();
+      writeData(HtmlUtil.makeReplaceElementScript("test-action", executionStatus(log)).html());
+    }
+  }
+
   public String executionStatus(CompositeExecutionLog log) {
     String errorLogPageName = log.getErrorLogPageName();
     if (log.exceptionCount() != 0)

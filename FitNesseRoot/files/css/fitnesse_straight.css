@@ -205,7 +205,7 @@ th {
 	text-align: left;
 }
 
-article th, article td {
+article th {
 	 white-space:nowrap;
 }
 
@@ -337,7 +337,7 @@ article th, article td {
     background-image: url("/files/images/executionStatus/ok.gif");
 }
 
-#test-action .capture {
+#test-action .output {
     background-image: url("/files/images/executionStatus/output.gif");
 }
 
