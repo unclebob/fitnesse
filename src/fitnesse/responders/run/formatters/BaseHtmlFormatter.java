@@ -7,6 +7,8 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.ExecutionLog;
+import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.templateUtilities.HtmlPage;
@@ -139,7 +141,21 @@ public abstract class BaseHtmlFormatter extends BaseFormatter {
   protected void close() {
   }
   
-  public String executionStatus(CompositeExecutionLog logs) {
-    return logs.executionStatusHtml();
+  public String executionStatus(CompositeExecutionLog log) {
+    String errorLogPageName = log.getErrorLogPageName();
+    if (log.exceptionCount() != 0)
+      return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.ERROR);
+
+    if (log.hasCapturedOutput())
+      return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OUTPUT);
+
+    return makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OK);
   }
+  
+  public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) {
+    HtmlTag status = HtmlUtil.makeLink(linkHref, executionStatus.getMessage());
+    status.addAttribute("class", executionStatus.getStyle());
+    return status.html();
+  }
+
 }

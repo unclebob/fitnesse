@@ -101,12 +101,6 @@ public class ExecutionLog {
   }
 
 
-  public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) {
-    HtmlTag status = HtmlUtil.makeLink(linkHref, executionStatus.getMessage());
-    status.addAttribute("class", executionStatus.getStyle());
-    return status.html();
-  }
-
   public int getExitCode() {
     return runner.getExitCode();
   }
