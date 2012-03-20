@@ -1,0 +1,10 @@
+!2 2012-03-20
+ * Introduced !-ReleaseNotes-! page
+ * Moved a lot of presentation logic to template files
+ * New style
+ * Can be built by Maven
+ * Parser fixes
+
+!2 2011-10-25
+ * New parser
+ * ...

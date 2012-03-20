@@ -9,5 +9,6 @@ To add your first "page", click the [[Edit][FrontPage?edit]] button and add a [[
 | [[A Two-Minute Example][FitNesse.UserGuide.TwoMinuteExample]]|''A brief example. Read this one next.''|
 | [[User Guide][FitNesse.UserGuide]]|''Answer the rest of your questions here.''|
 | [[Acceptance Tests][FitNesse.SuiteAcceptanceTests]]|''FitNesse's suite of Acceptance Tests''|
+| [[Release Notes][FitNesse.ReleaseNotes]]|''Find out about FitNesse's new features''|
 
 !note Release v@version@
