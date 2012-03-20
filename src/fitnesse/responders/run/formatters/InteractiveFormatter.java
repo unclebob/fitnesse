@@ -81,10 +81,12 @@ public abstract class InteractiveFormatter extends BaseFormatter {
       return "pass";
   }
 
+  public abstract String mainTemplate();
+  
   @Override
   public void writeHead(String pageType) throws IOException {
     HtmlPage htmlPage = buildHtml(pageType);
-    htmlPage.setMainTemplate("testPage");
+    htmlPage.setMainTemplate(mainTemplate());
     divide(htmlPage);
     writeData(preDivisionHtml);
   }

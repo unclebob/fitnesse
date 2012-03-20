@@ -38,6 +38,10 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     super(context, null);
   }
 
+  @Override
+  public String mainTemplate() {
+    return "suitePage";
+  }
   
   public String getTestSystemHeader(String testSystemName) {
     String tag = String.format("<h3>%s</h3>\n", testSystemName);
@@ -149,12 +153,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   }
   
   @Override
-  public void writeHead(String pageType) throws IOException {
-    super.writeHead(pageType);
-    writeTestSummaries();
-  }
-  
-  @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     latestTestTime = totalTimeMeasurement;
     removeStopTestLink();
@@ -222,14 +220,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     addStopLink(stopResponderId);
   }
 
-  private void writeTestSummaries() {
-    HtmlTag outputTitle = new HtmlTag("h2", "Test Summaries");
-
-    HtmlTag summariesDiv = HtmlUtil.makeDivTag(TEST_SUMMARIES_ID);
-    summariesDiv.addAttribute("id", TEST_SUMMARIES_ID);
-    summariesDiv.add(outputTitle);
-    writeData(summariesDiv.html());
-  }
 }
 
 

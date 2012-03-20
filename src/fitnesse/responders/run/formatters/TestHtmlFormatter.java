@@ -31,6 +31,11 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
   }
 
   @Override
+  public String mainTemplate() {
+    return "testPage";
+  }
+  
+  @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     writeData(getPage().getData().getHeaderPageHtml());
   }
