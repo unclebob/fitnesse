@@ -66,14 +66,9 @@ public class WikiPageActions {
   }
 
   public boolean isWithAddChild() {
-    return addChild;
+    return hasAction("AddChild");
   }
   
-  public WikiPageActions withAddChild() {
-    addChild = true;
-    return this;
-  }
-
   public boolean isWithPageHistory() {
     return pageHistory;
   }
