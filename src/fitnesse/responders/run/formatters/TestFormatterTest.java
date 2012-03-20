@@ -50,7 +50,7 @@ public class TestFormatterTest {
       protected void writeResults() {
       }
     };
-    BaseHtmlFormatter testHtmlFormatter = new TestHtmlFormatter(context, page) {
+    InteractiveFormatter testHtmlFormatter = new TestHtmlFormatter(context, page) {
       @Override
       protected void writeData(String output) {
       }

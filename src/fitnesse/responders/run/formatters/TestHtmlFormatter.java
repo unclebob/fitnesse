@@ -16,7 +16,7 @@ import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
-public abstract class TestHtmlFormatter extends BaseHtmlFormatter {
+public abstract class TestHtmlFormatter extends InteractiveFormatter {
   private CompositeExecutionLog log = null;
   protected TimeMeasurement latestTestTime;
 

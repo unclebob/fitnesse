@@ -20,7 +20,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class BaseHtmlFormatter extends BaseFormatter {
+public abstract class InteractiveFormatter extends BaseFormatter {
 
   public static final String BREAKPOINT = "<!--BREAKPOINT-->";
   private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>";
@@ -31,11 +31,11 @@ public abstract class BaseHtmlFormatter extends BaseFormatter {
   private String preDivisionHtml;
   private String postDivisionHtml;
   
-  protected BaseHtmlFormatter() {
+  protected InteractiveFormatter() {
     super();
   }
 
-  protected BaseHtmlFormatter(FitNesseContext context, WikiPage page) {
+  protected InteractiveFormatter(FitNesseContext context, WikiPage page) {
     super(context, page);
   }
 

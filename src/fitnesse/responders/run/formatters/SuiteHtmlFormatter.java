@@ -18,7 +18,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public abstract class SuiteHtmlFormatter extends BaseHtmlFormatter {
+public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private TestSummary pageCounts = new TestSummary();
   private static final String TEST_SUMMARIES_ID = "test-summaries";
 
