@@ -28,6 +28,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   private int totalTests = 1;
   private TimeMeasurement latestTestTime;
   private CompositeExecutionLog log;
+  private String testSummariesId = TEST_SUMMARIES_ID;
 
 
   public SuiteHtmlFormatter(FitNesseContext context, WikiPage page) {
@@ -43,12 +44,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     return "suitePage";
   }
   
-  public String getTestSystemHeader(String testSystemName) {
-    String tag = String.format("<h3>%s</h3>\n", testSystemName);
-    HtmlTag insertScript = HtmlUtil.makeAppendElementScript("test_summaries", tag);
-    return insertScript.html();
-  }
-
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
     super.announceNumberTestsToRun(testsToRun);
@@ -131,20 +126,20 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
     getAssertionCounts().add(testSummary);
 
-    HtmlTag mainDiv = HtmlUtil.makeDivTag("alternating_row");
+    HtmlTag tag = new HtmlTag("li");
 
-    mainDiv.add(HtmlUtil.makeSpanTag("test_summary_results " + cssClassFor(testSummary), testSummary.toString()));
+    tag.add(HtmlUtil.makeSpanTag("results " + cssClassFor(testSummary), testSummary.toString()));
 
     HtmlTag link = HtmlUtil.makeLink("#" + relativeName + currentTest, relativeName);
-    link.addAttribute("class", "test_summary_link");
-    mainDiv.add(link);
+    link.addAttribute("class", "link");
+    tag.add(link);
     
     if (latestTestTime != null) {
-      mainDiv.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
+      tag.add(HtmlUtil.makeSpanTag("", String.format("(%.03f seconds)", latestTestTime.elapsedSeconds())));
     }
 
     pageCounts.tallyPageCounts(testSummary);
-    HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, mainDiv.html(2));
+    HtmlTag insertScript = HtmlUtil.makeAppendElementScript(testSummariesId, tag.html());
     writeData(insertScript.html());
   }
 
@@ -192,7 +187,8 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
   @Override
   public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     testSystemFullName = (testSystemName + ":" + testRunner).replaceAll("\\\\", "/");
-    String tag = String.format("<h3>%s</h3>\n", testSystemFullName);
+    testSummariesId = "test-system-" + testSystemName;
+    String tag = String.format("<h3>%s</h3>\n<ul id=\"%s\"></ul>", testSystemFullName, testSummariesId);
     HtmlTag insertScript = HtmlUtil.makeAppendElementScript(TEST_SUMMARIES_ID, tag);
     writeData(insertScript.html());
 

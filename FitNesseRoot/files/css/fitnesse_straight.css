@@ -312,6 +312,11 @@ article th, article td {
  padding: 0.5em;
 }
 
+#test-summaries ul {
+    list-style: none;
+    padding-left: 0;
+}
+
 #test_summaries h2, #test-summaries h3 {
 	text-align: center;
 }

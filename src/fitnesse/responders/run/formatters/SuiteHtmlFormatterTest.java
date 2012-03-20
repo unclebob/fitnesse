@@ -50,16 +50,14 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
   public void testCountsHtml() throws Exception {
     formatter.processTestResults("RelativePageName", new TestSummary(1, 0, 0, 0));
 
-    assertSubString("<div class=\\\"alternating_row\\\">", pageBuffer.toString());
-    assertSubString("<span class=\\\"test_summary_results pass\\\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<a href=\\\"#RelativePageName0\\\" class=\\\"test_summary_link\\\">RelativePageName</a>", pageBuffer.toString());
+    assertSubString("<span class=\\\"results pass\\\">1 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
+    assertSubString("<a href=\\\"#RelativePageName0\\\" class=\\\"link\\\">RelativePageName</a>", pageBuffer.toString());
 
     pageBuffer.setLength(0);
     formatter.processTestResults("AnotherPageName", new TestSummary(0, 1, 0, 0));
 
-    assertSubString("<div class=\\\"alternating_row\\\">", pageBuffer.toString());
-    assertSubString("<span class=\\\"test_summary_results fail\\\">0 right, 1 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
-    assertSubString("<a href=\\\"#AnotherPageName0\\\" class=\\\"test_summary_link\\\">AnotherPageName</a>", pageBuffer.toString());
+    assertSubString("<span class=\\\"results fail\\\">0 right, 1 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
+    assertSubString("<a href=\\\"#AnotherPageName0\\\" class=\\\"link\\\">AnotherPageName</a>", pageBuffer.toString());
   }
 
   public void testResultsHtml() throws Exception {
@@ -144,8 +142,8 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.newTestStarted(secondPage, secondTimeMeasurement.start());
     formatter.testComplete(secondPage, new TestSummary(5, 6, 7, 8), secondTimeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
-    assertHasRegexp("<div.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</div>", pageBuffer.toString());
-    assertHasRegexp("<div.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</div>", pageBuffer.toString());
+    assertHasRegexp("<li.*\\(page1\\).*<span.*>\\(0\\.670 seconds\\)</span>.*</li>", pageBuffer.toString());
+    assertHasRegexp("<li.*\\(page2\\).*<span.*>\\(0\\.890 seconds\\)</span>.*</li>", pageBuffer.toString());
   }
 
   private TimeMeasurement newConstantElapsedTimeMeasurement(final long theElapsedTime) {
