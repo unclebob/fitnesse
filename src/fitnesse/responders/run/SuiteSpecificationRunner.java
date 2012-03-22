@@ -1,5 +1,7 @@
 package fitnesse.responders.run;
 
+import java.util.LinkedList;
+
 import fitnesse.components.SuiteSpecificationMatchFinder;
 import fitnesse.components.TraversalListener;
 import fitnesse.slimTables.HtmlTableScanner;
@@ -7,9 +9,6 @@ import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.htmlparser.util.ParserException;
-
-import java.util.LinkedList;
 
 public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   public String titleRegEx;
@@ -35,7 +34,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   }
 
 
-  public boolean getPageListFromPageContent(String pageContent) throws ParserException {
+  public boolean getPageListFromPageContent(String pageContent) {
     HtmlTableScanner scanner = new HtmlTableScanner(pageContent);
     for (int tableIndex = 0; tableIndex < scanner.getTableCount(); tableIndex++) {
       Table table = scanner.getTable(tableIndex);
@@ -124,7 +123,7 @@ public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
       testPageList.add(page);
   }
 
-  public static boolean isASuiteSpecificationsPage(String page) throws ParserException {
+  public static boolean isASuiteSpecificationsPage(String page) {
     HtmlTableScanner scanner = new HtmlTableScanner(page);
     if (scanner.getTableCount() > 0) {
       Table table = scanner.getTable(0);

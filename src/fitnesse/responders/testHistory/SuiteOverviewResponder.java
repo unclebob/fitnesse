@@ -2,8 +2,6 @@ package fitnesse.responders.testHistory;
 
 import java.util.List;
 
-import org.htmlparser.util.ParserException;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
@@ -21,7 +19,7 @@ public class SuiteOverviewResponder implements Responder {
 
   private FitNesseContext context;
   
-  public Response makeResponse(FitNesseContext context, Request request) throws ParserException {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     WikiPage root = context.root;
     WikiPage page = root.getPageCrawler().getPage(root, PathParser.parse(request.getResource()));

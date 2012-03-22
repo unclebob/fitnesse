@@ -2,11 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.wiki.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
-import java.util.*;
-
-import org.htmlparser.util.ParserException;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.VirtualCouplingExtension;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wiki.WikiPagePath;
 
 public class SuiteContentsFinder {
 
@@ -33,7 +41,7 @@ public class SuiteContentsFinder {
     return testPageList;
   }
 
-  public List<WikiPage> makePageList() throws ParserException {
+  public List<WikiPage> makePageList() {
     getAllPagesToRunForThisSuite();
 
     if (testPageList.isEmpty()) {
@@ -48,7 +56,7 @@ public class SuiteContentsFinder {
   }
 
 
-  public LinkedList<WikiPage> getAllPagesToRunForThisSuite() throws ParserException {
+  public LinkedList<WikiPage> getAllPagesToRunForThisSuite() {
     String content = pageToRun.getData().getHtml();
     if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
       SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);

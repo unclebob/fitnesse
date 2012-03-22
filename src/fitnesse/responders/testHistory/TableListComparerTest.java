@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.htmlparser.util.ParserException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ public class TableListComparerTest {
   private TableListComparer comparer;
 
   @Before
-  public void setUp() throws ParserException {
+  public void setUp() {
     HtmlTableScanner leftHandScanner = new HtmlTableScanner("<table>empty</table>");
     HtmlTableScanner rightHandScanner = new HtmlTableScanner("<table>empty</table>");
     comparer = new TableListComparer(leftHandScanner,rightHandScanner);

@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 
-import org.htmlparser.util.ParserException;
-
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -77,7 +75,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     closeClient(client);
   }
 
-  private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws IOException, InterruptedException, ParserException {
+  private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws IOException, InterruptedException {
     FitClient client = startClient(socket);
     SuiteFilter filter = new SuiteFilter(suiteFilter, null, null);
     SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);

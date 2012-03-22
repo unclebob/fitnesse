@@ -15,7 +15,6 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-import org.htmlparser.util.ParserException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,12 +49,7 @@ public class PacketResponder implements SecureResponder {
     packet = new JSONObject();
     String html = page.getData().getHtml();
 
-    TableScanner scanner;
-    try {
-      scanner = new HtmlTableScanner(html);
-    } catch (ParserException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    TableScanner scanner = new HtmlTableScanner(html);
 
     try {
       addTablesToPacket(scanner);

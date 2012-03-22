@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.htmlparser.util.ParserException;
 import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
@@ -60,7 +59,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeResponseFromComparison(FitNesseContext context,
-      Request request) throws ParserException, IOException, SAXException {
+      Request request) throws IOException, SAXException {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse(request);
     else {
