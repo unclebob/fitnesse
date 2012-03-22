@@ -308,6 +308,21 @@ article th {
 	background-color: lightgray;
 }
 
+tr.scenario > td:first-child {
+	padding-left: 16px;
+    background-image: url("/files/images/collapsableClosed.gif");
+    background-position: left;
+    background-repeat: no-repeat;
+}
+
+tr.scenario.open > td:first-child {
+    background-image: url("/files/images/collapsableOpen.gif");
+}
+
+tr.scenario-detail {
+	display: none;
+}
+
 #test-summary, #progressBar {
  padding: 0.5em;
 }

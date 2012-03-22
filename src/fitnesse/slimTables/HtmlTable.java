@@ -2,23 +2,25 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.slim.SlimError;
-import fitnesse.wikitext.Utils;
-import org.htmlparser.Node;
-import org.htmlparser.Parser;
-import org.htmlparser.Tag;
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.*;
-import org.htmlparser.util.NodeList;
-
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.htmlparser.Node;
+import org.htmlparser.Tag;
+import org.htmlparser.nodes.TextNode;
+import org.htmlparser.tags.CompositeTag;
+import org.htmlparser.tags.TableColumn;
+import org.htmlparser.tags.TableHeader;
+import org.htmlparser.tags.TableRow;
+import org.htmlparser.tags.TableTag;
+import org.htmlparser.util.NodeList;
+
+import fitnesse.wikitext.Utils;
 
 public class HtmlTable implements Table {
   private static final Random RANDOM_GENERATOR = new SecureRandom();
@@ -104,11 +106,60 @@ public class HtmlTable implements Table {
     row.appendCell(contents);
   }
 
-  public void appendCellToRow(int rowIndex, Table table) {
+  /**
+   * Scenario tables (mainly) are added on the next row. A bit of javascript allows for collapsing and
+   * expanding.
+   * 
+   * @see fitnesse.slimTables.Table#appendChildTable(int, fitnesse.slimTables.Table)
+   */
+  public void appendChildTable(int rowIndex, Table childTable) {
     Row row = rows.get(rowIndex);
-    row.appendCell(table);
+    row.rowNode.setAttribute("class", "scenario", '"');
+
+    Row childRow = new Row();
+    TableColumn column = (TableColumn) newTag(TableColumn.class);
+    column.setChildren(new NodeList(((HtmlTable) childTable).getTableNode()));
+    column.setAttribute("colspan", "" + colspan(row), '"');
+    childRow.appendCell(new Cell(column));
+    childRow.rowNode.setAttribute("class", "scenario-detail", '"');
+    insertRowAfter(row, childRow);
   }
 
+  private int colspan(Row row) {
+    NodeList rowNodes = row.rowNode.getChildren();
+    int colspan = 0;
+    for (int i = 0; i < rowNodes.size(); i++) {
+      if (rowNodes.elementAt(i) instanceof TableColumn) {
+        String s = ((TableColumn)rowNodes.elementAt(i)).getAttribute("colspan");
+        if (s != null) {
+          colspan += Integer.parseInt(s);
+        } else {
+          colspan++;
+        }
+      }
+    }
+    return colspan;
+  }
+
+  // It's a bit of work to insert a node with the htmlparser module.
+  private void insertRowAfter(Row existingRow, Row childRow) {
+    NodeList rowNodes = tableNode.getChildren();
+    int index = rowNodes.indexOf(existingRow.rowNode);
+    Stack<Node> tempStack = new Stack<Node>();
+    
+    while (rowNodes.size() - 1 > index) {
+      tempStack.push(rowNodes.elementAt(tableNode.getChildren().size() - 1));
+      rowNodes.remove(rowNodes.size() - 1);
+    }
+    
+    rowNodes.add(childRow.rowNode);
+    
+    while (tempStack.size() > 0) {
+      rowNodes.add(tempStack.pop());
+    }
+  }
+
+  
   public void setTestStatusOnRow(int rowIndex, boolean testStatus) {
     Row row = rows.get(rowIndex);
     row.setTestStatus(testStatus);
@@ -134,8 +185,9 @@ public class HtmlTable implements Table {
     Tag tag = null;
     try {
       tag = klass.newInstance();
+      tag.setTagName(tag.getTagName().toLowerCase());
       Tag endTag = klass.newInstance();
-      endTag.setTagName("/" + tag.getTagName());
+      endTag.setTagName("/" + tag.getTagName().toLowerCase());
       endTag.setParent(tag);
       tag.setEndTag(endTag);
     } catch (Exception e) {
@@ -184,7 +236,7 @@ public class HtmlTable implements Table {
       rowNode = (TableRow) newTag(TableRow.class);
       rowNode.setChildren(new NodeList());
       Tag endNode = new TableRow();
-      endNode.setTagName("/" + rowNode.getTagName());
+      endNode.setTagName("/" + rowNode.getTagName().toLowerCase());
       rowNode.setEndTag(endNode);
     }
 
@@ -206,73 +258,6 @@ public class HtmlTable implements Table {
       cells.add(newCell);
     }
 
-    public void appendCell(Table table) {
-      try {
-        doAppendCollapsableSection((HtmlTable) table);
-      } catch (Exception e) {
-        throw new SlimError(e);
-      }
-
-    }
-
-    private void doAppendCollapsableSection(HtmlTable htmlTable) throws Exception {
-      Node collapsableDiv = getCollapsableDiv();
-      NodeList children = collapsableDiv.getChildren();
-      Node hiddenDiv = findHiddenDiv(children);
-      hiddenDiv.setChildren(new NodeList(htmlTable.getTableNode()));
-      Cell newCell = new Cell(collapsableDiv);
-      appendCell(newCell);
-    }
-
-    private Node findHiddenDiv(NodeList children) {
-      Node hiddenDiv = null;
-      for (int i = 0; i < children.size(); i++) {
-        Node n = children.elementAt(i);
-        if (n instanceof Div) {
-          Div div = (Div) n;
-          if ("hidden".equals(div.getAttribute("class"))) {
-            hiddenDiv = n;
-            break;
-          }
-        }
-      }
-      return hiddenDiv;
-    }
-
-    private Node getCollapsableDiv() throws Exception {
-      String collapsableSectionHtml = makeCollapsableSection();
-      Parser parser = new Parser(collapsableSectionHtml);
-      NodeList htmlTree = parser.parse(null);
-      Node collapsableDiv = htmlTree.elementAt(0);
-      return collapsableDiv;
-    }
-
-    public String makeCollapsableSection() throws Exception {
-      String id = RANDOM_GENERATOR.nextLong() + "";
-      HtmlTag outerDiv;
-
-      outerDiv = HtmlUtil.makeDivTag("collapse_rim");
-
-      HtmlTag image = new HtmlTag("img");
-      image.addAttribute("src", "/files/images/collapsableClosed.gif");
-      image.addAttribute("class", "left");
-      image.addAttribute("id", "img" + id);
-
-      HtmlTag anchor = new HtmlTag("a", image);
-      anchor.addAttribute("href", "javascript:toggleCollapsable('" + id + "');");
-
-      outerDiv.add(anchor);
-      HtmlTag span = new HtmlTag("span", "Scenario");
-      span.addAttribute("id", "test_status");
-      outerDiv.add(span);
-      HtmlTag collapsablediv = HtmlUtil.makeDivTag("hidden");
-      collapsablediv.addAttribute("id", id);
-      collapsablediv.add("");
-      outerDiv.add(collapsablediv);
-
-      return outerDiv.html();
-    }
-
     public CompositeTag getRowNode() {
       return rowNode;
     }
@@ -287,14 +272,11 @@ public class HtmlTable implements Table {
 
     public void setTestStatus(boolean testStatus) {
       NodeList cells = rowNode.getChildren();
-      Node lastCell = cells.elementAt(cells.size() - 1);
-      Tag statusNode = findById(lastCell, "test_status");
-      statusNode.setAttribute("class", testStatus ? "pass" : "fail");
       for (int i = 0; i < cells.size(); i++) {
         Node cell = cells.elementAt(i);
         if (cell instanceof Tag) {
           Tag tag = (Tag) cell;
-          tag.setAttribute("class", testStatus ? "pass" : "fail");
+          tag.setAttribute("class", testStatus ? "\"pass\"" : "\"fail\"");
         }
       }
     }
@@ -384,3 +366,4 @@ public class HtmlTable implements Table {
 }
 
 
+ 
