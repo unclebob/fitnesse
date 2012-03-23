@@ -44,7 +44,10 @@ nav ul {
 }
 
 nav .label {
-	display: none;
+	background-color: transparent;
+	border: none;
+	padding: 0;
+	margin: 4px 12px;
 }
 
 nav li {
@@ -66,6 +69,7 @@ nav li a:hover {
 	background-color: #f8f8f8;
 }
 
+nav li#add,
 nav li#tools {
 	border: none;
 	padding: 0;
