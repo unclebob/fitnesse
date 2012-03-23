@@ -5,8 +5,9 @@
 #if($!redirect)
  <input type="hidden" name="redirect" value="$redirect"/>
 #end
- <textarea id="textarea" class="wikitext pageContent no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContentId" name="pageContent">$pageContent</textarea>
-
+ <div id="editor">
+   <textarea class="wikitext no_wrap" wrap="off" tabindex="1" cols="70" rows="30" id="pageContent" name="pageContent">$pageContent</textarea>
+ </div>
 
  <input id="save_button" type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
  <span id="edit_buttons">

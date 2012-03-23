@@ -142,7 +142,7 @@ h4 {
   font-style: italic;
 }
 
-textarea.pageContent {
+textarea#pageContent {
   font-family: monaco, 'Lucida Sans Typewriter', monospace;
   font-size: 12px;
   height: 100%;
