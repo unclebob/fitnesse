@@ -34,11 +34,10 @@ header {
 }
 
 #art_niche span {
-	display: none;
+ display: none;
 }
 
 header ul {
- list-style: none;
  margin: 0;
  padding: 0;
  float: left;
@@ -46,9 +45,10 @@ header ul {
 
 header li {
  display: inline-block;
- margin-right: 1em;
 }
-
+header li+li:before {
+ content: "> ";
+}
 header h1 {
  font: bold 2em;
  margin: 20px 0;
