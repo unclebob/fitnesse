@@ -1025,7 +1025,7 @@ Wysiwyg.prototype.insertTable = function() {
         return;
     }
     var id = this.generateDomId();
-    this.insertHTML(this.tableHTML(id, 2, 3));
+    this.insertHTML(this.tableHTML(id, 2, 2));
     var element = this.contentDocument.getElementById(id)
     if (element) {
         this.selectNodeContents(element);
