@@ -63,11 +63,12 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     HtmlTag anchor = HtmlUtil.makeLink(fullPathName, relativeName);
     anchor.addAttribute("id", relativeName + currentTest);
     anchor.addAttribute("class", "test_name");
-
+    HtmlTag title = new HtmlTag("h3", anchor);
+    
     HtmlTag topLink = HtmlUtil.makeLink("#" + TEST_SUMMARIES_ID, "Top");
     topLink.addAttribute("class", "top_of_page");
 
-    pageNameBar.add(anchor);
+    pageNameBar.add(title);
     pageNameBar.add(topLink);
     writeData(pageNameBar.html());
 

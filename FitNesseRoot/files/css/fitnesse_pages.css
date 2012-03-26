@@ -124,6 +124,9 @@ tr.scenario-detail {
 #test-action .error {
 	background-image: url("/files/images/executionStatus/error.gif");
 }
+.test_output_name h3 {
+	display: inline;
+}
 
 /** Virtual and import pages */
 .virtual header {
