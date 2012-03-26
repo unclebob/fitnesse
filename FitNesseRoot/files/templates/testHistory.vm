@@ -1,4 +1,3 @@
-<div class="main">
 #set($noHistory = true)
 <form action="" method="get">
  <input type="hidden" value="overview" name="responder"/>
@@ -67,4 +66,3 @@
 
 </table>
 #if ($noHistory)No History#end
-</div>

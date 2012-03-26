@@ -1,4 +1,3 @@
-<div class="main">
  <form method="post" action="">
   <input type="hidden" name="responder" value="renameFile"/>
 Rename <b>$filename</b> to <br/><br/><br/>
@@ -6,4 +5,3 @@ Rename <b>$filename</b> to <br/><br/><br/>
   <input type="submit" name="renameFile" value="Rename"/>
   <input type="hidden" name="filename" value="$filename"/>
  </form>
-</div>

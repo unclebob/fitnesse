@@ -1,4 +1,3 @@
-<div class="main">
 #if($testExecutionReport)
 <table>
   <tr>
@@ -40,4 +39,3 @@
 <div>$testResult.Content</div>
 #end
 #end
-</div>

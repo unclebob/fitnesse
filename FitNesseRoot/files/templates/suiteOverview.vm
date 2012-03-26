@@ -1,4 +1,3 @@
-<div class="main">
 #if($treeRoot)
 	#set ($branch=$treeRoot)
 	#if ($branch.branches.size()==1)
@@ -56,5 +55,3 @@
 #else
   <h2>Sorry no information: $pageTitle.Title</h2>
 #end
-
-</div>

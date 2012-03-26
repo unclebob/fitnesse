@@ -1,4 +1,3 @@
-<div class="main">
 #if($pageHistory)
 <table>
   <tr>
@@ -33,4 +32,3 @@
 #else
 <h2>No history for page: $pageTitle.Title</h2>
 #end
-</div>
