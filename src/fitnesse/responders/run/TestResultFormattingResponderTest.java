@@ -86,10 +86,19 @@ public class TestResultFormattingResponderTest extends RegexTestCase {
     Response response = responder.makeResponse(context, request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
-    String content = sender.sentData();
+    String html = sender.sentData();
 
-    assertSubString("Mock Results", content);
+    assertSubString("Mock Results", html);
+    
+//    assertTrue(html.startsWith("<!DOCTYPE html>"));
+//    assertTrue(html.endsWith("</html>"));
+//
+//    assertSubString("<base href=\"http://somehost.com:8080/\"", html);
+//    assertSubString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>", html);
+//    assertSubString("href=\"/files/css/fitnesse_print.css\"", html);
+//    assertSubString("Command Line Test Results", html);
   }
+
 
   public void testMockFormatter() throws Exception {
     checkFormatterCreated(null, MockResultFormatter.class);

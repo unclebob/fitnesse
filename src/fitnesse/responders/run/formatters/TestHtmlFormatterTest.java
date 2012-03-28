@@ -36,16 +36,9 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void tearDown() throws Exception {
   }
 
-  public void testHead() throws Exception {
-    formatter.writeHead("test");
-
-    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", pageBuffer.toString());
-  }
-
   public void testTestSummaryTestPass() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.writeHead("test");
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 0, 0, 0), timeMeasurement.stop());
@@ -58,7 +51,6 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testTestSummaryTestFail() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.writeHead("test");
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
@@ -70,7 +62,6 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testExecutionStatusHtml() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
@@ -82,19 +73,17 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testTail() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.writeHead("test");
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(4, 1, 0, 0), timeMeasurement.stop());
     formatter.allTestingComplete(totalTimeMeasurement.stop());
 
-    assertSubString("</html>", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong>", pageBuffer.toString());
   }
 
   public void testStop() throws Exception {
     TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
@@ -108,7 +97,6 @@ public class TestHtmlFormatterTest extends RegexTestCase {
 
   public void testIncompleteMessageAfterException() throws Exception {
     TimeMeasurement timeMeasurement = new TimeMeasurement();
-    formatter.writeHead("test");
     formatter.setExecutionLogAndTrackingId("2", new CompositeExecutionLog(root.addChildPage("ErrorLogs")));
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
@@ -123,7 +111,6 @@ public class TestHtmlFormatterTest extends RegexTestCase {
   public void testTimingShouldAppearInSummary() throws Exception {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
     TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(600);
-    formatter.writeHead("test");
     formatter.announceNumberTestsToRun(1);
     formatter.newTestStarted(page, timeMeasurement.start());
     formatter.testComplete(page, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());

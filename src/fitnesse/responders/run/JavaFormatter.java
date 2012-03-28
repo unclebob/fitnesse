@@ -103,11 +103,6 @@ public class JavaFormatter extends BaseFormatter {
 
   private TestSummary totalSummary = new TestSummary();
 
-  @Override
-  public void writeHead(String pageType) throws Exception {
-
-  }
-
   public String getFullPath(final WikiPage wikiPage) {
     return new WikiPagePath(wikiPage).toString();
   }

@@ -7,29 +7,19 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.ExecutionStatus;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
 
 public abstract class InteractiveFormatter extends BaseFormatter {
 
-  public static final String BREAKPOINT = "<!--BREAKPOINT-->";
   private static final String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong>";
 
   private boolean wasInterupted = false;
   private TestSummary assertionCounts = new TestSummary();
 
-  private String preDivisionHtml;
-  private String postDivisionHtml;
   private CompositeExecutionLog log;
   
   protected InteractiveFormatter() {
@@ -82,46 +72,6 @@ public abstract class InteractiveFormatter extends BaseFormatter {
       return "pass";
   }
 
-  public abstract String mainTemplate();
-  
-  @Override
-  public void writeHead(String pageType) throws IOException {
-    HtmlPage htmlPage = buildHtml(pageType);
-    htmlPage.setMainTemplate(mainTemplate());
-    divide(htmlPage);
-    writeData(preDivisionHtml);
-  }
-
-  protected HtmlPage buildHtml(String pageType) {
-    PageCrawler pageCrawler = getPage().getPageCrawler();
-    WikiPagePath fullPath = pageCrawler.getFullPath(getPage());
-    String fullPathName = PathParser.render(fullPath);
-    HtmlPage html = context.pageFactory.newPage();
-    html.setTitle(pageType + ": " + fullPathName);
-    html.setPageTitle(new PageTitle(pageType, fullPath));
-    html.setNavTemplate("wikiNav.vm");
-    html.put("actions", new WikiPageActions(getPage()).withPageHistory());
-    html.setFooterTemplate("wikiFooter.vm");
-    html.put("footerContent", new WikiPageFooterRenderer());
-
-    WikiImportProperty.handleImportProperties(html, getPage(), getPage().getData());
-    return html;
-  }
-
-  // Divide the HTML based on a "magic" phrase, until we have something better
-  private void divide(HtmlPage htmlPage) {
-    String html = htmlPage.html();
-    int breakIndex = html.indexOf(BREAKPOINT);
-    preDivisionHtml = html.substring(0, breakIndex);
-    postDivisionHtml = html.substring(breakIndex + BREAKPOINT.length());
-  }
-
-  public class WikiPageFooterRenderer {
-    public String render() {
-        return getPage().getData().getFooterPageHtml();
-    }
-  }
-
   public TestSummary getAssertionCounts() {
     return assertionCounts;
   }
@@ -148,7 +98,6 @@ public abstract class InteractiveFormatter extends BaseFormatter {
   protected abstract String makeSummaryContent();
 
   protected void finishWritingOutput() throws IOException {
-    writeData(postDivisionHtml);
   }
 
   protected void close() {

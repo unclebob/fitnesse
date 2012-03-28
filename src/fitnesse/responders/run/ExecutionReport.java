@@ -20,10 +20,12 @@ public abstract class ExecutionReport {
   private long totalRunTimeInMillis = 0;
 
   protected ExecutionReport(Document xmlDocument) {
+    this();
     xmlDoc = xmlDocument;
   }
 
   protected ExecutionReport() {
+    version = new FitNesseVersion().toString();
   }
 
   @Override

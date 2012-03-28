@@ -4,15 +4,13 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.run.CompositeExecutionLog;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestSystem;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.responders.run.TestPage;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -38,11 +36,6 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     super(context, null);
   }
 
-  @Override
-  public String mainTemplate() {
-    return "suitePage";
-  }
-  
   @Override
   public void announceNumberTestsToRun(int testsToRun) {
     super.announceNumberTestsToRun(testsToRun);

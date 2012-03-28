@@ -91,7 +91,6 @@ public class TestFormatterTest {
     when(timeMeasurement.startedAtDate()).thenReturn(new Date(0));
     when(timeMeasurement.elapsedSeconds()).thenReturn(0d);
     
-    formatter.writeHead("Suite");
     formatter.announceNumberTestsToRun(3);
     formatter.testComplete(page, right, timeMeasurement);
     formatter.testComplete(page, wrong, timeMeasurement);

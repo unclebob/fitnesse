@@ -10,4 +10,4 @@
 </div>
 
 ## Test results are placed here:
-<!--BREAKPOINT-->
+$testExecutor.execute()

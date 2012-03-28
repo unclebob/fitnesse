@@ -90,13 +90,8 @@ public class XmlFormatter extends BaseFormatter {
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
   
-  @Override
-  public void writeHead(String pageType) throws Exception {
-    writeHead(getPage());
-  }
-
-  protected void writeHead(WikiPage testPage) {
-    testResponse.version = new FitNesseVersion().toString();
+  protected void setPage(WikiPage testPage) {
+    this.page = testPage;
     testResponse.rootPath = testPage.getName();
   }
 

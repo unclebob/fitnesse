@@ -22,11 +22,6 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     htmlPage = context.pageFactory.newPage();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
-      protected HtmlPage buildHtml(String pageType) {
-        return htmlPage;
-      }
-      
-      @Override
       protected void writeData(String output) {
         pageBuffer.append(output);
       }
@@ -40,7 +35,6 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.processTestResults("TestName", new TestSummary(49, 0, 0, 0));
     formatter.processTestResults("TestName2", new TestSummary(1, 0, 2, 0));
     formatter.processTestResults("TestName3", new TestSummary(1, 1, 0, 0));
-    formatter.writeHead("Suite");
     formatter.finishWritingOutput();
 
     assertSubString("<strong>Test Pages:</strong> 2 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
@@ -72,7 +66,6 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     formatter.testOutputChunk("second");
     formatter.testOutputChunk(" test");
     formatter.processTestResults("NewRelativeName", new TestSummary(0, 1, 0, 0));
-    formatter.writeHead("Suite");
     formatter.finishWritingOutput();
 
     String results = pageBuffer.toString();    
@@ -119,7 +112,6 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
     TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
     formatter.page = new WikiPageDummy();
-    formatter.writeHead("test");
     formatter.announceNumberTestsToRun(1);
     TestPage firstPage = new TestPage(new WikiPageDummy("page1", "content"));
     formatter.newTestStarted(firstPage, timeMeasurement.start());
@@ -133,7 +125,6 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
     TimeMeasurement firstTimeMeasurement = newConstantElapsedTimeMeasurement(670);
     TimeMeasurement secondTimeMeasurement = newConstantElapsedTimeMeasurement(890);
     formatter.page = new WikiPageDummy();
-    formatter.writeHead("test");
     formatter.announceNumberTestsToRun(2);
     TestPage firstPage = new TestPage(new WikiPageDummy("page1", "content"));
     TestPage secondPage = new TestPage(new WikiPageDummy("page2", "content"));

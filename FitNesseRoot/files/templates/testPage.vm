@@ -2,4 +2,4 @@
 <div id="test-action"></div>
 
 ## Test results are placed here:
-<!--BREAKPOINT-->
+$testExecutor.execute()

@@ -18,17 +18,6 @@ public class HtmlResultFormatterTest extends RegexTestCase {
     formatter = new HtmlResultFormatter(context, "somehost.com:8080", "FitNesse");
   }
 
-  public void testIsValidHtml() throws Exception {
-    String html = getHtml().trim();
-    assertTrue(html.startsWith("<!DOCTYPE html>"));
-    assertTrue(html.endsWith("</html>"));
-
-    assertSubString("<base href=\"http://somehost.com:8080/\"", html);
-    assertSubString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>", html);
-    assertSubString("href=\"/files/css/fitnesse_print.css\"", html);
-    //assertSubString("Command Line Test Results", html);
-  }
-
   public void testUsage() throws Exception {
     formatter.acceptResult(new PageResult("PageOne", new TestSummary(1, 0, 0, 0), "page one"));
     formatter.acceptResult(new PageResult("PageTwo", new TestSummary(0, 1, 0, 0), "page two"));

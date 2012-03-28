@@ -43,9 +43,5 @@ public class NullFormatter extends BaseFormatter {
   @Override
   public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
   }
-
-  @Override
-  public void writeHead(String pageType) throws Exception {
-  }
 }
 

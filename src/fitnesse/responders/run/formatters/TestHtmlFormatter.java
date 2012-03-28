@@ -4,17 +4,15 @@ package fitnesse.responders.run.formatters;
 
 import java.io.IOException;
 
-import fitnesse.responders.PageFactory;
-import fitnesse.responders.run.TestPage;
 import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
-import fitnesse.html.*;
+import fitnesse.html.HtmlTag;
+import fitnesse.html.HtmlUtil;
+import fitnesse.html.TagGroup;
+import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
-import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.WikiPage;
 
 public abstract class TestHtmlFormatter extends InteractiveFormatter {
   protected TimeMeasurement latestTestTime;
@@ -29,11 +27,6 @@ public abstract class TestHtmlFormatter extends InteractiveFormatter {
     super(context, null);
   }
 
-  @Override
-  public String mainTemplate() {
-    return "testPage";
-  }
-  
   @Override
   public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     writeData(getPage().getData().getHeaderPageHtml());

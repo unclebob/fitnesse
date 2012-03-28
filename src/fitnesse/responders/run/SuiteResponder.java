@@ -7,8 +7,14 @@ import fitnesse.responders.run.formatters.*;
 public class SuiteResponder extends TestResponder {
   private boolean includeHtml;
 
-  String getTitle() {
+  @Override
+  protected String getTitle() {
     return "Suite Results";
+  }
+
+  @Override
+  protected String mainTemplate() {
+    return "suitePage";
   }
 
   protected void checkArguments() {
@@ -17,7 +23,7 @@ public class SuiteResponder extends TestResponder {
   }
 
   void addXmlFormatter() {
-    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
+    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, response.getWriter());
     if (includeHtml)
       xmlFormatter.includeHtml();
     formatters.add(xmlFormatter);

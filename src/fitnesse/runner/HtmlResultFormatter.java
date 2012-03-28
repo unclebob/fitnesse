@@ -36,7 +36,6 @@ public class HtmlResultFormatter implements ResultFormatter {
 
     createPage(context.pageFactory, rootPath);
     suiteFormatter = createCustomFormatter();
-    suiteFormatter.writeHead(null);
     System.out.println("Built HtmlResultFormatter for " + rootPath);
   }
 
@@ -51,10 +50,6 @@ public class HtmlResultFormatter implements ResultFormatter {
         }
       }
       
-      @Override
-      protected HtmlPage buildHtml(String pageType) {
-        return htmlPage;
-      }
     };
     return formatter;
   }

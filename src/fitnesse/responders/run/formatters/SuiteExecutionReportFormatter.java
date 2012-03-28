@@ -23,10 +23,6 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void writeHead(String pageType) throws Exception {
-  }
-
-  @Override
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 

@@ -87,6 +87,25 @@ public class TestResponderTest {
   }
 
   @Test
+  public void testIsValidHtml() throws Exception {
+    doSimpleRun(passFixtureTable());
+
+    assertSubString("<!DOCTYPE html>", results);
+    assertSubString("</html>", results);
+
+    //assertSubString("<base href=\"http://somehost.com:8080/\"", results);
+    assertSubString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>", results);
+    assertSubString("href=\"/files/css/fitnesse_print.css\"", results);
+    //assertSubString("Command Line Test Results", html);
+  }
+
+  @Test
+  public void testHead() throws Exception {
+    doSimpleRun(passFixtureTable());
+    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", results);
+  }
+
+  @Test
   public void testSimpleRun() throws Exception {
     doSimpleRun(passFixtureTable());
 
