@@ -1,8 +1,11 @@
 package fitnesse.updates;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import org.junit.After;
+
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +16,7 @@ import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class UpdateFileListTest {
   private UpdateFileList updater;
@@ -117,6 +121,13 @@ public class UpdateFileListTest {
     verify(updaterMock).exit();
   }
 
+  @Test
+  public void shouldSplitUpWindowsLikePathNames() throws Exception {
+    String args[] = {"-baseDirectory:C:\\FitNesse/Resources", "MasterFolder"};
+    updater.parseCommandLine(args);
+    assertEquals(asList("C:\\FitNesse/Resources/MasterFolder"), updater.getDirectories());
+ 
+  }
 
   private String runCreateFileAndGetContent(String[] args) throws Exception {
     updater.parseCommandLine(args);
