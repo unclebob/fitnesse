@@ -35,8 +35,7 @@
   <input type="text" id="newName" name="newName" value="" size="50"/>
  </fieldset>
  <fieldset>
-  <input type="checkbox" id="refactorReferences" name="refactorReferences"/>
-  <label for="refactorReferences">Find all references to this page and change them accordingly (May take several minutes)</label>
+  <label for="refactorReferences"><input type="checkbox" id="refactorReferences" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
  </fieldset>
  <input type="submit" name="" value="Rename Page"/>
 </form>
@@ -51,8 +50,7 @@
   <input type="text" name="newLocation" value="" size="80"/>
  </fieldset>
  <fieldset>
-  <input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>
-  <label for="refactorReferences_move">Find all references to this page and change them accordingly (May take several minutes)</label>
+  <label for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
  </fieldset>
  <input type="submit" name="" value="Move Page"/>
 </form>

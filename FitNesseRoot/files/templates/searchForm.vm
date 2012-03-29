@@ -10,7 +10,7 @@
  <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
 </form>
 
-<form method="post" action="$searchedRootPage" class="properties">
+<form method="post" action="$searchedRootPage">
 #macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 
@@ -22,46 +22,42 @@
   <input type="text" class="searchForm" name="Suites"#if ($request.hasInput("Suite")) value="$request.getInput("Suite")"#end />
  </fieldset>
  
- <fieldset>
-  <legend>Page type:</legend>
-  #foreach( $pageType in $pageTypeAttributes )
-  <input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>
-  <label for="$pageType">$pageType</label>
-  #end
- </fieldset>
+ <div class="properties">
+  <fieldset>
+   <legend>Page type:</legend>
+   #foreach( $pageType in $pageTypeAttributes )
+   <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
+   #end
+  </fieldset>
      
- <fieldset>
-  <legend>Actions:</legend>
-  #foreach( $action in $actionAttributes )
-  <input type="checkbox" id="$action" name="Action" value="$action"#checked( "Action" $action )/>
-  <label for="$action">$action</label>
-  #end
- </fieldset>
+  <fieldset>
+   <legend>Actions:</legend>
+   #foreach( $action in $actionAttributes )
+   <label for="$action"><input type="checkbox" id="$action" name="Action" value="$action"#checked( "Action" $action )/>$action</label>
+   #end
+  </fieldset>
 
-
- <fieldset>
-  <legend>Navigation:</legend>
-  #foreach( $navigation in $navigationAttributes )
-  <input type="checkbox" id="$navigation" name="Action" value="$navigation"#checked( "Action" $navigation )/>
-  <label for="$navigation">$navigation</label>
-  #end
- </fieldset>
+  <fieldset>
+   <legend>Navigation:</legend>
+   #foreach( $navigation in $navigationAttributes )
+   <label for="$navigation"><input type="checkbox" id="$navigation" name="Action" value="$navigation"#checked( "Action" $navigation )/>$navigation</label>
+   #end
+  </fieldset>
     
- <fieldset>
-  <legend>Security:</legend>
-  #foreach( $security in $securityAttributes )
-  <input type="checkbox" id="$security" name="Security" value="$security"#checked( "Security" $security )/>
-  <label for="$security">$security</label>
-  #end
- </fieldset>
+  <fieldset>
+   <legend>Security:</legend>
+   #foreach( $security in $securityAttributes )
+   <label for="$security"><input type="checkbox" id="$security" name="Security" value="$security"#checked( "Security" $security )/>$security</label>
+   #end
+  </fieldset>
 
- <fieldset>
-  <legend>Special pages:</legend>
-  #foreach( $special in $specialAttributes )
-  <input type="checkbox" id="$special" name="Special" value="$special"#checked( "Special" $special )/>
-  <label for="$special">$special</label>
-  #end
- </fieldset>
+  <fieldset>
+   <legend>Special pages:</legend>
+   #foreach( $special in $specialAttributes )
+   <label for="$special"><input type="checkbox" id="$special" name="Special" value="$special"#checked( "Special" $special )/>$special</label>
+   #end
+  </fieldset>
+ </div>
  <input type="submit" name="Search" value="Search Properties"/>
 </form>
 

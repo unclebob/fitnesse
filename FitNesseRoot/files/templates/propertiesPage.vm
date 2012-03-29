@@ -8,34 +8,30 @@
    <fieldset>
     <legend>Page type:</legend>
     #foreach( $pageType in $pageTypes )
-    <input type="radio" id="$pageType" name="PageType" value="$pageType"#if( $pageType == $selectedPageType) checked="checked"#end/>
-    <label for="$pageType">$pageType</label>
+    <label for="$pageType"><input type="radio" id="$pageType" name="PageType" value="$pageType"#if( $pageType == $selectedPageType) checked="checked"#end/>$pageType</label>
     #end
-    <input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>
-    <label for="Prune">Skip (Recursive)</label>
+    
+    <label for="Prune"><input type="checkbox" id="Prune" name="Prune"#checked( "Prune" )/>Skip (Recursive)</label>
    </fieldset>
      
    <fieldset>
     <legend>Actions:</legend>
     #foreach( $action in $actionTypes )
-    <input type="checkbox" id="$action" name="$action"#checked( $action )/>
-    <label for="$action">$action</label>
+    <label for="$action"><input type="checkbox" id="$action" name="$action"#checked( $action )/>$action</label>
     #end
    </fieldset>
 
    <fieldset>
     <legend>Navigation:</legend>
     #foreach( $navigation in $navigationTypes )
-    <input type="checkbox" id="$navigation" name="$navigation"#checked( $navigation )/>
-    <label for="$navigation">$navigation</label>
+    <label for="$navigation"><input type="checkbox" id="$navigation" name="$navigation"#checked( $navigation )/>$navigation</label>
     #end
    </fieldset>
     
    <fieldset>
     <legend>Security:</legend>
     #foreach( $security in $securityTypes )
-    <input type="checkbox" id="$security" name="$security"#checked( $security )/>
-	<label for="$security">$security</label>
+	<label for="$security"><input type="checkbox" id="$security" name="$security"#checked( $security )/>$security</label>
     #end
    </fieldset>
   </div>
@@ -77,8 +73,8 @@
    <a href="$sourceUrl">$sourceUrl</a>.</p>
   #set( $submitMsg = "Update Content and Subpages" )
   #end
-   <input type="checkbox" id="autoUpdate" name="autoUpdate"#if( $autoUpdate ) checked="checked"#end/>
-   <label for="autoUpdate">Automatically update imported content when executing tests</label>
+   
+   <label for="autoUpdate"><input type="checkbox" id="autoUpdate" name="autoUpdate"#if( $autoUpdate ) checked="checked"#end/>Automatically update imported content when executing tests</label>
    <input type="hidden" name="responder" value="import"/>
   </fieldset>
   <input type="submit" name="save" value="$submitMsg"/>

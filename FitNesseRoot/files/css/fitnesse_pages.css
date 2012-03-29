@@ -1,3 +1,6 @@
+label input {
+    margin-right: 0.5em;
+}
 /** Edit page **/
 .editPage label {
 	width: 7em;
@@ -30,11 +33,23 @@
 .propertiesPage label,
 .searchForm label {
 	display: inline-block;
-	width: 8em;
+	width: 12em;
 }
 .propertiesPage .properties fieldset,
 .searchForm .properties fieldset {
-	margin-top: 1em;
+    display: inline-block;
+    vertical-align: top;
+	border: none;
+}
+.propertiesPage .properties label,
+.searchForm .properties label {
+	display: block;
+}
+legend {
+	font-weight: bold;
+}
+label input {
+    margin-right: 0.5em;
 }
 .propertiesPage input[type=submit],
 .searchForm input[type=submit] {
