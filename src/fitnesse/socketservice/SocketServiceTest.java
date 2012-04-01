@@ -103,15 +103,19 @@ public class SocketServiceTest extends TestCase {
   private void connect(int port) {
     try {
       Socket s = new Socket("localhost", port);
-      try {
-        Thread.sleep(10);
-      }
-      catch (InterruptedException e) {
-      }
+      sleep(30);
       s.close();
     }
     catch (IOException e) {
       fail("could not connect");
+    }
+  }
+
+  private void sleep(int ms) {
+    try {
+      Thread.sleep(ms);
+    }
+    catch (InterruptedException e) {
     }
   }
 }
