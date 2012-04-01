@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.io.IOException;
 import java.net.Socket;
 
 public interface ResponseSender {
