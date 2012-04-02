@@ -1,9 +1,16 @@
+header,
+footer,
+article,
+section,
+aside,
+nav {
+	display:block;
+}
 body {
 	padding: 0;
 	margin: 0;
 	background-color: #fafafe;
 }
-
 header {
 	position: fixed;
 	left: 0;
@@ -14,12 +21,16 @@ header {
 	background-color: #d9dfc9;
 	border-bottom: 1px solid gray;
 }
-
 #art_niche {
 	float: left;
-	padding: 0 50px 0 22px;
+	background-image: url("../images/FitNesseLogo.png");
+	width: 90px;
+	height: 90px;
+	margin: 0 68px 0 4px;
 }
-
+#art_niche span {
+	display: none;
+}
 header ul {
 	list-style: none;
 }
@@ -27,7 +38,9 @@ header ul {
 header li {
 	display: inline-block;
 }
-
+header li+li:before {
+	content: " .";
+}
 nav {
 	position: fixed;
 	left: 0;
@@ -75,7 +88,9 @@ nav li#tools {
 	padding: 0;
 	margin: 0;
 }
-
+nav a.label {
+	display:none;
+}
 
 article {
 	margin: 120px 24px 24px 170px;
