@@ -95,7 +95,6 @@ public class TestResponderTest {
 
     //assertSubString("<base href=\"http://somehost.com:8080/\"", results);
     assertSubString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>", results);
-    assertSubString("href=\"/files/css/fitnesse_print.css\"", results);
     //assertSubString("Command Line Test Results", html);
   }
 

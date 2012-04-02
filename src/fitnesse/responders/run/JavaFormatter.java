@@ -58,8 +58,7 @@ public class JavaFormatter extends BaseFormatter {
       currentWriter.write(testName);
       currentWriter
           .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse.css' media='screen'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse_print.css' media='print'/>"
+              + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
               + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
       currentWriter.write(testName);
       currentWriter.write("</h2>");
@@ -92,7 +91,7 @@ public class JavaFormatter extends BaseFormatter {
     private void initFolder(String fitnesseRoot) throws IOException {
       File filesFolder = new File(new File(new File(fitnesseRoot), "FitNesseRoot"), "files");
       File cssDir = new File(filesFolder, "css");
-      addFile(new File(cssDir, "fitnesse_base.css"), "fitnesse.css");
+      addFile(new File(cssDir, "fitnesse_wiki.css"), "fitnesse.css");
       File javascriptDir = new File(filesFolder, "javascript");
       addFile(new File(javascriptDir, "fitnesse.js"), "fitnesse.js");
       File imagesDir = new File(filesFolder, "images");

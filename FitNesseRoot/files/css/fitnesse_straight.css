@@ -185,3 +185,9 @@ article th {
 	background: #efefef
 }
 
+@media print {
+	nav ul {
+		display: none;
+	}
+}
+
