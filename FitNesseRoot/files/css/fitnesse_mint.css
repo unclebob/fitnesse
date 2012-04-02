@@ -75,7 +75,7 @@ header h1 {
 }
 #art_niche {
  display:block;
- background: url("fit.png") top left no-repeat;
+ background: url("../images/mint/fit.png") top left no-repeat;
  width: 156px;
  height: 49px;
 }
