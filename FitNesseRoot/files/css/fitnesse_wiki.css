@@ -31,6 +31,7 @@ article .centered {
 	 font-size: 85%;
 }
 
+/** Collapsable section */
 .included, .setup, .teardown, .collapse_rim {
   background: #F9F9F9;
   margin: 5px 0px 5px 0px;
@@ -71,4 +72,96 @@ div.invisible {
   margin: 0px 0px 0px 0px;
   display: none;
   visibility: hidden;
+}
+
+/** !style_* */
+.error {
+  background-color: #ffffaa;
+}
+.pass {
+	background-color: lightgreen;
+}
+.fail {
+	background-color: red;
+}
+.ignore {
+	background-color: lightgray;
+}
+.caps {
+  font-variant: small-caps;
+}
+.red {
+  color: red;
+}
+.orange {
+  color: orange;
+}
+.yellow {
+  color: yellow;
+}
+.green {
+  color: green;
+}
+.blue {
+  color: blue;
+}
+.indigo {
+  color: indigo;
+}
+.violet {
+  color: violet;
+}
+.pink {
+  color: pink;
+}
+.lightYellow {
+  color: lightYellow;
+}
+.lightGreen {
+  color: lightGreen;
+}
+.lightBlue {
+  color: lightBlue;
+}
+.chocolate {
+  color: chocolate;
+}
+.darkOrange {
+  color: darkOrange;
+}
+.darkRed {
+  color: darkRed;
+}
+.olive {
+  color: olive;
+}
+.darkBlue {
+  color: darkBlue;
+}
+.darkGreen {
+  color: darkGreen;
+}
+.right {
+  float: right;
+}
+.left {
+  float: left;
+}
+.pageHelp {
+  font-size: 0.7em;
+  font-style: italic;
+  margin-left: 1.5em;
+}
+.hidden {
+  display: none;
+}
+.fit_stacktrace {
+  font-size: 0.7em;
+}
+.fit_label {
+  font-style: italic;
+  color: #C08080;
+}
+.fit_grey {
+  color: #808080;
 }

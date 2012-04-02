@@ -90,15 +90,6 @@ label input {
 }
 
 /** Test result **/
-.pass {
-	background-color: lightgreen;
-}
-.fail {
-	background-color: red;
-}
-.ignore {
-	background-color: lightgray;
-}
 tr.scenario > td:first-child {
 	padding-left: 16px;
 	background-image: url("/files/images/collapsableClosed.gif");
