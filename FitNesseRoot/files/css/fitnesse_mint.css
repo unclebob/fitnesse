@@ -123,13 +123,8 @@ nav ul ul {
  padding: 10px 0 10px 0;
 }
 
-nav hr {
- border: none;
- background:#A8AC9C;
- height:2px;
- margin: 0;
- padding:0;
- 
+nav li.divider {
+ border-top: 1px solid #A8AC9C;
 }
 
 nav ul ul li {
