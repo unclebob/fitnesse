@@ -8,42 +8,44 @@
 #end
 #if($!isNewPage)
  <input type="hidden" name="responder" value="addChild"/>
- <Label for="pagename">Page name:</label> <input type="text" id="pagename" name="pageName" value="" />
+ <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
  #if( $!pageType )
  <input type="hidden" name="pageType" value="$pageType"/>
  #else
- <fieldset>
+ <fieldset id="pagetypes">
   #foreach( $pageType in $pageTypes )
-  <input type="radio" name="pageType" value="$pageType"/> $pageType
+  <label for="pageType_$pageType"><input type="radio" name="pageType" value="$pageType" id="pageType_$pageType"/> $pageType</label>
   #end
-  <input type="radio" name="pageType" value="Default" checked="checked" /> Default <br/>
+  <label for="pageType_Default"><input type="radio" name="pageType" value="Default" id="pageType_Default" checked="checked" /> Default</label>
  </fieldset>
  #end
 #else
  <input type="hidden" name="responder" value="saveData"/>
 #end
- <Label for="helptext">Help text:</label> <input type="text" id="helptext" name="helpText" value="$!helpText" />
+ <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
  
+ <fieldset class="edit_options">
+  <script src="/files/javascript/textareaWrapSupport.js" type="text/javascript"></script>
+ </fieldset>
+
  <textarea class="pageContent" id="pageContentId" name="pageContent">$pageContent</textarea>
 
- <div class="edit_options">
-  <script src="/files/javascript/textareaWrapSupport.js" type="text/javascript"></script>
- </div>
- <div class="edit_buttons">
+ <fieldset class="edit_buttons">
 
   <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
   <script src="/files/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
   <script src="/files/javascript/spreadsheetSupport.js" type="text/javascript"></script>
   <script src="/files/javascript/WikiFormatter.js" type="text/javascript"></script>
   <script src="/files/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
- </div>
+ </fieldset>
 
- <div class="hints"><br>Hints:
+ <p class="hints">
+  Hints:
   <ul>
    <li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the "Save" button!</li>
    <li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>
   </ul>
- </div>
+ </p>
 </form>
 <script type="text/javascript">
 #if($!isNewPage)

@@ -1,18 +1,28 @@
 label input {
     margin-right: 0.5em;
 }
+.validationerror {
+    color: maroon;
+    margin: 0 0 0 7.78em;
+    font-size: 0.9em
+}
 /** Edit page **/
 .editPage label {
 	width: 7em;
 	float: left;
-	clear: both;s
+	clear: both;
 }
 .editPage #pagename,
 .editPage #helptext {
 	width: 55em;
+	margin-bottom: 0.5em;
 }
-.editPage fieldset {
-	margin-left: 5em;
+.editPage #pagetypes {
+	margin: 0 0 0.5em 7em;
+}
+.editPage #pagetypes label {
+	display: inline;
+	float: none;
 }
 .editPage textarea {
 	display: block;

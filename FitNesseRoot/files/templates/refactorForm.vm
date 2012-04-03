@@ -32,7 +32,7 @@
  <input type="hidden" name="responder" value="renamePage"/>
  <fieldset>
   <label for="newName">New Name:</label>
-  <input type="text" id="newName" name="newName" value="" size="50"/>
+  <input type="text" id="newName" name="newName" value="" size="50" class="wikiword" />
  </fieldset>
  <fieldset>
   <label for="refactorReferences"><input type="checkbox" id="refactorReferences" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
@@ -47,7 +47,7 @@
  <input type="hidden" name="responder" value="movePage"/>
  <fieldset>
   <label for="newLocation">New Location:</label>
-  <input type="text" name="newLocation" value="" size="80"/>
+  <input type="text" name="newLocation" value="" size="80" class="wikipath" />
  </fieldset>
  <fieldset>
   <label for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>

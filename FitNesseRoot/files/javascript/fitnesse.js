@@ -106,4 +106,33 @@ $(function() {
 		console.log(this);
 		$(this).parent().toggleClass("open").next().toggle();
 	});
+	
+	function validateField(re, msg) {
+		var pageNameError = $(this).data("error");
+		if (!re.test($(this).val())) {
+			if (!pageNameError) {
+				pageNameError = $(msg);
+				$(this).after(pageNameError);
+			}
+		} else {
+			if (pageNameError) {
+				$(this).next().remove();
+				pageNameError = undefined;
+			}
+		}
+		$(this).data("error", pageNameError);
+	}
+	
+	$('input.wikiword').keyup(function() {
+		validateField.apply(this, 
+				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
+		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
+	});
+	
+	$('input.wikipath').keyup(function() {
+		validateField.apply(this, 
+				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
+				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
+	});
+	
 });
