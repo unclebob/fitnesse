@@ -24,4 +24,4 @@ Check to make sure the box exists.
 
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|<div id="test-action">|true|
+|contents|<li id="test-action">|true|

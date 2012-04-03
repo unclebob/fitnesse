@@ -112,23 +112,17 @@ tr.scenario-detail {
 #test_summaries h2, #test-summaries h3 {
 	text-align: center;
 }
-#test-action a {
-	background-position: center top;
-	background-repeat: no-repeat;
-	float: right;
-	padding-top: 65px;
-}
 #test-action .stop {
-	background-image: url("/files/images/stop.gif");
+	background-color: red;
 }
 #test-action .ok {
-	background-image: url("/files/images/executionStatus/ok.gif");
+	background-color: lightgreen;
 }
 #test-action .output {
-	background-image: url("/files/images/executionStatus/output.gif");
+	background-color: lightgreen;
 }
 #test-action .error {
-	background-image: url("/files/images/executionStatus/error.gif");
+	background-color: red;
 }
 .test_output_name h3 {
 	display: inline;

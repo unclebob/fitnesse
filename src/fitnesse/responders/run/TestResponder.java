@@ -74,7 +74,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle() + ": " + fullPathName);
     htmlPage.setPageTitle(new PageTitle(getTitle(), fullPath));
-    htmlPage.setNavTemplate("wikiNav.vm");
+    htmlPage.setNavTemplate("testNav.vm");
     htmlPage.put("actions", new WikiPageActions(page).withPageHistory());
     htmlPage.setMainTemplate(mainTemplate());
     htmlPage.put("testExecutor", new TestExecutor());

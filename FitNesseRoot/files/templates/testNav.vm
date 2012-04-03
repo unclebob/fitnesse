@@ -1,0 +1,10 @@
+<ul><li id="test-action"></li></ul>
+## The menu is only shown after the page executed.
+<div class="hidden">
+#parse( "wikiNav.vm" )
+</div>
+<script type="text/javascript">//<!--
+ $(function() {
+   $('nav > div > ul > li').appendTo($('nav > ul'));
+ });
+//--></script>

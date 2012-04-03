@@ -1,5 +1,4 @@
 <div id="test-summary">Running Tests ...</div>
-<div id="test-action"></div>
 
 ## Test results are placed here:
 $testExecutor.execute()
