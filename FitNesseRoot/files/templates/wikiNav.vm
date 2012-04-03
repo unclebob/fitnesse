@@ -46,7 +46,7 @@
    <li#group(2)><a href="$localOrRemotePath?refactor&amp;type=rename">Rename</a></li>
    <li><a href="$localOrRemotePath?refactor&amp;type=move">Move</a></li>
    <li><a href="$localOrRemotePath?refactor&amp;type=replace">Replace</a></li>
-   <li><a href="$localOrRemotePath?refactor&amp;type=delete">Delete</a></li>
+   <li><a href="$localOrRemotePath?deletePage">Delete</a></li>
   #end
   #if( $actions.withFiles )
    <li #group(3)><a href="/files" accesskey="f">Files</a></li>
