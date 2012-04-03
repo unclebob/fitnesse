@@ -74,7 +74,8 @@ public class PropertiesResponder implements SecureResponder {
         throw new RuntimeException(e);
       }
     } else {
-      String html = makeHtml(context);
+      String html = makeHtml(context, request);
+      
       response.setContent(html);
     }
   }
@@ -101,8 +102,10 @@ public class PropertiesResponder implements SecureResponder {
     }
   }
 
-  private String makeHtml(FitNesseContext context) {
+  private String makeHtml(FitNesseContext context, Request request) {
     html = context.pageFactory.newPage();
+    html.setNavTemplate("viewNav");
+    html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
     html.setPageTitle(new PageTitle("Page Properties", path));
     html.put("pageData", pageData);

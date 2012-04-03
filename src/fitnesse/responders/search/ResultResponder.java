@@ -34,7 +34,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
       }
 
       public String getLink() {
-        return "search";
+        return null;
       }
     });
     htmlPage.setMainTemplate("searchResults");
@@ -46,7 +46,8 @@ public abstract class ResultResponder extends ChunkingResponder implements
     else
       htmlPage.put("request", request.getQueryString());
     htmlPage.put("page", page);
-
+    htmlPage.put("viewLocation", request.getResource());
+    htmlPage.setNavTemplate("viewNav");
     htmlPage.put("resultResponder", this);
     
     htmlPage.render(response.getWriter());

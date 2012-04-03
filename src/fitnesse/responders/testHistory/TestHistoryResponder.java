@@ -29,14 +29,16 @@ public class TestHistoryResponder implements SecureResponder {
     if (formatIsXML(request)) {
       return makeTestHistoryXmlResponse(testHistory);
     } else {
-      return makeTestHistoryResponse(testHistory, pageName);
+      return makeTestHistoryResponse(testHistory, request, pageName);
     }
   }
 
-  private Response makeTestHistoryResponse(TestHistory testHistory, String pageName) {
+  private Response makeTestHistoryResponse(TestHistory testHistory, Request request, String pageName) {
     HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Test History");
     page.setPageTitle(new PageTitle(makePageTitle(pageName)));
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
     page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();

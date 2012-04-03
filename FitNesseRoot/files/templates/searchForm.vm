@@ -1,4 +1,4 @@
-<form action="search" method="post">
+<form method="post">
  <input type="hidden" name="responder" value="search"/>
  <label for="searchString">Search:</label>
  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
@@ -10,7 +10,7 @@
  <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
 </form>
 
-<form method="post" action="$searchedRootPage">
+<form method="post">
 #macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
 #macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
 

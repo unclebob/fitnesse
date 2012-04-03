@@ -19,6 +19,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.PathParser;
 
 public class SearchFormResponder implements Responder {
   public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
@@ -33,12 +34,13 @@ public class SearchFormResponder implements Responder {
     html.setMainTemplate("searchForm");
     html.setTitle("Search Form");
     html.setPageTitle(new PageTitle("Search Form"));
+    html.put("viewLocation", request.getResource());
+    html.setNavTemplate("viewNav");
     html.put("pageTypeAttributes", PageType.values());
     html.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
     html.put("navigationAttributes", SEARCH_NAVIGATION_ATTRIBUTES);
     html.put("securityAttributes", SECURITY_ATTRIBUTES);
     html.put("specialAttributes", SPECIAL_ATTRIBUTES);
-    html.put("searchedRootPage", request.getResource());
     html.put("request", request);
 
     response.setContent(html.html());

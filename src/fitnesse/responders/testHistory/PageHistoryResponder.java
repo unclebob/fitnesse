@@ -54,6 +54,8 @@ public class PageHistoryResponder implements SecureResponder {
   private Response makePageHistoryResponse(Request request) {
     page.setTitle("Page History");
     page.put("pageHistory", pageHistory);
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.setMainTemplate("pageHistory");
     return makeResponse();
   }
@@ -104,23 +106,27 @@ public class PageHistoryResponder implements SecureResponder {
     report = ExecutionReport.makeReport(content);
     if (report instanceof TestExecutionReport) {
       report.setDate(resultDate);
-      return generateHtmlTestExecutionResponse((TestExecutionReport) report);
+      return generateHtmlTestExecutionResponse(request, (TestExecutionReport) report);
     } else if (report instanceof SuiteExecutionReport) {
       pageTitle.setPageType("Suite History");
-      return generateHtmlSuiteExecutionResponse((SuiteExecutionReport) report);
+      return generateHtmlSuiteExecutionResponse(request, (SuiteExecutionReport) report);
     } else
       return makeCorruptFileResponse(request);
   }
 
-  private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {
+  private Response generateHtmlSuiteExecutionResponse(Request request, SuiteExecutionReport report) throws Exception {
     page.setTitle("Suite Execution Report");
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.put("suiteExecutionReport", report);
     page.setMainTemplate("suiteExecutionReport");
     return makeResponse();
   }
 
-  private Response generateHtmlTestExecutionResponse(TestExecutionReport report) throws Exception {
+  private Response generateHtmlTestExecutionResponse(Request request, TestExecutionReport report) throws Exception {
     page.setTitle("Test Execution Report");
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.put("testExecutionReport", report);
     page.setMainTemplate("testExecutionReport");
     return makeResponse();

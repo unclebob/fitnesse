@@ -34,7 +34,7 @@ public class NewPageResponder implements Responder {
   }
 
   private void makeEditForm(HtmlPage html, FitNesseContext context, Request request) {
-    html.put("action", request.getResource());
+    html.put("resource", request.getResource());
 
     html.put("isNewPage", true);
     html.put("helpText", "");

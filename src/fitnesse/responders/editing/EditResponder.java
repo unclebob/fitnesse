@@ -91,7 +91,7 @@ public class EditResponder implements SecureResponder {
   }
 
   private void makeEditForm(HtmlPage html, String resource, boolean firstTimeForNewPage, String defaultNewPageContent) {
-    html.put("action", resource);
+    html.put("resource", resource);
     html.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));
     html.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
     
@@ -105,7 +105,7 @@ public class EditResponder implements SecureResponder {
     }
 
     html.put("helpText", pageData.getAttribute("Help"));
-    html.put("pageContent", Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
+    html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
   public SecureOperation getSecureOperation() {
