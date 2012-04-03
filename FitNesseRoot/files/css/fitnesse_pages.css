@@ -57,6 +57,7 @@ label input {
 }
 legend {
 	font-weight: bold;
+	margin-bottom: 0.5em;
 }
 label input {
     margin-right: 0.5em;
