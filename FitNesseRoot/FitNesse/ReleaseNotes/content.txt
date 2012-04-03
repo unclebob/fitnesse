@@ -1,9 +1,12 @@
 !2 2012-03-20 Arjan Molenaar
+ * '''Note:''' This page has a layout that's not conform previous releases of !-FitNesse-!
  * Introduced !-ReleaseNotes-! page
  * Moved a lot of presentation logic to template files
  * New style
  * Can be built by Maven
+ * New "add child" permission (see [[properties][?properties]] page)
  * Parser fixes
+
 
 !2 2011-10-25
  * New parser
