@@ -15,7 +15,7 @@ public abstract class BaseFormatter implements ResultsListener {
   protected int testCount = 0;
   protected int failCount = 0;
 
-  public abstract void writeHead(String pageType) throws Exception;
+//  public abstract void writeHead(String pageType) throws Exception;
 
   protected BaseFormatter() {
   }

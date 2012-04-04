@@ -2,23 +2,22 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SaveRecorder;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
@@ -80,19 +79,19 @@ public class EditResponder implements SecureResponder {
   }
 
   private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage) {
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.setTitle(title + resource + ":");
     
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource)));
-    html.setMainTemplate("editPage.vm");
+    html.setMainTemplate("editPage");
     makeEditForm(html, resource, firstTimeForNewPage, context.defaultNewPageContent);
     
     return html.html();
   }
 
   private void makeEditForm(HtmlPage html, String resource, boolean firstTimeForNewPage, String defaultNewPageContent) {
-    html.put("action", resource);
+    html.put("resource", resource);
     html.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));
     html.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
     
@@ -106,7 +105,7 @@ public class EditResponder implements SecureResponder {
     }
 
     html.put("helpText", pageData.getAttribute("Help"));
-    html.put("pageContent", Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
+    html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
   public SecureOperation getSecureOperation() {

@@ -1,7 +1,17 @@
 package fitnesse.responders.testHistory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import util.FileUtil;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -14,19 +24,8 @@ import fitnesse.responders.run.ExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import util.FileUtil;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PageHistoryResponder implements SecureResponder {
   private File resultsDirectory;
@@ -55,20 +54,18 @@ public class PageHistoryResponder implements SecureResponder {
   private Response makePageHistoryResponse(Request request) {
     page.setTitle("Page History");
     page.put("pageHistory", pageHistory);
-    page.setMainTemplate("pageHistory.vm");
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
+    page.setMainTemplate("pageHistory");
     return makeResponse();
   }
   
   private Response makePageHistoryXmlResponse(Request request) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("pageHistory", pageHistory);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("pageHistoryXML.vm");
-
-    StringWriter writer = new StringWriter();
-    template.merge(velocityContext, writer);
 
     response.setContentType("text/xml");
-    response.setContent(writer.toString());
+    response.setContent(context.pageFactory.render(velocityContext, "pageHistoryXML.vm"));
     return response;
   }
 
@@ -109,25 +106,29 @@ public class PageHistoryResponder implements SecureResponder {
     report = ExecutionReport.makeReport(content);
     if (report instanceof TestExecutionReport) {
       report.setDate(resultDate);
-      return generateHtmlTestExecutionResponse((TestExecutionReport) report);
+      return generateHtmlTestExecutionResponse(request, (TestExecutionReport) report);
     } else if (report instanceof SuiteExecutionReport) {
       pageTitle.setPageType("Suite History");
-      return generateHtmlSuiteExecutionResponse((SuiteExecutionReport) report);
+      return generateHtmlSuiteExecutionResponse(request, (SuiteExecutionReport) report);
     } else
       return makeCorruptFileResponse(request);
   }
 
-  private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {
+  private Response generateHtmlSuiteExecutionResponse(Request request, SuiteExecutionReport report) throws Exception {
     page.setTitle("Suite Execution Report");
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.put("suiteExecutionReport", report);
-    page.setMainTemplate("suiteExecutionReport.vm");
+    page.setMainTemplate("suiteExecutionReport");
     return makeResponse();
   }
 
-  private Response generateHtmlTestExecutionResponse(TestExecutionReport report) throws Exception {
+  private Response generateHtmlTestExecutionResponse(Request request, TestExecutionReport report) throws Exception {
     page.setTitle("Test Execution Report");
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.put("testExecutionReport", report);
-    page.setMainTemplate("testExecutionReport.vm");
+    page.setMainTemplate("testExecutionReport");
     return makeResponse();
   }
 
@@ -155,7 +156,7 @@ public class PageHistoryResponder implements SecureResponder {
     pageName = request.getResource();
     history.readPageHistoryDirectory(resultsDirectory, pageName);
     pageHistory = history.getPageHistory(pageName);
-    page = context.htmlPageFactory.newPage();
+    page = context.pageFactory.newPage();
     pageTitle = new PageTitle("Test History", PathParser.parse(request.getResource()));
     page.setPageTitle(pageTitle);
   }

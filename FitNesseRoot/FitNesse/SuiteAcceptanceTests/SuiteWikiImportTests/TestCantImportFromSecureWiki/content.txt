@@ -10,7 +10,7 @@ Create an importing page.
 This !-ImportingPage-! will now import the secure wiki page.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:9123/ImporteePage|true|
+|ImportingPage?responder=import&remoteUrl=http://localhost:9123/ImporteePage&nochunk=true|true|
 
 Since the wiki being imported is secure, the response will promt the user for credentials.
 !|Response Examiner|

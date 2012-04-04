@@ -34,11 +34,13 @@ public class VersionSelectionResponder implements SecureResponder {
     pageData = page.getData();
     versions = getVersionsList(pageData);
 
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version Selection: " + resource);
     html.setPageTitle(new PageTitle("Version Selection", PathParser.parse(resource)));
     html.put("versions", versions);
-    html.setMainTemplate("versionSelection.vm");
+    html.setNavTemplate("viewNav");
+    html.put("viewLocation", request.getResource());
+    html.setMainTemplate("versionSelection");
 
     response.setContent(html.html());
 

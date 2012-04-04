@@ -1,9 +1,10 @@
-<div class="header">
-#foreach($breadCrumb in $pageTitle.BreadCrumbs)
-<a href="/$breadCrumb.Link">$breadCrumb.Name</a>.
-#end
-#if($pageTitle.Link)<br/><a href="/$pageTitle.Link" class="page_title">$pageTitle.Title</a>
-#else<br/><span class="page_title">$pageTitle.Title</span>#end
-#if($pageTitle.PageType)<br/><span class="page_type">$pageTitle.PageType</span>#end
+<a href="/FrontPage" id="art_niche"><span>FitNesse</span></a>
 
-</div>
+<ul>
+#foreach($breadCrumb in $pageTitle.BreadCrumbs)
+ <li><a href="/$breadCrumb.Link">$breadCrumb.Name</a></li>
+#end
+</ul>
+<h1>#if($pageTitle.Link)<a href="/$pageTitle.Link">$pageTitle.Title</a>#else$pageTitle.Title#end</h1>
+
+##if($pageTitle.PageType)<br/><span class="page_type">$pageTitle.PageType</span>#end

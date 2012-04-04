@@ -13,15 +13,12 @@ Request the page
 Examine the requested page to ensure the correct links are displayed in the correct order.
 !|Response Examiner.|
 |line|inOrder?|
-|<div class="actions">|true|
-|<a href="SomePage?edit" accesskey="e">Edit</a>|true|
-|<a href="SomePage?properties" accesskey="p">Properties</a>|true|
-|<a href="SomePage?refactor" accesskey="r">Refactor</a>|true|
-|<a href="SomePage?whereUsed" accesskey="w">Where Used</a>|true|
-|<a href="?searchForm" accesskey="s">Search</a>|true|
-|<a href="/files" accesskey="f">Files</a>|true|
-|<a href="SomePage?versions" accesskey="v">Versions</a>|true|
-|<a href="/RecentChanges" accesskey="">Recent Changes</a>|true|
-|<a href=".FitNesse.UserGuide" accesskey="">User Guide</a>|true|
-|</div>|true|
-|<div class="header">|true|
+|<header>|true|
+|<li><a href="SomePage?edit" accesskey="e">Edit</a></li>|true|
+|<li><a href="SomePage?properties" accesskey="p">Properties</a></li>|true|
+|<li><a href="SomePage?whereUsed" accesskey="w">Where Used</a></li>|true|
+|<li><a href="SomePage?versions" accesskey="v">Versions</a></li>|true|
+|<a href="/files" accesskey="f">Files</a></li>|true|
+|<li><a href="?searchForm" accesskey="s">Search</a></li>|true|
+|<li><a href="/RecentChanges" accesskey="">Recent Changes</a></li>|true|
+|<a href=".FitNesse.UserGuide" accesskey="">User Guide</a></li>|true|

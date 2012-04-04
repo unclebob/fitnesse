@@ -1,17 +1,16 @@
 package fitnesse.responders.run;
 
-import fitnesse.components.SearchObserver;
+import java.util.LinkedList;
+
 import fitnesse.components.SuiteSpecificationMatchFinder;
+import fitnesse.components.TraversalListener;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.htmlparser.util.ParserException;
 
-import java.util.LinkedList;
-
-public class SuiteSpecificationRunner implements SearchObserver {
+public class SuiteSpecificationRunner implements TraversalListener<WikiPage> {
   public String titleRegEx;
   public String contentRegEx;
   public LinkedList<WikiPage> testPageList = new LinkedList<WikiPage>();
@@ -35,7 +34,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
 
-  public boolean getPageListFromPageContent(String pageContent) throws ParserException {
+  public boolean getPageListFromPageContent(String pageContent) {
     HtmlTableScanner scanner = new HtmlTableScanner(pageContent);
     for (int tableIndex = 0; tableIndex < scanner.getTableCount(); tableIndex++) {
       Table table = scanner.getTable(tableIndex);
@@ -115,7 +114,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
   }
 
 
-  public void hit(WikiPage page) {
+  public void process(WikiPage page) {
     for (WikiPage hit : testPageList) {
       if (hit == page)
         return;
@@ -124,7 +123,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
       testPageList.add(page);
   }
 
-  public static boolean isASuiteSpecificationsPage(String page) throws ParserException {
+  public static boolean isASuiteSpecificationsPage(String page) {
     HtmlTableScanner scanner = new HtmlTableScanner(page);
     if (scanner.getTableCount() > 0) {
       Table table = scanner.getTable(0);

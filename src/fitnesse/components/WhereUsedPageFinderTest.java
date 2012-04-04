@@ -11,7 +11,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
 
-public class WhereUsedPageFinderTest extends RegexTestCase implements SearchObserver {
+public class WhereUsedPageFinderTest extends RegexTestCase implements TraversalListener<WikiPage> {
   private WikiPage root;
   private InMemoryPage pageOne;
   private WikiPage pageTwo;
@@ -21,7 +21,7 @@ public class WhereUsedPageFinderTest extends RegexTestCase implements SearchObse
   private List<WikiPage> hits = new ArrayList<WikiPage>();
   private PageCrawler crawler;
 
-  public void hit(WikiPage page) {
+  public void process(WikiPage page) {
     hits.add(page);
   }
 

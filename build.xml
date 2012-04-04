@@ -55,8 +55,9 @@
 	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
 		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
 			<arg value="-baseDirectory:${classes}/Resources" />
-			<arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css" />
-			<arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css" />
+                        <!-- for this release, we want to override fitnesse.css, since the style all changed. -->
+			<!-- <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css" /> -->
+			<!-- <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css" /> -->
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
 			<arg value="FitNesseRoot/files/images" />
@@ -121,11 +122,9 @@
     <echo message="Stamping fitnesse with version ${version}" />
 		<delete file="pom.xml" />
 		<delete file="src/fitnesse/FitNesseVersion.java" />
-		<delete file="FitNesseRoot/FrontPage/content.txt" />
 		<filter token="version" value="${version}" />
 		<copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml" />
 		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
-		<copy filtering="true" file="templates/FrontPage.content.txt.template" tofile="FitNesseRoot/FrontPage/content.txt" />
 	</target>
 
 	<target name="clean" description="delete everything in the classes directory">

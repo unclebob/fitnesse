@@ -9,7 +9,7 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
   private String titleRegEx;
   private String contentRegEx;
 
-  public SuiteSpecificationMatchFinder(String titleRegEx, String contentRegEx, SearchObserver observer) {
+  public SuiteSpecificationMatchFinder(String titleRegEx, String contentRegEx, TraversalListener observer) {
     super(observer);
     this.titleRegEx = titleRegEx;
     this.contentRegEx = contentRegEx;

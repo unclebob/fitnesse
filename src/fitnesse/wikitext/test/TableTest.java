@@ -19,13 +19,13 @@ public class TableTest {
         ParserTestHelper.assertTranslatesTo("| a |\n", tableWithCell("a"));
         ParserTestHelper.assertTranslatesTo("|!- a -!|\n", tableWithCell(" a "));
         ParserTestHelper.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
-        ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
+        ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<center>a</center>"));
         ParserTestHelper.assertTranslatesTo("|http://mysite.org|\n",
           tableWithCell("<a href=\"http://mysite.org\">http://mysite.org</a>"));
         ParserTestHelper.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks\n"));
 
         ParserTestHelper.assertTranslatesTo("|a|b|c|\n|d|e|f|\n",
-          "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
+          "<table>" + HtmlElement.endl +
             "\t<tr>" + HtmlElement.endl +
             "\t\t<td>a</td>" + HtmlElement.endl +
             "\t\t<td>b</td>" + HtmlElement.endl +
@@ -54,7 +54,7 @@ public class TableTest {
 
     @Test public void normalizesRowLength() {
         ParserTestHelper.assertTranslatesTo("|a|\n|b|c|\n|d|e|f|\n",
-          "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
+          "<table>" + HtmlElement.endl +
             "\t<tr>" + HtmlElement.endl +
             "\t\t<td colspan=\"3\">a</td>" + HtmlElement.endl +
             "\t</tr>" + HtmlElement.endl +

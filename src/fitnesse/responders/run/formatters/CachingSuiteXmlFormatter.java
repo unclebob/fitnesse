@@ -1,22 +1,21 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.testHistory.PageHistory;
-import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.responders.testHistory.TestResultRecord;
-import fitnesse.wiki.WikiPage;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Date;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import util.TimeMeasurement;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Date;
+import fitnesse.FitNesseContext;
+import fitnesse.responders.run.SuiteExecutionReport;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.responders.testHistory.TestResultRecord;
+import fitnesse.wiki.WikiPage;
 
 public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   private TestHistory testHistory = new TestHistory();
@@ -25,10 +24,10 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
   private Writer writer;
   private boolean includeHtml = false;
 
-  public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) throws Exception {
+  public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) {
     super(context, page);
     velocityContext = new VelocityContext();
-    velocityEngine = VelocityFactory.getVelocityEngine();
+    velocityEngine = context.pageFactory.getVelocityEngine();
     this.writer = writer;
   }
 

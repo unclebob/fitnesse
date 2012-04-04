@@ -1,25 +1,17 @@
 package fitnesse.responders.editing;
 
-import static fitnesse.responders.editing.EditResponder.TIME_STAMP;
-import static fitnesse.responders.editing.EditResponder.TICKET_ID;
-import static fitnesse.responders.editing.EditResponder.TIME_STAMP;
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
-
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
-import fitnesse.components.SaveRecorder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
+import fitnesse.wiki.PageType;
 import fitnesse.wiki.PathParser;
-import fitnesse.wikitext.Utils;
 
 public class NewPageResponder implements Responder {
 
@@ -31,23 +23,30 @@ public class NewPageResponder implements Responder {
   }
 
   private String doMakeHtml(FitNesseContext context, Request request) {
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("New page:");
 
     html.setPageTitle(new PageTitle("New Page", PathParser.parse(request.getResource())));
-    html.setMainTemplate("editPage.vm");
+    html.setMainTemplate("editPage");
     makeEditForm(html, context, request);
     
     return html.html();
   }
 
   private void makeEditForm(HtmlPage html, FitNesseContext context, Request request) {
-    html.put("action", request.getResource());
+    html.put("resource", request.getResource());
 
     html.put("isNewPage", true);
     html.put("helpText", "");
     html.put("pageContent", context.defaultNewPageContent);
-    html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+    if (request.hasInput("pageType")) {
+      String pageType = (String) request.getInput("pageType");
+      // Validate page type:
+      PageType.fromString(pageType);
+      html.put("pageType", pageType);
+    } else {
+      html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+    }
   }
 
   public SecureOperation getSecureOperation() {

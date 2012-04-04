@@ -2,7 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 
 public class ChunkedResponse extends Response {
   private ResponseSender sender;
@@ -87,5 +91,30 @@ public class ChunkedResponse extends Response {
 
   public boolean isChunkingTurnedOff() {
     return dontChunk;
+  }
+
+  public Writer getWriter() {
+    return new  Writer() {
+  
+      @Override
+      public void close() throws IOException {
+        //sender.close();
+      }
+  
+      @Override
+      public void flush() throws IOException {
+        // sender.flush(); -- flush is done on write
+      }
+  
+      @Override
+      public void write(String str) throws IOException {
+        add(str);
+      }
+      
+      @Override
+      public void write(char[] cbuf, int off, int len) throws IOException {
+        write(new String(cbuf, off, len));
+      }
+    };
   }
 }

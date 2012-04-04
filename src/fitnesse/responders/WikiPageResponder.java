@@ -2,15 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.html.SetupTeardownAndLibraryIncluder;
-import org.apache.velocity.VelocityContext;
-
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTES;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlUtil;
+import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -73,18 +71,22 @@ public class WikiPageResponder implements SecureResponder {
 
   public String makeHtml(FitNesseContext context) {
     WikiPage page = pageData.getWikiPage();
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
     String fullPathName = PathParser.render(fullPath);
     html.setTitle(fullPathName);
     html.setPageTitle(new PageTitle(fullPath).notLinked());
-    // TODO move this to menu
-    html.actions = new WikiPageActions(page).withAddChild();
+    
+    html.setNavTemplate("wikiNav.vm");
+    html.put("actions", new WikiPageActions(page));
+    html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
+
     SetupTeardownAndLibraryIncluder.includeInto(pageData, true);
 
-    html.setMainTemplate("render.vm");
+    html.setMainTemplate("wikiPage");
+    html.setFooterTemplate("wikiFooter");
     html.put("content", new WikiPageRenderer());
-    
+    html.put("footerContent", new WikiPageFooterRenderer());
     handleSpecialProperties(html, page);
     return html.html();
   }
@@ -99,7 +101,14 @@ public class WikiPageResponder implements SecureResponder {
   
   public class WikiPageRenderer {
     public String render() {
-        return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
+        return HtmlUtil.makePageHtml(pageData);
     }
   }
+
+  public class WikiPageFooterRenderer {
+    public String render() {
+        return HtmlUtil.makePageFooterHtml(pageData);
+    }
+  }
+
 }

@@ -163,7 +163,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
   private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage wikiPage) {
     TestPage testPage = new TestPage(wikiPage);
-    Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), isRemoteDebug);
+    Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), fitNesseContext.pageFactory, isRemoteDebug);
     getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
   }
 

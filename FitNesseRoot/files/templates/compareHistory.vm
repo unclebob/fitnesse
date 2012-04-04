@@ -1,4 +1,3 @@
-<div class="main">
 #if($resultContent)
 
 #set($Header ="" )
@@ -46,4 +45,3 @@
 #else
 <h2>Comparison Failed: $pageTitle.Title</h2>
 #end
-</div>

@@ -67,11 +67,6 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.testComplete(test, testSummary, timeMeasurement);
   }
 
-  public void writeHead(String pageType) throws Exception {
-    for (BaseFormatter formatter : formatters)
-      formatter.writeHead(pageType);
-  }
-
   @Override
   public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters) {

@@ -38,7 +38,7 @@
 |Response Examiner.|
 |type|pattern|matches?|
 |contents|<ol>|false|
-|contents|<li>|false|
+|contents|1 is not a list|true|
 #
 
 '''Test that nothing gets interpreted inside literal tables.'''

@@ -7,7 +7,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -18,7 +17,6 @@ public class NotFoundResponderTest extends RegexTestCase {
 
   public void setUp() {
     context = FitNesseUtil.makeTestContext();
-    context.htmlPageFactory = new HtmlPageFactory();
   }
   
   public void testResponse() throws Exception {

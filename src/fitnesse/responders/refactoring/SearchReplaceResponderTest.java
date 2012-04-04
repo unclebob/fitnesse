@@ -85,7 +85,7 @@ public class SearchReplaceResponderTest {
     crawler.addPage(somePage, PathParser.parse("ChildPage"), "this page has something to replace.");
     String content = getResponseContentUsingSearchReplaceString("something", "replacedthing");
     assertThat(content, not(containsString("<a href=\"SomePage\">")));
-    assertThat(content, containsString("<a href=\"SomePage.ChildPage\">"));
+    assertThat(content, containsString("SomePage.ChildPage"));
   }
 
   private String getResponseContentUsingSearchReplaceString(String searchString, String replacementString) throws Exception {

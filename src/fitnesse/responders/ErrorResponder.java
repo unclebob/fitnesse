@@ -25,9 +25,9 @@ public class ErrorResponder implements Responder {
 
   public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(400);
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     HtmlUtil.addTitles(html, "Error Occured");
-    html.setMainTemplate("error.vm");
+    html.setMainTemplate("error");
     html.put("exception", exception);
     if (exception != null)
       html.put("exception", exception);

@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
 import util.Maybe;
 
 import java.util.HashMap;
@@ -44,7 +45,9 @@ public class ParsingPage {
         else if (key.equals("FITNESSE_PORT"))
             value = Integer.toString(FitNesseContext.globalContext.port);
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = FitNesseContext.globalContext.rootPath;
+          value = FitNesseContext.globalContext.rootPath;
+        else if (key.equals("FITNESSE_VERSION"))
+          value = new FitNesseVersion().toString();
         else
             return Maybe.noString;
         return new Maybe<String>(value);

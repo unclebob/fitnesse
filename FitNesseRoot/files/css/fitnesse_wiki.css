@@ -1,0 +1,167 @@
+/* Wiki styling */
+
+
+article .centered {
+  margin: 5px;
+  text-align: center;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.italic {
+	font-style:italic;
+}
+
+.code {
+  font-family: courier, 'Lucida Sans Typewriter', monospace;
+  font-size: 16px;
+  color: #004000;
+  font-weight: bold;
+}
+
+
+.meta {
+  color: #BF8660;
+  font-style: italic;
+}
+
+.note {
+	 font-size: 85%;
+}
+
+/** Collapsable section */
+.included, .setup, .teardown, .collapse_rim {
+  background: #F9F9F9;
+  margin: 5px 0px 5px 0px;
+  padding: 2px 2px 2px 2px;
+  border: 1px dotted #909090;
+}
+
+.setup, .teardown {
+  background: #FFFFF0;
+  border-color: #FF8000;
+}
+
+.included {
+  background: #F9F9FF;
+  border-color: #2E2EB2;
+}
+
+.collapse_rim {
+  border-color: #BF8660;
+}
+
+.collapse_rim .hidden {
+  display: none;
+}
+
+div.collapsable {
+  margin: 0px 0px 0px 15px;
+  display: block;
+}
+
+div.collapsable-contents {
+  margin: 0px 0px 0px 15px;
+  display: block;
+}
+
+div.invisible {
+  line-height: 0px;
+  margin: 0px 0px 0px 0px;
+  display: none;
+  visibility: hidden;
+}
+
+/** !style_* */
+.error {
+  background-color: #ffffaa;
+}
+.pass {
+	background-color: lightgreen;
+}
+.fail {
+	background-color: red;
+}
+.ignore {
+	background-color: lightgray;
+}
+.caps {
+  font-variant: small-caps;
+}
+.red {
+  color: red;
+}
+.orange {
+  color: orange;
+}
+.yellow {
+  color: yellow;
+}
+.green {
+  color: green;
+}
+.blue {
+  color: blue;
+}
+.indigo {
+  color: indigo;
+}
+.violet {
+  color: violet;
+}
+.pink {
+  color: pink;
+}
+.lightYellow {
+  color: lightYellow;
+}
+.lightGreen {
+  color: lightGreen;
+}
+.lightBlue {
+  color: lightBlue;
+}
+.chocolate {
+  color: chocolate;
+}
+.darkOrange {
+  color: darkOrange;
+}
+.darkRed {
+  color: darkRed;
+}
+.olive {
+  color: olive;
+}
+.darkBlue {
+  color: darkBlue;
+}
+.darkGreen {
+  color: darkGreen;
+}
+.right {
+  float: right;
+}
+.left {
+  float: left;
+}
+.pageHelp {
+  font-size: 0.7em;
+  font-style: italic;
+  margin-left: 1.5em;
+}
+.hidden {
+  display: none;
+}
+.fit_stacktrace {
+  font-size: 0.7em;
+}
+.fit_label {
+  font-style: italic;
+  color: #C08080;
+}
+.fit_grey {
+  color: #808080;
+}

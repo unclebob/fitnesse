@@ -13,16 +13,13 @@ Request the page
 Examine the requested page to ensure the correct links are displayed in the correct order.
 !|Response Examiner.|
 |line|inOrder?|
-|<div class="actions">|true|
+|<header>|true|
 |<a href="SomePage?test" accesskey="t">Test</a>|true|
 |<a href="SomePage?edit" accesskey="e">Edit</a>|true|
 |<a href="SomePage?properties" accesskey="p">Properties</a>|true|
-|<a href="SomePage?refactor" accesskey="r">Refactor</a>|true|
 |<a href="SomePage?whereUsed" accesskey="w">Where Used</a>|true|
-|<a href="?searchForm" accesskey="s">Search</a>|true|
-|<a href="/files" accesskey="f">Files</a>|true|
 |<a href="SomePage?versions" accesskey="v">Versions</a>|true|
+|<a href="/files" accesskey="f">Files</a>|true|
+|<a href="?searchForm" accesskey="s">Search</a>|true|
 |<a href="/RecentChanges" accesskey="">Recent Changes</a>|true|
 |<a href=".FitNesse.UserGuide" accesskey="">User Guide</a>|true|
-|</div>|true|
-|<div class="header">|true|

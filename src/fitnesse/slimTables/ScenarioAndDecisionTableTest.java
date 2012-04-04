@@ -64,7 +64,6 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "[[scenario, echo, user, giving, user_old], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
     assertEquals(1, dt.getTestSummary().getRight());
     assertEquals(0, dt.getTestSummary().getWrong());
     assertEquals(0, dt.getTestSummary().getIgnores());
@@ -129,7 +128,6 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "[[scenario, echo, input, giving, output], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
     assertEquals(1, dt.getTestSummary().getRight());
     assertEquals(0, dt.getTestSummary().getWrong());
     assertEquals(0, dt.getTestSummary().getIgnores());
@@ -158,7 +156,6 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "[[scenario, echo, input, giving, output], [check, echo, 7, [7] fail(expected [8])]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertSubString("<span id=\"test_status\" class=fail>Scenario</span>", dtHtml);
     assertEquals(0, dt.getTestSummary().getRight());
     assertEquals(1, dt.getTestSummary().getWrong());
     assertEquals(0, dt.getTestSummary().getIgnores());
@@ -208,6 +205,5 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
       "[[scenario, echo, input, giving, output, , output2], [check, echo, 7, pass(7)]]";
     assertEquals(expectedScript, scriptTable);
     String dtHtml = dt.getTable().toString();
-    assertSubString("<span id=\"test_status\" class=pass>Scenario</span>", dtHtml);
   }
 }

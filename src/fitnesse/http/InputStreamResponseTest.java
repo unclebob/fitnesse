@@ -102,10 +102,12 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     bytesSent += bytes.length;
   }
 
+  @Override
   public void close() {
     closed = true;
   }
 
+  @Override
   public Socket getSocket() //TODO-MdM maybe get rid of this method.
   {
     return null;

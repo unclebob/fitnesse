@@ -2,9 +2,9 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -50,7 +50,7 @@ public class TestFormatterTest {
       protected void writeResults() {
       }
     };
-    TestHtmlFormatter testHtmlFormatter = new TestHtmlFormatter(context, page, mock(HtmlPageFactory.class)) {
+    InteractiveFormatter testHtmlFormatter = new TestHtmlFormatter(context, page) {
       @Override
       protected void writeData(String output) {
       }

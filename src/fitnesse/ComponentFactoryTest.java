@@ -12,12 +12,12 @@ import fitnesse.wikitext.parser.*;
 import util.RegexTestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.NullVersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
@@ -67,20 +67,6 @@ public class ComponentFactoryTest extends RegexTestCase {
     assertNotNull(page);
     assertEquals(FileSystemPage.class, page.getClass());
     assertEquals("TestRoot", page.getName());
-  }
-
-  public void testDefaultHtmlPageFactory() throws Exception {
-    HtmlPageFactory pageFactory = factory.getHtmlPageFactory(new HtmlPageFactory());
-    assertNotNull(pageFactory);
-    assertEquals(HtmlPageFactory.class, pageFactory.getClass());
-  }
-
-  public void testHtmlPageFactoryCreation() throws Exception {
-    testProperties.setProperty(ComponentFactory.HTML_PAGE_FACTORY, TestPageFactory.class.getName());
-
-    HtmlPageFactory pageFactory = factory.getHtmlPageFactory(null);
-    assertNotNull(pageFactory);
-    assertEquals(TestPageFactory.class, pageFactory.getClass());
   }
 
   public void testAddPlugins() throws Exception {
@@ -168,12 +154,6 @@ public class ComponentFactoryTest extends RegexTestCase {
 
     VersionsController defaultRevisionController = factory.loadVersionsController();
     assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
-  }
-
-  public static class TestPageFactory extends HtmlPageFactory {
-    public TestPageFactory(Properties p) {
-      p.propertyNames();
-    }
   }
 
   public static class TestContentFilter implements ContentFilter {

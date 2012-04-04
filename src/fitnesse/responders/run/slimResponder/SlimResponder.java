@@ -31,19 +31,21 @@ responders in general.
 */
 public abstract class SlimResponder implements Responder, TestSystemListener {
   private boolean slimOpen = false;
-  ExecutionLog log;
+  private ExecutionLog log;
   private boolean fastTest = false;
   SlimTestSystem testSystem;
   private WikiPage page;
   private PageData pageData;
   private PageCrawler crawler;
+  private FitNesseContext context;
   
   @Override
   public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    this.context = context;
     loadPage(request.getResource(), context);
     
     SimpleResponse response = new SimpleResponse();
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setMainTemplate("render.vm");
     html.put("content", new SlimRenderer());
     response.setContent(html.html());
@@ -66,8 +68,8 @@ public abstract class SlimResponder implements Responder, TestSystemListener {
       String html = null;
   
       String classPath = new ClassPathBuilder().getClasspath(page);
-      TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
-      descriptor.testRunner = "fitnesse.slim.SlimService";
+      TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), context.pageFactory, false);
+      System.out.println("test runner: " + descriptor.testRunner);
       try {
         log = testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();

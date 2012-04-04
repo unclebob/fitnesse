@@ -4,6 +4,8 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
-public interface TraversalListener {
-  public void processPage(WikiPage page);
+public interface TraversalListener<T> {
+
+  void process(T page);
+
 }

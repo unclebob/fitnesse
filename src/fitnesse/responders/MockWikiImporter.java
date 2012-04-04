@@ -31,7 +31,7 @@ public class MockWikiImporter extends WikiImporter {
       pageCrawler.traverse((WikiPage) iterator.next(), this);
   }
 
-  public void processPage(WikiPage page) {
+  public void process(WikiPage page) {
     setMockContent(page);
   }
 }

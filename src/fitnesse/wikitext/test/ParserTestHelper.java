@@ -151,7 +151,7 @@ public class ParserTestHelper {
     }
 
     public static String nestedTableWithCellAndRow(String cellContent, String firstRow) {
-        return "<table border=\"1\" cellspacing=\"0\">"+ HtmlElement.endl +
+        return "<table>"+ HtmlElement.endl +
         "\t" + firstRow + HtmlElement.endl +
         "\t\t<td>" + cellContent + "</td>" + HtmlElement.endl +
         "\t</tr>" + HtmlElement.endl +

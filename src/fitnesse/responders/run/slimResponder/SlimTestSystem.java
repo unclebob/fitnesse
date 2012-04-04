@@ -123,7 +123,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     } else {
       slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
     }
-    return new ExecutionLog(page, slimRunner);
+    return new ExecutionLog(page, slimRunner, descriptor.pageFactory);
   }
 
   public int findFreePort() {

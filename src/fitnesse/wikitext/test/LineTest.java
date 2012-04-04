@@ -33,7 +33,7 @@ public class LineTest {
     }
 
     @Test public void translatesCenters() {
-        ParserTestHelper.assertTranslatesTo("!c some text", "<div class=\"centered\">some text</div>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("!c some text", "<center>some text</center>" + HtmlElement.endl);
     }
 
     @Test public void scansNotes() {

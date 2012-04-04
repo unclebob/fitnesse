@@ -10,10 +10,10 @@ import org.apache.velocity.VelocityContext;
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.FitNesseContext;
@@ -34,9 +34,8 @@ public class HtmlResultFormatter implements ResultFormatter {
 
     buffer = new ContentBuffer(".html");
 
-    createPage(context.htmlPageFactory, rootPath);
+    createPage(context.pageFactory, rootPath);
     suiteFormatter = createCustomFormatter();
-    suiteFormatter.writeHead(null);
     System.out.println("Built HtmlResultFormatter for " + rootPath);
   }
 
@@ -51,16 +50,12 @@ public class HtmlResultFormatter implements ResultFormatter {
         }
       }
       
-      @Override
-      protected HtmlPage buildHtml(String pageType) {
-        return htmlPage;
-      }
     };
     return formatter;
   }
   
-  private void createPage(HtmlPageFactory pageFactory, String rootPath) {
-    htmlPage = context.htmlPageFactory.newPage();
+  private void createPage(PageFactory pageFactory, String rootPath) {
+    htmlPage = context.pageFactory.newPage();
 
     htmlPage.setTitle(rootPath);
     htmlPage.put("baseUri", baseUri(host));

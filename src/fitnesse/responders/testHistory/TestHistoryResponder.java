@@ -1,7 +1,10 @@
 package fitnesse.responders.testHistory;
 
+import java.io.File;
+
+import org.apache.velocity.VelocityContext;
+
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -11,9 +14,6 @@ import fitnesse.http.Response.Format;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import org.apache.velocity.VelocityContext;
-
-import java.io.File;
 
 public class TestHistoryResponder implements SecureResponder {
 
@@ -29,16 +29,18 @@ public class TestHistoryResponder implements SecureResponder {
     if (formatIsXML(request)) {
       return makeTestHistoryXmlResponse(testHistory);
     } else {
-      return makeTestHistoryResponse(testHistory, pageName);
+      return makeTestHistoryResponse(testHistory, request, pageName);
     }
   }
 
-  private Response makeTestHistoryResponse(TestHistory testHistory, String pageName) {
-    HtmlPage page = context.htmlPageFactory.newPage();
+  private Response makeTestHistoryResponse(TestHistory testHistory, Request request, String pageName) {
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Test History");
     page.setPageTitle(new PageTitle(makePageTitle(pageName)));
+    page.setNavTemplate("viewNav");
+    page.put("viewLocation", request.getResource());
     page.put("testHistory", testHistory);
-    page.setMainTemplate("testHistory.vm");
+    page.setMainTemplate("testHistory");
     SimpleResponse response = new SimpleResponse();
     response.setContent(page.html());
     return response;
@@ -49,7 +51,7 @@ public class TestHistoryResponder implements SecureResponder {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("testHistory", history);
     response.setContentType(Format.XML);
-    response.setContent(VelocityFactory.translateTemplate(velocityContext, "testHistoryXML.vm"));
+    response.setContent(context.pageFactory.render(velocityContext, "testHistoryXML.vm"));
     return response;
   }
   

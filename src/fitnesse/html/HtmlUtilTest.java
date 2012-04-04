@@ -4,11 +4,9 @@ package fitnesse.html;
 
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.templateUtilities.HtmlPage;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageActions;
@@ -16,16 +14,11 @@ import fitnesse.wiki.WikiPageActions;
 public class HtmlUtilTest extends RegexTestCase {
 
   private WikiPage root;
+  private FitNesseContext context;
 
   public void setUp() {
     root = InMemoryPage.makeRoot("root");
-    FitNesseUtil.makeTestContext(root);
-  }
-
-  public void testMakeFormTag() {
-    HtmlTag formTag = HtmlUtil.makeFormTag("method", "action");
-    assertSubString("method", formTag.getAttribute("method"));
-    assertSubString("action", formTag.getAttribute("action"));
+    context = FitNesseUtil.makeTestContext(root);
   }
 
   public void testMakeDivTag() {
@@ -69,8 +62,9 @@ public class HtmlUtilTest extends RegexTestCase {
 
   private String getActionsHtml(String pageName) {
     root.addChildPage(pageName);
-    HtmlPage htmlPage = new HtmlPageFactory().newPage();
-    htmlPage.actions = new WikiPageActions(root.getChildPage(pageName));
+    HtmlPage htmlPage = context.pageFactory.newPage();
+    htmlPage.setNavTemplate("wikiNav.vm");
+    htmlPage.put("actions", new WikiPageActions(root.getChildPage(pageName)));
     return htmlPage.html();
   }
 
@@ -78,7 +72,7 @@ public class HtmlUtilTest extends RegexTestCase {
     assertSubString("<a href=\"" + pageName + "?edit\" accesskey=\"e\">Edit</a>", html);
     assertSubString("<a href=\"" + pageName + "?versions\" accesskey=\"v\">Versions</a>", html);
     assertSubString("<a href=\"" + pageName + "?properties\" accesskey=\"p\">Properties</a>", html);
-    assertSubString("<a href=\"" + pageName + "?refactor\" accesskey=\"r\">Refactor</a>", html);
+    assertSubString("<a href=\"" + pageName + "?refactor&amp;type=rename\">Rename</a>", html);
     assertSubString("<a href=\"" + pageName + "?whereUsed\" accesskey=\"w\">Where Used</a>", html);
     assertSubString("<a href=\"/files\" accesskey=\"f\">Files</a>", html);
     assertSubString("<a href=\"?searchForm\" accesskey=\"s\">Search</a>", html);

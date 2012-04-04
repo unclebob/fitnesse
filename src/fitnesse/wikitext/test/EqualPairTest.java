@@ -44,8 +44,8 @@ public class EqualPairTest {
     }
 
     @Test public void translatesStrike() {
-        ParserTestHelper.assertTranslatesTo("--some text--", "<span class=\"strike\">some text</span>");
-        ParserTestHelper.assertTranslatesTo("--embedded-dash--", "<span class=\"strike\">embedded-dash</span>");
+        ParserTestHelper.assertTranslatesTo("--some text--", "<strike>some text</strike>");
+        ParserTestHelper.assertTranslatesTo("--embedded-dash--", "<strike>embedded-dash</strike>");
     }
 
     @Test public void testEvilExponentialMatch() throws Exception {

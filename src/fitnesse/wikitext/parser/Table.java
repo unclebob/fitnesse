@@ -51,10 +51,6 @@ public class Table extends SymbolType implements Rule, Translation {
         if (symbol.hasProperty("class")) {
             writer.putAttribute("class", symbol.getProperty("class"));
         }
-        else {
-            writer.putAttribute("border", "1");
-            writer.putAttribute("cellspacing", "0");
-        }
         int longestRow = longestRow(symbol);
         int rowCount = 0;
         for (Symbol child: symbol.getChildren()) {

@@ -58,7 +58,7 @@ public class SaveResponder implements SecureResponder {
 
   private Response makeBannedContentResponse(FitNesseContext context, String resource) {
     SimpleResponse response = new SimpleResponse();
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Edit " + resource);
     html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
     html.setMainTemplate("bannedPage.vm");

@@ -1,6 +1,5 @@
-<div class="main">
 #if($testExecutionReport)
-<table border="1" cellspacing="0">
+<table>
   <tr>
     <td>$testExecutionReport.Date</td>
     <td class="meta">FitNesse Version: $testExecutionReport.Version</td>
@@ -11,7 +10,7 @@
 <p/>
 <hr/>
 <p/>
-<table border="1" cellspacing="0">
+<table>
   <tr class="$testExecutionReport.summaryClass($testResult.TestSummary)">
     <td>
       <strong><span STYLE="font-size: 16pt">
@@ -40,4 +39,3 @@
 <div>$testResult.Content</div>
 #end
 #end
-</div>

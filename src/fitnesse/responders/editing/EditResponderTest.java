@@ -45,7 +45,7 @@ public class EditResponderTest extends RegexTestCase {
     assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);
     assertSubString("name=\"" + EditResponder.HELP_TEXT + "\"", body);
     assertSubString("type=\"submit\"", body);
-    assertSubString(String.format("textarea class=\"%s no_wrap\" wrap=\"off\"", EditResponder.CONTENT_INPUT_NAME), body);
+    assertSubString(String.format("textarea", EditResponder.CONTENT_INPUT_NAME), body);
   }
 
   public void testResponseWhenNonexistentPageRequestsed() throws Exception {
@@ -78,8 +78,7 @@ public class EditResponderTest extends RegexTestCase {
     assertEquals(200, response.getStatus());
 
     String body = response.getContent();
-    HtmlTag redirectInputTag = HtmlUtil.makeInputTag("hidden", "redirect", "http://fitnesse.org:8080/SomePage?boom");
-    assertSubString(redirectInputTag.html(), body);
+    assertSubString("name=\"redirect\" value=\"http://fitnesse.org:8080/SomePage?boom\"", body);
   }
 
   public void testPasteFromExcelExists() throws Exception {

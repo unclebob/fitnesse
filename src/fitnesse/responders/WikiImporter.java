@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import util.XmlUtil;
 import fitnesse.components.TraversalListener;
@@ -25,7 +27,7 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.XmlizerPageHandler;
 
-public class WikiImporter implements XmlizerPageHandler, TraversalListener {
+public class WikiImporter implements XmlizerPageHandler, TraversalListener<WikiPage> {
   public static String remoteUsername;
   public static String remotePassword;
 
@@ -43,6 +45,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
   private boolean shouldDeleteOrphans = true;
   private WikiPagePath contextPath;
   private boolean autoUpdateSetting;
+  private Exception caughtException;
 
   public WikiImporter() {
     importerClient = new NullWikiImporterClient();
@@ -163,6 +166,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
       throw e;
     }
     catch (Exception e) {
+      caughtException = e;
       importerClient.pageImportError(localPage, e);
     }
     importCount++;
@@ -183,7 +187,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return getXmlDocument("pages");
   }
 
-  private Document getXmlDocument(String documentType) throws Exception {
+  private Document getXmlDocument(String documentType) throws IOException, SAXException {
     String remotePathName = PathParser.render(remotePath);
     RequestBuilder builder = new RequestBuilder("/" + remotePathName);
     builder.addInput("responder", "proxy");
@@ -195,7 +199,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     ResponseParser parser = ResponseParser.performHttpRequest(remoteHostname, remotePort, builder);
 
     if (parser.getStatus() == 404)
-      throw new Exception("The remote resource, " + remoteUrl() + ", was not found.");
+      throw new IOException("The remote resource, " + remoteUrl() + ", was not found.");
     if (parser.getStatus() == 401)
       throw new AuthenticationRequiredException(remoteUrl());
 
@@ -203,6 +207,10 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return XmlUtil.newDocument(body);
   }
 
+  public Exception getCaughtException() {
+    return caughtException;
+  }
+  
   public void setRemoteUsername(String username) {
     remoteUsername = username;
   }
@@ -276,7 +284,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     return orphans;
   }
 
-  public void processPage(WikiPage page) {
+  public void process(WikiPage page) {
     WikiPagePath relativePath = relativePath(page);
     pageCatalog.add(relativePath);
   }

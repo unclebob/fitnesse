@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestExecutionReport.Expectation;
 import fitnesse.responders.run.TestExecutionReport.InstructionResult;
 import fitnesse.responders.run.TestExecutionReport.Row;
@@ -41,7 +40,7 @@ public class TestExecutionReportTest {
 
   private String reportToXml(TestExecutionReport report) throws Exception {
     StringWriter writer = new StringWriter();
-    report.toXml(writer, VelocityFactory.getVelocityEngine());
+    report.toXml(writer, context.pageFactory.getVelocityEngine());
     writer.close();
     return writer.toString();
   }

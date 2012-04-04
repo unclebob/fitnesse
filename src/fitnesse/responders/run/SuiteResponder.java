@@ -7,8 +7,14 @@ import fitnesse.responders.run.formatters.*;
 public class SuiteResponder extends TestResponder {
   private boolean includeHtml;
 
-  String getTitle() {
+  @Override
+  protected String getTitle() {
     return "Suite Results";
+  }
+
+  @Override
+  protected String mainTemplate() {
+    return "suitePage";
   }
 
   protected void checkArguments() {
@@ -16,15 +22,15 @@ public class SuiteResponder extends TestResponder {
     includeHtml |= request.hasInput("includehtml");
   }
 
-  void addXmlFormatter() throws Exception {
-    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
+  void addXmlFormatter() {
+    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, response.getWriter());
     if (includeHtml)
       xmlFormatter.includeHtml();
     formatters.add(xmlFormatter);
   }
 
-  void addHtmlFormatter() throws Exception {
-    BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
+  void addHtmlFormatter() {
+    BaseFormatter formatter = new SuiteHtmlFormatter(context, page) {
       protected void writeData(String output) {
         addToResponse(output);
       }
@@ -32,7 +38,7 @@ public class SuiteResponder extends TestResponder {
     formatters.add(formatter);
   }
 
-  protected void addTestHistoryFormatter() throws Exception {
+  protected void addTestHistoryFormatter() {
     HistoryWriterFactory source = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, source));
     formatters.add(new SuiteHistoryFormatter(context, page, source));

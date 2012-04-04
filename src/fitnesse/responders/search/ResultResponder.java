@@ -2,32 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.VelocityFactory;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.SearchObserver;
+import fitnesse.components.TraversalListener;
+import fitnesse.components.Traverser;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import java.io.StringWriter;
 
 public abstract class ResultResponder extends ChunkingResponder implements
-  SearchObserver, SecureResponder {
-  private int hits;
+  SecureResponder, Traverser {
+  private BlockingQueue queue = new ArrayBlockingQueue<WikiPage>(64);
 
   protected PageCrawler getPageCrawler() {
     return root.getPageCrawler();
   }
 
   protected void doSending() {
-    HtmlPage htmlPage = context.htmlPageFactory.newPage();
+    HtmlPage htmlPage = context.pageFactory.newPage();
     htmlPage.setTitle(getTitle());
     htmlPage.setPageTitle(new PageTitle(getTitle()) {
       public String getTitle() {
@@ -35,10 +34,10 @@ public abstract class ResultResponder extends ChunkingResponder implements
       }
 
       public String getLink() {
-        return "search";
+        return null;
       }
     });
-    htmlPage.setMainTemplate("searchResults.vm");
+    htmlPage.setMainTemplate("searchResults");
 
     if (page == null)
       page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
@@ -47,69 +46,23 @@ public abstract class ResultResponder extends ChunkingResponder implements
     else
       htmlPage.put("request", request.getQueryString());
     htmlPage.put("page", page);
+    htmlPage.put("viewLocation", request.getResource());
+    htmlPage.setNavTemplate("viewNav");
+    htmlPage.put("resultResponder", this);
     
-    htmlPage.divide();
-
-    response.add(htmlPage.preDivision);
-
-    startSearching();
-
-    response.add(createSearchResultsFooter());
-    response.add(htmlPage.postDivision);
-
+    htmlPage.render(response.getWriter());
+    
     response.closeAll();
-  }
-
-  public void hit(WikiPage page) {
-    hits++;
-    response.add(createSearchResultsEntry(page));
-  }
-
-  private String createSearchResultsFooter() {
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = VelocityFactory.getVelocityEngine().getTemplate(
-      "searchResultsFooter.vm");
-    velocityContext.put("hits", hits);
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
-  }
-  
-  private String createSearchResultsEntry(WikiPage result) {
-    VelocityContext velocityContext = new VelocityContext();
-
-    StringWriter writer = new StringWriter();
-
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("searchResultsEntry.vm");
-
-    velocityContext.put("hits", hits);
-    velocityContext.put("resultsRow", getRow());
-    velocityContext.put("result", result);
-
-    template.merge(velocityContext, writer);
-
-    return writer.toString();
-  }
-
-  private int nextRow = 0;
-
-  private int getRow() {
-    return (nextRow++ % 2) + 1;
   }
 
   protected abstract String getTitle() ;
 
-  protected abstract String getPageFooterInfo(int hits) ;
-
-  protected void startSearching() {
-    hits = 0;
-  }
+  public abstract void traverse(TraversalListener observer);
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
   }
+  
 }
+
+

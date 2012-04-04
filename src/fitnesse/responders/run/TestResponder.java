@@ -9,9 +9,15 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.run.formatters.*;
+import fitnesse.responders.templateUtilities.HtmlPage;
+import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiImportProperty;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageActions;
 import fitnesse.wiki.WikiPagePath;
 
 import java.io.File;
@@ -25,11 +31,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
   protected PageData data;
   protected CompositeFormatter formatters;
+  protected boolean isInteractive = false;
   private volatile boolean isClosed = false;
 
   private boolean fastTest = false;
   private boolean remoteDebug = false;
   protected TestSystem testSystem;
+  int exitCode;
 
   public TestResponder() {
     super();
@@ -40,12 +48,54 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     checkArguments();
     data = page.getData();
 
-    createFormatterAndWriteHead();
+    createFormatters();
+    
+    if (isInteractive) {
+      makeHtml().render(response.getWriter());
+    } else {
+      doExecuteTests();
+    }
+    
+    closeHtmlResponse(exitCode);
+  }
+
+  public void doExecuteTests() throws Exception {
     sendPreTestNotification();
+    
     performExecution();
 
-    int exitCode = formatters.getErrorCount();
-    closeHtmlResponse(exitCode);
+    exitCode = formatters.getErrorCount();
+  }
+  
+  private HtmlPage makeHtml() {
+    PageCrawler pageCrawler = page.getPageCrawler();
+    WikiPagePath fullPath = pageCrawler.getFullPath(page);
+    String fullPathName = PathParser.render(fullPath);
+    HtmlPage htmlPage = context.pageFactory.newPage();
+    htmlPage.setTitle(getTitle() + ": " + fullPathName);
+    htmlPage.setPageTitle(new PageTitle(getTitle(), fullPath));
+    htmlPage.setNavTemplate("testNav.vm");
+    htmlPage.put("actions", new WikiPageActions(page).withPageHistory());
+    htmlPage.setMainTemplate(mainTemplate());
+    htmlPage.put("testExecutor", new TestExecutor());
+    htmlPage.setFooterTemplate("wikiFooter.vm");
+    htmlPage.put("footerContent", new WikiPageFooterRenderer());
+    
+    WikiImportProperty.handleImportProperties(htmlPage, page, page.getData());
+    
+    return htmlPage;
+  }
+
+  public class WikiPageFooterRenderer {
+    public String render() {
+        return page.getData().getFooterPageHtml();
+    }
+  }
+
+  public class TestExecutor {
+    public void execute() throws Exception {
+        doExecuteTests();
+    }
   }
 
   protected void checkArguments() {
@@ -53,29 +103,35 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     remoteDebug |= request.hasInput("remote_debug");
   }
 
-  protected void createFormatterAndWriteHead() throws Exception {
-    if (response.isXmlFormat())
+  protected void createFormatters() {
+    if (response.isXmlFormat()) {
       addXmlFormatter();
-    else if (response.isTextFormat())
+    } else if (response.isTextFormat()) {
       addTextFormatter();
-    else if (response.isJavaFormat())
+    } else if (response.isJavaFormat()) {
       addJavaFormatter();
-    else
+    } else {
       addHtmlFormatter();
-    if (!request.hasInput("nohistory"))
+      isInteractive = true;
+    }
+    if (!request.hasInput("nohistory")) {
       addTestHistoryFormatter();
-	addTestInProgressFormatter();
-    formatters.writeHead(getTitle());
+    }
+    addTestInProgressFormatter();
   }
 
-  String getTitle() {
+  protected String getTitle() {
     return "Test Results";
   }
 
-  void addXmlFormatter() throws Exception {
+  protected String mainTemplate() {
+    return "testPage";
+  }
+  
+  void addXmlFormatter() {
     XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
       public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
-        return makeResponseWriter();
+        return response.getWriter();
       }
     };
     formatters.add(new XmlFormatter(context, page, writerSource));
@@ -84,31 +140,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
   void addTextFormatter() {
     formatters.add(new TestTextFormatter(response));
   }
-  void addJavaFormatter() throws Exception{
+  void addJavaFormatter() {
     formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
   }
-  protected Writer makeResponseWriter() {
-    return new Writer() {
-      public void write(char[] cbuf, int off, int len) {
-        String fragment = new String(cbuf, off, len);
-        try {
-          response.add(fragment.getBytes());
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-      }
 
-      public void flush() throws IOException {
-      }
-
-      public void close() throws IOException {
-      }
-    };
-  }
-
-
-  void addHtmlFormatter() throws Exception {
-    BaseFormatter formatter = new TestHtmlFormatter(context, page, context.htmlPageFactory) {
+  void addHtmlFormatter() {
+    BaseFormatter formatter = new TestHtmlFormatter(context, page) {
       @Override
       protected void writeData(String output) {
         addToResponse(output);
@@ -117,12 +154,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     formatters.add(formatter);
   }
 
-  protected void addTestHistoryFormatter() throws Exception {
+  protected void addTestHistoryFormatter() {
     HistoryWriterFactory writerFactory = new HistoryWriterFactory();
     formatters.add(new PageHistoryFormatter(context, page, writerFactory));
   }
   
-  protected void addTestInProgressFormatter() throws Exception {
+  protected void addTestInProgressFormatter() {
     formatters.add(new PageInProgressFormatter(page));
   }
 

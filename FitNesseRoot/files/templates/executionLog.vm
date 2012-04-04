@@ -1,0 +1,24 @@
+|'''Date: '''| $currentDate |
+|'''Test Page: '''|$testPage|
+|'''Command: '''| !-${runner.command}-! |
+|'''Exit code: '''| $runner.exitCode |
+#set( $execTime = $runner.executionTime / 1000.0 )
+|'''Time elapsed: '''| $execTime seconds |
+
+#if( $runner.wroteToOutputStream() )
+----
+'''Standard Output:'''
+{{{ $runner.output }}}
+#end
+#if( $runner.wroteToErrorStream() )
+----
+'''Standard Error:'''
+{{{ $runner.error }}}
+#end
+#if( $exceptions.size() > 0 )
+----
+'''Internal Exception#if( $exceptions.size() > 1)s#end:'''
+#foreach( $exception in $exceptions)
+{{{ $exception.message }}}
+#end
+#end

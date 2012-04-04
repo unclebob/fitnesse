@@ -1,7 +1,6 @@
-<div class="main">
 #if($suiteExecutionReport)
 <h1>$suiteExecutionReport.getRootPath()</h1>
-<table border="1" cellspacing="0">
+<table>
   <tr>
     <td>$suiteExecutionReport.getDate()</td>
     <td class="meta">FitNesse Version: $suiteExecutionReport.Version</td>
@@ -24,7 +23,7 @@
 </div>
 #end
 <p/>
-<table border="1" cellspacing="0">
+<table>
   <tr>
     <th class="numeric">Right</th>
     <th class="numeric">Wrong</th>
@@ -62,4 +61,3 @@
   #end
 </table>
 #end
-</div>

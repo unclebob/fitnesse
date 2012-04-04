@@ -37,6 +37,7 @@ public class PageData implements Serializable {
   public static final String PropertyPROPERTIES = "Properties";
   public static final String PropertyVERSIONS = "Versions";
   public static final String PropertyEDIT = "Edit";
+  public static final String PropertyADD_CHILD = "AddChild";
   public static final String PropertySUITES = "Suites";
 
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
@@ -44,8 +45,8 @@ public class PageData implements Serializable {
       TEST.toString(), SUITE.toString() };
 
   public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
-      PropertyVERSIONS, PropertyPROPERTIES, PropertyREFACTOR,
-      PropertyWHERE_USED };
+      PropertyADD_CHILD, PropertyVERSIONS, PropertyPROPERTIES,
+      PropertyREFACTOR, PropertyWHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
       PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
@@ -97,13 +98,16 @@ public class PageData implements Serializable {
   }
 
   public void initializeAttributes() {
-    properties.set(PropertyEDIT, Boolean.toString(true));
-    properties.set(PropertyVERSIONS, Boolean.toString(true));
-    properties.set(PropertyPROPERTIES, Boolean.toString(true));
-    properties.set(PropertyREFACTOR, Boolean.toString(true));
+    if (!isErrorLogsPage()) { 
+      properties.set(PropertyEDIT, Boolean.toString(true));
+      properties.set(PropertyADD_CHILD, Boolean.toString(true));
+      properties.set(PropertyPROPERTIES, Boolean.toString(true));
+      properties.set(PropertyREFACTOR, Boolean.toString(true));
+    }
     properties.set(PropertyWHERE_USED, Boolean.toString(true));
-    properties.set(PropertyFILES, Boolean.toString(true));
     properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
+    properties.set(PropertyFILES, Boolean.toString(true));
+    properties.set(PropertyVERSIONS, Boolean.toString(true));
     properties.set(PropertySEARCH, Boolean.toString(true));
     properties.setLastModificationTime(Clock.currentDate());
 
@@ -225,10 +229,6 @@ public class PageData implements Serializable {
             contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
         }
     }
-
-  public void addVariable(String name, String value) {
-      getParsingPage().putVariable(name, value);
-  }
 
   public void setLiterals(List<String> literals) {}
 

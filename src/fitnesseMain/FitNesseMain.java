@@ -7,11 +7,11 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.responders.run.formatters.TestTextFormatter;
-import fitnesse.responders.templateUtilities.HtmlPageFactory;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
 import util.CommandLine;
@@ -35,7 +35,6 @@ public class FitNesseMain {
   public static void launchFitNesse(Arguments arguments) throws Exception {
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
-    VelocityFactory.makeVelocityFactory(context);
     Updater updater = null;
     if (!arguments.isOmittingUpdates())
       updater = new UpdaterImplementation(context);
@@ -102,8 +101,7 @@ public class FitNesseMain {
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);
-    context.htmlPageFactory = componentFactory
-      .getHtmlPageFactory(new HtmlPageFactory());
+    context.pageFactory = new PageFactory(context);
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,
       wikiPageFactory);

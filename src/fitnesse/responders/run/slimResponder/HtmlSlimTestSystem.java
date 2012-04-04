@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import org.htmlparser.util.ParserException;
-
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.SlimTable;
@@ -25,11 +23,7 @@ public class HtmlSlimTestSystem extends SlimTestSystem {
     Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
     syntaxTree.addToFront(findCollapsibleSymbol(preparsedScenarioLibrary));
     String html = pageData.translateToHtml(syntaxTree);
-    try {
-      return new HtmlTableScanner(html);
-    } catch (ParserException e) {
-      throw new RuntimeException(e);
-    }
+    return new HtmlTableScanner(html);
   }
 
   private Symbol findCollapsibleSymbol(Symbol syntaxTree) {

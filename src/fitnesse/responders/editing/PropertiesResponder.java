@@ -74,7 +74,8 @@ public class PropertiesResponder implements SecureResponder {
         throw new RuntimeException(e);
       }
     } else {
-      String html = makeHtml(context);
+      String html = makeHtml(context, request);
+      
       response.setContent(html);
     }
   }
@@ -101,29 +102,18 @@ public class PropertiesResponder implements SecureResponder {
     }
   }
 
-  private String makeHtml(FitNesseContext context) {
-    html = context.htmlPageFactory.newPage();
+  private String makeHtml(FitNesseContext context, Request request) {
+    html = context.pageFactory.newPage();
+    html.setNavTemplate("viewNav");
+    html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
     html.setPageTitle(new PageTitle("Page Properties", path));
     html.put("pageData", pageData);
-    html.setMainTemplate("properties.vm");
+    html.setMainTemplate("propertiesPage");
     makeLastModifiedTag();
     makeFormSections();
 
     return html.html();
-  }
-
-  private HtmlTag makeAttributeCheckbox(String attribute, String displayString, PageData pageData) {
-    HtmlTag checkbox = makeCheckbox(attribute, displayString);
-    if (pageData.hasAttribute(attribute))
-      checkbox.addAttribute("checked", "true");
-    return checkbox;
-  }
-
-  private HtmlTag makeCheckbox(String attribute, String displayString) {
-    HtmlTag checkbox = HtmlUtil.makeInputTag("checkbox", attribute);
-    checkbox.tail = " - " + displayString;
-    return checkbox;
   }
 
   private void makeLastModifiedTag() {
@@ -153,8 +143,6 @@ public class PropertiesResponder implements SecureResponder {
     makeNavigationCheckboxesHtml(pageData);
     makeSecurityCheckboxesHtml(pageData);
     makeVirtualWikiHtml();
-    makeTagsHtml(pageData);
-    makeHelpTextHtml(pageData);
   }
 
   public void makePageTypeRadiosHtml(PageData pageData) {
@@ -251,42 +239,6 @@ public class PropertiesResponder implements SecureResponder {
 
   public void makeSecurityCheckboxesHtml(PageData pageData) {
     html.put("securityTypes", SECURITY_ATTRIBUTES);
-  }
-
-  public HtmlTag makeTagsHtml(PageData pageData) {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; padding-right: 5px");
-
-    div.add(makeInputField("Tags:", PropertySUITES, PropertySUITES,
-        40, pageData));
-    return div;
-  }
-
-  public HtmlTag makeHelpTextHtml(PageData pageData) {
-    return makeInputField("Help Text:", PropertyHELP, "HelpText", 90,
-        pageData);
-  }
-
-  public HtmlTag makeInputField(String label, String propertyName,
-      String fieldId, int size, PageData pageData) {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left;");
-    div.add(label);
-
-    String textValue = "";
-    WikiPageProperty theProp = pageData.getProperties().getProperty(
-        propertyName);
-    if (theProp != null) {
-      String propValue = theProp.getValue();
-      if (propValue != null)
-        textValue = propValue;
-    }
-
-    div.add(HtmlUtil.BR);
-    HtmlTag input = HtmlUtil.makeInputTag("text", fieldId, textValue);
-    input.addAttribute("size", Integer.toString(size));
-    div.add(input);
-    return div;
   }
 
 

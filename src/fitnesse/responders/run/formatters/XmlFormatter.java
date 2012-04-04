@@ -2,25 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import util.TimeMeasurement;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.VelocityFactory;
-import fitnesse.responders.run.*;
+import fitnesse.responders.run.CompositeExecutionLog;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestPage;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.slimResponder.SlimTestSystem;
 import fitnesse.slimTables.HtmlTable;
 import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import util.TimeMeasurement;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
   public interface WriterFactory {
@@ -87,13 +90,8 @@ public class XmlFormatter extends BaseFormatter {
   public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
   
-  @Override
-  public void writeHead(String pageType) throws Exception {
-    writeHead(getPage());
-  }
-
-  protected void writeHead(WikiPage testPage) {
-    testResponse.version = new FitNesseVersion().toString();
+  protected void setPage(WikiPage testPage) {
+    this.page = testPage;
     testResponse.rootPath = testPage.getName();
   }
 
@@ -124,7 +122,7 @@ public class XmlFormatter extends BaseFormatter {
   protected void writeResults(Writer writer) throws IOException {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = context.pageFactory.getVelocityEngine().getTemplate("testResults.vm");
     template.merge(velocityContext, writer);
     writer.close();
   }

@@ -96,5 +96,10 @@ public abstract class ChunkingResponder implements Responder, ChunkedDataProvide
     this.request = request;
   }
 
+  /**
+   * Performs the actual chunk sending in a separate thread.
+   * 
+   * @throws Exception
+   */
   protected abstract void doSending() throws Exception;
 }

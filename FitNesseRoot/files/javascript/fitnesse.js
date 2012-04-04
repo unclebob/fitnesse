@@ -97,35 +97,42 @@ function keypress(e)
 
 function doSilentRequest(url)
 {
-  var xmlHttp;
-  try
-  {
-    // Firefox, Opera 8.0+, Safari
-    xmlHttp=new XMLHttpRequest();
-  }
-  catch (e)
-  {
-    // Internet Explorer
-    try
-    {
-      xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
-    }
-    catch (e)
-    {
-      try
-      {
-        xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      catch (e)
-      {
-        alert("Your browser does not support AJAX!");
-        return false;
-      }
-    }
-  }
-  xmlHttp.onreadystatechange=function() {}
-  xmlHttp.open("GET",url,true);
-  xmlHttp.send(null);
+  $.get(url);
   return false;
 }
 
+$(function() {
+	$('article').on("click", "tr.scenario td", function() {
+		console.log(this);
+		$(this).parent().toggleClass("open").next().toggle();
+	});
+	
+	function validateField(re, msg) {
+		var pageNameError = $(this).data("error");
+		if (!re.test($(this).val())) {
+			if (!pageNameError) {
+				pageNameError = $(msg);
+				$(this).after(pageNameError);
+			}
+		} else {
+			if (pageNameError) {
+				$(this).next().remove();
+				pageNameError = undefined;
+			}
+		}
+		$(this).data("error", pageNameError);
+	}
+	
+	$('input.wikiword').keyup(function() {
+		validateField.apply(this, 
+				[/^[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+$/,
+		         "<p class='validationerror'>The page name should be a valid <em>WikiWord</em>!</p>"]);
+	});
+	
+	$('input.wikipath').keyup(function() {
+		validateField.apply(this, 
+				[/^(?:[<>^.])?(?:[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+[.]?)+$/,
+				 "<p class='validationerror'>The page path should be a valid <em>WikiPath.WikiWord</em>!</p>"]);
+	});
+	
+});

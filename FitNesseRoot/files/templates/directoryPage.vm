@@ -1,4 +1,11 @@
-
+#macro( prettyPrint $s )
+ #if( $s.length() > 60 )
+  #set ( $t = $s.length() - 40 )
+  $s.substring(0, 15)...$s.substring($t)
+ #else
+  $s
+ #end
+#end
 <table class="dirListing">
  <thead>
   <tr>
@@ -13,7 +20,7 @@
   <tr >
    <td>
 	<a href="$fileInfo.name">
-	 #if( $fileInfo.directory )<img src="/files/images/folder.gif" alt="folder"/>#end $fileInfo.name
+	 #if( $fileInfo.directory )<img src="/files/images/folder.gif" alt="folder"/>#end #prettyPrint( $fileInfo.name )
 	</a>
    </td>
    <td>$fileInfo.size</td>
