@@ -230,10 +230,6 @@ public class PageData implements Serializable {
         }
     }
 
-  public void addVariable(String name, String value) {
-      getParsingPage().putVariable(name, value);
-  }
-
   public void setLiterals(List<String> literals) {}
 
 
