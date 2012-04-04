@@ -122,11 +122,9 @@
     <echo message="Stamping fitnesse with version ${version}" />
 		<delete file="pom.xml" />
 		<delete file="src/fitnesse/FitNesseVersion.java" />
-		<delete file="FitNesseRoot/FrontPage/content.txt" />
 		<filter token="version" value="${version}" />
 		<copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml" />
 		<copy filtering="true" file="templates/FitNesseVersion.java.template" tofile="src/fitnesse/FitNesseVersion.java" />
-		<copy filtering="true" file="templates/FrontPage.content.txt.template" tofile="FitNesseRoot/FrontPage/content.txt" />
 	</target>
 
 	<target name="clean" description="delete everything in the classes directory">
