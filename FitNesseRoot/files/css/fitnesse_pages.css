@@ -125,12 +125,14 @@ tr.scenario-detail {
 }
 #test-action .stop {
 	background-color: red;
+	color: white;
+	font-weight: bold;
 }
 #test-action .ok {
-	background-color: lightgreen;
+ 	background-color: lightblue;
 }
 #test-action .output {
-	background-color: lightgreen;
+ 	background-color: lightblue;
 }
 #test-action .error {
 	background-color: red;

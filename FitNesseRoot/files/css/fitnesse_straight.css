@@ -38,7 +38,6 @@ header {
 header ul {
 	margin: 0;
 	padding: 0;
-	float: left;
 }
 header li {
 	display: inline-block;
@@ -48,10 +47,12 @@ header li+li:before {
 }
 header h1 {
 	font: bold 2em;
-	margin: 20px 0;
+	margin: 0 0 0 102px;
 	font-weight: normal;
 	letter-spacing: 0.08em;
-	margin: 20px 0;
+	margin: 0 0 0 102px;
+	top: 28px;
+	position: absolute;
 }
 header a, header a:active, header a:visited {
 	color:#800000
