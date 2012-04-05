@@ -1,3 +1,4 @@
+/*jslint devel: true, undef: true, browser: true, continue: true, sloppy: true, stupid: true, vars: true, plusplus: true, regexp: true, maxerr: 50, indent: 4 */
 /****
  vim:sw=4:et:ai
 
@@ -7,17 +8,20 @@
  TODO:
  - paragraph "| foo |" should convert into a table.
  ****/
- 
-var Wysiwyg = function(textarea, options) {
+
+var Wysiwyg = function (textarea, options) {
     var self = this;
     var editorMode = Wysiwyg.getEditorMode();
+    var body = document.body;
+    var i;
+    var element;
 
     this.wrapTextarea = false;
     this.textarea = textarea;
     this.options = options = options || {};
     var wikitextToolbar = null;
     wikitextToolbar = textarea.previousSibling;
-    if (wikitextToolbar && (wikitextToolbar.nodeType != 1 || wikitextToolbar.className != "wikitoolbar")) {
+    if (wikitextToolbar && (wikitextToolbar.nodeType !== 1 || wikitextToolbar.className !== "wikitoolbar")) {
         wikitextToolbar = null;
     }
     this.wikitextToolbar = wikitextToolbar;
@@ -70,21 +74,20 @@ var Wysiwyg = function(textarea, options) {
         break;
     }
 
-    var body = document.body;
-    for (var i = 0; i < this.menus.length; i++) {
+    for (i = 0; i < this.menus.length; i++) {
         body.insertBefore(this.menus[i], body.firstChild);
     }
-    var element = wikitextToolbar || textarea;
+    element = wikitextToolbar || textarea;
     element.parentNode.insertBefore(this.toggleEditorButtons, element);
     element.parentNode.insertBefore(this.wysiwygToolbar, element);
 
     function lazySetup() {
         if (self.contentDocument.body) {
             var exception;
-            try { self.execCommand("useCSS", false); } catch (e) { }
-            try { self.execCommand("styleWithCSS", false); } catch (e) { }
-            if (editorMode == "wysiwyg") {
-                try { self.loadWysiwygDocument() } catch (e) { exception = e }
+            try { self.execCommand("useCSS", false); } catch (e1) { }
+            try { self.execCommand("styleWithCSS", false); } catch (e2) { }
+            if (editorMode === "wysiwyg") {
+                try { self.loadWysiwygDocument(); } catch (e3) { exception = e3; }
             }
             self.setupEditorEvents();
             self.setupFormEvent();
@@ -98,25 +101,30 @@ var Wysiwyg = function(textarea, options) {
                 alert("Failed to activate the wysiwyg editor.");
                 throw exception;
             }
-        }
-        else {
+        } else {
             setTimeout(lazySetup, 100);
         }
     }
     lazySetup();
 };
 
-Wysiwyg.prototype.initializeEditor = function(d) {
+Wysiwyg.prototype.initializeEditor = function (d) {
     var l = window.location;
     var html = [];
+    var i;
     html.push(
         '<!DOCTYPE html PUBLIC',
         ' "-//W3C//DTD XHTML 1.0 Transitional//EN"',
         ' "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n',
         '<html xmlns="http://www.w3.org/1999/xhtml">',
         '<head>',
-        '<base href="', l.protocol, '//', l.host, '/" />',
-        '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />');
+        '<base href="',
+        l.protocol,
+        '//',
+        l.host,
+        '/" />',
+        '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+    );
     var stylesheets = Wysiwyg.paths.stylesheets;
     if (!stylesheets) {
         // Work around wysiwyg stops with Agilo
@@ -124,7 +132,7 @@ Wysiwyg.prototype.initializeEditor = function(d) {
         stylesheets = [ "editor.css" ];
     }
     var length = stylesheets.length;
-    for (var i = 0; i < length; i++) {
+    for (i = 0; i < length; i++) {
         html.push('<link rel="stylesheet" href="' + stylesheets[i] + '" type="text/css" />');
     }
 
@@ -139,7 +147,7 @@ Wysiwyg.prototype.initializeEditor = function(d) {
     d.close();
     if (!first) {
         d.designMode = "On";
-        if (d != this.contentWindow.document) {
+        if (d !== this.contentWindow.document) {
             this.contentDocument = this.contentWindow.document;
         }
     }
@@ -148,12 +156,12 @@ Wysiwyg.prototype.initializeEditor = function(d) {
     d.execCommand("enableInlineTableEditing", false, "false");
 };
 
-Wysiwyg.prototype.toggleWrapTextarea = function() {
+Wysiwyg.prototype.toggleWrapTextarea = function () {
     this.wrapTextarea = !this.wrapTextarea;
     this.wrapTextareaButton.checked = this.wrapTextarea;
 };
 
-Wysiwyg.prototype.listenerToggleWrapTextarea = function(input) {
+Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
     var self = this;
 
     function setWrap(wrap) {
@@ -161,32 +169,32 @@ Wysiwyg.prototype.listenerToggleWrapTextarea = function(input) {
             self.textarea.wrap = wrap ? 'soft' : 'off';
         } else { // wrap attribute not supported - try Mozilla workaround
             self.textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
-            var newarea= self.textarea.cloneNode(true);
-            newarea.value= self.textarea.value;
+            var newarea = self.textarea.cloneNode(true);
+            newarea.value = self.textarea.value;
             self.textarea.parentNode.replaceChild(newarea, self.textarea);
             self.textarea = newarea;
         }
         if (wrap) {
-           $(self.textarea).removeClass('no_wrap');
+            $(self.textarea).removeClass('no_wrap');
         } else {
             $(self.textarea).addClass('no_wrap');
         }
     }
-    
-    return function(event) {
+
+    return function (event) {
         self.wrapTextarea = input.checked;
         setWrap(input.checked);
     };
 };
 
-Wysiwyg.prototype.listenerToggleEditor = function(type) {
+Wysiwyg.prototype.listenerToggleEditor = function (type) {
     var self = this;
 
     switch (type) {
     case "textarea":
-        return function(event) {
+        return function (event) {
             var textarea = self.textarea;
-            if (textarea.style.position == "absolute") {
+            if (textarea.style.position === "absolute") {
                 self.hideAllMenus();
                 self.loadWikiText();
                 textarea.style.position = "static";
@@ -203,13 +211,12 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
             self.focusTextarea();
         };
     case "wysiwyg":
-        return function(event) {
+        return function (event) {
             var frame = self.frame;
-            if (frame.style.position == "absolute") {
+            if (frame.style.position === "absolute") {
                 try {
                     self.loadWysiwygDocument();
-                }
-                catch (e) {
+                } catch (e) {
                     Wysiwyg.stopEvent(event || window.event);
                     alert("Failed to activate the wysiwyg editor.");
                     throw e;
@@ -229,31 +236,30 @@ Wysiwyg.prototype.listenerToggleEditor = function(type) {
     }
 };
 
-Wysiwyg.prototype.activeEditor = function() {
-    return this.textarea.style.position == "absolute" ? "wysiwyg" : "textarea";
+Wysiwyg.prototype.activeEditor = function () {
+    return this.textarea.style.position === "absolute" ? "wysiwyg" : "textarea";
 };
 
-Wysiwyg.prototype.setupFormEvent = function() {
+Wysiwyg.prototype.setupFormEvent = function () {
     var self = this;
 
     function listener(event) {
         var textarea = self.textarea;
         try {
-            if (textarea.style.position == "absolute") {
+            if (textarea.style.position === "absolute") {
                 var body = self.contentDocument.body;
-                if (self.savedWysiwygHTML !== null && body.innerHTML != self.savedWysiwygHTML) {
+                if (self.savedWysiwygHTML !== null && body.innerHTML !== self.savedWysiwygHTML) {
                     self.textarea.value = self.domToWikitext(body, self.options);
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             Wysiwyg.stopEvent(event || window.event);
         }
     }
     $(this.textarea.form).submit(listener);
 };
 
-Wysiwyg.prototype.createEditable = function(d, textarea) {
+Wysiwyg.prototype.createEditable = function (d, textarea) {
     var self = this;
     var getStyle = Wysiwyg.getStyle;
     var dimension = getDimension(textarea);
@@ -282,7 +288,7 @@ Wysiwyg.prototype.createEditable = function(d, textarea) {
             var parentWidth = textarea.parentNode.offsetWidth
                             + parseInt(getStyle(textarea, 'borderLeftWidth'), 10)
                             + parseInt(getStyle(textarea, 'borderRightWidth'), 10);
-            if (width == parentWidth) {
+            if (width === parentWidth) {
                 width = "100%";
             }
         }
@@ -300,7 +306,7 @@ Wysiwyg.prototype.createEditable = function(d, textarea) {
     }
 };
 
-Wysiwyg.prototype.createWysiwygToolbar = function(d) {
+Wysiwyg.prototype.createWysiwygToolbar = function (d) {
     var divider = '<li class="divider"></li>';
     var html = [
         '<ul>',
@@ -344,7 +350,7 @@ Wysiwyg.prototype.createWysiwygToolbar = function(d) {
     return div;
 };
 
-Wysiwyg.prototype.createStyleMenu = function(d) {
+Wysiwyg.prototype.createStyleMenu = function (d) {
     var html = [
         '<p><a id="wt-paragraph" href="#">Normal</a></p>',
         '<h1><a id="wt-heading1" href="#">Header 1</a></h1>',
@@ -361,7 +367,7 @@ Wysiwyg.prototype.createStyleMenu = function(d) {
     return menu;
 };
 
-Wysiwyg.prototype.createTableMenu = function(d) {
+Wysiwyg.prototype.createTableMenu = function (d) {
     var html = [
         '<ul class="menu">',
         '<li><a id="wt-insert-cell-before" href="#">Insert cell before</a></li>',
@@ -381,14 +387,14 @@ Wysiwyg.prototype.createTableMenu = function(d) {
     return menu;
 };
 
-Wysiwyg.prototype.setupMenuEvents = function() {
+Wysiwyg.prototype.setupMenuEvents = function () {
     function addToolbarEvent(element, self, args) {
         var method = args.shift();
-        $(element).click(function(event) {
+        $(element).click(function (event) {
             var w = self.contentWindow;
             Wysiwyg.stopEvent(event || w.event);
             var keepMenus = false, exception;
-            try { keepMenus = method.apply(self, args) } catch (e) { exception = e }
+            try { keepMenus = method.apply(self, args); } catch (e) { exception = e; }
             if (!keepMenus) {
                 self.hideAllMenus();
             }
@@ -401,54 +407,94 @@ Wysiwyg.prototype.setupMenuEvents = function() {
     }
 
     function argsByType(self, name, element) {
-        switch (name) {
-        case "style":       return [ self.toggleMenu, self.styleMenu, element ];
-        case "strong":      return [ self.execDecorate, "bold" ];
-        case "em":          return [ self.execDecorate, "italic" ];
-        case "underline":   return [ self.execDecorate, "underline" ];
-        case "strike":      return [ self.execDecorate, "strikethrough" ];
-        case "sub":         return [ self.execDecorate, "subscript" ];
-        case "sup":         return [ self.execDecorate, "superscript" ];
-        case "escape":      return [ self.execDecorate, "escape" ];
-        case "remove":      return [ self.execCommand, "removeformat" ];
-        case "paragraph":   return [ self.formatParagraph ];
-        case "heading1":    return [ self.formatHeaderBlock, "h1" ];
-        case "heading2":    return [ self.formatHeaderBlock, "h2" ];
-        case "heading3":    return [ self.formatHeaderBlock, "h3" ];
-        case "heading4":    return [ self.formatHeaderBlock, "h4" ];
-        case "heading5":    return [ self.formatHeaderBlock, "h5" ];
-        case "heading6":    return [ self.formatHeaderBlock, "h6" ];
-        case "link":        return [ self.createLink ];
-        case "unlink":      return [ self.execCommand, "unlink" ];
-        case "ul":          return [ self.insertUnorderedList ];
-        case "outdent":     return [ self.outdent ];
-        case "indent":      return [ self.indent ];
-        case "table":       return [ self.insertTable ];
-        case "tablemenu":   return [ self.toggleMenu, self.tableMenu, element ];
-        case "insert-cell-before":   return [ self.insertTableCell_, false ];
-        case "insert-cell-after":    return [ self.insertTableCell_, true ];
-        case "insert-row-before":   return [ self.insertTableRow, false ];
-        case "insert-row-after":    return [ self.insertTableRow, true ];
-        case "insert-col-before":   return [ self.insertTableColumn, false ];
-        case "insert-col-after":    return [ self.insertTableColumn, true ];
-        case "delete-cell":  return [ self.deleteTableCell ];
-        case "delete-row":  return [ self.deleteTableRow ];
-        case "delete-col":  return [ self.deleteTableColumn ];
-        case "code":        return [ self.formatCodeBlock ];
-        case "hr":          return [ self.insertHorizontalRule ];
-        case "br":          return [ self.insertLineBreak ];
-        case "collapsable-closed": return [ self.insertCollapsableSection, "collapsed" ];
-        case "collapsable-open": return [ self.insertCollapsableSection ];
-        case "collapsable-hidden": return [ self.insertCollapsableSection, "hidden" ];
-        case "remove-collapsable": return [ self.deleteCollapsableSection ];
-        }
-        return null;
-    }
+		switch (name) {
+		case "style":
+			return [ self.toggleMenu, self.styleMenu, element ];
+		case "strong":
+			return [ self.execDecorate, "bold" ];
+		case "em":
+			return [ self.execDecorate, "italic" ];
+		case "underline":
+			return [ self.execDecorate, "underline" ];
+		case "strike":
+			return [ self.execDecorate, "strikethrough" ];
+		case "sub":
+			return [ self.execDecorate, "subscript" ];
+		case "sup":
+			return [ self.execDecorate, "superscript" ];
+		case "escape":
+			return [ self.execDecorate, "escape" ];
+		case "remove":
+			return [ self.execCommand, "removeformat" ];
+		case "paragraph":
+			return [ self.formatParagraph ];
+		case "heading1":
+			return [ self.formatHeaderBlock, "h1" ];
+		case "heading2":
+			return [ self.formatHeaderBlock, "h2" ];
+		case "heading3":
+			return [ self.formatHeaderBlock, "h3" ];
+		case "heading4":
+			return [ self.formatHeaderBlock, "h4" ];
+		case "heading5":
+			return [ self.formatHeaderBlock, "h5" ];
+		case "heading6":
+			return [ self.formatHeaderBlock, "h6" ];
+		case "link":
+			return [ self.createLink ];
+		case "unlink":
+			return [ self.execCommand, "unlink" ];
+		case "ul":
+			return [ self.insertUnorderedList ];
+		case "outdent":
+			return [ self.outdent ];
+		case "indent":
+			return [ self.indent ];
+		case "table":
+			return [ self.insertTable ];
+		case "tablemenu":
+			return [ self.toggleMenu, self.tableMenu, element ];
+		case "insert-cell-before":
+			return [ self.ui_insertTableCell, false ];
+		case "insert-cell-after":
+			return [ self.ui_insertTableCell, true ];
+		case "insert-row-before":
+			return [ self.insertTableRow, false ];
+		case "insert-row-after":
+			return [ self.insertTableRow, true ];
+		case "insert-col-before":
+			return [ self.insertTableColumn, false ];
+		case "insert-col-after":
+			return [ self.insertTableColumn, true ];
+		case "delete-cell":
+			return [ self.deleteTableCell ];
+		case "delete-row":
+			return [ self.deleteTableRow ];
+		case "delete-col":
+			return [ self.deleteTableColumn ];
+		case "code":
+			return [ self.formatCodeBlock ];
+		case "hr":
+			return [ self.insertHorizontalRule ];
+		case "br":
+			return [ self.insertLineBreak ];
+		case "collapsable-closed":
+			return [ self.insertCollapsableSection, "collapsed" ];
+		case "collapsable-open":
+			return [ self.insertCollapsableSection ];
+		case "collapsable-hidden":
+			return [ self.insertCollapsableSection, "hidden" ];
+		case "remove-collapsable":
+			return [ self.deleteCollapsableSection ];
+		}
+		return null;
+	}
 
     function setup(container) {
         var elements = container.getElementsByTagName("a");
         var length = elements.length;
-        for (var i = 0; i < length; i++) {
+        var i;
+        for (i = 0; i < length; i++) {
             var element = elements[i];
             var name = element.id.replace(/^wt-/, "");
             var args = argsByType(this, name, element);
@@ -461,35 +507,35 @@ Wysiwyg.prototype.setupMenuEvents = function() {
 
     var buttons = {};
     setup.call(this, this.wysiwygToolbar);
-    for (var i = 0; i < this.menus.length; i++) {
+    for (i = 0; i < this.menus.length; i++) {
         setup.call(this, this.menus[i]);
     }
     return buttons;
 };
 
-Wysiwyg.prototype.toggleMenu = function(menu, element) {
+Wysiwyg.prototype.toggleMenu = function (menu, element) {
     if (parseInt(menu.style.left, 10) < 0) {
         this.hideAllMenus(menu);
         var position = Wysiwyg.elementPosition(element);
         Wysiwyg.setStyle(menu, { left: position[0] + "px", top: (position[1] + 18) + "px" });
-    }
-    else {
+    } else {
         this.hideAllMenus();
     }
     return true;
 };
 
-Wysiwyg.prototype.hideAllMenus = function(except) {
+Wysiwyg.prototype.hideAllMenus = function (except) {
     var menus = this.menus;
     var length = menus.length;
-    for (var i = 0; i < length; i++) {
-        if (menus[i] != except) {
+    var i;
+    for (i = 0; i < length; i++) {
+        if (menus[i] !== except) {
             Wysiwyg.setStyle(menus[i], { left: "-1000px", top: "-1000px" });
         }
     }
 };
 
-Wysiwyg.prototype.execDecorate = function(name) {
+Wysiwyg.prototype.execDecorate = function (name) {
     if (this.selectionContainsTagName("pre")) {
         return;
     }
@@ -500,22 +546,20 @@ Wysiwyg.prototype.execDecorate = function(name) {
     ancestor.end = getSelfOrAncestor(position.end, /^(?:a|tt)$/);
     this.expandSelectionToElement(ancestor);
 
-    if (name != "escape") {
+    if (name !== "escape") {
         this.execCommand(name);
-    }
-    else {
+    } else {
         this.execDecorateMonospace();
     }
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.execDecorateMonospace = function() {
+Wysiwyg.prototype.execDecorateMonospace = function () {
     var html = this.getSelectionHTML();
     var removePattern = /<ins.*?>|<\/ins>/gi;
     if (/^<ins.*?>/i.test(html) && /<\/ins>$/i.test(html)) {
         html = html.replace(removePattern, "");
-    }
-    else {
+    } else {
         var id = this.generateDomId();
         html = '<ins id="' + id + '">' + html.replace(removePattern, "") + "</ins>";
     }
@@ -526,11 +570,11 @@ Wysiwyg.prototype.execDecorateMonospace = function() {
     }
 };
 
-Wysiwyg.prototype.execCommand = function(name, arg) {
+Wysiwyg.prototype.execCommand = function (name, arg) {
     return this.contentDocument.execCommand(name, false, arg);
 };
 
-Wysiwyg.prototype.setupEditorEvents = function() {
+Wysiwyg.prototype.setupEditorEvents = function () {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var self = this;
     var d = this.contentDocument;
@@ -538,7 +582,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
     var ime = false;
     var inPasteAction = false;
 
-    $(d).keydown(function(event) {
+    $(d).keydown(function (event) {
         var method = null;
         var args = null;
         event = event || self.contentWindow.event;
@@ -560,7 +604,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
                     stop = true;
                     break;
                 case "table":
-                    if (getSelfOrAncestor(range.endContainer, "table") == element) {
+                    if (getSelfOrAncestor(range.endContainer, "table") === element) {
                         self.moveFocusInTable(!event.shiftKey);
                         self.selectionChanged();
                         stop = true;
@@ -577,8 +621,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             break;
         }
         switch ((keyCode & 0x00fffff) | (event.ctrlKey ? 0x40000000 : 0)
-            | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0))
-        {
+            | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0)) {
         case 0x40000042:  // C-b
             method = self.execDecorate;
             args = [ "bold" ];
@@ -608,17 +651,15 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             Wysiwyg.stopEvent(event);
             method.apply(self, args);
             self.selectionChanged();
-        }
-        else if (keyCode && !inPasteAction) {
+        } else if (keyCode && !inPasteAction) {
             var focus = self.getFocusNode();
             if (!getSelfOrAncestor(focus, /^(?:p|li|h[1-6]|t[dh]|d[td]|pre|blockquote)$/)) {
                 self.execCommand("formatblock", "<p>");
             }
         }
-    
     });
 
-    $(d).keypress(function(event) {
+    $(d).keypress(function (event) {
         event = event || self.contentWindow.event;
         var modifier = (event.ctrlKey ? 0x40000000 : 0)
             | (event.shiftKey ? 0x20000000 : 0) | (event.altKey ? 0x10000000 : 0);
@@ -653,12 +694,12 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             var range = self.getSelectionRange();
             var element = getSelfOrAncestor(range.startContainer, "table");
             if (element &&
-                    getSelfOrAncestor(range.endContainer, "table") == element &&
+                    getSelfOrAncestor(range.endContainer, "table")=== element &&
                     !getSelfOrAncestor(range.endContainer, /^(?:ins|tt)/)) {
                 if (event.ctrlKey) {
                     self.deleteTableCell();
                 } else {
-                    self.insertTableCell_(true);
+                    self.ui_insertTableCell(true);
                 }
                 Wysiwyg.stopEvent(event);
             }
@@ -666,7 +707,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
         }
     });
 
-    $(d).keyup(function(event) {
+    $(d).keyup(function (event) {
         var keyCode = event.keyCode;
         if (ime) {
             switch (keyCode) {
@@ -676,21 +717,22 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             }
             ime = false;
         }
-        if (self.getSelectionRange())
+        if (self.getSelectionRange()) {
             self.updateElementClassName(self.getSelectionRange().startContainer);
+    	} 
         self.selectionChanged();
     });
 
-    $(d).mouseup(function(event) {
+    $(d).mouseup(function (event) {
         self.selectionChanged();
     });
 
-    $(d).click(function(event) {
+    $(d).click(function (event) {
         self.hideAllMenus();
         self.selectionChanged();
     });
 
-    $(d).on('click', 'div.collapsable', function(event) {
+    $(d).on('click', 'div.collapsable', function (event) {
         var x = event.pageX - this.offsetLeft;
         var y = event.pageY - this.offsetTop;
         if (x < 15 && y < 15) {
@@ -706,20 +748,20 @@ Wysiwyg.prototype.setupEditorEvents = function() {
         }
     });
 
-    $(d).on('click', 'a', function(event) {
+    $(d).on('click', 'a', function (event) {
         return false;
     });
 
     /* Pasting data is forced in a specific div: pasteddata. In there, the
      * raw data is collected and fed to the wikiToDom parser.
      */
-    $(d).on('paste', 'body', function(event) {
+    $(d).on('paste', 'body', function (event) {
         // Clone state is change in Firefox, need to extract the fields
         var position = self.getSelectionRange();
         position = {
             sameContainer: position.startContainer === position.endContainer,
-            atStart: position.startOffset == 0,
-            atEnd: position.endOffset == position.endContainer.length
+            atStart: position.startOffset === 0,
+            atEnd: position.endOffset === position.endContainer.length
         };
         var html = "<div id='pasteddata'><br id='pasteddata-remove-me'/></div>";
         self.insertHTML(html);
@@ -729,9 +771,10 @@ Wysiwyg.prototype.setupEditorEvents = function() {
 
         // Post processing:
         setTimeout(function () {
+            var next, i, c;
             inPasteAction = false;
             // convert nested .pasteddata divs to br's (safari/chrome)
-            $('div', pastedDataBlock).each(function(i, elem) {
+            $('div', pastedDataBlock).each(function (i, elem) {
                 if (!/^\s*$/.test($(this).text())) {
                     $(this).before(this.childNodes);
                     $(this).before('<br/>');
@@ -740,30 +783,29 @@ Wysiwyg.prototype.setupEditorEvents = function() {
             });
             var lines = $(pastedDataBlock).html().split(/<br\/?>/);
 
-            if (position.sameContainer && lines.length == 1) {
+            if (position.sameContainer && lines.length === 1) {
                 // paste data without markup.
                 if (!position.atStart) {
                     var prev = $(pastedDataBlock).prev();
                     $(prev).append($(pastedDataBlock).text());
                     $(pastedDataBlock).remove();
                     if (!position.atEnd) {
-                        var next = $(prev).next();
-
-                        var c = $(next).contents();
-                        for (var i = 0; i < c.length; i++) {
+                        next = $(prev).next();
+                        c = $(next).contents();
+                        for (i = 0; i < c.length; i++) {
                             $(c[i]).appendTo(prev);
                         }
                         $(next).remove();
                     }
                 } else if (!position.atEnd) {
-                    var next = $(pastedDataBlock).next();
+                    next = $(pastedDataBlock).next();
                     $(next).prepend($(pastedDataBlock).text());
                     $(pastedDataBlock).remove();
                 }
             } else {
                 var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
-                var c = $(fragment).children();
-                for (var i = 0; i < c.length; i++) {
+                c = $(fragment).children();
+                for (i = 0; i < c.length; i++) {
                     $(pastedDataBlock).before(c[i]);
                 }
                 $(pastedDataBlock).remove();
@@ -772,7 +814,7 @@ Wysiwyg.prototype.setupEditorEvents = function() {
     });
 };
 
-Wysiwyg.prototype.loadWysiwygDocument = function() {
+Wysiwyg.prototype.loadWysiwygDocument = function () {
     var d = this.contentDocument;
     var container = d.body;
     var tmp;
@@ -785,7 +827,7 @@ Wysiwyg.prototype.loadWysiwygDocument = function() {
     this.savedWysiwygHTML = container.innerHTML;
 };
 
-Wysiwyg.prototype.focusWysiwyg = function() {
+Wysiwyg.prototype.focusWysiwyg = function () {
     var self = this;
     var w = this.contentWindow;
     function lazy() {
@@ -797,37 +839,39 @@ Wysiwyg.prototype.focusWysiwyg = function() {
     setTimeout(lazy, 10);
 };
 
-Wysiwyg.prototype.loadWikiText = function() {
+Wysiwyg.prototype.loadWikiText = function () {
     this.textarea.value = this.domToWikitext(this.contentDocument.body, this.options);
     this.savedWysiwygHTML = null;
 };
 
-Wysiwyg.prototype.focusTextarea = function() {
+Wysiwyg.prototype.focusTextarea = function () {
     this.textarea.focus();
 };
 
-Wysiwyg.prototype.setupToggleEditorButtons = function() {
+Wysiwyg.prototype.setupToggleEditorButtons = function () {
     var div = document.createElement("div");
     var mode = Wysiwyg.editorMode;
-    var html = ''
-        + '<label for="editor-wrap-@" title="Turns on/off wrapping">'
+    var html = '<label for="editor-wrap-@" title="Turns on/off wrapping">'
         + '<input type="checkbox" id="editor-wrap-@" />'
         + 'wrap </label>'
         + '<label for="editor-wysiwyg-@">'
         + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
-        + (mode == "wysiwyg" ? 'checked="checked"' : '') + ' />'
+        + (mode === "wysiwyg" ? 'checked="checked"' : '') + ' />'
         + 'rich text</label> '
         + '<label for="editor-textarea-@">'
         + '<input type="radio" name="__EDITOR__@" value="textarea" id="editor-textarea-@" '
-        + (mode == "textarea" ? 'checked="checked"' : '') + ' />'
+        + (mode === "textarea" ? 'checked="checked"' : '') + ' />'
         + 'plain text</label> '
         + '&nbsp; ';
+    var buttons;
+    var i;
+
     div.className = "editor-toggle";
     div.innerHTML = html.replace(/@/g, ++Wysiwyg.count);
     this.toggleEditorButtons = div;
 
-    var buttons = div.getElementsByTagName("input");
-    for (var i = 0; i < buttons.length; i++) {
+    buttons = div.getElementsByTagName("input");
+    for (i = 0; i < buttons.length; i++) {
         var button = buttons[i];
         var token = button.id.replace(/[0-9]+$/, "@");
         switch (token) {
@@ -845,7 +889,7 @@ Wysiwyg.prototype.setupToggleEditorButtons = function() {
     }
 };
 
-Wysiwyg.prototype.setupSyncTextAreaHeight = function() {
+Wysiwyg.prototype.setupSyncTextAreaHeight = function () {
     var self = this;
     var d = document;
     var timer = null;
@@ -868,15 +912,15 @@ Wysiwyg.prototype.setupSyncTextAreaHeight = function() {
     }
 };
 
-Wysiwyg.prototype.syncTextAreaHeight = function() {
+Wysiwyg.prototype.syncTextAreaHeight = function () {
     var height = this.textarea.offsetHeight;
     var frame = this.frame;
-    if (height > 0 && frame.height != height) {
+    if (height > 0 && frame.height !== height) {
         frame.height = height;
     }
 };
 
-Wysiwyg.prototype.detectLink = function(event) {
+Wysiwyg.prototype.detectLink = function (event) {
     var range = this.getSelectionRange();
     var node = range.startContainer;
     if (!node || !range.collapsed) {
@@ -888,19 +932,18 @@ Wysiwyg.prototype.detectLink = function(event) {
     }
 
     var offset = range.startOffset;
-    if (node.nodeType != 3) {
+    if (node.nodeType !== 3) {
         node = node.childNodes[offset];
-        while (node && node.nodeType != 3) {
+        while (node && node.nodeType !== 3) {
             node = node.lastChild;
         }
         if (!node) {
             return;
         }
         offset = node.nodeValue.length;
-    }
-    else if (offset == 0) {
+    } else if (offset === 0) {
         node = node.previousSibling;
-        if (!node || node.nodeType == 1) {
+        if (!node || node.nodeType === 1) {
             return;
         }
         offset = node.nodeValue.length;
@@ -913,7 +956,7 @@ Wysiwyg.prototype.detectLink = function(event) {
             break;
         }
         node = node.previousSibling;
-        if (!node || node.nodeType == 1) {
+        if (!node || node.nodeType === 1) {
             break;
         }
         text.push(node.nodeValue);
@@ -945,20 +988,20 @@ Wysiwyg.prototype.detectLink = function(event) {
 
     node = endContainer;
     var startOffset = match.index;
-    while (startContainer != node && startOffset >= startContainer.nodeValue.length) {
+    while (startContainer !== node && startOffset >= startContainer.nodeValue.length) {
         startOffset -= startContainer.nodeValue.length;
         startContainer = startContainer.nextSibling;
     }
     var endOffset = startOffset + label.length;
     endContainer = startContainer;
-    while (endContainer != node && endOffset >= endContainer.nodeValue.length) {
+    while (endContainer !== node && endOffset >= endContainer.nodeValue.length) {
         endOffset -= endContainer.nodeValue.length;
         endContainer = endContainer.nextSibling;
     }
     this.selectRange(startContainer, startOffset, endContainer, endOffset);
 
     offset = text.length - match.index - label.length;
-    if (offset == 0) {
+    if (offset === 0) {
         switch (event.keyCode) {
         case 0x20:  // SPACE
             this.insertHTML(html + "\u00a0");
@@ -996,7 +1039,7 @@ Wysiwyg.prototype.detectLink = function(event) {
     this.selectRange(node, offset, node, offset);
 };
 
-Wysiwyg.prototype.formatParagraph = function() {
+Wysiwyg.prototype.formatParagraph = function () {
     if (this.selectionContainsTagName("table")) {
         return;
     }
@@ -1004,7 +1047,7 @@ Wysiwyg.prototype.formatParagraph = function() {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.formatHeaderBlock = function(name) {
+Wysiwyg.prototype.formatHeaderBlock = function (name) {
     if (this.selectionContainsTagName("table")) {
         return;
     }
@@ -1012,7 +1055,7 @@ Wysiwyg.prototype.formatHeaderBlock = function(name) {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.insertUnorderedList = function() {
+Wysiwyg.prototype.insertUnorderedList = function () {
     if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
         return;
     }
@@ -1020,20 +1063,20 @@ Wysiwyg.prototype.insertUnorderedList = function() {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.insertTable = function() {
+Wysiwyg.prototype.insertTable = function () {
     if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
         return;
     }
     var id = this.generateDomId();
     this.insertHTML(this.tableHTML(id, 2, 2));
-    var element = this.contentDocument.getElementById(id)
+    var element = this.contentDocument.getElementById(id);
     if (element) {
         this.selectNodeContents(element);
     }
     this.selectionChanged();
 };
 
-Wysiwyg.prototype._tableHTML = function(row, col) {
+Wysiwyg.prototype._tableHTML = function (row, col) {
     var tr = "<tr>" + ((1 << col) - 1).toString(2).replace(/1/g, "<td></td>") + "</tr>";
     var html = [
         '<table class="wiki">', '<tbody>',
@@ -1042,7 +1085,7 @@ Wysiwyg.prototype._tableHTML = function(row, col) {
     return html.join("");
 };
 
-Wysiwyg.prototype._getFocusForTable = function() {
+Wysiwyg.prototype._getFocusForTable = function () {
     var hash = { node: null, cell: null, row: null, table: null };
     hash.node = this.getFocusNode();
     hash.cell = hash.node ? Wysiwyg.getSelfOrAncestor(hash.node, /^t[dh]$/) : null;
@@ -1052,7 +1095,7 @@ Wysiwyg.prototype._getFocusForTable = function() {
     return hash;
 };
 
-Wysiwyg.prototype.insertTableCell_ = function(after) {
+Wysiwyg.prototype.ui_insertTableCell = function (after) {
     var focus = this._getFocusForTable();
     if (focus.table && focus.cell) {
         var row = focus.table.rows[focus.row.rowIndex];
@@ -1066,14 +1109,15 @@ Wysiwyg.prototype.insertTableCell_ = function(after) {
     }
 };
 
-Wysiwyg.prototype.insertTableRow = function(after) {
+Wysiwyg.prototype.insertTableRow = function (after) {
     var focus = this._getFocusForTable();
     if (focus.table && focus.row) {
         var d = this.contentDocument;
         var cells = focus.row.getElementsByTagName("td");
         var row = focus.table.insertRow(focus.row.rowIndex + (after ? 1 : 0));
         var cell;
-        for (var j = 0; j < cells.length; j++) {
+        var j;
+        for (j = 0; j < cells.length; j++) {
             cell = this.insertTableCell(row, 0);
         }
         this.spanTableColumns(focus.table);
@@ -1084,21 +1128,22 @@ Wysiwyg.prototype.insertTableRow = function(after) {
     }
 };
 
-Wysiwyg.prototype.insertTableColumn = function(after) {
+Wysiwyg.prototype.insertTableColumn = function (after) {
     var focus = this._getFocusForTable();
     if (focus.table && focus.cell) {
         var d = this.contentDocument;
         var rows = focus.table.rows;
         var length = rows.length;
         var cellIndex = focus.cell.cellIndex + (after ? 1 : 0);
-        for (var i = 0; i < length; i++) {
+        var i;
+        for (i = 0; i < length; i++) {
             var row = rows[i];
             this.insertTableCell(row, Math.min(cellIndex, row.cells.length));
         }
     }
 };
 
-Wysiwyg.prototype.deleteTableCell = function() {
+Wysiwyg.prototype.deleteTableCell = function () {
     var focus = this._getFocusForTable();
     if (focus.table && focus.cell) {
         var row = focus.table.rows[focus.row.rowIndex];
@@ -1112,7 +1157,7 @@ Wysiwyg.prototype.deleteTableCell = function() {
     }
 };
 
-Wysiwyg.prototype.deleteTableRow = function() {
+Wysiwyg.prototype.deleteTableRow = function () {
     var focus = this._getFocusForTable();
     if (focus.table && focus.row) {
         focus.table.deleteRow(focus.row.rowIndex);
@@ -1120,13 +1165,14 @@ Wysiwyg.prototype.deleteTableRow = function() {
     }
 };
 
-Wysiwyg.prototype.deleteTableColumn = function() {
+Wysiwyg.prototype.deleteTableColumn = function () {
     var focus = this._getFocusForTable();
     if (focus.table && focus.cell) {
         var rows = focus.table.rows;
         var length = rows.length;
         var cellIndex = focus.cell.cellIndex;
-        for (var i = 0; i < length; i++) {
+        var i;
+        for (i = 0; i < length; i++) {
             var row = rows[i];
             if (cellIndex < row.cells.length) {
                 row.deleteCell(cellIndex);
@@ -1136,14 +1182,14 @@ Wysiwyg.prototype.deleteTableColumn = function() {
 };
 
 
-Wysiwyg.prototype.spanTableColumns = function(table) {
+Wysiwyg.prototype.spanTableColumns = function (table) {
     // Spanning columns fitnesse style.
-    var maxCells = Math.max.apply(Math, $.map($('tr', table), function(e) {
+    var maxCells = Math.max.apply(Math, $.map($('tr', table), function (e) {
         var tds = $('td', e);
         tds.removeAttr('colspan');
         return tds.size();
     }));
-    $('tr', table).each(function() {
+    $('tr', table).each(function () {
         var s = $('td', this).size();
         if (s < maxCells) {
             $('td:last', this).attr('colspan', maxCells - s + 1);
@@ -1151,7 +1197,7 @@ Wysiwyg.prototype.spanTableColumns = function(table) {
     });
 }
 
-Wysiwyg.prototype.moveFocusInTable = function(forward) {
+Wysiwyg.prototype.moveFocusInTable = function (forward) {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var focus = this.getFocusNode();
     var element = getSelfOrAncestor(focus, /^(?:t[dhr]|table)$/);
@@ -1164,25 +1210,21 @@ Wysiwyg.prototype.moveFocusInTable = function(forward) {
         if (forward) {
             if (focus.cellIndex + 1 < cells.length) {
                 target = cells[focus.cellIndex + 1];
-            }
-            else {
+            } else {
                 table = getSelfOrAncestor(row, /^(?:tbody|table)$/);
                 rows = table.rows;
                 target = row.rowIndex + 1 < rows.length ? rows[row.rowIndex + 1].cells[0] : null;
             }
-        }
-        else {
+        } else {
             if (focus.cellIndex > 0) {
                 target = cells[focus.cellIndex - 1];
-            }
-            else {
+            } else {
                 table = getSelfOrAncestor(row, /^(?:tbody|table)$/);
                 rows = table.rows;
                 if (row.rowIndex > 0) {
                     cells = rows[row.rowIndex - 1].cells;
                     target = cells[cells.length - 1];
-                }
-                else {
+                } else {
                     target = null;
                 }
             }
@@ -1200,14 +1242,14 @@ Wysiwyg.prototype.moveFocusInTable = function(forward) {
     }
     if (target) {
         this.selectNodeContents(target);
-    }
-    else if (table) {
+    } else if (table) {
         table = getSelfOrAncestor(table, "table");
         var parent = table.parentNode;
         var elements = parent.childNodes;
         var length = elements.length;
-        for (var offset = 0; offset < length; offset++) {
-            if (table == elements[offset]) {
+        var offset;
+        for (offset = 0; offset < length; offset++) {
+            if (table === elements[offset]) {
                 if (forward) {
                     offset++;
                 }
@@ -1217,14 +1259,14 @@ Wysiwyg.prototype.moveFocusInTable = function(forward) {
     }
 };
 
-Wysiwyg.prototype.formatCodeBlock = function() {
+Wysiwyg.prototype.formatCodeBlock = function () {
     if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
         return;
     }
     var text = this.getSelectionText();
     if (!text) {
         var node = this.getFocusNode();
-        while (node.nodeType == 3) {
+        while (node.nodeType === 3) {
             node = node.parentNode;
         }
         text = Wysiwyg.getTextContent(node);
@@ -1247,7 +1289,7 @@ Wysiwyg.prototype.formatCodeBlock = function() {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.insertHorizontalRule = function() {
+Wysiwyg.prototype.insertHorizontalRule = function () {
     if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
         return;
     }
@@ -1257,7 +1299,7 @@ Wysiwyg.prototype.insertHorizontalRule = function() {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.insertCollapsableSection = function(mode) {
+Wysiwyg.prototype.insertCollapsableSection = function (mode) {
     var self = this;
     var range = this.getSelectionRange();
     var html = this.getSelectionHTML();
@@ -1265,8 +1307,8 @@ Wysiwyg.prototype.insertCollapsableSection = function(mode) {
     function tagsToFragment(node) {
         var close = open = '';
         while (node.parentNode && node !== self.contentDocument.body &&
-                (node.nodeType != 1 || node.tagName != "DIV")) {
-            if (node.nodeType == 1) {
+                (node.nodeType !== 1 || node.tagName !== "DIV")) {
+            if (node.nodeType === 1) {
                 var tagName = node.tagName.toLowerCase();
                 close += "</" + tagName + ">";
                 open = "<" + tagName + ">" + open;
@@ -1289,7 +1331,7 @@ Wysiwyg.prototype.insertCollapsableSection = function(mode) {
     }
 };
 
-Wysiwyg.prototype.deleteCollapsableSection = function() {
+Wysiwyg.prototype.deleteCollapsableSection = function () {
     var pos = this.getSelectionPosition();
     var startCol = $(pos.start).parents("div.collapsable")[0];
     var endCol = $(pos.end).parents("div.collapsable")[0];
@@ -1299,7 +1341,7 @@ Wysiwyg.prototype.deleteCollapsableSection = function() {
     }
 };
 
-Wysiwyg.prototype.createLink = function() {
+Wysiwyg.prototype.createLink = function () {
     if (this.selectionContainsTagName("pre")) {
         return;
     }
@@ -1311,20 +1353,19 @@ Wysiwyg.prototype.createLink = function() {
     if (anchor) {
         var autolink = anchor.getAttribute("data-wysiwyg-autolink");
 
-        if (autolink == "true") {
+        if (autolink === "true") {
             var pattern = this.wikiDetectLinkPattern;
             pattern.lastIndex = 0;
             var label = Wysiwyg.getTextContent(anchor);
             var match = pattern.exec(label);
-            if (match && match.index == 0 && match[0].length == label.length) {
+            if (match && match.index === 0 && match[0].length === label.length) {
                 currLink = this.normalizeLink(label);
             }
         }
         if (!currLink) {
             currLink = anchor.getAttribute("data-wysiwyg-link") || anchor.href;
         }
-    }
-    else {
+    } else {
         currLink = "";
     }
     if (expand) {
@@ -1332,7 +1373,7 @@ Wysiwyg.prototype.createLink = function() {
     }
     var text = this.getSelectionText() || "";
     var newLink = (prompt(text ? "Enter link:" : "Insert link:", currLink) || "").replace(/^\s+|\s+$/g, "");
-    if (newLink && newLink != currLink) {
+    if (newLink && newLink !== currLink) {
         text = text || newLink;
         newLink = this.normalizeLink(newLink);
         var id = this.generateDomId();
@@ -1349,10 +1390,11 @@ Wysiwyg.prototype.createLink = function() {
     this.selectionChanged();
 };
 
-Wysiwyg.prototype.createAnchor = function(link, label, attrs) {
+Wysiwyg.prototype.createAnchor = function (link, label, attrs) {
     var d = this.contentDocument;
     var anchor = d.createElement("a");
-    for (var name in attrs) {
+    var name;
+    for (name in attrs) {
         var value = attrs[name];
         anchor.setAttribute(name, value);
     }
@@ -1364,21 +1406,22 @@ Wysiwyg.prototype.createAnchor = function(link, label, attrs) {
     return anchor;
 };
 
-Wysiwyg.prototype.createCollapsableSection = function() {
+Wysiwyg.prototype.createCollapsableSection = function () {
     var collapsible = this.contentDocument.createElement("div");
 
     $(collapsible).addClass("collapsable")
     return collapsible;
 }
 
-Wysiwyg.prototype.collectChildNodes = function(dest, source) {
+Wysiwyg.prototype.collectChildNodes = function (dest, source) {
     var childNodes = source.childNodes;
-    for (var i = childNodes.length - 1; i >= 0; i--) {
+    var i;
+    for (i = childNodes.length - 1; i >= 0; i--) {
         dest.insertBefore(childNodes[i], dest.firstChild);
     }
 };
 
-Wysiwyg.prototype.generateDomId = function() {
+Wysiwyg.prototype.generateDomId = function () {
     var d = this.contentDocument;
     for ( ; ; ) {
         var id = "tmp-" + (new Date().valueOf().toString(36));
@@ -1388,7 +1431,7 @@ Wysiwyg.prototype.generateDomId = function() {
     }
 };
 
-Wysiwyg.prototype.selectionChanged = function() {
+Wysiwyg.prototype.selectionChanged = function () {
     var status = {
         strong: false, em: false, underline: false, strike: false, sub: false,
         sup: false, monospace: false, paragraph: false, heading1: false,
@@ -1401,17 +1444,16 @@ Wysiwyg.prototype.selectionChanged = function() {
         p: "paragraph", h1: "heading1", h2: "heading2", h3: "heading3",
         h4: "heading4", h5: "heading5", h6: "heading6", a: "link", pre: "code" };
     var position = this.getSelectionPosition();
-
-    var node;
+    var node, toolbarButtons, name;
+    
     if (position.start) {
-        node = position.start == position.end ? position.start.firstChild : position.start.nextSibling;
+        node = position.start === position.end ? position.start.firstChild : position.start.nextSibling;
         node = node || position.start;
-    }
-    else {
+    } else {
         node = null;
     }
     while (node) {
-        if (node.nodeType == 1) {
+        if (node.nodeType === 1) {
             var name = node.tagName.toLowerCase();
             if (name in tagNameToKey) {
                 name = tagNameToKey[name];
@@ -1421,8 +1463,8 @@ Wysiwyg.prototype.selectionChanged = function() {
         node = node.parentNode;
     }
 
-    var toolbarButtons = this.toolbarButtons;
-    for (var name in status) {
+    toolbarButtons = this.toolbarButtons;
+    for (name in status) {
         var button = toolbarButtons[name];
         if (button) {
             var parent = button.parentNode;
@@ -1434,7 +1476,8 @@ Wysiwyg.prototype.selectionChanged = function() {
         "heading2", "heading3", "heading4", "heading5", "heading6" ];
     var styleButton = toolbarButtons["style"];
     var styleButtonClass = "wysiwyg-menu-style";
-    for (var i = 0; i < styles.length; i++) {
+    var i;
+    for (i = 0; i < styles.length; i++) {
         var name = styles[i];
         if (status[name]) {
             styleButtonClass = "wysiwyg-menu-" + name;
@@ -1444,7 +1487,7 @@ Wysiwyg.prototype.selectionChanged = function() {
     styleButton.parentNode.className = styleButtonClass;
 };
 
-(function() {
+(function () {
     var _linkScheme = "[a-zA-Z][a-zA-Z0-9+-.]*";
     // cf. WikiSystem.XML_NAME, http://www.w3.org/TR/REC-xml/#id
     var _xmlName = "[:_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD](?:[-:_.A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*[-_A-Za-z0-9\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])?"
@@ -1500,7 +1543,7 @@ Wysiwyg.prototype.selectionChanged = function() {
     Wysiwyg.prototype.wikiDetectLinkPattern = wikiDetectLinkPattern;
 })();
 
-Wysiwyg.prototype.normalizeLink = function(link) {
+Wysiwyg.prototype.normalizeLink = function (link) {
     if (/^[\/.#]/.test(link)) {
         link = encodeURIComponent(link);
     }
@@ -1510,18 +1553,16 @@ Wysiwyg.prototype.normalizeLink = function(link) {
     if (/^[^\"\']/.test(link) && /\s/.test(link)) {
         if (link.indexOf('"') === -1) {
             link = '"' + link + '"';
-        }
-        else if (link.indexOf("'") === -1) {
+        } else if (link.indexOf("'") === -1) {
             link = "'" + link + "'";
-        }
-        else {
+        } else {
             link = '"' + link.replace(/"/g, "%22") + '"';
         }
     }
     return link;
 };
 
-Wysiwyg.prototype.isInlineNode = function(node) {
+Wysiwyg.prototype.isInlineNode = function (node) {
     if (node) {
         switch (node.nodeType) {
         case 1:
@@ -1533,7 +1574,7 @@ Wysiwyg.prototype.isInlineNode = function(node) {
     return false;
 };
 
-(function() {
+(function () {
     var blocks = {
         p: true, blockquote: true, div: true,
         li: true, ul: true, ol: true,
@@ -1554,7 +1595,7 @@ Wysiwyg.prototype.isInlineNode = function(node) {
                 if (!node) {
                     return true;
                 }
-                if (node.nodeType == 1 && node.tagName.toLowerCase() in blocks) {
+                if (node.nodeType === 1 && node.tagName.toLowerCase() in blocks) {
                     return true;
                 }
             }
@@ -1566,7 +1607,7 @@ Wysiwyg.prototype.isInlineNode = function(node) {
     Wysiwyg.prototype.isFirstChildInBlockNode = generator("previousSibling", blocks);
 })();
 
-Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, options) {
+Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, options) {
     options = options || {};
     var escapeNewlines = !!options.escapeNewlines;
 
@@ -1584,6 +1625,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     var listDepth = [];
     var decorationStatus;
     var decorationStack;
+    var indexLines;
     var inCodeBlock, inCollapsibleBlock;
     inCodeBlock = inCollapsibleBlock = false;
 
@@ -1597,29 +1639,25 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     function handleCodeBlock(line) {
         if (/^ *\{\{\{ *$/.test(line)) {
             inCodeBlock++;
-            if (inCodeBlock == 1) {
+            if (inCodeBlock === 1) {
                 closeParagraph();
                 codeText = [];
-            }
-            else {
+            } else {
                 codeText.push(line);
             }
-        }
-        else if (/^ *\}\}\} *$/.test(line)) {
+        } else if (/^ *\}\}\} *$/.test(line)) {
             inCodeBlock--;
-            if (inCodeBlock == 0) {
+            if (inCodeBlock === 0) {
                 var pre = contentDocument.createElement("pre");
                 pre.className = "wiki";
                 pre.appendChild(contentDocument.createTextNode(codeText.join(
                     pre.addEventListener && !window.opera ? "\n" : "\n\r")));
                 holder.appendChild(pre);
                 codeText = [];
-            }
-            else {
+            } else {
                 codeText.push(line);
             }
-        }
-        else {
+        } else {
             codeText.push(line);
         }
     }
@@ -1696,7 +1734,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         case "strike":      tagName = "strike";    break;
         }
 
-        if (holder == fragment) {
+        if (holder === fragment) {
             openParagraph();
         }
         element = d.createElement(tagName);
@@ -1710,10 +1748,11 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     function handleCloseInlineCode(name) {
         var d = contentDocument;
         var tagNames = [];
-        for (var index = decorationStack.length - 1; index >= 0; index--) {
+        var index;
+        for (index = decorationStack.length - 1; index >= 0; index--) {
             var tagName = holder.tagName;
             holder = holder.parentNode;
-            if (decorationStack[index] == name) {
+            if (decorationStack[index] === name) {
                 break;
             }
             tagNames.push(tagName);
@@ -1728,12 +1767,11 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     }
 
     function handleInline(name) {
-        if (name == "bolditalic") {
+        if (name === "bolditalic") {
             if (decorationStatus.italic) {
                 handleInline("italic");
                 handleInline("bold");
-            }
-            else {
+            } else {
                 handleInline("bold");
                 handleInline("italic");
             }
@@ -1786,8 +1824,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
             holder = anchor;
             handleLine(match[1]);
             holder = anchor.parentNode;
-        }
-        else {
+        } else {
             holder.appendChild(contentDocument.createTextNode(value));
         }
     }
@@ -1845,9 +1882,8 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         if (depth > (last >= 0 ? listDepth[last] : -1)) {
             closeToFragment("li");
             openList("ul", className, start, depth);
-        }
-        else {
-            var container, list;
+        } else {
+            var container, list, tmp;
             if (listDepth.length > 1 && depth < listDepth[last]) {
                 do {
                     if (depth >= listDepth[last]) {
@@ -1857,13 +1893,12 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
                     last = listDepth.length - 1;
                 } while (listDepth.length > 1);
                 container = holder;
-            }
-            else {
+            } else {
                 list = getSelfOrAncestor(holder, "li");
                 self.appendBogusLineBreak(list);
                 container = list.parentNode;
             }
-            var tmp = contentDocument.createElement("li");
+            tmp = contentDocument.createElement("li");
             container.appendChild(tmp);
             holder = tmp;
             listDepth[last] = depth;
@@ -1873,8 +1908,8 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     function openList(tag, className, start, depth) {
         var d = contentDocument;
         var h = holder;
-
         var container = d.createElement(tag);
+
         if (className) {
             container.className = className;
         }
@@ -1885,10 +1920,9 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         container.appendChild(list);
 
         var target;
-        if (h == fragment) {
+        if (h === fragment) {
             target = fragment;
-        }
-        else {
+        } else {
             target = getSelfOrAncestor(h, "li");
             target = target ? target.parentNode : h;
         }
@@ -1903,8 +1937,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         if (target) {
             self.appendBogusLineBreak(target);
             holder = target.parentNode.parentNode;
-        }
-        else {
+        } else {
             holder = h.parentNode;
         }
         listDepth.pop();
@@ -1921,7 +1954,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     function closeParagraph() {
         if (inParagraph()) {
             var target = holder;
-            if (target != fragment) {
+            if (target !== fragment) {
                 target = getSelfOrAncestor(target, "p");
                 self.appendBogusLineBreak(target);
                 self.updateElementClassName(target);
@@ -1941,8 +1974,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
             tbody = d.createElement("tbody");
             table.appendChild(tbody);
             h.appendChild(table);
-        }
-        else {
+        } else {
             h = holder;
             tbody = getSelfOrAncestor(h, "tbody");
         }
@@ -1992,9 +2024,9 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         var _fragment = fragment;
         stopTag = stopTag ? stopTag.toLowerCase() : "div";
 
-        while (element != _fragment) {
+        while (element !== _fragment) {
             var tag = element.tagName.toLowerCase();
-            if (tag == stopTag) {
+            if (tag === stopTag) {
                 holder = element;
                 return;
             }
@@ -2015,8 +2047,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
             if (method) {
                 method();
                 element = holder;
-            }
-            else {
+            } else {
                 element = element.parentNode;
             }
         }
@@ -2026,7 +2057,8 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
 
     function getMatchNumber(match) {
         var length = match.length;
-        for (var i = 1; i < length; i++) {
+        var i;
+        for (i = 1; i < length; i++) {
             if (match[i]) {
                 if (i <= wikiInlineRulesCount) {
                     return i;
@@ -2039,8 +2071,8 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
 
     function handleLine(line) {
         var wikiRulesPattern = new RegExp(self.wikiRulesPattern.source, "g");
-        wikiRulesPattern.lastIndex = 0;
         var prevIndex = wikiRulesPattern.lastIndex;
+        wikiRulesPattern.lastIndex = 0;
         for ( ; ; ) {
             var match = wikiRulesPattern.exec(line);
             var matchNumber = null;
@@ -2056,17 +2088,17 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
                 text = line.substring(prevIndex);
             }
 
-            if ((prevIndex == 0 && text || match && match.index == 0 && matchNumber > 0)
+            if ((prevIndex === 0 && text || match && match.index === 0 && matchNumber > 0)
                 && !inParagraph() && !inAnchor() && !inCollapsibleBlock && !currentHeader) {
                 closeToFragment();
             }
 
 
             if (text || match && matchNumber > 0) {
-                if (inParagraph() && (prevIndex == 0)) {
+                if (inParagraph() && (prevIndex === 0)) {
                     text = text ? ((holder.hasChildNodes() ? " " : "") + text) : "";
                 }
-                if (listDepth.length == 0 && !inTable() && !currentHeader || holder == fragment) {
+                if (listDepth.length === 0 && !inTable() && !currentHeader || holder === fragment) {
                     openParagraph();
                 }
                 if (text) {
@@ -2136,7 +2168,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
                 }
                 break;
             case -5:    // cell
-                if (!inTable() && match.index == 0) {
+                if (!inTable() && match.index === 0) {
                     closeToFragment();
                 }
                 wikiRulesPattern.lastIndex = prevIndex;
@@ -2151,7 +2183,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
             }
 
             if (matchText) {
-                if (listDepth.length == 0 && !currentHeader && !inTable() && !inAnchor()) {
+                if (listDepth.length === 0 && !currentHeader && !inTable() && !inAnchor()) {
                     openParagraph();
                 }
                 holder.appendChild(contentDocument.createTextNode(matchText));
@@ -2165,7 +2197,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
         }
     }
 
-    for (var indexLines = 0; indexLines < lines.length; indexLines++) {
+    for (indexLines = 0; indexLines < lines.length; indexLines++) {
         var line = lines[indexLines].replace(/\r$/, "");
         if (inCodeBlock || /^ *\{\{\{ *$/.test(line)) {
             handleCodeBlock(line);
@@ -2176,7 +2208,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
             fragment.appendChild(contentDocument.createElement("hr"));
             continue;
         }
-        if (line.length == 0 && !inCollapsibleBlock) {
+        if (line.length === 0 && !inCollapsibleBlock) {
             closeToFragment();
             continue;
         }
@@ -2200,7 +2232,7 @@ Wysiwyg.prototype.wikitextToFragment = function(wikitext, contentDocument, optio
     return fragment;
 };
 
-Wysiwyg.prototype.wikitextToOnelinerFragment = function(wikitext, contentDocument, options) {
+Wysiwyg.prototype.wikitextToOnelinerFragment = function (wikitext, contentDocument, options) {
     var source = this.wikitextToFragment(wikitext, contentDocument, options);
     var fragment = contentDocument.createDocumentFragment();
     this.collectChildNodes(fragment, source.firstChild);
@@ -2239,7 +2271,7 @@ Wysiwyg.prototype.wikiInlineTags = {
     "u": true, "del": true, "strike": true, "sub": true, "sup": true,
     "br": true, "span": true };
 
-Wysiwyg.prototype.domToWikitext = function(root, options) {
+Wysiwyg.prototype.domToWikitext = function (root, options) {
     options = options || {};
     var formatCodeBlock = !!options.formatCodeBlock;
     var escapeNewlines = !!options.escapeNewlines;
@@ -2270,10 +2302,10 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
 
     function tokenFromSpan(node) {
         var style = node.style;
-        if (style.fontWeight == "bold") {
+        if (style.fontWeight === "bold") {
             return wikiOpenTokens["b"];
         }
-        if (style.fontStyle == "italic") {
+        if (style.fontStyle === "italic") {
             return wikiOpenTokens["i"];
         }
         switch (style.textDecoration) {
@@ -2290,11 +2322,11 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
 
         for ( ; ; ) {
             var childNodes = node.childNodes;
-            if (!childNodes || childNodes.length != 1) {
+            if (!childNodes || childNodes.length !== 1) {
                 break;
             }
             var child = childNodes[0];
-            if (child.nodeType != 1) {
+            if (child.nodeType !== 1) {
                 break;
             }
             var token = _wikiOpenTokens[child.tagName.toLowerCase()];
@@ -2313,6 +2345,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
         var decorationsHash = nodeDecorations(node);
         var decorations = [];
         var cancelDecorations = [];
+        var token;
 
         while (_texts.length > 0) {
             var token = _texts[_texts.length - 1];
@@ -2322,10 +2355,10 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                     cancelDecorations.push(_texts.pop());
                     continue;
                 }
-                if ((token == "'''" || token == "''") && _texts.length > 1) {
+                if ((token === "'''" || token === "''") && _texts.length > 1) {
                     var moreToken = _texts[_texts.length - 2];
                     if (_decorationTokenPattern.test(moreToken)
-                        && token + moreToken == "'''''"
+                        && token + moreToken === "'''''"
                         && decorationsHash[moreToken])
                     {
                         delete decorationsHash[moreToken];
@@ -2338,7 +2371,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
             break;
         }
 
-        for (var token in decorationsHash) {
+        for (token in decorationsHash) {
             decorations.push(token);
         }
         decorations.sort();
@@ -2362,7 +2395,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
         var _texts = texts;
         var _decorationTokenPattern = decorationTokenPattern;
         var length = _texts.length;
-        if (length == 0 || !_decorationTokenPattern.test(token)) {
+        if (length === 0 || !_decorationTokenPattern.test(token)) {
             _texts.push(token);
             return;
         }
@@ -2371,19 +2404,18 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
             _texts.push(token);
             return;
         }
-        if (last == token) {
+        if (last === token) {
             _texts.pop();
             return;
         }
-        if (length < 2 || last + token != "'''''") {
+        if (length < 2 || last + token !== "'''''") {
             _texts.push(token);
             return;
         }
-        if (_texts[length - 2] == token) {
+        if (_texts[length - 2] === token) {
             _texts[length - 2] = _texts[length - 1];
             _texts.pop();
-        }
-        else {
+        } else {
             _texts.push(token);
         }
     }
@@ -2413,7 +2445,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
             return;
         }
         var text = null;
-        if (autolink == "true") {
+        if (autolink === "true") {
             if (wikiPageNamePattern.test(label)) {
                 text = label;
                 link = label;
@@ -2429,8 +2461,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
         var value = (1 << times) - 1;
         if (value <= 0) {
             return "";
-        }
-        else {
+        } else {
             return value.toString(2).replace(/1/g, source);
         }
     }
@@ -2448,11 +2479,10 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
             if (token !== true) {
                 pushToken(token);
             }
-            if (name == "table" && $(node).hasClass("escaped")) {
+            if (name === "table" && $(node).hasClass("escaped")) {
                 _texts.push("!");
             }
-        }
-        else {
+        } else {
             switch (name) {
             case "#text":
                 var value = node.nodeValue;
@@ -2485,12 +2515,11 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
             case "li":
                 _texts.push(" " + string("  ", listDepth - 1));
                 var container = node.parentNode;
-                if ((container.tagName || "").toLowerCase() == "ol") {
+                if ((container.tagName || "").toLowerCase() === "ol") {
                     var start = container.getAttribute("start") || "";
-                    if (start != "1" && /^(?:[0-9]+|[a-zA-Z]|[ivxIVX]{1,5})$/.test(start)) {
+                    if (start !== "1" && /^(?:[0-9]+|[a-zA-Z]|[ivxIVX]{1,5})$/.test(start)) {
                         _texts.push(start, ". ");
-                    }
-                    else {
+                    } else {
                         switch (container.className) {
                         case "arabiczero":  _texts.push("0. "); break;
                         case "lowerroman":  _texts.push("i. "); break;
@@ -2500,19 +2529,17 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                         default:            _texts.push("1. "); break;
                         }
                     }
-                }
-                else {
+                } else {
                     _texts.push("* ");
                 }
                 break;
             case "ul": case "ol":
-                if (listDepth == 0) {
+                if (listDepth === 0) {
                     if (self.isInlineNode(node.previousSibling)) {
                         _texts.push("\n");
                     }
-                }
-                else if (listDepth > 0) {
-                    if (node.parentNode.tagName.toLowerCase() == "li") {
+                } else if (listDepth > 0) {
+                    if (node.parentNode.tagName.toLowerCase() === "li") {
                         _texts.push("\n");
                     }
                 }
@@ -2523,8 +2550,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                     var value = null;
                     if (inCodeBlock) {
                         value = "\n";
-                    }
-                    else {
+                    } else {
                         value = " ";
                     }
                     _texts.push(value);
@@ -2535,7 +2561,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                 inCodeBlock = true;
                 break;
             case "table":
-                if (node.className == 'escaped') {
+                if (node.className === 'escaped') {
                     _texts.push("!");
                 }
             case "th":
@@ -2545,8 +2571,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                 var text = self.domToWikitext(node, self.options).replace(/^ +| +$/g, "");
                 if (text) {
                     _texts.push(" ", text, " ");    break;
-                }
-                else {
+                } else {
                     _texts.push(" ");
                 }
                 break;
@@ -2571,12 +2596,11 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                 }
                 break;
             case "span":
-                if (node.className == "wikianchor" && xmlNamePattern.test(node.id || "")) {
+                if (node.className === "wikianchor" && xmlNamePattern.test(node.id || "")) {
                     skipNode = node;
                     var text = self.domToWikitext(node, self.options).replace(/^ +| +$|\]/g, "");
                     _texts.push("[=#", node.id, text ? " " + text + "]" : "]");
-                }
-                else {
+                } else {
                     var token = tokenFromSpan(node);
                     if (token !== undefined) {
                         pushToken(token);
@@ -2605,7 +2629,7 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
 
     function close(name, node) {
         if (skipNode !== null) {
-            if (skipNode == node) {
+            if (skipNode === node) {
                 skipNode = null;
             }
             return;
@@ -2614,11 +2638,9 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
         var token = wikiCloseTokens[name];
         if (token === true) {
             // nothing to do
-        }
-        else if (token !== undefined) {
+        } else if (token !== undefined) {
             pushToken(token);
-        }
-        else {
+        } else {
             switch (name) {
             case "p":
                 if ($(node).hasClass('meta')) {
@@ -2628,13 +2650,13 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                 }
                 break;
             case "li":
-                if (node.getElementsByTagName("li").length == 0) {
+                if (node.getElementsByTagName("li").length === 0) {
                     _texts.push("\n");
                 }
                 break;
             case "ul": case "ol":
                 listDepth--;
-                if (listDepth == 0) {
+                if (listDepth === 0) {
                     _texts.push("\n");
                 }
                 break;
@@ -2645,21 +2667,17 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
                     var nextSibling = node.nextSibling;
                     if (!nextSibling) {
                         text = "\n}}}";
-                    }
-                    else if (nextSibling.nodeType != 1) {
+                    } else if (nextSibling.nodeType !== 1) {
                         text = "\n}}}\n";
-                    }
-                    else if (nextSibling.tagName.toLowerCase() == "pre") {
+                    } else if (nextSibling.tagName.toLowerCase() === "pre") {
                         text = "\n}}}";
-                    }
-                    else {
+                    } else {
                         text = "\n}}}\n";
                     }
-                    if (text.slice(-1) == "\n") {
+                    if (text.slice(-1) === "\n") {
                         text += listDepth > 0 ? " " + string("  ", listDepth) : "    ";
                     }
-                }
-                else {
+                } else {
                     text = "\n}}}\n";
                 }
                 _texts.push(text);
@@ -2700,22 +2718,20 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
             break;
         }
 
-        if (node && last == node.parentNode) {  // down
+        if (node && last === node.parentNode) {  // down
             // nothing to do
-        }
-        else if (node && last == node.previousSibling) {    // forward
+        } else if (node && last === node.previousSibling) {    // forward
             close(stack.pop(), last);
-        }
-        else {  // up, forward
+        } else {  // up, forward
             var tmp = last;
             var nodeParent = node ? node.parentNode : root;
             for ( ; ; ) {
                 var parent = tmp.parentNode;
-                if (parent == node) {
+                if (parent === node) {
                     break;
                 }
                 close(stack.pop(), tmp);
-                if (parent == nodeParent || !parent) {
+                if (parent === nodeParent || !parent) {
                     if (!node) {
                         return;
                     }
@@ -2733,16 +2749,16 @@ Wysiwyg.prototype.domToWikitext = function(root, options) {
     return texts.join("").replace(/^(?: *\n)+|(?: *\n)+$/g, "");
 };
 
-Wysiwyg.prototype.updateElementClassName = function(element) {
+Wysiwyg.prototype.updateElementClassName = function (element) {
     var getSelfOrAncestor = Wysiwyg.getSelfOrAncestor;
     var p = getSelfOrAncestor(element, "p");
     if (p) {
         if (/^![a-z]/.test(p.innerHTML)) {
-            if (p.className != 'meta') {
+            if (p.className !== 'meta') {
                 p.className = 'meta';
             }
         } else if (/^#/.test(p.innerHTML)) {
-            if (p.className != 'comment') {
+            if (p.className !== 'comment') {
                 p.className = 'comment';
             }
         } else {
@@ -2752,18 +2768,18 @@ Wysiwyg.prototype.updateElementClassName = function(element) {
 };
 
 if (window.getSelection) {
-    Wysiwyg.prototype.appendBogusLineBreak = function(element) {
+    Wysiwyg.prototype.appendBogusLineBreak = function (element) {
         var wikiInlineTags = this.wikiInlineTags;
         var last = element.lastChild;
         for ( ; ; ) {
             if (!last) {
                 break;
             }
-            if (last.nodeType != 1) {
+            if (last.nodeType !== 1) {
                 return;
             }
             var name = last.tagName.toLowerCase();
-            if (name == "br") {
+            if (name === "br") {
                 break;
             }
             if (!(name in wikiInlineTags)) {
@@ -2775,15 +2791,15 @@ if (window.getSelection) {
         element.appendChild(br);
     };
     Wysiwyg.prototype.isBogusLineBreak = Wysiwyg.prototype.isLastChildInBlockNode;
-    Wysiwyg.prototype.insertParagraphOnEnter = function(event) {
+    Wysiwyg.prototype.insertParagraphOnEnter = function (event) {
         var range = this.getSelectionRange();
         var node = range.endContainer;
         var header = null;
-        if (node && node.nodeType == 3 && range.endOffset == node.nodeValue.length) {
+        if (node && node.nodeType === 3 && range.endOffset === node.nodeValue.length) {
             var nextSibling = node.nextSibling;
-            if (!nextSibling || nextSibling.tagName.toLowerCase() == "br") {
+            if (!nextSibling || nextSibling.tagName.toLowerCase() === "br") {
                 while (node) {
-                    if (node.nodeType == 1 && /^h[1-6]$/i.exec(node.tagName)) {
+                    if (node.nodeType === 1 && /^h[1-6]$/i.exec(node.tagName)) {
                         header = node;
                         break;
                     }
@@ -2793,8 +2809,9 @@ if (window.getSelection) {
                     var parent = header.parentNode;
                     var childNodes = parent.childNodes;
                     var length = childNodes.length;
-                    for (var offset = 0; offset < length; offset++) {
-                        if (childNodes[offset] == header) {
+                    var offset;
+                    for (offset = 0; offset < length; offset++) {
+                        if (childNodes[offset] === header) {
                             offset++;
                             break;
                         }
@@ -2806,35 +2823,33 @@ if (window.getSelection) {
             }
         }
     };
-    Wysiwyg.prototype.tableHTML = function(id, row, col) {
+    Wysiwyg.prototype.tableHTML = function (id, row, col) {
         var html = this._tableHTML(row, col);
         return html.replace(/<td><\/td>/g, '<td><br/></td>').replace(/<td>/, '<td id="' + id + '">');
     };
-    Wysiwyg.prototype.insertTableCell = function(row, index) {
+    Wysiwyg.prototype.insertTableCell = function (row, index) {
         var cell = row.insertCell(index);
         this.appendBogusLineBreak(cell);
         return cell;
     };
-    Wysiwyg.prototype.getFocusNode = function() {
+    Wysiwyg.prototype.getFocusNode = function () {
         return this.contentWindow.getSelection().focusNode;
     };
     if (window.opera) {
-        Wysiwyg.prototype.insertLineBreak = function() {
+        Wysiwyg.prototype.insertLineBreak = function () {
             this.execCommand("inserthtml", "<br/>");
         };
         Wysiwyg.prototype.insertLineBreakOnShiftEnter = null;
-    }
-    else if (window.getSelection().setBaseAndExtent) {  // Safari 2+
-        Wysiwyg.prototype.insertLineBreak = function() {
+    } else if (window.getSelection().setBaseAndExtent) {  // Safari 2+
+        Wysiwyg.prototype.insertLineBreak = function () {
             this.execCommand("insertlinebreak");
         };
-        Wysiwyg.prototype.insertLineBreakOnShiftEnter = function(event) {
+        Wysiwyg.prototype.insertLineBreakOnShiftEnter = function (event) {
             this.insertLineBreak();
             Wysiwyg.stopEvent(event);
         };
-    }
-    else {  // Firefox 2+
-        Wysiwyg.prototype.insertLineBreak = function() {
+    } else {  // Firefox 2+
+        Wysiwyg.prototype.insertLineBreak = function () {
             var d = this.contentDocument;
             var event = d.createEvent("KeyboardEvent");
             event.initKeyEvent("keypress", true, true, null, false, false, true, false, 0x000d, 0);
@@ -2843,21 +2858,21 @@ if (window.getSelection) {
         Wysiwyg.prototype.insertLineBreakOnShiftEnter = null;
     }
     if (window.getSelection().removeAllRanges) {
-        Wysiwyg.prototype.selectNode = function(node) {
+        Wysiwyg.prototype.selectNode = function (node) {
             var selection = this.contentWindow.getSelection();
             selection.removeAllRanges();
             var range = this.contentDocument.createRange();
             range.selectNode(node);
             selection.addRange(range);
         };
-        Wysiwyg.prototype.selectNodeContents = function(node) {
+        Wysiwyg.prototype.selectNodeContents = function (node) {
             var selection = this.contentWindow.getSelection();
             selection.removeAllRanges();
             var range = this.contentDocument.createRange();
             range.selectNodeContents(node);
             selection.addRange(range);
         };
-        Wysiwyg.prototype.selectRange = function(start, startOffset, end, endOffset) {
+        Wysiwyg.prototype.selectRange = function (start, startOffset, end, endOffset) {
             var selection = this.contentWindow.getSelection();
             selection.removeAllRanges();
             var range = this.contentDocument.createRange();
@@ -2865,11 +2880,11 @@ if (window.getSelection) {
             range.setEnd(end, endOffset);
             selection.addRange(range);
         };
-        Wysiwyg.prototype.getNativeSelectionRange = function() {
+        Wysiwyg.prototype.getNativeSelectionRange = function () {
             var selection = this.contentWindow.getSelection();
             return selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
         };
-        Wysiwyg.prototype.expandSelectionToElement = function(arg) {
+        Wysiwyg.prototype.expandSelectionToElement = function (arg) {
             if (arg.start || arg.end) {
                 var selection = this.contentWindow.getSelection();
                 var range = this.getNativeSelectionRange() || this.contentDocument.createRange();
@@ -2883,26 +2898,25 @@ if (window.getSelection) {
                 selection.addRange(range);
             }
         };
-        Wysiwyg.prototype.insertHTML = function(html) {
+        Wysiwyg.prototype.insertHTML = function (html) {
             this.execCommand("inserthtml", html);
         };
-    }
-    else {      // Safari 2
-        Wysiwyg.prototype.selectNode = function(node) {
+    } else {      // Safari 2
+        Wysiwyg.prototype.selectNode = function (node) {
             var selection = this.contentWindow.getSelection();
             var range = this.contentDocument.createRange();
             range.selectNode(node);
             selection.setBaseAndExtent(range.startContainer, range.startOffset, range.endContainer, range.endOffset);
             range.detach();
         };
-        Wysiwyg.prototype.selectNodeContents = function(node) {
+        Wysiwyg.prototype.selectNodeContents = function (node) {
             this.selectRange(node, 0, node, node.childNodes.length);
         };
-        Wysiwyg.prototype.selectRange = function(start, startOffset, end, endOffset) {
+        Wysiwyg.prototype.selectRange = function (start, startOffset, end, endOffset) {
             var selection = this.contentWindow.getSelection();
             selection.setBaseAndExtent(start, startOffset, end, endOffset);
         };
-        Wysiwyg.prototype.getNativeSelectionRange = function() {
+        Wysiwyg.prototype.getNativeSelectionRange = function () {
             var selection = this.contentWindow.getSelection();
             if (selection.anchorNode) {
                 var range = this.contentDocument.createRange();
@@ -2916,7 +2930,7 @@ if (window.getSelection) {
             }
             return null;
         };
-        Wysiwyg.prototype.expandSelectionToElement = function(arg) {
+        Wysiwyg.prototype.expandSelectionToElement = function (arg) {
             if (arg.start || arg.end) {
                 var selection = this.contentWindow.getSelection();
                 var range = this.getNativeSelectionRange();
@@ -2930,7 +2944,7 @@ if (window.getSelection) {
                 range.detach();
             }
         };
-        Wysiwyg.prototype.insertHTML = function(html) {
+        Wysiwyg.prototype.insertHTML = function (html) {
             var range = this.getNativeSelectionRange();
             if (range) {
                 var d = this.contentDocument;
@@ -2946,21 +2960,21 @@ if (window.getSelection) {
         };
     }
     Wysiwyg.prototype.getSelectionRange = Wysiwyg.prototype.getNativeSelectionRange;
-    Wysiwyg.prototype.getSelectionText = function() {
+    Wysiwyg.prototype.getSelectionText = function () {
         var range = this.getNativeSelectionRange();
         return range ? range.toString() : null;
     };
-    Wysiwyg.prototype.getSelectionHTML = function() {
+    Wysiwyg.prototype.getSelectionHTML = function () {
         var fragment = this.getSelectionFragment();
         var anonymous = this.contentDocument.createElement("div");
         anonymous.appendChild(fragment);
         return anonymous.innerHTML;
     };
-    Wysiwyg.prototype.getSelectionFragment = function() {
+    Wysiwyg.prototype.getSelectionFragment = function () {
         var range = this.getNativeSelectionRange();
         return range ? range.cloneContents() : this.contentDocument.createDocumentFragment();
     };
-    Wysiwyg.prototype.getSelectionPosition = function() {
+    Wysiwyg.prototype.getSelectionPosition = function () {
         var range = this.getNativeSelectionRange();
         var position = { start: null, end: null };
         if (range) {
@@ -2969,7 +2983,7 @@ if (window.getSelection) {
         }
         return position;
     };
-    Wysiwyg.prototype.selectionContainsTagName = function(name) {
+    Wysiwyg.prototype.selectionContainsTagName = function (name) {
         var selection = this.contentWindow.getSelection();
         var range = this.getNativeSelectionRange();
         if (!range) {
@@ -2982,12 +2996,13 @@ if (window.getSelection) {
         if (Wysiwyg.getSelfOrAncestor(ancestor, name)) {
             return true;
         }
-        if (ancestor.nodeType != 1) {
+        if (ancestor.nodeType !== 1) {
             return false;
         }
         var elements = ancestor.getElementsByTagName(name);
         var length = elements.length;
-        for (var i = 0; i < length; i++) {
+        var i;
+        for (i = 0; i < length; i++) {
             if (selection.containsNode(elements[i], true)) {
                 return true;
             }
@@ -2996,28 +3011,28 @@ if (window.getSelection) {
     };
 }
 else if (document.selection) {
-    Wysiwyg.prototype.appendBogusLineBreak = function(element) { };
-    Wysiwyg.prototype.isBogusLineBreak = function(node) { return false };
+    Wysiwyg.prototype.appendBogusLineBreak = function (element) { };
+    Wysiwyg.prototype.isBogusLineBreak = function (node) { return false };
     Wysiwyg.prototype.insertParagraphOnEnter = null;
-    Wysiwyg.prototype.insertLineBreak = function() {
+    Wysiwyg.prototype.insertLineBreak = function () {
         this.insertHTML("<br/>");
     };
     Wysiwyg.prototype.insertLineBreakOnShiftEnter = null;
-    Wysiwyg.prototype.tableHTML = function(id, row, col) {
+    Wysiwyg.prototype.tableHTML = function (id, row, col) {
         var html = this._tableHTML(row, col);
         return html.replace(/<td>/, '<td id="' + id + '">');
     };
-    Wysiwyg.prototype.insertTableCell = function(row, index) {
+    Wysiwyg.prototype.insertTableCell = function (row, index) {
         return row.insertCell(index);
     };
-    Wysiwyg.prototype.getFocusNode = function() {
+    Wysiwyg.prototype.getFocusNode = function () {
         this.contentWindow.focus();
         var d = this.contentDocument;
         var range = d.selection.createRange();
         var node = range.item ? range.item(0) : range.parentElement();
-        return node.ownerDocument == d ? node : null;
+        return node.ownerDocument === d ? node : null;
     };
-    Wysiwyg.prototype.selectNode = function(node) {
+    Wysiwyg.prototype.selectNode = function (node) {
         var d = this.contentDocument;
         var body = d.body;
         var range;
@@ -3025,33 +3040,32 @@ else if (document.selection) {
         try {
             range = body.createControlRange();
             range.addElement(node);
-        }
-        catch (e) {
+        } catch (e) {
             range = body.createTextRange();
             range.moveToElementText(node);
         }
         range.select();
     };
-    Wysiwyg.prototype.selectNodeContents = function(node) {
+    Wysiwyg.prototype.selectNodeContents = function (node) {
         var d = this.contentDocument;
         d.selection.empty();
         var range = d.body.createTextRange();
         range.moveToElementText(node);
         range.select();
     };
-    Wysiwyg.prototype.selectRange = function(start, startOffset, end, endOffset) {
+    Wysiwyg.prototype.selectRange = function (start, startOffset, end, endOffset) {
         var d = this.contentDocument;
         var body = d.body;
         d.selection.empty();
         var range = endPoint(start, startOffset);
-        if (start != end || startOffset != endOffset) {
+        if (start !== end || startOffset !== endOffset) {
             range.setEndPoint("EndToEnd", endPoint(end, endOffset));
         }
         range.select();
 
         function endPoint(node, offset) {
             var range;
-            if (node.nodeType == 1) {
+            if (node.nodeType === 1) {
                 var childNodes = node.childNodes;
                 if (offset >= childNodes.length) {
                     range = body.createTextRange();
@@ -3060,7 +3074,7 @@ else if (document.selection) {
                     return range;
                 }
                 node = childNodes[offset];
-                if (node.nodeType == 1) {
+                if (node.nodeType === 1) {
                     range = body.createTextRange();
                     range.moveToElementText(node);
                     range.collapse(true);
@@ -3073,7 +3087,7 @@ else if (document.selection) {
                 }
                 return endPoint(node, 0);
             }
-            if (node.nodeType != 3) {
+            if (node.nodeType !== 3) {
                 throw "selectRange: nodeType != @".replace(/@/, node.nodeType);
             }
 
@@ -3081,12 +3095,12 @@ else if (document.selection) {
             var element = node.previousSibling;
             while (element) {
                 var nodeType = element.nodeType;
-                if (nodeType == 1) {
+                if (nodeType === 1) {
                     range.moveToElementText(element);
                     range.collapse(false);
                     break;
                 }
-                if (nodeType == 3) {
+                if (nodeType === 3) {
                     offset += element.nodeValue.length;
                 }
                 element = element.previousSibling;
@@ -3095,13 +3109,13 @@ else if (document.selection) {
                 range.moveToElementText(node.parentNode);
                 range.collapse(true);
             }
-            if (offset != 0) {
+            if (offset !== 0) {
                 range.move("character", offset);
             }
             return range;
         }
     };
-    Wysiwyg.prototype.getSelectionRange = function() {
+    Wysiwyg.prototype.getSelectionRange = function () {
         var body = this.contentDocument.body;
         var pseudo = {};
         var start = this.getNativeSelectionRange();
@@ -3110,8 +3124,10 @@ else if (document.selection) {
             var parent = element.parentNode;
             var childNodes = parent.childNodes;
             var length = childNodes.length;
-            for (var i = 0; i < length; i++) {
-                if (childNodes[i] == element) {
+            var i;
+            
+            for (i = 0; i < length; i++) {
+                if (childNodes[i] === element) {
                     pseudo.startOffset = i;
                     pseudo.endOffset = i + 1;
                     break;
@@ -3122,7 +3138,7 @@ else if (document.selection) {
             return pseudo;
         }
         var end = start.duplicate();
-        pseudo.collapsed = start.compareEndPoints("StartToEnd", end) == 0;
+        pseudo.collapsed = start.compareEndPoints("StartToEnd", end) === 0;
         start.collapse(true);
         end.collapse(false);
 
@@ -3130,9 +3146,10 @@ else if (document.selection) {
             var parent = range.parentElement();
             var childNodes = parent.childNodes;
             var length = childNodes.length;
-            for (var i = 0; i < length; i++) {
+            var i;
+            for (i = 0; i < length; i++) {
                 var node = childNodes[i];
-                if (node.nodeType == 1) {
+                if (node.nodeType === 1) {
                     var tmp = body.createTextRange();
                     tmp.moveToElementText(node);
                     if (range.compareEndPoints("EndToStart", tmp) <= 0) {
@@ -3152,7 +3169,7 @@ else if (document.selection) {
                 length++;
             }
             for ( ; length >= 0; length--) {
-                if (tmp.compareEndPoints("EndToStart", range) == 0) {
+                if (tmp.compareEndPoints("EndToStart", range) === 0) {
                     return length;
                 }
                 tmp.move("character", -1);
@@ -3166,7 +3183,7 @@ else if (document.selection) {
             var index = 0;
             var node = element ? element.previousSibling : parent.lastChild;
             var offset, length;
-            while (node && node.nodeType == 3) {
+            while (node && node.nodeType === 3) {
                 length = node.nodeValue.length;
                 offset = nodeOffset(range, parent, element, index, length);
                 if (offset !== null) {
@@ -3181,7 +3198,7 @@ else if (document.selection) {
             length = childNodes.length;
             if (length > 0) {
                 pseudo[containerKey] = parent;
-                pseudo[offsetKey] = containerKey == "startContainer" ? 0 : length - 1;
+                pseudo[offsetKey] = containerKey === "startContainer" ? 0 : length - 1;
                 return;
             }
             element = parent;
@@ -3189,7 +3206,7 @@ else if (document.selection) {
             childNodes = parent.childNodes;
             length = childNodes.length;
             for (offset = 0; offset < length; offset++) {
-                if (element == childNodes[offset]) {
+                if (element === childNodes[offset]) {
                     pseudo[containerKey] = parent;
                     pseudo[offsetKey] = offset;
                     return;
@@ -3201,25 +3218,25 @@ else if (document.selection) {
         setContainerOffset(end, "endContainer", "endOffset");
         return pseudo;
     };
-    Wysiwyg.prototype.getNativeSelectionRange = function() {
+    Wysiwyg.prototype.getNativeSelectionRange = function () {
         this.contentWindow.focus();
         return this.contentDocument.selection.createRange();
     };
-    Wysiwyg.prototype.getSelectionText = function() {
+    Wysiwyg.prototype.getSelectionText = function () {
         var range = this.getNativeSelectionRange();
         if (range) {
             return range.item ? range.item(0).innerText : range.text;
         }
         return null;
     };
-    Wysiwyg.prototype.getSelectionHTML = function() {
+    Wysiwyg.prototype.getSelectionHTML = function () {
         var range = this.getNativeSelectionRange();
         if (range) {
             return range.item ? range.item(0).innerHTML : range.htmlText;
         }
         return null;
     };
-    Wysiwyg.prototype.getSelectionFragment = function() {
+    Wysiwyg.prototype.getSelectionFragment = function () {
         var d = this.contentDocument;
         var fragment = d.createDocumentFragment();
         var anonymous = d.createElement("div");
@@ -3227,20 +3244,19 @@ else if (document.selection) {
         this.collectChildNodes(fragment, anonymous);
         return fragment;
     };
-    Wysiwyg.prototype.getSelectionPosition = function() {
+    Wysiwyg.prototype.getSelectionPosition = function () {
         this.contentWindow.focus();
         var d = this.contentDocument;
         var range = d.selection.createRange();
         var startNode = null;
         var endNode = null;
         if (range.item) {
-            if (range.item(0).ownerDocument == d) {
+            if (range.item(0).ownerDocument === d) {
                 startNode = range.item(0);
                 endNode = range.item(range.length - 1);
             }
-        }
-        else {
-            if (range.parentElement().ownerDocument == d) {
+        } else {
+            if (range.parentElement().ownerDocument === d) {
                 var startRange = range.duplicate();
                 startRange.collapse(true);
                 startNode = startRange.parentElement();
@@ -3251,7 +3267,7 @@ else if (document.selection) {
         }
         return { start: startNode, end: endNode };
     };
-    Wysiwyg.prototype.expandSelectionToElement = function(arg) {
+    Wysiwyg.prototype.expandSelectionToElement = function (arg) {
         this.contentWindow.focus();
         var d = this.contentDocument;
         var body = d.body;
@@ -3271,7 +3287,7 @@ else if (document.selection) {
             range.select();
         }
     };
-    Wysiwyg.prototype.selectionContainsTagName = function(name) {
+    Wysiwyg.prototype.selectionContainsTagName = function (name) {
         this.contentWindow.focus();
         var d = this.contentDocument;
         var selection = d.selection;
@@ -3285,7 +3301,8 @@ else if (document.selection) {
         }
         var elements = parent.getElementsByTagName(name);
         var length = elements.length;
-        for (var i = 0; i < length; i++) {
+        var i;
+        for (i = 0; i < length; i++) {
             var testRange = selection.createRange();
             testRange.moveToElementText(elements[i]);
             if (range.compareEndPoints("StartToEnd", testRange) <= 0
@@ -3296,7 +3313,7 @@ else if (document.selection) {
         }
         return false;
     };
-    Wysiwyg.prototype.insertHTML = function(html) {
+    Wysiwyg.prototype.insertHTML = function (html) {
         this.contentWindow.focus();
         var selection = this.contentDocument.selection;
         var range = selection.createRange();
@@ -3307,26 +3324,26 @@ else if (document.selection) {
     };
 }
 else {
-    Wysiwyg.prototype.appendBogusLineBreak = function(element) { };
+    Wysiwyg.prototype.appendBogusLineBreak = function (element) { };
     Wysiwyg.prototype.insertParagraphOnEnter = null;
-    Wysiwyg.prototype.insertLineBreak = function() { };
-    Wysiwyg.prototype.insertTableCell = function(row, index) { return null };
-    Wysiwyg.prototype.getFocusNode = function() { return null };
-    Wysiwyg.prototype.selectNode = function(node) { };
-    Wysiwyg.prototype.selectNodeContents = function(node) { return null };
-    Wysiwyg.prototype.selectRange = function(start, startOffset, end, endOffset) { };
-    Wysiwyg.prototype.getSelectionRange = function() { return null };
-    Wysiwyg.prototype.getNativeSelectionRange = function() { return null };
-    Wysiwyg.prototype.getSelectionText = function() { return null };
-    Wysiwyg.prototype.getSelectionHTML = function() { return null };
-    Wysiwyg.prototype.getSelectionFragment = function() { return null };
-    Wysiwyg.prototype.getSelectionPosition = function() { return null };
-    Wysiwyg.prototype.expandSelectionToElement = function(arg) { };
-    Wysiwyg.prototype.selectionContainsTagName = function(name) { return false };
-    Wysiwyg.prototype.insertHTML = function(html) { };
+    Wysiwyg.prototype.insertLineBreak = function () { };
+    Wysiwyg.prototype.insertTableCell = function (row, index) { return null };
+    Wysiwyg.prototype.getFocusNode = function () { return null };
+    Wysiwyg.prototype.selectNode = function (node) { };
+    Wysiwyg.prototype.selectNodeContents = function (node) { return null };
+    Wysiwyg.prototype.selectRange = function (start, startOffset, end, endOffset) { };
+    Wysiwyg.prototype.getSelectionRange = function () { return null };
+    Wysiwyg.prototype.getNativeSelectionRange = function () { return null };
+    Wysiwyg.prototype.getSelectionText = function () { return null };
+    Wysiwyg.prototype.getSelectionHTML = function () { return null };
+    Wysiwyg.prototype.getSelectionFragment = function () { return null };
+    Wysiwyg.prototype.getSelectionPosition = function () { return null };
+    Wysiwyg.prototype.expandSelectionToElement = function (arg) { };
+    Wysiwyg.prototype.selectionContainsTagName = function (name) { return false };
+    Wysiwyg.prototype.insertHTML = function (html) { };
 }
 
-Wysiwyg.prototype._treeWalkEmulation = function(root, iterator) {
+Wysiwyg.prototype._treeWalkEmulation = function (root, iterator) {
     if (!root.firstChild) {
         iterator(null);
         return;
@@ -3336,18 +3353,17 @@ Wysiwyg.prototype._treeWalkEmulation = function(root, iterator) {
     while (element) {
         if (tmp = element.firstChild) {
             element = tmp;
-        }
-        else if (tmp = element.nextSibling) {
+        } else if (tmp = element.nextSibling) {
             element = tmp;
-        }
-        else {
+        } else {
             for ( ; ; ) {
                 element = element.parentNode;
-                if (element == root || !element) {
+                if (element === root || !element) {
                     iterator(null);
                     return;
                 }
-                if (tmp = element.nextSibling) {
+                tmp = element.nextSibling;
+                if (tmp) {
                     element = tmp;
                     break;
                 }
@@ -3358,7 +3374,7 @@ Wysiwyg.prototype._treeWalkEmulation = function(root, iterator) {
 };
 
 if (document.createTreeWalker) {
-    Wysiwyg.prototype.treeWalk = function(root, iterator) {
+    Wysiwyg.prototype.treeWalk = function (root, iterator) {
         var walker = root.ownerDocument.createTreeWalker(
             root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, null, true);
         while (walker.nextNode()) {
@@ -3375,25 +3391,26 @@ Wysiwyg.instances = [];
 Wysiwyg.count = 0;
 Wysiwyg.paths = null;
 
-Wysiwyg.newInstance = function(textarea, options) {
+Wysiwyg.newInstance = function (textarea, options) {
     var instance = new Wysiwyg(textarea, options);
     Wysiwyg.instances.push(instance);
     return instance;
 };
 
-Wysiwyg.findInstance = function(textarea) {
+Wysiwyg.findInstance = function (textarea) {
     var instances = Wysiwyg.instances;
     var length = instances.length;
-    for (var i = 0; i < length; i++) {
+    var i;
+    for (i = 0; i < length; i++) {
         var instance = instances[i];
-        if (instance.textarea == textarea) {
+        if (instance.textarea === textarea) {
             return instance;
         }
     }
     return null;
 };
 
-Wysiwyg.getStylePaths = function() {
+Wysiwyg.getStylePaths = function () {
     var stylesheets = [];
     var paths = { stylesheets: stylesheets, base: '/' };
 
@@ -3401,7 +3418,8 @@ Wysiwyg.getStylePaths = function() {
     var head = d.getElementsByTagName("head")[0];
     var links = head.getElementsByTagName("link");
     var length = links.length;
-    for (var i = 0; i < length; i++) {
+    var i;
+    for (i = 0; i < length; i++) {
         var link = links[i];
         var href = link.getAttribute("href") || "";
         var type = link.getAttribute("type") || "";
@@ -3420,15 +3438,15 @@ Wysiwyg.getStylePaths = function() {
     return null;
 };
 
-Wysiwyg.getOptions = function() {
+Wysiwyg.getOptions = function () {
     var options = {};
-    if (typeof window._wysiwyg != "undefined") {
+    if (window._wysiwyg) {
         options = _wysiwyg;
     }
     return options;
 };
 
-Wysiwyg.getEditorMode = function() {
+Wysiwyg.getEditorMode = function () {
     if (Wysiwyg.editorMode) {
         return Wysiwyg.editorMode;
     }
@@ -3436,7 +3454,8 @@ Wysiwyg.getEditorMode = function() {
     var mode = null;
     var cookies = (document.cookie || "").split(";");
     var length = cookies.length;
-    for (var i = 0; i < length; i++) {
+    var i;
+    for (i = 0; i < length; i++) {
         var match = /^\s*wysiwyg=(\S*)/.exec(cookies[i]);
         if (match) {
             switch (match[1]) {
@@ -3455,7 +3474,7 @@ Wysiwyg.getEditorMode = function() {
     return Wysiwyg.editorMode;
 };
 
-Wysiwyg.setEditorMode = function(mode) {
+Wysiwyg.setEditorMode = function (mode) {
     switch (mode) {
     case "wysiwyg":
         break;
@@ -3480,30 +3499,30 @@ Wysiwyg.setEditorMode = function(mode) {
     document.cookie = pieces.join("; ");
 };
 
-Wysiwyg.removeEvent = function(element, type, func) {
+Wysiwyg.removeEvent = function (element, type, func) {
     jQuery(element).unbind(type, func);
 };
 
-Wysiwyg.stopEvent = function(event) {
+Wysiwyg.stopEvent = function (event) {
     if (event.preventDefault) {
         event.preventDefault();
         event.stopPropagation();
-    }
-    else {
+    } else {
         event.returnValue = false;
         event.cancelBubble = true;
     }
 };
 
-Wysiwyg.setStyle = function(element, object) {
+Wysiwyg.setStyle = function (element, object) {
     var style = element.style;
-    for (var name in object) {
+    var name;
+    for (name in object) {
         style[name] = object[name];
     }
 };
 
 if (document.defaultView) {
-    Wysiwyg.getStyle = function(element, name) {
+    Wysiwyg.getStyle = function (element, name) {
         var value = element.style[name];
         if (!value) {
             var style = element.ownerDocument.defaultView.getComputedStyle(element, null)
@@ -3513,12 +3532,12 @@ if (document.defaultView) {
     };
 }
 else {
-    Wysiwyg.getStyle = function(element, name) {
+    Wysiwyg.getStyle = function (element, name) {
         return element.style[name] || element.currentStyle[name];
     };
 }
 
-Wysiwyg.elementPosition = function(element) {
+Wysiwyg.elementPosition = function (element) {
     function vector(left, top) {
         var value = [ left, top ];
         value.left = left;
@@ -3527,22 +3546,23 @@ Wysiwyg.elementPosition = function(element) {
     }
     var position = Wysiwyg.getStyle(element, "position");
     var left = 0, top = 0;
-    for (var node = element; node; node = node.offsetParent) {
+    var node;
+    for (node = element; node; node = node.offsetParent) {
         left += node.offsetLeft || 0;
         top += node.offsetTop || 0;
     }
-    if (position != "absolute") {
+    if (position !== "absolute") {
         return vector(left, top);
     }
     var offset = Wysiwyg.elementPosition(element.offsetParent);
     return vector(left - offset.left, top - offset.top);
 };
 
-Wysiwyg.getSelfOrAncestor = function(element, name) {
+Wysiwyg.getSelfOrAncestor = function (element, name) {
     var target = element;
     var d = element.ownerDocument;
     if (name instanceof RegExp) {
-        while (target && target != d) {
+        while (target && target !== d) {
             switch (target.nodeType) {
             case 1: // element
                 if (name.test(target.tagName.toLowerCase())) {
@@ -3554,13 +3574,12 @@ Wysiwyg.getSelfOrAncestor = function(element, name) {
             }
             target = target.parentNode;
         }
-    }
-    else {
+    } else {
         name = name.toLowerCase();
-        while (target && target != d) {
+        while (target && target !== d) {
             switch (target.nodeType) {
             case 1: // element
-                if (target.tagName.toLowerCase() == name) {
+                if (target.tagName.toLowerCase() === name) {
                     return target;
                 }
                 break;
@@ -3573,24 +3592,22 @@ Wysiwyg.getSelfOrAncestor = function(element, name) {
     return null;
 };
 
-Wysiwyg.getTextContent = (function() {
+Wysiwyg.getTextContent = (function () {
     var anonymous = document.createElement("div");
-    if (typeof anonymous.textContent != "undefined") {
-        return function(element) { return element.textContent };
-    }
-    else if (typeof anonymous.innerText != "undefined") {
-        return function(element) { return element.innerText };
-    }
-    else {
-        return function(element) { return null };
+    if (typeof anonymous.textContent !== undefined) {
+        return function (element) { return element.textContent };
+    } else if (typeof anonymous.innerText !== undefined) {
+        return function (element) { return element.innerText };
+    } else {
+        return function (element) { return null };
     }
 })();
 
-Wysiwyg.initialize = function() {
-    if ("replace".replace(/[a-e]/g, function(m) { return "*" }) != "r*pl***") {
+Wysiwyg.initialize = function () {
+    if ("replace".replace(/[a-e]/g, function (m) { return "*" }) !== "r*pl***") {
         return;
     }
-    if (typeof document.designMode == "undefined") {
+    if (typeof document.designMode === undefined) {
         return;
     }
     Wysiwyg.paths = Wysiwyg.getStylePaths();
@@ -3600,7 +3617,8 @@ Wysiwyg.initialize = function() {
     var options = Wysiwyg.getOptions();
     var textareas = document.getElementsByTagName("textarea");
     var editors = [];
-    for (var i = 0; i < textareas.length; i++) {
+    var i;
+    for (i = 0; i < textareas.length; i++) {
         var textarea = textareas[i];
         if (/\bwikitext\b/.test(textarea.className || "")) {
             editors.push(Wysiwyg.newInstance(textarea, options));
