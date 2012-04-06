@@ -1,8 +1,7 @@
 body {
 	font:normal 80% Verdana, Helvetica, Arial, sans-serif;
 	padding: 0;
-	margin: 0 auto;
-	width: 70em;
+	margin: 0 2em;
 }
 header,
 footer,
@@ -13,7 +12,6 @@ nav {
 	display:block;
 }
 table {
-	width:100%;
 	border: 1px solid #EEEEEE;
 	border-collapse:collapse;
 }
