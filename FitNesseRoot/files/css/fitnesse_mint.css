@@ -47,7 +47,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size:xx-large;
 }
 
-h1+br, h2+br, h3+br, h4+br, h5+br, h6+br, br+br {
+h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
  display: none;
 }
 
@@ -155,6 +155,15 @@ article {
 box-shadow: 2px 2px 2px #494A43;
  
  
+}
+
+table {
+	border: thin solid #5D5F56;
+	border-collapse:collapse;
+}
+td, th {
+	border: thin solid #5D5F56;
+	padding: 0.25em 0.5em;
 }
 
 /* FOOTER  */
