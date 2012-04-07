@@ -3,6 +3,17 @@ var collapsableClosedCss = "hidden";
 var collapsableOpenImg = "/files/images/collapsableOpen.gif";
 var collapsableClosedImg = "/files/images/collapsableClosed.gif";
 
+window.onbeforeunload=stopNavIfTestRunning;
+
+
+function stopNavIfTestRunning(){
+  var stoptestDiv = document.querySelector("#test-action a.stop");
+
+  if (stoptestDiv){
+    return "There is a test or suite currently running.  Are you sure you want to navigate away from this page?";
+  }
+}
+
 function toggleCollapsable(id)
 {
   var div = document.getElementById(id);
