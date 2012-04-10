@@ -113,14 +113,14 @@ $(function() {
 			if (!pageNameError) {
 				pageNameError = $(msg);
 				$(this).after(pageNameError);
+				$(this).data("error", pageNameError);
 			}
+			pageNameError.show();
 		} else {
 			if (pageNameError) {
-				$(this).next().remove();
-				pageNameError = undefined;
+				pageNameError.hide();
 			}
 		}
-		$(this).data("error", pageNameError);
 	}
 	
 	$('input.wikiword').keyup(function() {
