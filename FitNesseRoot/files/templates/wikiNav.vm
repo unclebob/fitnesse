@@ -19,11 +19,11 @@
  #end
  
  #if( $actions.withAddChild )
- <li id="add"><a href="#" class="label">Add</a>
+ <li id="add"><a href="$localOrRemotePath?new" class="label">Add</a>
   <ul>
-  #foreach( $pageType in $pageTypes )
-   <li><a href="$localOrRemotePath?new&pageType=$pageType">$pageType page</a></li>
-  #end
+   <li><a href="$localOrRemotePath?new&pageType=Static">Static page</a></li>
+   <li><a href="$localOrRemotePath?new&pageType=Test">Test page</a></li>
+   <li><a href="$localOrRemotePath?new&pageType=Suite">Suite page</a></li>
   </ul>
  </li>
  #end
