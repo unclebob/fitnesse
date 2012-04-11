@@ -506,7 +506,7 @@ Wysiwyg.prototype.setupMenuEvents = function () {
         }
     }
 
-    var buttons = {};
+    var buttons = {}, i;
     setup.call(this, this.wysiwygToolbar);
     for (i = 0; i < this.menus.length; i++) {
         setup.call(this, this.menus[i]);
