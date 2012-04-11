@@ -771,8 +771,9 @@ Wysiwyg.prototype.setupEditorEvents = function () {
 
         // Post processing:
         setTimeout(function () {
-            var next, i, c;
+            var lines, next, i, c;
             inPasteAction = false;
+
             // convert nested .pasteddata divs to br's (safari/chrome)
             $('div', pastedDataBlock).each(function (i, elem) {
                 if (!/^\s*$/.test($(this).text())) {
@@ -781,10 +782,17 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 }
                 $(this).remove();
             });
-            var lines = $(pastedDataBlock).html().split(/<br\/?>/);
+            console.log("Text content is:", pastedDataBlock, $(pastedDataBlock).children());
+            if (!$(pastedDataBlock).children()) {
+                console.log('only plain text content');
+                lines = $(pastedDataBlock).html().split(/<br\/?>/);
+            } else {
+                lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
+            }
 
-            if (position.sameContainer && lines.length === 1) {
+            if (position.sameContainer && lines.length === 1 && /^\<.*\>$/.test(lines[0])) {
                 // paste data without markup.
+                console.log("paste line");
                 if (!position.atStart) {
                     var prev = $(pastedDataBlock).prev();
                     $(prev).append($(pastedDataBlock).text());
@@ -804,11 +812,23 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 }
             } else {
                 var fragment = self.wikitextToFragment(lines.join("\n"), d, self.options);
+                var parentTr = getSelfOrAncestor(pastedDataBlock, 'tr');
+                var parentTable = getSelfOrAncestor(parentTr, 'table');
                 c = $(fragment).children();
+                console.log("paste fragment");
                 for (i = 0; i < c.length; i++) {
-                    $(pastedDataBlock).before(c[i]);
+                    if (parentTr && c[i].tagName === 'TABLE') {
+                        $(c[i]).find('tr').each(function(j, elem) {
+                            $(parentTr).after(elem);
+                        });
+                    } else {
+                        $(pastedDataBlock).before(c[i]);
+                    }
                 }
                 $(pastedDataBlock).remove();
+                if (parentTable) {
+                    self.spanTableColumns(parentTable);
+                }
             }
         }, 20);
     });
