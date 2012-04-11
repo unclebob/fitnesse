@@ -119,12 +119,15 @@ public class FileResponder implements Responder {
   public static String getContentType(String filename) {
     String contentType = fileNameMap.getContentTypeFor(filename);
     if (contentType == null) {
-      if (filename.endsWith(".css"))
+      if (filename.endsWith(".css")) {
         contentType = "text/css";
-      else if (filename.endsWith(".jar"))
+      } else if (filename.endsWith(".js")) {
+        contentType = "text/javascript";
+      } else if (filename.endsWith(".jar")) {
         contentType = "application/x-java-archive";
-      else
+      } else {
         contentType = "text/plain";
+      }
     }
     return contentType;
   }
