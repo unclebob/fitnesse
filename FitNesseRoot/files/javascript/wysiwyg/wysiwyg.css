@@ -90,35 +90,36 @@ iframe.wysiwyg:focus {
     display: inline;
 }
 
-.wysiwyg-toolbar li a#wt-em        { background-position: -4px -314px; }
-.wysiwyg-toolbar li a#wt-strong    { background-position: -4px -290px; }
-.wysiwyg-toolbar li a#wt-escape    { background-position: -4px -500px; }
-.wysiwyg-toolbar li a#wt-strike    { background-position: -4px -338px; }
-.wysiwyg-toolbar li a#wt-link      { background-position: -4px -360px; }
-.wysiwyg-toolbar li a#wt-unlink    { background-position: -4px -383px; }
-.wysiwyg-toolbar li a#wt-ul        { background-position: -4px -431px; }
-.wysiwyg-toolbar li a#wt-outdent   { background-position: -4px -478px; }
-.wysiwyg-toolbar li a#wt-indent    { background-position: -4px -454px; }
-.wysiwyg-toolbar li a#wt-table     { background-position: -4px -4px; }
-.wysiwyg-toolbar li a#wt-hr        { background-position: -4px -409px; }
-.wysiwyg-toolbar li a#wt-br        { background-position: -4px -144px; }
-.wysiwyg-toolbar li a#wt-remove    { background-position: -4px -267px; }
-.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: -4px -547px; }
-.wysiwyg-toolbar li a#wt-collapsable-open { background-position: -4px -571px; }
-.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: -4px -594px; }
-.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: -4px -524px; }
+.wysiwyg-toolbar li a#wt-table    { background-position: 0px 0px; }
+.wysiwyg-toolbar li a#wt-remove   { background-position: 0px -242px; }
+.wysiwyg-toolbar li a#wt-strong   { background-position: 0px -264px; }
+.wysiwyg-toolbar li a#wt-em       { background-position: 0px -286px; }
+.wysiwyg-toolbar li a#wt-strike   { background-position: 0px -308px; }
+.wysiwyg-toolbar li a#wt-link     { background-position: 0px -330px; }
+.wysiwyg-toolbar li a#wt-unlink   { background-position: 0px -352px; }
+.wysiwyg-toolbar li a#wt-hr       { background-position: 0px -374px; }
+.wysiwyg-toolbar li a#wt-ul       { background-position: 0px -396px; }
+.wysiwyg-toolbar li a#wt-indent   { background-position: 0px -418px; }
+.wysiwyg-toolbar li a#wt-outdent  { background-position: 0px -440px; }
+.wysiwyg-toolbar li a#wt-escape   { background-position: 0px -462px; }
+.wysiwyg-toolbar li a#wt-unescape { background-position: 0px -484px; }
 
-.wysiwyg-toolbar li a#wt-add-table { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-remove-table { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-add-row-below { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-add-row-above { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-add-column-after { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-add-column-before { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-add-cell-after { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-add-cell-before { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-remove-row { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-remove-column { background-position: 0 -256px; }
-.wysiwyg-toolbar li a#wt-remove-cell { background-position: 0 -256px; }
+.wysiwyg-toolbar li a#wt-collapsable-closed { background-position: 0px -506px; }
+.wysiwyg-toolbar li a#wt-collapsable-open   { background-position: 0px -528px; }
+.wysiwyg-toolbar li a#wt-collapsable-hidden { background-position: 0px -550px; }
+.wysiwyg-toolbar li a#wt-remove-collapsable { background-position: 0px -572px; }
+
+.wysiwyg-toolbar li a#wt-add-table         { background-position: 0 0px; }
+.wysiwyg-toolbar li a#wt-remove-table      { background-position: 0 -22px; }
+.wysiwyg-toolbar li a#wt-add-row-below     { background-position: 0 -44px; }
+.wysiwyg-toolbar li a#wt-add-row-above     { background-position: 0 -66px; }
+.wysiwyg-toolbar li a#wt-add-column-after  { background-position: 0 -88px; }
+.wysiwyg-toolbar li a#wt-add-column-before { background-position: 0 -110px; }
+.wysiwyg-toolbar li a#wt-add-cell-after    { background-position: 0 -132px; }
+.wysiwyg-toolbar li a#wt-add-cell-before   { background-position: 0 -154px; }
+.wysiwyg-toolbar li a#wt-remove-row        { background-position: 0 -176px; }
+.wysiwyg-toolbar li a#wt-remove-column     { background-position: 0 -198px; }
+.wysiwyg-toolbar li a#wt-remove-cell       { background-position: 0 -220px; }
 
 .wysiwyg-toolbar li a#wt-decorationmenu,
 .wysiwyg-toolbar li a#wt-tablemenu
