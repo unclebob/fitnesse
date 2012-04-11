@@ -19,25 +19,27 @@ import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 
 public class FileResponder implements Responder {
   private static FileNameMap fileNameMap = URLConnection.getFileNameMap();
-  public String resource;
-  public File requestedFile;
+  final public String resource;
+  final public File requestedFile;
   public Date lastModifiedDate;
   public String lastModifiedDateString;
 
   public static Responder makeResponder(Request request, String rootPath) {
     String resource = request.getResource();
 
-    if (fileNameHasSpaces(resource))
-      resource = restoreRealSpacesInFileName(resource);
+    try {
+      resource = URLDecoder.decode(resource, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return new ErrorResponder(e);
+    }
 
     File requestedFile = new File(rootPath + "/" + resource);
-    if (!requestedFile.exists())
-      return new NotFoundResponder();
-
+    
     if (requestedFile.isDirectory())
       return new DirectoryResponder(resource, requestedFile);
     else
@@ -50,6 +52,10 @@ public class FileResponder implements Responder {
   }
 
   public Response makeResponse(FitNesseContext context, Request request) throws FileNotFoundException {
+
+    if (!requestedFile.exists())
+      return new NotFoundResponder().makeResponse(context, request);
+
     InputStreamResponse response = new InputStreamResponse();
     determineLastModifiedInfo();
 
@@ -61,18 +67,6 @@ public class FileResponder implements Responder {
       response.setLastModifiedHeader(lastModifiedDateString);
     }
     return response;
-  }
-
-  public static boolean fileNameHasSpaces(String resource) {
-    return resource.indexOf("%20") != 0;
-  }
-
-  static String restoreRealSpacesInFileName(String resource) {
-    try {
-      return URLDecoder.decode(resource, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   String getResource() {

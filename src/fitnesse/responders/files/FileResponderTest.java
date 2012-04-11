@@ -66,12 +66,14 @@ public class FileResponderTest {
 
   @Test
   public void testSpacesInFileName() throws Exception {
-    String restoredPath = FileResponder.restoreRealSpacesInFileName("files/test%20File%20With%20Spaces%20In%20Name");
-    assertEquals("files/test File With Spaces In Name", restoredPath);
-
-    request.setResource("files/file4%20with%20spaces.txt");
+    request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
-    assertEquals("files/file4 with spaces.txt", responder.resource);
+    System.out.println(responder.requestedFile);
+    assertEquals("testdir/files/test File With Spaces In Name", responder.requestedFile.getPath());
+
+    request.setResource("files/file4%20with%20spaces%32.txt");
+    responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    assertEquals("files/file4 with spaces2.txt", responder.resource);
   }
 
   @Test
