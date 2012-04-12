@@ -58,8 +58,10 @@ public class PageFactory {
 //            FileResourceLoader.class.getName());
 
       properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
-            org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader.class.getName());
-
+          fitnesse.responders.templateUtilities.ClasspathResourceLoader.class.getName());
+      properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
+          "/fitnesse/resources/templates");
+      
       velocityEngine = new VelocityEngine();
       velocityEngine.init(properties);
       
@@ -72,5 +74,6 @@ public class PageFactory {
   public String getTemplatePath() {
     return String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName);
   }
+
 
 }
