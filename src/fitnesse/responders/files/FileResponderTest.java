@@ -4,10 +4,15 @@ package fitnesse.responders.files;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -17,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import util.RegexTestCase;
+import util.StreamReader;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
@@ -65,10 +71,19 @@ public class FileResponderTest {
   }
 
   @Test
+  public void testClasspathResourceContent() throws Exception {
+    request.setResource("files/fitnesse/testresource.txt");
+    responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    assertSubString("test resource content", sender.sentData());
+  }
+
+  @Test
   public void testSpacesInFileName() throws Exception {
     request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
-    System.out.println(responder.requestedFile);
     assertEquals("testdir/files/test File With Spaces In Name", responder.requestedFile.getPath());
 
     request.setResource("files/file4%20with%20spaces%32.txt");

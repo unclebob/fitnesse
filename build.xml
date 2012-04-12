@@ -108,7 +108,7 @@
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 		<copy todir="${classes}">
 			<fileset dir="src">
-				<include name="**/*.vm" />
+				<include name="fitnesse/resources/*" />
 			</fileset>
 		</copy>
 	</target>
