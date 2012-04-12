@@ -49,7 +49,7 @@ public class SearchResponderTest extends RegexTestCase {
 
   public void testClientSideSortScript() throws Exception {
     String content = getResponseContentUsingSearchString("something");
-    assertHasRegexp("<script src=\"/files/javascript/clientSideSort.js\"> </script>", content);
+    assertHasRegexp("<script src=\"/files/fitnesse/javascript/clientSideSort.js\"> </script>", content);
   }
 
   public void testPageSortLink() throws Exception {

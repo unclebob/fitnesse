@@ -42,7 +42,7 @@ public class CollapsibleTest {
         "\t\t<a href=\"javascript:collapseAll();\">Collapse All</a>" + HtmlElement.endl +
         "\t</div>"  + HtmlElement.endl +
         "\t<a href=\"javascript:toggleCollapsable('1');\">" + HtmlElement.endl +
-        "\t\t<img src=\"/files/images/collapsable" + image + ".gif\" class=\"left\" id=\"img1\"/>" + HtmlElement.endl +
+        "\t\t<img src=\"/files/fitnesse/images/collapsable" + image + ".gif\" class=\"left\" id=\"img1\"/>" + HtmlElement.endl +
         "\t</a>" + HtmlElement.endl +
         "&nbsp;" + HtmlElement.endl +
         "\t<span class=\"meta\">Some title</span>" + HtmlElement.endl +

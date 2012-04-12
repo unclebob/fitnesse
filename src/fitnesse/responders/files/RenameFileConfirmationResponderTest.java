@@ -53,7 +53,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
     Responder responder = new RenameFileConfirmationResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     String content = response.getContent();
-    assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/css/fitnesse.css\"", content);
+    assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/fitnesse/css/fitnesse_wiki.css\"", content);
   }
 
 }

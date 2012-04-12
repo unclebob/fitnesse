@@ -70,7 +70,7 @@ public class PageFactory {
   }
 
   public String getTemplatePath() {
-    return String.format("%s/%s/files/templates", context.rootPath, context.rootDirectoryName);
+    return String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName);
   }
 
 }

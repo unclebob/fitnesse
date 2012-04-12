@@ -103,12 +103,12 @@ label input {
 /** Test result **/
 tr.scenario > td:first-child {
 	padding-left: 16px;
-	background-image: url("/files/images/collapsableClosed.gif");
+	background-image: url("../images/collapsableClosed.gif");
 	background-position: left;
 	background-repeat: no-repeat;
 }
 tr.scenario.open > td:first-child {
-	background-image: url("/files/images/collapsableOpen.gif");
+	background-image: url("../images/collapsableOpen.gif");
 }
 tr.scenario-detail {
 	display: none;
@@ -143,12 +143,12 @@ tr.scenario-detail {
 
 /** Virtual and import pages */
 .virtual header {
-	background-image: url("/files/images/virtualPage.jpg");
+	background-image: url("../images/virtualPage.jpg");
 	background-position: center top;
 	background-repeat: no-repeat;
 }
 .imported header {
-	background-image: url("/files/images/importedPage.jpg");
+	background-image: url("../images/importedPage.jpg");
 	background-position: center top;
 	background-repeat: no-repeat;
 }

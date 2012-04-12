@@ -89,7 +89,7 @@ public class JavaFormatter extends BaseFormatter {
     }
 
     private void initFolder(String fitnesseRoot) throws IOException {
-      File filesFolder = new File(new File(new File(fitnesseRoot), "FitNesseRoot"), "files");
+      File filesFolder = new File(new File(new File(new File(fitnesseRoot), "FitNesseRoot"), "files"), "fitnesse");
       File cssDir = new File(filesFolder, "css");
       addFile(new File(cssDir, "fitnesse_wiki.css"), "fitnesse.css");
       File javascriptDir = new File(filesFolder, "javascript");

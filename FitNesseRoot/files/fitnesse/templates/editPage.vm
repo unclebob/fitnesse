@@ -25,7 +25,7 @@
  <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
  
  <fieldset class="edit_options">
-  <script src="/files/javascript/textareaWrapSupport.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/textareaWrapSupport.js" type="text/javascript"></script>
  </fieldset>
 
  <textarea class="pageContent" id="pageContentId" name="pageContent">$pageContent</textarea>
@@ -34,10 +34,10 @@
 
   <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
   <a href="$resource">Cancel</a>
-  <script src="/files/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
-  <script src="/files/javascript/spreadsheetSupport.js" type="text/javascript"></script>
-  <script src="/files/javascript/WikiFormatter.js" type="text/javascript"></script>
-  <script src="/files/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/spreadsheetSupport.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
  </fieldset>
 
  <p class="hints">
