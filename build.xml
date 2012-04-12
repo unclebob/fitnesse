@@ -35,6 +35,7 @@
 			<include name="**/*.class" />
 			<exclude name="**/*Test.class" />
 			<exclude name="**/*TestSuite.class" />
+			<include name="fitnesse/resources/**" />
 			<include name="Resources/**" />
 			<include name="tasks.properties" />
 
@@ -55,16 +56,8 @@
 	<target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
 		<java classpath="${classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
 			<arg value="-baseDirectory:${classes}/Resources" />
-                        <!-- for this release, we want to override fitnesse.css, since the style all changed. -->
-			<!-- <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css" /> -->
-			<!-- <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css" /> -->
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt" />
 			<arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml" />
-			<arg value="FitNesseRoot/files/images" />
-			<arg value="FitNesseRoot/files/css" />
-			<arg value="FitNesseRoot/files/javascript" />
-			<arg value="FitNesseRoot/files/html" />
-			<arg value="FitNesseRoot/files/templates" />
 			<arg value="FitNesseRoot/FitNesse" />
 			<arg value="FitNesseRoot/FrontPage" />
 			<arg value="FitNesseRoot/PageFooter" />
@@ -79,19 +72,15 @@
 	</target>
 
 	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<delete dir="${classes}/Resources" />
-		<mkdir dir="${classes}/Resources" />
-		<copy todir="${classes}/Resources/FitNesseRoot/files">
-			<fileset dir="FitNesseRoot/files">
-				<include name="images/**" />
-				<include name="css/*.css" />
-				<include name="javascript/**/*.js" />
-				<include name="html/**" />
-				<include name="templates/**" />
-				<exclude name="juUnitTestLink.js" />
-				<exclude name="**/unused/**" />
+		<delete dir="${classes}/fitnesse/resources" />
+		<mkdir dir="${classes}/fitnesse/resources" />
+		<copy todir="${classes}/fitnesse/resources">
+			<fileset dir="FitNesseRoot/files/fitnesse">
+				<include name="**" />
 			</fileset>
 		</copy>
+		<delete dir="${classes}/Resources" />
+		<mkdir dir="${classes}/Resources" />
 		<copy todir="${classes}/Resources/FitNesseRoot">
 			<fileset dir="FitNesseRoot">
 				<include name="FitNesse/**" />
