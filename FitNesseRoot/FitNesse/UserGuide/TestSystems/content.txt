@@ -1,5 +1,5 @@
 !1 FitNesse Test Systems.
-!img http://files/images/fitnesse_architecture.jpg
+!img http://files/fitnesse/images/fitnesse_architecture.jpg
 
 This diagram shows how FitNesse works with the two Test Systems, [[Slim][SliM]], and [[Fit][FitFramework]].
 

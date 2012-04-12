@@ -19,5 +19,5 @@ The !-TimedActionFixture-! does not report any delays that are less than one sec
 
 This fixture does not appear to give you access to the time or the ''split''.  It just displays them for your edification.
 
-!img http://files/images/runArrow.gif For more on ActionFixture see: DesigningWithActionFixture.
+!img http://files/fitnesse/images/runArrow.gif For more on ActionFixture see: DesigningWithActionFixture.
 
