@@ -79,7 +79,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         HtmlTag toggle = new HtmlTag("a");
         toggle.addAttribute("href", "javascript:toggleCollapsable('" + Long.toString(id) + "');");
         HtmlTag image = new HtmlTag("img");
-        image.addAttribute("src", "/files/images/collapsable" + state + ".gif");
+        image.addAttribute("src", "/files/fitnesse/images/collapsable" + state + ".gif");
         image.addAttribute("class", "left");
         image.addAttribute("id", "img" + Long.toString(id));
         toggle.add(image);

@@ -1,7 +1,7 @@
 var collapsableOpenCss = "collapsable";
 var collapsableClosedCss = "hidden";
-var collapsableOpenImg = "/files/images/collapsableOpen.gif";
-var collapsableClosedImg = "/files/images/collapsableClosed.gif";
+var collapsableOpenImg = "/files/fitnesse/images/collapsableOpen.gif";
+var collapsableClosedImg = "/files/fitnesse/images/collapsableClosed.gif";
 
 function toggleCollapsable(id)
 {
