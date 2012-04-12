@@ -72,7 +72,6 @@
 	</target>
 
 	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<delete dir="${classes}/fitnesse/resources" />
 		<mkdir dir="${classes}/fitnesse/resources" />
 		<copy todir="${classes}/fitnesse/resources">
 			<fileset dir="FitNesseRoot/files/fitnesse">
@@ -118,7 +117,6 @@
 
 	<target name="clean" description="delete everything in the classes directory">
 		<delete dir="${classes}" />
-		<mkdir dir="${classes}" />
 		<delete dir="test-results" />
 	</target>
 
