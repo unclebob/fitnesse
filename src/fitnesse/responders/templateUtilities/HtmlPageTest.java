@@ -18,7 +18,7 @@ public class HtmlPageTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext(null);
-    page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "theme");
+    page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "fitnesse_theme");
     html = page.html();
   }
 

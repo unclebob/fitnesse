@@ -33,7 +33,7 @@ public class FitNesseContext {
   public String testResultsDirectoryName = "testResults";
   public boolean shouldCollectHistory = false;
   public boolean doNotChunk;
-  public String pageTheme = "straight";
+  public String pageTheme = "fitnesse_straight";
 
   public FitNesseContext() {
     this(null);
