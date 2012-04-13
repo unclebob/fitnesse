@@ -6,7 +6,7 @@
 #  -print (html|detail)
 # See also options documented in the TE readme.
 
-classpath=classes:dist/fitnesse/fitlibrary.jar:lib/easymock.jar:lib/junit.jar
+classpath=classes:dist/fitnesse/fitlibrary.jar:lib/junit.jar
 # for jar in lib/*.jar
 # do
 # 	test -s $jar &&	classpath=$classpath:$jar
