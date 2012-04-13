@@ -101,12 +101,14 @@ function doSilentRequest(url)
   return false;
 }
 
+
+$('article').on("click", "tr.scenario td", function() {
+	console.log(this);
+	$(this).parent().toggleClass("open").next().toggle();
+});
+
+// On page ready events:
 $(function() {
-	$('article').on("click", "tr.scenario td", function() {
-		console.log(this);
-		$(this).parent().toggleClass("open").next().toggle();
-	});
-	
 	function validateField(re, msg) {
 		var pageNameError = $(this).data("error");
 		if (!re.test($(this).val())) {
