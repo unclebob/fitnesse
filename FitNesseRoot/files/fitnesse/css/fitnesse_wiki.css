@@ -62,11 +62,11 @@ article .centered {
 }
 
 .collapsible p.title {
-  background: url(../images/collapsableOpen.gif) top left no-repeat;
+  background: url(../images/collapsibleOpen.png) no-repeat scroll 0 2px transparent;
 }
 
 .collapsible.closed p.title {
-  background: url(../images/collapsableClosed.gif) top left no-repeat;
+  background: url(../images/collapsibleClosed.png) no-repeat scroll 0 2px transparent;
 }
 
 .collapsible > ul {

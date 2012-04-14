@@ -103,12 +103,12 @@ label input {
 /** Test result **/
 tr.scenario > td:first-child {
 	padding-left: 16px;
-	background-image: url("../images/collapsableClosed.gif");
-	background-position: left;
+	background-image: url("../images/collapsibleClosed.png");
+	background-position: 2px;
 	background-repeat: no-repeat;
 }
 tr.scenario.open > td:first-child {
-	background-image: url("../images/collapsableOpen.gif");
+	background-image: url("../images/collapsibleOpen.png");
 }
 tr.scenario-detail {
 	display: none;
