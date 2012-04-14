@@ -31,9 +31,6 @@ article .centered {
 }
 
 /** Collapsable section */
-.included,
-.setup,
-.teardown,
 .collapsible {
   background: #F9F9F9;
   margin: 5px 0px 5px 0px;
@@ -41,23 +38,8 @@ article .centered {
   border: 1px dotted #909090;
 }
 
-.setup,
-.teardown {
-  background: #FFFFF0;
-  border-color: #FF8000;
-}
-.included {
-  background: #F9F9FF;
-  border-color: #2E2EB2;
-}
-
 .collapsible {
   border-color: #BF8660;
-}
-
-div.collapsable-contents {
-  margin: 0px 0px 0px 15px;
-  display: block;
 }
 
 .collapsible > div {
@@ -95,9 +77,6 @@ div.collapsable-contents {
 .collapsible > ul li {
 	display: inline-block;
 	padding: 0 .5em;
-}
-
-.collapsible > ul li {
 	border-left: 1px solid #BF8660;
 }
 
