@@ -100,10 +100,10 @@ public class TableListComparerTest {
     assertFalse(comparer.theTablesMatch(comparer.compareTables(table1, table2)));
   }
 
-    @Test
+  @Test
   public void shouldIgnoreCollapsedTables() throws Exception {
-    String table1text = "<table><tr><td>has collapsed table</td><td><div class=\"collapse_rim\"> <tr><td>bleh1</td></tr></div></td></tr></table>";
-    String table2text = "<table><tr><td>has collapsed table</td><td><div class=\"collapse_rim\"> <tr><td>HAHA</td></tr></div></td></tr></table>";
+    String table1text = "<table><tr><td>has collapsed table</td><td><div class=\"collapsible hidden\"> <tr><td>bleh1</td></tr></div></td></tr></table>";
+    String table2text = "<table><tr><td>has collapsed table</td><td><div class=\"collapsible hidden\"> <tr><td>HAHA</td></tr></div></td></tr></table>";
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
     double score = comparer.compareTables(table1, table2);

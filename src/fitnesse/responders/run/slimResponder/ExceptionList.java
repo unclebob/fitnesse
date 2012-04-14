@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.parser.Collapsible;
 
 public class ExceptionList {
   private boolean stopTestCalled = false;
@@ -71,16 +72,7 @@ public class ExceptionList {
   private void writeExceptions() {
     for (String key : exceptions.keySet()) {
       buffer.append(String.format("<a name=\"%s\"/><b></b>", key));
-      String collapsibleSectionFormat = "<div class=\"collapse_rim\">"
-          + "<div style=\"float: right;\" class=\"meta\"><a href=\"javascript:expandAll();\">Expand All</a> | <a href=\"javascript:collapseAll();\">Collapse All</a></div>"
-          + "<a href=\"javascript:toggleCollapsable('%d');\">"
-          + "<img src=\"/files/images/collapsableClosed.gif\" class=\"left\" id=\"img%d\"/>"
-          + "</a>" + "&nbsp;<span class=\"meta\">%s </span>\n" + "\n"
-          + "\t<div class=\"hidden\" id=\"%d\"><pre>%s</pre></div>\n"
-          + "</div>";
-      long id = new Random().nextLong();
-      buffer.append(String.format(collapsibleSectionFormat, id, id, key, id,
-          exceptions.get(key)));
+      buffer.append(Collapsible.generateHtml(Collapsible.CLOSED, key, exceptions.get(key)));
     }
     exceptions.clear();
   }

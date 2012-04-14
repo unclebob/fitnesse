@@ -68,7 +68,7 @@ public class Include extends SymbolType implements Rule, Translation {
     private String stateForOption(String option, Symbol symbol) {
         return ((option.equals("-setup") || option.equals("-teardown")) && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
                 || option.equals("-c")
-                ? Collapsible.Closed
-                : Collapsible.Open;
+                ? Collapsible.CLOSED
+                : "";
     }
 }

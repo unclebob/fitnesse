@@ -1,56 +1,3 @@
-var collapsableOpenCss = "collapsable";
-var collapsableClosedCss = "hidden";
-var collapsableOpenImg = "/files/fitnesse/images/collapsableOpen.gif";
-var collapsableClosedImg = "/files/fitnesse/images/collapsableClosed.gif";
-
-function toggleCollapsable(id)
-{
-  var div = document.getElementById(id);
-  var img = document.getElementById("img" + id);
-  if (div.className.indexOf(collapsableClosedCss) != -1)
-  {
-    div.className = collapsableOpenCss;
-    img.src = collapsableOpenImg;
-  }
-  else
-  {
-    div.className = collapsableClosedCss;
-    img.src = collapsableClosedImg;
-  }
-}
-
-function popup(window_id) {
-  var window = document.getElementById(window_id);
-  window.style.visibility = "visible";
-}
-
-function popdown(window_id) {
-  var window = document.getElementById(window_id);
-  window.style.visibility = "hidden";
-}
-
-function expandOrCollapseAll(cssClass)
-{
-  divs = document.getElementsByTagName("div");
-  for (i = 0; i < divs.length; i++)
-  {
-    div = divs[i];
-    if (div.className == cssClass)
-    {
-      toggleCollapsable(div.id);
-    }
-  }
-}
-
-function collapseAll()
-{
-  expandOrCollapseAll(collapsableOpenCss);
-}
-
-function expandAll()
-{
-  expandOrCollapseAll(collapsableClosedCss);
-}
 
 function symbolicLinkRename(linkName, resource)
 {
@@ -80,8 +27,8 @@ function enableSaveOnControlS(control, formToSubmit)
   {
     document.onkeypress = keypress;
   }
-
 }
+
 function keypress(e)
 {
   if (!e) e = event;
@@ -101,14 +48,41 @@ function doSilentRequest(url)
   return false;
 }
 
-
-$('article').on("click", "tr.scenario td", function() {
-	console.log(this);
+/**
+ *  Scenario's (after test execution)
+ */
+$(document).on("click", "article tr.scenario td", function() {
 	$(this).parent().toggleClass("open").next().toggle();
 });
 
-// On page ready events:
-$(function() {
+/**
+ * Collapsible section
+ */
+$(document).on("click", "article .collapsible > p.title", function() {
+	$(this).parent().toggleClass('closed');
+});
+
+$(document).on("click", "article .collapsible > p.title a", function(event) {
+	// Do not open when clicking on a link in the title.
+	event.stopPropagation();
+	return true;
+});
+
+$(document).on('click', 'article .collapsible .expandall', function (event) {
+	$(this).closest('.collapsible').find('.collapsible').andSelf().removeClass('closed');
+	event.stopPropagation();
+});
+
+$(document).on('click', 'article .collapsible .collapseall', function (event) {
+	$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
+	event.stopPropagation();
+});
+
+/**
+ * Field validations
+ */
+$(document).ready(function() {
+	
 	function validateField(re, msg) {
 		var pageNameError = $(this).data("error");
 		if (!re.test($(this).val())) {

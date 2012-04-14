@@ -21,7 +21,6 @@ article .centered {
   font-weight: bold;
 }
 
-
 .meta {
   color: #BF8660;
   font-style: italic;
@@ -32,34 +31,28 @@ article .centered {
 }
 
 /** Collapsable section */
-.included, .setup, .teardown, .collapse_rim {
+.included,
+.setup,
+.teardown,
+.collapsible {
   background: #F9F9F9;
   margin: 5px 0px 5px 0px;
   padding: 2px 2px 2px 2px;
   border: 1px dotted #909090;
 }
 
-.setup, .teardown {
+.setup,
+.teardown {
   background: #FFFFF0;
   border-color: #FF8000;
 }
-
 .included {
   background: #F9F9FF;
   border-color: #2E2EB2;
 }
 
-.collapse_rim {
+.collapsible {
   border-color: #BF8660;
-}
-
-.collapse_rim .hidden {
-  display: none;
-}
-
-div.collapsable {
-  margin: 0px 0px 0px 15px;
-  display: block;
 }
 
 div.collapsable-contents {
@@ -67,11 +60,45 @@ div.collapsable-contents {
   display: block;
 }
 
-div.invisible {
-  line-height: 0px;
-  margin: 0px 0px 0px 0px;
+.collapsible > div {
+	margin-left: 16px;
+}
+
+.collapsible.closed > div {
+	display: none;
+}
+
+.collapsible.invisible {
   display: none;
-  visibility: hidden;
+}
+
+.collapsible p.title {
+  color: #BF8660;
+  font-style: italic;
+  margin: 0;
+  padding: 0 0 0 16px;
+}
+
+.collapsible p.title {
+  background: url(../images/collapsableOpen.gif) top left no-repeat;
+}
+
+.collapsible.closed p.title {
+  background: url(../images/collapsableClosed.gif) top left no-repeat;
+}
+
+.collapsible > ul {
+	float: right;
+	margin: 0;
+}
+
+.collapsible > ul li {
+	display: inline-block;
+	padding: 0 .5em;
+}
+
+.collapsible > ul li {
+	border-left: 1px solid #BF8660;
 }
 
 /** !style_* */

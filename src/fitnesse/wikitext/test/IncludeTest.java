@@ -32,7 +32,7 @@ public class IncludeTest {
 
     String result = ParserTestHelper.translateTo(currentPage);
 
-    assertContains(result, "class=\"collapsable\"");
+    assertContains(result, "class=\"collapsible\"");
     assertContains(result, "Included page: <a href=\"PageTwo\">PageTwo</a> <a href=\"PageTwo?edit&amp;redirectToReferer=true&amp;redirectAction=\">(edit)</a>");
     assertContains(result, "page <i>two</i>");
   }
@@ -70,7 +70,7 @@ public class IncludeTest {
   public void setupsAreHidden() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesSetup());
 
-    assertContains(result, "class=\"hidden\"");
+    assertContains(result, "class=\"collapsible closed\"");
     assertContains(result, "<a href=\"PageTwo.SetUp\">");
   }
 
@@ -78,7 +78,7 @@ public class IncludeTest {
   public void teardownsAreHidden() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesTeardown());
 
-    assertContains(result, "class=\"hidden\"");
+    assertContains(result, "class=\"collapsible closed\"");
     assertContains(result, "<a href=\"PageTwo.TearDown\">");
   }
 
@@ -100,7 +100,7 @@ public class IncludeTest {
   public void translatesSetupWithoutCollapse() throws Exception {
     String result = ParserTestHelper.translateTo(makePageThatIncludesSetup(), new TestVariableSource("COLLAPSE_SETUP", "false"));
 
-    assertContains(result, "class=\"collapsable\"");
+    assertContains(result, "class=\"collapsible\"");
     assertContains(result, "<a href=\"PageTwo.SetUp\">");
   }
 
@@ -112,7 +112,7 @@ public class IncludeTest {
 
     String result = ParserTestHelper.translateTo(includingPage);
 
-    assertContains(result, "class=\"hidden\"");
+    assertContains(result, "class=\"collapsible closed\"");
   }
 
   @Test

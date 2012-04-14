@@ -229,7 +229,7 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     private boolean isScenarioHtml(String contents) {
-      return contents.startsWith("<div class=\"collapse_rim\">");
+      return contents.startsWith("<div class=\"collapsible\">");
     }
 
     private void addInstructionResults() {
