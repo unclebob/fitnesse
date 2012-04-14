@@ -9,39 +9,6 @@ function symbolicLinkRename(linkName, resource)
     alert('Enter a new name first.');
 }
 
-// Allow ctrl-s to save the changes.
-// Currently this alone appears to work on OS X. For windows (and linux??) use alt-s, which doesn't work on OS X!
-formToSubmit = null;
-function enableSaveOnControlS(control, formToSubmit)
-{
-  formToSubmit = formToSubmit;
-  if (document.addEventListener)
-  {
-    document.addEventListener("keypress", keypress, false);
-  }
-  else if (document.attachEvent)
-  {
-    document.attachEvent("onkeypress", keypress);
-  }
-  else
-  {
-    document.onkeypress = keypress;
-  }
-}
-
-function keypress(e)
-{
-  if (!e) e = event;
-  if (e.keyIdentifier == "U+0053" || e.keyIdentifier == "U+0060")
-  {
-    suppressdefault(e, formToSubmit.keypress.checked);
-    if (formToSubmit != null)
-    {
-      formToSubmit.submit
-    }
-  }
-}
-
 function doSilentRequest(url)
 {
   $.get(url);
