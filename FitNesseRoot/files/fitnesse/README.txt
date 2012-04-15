@@ -1,12 +1,5 @@
 This section will contain the resources.
 
-If you checked out the code, the resources are located in
-FitNesseRoot/files/fitnesse. This works nicely during development. Everything
-in this directory will be packaged in fitnesse.resources, so the resources
-can be served from the fitnesse.jar directly. The files are still accessible
-(through a resource loader), but will not be visible in the User's
-FitNesseRoot (previously all resources were extracted in FitNesseRoot/files).
-
 Users can override files in files/fitnesse or add their own (e.g. a custom
 theme). Both the render engine (Velocity) and the FileResponder check
 files/fitnesse and the fitnesse.resources package when looking for a particular
