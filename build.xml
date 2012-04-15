@@ -72,12 +72,6 @@
 	</target>
 
 	<target name="copyResources" description="copy images, css, and other resources into the classes directory">
-		<mkdir dir="${classes}/fitnesse/resources" />
-		<copy todir="${classes}/fitnesse/resources">
-			<fileset dir="FitNesseRoot/files/fitnesse">
-				<include name="**" />
-			</fileset>
-		</copy>
 		<delete dir="${classes}/Resources" />
 		<mkdir dir="${classes}/Resources" />
 		<copy todir="${classes}/Resources/FitNesseRoot">

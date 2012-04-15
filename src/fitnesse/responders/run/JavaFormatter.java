@@ -69,14 +69,14 @@ public class JavaFormatter extends BaseFormatter {
       currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
     }
 
-    public void addFile(File f, String relativeFilePath) throws IOException {
+    public void addFile(String r, String relativeFilePath) throws IOException {
       File dst = new File(outputPath, relativeFilePath);
       dst.getParentFile().mkdirs();
-      copy(f, dst);
+      copy(r, dst);
     }
 
-    private void copy(File src, File dst) throws IOException {
-      InputStream in = new FileInputStream(src);
+    private void copy(String src, File dst) throws IOException {
+      InputStream in = getClass().getResourceAsStream(src);
       OutputStream out = new FileOutputStream(dst);
       // Transfer bytes from in to out
       byte[] buf = new byte[1024];
@@ -89,14 +89,14 @@ public class JavaFormatter extends BaseFormatter {
     }
 
     private void initFolder(String fitnesseRoot) throws IOException {
-      File filesFolder = new File(new File(new File(new File(fitnesseRoot), "FitNesseRoot"), "files"), "fitnesse");
-      File cssDir = new File(filesFolder, "css");
-      addFile(new File(cssDir, "fitnesse_wiki.css"), "fitnesse.css");
-      File javascriptDir = new File(filesFolder, "javascript");
-      addFile(new File(javascriptDir, "fitnesse.js"), "fitnesse.js");
-      File imagesDir = new File(filesFolder, "images");
-      addFile(new File(imagesDir, "collapsableOpen.gif"), "images/collapsableOpen.gif");
-      addFile(new File(imagesDir, "collapsableClosed.gif"), "images/collapsableClosed.gif");
+      String base = "/fitnesse/resources/";
+      String cssDir = base + "css/";
+      addFile(cssDir + "fitnesse_wiki.css", "fitnesse.css");
+      String javascriptDir = base + "javascript/";
+      addFile(javascriptDir + "fitnesse.js", "fitnesse.js");
+      String imagesDir = base + "images/";
+      addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
+      addFile(imagesDir + "collapsibleClosed.png", "images/collapsibleClosed.png");
     }
   }
 
