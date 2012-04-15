@@ -80,6 +80,7 @@
 				<include name="FrontPage/**" />
 				<include name="PageHeader/**" />
 				<include name="PageFooter/**" />
+				<include name="fitnesse/**" />
 				<exclude name="**/*.zip" />
 			</fileset>
 		</copy>
@@ -90,7 +91,7 @@
 		<copy file="extra/ant/tasks.properties" todir="${classes}" />
 		<copy todir="${classes}">
 			<fileset dir="src">
-				<include name="fitnesse/resources/*" />
+				<include name="fitnesse/resources/**" />
 			</fileset>
 		</copy>
 	</target>
