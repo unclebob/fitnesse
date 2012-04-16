@@ -38,7 +38,7 @@ header ul {
 	padding: 0;
 }
 header li {
-	display: inline-block;
+	display: inline;
 }
 header li+li:before {
 	content: "> ";

@@ -75,7 +75,7 @@ article .centered {
 }
 
 .collapsible > ul li {
-	display: inline-block;
+	display: inline;
 	padding: 0 .5em;
 	border-left: 1px solid #BF8660;
 }
