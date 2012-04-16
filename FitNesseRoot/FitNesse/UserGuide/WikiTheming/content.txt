@@ -1,0 +1,35 @@
+(new since April 2012)
+
+As of April 2012, !-FitNesse-! has a new layout. There are a few reasons for making this (incompatible) change:
+
+ * !-FitNesse-! had quite a techie edge to it. The menu items were not well structured and some pages looked messy (like Search)
+ * Web standards have evolved, so should !-FitNesse-!
+ * Lots of markup was generated directly from java code, now [[Velocity][http://velocity.apache.org]] is performing the rendering
+ * !-FitNesse-! was not easy to customize
+ * The web interface looked old fashioned. Having a fresh look and feel appeals to people (yes it does)
+ * !-FitNesse-! style related files (css, javascript, templates) were put in !-FitNesseRoot-!. This is not desired since it mixes application files with user data (will pages)
+
+So here you are, in your new !-FitNesse-!, with a look and feel you're not accustomed to. How to deal with that?
+
+!2 Theming to the rescue
+
+One of the benefits you'll have from the new layout is that the page L&F is easier to change. FitNesse comes with a few styles built-in:
+
+ * ''fitnesse_straight'' -- the default style
+ * ''fitnesse_mint'' -- a classy style
+ * ''fitnesse_topnav'' -- a minimalistic style
+
+The default style can be configured through ''plugins.properties'', !-FitNesse-!'s settings file (this is where you also configure custom symbols). Add the line
+{{{
+Theme=fitnesse_mint
+}}}
+(re)start !-FitNesse-! and the style completely changed.
+
+!2 Rolling your own
+
+FitNesse still has the ability to support custom user styling. In [[!-FitNesseRoot/files/fitnesse-!][/files/fitnesse]] you can place your own files. Stylesheets go in a ''css'' directory, Javascript under ''javascript'' and images are filed under ''images'' (note: those directories are not present by default, you'll have to create them by hand).
+
+Now say you want to create your own style, named ''my-own''. You'll need to create a stylesheet ''!-FitNesseRoot/files/fitnesse/css/my-own.css-!'' and an optional Javascript file ''!-FitNesseRoot/files/fitnesse/javascript/my-own.js-!''.
+
+The stylesheet fill with your own styling (maybe import one of the default styles and apply your own modifications on top of it).
+

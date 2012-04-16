@@ -54,6 +54,7 @@ If you'll be spending a lot of time writing tests, you'll probably want to study
 |[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure.''|
 |[[Special Pages][>SpecialPages]]|''Some pages in FitNesse that serve special purposes.''|
 |[[Quick Reference Guide][>QuickReferenceGuide]]|''A cheat sheet for markups and usage.''|
+|[[Changing look and feel][>WikiTheming]]|''Style FitNesse as you like.''|
 
 !3 Creating the Fixtures
 
