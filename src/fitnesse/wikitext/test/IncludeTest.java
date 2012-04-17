@@ -131,7 +131,15 @@ public class IncludeTest {
     WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage");
     ParserTestHelper.assertTranslatesTo(currentPage,
       "<span class=\"meta\">Error! Cannot include parent page (&lt;ParentPage).\n</span>");
+  }
 
+  @Test
+  public void doesNotIncludeInvalidPageNames() throws Exception {
+    TestRoot root = new TestRoot();
+    WikiPage parent = root.makePage("ParentPage", "stuff");
+    WikiPage currentPage = root.makePage(parent, "PageOne", "!include not.a.wiki.page");
+    ParserTestHelper.assertTranslatesTo(currentPage,
+      "<span class=\"meta\">Page include failed because the page not.a.wiki.page does not have a valid WikiPage name.\n</span>");
   }
 
   private void assertContains(String result, String substring) {
