@@ -33,7 +33,7 @@ public class IncludeTest {
     String result = ParserTestHelper.translateTo(currentPage);
 
     assertContains(result, "class=\"collapsible\"");
-    assertContains(result, "Included page: <a href=\"PageTwo\">PageTwo</a> <a href=\"PageTwo?edit&amp;redirectToReferer=true&amp;redirectAction=\">(edit)</a>");
+    assertContains(result, "Included page: <a href=\"PageTwo\">PageTwo</a> <a href=\"PageTwo?edit&amp;redirectToReferer=true&amp;redirectAction=\" class=\"edit\">(edit)</a>");
     assertContains(result, "page <i>two</i>");
   }
 

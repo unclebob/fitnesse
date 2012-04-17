@@ -10,14 +10,18 @@ import util.StringUtil;
 import java.util.Arrays;
 
 public class WikiWordBuilder {
-    private SourcePage currentPage;
-    private String pagePath;
-    private String linkBody;
+    private final SourcePage currentPage;
+    private final String pagePath;
+    private final String linkBody;
+    private final String wikiWordPath;
+    private final String qualifiedName;
 
     public WikiWordBuilder(SourcePage currentPage, String pagePath, String linkBody) {
         this.currentPage = currentPage;
         this.pagePath = pagePath;
         this.linkBody = linkBody;
+        this.wikiWordPath = makePath(currentPage, pagePath);
+        this.qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);
     }
 
     public static String expandPrefix(WikiPage wikiPage, String theWord) {
@@ -42,13 +46,20 @@ public class WikiWordBuilder {
     }
 
     public String buildLink(String pageSuffix, String originalName) {
-        String wikiWordPath = makePath(currentPage, pagePath);
-        String qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);
-        if (currentPage.targetExists(wikiWordPath)) {
-            return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody);
-        }
-        else
-            return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
+      if (currentPage.targetExists(wikiWordPath)) {
+        return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody, null);
+      } else {
+        return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
+      }
+    }
+
+    public String makeEditabeLink(String originalName) {
+      if (currentPage.targetExists(wikiWordPath)) {
+        return makeLinkToExistingWikiPage(qualifiedName, linkBody, null) + " " +
+            makeLinkToExistingWikiPage(qualifiedName + "?edit&amp;redirectToReferer=true&amp;redirectAction=", "(edit)", "edit");
+      } else {
+        return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
+      }
     }
 
     private String makePath(SourcePage page, String content) {
@@ -60,9 +71,13 @@ public class WikiWordBuilder {
         }
         return content;
     }
-    private String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
+    
+    private String makeLinkToExistingWikiPage(String qualifiedName, String linkBody, String linkClass) {
         HtmlTag link = new HtmlTag("a", linkBody);
         link.addAttribute("href", qualifiedName);
+        if (linkClass != null) {
+          link.addAttribute("class", linkClass);
+        }
         return link.htmlInline();
     }
 
@@ -80,4 +95,5 @@ public class WikiWordBuilder {
     private String makeChildPath(SourcePage page, String content) {
         return String.format("%s.%s", page.getName(), content.substring(1));
     }
+
 }

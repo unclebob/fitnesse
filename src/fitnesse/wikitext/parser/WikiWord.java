@@ -7,6 +7,7 @@ public class WikiWord extends SymbolType implements Translation {
     public static WikiWord symbolType = new WikiWord(null);
 
     public static final String REGRACE_LINK = "REGRACE_LINK";
+    public static final String WITH_EDIT = "WITH_EDIT";
 
     private SourcePage sourcePage;
 
@@ -17,14 +18,30 @@ public class WikiWord extends SymbolType implements Translation {
     }
 
     public String toTarget(Translator translator, Symbol symbol) {
+        if ("true".equals(symbol.getProperty(WITH_EDIT))) {
+          return buildEditableLink(
+                    symbol.getContent(),
+                    formatWikiWord(symbol));
+        }
         return buildLink(
-                sourcePage,
                 symbol.getContent(),
-                new HtmlText(formatWikiWord(symbol.getContent(), symbol)).html());
+                formatWikiWord(symbol));
     }
 
-    private String buildLink(SourcePage currentPage, String pagePath, String linkBody) {
-         return new WikiWordBuilder(currentPage, pagePath, linkBody).buildLink( "", pagePath);
+    public SourcePage getSourcePage() {
+      return sourcePage;
+    }
+    
+    private String buildLink(String pagePath, String linkBody) {
+         return new WikiWordBuilder(sourcePage, pagePath, linkBody).buildLink( "", pagePath);
+    }
+
+    private String buildEditableLink(String pagePath, String linkBody) {
+        return new WikiWordBuilder(sourcePage, pagePath, linkBody).makeEditabeLink(pagePath);
+    }
+    
+    private String formatWikiWord(Symbol symbol) {
+      return new HtmlText(formatWikiWord(symbol.getContent(), symbol)).html();
     }
 
     private String formatWikiWord(String originalName, Symbol symbol) {
