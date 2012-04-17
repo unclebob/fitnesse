@@ -33,6 +33,7 @@ public class FitNesseContext {
   public String testResultsDirectoryName = "testResults";
   public boolean shouldCollectHistory = false;
   public boolean doNotChunk;
+  public String pageTheme = "fitnesse_straight";
 
   public FitNesseContext() {
     this(null);
@@ -51,6 +52,7 @@ public class FitNesseContext {
     buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
     buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
     buffer.append("\t").append("page factory:      ").append(pageFactory).append(endl);
+    buffer.append("\t").append("page theme:        ").append(pageTheme).append(endl);
 
     return buffer.toString();
   }

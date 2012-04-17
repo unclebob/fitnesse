@@ -19,5 +19,5 @@
 
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<div.*class="hidden".*>set up</div>|true|
-|contents|<div.*class="hidden".*>tear down</div>|true|
+|contents|<div class="collapsible closed">.*<div>set up</div>|true|
+|contents|<div class="collapsible closed">.*<div>tear down</div>|true|

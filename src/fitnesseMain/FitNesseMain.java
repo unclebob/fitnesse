@@ -101,6 +101,10 @@ public class FitNesseMain {
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);
+    String newPageTheme = componentFactory.getProperty(ComponentFactory.THEME);
+    if (newPageTheme != null) {
+      context.pageTheme = newPageTheme;
+    }
     context.pageFactory = new PageFactory(context);
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,

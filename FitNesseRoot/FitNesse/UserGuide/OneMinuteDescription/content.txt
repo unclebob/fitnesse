@@ -19,7 +19,7 @@ From another perspective, !-FitNesse-! is a lightweight, open-source framework t
   * Just run it and then direct your browser to the machine where it is running (see [[Downloading and Installing][DownloadingAndInstallingFitNesse]]).
 !3     --> Want a quick introduction? Check out the [[Two Minute Example][TwoMinuteExample]].
 ----
-!img http://files/images/fitnesse_architecture.jpg
+!img http://files/fitnesse/images/fitnesse_architecture.jpg
 
 
   

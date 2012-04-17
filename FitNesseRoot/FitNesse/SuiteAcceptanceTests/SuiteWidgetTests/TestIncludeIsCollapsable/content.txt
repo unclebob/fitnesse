@@ -29,4 +29,4 @@ The following is a test that demonstrates how this works.
 #
 |Response Examiner.|
 |type|pattern|matches?|value|
-|contents|class="collapsable"|true||
+|contents|class="collapsible"|true||

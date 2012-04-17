@@ -21,7 +21,7 @@ public class HtmlPage {
   
   private String templateFileName;
   
-  public HtmlPage(VelocityEngine velocityEngine, String templateFileName) {
+  public HtmlPage(VelocityEngine velocityEngine, String templateFileName, String theme) {
     super();
     
     this.velocityEngine = velocityEngine;
@@ -31,6 +31,7 @@ public class HtmlPage {
 
     setHeaderTemplate(HEADER_TEMPLATE);
     setTitle("FitNesse");
+    velocityContext.put("theme", theme);
   }
 
   public void setHeaderTemplate(String headerTemplate) {

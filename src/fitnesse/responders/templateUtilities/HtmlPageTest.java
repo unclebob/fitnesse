@@ -18,7 +18,7 @@ public class HtmlPageTest extends RegexTestCase {
 
   public void setUp() throws Exception {
     context = FitNesseUtil.makeTestContext(null);
-    page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm");
+    page = new HtmlPage(context.pageFactory.getVelocityEngine(), "skeleton.vm", "fitnesse_theme");
     html = page.html();
   }
 
@@ -38,8 +38,9 @@ public class HtmlPageTest extends RegexTestCase {
     assertSubString("<link", html);
     assertSubString("rel=\"stylesheet\"", html);
     assertSubString("type=\"text/css\"", html);
-    assertSubString("href=\"/files/css/fitnesse.css\"", html);
-    assertSubString("src=\"/files/javascript/fitnesse.js\"", html);
+    assertSubString("href=\"/files/fitnesse/css/fitnesse_theme.css\"", html);
+    assertSubString("src=\"/files/fitnesse/javascript/fitnesse.js\"", html);
+    assertSubString("src=\"/files/fitnesse/javascript/fitnesse_theme.js\"", html);
   }
 
   public void testIncludesBody() throws Exception {

@@ -29,8 +29,7 @@ public class PageFactory {
   }
 
   public HtmlPage newPage() {
-    
-    return new HtmlPage(getVelocityEngine(), "skeleton.vm");
+    return new HtmlPage(getVelocityEngine(), "skeleton.vm", context.pageTheme);
   }
 
   public String render(VelocityContext context, String templateName) {
@@ -53,13 +52,11 @@ public class PageFactory {
       properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file,classpath");
       properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, templatePath);
 
-//      instance.velocityEngine.setProperty(
-//            "file." + VelocityEngine.RESOURCE_LOADER + ".class",
-//            FileResourceLoader.class.getName());
-
       properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".class",
-            org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader.class.getName());
-
+          fitnesse.responders.templateUtilities.ClasspathResourceLoader.class.getName());
+      properties.setProperty("classpath." + VelocityEngine.RESOURCE_LOADER + ".base",
+          "/fitnesse/resources/templates");
+      
       velocityEngine = new VelocityEngine();
       velocityEngine.init(properties);
       
@@ -70,7 +67,8 @@ public class PageFactory {
   }
 
   public String getTemplatePath() {
-    return String.format("%s/%s/files/templates", context.rootPath, context.rootDirectoryName);
+    return String.format("%s/%s/files/fitnesse/templates", context.rootPath, context.rootDirectoryName);
   }
+
 
 }

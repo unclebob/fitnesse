@@ -33,6 +33,7 @@ public class Include extends SymbolType implements Rule, Translation {
             current.add(new Symbol(SymbolType.Meta).add(includedPage.because()));
         }
         else {
+            current.childAt(1).putProperty(WikiWord.WITH_EDIT, "true");
             ParsingPage included = option.equals("-setup") || option.equals("-teardown")
                     ? parser.getPage()
                     : parser.getPage().copyForNamedPage(includedPage.getValue());
@@ -42,7 +43,7 @@ public class Include extends SymbolType implements Rule, Translation {
                             .parse());
             if (option.equals("-setup")) current.evaluateVariables(setUpSymbols, parser.getVariableSource());
         }
-
+        
         return new Maybe<Symbol>(current);
     }
 
@@ -57,10 +58,7 @@ public class Include extends SymbolType implements Rule, Translation {
         else {
             String collapseState = stateForOption(option, symbol);
             String title = "Included page: "
-                    + translator.translate(symbol.childAt(1))
-                    + " "
-                    + new WikiWordBuilder(translator.getPage(), symbol.childAt(1).getContent(), "(edit)")
-                        .buildLink("?edit&amp;redirectToReferer=true&amp;redirectAction=", symbol.childAt(1).getContent());
+                    + translator.translate(symbol.childAt(1));
             return Collapsible.generateHtml(collapseState, title, translator.translate(symbol.childAt(3)));
         }
     }
@@ -68,7 +66,7 @@ public class Include extends SymbolType implements Rule, Translation {
     private String stateForOption(String option, Symbol symbol) {
         return ((option.equals("-setup") || option.equals("-teardown")) && symbol.getVariable("COLLAPSE_SETUP", "true").equals("true"))
                 || option.equals("-c")
-                ? Collapsible.Closed
-                : Collapsible.Open;
+                ? Collapsible.CLOSED
+                : "";
     }
 }

@@ -30,6 +30,7 @@ public class ComponentFactory {
   public static final String CONTENT_FILTER = "ContentFilter";
   public static final String VERSIONS_CONTROLLER = "VersionsController";
   public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
+  public static final String THEME = "Theme";
 
   private final Properties loadedProperties;
   private final String propertiesLocation;

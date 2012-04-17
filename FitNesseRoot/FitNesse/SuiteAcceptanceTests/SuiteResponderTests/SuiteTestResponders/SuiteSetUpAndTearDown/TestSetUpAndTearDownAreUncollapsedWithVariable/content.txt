@@ -32,5 +32,5 @@ By setting the variables COLLAPSE_SETUP or COLLAPSE_TEARDOWN to false (using the
 * Verify that the right style is being rendered.
 !|Response Examiner.|
 |type|pattern|matches?|
-|contents|<div.*class="collapsable".*>set up</div>|true|
-|contents|<div.*class="collapsable".*>tear down</div>|true|
+|contents|<div class="collapsible">.*<div>set up</div>|true|
+|contents|<div class="collapsible closed">.*<div>tear down</div>|true|

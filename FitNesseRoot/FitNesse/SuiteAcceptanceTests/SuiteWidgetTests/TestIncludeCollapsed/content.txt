@@ -33,5 +33,4 @@ See TestInclude for more info on included pages.
 |Response Examiner.|
 |type|pattern|matches?|
 |contents|included|true|
-|contents|class="hidden"|true|
-|contents|collapsableClosed.gif|true|
+|contents|class="collapsible closed"|true|

@@ -1,0 +1,57 @@
+<form method="post" action="$resource" name="f">
+#if($!editTime)
+ <input type="hidden" name="editTime" value="$editTime"/>
+ <input type="hidden" name="ticketId" value="$ticketId"/>
+#end
+#if($!redirect)
+ <input type="hidden" name="redirect" value="$redirect"/>
+#end
+#if($!isNewPage)
+ <input type="hidden" name="responder" value="addChild"/>
+ <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
+ #if( $!pageType )
+ <input type="hidden" name="pageType" value="$pageType"/>
+ #else
+ <fieldset id="pagetypes">
+  #foreach( $pageType in $pageTypes )
+  <label for="pageType_$pageType"><input type="radio" name="pageType" value="$pageType" id="pageType_$pageType"/> $pageType</label>
+  #end
+  <label for="pageType_Default"><input type="radio" name="pageType" value="Default" id="pageType_Default" checked="checked" /> Default</label>
+ </fieldset>
+ #end
+#else
+ <input type="hidden" name="responder" value="saveData"/>
+#end
+ <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
+ 
+ <fieldset class="edit_options">
+  <script src="/files/fitnesse/javascript/textareaWrapSupport.js" type="text/javascript"></script>
+ </fieldset>
+
+ <textarea class="pageContent" id="pageContentId" name="pageContent">$pageContent</textarea>
+
+ <fieldset class="edit_buttons">
+
+  <input type="submit" name="save" value="Save" tabindex="2" accesskey="s"/>
+  <a href="$resource">Cancel</a>
+  <script src="/files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/spreadsheetSupport.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
+  <script src="/files/fitnesse/javascript/wikiFormatterSupport.js" type="text/javascript"></script>
+ </fieldset>
+
+ <p class="hints">
+  Hints:
+  <ul>
+   <li>Use alt+s (Windows) or control+s (Mac OS X) to save your changes. Or, tab from the text area to the "Save" button!</li>
+   <li>Grab the lower-right corner of the text area to increase its size (works with some browsers).</li>
+  </ul>
+ </p>
+</form>
+<script type="text/javascript">
+#if($!isNewPage)
+ document.f.pageName.focus();
+#else
+ document.f.pageContent.focus();
+#end
+</script>
