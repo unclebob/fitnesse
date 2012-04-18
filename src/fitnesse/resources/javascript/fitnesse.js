@@ -44,6 +44,14 @@ $(document).on('click', 'article .collapsible .collapseall', function (event) {
 	$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
 	event.stopPropagation();
 });
+/**
+ * Notify user when changing page while test execution is in progress.
+ */
+window.onbeforeunload = function () {
+	if (document.querySelector("li#test-action .stop")){
+		return "There is a test or suite currently running.\nAre you sure you want to navigate away from this page?";
+	}
+};
 
 /**
  * Field validations
