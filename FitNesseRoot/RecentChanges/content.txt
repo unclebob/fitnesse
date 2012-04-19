@@ -98,7 +98,3 @@
 |JunkParent.SuiteSetUp||08:11:04 Mon, Jan 04, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteResponderTests.SuiteTestResponders.SuiteResponder.SetUpAndTearDownShouldBeIncludedProperly||14:53:50 Fri, Jan 01, 2010|
 |FitNesse.SuiteAcceptanceTests.SuiteEditResponderTests.TestUserNameInProperties||11:21:44 Fri, Jan 01, 2010|
-<<<<<<< HEAD
-=======
-|FitNesse.SuiteAcceptanceTests.SuiteTestHistory.SetUp||11:05:50 Fri, Jan 01, 2010|
->>>>>>> html5
