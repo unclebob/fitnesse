@@ -8,7 +8,9 @@
 #end
 #if($!isNewPage)
  <input type="hidden" name="responder" value="addChild"/>
- <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
+ <fieldset>
+  <label for="pagename">Page name:</label><input type="text" id="pagename" name="pageName" value="" class="wikiword" />
+ </fieldset>
  #if( $!pageType )
  <input type="hidden" name="pageType" value="$pageType"/>
  #else
@@ -22,7 +24,9 @@
 #else
  <input type="hidden" name="responder" value="saveData"/>
 #end
- <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
+ <fieldset>
+  <label for="helptext">Help text:</label><input type="text" id="helptext" name="helpText" value="$!helpText" />
+ </fieldset>
  
  <fieldset class="edit_options">
   <script src="/files/fitnesse/javascript/textareaWrapSupport.js" type="text/javascript"></script>

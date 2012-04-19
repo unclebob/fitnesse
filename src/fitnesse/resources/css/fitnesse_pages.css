@@ -1,11 +1,20 @@
+fieldset {
+	border: none;
+	padding: 0;
+	margin: 2px;
+}
 label input {
     margin-right: 0.5em;
+}
+textarea {
+	font-family: monospace;
 }
 .validationerror {
     color: maroon;
     margin: 0 0 0 7.78em;
     font-size: 0.9em
 }
+
 /** Edit page **/
 .editPage label {
 	width: 7em;

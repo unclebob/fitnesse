@@ -156,11 +156,6 @@ footer a:hover {
 h1+br, h2+br, h3+br, h4+br, h5+br, h6+br {
 	display: none;
 }
-fieldset {
-	border: none;
-	padding: 0;
-	margin: 2px;
-}
 article h1 {
 	 font: bold 1.5em;
 }
