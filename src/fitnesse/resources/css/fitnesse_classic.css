@@ -10,6 +10,7 @@ body {
 	padding: 0;
 	margin: 0;
 	background-color: #fafafe;
+	font-family: 'Lucida Grande','Bitstream Vera Sans','trebuchet ms',verdana,tahoma,arial,sans-serif;
 }
 header {
 	position: fixed;
@@ -41,11 +42,12 @@ header li {
 header li+li:before {
 	content: " .";
 }
+
 nav {
 	position: fixed;
 	left: 0;
 	top: 108px;
-	width: 150px;
+	width: 130px;
 	bottom: 0;
 	background-color: #d9dfc9;
 }
@@ -56,23 +58,20 @@ nav ul {
 	padding: 0;
 }
 
-nav .label {
-	background-color: transparent;
-	border: none;
-	padding: 0;
-	margin: 4px 12px;
-}
-
 nav li {
 	list-style: none;
-	margin: 4px 12px;
+	margin: 4px;
+}
+
+nav li.divider {
+ border-top: 1px solid #A8AC9C;
 }
 
 nav li a, nav li a:visited {
 	display: block;
 	padding: 6px 4px;
 	border: 1px solid gray;
-	width: 120px;
+	width: 112px;
 	text-decoration: none;
 	color: black;
 	background-color: #eee;
@@ -82,28 +81,46 @@ nav li a:hover {
 	background-color: #f8f8f8;
 }
 
-nav li#add,
-nav li#tools {
-	border: none;
-	padding: 0;
-	margin: 0;
+nav ul ul {
+ background: #eee; /* Adding a background makes the dropdown work properly in IE7+. */
+ -moz-box-shadow: 0 3px 10px #4A4A44;
+ position: absolute;
+ display: none;
+ z-index: 999;
+ margin: -20px 0 0 20px;
 }
-nav a.label {
-	display:none;
+
+nav ul ul li {
+ margin: 0px;
+}
+
+nav ul ul li a {
+ border: none;
+}
+
+nav li:hover ul {
+    display: block;
 }
 
 article {
 	margin: 120px 24px 24px 170px;
 }
 
-.virtual {
-  background-image: url("../images/virtualPage.jpg");
-  background-position: center top;
-  background-repeat: no-repeat;
+table {
+	border: thin solid #000;
+	border-collapse:collapse;
 }
 
-.imported {
-  background-image: url("../images/importedPage.jpg");
-  background-position: center top;
-  background-repeat: no-repeat;
+td, th {
+	border: thin solid #000;
+	padding: 0.25em 0.5em;
+	border-collapse:collapse;
+}
+
+footer {
+	margin-left: 170px;
+	padding: 20px;
+	font-size: 75%;
+	border-top: 1px solid #984D00;
+	text-align: center;
 }

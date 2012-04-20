@@ -25,25 +25,34 @@ $(document).on("click", "article tr.scenario td", function() {
 /**
  * Collapsible section
  */
-$(document).on("click", "article .collapsible > p.title", function() {
-	$(this).parent().toggleClass('closed');
-});
+$(document)
+	.on("click", "article .collapsible > p.title", function() {
+		$(this).parent().toggleClass('closed');
+	})
+	.on("click", "article .collapsible > p.title a", function(event) {
+		// Do not open when clicking on a link in the title.
+		event.stopPropagation();
+		return true;
+	})
+	.on('click', 'article .collapsible .expandall', function (event) {
+		$(this).closest('.collapsible').find('.collapsible').andSelf().removeClass('closed');
+		event.stopPropagation();
+		return false;
+	})
+	.on('click', 'article .collapsible .collapseall', function (event) {
+		$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
+		event.stopPropagation();
+		return false;
+	});
 
-$(document).on("click", "article .collapsible > p.title a", function(event) {
-	// Do not open when clicking on a link in the title.
-	event.stopPropagation();
-	return true;
-});
-
-$(document).on('click', 'article .collapsible .expandall', function (event) {
-	$(this).closest('.collapsible').find('.collapsible').andSelf().removeClass('closed');
-	event.stopPropagation();
-});
-
-$(document).on('click', 'article .collapsible .collapseall', function (event) {
-	$(this).closest('.collapsible').find('.collapsible').andSelf().addClass('closed');
-	event.stopPropagation();
-});
+/**
+ * Notify user when changing page while test execution is in progress.
+ */
+window.onbeforeunload = function () {
+	if (document.querySelector("li#test-action .stop")){
+		return "There is a test or suite currently running.\nAre you sure you want to navigate away from this page?";
+	}
+};
 
 /**
  * Field validations
