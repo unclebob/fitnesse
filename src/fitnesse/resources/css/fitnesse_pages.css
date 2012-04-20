@@ -9,6 +9,9 @@ label input {
 textarea {
 	font-family: monospace;
 }
+textarea.no_wrap {
+	overflow: scroll;
+}
 .validationerror {
     color: maroon;
     margin: 0 0 0 7.78em;
@@ -21,6 +24,10 @@ textarea {
 	float: left;
 	clear: both;
 }
+.editPage .edit_options label {
+	width: auto;
+}
+
 .editPage #pagename,
 .editPage #helptext {
 	width: 55em;
