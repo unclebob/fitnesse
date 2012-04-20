@@ -185,7 +185,7 @@ public class PageHistoryResponderTest {
   public void shouldNotReportNoHistoryIfHistoryIsPresent() throws Exception {
     addPageDirectory("TestPage");
     File pageDirectory = addPageDirectory("TestPage");
-    addTestResult(pageDirectory, "20090503110451_6_5_3_1");
+    addTestResult(pageDirectory, "20090503110455_6_5_3_1");
 
     makeResponse();
     RegexTestCase.assertDoesntHaveRegexp("No history for page: TestPage", response.getContent());
