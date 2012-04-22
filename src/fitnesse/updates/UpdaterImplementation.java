@@ -104,8 +104,17 @@ public class UpdaterImplementation extends UpdaterBase {
 
   public void update() throws IOException {
     if (shouldUpdate()) {
-      System.err.println("Unpacking new version of FitNesse resources.  Please be patient.");
+      System.err.println("Unpacking new version of FitNesse resources. Please be patient.");
       super.update();
+      System.err.println("\n\n" +
+          "********************************************************************************\n" +
+          "    Files have been updated to a new version. Please read the release notes\n" +
+          "    on http://localhost:" +
+          context.getPort() +
+          "/FitNesse.ReleaseNotes to find out about the new\n" +
+          "    features and fixes.\n" +
+          "********************************************************************************\n\n");
+      
       getProperties().put("Version", fitNesseVersion);
       saveProperties();
     }
