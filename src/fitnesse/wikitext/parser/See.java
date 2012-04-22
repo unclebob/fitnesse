@@ -7,11 +7,12 @@ public class See extends SymbolType implements Rule {
 
     public See() {
         super("See");
-        wikiMatcher(new Matcher().string("!see").whitespace());
+        wikiMatcher(new Matcher().startLineOrCell().string("!see").whitespace());
         wikiRule(this);
         htmlTranslation(new HtmlBuilder("b").body(0, "See: ").inline());
     }
-    
+
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol next = parser.moveNext(1);
         if (!next.isType(WikiWord.symbolType)) return Symbol.nothing;

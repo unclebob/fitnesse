@@ -15,7 +15,7 @@ public class SymbolProvider {
             new AnchorName(), new Contents(), SymbolType.CenterLine, new Define(), new Help(),
             new Include(), SymbolType.Meta, SymbolType.NoteLine, Path.symbolType, new PlainTextTable(),
             See.symbolType, SymbolType.Style, new LastModified(), Image.symbolType,
-            new Today(), SymbolType.Delta, 
+            new Today(), SymbolType.Delta,
             new HorizontalRule(), SymbolType.CloseLiteral, SymbolType.Strike,
             Alias.symbolType, SymbolType.UnorderedList, SymbolType.OrderedList, Comment.symbolType, SymbolType.Whitespace, SymbolType.CloseCollapsible,
             SymbolType.Newline, SymbolType.Colon, SymbolType.Comma,
@@ -25,7 +25,7 @@ public class SymbolProvider {
             SymbolType.Bold,
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
-    
+
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
             new SymbolType[] {SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
@@ -66,14 +66,20 @@ public class SymbolProvider {
             add(symbolType);
         }
     }
-    
+
     public SymbolProvider add(SymbolType symbolType) {
         if (matchesFor(symbolType)) return this;
         symbolTypes.add(symbolType);
         for (Matcher matcher: symbolType.getWikiMatchers()) {
             for (char first: matcher.getFirsts()) {
-                if (!currentDispatch.containsKey(first)) currentDispatch.put(first, new ArrayList<Matchable>());
-                currentDispatch.get(first).add(symbolType);
+                ArrayList<Matchable> dispatch = currentDispatch.get(first);
+                if (dispatch == null) {
+                    dispatch = new ArrayList<Matchable>(1);
+                    currentDispatch.put(first, dispatch);
+                } else if (dispatch.contains(symbolType)) {
+                    continue;
+                }
+                dispatch.add(symbolType);
             }
         }
         return this;
@@ -88,7 +94,7 @@ public class SymbolProvider {
         ArrayList<Matchable> defaults = currentDispatch.get(defaultMatch);
         defaults.add(matcher);
     }
-    
+
     public boolean matchesFor(SymbolType type) {
         return symbolTypes.contains(type);
     }

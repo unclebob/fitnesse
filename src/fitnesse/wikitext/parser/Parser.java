@@ -12,7 +12,7 @@ public class Parser {
     public static Parser make(WikiPage page, String input) {
         return make(new ParsingPage(new WikiSourcePage(page)), input);
     }
-    
+
     public static Parser make(ParsingPage currentPage, String input) {
         return make(currentPage, input, SymbolProvider.wikiParsingProvider);
     }
@@ -60,6 +60,10 @@ public class Parser {
             tokens.add(current);
         }
         return tokens;
+    }
+
+    public void endBlock() {
+        scanner.markStart();
     }
 
     public Symbol peek() {
@@ -115,7 +119,7 @@ public class Parser {
     public Symbol parseToIgnoreFirstWithSymbols(SymbolType ignore, SymbolProvider provider) {
         return parse(new ParseSpecification().ignoreFirst(ignore).terminator(ignore).provider(provider));
     }
-    
+
     public Symbol parseTo(SymbolType terminator) {
         return parseTo(terminator, 0);
     }

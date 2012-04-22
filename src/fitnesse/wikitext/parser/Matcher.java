@@ -34,18 +34,34 @@ public class Matcher {
     }
 
     public Matcher startLine() {
+        return startLine(true);
+    }
+
+    public Matcher startLine(final boolean ignoreWhitespace) {
+        if (firsts == null && ignoreWhitespace) {
+            firsts = new ArrayList<Character>(1);
+            firsts.add('\0');
+        }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
-                return input.startsLine(offset) ? new Maybe<Integer>(0) : Maybe.noInteger;
+                return input.startsLine(offset)
+                        ? new Maybe<Integer>(ignoreWhitespace ? input.whitespaceLength(offset) : 0)
+                        : Maybe.noInteger;
             }
         });
         return this;
     }
 
     public Matcher startLineOrCell() {
+        if (firsts == null) {
+            firsts = new ArrayList<Character>(1);
+            firsts.add('\0');
+        }
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, int offset) {
-                return input.startsLine(offset, "\n|") ? new Maybe<Integer>(0) : Maybe.noInteger;
+                return input.startsLine(offset, "\n|")
+                        ? new Maybe<Integer>(input.whitespaceLength(offset))
+                        : Maybe.noInteger;
             }
         });
         return this;
@@ -53,7 +69,9 @@ public class Matcher {
 
     public Matcher string(final String delimiter) {
         if (firsts == null) {
-            firsts = new ArrayList<Character>();
+            firsts = new ArrayList<Character>(1);
+        }
+        if (firsts != defaultList) {
             firsts.add(delimiter.charAt(0));
         }
         matches.add(new ScanMatch() {
@@ -155,5 +173,5 @@ public class Matcher {
 
         return new Maybe<Integer>(totalLength);
     }
-   
+
 }
