@@ -32,6 +32,7 @@ public class SaveResponder implements SecureResponder {
   private long ticketId;
   private String savedContent;
   private String helpText;
+  private String suites;
   private PageData data;
   private long editTimeStamp;
 
@@ -48,6 +49,7 @@ public class SaveResponder implements SecureResponder {
     else {
       savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
       helpText = (String) request.getInput("helpText");
+      suites = (String) request.getInput("Suites");
 
       if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
         return makeBannedContentResponse(context, resource);
@@ -111,13 +113,19 @@ public class SaveResponder implements SecureResponder {
 
   private void setData() {
     data.setContent(savedContent);
-    data.setAttribute(PageData.PropertyHELP, helpText);
-    data.setAttribute(PageData.PropertyHELP, helpText);
+    setAttribute(PageData.PropertyHELP, helpText);
+    setAttribute(PageData.PropertySUITES, suites);
     SaveRecorder.pageSaved(data, ticketId);
-    if (user != null)
-      data.setAttribute(PageData.LAST_MODIFYING_USER, user);
-    else
-      data.removeAttribute(PageData.LAST_MODIFYING_USER);
+    
+    setAttribute(PageData.LAST_MODIFYING_USER, user);
+  }
+
+  private void setAttribute(String property, String content) {
+    if (content == null || "".equals(content)) {
+      data.removeAttribute(property);
+    } else {
+      data.setAttribute(property, content);
+    }
   }
 
   public SecureOperation getSecureOperation() {

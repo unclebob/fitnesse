@@ -355,7 +355,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     getContentFromSimplePropertiesPage();
 
     assertSubString("Suites", content);
-    assertSubString("<input type=\"text\" id=\"Suites\" name=\"Suites\" value=\"\"/>", content);
+    assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"\"/>", content);
   }
 
   public void testSuitesDisplayed() throws Exception {
@@ -367,6 +367,6 @@ public class PropertiesResponderTest extends RegexTestCase {
     getPropertiesContentFromPage(page);
 
     assertSubString("Suites", content);
-    assertSubString("<input type=\"text\" id=\"Suites\" name=\"Suites\" value=\"smoke\"/>", content);
+    assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"smoke\"/>", content);
   }
 }

@@ -44,7 +44,7 @@
     
    <fieldset>
     <label for="Suites">Tags:</label>
-     <input type="text" id="Suites" name="Suites"#value( "Suites" )/>
+     <input type="text" id="Suites" title="Separate tags by a comma" name="Suites"#value( "Suites" )/>
    </fieldset>
   </div>
   <input type="submit" name="Save" value="Save Properties" accesskey="s"/>

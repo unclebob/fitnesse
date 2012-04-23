@@ -104,7 +104,8 @@ public class EditResponder implements SecureResponder {
       html.put("redirect", redirectUrl);
     }
 
-    html.put("helpText", pageData.getAttribute("Help"));
+    html.put("helpText", pageData.getAttribute(PageData.PropertyHELP));
+    html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
     html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
