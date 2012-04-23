@@ -18,7 +18,7 @@ var Wysiwyg = function (textarea, options) {
     var i;
     var element;
 
-    this.wrapTextarea = false;
+    this.wrapTextarea = Wysiwyg.getWrapOn();
     this.textarea = textarea;
     this.options = options = options || {};
     var wikitextToolbar = null;
@@ -157,9 +157,27 @@ Wysiwyg.prototype.initializeEditor = function (d) {
     d.execCommand("enableInlineTableEditing", false, "false");
 };
 
-Wysiwyg.prototype.toggleWrapTextarea = function () {
-    this.wrapTextarea = !this.wrapTextarea;
-    this.wrapTextareaButton.checked = this.wrapTextarea;
+Wysiwyg.getWrapOn = function () {
+    var mode = false;
+    var cookies = (document.cookie || "").split(";");
+    var length = cookies.length;
+    var i;
+    for (i = 0; i < length; i++) {
+        var match = /^\s*textwrapon=(\S*)/.exec(cookies[i]);
+        if (match) {
+            switch (match[1]) {
+            case "true":
+                mode = true;
+                break;
+            default:
+                mode = false;
+                break;
+            }
+            break;
+        }
+    }
+
+    return mode;
 };
 
 Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
@@ -177,14 +195,18 @@ Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
         }
         if (wrap) {
             $(self.textarea).removeClass('no_wrap');
+            Wysiwyg.setCookie("textwrapon", "true");
         } else {
             $(self.textarea).addClass('no_wrap');
+            Wysiwyg.setCookie("textwrapon", "false");
         }
+        console.log("set text wrap:", wrap);
     }
 
     return function () {
         self.wrapTextarea = input.checked;
         setWrap(input.checked);
+        
     };
 };
 
@@ -901,6 +923,8 @@ Wysiwyg.prototype.setupToggleEditorButtons = function () {
             $(button).click(listener);
             $(button).keypress(listener);
             this.wrapTextareaButton = button;
+            button.checked = this.wrapTextarea ? "checked" : "";
+            listener();
             break;
         case "editor-wysiwyg-@":
         case "editor-textarea-@":
@@ -1796,7 +1820,7 @@ Wysiwyg.prototype.wikitextToFragment = function (wikitext, contentDocument, opti
 
     function handleOpenInlineCode(name) {
         var d = contentDocument;
-        var tagName;
+        var tagName, element;
         switch (name) {
         case "bold":
             tagName = "b";
@@ -3606,17 +3630,21 @@ Wysiwyg.setEditorMode = function (mode) {
         break;
     }
     Wysiwyg.editorMode = mode;
+    Wysiwyg.setCookie("wysiwyg", mode);
+};
 
+Wysiwyg.setCookie = function (key, val) {
+	var expires, pieces;
     var now = new Date();
     if (!/\/$/.test(Wysiwyg.paths.base)) {
         expires = new Date(now.getTime() - 86400000);
-        pieces = [ "wysiwyg=",
+        pieces = [ key +"=",
             "path=" + Wysiwyg.paths.base + "/",
             "expires=" + expires.toUTCString() ];
         document.cookie = pieces.join("; ");
     }
-    var expires = new Date(now.getTime() + 365 * 86400 * 1000);
-    var pieces = [ "wysiwyg=" + mode,
+    expires = new Date(now.getTime() + 365 * 86400 * 1000);
+    pieces = [ key + "=" + val,
         "path=" + Wysiwyg.paths.base,
         "expires=" + expires.toUTCString() ];
     document.cookie = pieces.join("; ");
