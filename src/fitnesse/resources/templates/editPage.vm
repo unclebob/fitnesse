@@ -57,26 +57,25 @@
  </p>
 </form>
 <script type="text/javascript">
+$(function () {
 #if($!isNewPage)
   document.f.pageName.focus();
 #else
   document.f.pageContent.focus();
 #end
 
-  setTimeout(function() {
-    function toggle_edit_buttons(type) {
-      if (type == "textarea") {
-        $("#edit_buttons").show();
-      } else {
-        $("#edit_buttons").hide();
-      }
-    };
+  function toggle_edit_buttons(type) {
+    if (type == "textarea") {
+      $("#edit_buttons").show();
+    } else {
+      $("#edit_buttons").hide();
+    }
+  };
 
-    var editors = Wysiwyg.initialize();
-    toggle_edit_buttons(editors[0].activeEditor());
-    $('#editor-wysiwyg-1,#editor-textarea-1').click(function() {
-      toggle_edit_buttons($(this).val());
-    });
-
-  }, 10);
+  var editors = Wysiwyg.initialize();
+  toggle_edit_buttons(editors[0].activeEditor());
+  $('#editor-wysiwyg-1,#editor-textarea-1').click(function() {
+    toggle_edit_buttons($(this).val());
+  });
+});
 </script>

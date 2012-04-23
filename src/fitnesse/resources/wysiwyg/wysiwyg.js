@@ -16,17 +16,10 @@ var Wysiwyg = function (textarea, options) {
     var editorMode = Wysiwyg.getEditorMode();
     var body = document.body;
     var i;
-    var element;
 
     this.wrapTextarea = Wysiwyg.getWrapOn();
     this.textarea = textarea;
     this.options = options = options || {};
-    var wikitextToolbar = null;
-    wikitextToolbar = textarea.previousSibling;
-    if (wikitextToolbar && (wikitextToolbar.nodeType !== 1 || wikitextToolbar.className !== "wikitoolbar")) {
-        wikitextToolbar = null;
-    }
-    this.wikitextToolbar = wikitextToolbar;
 
     this.createEditable(document, textarea);
     var frame = this.frame;
@@ -52,9 +45,6 @@ var Wysiwyg = function (textarea, options) {
     switch (editorMode) {
     case "textarea":
         Wysiwyg.setStyle(textarea, styleStatic);
-        if (wikitextToolbar) {
-            Wysiwyg.setStyle(wikitextToolbar, styleStatic);
-        }
         Wysiwyg.setStyle(frame, { position: "absolute",
             left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
         Wysiwyg.setStyle(this.wysiwygToolbar, styleAbsolute);
@@ -65,9 +55,6 @@ var Wysiwyg = function (textarea, options) {
     case "wysiwyg":
         Wysiwyg.setStyle(textarea, { position: "absolute",
             left: "-9999px", top: Wysiwyg.elementPosition(textarea).top + "px" });
-        if (wikitextToolbar) {
-            Wysiwyg.setStyle(wikitextToolbar, styleAbsolute);
-        }
         Wysiwyg.setStyle(frame, styleStatic);
         Wysiwyg.setStyle(this.wysiwygToolbar, styleStatic);
         Wysiwyg.setStyle(this.wrapTextareaButton.parentNode, { display: "none" });
@@ -79,9 +66,8 @@ var Wysiwyg = function (textarea, options) {
     for (i = 0; i < this.menus.length; i++) {
         body.insertBefore(this.menus[i], body.firstChild);
     }
-    element = wikitextToolbar || textarea;
-    element.parentNode.insertBefore(this.toggleEditorButtons, element);
-    element.parentNode.insertBefore(this.wysiwygToolbar, element);
+    this.textarea.parentNode.insertBefore(this.toggleEditorButtons, this.textarea);
+    this.textarea.parentNode.insertBefore(this.wysiwygToolbar, this.textarea);
 
     function lazySetup() {
         if (self.contentDocument.body) {
@@ -95,9 +81,6 @@ var Wysiwyg = function (textarea, options) {
             self.setupFormEvent();
             if (exception) {
                 self.textarea.style.position = "static";
-                if (self.wikitextToolbar) {
-                    self.wikitextToolbar.style.position = "static";
-                }
                 self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.wrapTextareaButton.parentNode.style.display = "none";
                 alert("Failed to activate the wysiwyg editor.");
@@ -188,10 +171,6 @@ Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
             self.textarea.wrap = wrap ? 'soft' : 'off';
         } else { // wrap attribute not supported - try Mozilla workaround
             self.textarea.setAttribute('wrap', wrap ? 'soft' : 'off');
-            var newarea = self.textarea.cloneNode(true);
-            newarea.value = self.textarea.value;
-            self.textarea.parentNode.replaceChild(newarea, self.textarea);
-            self.textarea = newarea;
         }
         if (wrap) {
             $(self.textarea).removeClass('no_wrap');
@@ -200,7 +179,6 @@ Wysiwyg.prototype.listenerToggleWrapTextarea = function (input) {
             $(self.textarea).addClass('no_wrap');
             Wysiwyg.setCookie("textwrapon", "false");
         }
-        console.log("set text wrap:", wrap);
     }
 
     return function () {
@@ -222,9 +200,6 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 self.loadWikiText();
                 textarea.style.position = "static";
                 self.textarea.setAttribute("tabIndex", "");
-                if (self.wikitextToolbar) {
-                    self.wikitextToolbar.style.position = "static";
-                }
                 self.syncTextAreaHeight();
                 self.frame.style.position = self.wysiwygToolbar.style.position = "absolute";
                 self.frame.setAttribute("tabIndex", "-1");
@@ -246,9 +221,6 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 }
                 self.textarea.style.position = "absolute";
                 self.textarea.setAttribute("tabIndex", "-1");
-                if (self.wikitextToolbar) {
-                    self.wikitextToolbar.style.position = "absolute";
-                }
                 frame.style.position = self.wysiwygToolbar.style.position = "static";
                 self.frame.setAttribute("tabIndex", "");
                 self.wrapTextareaButton.parentNode.style.display = "none";
@@ -804,9 +776,7 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 }
                 $(this).remove();
             });
-            console.log("Text content is:", pastedDataBlock, $(pastedDataBlock).children());
             if (!$(pastedDataBlock).children()) {
-                console.log('only plain text content');
                 lines = $(pastedDataBlock).html().split(/<br\/?>/);
             } else {
                 lines = self.domToWikitext(pastedDataBlock, self.options).split('\n');
@@ -814,7 +784,6 @@ Wysiwyg.prototype.setupEditorEvents = function () {
 
             if (position.sameContainer && lines.length === 1 && /^\<.*\>$/.test(lines[0])) {
                 // paste data without markup.
-                console.log("paste line");
                 if (!position.atStart) {
                     var prev = $(pastedDataBlock).prev();
                     $(prev).append($(pastedDataBlock).text());
@@ -837,7 +806,6 @@ Wysiwyg.prototype.setupEditorEvents = function () {
                 var parentTr = getSelfOrAncestor(pastedDataBlock, 'tr');
                 var parentTable = getSelfOrAncestor(parentTr, 'table');
                 c = $(fragment).children();
-                console.log("paste fragment");
                 for (i = 0; i < c.length; i++) {
                     if (parentTr && c[i].tagName === 'TABLE') {
                         $(c[i]).find('tr').each(function(j, elem) {

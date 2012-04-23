@@ -32,18 +32,19 @@ div.collapsable {
  border: 1pt dotted #BF8660;
  margin: 0.5em;
  padding-left: 15px;
- background: url(../images/collapsableOpen.gif) left top no-repeat #F9F9F9;
+ background: url(../images/collapsibleOpen.png) left top no-repeat #F9F9F9;
  background-position: 2px 2px;
  min-height: 1em;
 }
 
 div.collapsable.collapsed {
- background: url(../images/collapsableClosed.gif) left top no-repeat #F9F9F9;
+ background: url(../images/collapsibleClosed.png) left top no-repeat #F9F9F9;
  background-position: 2px 2px;
 }
 
 div.collapsable.hidden {
- background: url(../images/collapsableHidden.png) left top no-repeat #F9F9F9;
+ display: block;
+ background: url(../images/collapsibleHidden.png) left top no-repeat #F9F9F9;
  background-position: 2px 2px;
 }
 
@@ -51,15 +52,4 @@ div.collapsable>p:first-child {
 /* like .meta */
  color: #BF8660;
  font-style: italic;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 1px;
-  /* Fitnesse replaces newlines by <br />, but wysiwig doesn't */
-  margin: 10px 0px !important;
-}
-
-td {
- border: 1px solid gray;
 }
