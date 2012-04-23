@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import util.CommandLine;
@@ -12,7 +13,7 @@ public class SlimService extends SocketService {
   public static boolean verbose;
   public static int port;
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws IOException {
     if (parseCommandLine(args)) {
       startWithFactory(args, new JavaSlimFactory());
     } else {
@@ -24,7 +25,7 @@ public class SlimService extends SocketService {
     System.err.println("Invalid command line arguments:" + Arrays.asList(args));
   }
 
-  protected static void startWithFactory(String[] args, SlimFactory slimFactory) throws Exception {
+  protected static void startWithFactory(String[] args, SlimFactory slimFactory) throws IOException {
     new SlimService(port, slimFactory.getSlimServer(verbose));
   }
 
@@ -39,7 +40,7 @@ public class SlimService extends SocketService {
     return false;
   }
 
-  public SlimService(int port, SlimServer slimServer) throws Exception {
+  public SlimService(int port, SlimServer slimServer) throws IOException  {
     super(port, slimServer);
     instance = this;
   }

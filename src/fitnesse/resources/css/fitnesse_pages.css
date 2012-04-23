@@ -1,0 +1,170 @@
+fieldset {
+	border: none;
+	padding: 0;
+	margin: 2px;
+}
+label input {
+    margin-right: 0.5em;
+}
+textarea {
+	font-family: monospace;
+}
+textarea.no_wrap {
+	overflow: scroll;
+}
+.validationerror {
+    color: maroon;
+    margin: 0 0 0 7.78em;
+    font-size: 0.9em
+}
+
+/** Edit page **/
+.editPage label {
+	width: 7em;
+	float: left;
+	clear: both;
+}
+.editPage .edit_options label {
+	width: auto;
+}
+
+.editPage #pagename,
+.editPage #helptext {
+	width: 55em;
+	margin-bottom: 0.5em;
+}
+.editPage #pagetypes {
+	margin: 0 0 0.5em 7em;
+}
+.editPage #pagetypes label {
+	display: inline;
+	float: none;
+}
+.editPage textarea {
+	display: block;
+	width: 100%;
+	height: 32em;
+}
+.editPage .edit_options {
+	float: right;
+}
+
+/** Properties page / Search form **/
+.propertiesPage form,
+.searchForm form,
+.refactorForm form {
+	padding-bottom: 1em;
+	border-bottom: 1px solid #984D00;
+}
+.propertiesPage label,
+.searchForm label {
+	display: inline-block;
+	width: 12em;
+}
+.propertiesPage .properties fieldset,
+.searchForm .properties fieldset {
+    display: inline-block;
+    vertical-align: top;
+	border: none;
+}
+.propertiesPage .properties label,
+.searchForm .properties label {
+	display: block;
+}
+legend {
+	font-weight: bold;
+	margin-bottom: 0.5em;
+}
+label input {
+    margin-right: 0.5em;
+}
+.propertiesPage input[type=submit],
+.searchForm input[type=submit] {
+	display: block;
+	margin-top: 1em;
+}
+#virtual-wiki-properties {
+	margin-top: 1em;
+}
+.propertiesPage #wiki-import label {
+	display: inline;
+	width: auto;
+}
+
+/** Merge page **/
+.mergePage #merge-new,
+.mergePage #merge-old {
+	float: left;
+	width: 47%;
+	margin-right: 1em;
+}
+.mergePage textarea {
+	width: 100%;
+	height: 32em;
+}
+.mergePage #merge-old textarea{
+	background-color: #efefef;
+}
+
+/** Delete page confirmation dialog **/
+.warning {
+	color: maroon;
+}
+
+/** Test history **/
+.testHistory td a {
+	text-decoration: none;
+}
+
+/** Test result **/
+tr.scenario > td:first-child {
+	padding-left: 16px;
+	background-image: url("../images/collapsibleClosed.png");
+	background-position: 2px;
+	background-repeat: no-repeat;
+}
+tr.scenario.open > td:first-child {
+	background-image: url("../images/collapsibleOpen.png");
+}
+tr.scenario-detail {
+	display: none;
+}
+#test-summary, #progressBar {
+	padding: 0.5em;
+}
+#test-summaries ul {
+	list-style: none;
+	padding-left: 0;
+}
+#test_summaries h2, #test-summaries h3 {
+	text-align: center;
+}
+#test-action .stop {
+	background-color: red;
+	color: white;
+	font-weight: bold;
+}
+#test-action .ok {
+ 	background-color: lightblue;
+}
+#test-action .output {
+ 	background-color: lightblue;
+}
+#test-action .error {
+	background-color: red;
+}
+.test_output_name h3 {
+	display: inline;
+}
+
+/** Virtual and import pages */
+.virtual header {
+	background-image: url("../images/virtualPage.jpg");
+	background-position: center top;
+	background-repeat: no-repeat;
+}
+.imported header {
+	background-image: url("../images/importedPage.jpg");
+	background-position: center top;
+	background-repeat: no-repeat;
+}

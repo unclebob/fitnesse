@@ -6,22 +6,22 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 
 public class RenameFileConfirmationResponder implements SecureResponder {
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
     
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Rename " + filename);
     page.setPageTitle(new PageTitle("Rename File", resource + filename, "/"));
     page.setMainTemplate("renameFileConfirmation.vm");

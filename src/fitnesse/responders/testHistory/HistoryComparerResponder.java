@@ -2,23 +2,21 @@ package fitnesse.responders.testHistory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
+import org.xml.sax.SAXException;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 
@@ -43,8 +41,7 @@ public class HistoryComparerResponder implements Responder {
     comparer = new HistoryComparer();
   }
 
-  public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
     this.context = context;
     initializeReponseComponents(request);
     if (!getFileNameFromRequest(request))
@@ -62,7 +59,7 @@ public class HistoryComparerResponder implements Responder {
   }
 
   private Response makeResponseFromComparison(FitNesseContext context,
-      Request request) throws Exception {
+      Request request) throws IOException, SAXException {
     if (comparer.compare(firstFilePath, secondFilePath))
       return makeValidResponse(request);
     else {
@@ -77,7 +74,7 @@ public class HistoryComparerResponder implements Responder {
         || ((new File(secondFilePath)).exists());
   }
 
-  private void initializeReponseComponents(Request request) throws IOException {
+  private void initializeReponseComponents(Request request) {
     if (comparer == null)
       comparer = new HistoryComparer();
   }
@@ -116,14 +113,14 @@ public class HistoryComparerResponder implements Responder {
     return false;
   }
 
-  private Response makeValidResponse(Request request) throws Exception {
+  private Response makeValidResponse(Request request) {
     count = 0;
-    HtmlPage page = context.htmlPageFactory.newPage();
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("History Comparison");
     page.setPageTitle(makePageTitle(request.getResource()));
     if (!testing) {
-      page.put("firstFileName", dateFormat.parse(firstFileName));
-      page.put("secondFileName", dateFormat.parse(secondFileName));
+      page.put("firstFileName", formatDate(firstFileName));
+      page.put("secondFileName", formatDate(secondFileName));
       page.put("completeMatch", comparer.allTablesMatch());
       page.put("comparer", comparer);
     }
@@ -138,13 +135,21 @@ public class HistoryComparerResponder implements Responder {
     return response;
   }
 
+  private Date formatDate(String fileName) {
+    try {
+      return dateFormat.parse(firstFileName);
+    } catch (ParseException e) {
+      throw new RuntimeException("File name '" + fileName + "' does not parse to a date", e);
+    }
+  }
+
   private PageTitle makePageTitle(String resource) {
     return new PageTitle("Test History", PathParser.parse(resource));
 
   }
 
   private Response makeErrorResponse(FitNesseContext context, Request request,
-      String message) throws Exception {
+      String message) {
     return new ErrorResponder(message).makeResponse(context, request);
   }
 }

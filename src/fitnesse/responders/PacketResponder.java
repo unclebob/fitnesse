@@ -14,6 +14,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +28,7 @@ public class PacketResponder implements SecureResponder {
   List<JSONObject> tables = new ArrayList<JSONObject>();
   private String jsonpFunction;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     jsonpFunction = (String) request.getInput("jsonp");
     String pageName = request.getResource();
@@ -44,15 +45,21 @@ public class PacketResponder implements SecureResponder {
     return response;
   }
 
-  private void buildPacket() throws Exception {
+  private void buildPacket() {
     packet = new JSONObject();
     String html = page.getData().getHtml();
+
     TableScanner scanner = new HtmlTableScanner(html);
-    addTablesToPacket(scanner);
-    if (jsonpFunction != null)
-      response.setContent(String.format("%s(%s)", jsonpFunction, packet.toString(1)));
-    else
-      response.setContent(packet.toString(1));
+
+    try {
+      addTablesToPacket(scanner);
+      if (jsonpFunction != null)
+        response.setContent(String.format("%s(%s)", jsonpFunction, packet.toString(1)));
+      else
+        response.setContent(packet.toString(1));
+    } catch (JSONException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   private void addTablesToPacket(TableScanner scanner) throws JSONException {

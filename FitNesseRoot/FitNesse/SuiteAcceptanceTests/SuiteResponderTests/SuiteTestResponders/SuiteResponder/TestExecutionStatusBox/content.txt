@@ -32,4 +32,4 @@ The error log page should not have any errors
 
 |Response Examiner.|
 |type  |pattern|matches?|
-|contents|<div id="execution-status">|true|
+|contents|<div id="test-action">|true|

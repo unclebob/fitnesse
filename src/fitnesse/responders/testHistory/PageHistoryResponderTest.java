@@ -1,29 +1,10 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.VelocityFactory;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.run.SuiteExecutionReport;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import util.DateTimeUtil;
-import util.FileUtil;
-import util.RegexTestCase;
-import util.TimeMeasurement;
-import static util.RegexTestCase.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static util.RegexTestCase.assertHasRegexp;
+import static util.RegexTestCase.assertSubString;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,6 +13,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SortedSet;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import util.DateTimeUtil;
+import util.FileUtil;
+import util.RegexTestCase;
+import util.TimeMeasurement;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseVersion;
+import fitnesse.http.MockRequest;
+import fitnesse.http.SimpleResponse;
+import fitnesse.responders.run.SuiteExecutionReport;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestSummary;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 
 public class PageHistoryResponderTest {
   private File resultsDirectory;
@@ -357,7 +359,7 @@ public class PageHistoryResponderTest {
   private void generateSuiteResultFile(SuiteExecutionReport report, File resultFile) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("suiteExecutionReport", report);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("suiteHistoryXML.vm");
+    Template template = context.pageFactory.getVelocityEngine().getTemplate("suiteHistoryXML.vm");
     FileWriter fileWriter = new FileWriter(resultFile);
     template.merge(velocityContext, fileWriter);
     fileWriter.close();  }
@@ -381,7 +383,7 @@ public class PageHistoryResponderTest {
   private void generateTestResultFile(TestExecutionReport testResponse, File resultFile) throws Exception {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", testResponse);
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
+    Template template = context.pageFactory.getVelocityEngine().getTemplate("testResults.vm");
     FileWriter fileWriter = new FileWriter(resultFile);
     template.merge(velocityContext, fileWriter);
     fileWriter.close();

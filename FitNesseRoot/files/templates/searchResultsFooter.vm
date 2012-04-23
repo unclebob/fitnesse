@@ -1,8 +1,0 @@
-## TODO: For now use this file, until we can properly script this
-#if ($hits > 1)
-    <script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search.'</script>
-#elseif ($hits == 1)
-    <script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits result for your search.'</script>
-#else
-    <script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria.'</script>
-#end

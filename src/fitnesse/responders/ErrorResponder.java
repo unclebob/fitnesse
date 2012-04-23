@@ -4,12 +4,12 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 
 public class ErrorResponder implements Responder {
   Exception exception;
@@ -23,14 +23,16 @@ public class ErrorResponder implements Responder {
     this.message = message;
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse(400);
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     HtmlUtil.addTitles(html, "Error Occured");
+    html.setMainTemplate("error");
+    html.put("exception", exception);
     if (exception != null)
-      html.setMainContent(new HtmlTag("pre", makeExceptionString(exception)).html());
+      html.put("exception", exception);
     if (message != null)
-      html.setMainContent(makeErrorMessage());
+      html.put("message", message);
     response.setContent(html.html());
 
     return response;
@@ -44,11 +46,5 @@ public class ErrorResponder implements Responder {
       buffer.append("\t" + stackTreace[i]).append("\n");
 
     return buffer.toString();
-  }
-
-  public String makeErrorMessage() {
-    HtmlTag tag = HtmlUtil.makeDivTag("centered");
-    tag.add(message);
-    return tag.html();
   }
 }

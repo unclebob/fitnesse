@@ -24,7 +24,7 @@ A simple table is created as follows {{{|a|b|c|}}} The resulting text will be re
 
 |Response Examiner.|
 |type|number|string?|
-|line|1|!-&lt;table border="1" cellspacing="0">-!|
+|line|1|!-&lt;table>-!|
 |line|2|!-&lt;tr>-!|
 |line|3|!-&lt;td>a&lt;/td>-!|
 |line|4|!-&lt;td>b&lt;/td>-!|

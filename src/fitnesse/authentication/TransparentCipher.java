@@ -3,7 +3,7 @@
 package fitnesse.authentication;
 
 public class TransparentCipher implements PasswordCipher {
-  public String encrypt(String password) throws Exception {
+  public String encrypt(String password) {
     return password;
   }
 }

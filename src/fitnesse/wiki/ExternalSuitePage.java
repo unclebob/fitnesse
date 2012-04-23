@@ -7,7 +7,7 @@ public class ExternalSuitePage extends CachingPage {
     private String path;
     private FileSystem fileSystem;
 
-    public ExternalSuitePage(String path, String name, WikiPage parent, FileSystem fileSystem) throws Exception {
+    public ExternalSuitePage(String path, String name, WikiPage parent, FileSystem fileSystem) {
         super(name, parent);
         this.path = path;
         this.fileSystem = fileSystem;
@@ -15,19 +15,19 @@ public class ExternalSuitePage extends CachingPage {
 
     public String getFileSystemPath() { return path; }
 
-    public boolean hasChildPage(String pageName) throws Exception {
+    public boolean hasChildPage(String pageName) {
         return false;
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) {
         return null;
     }
 
-    protected WikiPage createChildPage(String name) throws Exception {
+    protected WikiPage createChildPage(String name) {
         return null;
     }
 
-    protected void loadChildren() throws Exception {
+    protected void loadChildren() {
         for (WikiPage child: new PageRepository(fileSystem).findChildren(this)) {
             if (!children.containsKey(child.getName())) {
                 children.put(child.getName(), child);
@@ -35,7 +35,7 @@ public class ExternalSuitePage extends CachingPage {
         }
     }
 
-    protected PageData makePageData() throws Exception {
+    protected PageData makePageData() {
         PageData pageData = new PageData(this);
         pageData.setContent("!contents");
         pageData.removeAttribute(PageData.PropertyEDIT);
@@ -46,11 +46,11 @@ public class ExternalSuitePage extends CachingPage {
         return pageData;
     }
 
-    protected VersionInfo makeVersion() throws Exception {
+    protected VersionInfo makeVersion() {
         return null;
     }
 
-    protected void doCommit(PageData data) throws Exception {
+    protected void doCommit(PageData data) {
         
     }
 }

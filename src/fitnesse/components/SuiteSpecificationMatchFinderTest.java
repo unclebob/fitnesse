@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SuiteSpecificationMatchFinderTest implements SearchObserver {
+public class SuiteSpecificationMatchFinderTest implements TraversalListener<WikiPage> {
 
   WikiPage root;
   private List<WikiPage> hits = new ArrayList<WikiPage>();
@@ -71,7 +71,8 @@ public class SuiteSpecificationMatchFinderTest implements SearchObserver {
     finder.search(root);
     assertPagesFound("TestPageOne", "ChildPage");
   }
-  public void hit(WikiPage page) throws Exception {
+  
+  public void process(WikiPage page) {
     hits.add(page);
   }
 

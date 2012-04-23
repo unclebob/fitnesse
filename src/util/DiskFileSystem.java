@@ -23,7 +23,7 @@ public class DiskFileSystem implements FileSystem{
         return file.isDirectory() ? file.list() : new String[]{};
     }
 
-    public String getContent(String path) throws Exception {
+    public String getContent(String path) throws IOException {
         return FileUtil.getFileContent(path);
     }
 }

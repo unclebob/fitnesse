@@ -15,7 +15,7 @@ public class SymbolType implements Matchable {
             .wikiMatcher(new Matcher().string("!c"))
             .wikiMatcher(new Matcher().string("!C"))
             .wikiRule(new LineRule())
-            .htmlTranslation(new HtmlBuilder("div").body(0).attribute("class", "centered"));
+            .htmlTranslation(new HtmlBuilder("center").body(0));
     public static final SymbolType CloseBrace = new SymbolType("CloseBrace")
             .wikiMatcher(new Matcher().string("}"));
     public static final SymbolType CloseBracket = new SymbolType("CloseBracket")
@@ -75,7 +75,7 @@ public class SymbolType implements Matchable {
     public static final SymbolType Strike = new SymbolType("Strike")
             .wikiMatcher(new Matcher().string("--"))
             .wikiRule(new EqualPairRule())
-            .htmlTranslation(new HtmlBuilder("span").body(0).attribute("class", "strike").inline());
+            .htmlTranslation(new HtmlBuilder("strike").body(0).inline());
     public static final SymbolType Style = new SymbolType("Style")
             .wikiMatcher(new Matcher().string("!style_").endsWith(new char[] {'(', '{', '['}))
             .wikiRule(new StyleRule())

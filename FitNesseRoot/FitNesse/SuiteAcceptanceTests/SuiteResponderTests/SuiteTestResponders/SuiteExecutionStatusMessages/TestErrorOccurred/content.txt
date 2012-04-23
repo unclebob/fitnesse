@@ -3,6 +3,6 @@ When errors occur, we get the message:
 
 !define FIXTURE_NAME {CrashFixture}
 !define EXPECTED_STATUS_MESSAGE {Errors Occurred}
-!define EXPECTED_ICON_URL {/files/images/executionStatus/error.gif}
+!define EXPECTED_STYLE {error}
 
 !include DoTest

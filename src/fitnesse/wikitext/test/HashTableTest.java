@@ -15,6 +15,10 @@ public class HashTableTest {
         ParserTestHelper.assertTranslatesTo("!{a:b, c:d}", hashTable());
     }
 
+    @Test public void invalidHashInTableIsIgnored() {
+        ParserTestHelper.assertTranslatesTo("|!{a:}|\n", ParserTestHelper.tableWithCell("!{a:}"));
+    }
+
     private String hashTable() {
         return "<table class=\"hash_table\">" + HtmlElement.endl +
         "\t<tr class=\"hash_row\">" + HtmlElement.endl +

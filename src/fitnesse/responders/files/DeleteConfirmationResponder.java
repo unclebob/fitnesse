@@ -8,38 +8,39 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 
 public class DeleteConfirmationResponder implements SecureResponder {
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");
-    response.setContent(makeDirectoryListingPage(filename, context));
+    response.setContent(makeDirectoryListingPage(resource, filename, context));
     response.setLastModifiedHeader("Delete");
     return response;
   }
 
-  private String makeDirectoryListingPage(String filename, FitNesseContext context) throws Exception {
-    HtmlPage page = context.htmlPageFactory.newPage();
-    page.setTitle("Delete File(s): ");
+  private String makeDirectoryListingPage(String pageName, String filename, FitNesseContext context) {
+    HtmlPage page = context.pageFactory.newPage();
+    page.setTitle("Delete File(s)");
     page.setPageTitle(new PageTitle("Delete File", resource + filename, "/"));
+    page.put("pageName", "/" + pageName);
     makeConfirmationHTML(page, filename, context);
-    page.setMainTemplate("deleteConfirmation.vm");
-        
+    page.setMainTemplate("deleteConfirmation");
+
     return page.html();
   }
 
-  private void makeConfirmationHTML(HtmlPage page, String filename, FitNesseContext context) throws Exception {
+  private void makeConfirmationHTML(HtmlPage page, String filename, FitNesseContext context) {
     String pathname = context.rootPagePath + "/" + resource + filename;
     File file = new File(pathname);
     boolean isDir = file.isDirectory();
@@ -49,9 +50,6 @@ public class DeleteConfirmationResponder implements SecureResponder {
     if (isDir) {
       page.put("nFiles", file.listFiles().length);
     }
-//    page.put("path", resource);
-//    makeYesForm(filename);
-//    makeNoForm();
   }
 
   public SecureOperation getSecureOperation() {

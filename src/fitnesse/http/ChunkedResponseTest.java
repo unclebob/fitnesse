@@ -9,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
 import org.junit.After;
@@ -21,15 +23,22 @@ public class ChunkedResponseTest implements ResponseSender {
 
   public StringBuffer buffer;
 
-  public void send(byte[] bytes) throws Exception {
-    buffer.append(new String(bytes, "UTF-8"));
+  @Override
+  public void send(byte[] bytes) {
+    try {
+      buffer.append(new String(bytes, "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Error in encoding", e);
+    }
   }
 
+  @Override
   public void close() {
     closed = true;
   }
 
-  public Socket getSocket() throws Exception {
+  @Override
+  public Socket getSocket() {
     return null;
   }
 
@@ -37,8 +46,8 @@ public class ChunkedResponseTest implements ResponseSender {
   public void setUp() throws Exception {
     buffer = new StringBuffer();
 
-    response = new ChunkedResponse("html");
-    response.readyToSend(this);
+    response = new ChunkedResponse("html", new MockChunkedDataProvider());
+    response.sendTo(this);
   }
 
   @After
@@ -48,7 +57,6 @@ public class ChunkedResponseTest implements ResponseSender {
 
   @Test
   public void testHeaders() throws Exception {
-    assertTrue(response.isReadyToSend());
     String text = buffer.toString();
     assertHasRegexp("Transfer-Encoding: chunked", text);
     assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));
@@ -57,10 +65,8 @@ public class ChunkedResponseTest implements ResponseSender {
 
   @Test
   public void xmlHeaders() throws Exception {
-    response = new ChunkedResponse("xml");
-    response.readyToSend(this);
-    assertTrue(response.isReadyToSend());
-    assertTrue(response.isReadyToSend());
+    response = new ChunkedResponse("xml", new MockChunkedDataProvider());
+    response.sendTo(this);
     String text = buffer.toString();
     assertHasRegexp("Transfer-Encoding: chunked", text);
     assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));
@@ -155,4 +161,5 @@ public class ChunkedResponseTest implements ResponseSender {
 
     assertSubString("\uba80\uba81\uba82\uba83", buffer.toString());
   }
+
 }

@@ -1,0 +1,66 @@
+<p id="feedback">Searching...</p>
+<table id="searchResultsTable" class="dirListing">
+ <thead>
+  <tr>
+   <th>
+    <a href="javascript:void(tableSorter.sort(0));">Test</a>
+   </th>
+   <th>
+    <a href="javascript:void(tableSorter.sort(1));">Page</a>
+   </th>
+   <th>
+    <a href="javascript:void(tableSorter.sort(2));">Tags</a>
+   </th>
+   <th>
+    <a href="javascript:void(tableSorter.sort(3, 'date'));">LastModified</a>
+   </th>
+  </tr>
+ </thead>
+ <tbody> 
+
+ #set( $hits = 0 )
+ #traverse( $resultResponder )
+  <tr>
+   <td>
+   #if($result.getData().hasAttribute("Suite"))
+    <a href="$result.getPageCrawler().getRelativeName($page, $result)?suite">
+     Suite
+    </a>
+   #end
+   #if($result.getData().hasAttribute("Test"))
+    <a href="$result.getPageCrawler().getRelativeName($page, $result)?test">
+     Test
+    </a>
+   #end
+   </td>
+   <td>
+    <a href="$result.getPageCrawler().getFullPath($result).toString()">$result.getPageCrawler().getFullPath($result).toString()</a>
+   </td>
+   <td style="text-align: right;">
+   #set ( $tags = $result.getData().getAttribute("Suites") )
+    <label>#if ($tags && !$tags.equals("null"))$tags#end</label>
+   </td>
+   <td>$result.getData().getProperties().getLastModificationTime()
+   </td>
+  </tr>
+  #set( $hits = $hits + 1 )
+ #end
+ 
+ </tbody>
+</table>
+
+<hr/>
+<h4>To save this search as a link, paste the text below into a page.</h4>
+<pre>[[Search below !-$page.getName()-! for &lt;description&gt;][$page.getPageCrawler().getFullPath($page)?$request]]</pre>
+
+#if ($hits > 1)
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits results for your search.'</script>
+#elseif ($hits == 1)
+<script language="javascript">document.getElementById("feedback").innerHTML = 'Found $hits result for your search.'</script>
+#else
+<script language="javascript">document.getElementById("feedback").innerHTML = 'No pages matched your search criteria.'</script>
+#end
+<script src="/files/fitnesse/javascript/clientSideSort.js"> </script>
+<script language="javascript">
+ tableSorter = new TableSorter('searchResultsTable', new DateParser(/^(\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\d+) (\d+).(\d+).(\d+) (\w+) (\d+)$/,8,2,3,4,5,6));
+</script>

@@ -71,11 +71,11 @@ public class PropertiesResponderTest extends RegexTestCase {
   }
 
   private void assertCheckboxNotChecked(String content, String attribute) {
-    assertSubString("<input type=\"checkbox\" name=\"" + attribute + "\"/>", content);
+    assertSubString("<input type=\"checkbox\" id=\"" + attribute + "\" name=\"" + attribute + "\"/>", content);
   }
 
   private void assertCheckboxChecked(String attribute, String content) {
-    assertSubString("<input type=\"checkbox\" name=\"" + attribute + "\" checked=\"true\"/>", content);
+    assertSubString("<input type=\"checkbox\" id=\"" + attribute + "\" name=\"" + attribute + "\" checked=\"checked\"/>", content);
   }
 
   public void testJsonResponse() throws Exception {
@@ -156,7 +156,7 @@ public class PropertiesResponderTest extends RegexTestCase {
     getContentFromSimplePropertiesPage();
 
     checkUpdateForm();
-    assertSubString("Wiki Import.", content);
+    assertSubString("Wiki Import", content);
     assertSubString("value=\"Import\"", content);
     assertSubString("type=\"text\"", content);
     assertSubString("name=\"remoteUrl\"", content);
@@ -230,16 +230,13 @@ public class PropertiesResponderTest extends RegexTestCase {
 
     getPropertiesContentFromPage(page);
 
-    assertSubString("<td>InternalAbsPage</td>", content);
     assertSubString("<input type=\"text\" name=\"InternalAbsPage\"", content);
     assertSubString("<a href=\".PageOne.ChildOne\">.PageOne.ChildOne</a>", content);
-    assertMatches("<a href=\".*\">Rename:</a>", content);
+    assertMatches("<a href=\".*\">Rename</a>", content);
 
-    assertSubString("<td>InternalRelPage</td>", content);
     assertSubString("<input type=\"text\" name=\"InternalRelPage\"", content);
     assertSubString("<a href=\".PageOne.ChildOne\">PageOne.ChildOne</a>", content);
 
-    assertSubString("<td>InternalSubPage</td>", content);
     assertSubString("<input type=\"text\" name=\"InternalSubPage\"", content);
     assertSubString("<a href=\".SomePage.SomeChild\">&gt;SomeChild</a>", content);
 
@@ -268,12 +265,11 @@ public class PropertiesResponderTest extends RegexTestCase {
     PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\" checked=\"checked\"/> - Static", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\"/> - Test", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
+    assertSubString("<input type=\"radio\" id=\"Static\" name=\"PageType\" value=\"Static\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Test\" name=\"PageType\" value=\"Test\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"PageType\" value=\"Suite\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
   public void testPageTypePropertiesSuiteHtml() throws Exception {
@@ -285,12 +281,11 @@ public class PropertiesResponderTest extends RegexTestCase {
     request.setResource(page.getPageCrawler().getFullPath(page).toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\"/> - Test", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\" checked=\"checked\"/> - Suite", html);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
+    assertSubString("<input type=\"radio\" id=\"Static\" name=\"PageType\" value=\"Static\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Test\" name=\"PageType\" value=\"Test\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"PageType\" value=\"Suite\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
   public void testPageTypePropertiesTestHtml() throws Exception {
@@ -301,12 +296,11 @@ public class PropertiesResponderTest extends RegexTestCase {
     request.setResource(page.getPageCrawler().getFullPath(page).toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Static\"/> - Static", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Test\" checked=\"checked\"/> - Test", html);
-    assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Skip", html);
+    assertSubString("<input type=\"radio\" id=\"Static\" name=\"PageType\" value=\"Static\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Test\" name=\"PageType\" value=\"Test\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"radio\" id=\"Suite\" name=\"PageType\" value=\"Suite\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\"/>", html);
   }
 
   public void testPageTypePropertiesSkippedHtml() throws Exception {
@@ -317,9 +311,8 @@ public class PropertiesResponderTest extends RegexTestCase {
     request.setResource(page.getPageCrawler().getFullPath(page).toString());
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
     assertSubString("Page type:", html);
-    assertSubString("<input type=\"checkbox\" name=\"Prune\" checked=\"true\"/> - Skip", html);
+    assertSubString("<input type=\"checkbox\" id=\"Prune\" name=\"Prune\" checked=\"checked\"/>", html);
   }
 
   
@@ -328,13 +321,12 @@ public class PropertiesResponderTest extends RegexTestCase {
     PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 180px;\">Actions:", html);
     assertSubString("Actions:", html);
-    assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
-    assertSubString("<input type=\"checkbox\" name=\"Versions\" checked=\"true\"/> - Versions", html);
-    assertSubString("<input type=\"checkbox\" name=\"Properties\" checked=\"true\"/> - Properties", html);
-    assertSubString("<input type=\"checkbox\" name=\"Refactor\" checked=\"true\"/> - Refactor", html);
-    assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/> - WhereUsed", html);
+    assertSubString("<input type=\"checkbox\" id=\"Edit\" name=\"Edit\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Versions\" name=\"Versions\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Properties\" name=\"Properties\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Refactor\" name=\"Refactor\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"WhereUsed\" name=\"WhereUsed\" checked=\"checked\"/>", html);
   }
 
   public void testMakeNavigationPropertiesHtml() throws Exception {
@@ -342,10 +334,10 @@ public class PropertiesResponderTest extends RegexTestCase {
     PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 180px;\">Navigation:", html);
-    assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
-    assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
-    assertSubString("<input type=\"checkbox\" name=\"Search\" checked=\"true\"/> - Search", html);
+    assertSubString("Navigation:", html);
+    assertSubString("<input type=\"checkbox\" id=\"Files\" name=\"Files\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"RecentChanges\" name=\"RecentChanges\" checked=\"checked\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"Search\" name=\"Search\" checked=\"checked\"/>", html);
   }
 
   public void testMakeSecurityPropertiesHtml() throws Exception {
@@ -353,17 +345,17 @@ public class PropertiesResponderTest extends RegexTestCase {
     PageData data = page.getData();
     SimpleResponse response = (SimpleResponse) new PropertiesResponder().makeResponse(context, request);
     String html = response.getContent();
-    assertSubString("<div style=\"float: left; width: 180px;\">Security:", html);
-    assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
-    assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);
-    assertSubString("<input type=\"checkbox\" name=\"secure-test\"/> - secure-test", html);
+    assertSubString("Security:", html);
+    assertSubString("<input type=\"checkbox\" id=\"secure-read\" name=\"secure-read\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"secure-write\" name=\"secure-write\"/>", html);
+    assertSubString("<input type=\"checkbox\" id=\"secure-test\" name=\"secure-test\"/>", html);
   }
 
   public void testEmptySuitesForm() throws Exception {
     getContentFromSimplePropertiesPage();
 
     assertSubString("Suites", content);
-    assertSubString("<input type=\"text\" name=\"Suites\" value=\"\" size=\"40\"/>", content);
+    assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"\"/>", content);
   }
 
   public void testSuitesDisplayed() throws Exception {
@@ -375,26 +367,6 @@ public class PropertiesResponderTest extends RegexTestCase {
     getPropertiesContentFromPage(page);
 
     assertSubString("Suites", content);
-    assertSubString("<input type=\"text\" name=\"Suites\" value=\"smoke\" size=\"40\"/>", content);
+    assertSubString("<input type=\"text\" id=\"Suites\" title=\"Separate tags by a comma\" name=\"Suites\" value=\"smoke\"/>", content);
   }
-
-  public void testEmptyHelpTextForm() throws Exception {
-    getContentFromSimplePropertiesPage();
-
-    assertSubString("Help Text", content);
-    assertSubString("<input type=\"text\" name=\"HelpText\" value=\"\" size=\"90\"/>", content);
-  }
-
-  public void testHelpTextDisplayed() throws Exception {
-    WikiPage page = getContentFromSimplePropertiesPage();
-    PageData data = page.getData();
-    data.setAttribute(PageData.PropertyHELP, "help text");
-    page.commit(data);
-
-    getPropertiesContentFromPage(page);
-
-    assertSubString("Help Text", content);
-    assertSubString("<input type=\"text\" name=\"HelpText\" value=\"help text\" size=\"90\"/>", content);
-  }
-
 }

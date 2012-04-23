@@ -1,0 +1,126 @@
+header,
+footer,
+article,
+section,
+aside,
+nav {
+	display:block;
+}
+body {
+	padding: 0;
+	margin: 0;
+	background-color: #fafafe;
+	font-family: 'Lucida Grande','Bitstream Vera Sans','trebuchet ms',verdana,tahoma,arial,sans-serif;
+}
+header {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	padding: 8px;
+	height: 90px;
+	background-color: #d9dfc9;
+	border-bottom: 1px solid gray;
+}
+#art_niche {
+	float: left;
+	background-image: url("../images/FitNesseLogo.png");
+	width: 90px;
+	height: 90px;
+	margin: 0 68px 0 4px;
+}
+#art_niche span {
+	display: none;
+}
+header ul {
+	list-style: none;
+}
+
+header li {
+	display: inline-block;
+}
+header li+li:before {
+	content: " .";
+}
+
+nav {
+	position: fixed;
+	left: 0;
+	top: 108px;
+	width: 130px;
+	bottom: 0;
+	background-color: #d9dfc9;
+}
+
+nav ul {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+nav li {
+	list-style: none;
+	margin: 4px;
+}
+
+nav li.divider {
+ border-top: 1px solid #A8AC9C;
+}
+
+nav li a, nav li a:visited {
+	display: block;
+	padding: 6px 4px;
+	border: 1px solid gray;
+	width: 112px;
+	text-decoration: none;
+	color: black;
+	background-color: #eee;
+}
+
+nav li a:hover {
+	background-color: #f8f8f8;
+}
+
+nav ul ul {
+ background: #eee; /* Adding a background makes the dropdown work properly in IE7+. */
+ -moz-box-shadow: 0 3px 10px #4A4A44;
+ position: absolute;
+ display: none;
+ z-index: 999;
+ margin: -20px 0 0 20px;
+}
+
+nav ul ul li {
+ margin: 0px;
+}
+
+nav ul ul li a {
+ border: none;
+}
+
+nav li:hover ul {
+    display: block;
+}
+
+article {
+	margin: 120px 24px 24px 170px;
+}
+
+table {
+	border: thin solid #000;
+	border-collapse:collapse;
+}
+
+td, th {
+	border: thin solid #000;
+	padding: 0.25em 0.5em;
+	border-collapse:collapse;
+}
+
+footer {
+	margin-left: 170px;
+	padding: 20px;
+	font-size: 75%;
+	border-top: 1px solid #984D00;
+	text-align: center;
+}

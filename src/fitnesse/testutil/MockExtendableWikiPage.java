@@ -22,22 +22,22 @@ public class MockExtendableWikiPage extends ExtendableWikiPage {
     return null;
   }
 
-  public WikiPage addChildPage(String name) throws Exception {
+  public WikiPage addChildPage(String name) {
     return null;
   }
 
-  public boolean hasChildPage(String name) throws Exception {
+  public boolean hasChildPage(String name) {
     return false;
   }
 
-  public WikiPage getNormalChildPage(String name) throws Exception {
+  public WikiPage getNormalChildPage(String name) {
     return null;
   }
 
-  public void removeChildPage(String name) throws Exception {
+  public void removeChildPage(String name) {
   }
 
-  public List<WikiPage> getNormalChildren() throws Exception {
+  public List<WikiPage> getNormalChildren() {
     return null;
   }
 
@@ -45,15 +45,15 @@ public class MockExtendableWikiPage extends ExtendableWikiPage {
     return null;
   }
 
-  public PageData getData() throws Exception {
+  public PageData getData() {
     return null;
   }
 
-  public PageData getDataVersion(String versionName) throws Exception {
+  public PageData getDataVersion(String versionName) {
     return null;
   }
 
-  public VersionInfo commit(PageData data) throws Exception {
+  public VersionInfo commit(PageData data) {
     return null;
   }
 

@@ -13,17 +13,15 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class CompositeExecutionLog {
-  private String errorLogPageName;
   private WikiPagePath errorLogPagePath;
   private PageCrawler crawler;
   private WikiPage root;
 
-  public CompositeExecutionLog(WikiPage testPage) throws Exception {
+  public CompositeExecutionLog(WikiPage testPage) {
     crawler = testPage.getPageCrawler();
     root = crawler.getRoot(testPage);
     crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
     errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
-    errorLogPageName = PathParser.render(errorLogPagePath);
   }
 
   private Map<String, ExecutionLog> logs = new HashMap<String, ExecutionLog>();
@@ -32,7 +30,7 @@ public class CompositeExecutionLog {
     logs.put(testSystemName, executionLog);
   }
 
-  public void publish() throws Exception {
+  public void publish() {
     String content = buildLogContent();
 
     WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
@@ -41,7 +39,7 @@ public class CompositeExecutionLog {
     errorLogPage.commit(data);
   }
 
-  private String buildLogContent() throws Exception {
+  private String buildLogContent() {
     StringBuffer logContent = new StringBuffer();
     for (String testSystemName : logs.keySet()) {
       logContent.append(String.format("!3 !-%s-!\n", testSystemName));
@@ -50,15 +48,21 @@ public class CompositeExecutionLog {
     return logContent.toString();
   }
 
-  public String executionStatusHtml() throws Exception {
+  public String getErrorLogPageName() {
+    return PathParser.render(errorLogPagePath);
+  }
+  
+  public int exceptionCount() {
+    int count = 0;
     for (ExecutionLog log : logs.values())
-      if (log.exceptionCount() != 0)
-        return ExecutionLog.makeExecutionStatusLink(errorLogPageName, ExecutionStatus.ERROR);
-
+      count += log.exceptionCount();
+    return count;
+  }
+  
+  public boolean hasCapturedOutput() {
     for (ExecutionLog log : logs.values())
       if (log.hasCapturedOutput())
-        return ExecutionLog.makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OUTPUT);
-
-    return ExecutionLog.makeExecutionStatusLink(errorLogPageName, ExecutionStatus.OK);
+        return true;
+    return false;
   }
 }

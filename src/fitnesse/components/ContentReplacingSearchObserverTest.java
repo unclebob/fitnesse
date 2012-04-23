@@ -21,7 +21,7 @@ public class ContentReplacingSearchObserverTest {
     wikiPage = createPageWithContent("simplePageContent");
     observer = simpleContentReplacer();
 
-    observer.hit(wikiPage);
+    observer.process(wikiPage);
 
     assertThat(wikiPage, contentMatches("replacement"));
   }
@@ -35,7 +35,7 @@ public class ContentReplacingSearchObserverTest {
     wikiPage = createPageWithContent("pattern1 some various text pattern2 pattern3");
     observer = new ContentReplacingSearchObserver("pattern1(.*)pattern2 pattern3", "replacement1$1replacement2 replacement3");
 
-    observer.hit(wikiPage);
+    observer.process(wikiPage);
 
     assertThat(wikiPage, contentMatches("replacement1 some various text replacement2 replacement3"));
   }
@@ -45,7 +45,7 @@ public class ContentReplacingSearchObserverTest {
     wikiPage = createPageWithContent(multiLineContent());
     observer = new ContentReplacingSearchObserver("matching line", "replaced line");
 
-    observer.hit(wikiPage);
+    observer.process(wikiPage);
 
     assertThat(wikiPage, contentMatches("line 1\nline 2\nline 3\nreplaced line\nline 5\nreplaced line\nline 7"));
   }

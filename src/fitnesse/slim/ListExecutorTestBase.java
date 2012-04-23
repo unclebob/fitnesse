@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import fitnesse.html.HtmlUtil;
 import fitnesse.slim.converters.VoidConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -9,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static util.ListUtility.list;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +105,33 @@ public abstract class ListExecutorTestBase {
     statements.add(list("id", "call", "testSlim", "returnString"));
     respondsWith(list(list("id", "string")));
   }
+
+  @Test
+  public void oneFunctionCallVerbose() throws Exception {
+    executor.setVerbose();
+    PrintStream oldOut = System.out;
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(os));
+
+    statements.add(list("id", "call", "testSlim", "returnString"));
+    executor.execute(statements);
+
+    System.setOut(oldOut);
+    assertEquals("!1 Instructions" + HtmlUtil.ENDL +
+      "[i1, import, fitnesse.slim.test]\n" +
+      HtmlUtil.ENDL +
+      "[i1, OK]" + HtmlUtil.ENDL +
+      "------" + HtmlUtil.ENDL +
+      "[m1, make, testSlim, TestSlim]\n" +
+      HtmlUtil.ENDL +
+      "[m1, OK]" + HtmlUtil.ENDL +
+      "------" + HtmlUtil.ENDL +
+      "[id, call, testSlim, returnString]\n" +
+      HtmlUtil.ENDL +
+      "[id, string]" + HtmlUtil.ENDL +
+      "------" + HtmlUtil.ENDL, os.toString());
+  }
+
 
   @Test
   public void oneFunctionCallWithBlankArgument() throws Exception {

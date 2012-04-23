@@ -2,50 +2,50 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.testutil.MockSocket;
-import util.ConcurrentBoolean;
-
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.net.Socket;
 
+import fitnesse.testutil.MockSocket;
+
 public class MockResponseSender implements ResponseSender {
   public MockSocket socket;
-  protected ConcurrentBoolean closed;
+  protected boolean closed;
 
   public MockResponseSender() {
     socket = new MockSocket("Mock");
-    closed = new ConcurrentBoolean();
   }
 
-  public void send(byte[] bytes) throws Exception {
-    socket.getOutputStream().write(bytes);
+  public void send(byte[] bytes) {
+    try {
+      socket.getOutputStream().write(bytes);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public void close() throws Exception {
-    closed.set(true);
+  @Override
+  public void close() {
+    closed = true;
   }
 
-  public Socket getSocket() throws Exception {
+  @Override
+  public Socket getSocket() {
     return socket;
   }
 
-  public String sentData() throws Exception {
+  public String sentData() {
     return socket.getOutput();
   }
 
-  public void doSending(Response response) throws Exception {
-    response.readyToSend(this);
-    waitForClose(20000);
-  }
-
-  public void waitForClose(long timeoutMillis) throws Exception {
-    if (!closed.waitFor(true, timeoutMillis))
-      throw new Exception("MockResponseSender could not be closed");
+  public void doSending(Response response) throws IOException {
+    response.sendTo(this);
+    assert closed == true;
   }
 
   public boolean isClosed() {
-    return closed.isTrue();
+    return closed;
   }
 
   public static class OutputStreamSender extends MockResponseSender {
@@ -53,10 +53,9 @@ public class MockResponseSender implements ResponseSender {
       socket = new MockSocket(new PipedInputStream(), out);
     }
 
-    public void doSending(Response response) throws Exception {
-      response.readyToSend(this);
-      while (!closed.isTrue())
-        Thread.sleep(1000);
+    public void doSending(Response response) throws IOException {
+      response.sendTo(this);
+      assert closed == true;
     }
   }
 }

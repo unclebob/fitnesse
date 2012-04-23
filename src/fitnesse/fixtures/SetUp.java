@@ -2,18 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import static fitnesse.fixtures.FitnesseFixtureContext.baseDir;
+import static fitnesse.fixtures.FitnesseFixtureContext.context;
+import static fitnesse.fixtures.FitnesseFixtureContext.fitnesse;
+import static fitnesse.fixtures.FitnesseFixtureContext.responderFactory;
+import static fitnesse.fixtures.FitnesseFixtureContext.root;
+
+import java.io.File;
+
+import util.FileUtil;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.components.SaveRecorder;
-import static fitnesse.fixtures.FitnesseFixtureContext.*;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
-import util.FileUtil;
-
-import java.io.File;
 
 public class SetUp extends Fixture {
   public SetUp() throws Exception {
@@ -22,11 +27,10 @@ public class SetUp extends Fixture {
 
     root = InMemoryPage.makeRoot("RooT");
     responderFactory = new ResponderFactory(baseDir + "/RooT/");
-    context = new FitNesseContext(root);
+    context = FitNesseUtil.makeTestContext(root);
     context.responderFactory = responderFactory;
     context.port = 9123;
     context.rootPagePath = baseDir;
-    VelocityFactory.makeVelocityFactory(context);
     fitnesse = new FitNesse(context, false);
     File historyDirectory = context.getTestHistoryDirectory();
     if (historyDirectory.exists())

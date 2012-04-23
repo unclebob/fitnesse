@@ -7,23 +7,23 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 
 public class ShutdownResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Shutdown");
     html.setPageTitle(new PageTitle("Shutdown"));
 
-    html.setMainContent("<div class=\"centered\"><h3>FitNesse is shutting down...</h3></div>");
+    html.setMainTemplate("shutdownPage.vm");
     response.setContent(html.html());
 
     final FitNesse fitnesseInstance = context.fitnesse;

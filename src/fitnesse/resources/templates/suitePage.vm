@@ -1,0 +1,13 @@
+<div id="test-summary">Running Tests ...</div>
+
+<div id="test-action">
+ ## Filled with stop/output buttons
+</div>
+
+<div id="test-summaries">
+  <h2>Test Summaries</h2>
+  ## Filled with test results
+</div>
+
+## Test results are placed here:
+$testExecutor.execute()

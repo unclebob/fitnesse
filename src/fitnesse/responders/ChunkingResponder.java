@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.http.ChunkedDataProvider;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -14,7 +15,7 @@ import fitnesse.wiki.WikiPagePath;
 
 import java.net.SocketException;
 
-public abstract class ChunkingResponder implements Responder {
+public abstract class ChunkingResponder implements Responder, ChunkedDataProvider {
   protected WikiPage root;
   public WikiPage page;
   protected WikiPagePath path;
@@ -23,20 +24,18 @@ public abstract class ChunkingResponder implements Responder {
   protected FitNesseContext context;
   private boolean dontChunk = false;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
     this.request = request;
     this.root = context.root;
     String format = (String) request.getInput("format");
-    response = new ChunkedResponse(format);
+    response = new ChunkedResponse(format, this);
+    
     if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
       response.turnOffChunking();
     getRequestedPage(request);
     if (page == null && shouldRespondWith404())
       return pageNotFoundResponse(context, request);
-
-    Thread respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
-    respondingThread.start();
 
     return response;
   }
@@ -45,7 +44,7 @@ public abstract class ChunkingResponder implements Responder {
     dontChunk = true;
   }
 
-  private void getRequestedPage(Request request) throws Exception {
+  private void getRequestedPage(Request request) {
     path = PathParser.parse(request.getResource());
     page = getPageCrawler().getPage(root, path);
   }
@@ -54,7 +53,7 @@ public abstract class ChunkingResponder implements Responder {
     return root.getPageCrawler();
   }
 
-  private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
+  private Response pageNotFoundResponse(FitNesseContext context, Request request) {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
@@ -62,7 +61,7 @@ public abstract class ChunkingResponder implements Responder {
     return true;
   }
 
-  private void startSending() {
+  public void startSending() {
     try {
       doSending();
     }
@@ -92,17 +91,15 @@ public abstract class ChunkingResponder implements Responder {
       return request.getResource();
   }
 
-  protected class RespondingRunnable implements Runnable {
-    public void run() {
-      response.waitForReadyToSend();
-      startSending();
-
-    }
-  }
 
   public void setRequest(Request request) {
     this.request = request;
   }
 
+  /**
+   * Performs the actual chunk sending in a separate thread.
+   * 
+   * @throws Exception
+   */
   protected abstract void doSending() throws Exception;
 }

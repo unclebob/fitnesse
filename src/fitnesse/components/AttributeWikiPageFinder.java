@@ -39,7 +39,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     return true;
   }
 
-  public AttributeWikiPageFinder(SearchObserver observer,
+  public AttributeWikiPageFinder(TraversalListener observer,
       List<PageType> requestedPageTypes, Map<String, Boolean> attributes,
       List<String> suites) {
     super(observer);
@@ -49,12 +49,12 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     this.suites = suites;
   }
 
-  public AttributeWikiPageFinder(ExecuteSearchPropertiesResponder observer,
+  public AttributeWikiPageFinder(TraversalListener observer,
       List<PageType> pageTypes, Map<String, Boolean> attributes, String suites) {
     this(observer, pageTypes, attributes, splitSuitesIntoArray(suites));
   }
 
-  protected boolean pageMatches(WikiPage page) throws Exception {
+  protected boolean pageMatches(WikiPage page) {
 
     if (!meetsSetUpTearDownConditions(page)) {
       return false;
@@ -78,7 +78,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     return suitesMatchInput(pageData, suites);
   }
 
-  private boolean meetsSetUpTearDownConditions(WikiPage page) throws Exception {
+  private boolean meetsSetUpTearDownConditions(WikiPage page) {
 
     if (attributes.containsKey("SetUp") && attributes.containsKey("TearDown")) {
       Boolean setupWanted = attributes.get("SetUp");
@@ -103,16 +103,16 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     return true;
   }
 
-  private boolean isTearDownPage(WikiPage page) throws Exception {
+  private boolean isTearDownPage(WikiPage page) {
     return tearDownPageNames.contains(page.getName());
   }
 
-  private boolean isSetUpPage(WikiPage page) throws Exception {
+  private boolean isSetUpPage(WikiPage page) {
     return setUpPageNames.contains(page.getName());
   }
 
   private boolean pageIsOfRequestedPageType(WikiPage page,
-      List<PageType> requestedPageTypesEnum) throws Exception {
+      List<PageType> requestedPageTypesEnum) {
     PageType pageType = PageType.fromWikiPage(page);
 
     return (requestedPageTypesEnum.contains(pageType));
@@ -123,7 +123,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
     return attributeSet == inputValueOn;
   }
 
-  private boolean suitesMatchInput(PageData pageData, List<String> suites) throws Exception {
+  private boolean suitesMatchInput(PageData pageData, List<String> suites) {
     if (suites == null)
       return true;
 

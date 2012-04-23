@@ -1,0 +1,4 @@
+<div id="test-summary">Running Tests ...</div>
+
+## Test results are placed here:
+$testExecutor.execute()

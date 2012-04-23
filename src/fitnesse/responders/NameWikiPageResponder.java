@@ -13,8 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
-  protected String contentFrom(WikiPage requestedPage)
-    throws Exception {
+  protected String contentFrom(WikiPage requestedPage) {
     List<String> pages = new ArrayList<String>();
     for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext();) {
       WikiPage child = (WikiPage) iterator.next();

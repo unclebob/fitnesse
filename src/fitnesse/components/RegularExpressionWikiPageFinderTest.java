@@ -17,7 +17,7 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 
-public class RegularExpressionWikiPageFinderTest implements SearchObserver {
+public class RegularExpressionWikiPageFinderTest implements TraversalListener<WikiPage> {
 
   private WikiPage root;
   private WikiPage pageOne;
@@ -28,7 +28,7 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
   List<WikiPage> foundPages = new ArrayList<WikiPage>();
   private WikiPageFinder pageFinder;
 
-  public void hit(WikiPage page) throws Exception {
+  public void process(WikiPage page) {
     foundPages.add(page);
   }
 

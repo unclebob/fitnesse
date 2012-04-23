@@ -2,36 +2,35 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.ConcurrentBoolean;
-
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 
 public class ChunkedResponse extends Response {
   private ResponseSender sender;
   private int bytesSent = 0;
-  private ConcurrentBoolean isReadyToSend = new ConcurrentBoolean();
   private boolean dontChunk = false;
+  private ChunkedDataProvider chunckedDataProvider;
 
-  public ChunkedResponse(String format) {
+  public ChunkedResponse(String format, ChunkedDataProvider chunckedDataProvider) {
     super(format);
+    this.chunckedDataProvider = chunckedDataProvider;
     if (isTextFormat())
       dontChunk = true;
   }
 
-  public void readyToSend(ResponseSender sender) throws Exception {
+  public void sendTo(ResponseSender sender) {
     this.sender = sender;
     addStandardHeaders();
     sender.send(makeHttpHeaders().getBytes());
-    isReadyToSend.set(true);
+    chunckedDataProvider.startSending();
   }
 
-  public void waitForReadyToSend() {
-    isReadyToSend.waitFor(true);
-  }
-
-  public boolean isReadyToSend() { return isReadyToSend.isTrue(); }
-
-  protected void addSpecificHeaders() {
+  @Override
+  protected void addStandardHeaders() {
+    super.addStandardHeaders();
     if (!dontChunk)
       addHeader("Transfer-Encoding", "chunked");
   }
@@ -40,12 +39,12 @@ public class ChunkedResponse extends Response {
     return Integer.toHexString(value);
   }
 
-  public void add(String text) throws Exception {
+  public void add(String text) {
     if (text != null)
       add(getEncodedBytes(text));
   }
 
-  public void add(byte[] bytes) throws Exception {
+  public void add(byte[] bytes) {
     if (bytes == null || bytes.length == 0)
       return;
     if (dontChunk) {
@@ -59,24 +58,24 @@ public class ChunkedResponse extends Response {
     bytesSent += bytes.length;
   }
 
-  public void addTrailingHeader(String key, String value) throws Exception {
+  public void addTrailingHeader(String key, String value) {
     String header = key + ": " + value + CRLF;
     sender.send(header.getBytes());
   }
 
-  public void closeChunks() throws Exception {
+  public void closeChunks() {
     sender.send(("0" + CRLF).getBytes());
   }
 
-  public void closeTrailer() throws Exception {
+  public void closeTrailer() {
     sender.send(CRLF.getBytes());
   }
 
-  public void close() throws Exception {
+  public void close() {
     sender.close();
   }
 
-  public void closeAll() throws Exception {
+  public void closeAll() {
     closeChunks();
     closeTrailer();
     close();
@@ -92,5 +91,30 @@ public class ChunkedResponse extends Response {
 
   public boolean isChunkingTurnedOff() {
     return dontChunk;
+  }
+
+  public Writer getWriter() {
+    return new  Writer() {
+  
+      @Override
+      public void close() throws IOException {
+        //sender.close();
+      }
+  
+      @Override
+      public void flush() throws IOException {
+        // sender.flush(); -- flush is done on write
+      }
+  
+      @Override
+      public void write(String str) throws IOException {
+        add(str);
+      }
+      
+      @Override
+      public void write(char[] cbuf, int off, int len) throws IOException {
+        write(new String(cbuf, off, len));
+      }
+    };
   }
 }

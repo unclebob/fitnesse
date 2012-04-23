@@ -1,8 +1,8 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.run.TestPage;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -47,16 +47,16 @@ public class TestFormatterTest {
     TestTextFormatter testTextFormatter = new TestTextFormatter(response);
     XmlFormatter xmlFormatter = new XmlFormatter(context, page, writerFactory) {
       @Override
-      protected void writeResults() throws Exception {
+      protected void writeResults() {
       }
     };
-    TestHtmlFormatter testHtmlFormatter = new TestHtmlFormatter(context, page, mock(HtmlPageFactory.class)) {
+    InteractiveFormatter testHtmlFormatter = new TestHtmlFormatter(context, page) {
       @Override
-      protected void writeData(String output) throws Exception {
+      protected void writeData(String output) {
       }
     };
     PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, page, writerFactory) {
-      protected void writeResults() throws Exception {
+      protected void writeResults() {
       };
     };
     return Arrays.asList(new Object[][]{

@@ -6,9 +6,12 @@ import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import util.XmlUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -20,35 +23,35 @@ public class TestExecutionReport extends ExecutionReport {
   public TestExecutionReport() {
   }
 
-  public TestExecutionReport(InputStream input) throws Exception {
+  public TestExecutionReport(InputStream input) throws IOException, SAXException {
     xmlDoc = XmlUtil.newDocument(input);
     unpackXml();
   }
 
-  public TestExecutionReport(String string) throws Exception {
+  public TestExecutionReport(String string) throws IOException, SAXException {
     xmlDoc = XmlUtil.newDocument(string);
     unpackXml();
   }
 
-  public TestExecutionReport(Document xmlDocument) throws Exception {
+  public TestExecutionReport(Document xmlDocument) {
     super(xmlDocument);
     unpackXml();
   }
 
-  public TestExecutionReport read(File file) throws Exception {
+  public TestExecutionReport read(File file) throws IOException, SAXException {
     xmlDoc = XmlUtil.newDocument(file);
     unpackXml();
     return this;
   }
 
-  protected void unpackResults(Element testResults) throws Exception {
+  protected void unpackResults(Element testResults) {
     NodeList xmlResults = testResults.getElementsByTagName("result");
     for (int resultIndex = 0; resultIndex < xmlResults.getLength(); resultIndex++) {
       unpackResult(xmlResults, resultIndex);
     }
   }
 
-  private void unpackResult(NodeList xmlResults, int resultIndex) throws Exception {
+  private void unpackResult(NodeList xmlResults, int resultIndex) {
     Element xmlResult = (Element) xmlResults.item(resultIndex);
     TestResult result = new TestResult();
     results.add(result);
@@ -68,7 +71,7 @@ public class TestExecutionReport extends ExecutionReport {
     }
   }
 
-  private void unpackInstructions(TestResult result, Element xmlInstructions) throws Exception {
+  private void unpackInstructions(TestResult result, Element xmlInstructions) {
     NodeList xmlInstructionResults = xmlInstructions.getElementsByTagName("instructionResult");
     for (int instructionIndex = 0; instructionIndex < xmlInstructionResults.getLength(); instructionIndex++) {
       Element instructionElement = (Element) xmlInstructionResults.item(instructionIndex);
@@ -82,7 +85,7 @@ public class TestExecutionReport extends ExecutionReport {
     }
   }
 
-  private void unpackExpectations(Element instructionElement, InstructionResult instructionResult) throws Exception {
+  private void unpackExpectations(Element instructionElement, InstructionResult instructionResult) {
     NodeList xmlExpectations = instructionElement.getElementsByTagName("expectation");
     for (int expectationIndex = 0; expectationIndex < xmlExpectations.getLength(); expectationIndex++) {
       Element expectationElement = (Element) xmlExpectations.item(expectationIndex);
@@ -99,7 +102,7 @@ public class TestExecutionReport extends ExecutionReport {
     }
   }
 
-  private void unpackTables(Element xmlResult, TestResult result) throws Exception {
+  private void unpackTables(Element xmlResult, TestResult result) {
     NodeList tables = xmlResult.getElementsByTagName("tables");
     for (int tableIndex = 0; tableIndex < tables.getLength(); tableIndex++) {
       Element xmlTable = (Element) tables.item(tableIndex);
@@ -110,7 +113,7 @@ public class TestExecutionReport extends ExecutionReport {
     }
   }
 
-  private void unpackTable(Element xmlTable, Table table) throws Exception {
+  private void unpackTable(Element xmlTable, Table table) {
     NodeList xmlRows = xmlTable.getElementsByTagName("row");
     for (int rowIndex = 0; rowIndex < xmlRows.getLength(); rowIndex++) {
       Element xmlRow = (Element) xmlRows.item(rowIndex);
@@ -118,7 +121,7 @@ public class TestExecutionReport extends ExecutionReport {
     }
   }
 
-  private void unpackRow(Table table, Element xmlRow) throws Exception {
+  private void unpackRow(Table table, Element xmlRow) {
     Row row = new Row();
     table.add(row);
     NodeList xmlCols = xmlRow.getElementsByTagName("col");
@@ -133,7 +136,7 @@ public class TestExecutionReport extends ExecutionReport {
     return results;
   }
 
-  public void toXml(Writer writer, VelocityEngine velocityEngine) throws Exception {
+  public void toXml(Writer writer, VelocityEngine velocityEngine) {
     VelocityContext velocityContext = new VelocityContext();
     velocityContext.put("response", this);
     Template template = velocityEngine.getTemplate("testResults.vm");

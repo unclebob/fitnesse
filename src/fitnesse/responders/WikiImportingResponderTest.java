@@ -2,10 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import java.io.IOException;
+
 import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.http.MockChunkedDataProvider;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -36,8 +39,8 @@ public class WikiImportingResponderTest extends RegexTestCase {
   private void createResponder() throws Exception {
     responder = new WikiImportingResponder();
     responder.path = new WikiPagePath();
-    ChunkedResponse response = new ChunkedResponse("html");
-    response.readyToSend(new MockResponseSender());
+    ChunkedResponse response = new ChunkedResponse("html", new MockChunkedDataProvider());
+    response.sendTo(new MockResponseSender());
     responder.setResponse(response);
     responder.getImporter().setDeleteOrphanOption(false);
   }
@@ -117,19 +120,29 @@ public class WikiImportingResponderTest extends RegexTestCase {
     }
   }
 
-  public void testHtmlOfMakeResponse() throws Exception {
-    Response response = makeSampleResponse(baseUrl);
+  private String simulateWebRequest(MockRequest request) throws IOException {
+    ChunkedResponse response = getResponse(request);
     MockResponseSender sender = new MockResponseSender();
     sender.doSending(response);
     String content = sender.sentData();
+    return content;
+  }
 
+  public void testHtmlOfMakeResponse() throws IOException {
+    Response response = makeSampleResponse(baseUrl);
+    MockResponseSender sender = new MockResponseSender();
+    ((ChunkedResponse) response).turnOffChunking();
+    sender.doSending(response);
+    String content = sender.sentData();
+
+    System.out.println(content);
+    
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
 
-    assertSubString("href=\"PageTwo\"", content);
-    assertSubString("href=\"PageTwo.PageOne\"", content);
-    assertSubString("href=\"PageTwo.PageOne.ChildOne\"", content);
-    assertSubString("href=\"PageTwo.PageTwo\"", content);
+    assertSubString("PageTwo", content);
+    assertSubString("PageTwo.PageOne", content);
+    assertSubString("PageTwo.PageOne.ChildOne", content);
     assertSubString("Import complete.", content);
     assertSubString("3 pages were imported.", content);
   }
@@ -149,8 +162,8 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("<html>", content);
     assertSubString("Wiki Import", content);
 
-    assertSubString("href=\"PageTwo\"", content);
-    assertNotSubString("href=\"PageTwo.PageOne\"", content);
+    assertSubString("PageTwo", content);
+    assertNotSubString("PageTwo.PageOne", content);
     assertNotSubString("href=\"PageTwo.PageOne.ChildOne\"", content);
     assertNotSubString("href=\"PageTwo.PageTwo\"", content);
     assertSubString("Import complete.", content);
@@ -158,16 +171,16 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertSubString("3 pages were unmodified.", content);
   }
 
-  private ChunkedResponse makeSampleResponse(String remoteUrl) throws Exception {
+  private ChunkedResponse makeSampleResponse(String remoteUrl) {
     MockRequest request = makeRequest(remoteUrl);
 
     return getResponse(request);
   }
 
-  private ChunkedResponse getResponse(MockRequest request) throws Exception {
-    Response response = responder.makeResponse(new FitNesseContext(testData.localRoot), request);
-    assertTrue(response instanceof ChunkedResponse);
-    return (ChunkedResponse) response;
+  private ChunkedResponse getResponse(MockRequest request) {
+    ChunkedResponse response = (ChunkedResponse) responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+    response.turnOffChunking();
+    return response;
   }
 
   private MockRequest makeRequest(String remoteUrl) {
@@ -187,8 +200,8 @@ public class WikiImportingResponderTest extends RegexTestCase {
     String content = sender.sentData();
 
     assertNotNull(testData.pageTwo.getChildPage("ChildOne"));
-    assertSubString("href=\"PageTwo.ChildOne\"", content);
-    assertSubString(">ChildOne<", content);
+    assertSubString("PageTwo.ChildOne", content);
+    assertSubString("ChildOne", content);
   }
 
   public void testRemoteUrlNotFound() throws Exception {
@@ -268,20 +281,23 @@ public class WikiImportingResponderTest extends RegexTestCase {
   public void testListOfOrphanedPages() throws Exception {
     WikiImporter importer = new WikiImporter();
 
-    String tail = responder.makeTailHtml(importer).html();
+    responder.setImporter(importer);
+    
+    MockRequest request = makeRequest(baseUrl);
+    String content = simulateWebRequest(request);
 
-    assertNotSubString("orphan", tail);
-    assertNotSubString("PageOne", tail);
-    assertNotSubString("PageOne.ChildPagae", tail);
+    assertNotSubString("orphan", content);
+    //assertNotSubString("PageOne", content);
+    //assertNotSubString("PageOne.ChildPagae", content);
 
     importer.getOrphans().add(new WikiPagePath(testData.pageOne));
     importer.getOrphans().add(new WikiPagePath(testData.childPageOne));
 
-    tail = responder.makeTailHtml(importer).html();
+    content = simulateWebRequest(request);
 
-    assertSubString("2 orphaned pages were found and have been removed.", tail);
-    assertSubString("PageOne", tail);
-    assertSubString("PageOne.ChildOne", tail);
+    assertSubString("2 orphaned pages were found and have been removed.", content);
+    assertSubString("PageOne", content);
+    assertSubString("PageOne.ChildOne", content);
   }
 
   public void testAutoUpdatingTurnedOn() throws Exception {
@@ -297,16 +313,20 @@ public class WikiImportingResponderTest extends RegexTestCase {
     assertTrue(responder.getImporter().getAutoUpdateSetting());
   }
 
-  public void testAutoUpdateSettingDisplayedInTail() throws Exception {
+  public void testAutoUpdateSettingDisplayed() throws Exception {
     WikiImporter importer = new MockWikiImporter();
-    importer.setAutoUpdateSetting(true);
+    
+    responder.setImporter(importer);
+    
+    MockRequest request = makeRequest(baseUrl);
+    request.addInput("autoUpdate", true);
+    String content = simulateWebRequest(request);
 
-    String tail = responder.makeTailHtml(importer).html();
-    assertSubString("Automatic Update turned ON", tail);
+    assertSubString("Automatic Update turned ON", content);
 
-    importer.setAutoUpdateSetting(false);
-
-    tail = responder.makeTailHtml(importer).html();
-    assertSubString("Automatic Update turned OFF", tail);
+    request = makeRequest(baseUrl);
+    content = simulateWebRequest(request);
+    
+    assertSubString("Automatic Update turned OFF", content);
   }
 }

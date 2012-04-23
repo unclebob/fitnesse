@@ -3,6 +3,7 @@
 package fitnesse.runner;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,11 +18,11 @@ public class CachingResultFormatter implements ResultFormatter {
   private ContentBuffer buffer;
   public List<ResultHandler> subHandlers = new LinkedList<ResultHandler>();
 
-  public CachingResultFormatter() throws Exception {
+  public CachingResultFormatter() throws IOException {
     buffer = new ContentBuffer(".results");
   }
 
-  public void acceptResult(PageResult result) throws Exception {
+  public void acceptResult(PageResult result) throws IOException {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     FitProtocol.writeData(result.toString() + "\n", output);
     buffer.append(output.toByteArray());
@@ -30,7 +31,7 @@ public class CachingResultFormatter implements ResultFormatter {
       iterator.next().acceptResult(result);
   }
 
-  public void acceptFinalCount(TestSummary testSummary) throws Exception {
+  public void acceptFinalCount(TestSummary testSummary) throws IOException {
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     Counts counts = new Counts(testSummary.getRight(), testSummary.getWrong(), testSummary.getIgnores(), testSummary.getExceptions());
     FitProtocol.writeCounts(counts, output);
@@ -40,15 +41,15 @@ public class CachingResultFormatter implements ResultFormatter {
       iterator.next().acceptFinalCount(testSummary);
   }
 
-  public int getByteCount() throws Exception {
+  public int getByteCount() {
     return buffer.getSize();
   }
 
-  public InputStream getResultStream() throws Exception {
+  public InputStream getResultStream() throws IOException {
     return buffer.getNonDeleteingInputStream();
   }
 
-  public void cleanUp() throws Exception {
+  public void cleanUp() {
     buffer.delete();
   }
 

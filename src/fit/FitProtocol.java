@@ -11,7 +11,7 @@ import util.StreamReader;
 public class FitProtocol {
   public static final DecimalFormat format = new DecimalFormat("0000000000");
 
-  public static void writeData(String data, OutputStream output) throws Exception {
+  public static void writeData(String data, OutputStream output) throws IOException {
     byte[] bytes = data.getBytes("UTF-8");
     writeData(bytes, output);
   }
@@ -38,19 +38,19 @@ public class FitProtocol {
     writeSize(count.exceptions, output);
   }
 
-  public static int readSize(StreamReader reader) throws Exception {
+  public static int readSize(StreamReader reader) throws IOException {
     String sizeString = reader.read(10);
     if (sizeString.length() < 10)
-      throw new Exception("A size value could not be read. Fragment=|" + sizeString + "|");
+      throw new IOException("A size value could not be read. Fragment=|" + sizeString + "|");
     else
       return Integer.valueOf(sizeString).intValue();
   }
 
-  public static String readDocument(StreamReader reader, int size) throws Exception {
+  public static String readDocument(StreamReader reader, int size) throws IOException {
     return reader.read(size);
   }
 
-  public static Counts readCounts(StreamReader reader) throws Exception {
+  public static Counts readCounts(StreamReader reader) throws IOException {
     Counts counts = new Counts();
     counts.right = readSize(reader);
     counts.wrong = readSize(reader);

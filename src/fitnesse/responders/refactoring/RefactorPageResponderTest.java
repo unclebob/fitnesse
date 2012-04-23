@@ -19,11 +19,10 @@ public class RefactorPageResponderTest extends RegexTestCase {
   private Responder responder;
   private String childPage = "ChildPage";
   private PageCrawler crawler;
-  private FitNesseContext context;
 
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("root");
-    context = FitNesseUtil.makeTestContext(root);
+    FitNesseUtil.makeTestContext(root);
     crawler = root.getPageCrawler();
     crawler.addPage(root, PathParser.parse(childPage));
 

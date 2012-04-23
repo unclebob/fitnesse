@@ -3,11 +3,12 @@ package fitnesse.authentication;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
+
 import org.ietf.jgss.*;
 
 import java.util.Properties;
@@ -114,16 +115,15 @@ public class NegotiateAuthenticator extends Authenticator {
       this.token = token;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
+    public Response makeResponse(FitNesseContext context, Request request) {
       SimpleResponse response = new SimpleResponse(401);
       response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
-      HtmlPage html = context.htmlPageFactory.newPage();
+      HtmlPage html = context.pageFactory.newPage();
       HtmlUtil.addTitles(html, "Negotiated authentication required");
       if (request == null)
-        html.setMainContent("This request requires authentication");
+        html.setMainTemplate("authRequired.vm");
       else
-        html.setMainContent("Your client failed to complete required authentication");
+        html.setMainTemplate("authFailed.vm");
       response.setContent(html.html());
       return response;
     }
@@ -139,13 +139,16 @@ public class NegotiateAuthenticator extends Authenticator {
   * Otherwise, stores the next token to send in the password field and sets request username to null.
   * XXX It would be better to allow associating generic authenticator data to each request.
   */
-  protected void negotiateCredentials(Request request)
-    throws Exception {
+  protected void negotiateCredentials(Request request) {
     String authHeader = (String) request.getHeader("Authorization");
     if (authHeader == null || !authHeader.toLowerCase().startsWith(NEGOTIATE.toLowerCase()))
       request.setCredentials(null, null);
     else {
-      setCredentials(request, getToken(authHeader));
+      try {
+        setCredentials(request, getToken(authHeader));
+      } catch (Exception e) {
+        throw new RuntimeException("Unable to negotiate credentials", e);
+      }
     }
   }
 
@@ -179,13 +182,12 @@ public class NegotiateAuthenticator extends Authenticator {
   }
 
   @Override
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
     negotiateCredentials(request);
     return super.authenticate(context, request, privilegedResponder);
   }
 
-  public boolean isAuthenticated(String username, String password)
-    throws Exception {
+  public boolean isAuthenticated(String username, String password) {
     return username != null;
   }
 

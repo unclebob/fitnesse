@@ -7,5 +7,5 @@ public interface FileSystem {
     void makeDirectory(String path) throws IOException;
     boolean exists(String path);
     String[] list(String path);
-    String getContent(String path) throws Exception;
+    String getContent(String path) throws IOException;
 }

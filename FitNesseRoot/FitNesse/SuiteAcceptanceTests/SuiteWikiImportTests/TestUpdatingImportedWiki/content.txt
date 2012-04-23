@@ -19,7 +19,7 @@ Now we'll change the content of one of the local pages.
 Update the imported wiki.
 !|Response Requester.|
 |uri   |valid?|
-|ImportingPage?responder=import|true|
+|ImportingPage?responder=import&nochunk=true|true|
 
 The !-ChildPageOne-! page will be listed.
 !|Response Examiner|

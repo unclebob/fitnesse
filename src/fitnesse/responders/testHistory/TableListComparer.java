@@ -190,7 +190,7 @@ public class TableListComparer {
     }
 
     private boolean isCalledScenario(String content1) {
-      return content1.contains("<div class=\"collapse_rim\">");
+      return content1.contains("<div class=\"collapsible hidden\">");
     }
   }
 }

@@ -4,17 +4,18 @@ package fitnesse.responders.files;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import util.FileUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.WikiPageAction;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTableListingBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -35,7 +36,7 @@ public class DirectoryResponder implements SecureResponder {
     requestedDirectory = requestedFile;
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     this.context = context;
 
     SimpleResponse simpleResponse = new SimpleResponse();
@@ -52,111 +53,63 @@ public class DirectoryResponder implements SecureResponder {
     response.redirect(resource + "/");
   }
 
-  private String makeDirectoryListingPage() throws Exception {
-    HtmlPage page = context.htmlPageFactory.newPage();
+  private String makeDirectoryListingPage() {
+    HtmlPage page = context.pageFactory.newPage();
     page.setTitle("Files: " + resource);
     //page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
     page.setPageTitle(new PageTitle("Files Section", resource, "/"));
-    page.setMainContent(makeRightColumn());
-
+    page.put("fileInfoList", makeFileInfo(FileUtil.getDirectoryListing(requestedDirectory)));
+    page.setMainTemplate("directoryPage.vm");
     return page.html();
   }
 
-  private String makeRightColumn() throws Exception {
-    TagGroup html = new TagGroup();
-    html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));
-    html.add(HtmlUtil.HR.html());
-    html.add(makeUploadForm());
-    html.add(makeDirectoryForm());
-    return html.html();
-  }
-
-  private HtmlTag addFiles(File[] files) throws Exception {
-    HtmlTableListingBuilder table = new HtmlTableListingBuilder();
-    makeHeadingRow(table);
-    addFileRows(files, table);
-
-    return table.getTable();
-  }
-
-  private void addFileRows(File[] files, HtmlTableListingBuilder table) throws Exception {
-    for (File file : files) {
-      HtmlTag nameItem = makeLinkToFile(file);
-      HtmlElement sizeItem = new RawHtml(getSizeString(file));
-      HtmlElement dateItem = new RawHtml(dateFormat.format(new Date(file.lastModified())));
-      TagGroup actionItem = new TagGroup();
-      actionItem.add(makeRenameButton(file.getName()));
-      actionItem.add("|");
-      actionItem.add(makeDeleteButton(file.getName()));
-      table.addRow(new HtmlElement[]{nameItem, sizeItem, dateItem, actionItem});
-    }
-  }
-
-  private void makeHeadingRow(HtmlTableListingBuilder table) throws Exception {
-    HtmlTag nameHeading = HtmlUtil.makeSpanTag("caps", "Name");
-    HtmlTag sizeHeading = HtmlUtil.makeSpanTag("caps", "Size");
-    HtmlTag dateHeading = HtmlUtil.makeSpanTag("caps", "Date");
-    HtmlTag actionHeading = HtmlUtil.makeSpanTag("caps", "Action");
-    table.addRow(new HtmlTag[]{nameHeading, sizeHeading, dateHeading, actionHeading});
-  }
-
-  private HtmlTag makeDeleteButton(String filename) throws Exception {
-    return HtmlUtil.makeLink("?responder=deleteConfirmation&filename=" + filename, "Delete");
-  }
-
-  private HtmlTag makeRenameButton(String filename) throws Exception {
-    return HtmlUtil.makeLink("?responder=renameConfirmation&filename=" + filename, "Rename");
-  }
-
-  private HtmlTag makeLinkToFile(File file) {
-    String href = file.getName();
-    if (file.isDirectory()) {
-      href += "/";
-      HtmlTag image = new HtmlTag("img");
-      image.addAttribute("src", "/files/images/folder.gif");
-      image.addAttribute("class", "left");
-      HtmlTag link = HtmlUtil.makeLink(href, image);
-      link.add(file.getName());
-      return link;
-    } else
-      return HtmlUtil.makeLink(href, file.getName());
-  }
-
-  private HtmlTag makeUploadForm() throws Exception {
-    HtmlTag uploadForm = HtmlUtil.makeFormTag("post", "/" + resource);
-    uploadForm.addAttribute("enctype", "multipart/form-data");
-    uploadForm.addAttribute("class", "left");
-    uploadForm.add("<!--upload form-->");
-    uploadForm.add(HtmlUtil.makeSpanTag("caps", "Upload a file:"));
-    uploadForm.add(HtmlUtil.makeInputTag("hidden", "responder", "upload"));
-    uploadForm.add(HtmlUtil.BR);
-    uploadForm.add(HtmlUtil.makeInputTag("file", "file", ""));
-    uploadForm.add(HtmlUtil.BR);
-    uploadForm.add(HtmlUtil.makeInputTag("submit", "", "Upload"));
-    return uploadForm;
-  }
-
-  private HtmlTag makeDirectoryForm() throws Exception {
-    HtmlTag dirForm = HtmlUtil.makeFormTag("get", "/" + resource);
-    dirForm.addAttribute("class", "right");
-    dirForm.add(HtmlUtil.makeInputTag("hidden", "responder", "createDir"));
-    dirForm.add("<!--create directory form-->");
-    dirForm.add(HtmlUtil.makeSpanTag("caps", "Create a directory:"));
-    dirForm.add(HtmlUtil.BR);
-    dirForm.add(HtmlUtil.makeInputTag("text", "dirname", ""));
-    dirForm.add(HtmlUtil.BR);
-    dirForm.add(HtmlUtil.makeInputTag("submit", "", "Create"));
-    return dirForm;
-  }
-
-  public static String getSizeString(File file) {
-    if (file.isDirectory())
-      return "";
-    else
-      return file.length() + " bytes";
-  }
 
   public SecureOperation getSecureOperation() {
     return new AlwaysSecureOperation();
   }
+
+  private List<FileInfo> makeFileInfo(File[] files) {
+    List<FileInfo> fileInfo = new ArrayList<FileInfo>();
+    for (File file : files) {
+      fileInfo.add(new FileInfo(file));
+    }
+    return fileInfo;
+  }
+
+  
+  public class FileInfo {
+    private File file;
+    
+    public FileInfo(File file) {
+      this.file = file;
+    }
+    
+    public File getFile() {
+      return file;
+    }
+    
+    public boolean isDirectory() {
+      return file.isDirectory();
+    }
+    
+    public String getName() {
+      String name = file.getName();
+      if (file.isDirectory()) {
+        name += "/";
+      }
+      return name;
+    }
+    
+    public String getSize() {
+      if (file.isDirectory())
+        return "";
+      else
+        return file.length() + " bytes";
+    }
+
+    public String getDate() {
+      return dateFormat.format(new Date(file.lastModified()));
+    }
+  }
+  
 }

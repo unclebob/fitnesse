@@ -205,25 +205,19 @@ public class SuiteResponderTest {
   @Test
   public void testExecutionStatusAppears() throws Exception {
     String results = runSuite();
-    assertHasRegexp(divWithIdAndContent("execution-status", ".*?"), results);
+    assertHasRegexp("Tests Executed OK", results);
   }
 
   @Test
   public void testTestSummaryInformationIncludesPageSummary() throws Exception {
     String results = runSuite();
-    assertHasRegexp(divWithIdAndContent("test-summary",
-      ".*?Test Pages:.*?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.*?Assertions:.*?"
-    ), results
-    );
+    assertHasRegexp(".*?Test Pages:.*?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.*?Assertions:.*?", results);
   }
 
   @Test
   public void testFormatTestSummaryInformation() throws Exception {
     String results = runSuite();
-    assertHasRegexp(divWithIdAndContent("test-summary",
-      ".*?<strong>Test Pages:</strong>.*?<strong>Assertions:</strong>.*?"
-    ), results
-    );
+    assertHasRegexp(".*?<strong>Test Pages:</strong>.*?<strong>Assertions:</strong>.*?", results);
   }
 
   private String classpathWidgets() {

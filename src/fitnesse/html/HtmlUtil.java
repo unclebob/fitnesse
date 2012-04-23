@@ -2,20 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import org.apache.velocity.VelocityContext;
-
-import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.ProxyPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageAction;
-import fitnesse.wiki.WikiPageActions;
-import fitnesse.wiki.WikiPagePath;
-
-import java.util.List;
 
 public class HtmlUtil {
   public static final String BRtag = "<br/>";
@@ -45,57 +34,11 @@ public class HtmlUtil {
     return bold;
   }
 
-  public static HtmlTag makeItalic(String content) {
-    HtmlTag italic = new HtmlTag("i");
-    italic.add(content);
-    return italic;
-  }
-
   public static HtmlTag makeSpanTag(String spanClass, String content) {
     HtmlTag span = new HtmlTag("span");
     span.addAttribute("class", spanClass);
     span.add(content);
     return span;
-  }
-
-  public static HtmlTag makeFormTag(String method, String action) {
-    return makeFormTag(method, action, null);
-  }
-
-  public static HtmlTag makeFormTag(String method, String action, String name) {
-    HtmlTag formTag = new HtmlTag("form");
-    formTag.addAttribute("method", method);
-    formTag.addAttribute("action", action);
-    if (name != null)
-      formTag.addAttribute("name", name);
-    return formTag;
-  }
-
-  public static HtmlTag makeAnchorTag(String name) {
-    HtmlTag anchorTag = new HtmlTag("a", " ");
-    anchorTag.addAttribute("name", name);
-    return anchorTag;
-  }
-
-  public static HtmlTag makeInputTag(String type, String name, String value) {
-    HtmlTag input = makeInputTag(type, name);
-    input.addAttribute("value", value);
-    return input;
-  }
-
-  public static HtmlTag makeInputTag(String type, String name) {
-    HtmlTag input = new HtmlTag("input");
-    input.addAttribute("type", type);
-    input.addAttribute("name", name);
-    return input;
-  }
-
-  public static HtmlTag makeOptionTag(String value, String text) {
-    HtmlTag option = new HtmlTag("option");
-    option.addAttribute("value", value);
-    option.add(text);
-
-    return option;
   }
 
   public static HtmlTag makeLink(String href, String text) {
@@ -109,19 +52,20 @@ public class HtmlUtil {
     return link;
   }
 
-  public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
+  public static String makeNormalWikiPageContent(PageData pageData) {
     SetupTeardownAndLibraryIncluder.includeInto(pageData);
-    return makePageHtmlWithHeaderAndFooter(pageData);
+    return makePageHtml(pageData);
   }
 
-  public static String makePageHtmlWithHeaderAndFooter(PageData pageData) throws Exception {
+  public static String makePageHtml(PageData pageData) {
     StringBuffer buffer = new StringBuffer();
     buffer.append(pageData.getHeaderPageHtml());
     buffer.append(pageData.getHtml());
-    buffer.append("<br/><div class=\"footer\">\n");
-    buffer.append(pageData.getFooterPageHtml());
-    buffer.append("</div>\n");
     return buffer.toString();
+  }
+
+  public static String makePageFooterHtml(PageData pageData) {
+    return pageData.getFooterPageHtml();
   }
 
   public static String metaText(String text) {

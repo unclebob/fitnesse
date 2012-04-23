@@ -33,15 +33,14 @@ public class WhereUsedResponderTest extends RegexTestCase {
 
     Response response = responder.makeResponse(new FitNesseContext(root), request);
     MockResponseSender sender = new MockResponseSender();
-    response.readyToSend(sender);
-    sender.waitForClose(5000);
+    response.sendTo(sender);
 
     String content = sender.sentData();
     assertEquals(200, response.getStatus());
     assertHasRegexp("Where Used", content);
-    assertHasRegexp(">PageOne<", content);
-    assertHasRegexp(">PageTwo<", content);
-    assertHasRegexp(">PageTwo\\.ChildPage<", content);
+    assertHasRegexp("PageOne", content);
+    assertHasRegexp("PageTwo", content);
+    assertHasRegexp("PageTwo\\.ChildPage", content);
   }
 }
 

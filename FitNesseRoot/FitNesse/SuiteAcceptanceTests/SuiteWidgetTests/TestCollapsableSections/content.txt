@@ -67,28 +67,25 @@ BOTTOM
 !|scenario|given a page with an invisible section containing|text|
 |given page|PageWithCollapsibleSection|with content|!*< My Section!-<br>-!@text!-<br>-!****!|
 
-!|scenario|the content|text|should be in a div of class|class|
-|it should match|div.*class="@class".*>@text(<br/>)?</div>|
+!|scenario|the content|text|should be in a div|
+|it should match|<div>@text(<br/>)?</div>|
 
 !|scenario|it should have|text|within a|class|div|
-|the content|@text|should be in a div of class|@class|
+|the content|@text|should be in a div|
 |and it should have a collapsible div|
 
 !|scenario|and it should have a collapsible div|
-|and should contain|div class="collapse_rim">|
-|and should contain|a href="javascript:expandAll()|
-|and should contain|a href="javascript:collapseAll()|
-|and should contain|a href="javascript:toggleCollapsable|
-|and should contain|span class="meta">My Section|
+|and should contain|div class="collapsible|
+|and should contain|p class="title">My Section|
 
 *!
 
 !|script|
 |given a page with a collapsible section containing|line one!-<br/>-!line two|
-|it should have|line one!-<br/>-!line two|within a|collapsable|div|
+|it should have|line one!-<br/>-!line two|within a|collapsible|div|
 ||
 |given a page with a collapsed section containing|line one!-<br/>-!line two|
-|it should have|line one!-<br/>-!line two|within a|hidden|div|
+|it should have|line one!-<br/>-!line two|within a|invisible|div|
 ||
 |given a page with an invisible section containing|line one!-<br/>-!line two|
-|the content|line one!-<br/>-!line two|should be in a div of class|invisible|
+|the content|line one!-<br/>-!line two|should be in a div|

@@ -31,7 +31,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
     getContentForSimpleRename();
 
     assertSubString("renameFile", content);
-    assertSubString("Rename File", content);
+    assertSubString("Rename", content);
     assertSubString("Rename <b>MyFile.txt</b>", content);
   }
 
@@ -53,7 +53,7 @@ public class RenameFileConfirmationResponderTest extends RegexTestCase {
     Responder responder = new RenameFileConfirmationResponder();
     SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
     String content = response.getContent();
-    assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/css/fitnesse.css\" media=\"screen\"/>", content);
+    assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/fitnesse/css/fitnesse_wiki.css\"", content);
   }
 
 }

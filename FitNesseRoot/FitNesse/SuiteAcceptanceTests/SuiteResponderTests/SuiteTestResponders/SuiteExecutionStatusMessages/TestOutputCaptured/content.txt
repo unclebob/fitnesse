@@ -3,6 +3,6 @@ When output is captures during execution, we get the message:
 
 !define FIXTURE_NAME {OutputWritingFixture}
 !define EXPECTED_STATUS_MESSAGE {Output Captured}
-!define EXPECTED_ICON_URL {/files/images/executionStatus/output.gif}
+!define EXPECTED_STYLE {output}
 
 !include DoTest

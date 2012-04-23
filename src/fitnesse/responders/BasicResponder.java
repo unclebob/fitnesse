@@ -11,11 +11,11 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public abstract class BasicResponder implements SecureResponder {
-  protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
+  protected Response pageNotFoundResponse(FitNesseContext context, Request request) {
     return new NotFoundResponder().makeResponse(context, request);
   }
 
-  protected Response responseWith(String content) throws Exception {
+  protected Response responseWith(String content) {
     SimpleResponse response = new SimpleResponse();
     response.setContentType(getContentType());
     response.setContent(content);
@@ -23,7 +23,7 @@ public abstract class BasicResponder implements SecureResponder {
   }
 
   protected String getContentType() {
-    return Response.DEFAULT_CONTENT_TYPE;
+    return Response.Format.HTML.getContentType();
   }
 
   public SecureOperation getSecureOperation() {

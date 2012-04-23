@@ -1,0 +1,57 @@
+#if( !$type || $type == "replace" )
+<form action="$refactoredRootPage" method="post">
+ <h2>Replace</h2>
+ <input type="hidden" name="responder" value="replace"/>
+ <fieldset>
+  <label for="searchString">Search String:</label>
+  <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+ </fieldset>
+ <fieldset>
+  <label for="replacementString">Replacement:</label>
+  <input type="text" id="replacementString" name="replacementString" value="#if ($request.hasInput("replacementString"))$request.getInput("replacementString")#end"/>
+ </fieldset>
+ <input type="submit" name="replace" value="Replace!"/>
+
+ <p><strong>Search &amp; Replace: </strong>
+ Please note that this feature is experimental! It uses java-based regular expressions. For an introduction, take a look <a href="http://java.sun.com/javase/6/docs/api/java/util/regex/Pattern.html" target="_new">here</a> (new window).  
+</form>
+#end
+
+#if( !$type || $type == "delete" ) 
+<form method="get" action="$refactoredRootPage">
+ <h2>Delete page</h2>
+ <p>Delete this entire sub-wiki.</p>		
+ <input type="hidden" name="responder" value="deletePage"/>
+ <input type="submit" name="" value="Delete Page"/>
+</form>
+#end
+
+#if( !$type || $type == "rename" )
+<form method="get" action="$refactoredRootPage">
+ <h2>Rename page</h2>
+ <input type="hidden" name="responder" value="renamePage"/>
+ <fieldset>
+  <label for="newName">New Name:</label>
+  <input type="text" id="newName" name="newName" value="" size="50" class="wikiword" />
+ </fieldset>
+ <fieldset>
+  <label for="refactorReferences"><input type="checkbox" id="refactorReferences" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
+ </fieldset>
+ <input type="submit" name="" value="Rename Page"/>
+</form>
+#end
+
+#if( !$type || $type == "move" )
+<form method="get" action="$refactoredRootPage">
+ <h2>Move page</h2>
+ <input type="hidden" name="responder" value="movePage"/>
+ <fieldset>
+  <label for="newLocation">New Location:</label>
+  <input type="text" name="newLocation" value="" size="80" class="wikipath" />
+ </fieldset>
+ <fieldset>
+  <label for="refactorReferences_move"><input type="checkbox" id="refactorReferences_move" name="refactorReferences"/>Find all references to this page and change them accordingly (May take several minutes)</label>
+ </fieldset>
+ <input type="submit" name="" value="Move Page"/>
+</form>
+#end

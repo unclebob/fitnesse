@@ -4,7 +4,7 @@ package fitnesse.wiki;
 
 //TODO rename me
 public class VirtualEnabledPageCrawler implements PageCrawlerDeadEndStrategy {
-  public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws Exception {
+  public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) {
     String name = restOfPath.getFirst();
     restOfPath = restOfPath.getRest();
     if (context.hasExtension(VirtualCouplingExtension.NAME)) {

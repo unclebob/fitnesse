@@ -16,7 +16,7 @@ Create an importing page.
 This !-ImportingPage-! will now import the !-ImportingRoot-! page created above.
 !|Response Requester.                                                                          |
 |uri                                                                                    |valid?|
-|ImportingPage?responder=import&remoteUrl=http://localhost:${INTERNAL_PORT}/ImportedRoot|true  |
+|ImportingPage?responder=import&remoteUrl=http://localhost:${INTERNAL_PORT}/ImportedRoot&nochunk=true|true  |
 
 We see all 3 pages imported.
 !|Response Examiner                     |
@@ -29,7 +29,7 @@ Sleep a bit so that the last modification time actually changes.
 Importing again will show that no pages were imported since none had changed.
 !|Response Requester.                 |
 |uri                           |valid?|
-|ImportingPage?responder=import|true  |
+|ImportingPage?responder=import&nochunk=true|true  |
 
 !|Response Examiner                                     |
 |type    |pattern                |matches?|wrapped html?|
@@ -44,7 +44,7 @@ Now we'll update one of the imported pages...
 Importing again will shows only 1 page imported, 2 unchanged.
 !|Response Requester.                 |
 |uri                           |valid?|
-|ImportingPage?responder=import|true  |
+|ImportingPage?responder=import&nochunk=true|true  |
 
 !|Response Examiner                       |
 |type    |pattern                |matches?|

@@ -2,16 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TimeZone;
 
 public abstract class Response {
-    public enum Format {
+  public enum Format {
     XML("text/xml"),
-    HTML(DEFAULT_CONTENT_TYPE),
+    HTML("text/html; charset=utf-8"),
     TEXT("text/text"),
     JSON("text/json"),
     JAVA("java");
@@ -28,8 +32,6 @@ public abstract class Response {
     
   }
 
-  public static final String DEFAULT_CONTENT_TYPE = "text/html; charset=utf-8";
-
   protected static final String CRLF = "\r\n";
 
   public static SimpleDateFormat makeStandardHttpDateFormat() {
@@ -42,7 +44,7 @@ public abstract class Response {
 
   private int status = 200;
   private HashMap<String, String> headers = new HashMap<String, String>(17);
-  private String contentType = DEFAULT_CONTENT_TYPE;
+  private String contentType = Format.HTML.contentType;
 
   public Response(String formatString) {
     Format format;
@@ -77,13 +79,12 @@ public abstract class Response {
   public boolean isTextFormat() {
     return Format.TEXT.contentType.equals(contentType);
   }
+  
   public boolean isJavaFormat(){
     return Format.JAVA.contentType.equals(contentType);
   }
 
-  public abstract void readyToSend(ResponseSender sender) throws Exception;
-
-  protected abstract void addSpecificHeaders();
+  public abstract void sendTo(ResponseSender sender) throws IOException;
 
   public abstract int getContentSize();
 
@@ -143,22 +144,23 @@ public abstract class Response {
     return headers.get(key);
   }
 
-  public byte[] getEncodedBytes(String value) throws Exception {
-    return value.getBytes("UTF-8");
+  public byte[] getEncodedBytes(String value) {
+    // TODO: -AJM- Defer encoding to the latest responsible moment
+    try {
+      return value.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Unable to encode data", e);
+    }
   }
 
   void makeHeaders(StringBuffer text) {
-    for (Iterator<String> iterator = headers.keySet().iterator(); iterator
-      .hasNext();) {
-      String key = iterator.next();
-      String value = headers.get(key);
-      text.append(key).append(": ").append(value).append(CRLF);
+    for (Entry<String, String> entry: headers.entrySet()) {
+      text.append(entry.getKey()).append(": ").append(entry.getValue()).append(CRLF);
     }
   }
 
   protected void addStandardHeaders() {
     addHeader("Content-Type", getContentType());
-    addSpecificHeaders();
   }
 
   protected String getReasonPhrase() {

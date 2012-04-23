@@ -7,9 +7,10 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.PageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
+import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
@@ -34,7 +35,6 @@ public class FitNesseMain {
   public static void launchFitNesse(Arguments arguments) throws Exception {
     loadPlugins();
     FitNesseContext context = loadContext(arguments);
-    VelocityFactory.makeVelocityFactory(context);
     Updater updater = null;
     if (!arguments.isOmittingUpdates())
       updater = new UpdaterImplementation(context);
@@ -75,8 +75,9 @@ public class FitNesseMain {
     fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
     System.out.println("-----Command Complete-----");
     fitnesse.stop();
-    if (shouldExitAfterSingleCommand())
+    if (shouldExitAfterSingleCommand()) {
       System.exit(TestTextFormatter.finalErrorCount);
+    }
   }
 
   private static boolean shouldExitAfterSingleCommand() {
@@ -100,8 +101,11 @@ public class FitNesseMain {
     context.logger = makeLogger(arguments);
     context.authenticator = makeAuthenticator(arguments.getUserpass(),
       componentFactory);
-    context.htmlPageFactory = componentFactory
-      .getHtmlPageFactory(new HtmlPageFactory());
+    String newPageTheme = componentFactory.getProperty(ComponentFactory.THEME);
+    if (newPageTheme != null) {
+      context.pageTheme = newPageTheme;
+    }
+    context.pageFactory = new PageFactory(context);
 
     extraOutput = componentFactory.loadPlugins(context.responderFactory,
       wikiPageFactory);

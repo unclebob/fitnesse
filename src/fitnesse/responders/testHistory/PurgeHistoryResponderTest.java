@@ -131,7 +131,7 @@ public class PurgeHistoryResponderTest {
     public int daysDeleted = -1;
 
     @Override
-    public void deleteTestHistoryOlderThanDays(int days) throws ParseException {
+    public void deleteTestHistoryOlderThanDays(int days) {
       daysDeleted = days;
     }
   }

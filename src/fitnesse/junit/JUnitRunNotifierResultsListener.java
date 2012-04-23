@@ -19,7 +19,7 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
   }
 
   @Override
@@ -31,21 +31,20 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
     notifier.fireTestStarted(descriptionFor(test));
   }
 
-  private Description descriptionFor(TestPage test) throws Exception {
+  private Description descriptionFor(TestPage test) {
     return Description.createTestDescription(mainClass, new WikiPagePath(test.getSourcePage()).toString());
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
-      throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)  {
     if (testSummary.wrong == 0 && testSummary.exceptions == 0) {
       notifier.fireTestFinished(descriptionFor(test));
     } else {
@@ -55,11 +54,10 @@ public class JUnitRunNotifierResultsListener implements ResultsListener {
   }
 
   @Override
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-      throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 }

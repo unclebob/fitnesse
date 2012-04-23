@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import fitnesse.FitNesseContext;
@@ -16,7 +17,6 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlElement;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTableListingBuilder;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -26,6 +26,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.MockingPageCrawler;
 import fitnesse.wiki.PageCrawler;
@@ -47,8 +48,7 @@ public class PropertiesResponder implements SecureResponder {
   private SimpleResponse response;
   private HtmlPage html;
 
-  public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     response = new SimpleResponse();
     resource = request.getResource();
     path = PathParser.parse(resource);
@@ -65,18 +65,22 @@ public class PropertiesResponder implements SecureResponder {
     return response;
   }
 
-  private void makeContent(FitNesseContext context, Request request)
-      throws Exception {
+  private void makeContent(FitNesseContext context, Request request) {
     if ("json".equals(request.getInput("format"))) {
       JSONObject jsonObject = makeJson();
-      response.setContent(jsonObject.toString(1));
+      try {
+        response.setContent(jsonObject.toString(1));
+      } catch (JSONException e) {
+        throw new RuntimeException(e);
+      }
     } else {
-      String html = makeHtml(context);
+      String html = makeHtml(context, request);
+      
       response.setContent(html);
     }
   }
 
-  private JSONObject makeJson() throws Exception {
+  private JSONObject makeJson() {
     response.setContentType("text/json");
     JSONObject jsonObject = new JSONObject();
     String attributes[] = new String[] { TEST.toString(), PropertySEARCH,
@@ -90,38 +94,29 @@ public class PropertiesResponder implements SecureResponder {
     return jsonObject;
   }
 
-  private void addJsonAttribute(JSONObject jsonObject, String attribute)
-      throws Exception {
-    jsonObject.put(attribute, pageData.hasAttribute(attribute));
+  private void addJsonAttribute(JSONObject jsonObject, String attribute) {
+    try {
+      jsonObject.put(attribute, pageData.hasAttribute(attribute));
+    } catch (JSONException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  private String makeHtml(FitNesseContext context) throws Exception {
-    html = context.htmlPageFactory.newPage();
+  private String makeHtml(FitNesseContext context, Request request) {
+    html = context.pageFactory.newPage();
+    html.setNavTemplate("viewNav");
+    html.put("viewLocation", request.getResource());
     html.setTitle("Properties: " + resource);
     html.setPageTitle(new PageTitle("Page Properties", path));
     html.put("pageData", pageData);
-    html.setMainTemplate("properties.vm");
+    html.setMainTemplate("propertiesPage");
     makeLastModifiedTag();
     makeFormSections();
 
     return html.html();
   }
 
-  private HtmlTag makeAttributeCheckbox(String attribute, String displayString, PageData pageData)
-      throws Exception {
-    HtmlTag checkbox = makeCheckbox(attribute, displayString);
-    if (pageData.hasAttribute(attribute))
-      checkbox.addAttribute("checked", "true");
-    return checkbox;
-  }
-
-  private HtmlTag makeCheckbox(String attribute, String displayString) {
-    HtmlTag checkbox = HtmlUtil.makeInputTag("checkbox", attribute);
-    checkbox.tail = " - " + displayString;
-    return checkbox;
-  }
-
-  private void makeLastModifiedTag() throws Exception {
+  private void makeLastModifiedTag() {
     String username = pageData.getAttribute(LAST_MODIFYING_USER);
     if (username == null || "".equals(username))
       html.put("lastModified", "Last modified anonymously");
@@ -129,7 +124,7 @@ public class PropertiesResponder implements SecureResponder {
       html.put("lastModified", "Last modified by " + username);
   }
 
-  private void makeFormSections() throws Exception {
+  private void makeFormSections() {
     makePropertiesForm();
 
     WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData
@@ -142,24 +137,21 @@ public class PropertiesResponder implements SecureResponder {
     makeSymbolicLinkSection();
   }
 
-  private void makePropertiesForm() throws Exception {
+  private void makePropertiesForm() {
     makePageTypeRadiosHtml(pageData);
     makeTestActionCheckboxesHtml(pageData);
     makeNavigationCheckboxesHtml(pageData);
     makeSecurityCheckboxesHtml(pageData);
     makeVirtualWikiHtml();
-    makeTagsHtml(pageData);
-    makeHelpTextHtml(pageData);
   }
 
-  public void makePageTypeRadiosHtml(PageData pageData) throws Exception {
+  public void makePageTypeRadiosHtml(PageData pageData) {
     html.put("pageTypes", PAGE_TYPE_ATTRIBUTES);
     String pt = getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES);
     html.put("selectedPageType", getCheckedAttribute(pageData, PAGE_TYPE_ATTRIBUTES));
   }
 
-  private String getCheckedAttribute(PageData pageData, String[] attributes)
-      throws Exception {
+  private String getCheckedAttribute(PageData pageData, String[] attributes) {
     for (int i = attributes.length - 1; i > 0; i--) {
       if (pageData.hasAttribute(attributes[i]))
         return attributes[i];
@@ -167,7 +159,7 @@ public class PropertiesResponder implements SecureResponder {
     return attributes[0];
   }
 
-  private void makeVirtualWikiHtml() throws Exception {
+  private void makeVirtualWikiHtml() {
     html.put("virtualWikiValue", getVirtualWikiValue(pageData));
   }
 
@@ -187,7 +179,7 @@ public class PropertiesResponder implements SecureResponder {
     html.put("sourceUrl", importProps.getSourceUrl());
   }
 
-  private void makeSymbolicLinkSection() throws Exception {
+  private void makeSymbolicLinkSection() {
     WikiPageProperty symLinksProperty = pageData.getProperties().getProperty(
         SymbolicPage.PROPERTY_NAME);
     if (symLinksProperty == null)
@@ -203,7 +195,7 @@ public class PropertiesResponder implements SecureResponder {
     html.put("symlinks", symlinks);
   }
 
-  private String makePathForSymbolicLink(String linkPath) throws Exception {
+  private String makePathForSymbolicLink(String linkPath) {
     WikiPagePath wikiPagePath = PathParser.parse(linkPath);
 
     if (wikiPagePath != null) {
@@ -225,7 +217,7 @@ public class PropertiesResponder implements SecureResponder {
     return null;
   }
 
-  public static String getVirtualWikiValue(PageData data) throws Exception {
+  public static String getVirtualWikiValue(PageData data) {
     String value = data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
     if (value == null)
       return "";
@@ -245,44 +237,8 @@ public class PropertiesResponder implements SecureResponder {
     html.put("navigationTypes", NAVIGATION_ATTRIBUTES);
   }
 
-  public void makeSecurityCheckboxesHtml(PageData pageData) throws Exception {
+  public void makeSecurityCheckboxesHtml(PageData pageData) {
     html.put("securityTypes", SECURITY_ATTRIBUTES);
-  }
-
-  public HtmlTag makeTagsHtml(PageData pageData) throws Exception {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left; padding-right: 5px");
-
-    div.add(makeInputField("Tags:", PropertySUITES, PropertySUITES,
-        40, pageData));
-    return div;
-  }
-
-  public HtmlTag makeHelpTextHtml(PageData pageData) throws Exception {
-    return makeInputField("Help Text:", PropertyHELP, "HelpText", 90,
-        pageData);
-  }
-
-  public HtmlTag makeInputField(String label, String propertyName,
-      String fieldId, int size, PageData pageData) throws Exception {
-    HtmlTag div = new HtmlTag("div");
-    div.addAttribute("style", "float: left;");
-    div.add(label);
-
-    String textValue = "";
-    WikiPageProperty theProp = pageData.getProperties().getProperty(
-        propertyName);
-    if (theProp != null) {
-      String propValue = theProp.getValue();
-      if (propValue != null)
-        textValue = propValue;
-    }
-
-    div.add(HtmlUtil.BR);
-    HtmlTag input = HtmlUtil.makeInputTag("text", fieldId, textValue);
-    input.addAttribute("size", Integer.toString(size));
-    div.add(input);
-    return div;
   }
 
 

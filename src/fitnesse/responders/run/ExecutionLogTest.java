@@ -11,6 +11,9 @@ import static util.RegexTestCase.assertSubString;
 import org.junit.Before;
 import org.junit.Test;
 
+import fitnesse.FitNesseContext;
+import fitnesse.responders.PageFactory;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
@@ -25,13 +28,15 @@ public class ExecutionLogTest {
   private MockCommandRunner runner;
   private ExecutionLog log;
   private WikiPage root;
-
+  private FitNesseContext context;
+  
   @Before
   public void setUp() throws Exception {
     root = InMemoryPage.makeRoot("RooT");
     testPage = root.addChildPage("TestPage");
     runner = new MockCommandRunner("some command", 123);
-    log = new ExecutionLog(testPage, runner);
+    context = FitNesseUtil.makeTestContext(root);
+    log = new ExecutionLog(testPage, runner, context.pageFactory);
   }
 
 
@@ -126,7 +131,7 @@ public class ExecutionLogTest {
     public void testExecutionReport_Ok() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
-    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner, context.pageFactory);
     ExecutionStatus result;
 
     if (executionLog.exceptionCount() > 0)
@@ -144,7 +149,7 @@ public class ExecutionLogTest {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
     mockCommandRunner.setOutput("I wrote something here");
-    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner, context.pageFactory);
     ExecutionStatus result;
 
     if (executionLog.exceptionCount() > 0)
@@ -161,7 +166,7 @@ public class ExecutionLogTest {
     public void testExecutionReport_Error() throws Exception {
     WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
     MockCommandRunner mockCommandRunner = new MockCommandRunner();
-    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
+    ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner, context.pageFactory);
     executionLog.addException(new RuntimeException("I messed up"));
     ExecutionStatus result;
 

@@ -2,30 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SaveRecorder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.*;
+import fitnesse.wiki.MockingPageCrawler;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
 
 public class EditResponder implements SecureResponder {
   public static final String CONTENT_INPUT_NAME = "pageContent";
-  public static final String CONTENT_INPUT_ID = "pageContentId";
   public static final String TIME_STAMP = "editTime";
   public static final String TICKET_ID = "ticketId";
+  public static final String HELP_TEXT = "helpText";
 
   protected String content;
   protected WikiPage page;
@@ -36,17 +35,16 @@ public class EditResponder implements SecureResponder {
   public EditResponder() {
   }
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     boolean nonExistent = request.hasInput("nonExistent");
     return doMakeResponse(context, request, nonExistent);
   }
 
-  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) {
     return doMakeResponse(context, request, true);
   }
 
-  protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage)
-    throws Exception {
+  protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage) {
     initializeResponder(context.root, request);
 
     SimpleResponse response = new SimpleResponse();
@@ -76,31 +74,26 @@ public class EditResponder implements SecureResponder {
     this.request = request;
   }
 
-  protected String createPageContent() throws Exception {
+  protected String createPageContent() {
     return pageData.getContent();
   }
 
-  public String makeHtml(String resource, FitNesseContext context) throws Exception {
-    return doMakeHtml(resource, context, false);
-  }
-
-  private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage)
-    throws Exception {
-    HtmlPage html = context.htmlPageFactory.newPage();
+  private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage) {
+    HtmlPage html = context.pageFactory.newPage();
     String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
     html.setTitle(title + resource + ":");
     
     html.setPageTitle(new PageTitle(title + " Page:", PathParser.parse(resource)));
-    html.setMainContent(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
+    html.setMainTemplate("editPage");
+    makeEditForm(html, resource, firstTimeForNewPage, context.defaultNewPageContent);
     
     return html.html();
   }
 
-  private String makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception {
-    VelocityContext velocityContext = new VelocityContext();
-    velocityContext.put("action", resource);
-    velocityContext.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));
-    velocityContext.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
+  private void makeEditForm(HtmlPage html, String resource, boolean firstTimeForNewPage, String defaultNewPageContent) {
+    html.put("resource", resource);
+    html.put(TIME_STAMP, String.valueOf(SaveRecorder.timeStamp()));
+    html.put(TICKET_ID, String.valueOf(SaveRecorder.newTicket()));
     
     if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
       String redirectUrl = request.getHeader("Referer").toString();
@@ -108,12 +101,12 @@ public class EditResponder implements SecureResponder {
       if (questionMarkIndex > 0)
         redirectUrl = redirectUrl.substring(0, questionMarkIndex);
       redirectUrl += "?" + request.getInput("redirectAction").toString();
-      velocityContext.put("redirect", redirectUrl);
+      html.put("redirect", redirectUrl);
     }
 
-    velocityContext.put("pageContent", Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
-
-    return VelocityFactory.translateTemplate(velocityContext, "editPage.vm");
+    html.put("helpText", pageData.getAttribute(PageData.PropertyHELP));
+    html.put("suites", pageData.getAttribute(PageData.PropertySUITES));
+    html.put(CONTENT_INPUT_NAME, Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
   }
 
   public SecureOperation getSecureOperation() {

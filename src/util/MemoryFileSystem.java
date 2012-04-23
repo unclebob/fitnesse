@@ -7,7 +7,7 @@ import java.util.Hashtable;
 public class MemoryFileSystem implements FileSystem{
     private final Hashtable<String, String> files = new Hashtable<String, String>();
 
-    public void makeFile(String path, String content) throws IOException {
+    public void makeFile(String path, String content) {
         files.put(path, content);
     }
 
@@ -36,7 +36,7 @@ public class MemoryFileSystem implements FileSystem{
         return result.toArray(new String[result.size()]);
     }
 
-    public String getContent(String path) throws Exception {
+    public String getContent(String path) {
         return files.get(path);
     }
 }

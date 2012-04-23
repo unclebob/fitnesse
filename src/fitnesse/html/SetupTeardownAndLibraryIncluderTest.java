@@ -49,7 +49,7 @@ public class SetupTeardownAndLibraryIncluderTest {
     assertSubString(".TearDown", html);
     assertSubString("teardown", html);
     assertSubString("the content", html);
-    assertSubString("class=\"hidden\"", html);
+    assertSubString("class=\"collapsible closed\"", html);
     assertNotSubString(".SuiteSetUp", html);
     assertNotSubString("suiteSetUp", html);
     assertNotSubString(".SuiteTearDown", html);
@@ -68,7 +68,7 @@ public class SetupTeardownAndLibraryIncluderTest {
     assertSubString(".TearDown", html);
     assertSubString("teardown", html);
     assertSubString("sub test page", html);
-    assertSubString("class=\"hidden\"", html);
+    assertSubString("class=\"collapsible closed\"", html);
     assertSubString("scenario library 3", html);
     assertNotSubString(".SuiteSetUp", html);
     assertNotSubString("suiteSetUp", html);
@@ -87,7 +87,7 @@ public class SetupTeardownAndLibraryIncluderTest {
     assertSubString(".TearDown", html);
     assertSubString("teardown", html);
     assertSubString("the content", html);
-    assertSubString("class=\"hidden\"", html);
+    assertSubString("class=\"collapsible closed\"", html);
     assertSubString(".SuiteSetUp", html);
     assertSubString("suiteSetUp", html);
     assertSubString(".SuiteTearDown", html);

@@ -10,7 +10,9 @@ import java.util.Map;
 import util.StringUtil;
 import fitnesse.Responder;
 import fitnesse.http.Request;
+import fitnesse.responders.editing.AddChildPageResponder;
 import fitnesse.responders.editing.EditResponder;
+import fitnesse.responders.editing.NewPageResponder;
 import fitnesse.responders.editing.PropertiesResponder;
 import fitnesse.responders.editing.SavePropertiesResponder;
 import fitnesse.responders.editing.SaveResponder;
@@ -48,6 +50,7 @@ public class ResponderFactory {
   public ResponderFactory(String rootPath) {
     this.rootPath = rootPath;
     responderMap = new HashMap<String, Class<?>>();
+    addResponder("new", NewPageResponder.class);
     addResponder("edit", EditResponder.class);
     addResponder("saveData", SaveResponder.class);
     addResponder("search", SearchResponder.class);
@@ -118,12 +121,12 @@ public class ResponderFactory {
     return (argStart <= 0) ? fullQuery : fullQuery.substring(0, argStart);
   }
 
-  public Responder makeResponder(Request request, WikiPage root) throws Exception {
+  public Responder makeResponder(Request request, WikiPage root) throws InstantiationException {
     Responder responder = new DefaultResponder();
     String resource = request.getResource();
     String responderKey = getResponderKey(request);
     if (usingResponderKey(responderKey))
-      responder = lookupResponder(responderKey, responder);
+      responder = lookupResponder(responderKey);
     else {
       if (StringUtil.isBlank(resource))
         responder = new WikiPageResponder();
@@ -138,20 +141,30 @@ public class ResponderFactory {
     return responder;
   }
 
-  private Responder lookupResponder(String responderKey, Responder responder)
-    throws NoSuchMethodException, InstantiationException,
-    IllegalAccessException, InvocationTargetException {
+  private Responder lookupResponder(String responderKey)
+    throws InstantiationException {
     Class<?> responderClass = getResponderClass(responderKey);
     if (responderClass != null) {
       try {
-        Constructor<?> constructor = responderClass.getConstructor(String.class);
-        responder = (Responder) constructor.newInstance(rootPath);
-      } catch (NoSuchMethodException e) {
-        Constructor<?> constructor = responderClass.getConstructor();
-        responder = (Responder) constructor.newInstance();
+        return newResponderInstance(responderClass);
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new InstantiationException("Unable to instantiate responder " + responderKey);
       }
     }
-    return responder;
+    throw new InstantiationException("No responder for " + responderKey);
+  }
+
+  private Responder newResponderInstance(Class<?> responderClass)
+      throws InstantiationException, IllegalAccessException, InvocationTargetException,
+      NoSuchMethodException {
+    try {
+      Constructor<?> constructor = responderClass.getConstructor(String.class);
+      return (Responder) constructor.newInstance(rootPath);
+    } catch (NoSuchMethodException e) {
+      Constructor<?> constructor = responderClass.getConstructor();
+      return (Responder) constructor.newInstance();
+    }
   }
 
   public Class<?> getResponderClass(String responderKey) {

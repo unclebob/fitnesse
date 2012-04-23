@@ -6,6 +6,7 @@ import fitnesse.responders.run.*;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.PathParser;
 
+import java.io.IOException;
 import java.util.List;
 
 import util.TimeMeasurement;
@@ -14,7 +15,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
   protected SuiteExecutionReport suiteExecutionReport;
 
-  public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) throws Exception {
+  public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) {
     super(context, page);
     suiteExecutionReport = new SuiteExecutionReport();
     suiteExecutionReport.version = new FitNesseVersion().toString();
@@ -22,25 +23,21 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void writeHead(String pageType) throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
-  }
-
-  @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
     String pageName = PathParser.render(test.getSourcePage().getPageCrawler().getFullPath(test.getSourcePage()));
     referenceToCurrentTest = new SuiteExecutionReport.PageHistoryReference(pageName, timeMeasurement.startedAt(), timeMeasurement.elapsed());
   }
 
   @Override
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) {
   }
 
   public String getRootPageName() {
@@ -52,7 +49,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
     referenceToCurrentTest.setTestSummary(testSummary);
     referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
     suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);
@@ -71,7 +68,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     super.allTestingComplete(totalTimeMeasurement);
     suiteExecutionReport.setTotalRunTimeInMillis(totalTimeMeasurement);
   }

@@ -1,0 +1,66 @@
+<form method="post">
+ <input type="hidden" name="responder" value="search"/>
+ <label for="searchString">Search:</label>
+ <input type="text" id="searchString" name="searchString" value="#if ($request.hasInput("searchString"))$request.getInput("searchString")#end"/>
+
+ <input type="submit" name="searchType" value="Search Titles"/>
+ <input type="submit" name="searchType" value="Search Content"/>
+
+ <p><strong>Search Titles</strong>: Searches in page titles only.  Will run fairly quickly.</p>
+ <p><strong>Search Content</strong>: Searches in the content of every page.  Don't hold your breath.</p>
+</form>
+
+<form method="post">
+#macro( anychecked $type )#if( !$request.hasInput($type) || $request.getInput($type).contains("Any") ) checked="checked"#end#end
+#macro( checked $type $attr )#if( $request.getInput($type).contains($attr) ) checked="checked"#end#end
+
+ <h2>Search Properties</h2>
+ <input type="hidden" name="responder" value="executeSearchProperties"/>
+
+ <fieldset>
+  <label>Tags</label>
+  <input type="text" class="searchForm" name="Suites"#if ($request.hasInput("Suite")) value="$request.getInput("Suite")"#end />
+ </fieldset>
+ 
+ <div class="properties">
+  <fieldset>
+   <legend>Page type:</legend>
+   #foreach( $pageType in $pageTypeAttributes )
+   <label for="$pageType"><input type="checkbox" id="$pageType" name="PageType" value="$pageType"#checked( "PageType" $pageType)/>$pageType</label>
+   #end
+  </fieldset>
+     
+  <fieldset>
+   <legend>Actions:</legend>
+   #foreach( $action in $actionAttributes )
+   <label for="$action"><input type="checkbox" id="$action" name="Action" value="$action"#checked( "Action" $action )/>$action</label>
+   #end
+  </fieldset>
+
+  <fieldset>
+   <legend>Navigation:</legend>
+   #foreach( $navigation in $navigationAttributes )
+   <label for="$navigation"><input type="checkbox" id="$navigation" name="Action" value="$navigation"#checked( "Action" $navigation )/>$navigation</label>
+   #end
+  </fieldset>
+    
+  <fieldset>
+   <legend>Security:</legend>
+   #foreach( $security in $securityAttributes )
+   <label for="$security"><input type="checkbox" id="$security" name="Security" value="$security"#checked( "Security" $security )/>$security</label>
+   #end
+  </fieldset>
+
+  <fieldset>
+   <legend>Special pages:</legend>
+   #foreach( $special in $specialAttributes )
+   <label for="$special"><input type="checkbox" id="$special" name="Special" value="$special"#checked( "Special" $special )/>$special</label>
+   #end
+  </fieldset>
+ </div>
+ <input type="submit" name="Search" value="Search Properties"/>
+</form>
+
+<script type="text/javascript">
+ document.forms[0].searchString.focus();
+</script>

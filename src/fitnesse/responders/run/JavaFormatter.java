@@ -58,8 +58,7 @@ public class JavaFormatter extends BaseFormatter {
       currentWriter.write(testName);
       currentWriter
           .write("</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse.css' media='screen'/>"
-              + "<link rel='stylesheet' type='text/css' href='fitnesse_print.css' media='print'/>"
+              + "<link rel='stylesheet' type='text/css' href='fitnesse.css'/>"
               + "<script src='fitnesse.js' type='text/javascript'></script>" + "</head><body><h2>");
       currentWriter.write(testName);
       currentWriter.write("</h2>");
@@ -70,14 +69,14 @@ public class JavaFormatter extends BaseFormatter {
       currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
     }
 
-    public void addFile(File f, String relativeFilePath) throws IOException {
+    public void addFile(String r, String relativeFilePath) throws IOException {
       File dst = new File(outputPath, relativeFilePath);
       dst.getParentFile().mkdirs();
-      copy(f, dst);
+      copy(r, dst);
     }
 
-    private void copy(File src, File dst) throws IOException {
-      InputStream in = new FileInputStream(src);
+    private void copy(String src, File dst) throws IOException {
+      InputStream in = getClass().getResourceAsStream(src);
       OutputStream out = new FileOutputStream(dst);
       // Transfer bytes from in to out
       byte[] buf = new byte[1024];
@@ -90,25 +89,20 @@ public class JavaFormatter extends BaseFormatter {
     }
 
     private void initFolder(String fitnesseRoot) throws IOException {
-      File filesFolder = new File(new File(new File(fitnesseRoot), "FitNesseRoot"), "files");
-      File cssDir = new File(filesFolder, "css");
-      addFile(new File(cssDir, "fitnesse_base.css"), "fitnesse.css");
-      File javascriptDir = new File(filesFolder, "javascript");
-      addFile(new File(javascriptDir, "fitnesse.js"), "fitnesse.js");
-      File imagesDir = new File(filesFolder, "images");
-      addFile(new File(imagesDir, "collapsableOpen.gif"), "images/collapsableOpen.gif");
-      addFile(new File(imagesDir, "collapsableClosed.gif"), "images/collapsableClosed.gif");
+      String base = "/fitnesse/resources/";
+      String cssDir = base + "css/";
+      addFile(cssDir + "fitnesse_wiki.css", "fitnesse.css");
+      String javascriptDir = base + "javascript/";
+      addFile(javascriptDir + "fitnesse.js", "fitnesse.js");
+      String imagesDir = base + "images/";
+      addFile(imagesDir + "collapsibleOpen.png", "images/collapsibleOpen.png");
+      addFile(imagesDir + "collapsibleClosed.png", "images/collapsibleClosed.png");
     }
   }
 
   private TestSummary totalSummary = new TestSummary();
 
-  @Override
-  public void writeHead(String pageType) throws Exception {
-
-  }
-
-  public String getFullPath(final WikiPage wikiPage) throws Exception {
+  public String getFullPath(final WikiPage wikiPage) {
     return new WikiPagePath(wikiPage).toString();
   }
 
@@ -116,18 +110,17 @@ public class JavaFormatter extends BaseFormatter {
   private Map<String, TestSummary> testSummaries = new HashMap<String, TestSummary>();
 
   @Override
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     resultsRepository.open(getFullPath(test.getSourcePage()));
     if (listener != null)
       listener.newTestStarted(test, timeMeasurement);
   }
 
   @Override
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
-      throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     String fullPath = getFullPath(test.getSourcePage());
     visitedTestPages.add(fullPath);
     totalSummary.add(testSummary);
@@ -143,13 +136,12 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) throws IOException {
     resultsRepository.write(output);
   }
 
   @Override
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-      throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
   }
 
   private ResultsRepository resultsRepository;
@@ -185,7 +177,7 @@ public class JavaFormatter extends BaseFormatter {
   }
 
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     if (isSuite)
       writeSummary(mainPageName);
     if (listener != null)

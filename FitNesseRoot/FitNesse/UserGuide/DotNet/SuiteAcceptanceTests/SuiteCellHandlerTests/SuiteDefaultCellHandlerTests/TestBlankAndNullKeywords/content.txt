@@ -4,7 +4,7 @@ Empty cells are automatically filled with the value of the field or property, an
 
 This works in column fixtures...
 |!-fitlibrary.spec.SpecifyFixture-!|
-|!-<table border="1" cellspacing="0">
+|!-<table>
 
 <tr><td colspan="5">string fixture</td>
 </tr>
@@ -34,7 +34,7 @@ This works in column fixtures...
 <td>blank</td>
 <td>joe</td>
 </tr>
-</table>-!|!-<table border="1" cellspacing="0">
+</table>-!|!-<table>
 
 <tr><td colspan="5">string fixture</td>
 </tr>
@@ -69,7 +69,7 @@ This works in column fixtures...
 
 ...row fixtures...
 |!-fitlibrary.spec.SpecifyFixture-!|
-|!-<table border="1" cellspacing="0">
+|!-<table>
 <tr><td colspan="9">blank and null keyword row fixture</td>
 </tr>
 <tr><td>field</td>
@@ -117,7 +117,7 @@ This works in column fixtures...
 <td>blank</td>
 
 </tr>
-</table>-!|!-<table border="1" cellspacing="0">
+</table>-!|!-<table>
 <tr><td colspan="9">blank and null keyword row fixture</td>
 </tr>
 <tr><td>field</td>
@@ -198,7 +198,7 @@ public class BlankAndNullKeywordRowFixture : RowFixture
 
 ...and action fixtures...
 |!-fitlibrary.spec.SpecifyFixture-!|
-|!-<table border="1" cellspacing="0">
+|!-<table>
 <tr><td colspan="3">action fixture</td>
 </tr>
 <tr><td>start</td>
@@ -226,7 +226,7 @@ public class BlankAndNullKeywordRowFixture : RowFixture
 <td>field</td>
 <td>Joe</td>
 </tr>
-</table>-!|!-<table border="1" cellspacing="0">
+</table>-!|!-<table>
 <tr><td colspan="3">action fixture</td>
 </tr>
 <tr><td>start</td>
@@ -258,7 +258,7 @@ public class BlankAndNullKeywordRowFixture : RowFixture
 </table>-!|
 
 |!-fitlibrary.spec.SpecifyFixture-!|
-|!-<table border="1" cellspacing="0">
+|!-<table>
 <tr><td colspan="3">action fixture</td>
 </tr>
 <tr><td>start</td>
@@ -286,7 +286,7 @@ public class BlankAndNullKeywordRowFixture : RowFixture
 <td>field</td>
 <td>Joe</td>
 </tr>
-</table>-!|!-<table border="1" cellspacing="0">
+</table>-!|!-<table>
 <tr><td colspan="3">action fixture</td>
 
 </tr>
@@ -318,7 +318,7 @@ public class BlankAndNullKeywordRowFixture : RowFixture
 </table>-!|
 
 |!-fitlibrary.spec.SpecifyFixture-!|
-|!-<table border="1" cellspacing="0">
+|!-<table>
 <tr><td colspan="3">action fixture</td>
 </tr>
 <tr><td>start</td>
@@ -346,7 +346,7 @@ public class BlankAndNullKeywordRowFixture : RowFixture
 <td>field</td>
 <td>Joe</td>
 </tr>
-</table>-!|!-<table border="1" cellspacing="0">
+</table>-!|!-<table>
 
 <tr><td colspan="3">action fixture</td>
 </tr>

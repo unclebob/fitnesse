@@ -6,6 +6,7 @@ import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSummary;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,38 +42,33 @@ public class CompositeFormatter extends BaseFormatter {
       formatter.addMessageForBlankHtml();
   }
 
-  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+  public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     for (BaseFormatter formatter : formatters)
       formatter.setExecutionLogAndTrackingId(stopResponderId, log);
   }
 
-  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+  public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     for (BaseFormatter formatter : formatters)
       formatter.testSystemStarted(testSystem, testSystemName, testRunner);
   }
 
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.newTestStarted(test, timeMeasurement);
   }
 
-  public void testOutputChunk(String output) throws Exception {
+  public void testOutputChunk(String output) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testOutputChunk(output);
   }
 
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters)
       formatter.testComplete(test, testSummary, timeMeasurement);
   }
 
-  public void writeHead(String pageType) throws Exception {
-    for (BaseFormatter formatter : formatters)
-      formatter.writeHead(pageType);
-  }
-
   @Override
-  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
     for (BaseFormatter formatter : formatters) {
       formatter.allTestingComplete(totalTimeMeasurement);
     }

@@ -21,7 +21,7 @@ public class SuiteFilter {
   final private String startWithTest;
   
   public static SuiteFilter NO_MATCHING = new SuiteFilter(null, null, null) {
-    public boolean isMatchingTest(WikiPage testPage) throws Exception {
+    public boolean isMatchingTest(WikiPage testPage) {
       return false;
     }
   };
@@ -65,7 +65,7 @@ public class SuiteFilter {
     return startTest;
   }
   
-  public boolean isMatchingTest(WikiPage testPage) throws Exception {
+  public boolean isMatchingTest(WikiPage testPage) {
     PageData data = testPage.getData();
     boolean pruned = data.hasAttribute(PageData.PropertyPRUNE);
     boolean isTest = data.hasAttribute("Test");
@@ -76,7 +76,7 @@ public class SuiteFilter {
            afterStartingTest(testPage);
   }
   
-  private boolean afterStartingTest(WikiPage testPage) throws Exception {
+  private boolean afterStartingTest(WikiPage testPage) {
     if (startWithTest == null) {
       return true;
     }
@@ -89,7 +89,7 @@ public class SuiteFilter {
     return (this != NO_MATCHING);
   }
 
-  public SuiteFilter getFilterForTestsInSuite(WikiPage suitePage) throws Exception {
+  public SuiteFilter getFilterForTestsInSuite(WikiPage suitePage) {
     if (suitePage.getData().hasAttribute(PageData.PropertyPRUNE)) {
       return NO_MATCHING;
     }

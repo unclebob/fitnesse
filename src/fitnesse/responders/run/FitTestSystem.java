@@ -7,6 +7,7 @@ import fitnesse.components.CommandRunningFitClient;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class FitTestSystem extends TestSystem {
@@ -18,20 +19,20 @@ public class FitTestSystem extends TestSystem {
    this.context = context;
  }
 
- protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception {
+ protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) {
    String command = buildCommand(descriptor, classPath);
    Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
    client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
-   return new ExecutionLog(page, client.commandRunner);
+   return new ExecutionLog(page, client.commandRunner, context.pageFactory);
  }
 
 
-  public void bye() throws Exception {
+  public void bye() throws IOException, InterruptedException {
    client.done();
    client.join();
  }
 
- public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
+ public String runTestsAndGenerateHtml(PageData pageData) throws IOException, InterruptedException {
    String html = pageData.getHtml();
    if (html.length() == 0)
      client.send(emptyPageContent);
@@ -44,11 +45,11 @@ public class FitTestSystem extends TestSystem {
    return client.isSuccessfullyStarted();
  }
 
- public void kill() throws Exception {
+ public void kill() {
    client.kill();
  }
 
- public void start() throws Exception {
+ public void start() {
    client.start();
  }
 }

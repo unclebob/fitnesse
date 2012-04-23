@@ -40,7 +40,7 @@ public class ClassPathBuilderTest extends RegexTestCase {
       "!path fitnesse.jar\n" +
         "!path my.jar");
     PageData data = page.getData();
-    data.addVariable("PATH_SEPARATOR", "|");
+    data.getParsingPage().putVariable("PATH_SEPARATOR", "|");
     page.commit(data);
 
     String expected = "fitnesse.jar" + "|" + "my.jar";

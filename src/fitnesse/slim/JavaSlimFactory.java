@@ -4,7 +4,7 @@ public class JavaSlimFactory extends SlimFactory {
 
   private NameTranslator identityTranslator = new NameTranslatorIdentity();
   
-  public StatementExecutorInterface getStatementExecutor() throws Exception {
+  public StatementExecutorInterface getStatementExecutor() {
     return new StatementExecutor();
   }
 

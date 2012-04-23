@@ -4,10 +4,15 @@ package fitnesse.responders.files;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertHasRegexp;
 import static util.RegexTestCase.assertMatches;
 import static util.RegexTestCase.assertSubString;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -17,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import util.RegexTestCase;
+import util.StreamReader;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
@@ -24,6 +30,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.testutil.FitNesseUtil;
 
 public class FileResponderTest {
   MockRequest request;
@@ -42,11 +49,12 @@ public class FileResponderTest {
     SampleFileUtility.makeSampleFiles();
     response = null;
     saveLocale = Locale.getDefault();
+    FitNesseUtil.makeTestContext();
   }
 
   @After
   public void tearDown() throws Exception {
-    if (response != null) response.readyToSend(new MockResponseSender());
+    if (response != null) response.sendTo(new MockResponseSender());
     SampleFileUtility.deleteSampleFiles();
     Locale.setDefault(saveLocale);
   }
@@ -63,13 +71,24 @@ public class FileResponderTest {
   }
 
   @Test
-  public void testSpacesInFileName() throws Exception {
-    String restoredPath = FileResponder.restoreRealSpacesInFileName("files/test%20File%20With%20Spaces%20In%20Name");
-    assertEquals("files/test File With Spaces In Name", restoredPath);
-
-    request.setResource("files/file4%20with%20spaces.txt");
+  public void testClasspathResourceContent() throws Exception {
+    request.setResource("files/fitnesse/testresource.txt");
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
-    assertEquals("files/file4 with spaces.txt", responder.resource);
+    response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    assertSubString("test resource content", sender.sentData());
+  }
+
+  @Test
+  public void testSpacesInFileName() throws Exception {
+    request.setResource("files/test%20File%20With%20Spaces%20In%20Name");
+    responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    assertEquals("testdir/files/test File With Spaces In Name", responder.requestedFile.getPath());
+
+    request.setResource("files/file4%20with%20spaces%32.txt");
+    responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    assertEquals("files/file4 with spaces2.txt", responder.resource);
   }
 
   @Test
@@ -132,5 +151,16 @@ public class FileResponderTest {
     responder = (FileResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
     response = responder.makeResponse(context, request);
     assertEquals("text/css", response.getContentType());
+  }
+  
+  @Test
+  public void testNavigationBackToFrontPage() throws Exception {
+    request.setResource("files/");
+    DirectoryResponder responder = (DirectoryResponder) FileResponder.makeResponder(request, SampleFileUtility.base);
+    response = responder.makeResponse(context, request);
+    response = responder.makeResponse(context, request);
+    MockResponseSender sender = new MockResponseSender();
+    sender.doSending(response);
+    assertSubString("<a href=\"/FrontPage\" id=\"art_niche\"", sender.sentData());
   }
 }

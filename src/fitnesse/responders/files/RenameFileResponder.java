@@ -16,7 +16,7 @@ public class RenameFileResponder implements SecureResponder {
   private String resource;
   String newFilename;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     Response response = new SimpleResponse();
     resource = request.getResource();
     String filename = (String) request.getInput("filename");

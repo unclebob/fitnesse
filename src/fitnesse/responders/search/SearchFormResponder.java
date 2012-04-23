@@ -2,43 +2,45 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static fitnesse.wiki.PageData.*;
-
+import static fitnesse.wiki.PageData.PropertyEDIT;
+import static fitnesse.wiki.PageData.PropertyFILES;
+import static fitnesse.wiki.PageData.PropertyPROPERTIES;
+import static fitnesse.wiki.PageData.PropertyRECENT_CHANGES;
+import static fitnesse.wiki.PageData.PropertyREFACTOR;
+import static fitnesse.wiki.PageData.PropertySEARCH;
+import static fitnesse.wiki.PageData.PropertyVERSIONS;
+import static fitnesse.wiki.PageData.PropertyWHERE_USED;
+import static fitnesse.wiki.PageData.SECURITY_ATTRIBUTES;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.VelocityFactory;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageType;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
-import java.io.StringWriter;
+import fitnesse.wiki.PathParser;
 
 public class SearchFormResponder implements Responder {
   public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
-    PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED, PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
+    PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED };
+  public static final String[] SEARCH_NAVIGATION_ATTRIBUTES = { PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
   public static final String[] SPECIAL_ATTRIBUTES = { "obsolete", "SetUp", "TearDown" };
 
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     SimpleResponse response = new SimpleResponse();
 
-    VelocityContext velocityContext = new VelocityContext();
-
-    HtmlPage html = context.htmlPageFactory.newPage();
-    html.setMainTemplate("searchForm.vm");
+    HtmlPage html = context.pageFactory.newPage();
+    html.setMainTemplate("searchForm");
     html.setTitle("Search Form");
     html.setPageTitle(new PageTitle("Search Form"));
+    html.put("viewLocation", request.getResource());
+    html.setNavTemplate("viewNav");
     html.put("pageTypeAttributes", PageType.values());
     html.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
+    html.put("navigationAttributes", SEARCH_NAVIGATION_ATTRIBUTES);
     html.put("securityAttributes", SECURITY_ATTRIBUTES);
     html.put("specialAttributes", SPECIAL_ATTRIBUTES);
-    html.put("searchedRootPage", request.getResource());
     html.put("request", request);
 
     response.setContent(html.html());

@@ -2,18 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import java.io.IOException;
+
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.components.RecentChanges;
 import fitnesse.components.SaveRecorder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
@@ -28,10 +31,12 @@ public class SaveResponder implements SecureResponder {
   private String user;
   private long ticketId;
   private String savedContent;
+  private String helpText;
+  private String suites;
   private PageData data;
   private long editTimeStamp;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     editTimeStamp = getEditTime(request);
     ticketId = getTicketId(request);
     String resource = request.getResource();
@@ -43,25 +48,27 @@ public class SaveResponder implements SecureResponder {
       return new MergeResponder(request).makeResponse(context, request);
     else {
       savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
+      helpText = (String) request.getInput("helpText");
+      suites = (String) request.getInput("Suites");
+
       if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
         return makeBannedContentResponse(context, resource);
       else
-        return saveEdits(request, page);
+        return saveEdits(context, request, page);
     }
   }
 
-  private Response makeBannedContentResponse(FitNesseContext context, String resource) throws Exception {
+  private Response makeBannedContentResponse(FitNesseContext context, String resource) {
     SimpleResponse response = new SimpleResponse();
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Edit " + resource);
     html.setPageTitle(new PageTitle("Banned Content", PathParser.parse(resource)));
-    html.setMainContent("<h3>The content you're trying to save has been " +
-      "banned from this site.  Your changes will not be saved!</h3>");
+    html.setMainTemplate("bannedPage.vm");
     response.setContent(html.html());
     return response;
   }
 
-  private Response saveEdits(Request request, WikiPage page) throws Exception {
+  private Response saveEdits(FitNesseContext context, Request request, WikiPage page) {
     Response response = new SimpleResponse();
     setData();
     VersionInfo commitRecord = page.commit(data);
@@ -76,7 +83,7 @@ public class SaveResponder implements SecureResponder {
     return response;
   }
 
-  private boolean editsNeedMerge() throws Exception {
+  private boolean editsNeedMerge() {
     return SaveRecorder.changesShouldBeMerged(editTimeStamp, ticketId, data);
   }
 
@@ -95,7 +102,7 @@ public class SaveResponder implements SecureResponder {
     return editTimeStamp;
   }
 
-  private WikiPage getPage(String resource, FitNesseContext context) throws Exception {
+  private WikiPage getPage(String resource, FitNesseContext context) {
     WikiPagePath path = PathParser.parse(resource);
     PageCrawler pageCrawler = context.root.getPageCrawler();
     WikiPage page = pageCrawler.getPage(context.root, path);
@@ -104,13 +111,21 @@ public class SaveResponder implements SecureResponder {
     return page;
   }
 
-  private void setData() throws Exception {
+  private void setData() {
     data.setContent(savedContent);
+    setAttribute(PageData.PropertyHELP, helpText);
+    setAttribute(PageData.PropertySUITES, suites);
     SaveRecorder.pageSaved(data, ticketId);
-    if (user != null)
-      data.setAttribute(PageData.LAST_MODIFYING_USER, user);
-    else
-      data.removeAttribute(PageData.LAST_MODIFYING_USER);
+    
+    setAttribute(PageData.LAST_MODIFYING_USER, user);
+  }
+
+  private void setAttribute(String property, String content) {
+    if (content == null || "".equals(content)) {
+      data.removeAttribute(property);
+    } else {
+      data.setAttribute(property, content);
+    }
   }
 
   public SecureOperation getSecureOperation() {

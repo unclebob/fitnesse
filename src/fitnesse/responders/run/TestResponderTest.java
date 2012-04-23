@@ -87,6 +87,24 @@ public class TestResponderTest {
   }
 
   @Test
+  public void testIsValidHtml() throws Exception {
+    doSimpleRun(passFixtureTable());
+
+    assertSubString("<!DOCTYPE html>", results);
+    assertSubString("</html>", results);
+
+    //assertSubString("<base href=\"http://somehost.com:8080/\"", results);
+    assertSubString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>", results);
+    //assertSubString("Command Line Test Results", html);
+  }
+
+  @Test
+  public void testHead() throws Exception {
+    doSimpleRun(passFixtureTable());
+    assertSubString("<div id=\"test-summary\">Running Tests ...</div>", results);
+  }
+
+  @Test
   public void testSimpleRun() throws Exception {
     doSimpleRun(passFixtureTable());
 
@@ -231,7 +249,7 @@ public class TestResponderTest {
   @Test
   public void testResultsIncludeActions() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertSubString("<div class=\"actions\">", results);
+    assertSubString("<nav>", results);
   }
 
   @Test
@@ -246,7 +264,7 @@ public class TestResponderTest {
   @Test
   public void testExecutionStatusAppears() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertHasRegexp("<div id=\"execution-status\">.*?</div>", results);
+    assertHasRegexp("Tests Executed OK", results);
   }
 
   @Test
@@ -339,25 +357,11 @@ public class TestResponderTest {
     assertTrue(results.indexOf("1 Tests,\t1 Failures") != -1);
   }
 
-  private String getExecutionStatusMessage() throws Exception {
-    Pattern pattern = Pattern.compile("<div id=\"execution-status\">.*?<a href=\"ErrorLogs\\.[^\"]*\">([^<>]*?)</a>.*?</div>", Pattern.DOTALL);
-    Matcher matcher = pattern.matcher(results);
-    matcher.find();
-    return matcher.group(1);
-  }
-
-  private String getExecutionStatusIconFilename() {
-    Pattern pattern = Pattern.compile("<div id=\"execution-status\">.*?<img.*?src=\"(?:[^/]*/)*([^/]*\\.gif)\".*?/>.*?</div>", Pattern.DOTALL);
-    Matcher matcher = pattern.matcher(results);
-    matcher.find();
-    return matcher.group(1);
-  }
-
   @Test
   public void testExecutionStatusOk() throws Exception {
     doSimpleRun(passFixtureTable());
-    assertEquals("Tests Executed OK", getExecutionStatusMessage());
-    assertEquals("ok.gif", getExecutionStatusIconFilename());
+    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains("\\\"ok\\\""));
   }
 
   @Test
@@ -365,8 +369,8 @@ public class TestResponderTest {
     responder.setFastTest(false);
     request.addInput("debug", "");
     doSimpleRun(passFixtureTable());
-    assertEquals("Tests Executed OK", getExecutionStatusMessage());
-    assertEquals("ok.gif", getExecutionStatusIconFilename());
+    assertTrue(results.contains(">Tests Executed OK<"));
+    assertTrue(results.contains("\\\"ok\\\""));
     assertTrue("should be fast test", responder.isFastTest());
   }
 
@@ -374,23 +378,23 @@ public class TestResponderTest {
   public void testExecutionStatusOutputCaptured() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(outputWritingTable("blah"));
-    assertEquals("Output Captured", getExecutionStatusMessage());
-    assertEquals("output.gif", getExecutionStatusIconFilename());
+    assertTrue(results.contains(">Output Captured<"));
+    assertTrue(results.contains("\\\"output\\\""));
   }
 
   @Test
   public void testExecutionStatusError() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(crashFixtureTable());
-    assertEquals("Errors Occurred", getExecutionStatusMessage());
-    assertEquals("error.gif", getExecutionStatusIconFilename());
+    assertTrue(results.contains(">Errors Occurred<"));
+    assertTrue(results.contains("\\\"error\\\""));
   }
 
   @Test
   public void testExecutionStatusErrorHasPriority() throws Exception {
     responder.setFastTest(false);
     doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
-    assertEquals("Errors Occurred", getExecutionStatusMessage());
+    assertTrue(results.contains(">Errors Occurred<"));
   }
 
   @Test
@@ -501,7 +505,7 @@ public class TestResponderTest {
     sender.doSending(response);
     results = sender.sentData();
 
-    assertEquals("Output Captured", getExecutionStatusMessage());
+    assertTrue(results.contains(">Output Captured<"));
     assertHasRegexp("ErrorLog", results);
 
     WikiPage errorLog = crawler.getPage(errorLogsParentPage, testPagePath);

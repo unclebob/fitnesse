@@ -31,8 +31,7 @@ public class FitNesseExpediterTest extends RegexTestCase {
     root = (InMemoryPage) InMemoryPage.makeRoot("RooT");
     root.addChildPage("FrontPage");
     socket = new MockSocket();
-    context = new FitNesseContext(root);
-    FitNesseUtil.makeTestContext(root);
+    context = FitNesseUtil.makeTestContext(root);
     context.responderFactory = new ResponderFactory(".");
     expediter = new FitNesseExpediter(socket, context);
   }
@@ -52,7 +51,7 @@ public class FitNesseExpediterTest extends RegexTestCase {
       MockRequest request = new MockRequest();
       Response response = expediter.createGoodResponse(request);
       socket.close();
-      response.readyToSend(expediter);
+      response.sendTo(expediter);
     }
     catch (IOException e) {
       fail("no IOException should be thrown");
@@ -154,7 +153,7 @@ public class FitNesseExpediterTest extends RegexTestCase {
   }
 
   class StoneWallAuthenticator extends Authenticator {
-    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
       return new UnauthorizedResponder();
     }
 

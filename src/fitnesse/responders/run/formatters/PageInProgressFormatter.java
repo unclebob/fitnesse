@@ -7,6 +7,8 @@ import fitnesse.responders.run.TestSummary;
 import util.TimeMeasurement;
 import util.FileUtil;
 
+import java.io.IOException;
+
 public class PageInProgressFormatter extends NullFormatter {
 
   public PageInProgressFormatter(final WikiPage page) {
@@ -14,18 +16,23 @@ public class PageInProgressFormatter extends NullFormatter {
 	this.page = page;
   }
   
-  public String getLockFileName(TestPage test) throws Exception {
+  public String getLockFileName(TestPage test) {
 	PageData data = test.getData();
 	return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");
   }
     
-  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) throws Exception {
+  public void newTestStarted(TestPage test, TimeMeasurement timeMeasurement) {
 	FileUtil.createFile(getLockFileName(test), "");
   }
 
   @Override
-  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+  public void testComplete(TestPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
 	FileUtil.deleteFile(getLockFileName(test));
+  }
+
+  @Override
+  public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+    //ignore.
   }
 }
 

@@ -8,20 +8,21 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class DeletePageResponder implements SecureResponder {
-  public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
+  
+  public Response makeResponse(final FitNesseContext context, final Request request) {
     SimpleResponse response = new SimpleResponse();
     String qualifiedPageName = request.getResource();
     WikiPagePath path = PathParser.parse(qualifiedPageName);
@@ -32,7 +33,7 @@ public class DeletePageResponder implements SecureResponder {
     }
 
     String confirmedString = (String) request.getInput("confirmed");
-    if (!"yes".equals(confirmedString)) {
+    if (!"yes".equalsIgnoreCase(confirmedString)) {
       response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
       return response;
     }
@@ -57,21 +58,21 @@ public class DeletePageResponder implements SecureResponder {
     }
   }
 
-  private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) throws Exception {
-    HtmlPage html = context.htmlPageFactory.newPage();
+  private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) {
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Delete Confirmation");
     html.setPageTitle(new PageTitle("Confirm Deletion", qualifiedPageName, "/"));
     makeMainContent(html, root, qualifiedPageName);
-    html.setMainTemplate("deletePage.vm");
+    html.setMainTemplate("deletePage");
     return html.html();
   }
 
-  private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) throws Exception {
+  private void makeMainContent(final HtmlPage html, final WikiPage root, final String qualifiedPageName) {
     WikiPagePath path = PathParser.parse(qualifiedPageName);
     WikiPage pageToDelete = root.getPageCrawler().getPage(root, path);
     List<WikiPage> children = pageToDelete.getChildren();
 
-    html.put("deleteSubPages", children == null || children.isEmpty());
+    html.put("deleteSubPages", children != null && !children.isEmpty());
     html.put("pageName", qualifiedPageName);
   }
 

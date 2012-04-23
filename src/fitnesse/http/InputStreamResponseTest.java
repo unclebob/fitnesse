@@ -31,7 +31,7 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
   public void testSimpleUsage() throws Exception {
     ByteArrayInputStream input = new ByteArrayInputStream("content".getBytes());
     response.setBody(input, 7);
-    response.readyToSend(this);
+    response.sendTo(this);
     assertTrue(closed);
 
     ResponseParser result = new ResponseParser(new ByteArrayInputStream(output.toByteArray()));
@@ -43,7 +43,7 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
   public void testWithFile() throws Exception {
     FileUtil.createFile(testFile, "content");
     response.setBody(testFile);
-    response.readyToSend(this);
+    response.sendTo(this);
     assertTrue(closed);
 
     ResponseParser result = new ResponseParser(new ByteArrayInputStream(output.toByteArray()));
@@ -56,7 +56,7 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     writeLinesToFile(1000);
 
     response.setBody(testFile);
-    response.readyToSend(this);
+    response.sendTo(this);
     String responseString = output.toString();
     assertSubString("Content-Length: 100000", responseString);
     assertTrue(bytesSent > 100000);
@@ -66,7 +66,7 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     writeLinesToFile(100000);
 
     response.setBody(testFile);
-    response.readyToSend(this);
+    response.sendTo(this);
     String responseString = output.toString();
     assertSubString("Content-Length: 10000000", responseString);
     assertTrue(bytesSent > 10000000);
@@ -77,7 +77,7 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     writeLinesToFile(10000000);
 
     response.setBody(testFile);
-    response.readyToSend(this);
+    response.sendTo(this);
     String responseString = output.toString();
     assertSubString("Content-Length: 1000000000", responseString);
     assertTrue(bytesSent > 1000000000);
@@ -92,17 +92,23 @@ public class InputStreamResponseTest extends RegexTestCase implements ResponseSe
     testFileOutput.close();
   }
 
-  public void send(byte[] bytes) throws Exception {
+  public void send(byte[] bytes) {
     if (bytesSent < 500)
-      output.write(bytes);
+      try {
+        output.write(bytes);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     bytesSent += bytes.length;
   }
 
-  public void close() throws Exception {
+  @Override
+  public void close() {
     closed = true;
   }
 
-  public Socket getSocket() throws Exception //TODO-MdM maybe get rid of this method.
+  @Override
+  public Socket getSocket() //TODO-MdM maybe get rid of this method.
   {
     return null;
   }

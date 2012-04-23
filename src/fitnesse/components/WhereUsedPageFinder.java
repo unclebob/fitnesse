@@ -7,22 +7,22 @@ import fitnesse.wikitext.parser.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhereUsedPageFinder implements TraversalListener, SearchObserver, PageFinder, SymbolTreeWalker {
+public class WhereUsedPageFinder implements TraversalListener<WikiPage>, PageFinder, SymbolTreeWalker {
   private WikiPage subjectPage;
-  private SearchObserver observer;
+  private TraversalListener observer;
   private WikiPage currentPage;
 
   private List<WikiPage> hits = new ArrayList<WikiPage>();
 
-  public WhereUsedPageFinder(WikiPage subjectPage, SearchObserver observer) {
+  public WhereUsedPageFinder(WikiPage subjectPage, TraversalListener observer) {
     this.subjectPage = subjectPage;
     this.observer = observer;
   }
 
-  public void hit(WikiPage referencingPage) throws Exception {
+  public void hit(WikiPage referencingPage) {
   }
 
-  public void processPage(WikiPage currentPage) throws Exception {
+  public void process(WikiPage currentPage) {
     this.currentPage = currentPage;
     String content = currentPage.getData().getContent();
       Symbol syntaxTree = Parser.make(
@@ -33,7 +33,7 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
       syntaxTree.walkPreOrder(this);
   }
 
-  public List<WikiPage> search(WikiPage page) throws Exception {
+  public List<WikiPage> search(WikiPage page) {
     hits.clear();
     subjectPage.getPageCrawler().traverse(page, this);
     return hits;
@@ -46,7 +46,7 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
             WikiPage referencedPage = new WikiWordReference(currentPage, node.getContent()).getReferencedPage();
             if (referencedPage != null && referencedPage.equals(subjectPage)) {
               hits.add(currentPage);
-              observer.hit(currentPage);
+              observer.process(currentPage);
             }
         }
         catch (Exception e) {

@@ -5,9 +5,10 @@ import util.FileUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class UpdateFileList {
-  private ArrayList<String> mainDirectories;
+  private List<String> mainDirectories;
   private String updateListContent;
   private String updateDoNotCopyOverContent;
   private HashSet<String> doNotReplaceFiles = new HashSet<String>();
@@ -64,13 +65,12 @@ public class UpdateFileList {
   }
 
   private void parseBaseDirectory(String arg) {
-    String[] components = arg.split(":");
-    baseDirectory = components[1];
+    baseDirectory = arg.substring(arg.indexOf(':')+1);
     if (!baseDirectory.endsWith("/"))
       baseDirectory += "/";
   }
 
-  public ArrayList<String> getDirectories() {
+  public List<String> getDirectories() {
     return mainDirectories;
   }
 

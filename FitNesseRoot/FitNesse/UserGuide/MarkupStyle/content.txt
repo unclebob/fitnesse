@@ -11,12 +11,9 @@ Here are some of the available classes you can use.  Remember you can (should) a
 |!-!style_ignore(ignore)-!|!style_ignore(ignore)|
 |!-!style_caps{Caps}-!|!style_caps{Caps}|
 |!-!style_code[code]-!|!style_code[code]|
-|!-!style_red[red]-! and other colors...|!style_red[red], !style_orange[orange], !style_yellow[yellow], !style_green[green], !style_blue[blue], !style_indigo[indigo], !style_violet[violet]|
-||!style_pink[pink], !style_lightYellow[lightYellow], !style_lightGreen[lightGreen], !style_lightBlue[lightBlue]|
-||!style_chocolate[chocolate], !style_darkOrange[darkOrange], !style_darkRed[darkRed], !style_olive[olive], !style_darkBlue[darkBlue], !style_darkGreen[darkGreen]|
+|!-!style_red[red]-! and other colors...|!style_red[red], !style_orange[orange], !style_yellow[yellow], !style_green[green], !style_blue[blue], !style_indigo[indigo], !style_violet[violet], !style_pink[pink], !style_lightYellow[lightYellow], !style_lightGreen[lightGreen], !style_lightBlue[lightBlue], !style_chocolate[chocolate], !style_darkOrange[darkOrange], !style_darkRed[darkRed], !style_olive[olive], !style_darkBlue[darkBlue], !style_darkGreen[darkGreen]|
 |!-!style_code(!style_red[code red])-!|!style_code(!style_red[code red])|
 |!-!style_note[note]-!|!style_note[note]|
-|!-!style_page_title[page_title]-!|!style_page_title[page_title]|
 |!-!style_right[right]-!|!style_right[right]|
 |!-!style_strike[strike]-!|!style_strike[strike]|
 |!-!style_meta[meta]-!|!style_meta[meta]|
@@ -29,6 +26,3 @@ Here are some of the available classes you can use.  Remember you can (should) a
 |!-!style_fit_label[fit_label]-!|!style_fit_label[fit_label]|
 |!-!style_fit_stacktrace[fit_stacktrace]-!|!style_fit_stacktrace[fit_stacktrace]|
 |!-!style_fit_grey[fit_grey]-!|!style_fit_grey[fit_grey]|
-
-
-

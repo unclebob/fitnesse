@@ -1,0 +1,10 @@
+<a href="/FrontPage" id="art_niche"><span>FitNesse</span></a>
+
+<ul>
+#foreach($breadCrumb in $pageTitle.BreadCrumbs)
+ <li><a href="/$breadCrumb.Link">$breadCrumb.Name</a></li>
+#end
+</ul>
+<h1>#if($pageTitle.Link)<a href="/$pageTitle.Link">$pageTitle.Title</a>#else$pageTitle.Title#end</h1>
+
+##if($pageTitle.PageType)<br/><span class="page_type">$pageTitle.PageType</span>#end

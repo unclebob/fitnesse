@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -14,6 +13,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
+import fitnesse.responders.templateUtilities.HtmlPage;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.*;
 
@@ -21,7 +21,7 @@ public class VersionResponder implements SecureResponder {
   private String version;
   private String resource;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+  public Response makeResponse(FitNesseContext context, Request request) {
     resource = request.getResource();
     version = (String) request.getInput("version");
     if (version == null)
@@ -42,19 +42,34 @@ public class VersionResponder implements SecureResponder {
     return response;
   }
 
-  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) throws Exception {
+  private HtmlPage makeHtml(String name, WikiPage page, FitNesseContext context) {
     PageData pageData = page.getDataVersion(version);
-    HtmlPage html = context.htmlPageFactory.newPage();
+    HtmlPage html = context.pageFactory.newPage();
     html.setTitle("Version " + version + ": " + name);
     html.setPageTitle(new PageTitle("Version " + version, PathParser.parse(resource)));
     // TODO: subclass actions for specific rollback behaviour.
-    html.actions = new WikiPageActions(page).withRollback();
+    html.setNavTemplate("versionNav.vm");
     html.put("rollbackVersion", version);
-    html.setMainContent(HtmlUtil.makeNormalWikiPageContent(pageData));
+    html.put("localPath", name);
+    html.setMainTemplate("wikiPage");
+    html.put("content", new VersionRenderer(pageData));
     return html;
   }
 
   public SecureOperation getSecureOperation() {
     return new SecureReadOperation();
+  }
+  
+  public class VersionRenderer {
+    private PageData pageData;
+    
+    public VersionRenderer(PageData pageData) {
+      super();
+      this.pageData = pageData;
+    }
+
+    public String render() {
+      return HtmlUtil.makeNormalWikiPageContent(pageData);
+    }
   }
 }

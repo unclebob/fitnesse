@@ -37,6 +37,7 @@ public class PageData implements Serializable {
   public static final String PropertyPROPERTIES = "Properties";
   public static final String PropertyVERSIONS = "Versions";
   public static final String PropertyEDIT = "Edit";
+  public static final String PropertyADD_CHILD = "AddChild";
   public static final String PropertySUITES = "Suites";
 
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
@@ -44,8 +45,8 @@ public class PageData implements Serializable {
       TEST.toString(), SUITE.toString() };
 
   public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
-      PropertyVERSIONS, PropertyPROPERTIES, PropertyREFACTOR,
-      PropertyWHERE_USED };
+      PropertyADD_CHILD, PropertyVERSIONS, PropertyPROPERTIES,
+      PropertyREFACTOR, PropertyWHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
       PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
@@ -77,18 +78,18 @@ public class PageData implements Serializable {
   private Symbol contentSyntaxTree = null;
   private ParsingPage parsingPage;
 
-    public PageData(WikiPage page) throws Exception {
+    public PageData(WikiPage page) {
     wikiPage = page;
     initializeAttributes();
     versions = new HashSet<VersionInfo>();
   }
 
-  public PageData(WikiPage page, String content) throws Exception {
+  public PageData(WikiPage page, String content) {
     this(page);
     setContent(content);
   }
 
-  public PageData(PageData data) throws Exception {
+  public PageData(PageData data) {
     this(data.getWikiPage(), data.content);
     properties = new WikiPageProperties(data.properties);
     versions.addAll(data.versions);
@@ -96,21 +97,24 @@ public class PageData implements Serializable {
     parsingPage = data.parsingPage;
   }
 
-  public void initializeAttributes() throws Exception {
-    properties.set(PropertyEDIT, Boolean.toString(true));
-    properties.set(PropertyVERSIONS, Boolean.toString(true));
-    properties.set(PropertyPROPERTIES, Boolean.toString(true));
-    properties.set(PropertyREFACTOR, Boolean.toString(true));
+  public void initializeAttributes() {
+    if (!isErrorLogsPage()) { 
+      properties.set(PropertyEDIT, Boolean.toString(true));
+      properties.set(PropertyADD_CHILD, Boolean.toString(true));
+      properties.set(PropertyPROPERTIES, Boolean.toString(true));
+      properties.set(PropertyREFACTOR, Boolean.toString(true));
+    }
     properties.set(PropertyWHERE_USED, Boolean.toString(true));
-    properties.set(PropertyFILES, Boolean.toString(true));
     properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
+    properties.set(PropertyFILES, Boolean.toString(true));
+    properties.set(PropertyVERSIONS, Boolean.toString(true));
     properties.set(PropertySEARCH, Boolean.toString(true));
     properties.setLastModificationTime(Clock.currentDate());
 
     initTestOrSuiteProperty();
   }
 
-  private void initTestOrSuiteProperty() throws Exception {
+  private void initTestOrSuiteProperty() {
     final String pageName = wikiPage.getName();
     if (pageName == null) {
       handleInvalidPageName(wikiPage);
@@ -128,7 +132,7 @@ public class PageData implements Serializable {
     properties.set(pageType.toString(), Boolean.toString(true));
   }
 
-  private boolean isErrorLogsPage() throws Exception {
+  private boolean isErrorLogsPage() {
     PageCrawler crawler = wikiPage.getPageCrawler();
     String relativePagePath = crawler.getRelativeName(
         crawler.getRoot(wikiPage), wikiPage);
@@ -149,23 +153,23 @@ public class PageData implements Serializable {
     }
   }
 
-  public WikiPageProperties getProperties() throws Exception {
+  public WikiPageProperties getProperties() {
     return properties;
   }
 
-  public String getAttribute(String key) throws Exception {
+  public String getAttribute(String key) {
     return properties.get(key);
   }
 
-  public void removeAttribute(String key) throws Exception {
+  public void removeAttribute(String key) {
     properties.remove(key);
   }
 
-  public void setAttribute(String key, String value) throws Exception {
+  public void setAttribute(String key, String value) {
     properties.set(key, value);
   }
 
-  public void setAttribute(String key) throws Exception {
+  public void setAttribute(String key) {
     properties.set(key);
   }
 
@@ -188,21 +192,21 @@ public class PageData implements Serializable {
   }
 
   /* this is the public entry to page parse and translate */
-  public String getHtml() throws Exception {
+  public String getHtml() {
       return translateToHtml(getSyntaxTree());
   }
 
-  public String getHeaderPageHtml() throws Exception {
+  public String getHeaderPageHtml() {
     WikiPage header = wikiPage.getHeaderPage();
     return header == null ? "" : header.getData().getHtml();
   }
 
-  public String getFooterPageHtml() throws Exception {
+  public String getFooterPageHtml() {
     WikiPage footer = wikiPage.getFooterPage();
     return footer == null ? "" : footer.getData().getHtml();
   }
 
-  public String getVariable(String name) throws Exception {
+  public String getVariable(String name) {
       Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
       if (variable.isNothing()) return null;
       //todo: push this into parser/translator
@@ -214,7 +218,7 @@ public class PageData implements Serializable {
         return contentSyntaxTree;
     }
 
-    public ParsingPage getParsingPage() throws Exception {
+    public ParsingPage getParsingPage() {
         parsePageContent();
         return parsingPage;
     }
@@ -225,10 +229,6 @@ public class PageData implements Serializable {
             contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
         }
     }
-
-  public void addVariable(String name, String value) throws Exception {
-      getParsingPage().putVariable(name, value);
-  }
 
   public void setLiterals(List<String> literals) {}
 
@@ -245,7 +245,7 @@ public class PageData implements Serializable {
     return wikiPage;
   }
 
-  public List<String> getClasspaths() throws Exception {
+  public List<String> getClasspaths() {
     Symbol tree = getSyntaxTree();
     return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage)).getPaths(tree);
   }
@@ -271,7 +271,7 @@ public class PageData implements Serializable {
     versions.addAll(newVersions);
   }
 
-  public boolean isEmpty() throws Exception {
+  public boolean isEmpty() {
     return getContent() == null || getContent().length() == 0;
   }
 }

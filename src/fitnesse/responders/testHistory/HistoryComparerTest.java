@@ -1,21 +1,29 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
-import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
-import org.apache.velocity.app.VelocityEngine;
-import org.junit.After;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import util.FileUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexTestCase.assertSubString;
 
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+
+import org.apache.velocity.app.VelocityEngine;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import util.FileUtil;
+import fitnesse.FitNesseContext;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PageData;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 
 public class HistoryComparerTest {
   private HistoryComparer comparer;
@@ -295,7 +303,7 @@ public class HistoryComparerTest {
     result.relativePageName = "testPageOne";
     report.results.add(result);
     Writer writer = new StringWriter();
-    VelocityEngine engine = VelocityFactory.getVelocityEngine();
+    VelocityEngine engine = context.pageFactory.getVelocityEngine();
     report.toXml(writer, engine);
     return writer.toString();
   }

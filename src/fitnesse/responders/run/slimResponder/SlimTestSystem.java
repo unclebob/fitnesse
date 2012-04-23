@@ -20,6 +20,7 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.Symbol;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
@@ -92,21 +93,21 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return started;
   }
 
-  public void kill() throws Exception {
+  public void kill() throws IOException {
     if (slimRunner != null)
       slimRunner.kill();
     if (slimClient != null)
       slimClient.close();
   }
 
-  String getSlimFlags() throws Exception {
+  String getSlimFlags() {
     String slimFlags = page.getData().getVariable("SLIM_FLAGS");
     if (slimFlags == null)
       slimFlags = "";
     return slimFlags;
   }
 
-  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception {
+  protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws SocketException {
     String slimFlags = getSlimFlags();
     slimSocket = getNextSlimSocket();
     String slimArguments = String.format("%s %d", slimFlags, slimSocket);
@@ -115,31 +116,33 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     if (fastTest) {
       slimRunner = new MockCommandRunner();
       createSlimService(slimArguments);
-    } if (manualStart) {
+    }
+    else if (manualStart) {
       slimSocket = getSlimPortBase();
       slimRunner = new MockCommandRunner();
-    }
-    else {
+    } else {
       slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
     }
-    return new ExecutionLog(page, slimRunner);
+    return new ExecutionLog(page, slimRunner, descriptor.pageFactory);
   }
-  
+
   public int findFreePort() {
     int port;
     try {
-      ServerSocket socket= new ServerSocket(0);
+      ServerSocket socket = new ServerSocket(0);
       port = socket.getLocalPort();
-      socket.close(); 
-    } catch (Exception e) { port = -1; }
-    return port;    
-  } 
+      socket.close();
+    } catch (Exception e) {
+      port = -1;
+    }
+    return port;
+  }
 
   public int getNextSlimSocket() {
-	int base = getSlimPortBase();
-	if (base == 0) {
-		return findFreePort();
-	}
+    int base = getSlimPortBase();
+    if (base == 0) {
+      return findFreePort();
+    }
     synchronized (slimSocketOffset) {
       int offset = slimSocketOffset.get();
       offset = (offset + 1) % 10;
@@ -161,7 +164,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return base;
   }
 
-  public void start() throws Exception {
+  public void start() throws IOException {
     slimRunner.asynchronousStart();
 
     slimClient = new SlimClient(determineSlimHost(), slimSocket);
@@ -173,7 +176,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
   }
 
-  String determineSlimHost() throws Exception {
+  String determineSlimHost() {
     String slimHost = page.getData().getVariable("SLIM_HOST");
     return slimHost == null ? "localhost" : slimHost;
   }
@@ -182,18 +185,24 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return slimCommand;
   }
 
-  public void bye() throws Exception {
+  public void bye() throws IOException {
     slimClient.sendBye();
-    if (!fastTest && !manualStart)
+    if (!fastTest && !manualStart) {
       slimRunner.join();
-    if (fastTest)
+    }
+    if (fastTest) {
       slimRunner.kill();
+    }
   }
 
   //For testing only.  Makes responder faster.
-  void createSlimService(String args) throws Exception {
+  void createSlimService(String args) throws SocketException {
     while (!tryCreateSlimService(args))
-      Thread.sleep(10);
+      try {
+        Thread.sleep(10);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
   }
 
   private boolean tryCreateSlimService(String args) throws SocketException {
@@ -207,12 +216,16 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
   }
 
-  void waitForConnection() throws Exception {
+  void waitForConnection() {
     while (!isConnected())
-      Thread.sleep(50);
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
   }
 
-  private boolean isConnected() throws Exception {
+  private boolean isConnected() {
     try {
       slimClient.connect();
       return true;
@@ -221,7 +234,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
   }
 
-  public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
+  public String runTestsAndGenerateHtml(PageData pageData) throws IOException {
     initializeTest();
     checkForAndReportVersionMismatch(pageData);
     String html = processAllTablesOnPage(pageData);
@@ -240,7 +253,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     exceptions.resetForNewTest();
   }
 
-  private void checkForAndReportVersionMismatch(PageData pageData) throws Exception {
+  private void checkForAndReportVersionMismatch(PageData pageData) {
     double expectedVersionNumber = getExpectedSlimVersion(pageData);
     double serverVersionNumber = slimClient.getServerVersion();
     if (serverVersionNumber < expectedVersionNumber)
@@ -248,7 +261,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
   }
 
-  private double getExpectedSlimVersion(PageData pageData) throws Exception {
+  private double getExpectedSlimVersion(PageData pageData) {
     double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
     String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
     if (pageSpecificSlimVersion != null) {
@@ -261,9 +274,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return expectedVersionNumber;
   }
 
-  protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable) throws Exception;
+  protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-  String processAllTablesOnPage(PageData pageData) throws Exception {
+  String processAllTablesOnPage(PageData pageData) throws IOException {
     tableScanner = scanTheTables(pageData);
     allTables = createSlimTables(tableScanner);
     testResults = pageData;
@@ -287,9 +300,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     return htmlResults;
   }
 
-  protected abstract TableScanner scanTheTables(PageData pageData) throws Exception;
+  protected abstract TableScanner scanTheTables(PageData pageData);
 
-  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws Exception {
+  private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
     expectations.clear();
 
     testTables = tables;
@@ -318,14 +331,18 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
   private List<SlimTable> createSlimTables(TableScanner tableScanner) {
     List<SlimTable> allTables = new LinkedList<SlimTable>();
-    for (Table table : tableScanner) {
-      String tableId = "" + allTables.size();
-      SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, this);
-      if (slimTable != null) {
-        allTables.add(slimTable);
-      }
-    }
+    for (Table table : tableScanner)
+      createSlimTable(allTables, table);
+   
     return allTables;
+  }
+
+  private void createSlimTable(List<SlimTable> allTables, Table table) {
+    String tableId = "" + allTables.size();
+    SlimTable slimTable = slimTableFactory.makeSlimTable(table, tableId, this);
+    if (slimTable != null) {
+      allTables.add(slimTable);
+    }
   }
 
   static String translateExceptionMessage(String exceptionMessage) {
@@ -464,21 +481,21 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
   }
 
 
-  public Symbol getPreparsedScenarioLibrary() throws Exception {
+  public Symbol getPreparsedScenarioLibrary() {
     if (preparsedScenarioLibrary == null) {
       preparsedScenarioLibrary = Parser.make(page, getScenarioLibraryContent()).parse();
     }
     return preparsedScenarioLibrary;
   }
 
-  private String getScenarioLibraryContent() throws Exception {
+  private String getScenarioLibraryContent() {
     String content = "!*> Precompiled Libraries\n\n";
     content += includeUncleLibraries();
     content += "*!\n";
     return content;
   }
 
-  private String includeUncleLibraries() throws Exception {
+  private String includeUncleLibraries() {
     String content = "";
     List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", page);
     Collections.reverse(uncles);

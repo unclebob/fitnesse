@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.htmlparser.util.ParserException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ public class TableListComparerTest {
   private TableListComparer comparer;
 
   @Before
-  public void setUp() throws ParserException {
+  public void setUp() {
     HtmlTableScanner leftHandScanner = new HtmlTableScanner("<table>empty</table>");
     HtmlTableScanner rightHandScanner = new HtmlTableScanner("<table>empty</table>");
     comparer = new TableListComparer(leftHandScanner,rightHandScanner);
@@ -101,10 +100,10 @@ public class TableListComparerTest {
     assertFalse(comparer.theTablesMatch(comparer.compareTables(table1, table2)));
   }
 
-    @Test
+  @Test
   public void shouldIgnoreCollapsedTables() throws Exception {
-    String table1text = "<table><tr><td>has collapsed table</td><td><div class=\"collapse_rim\"> <tr><td>bleh1</td></tr></div></td></tr></table>";
-    String table2text = "<table><tr><td>has collapsed table</td><td><div class=\"collapse_rim\"> <tr><td>HAHA</td></tr></div></td></tr></table>";
+    String table1text = "<table><tr><td>has collapsed table</td><td><div class=\"collapsible hidden\"> <tr><td>bleh1</td></tr></div></td></tr></table>";
+    String table2text = "<table><tr><td>has collapsed table</td><td><div class=\"collapsible hidden\"> <tr><td>HAHA</td></tr></div></td></tr></table>";
     Table table1 = (new HtmlTableScanner(table1text)).getTable(0);
     Table table2 = (new HtmlTableScanner(table2text)).getTable(0);
     double score = comparer.compareTables(table1, table2);

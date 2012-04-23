@@ -1,0 +1,29 @@
+!2 2012-03-20
+ * '''Note:''' This page has a layout that's not conform previous releases of !-FitNesse-!
+ * Introduced !-ReleaseNotes-! page
+ * Moved a lot of presentation logic to template files
+ * New style - The layout and style in the WIki text is changed as well, keep this in mind when comparing test output
+ * Can be built by Maven
+ * New "add child" permission (see [[properties][?properties]] page)
+ * Parser fixes
+ * [[Theming system][UserGuide.WikiTheming]]
+
+
+!2 2011-10-25
+ * New parser
+
+!2 20110923 (Dan Rollo)
+maven pom.xml cleanups:
+ * Remove unneeded default <groupId> tags.
+ * Add plugin <version> tags.
+ * Add explicit, platform independent UTF-8 file encoding via property: project.build.sourceEncoding
+ * Remove dependency on obsolete fitlibrary (the required classes are already in the source tree).
+ * Replace <system> dependency on json with the latest published json artifact.
+ * Remove unneeded ${basedir} from <sourceDirectory> tag value.
+
+!2 20081128 (UB)
+ * Added &debug flag to TestResponder url.  This forces the test to run ''inside'' the fitnesse process.  If you are running fitnesse in a debugger, you can breakpoint your fixtures.
+ * Symbols can be java properties or environment variables.  Symbols first, env variables second, java properties third.
+ * If the first cell of a script table is a symbol assignment ($V=) then the rest must be a function call.  The symbol is assigned the return value of the function.
+
+

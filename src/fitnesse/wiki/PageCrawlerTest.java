@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class PageCrawlerTest implements TraversalListener {
+public class PageCrawlerTest implements TraversalListener<WikiPage> {
   private WikiPage root;
   private WikiPage page1;
   private WikiPage page2;
@@ -160,7 +160,7 @@ public class PageCrawlerTest implements TraversalListener {
     assertTrue(traversedPages.contains("ChildOne"));
   }
 
-  public void processPage(WikiPage page) throws Exception {
+  public void process(WikiPage page) {
     traversedPages.add(page.getName());
   }
 

@@ -35,7 +35,7 @@ public interface Table {
 
   String getCellResult(int col,int row);
 
-  void appendCellToRow(int row, Table table);
+  void appendChildTable(int row, Table table);
 
   void setTestStatusOnRow(int row, boolean testStatus);
 

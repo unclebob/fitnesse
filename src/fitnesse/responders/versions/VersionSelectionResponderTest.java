@@ -62,12 +62,8 @@ public class VersionSelectionResponderTest extends RegexTestCase {
     SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
     String content = response.getContent();
-    assertSubString("<input", content);
-    assertSubString("name=\"version\"", content);
-    assertSubString("<form", content);
-    assertSubString("action=\"\"", content);
-    assertSubString("name=\"responder\"", content);
-    assertSubString(" value=\"viewVersion\"", content);
+    assertSubString("<a", content);
+    assertSubString("?responder=viewVersion", content);
     assertNotSubString("$version", content);
   }
 }
