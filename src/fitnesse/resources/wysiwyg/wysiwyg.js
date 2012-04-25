@@ -1348,10 +1348,11 @@ Wysiwyg.prototype.insertCollapsableSection = function (mode) {
     var id = this.generateDomId();
     var classes = "";
     if (mode) { classes = " " + mode; }
-    this.insertHTML(start[0] + "<div class='collapsable" + classes + "' id='" + id + "'>" + start[1] + (html ? html : "<p>edit me</p>") + end[0] + "</div>" + end[1]);
+    this.insertHTML(start[0] + "<div class='collapsable" + classes + "' id='" + id + "'>" + start[1] + 
+    		"<p>section title</p>" + (html ? html : "") + end[0] + "</div>" + end[1]);
     var node = this.contentDocument.getElementById(id);
     if (node) {
-        this.selectNode(node.firstChild);
+        this.selectNode(node.firstChild.nextSibling || node.firstChild);
     }
 };
 
