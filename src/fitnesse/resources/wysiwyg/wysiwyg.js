@@ -439,6 +439,8 @@ Wysiwyg.prototype.setupMenuEvents = function () {
 			return [ self.createLink ];
 		case "unlink":
 			return [ self.execCommand, "unlink" ];
+        case "ol":
+            return [ self.insertOrderedList ];
 		case "ul":
 			return [ self.insertUnorderedList ];
 		case "outdent":
@@ -1065,6 +1067,14 @@ Wysiwyg.prototype.formatHeaderBlock = function (name) {
         return;
     }
     this.execCommand("formatblock", "<" + name + ">");
+    this.selectionChanged();
+};
+
+Wysiwyg.prototype.insertOrderedList = function () {
+    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
+        return;
+    }
+    this.execCommand("insertorderedlist");
     this.selectionChanged();
 };
 
