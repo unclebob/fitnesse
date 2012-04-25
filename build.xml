@@ -113,6 +113,8 @@
 	<target name="clean" description="delete everything in the classes directory">
 		<delete dir="${classes}" />
 		<delete dir="test-results" />
+		<delete file="updateList"/>
+		<delete file="updateDoNotCopyOverList"/>
 	</target>
 
 	<target name="unit_test" depends="compile" description="run the unit tests">
