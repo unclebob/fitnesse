@@ -327,8 +327,8 @@ Wysiwyg.prototype.createWysiwygToolbar = function (d) {
         '<li title="Unlink"><a id="wt-unlink" href="#"></a></li>',
         divider,
         '<li title="List"><a id="wt-ul" href="#"></a></li>',
-        //'<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
-        //'<li title="Indent"><a id="wt-indent" href="#"></a></li>',
+        '<li title="Outdent"><a id="wt-outdent" href="#"></a></li>',
+        '<li title="Indent"><a id="wt-indent" href="#"></a></li>',
         '<li title="Table"><a id="wt-table" href="#"></a></li>',
         '<li><a id="wt-tablemenu" href="#"></a></li>',
         divider,
@@ -1054,6 +1054,20 @@ Wysiwyg.prototype.detectLink = function (event) {
     this.selectRange(node, offset, node, offset);
 };
 
+Wysiwyg.prototype.outdent = function () {
+    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
+        return;
+    }
+    this.execCommand("outdent");
+};
+
+Wysiwyg.prototype.indent = function () {
+    if (this.selectionContainsTagName("table") || this.selectionContainsTagName("pre")) {
+        return;
+    }
+    this.execCommand("indent");
+};
+
 Wysiwyg.prototype.formatParagraph = function () {
     if (this.selectionContainsTagName("table")) {
         return;
@@ -1465,7 +1479,7 @@ Wysiwyg.prototype.selectionChanged = function () {
         strike: false,
         sub: false,
         sup: false,
-        monospace: false,
+        escape: false,
         paragraph: false,
         heading1: false,
         heading2: false,
@@ -1489,7 +1503,7 @@ Wysiwyg.prototype.selectionChanged = function () {
         i: "em",
         u: "underline",
         del: "strike",
-        tt: "monospace",
+        ins: "escape",
         p: "paragraph",
         h1: "heading1",
         h2: "heading2",

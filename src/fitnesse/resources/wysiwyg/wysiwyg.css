@@ -21,8 +21,8 @@ iframe.wysiwyg:focus {
 	display: inline;
 }
 .wysiwyg-toolbar {
-    height: 24px;
-    width: 642px;
+    height: 28px;
+    width: 714px;
     float: left;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -37,13 +37,10 @@ iframe.wysiwyg:focus {
 .wysiwyg-toolbar li {
     float: left;
     display: block;
-    border-color: #d7d7d7;
-    border-width: 1px 1px 1px 0;
-    border-style: solid;
+    margin-right: 1px;
     background-color: white;
 }
 .wysiwyg-toolbar li.divider {
-    background-color: #D7D7D7;
     height: 22px;
     width: 4px;
 }
@@ -55,16 +52,17 @@ iframe.wysiwyg:focus {
     width: 32px;
     height: 22px;
     color: #777;
+    border: 2px outset #888;
+    border-radius: .25em;
 }
+
 .wysiwyg-toolbar li.selected :link, .wysiwyg-toolbar li.selected :visited {
-    border: 1px solid #7c4;
+    border-style: inset;
 }
 .wysiwyg-toolbar li a:hover, .wysiwyg-toolbar li.selected a:hover {
 }
 .wysiwyg-toolbar li a:active, .wysiwyg-toolbar li.selected a:active {
-    width: 30px;
-    height: 20px;
-    border: 1px solid yellow;
+    border-style: inset;
 }
 
 .wysiwyg-toolbar li a#wt-style {
