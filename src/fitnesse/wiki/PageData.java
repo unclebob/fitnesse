@@ -37,7 +37,6 @@ public class PageData implements Serializable {
   public static final String PropertyPROPERTIES = "Properties";
   public static final String PropertyVERSIONS = "Versions";
   public static final String PropertyEDIT = "Edit";
-  public static final String PropertyADD_CHILD = "AddChild";
   public static final String PropertySUITES = "Suites";
 
   public static final String PAGE_TYPE_ATTRIBUTE = "PageType";
@@ -45,7 +44,7 @@ public class PageData implements Serializable {
       TEST.toString(), SUITE.toString() };
 
   public static final String[] ACTION_ATTRIBUTES = { PropertyEDIT,
-      PropertyADD_CHILD, PropertyVERSIONS, PropertyPROPERTIES,
+      PropertyVERSIONS, PropertyPROPERTIES,
       PropertyREFACTOR, PropertyWHERE_USED };
 
   public static final String[] NAVIGATION_ATTRIBUTES = {
@@ -100,7 +99,6 @@ public class PageData implements Serializable {
   public void initializeAttributes() {
     if (!isErrorLogsPage()) { 
       properties.set(PropertyEDIT, Boolean.toString(true));
-      properties.set(PropertyADD_CHILD, Boolean.toString(true));
       properties.set(PropertyPROPERTIES, Boolean.toString(true));
       properties.set(PropertyREFACTOR, Boolean.toString(true));
     }

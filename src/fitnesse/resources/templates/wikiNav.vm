@@ -17,8 +17,8 @@
  #if( $actions.imported )
  <li><a href="$sourceUrl?responder=edit&amp;redirectToReferer=true&amp;redirectAction=importAndView">Edit Remotely</a></li>
  #end
- 
- #if( $actions.withAddChild )
+
+ #if( $actions.withEdit)
  <li id="add"><a href="$localOrRemotePath?new" class="label">Add</a>
   <ul>
    <li><a href="$localOrRemotePath?new&pageType=Static">Static page</a></li>
