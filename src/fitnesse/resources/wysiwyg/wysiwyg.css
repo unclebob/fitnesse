@@ -21,11 +21,10 @@ iframe.wysiwyg:focus {
 	display: inline;
 }
 .wysiwyg-toolbar {
-    height: 28px;
-    width: 714px;
     float: left;
     -moz-user-select: none;
     -webkit-user-select: none;
+	margin-bottom: 4px;
 }
 .wysiwyg-toolbar ul, .wysiwyg-toolbar li {
     list-style-type: none;
@@ -34,35 +33,50 @@ iframe.wysiwyg:focus {
     text-indent: 0;
     font-size: .9em;
 }
-.wysiwyg-toolbar li {
+.wysiwyg-toolbar ul {
+    border: 1px solid gray;
+    border-radius: 10px;
     float: left;
+    padding: 0 8px;
+    margin-right: .1em;
+}
+
+.wysiwyg-toolbar li {
     display: block;
-    margin-right: 1px;
+    float: left;
     background-color: white;
+    border-left: 1px solid gray;
+    padding: 0 1px;
 }
-.wysiwyg-toolbar li.divider {
-    height: 22px;
-    width: 4px;
+
+.wysiwyg-toolbar li:first-child {
+    display: inline;
+    background-color: white;
+    border-left: none;
 }
+
 .wysiwyg-toolbar li :link, .wysiwyg-toolbar li :visited {
     background: transparent url(menusprite.png) no-repeat;
     border: none;
     cursor: default;
-    display: block;
     width: 32px;
     height: 22px;
     color: #777;
-    border: 2px outset #888;
-    border-radius: .25em;
+    display: block;
+    float: left;
 }
 
 .wysiwyg-toolbar li.selected :link, .wysiwyg-toolbar li.selected :visited {
-    border-style: inset;
+	border: 1px inset gray;
+	width: 30px;
+	height: 20px;
 }
 .wysiwyg-toolbar li a:hover, .wysiwyg-toolbar li.selected a:hover {
 }
 .wysiwyg-toolbar li a:active, .wysiwyg-toolbar li.selected a:active {
-    border-style: inset;
+	border: 1px inset gray;
+	width: 30px;
+	height: 20px;
 }
 
 .wysiwyg-toolbar li a#wt-style {
