@@ -33,14 +33,14 @@
  </tbody>
 </table>
 
-<form method="post" action="/files/css/" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
  <input type="hidden" name="responder" value="upload"/>
  <label for="upload-file">Upload a file:</label>
  <input id="upload-file" type="file" name="file" value=""/>
  <input type="submit" name="" value="Upload"/>
 </form>
 
-<form method="get" action="/files/css/">
+<form method="get">
  <input type="hidden" name="responder" value="createDir"/>
  <label for="create-dir">Create a directory:</label>
  <input id="create-dir" type="text" name="dirname" value=""/>
