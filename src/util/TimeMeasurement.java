@@ -15,7 +15,7 @@ public class TimeMeasurement {
     this(Clock.instance);
   }
 
-  TimeMeasurement(Clock measuringClock) {
+  public TimeMeasurement(Clock measuringClock) {
     this.clock = measuringClock;
   }
 
