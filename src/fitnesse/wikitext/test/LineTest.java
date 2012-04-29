@@ -21,6 +21,7 @@ public class LineTest {
             ParserTestHelper.assertTranslatesTo("!" + i + " some text", "<h" + i + ">some text</h" + i + ">" + HtmlElement.endl);
         ParserTestHelper.assertTranslatesTo("atstart\n!1 text\n", "atstart<br/><h1>text</h1>" + HtmlElement.endl + "<br/>");
         ParserTestHelper.assertTranslatesTo("|!1 text|\n", ParserTestHelper.tableWithCell("<h1>text</h1>"));
+        ParserTestHelper.assertTranslatesTo("| !1 text|\n", ParserTestHelper.tableWithCell("<h1>text</h1>"));
         ParserTestHelper.assertTranslatesTo("|a|!1 text|\n", ParserTestHelper.tableWithCells(new String[] {"a", "<h1>text</h1>"}));
     }
 

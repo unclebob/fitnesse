@@ -3,15 +3,16 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Scanner {
 
     private static final Symbol emptyToken = new Symbol(SymbolType.Empty);
+    private static final int tokensCapacity = 3;
 
     private ScanString input;
-    private Symbol currentToken;
-    private Symbol previousToken;
+    private LinkedList<Symbol> tokens = new LinkedList<Symbol>();
     private int next;
     private TextMaker textMaker;
 
@@ -23,16 +24,12 @@ public class Scanner {
                     return Maybe.noString;
                 }
             }, sourcePage);
-        previousToken = emptyToken;
-        currentToken = emptyToken;
     }
 
     public Scanner(TextMaker textMaker, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
         this.textMaker = textMaker;
-        previousToken = emptyToken;
-        currentToken = emptyToken;
     }
 
     public Scanner(Scanner other) {
@@ -42,10 +39,13 @@ public class Scanner {
     public int getOffset() { return next; }
     public void markStart() { input.markStart(next); }
 
-    public boolean isEnd() { return currentToken == emptyToken; }
+    public boolean isEnd() { return tokens.isEmpty() || tokens.getFirst() == emptyToken; }
     public boolean isLast() { return input.isEnd(1); }
-    public Symbol getCurrent() { return currentToken; }
-    public boolean isPrevious(SymbolType type) { return previousToken.isType(type); }
+    public Symbol getCurrent() { return tokens.isEmpty() ? emptyToken : tokens.getFirst(); }
+
+    public boolean isTypeAt(int position, SymbolType type) {
+        return tokens.size() <= position ? emptyToken.isType(type) : tokens.get(position).isType(type);
+    }
 
     public Maybe<String> stringFromStart(int start) {
         int end = getOffset() - getCurrent().getContent().length();
@@ -57,9 +57,8 @@ public class Scanner {
     public void copy(Scanner other) {
         input = new ScanString(other.input);
         next = other.next;
-        currentToken = other.currentToken;
-        previousToken = other.previousToken;
         textMaker = other.textMaker;
+        tokens = new LinkedList<Symbol>(other.tokens);
     }
 
     public Symbol makeLiteral(SymbolType terminator) {
@@ -102,8 +101,8 @@ public class Scanner {
     }
 
     private void setCurrentToken(Symbol value)  {
-        previousToken = currentToken;
-        currentToken = value;
+        tokens.addFirst(value);
+        if (tokens.size() > tokensCapacity) tokens.removeLast();
     }
 
     private Step makeNextStep(final ParseSpecification specification, final int startPosition) {
