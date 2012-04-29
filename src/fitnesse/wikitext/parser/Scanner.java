@@ -3,33 +3,32 @@ package fitnesse.wikitext.parser;
 import util.Maybe;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Scanner {
 
-    private static final Symbol emptyToken = new Symbol(SymbolType.Empty);
-    private static final int tokensCapacity = 3;
-
     private ScanString input;
-    private LinkedList<Symbol> tokens = new LinkedList<Symbol>();
     private int next;
     private TextMaker textMaker;
+    private SymbolStream symbols;
 
     public Scanner(SourcePage sourcePage, String input) {
-        this.input = new ScanString(input, 0);
-        next = 0;
-        textMaker = new TextMaker(new VariableSource() {
-                public Maybe<String> findVariable(String name) {
-                    return Maybe.noString;
-                }
-            }, sourcePage);
+        this(
+            new TextMaker(
+                new VariableSource() {
+                        public Maybe<String> findVariable(String name) {
+                            return Maybe.noString;
+                        }
+                },
+                sourcePage),
+            input);
     }
 
     public Scanner(TextMaker textMaker, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
         this.textMaker = textMaker;
+        symbols = new SymbolStream();
     }
 
     public Scanner(Scanner other) {
@@ -39,12 +38,12 @@ public class Scanner {
     public int getOffset() { return next; }
     public void markStart() { input.markStart(next); }
 
-    public boolean isEnd() { return tokens.isEmpty() || tokens.getFirst() == emptyToken; }
+    public boolean isEnd() { return symbols.isEnd(); }
     public boolean isLast() { return input.isEnd(1); }
-    public Symbol getCurrent() { return tokens.isEmpty() ? emptyToken : tokens.getFirst(); }
+    public Symbol getCurrent() { return symbols.get(0); }
 
     public boolean isTypeAt(int position, SymbolType type) {
-        return tokens.size() <= position ? emptyToken.isType(type) : tokens.get(position).isType(type);
+        return symbols.get(position).isType(type);
     }
 
     public Maybe<String> stringFromStart(int start) {
@@ -58,13 +57,13 @@ public class Scanner {
         input = new ScanString(other.input);
         next = other.next;
         textMaker = other.textMaker;
-        tokens = new LinkedList<Symbol>(other.tokens);
+        symbols = new SymbolStream(other.symbols);
     }
 
     public Symbol makeLiteral(SymbolType terminator) {
         input.setOffset(next);
         while (!input.isEnd()) {
-            SymbolMatch match = terminator.makeMatch(input);
+            SymbolMatch match = terminator.makeMatch(input, symbols);
             if (match.isMatch()) {
                 Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset() + match.getMatchLength();
@@ -74,7 +73,7 @@ public class Scanner {
         }
         Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
         next = input.getOffset();
-        setCurrentToken(emptyToken);
+        symbols.add(Symbol.emptySymbol);
         return result;
     }
 
@@ -85,7 +84,7 @@ public class Scanner {
     public void moveNextIgnoreFirst(ParseSpecification specification) {
         Step step = makeNextStep(specification, next);
         next = step.nextPosition;
-        setCurrentToken(step.token);
+        symbols.add(step.token);
     }
 
     public List<Symbol> peek(int count, ParseSpecification specification) {
@@ -100,21 +99,13 @@ public class Scanner {
         return result;
     }
 
-    private void setCurrentToken(Symbol value)  {
-        tokens.addFirst(value);
-        if (tokens.size() > tokensCapacity) tokens.removeLast();
-    }
 
     private Step makeNextStep(final ParseSpecification specification, final int startPosition) {
         input.setOffset(startPosition);
         int newNext = startPosition;
         Symbol matchSymbol = null;
         while (!input.isEnd()) {
-            SymbolMatch match = specification.findMatch(input, new MatchableFilter() {
-                public boolean isValid(Matchable candidate) {
-                    return input.getOffset() != startPosition || !specification.ignores(candidate);
-                }
-            });
+            SymbolMatch match = specification.findMatch(input, startPosition, symbols);
             if (match.isMatch()) {
                 matchSymbol = match.getSymbol();
                 newNext = input.getOffset() + match.getMatchLength();
@@ -127,11 +118,10 @@ public class Scanner {
             return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
-            return new Step(emptyToken, input.getOffset());
+            return new Step(Symbol.emptySymbol, input.getOffset());
         }
         return new Step(matchSymbol, newNext);
     }
-
 
     private class Step {
         public Symbol token;

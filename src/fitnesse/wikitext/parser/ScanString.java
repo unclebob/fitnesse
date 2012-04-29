@@ -33,14 +33,6 @@ public class ScanString {
         return matches(match, 0);
     }
 
-    public boolean startsLine(int startAt) {
-        return startsLine(startAt, "\n");
-    }
-
-    public boolean startsLine(int startAt, String startDelimiters) {
-        return offset + startAt == 0 || offset + startAt == markStartOffset || startDelimiters.indexOf(input.charAt(offset + startAt - 1)) >= 0;
-    }
-
     public int find(char[] matches, int startAt) {
         int current = offset + startAt;
         while (current < input.length()) {

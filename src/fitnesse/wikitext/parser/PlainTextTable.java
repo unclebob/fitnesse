@@ -63,8 +63,8 @@ public class PlainTextTable extends SymbolType implements Rule {
             return symbolType == SymbolType.PlainTextCellSeparator;
         }
 
-        public SymbolMatch makeMatch(ScanString input) {
-            Maybe<Integer> matchLength = matcher.makeMatch(input);
+        public SymbolMatch makeMatch(ScanString input, SymbolStream symbols) {
+            Maybe<Integer> matchLength = matcher.makeMatch(input, symbols);
             return matchLength.isNothing()
                     ? SymbolMatch.noMatch
                     : new SymbolMatch(SymbolType.PlainTextCellSeparator, input, matchLength.getValue());

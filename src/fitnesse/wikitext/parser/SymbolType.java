@@ -122,9 +122,9 @@ public class SymbolType implements Matchable {
         return this.name.equals(symbolType.name);
     }
 
-    public SymbolMatch makeMatch(ScanString input) {
+    public SymbolMatch makeMatch(ScanString input, SymbolStream symbols) {
         for (Matcher matcher: getWikiMatchers()) {
-            Maybe<Integer> matchLength = matcher.makeMatch(input);
+            Maybe<Integer> matchLength = matcher.makeMatch(input, symbols);
             if (!matchLength.isNothing()) return new SymbolMatch(this, input, matchLength.getValue());
         }
         return SymbolMatch.noMatch;
