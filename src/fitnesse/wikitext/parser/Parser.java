@@ -46,6 +46,7 @@ public class Parser {
     public boolean atEnd() { return scanner.isEnd(); }
     public boolean atLast() { return scanner.isLast(); }
     public boolean isMoveNext(SymbolType type) { return moveNext(1).isType(type); }
+    public boolean isPrevious(SymbolType type) { return scanner.isPrevious(type); }
 
     public Symbol moveNext(int count) {
         for (int i = 0; i < count; i++) scanner.moveNext();
@@ -121,7 +122,7 @@ public class Parser {
     }
 
     public Symbol parseTo(SymbolType terminator, int priority) {
-        return parse(new ParseSpecification().terminator(terminator).priority(priority));
+        return parse(new ParseSpecification() /*.provider(specification)*/ .terminator(terminator).priority(priority));
     }
 
     public Symbol parseToWithSymbols(SymbolType terminator, SymbolProvider provider, int priority) {
@@ -136,7 +137,7 @@ public class Parser {
     }
 
     public Symbol parseToEnd(SymbolType end) {
-        return parse(new ParseSpecification().end(end));
+        return parse(new ParseSpecification().provider(specification).end(end));
     }
 
     public Symbol parseToEnds(int priority, SymbolProvider provider, SymbolType[] moreEnds) {

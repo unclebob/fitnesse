@@ -14,13 +14,19 @@ public class LineTest {
         ParserTestHelper.assertScans("!3text\n", "HeaderLine=!3,Text=text,Newline=\n");
         ParserTestHelper.assertScans("!0 text\n", "Text=!0,Whitespace= ,Text=text,Newline=\n");
         ParserTestHelper.assertScans("!7 text\n", "Text=!7,Whitespace= ,Text=text,Newline=\n");
-        ParserTestHelper.assertScans("not start !1 text\n", "Text=not,Whitespace= ,Text=start,Whitespace= ,HeaderLine=!1,Whitespace= ,Text=text,Newline=\n");
-        ParserTestHelper.assertScans("at start\n!1 text\n", "Text=at,Whitespace= ,Text=start,Newline=\n,HeaderLine=!1,Whitespace= ,Text=text,Newline=\n");
     }
 
     @Test public void translatesHeaders() {
         for (int i = 1; i < 7; i++)
             ParserTestHelper.assertTranslatesTo("!" + i + " some text", "<h" + i + ">some text</h" + i + ">" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("atstart\n!1 text\n", "atstart<br/><h1>text</h1>" + HtmlElement.endl + "<br/>");
+        ParserTestHelper.assertTranslatesTo("|!1 text|\n", ParserTestHelper.tableWithCell("<h1>text</h1>"));
+        ParserTestHelper.assertTranslatesTo("|a|!1 text|\n", ParserTestHelper.tableWithCells(new String[] {"a", "<h1>text</h1>"}));
+    }
+
+    @Test public void doesNotTranslateHeaders() {
+        ParserTestHelper.assertTranslatesTo("notstart !1 text\n", "notstart !1 text<br/>");
+        ParserTestHelper.assertTranslatesTo("|!1 text\n", "|!1 text<br/>");
     }
 
     @Test public void scansCenters() {

@@ -7,10 +7,11 @@ import java.util.List;
 
 public class Scanner {
 
-    private static final Symbol endToken = new Symbol(SymbolType.Empty);
+    private static final Symbol emptyToken = new Symbol(SymbolType.Empty);
 
     private ScanString input;
     private Symbol currentToken;
+    private Symbol previousToken;
     private int next;
     private TextMaker textMaker;
 
@@ -18,17 +19,20 @@ public class Scanner {
         this.input = new ScanString(input, 0);
         next = 0;
         textMaker = new TextMaker(new VariableSource() {
-            public Maybe<String> findVariable(String name) {
-                return Maybe.noString;
-            }
-        },
-        sourcePage);
+                public Maybe<String> findVariable(String name) {
+                    return Maybe.noString;
+                }
+            }, sourcePage);
+        previousToken = emptyToken;
+        currentToken = emptyToken;
     }
 
     public Scanner(TextMaker textMaker, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
         this.textMaker = textMaker;
+        previousToken = emptyToken;
+        currentToken = emptyToken;
     }
 
     public Scanner(Scanner other) {
@@ -38,9 +42,10 @@ public class Scanner {
     public int getOffset() { return next; }
     public void markStart() { input.markStart(next); }
 
-    public boolean isEnd() { return currentToken == endToken; }
+    public boolean isEnd() { return currentToken == emptyToken; }
     public boolean isLast() { return input.isEnd(1); }
     public Symbol getCurrent() { return currentToken; }
+    public boolean isPrevious(SymbolType type) { return previousToken.isType(type); }
 
     public Maybe<String> stringFromStart(int start) {
         int end = getOffset() - getCurrent().getContent().length();
@@ -53,6 +58,7 @@ public class Scanner {
         input = new ScanString(other.input);
         next = other.next;
         currentToken = other.currentToken;
+        previousToken = other.previousToken;
         textMaker = other.textMaker;
     }
 
@@ -69,7 +75,7 @@ public class Scanner {
         }
         Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
         next = input.getOffset();
-        currentToken = endToken;
+        setCurrentToken(emptyToken);
         return result;
     }
 
@@ -80,7 +86,7 @@ public class Scanner {
     public void moveNextIgnoreFirst(ParseSpecification specification) {
         Step step = makeNextStep(specification, next);
         next = step.nextPosition;
-        currentToken = step.token;
+        setCurrentToken(step.token);
     }
 
     public List<Symbol> peek(int count, ParseSpecification specification) {
@@ -93,6 +99,11 @@ public class Scanner {
             startPosition = step.nextPosition;
         }
         return result;
+    }
+
+    private void setCurrentToken(Symbol value)  {
+        previousToken = currentToken;
+        currentToken = value;
     }
 
     private Step makeNextStep(final ParseSpecification specification, final int startPosition) {
@@ -117,7 +128,7 @@ public class Scanner {
             return new Step(match.getSymbol(), startPosition + match.getMatchLength());
         }
         if (input.isEnd()) {
-            return new Step(endToken, input.getOffset());
+            return new Step(emptyToken, input.getOffset());
         }
         return new Step(matchSymbol, newNext);
     }
