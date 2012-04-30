@@ -36,7 +36,7 @@ public class Matcher {
     public Matcher startLine() {
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
-                return symbols.get(0).isStartLine() ? new Maybe<Integer>(0) : Maybe.noInteger;
+                return input.startsLine(offset) ? new Maybe<Integer>(0) : Maybe.noInteger;
             }
         });
         return this;
@@ -46,9 +46,10 @@ public class Matcher {
         matches.add(new ScanMatch() {
             public Maybe<Integer> match(ScanString input, SymbolStream symbols, int offset) {
                 return
-                    symbols.get(0).isStartLine() ||
+                    input.startsLine(offset) ||
                     symbols.get(0).isStartCell() ||
-                    (symbols.get(0).isType(SymbolType.Whitespace) && symbols.get(1).isStartCell())
+                    (symbols.get(0).isType(SymbolType.Whitespace) &&
+                            (symbols.get(1).isStartCell() || symbols.get(1).isLineType()))
                  ? new Maybe<Integer>(0) : Maybe.noInteger;
             }
         });

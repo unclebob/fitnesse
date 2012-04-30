@@ -24,8 +24,12 @@ public class Symbol {
 
     public SymbolType getType() { return type; }
     public boolean isType(SymbolType type) { return this.type.matchesFor(type); }
-    public boolean isStartLine() { return isType(SymbolType.Newline) || isType(SymbolType.Empty); }
     public boolean isStartCell() { return isType(Table.symbolType) || isType(SymbolType.EndCell); }
+
+    public boolean isLineType() {
+        return isType(HeaderLine.symbolType) || isType(SymbolType.CenterLine) || isType(SymbolType.Meta) ||
+                isType(SymbolType.NoteLine);
+    }
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 

@@ -42,10 +42,6 @@ public class Scanner {
     public boolean isLast() { return input.isEnd(1); }
     public Symbol getCurrent() { return symbols.get(0); }
 
-    public boolean isTypeAt(int position, SymbolType type) {
-        return symbols.get(position).isType(type);
-    }
-
     public Maybe<String> stringFromStart(int start) {
         int end = getOffset() - getCurrent().getContent().length();
         return start <= end
@@ -65,6 +61,7 @@ public class Scanner {
         while (!input.isEnd()) {
             SymbolMatch match = terminator.makeMatch(input, symbols);
             if (match.isMatch()) {
+                symbols.add(new Symbol(terminator));
                 Symbol result = new Symbol(SymbolType.Text, input.substringFrom(next));
                 next = input.getOffset() + match.getMatchLength();
                 return result;

@@ -33,6 +33,10 @@ public class ScanString {
         return matches(match, 0);
     }
 
+    public boolean startsLine(int startAt) {
+        return offset + startAt == 0 || offset + startAt == markStartOffset || input.charAt(offset + startAt - 1) == '\n';
+    }
+
     public int find(char[] matches, int startAt) {
         int current = offset + startAt;
         while (current < input.length()) {

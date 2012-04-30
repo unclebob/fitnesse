@@ -46,7 +46,6 @@ public class Parser {
     public boolean atEnd() { return scanner.isEnd(); }
     public boolean atLast() { return scanner.isLast(); }
     public boolean isMoveNext(SymbolType type) { return moveNext(1).isType(type); }
-    public boolean isTypeAt(int position, SymbolType type) { return scanner.isTypeAt(position, type); }
 
     public Symbol moveNext(int count) {
         for (int i = 0; i < count; i++) scanner.moveNext();
