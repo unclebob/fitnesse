@@ -121,7 +121,7 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
 
     HtmlTag tag = new HtmlTag("li");
 
-    tag.add(HtmlUtil.makeSpanTag("results " + cssClassFor(testSummary), testSummary.toString()));
+    tag.add(HtmlUtil.makeSpanTag("results " + cssClassFor(relativeName, testSummary), testSummary.toString()));
 
     HtmlTag link = HtmlUtil.makeLink("#" + relativeName + currentTest, relativeName);
     link.addAttribute("class", "link");
@@ -136,6 +136,29 @@ public abstract class SuiteHtmlFormatter extends InteractiveFormatter {
     writeData(insertScript.html());
   }
 
+  protected String cssClassFor(String relativeName, TestSummary testSummary) {
+    if (isSuiteMetaPage(relativeName)) {
+      if (testSummary.getWrong() > 0 || wasInterupted()) {
+        return "fail";
+      } else if (testSummary.getExceptions() > 0) {
+        return "error";
+      } else if (testSummary.getIgnores() > 0) {
+        return "ignore";
+      } else {
+        return "pass";
+      }
+    } else {
+      return cssClassFor(testSummary);
+    }
+  }
+
+  private boolean isSuiteMetaPage(String relativeName) {
+    return relativeName.equals("SuiteSetUp")
+        || relativeName.endsWith(".SuiteSetUp")
+        || relativeName.equals("SuiteTearDown")
+        || relativeName.endsWith(".SuiteTearDown");
+  }
+  
   private void finishOutputForTest() {
     writeData("</div>" + HtmlTag.endl);
   }

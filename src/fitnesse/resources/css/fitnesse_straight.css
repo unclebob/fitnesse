@@ -76,12 +76,13 @@ nav ul li {
 }
 nav a, nav a:active, nav a:visited {
 	color: #000000;
-	white-space:nowrap;
+	white-space: nowrap;
 	text-decoration: none;
 	width: 5em;
-	height:1.5em;
+	height: 1.5em;
 	color: black;
-	margin-right: 0.5em; 
+	letter-spacing: 0.1em;
+    margin-right: 1em;
 	padding: 0.5em 3em;
 	background-color: #eeeeee;
 	border-radius: 0.25em;

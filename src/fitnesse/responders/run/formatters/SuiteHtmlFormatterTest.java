@@ -13,13 +13,13 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.WikiPageDummy;
 
 public class SuiteHtmlFormatterTest extends RegexTestCase {
-  private HtmlPage htmlPage;
+  //private HtmlPage htmlPage;
   private SuiteHtmlFormatter formatter;
   private StringBuffer pageBuffer = new StringBuffer();
 
   public void setUp() throws Exception {
     FitNesseContext context = FitNesseUtil.makeTestContext();
-    htmlPage = context.pageFactory.newPage();
+    //htmlPage = context.pageFactory.newPage();
     formatter = new SuiteHtmlFormatter(context) {
       @Override
       protected void writeData(String output) {
@@ -39,6 +39,41 @@ public class SuiteHtmlFormatterTest extends RegexTestCase {
 
     assertSubString("<strong>Test Pages:</strong> 2 right, 1 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
     assertSubString("<strong>Assertions:</strong> 51 right, 1 wrong, 2 ignored, 0 exceptions", pageBuffer.toString());
+  }
+
+  private void testSuiteMetaTestSummaryWithTestResults(String pageName) throws Exception {
+    formatter.processTestResults(pageName, new TestSummary(2, 0, 0, 0));
+    formatter.finishWritingOutput();
+
+    assertSubString("<span class=\\\"results pass\\\">2 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
+    assertSubString("<strong>Test Pages:</strong> 1 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong> 2 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+  }
+
+  public void testSuiteSetUpSummaryWithTestResults() throws Exception {
+    testSuiteMetaTestSummaryWithTestResults("SuiteSetUp");
+  }
+
+  public void testSuiteTearDownSummaryWithTestResults() throws Exception {
+    testSuiteMetaTestSummaryWithTestResults("SuiteTearDown");
+  }
+
+
+  private void testSuiteMetaTestSummaryWithoutTestResults(String pageName) throws Exception {
+    formatter.processTestResults(pageName, new TestSummary(0, 0, 0, 0));
+    formatter.finishWritingOutput();
+
+    assertSubString("<span class=\\\"results pass\\\">0 right, 0 wrong, 0 ignored, 0 exceptions</span>", pageBuffer.toString());
+    assertSubString("<strong>Test Pages:</strong> 0 right, 0 wrong, 1 ignored, 0 exceptions", pageBuffer.toString());
+    assertSubString("<strong>Assertions:</strong> 0 right, 0 wrong, 0 ignored, 0 exceptions", pageBuffer.toString());
+  }
+
+  public void testSuiteSetUpSummaryWithoutTestResults() throws Exception {
+    testSuiteMetaTestSummaryWithoutTestResults("SuiteSetUp");
+  }
+  
+  public void testSuiteTearDownSummaryWithoutTestResults() throws Exception {
+    testSuiteMetaTestSummaryWithoutTestResults("SuiteTearDown");
   }
 
   public void testCountsHtml() throws Exception {
