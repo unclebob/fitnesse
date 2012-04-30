@@ -9,6 +9,9 @@ import static org.junit.Assert.assertTrue;
 public class ContentsTest {
     @Test public void scansContents() {
         ParserTestHelper.assertScansTokenType("!contents", "Contents", true);
+        ParserTestHelper.assertScansTokenType(" !contents", "Contents", false);
+        ParserTestHelper.assertScansTokenType("!note !contents", "Contents", true);
+        ParserTestHelper.assertScansTokenType("| !contents|\n", "Contents", true);
     }
 
     @Test public void parsesContents() throws Exception {

@@ -10,7 +10,7 @@ public class Path extends SymbolType implements Rule, PathsProvider {
 
     public Path() {
         super("Path");
-        wikiMatcher(new Matcher().startLine().string("!path"));
+        wikiMatcher(new Matcher().startLineOrCell().string("!path"));
         wikiRule(this);
         htmlTranslation(new HtmlBuilder("span").body(0, "classpath: ").attribute("class", "meta").inline());
     }
