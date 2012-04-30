@@ -14,11 +14,12 @@ public class Contents extends SymbolType implements Rule, Translation {
 
     public Contents() {
         super("Contents");
-        wikiMatcher(new Matcher().string("!contents"));
+        wikiMatcher(new Matcher().startLineOrCell().string("!contents"));
         wikiRule(this);
         htmlTranslation(this);
     }
 
+    @Override
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         Symbol body = parser.parseToEnd(SymbolType.Newline);
         for (Symbol option: body.getChildren()) {
@@ -33,6 +34,8 @@ public class Contents extends SymbolType implements Rule, Translation {
 
         return new Maybe<Symbol>(current);
     }
+
+    @Override
     public String toTarget(Translator translator, Symbol symbol) {
         ContentsItemBuilder itemBuilder
                 = new ContentsItemBuilder(symbol, 1);
